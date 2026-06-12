@@ -11,7 +11,6 @@ typedef struct TrickyGrowlState
     u8 pad59[0x60 - 0x59];
 } TrickyGrowlState;
 
-
 extern int trickyDebugPrint(const char* fmt, ...);
 extern int trickyFn_8013b368(void* param_1, float threshold, void* param_2);
 extern int Sfx_IsPlayingFromObjectChannel(void* obj, int chan);
@@ -36,13 +35,6 @@ extern f32 lbl_803E24C8;
 extern f32 lbl_803E24CC;
 extern f32 lbl_803E24D0;
 
-/*
- * --INFO--
- *
- * Function: trickyGrowl
- * EN v1.0 Address: 0x8013DC88
- * EN v1.0 Size: 1096b
- */
 void trickyGrowl(void* obj, void* trickyState)
 {
     void* state;
@@ -176,4 +168,3 @@ void trickyGrowl(void* obj, void* trickyState)
         break;
     }
 }
-

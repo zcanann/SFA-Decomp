@@ -1,62 +1,13 @@
 /* DLL 0x10E - DeathSeq [8018BC48-8018BC50) */
 #include "main/objseq.h"
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8018af28
- * EN v1.0 Address: 0x8018AF28
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8018AF64
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b220
- * EN v1.0 Address: 0x8018B220
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018B230
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b224
- * EN v1.0 Address: 0x8018B224
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8018B314
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
-
 extern f32 timeDelta;
-
 
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -64,20 +15,6 @@ extern f32 timeDelta;
 #include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
 
-
-/*
- * --INFO--
- *
- * Function: deathgas_free
- * EN v1.0 Address: 0x8018BC50
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8018BC64
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern s16* Camera_GetCurrentViewSlot(void);
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void setScreenTransitionPause(int v);
@@ -108,7 +45,6 @@ void deathseq_init(int* obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void deathseq_render(void)
 {
@@ -128,7 +64,6 @@ void deathseq_initialise(void)
 
 void dll_127_free_nop(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int deathseq_getExtraSize(void) { return 0x24; }
 int deathseq_getObjectTypeId(void) { return 0x0; }
@@ -136,11 +71,9 @@ int dll_127_getExtraSize_ret_0(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
-
 
 void deathseq_free(int* obj)
 {
@@ -150,7 +83,6 @@ void deathseq_free(int* obj)
 }
 
 void deathgas_init(int* obj);
-
 
 typedef struct
 {

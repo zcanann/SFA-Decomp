@@ -39,20 +39,6 @@ typedef struct Cup197State
 } Cup197State;
 
 /*
- * --INFO--
- *
- * Function: DBSH_Symbol_SeqFn
- * EN v1.0 Address: 0x801C9660
- * EN v1.0 Size: 2276b
- * EN v1.1 Address: 0x801C9C14
- * EN v1.1 Size: 1500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
  * Per-object extra state for the DBSH spin-symbol minigame
  * (dbsh_symbol_getExtraSize == 0x24).
  */
@@ -60,62 +46,6 @@ typedef struct Cup197State
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
-
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_update
- * EN v1.0 Address: 0x801C9F84
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x801CA234
- * EN v1.1 Size: 484b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_getExtraSize
- * EN v1.0 Address: 0x801C9C34
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_free
- * EN v1.0 Address: 0x801C9C3C
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_render
- * EN v1.0 Address: 0x801CA0E0
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x801CA418
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_197_hitDetect(void)
@@ -391,19 +321,6 @@ extern f32 lbl_803E5118;
 
 extern int ObjHits_GetPriorityHit();
 
-/*
- * --INFO--
- *
- * Function: dll_197_init
- * EN v1.0 Address: 0x801CA5B4
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801CA6BC
- * EN v1.1 Size: 1196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 
@@ -452,62 +369,7 @@ void dll_197_init(int obj, int data)
     ((Dll197State*)st)->unk4 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801caa30
- * EN v1.0 Address: 0x801CAA30
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x801CAB68
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801cacd4
- * EN v1.0 Address: 0x801CACD4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801CAE40
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeac
- * EN v1.0 Address: 0x801CAEAC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CAEF8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeb0
- * EN v1.0 Address: 0x801CAEB0
- * EN v1.0 Size: 1240b
- * EN v1.1 Address: 0x801CAF74
- * EN v1.1 Size: 788b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_197_release(void)
@@ -523,4 +385,3 @@ void nwsh_levcon_hitDetect(void);
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-

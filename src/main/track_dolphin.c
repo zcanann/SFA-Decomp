@@ -23,7 +23,6 @@ typedef struct TrackP6Entry
     f32 relZ2;
 } TrackP6Entry;
 
-
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 ABS();
@@ -180,19 +179,6 @@ extern f32 lbl_803DF988;
 extern char s_NO_FREE_LAST_LINE_8030f428[];
 extern char s_trackIntersect__FUNC_OVERFLOW__d_8030f43c[];
 
-/*
- * --INFO--
- *
- * Function: mapBlockRender_setVtxDcrs
- * EN v1.0 Address: 0x8005F920
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x8005FA9C
- * EN v1.1 Size: 472b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void mapBlockRender_setVtxDcrs(flag, param_2, sh, bs)
 u8 flag;
 int* param_2;
@@ -271,19 +257,6 @@ int* bs;
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8005fab0
- * EN v1.0 Address: 0x8005FAB0
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x8005FC74
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005fab0(int param_1, float* param_2)
 {
     float afStack_68[3];
@@ -306,7 +279,6 @@ void FUN_8005fab0(int param_1, float* param_2)
     FUN_802585d8(0xe, *(uint*)(param_1 + 0x60), 4);
     return;
 }
-
 
 extern void GXLoadPosMtxImm(void* mtx, int slot);
 extern void PSMTXCopy(void* src, void* dst);
@@ -432,20 +404,6 @@ void renderMapBlock(void* objp, u8 type)
 }
 #pragma pop
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005fe14
- * EN v1.0 Address: 0x8005FE14
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80060630
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005fe14(int param_1)
 {
     bool bVar1;
@@ -492,20 +450,6 @@ void FUN_8005fe14(int param_1)
     while (true);
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005ff90
- * EN v1.0 Address: 0x8005FF90
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x8006076C
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005ff90(short* param_1, float* param_2)
 {
     double dVar1;
@@ -520,206 +464,55 @@ void FUN_8005ff90(short* param_1, float* param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80060058
- * EN v1.0 Address: 0x80060058
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x800607F4
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint FUN_80060058(int param_1)
 {
     return *(uint*)(param_1 + 0x10) >> 0x18;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800600b4
- * EN v1.0 Address: 0x800600B4
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80060858
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_800600b4(int param_1, int param_2)
 {
     return *(int*)(param_1 + 0x4c) + param_2 * 8;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800600c4
- * EN v1.0 Address: 0x800600C4
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80060868
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_800600c4(int param_1, int param_2)
 {
     return *(int*)(param_1 + 0x50) + param_2 * 0x14;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800600d4
- * EN v1.0 Address: 0x800600D4
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80060878
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_800600d4(int param_1, int param_2)
 {
     return *(int*)(param_1 + 0x68) + param_2 * 0x1c;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800600e4
- * EN v1.0 Address: 0x800600E4
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80060888
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_800600e4(int param_1, int param_2)
 {
     return *(int*)(param_1 + 100) + param_2 * 0x44;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8006069c
- * EN v1.0 Address: 0x8006069C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80060D0C
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_8006069c(void)
 {
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8006070c
- * EN v1.0 Address: 0x8006070C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80060D90
- * EN v1.1 Size: 1152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8006070c(undefined8 param_1, double param_2, undefined4 param_3, undefined4 param_4,
                   int param_5, float* param_6, undefined4 param_7, undefined4 param_8, int param_9)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80060a64
- * EN v1.0 Address: 0x80060A64
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800617D0
- * EN v1.1 Size: 768b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80060a64(ushort* param_1, int param_2)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80061194
- * EN v1.0 Address: 0x80061194
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80062614
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80061194(void)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800614d0
- * EN v1.0 Address: 0x800614D0
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x80062A54
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800614d0(undefined param_1)
 {
     DAT_803dc2b8 = param_1;
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80061a80
- * EN v1.0 Address: 0x80061A80
- * EN v1.0 Size: 572b
- * EN v1.1 Address: 0x80063000
- * EN v1.1 Size: 596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80061a80(short* param_1, short* param_2, int param_3)
 {
     int iVar1;
@@ -817,19 +610,6 @@ void FUN_80061a80(short* param_1, short* param_2, int param_3)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80061cbc
- * EN v1.0 Address: 0x80061CBC
- * EN v1.0 Size: 780b
- * EN v1.1 Address: 0x80063254
- * EN v1.1 Size: 656b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, float* param_5, char param_6
 )
@@ -915,20 +695,6 @@ FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, flo
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80062010
- * EN v1.0 Address: 0x80062010
- * EN v1.0 Size: 216b
- * EN v1.1 Address: 0x8006416C
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_80062010(double param_1, double param_2, double param_3, undefined2 param_4, int param_5)
 {
     int iVar1;
@@ -965,38 +731,11 @@ int FUN_80062010(double param_1, double param_2, double param_3, undefined2 para
     return DAT_803ddbdc + -1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800620e8
- * EN v1.0 Address: 0x800620E8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80064248
- * EN v1.1 Size: 1656b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800620e8(undefined4 param_1, undefined4 param_2, float* param_3, int* param_4, int* param_5,
                   undefined4 param_6, undefined4 param_7, uint param_8, byte param_9)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800631d4
- * EN v1.0 Address: 0x800631D4
- * EN v1.0 Size: 136b
- * EN v1.1 Address: 0x800656F0
- * EN v1.1 Size: 144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800631d4(int param_1, int param_2, int param_3)
 {
     uint uVar1;
@@ -1047,20 +786,6 @@ void FUN_800631d4(int param_1, int param_2, int param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80063298
- * EN v1.0 Address: 0x80063298
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x800657BC
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_80063298(void)
 {
     if (((DAT_803ddbce == '\0') && (DAT_803ddbcf == '\0')) && (DAT_803ddbcd == '\0'))
@@ -1070,20 +795,6 @@ undefined4 FUN_80063298(void)
     return 1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800632d8
- * EN v1.0 Address: 0x800632D8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80065800
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800632d8(undefined8 param_1, double param_2, double param_3, undefined4 param_4, float* param_5,
              uint param_6)
@@ -1091,19 +802,6 @@ FUN_800632d8(undefined8 param_1, double param_2, double param_3, undefined4 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800632e0
- * EN v1.0 Address: 0x800632E0
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800658E4
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800632e0(undefined8 param_1, double param_2, double param_3, undefined4 param_4, float* param_5,
              undefined4* param_6, uint param_7)
@@ -1111,19 +809,6 @@ FUN_800632e0(undefined8 param_1, double param_2, double param_3, undefined4 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800632e8
- * EN v1.0 Address: 0x800632E8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80065A20
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800632e8(undefined8 param_1, double param_2, double param_3, undefined4 param_4, float* param_5,
              uint param_6)
@@ -1131,38 +816,11 @@ FUN_800632e8(undefined8 param_1, double param_2, double param_3, undefined4 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800632f4
- * EN v1.0 Address: 0x800632F4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80065FCC
- * EN v1.1 Size: 632b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800632f4(undefined8 param_1, double param_2, double param_3, undefined4 param_4,
                   undefined4 param_5, int param_6, uint param_7)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800632f8
- * EN v1.0 Address: 0x800632F8
- * EN v1.0 Size: 1108b
- * EN v1.1 Address: 0x80066244
- * EN v1.1 Size: 1076b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, float* param_5,
              float* param_6, byte param_7)
@@ -1285,55 +943,14 @@ FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, flo
     return 1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80063a68
- * EN v1.0 Address: 0x80063A68
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80067AD4
- * EN v1.1 Size: 556b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80063a68(void)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80063a74
- * EN v1.0 Address: 0x80063A74
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8006933C
- * EN v1.1 Size: 1116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80063a74(undefined4 param_1, undefined4 param_2, uint param_3, char param_4)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80063a78
- * EN v1.0 Address: 0x80063A78
- * EN v1.0 Size: 1008b
- * EN v1.1 Address: 0x80069798
- * EN v1.1 Size: 808b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
                                    float* radii, int pointCount)
 {
@@ -1421,57 +1038,18 @@ void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* e
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80069AC0
- * EN v1.0 Address: 0x80063E68
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80069AC0
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4* trackDolphin_getIntersectionDescriptorTable(uint* currentIndexOut)
 {
     *currentIndexOut = (uint)DAT_803ddbec;
     return (undefined4*)&DAT_8038e8c4;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80063e78
- * EN v1.0 Address: 0x80063E78
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x80069AD4
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void trackDolphin_getCurrentTrackPoint(uint** trackPointOut)
 {
     *trackPointOut = (uint*)&DAT_8038eaa4;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80063e84
- * EN v1.0 Address: 0x80063E84
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x80069AE4
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void trackDolphin_getCurrentIntersectionList(int* entryCountOut, undefined4* entryListOut)
 {
     *entryCountOut = (int)(short)(&DAT_8038e8c8)[(uint)DAT_803ddbec * 0xc];
@@ -1479,19 +1057,6 @@ void trackDolphin_getCurrentIntersectionList(int* entryCountOut, undefined4* ent
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80063ea8
- * EN v1.0 Address: 0x80063EA8
- * EN v1.0 Size: 392b
- * EN v1.1 Address: 0x80069B0C
- * EN v1.1 Size: 396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void trackDolphin_initIntersectionBuffers(void)
 {
     int off;
@@ -1536,20 +1101,6 @@ void trackDolphin_initIntersectionBuffers(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80064384
- * EN v1.0 Address: 0x80064384
- * EN v1.0 Size: 328b
- * EN v1.1 Address: 0x8006A034
- * EN v1.1 Size: 368b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80064384(int param_1)
 {
     int iVar1;
@@ -1615,7 +1166,6 @@ void FUN_80064384(int param_1)
     DAT_803ddc00 = (char)param_1;
     return;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void doNothing_80062A50(void)
@@ -2149,7 +1699,6 @@ void fn_80062808(void)
     lbl_803DCF14 = lbl_803DCF1C;
     lbl_803DCF0C = lbl_803DCF20;
 }
-
 
 void fn_80065574(int matchVal, int obj, int flag)
 {
@@ -6166,7 +5715,6 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     }
     return count;
 }
-
 
 /* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */

@@ -2,100 +2,21 @@
 #include "main/dll/dim2conveyor.h"
 #include "main/gameplay_runtime.h"
 
-
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 
 extern f32 timeDelta;
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: nw_mammoth_update
- * EN v1.0 Address: 0x801CF0AC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CF2E0
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: nw_mammoth_init
- * EN v1.0 Address: 0x801CF4F0
- * EN v1.0 Size: 668b
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801cf0b4
- * EN v1.0 Address: 0x801CF0B4
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801CF570
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: nw_tricky_getExtraSize
- * EN v1.0 Address: 0x801CF7B8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int nw_tricky_getExtraSize(void)
 {
     return 8;
 }
 
-/*
- * --INFO--
- *
- * Function: nw_tricky_SeqFn
- * EN v1.0 Address: 0x801CF78C
- * EN v1.0 Size: 44b
- */
 int nw_tricky_SeqFn(void)
 {
     Sfx_StopObjectChannel(getTrickyObject(), 16);
     return 0;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_801cf108
- * EN v1.0 Address: 0x801CF108
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801CF5C4
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 void nw_tricky_free(int obj)
 {
@@ -109,18 +30,13 @@ void nw_tricky_free(int obj)
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-
-
 typedef struct NwTrickyState
 {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
 } NwTrickyState;
 
-
 extern int** ObjGroup_GetObjects(int group, int* countOut);
-
-
 
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 fn_8014C5D0(int* obj);
@@ -143,19 +59,6 @@ typedef struct NwObjPos
     f32 pos[3];
 } NwObjPos;
 
-/*
- * --INFO--
- *
- * Function: nw_tricky_update
- * EN v1.0 Address: 0x801CF7E8
- * EN v1.0 Size: 796b
- * EN v1.1 Address: 0x801CFAC0
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma opt_loop_invariants off
 void nw_tricky_update(int* obj)
 {
@@ -278,19 +181,12 @@ void nw_tricky_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void nw_animice_render(void);
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
 
 /* call(x, N) wrappers. */
 

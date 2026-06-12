@@ -62,19 +62,6 @@ extern f32 lbl_803E58B4;
 extern f32 lbl_803E58B8;
 extern f32 lbl_803E58BC;
 
-/*
- * --INFO--
- *
- * Function: FUN_801ba224
- * EN v1.0 Address: 0x801BA224
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x801BA3CC
- * EN v1.1 Size: 180b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801ba224(short* param_1, int param_2)
 {
     int iVar1;
@@ -99,19 +86,6 @@ void FUN_801ba224(short* param_1, int param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801ba2e0
- * EN v1.0 Address: 0x801BA2E0
- * EN v1.0 Size: 1016b
- * EN v1.1 Address: 0x801BA480
- * EN v1.1 Size: 856b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801ba2e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -215,19 +189,6 @@ LAB_801ba764:
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801ba6d8
- * EN v1.0 Address: 0x801BA6D8
- * EN v1.0 Size: 788b
- * EN v1.1 Address: 0x801BA7D8
- * EN v1.1 Size: 660b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801ba6d8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -301,19 +262,6 @@ FUN_801ba6d8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801ba9ec
- * EN v1.0 Address: 0x801BA9EC
- * EN v1.0 Size: 416b
- * EN v1.1 Address: 0x801BAA6C
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801ba9ec(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -350,20 +298,6 @@ FUN_801ba9ec(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801babd4
- * EN v1.0 Address: 0x801BABD4
- * EN v1.0 Size: 424b
- * EN v1.1 Address: 0x801BAC08
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801babd4(int param_1, int param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8)
@@ -410,19 +344,6 @@ FUN_801babd4(int param_1, int param_2, undefined4 param_3, undefined4 param_4, u
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bad7c
- * EN v1.0 Address: 0x801BAD7C
- * EN v1.0 Size: 384b
- * EN v1.1 Address: 0x801BAD34
- * EN v1.1 Size: 256b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bad7c(int param_1, int param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8)
@@ -468,19 +389,6 @@ FUN_801bad7c(int param_1, int param_2, undefined4 param_3, undefined4 param_4, u
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801baefc
- * EN v1.0 Address: 0x801BAEFC
- * EN v1.0 Size: 388b
- * EN v1.1 Address: 0x801BAE34
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801baefc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -514,19 +422,6 @@ FUN_801baefc(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bb080
- * EN v1.0 Address: 0x801BB080
- * EN v1.0 Size: 544b
- * EN v1.1 Address: 0x801BAF0C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bb080(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -565,19 +460,6 @@ FUN_801bb080(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bb2a0
- * EN v1.0 Address: 0x801BB2A0
- * EN v1.0 Size: 432b
- * EN v1.1 Address: 0x801BB038
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bb2a0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -665,19 +547,6 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
     modelLightStruct_setGlowProjectionRadius(lightSlot[0], lbl_803E4BBC);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bb450
- * EN v1.0 Address: 0x801BB450
- * EN v1.0 Size: 408b
- * EN v1.1 Address: 0x801BB13C
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 #pragma peephole on
@@ -720,19 +589,6 @@ FUN_801bb450(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar2;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bb5e8
- * EN v1.0 Address: 0x801BB5E8
- * EN v1.0 Size: 432b
- * EN v1.1 Address: 0x801BB26C
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bb5e8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -775,19 +631,6 @@ FUN_801bb5e8(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bb798
- * EN v1.0 Address: 0x801BB798
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x801BB3B4
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bb798(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -831,19 +674,6 @@ FUN_801bb798(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bb954
- * EN v1.0 Address: 0x801BB954
- * EN v1.0 Size: 628b
- * EN v1.1 Address: 0x801BB50C
- * EN v1.1 Size: 384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bb954(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -895,19 +725,6 @@ FUN_801bb954(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bbbc8
- * EN v1.0 Address: 0x801BBBC8
- * EN v1.0 Size: 416b
- * EN v1.1 Address: 0x801BB68C
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bbbc8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10)
@@ -940,19 +757,6 @@ FUN_801bbbc8(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bbd68
- * EN v1.0 Address: 0x801BBD68
- * EN v1.0 Size: 312b
- * EN v1.1 Address: 0x801BB7A0
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bbd68(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9, int param_10
@@ -971,19 +775,6 @@ FUN_801bbd68(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801bbea0
- * EN v1.0 Address: 0x801BBEA0
- * EN v1.0 Size: 248b
- * EN v1.1 Address: 0x801BB864
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801bbea0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -1009,7 +800,6 @@ FUN_801bbea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     return 0;
 }
-
 
 int fn_801BA590(int unused, int* p) { return *(s8*)((char*)p + 0x346) != 0; }
 
@@ -1165,7 +955,6 @@ int fn_801BA880(int obj, int p2)
     }
     return 0;
 }
-
 
 int fn_801BA5A8(int obj, int param2)
 {

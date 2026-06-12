@@ -2,7 +2,6 @@
 #include "main/audio/synth_job.h"
 #include "main/audio/synth_jobs.h"
 
-
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern void voiceBreakAndFree(u32 voice);
@@ -15,19 +14,6 @@ extern u16 dataKeymapNum;
 
 extern f32 lbl_803E77D8;
 
-/*
- * --INFO--
- *
- * Function: synthUpdateJobTable
- * EN v1.0 Address: 0x80272F70
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802736D4
- * EN v1.1 Size: 2168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef u32 (*SynthStreamUpdateFn)(u8* buffer, u32 length, u8* buffer2, u32 length2, u32 user);
 
 typedef struct SynthSampleInfo

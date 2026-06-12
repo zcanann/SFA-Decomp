@@ -16,19 +16,6 @@ typedef struct THPAudioDecodeContext
 
 extern THPAudioDecodeContext lbl_803A4448;
 
-/*
- * --INFO--
- *
- * Function: CreateAudioDecodeThread
- * EN v1.0 Address: 0x801175A4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801175B4
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
 {
     THPAudioDecodeContext* context = &lbl_803A4448;

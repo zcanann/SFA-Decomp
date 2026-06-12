@@ -11,25 +11,17 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-
-
-
-
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 /* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
 
-
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 /* portalspelldoor_getExtraSize == 0x10. */
 
-
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -39,7 +31,6 @@ extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -86,19 +77,6 @@ extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5,
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
 extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(int obj, void* p2, void* p3, int p4, void* p5, int p6);
-/*
- * --INFO--
- *
- * Function: scarab_update
- * EN v1.0 Address: 0x80184930
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80184D4C
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void scarab_update(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -650,13 +628,6 @@ typedef struct GuardianAngleParams
     f32 x, y, z;
 } GuardianAngleParams;
 
-/*
- * --INFO--
- *
- * Function: fn_801845FC
- * EN v1.0 Address: 0x801845FC
- * EN v1.0 Size: 492b
- */
 void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
 {
     extern int getAngle(f32, f32);
@@ -728,37 +699,11 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: scarab_getExtraSize
- * EN v1.0 Address: 0x801847E8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80184918
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int scarab_getExtraSize(void)
 {
     return 0x34;
 }
 
-/*
- * --INFO--
- *
- * Function: scarab_free
- * EN v1.0 Address: 0x801847F0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80184920
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void scarab_free(void)
 {
 }
@@ -818,13 +763,6 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 /* ================================================================ */
 /* [0x801843C0..0x801845FC) - formerly the tail of cfforcefield.c. */
 
-/*
- * --INFO--
- *
- * Function: objHitboxFn_801843c0
- * EN v1.0 Address: 0x801843C0
- * EN v1.0 Size: 572b
- */
 int objHitboxFn_801843c0(int obj)
 {
     extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii, int pointCount);

@@ -43,13 +43,6 @@ extern f32 lbl_803E395C;
 extern f32 lbl_803E3960;
 extern f32 lbl_803E3964;
 
-/*
- * --INFO--
- *
- * Function: fn_801816F8
- * EN v1.0 Address: 0x801816F8
- * EN v1.0 Size: 2820b
- */
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
 {
     int mode;
@@ -419,13 +412,6 @@ extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int po
                                void* outHits, int flags);
 extern f32 lbl_803E3970;
 
-/*
- * --INFO--
- *
- * Function: fn_801821FC
- * EN v1.0 Address: 0x801821FC
- * EN v1.0 Size: 776b
- */
 int fn_801821FC(u8* obj)
 {
     typedef struct
@@ -542,19 +528,6 @@ int fn_801821FC(u8* obj)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: smallbasket_getExtraSize
- * EN v1.0 Address: 0x80182594
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018291C
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int smallbasket_getExtraSize(void)
 {
     return 0x24;
@@ -568,13 +541,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAC0;
 extern void ObjGroup_RemoveObject(int obj, int flag);
 
-/*
- * --INFO--
- *
- * Function: smallbasket_free
- * EN v1.0 Address: 0x8018259C
- * EN v1.0 Size: 80b
- */
 void smallbasket_free(int param_1)
 {
     (*gModgfxInterface)->detachSource((void*)param_1);
@@ -587,13 +553,6 @@ extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefi
                                  undefined4 p5, double scale);
 extern void* Obj_GetPlayerObject(void);
 
-/*
- * --INFO--
- *
- * Function: objThrowFn_80182504
- * EN v1.0 Address: 0x80182504
- * EN v1.0 Size: 144b
- */
 void objThrowFn_80182504(int obj)
 {
     struct LocalArgs
@@ -626,13 +585,6 @@ void objThrowFn_80182504(int obj)
     vecRotateZXY(&local.f8, (void*)&((GameObject*)obj)->anim.velocityX);
 }
 
-/*
- * --INFO--
- *
- * Function: smallbasket_render
- * EN v1.0 Address: 0x801825EC
- * EN v1.0 Size: 252b
- */
 void smallbasket_render(int obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                         undefined4 param_5, char param_6)
 {
@@ -809,13 +761,6 @@ typedef struct
     f32 fw;
 } BasketMathArgs;
 
-/*
- * --INFO--
- *
- * Function: smallbasket_update
- * EN v1.0 Address: 0x801826E8
- * EN v1.0 Size: 2476b
- */
 void smallbasket_update(int obj)
 {
     extern void fn_801821FC(int obj);

@@ -23,19 +23,6 @@ typedef struct TrickyCurveState
     s16 halfHeightY;
 } TrickyCurveState;
 
-/*
- * --INFO--
- *
- * Function: TrickyCurve_updateCooldownTrigger
- * EN v1.0 Address: 0x80206F30
- * EN v1.0 Size: 604b
- * EN v1.1 Address: 0x80206FA0
- * EN v1.1 Size: 688b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void TrickyCurve_updateCooldownTrigger(int obj)
 {
     TrickyCurveObject* curve;

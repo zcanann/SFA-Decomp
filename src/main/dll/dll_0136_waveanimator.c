@@ -16,9 +16,7 @@ typedef struct WaveanimatorState
     u8 pad39[0x40 - 0x39];
 } WaveanimatorState;
 
-
 extern uint GameBit_Get(int eventId);
-
 
 void waveanimator_modelMtxFn(int obj, int a, int b, int c)
 {
@@ -31,11 +29,8 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c)
     ((WaveanimatorState*)state)->unk38 = (u8)c;
 }
 
-
 extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
-
-
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
@@ -43,16 +38,13 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/game_object.h"
 #include "global.h"
 
-
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
  * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
  * globals). */
 
-
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
 /* alphaanimator_getExtraSize == 0x1c. */
-
 
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
@@ -60,7 +52,6 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 /* visanimator_getExtraSize == 0x5. */
-
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -76,43 +67,14 @@ extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 
-
-/*
- * --INFO--
- *
- * Function: waveanimator_func0B
- * EN v1.0 Address: 0x801923C4
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x801923CC
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void waveanimator_func0B(int* obj)
 {
     WaveAnimatorState* p = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
     p->flags |= 2;
 }
 
-
 extern void mm_free(void* p);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80192488
- * EN v1.0 Address: 0x80192488
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x801924D0
- * EN v1.1 Size: 500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_80192488(void)
@@ -191,7 +153,6 @@ void FUN_80192488(void)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void waveanimator_update(void)
 {
@@ -207,14 +168,12 @@ void waveanimator_initialise(void)
 
 void alphaanimator_hitDetect(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int waveanimator_getExtraSize(void) { return 0x3c; }
 int waveanimator_getObjectTypeId(void) { return 0x0; }
 int alphaanimator_getExtraSize(void);
 
 /* Pattern wrappers. */
-
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F70;
@@ -226,7 +185,6 @@ void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 /* wall variant: hashes lha to byte */
 
@@ -265,7 +223,6 @@ void waveanimator_init(int* obj, int* desc)
     ObjGroup_AddObject(obj, 27);
     lbl_803DDAE8++;
 }
-
 
 extern void* lbl_803DDAEC;
 extern void* lbl_803DDAF0;
@@ -316,10 +273,7 @@ void waveanimator_hitDetect(int* obj)
 
 extern void* mapBlockFn_800606ec(void* block, int idx);
 
-
-
 extern void* mmAlloc(int size, int align, int tag);
-
 
 extern f32 lbl_803E3F40;
 extern f32 lbl_803E3F44;
@@ -432,4 +386,3 @@ void fn_801923F8(int* cfgArg)
 }
 
 extern u8* Shader_getLayer(char* s, int layer);
-

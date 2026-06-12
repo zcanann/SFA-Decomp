@@ -1,7 +1,6 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/resource.h"
 
-
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern undefined8 padUpdate();
 extern undefined4 dvdCheckError();
@@ -183,19 +182,6 @@ static inline DIMbossObjectTriggerInterface* DIMboss_GetObjectTriggerInterface(v
     return (DIMbossObjectTriggerInterface*)*gObjectTriggerInterface;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_updateState
- * EN v1.0 Address: 0x801BCB34
- * EN v1.0 Size: 1804b
- * EN v1.1 Address: 0x801BD0E8
- * EN v1.1 Size: 1836b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
     DIMbossRuntime* runtime;
@@ -431,90 +417,25 @@ LAB_801bd7dc:
     return updateResult;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_func0B
- * EN v1.0 Address: 0x801BD240
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMboss_func0B(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_setScale
- * EN v1.0 Address: 0x801BD244
- * EN v1.0 Size: 12b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMboss_setScale(DIMbossObject* obj)
 {
     return obj->runtime->scale;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_getExtraSize
- * EN v1.0 Address: 0x801BD250
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMboss_getExtraSize(void)
 {
     return DIMBOSS_RUNTIME_SIZE;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_getObjectTypeId
- * EN v1.0 Address: 0x801BD258
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMboss_getObjectTypeId(void)
 {
     return DIMBOSS_OBJECT_TYPE_ID;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_free
- * EN v1.0 Address: 0x801BD260
- * EN v1.0 Size: 260b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMboss_free(DIMbossObject* obj)
 {
     DIMbossRuntime* runtime;
@@ -551,19 +472,6 @@ void DIMboss_free(DIMbossObject* obj)
     timeOfDayFn_80055000();
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_render
- * EN v1.0 Address: 0x801BD364
- * EN v1.0 Size: 176b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMboss_render(DIMbossObject* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                     undefined4 param_5, char shouldRender)
 {
@@ -587,37 +495,11 @@ void DIMboss_render(DIMbossObject* obj, undefined4 param_2, undefined4 param_3, 
     }
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_hitDetect
- * EN v1.0 Address: 0x801BD414
- * EN v1.0 Size: 60b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMboss_hitDetect(DIMbossObject* obj)
 {
     DIMboss_GetPlayerInterface()->updateHitDetect(obj, obj->runtime, gDIMbossHitDetectAnimTable);
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_update
- * EN v1.0 Address: 0x801BD450
- * EN v1.0 Size: 860b
- * EN v1.1 Address: 0x801BDA04
- * EN v1.1 Size: 860b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMboss_update(DIMbossObject* obj)
 {
     uint gameBitCount;
@@ -727,19 +609,6 @@ void DIMboss_update(DIMbossObject* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_init
- * EN v1.0 Address: 0x801BD7AC
- * EN v1.0 Size: 804b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
 {
     DIMbossRuntime* runtime;
@@ -825,19 +694,6 @@ void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
     Music_Trigger(DIMBOSS_MUSIC_DIM2_PROJECTILE_ALT, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: DIMboss_initialise
- * EN v1.0 Address: 0x801BDAD4
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMboss_release(void)
 {
 }

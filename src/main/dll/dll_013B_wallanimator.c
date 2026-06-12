@@ -4,21 +4,13 @@
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/dll/MMP/mmp_barrel.h"
 
-
-
-
-
-
-
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
  * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
  * globals). */
 
-
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
 /* alphaanimator_getExtraSize == 0x1c. */
-
 
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
@@ -26,7 +18,6 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 /* visanimator_getExtraSize == 0x5. */
-
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -36,21 +27,6 @@ extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
-
-/*
- * --INFO--
- *
- * Function: waveanimator_func0B
- * EN v1.0 Address: 0x801923C4
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x801923CC
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 u8 wallanimator_func0B(int* obj)
 {
     int* p = ((int**)obj)[0xb8 / 4];
@@ -59,33 +35,7 @@ u8 wallanimator_func0B(int* obj)
 
 extern void mm_free(void* p);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80192488
- * EN v1.0 Address: 0x80192488
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x801924D0
- * EN v1.1 Size: 500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -96,29 +46,10 @@ extern void mm_free(void* p);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
-
 /* wall variant: hashes lha to byte */
 u8 wallanimator_modelMtxFn(int* obj) { return (u8) * (s16*)((char*)((int**)obj)[0x4c / 4] + 0x1c); }
 
-
 extern f32 lbl_803E3F98;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -133,16 +64,12 @@ typedef struct WallanimatorPlacement
     u8 pad1E[0x20 - 0x1E];
 } WallanimatorPlacement;
 
-
 typedef struct WallanimatorState
 {
     u8 pad0[0x4 - 0x0];
     u8 unk4;
     u8 pad5[0x8 - 0x5];
 } WallanimatorState;
-
-
-
 
 extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
@@ -160,19 +87,6 @@ extern f32 lbl_803E3FE4;
 extern f32 lbl_803E3FE8;
 extern f32 lbl_803E3FEC;
 
-/*
- * --INFO--
- *
- * Function: wallanimator_setScale
- * EN v1.0 Address: 0x8019443C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80194688
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 f32 wallanimator_setScale(int obj, int target)
 {
     struct
@@ -246,48 +160,6 @@ f32 wallanimator_setScale(int obj, int target)
     return scale;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80194544
- * EN v1.0 Address: 0x80194544
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801947D4
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: objFn_801948c0
- * EN v1.0 Address: 0x801948C0
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80194a70
- * EN v1.0 Address: 0x80194A70
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x80194E3C
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 double FUN_80194a70(int param_1, byte param_2)
 {
     int iVar1;
@@ -329,58 +201,10 @@ double FUN_80194a70(int param_1, byte param_2)
     return (double)lbl_803E4C98;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80194b10
- * EN v1.0 Address: 0x80194B10
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x80194EE0
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: wallanimator_getExtraSize
- * EN v1.0 Address: 0x8019469C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int wallanimator_getExtraSize(void)
 {
     return 8;
 }
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_getExtraSize
- * EN v1.0 Address: 0x80194B5C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FF8;

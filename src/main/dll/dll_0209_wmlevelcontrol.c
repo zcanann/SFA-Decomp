@@ -16,7 +16,6 @@ typedef struct WmlevelcontrolState
     s16 unk6;
 } WmlevelcontrolState;
 
-
 extern undefined4 GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -28,19 +27,6 @@ extern f64 DOUBLE_803e6b00;
 extern f32 lbl_803E5E70;
 extern f32 timeDelta;
 
-/*
- * --INFO--
- *
- * Function: wmlevelcontrol_readParams
- * EN v1.0 Address: TODO
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801F44C0
- * EN v1.1 Size: 144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void wmlevelcontrol_readParams(undefined2* param_1, int param_2)
@@ -68,20 +54,6 @@ void wmlevelcontrol_readParams(undefined2* param_1, int param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: wmlevelcontrol_update
- * EN v1.0 Address: 0x801F44B4
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x801F44C0
- * EN v1.1 Size: 144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void wmlevelcontrol_update(int obj)
@@ -133,13 +105,6 @@ extern void unlockLevel(int a, int b, int c);
 extern void lockLevel(int idx, int p2);
 extern f32 lbl_803E5E90;
 
-/*
- * --INFO--
- *
- * Function: wmlevelcontrol_init
- * EN v1.0 Address: 0x801F4628
- * EN v1.0 Size: 656b
- */
 void wmlevelcontrol_init(int obj)
 {
     f32* state;

@@ -9,36 +9,9 @@
 extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de0af;
 
-/*
- * --INFO--
- *
- * Function: Checkpoint_func07
- * EN v1.0 Address: 0x800D6660
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x800D6844
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800d7780
- * EN v1.0 Address: 0x800D7780
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x800D7CFC
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_800d7780(undefined param_1)
@@ -75,7 +48,6 @@ void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 extern f32 screenTransitionAlpha;
 
 /* Pattern wrappers. */
-
 
 /* fcmp-eq-to-bool. */
 
@@ -316,7 +288,6 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 }
 #pragma opt_common_subs reset
 
-
 #pragma peephole on
 void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
 {
@@ -337,7 +308,6 @@ void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
         count--;
     }
 }
-
 
 void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
 {
@@ -630,19 +600,6 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 
 static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 
-/*
- * --INFO--
- *
- * Function: player_setScale
- * EN v1.0 Address: 0x800D8F90
- * EN v1.0 Size: 256b
- * EN v1.1 Address: 0x800D8FE0
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 lbl_803DD440;
 
 typedef struct PlayerMoveBuf
@@ -731,384 +688,7 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
     lbl_803DD440 = 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800d9090
- * EN v1.0 Address: 0x800D9090
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x800D9108
- * EN v1.1 Size: 184b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800d9de0
- * EN v1.0 Address: 0x800D9DE0
- * EN v1.0 Size: 1972b
- * EN v1.1 Address: 0x800DA4C8
- * EN v1.1 Size: 1772b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
-
-/*
- * --INFO--
- *
- * Function: FUN_800da594
- * EN v1.0 Address: 0x800DA594
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x800DABB4
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800da5e8
- * EN v1.0 Address: 0x800DA5E8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800DAC0C
- * EN v1.1 Size: 1628b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800da700
- * EN v1.0 Address: 0x800DA700
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x800DB36C
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800da850
- * EN v1.0 Address: 0x800DA850
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x800DB4B0
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800db110
- * EN v1.0 Address: 0x800DB110
- * EN v1.0 Size: 480b
- * EN v1.1 Address: 0x800DBCD8
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800db47c
- * EN v1.0 Address: 0x800DB47C
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x800DBF88
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800db690
- * EN v1.0 Address: 0x800DB690
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x800DC158
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800db820
- * EN v1.0 Address: 0x800DB820
- * EN v1.0 Size: 1096b
- * EN v1.1 Address: 0x800DC27C
- * EN v1.1 Size: 936b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800dd3e4
- * EN v1.0 Address: 0x800DD3E4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800DD8CC
- * EN v1.1 Size: 2208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800dd62c
- * EN v1.0 Address: 0x800DD62C
- * EN v1.0 Size: 2048b
- * EN v1.1 Address: 0x800DE41C
- * EN v1.1 Size: 1880b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800ddf84
- * EN v1.0 Address: 0x800DDF84
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800DED20
- * EN v1.1 Size: 956b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800ddf8c
- * EN v1.0 Address: 0x800DDF8C
- * EN v1.0 Size: 2572b
- * EN v1.1 Address: 0x800DF0DC
- * EN v1.1 Size: 2428b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800de998
- * EN v1.0 Address: 0x800DE998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800DFA58
- * EN v1.1 Size: 2400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_findNearObj
- * EN v1.0 Address: 0x800E0134
- * EN v1.0 Size: 696b
- * EN v1.1 Address: 0x800E03B8
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_800dece0
- * EN v1.0 Address: 0x800DECE0
- * EN v1.0 Size: 1476b
- * EN v1.1 Address: 0x800E0670
- * EN v1.1 Size: 1572b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_lengthFn24
- * EN v1.0 Address: 0x800E0E18
- * EN v1.0 Size: 1888b
- * EN v1.1 Address: 0x800E109C
- * EN v1.1 Size: 1888b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_getPos
- * EN v1.0 Address: 0x800E1578
- * EN v1.0 Size: 592b
- * EN v1.1 Address: 0x800E17FC
- * EN v1.1 Size: 592b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: walkGroupFn_800db3e4
- * EN v1.0 Address: 0x800DB3E4
- * EN v1.0 Size: 1268b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: isPointWithinPatchGroup
- * EN v1.0 Address: 0x800DB8D8
- * EN v1.0 Size: 372b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: getPatchGroup
- * EN v1.0 Address: 0x800DBA4C
- * EN v1.0 Size: 344b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: isInWalkGroupOrPatch
- * EN v1.0 Address: 0x800DBBA4
- * EN v1.0 Size: 344b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: Objfsa_GetWalkGroupIndexAtPoint
- * EN v1.0 Address: 0x800DBCFC
- * EN v1.0 Size: 464b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: Objfsa_GetPatchGroupIdAtPoint
- * EN v1.0 Address: 0x800DBECC
- * EN v1.0 Size: 292b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: mathFn_800dbff0
- * EN v1.0 Address: 0x800DBFF0
- * EN v1.0 Size: 936b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_findProjectedCurveFromStart
- * EN v1.0 Address: 0x800DFE64
- * EN v1.0 Size: 720b
- * EN v1.1 Address: 0x800E1A4C
- * EN v1.1 Size: 860b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
@@ -1493,15 +1073,9 @@ extern f32 lbl_803E0610;
 
 void RomCurve_setA4(void* a, void* b);
 
-
-
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 
-
-
-
 /* UIController dispatch through the shared GameUI interface. */
-
 
 /* player_setState */
 void player_setState(void* ctx, void* p, int new_state)
@@ -1534,7 +1108,6 @@ end:
 void walkPath_writeU16LE(u32 v, u8* dst);
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
-
 
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
 {

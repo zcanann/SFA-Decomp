@@ -3,24 +3,7 @@
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/game_object.h"
 
-
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
-
-
-/*
- * --INFO--
- *
- * Function: sh_emptytumblew_init
- * EN v1.0 Address: 0x801DAFDC
- * EN v1.0 Size: 1440b
- * EN v1.1 Address: 0x801DB048
- * EN v1.1 Size: 1080b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int a, int b);
@@ -41,7 +24,6 @@ typedef struct ScCloudrunneraPlacement
     u8 pad1A[0x20 - 0x1A];
 } ScCloudrunneraPlacement;
 
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern int Obj_SetupObject(int s, int a, int b, int c, int d);
@@ -51,14 +33,11 @@ extern void cmbsrc_setExternalActive(int obj, int active);
 extern void Obj_FreeObject(int obj);
 extern void objSetSlot(int obj, int slot);
 
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterface;
 
-
 extern u8 lbl_803DB411;
 extern f32 lbl_803E55E0;
-
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
@@ -67,7 +46,6 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
-
 
 int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
 int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }

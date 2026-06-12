@@ -26,19 +26,6 @@ typedef struct TreeBirdState
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
   (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
 
-/*
- * --INFO--
- *
- * Function: TreeBird_SeqFn
- * EN v1.0 Address: 0x801CD7DC
- * EN v1.0 Size: 620b
- * EN v1.1 Address: 0x801CD80C
- * EN v1.1 Size: 620b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     TreeBirdState* state;
@@ -128,31 +115,11 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: treebird_getExtraSize
- * EN v1.0 Address: 0x801CDA48
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int treebird_getExtraSize(void)
 {
     return 0xc;
 }
 
-/*
- * --INFO--
- *
- * Function: treebird_render
- * EN v1.0 Address: 0x801CDA50
- * EN v1.0 Size: 136b
- */
 void treebird_render(int obj)
 {
     TreeBirdState* state;
@@ -169,13 +136,6 @@ void treebird_render(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: treebird_update
- * EN v1.0 Address: 0x801CDAD8
- * EN v1.0 Size: 276b
- */
 void treebird_update(int obj)
 {
     TreeBirdState* state;
@@ -219,19 +179,6 @@ void treebird_update(int obj)
 
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 
-/*
- * --INFO--
- *
- * Function: treebird_init
- * EN v1.0 Address: 0x801CDBEC
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x801CDC2C
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void treebird_init(int obj, int setup)
 {
     TreeBirdState* state;
@@ -250,19 +197,4 @@ void treebird_init(int obj, int setup)
     state->searchDelay = 4;
 }
 
-/*
- * --INFO--
- *
- * Function: nw_geyser_init
- * EN v1.0 Address: 0x801CDE50
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 char* fn_801CDE70(int* obj);
-

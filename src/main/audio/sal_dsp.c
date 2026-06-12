@@ -15,13 +15,6 @@ extern u16 lbl_803DC628[4];
 extern void dspInitCallback(void* task);
 extern void dspResumeCallback(void* task);
 
-/*
- * --INFO--
- *
- * Function: salInitDsp
- * EN v1.0 Address: 0x802848D8
- * EN v1.0 Size: 192b
- */
 int salInitDsp(u32 flags)
 {
     lbl_803D4880.iram_mmem_addr = lbl_80330840;
@@ -49,24 +42,10 @@ int salInitDsp(u32 flags)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: hwEnableIrq
- * EN v1.0 Address: 0x80284AB8
- * EN v1.0 Size: 4b
- */
 void hwEnableIrq(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: sndEnd
- * EN v1.0 Address: 0x80284ABC
- * EN v1.0 Size: 56b
- */
 void sndEnd(void)
 {
     u16 count;
@@ -79,13 +58,6 @@ void sndEnd(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: salStartDsp
- * EN v1.0 Address: 0x80284998
- * EN v1.0 Size: 52b
- */
 int salStartDsp(void)
 {
     DSPHalt();
@@ -96,13 +68,6 @@ int salStartDsp(void)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: salCtrlDsp
- * EN v1.0 Address: 0x802849CC
- * EN v1.0 Size: 116b
- */
 void salCtrlDsp(u32 param_1)
 {
     u32 elapsed = salGetStartDelay();
@@ -122,26 +87,12 @@ void salCtrlDsp(u32 param_1)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: salGetStartDelay
- * EN v1.0 Address: 0x80284A40
- * EN v1.0 Size: 76b
- */
 u32 salGetStartDelay(void)
 {
     OSTick now = OSGetTick();
     return OS_TICKS_TO_USEC(now - salLastTick);
 }
 
-/*
- * --INFO--
- *
- * Function: hwInitIrq
- * EN v1.0 Address: 0x80284A8C
- * EN v1.0 Size: 44b
- */
 #pragma scheduling off
 void hwInitIrq(void)
 {
@@ -149,13 +100,6 @@ void hwInitIrq(void)
     hwIrqLevel = 1;
 }
 
-/*
- * --INFO--
- *
- * Function: sndBegin
- * EN v1.0 Address: 0x80284AF4
- * EN v1.0 Size: 56b
- */
 #pragma scheduling on
 void sndBegin(void)
 {
@@ -167,37 +111,16 @@ void sndBegin(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: hwIRQEnterCritical
- * EN v1.0 Address: 0x80284B2C
- * EN v1.0 Size: 32b
- */
 void hwIRQEnterCritical(void)
 {
     OSDisableInterrupts();
 }
 
-/*
- * --INFO--
- *
- * Function: hwIRQLeaveCritical
- * EN v1.0 Address: 0x80284B4C
- * EN v1.0 Size: 32b
- */
 void hwIRQLeaveCritical(void)
 {
     OSEnableInterrupts();
 }
 
-/*
- * --INFO--
- *
- * Function: salMalloc
- * EN v1.0 Address: 0x80284B6C
- * EN v1.0 Size: 40b
- */
 void* salMalloc(u32 size)
 {
     return gSalMallocHook(size);

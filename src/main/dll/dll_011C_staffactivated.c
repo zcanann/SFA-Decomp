@@ -265,19 +265,6 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
 STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
 STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
-/*
- * --INFO--
- *
- * Function: staffactivated_init
- * EN v1.0 Address: 0x8018A53C
- * EN v1.0 Size: 684b
- * EN v1.1 Address: 0x8018A7DC
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void staffactivated_init(int obj, int setup)
 {
     StaffActivatedSetup* setupData;
@@ -400,42 +387,5 @@ void staffactivated_init(int obj, int setup)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: treasurechest_SeqFn
- * EN v1.0 Address: 0x8018A8BC
- * EN v1.0 Size: 248b
- */
-
-/*
- * --INFO--
- *
- * Function: treasurechest_getExtraSize
- * EN v1.0 Address: 0x8018A9B4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ABD4
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: treasurechest_getObjectTypeId
- * EN v1.0 Address: 0x8018A9BC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ABDC
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3C20;
-

@@ -23,19 +23,6 @@ extern undefined4 DAT_803e2a94;
 extern f64 DOUBLE_803e2b08;
 extern f32 FLOAT_803e2c90;
 
-/*
- * --INFO--
- *
- * Function: cMenuSetItems
- * EN v1.0 Address: 0x801242DC
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8012434C
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 lbl_803A87F0[];
 extern s16 lbl_8031B4E0[];
 extern s16 lbl_803DD894;
@@ -266,19 +253,6 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
     return count;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801244B0
- * EN v1.0 Address: 0x8012439C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x801244B0
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 int fn_801244B0(short* table, char mode)
@@ -324,19 +298,6 @@ int fn_801244B0(short* table, char mode)
     return count;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801244a4
- * EN v1.0 Address: 0x801244A4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801245C0
- * EN v1.1 Size: 1208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void FUN_801244a4(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -344,19 +305,6 @@ void FUN_801244a4(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80124A78
- * EN v1.0 Address: 0x801244A8
- * EN v1.0 Size: 200b
- * EN v1.1 Address: 0x80124A78
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 undefined4 fn_80124A78(int shader, int* block, int idx)
@@ -379,19 +327,6 @@ undefined4 fn_80124A78(int shader, int* block, int idx)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80124B38
- * EN v1.0 Address: 0x80124570
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x80124B38
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 fn_80124B38(int shader, int* block, int idx)
 {
     int level;
@@ -439,36 +374,6 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
     FUN_8025c754(7, 0, 0, 7, 0);
     return 1;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_801246cc
- * EN v1.0 Address: 0x801246CC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80124C7C
- * EN v1.1 Size: 1000b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801246d0
- * EN v1.0 Address: 0x801246D0
- * EN v1.0 Size: 748b
- * EN v1.1 Address: 0x80125064
- * EN v1.1 Size: 1220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 extern u32 lbl_803E1E14;
 extern int ObjModel_GetRenderOp(int model, int p);
@@ -783,7 +688,6 @@ void hudDrawCMenu(int p1, int p2, int p3)
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
 }
-
 
 void cMenuRotateFn_80124d80(void)
 {

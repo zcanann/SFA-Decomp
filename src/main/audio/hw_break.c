@@ -3,19 +3,6 @@
 extern u8* dspVoice;
 extern u8 salTimeOffset;
 
-/*
- * --INFO--
- *
- * Function: hwBreak
- * EN v1.0 Address: 0x8028343C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80283488
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwBreak(int slot)
 {
     u8* entry;
@@ -35,4 +22,3 @@ void hwBreak(int slot)
     entry += channel;
     *(u32*)(entry + 0x24) |= 0x20;
 }
-

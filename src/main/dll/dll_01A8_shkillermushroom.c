@@ -3,14 +3,11 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
-
-
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_DisableObject();
 extern void ObjHits_EnableObject(int obj);
 extern undefined8 ObjGroup_RemoveObject();
 extern u32 randomGetRange(int min, int max);
-
 
 extern void* Obj_GetPlayerObject(void);
 
@@ -18,14 +15,6 @@ extern f32 lbl_803E52F8;
 extern f32 lbl_803E52FC;
 extern f32 lbl_803E5300;
 extern f32 lbl_803E5304;
-
-/*
- * --INFO--
- *
- * Function: ediblemushroom_init
- * EN v1.0 Address: 0x801D1978
- * EN v1.0 Size: 644b
- */
 
 /* Keep the cross-TU bl: target calls this; once it lands in the
  * EnemyMushroom TU (dim_bossgut.c) alongside its callers, dont_inline stops
@@ -68,37 +57,11 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: enemymushroom_getExtraSize
- * EN v1.0 Address: 0x801D1D58
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int enemymushroom_getExtraSize(void)
 {
     return 0x3c;
 }
 
-/*
- * --INFO--
- *
- * Function: enemymushroom_getObjectTypeId
- * EN v1.0 Address: 0x801D1D60
- * EN v1.0 Size: 20b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int enemymushroom_getObjectTypeId(EnemyMushroomObject* obj)
 {
     return (*(byte*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1f) << 0xb) | 0x400;
@@ -124,19 +87,6 @@ void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
     }
 }
 
-/*
- * --INFO--
- *
- * Function: enemymushroom_hitDetect
- * EN v1.0 Address: 0x801D1E20
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void enemymushroom_hitDetect(void)
 {
 }
@@ -147,8 +97,6 @@ void enemymushroom_hitDetect(void)
 #include "main/objfx.h"
 #include "main/dll/dll_01A8_shkillermushroom.h"
 #include "main/dll/ediblemushroom.h"
-
-
 
 typedef struct EnemymushroomPlacement
 {
@@ -164,108 +112,20 @@ typedef struct EnemymushroomPlacement
     u8 pad1F[0x20 - 0x1F];
 } EnemymushroomPlacement;
 
-
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 
-
-/*
-
-/*
- * --INFO--
- *
- * Function: enemymushroom_release
- * EN v1.0 Address: 0x801D2864
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void enemymushroom_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: enemymushroom_initialise
- * EN v1.0 Address: 0x801D2868
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void enemymushroom_initialise(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: bombplant_getExtraSize
- * EN v1.0 Address: 0x801D2B34
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplant_getObjectTypeId
- * EN v1.0 Address: 0x801D2B3C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplant_free
- * EN v1.0 Address: 0x801D2B44
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplant_hitDetect
- * EN v1.0 Address: 0x801D2B6C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5370;
-
-
 
 extern f32 lbl_803E5350;
 
@@ -299,7 +159,6 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-
 
 /* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */

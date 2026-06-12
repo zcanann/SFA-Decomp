@@ -26,7 +26,6 @@ typedef struct DllCBPlacement
     u8 pad2F[0x30 - 0x2F];
 } DllCBPlacement;
 
-
 typedef struct DllCBState
 {
     f32 unk0;
@@ -43,7 +42,6 @@ typedef struct DllCBState
     s8 unk405;
     u8 pad406[0x408 - 0x406];
 } DllCBState;
-
 
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
@@ -92,48 +90,6 @@ extern f32 lbl_803E3B8C;
 extern f32 lbl_803E3B90;
 extern f32 lbl_803E3B94;
 
-/*
- * --INFO--
- *
- * Function: dll_CA_update
- * EN v1.0 Address: 0x8015D7B0
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x8015D86C
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8015d99c
- * EN v1.0 Address: 0x8015D99C
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x8015DA64
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e0d0
- * EN v1.0 Address: 0x8015E0D0
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x8015E3CC
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -179,34 +135,6 @@ FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 int fn_8015E210(int* obj, GroundBaddieState* state);
 
-/*
- * --INFO--
- *
- * Function: FUN_8015e260
- * EN v1.0 Address: 0x8015E260
- * EN v1.0 Size: 128b
- * EN v1.1 Address: 0x8015E4F0
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e2e0
- * EN v1.0 Address: 0x8015E2E0
- * EN v1.0 Size: 424b
- * EN v1.1 Address: 0x8015E574
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -255,19 +183,6 @@ FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015e488
- * EN v1.0 Address: 0x8015E488
- * EN v1.0 Size: 496b
- * EN v1.1 Address: 0x8015E6BC
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -330,20 +245,6 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 int fn_8015DC04(int obj, GroundBaddieState* p);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e678
- * EN v1.0 Address: 0x8015E678
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x8015E84C
- * EN v1.1 Size: 384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -398,19 +299,6 @@ FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015e88c
- * EN v1.0 Address: 0x8015E88C
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x8015E9CC
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015e88c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -439,19 +327,6 @@ FUN_8015e88c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015e9f4
- * EN v1.0 Address: 0x8015E9F4
- * EN v1.0 Size: 676b
- * EN v1.1 Address: 0x8015EA88
- * EN v1.1 Size: 444b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -516,19 +391,6 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void fn_8015EB6C(int obj, int p2, int p3);
 
-/*
- * --INFO--
- *
- * Function: FUN_8015ec98
- * EN v1.0 Address: 0x8015EC98
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8015EC44
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -576,21 +438,6 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void fn_8015ED1C(int p1, int p2, int p3);
 
-/*
- * --INFO--
- *
- * Function: dll_CE_func0B
- * EN v1.0 Address: 0x8015EE98
- * EN v1.0 Size: 464b
- * EN v1.1 Address: 0x8015ED68
- * EN v1.1 Size: 396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 #pragma scheduling off
 #pragma peephole off
 static inline u8 scarab_isObjectInList(void* o)
@@ -611,38 +458,10 @@ static inline u8 scarab_isObjectInList(void* o)
 
 void fn_8015FCCC(int obj);
 
-/*
- * --INFO--
- *
- * Function: FUN_8015fb0c
- * EN v1.0 Address: 0x8015FB0C
- * EN v1.0 Size: 1212b
- * EN v1.1 Address: 0x8015FBEC
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
 
-/*
- * --INFO--
- *
- * Function: iceball_update
- * EN v1.0 Address: 0x8015FFC8
- * EN v1.0 Size: 224b
- * EN v1.1 Address: 0x8015FF9C
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void iceball_update(undefined2* param_1, int param_2);
 
 int fn_801601C4(int obj, GroundBaddieState* p)
@@ -907,34 +726,6 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     return *(u8*)&((DllCBState*)sub)->unk405 != 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801600a8
- * EN v1.0 Address: 0x801600A8
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x80160098
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8016043c
- * EN v1.0 Address: 0x8016043C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80160440
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8016043c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
@@ -946,20 +737,6 @@ void FUN_8016043c(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80160798
- * EN v1.0 Address: 0x80160798
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x80160670
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80160798(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10)
@@ -1005,20 +782,6 @@ FUN_80160798(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80160aa4
- * EN v1.0 Address: 0x80160AA4
- * EN v1.0 Size: 440b
- * EN v1.1 Address: 0x801608E8
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -1057,20 +820,6 @@ FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar2;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80160cd0
- * EN v1.0 Address: 0x80160CD0
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80160A80
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -1095,20 +844,6 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80161130
- * EN v1.0 Address: 0x80161130
- * EN v1.0 Size: 240b
- * EN v1.1 Address: 0x80161180
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80161130(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -1128,20 +863,6 @@ void FUN_80161130(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801615d4
- * EN v1.0 Address: 0x801615D4
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x80161638
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801615d4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -1178,20 +899,6 @@ FUN_801615d4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80161c08
- * EN v1.0 Address: 0x80161C08
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x80161B58
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80161c08(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -1217,20 +924,6 @@ FUN_80161c08(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80161ea0
- * EN v1.0 Address: 0x80161EA0
- * EN v1.0 Size: 888b
- * EN v1.1 Address: 0x80161D2C
- * EN v1.1 Size: 632b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -1315,10 +1008,8 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar3;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_CA_release_nop(void);
-
 
 void chukchuk_free(void);
 
@@ -1334,7 +1025,6 @@ extern uint GameBit_Get(int eventId);
  * Per-object extra state for the ChukChuk ice-spitter
  * (chukchuk_getExtraSize == 0x18).
  */
-
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
@@ -1381,7 +1071,6 @@ void dll_CB_init(int* obj, u8* params, int extra)
         sub->aggroRange = 0x32;
     }
 }
-
 
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
 extern int getAngle(f32 a, f32 b);
@@ -1455,7 +1144,6 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* plain forwarder. */
 void iceball_free(void);
-
 
 void chukchuk_update(short* obj);
 
@@ -1557,11 +1245,9 @@ extern u8 framesThisStep;
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
-
 extern f32 lbl_803E2E7C;
 extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;
-
 
 #pragma peephole off
 int fn_8016032C(int* obj, GroundBaddieState* state)
@@ -1594,11 +1280,9 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
 
 int fn_8015E520(int* obj, GroundBaddieState* state);
 
-
 extern void* lbl_803AC5D0[];
 extern int fn_801605D4(int* obj, GroundBaddieState* def);
 int fn_80160534(int* obj);
-
 
 extern f32 lbl_803E2E90;
 extern f32 lbl_803E2E94;
@@ -1657,7 +1341,6 @@ int fn_80160534(int* obj)
 
 int grimble_stateHandlerB01(int* obj, GroundBaddieState* state);
 
-
 #pragma peephole off
 void dll_CB_free(int* obj)
 {
@@ -1675,7 +1358,6 @@ void dll_CB_free(int* obj)
 }
 
 void dll_CE_free(int* obj);
-
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {

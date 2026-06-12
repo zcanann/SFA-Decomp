@@ -6,11 +6,9 @@
 
 /* SB_Propeller_getExtraSize == 0x10. */
 
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 /* SB_ShipHead_getExtraSize == 0x10. */
-
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -19,113 +17,17 @@ extern int ObjHits_GetPriorityHit();
 
 extern EffectInterface** gPartfxInterface;
 
-/*
- * --INFO--
- *
- * Function: SB_Galleon_animEventCallback
- * EN v1.0 Address: 0x801E1AAC
- * EN v1.0 Size: 764b
- * EN v1.1 Address: 0x801E18DC
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int ObjList_GetObjects(int* start, int* end);
 
-
-/*
- * --INFO--
- *
- * Function: fn_801E1588
- * EN v1.0 Address: 0x801E1588
- * EN v1.0 Size: 1316b
- * EN v1.1 Address: 0x801E1B78
- * EN v1.1 Size: 1316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: SB_Propeller_update
- * EN v1.0 Address: 0x801E21B4
- * EN v1.0 Size: 1364b
- * EN v1.1 Address: 0x801E2BBC
- * EN v1.1 Size: 1212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u8 framesThisStep;
 
-
-/*
- * --INFO--
- *
- * Function: SB_Propeller_init
- * EN v1.0 Address: 0x801E2708
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801E3078
- * EN v1.1 Size: 176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: SB_ShipHead_render
- * EN v1.0 Address: 0x801E27C4
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x801E314C
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: SB_ShipHead_update
- * EN v1.0 Address: 0x801E2940
- * EN v1.0 Size: 1892b
- * EN v1.1 Address: 0x801E32D4
- * EN v1.1 Size: 1384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Sfx_StopObjectChannel(int obj, int ch);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern f32 sqrtf(f32);
 
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
@@ -139,8 +41,6 @@ extern u32 gSbGalleon;
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
@@ -157,33 +57,9 @@ void SB_ShipGun_free(int param_1)
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 extern f32 lbl_803E57FC;
 
-
-
-
-/*
- * --INFO--
- *
- * Function: SB_Galleon_update
- * EN v1.0 Address: 0x801E21AC
- * EN v1.0 Size: 568b
- */
-
-
-/*
- * --INFO--
- *
- * Function: SB_Galleon_init
- * EN v1.0 Address: 0x801E23E4
- * EN v1.0 Size: 388b
- */
-
-
-
 /* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
 
-
 /* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
-
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
@@ -228,7 +104,6 @@ typedef struct SBShipGunPlacement
     u8 pad24[0x28 - 0x24];
 } SBShipGunPlacement;
 
-
 typedef struct SBShipGunState
 {
     u8 pad0[0x3 - 0x0];
@@ -240,24 +115,6 @@ typedef struct SBShipGunState
     u8 padF[0x10 - 0xF];
 } SBShipGunState;
 
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: SB_ShipGun_update
- * EN v1.0 Address: 0x801E34C0
- * EN v1.0 Size: 2312b
- * EN v1.1 Address: 0x801E3AB0
- * EN v1.1 Size: 2132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void Sfx_StopObjectChannel();
@@ -574,10 +431,8 @@ void SB_ShipGun_update(int obj)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void SB_CannonBall_release(void);
-
 
 void SB_ShipGun_init(int obj)
 {
@@ -592,15 +447,4 @@ void SB_ShipGun_init(int obj)
 /* 8b "li r3, N; blr" returners. */
 int SB_CannonBall_getExtraSize(void);
 
-
-
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
-

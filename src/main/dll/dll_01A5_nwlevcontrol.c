@@ -25,19 +25,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5F10;
 extern f32 lbl_803E5F14;
 
-/*
- * --INFO--
- *
- * Function: nw_levcontrol_update
- * EN v1.0 Address: 0x801CFF20
- * EN v1.0 Size: 1472b
- * EN v1.1 Address: 0x801D04F0
- * EN v1.1 Size: 1472b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void nw_levcontrol_update(int param_1)
 {
     int obj;
@@ -211,19 +198,6 @@ void nw_levcontrol_update(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: sh_tricky_getExtraSize
- * EN v1.0 Address: 0x801D069C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int sh_tricky_getExtraSize(void);
 
 extern uint GameBit_Get(int id);
@@ -288,13 +262,6 @@ void nw_levcontrol_init(int* obj)
 extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 
-/*
- * --INFO--
- *
- * Function: fn_801CFD68
- * EN v1.0 Address: 0x801CFD68
- * EN v1.0 Size: 348b
- */
 int fn_801CFD68(u8* state)
 {
     extern s32 lbl_803269F8[];
@@ -330,19 +297,6 @@ int fn_801CFD68(u8* state)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: nw_levcontrol_getExtraSize
- * EN v1.0 Address: 0x801CFEC4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int nw_levcontrol_getExtraSize(void)
 {
     return 0x14;

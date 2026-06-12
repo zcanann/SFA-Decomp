@@ -10,20 +10,6 @@ extern OSMessageQueue lbl_803A4480;
 extern OSThread lbl_803A54A0;
 extern s32 gAttractMovieAudioThreadActive;
 
-/*
- * --INFO--
- *
- * Function: TitleMenu_initialise
- * EN v1.0 Address: 0x80116F84
- * EN v1.0 Size: 904b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void* PopDecodedAudioBuffer(int flags)
 {
     void* message;

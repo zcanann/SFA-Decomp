@@ -17,34 +17,8 @@
 
 extern void mm_free(void* ptr);
 
-/*
- * --INFO--
- *
- * Function: gameTextSetWindow
- * EN v1.0 Address: 0x80017434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001746C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* moved below GameTextSlot/global declarations */
 
-/*
- * --INFO--
- *
- * Function: FUN_80017460
- * EN v1.0 Address: 0x80017460
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800191FC
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -54,19 +28,6 @@ FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017468
- * EN v1.0 Address: 0x80017468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001947C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -76,37 +37,8 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textRenderStr
- * EN v1.0 Address: 0x800174D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001AE18
- * EN v1.1 Size: 1760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80017500
- * EN v1.0 Address: 0x80017500
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001BD8C
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -114,19 +46,6 @@ FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8001786c
- * EN v1.0 Address: 0x8001786C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80024F40
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -135,19 +54,6 @@ FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017998
- * EN v1.0 Address: 0x80017998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80029260
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined*
 FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -170,12 +76,6 @@ void fn_8002B85C(void)
 }
 
 /* ObjModel/model-file accessors. */
-
-
-
-
-
-
 
 void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
 
@@ -418,9 +318,7 @@ void Obj_StartModelFadeIn(u8* obj, int frames)
     }
 }
 
-
 /* Global game-state / text accessors. */
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -442,7 +340,6 @@ int roundUpTo32(int x);
 
 /* Simple field/global accessors. */
 
-
 extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
@@ -453,7 +350,6 @@ extern void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void textureFree(void* tex);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -469,7 +365,6 @@ void objSetHintTextIdx(u8* obj, u16 idx)
 extern int getLoadedFileFlags(int);
 extern s8 lbl_803DCB74;
 extern int lbl_803408A8[];
-
 
 int Obj_IsLoadingLocked(void)
 {
@@ -526,7 +421,6 @@ extern int* lbl_803DCBB0;
 extern u8* lbl_803DCBB4;
 extern int lbl_803DCB7C;
 
-
 void mm_free(void* p);
 
 #pragma peephole off
@@ -575,13 +469,11 @@ void* Obj_GetPlayerObject(void)
     return NULL;
 }
 
-
 extern f32 sqrtf(f32 x);
 extern int lbl_803DCB84;
 extern void* lbl_803DCB88;
 
 extern void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
-
 
 void* ObjList_GetObjects(int* outA, int* outB)
 {
@@ -596,9 +488,7 @@ void* ObjList_GetObjects(int* outA, int* outB)
     return lbl_803DCB88;
 }
 
-
 void* loadAssetFileById(int id, int arg);
-
 
 void Obj_SetActiveModelIndex(u8* obj, int idx)
 {
@@ -636,7 +526,6 @@ typedef struct ObjListObject
     ObjListObjectDef* def;
 } ObjListObject;
 
-
 void* getTrickyObject(void)
 {
     int count;
@@ -667,9 +556,7 @@ ObjListObject* ObjList_FindObjectById(u32 objectId)
     return NULL;
 }
 
-
 typedef f32 Mtx[3][4];
-
 
 void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 {
@@ -746,7 +633,6 @@ void objWorldToLocalPos(f32* out, u8* transform, f32* in)
 
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 
-
 void* Obj_AllocObjectSetup(int size, int b)
 {
     u8* p = mmAlloc(size, 0xe, 0);
@@ -761,12 +647,9 @@ void* Obj_AllocObjectSetup(int size, int b)
     return p;
 }
 
-
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
 
-
 extern void OSReport(char* fmt, ...);
-
 
 extern void* memcpy(void* dst, const void* src, int n);
 
@@ -780,9 +663,7 @@ int objMove(u8* obj, f32 dx, f32 dy, f32 dz)
     return 0;
 }
 
-
 void mtx44Transpose(f32 * src, f32 * dst);
-
 
 void setMatrixFromObjectTransposed(void* obj, f32* out);
 
@@ -812,9 +693,7 @@ void objFn_8002b67c(u8* obj)
     dst[4] = src[0x10];
 }
 
-
 extern f32 lbl_803DE8B8;
-
 
 int objApplyVelocity(u8* obj)
 {
@@ -850,7 +729,6 @@ extern void objFreeObjDef(void* def, int flags);
 extern int lbl_803DCB94;
 extern void** lbl_803DCB98;
 
-
 void Obj_FlushDeferredFreeList(void)
 {
     int i;
@@ -865,7 +743,6 @@ void Obj_FlushDeferredFreeList(void)
     }
     lbl_803DCB94 = 0;
 }
-
 
 void fn_8002B6D8(u8* obj, int a, int b, int c, u8 d, u8 e)
 {
@@ -901,7 +778,6 @@ void fn_8002B6D8(u8* obj, int a, int b, int c, u8 d, u8 e)
         p[4] = e;
     }
 }
-
 
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
 
@@ -954,9 +830,7 @@ void* loadObjectAtObject(u8* src, int arg1)
     return obj;
 }
 
-
 void ObjModel_Release(u8 * model);
-
 
 extern void objLoadPlayerFromSave(u8 * obj);
 
@@ -1075,9 +949,6 @@ void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u
         i += 3;
     }
 }
-
-
-
 
 void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out)
 {
@@ -1625,14 +1496,12 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     return obj;
 }
 
-
 extern void Obj_InitObjectSystem(void);
 extern int getDataFileSize(int id);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void* gTitleMenuControlInterface;
 extern void* gModgfxInterface;
 extern WaterfxInterface** gWaterfxInterface;
-
 
 extern void fn_802B4DE0(u8* obj, int flag);
 extern void Obj_FreeObject(u8 * obj);
@@ -1844,7 +1713,6 @@ void objFreeObjDef(void* objp, int flag)
     }
     mm_free(obj);
 }
-
 
 extern void playerUpdateWhileTimeStopped(u8 * obj);
 extern void playerRenderQuakeSpell(void);
@@ -2265,7 +2133,6 @@ void mapSetupPlayer(void)
         playerUpdateFn_8005649c();
     }
 }
-
 
 extern void fn_80013B6C(int* p, int n);
 extern void AudioStream_StopAll(void);
@@ -2827,14 +2694,11 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     return roundUpTo32(size);
 }
 
-
 void* mmAlloc(int size, int type, int flag);
-
 
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
 
 void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
-
 
 extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 
@@ -2888,7 +2752,6 @@ void fn_8002A5DC(u8* obj)
         fn_800213D0(vecA, vecB, &((GameObject*)obj)->anim.rotZ, &((GameObject*)obj)->anim.rotY, (s16*)obj);
     }
 }
-
 
 void modelInitBones(f32 scale, void* model)
 {
@@ -2982,7 +2845,6 @@ void modelInitBones(f32 scale, void* model)
     }
 }
 
-
 int loadModLines(int idx, s16* outCount)
 {
     int result;
@@ -3009,9 +2871,5 @@ int loadModLines(int idx, s16* outCount)
     return result;
 }
 
-
 extern f32 lbl_803DCED0;
 extern f32 lbl_803DCECC;
-
-
-

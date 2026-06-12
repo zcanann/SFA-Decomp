@@ -5,38 +5,6 @@
 
 extern void objRenderFn_80041018(void);
 
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: dll_FC_init
- * EN v1.0 Address: 0x8017EF3C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017F17C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dll_14D_hitDetect
- * EN v1.0 Address: 0x8017EFB0
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x8017F1AC
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_14D_hitDetect(int param_1)
 {
     if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) && (*(uint*)(param_1 + 0x74) != 0))
@@ -46,9 +14,7 @@ void dll_14D_hitDetect(int param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void dll_14D_free_nop(void)
 {
@@ -78,7 +44,6 @@ typedef struct Dll14DState
     u8 pad0[0x4 - 0x0];
     u32 unk4;
 } Dll14DState;
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -110,19 +75,6 @@ typedef struct MagicPlantBridgeState
     s8 mode;
 } MagicPlantBridgeState;
 
-/*
- * --INFO--
- *
- * Function: dll_14D_update
- * EN v1.0 Address: 0x8017EFF0
- * EN v1.0 Size: 632b
- * EN v1.1 Address: 0x8017F1EC
- * EN v1.1 Size: 748b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_14D_update(undefined2* obj)
 {
     extern undefined4 ObjGroup_FindNearestObject(); /* #57 */
@@ -230,19 +182,6 @@ void dll_14D_update(undefined2* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_14D_init
- * EN v1.0 Address: 0x8017F308
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017F4D8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_14D_init(int* obj)
 {
     char* p = ((GameObject*)obj)->extra;
@@ -290,7 +229,6 @@ void fn_8017F334(int obj, void* setup, void* stateArg)
         ObjAnim_SetCurrentMove(obj, 2, lbl_803E385C, 0);
     }
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_14D_release_nop(void)

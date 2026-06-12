@@ -6,12 +6,6 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
 typedef struct FlameblastState
 {
     u8 pad0[0x10 - 0x0];
@@ -19,17 +13,6 @@ typedef struct FlameblastState
     u8 unk11;
     u8 pad12[0x14 - 0x12];
 } FlameblastState;
-
-
-
-
-
-
-
-
-
-
-
 
 static inline int* Transporter_GetActiveModel(void* obj)
 {
@@ -51,51 +34,10 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-/*
- * --INFO--
- *
- * Function: pushable_setScale
- * EN v1.0 Address: 0x801755CC
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x801758D4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* pushable_setScale: real v1.0 body defined at end of file (old v1.1 misimport removed). */
 
-
-/*
- * --INFO--
- *
- * Function: pushable_render
- * EN v1.0 Address: 0x80175FB8
- * EN v1.0 Size: 236b
- * EN v1.1 Address: 0x80176464
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* pushable_render: recovered v1.0 body defined at end of file. */
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80176920
- * EN v1.0 Address: 0x80176920
- * EN v1.0 Size: 200b
- * EN v1.1 Address: 0x80177470
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -115,39 +57,12 @@ FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801778d0
- * EN v1.0 Address: 0x801778D0
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x801784F8
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801778d0(int param_1)
 {
     *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801778e0
- * EN v1.0 Address: 0x801778E0
- * EN v1.0 Size: 396b
- * EN v1.1 Address: 0x80178508
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -211,17 +126,8 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void invhit_hitDetect(void);
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int flameblast_getExtraSize(void) { return 0x14; }
@@ -251,11 +157,6 @@ void objSetAnimSpeedTo1(int* obj)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
-
-
-
-
-
 
 extern f32 timeDelta;
 extern f32 lbl_803E3630;
@@ -303,7 +204,6 @@ void flameblast_init(int* obj, u8* def)
 }
 
 void WarpPoint_init(int* obj, u8* def);
-
 
 extern s16* getTrickyObject(void);
 extern int fn_80138F90(void);
@@ -371,21 +271,3 @@ int fn_8017805C(int* obj, f32* state)
 #pragma opt_common_subs off
 
 #pragma opt_common_subs reset
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

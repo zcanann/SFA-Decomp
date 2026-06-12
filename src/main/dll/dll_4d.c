@@ -13,13 +13,6 @@ extern int lbl_803A87D0[8];
 extern int saveFileStruct_isCheatActive(int);
 extern int isCheatUnlocked(int);
 
-/*
- * --INFO--
- *
- * Function: languageMenuInit
- * EN v1.0 Address: 0x8011C5CC
- * EN v1.0 Size: 488b
- */
 void languageMenuInit(void)
 {
     MenuPanelGroup* p;

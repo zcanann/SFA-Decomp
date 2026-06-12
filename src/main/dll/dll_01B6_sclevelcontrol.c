@@ -3,35 +3,9 @@
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 
-
-
-
-
-
 /* sh_beacon_getExtraSize == 0x18. */
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: sh_staff_render
- * EN v1.0 Address: 0x801D9BDC
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801DA010
- * EN v1.1 Size: 444b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
 /* 8b "li r3, N; blr" returners. */
-
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
 
@@ -48,21 +22,6 @@
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
 
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: sh_beacon_update
- * EN v1.0 Address: 0x801DAA58
- * EN v1.0 Size: 1080b
- */
-
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -72,18 +31,9 @@
 
 #include "global.h"
 
-
-
-
-
-
-
-
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
-
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
-
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006824();
@@ -98,50 +48,6 @@ extern int FUN_80017a98();
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 lbl_803E61E8;
 
-/*
- * --INFO--
- *
- * Function: sh_emptytumblew_init
- * EN v1.0 Address: 0x801DAFDC
- * EN v1.0 Size: 1440b
- * EN v1.1 Address: 0x801DB048
- * EN v1.1 Size: 1080b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801db580
- * EN v1.0 Address: 0x801DB580
- * EN v1.0 Size: 56b
- * EN v1.1 Address: 0x801DB594
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: sc_levelcontrol_processAnimEvents
- * EN v1.0 Address: 0x801DB670
- * EN v1.0 Size: 324b
- * EN v1.1 Address: 0x801DB688
- * EN v1.1 Size: 352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
@@ -197,19 +103,6 @@ undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUp
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: sc_levelcontrol_setAnimEventState
- * EN v1.0 Address: 0x801DB7B4
- * EN v1.0 Size: 272b
- * EN v1.1 Address: 0x801DB7E8
- * EN v1.1 Size: 284b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sc_levelcontrol_setAnimEventState(int obj, undefined value)
 {
     char mode;
@@ -254,36 +147,6 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801db8c4
- * EN v1.0 Address: 0x801DB8C4
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x801DB904
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801db924
- * EN v1.0 Address: 0x801DB924
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801DB964
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
@@ -298,8 +161,6 @@ void sc_levelcontrol_release(void)
 void sc_levelcontrol_initialise(void)
 {
 }
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int sc_levelcontrol_getExtraSize(void) { return 0x24; }
@@ -319,8 +180,6 @@ void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 extern void fn_8003B608(int a, int b, int c);
-
-
 
 extern void gameTimerStop(void);
 extern void disableHeavyFog(void);
@@ -444,8 +303,6 @@ extern f32 lbl_803E5574;
 extern f32 lbl_803E5578;
 extern f32 lbl_803E557C;
 
-
-
 void sc_levelcontrol_init(int obj)
 {
     ScLevelControlState* st = ((GameObject*)obj)->extra;
@@ -489,7 +346,6 @@ extern u8 Obj_IsLoadingLocked(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 #pragma dont_inline on
 #pragma dont_inline reset

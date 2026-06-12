@@ -26,18 +26,6 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex)
 }
 
 /*
- * --INFO--
- *
- * Function: ObjAnim_SetBlendMove
- * EN v1.0 Address: 0x8002EB54
- * EN v1.0 Size: 452b
- * EN v1.1 Address: 0x8002EC4C
- * EN v1.1 Size: 452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Retail string evidence labels this source-side path as objanim.c/setBlendMove.
  */
 #pragma dont_inline on
@@ -113,19 +101,6 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: Object_ObjAnimSetPrimaryBlendMove
- * EN v1.0 Address: 0x8002ED18
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x8002EE10
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole on
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, int eventState)
 {
@@ -139,19 +114,6 @@ void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, in
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Object_ObjAnimSetSecondaryBlendMove
- * EN v1.0 Address: 0x8002ED6C
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x8002EE64
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, int eventState)
 {
     ObjAnimBank* bank;
@@ -164,19 +126,6 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Object_ObjAnimAdvanceMove
- * EN v1.0 Address: 0x8002EDC0
- * EN v1.0 Size: 1100b
- * EN v1.1 Address: 0x8002EEB8
- * EN v1.1 Size: 1100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole off
 int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandle,
                               ObjAnimEventList* events)
@@ -382,19 +331,6 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
     return wrapped;
 }
 
-/*
- * --INFO--
- *
- * Function: Object_ObjAnimSetMoveProgress
- * EN v1.0 Address: 0x8002F20C
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x8002F304
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 int Object_ObjAnimSetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
@@ -411,19 +347,6 @@ int Object_ObjAnimSetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: Object_ObjAnimSetMove
- * EN v1.0 Address: 0x8002F23C
- * EN v1.0 Size: 720b
- * EN v1.1 Address: 0x8002F334
- * EN v1.1 Size: 720b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int
 #pragma scheduling off
 #pragma peephole off
@@ -514,38 +437,12 @@ Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveC
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjAnim_GetCurrentEventCountdown
- * EN v1.0 Address: 0x8002F50C
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8002F604
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole on
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent* objAnim)
 {
     return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjAnim_WriteStateWord
- * EN v1.0 Address: 0x8002F52C
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x8002F624
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjAnim_WriteStateWord(ObjAnimComponent* objAnim, int stateIndex, short wordIndex, int value)
 {
     ObjAnimBank* bank;
@@ -571,19 +468,6 @@ void ObjAnim_WriteStateWord(ObjAnimComponent* objAnim, int stateIndex, short wor
     stateWords[wordIndex] = stateWord;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjAnim_SetCurrentEventStepFrames
- * EN v1.0 Address: 0x8002F574
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x8002F66C
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent* objAnim, u32 frameCount)
 {
     ObjAnimBank* bank;
@@ -597,19 +481,6 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent* objAnim, u32 frameCount
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ObjAnim_SampleRootCurvePhase
- * EN v1.0 Address: 0x8002F5D4
- * EN v1.0 Size: 1140b
- * EN v1.1 Address: 0x8002F6CC
- * EN v1.1 Size: 1140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole off
 int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float* phaseOut)
 {
@@ -788,19 +659,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjAnim_AdvanceCurrentMove
- * EN v1.0 Address: 0x8002FA48
- * EN v1.0 Size: 2236b
- * EN v1.1 Address: 0x8002FB40
- * EN v1.1 Size: 2236b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHandle,
                                ObjAnimEventList* events)
 {
@@ -1170,19 +1028,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     return wrapped;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjAnim_SetMoveProgress
- * EN v1.0 Address: 0x80030304
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x800303FC
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 int ObjAnim_SetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
@@ -1199,19 +1044,6 @@ int ObjAnim_SetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjAnim_SetCurrentMove
- * EN v1.0 Address: 0x80030334
- * EN v1.0 Size: 852b
- * EN v1.1 Address: 0x8003042C
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int moveControlFlags)

@@ -2,7 +2,6 @@
 #include "main/newclouds.h"
 #include "main/resource.h"
 
-
 typedef struct LightningEffect
 {
     f32 start[3];
@@ -35,11 +34,6 @@ extern u8 lbl_803DD19B;
 extern u8* lbl_803DD19C;
 extern u8 lbl_803DD1C0;
 extern void PSVECNormalize(void* src, void* dst);
-
-
-
-
-
 
 void lightningRenderActive(void)
 {
@@ -109,7 +103,6 @@ void newclouds_initialise(void)
     lbl_803DD1C0 = 0;
 }
 
-
 /* Pattern wrappers. */
 void dll_07_func0A_nop(void)
 {
@@ -135,7 +128,6 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
 
 extern void padUpdate(void);
 extern void* textureLoadAsset(int);
-
 
 extern void textureFree(void* handle);
 extern void ModelLightStruct_free(void* p);
@@ -223,9 +215,6 @@ void newclouds_onMapSetup(void)
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 
-
-
-
 #pragma dont_inline on
 void* lightningCreate(f32* a, f32* b, f32 c, f32 d, int e, int f, int g)
 {
@@ -251,16 +240,8 @@ void* lightningCreate(f32* a, f32* b, f32 c, f32 d, int e, int f, int g)
     return p;
 }
 
-
-
-
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-
-
-
-
-
 
 typedef struct FogColor
 {
@@ -396,20 +377,11 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
 
 extern void* memset(void* dst, int c, int n);
 
-
 extern u8* saveGameGetEnvState(void);
 extern int getSaveGameLoadStatus(void);
 
-
 extern char sSnowFreeSnowCloudInvalidCloudId[];
 
-/*
- * --INFO--
- *
- * Function: snowFreeSnowCloud
- * EN v1.0 Address: 0x80090098
- * EN v1.0 Size: 504b
- */
 #pragma dont_inline on
 void snowFreeSnowCloud(int cloudId)
 {
@@ -490,13 +462,6 @@ extern WindSource lbl_8039A848[];
 extern s16 renderModeSetOrGet(int mode);
 extern void normalize(f32 * x, f32 * y, f32 * z);
 
-/*
- * --INFO--
- *
- * Function: snowCloudComputeDrift
- * EN v1.0 Address: 0x800916C0
- * EN v1.0 Size: 776b
- */
 #pragma dont_inline off
 void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
 {
@@ -576,13 +541,6 @@ extern f32 lbl_803DF1D4;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 c, f32 d, int* seed, int e, int f);
 
-/*
- * --INFO--
- *
- * Function: lightningRender
- * EN v1.0 Address: 0x8008F904
- * EN v1.0 Size: 496b
- */
 void lightningRender(void* state)
 {
     LightningEffect* p = state;
@@ -654,13 +612,6 @@ extern const f32 lbl_803DF1F0;
 extern const f32 lbl_803DF1F4;
 extern const f32 lbl_803DF1F8;
 
-/*
- * --INFO--
- *
- * Function: snowCloudInitFlakes
- * EN v1.0 Address: 0x8008FC9C
- * EN v1.0 Size: 988b
- */
 void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
 {
     u8* p;
@@ -780,13 +731,6 @@ extern f32 lbl_803DF284;
 extern f32 lbl_803DF288;
 extern f32 lbl_803DF28C;
 
-/*
- * --INFO--
- *
- * Function: drawSkyStars
- * EN v1.0 Address: 0x80093AF8
- * EN v1.0 Size: 724b
- */
 void drawSkyStars(void)
 {
     int timeOk;
@@ -923,13 +867,6 @@ extern f32 lbl_803DF1C4;
 extern f32 lbl_803DF1C8;
 extern f32 lbl_803DF1CC;
 
-/*
- * --INFO--
- *
- * Function: lightningDrawStrand
- * EN v1.0 Address: 0x8008EE18
- * EN v1.0 Size: 1200b
- */
 void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
 {
     int savedRand;
@@ -1044,13 +981,6 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: snowCloudUpdateFlakes
- * EN v1.0 Address: 0x80090C0C
- * EN v1.0 Size: 892b
- */
 void snowCloudUpdateFlakes(u8* snow)
 {
     s16* cam;
@@ -1126,13 +1056,6 @@ void snowCloudUpdateFlakes(u8* snow)
 extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
 extern f32 lbl_803DF1D0;
 
-/*
- * --INFO--
- *
- * Function: lightningDrawBolt
- * EN v1.0 Address: 0x8008F2C8
- * EN v1.0 Size: 1596b
- */
 void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int* seed, int depth,
                        int flags)
 {
@@ -1294,13 +1217,6 @@ extern f32 lbl_803DF29C;
 extern f32 lbl_803DF2A0;
 extern f32 lbl_803DF2A4;
 
-/*
- * --INFO--
- *
- * Function: titleScreenDrawFn_80093db4
- * EN v1.0 Address: 0x80093DB4
- * EN v1.0 Size: 1464b
- */
 void titleScreenDrawFn_80093db4(void)
 {
     f32* constellation;
@@ -1469,13 +1385,6 @@ extern f32 lbl_803DF228;
 extern f32 lbl_803DF22C;
 extern f32 lbl_803DF230;
 
-/*
- * --INFO--
- *
- * Function: snowReposSnowCloud
- * EN v1.0 Address: 0x80090F58
- * EN v1.0 Size: 1848b
- */
 void snowReposSnowCloud(int cloudId)
 {
     u8* p;
@@ -1656,13 +1565,6 @@ extern f32 lbl_803DF244;
 #define NC_CLOUD ((u8 *)lbl_8039A828[id])
 #define NC_PARTS ((u8 *)*(void **)(NC_CLOUD + 4))
 
-/*
- * --INFO--
- *
- * Function: newClouds
- * EN v1.0 Address: 0x800919DC
- * EN v1.0 Size: 2632b
- */
 void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 {
     char* strs;
@@ -1926,13 +1828,6 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 extern int lbl_8030F5A0[];
 extern f32 lbl_803DF27C;
 
-/*
- * --INFO--
- *
- * Function: newclouds_update
- * EN v1.0 Address: 0x80093124
- * EN v1.0 Size: 2324b
- */
 void newclouds_update(u8* objA, u8* objB, u8* params)
 {
     u8* env;
@@ -2170,13 +2065,6 @@ extern f32 lbl_803DF278;
 
 #define D7_CLOUD ((u8 *)lbl_8039A818[i + 4])
 
-/*
- * --INFO--
- *
- * Function: dll_07_func06
- * EN v1.0 Address: 0x80092548
- * EN v1.0 Size: 2376b
- */
 void dll_07_func06(void)
 {
     s16* cam;
@@ -2501,13 +2389,6 @@ extern void gxBlendFn_80078b4c(void);
 extern int lbl_803DD1A4;
 extern f32 lbl_803DF204;
 
-/*
- * --INFO--
- *
- * Function: snowPrintSnowCloud
- * EN v1.0 Address: 0x80090250
- * EN v1.0 Size: 2456b
- */
 int snowPrintSnowCloud(int arg, int cloudId)
 {
     u8* p;

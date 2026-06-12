@@ -5,197 +5,18 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-
-
-
 /* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
-
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 /* shopkeeper_getExtraSize == 0x9d8. */
 
-
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e76a0
- * EN v1.0 Address: 0x801E76A0
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x801E7714
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e7be4
- * EN v1.0 Address: 0x801E7BE4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E7C90
- * EN v1.1 Size: 1452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e7be8
- * EN v1.0 Address: 0x801E7BE8
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801E823C
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e7d3c
- * EN v1.0 Address: 0x801E7D3C
- * EN v1.0 Size: 688b
- * EN v1.1 Address: 0x801E83B8
- * EN v1.1 Size: 508b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: shopkeeper_render
- * EN v1.0 Address: 0x801E7FEC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801E85B4
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Stack_Free();
 
-
-/*
- * --INFO--
- *
- * Function: shopkeeper_render
- * EN v1.0 Address: 0x801E8014
- * EN v1.0 Size: 156b
- * EN v1.1 Address: 0x801E85DC
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801e80b0
- * EN v1.0 Address: 0x801E80B0
- * EN v1.0 Size: 452b
- * EN v1.1 Address: 0x801E8680
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e8274
- * EN v1.0 Address: 0x801E8274
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E87C4
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e8300
- * EN v1.0 Address: 0x801E8300
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x801E89A0
- * EN v1.1 Size: 688b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e85b0
- * EN v1.0 Address: 0x801E85B0
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801E8CE4
- * EN v1.1 Size: 452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e85b8
- * EN v1.0 Address: 0x801E85B8
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x801E8EA8
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 void spscarab_render(void)
 {
@@ -215,36 +36,13 @@ void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
 
 extern f32 lbl_803E5A30;
 
-
-
-
-
-
-
 extern f32 timeDelta;
 extern void gameTextShow(int);
 extern void characterDoEyeAnims(int obj, int p2);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern f32 sqrtf(f32 x);
 
-
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -259,7 +57,6 @@ typedef struct SpscarabPlacement
     u8 pad1A[0x20 - 0x1A];
 } SpscarabPlacement;
 
-
 typedef struct SpscarabState
 {
     f32 unk0;
@@ -270,7 +67,6 @@ typedef struct SpscarabState
     s16 unk10;
     u8 pad12[0x18 - 0x12];
 } SpscarabState;
-
 
 extern f32 mathCosf(double x);
 extern f32 mathSinf(double x); /* cos-like */
@@ -296,14 +92,6 @@ extern f32 lbl_803E5A8C;
 extern f32 lbl_803E5A90;
 extern f32 lbl_803E5A94;
 
-
-/*
- * --INFO--
- *
- * Function: spscarab_update
- * EN v1.0 Address: 0x801E8EE0
- * EN v1.0 Size: 588b
- */
 void spscarab_update(int obj)
 {
     extern int Obj_GetPlayerObject(void); /* #57 */
@@ -378,13 +166,6 @@ void spscarab_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: spscarab_init
- * EN v1.0 Address: 0x801E912C
- * EN v1.0 Size: 500b
- */
 void spscarab_init(int obj, int param_2)
 {
     extern int Obj_GetActiveModel(int obj); /* #57 */
@@ -439,24 +220,10 @@ void spscarab_init(int obj, int param_2)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: spscarab_release
- * EN v1.0 Address: 0x801E9320
- * EN v1.0 Size: 4b
- */
 void spscarab_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: spscarab_initialise
- * EN v1.0 Address: 0x801E9324
- * EN v1.0 Size: 4b
- */
 void spscarab_initialise(void)
 {
 }
@@ -477,43 +244,3 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     (ObjectDescriptorCallback)spscarab_getObjectTypeId,
     spscarab_getExtraSize,
 };
-
-/*
- * --INFO--
- *
- * Function: spdrape_getExtraSize
- * EN v1.0 Address: 0x801E9328
- * EN v1.0 Size: 8b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_getObjectTypeId
- * EN v1.0 Address: 0x801E9330
- * EN v1.0 Size: 8b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_free
- * EN v1.0 Address: 0x801E9338
- * EN v1.0 Size: 4b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_render
- * EN v1.0 Address: 0x801E933C
- * EN v1.0 Size: 4b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_hitDetect
- * EN v1.0 Address: 0x801E9340
- * EN v1.0 Size: 4b
- */

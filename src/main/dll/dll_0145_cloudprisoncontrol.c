@@ -7,12 +7,6 @@
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 
-
-
-
-
-
-
 extern undefined4 getLActions();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006810();
@@ -84,19 +78,6 @@ extern f32 lbl_803E4D94;
 extern f32 lbl_803E4D98;
 extern f32 lbl_803E4D9C;
 
-/*
- * --INFO--
- *
- * Function: objInterpretSeq
- * EN v1.0 Address: 0x801993B0
- * EN v1.0 Size: 6644b
- * EN v1.1 Address: 0x8019992C
- * EN v1.1 Size: 3936b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -759,20 +740,6 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
     while (true);
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019ae30
- * EN v1.0 Address: 0x8019AE30
- * EN v1.0 Size: 2172b
- * EN v1.1 Address: 0x8019A92C
- * EN v1.1 Size: 1268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, float* param_11, undefined4 param_12,
@@ -1046,16 +1013,8 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void Trigger_render(void);
-
-
-
-
-
-
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -1094,8 +1053,6 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
 int cfguardian_setScale(int* obj);
-
-
 
 extern s8 lbl_803DDB08;
 extern s8 lbl_803DDB09;
@@ -1198,9 +1155,4 @@ void cloudprisoncontrol_update(int obj)
 
 extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 
-
-
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
-
-
-

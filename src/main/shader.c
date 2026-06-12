@@ -8,7 +8,6 @@
 #include "main/objseq.h"
 #include "main/shader.h"
 
-
 extern float ABS();
 extern undefined4 FUN_8000693c();
 extern undefined4 FUN_80006958();
@@ -44,19 +43,6 @@ extern f32 lbl_803DF860;
 extern f32 lbl_803DF864;
 extern f32 lbl_803DF868;
 
-/*
- * --INFO--
- *
- * Function: objShouldLoad
- * EN v1.0 Address: 0x80055980
- * EN v1.0 Size: 908b
- * EN v1.1 Address: 0x80055AFC
- * EN v1.1 Size: 932b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern char lbl_8030E4B0[];
 extern int gMapBlockLayerTables[5];
 extern u8 lbl_80386648[];
@@ -231,39 +217,11 @@ test:
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: fn_80056800
- * EN v1.0 Address: 0x80055ED8
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80056800
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fn_80056800(int param_1)
 {
     return (int)(DAT_803ddaec + param_1 * 4);
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80056418
- * EN v1.0 Address: 0x80056418
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80056D38
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80056418(int param_1, int param_2, int param_3, int param_4, int param_5)
 {
     int iVar1;
@@ -274,39 +232,11 @@ void FUN_80056418(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80056600
- * EN v1.0 Address: 0x80056600
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80057360
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_80056600(void)
 {
     return (int)DAT_803dda61;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80056cfc
- * EN v1.0 Address: 0x80056CFC
- * EN v1.0 Size: 844b
- * EN v1.1 Address: 0x800598A8
- * EN v1.1 Size: 804b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80056cfc(void)
 {
     byte* pbVar1;
@@ -482,20 +412,6 @@ void FUN_80056cfc(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800571f8
- * EN v1.0 Address: 0x800571F8
- * EN v1.0 Size: 120b
- * EN v1.1 Address: 0x80059DA8
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800571f8(u8* param_1)
 {
     int iVar1;
@@ -540,20 +456,6 @@ void FUN_800571f8(u8* param_1)
     while (true);
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800575b4
- * EN v1.0 Address: 0x800575B4
- * EN v1.0 Size: 220b
- * EN v1.1 Address: 0x8005A288
- * EN v1.1 Size: 136b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_800575b4(double param_1, float* param_2)
 {
     uint uVar1;
@@ -579,19 +481,6 @@ undefined4 FUN_800575b4(double param_1, float* param_2)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80057690
- * EN v1.0 Address: 0x80057690
- * EN v1.0 Size: 828b
- * EN v1.1 Address: 0x8005A310
- * EN v1.1 Size: 712b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_80057690(int param_1)
 {
     float fVar1;
@@ -697,7 +586,6 @@ undefined4 FUN_80057690(int param_1)
     }
     return uVar3;
 }
-
 
 /* 8b "li r3, N; blr" returners. */
 int return0_80056694(void) { return 0x0; }
@@ -914,7 +802,6 @@ void gameTextLoadForMap_800571f0(u8 force)
         gameTextLoadDir(entry);
     }
 }
-
 
 void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, int texHeightFixed)
 {

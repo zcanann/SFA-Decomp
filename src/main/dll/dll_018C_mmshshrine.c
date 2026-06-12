@@ -87,19 +87,6 @@ typedef struct MMSHShrineObject
     s32 loadTriggerTimer;
 } MMSHShrineObject;
 
-/*
- * --INFO--
- *
- * Function: MMSH_Shrine_SeqFn
- * EN v1.0 Address: 0x801C4B10
- * EN v1.0 Size: 616b
- * EN v1.1 Address: 0x801C4B54
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* seq)
 {
     extern undefined4 GameBit_Set(int eventId, int value);
@@ -191,55 +178,16 @@ int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* se
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_getExtraSize
- * EN v1.0 Address: 0x801C4D78
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int mmsh_shrine_getExtraSize(void)
 {
     return 0x28;
 }
 
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_getObjectTypeId
- * EN v1.0 Address: 0x801C4D80
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int mmsh_shrine_getObjectTypeId(void)
 {
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_hitDetect
- * EN v1.0 Address: 0x801C4F1C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void mmsh_shrine_hitDetect(void)
 {
 }
@@ -255,13 +203,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int objGetAnimStateFlags(int obj, u32 mask);
 extern void audioStopByMask(int mask);
 
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_free
- * EN v1.0 Address: 0x801C4D88
- * EN v1.0 Size: 220b
- */
 void mmsh_shrine_free(int obj)
 {
     extern undefined4 GameBit_Set(int eventId, int value);
@@ -288,13 +229,6 @@ void mmsh_shrine_free(int obj)
     GameBit_Set(0xe85, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_render
- * EN v1.0 Address: 0x801C4E64
- * EN v1.0 Size: 184b
- */
 void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
                         char visible)
 {
@@ -321,12 +255,6 @@ void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, un
 }
 
 /*
- * --INFO--
- *
- * Function: mmsh_shrine_update
- * EN v1.0 Address: 0x801C4F20
- * EN v1.0 Size: 952b
- *
  * Shrine state machine: load-completion effects, gamebit latches, object-trigger phases.
  */
 void mmsh_shrine_update(int objArg)
@@ -438,19 +366,6 @@ void mmsh_shrine_update(int objArg)
 
 extern int objCreateLight(int param_1, int param_2);
 
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_init
- * EN v1.0 Address: 0x801C52D8
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x801C533C
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void mmsh_shrine_init(undefined2* obj, int arg2)
 {
     extern void GameBit_Set(int eventId, int value);
@@ -479,27 +394,6 @@ void mmsh_shrine_init(undefined2* obj, int arg2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: mmsh_scales_free
- * EN v1.0 Address: 0x801C53B0
- * EN v1.0 Size: 144b
- * EN v1.1 Address: 0x801C5418
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: mmsh_scales_update
- * EN v1.0 Address: 0x801C5474
- * EN v1.0 Size: 372b
- */
 extern u8 lbl_803DB411;
 
 void mmsh_scales_update(int objArg);
@@ -518,12 +412,3 @@ void mmsh_scales_hitDetect(void);
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-/*
- * --INFO--
- *
- * Function: mmsh_waterspike_update
- * EN v1.0 Address: 0x801C57B0
- * EN v1.0 Size: 380b
- */
-

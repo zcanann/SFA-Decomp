@@ -6,35 +6,12 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
-
-
 typedef struct Dll109State
 {
     u8 pad0[0xA - 0x0];
     u8 unkA;
     u8 padB[0x10 - 0xB];
 } Dll109State;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_ClearHitVolumes();
@@ -57,50 +34,6 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80187664
- * EN v1.0 Address: 0x80187664
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x80187720
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: infopoint_hitDetect
- * EN v1.0 Address: 0x8018843C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801884A0
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80189054
- * EN v1.0 Address: 0x80189054
- * EN v1.0 Size: 2620b
- * EN v1.1 Address: 0x80189218
- * EN v1.1 Size: 1552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -374,10 +307,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
-
 
 void dll_109_hitDetect_nop(void)
 {
@@ -393,19 +324,10 @@ void dll_109_initialise_nop(void)
 
 void Fall_Ladders_render(void);
 
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int dll_109_getExtraSize_ret_16(void) { return 0x10; }
 int dll_109_getObjectTypeId(void) { return 0x0; }
 int Fall_Ladders_SeqFn(void);
-
 
 typedef struct CarryableBreakRespawnState
 {
@@ -492,40 +414,19 @@ void carryable_break_respawn_update(int obj)
 extern f32 lbl_803E3AF8;
 extern void objRenderFn_8003b8f4(f32);
 
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
-
-
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
 
-
 /* landed_arwing_free: free child object + detach link. */
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 
-
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 
@@ -542,7 +443,6 @@ void dll_109_init(int obj, u8* p)
 #pragma dont_inline on
 void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut);
 #pragma dont_inline reset
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -567,10 +467,3 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
-
-
-
-
-
-
-

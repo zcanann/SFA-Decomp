@@ -4,47 +4,13 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* 8b "li r3, N; blr" returners. */
-
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int id);
-
 
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -62,48 +28,6 @@ extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
 extern f32 lbl_803E5360;
 
-/*
- * --INFO--
- *
- * Function: ccqueen_render
- * EN v1.0 Address: 0x801AA560
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x801AA584
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801aa684
- * EN v1.0 Address: 0x801AA684
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801AA6C0
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801aaa6c
- * EN v1.0 Address: 0x801AAA6C
- * EN v1.0 Size: 148b
- * EN v1.1 Address: 0x801AAE2C
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
@@ -135,20 +59,6 @@ void FUN_801aaa6c(double param_1, int param_2, int param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801abf38
- * EN v1.0 Address: 0x801ABF38
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x801AC038
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -162,7 +72,6 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
 int ccsharpclawpad_getExtraSize(void) { return 0x4; }
@@ -171,7 +80,6 @@ int ccpedstal_getExtraSize(void);
 /* render-with-fn(lbl) (no visibility check). */
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -183,13 +91,10 @@ void ccsharpclawpad_init(int* obj, int* def)
 
 void cclevcontrol_free(void);
 
-
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
-
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
@@ -208,11 +113,7 @@ extern int ObjTrigger_IsSet(int obj);
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
 
-
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-
-
-
 
 extern f32 lbl_803E46A8;
 extern f32 lbl_803E46AC;
@@ -305,6 +206,4 @@ void ccsharpclawpad_update(int obj)
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-
 extern f32 lbl_803E46D0;
-

@@ -20,14 +20,6 @@ extern f32 lbl_803E162C;
 extern f32 lbl_803E1630;
 extern f32 lbl_803E1640;
 
-
-/*
- * --INFO--
- *
- * Function: lockIconInit
- * EN v1.0 Address: 0x80100FA0
- * EN v1.0 Size: 276b
- */
 void lockIconInit(void)
 {
     if (gCamcontrolTargetReticle == NULL)

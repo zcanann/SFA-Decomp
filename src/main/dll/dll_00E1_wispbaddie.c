@@ -6,8 +6,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
-
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -15,110 +13,6 @@ extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
 extern f32 lbl_803DC074;
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e1dc
- * EN v1.0 Address: 0x8014E1DC
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8014E604
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e210
- * EN v1.0 Address: 0x8014E210
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8014E638
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e248
- * EN v1.0 Address: 0x8014E248
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x8014EBD8
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e374
- * EN v1.0 Address: 0x8014E374
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8014ED20
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e3a8
- * EN v1.0 Address: 0x8014E3A8
- * EN v1.0 Size: 1264b
- * EN v1.1 Address: 0x8014ED54
- * EN v1.1 Size: 1168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014ede0
- * EN v1.0 Address: 0x8014EDE0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8014F6E0
- * EN v1.1 Size: 680b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014ede4
- * EN v1.0 Address: 0x8014EDE4
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x8014F988
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void hagabon_release(void);
@@ -161,17 +55,11 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 
-
-
-
-
 /* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
-
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
-
 
 void hagabon_hitDetect(int obj);
 
@@ -301,7 +189,6 @@ void fn_8014F620(int obj, int* state)
 void swarmbaddie_update(int obj);
 
 void hagabon_update(int obj);
-
 
 ObjectDescriptor gHagabonObjDescriptor = {
     0,
@@ -533,64 +420,6 @@ void wispbaddie_init(int obj, int setup, int initialised)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014fd38
- * EN v1.0 Address: 0x8014FD38
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x8014FE24
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014fd80
- * EN v1.0 Address: 0x8014FD80
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8014FE7C
- * EN v1.1 Size: 992b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014fd84
- * EN v1.0 Address: 0x8014FD84
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x8015025C
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014fef8
- * EN v1.0 Address: 0x8014FEF8
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8015038C
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8014fef8(undefined4 param_1, int param_2, undefined4 param_3, int param_4)
 {
     if (param_4 == 0x10)
@@ -602,37 +431,11 @@ void FUN_8014fef8(undefined4 param_1, int param_2, undefined4 param_3, int param
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014ff20
- * EN v1.0 Address: 0x8014FF20
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801503B4
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8014ff20(void)
 {
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014ff24
- * EN v1.0 Address: 0x8014FF24
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801503B8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8014ff24(short* param_1, undefined4 param_2)
@@ -641,20 +444,6 @@ void FUN_8014ff24(short* param_1, undefined4 param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8014ffa8
- * EN v1.0 Address: 0x8014FFA8
- * EN v1.0 Size: 1176b
- * EN v1.1 Address: 0x80150448
- * EN v1.1 Size: 1000b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, uint param_11, undefined4 param_12,
@@ -784,38 +573,12 @@ LAB_80150818:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: wispbaddie_release
- * EN v1.0 Address: 0x8014FEF0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void wispbaddie_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: wispbaddie_initialise
- * EN v1.0 Address: 0x8014FEF4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wispbaddie_initialise(void)
 {
 }
@@ -836,7 +599,6 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
     (ObjectDescriptorCallback)wispbaddie_getObjectTypeId,
     wispbaddie_getExtraSize,
 };
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014FF20(void)

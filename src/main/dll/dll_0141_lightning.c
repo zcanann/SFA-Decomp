@@ -2,131 +2,14 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/effect_interfaces.h"
 
-
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801950ac
- * EN v1.0 Address: 0x801950AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8019518C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f0
- * EN v1.0 Address: 0x801954F0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80195584
- * EN v1.1 Size: 4624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f4
- * EN v1.0 Address: 0x801954F4
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x80196794
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b40
- * EN v1.0 Address: 0x80195B40
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80196EA8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b74
- * EN v1.0 Address: 0x80195B74
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80196ED8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int lightning_getExtraSize(void) { return 0x28; }
@@ -135,41 +18,13 @@ int lightning_getExtraSize(void) { return 0x28; }
 extern f32 lbl_803E4048;
 extern void objRenderFn_8003b8f4(f32);
 
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
-
-
-
-
-
-
-
-
-
-
-
-/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
- * trigger gamebit, integrate velocity/rotation with per-axis gravity
- * clamps, run the path-control hooks with surface bounce, fade alpha over
- * the lifetime window, and emit the two trail particles. */
-
-
-/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
- * state from the setup record: spawn position/rotation, launch velocity
- * (optionally homing on the target point), rotation velocities and the
- * gravity/clamp direction flags. */
-
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-
-/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
- * toward the gamebit-selected target and feed the heavy fog params. */
 
 /* segment pragma-stack balance (re-split): */
 
@@ -180,8 +35,6 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-
-
 
 typedef struct LightningPlacement
 {
@@ -194,11 +47,6 @@ typedef struct LightningPlacement
     u8 pad26[0x28 - 0x26];
 } LightningPlacement;
 
-
-
-
-
-
 extern void* ObjGroup_GetObjects();
 
 extern f32 lbl_803E4088;
@@ -206,21 +54,6 @@ extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
 
-
-
-/*
- * --INFO--
- *
- * Function: lightning_free
- * EN v1.0 Address: 0x801978A8
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801978DC
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
 extern void mm_free(void* p);
 
@@ -403,9 +236,6 @@ void lightning_init(u8* obj, u8* data)
 
 void WaterFallSpray_free(u8* obj);
 
-
-
-
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
@@ -415,94 +245,10 @@ void WaterFallSpray_free(u8* obj);
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 
-
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
 
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197960
- * EN v1.0 Address: 0x80197960
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x801979B8
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e54
- * EN v1.0 Address: 0x80197E54
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80197E64
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e84
- * EN v1.0 Address: 0x80197E84
- * EN v1.0 Size: 940b
- * EN v1.1 Address: 0x80197E94
- * EN v1.1 Size: 828b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8019836c
- * EN v1.0 Address: 0x8019836C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80198350
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801983a0
- * EN v1.0 Address: 0x801983A0
- * EN v1.0 Size: 660b
- * EN v1.1 Address: 0x80198384
- * EN v1.1 Size: 916b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
-

@@ -1,7 +1,6 @@
 /* DLL 0x0033 (nrareware) — Rareware logo / loading screen front-end [0x80115F20-0x8011611C). */
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 
-
 extern int lbl_803DD5F8;
 extern f32 lbl_803DD600;
 extern f32 lbl_803DD604;
@@ -9,80 +8,8 @@ extern u8 lbl_803DD608;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
 
-
-/*
- * --INFO--
- *
- * Function: runLoadingScreens
- * EN v1.0 Address: 0x801159E4
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x80115C80
- * EN v1.1 Size: 880b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: initLoadingScreenTextures
- * EN v1.0 Address: 0x80115D54
- * EN v1.0 Size: 280b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-/*
- * --INFO--
- *
- * Function: TitleScreenInit_frameStart
- * EN v1.0 Address: 0x80115E74
- * EN v1.0 Size: 72b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: TitleScreenInit_initialise
- * EN v1.0 Address: 0x80115EC0
- * EN v1.0 Size: 96b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: n_rareware_render
- * EN v1.0 Address: 0x80115F20
- * EN v1.0 Size: 152b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void n_rareware_render(void)
 {
     extern u8 lbl_803DD609; /* #57 */
@@ -132,19 +59,6 @@ extern f32 timeDelta;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern u8 lbl_803DD60A;
 
-/*
- * --INFO--
- *
- * Function: n_rareware_frameStart
- * EN v1.0 Address: 0x80115FBC
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x80115FF0
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int n_rareware_frameStart(void)
 {
     extern s8 lbl_803DD609; /* #57 */
@@ -192,19 +106,6 @@ void n_rareware_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: n_rareware_initialise
- * EN v1.0 Address: 0x801160E0
- * EN v1.0 Size: 60b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void n_rareware_initialise(void)
 {
     extern s8 lbl_803DD609; /* #57 */
@@ -216,34 +117,5 @@ void n_rareware_initialise(void)
     lbl_803DD609 = 0;
     lbl_803DD608 = 0;
 }
-
-
-/*
- * --INFO--
- *
- * Function: n_attractmode_prepareMovie
- * EN v1.0 Address: 0x80116224
- * EN v1.0 Size: 920b
- * EN v1.1 Address: 0x801164C0
- * EN v1.1 Size: 920b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: TitleMenu_render
- * EN v1.0 Address: 0x801165BC
- * EN v1.0 Size: 264b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */

@@ -8,30 +8,24 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
 /* dim2conveyor_getExtraSize == 0x14. */
-
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 /* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 
-
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
 /* dimtruthhornice_getExtraSize == 0x8. */
-
 
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 /* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 
-
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
-
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
@@ -41,22 +35,7 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 extern EffectInterface** gPartfxInterface;
 
-/*
- * --INFO--
- *
- * Function: dim_levelcontrol_update
- * EN v1.0 Address: 0x801B6464
- * EN v1.0 Size: 1352b
- * EN v1.1 Address: 0x801B6A18
- * EN v1.1 Size: 1352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 extern f32 timeDelta;
-
 
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
@@ -69,7 +48,6 @@ extern void* mmAlloc(int size, int a, int b);
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
 
-
 typedef struct Dll1DFState
 {
     u8 pad0[0x4 - 0x0];
@@ -80,65 +58,6 @@ typedef struct Dll1DFState
     f32 unk24;
 } Dll1DFState;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801b8c60
- * EN v1.0 Address: 0x801B8C60
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801B8D60
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b9728
- * EN v1.0 Address: 0x801B9728
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B9578
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b972c
- * EN v1.0 Address: 0x801B972C
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801B97B8
- * EN v1.1 Size: 524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b9cc4
- * EN v1.0 Address: 0x801B9CC4
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x801B9DC4
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801b9cc4(int param_1)
@@ -159,27 +78,20 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_1DA_release(void);
 
-
 /* dim2icefloe: per-frame curve-follow update + path-param init. */
-
 
 /* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
 
-
 /* dll_1DB_update: geyser state machine driven by player standing on it. */
-
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
 
-
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -207,7 +119,6 @@ int dll_1DF_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B08;
 extern f32 lbl_803E4B98;
-
 
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -255,7 +166,6 @@ void dll_1DF_init(void* obj, void* p)
 void dim2lavacontrol_setScale(void* obj);
 
 /* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
-
 
 /* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
@@ -311,4 +221,3 @@ void dll_1DF_update(void* obj)
 /* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
 void dll_1DB_init(void* obj, void* p);
-

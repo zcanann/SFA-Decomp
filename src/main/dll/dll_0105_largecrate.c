@@ -65,19 +65,6 @@ typedef struct
     f32 fw;
 } ExplodeArgs;
 
-/*
- * --INFO--
- *
- * Function: fn_801833E4
- * EN v1.0 Address: 0x801833E4
- * EN v1.0 Size: 1824b
- * EN v1.1 Address: 0x8018393C
- * EN v1.1 Size: 1824b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fn_801833E4(int obj, int player, int state)
 {
     ExplodeArgs blk;
@@ -296,37 +283,11 @@ int fn_801833E4(int obj, int player, int state)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: largecrate_getExtraSize
- * EN v1.0 Address: 0x80183B44
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80183F3C
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int largecrate_getExtraSize(void)
 {
     return 0x2c;
 }
 
-/*
- * --INFO--
- *
- * Function: largecrate_getObjectTypeId
- * EN v1.0 Address: 0x80183B4C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80183F44
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int largecrate_getObjectTypeId(void)
 {
     return 0;
@@ -364,30 +325,10 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: largecrate_hitDetect
- * EN v1.0 Address: 0x80183C98
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80184090
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void largecrate_hitDetect(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: largecrate_update
- * EN v1.0 Address: 0x80183C9C
- * EN v1.0 Size: 1252b
- */
 void largecrate_update(int obj)
 {
     extern int* lbl_803DDAC8;
@@ -578,15 +519,6 @@ typedef union LargeCrateVariantRemap
 extern LargeCrateVariantRemap lbl_802C2280;
 extern LargeCrateVariantRemap lbl_802C228C;
 
-/*
- * --INFO--
- *
- * Function: largecrate_init
- * EN v1.0 Address: 0x80184180
- * EN v1.0 Size: 568b
- * EN v1.1 Address: 0x801841F4
- * EN v1.1 Size: 568b
- */
 void largecrate_init(int obj, u8* initData)
 {
     extern void* lbl_803DDAC8;
@@ -667,24 +599,10 @@ void largecrate_init(int obj, u8* initData)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: largecrate_release
- * EN v1.0 Address: 0x801843B8
- * EN v1.0 Size: 4b
- */
 void largecrate_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: largecrate_initialise
- * EN v1.0 Address: 0x801843BC
- * EN v1.0 Size: 4b
- */
 void largecrate_initialise(void)
 {
 }

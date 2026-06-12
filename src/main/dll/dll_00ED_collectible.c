@@ -15,164 +15,10 @@ extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E40EC;
 
-/*
- * --INFO--
- *
- * Function: staticCamera_free
- * EN v1.0 Address: 0x8016BAC4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8016BD54
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: staticCamera_render
- * EN v1.0 Address: 0x8016BAE8
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8016BD78
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: staticCamera_init
- * EN v1.0 Address: 0x8016BB10
- * EN v1.0 Size: 168b
- * EN v1.1 Address: 0x8016BDB0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016d188
- * EN v1.0 Address: 0x8016D188
- * EN v1.0 Size: 2060b
- * EN v1.1 Address: 0x8016D394
- * EN v1.1 Size: 2820b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016d994
- * EN v1.0 Address: 0x8016D994
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x8016DE98
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016e8cc
- * EN v1.0 Address: 0x8016E8CC
- * EN v1.0 Size: 1068b
- * EN v1.1 Address: 0x8016F0A8
- * EN v1.1 Size: 756b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80170048
- * EN v1.0 Address: 0x80170048
- * EN v1.0 Size: 2352b
- * EN v1.1 Address: 0x8017082C
- * EN v1.1 Size: 1804b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: checkpoint4_render
- * EN v1.0 Address: 0x80170F68
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x80171EA4
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: checkpoint4_init
- * EN v1.0 Address: 0x80170F88
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x80171ED0
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 extern void* getTrickyObject(void);
 extern u32 GameBit_Get(int eventId);
 
-/*
- * --INFO--
- *
- * Function: sideload_update
- * EN v1.0 Address: 0x801710BC
- * EN v1.0 Size: 352b
- * EN v1.1 Address: 0x80172058
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void mikabombshadow_update(int* obj);
-
-/*
- * --INFO--
- *
- * Function: FUN_801713ac
- * EN v1.0 Address: 0x801713AC
- * EN v1.0 Size: 956b
- * EN v1.1 Address: 0x80172308
- * EN v1.1 Size: 744b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -681,7 +527,6 @@ void objSetAnimField48to0(int* obj);
 
 void flamethrowerspe_func0B(int* obj);
 
-
 void collectible_func0E(int* obj, u32 v)
 {
     *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e) = (u8)v;
@@ -791,7 +636,6 @@ void flamethrowerspe_update(int* obj);
 void mikabomb_init(int* obj);
 
 extern void GameBit_Set(int eventId, int value);
-
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -1043,19 +887,6 @@ extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
 extern f32 lbl_803E4104;
 
-/*
- * --INFO--
- *
- * Function: FUN_801723dc
- * EN v1.0 Address: 0x801723DC
- * EN v1.0 Size: 720b
- * EN v1.1 Address: 0x801725F0
- * EN v1.1 Size: 664b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801723dc(int param_1)
@@ -1142,19 +973,6 @@ void FUN_801723dc(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: collectible_free
- * EN v1.0 Address: 0x80173040
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x80172F80
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 void collectible_free(int obj)
 {
@@ -1163,56 +981,17 @@ void collectible_free(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: collectible_getExtraSize
- * EN v1.0 Address: 0x80172E34
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80172D70
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 int collectible_getExtraSize(void)
 {
     return 0x2b8;
 }
 
-/*
- * --INFO--
- *
- * Function: collectible_getObjectTypeId
- * EN v1.0 Address: 0x80172E3C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80172D78
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int collectible_getObjectTypeId(void)
 {
     return 0x13;
 }
 
-/*
- * --INFO--
- *
- * Function: collectible_hitDetect
- * EN v1.0 Address: 0x80172F90
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80172ECC
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void collectible_hitDetect(void)
 {
 }
@@ -1628,19 +1407,6 @@ extern f32 lbl_803E3498;
 extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
 
-/*
- * --INFO--
- *
- * Function: collectible_init
- * EN v1.0 Address: 0x80172F14
- * EN v1.0 Size: 1104b
- * EN v1.1 Address: 0x801730D0
- * EN v1.1 Size: 752b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void collectible_init(int obj, int setup)
 {
     ObjAnimComponent* objAnim;
@@ -1739,36 +1505,10 @@ void collectible_init(int obj, int setup)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: collectible_release
- * EN v1.0 Address: 0x8017321C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80173378
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void collectible_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: collectible_initialise
- * EN v1.0 Address: 0x80173220
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017337C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void collectible_initialise(void)
 {
 }

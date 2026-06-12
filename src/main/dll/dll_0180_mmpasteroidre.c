@@ -9,26 +9,19 @@ extern u32 randomGetRange(int min, int max);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 
-
 extern void doRumble(f32 v);
 
 extern void objRenderFn_8003b8f4(f32 v);
 
-
 extern f32 timeDelta;
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* Pattern wrappers. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -41,12 +34,10 @@ extern f32 timeDelta;
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 /*
  * Per-object extra state for the MoonSeedBush plant spot
  * (MoonSeedBush_getExtraSize == 0x2).
  */
-
 
 STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
@@ -62,7 +53,6 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
  * (mmp_trenchfx_getExtraSize == 0x30).
  */
 
-
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 /*
@@ -73,7 +63,6 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
-
 extern undefined8 FUN_80006728();
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();
@@ -82,20 +71,6 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a68b8
- * EN v1.0 Address: 0x801A68B8
- * EN v1.0 Size: 504b
- * EN v1.1 Address: 0x801A6BEC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -126,20 +101,6 @@ FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a7874
- * EN v1.0 Address: 0x801A7874
- * EN v1.0 Size: 504b
- * EN v1.1 Address: 0x801A7500
- * EN v1.1 Size: 420b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
@@ -197,10 +158,8 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void);
-
 
 void mmp_asteroid_re_free(void)
 {
@@ -220,7 +179,6 @@ void mmp_asteroid_re_initialise(void)
 
 void mmp_moonrock_hitDetect(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
 int mmp_asteroid_re_getObjectTypeId(void) { return 0x0; }
@@ -239,12 +197,10 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 extern f32 lbl_803E44D4;
 
-
 extern void setDrawLights(int v);
 extern f32 lbl_803E44E8;
 
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-
 
 #pragma scheduling off
 int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -331,7 +287,6 @@ void mmp_asteroid_re_init(int obj)
         state->baseY2 = v;
     }
 }
-
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern f32 mathSinf(f32);
@@ -484,4 +439,3 @@ void mmp_asteroid_re_update(int obj)
 }
 
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
-

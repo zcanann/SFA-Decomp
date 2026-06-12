@@ -57,19 +57,6 @@ static inline uint camcontrol_GetTargetKind(CamcontrolTargetObject* target)
     return target->targetSetup[target->targetSetupIndex].targetKind & CAMCONTROL_TARGET_KIND_MASK;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updateTargetFeedback
- * EN v1.0 Address: 0x8010224C
- * EN v1.0 Size: 1652b
- * EN v1.1 Address: 0x801024E8
- * EN v1.1 Size: 1736b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_updateTargetFeedback(void)
 {
     uint targetKind;
@@ -325,19 +312,6 @@ int Camera_getOverrideTarget(void)
     return CAMCONTROL_CAMERA->overrideTarget;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_getRelativePosition
- * EN v1.0 Address: 0x80102914
- * EN v1.0 Size: 240b
- * EN v1.1 Address: 0x80102BB0
- * EN v1.1 Size: 396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, float* outX, float* outY,
                                     float* outZ, float* outDistanceXZ, int useLocalPosition)
 {
@@ -412,19 +386,6 @@ void Camera_setFocus(void* target)
     CAMCONTROL_CAMERA->focusObj = target;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_loadTriggeredCamAction
- * EN v1.0 Address: 0x80102AA0
- * EN v1.0 Size: 1012b
- * EN v1.1 Address: 0x80102D3C
- * EN v1.1 Size: 1012b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int triggerMode)
 {
     int handlerCount;
@@ -596,19 +557,6 @@ void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int trigge
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Camera_getCamActionsBinEntry
- * EN v1.0 Address: 0x80102E94
- * EN v1.0 Size: 116b
- * EN v1.1 Address: 0x80103130
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 CamcontrolTriggeredAction* Camera_getCamActionsBinEntry(int actionNo)
 {
     CamcontrolTriggeredAction* camAction;
@@ -626,19 +574,6 @@ CamcontrolTriggeredAction* Camera_getCamActionsBinEntry(int actionNo)
     return camAction;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_release
- * EN v1.0 Address: 0x80102F08
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x801031A4
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_release(void* camAction, int recordSize)
 {
     CamcontrolHandlerEntry* currentHandler;
@@ -650,19 +585,6 @@ void camcontrol_release(void* camAction, int recordSize)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_queueSavedAction
- * EN v1.0 Address: 0x80102F44
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x801031E0
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_queueSavedAction(int blendFrames, u8 queueMode)
 {
     if (gCamcontrolSavedActionId != CAMCONTROL_SAVED_ACTION_NONE)
@@ -673,19 +595,6 @@ void camcontrol_queueSavedAction(int blendFrames, u8 queueMode)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Camera_setMode
- * EN v1.0 Address: 0x80102F88
- * EN v1.0 Size: 204b
- * EN v1.1 Address: 0x80103224
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void Camera_setMode(s32 actionId, int priority, int startFlags, int dataSize, void* data,
                     int blendFrames, u8 queueMode)
 {
@@ -720,19 +629,6 @@ void Camera_setMode(s32 actionId, int priority, int startFlags, int dataSize, vo
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Camera_update
- * EN v1.0 Address: 0x801030C0
- * EN v1.0 Size: 748b
- * EN v1.1 Address: 0x8010335C
- * EN v1.1 Size: 748b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void Camera_update(void)
 {
     CamcontrolCameraState* camera;

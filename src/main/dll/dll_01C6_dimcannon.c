@@ -45,19 +45,6 @@ extern f32 lbl_803DCB60;
 extern f32 lbl_803DCB64;
 extern f32 lbl_803DCB70;
 
-/*
- * --INFO--
- *
- * Function: FUN_801b2550
- * EN v1.0 Address: 0x801B2550
- * EN v1.0 Size: 1672b
- * EN v1.1 Address: 0x801B2B04
- * EN v1.1 Size: 1560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
@@ -848,20 +835,6 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-/*
- * --INFO--
- *
- * Function: dimlavasmash_init
- * EN v1.0 Address: 0x801B3658
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B367C
- * EN v1.1 Size: 636b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 extern unsigned long GameBit_Set(int eventId, int value);
@@ -872,4 +845,3 @@ extern unsigned long GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-

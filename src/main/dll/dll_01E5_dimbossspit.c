@@ -6,10 +6,6 @@
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
-
-
-
-
 typedef struct DIMbossspitUpdateBurstState
 {
     u8 pad0[0x4 - 0x0];
@@ -21,9 +17,6 @@ typedef struct DIMbossspitUpdateBurstState
     u8 pad402[0x40C - 0x402];
     s32 unk40C;
 } DIMbossspitUpdateBurstState;
-
-
-
 
 typedef struct DIMbossspitState
 {
@@ -37,7 +30,6 @@ typedef struct DIMbossspitState
     u8 pad402[0x40C - 0x402];
     s32 unk40C;
 } DIMbossspitState;
-
 
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int min, int max);
@@ -69,75 +61,6 @@ extern f32 lbl_803E4D64;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
 
-/*
- * --INFO--
- *
- * Function: dimbossgut2_updateTracking
- * EN v1.0 Address: 0x801BF048
- * EN v1.0 Size: 652b
- * EN v1.1 Address: 0x801BF5FC
- * EN v1.1 Size: 680b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_free
- * EN v1.0 Address: 0x801BF2F0
- * EN v1.0 Size: 140b
- * EN v1.1 Address: 0x801BF8A4
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_render
- * EN v1.0 Address: 0x801BF37C
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x801BF930
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_update
- * EN v1.0 Address: 0x801BF3E8
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x801BF99C
- * EN v1.1 Size: 716b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_init
- * EN v1.0 Address: 0x801BF6B4
- * EN v1.0 Size: 540b
- * EN v1.1 Address: 0x801BFC68
- * EN v1.1 Size: 540b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void* objCreateLight(int obj, int n);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
@@ -145,20 +68,6 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_updateBurst
- * EN v1.0 Address: 0x801BF8D8
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801BFE8C
- * EN v1.1 Size: 664b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbossspit_updateBurst(int obj)
 {
     int state;
@@ -236,19 +145,6 @@ void DIMbossspit_updateBurst(int obj)
                                      &radius);
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbossspit_free
- * EN v1.0 Address: 0x801BFB70
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801C0124
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbossspit_free(int param_1)
 {
     int obj = param_1;
@@ -263,19 +159,6 @@ void DIMbossspit_free(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbossspit_render
- * EN v1.0 Address: 0x801BFBC4
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x801C0178
- * EN v1.1 Size: 104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     u8* light;
@@ -294,19 +177,6 @@ void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int para
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbossspit_update
- * EN v1.0 Address: 0x801BFC2C
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801C01E0
- * EN v1.1 Size: 648b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbossspit_update(int obj)
 {
     int state;
@@ -378,19 +248,6 @@ void DIMbossspit_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbossspit_init
- * EN v1.0 Address: 0x801BFEB4
- * EN v1.0 Size: 312b
- * EN v1.1 Address: 0x801C0468
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
@@ -429,12 +286,8 @@ void DIMbossspit_init(int obj)
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dimbossgut2_func11(void);
-
-
-
 
 void DIMbossspit_hitDetect(void)
 {
@@ -449,50 +302,6 @@ void DIMbossspit_initialise(void)
 }
 
 void magicmaker_free(void);
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: magicmaker_update
- * EN v1.0 Address: 0x801C0080
- * EN v1.0 Size: 624b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: dimbossfire_free
- * EN v1.0 Address: 0x801C04C8
- * EN v1.0 Size: 100b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* 8b "li r3, N; blr" returners. */
 int DIMbossspit_getExtraSize(void) { return 0x8; }

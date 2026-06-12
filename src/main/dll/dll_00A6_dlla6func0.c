@@ -1,22 +1,8 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/pickup.h"
 
-
 extern ModgfxInterface** gModgfxInterface;
 
-/*
- * --INFO--
- *
- * Function: dll_9D_func03
- * EN v1.0 Address: 0x800FD744
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x800FD9E0
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     u32 mode; /* +0x00 */
@@ -26,96 +12,6 @@ typedef struct
     u8 layer; /* +0x16 */
 } GfxCmd;
 
-
-
-
-/*
- * --INFO--
- *
- * Function: dll_9E_func03
- * EN v1.0 Address: 0x800FDA98
- * EN v1.0 Size: 888b
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_9F_func03
- * EN v1.0 Address: 0x800FDE18
- * EN v1.0 Size: 1056b
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_A0_func03
- * EN v1.0 Address: 0x800FD820
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x800FE4DC
- * EN v1.1 Size: 872b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_A1_func03
- * EN v1.0 Address: 0x800FD884
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x800FE844
- * EN v1.1 Size: 896b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_A2_func03
- * EN v1.0 Address: 0x800FD8F0
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x800FEBC4
- * EN v1.1 Size: 860b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_A5_func03
- * EN v1.0 Address: 0x800FD954
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x800FEF20
- * EN v1.1 Size: 896b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: dll_A6_func03
- * EN v1.0 Address: 0x800FF004
- * EN v1.0 Size: 1684b
- */
 extern u32 randomGetRange(int min, int max);
 extern u8 lbl_80318DF0[];
 extern u8 lbl_80318E10[];
@@ -316,45 +212,11 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80318DF0, 1, &lbl_803DB980, 0x26a, 0);
 }
 
-
-/*
- * --INFO--
- *
- * Function: dll_A8_func03
- * EN v1.0 Address: 0x800FFB44
- * EN v1.0 Size: 952b
- */
 extern u8 lbl_80318EE8[];
 
 void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5, u8* extraArgs);
 
-/*
- * --INFO--
- *
- * Function: dll_A9_func03
- * EN v1.0 Address: 0x800FFF04
- * EN v1.0 Size: 948b
- */
-
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void dll_A6_func01_nop(void)
 {
@@ -365,12 +227,5 @@ void dll_A6_func00_nop(void)
 }
 
 void dll_A7_func01_nop(void);
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */

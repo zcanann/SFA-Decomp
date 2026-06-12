@@ -4,8 +4,6 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 
-
-
 typedef struct MmshScalesState
 {
     u8 pad0[0xC - 0x0];
@@ -22,42 +20,12 @@ typedef struct MmshScalesState
     u8 pad70[0x140 - 0x70];
 } MmshScalesState;
 
-
-
-
 extern void Obj_FreeObject(void* obj);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_init
- * EN v1.0 Address: 0x801C52D8
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x801C533C
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: mmsh_scales_free
- * EN v1.0 Address: 0x801C53B0
- * EN v1.0 Size: 144b
- * EN v1.1 Address: 0x801C5418
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void mmsh_scales_free(int obj, int arg2)
 {
     void* child;
@@ -71,13 +39,6 @@ void mmsh_scales_free(int obj, int arg2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: mmsh_scales_update
- * EN v1.0 Address: 0x801C5474
- * EN v1.0 Size: 372b
- */
 extern u8 lbl_803DB411;
 
 void mmsh_scales_update(int objArg)
@@ -127,10 +88,8 @@ void mmsh_scales_update(int objArg)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void mmsh_shrine_release(void);
-
 
 void mmsh_scales_hitDetect(void)
 {
@@ -145,9 +104,6 @@ void mmsh_scales_initialise(void)
 }
 
 void mmsh_waterspike_free(void);
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int mmsh_scales_getExtraSize(void) { return 0x140; }
@@ -164,17 +120,9 @@ void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4F68);
 }
 
-/*
- * --INFO--
- *
- * Function: mmsh_waterspike_update
- * EN v1.0 Address: 0x801C57B0
- * EN v1.0 Size: 380b
- */
 extern void* ObjList_FindObjectById(int id);
 
 void mmsh_waterspike_update(int obj);
-
 
 extern f32 lbl_803E4F78;
 extern u8 Obj_IsLoadingLocked(void);

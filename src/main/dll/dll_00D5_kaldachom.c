@@ -14,14 +14,12 @@ typedef struct KaldachomPlacement
     s32 unk14;
 } KaldachomPlacement;
 
-
 typedef struct KaldachomState
 {
     u8 pad0[0x3E8 - 0x0];
     f32 unk3E8;
     u8 pad3EC[0x3F0 - 0x3EC];
 } KaldachomState;
-
 
 extern undefined4 Sfx_PlayFromObject();
 extern u32 randomGetRange(int min, int max);
@@ -69,20 +67,6 @@ extern f32 lbl_803E30C4;
 extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 
-
-/*
- * --INFO--
- *
- * Function: kaldaChomFn_8016821c
- * EN v1.0 Address: 0x80168818
- * EN v1.0 Size: 500b
- * EN v1.1 Address: 0x801686C8
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
 {
@@ -119,19 +103,6 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: kaldaChomFn_80168374
- * EN v1.0 Address: 0x80168A0C
- * EN v1.0 Size: 640b
- * EN v1.1 Address: 0x80168820
- * EN v1.1 Size: 488b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
 {
     KaldaChomControl* control;
@@ -183,19 +154,6 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: kaldachom_handleAnimEvents
- * EN v1.0 Address: 0x80168C8C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80168A08
- * EN v1.1 Size: 496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline off
 void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
@@ -251,19 +209,6 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: kaldachom_updateCombat
- * EN v1.0 Address: 0x80168C90
- * EN v1.0 Size: 1624b
- * EN v1.1 Address: 0x80168BF8
- * EN v1.1 Size: 1108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct KaldaCombatParams
 {
     u32 a;
@@ -402,19 +347,6 @@ s16 kaldachom_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] 
 int kaldachom_getExtraSize(void) { return sizeof(CampfireState); }
 int kaldachom_getObjectTypeId(void) { return 0x49; }
 
-/*
- * --INFO--
- *
- * Function: kaldachom_free
- * EN v1.0 Address: 0x801692E8
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x8016904C
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void kaldachom_free(int obj)
 {
     undefined4 state;
@@ -425,19 +357,6 @@ void kaldachom_free(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: kaldachom_render
- * EN v1.0 Address: 0x80169348
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801690A8
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int state;
@@ -469,19 +388,6 @@ void kaldachom_hitDetect(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: kaldachom_update
- * EN v1.0 Address: 0x80169430
- * EN v1.0 Size: 1120b
- * EN v1.1 Address: 0x801691B8
- * EN v1.1 Size: 940b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void kaldachom_update(int obj)
 {
     int cond;
@@ -576,19 +482,6 @@ void kaldachom_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: kaldachom_init
- * EN v1.0 Address: 0x801690B8
- * EN v1.0 Size: 488b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void kaldachom_init(int obj, int data, int skip_alloc)
 {
     int initMode;

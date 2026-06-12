@@ -164,19 +164,6 @@ extern f32 lbl_803DFA38;
 extern f32 lbl_803DFA3C;
 extern f32 lbl_803DFA40;
 
-/*
- * --INFO--
- *
- * Function: FUN_8006a028
- * EN v1.0 Address: 0x8006A028
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8006A1A4
- * EN v1.1 Size: 5424b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void DCFlushRange(void* addr, u32 nBytes);
 
 /* Box-blur a square tiled texture in place (8-bit and 16-bit texel paths). */
@@ -417,19 +404,6 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
     DCFlushRange(data, size * size);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006a02c
- * EN v1.0 Address: 0x8006A02C
- * EN v1.0 Size: 676b
- * EN v1.1 Address: 0x8006B6D4
- * EN v1.1 Size: 728b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void newshadows_captureProjectedShadow(ushort* object)
@@ -507,19 +481,6 @@ void newshadows_captureProjectedShadow(ushort* object)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006a2d0
- * EN v1.0 Address: 0x8006A2D0
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x8006B9AC
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
 {
     int remaining;
@@ -580,19 +541,6 @@ void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006a410
- * EN v1.0 Address: 0x8006A410
- * EN v1.0 Size: 2448b
- * EN v1.1 Address: 0x8006BADC
- * EN v1.1 Size: 2596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_renderQueuedShadowCasters(void)
 {
     undefined2 savedWord0;
@@ -1021,19 +969,6 @@ void newshadows_renderQueuedShadowCasters(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006ada0
- * EN v1.0 Address: 0x8006ADA0
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x8006C500
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_queueShadowCaster(int object)
 {
     ObjAnimComponent* objAnim;
@@ -1082,19 +1017,6 @@ void newshadows_queueShadowCaster(int object)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006af14
- * EN v1.0 Address: 0x8006AF14
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x8006C63C
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getShadowTextureTable4x8(int* tableOut, int* columnsOut, int* rowsOut)
 {
     *tableOut = (int)&DAT_8038ee48;
@@ -1103,19 +1025,6 @@ void newshadows_getShadowTextureTable4x8(int* tableOut, int* columnsOut, int* ro
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006af30
- * EN v1.0 Address: 0x8006AF30
- * EN v1.0 Size: 20b
- * EN v1.1 Address: 0x8006C65C
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getShadowTextureTable16(int* tableOut, int* countOut)
 {
     *tableOut = (int)&DAT_8038eec8;
@@ -1123,34 +1032,6 @@ void newshadows_getShadowTextureTable16(int* tableOut, int* countOut)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006af44
- * EN v1.0 Address: 0x8006AF44
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C674
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8006af5c
- * EN v1.0 Address: 0x8006AF5C
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C68C
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void newshadows_getShadowTexture(int* textureOut)
@@ -1159,168 +1040,47 @@ void newshadows_getShadowTexture(int* textureOut)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8006af74
- * EN v1.0 Address: 0x8006AF74
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C6A4
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getBlankShadowTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc38;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006af80
- * EN v1.0 Address: 0x8006AF80
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C6B0
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getShadowDirectionTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc3c;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006af8c
- * EN v1.0 Address: 0x8006AF8C
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C6BC
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getSoftShadowTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc40;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006af98
- * EN v1.0 Address: 0x8006AF98
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x8006C6C8
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8006b004
- * EN v1.0 Address: 0x8006B004
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C734
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getShadowRampTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc1c;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b010
- * EN v1.0 Address: 0x8006B010
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8006C740
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int newshadows_getSmallShadowTexture(void)
 {
     return DAT_803ddc54;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b018
- * EN v1.0 Address: 0x8006B018
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C748
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getShadowDiskTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc58;
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8006b030
- * EN v1.0 Address: 0x8006B030
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8006C760
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_getShadowNoiseTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc60;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b03c
- * EN v1.0 Address: 0x8006B03C
- * EN v1.0 Size: 120b
- * EN v1.1 Address: 0x8006C76C
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8006b03c(int param_1, undefined4* param_2, undefined4* param_3, int* param_4, int* param_5)
@@ -1333,19 +1093,6 @@ void FUN_8006b03c(int param_1, undefined4* param_2, undefined4* param_3, int* pa
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b0b4
- * EN v1.0 Address: 0x8006B0B4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8006C7EC
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 double newshadows_getShadowNoiseScale(void)
@@ -1353,34 +1100,6 @@ double newshadows_getShadowNoiseScale(void)
     return (double)lbl_803DDC24;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b0bc
- * EN v1.0 Address: 0x8006B0BC
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x8006C7F4
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8006b134
- * EN v1.0 Address: 0x8006B134
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8006C86C
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void newshadows_bindShadowRenderTexture(int textureSlot)
@@ -1396,19 +1115,6 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b180
- * EN v1.0 Address: 0x8006B180
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8006C8B8
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 int newshadows_getShadowRenderTexture(void)
@@ -1416,56 +1122,16 @@ int newshadows_getShadowRenderTexture(void)
     return DAT_803ddbfc;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8006b190
- * EN v1.0 Address: 0x8006B190
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8006C8C8
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int newshadows_getInverseShadowRampTexture(void)
 {
     return DAT_803ddc18;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b198
- * EN v1.0 Address: 0x8006B198
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8006C8D0
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int newshadows_getRadialFalloffTexture(void)
 {
     return DAT_803ddc10;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b1a0
- * EN v1.0 Address: 0x8006B1A0
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8006C8D8
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void newshadows_bindShadowCaptureTexture(int textureSlot)
@@ -1481,19 +1147,6 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b1ec
- * EN v1.0 Address: 0x8006B1EC
- * EN v1.0 Size: 136b
- * EN v1.1 Address: 0x8006C924
- * EN v1.1 Size: 136b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_refreshShadowCaptureTexture(void)
 {
     FUN_800709e8((double)lbl_803DF9A8, (double)lbl_803DF9A8, DAT_803ddbfc, 0xff, 0x40);
@@ -1507,19 +1160,6 @@ void newshadows_refreshShadowCaptureTexture(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b274
- * EN v1.0 Address: 0x8006B274
- * EN v1.0 Size: 236b
- * EN v1.1 Address: 0x8006C9AC
- * EN v1.1 Size: 236b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_flushShadowRenderTargets(void)
 {
     FUN_80259400(0, 0, 0x280, 0x1e0);
@@ -1544,19 +1184,6 @@ void newshadows_flushShadowRenderTargets(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b360
- * EN v1.0 Address: 0x8006B360
- * EN v1.0 Size: 388b
- * EN v1.1 Address: 0x8006CA98
- * EN v1.1 Size: 416b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_updateFrameState(void)
 {
     uint texSize;
@@ -1629,19 +1256,6 @@ void newshadows_updateFrameState(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b4e4
- * EN v1.0 Address: 0x8006B4E4
- * EN v1.0 Size: 20b
- * EN v1.1 Address: 0x8006CC38
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut)
@@ -1651,34 +1265,6 @@ void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b4f8
- * EN v1.0 Address: 0x8006B4F8
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x8006CC4C
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8006b540
- * EN v1.0 Address: 0x8006B540
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x8006CCA0
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void newshadows_freeShadowDirectionTexture(void)
 {
     FUN_80017814(DAT_803ddc3c);
@@ -1686,19 +1272,6 @@ void newshadows_freeShadowDirectionTexture(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006b56c
- * EN v1.0 Address: 0x8006B56C
- * EN v1.0 Size: 696b
- * EN v1.1 Address: 0x8006CCCC
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void newshadows_buildShadowDirectionTexture(void)
@@ -1768,20 +1341,6 @@ void newshadows_buildShadowDirectionTexture(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8006dca8
- * EN v1.0 Address: 0x8006DCA8
- * EN v1.0 Size: 148b
- * EN v1.1 Address: 0x8006EF48
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8006dca8(undefined8 param_1, double param_2, undefined4 param_3, undefined4 param_4,
                   uint param_5, int param_6, int param_7)
 {

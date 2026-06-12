@@ -2,7 +2,6 @@
 #include "main/dll/dll_43.h"
 #include "main/screen_transition.h"
 
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveSelectGoToChooseSlot(int arg);
 
@@ -14,19 +13,6 @@ extern u8 lbl_803DD6CC;
 extern u8 lbl_803DD6CD;
 extern u8 lbl_803DD6CF;
 
-/*
- * --INFO--
- *
- * Function: saveSelectSetSlot
- * EN v1.0 Address: 0x80119FAC
- * EN v1.0 Size: 304b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void saveSelectSetSlot(int param_1, int param_2)
 {
     if (param_1 == 0)

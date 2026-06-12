@@ -6,7 +6,6 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
-
 typedef struct FallLaddersObjectDef
 {
     u8 pad0[0x14 - 0x0];
@@ -18,7 +17,6 @@ typedef struct FallLaddersObjectDef
     s16 unk20;
     u8 pad22[0x28 - 0x22];
 } FallLaddersObjectDef;
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80041ff8();
@@ -36,50 +34,6 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80187664
- * EN v1.0 Address: 0x80187664
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x80187720
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: infopoint_hitDetect
- * EN v1.0 Address: 0x8018843C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801884A0
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80189054
- * EN v1.0 Address: 0x80189054
- * EN v1.0 Size: 2620b
- * EN v1.1 Address: 0x80189218
- * EN v1.1 Size: 1552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -353,10 +307,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
-
 
 void Fall_Ladders_render(void)
 {
@@ -376,7 +328,6 @@ void Fall_Ladders_initialise(void)
 
 void infopoint_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int Fall_Ladders_SeqFn(void) { return 0x0; }
 int Fall_Ladders_getExtraSize(void) { return 0xc; }
@@ -393,7 +344,6 @@ typedef struct FallLaddersState
     s16 delay;
 } FallLaddersState;
 
-
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
@@ -401,9 +351,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
 void Fall_Ladders_free(int obj)
@@ -420,15 +368,11 @@ void coldwatercontrol_init(int obj);
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
-
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
-
 
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
 
-
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E3B50;
@@ -516,4 +460,3 @@ void Fall_Ladders_init(int* obj, s8* def)
 }
 
 extern int textureLoadAsset(int id);
-

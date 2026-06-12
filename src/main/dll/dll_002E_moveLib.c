@@ -18,78 +18,9 @@ extern f32 lbl_803E2910;
 extern f32 lbl_803E2948;
 extern f32 lbl_803E294C;
 
-/*
- * --INFO--
- *
- * Function: dll_19_func0F
- * EN v1.0 Address: 0x80113504
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x80113590
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801135c0
- * EN v1.0 Address: 0x801135C0
- * EN v1.0 Size: 408b
- * EN v1.1 Address: 0x80113634
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801141dc
- * EN v1.0 Address: 0x801141DC
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x80114230
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801141e8
- * EN v1.0 Address: 0x801141E8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80114238
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801141e8(int param_1, wchar_t* param_2, wchar_t* param_3)
 {
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_801141ec
- * EN v1.0 Address: 0x801141EC
- * EN v1.0 Size: 136b
- * EN v1.1 Address: 0x801142B4
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
@@ -205,61 +136,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     return ret;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801143e8
- * EN v1.0 Address: 0x801143E8
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801144C0
- * EN v1.1 Size: 484b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801145a8
- * EN v1.0 Address: 0x801145A8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801146A4
- * EN v1.1 Size: 436b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801145b0
- * EN v1.0 Address: 0x801145B0
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x80114A58
- * EN v1.1 Size: 864b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801149b8
- * EN v1.0 Address: 0x801149B8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80114E4C
- * EN v1.1 Size: 572b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801149b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, float* param_11, short param_12,
@@ -267,19 +143,6 @@ void FUN_801149b8(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801149bc
- * EN v1.0 Address: 0x801149BC
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x80115088
- * EN v1.1 Size: 376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801149bc(short* param_1, int param_2, int param_3)
@@ -325,19 +188,6 @@ void FUN_801149bc(short* param_1, int param_2, int param_3)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80114b10
- * EN v1.0 Address: 0x80114B10
- * EN v1.0 Size: 316b
- * EN v1.1 Address: 0x80115200
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefined2 param_4, int param_5)
 {
     float fVar1;
@@ -851,19 +701,6 @@ extern f32 lbl_803E1CD4;
 extern f32 lbl_803E1CD8;
 extern f32 lbl_803E1CDC;
 
-/*
- * --INFO--
- *
- * Function: dll_2E_func03
- * EN v1.0 Address: 0x80115094
- * EN v1.0 Size: 1468b
- * EN v1.1 Address: 0x80115318
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct ProjNearSearch
 {
     f32 range;
@@ -1105,19 +942,6 @@ void FUN_801150ac(void)
 
 extern f32 lbl_803E1CE0;
 
-/*
- * --INFO--
- *
- * Function: objAnimFn_80115650
- * EN v1.0 Address: 0x80115650
- * EN v1.0 Size: 908b
- * EN v1.1 Address: 0x801158EC
- * EN v1.1 Size: 916b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning,
                        PostControl* control, float* turnSpeed, s16* moves)
 {

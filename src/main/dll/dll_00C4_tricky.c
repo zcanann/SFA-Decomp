@@ -11,7 +11,6 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-
 #define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
 #define TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE 0x08000000
 #define TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE 0x10000000
@@ -24,7 +23,6 @@
 #define TRICKY_HEIGHT_TRACK_GROUP 0x51
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
-
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -39,14 +37,12 @@ typedef struct BaddieInstantiateWeaponPlacement
     u8 pad14[0x18 - 0x14];
 } BaddieInstantiateWeaponPlacement;
 
-
 typedef struct TrickyDestroyState
 {
     u8 pad0[0x700 - 0x0];
     s32 unk700;
     u8 pad704[0x708 - 0x704];
 } TrickyDestroyState;
-
 
 typedef struct TrickyInitFlags
 {
@@ -209,19 +205,6 @@ extern f32 lbl_803E31C4;
 extern f32 lbl_803E3234;
 extern f32 lbl_803E3244;
 
-/*
- * --INFO--
- *
- * Function: FUN_80144e40
- * EN v1.0 Address: 0x80144E40
- * EN v1.0 Size: 736b
- * EN v1.1 Address: 0x80144ED8
- * EN v1.1 Size: 752b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80144e40(int param_1, int param_2)
 {
     float fVar1;
@@ -324,16 +307,6 @@ void FUN_80144e40(int param_1, int param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: tricky_SeqFn
- * EN v1.0 Address: 0x80145304
- * EN v1.0 Size: 1168b
- * EN v1.1 Address: 0x8014568C
- * EN v1.1 Size: 1328b
- */
 typedef struct
 {
     u8 bit7 : 1;
@@ -492,20 +465,6 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: sideCommandEnable
- * EN v1.0 Address: 0x801459E0
- * EN v1.0 Size: 240b
- * EN v1.1 Address: 0x80145E08
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
 {
     int commandCount;
@@ -543,19 +502,6 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Tricky_updateSideCommandPrompts
- * EN v1.0 Address: 0x80145AE8
- * EN v1.0 Size: 1648b
- * EN v1.1 Address: 0x80145F10
- * EN v1.1 Size: 1648b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int Tricky_updateSideCommandPrompts(int obj)
 {
     char cmdByte;
@@ -797,20 +743,6 @@ int Tricky_updateSideCommandPrompts(int obj)
     return -1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: Tricky_destroy
- * EN v1.0 Address: 0x801461DC
- * EN v1.0 Size: 480b
- * EN v1.1 Address: 0x80146604
- * EN v1.1 Size: 480b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void Tricky_destroy(int obj, int shouldKeepFlameChildren)
 {
     bool bVar1;
@@ -2771,19 +2703,6 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     }
 }
 
-/*
- * --INFO--
- *
- * Function: Tricky_render
- * EN v1.0 Address: 0x801463BC
- * EN v1.0 Size: 464b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, char doRender)
 {
     u8 mode;
@@ -2850,19 +2769,6 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Tricky_hitDetect
- * EN v1.0 Address: 0x8014658C
- * EN v1.0 Size: 500b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void Tricky_hitDetect(int obj)
 {
     f32 y;
@@ -2943,39 +2849,11 @@ void Tricky_hitDetect(int obj)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80146fa0
- * EN v1.0 Address: 0x80146FA0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80148FF0
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80146fa0(void)
 {
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80147884
- * EN v1.0 Address: 0x80147884
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x8014A5B0
- * EN v1.1 Size: 436b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, float* param_11, float* param_12)
@@ -3042,7 +2920,6 @@ void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     FUN_80286888();
     return;
 }
-
 
 /* 8b "li r3, N; blr" returners. */
 int Tricky_getExtraSize(void) { return 0x83c; }
@@ -3359,7 +3236,6 @@ void trickyFn_80144f50(int obj, int state)
         }
     }
 }
-
 
 /* frozenEnemyFn_80149bb4: 312b - flag bits to byte field. */
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val)

@@ -8,176 +8,6 @@ extern void ModelLightStruct_free(void* light);
 
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_free
- * EN v1.0 Address: 0x801C282C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_render
- * EN v1.0 Address: 0x801C2830
- * EN v1.0 Size: 48b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_hitDetect
- * EN v1.0 Address: 0x801C2860
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_update
- * EN v1.0 Address: 0x801C2864
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_init
- * EN v1.0 Address: 0x801C2868
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_release
- * EN v1.0 Address: 0x801C290C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_initialise
- * EN v1.0 Address: 0x801C2910
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fn_801C2914
- * EN v1.0 Address: 0x801C2914
- * EN v1.0 Size: 852b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_SeqFn
- * EN v1.0 Address: 0x801C2C68
- * EN v1.0 Size: 348b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_getExtraSize
- * EN v1.0 Address: 0x801C2DC4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_getObjectTypeId
- * EN v1.0 Address: 0x801C2DCC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_free
- * EN v1.0 Address: 0x801C2DD4
- * EN v1.0 Size: 148b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 #include "main/dll/DF/DFlantern.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -192,7 +22,6 @@ typedef struct SpiritPrizePlacement
     u8 pad1A[0x20 - 0x1A];
 } SpiritPrizePlacement;
 
-
 extern u32 randomGetRange(int min, int max);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -204,7 +33,6 @@ extern f32 lbl_803E4E9C;
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Obj_FreeObject(int obj);
 extern int coordsToMapCell(f32 x, f32 z);
-
 
 typedef struct DfshShrinePlacement
 {
@@ -219,75 +47,9 @@ STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_render
- * EN v1.0 Address: 0x801C2E68
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801C2EC8
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3134
- * EN v1.0 Address: 0x801C3134
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801C321C
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3a9c
- * EN v1.0 Address: 0x801C3A9C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801C3ABC
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3aa0
- * EN v1.0 Address: 0x801C3AA0
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x801C3BDC
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
 extern void* objCreateLight(int* obj, int v);
-
-
 
 void SpiritPrize_hitDetect(void)
 {
@@ -300,7 +62,6 @@ void SpiritPrize_release(void)
 void SpiritPrize_initialise(void)
 {
 }
-
 
 typedef struct SpiritPrizeState
 {
@@ -401,14 +162,12 @@ void SpiritPrize_init(int* obj, u8* init)
 
 void dfsh_objcreator_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int SpiritPrize_getExtraSize(void) { return 0x14c; }
 int SpiritPrize_getObjectTypeId(void) { return 0x8; }
 int dfsh_objcreator_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
 
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {

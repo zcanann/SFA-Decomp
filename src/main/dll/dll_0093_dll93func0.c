@@ -14,26 +14,7 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: dll_91_func03
- * EN v1.0 Address: 0x800FA5D8
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x800FA874
- * EN v1.1 Size: 1056b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 void dll_93_func01_nop(void)
 {
@@ -44,17 +25,6 @@ void dll_93_func00_nop(void)
 }
 
 void dll_94_func01_nop(void);
-
-
-
-
-
-
-
-
-
-
-
 
 /* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
  * the same large-struct + vtable-call pattern as foodbag's func03s; matching
@@ -79,10 +49,6 @@ typedef struct
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-
-
-
-
 extern u8 lbl_80317260[];
 extern f32 lbl_803E1240;
 extern f32 lbl_803E1244;
@@ -91,7 +57,6 @@ extern f32 lbl_803E124C;
 extern f32 lbl_803E1250;
 extern f32 lbl_803E1254;
 extern f32 lbl_803E1258;
-
 
 void dll_93_func03(int sourceObj, int variant, int posSource, uint flags)
 {
@@ -189,10 +154,3 @@ void dll_93_func03(int sourceObj, int variant, int posSource, uint flags)
 }
 
 extern u8 lbl_80317488[];
-
-
-
-
-
-
-

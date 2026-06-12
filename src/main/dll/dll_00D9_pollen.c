@@ -4,8 +4,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
-
-
 extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -17,46 +15,13 @@ extern uint FUN_8007f6c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8008112c();
 
-
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
-
 
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DF4;
 extern f32 lbl_803E3DF8;
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_render
- * EN v1.0 Address: 0x8016984C
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x80169CF8
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: kaldachompspit_init
- * EN v1.0 Address: 0x80169CC4
- * EN v1.0 Size: 552b
- * EN v1.1 Address: 0x8016A170
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-
 
 #pragma dont_inline on
 void fn_8016A660(int obj)
@@ -116,36 +81,8 @@ void fn_8016A660(int obj)
 }
 #pragma dont_inline reset
 
-
-/*
- * --INFO--
- *
- * Function: pollenfragment_init
- * EN v1.0 Address: 0x8016B0A4
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x8016ACA4
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pollenfragment_init(int obj, int config);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8016b228
- * EN v1.0 Address: 0x8016B228
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8016AE70
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -187,9 +124,7 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void pinponspike_render(void);
 
@@ -210,7 +145,6 @@ void pollen_initialise(void)
 void pollenfragment_release(void);
 
 void pollenfragment_initialise(void);
-
 
 extern f32 lbl_803E313C;
 
@@ -245,7 +179,6 @@ void pollen_hitDetect(int obj)
 }
 
 void pollenfragment_free(int obj);
-
 
 /* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void);
@@ -391,7 +324,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
@@ -437,8 +369,6 @@ void pollen_init(int* obj)
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
-
-
 extern f32 timeDelta;
 extern f32 lbl_803E3140;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
@@ -446,7 +376,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-
 
 void pinponspike_update(int obj);
 

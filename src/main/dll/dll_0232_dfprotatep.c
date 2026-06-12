@@ -68,34 +68,8 @@ extern f32 lbl_803E6478;
 #define SFXPLAYER_RING_SETUP_MODE 5
 #define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
 
-/*
- * --INFO--
- *
- * Function: TrickyCurve_updateBurstTrigger
- * EN v1.0 Address: 0x8020718C
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x80207250
- * EN v1.1 Size: 792b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void TrickyCurve_updateBurstTrigger(int obj);
 
-/*
- * --INFO--
- *
- * Function: TrickyCurve_updateBoundsTrigger
- * EN v1.0 Address: 0x802074FC
- * EN v1.0 Size: 520b
- * EN v1.1 Address: 0x80207568
- * EN v1.1 Size: 604b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void TrickyCurve_updateBoundsTrigger(int obj)
@@ -152,19 +126,6 @@ void TrickyCurve_updateBoundsTrigger(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: TrickyCurve_updateEffectRingTrigger
- * EN v1.0 Address: 0x80207704
- * EN v1.0 Size: 1292b
- * EN v1.1 Address: 0x802077C4
- * EN v1.1 Size: 1008b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2, undefined8 param_3,
                                          undefined8 param_4, undefined8 param_5, undefined8 param_6,
                                          undefined8 param_7, undefined8 param_8)
@@ -359,33 +320,6 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80207c10
- * EN v1.0 Address: 0x80207C10
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80207BB4
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: TrickyCurve_updateState
- * EN v1.0 Address: 0x80207C44
- * EN v1.0 Size: 640b
- * EN v1.1 Address: 0x80207BEC
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void TrickyCurve_updateState(undefined8 param_1, undefined8 param_2, undefined8 param_3,
                              undefined8 param_4, undefined8 param_5, undefined8 param_6,
                              undefined8 param_7, undefined8 param_8, int obj)
@@ -413,19 +347,6 @@ void TrickyCurve_updateState(undefined8 param_1, undefined8 param_2, undefined8 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: sfxplayer_updateEffectHandlePositions
- * EN v1.0 Address: 0x80207EC4
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x80207CC4
- * EN v1.1 Size: 700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sfxplayer_updateEffectHandlePositions(short* obj)
 {
     int angleDelta;
@@ -766,19 +687,6 @@ extern void timerSetToCountUp(void);
 #define SFXPLAYER_HIT_TYPE_RING_TARGET 0x13
 #define SFXPLAYER_OBJECT_FLAGS 0x6000
 
-/*
- * --INFO--
- *
- * Function: sfxplayer_update
- * EN v1.0 Address: 0x80207CE4
- * EN v1.0 Size: 720b
- * EN v1.1 Address: 0x80207F80
- * EN v1.1 Size: 492b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sfxplayer_update(int obj)
 {
     s16 i;
@@ -885,19 +793,6 @@ void sfxplayer_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: sfxplayer_init
- * EN v1.0 Address: 0x80207FBC
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x8020816C
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sfxplayer_init(int obj, int config)
 {
     SfxplayerState* state;
@@ -927,36 +822,10 @@ void sfxplayer_init(int obj, int config)
         *(u16*)(obj + SFXPLAYER_OBJECT_FLAGS_OFFSET) | SFXPLAYER_OBJECT_FLAGS;
 }
 
-/*
- * --INFO--
- *
- * Function: sfxplayer_release
- * EN v1.0 Address: 0x80208090
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80208240
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sfxplayer_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: sfxplayer_initialise
- * EN v1.0 Address: 0x80208094
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80208244
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sfxplayer_initialise(void)
 {
 }

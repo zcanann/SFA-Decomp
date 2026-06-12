@@ -22,19 +22,6 @@ extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
 #define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES 0x10
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_HasNearbyPendingEventObject
- * EN v1.0 Address: 0x801D4CD0
- * EN v1.0 Size: 432b
- * EN v1.1 Address: 0x801D4D8C
- * EN v1.1 Size: 1280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
 {
     SHthorntailObject** objects;
@@ -105,19 +92,6 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     return linkedEventPending;
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateTailSwing
- * EN v1.0 Address: 0x801D4E80
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801D5470
- * EN v1.1 Size: 232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_updateTailSwing(uint objectId, SHthorntailRuntime* runtime)
 {
     u8 tailSwingState;
@@ -157,19 +131,6 @@ void SHthorntail_updateTailSwing(uint objectId, SHthorntailRuntime* runtime)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_chooseNextState
- * EN v1.0 Address: 0x801D4F68
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801D5558
- * EN v1.1 Size: 524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* runtime,
                                  SHthorntailConfig* config)
 {

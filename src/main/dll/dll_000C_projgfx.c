@@ -6,12 +6,9 @@
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
 
-
 /* per-channel vertex-scale blend record (state+0x30, stride 0x18, 2 channels) */
 
-
 /* per-channel vertex-alpha blend record (state+0xAC, stride 8, 2 channels) */
-
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
@@ -24,7 +21,6 @@ STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
 
 /* vertex-group command payload handed to the updateVertex* handlers */
 
-
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -34,7 +30,6 @@ static inline int* Modgfx_GetActiveModel(void* obj)
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 #define PARTFX_STAGE_COUNT 7
-
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, vecX) == 0x20);
@@ -202,19 +197,6 @@ extern f32 lbl_803E093C;
 extern f32 lbl_803E0940;
 extern f32 lbl_803E0944;
 
-/*
- * --INFO--
- *
- * Function: modgfx_releaseExpgfxPools
- * EN v1.0 Address: 0x800A00A8
- * EN v1.0 Size: 144b
- * EN v1.1 Address: 0x800A0108
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_releaseExpgfxPools(void)
 {
     int poolIndex;
@@ -233,19 +215,6 @@ void modgfx_releaseExpgfxPools(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_allocExpgfxPools
- * EN v1.0 Address: 0x800A0138
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x800A015C
- * EN v1.1 Size: 320b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_allocExpgfxPools(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -310,20 +279,6 @@ void modgfx_allocExpgfxPools(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: modgfx_initExpgfxSpawnConfig
- * EN v1.0 Address: 0x800A0280
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x800A04C0
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefined colorLowByte,
                                   undefined4 textureWord, undefined4 scaleBits)
 {
@@ -351,19 +306,6 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefi
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_scrollVertexTexcoords
- * EN v1.0 Address: 0x800A0330
- * EN v1.0 Size: 388b
- * EN v1.1 Address: 0x800A0568
- * EN v1.1 Size: 412b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_scrollVertexTexcoords(int stateArg, int command)
 {
     ModgfxState* state;
@@ -440,19 +382,6 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_resetBaseVertexState
- * EN v1.0 Address: 0x800A04B4
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x800A0704
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_resetBaseVertexState(int stateArg)
 {
     ModgfxState* state;
@@ -493,19 +422,6 @@ void modgfx_resetBaseVertexState(int stateArg)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_updateVertexRgb
- * EN v1.0 Address: 0x800A0560
- * EN v1.0 Size: 924b
- * EN v1.1 Address: 0x800A07B0
- * EN v1.1 Size: 760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_updateVertexRgb(int state, int command, int mode)
 {
     float targetR;
@@ -625,19 +541,6 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_updateEffectPosition
- * EN v1.0 Address: 0x800A08FC
- * EN v1.0 Size: 396b
- * EN v1.1 Address: 0x800A0AA8
- * EN v1.1 Size: 424b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_updateEffectPosition(int stateArg, int command, int mode)
 {
     ModgfxState* state;
@@ -702,19 +605,6 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_updateEffectRotation
- * EN v1.0 Address: 0x800A0A88
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x800A0C50
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_updateEffectRotation(int stateArg, int command, int mode)
 {
     ModgfxState* state;
@@ -756,19 +646,6 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_updateVertexAlpha
- * EN v1.0 Address: 0x800A0B6C
- * EN v1.0 Size: 536b
- * EN v1.1 Address: 0x800A0D40
- * EN v1.1 Size: 452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
 {
     float targetAlpha;
@@ -839,19 +716,6 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_updateVertexScale
- * EN v1.0 Address: 0x800A0D84
- * EN v1.0 Size: 984b
- * EN v1.1 Address: 0x800A0F04
- * EN v1.1 Size: 856b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
 {
     float targetX;
@@ -951,19 +815,6 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_restoreActiveVertexState
- * EN v1.0 Address: 0x800A115C
- * EN v1.0 Size: 112b
- * EN v1.1 Address: 0x800A125C
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_restoreActiveVertexState(int stateArg)
 {
     ModgfxState* state;
@@ -989,19 +840,6 @@ void modgfx_restoreActiveVertexState(int stateArg)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_releaseActiveEffectsByType
- * EN v1.0 Address: 0x800A11CC
- * EN v1.0 Size: 364b
- * EN v1.1 Address: 0x800A12CC
- * EN v1.1 Size: 1156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, undefined8 param_3,
                                        undefined8 param_4, undefined8 param_5, undefined8 param_6,
                                        undefined8 param_7, undefined8 param_8, short effectType,
@@ -1046,20 +884,6 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, u
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: modgfx_releaseActiveEffectsByOwner
- * EN v1.0 Address: 0x800A1340
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x800A2294
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, undefined8 param_3,
                                         undefined8 param_4, undefined8 param_5, undefined8 param_6,
                                         undefined8 param_7, undefined8 param_8, int ownerToken)
@@ -1098,19 +922,6 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: modgfx_releaseAllActiveEffects
- * EN v1.0 Address: 0x800A1480
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x800A2364
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_releaseAllActiveEffects(undefined8 param_1, undefined8 param_2, undefined8 param_3,
                                     undefined8 param_4, undefined8 param_5, undefined8 param_6,
                                     undefined8 param_7, undefined8 param_8)
@@ -1120,20 +931,6 @@ void modgfx_releaseAllActiveEffects(undefined8 param_1, undefined8 param_2, unde
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: modgfx_resetActiveEffectRegistry
- * EN v1.0 Address: 0x800A15D8
- * EN v1.0 Size: 556b
- * EN v1.1 Address: 0x800A3A68
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, undefined8 param_3,
                                       undefined8 param_4, undefined8 param_5, undefined8 param_6,
                                       undefined8 param_7, undefined8 param_8)
@@ -1164,20 +961,6 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800a2a98
- * EN v1.0 Address: 0x800A2A98
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800B3428
- * EN v1.1 Size: 15400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
              undefined param_5)
@@ -1185,20 +968,6 @@ FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, uint 
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: projgfx_spawnPresetEffect
- * EN v1.0 Address: 0x800A332C
- * EN v1.0 Size: 784b
- * EN v1.1 Address: 0x800BD6C8
- * EN v1.1 Size: 2756b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSourceState* sourceState,
                           uint spawnFlags, undefined modelId, undefined2* extraArgs)
@@ -1523,20 +1292,6 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     return spawnResult;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800a3828
- * EN v1.0 Address: 0x800A3828
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800BFC04
- * EN v1.1 Size: 5920b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800a3828(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
              undefined param_5)
@@ -1544,27 +1299,12 @@ FUN_800a3828(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800a3924
- * EN v1.0 Address: 0x800A3924
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800C1458
- * EN v1.1 Size: 5660b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
              undefined param_5)
 {
     return 0;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void projgfx_func07_nop(void)
@@ -1588,7 +1328,6 @@ void projgfx_initialise(void)
 }
 
 void playerShadow_func03_nop(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int projgfx_getObjectTypeId(void) { return 0x0; }
@@ -1648,16 +1387,13 @@ static u8 sProjgfxStringPad1[] = {0, 0, 0};
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
-
 #pragma peephole reset
-
 
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -1666,7 +1402,6 @@ extern f32 lbl_803DFCE0;
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-
 
 extern FxNode9 lbl_8039C398;
 
@@ -1698,7 +1433,6 @@ extern FxNode9 lbl_8039C380;
 
 #undef FILL8
 
-
 extern FxNode9 lbl_8039C338;
 extern f32 lbl_803DF884;
 
@@ -1713,9 +1447,7 @@ extern f32 lbl_803DF884;
     spawnParams = (s16 *)&lbl_8039C338;             \
   } while (0)
 
-
 /* ---- partfx_spawnObject (FUN_800a4df4, v1.0) ---- */
-
 
 #undef FILL338
 
@@ -1735,7 +1467,6 @@ extern f32 lbl_803DFCEC;
 
 #undef FILL368
 
-
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
@@ -1752,7 +1483,6 @@ extern f32 lbl_803DF9D4;
   } while (0)
 
 #undef FILL350
-
 
 /* ===== (1) extern declarations needed by Effect1_func04 ===== */
 /* lbl_803DF720/724/728/730 already declared in modgfx.c; the rest are new. */
@@ -1782,4 +1512,3 @@ extern FxNode9 lbl_8039C320;
 
 #pragma peephole reset
 #pragma scheduling reset
-

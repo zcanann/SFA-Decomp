@@ -60,19 +60,6 @@ extern f32 lbl_803E57E0;
 #define CLOUD_ACTION_ENABLE(flag) \
   (*gCloudActionInterface)->func10Nop((flag))
 
-/*
- * --INFO--
- *
- * Function: fn_801DFA28
- * EN v1.0 Address: 0x801DFA28
- * EN v1.0 Size: 5732b
- * EN v1.1 Address: 0x801E0018
- * EN v1.1 Size: 6060b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 framesThisStep;
 extern f32 sqrtf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -874,7 +861,6 @@ void fn_801DFA28(u8* obj)
     }
 end:;
 }
-
 
 void DBprotection_updateEnvfxGameBits(u8* state)
 {

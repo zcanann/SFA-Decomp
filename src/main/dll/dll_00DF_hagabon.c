@@ -20,7 +20,6 @@ typedef struct HagabonPlacement
     u8 pad22[0x28 - 0x22];
 } HagabonPlacement;
 
-
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
@@ -34,19 +33,6 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 DAT_803de6d0;
 extern f32 lbl_803DDA58;
 
-/*
- * --INFO--
- *
- * Function: FUN_8014e1dc
- * EN v1.0 Address: 0x8014E1DC
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8014E604
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pressureSwitch_freeSharedResource(void)
 {
     if (DAT_803de6d0 != 0)
@@ -57,19 +43,6 @@ void pressureSwitch_freeSharedResource(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014e210
- * EN v1.0 Address: 0x8014E210
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8014E638
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pressureSwitch_ensureSharedResource(void)
 {
     if (DAT_803de6d0 == 0)
@@ -78,82 +51,6 @@ void pressureSwitch_ensureSharedResource(void)
     }
     return;
 }
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e248
- * EN v1.0 Address: 0x8014E248
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x8014EBD8
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e374
- * EN v1.0 Address: 0x8014E374
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8014ED20
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014e3a8
- * EN v1.0 Address: 0x8014E3A8
- * EN v1.0 Size: 1264b
- * EN v1.1 Address: 0x8014ED54
- * EN v1.1 Size: 1168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014ede0
- * EN v1.0 Address: 0x8014EDE0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8014F6E0
- * EN v1.1 Size: 680b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8014ede4
- * EN v1.0 Address: 0x8014EDE4
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x8014F988
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void hagabon_release(void)
@@ -169,7 +66,6 @@ void swarmbaddie_hitDetect(void);
 void swarmbaddie_release(void);
 
 void swarmbaddie_initialise(void);
-
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
@@ -221,10 +117,7 @@ typedef union PressureSwitchIntToDouble
     f64 value;
 } PressureSwitchIntToDouble;
 
-
-
 /* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
-
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -385,7 +278,6 @@ void hagabon_hitDetect(int obj)
 
 void swarmbaddie_free(int obj);
 
-
 void hagabon_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
@@ -459,8 +351,6 @@ int swarmbaddie_getExtraSize(void);
 int swarmbaddie_getObjectTypeId(void);
 
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-
 
 void swarmbaddie_update(int obj);
 
@@ -601,7 +491,6 @@ void hagabon_update(int obj)
     }
     fn_8014E1DC(obj, state);
 }
-
 
 ObjectDescriptor gHagabonObjDescriptor = {
     0,

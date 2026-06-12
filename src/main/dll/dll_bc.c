@@ -6,14 +6,6 @@ extern int lbl_803DD518;
 extern int gameTextFn_80134be8(void);
 extern void setAButtonIcon(int kind);
 
-
-/*
- * --INFO--
- *
- * Function: Camera_minimapShowHelpTextForTarget
- * EN v1.0 Address: 0x8010210C
- * EN v1.0 Size: 152b
- */
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {
     if (gameTextFn_80134be8() == 0)
@@ -26,13 +18,6 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_playTargetTypeSfx
- * EN v1.0 Address: 0x801021A4
- * EN v1.0 Size: 168b
- */
 void camcontrol_playTargetTypeSfx(void)
 {
     CamcontrolTargetObject* target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->currentTarget;

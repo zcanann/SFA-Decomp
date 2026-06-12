@@ -12,7 +12,6 @@
 #include "main/dll/baddie/skeetla.h"
 #include "main/objfx.h"
 
-
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23EC;
@@ -1311,8 +1310,6 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
 #include "ghidra_import.h"
 #include "main/dll/baddie/skeetla.h"
 
-
-
 extern undefined4 FUN_80006824();
 extern uint FUN_80017690();
 extern double FUN_80017708();
@@ -1353,19 +1350,6 @@ extern f32 FLOAT_803e30e0;
 extern f32 FLOAT_803e310c;
 extern f32 FLOAT_803e3110;
 
-/*
- * --INFO--
- *
- * Function: FUN_8013939c
- * EN v1.0 Address: 0x8013939C
- * EN v1.0 Size: 1124b
- * EN v1.1 Address: 0x80139724
- * EN v1.1 Size: 1176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8013939c(uint param_1)
 {
     bool bVar1;
@@ -1539,20 +1523,6 @@ void FUN_8013939c(uint param_1)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80139910
- * EN v1.0 Address: 0x80139910
- * EN v1.0 Size: 312b
- * EN v1.1 Address: 0x80139CB8
- * EN v1.1 Size: 348b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_80139910(ushort* param_1, ushort param_2)
 {
     ushort uVar1;
@@ -1615,36 +1585,10 @@ int FUN_80139910(ushort* param_1, ushort param_2)
     return iVar3;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80139a48
- * EN v1.0 Address: 0x80139A48
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80139E14
- * EN v1.1 Size: 2404b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80139a48(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80139a4c
- * EN v1.0 Address: 0x80139A4C
- * EN v1.0 Size: 224b
- * EN v1.1 Address: 0x8013A778
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_80139a4c(double param_1, int param_2, int param_3, uint param_4)
 {
     float fVar1;
@@ -1695,19 +1639,6 @@ undefined4 FUN_80139a4c(double param_1, int param_2, int param_3, uint param_4)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8013A874
- * EN v1.0 Address: 0x80139B2C
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x8013A874
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fn_8013A874(undefined4 param_1, undefined4 param_2, uint filterKind, uint maskBit)
 {
     int ctxHi;
@@ -1769,19 +1700,6 @@ int fn_8013A874(undefined4 param_1, undefined4 param_2, uint filterKind, uint ma
     return count;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80139ce8
- * EN v1.0 Address: 0x80139CE8
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x8013AA44
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_80139ce8(int param_1, int param_2, int param_3)
 {
     undefined4 uVar1;
@@ -1839,20 +1757,6 @@ int FUN_80139ce8(int param_1, int param_2, int param_3)
     return iVar3;
 }
 
-
-/*
- * --INFO--
- *
- * Function: fn_8013AD50
- * EN v1.0 Address: 0x80139FBC
- * EN v1.0 Size: 392b
- * EN v1.1 Address: 0x8013AD50
- * EN v1.1 Size: 388b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8013AD50(int state, int key, byte variant)
 {
     int cached;
@@ -1918,20 +1822,6 @@ void fn_8013AD50(int state, int key, byte variant)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8013a5b0
- * EN v1.0 Address: 0x8013A5B0
- * EN v1.0 Size: 596b
- * EN v1.1 Address: 0x8013B368
- * EN v1.1 Size: 512b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8013a5b0(undefined8 param_1, double param_2, undefined4 param_3, undefined4 param_4,
                   float* param_5, float* param_6)
 {

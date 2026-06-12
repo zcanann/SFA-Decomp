@@ -4,109 +4,12 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: dll_197_init
- * EN v1.0 Address: 0x801CA5B4
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801CA6BC
- * EN v1.1 Size: 1196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caa30
- * EN v1.0 Address: 0x801CAA30
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x801CAB68
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801cacd4
- * EN v1.0 Address: 0x801CACD4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801CAE40
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeac
- * EN v1.0 Address: 0x801CAEAC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CAEF8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeb0
- * EN v1.0 Address: 0x801CAEB0
- * EN v1.0 Size: 1240b
- * EN v1.1 Address: 0x801CAF74
- * EN v1.1 Size: 788b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
-
-
-
-
-
-
-
-
-
-
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -127,49 +30,15 @@ typedef struct Dll19APlacement
     s8 unk1F;
 } Dll19APlacement;
 
-
-
-
-
-
-
-
-
 extern u32 GameBit_Get(int eventId);
 
-
 extern byte framesThisStep;
-
-
-/*
- * --INFO--
- *
- * Function: dll_199_update
- * EN v1.0 Address: 0x801CAD80
- * EN v1.0 Size: 2228b
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_199_init
- * EN v1.0 Address: 0x801CB634
- * EN v1.0 Size: 364b
- */
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int typeId);
 extern char* Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 
-/*
- * --INFO--
- *
- * Function: dll_19A_update
- * EN v1.0 Address: 0x801CB7F0
- * EN v1.0 Size: 612b
- */
 void dll_19A_update(int obj)
 {
     int setup;
@@ -247,7 +116,6 @@ void dll_19A_update(int obj)
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_199_release(void);
-
 
 void dll_19A_free(void)
 {

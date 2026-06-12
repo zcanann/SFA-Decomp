@@ -80,48 +80,7 @@ extern f32 lbl_803E4308;
 extern f32 lbl_803E430C;
 extern f32 lbl_803E431C;
 
-/*
- * --INFO--
- *
- * Function: FUN_80178338
- * EN v1.0 Address: 0x80178338
- * EN v1.0 Size: 56b
- * EN v1.1 Address: 0x80178648
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80178338(undefined4 param_1);
-
-/*
- * --INFO--
- *
- * Function: FUN_801799bc
- * EN v1.0 Address: 0x801799BC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017967C
- * EN v1.1 Size: 468b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801799c0
- * EN v1.0 Address: 0x801799C0
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80179850
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -350,13 +309,6 @@ enum SidekickBallMode
 
 #include "main/dll/sidekickball_state.h"
 
-/*
- * --INFO--
- *
- * Function: sidekickball_update
- * EN v1.0 Address: 0x801797A4
- * EN v1.0 Size: 648b
- */
 void sidekickball_update(u8* self)
 {
     extern int ObjTrigger_IsSet(u8 * obj);
@@ -501,19 +453,6 @@ typedef struct TrickyBallState
     f32 floorDepth;
 } TrickyBallState;
 
-/*
- * --INFO--
- *
- * Function: trickyBallMove
- * EN v1.0 Address: 0x80179A2C
- * EN v1.0 Size: 168b
- * EN v1.1 Address: 0x80179B84
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 u8 trickyBallMove(u8* obj)
 {
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
@@ -681,19 +620,6 @@ extern int* gameTextGet(int textId);
 
 extern u8 lbl_80320F30[];
 
-/*
- * --INFO--
- *
- * Function: sidekickball_init
- * EN v1.0 Address: 0x80179EB0
- * EN v1.0 Size: 1220b
- * EN v1.1 Address: 0x80179F40
- * EN v1.1 Size: 1204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 sidekickball_init(int obj)
 {
     extern undefined4 ObjMsg_AllocQueue();

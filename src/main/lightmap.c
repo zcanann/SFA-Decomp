@@ -7,7 +7,6 @@
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 
-
 extern undefined4 FUN_80006934();
 extern undefined4 FUN_8000694c();
 extern undefined4 FUN_80006974();
@@ -85,19 +84,6 @@ extern f32 lbl_803DDAD8;
 extern f32 lbl_803DF834;
 extern f32 lbl_803DF89C;
 
-/*
- * --INFO--
- *
- * Function: updateVisibleGeometry
- * EN v1.0 Address: 0x8005AB70
- * EN v1.0 Size: 1024b
- * EN v1.1 Address: 0x8005ACEC
- * EN v1.1 Size: 892b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     s16 rx, ry, rz, pad;
@@ -132,7 +118,6 @@ extern f32 sqrtf(f32 v);
 extern f32 fn_80292248(f32 v);
 extern f32 floor(f32 v);
 extern f32 fn_802943F4(f32 v);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -221,19 +206,6 @@ void updateVisibleGeometry(void)
 
 /* old v1.1 body removed */
 
-/*
- * --INFO--
- *
- * Function: FUN_8005af70
- * EN v1.0 Address: 0x8005AF70
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x8005B068
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_8005af70(int param_1)
 {
     if ((-1 < param_1) && (param_1 < (int)(uint)DAT_803ddb18))
@@ -243,20 +215,6 @@ undefined4 FUN_8005af70(int param_1)
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: coordsToMapCell
- * EN v1.0 Address: 0x8005AFAC
- * EN v1.0 Size: 112b
- * EN v1.1 Address: 0x8005B0A8
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern s16* lbl_803822A0[];
 extern f32 gMapBlockWorldSize;
 extern f32 fastFloorf(f32 v);
@@ -272,37 +230,11 @@ int coordsToMapCell(f32 x, f32 z)
     return *(s16*)((char*)lbl_803822A0[0] + (ix + iz * 16) * 12);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8005B11C
- * EN v1.0 Address: 0x8005B01C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8005B11C
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int* fn_8005B11C(void)
 {
     return &DAT_803870c8;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8005b024
- * EN v1.0 Address: 0x8005B024
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x8005B128
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_8005b024(void)
 {
     int iVar1;
@@ -328,20 +260,6 @@ int FUN_8005b024(void)
     return iVar2;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005b398
- * EN v1.0 Address: 0x8005B398
- * EN v1.0 Size: 436b
- * EN v1.1 Address: 0x8005B478
- * EN v1.1 Size: 404b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_8005b398(undefined8 param_1, double param_2)
 {
     int iVar1;
@@ -382,20 +300,6 @@ int FUN_8005b398(undefined8 param_1, double param_2)
     return -1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005b638
- * EN v1.0 Address: 0x8005B638
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x8005B6E8
- * EN v1.1 Size: 232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void lightmap_sortQueuedRenderKeys(int queueBase, int keyCount)
 {
     int scratch;
@@ -444,20 +348,6 @@ void lightmap_sortQueuedRenderKeys(int queueBase, int keyCount)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005bdbc
- * EN v1.0 Address: 0x8005BDBC
- * EN v1.0 Size: 1168b
- * EN v1.1 Address: 0x8005BE04
- * EN v1.1 Size: 1260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005bdbc(void)
 {
     char* extraout_r4;
@@ -752,20 +642,6 @@ void FUN_8005bdbc(void)
     while (true);
 }
 
-
-/*
- * --INFO--
- *
- * Function: fn_8005C8CC
- * EN v1.0 Address: 0x8005C82C
- * EN v1.0 Size: 128b
- * EN v1.1 Address: 0x8005C8CC
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8005C8CC(void)
 {
     DAT_803dda68 = DAT_803dda68 | 0x21;
@@ -787,20 +663,6 @@ void fn_8005C8CC(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005cff0
- * EN v1.0 Address: 0x8005CFF0
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x8005CEA0
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005cff0(int param_1)
 {
     if (param_1 == 0)
@@ -814,20 +676,6 @@ void FUN_8005cff0(int param_1)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005d018
- * EN v1.0 Address: 0x8005D018
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x8005CED0
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_8005d018(char param_1)
 {
     if (param_1 == '\0')
@@ -843,38 +691,11 @@ undefined4 FUN_8005d018(char param_1)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8005d06c
- * EN v1.0 Address: 0x8005D06C
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8005CF2C
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint FUN_8005d06c(void)
 {
     return DAT_803dda68 & 8;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005d0ac
- * EN v1.0 Address: 0x8005D0AC
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x8005CF74
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005d0ac(int param_1)
 {
     undefined4* puVar1;
@@ -893,20 +714,6 @@ void FUN_8005d0ac(int param_1)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005d17c
- * EN v1.0 Address: 0x8005D17C
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x8005D06C
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005d17c(int param_1)
 {
     undefined4* puVar1;
@@ -925,19 +732,6 @@ void FUN_8005d17c(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8005d1e8
- * EN v1.0 Address: 0x8005D1E8
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x8005D0E4
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005d1e8(int param_1)
 {
     if (param_1 == 0)
@@ -951,19 +745,6 @@ void FUN_8005d1e8(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8005D108
- * EN v1.0 Address: 0x8005D204
- * EN v1.0 Size: 272b
- * EN v1.1 Address: 0x8005D108
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8005D108(int vtxTable, int indices, int triCount)
 {
     volatile byte* fifo8;
@@ -1012,20 +793,6 @@ void fn_8005D108(int vtxTable, int indices, int triCount)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005d370
- * EN v1.0 Address: 0x8005D370
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x8005D294
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8005d370(undefined4 param_1, undefined param_2, undefined param_3, undefined param_4,
                   undefined param_5)
 {
@@ -1033,20 +800,6 @@ void FUN_8005d370(undefined4 param_1, undefined param_2, undefined param_3, unde
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005d3a8
- * EN v1.0 Address: 0x8005D3A8
- * EN v1.0 Size: 260b
- * EN v1.1 Address: 0x8005D2CC
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
 {
     int idx;
@@ -1090,19 +843,6 @@ void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8005D3EC
- * EN v1.0 Address: 0x8005D4AC
- * EN v1.0 Size: 328b
- * EN v1.1 Address: 0x8005D3EC
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void lightmap_sortQueuedRenderPackets(void)
 {
     int byteOff;
@@ -1160,20 +900,6 @@ void lightmap_sortQueuedRenderPackets(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8005dc18
- * EN v1.0 Address: 0x8005DC18
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x8005DBC4
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void lightmap_renderQueuedObject(ushort* object)
 {
     int val;
@@ -1205,19 +931,6 @@ void lightmap_renderQueuedObject(ushort* object)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8005dcfc
- * EN v1.0 Address: 0x8005DCFC
- * EN v1.0 Size: 1244b
- * EN v1.1 Address: 0x8005DCB4
- * EN v1.1 Size: 860b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void lightmap_flushQueuedRenderPackets(void)
 {
     byte bval;
@@ -1327,7 +1040,6 @@ void lightmap_flushQueuedRenderPackets(void)
     FUN_8028687c();
     return;
 }
-
 
 extern u32 lbl_8037E0C0[];
 extern s32 lbl_803DCE30;
@@ -1944,12 +1656,10 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     return NULL;
 }
 
-
 typedef struct
 {
     u8 r, g, b, a;
 } GXColor8;
-
 
 extern u8 framesThisStep;
 extern int* Obj_GetActiveModel(int* obj);
@@ -1969,7 +1679,6 @@ extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
 extern void GXSetChanAmbColor(int chan, GXColor8* c);
 extern void GXSetNumChans(int n);
 extern void setupToRenderMapBlock(int* block, void* posMtx);
-
 
 extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
@@ -2311,7 +2020,6 @@ void sceneDrawTransparentPolys(void)
     }
 }
 
-
 extern void mapFn_80057d24(int x, int z, int* box0, int* box1, int* box2, int* box3, int layer,
                            int one, int v);
 extern int mapRectFn_8005a728(int row, int col, u8* block);
@@ -2523,7 +2231,6 @@ void lightmap_sortTransparentDrawQueue(void)
         gap /= 3;
     }
 }
-
 
 extern void maybeHudFn_8006c91c(void);
 extern int ObjList_PartitionForRender(int* count);

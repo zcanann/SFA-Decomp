@@ -7,19 +7,6 @@ extern void GameBit_Set(int eventId, int value);
 #define SFXPLAYER_EVENT_DEACTIVATE 2
 #define SFXPLAYER_EVENT_VARIANT 3
 #define SFXPLAYER_VARIANT_TIMER_FRAMES 0x96
-/*
- * --INFO--
- *
- * Function: sfxplayer_updateState
- * EN v1.0 Address: 0x80208098
- * EN v1.0 Size: 328b
- * EN v1.1 Address: 0x8020816C
- * EN v1.1 Size: 256b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
 {
     int event;
@@ -69,18 +56,3 @@ undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState*
     }
     return 0;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_802081e0
- * EN v1.0 Address: 0x802081E0
- * EN v1.0 Size: 352b
- * EN v1.1 Address: 0x8020826C
- * EN v1.1 Size: 176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-

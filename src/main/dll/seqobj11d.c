@@ -6,7 +6,6 @@
 #include "main/dll/seqObj11D.h"
 #include "main/objseq.h"
 
-
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001766c();
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -37,19 +36,6 @@ extern void* PTR_DAT_8031fdc8;
 extern void* PTR_DAT_8031fdd4;
 extern void* PTR_DAT_8031fdd8;
 
-/*
- * --INFO--
- *
- * Function: FUN_801511e8
- * EN v1.0 Address: 0x801511E8
- * EN v1.0 Size: 1112b
- * EN v1.1 Address: 0x80151370
- * EN v1.1 Size: 780b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
@@ -180,20 +166,6 @@ void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80151844
- * EN v1.0 Address: 0x80151844
- * EN v1.0 Size: 728b
- * EN v1.1 Address: 0x80151840
- * EN v1.1 Size: 688b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   short* param_9, int param_10)
@@ -276,22 +248,6 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
     }
     return;
 }
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015209c
- * EN v1.0 Address: 0x8015209C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80151DE8
- * EN v1.1 Size: 788b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 

@@ -9,60 +9,15 @@ typedef struct TumbleweedbushState
     u8 padA[0x54 - 0xA];
 } TumbleweedbushState;
 
-
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 FUN_8003b818();
 
-
-/*
- * --INFO--
- *
- * Function: cannonclaw_update
- * EN v1.0 Address: 0x801630EC
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x801630F0
- * EN v1.1 Size: 672b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
 extern f32 timeDelta;
 
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801633b0
- * EN v1.0 Address: 0x801633B0
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80163554
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801638bc
- * EN v1.0 Address: 0x801638BC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801639B8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
@@ -74,39 +29,8 @@ void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801638e4
- * EN v1.0 Address: 0x801638E4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801639EC
- * EN v1.1 Size: 432b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801638e8
- * EN v1.0 Address: 0x801638E8
- * EN v1.0 Size: 480b
- * EN v1.1 Address: 0x80163B9C
- * EN v1.1 Size: 460b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void cannonclaw_release(void);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -353,7 +277,6 @@ void tumbleweedbush_setScale(u8* obj, void* match)
     }
 }
 
-
 extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(int* obj, int a, s8 b, int c, void* d);
@@ -500,7 +423,6 @@ void fn_80163990(int* piece, u8* state)
     ((GameObject*)piece)->anim.rotX = (s16)(s32)(
         (f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int)((GameObject*)piece)->anim.rotX);
 }
-
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {

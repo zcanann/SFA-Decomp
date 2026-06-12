@@ -2,20 +2,6 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-
-/*
- * --INFO--
- *
- * Function: dll_19B_update
- * EN v1.0 Address: 0x801CBD88
- * EN v1.0 Size: 2124b
- * EN v1.1 Address: 0x801CC33C
- * EN v1.1 Size: 2032b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 
@@ -29,8 +15,6 @@ int dll_19E_getObjectTypeId(void) { return 0x1; }
 extern f32 lbl_803E51B0;
 
 /* Stubs to align function set with v1.0 asm. */
-
-
 
 /*
  * Function: dll_19C_init
@@ -82,38 +66,12 @@ extern f32 lbl_803E51D4;
 extern f32 lbl_803E51D8;
 extern f32 lbl_803E51DC;
 
-/*
- * --INFO--
- *
- * Function: dll_19E_free
- * EN v1.0 Address: 0x801CCFB4
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801CCFE4
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_19E_free(int param_1)
 {
     (*gModgfxInterface)->detachSource((void*)param_1);
     (*gExpgfxInterface)->freeSource2((u32)param_1);
 }
 
-/*
- * --INFO--
- *
- * Function: dll_19E_render
- * EN v1.0 Address: 0x801CD008
- * EN v1.0 Size: 588b
- * EN v1.1 Address: 0x801CD0F8
- * EN v1.1 Size: 588b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_19E_render(int obj, int param_2, int param_3, int param_4,
                     int param_5, s8 visible)
 {
@@ -262,13 +220,6 @@ STATIC_ASSERT(offsetof(Dll19ESetup, scaleTimer) == 0x1A);
 STATIC_ASSERT(offsetof(Dll19ESetup, sequenceIndex) == 0x1C);
 STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
 
-/*
- * --INFO--
- *
- * Function: dll_19E_update
- * EN v1.0 Address: 0x801CD258
- * EN v1.0 Size: 1056b
- */
 void dll_19E_update(void* obj)
 {
     extern void Sfx_PlayFromObject(void* obj, int sfxId);
@@ -403,13 +354,6 @@ void dll_19E_update(void* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_19E_init
- * EN v1.0 Address: 0x801CD678
- * EN v1.0 Size: 348b
- */
 void dll_19E_init(u8* obj, Dll19ESetup* setup)
 {
     Dll19EState* state;

@@ -66,19 +66,6 @@ extern f32 lbl_803E34E4;
 extern undefined2 uRam803dc90a;
 extern undefined4 uRam803dc90c;
 
-/*
- * --INFO--
- *
- * Function: FUN_80152040
- * EN v1.0 Address: 0x80152040
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801520FC
- * EN v1.1 Size: 336b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_80152040(int param_1, int param_2)
@@ -113,7 +100,6 @@ void FUN_80152040(int param_1, int param_2)
     }
     return;
 }
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -517,34 +503,6 @@ int fn_80152370(int obj, int p2)
                                 *(int*)&((GameObject*)obj)->anim.parent);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801523bc
- * EN v1.0 Address: 0x801523BC
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x80152498
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801523f8
- * EN v1.0 Address: 0x801523F8
- * EN v1.0 Size: 1452b
- * EN v1.1 Address: 0x801524D4
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -645,20 +603,6 @@ void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80152a30
- * EN v1.0 Address: 0x80152A30
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x8015281C
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80152a30(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined2 param_10
@@ -745,34 +689,6 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
     ((BaddieState*)p)->reactionFlags |= 0x8;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80152b8c
- * EN v1.0 Address: 0x80152B8C
- * EN v1.0 Size: 356b
- * EN v1.1 Address: 0x801528EC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80152cf0
- * EN v1.0 Address: 0x80152CF0
- * EN v1.0 Size: 2108b
- * EN v1.1 Address: 0x801529C0
- * EN v1.1 Size: 1408b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)

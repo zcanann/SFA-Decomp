@@ -11,7 +11,6 @@
 #include "main/objseq.h"
 #include "stdarg.h"
 
-
 typedef struct TitlescreenState
 {
     s16 unk0;
@@ -28,7 +27,6 @@ typedef struct TitlescreenState
     f32 unk34;
 } TitlescreenState;
 
-
 extern int ObjGroup_FindNearestObject();
 extern undefined8 FUN_80053754();
 extern undefined4 FUN_80246dcc();
@@ -44,21 +42,6 @@ extern undefined4 DAT_803de6bc;
 extern undefined4 DAT_803de6c0;
 extern f32 FLOAT_803e3098;
 
-/*
- * --INFO--
- *
- * Function: Minimap_update
- * EN v1.0 Address: 0x80132024
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801323AC
- * EN v1.1 Size: 5296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern void* Obj_GetPlayerObject(void);
 extern void* gameTextGetBox(int boxId);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -71,20 +54,6 @@ extern u32 lbl_803DD938;
 extern void* lbl_803DD92C;
 extern void* minimapTexture;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80132034
- * EN v1.0 Address: 0x80132034
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80133868
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80132034(void)
 {
     bool bVar1;
@@ -102,20 +71,6 @@ void FUN_80132034(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801334d4
- * EN v1.0 Address: 0x801334D4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x80134B90
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801334d4(void)
 {
     FUN_80053754();
@@ -123,40 +78,12 @@ void FUN_801334d4(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80134bc4
- * EN v1.0 Address: 0x80134BC4
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x80136C5C
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80134bc4(void)
 {
     DAT_803de62b = 0;
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80135810
- * EN v1.0 Address: 0x80135810
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80137C30
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   char* param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
@@ -164,38 +91,11 @@ void FUN_80135810(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80135814
- * EN v1.0 Address: 0x80135814
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80137CD0
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135814(void)
 {
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80135c48
- * EN v1.0 Address: 0x80135C48
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x80138C58
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)
 {
     DAT_803de6b4 = param_4;
@@ -206,19 +106,6 @@ void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, un
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80135c84
- * EN v1.0 Address: 0x80135C84
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x80138C90
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135c84(int param_1, uint param_2)
 {
     *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) =
@@ -226,20 +113,6 @@ void FUN_80135c84(int param_1, uint param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8013651c
- * EN v1.0 Address: 0x8013651C
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x80139280
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8013651c(int param_1)
 {
     int iVar1;
@@ -249,7 +122,6 @@ void FUN_8013651c(int param_1)
     *(float*)(iVar1 + 0x808) = FLOAT_803e3098;
     return;
 }
-
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
@@ -261,12 +133,10 @@ extern u8 showCredits;
 
 /* 4-byte and 8-byte trivial leaves. */
 
-
 u8 shouldShowCredits(void) { return showCredits; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void);
-
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
 void fn_80135814(u32 a, u32 b)
@@ -480,14 +350,12 @@ void titlescreen_init(u8* obj, u8* p)
 
 extern f32 lbl_803E23E8;
 
-
 extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
 extern f32 lbl_803E234C;
 extern f32 lbl_803E2350;
 extern f32 lbl_803DD9C8;
 extern void PSMTXTrans(void*, f32, f32, f32);
-
 
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
@@ -531,7 +399,6 @@ extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* Obj_GetActiveModel(void* obj);
 
-
 /* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
 
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
@@ -556,10 +423,8 @@ extern void* lbl_803DD960;
 /* lbl_803DD940 declared later as void* */
 extern f32 lbl_803E2408;
 
-
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
-
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 
@@ -600,7 +465,6 @@ extern int getCurUiDll(void);
  * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
 extern f32 timeDelta;
 
-
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
  * latch showCredits = 1 and zero five halfword/byte counters. */
 #pragma scheduling off
@@ -632,7 +496,6 @@ int gameTextFn_80134be8(void)
  * minimapTexture and lbl_803DD92C. */
 void fn_80133934(void);
 
-
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
  * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
  * the rlwimi only uses bit 0 of r4. No C form found to force it. */
@@ -654,9 +517,7 @@ void titlescreen_free(u8* obj)
  * the thread at &lbl_803AB118. */
 extern u8 lbl_803AB118[];
 
-
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-
 
 extern f32 lbl_803DD99C;
 extern u8 lbl_803DD9A0;
@@ -703,7 +564,6 @@ void titleScreenShowCopyright(u8 arg)
     }
 }
 
-
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void GXSetCurrentMtx(int id);
 extern void GXSetProjection(f32* matrix, s32 mode);
@@ -713,7 +573,6 @@ extern void GXSetCullMode(int mode);
 extern void GXBegin(int type, int fmt, int n);
 extern void Camera_RebuildProjectionMatrix(void);
 extern f32 hudMatrix[];
-
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
@@ -750,7 +609,6 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
     Camera_RebuildProjectionMatrix();
 }
 
-
 void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     GXLoadPosMtxImm((f32*)lbl_803A9FE4, 0);
@@ -786,7 +644,6 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
     GXSetScissor(0, 0, 0x280, 0x1e0);
     Camera_RebuildProjectionMatrix();
 }
-
 
 extern f32 lbl_803E2354;
 extern f32 lbl_803E2358;
@@ -1180,7 +1037,6 @@ void fn_80134870(int obj, u8* arr)
     }
 }
 
-
 extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
 extern int loadUiDll(int dllId);
@@ -1253,17 +1109,7 @@ void creditsStart_(void)
 
 extern void CMenu_SetFadeCounter(int v);
 
-
-
-
-
-
-
-
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
-
-
-
 
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern s16 fn_80130124(void);
@@ -1425,13 +1271,3 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
 }
 
 extern u16* debugFrameBuffer;
-
-/* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
- * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
- * stack trace and GPR dump via debugPrintfxy, draws the underline and
- * box pixels directly into the framebuffer, and flips buffers forever. */
-
-
-/* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
- * twice (measure pass then draw pass), drawing the backing rect between
- * the passes when the log produced any extent. */

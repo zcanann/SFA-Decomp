@@ -27,19 +27,6 @@ extern u8 gAttractMovieLoopCompleted;
 extern OSMessageQueue lbl_803A5CEC;
 extern OSMessage lbl_803DD67C;
 
-/*
- * --INFO--
- *
- * Function: PlayControl
- * EN v1.0 Address: 0x8011846C
- * EN v1.0 Size: 944b
- * EN v1.1 Address: 0x80118714
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void PlayControl(void)
 {
     AttractMovieTextureSet* decodedTexture;
@@ -177,36 +164,6 @@ void PlayControl(void)
         gAttractMovieLoopCompleted = 1;
     }
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_80118470
- * EN v1.0 Address: 0x80118470
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x80118AC4
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80118574
- * EN v1.0 Address: 0x80118574
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80118C08
- * EN v1.1 Size: 552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 void THPPlayerStop(void)
 {

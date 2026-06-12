@@ -21,19 +21,6 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
     return (f32) * (f64*)&bits - (f32)lbl_803E4DF0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_func0E
- * EN v1.0 Address: 0x801C1740
- * EN v1.0 Size: 560b
- * EN v1.1 Address: 0x801C17EC
- * EN v1.1 Size: 992b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
                       float* phaseOut, u8* sideOut)
 {
@@ -118,19 +105,6 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
     return result;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_render2
- * EN v1.0 Address: 0x801C1970
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_render2(f32 phase, f32 force, int obj)
 {
     int extra;
@@ -150,19 +124,6 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
     *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_modelMtxFn
- * EN v1.0 Address: 0x801C1A14
- * EN v1.0 Size: 240b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_modelMtxFn(f32 distance, int obj, float* phase)
 {
     int extra;
@@ -191,19 +152,6 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float* phase)
     raw;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_func0B
- * EN v1.0 Address: 0x801C1B04
- * EN v1.0 Size: 196b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut)
 {
     DFropenodeExtra* extra;
@@ -263,19 +211,6 @@ void dfropenode_setScale(int* obj, f32* out)
 extern f32 lbl_803E4E20;
 extern f32 lbl_803E4E24;
 
-/*
- * --INFO--
- *
- * Function: dfropenode_syncRopeToEndpoints
- * EN v1.0 Address: 0x801C1BF0
- * EN v1.0 Size: 684b
- * EN v1.1 Address: 0x801C1C4C
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
@@ -385,37 +320,11 @@ int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_getExtraSize
- * EN v1.0 Address: 0x801C1E9C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfropenode_getExtraSize(void)
 {
     return 0x34;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_getObjectTypeId
- * EN v1.0 Address: 0x801C1EA4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfropenode_getObjectTypeId(void)
 {
     return 0;
@@ -426,13 +335,6 @@ int dfropenode_getObjectTypeId(void)
 
 extern void mm_free(void* p);
 
-/*
- * --INFO--
- *
- * Function: dfropenode_free
- * EN v1.0 Address: 0x801C1EAC
- * EN v1.0 Size: 176b
- */
 void dfropenode_free(void* obj)
 {
     void* node;
@@ -505,19 +407,6 @@ extern u8 lbl_80325E60[];
 extern u8 lbl_802C2358[];
 extern f32 lbl_803E4DF8;
 
-/*
- * --INFO--
- *
- * Function: dfropenode_render
- * EN v1.0 Address: 0x801C1F5C
- * EN v1.0 Size: 792b
- * EN v1.1 Address: 0x801C21A4
- * EN v1.1 Size: 700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_render(int obj, int param_2, int param_3)
 {
     ObjAnimComponent* objAnim;
@@ -637,19 +526,6 @@ void dfropenode_render(int obj, int param_2, int param_3)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_hitDetect
- * EN v1.0 Address: 0x801C2274
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801C245C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_hitDetect(void)
 {
 }
@@ -665,19 +541,6 @@ extern f32 lbl_803DBF50;
 extern u8 lbl_803DBF58;
 extern f32 lbl_803E4E28;
 
-/*
- * --INFO--
- *
- * Function: dfropenode_update
- * EN v1.0 Address: 0x801C2278
- * EN v1.0 Size: 824b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_update(DFropenodeObject* obj)
 {
     extern s32 getAngle(f32 dx, f32 dz);
@@ -809,19 +672,6 @@ void dfropenode_update(DFropenodeObject* obj)
     DFRope_UpdateSimulation((u8*)extra->rope);
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_init
- * EN v1.0 Address: 0x801C25B0
- * EN v1.0 Size: 132b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_init(DFropenodeObject* obj, u8* objDef)
 {
     extern void ObjGroup_AddObject(int obj, int group);
@@ -839,19 +689,6 @@ void dfropenode_init(DFropenodeObject* obj, u8* objDef)
     ((GameObject*)obj)->anim.alpha = 0x46;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_release
- * EN v1.0 Address: 0x801C2634
- * EN v1.0 Size: 76b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_release(void)
 {
     int i;
@@ -862,19 +699,6 @@ void dfropenode_release(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_initialise
- * EN v1.0 Address: 0x801C2680
- * EN v1.0 Size: 96b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_initialise(void)
 {
     int i;
@@ -884,31 +708,3 @@ void dfropenode_initialise(void)
         (&lbl_803DBF48)[i] = textureLoadAsset((&lbl_803DBF40)[i]);
     }
 }
-
-/*
- * --INFO--
- *
- * Function: DFSH_Door2Speci_SeqFn
- * EN v1.0 Address: 0x801C26E0
- * EN v1.0 Size: 316b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_getExtraSize
- * EN v1.0 Address: 0x801C281C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801C29EC
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */

@@ -42,117 +42,6 @@ typedef struct DFlanternShrineState
     u8 flags;
 } DFlanternShrineState;
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_free
- * EN v1.0 Address: 0x801C282C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_render
- * EN v1.0 Address: 0x801C2830
- * EN v1.0 Size: 48b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_hitDetect
- * EN v1.0 Address: 0x801C2860
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_update
- * EN v1.0 Address: 0x801C2864
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_init
- * EN v1.0 Address: 0x801C2868
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_release
- * EN v1.0 Address: 0x801C290C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_initialise
- * EN v1.0 Address: 0x801C2910
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fn_801C2914
- * EN v1.0 Address: 0x801C2914
- * EN v1.0 Size: 852b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801C2914(int obj)
 {
     extern u8* Obj_GetPlayerObject(void);
@@ -226,19 +115,6 @@ void fn_801C2914(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_SeqFn
- * EN v1.0 Address: 0x801C2C68
- * EN v1.0 Size: 348b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct LanternFlagBits
 {
     u8 on : 1;
@@ -295,55 +171,16 @@ int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_getExtraSize
- * EN v1.0 Address: 0x801C2DC4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfsh_shrine_getExtraSize(void)
 {
     return 0x20;
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_getObjectTypeId
- * EN v1.0 Address: 0x801C2DCC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfsh_shrine_getObjectTypeId(void)
 {
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_free
- * EN v1.0 Address: 0x801C2DD4
- * EN v1.0 Size: 148b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_shrine_free(int obj)
 {
     void** state;
@@ -368,8 +205,6 @@ void dfsh_shrine_free(int obj)
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-
-
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjMsg_AllocQueue();
@@ -426,19 +261,6 @@ STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_render
- * EN v1.0 Address: 0x801C2E68
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801C2EC8
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DfshShrineState* state;
@@ -654,51 +476,6 @@ void dfsh_shrine_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801c3134
- * EN v1.0 Address: 0x801C3134
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801C321C
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3a9c
- * EN v1.0 Address: 0x801C3A9C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801C3ABC
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3aa0
- * EN v1.0 Address: 0x801C3AA0
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x801C3BDC
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void dfsh_shrine_hitDetect(void)
 {
@@ -759,18 +536,6 @@ void dfsh_shrine_init(int* obj, DfshShrinePlacement* init)
 
 void SpiritPrize_hitDetect(void);
 
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-

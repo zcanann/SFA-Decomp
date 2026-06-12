@@ -6,18 +6,6 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
 typedef struct LandedArwingPlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -29,7 +17,6 @@ typedef struct LandedArwingPlacement
     s16 unk20;
     u8 pad22[0x28 - 0x22];
 } LandedArwingPlacement;
-
 
 typedef struct LandedArwingUpdateHitReactionPlacement
 {
@@ -45,7 +32,6 @@ typedef struct LandedArwingUpdateHitReactionPlacement
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateHitReactionPlacement;
 
-
 typedef struct LandedArwingUpdateDamageTexturePlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -59,13 +45,6 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
     s16 unk24;
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateDamageTexturePlacement;
-
-
-
-
-
-
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -92,50 +71,6 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80187664
- * EN v1.0 Address: 0x80187664
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x80187720
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: infopoint_hitDetect
- * EN v1.0 Address: 0x8018843C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801884A0
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80189054
- * EN v1.0 Address: 0x80189054
- * EN v1.0 Size: 2620b
- * EN v1.1 Address: 0x80189218
- * EN v1.1 Size: 1552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 #pragma peephole on
@@ -411,27 +346,11 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int landed_arwing_getExtraSize(void) { return 0x1c; }
-
-
 
 extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
@@ -443,18 +362,11 @@ extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
-
-
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
@@ -1078,14 +990,3 @@ void dll_109_init(int obj, u8* p);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-
-
-
-
-
-
-
-
-
-

@@ -5,23 +5,17 @@
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
 
-
 extern uint GameBit_Get(int eventId);
-
 
 extern void* mapGetBlock(int idx);
 
-
 extern void objRenderFn_8003b8f4(f32);
-
-
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/game_object.h"
 #include "global.h"
-
 
 typedef struct GroundanimatorPlacement
 {
@@ -37,16 +31,13 @@ typedef struct GroundanimatorPlacement
     u8 pad26[0x28 - 0x26];
 } GroundanimatorPlacement;
 
-
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
  * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
  * globals). */
 
-
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
 /* alphaanimator_getExtraSize == 0x1c. */
-
 
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
@@ -54,7 +45,6 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 /* visanimator_getExtraSize == 0x5. */
-
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -72,23 +62,8 @@ extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 
-
 extern void mm_free(void* p);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80192488
- * EN v1.0 Address: 0x80192488
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x801924D0
- * EN v1.1 Size: 500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_80192488(void)
@@ -167,10 +142,8 @@ void FUN_80192488(void)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void waveanimator_update(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int groundanimator_getExtraSize(void) { return 0x30; }
@@ -179,10 +152,8 @@ int hitanimator_getExtraSize(void);
 /* Pattern wrappers. */
 u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
 
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FC4;
-
 
 #pragma peephole off
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -190,7 +161,6 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3FC4);
 }
-
 
 extern f32 lbl_803E3F98;
 #pragma scheduling off
@@ -205,7 +175,6 @@ u8 groundanimator_func0B(int* obj)
 }
 
 extern void fn_801923F8(int* cfg);
-
 
 extern f32 lbl_803E3FB8;
 #pragma peephole off
@@ -230,8 +199,6 @@ void groundanimator_init(int* obj, int* desc)
         }
     }
 }
-
-
 
 extern void* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
@@ -652,6 +619,4 @@ void groundanimator_update(int* obj)
 
 extern f32 lbl_803E3F7C;
 
-
 void fn_801923F8(int* cfgArg);
-

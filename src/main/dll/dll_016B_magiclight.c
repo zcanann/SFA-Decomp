@@ -11,7 +11,6 @@
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/resource.h"
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -36,14 +35,12 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
  * (magiclight_getExtraSize == 0x14 for non-0x172 types).
  */
 
-
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 /*
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
  */
-
 
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
@@ -52,9 +49,7 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * (crrockfall_getExtraSize == 0x14).
  */
 
-
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
-
 
 extern undefined4 getLActions();
 extern undefined4 FUN_8001771c();
@@ -73,39 +68,12 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
-/*
- * --INFO--
- *
- * Function: FUN_801ac248
- * EN v1.0 Address: 0x801AC248
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801AC4FC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801ad984
- * EN v1.0 Address: 0x801AD984
- * EN v1.0 Size: 420b
- * EN v1.1 Address: 0x801AD9F4
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -143,20 +111,6 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801adca0
- * EN v1.0 Address: 0x801ADCA0
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x801ADD98
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
 {
@@ -195,19 +149,6 @@ void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801addec
- * EN v1.0 Address: 0x801ADDEC
- * EN v1.0 Size: 896b
- * EN v1.1 Address: 0x801ADEE4
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -298,10 +239,8 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void imicemountain_free(void);
-
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
@@ -310,7 +249,6 @@ void imicemountain_free(void);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-
 
 void magiclight_hitDetect(void)
 {
@@ -381,7 +319,6 @@ void magiclight_init(int* obj, u8* params)
 }
 void dll_16C_release(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int magiclight_getObjectTypeId(void) { return 0x0; }
 int dll_16C_getExtraSize(void);
@@ -391,7 +328,6 @@ int dll_16C_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
-
 
 #pragma scheduling on
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -442,9 +378,7 @@ int magiclight_getExtraSize(int* obj)
 
 extern void Obj_FreeObject(int*);
 
-
 /* conditional init/free pair. */
-
 
 extern float Vec_distance(float* a, float* b);
 extern f32 lbl_803E4738;
@@ -483,7 +417,4 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-
 extern void Music_Trigger(int track, int flag);
-
-

@@ -15,7 +15,6 @@ typedef struct GunpowderbarrelTriggerExplosionPlacement
     u8 pad1C[0x20 - 0x1C];
 } GunpowderbarrelTriggerExplosionPlacement;
 
-
 typedef struct GunpowderbarrelTriggerExplosionState
 {
     u8 pad0[0x10 - 0x0];
@@ -24,7 +23,6 @@ typedef struct GunpowderbarrelTriggerExplosionState
     f32 unk34;
 } GunpowderbarrelTriggerExplosionState;
 
-
 typedef struct GunpowderbarrelState
 {
     u8 pad0[0x10 - 0x0];
@@ -32,7 +30,6 @@ typedef struct GunpowderbarrelState
     u8 pad14[0x34 - 0x14];
     f32 unk34;
 } GunpowderbarrelState;
-
 
 typedef struct GunpowderbarrelUpdatePhysicsState
 {
@@ -50,7 +47,6 @@ typedef struct GunpowderbarrelUpdatePhysicsState
     s16 unk44;
     s16 unk46;
 } GunpowderbarrelUpdatePhysicsState;
-
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
@@ -80,19 +76,6 @@ extern f32 lbl_803E4F58;
 extern f32 lbl_803E4F5C;
 extern f32 lbl_803E4FA0;
 
-/*
- * --INFO--
- *
- * Function: FUN_801a1230
- * EN v1.0 Address: 0x801A1230
- * EN v1.0 Size: 224b
- * EN v1.1 Address: 0x801A1380
- * EN v1.1 Size: 244b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a1230(int param_1, char param_2)
 {
     int iVar1;
@@ -128,20 +111,6 @@ void FUN_801a1230(int param_1, char param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a1654
- * EN v1.0 Address: 0x801A1654
- * EN v1.0 Size: 840b
- * EN v1.1 Address: 0x801A17AC
- * EN v1.1 Size: 716b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
@@ -266,19 +235,6 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: gunpowderbarrel_getExtraSize
- * EN v1.0 Address: 0x801A1894
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int gunpowderbarrel_getExtraSize(void)
 {
     return 0x58;
@@ -288,13 +244,6 @@ extern undefined4* gCarryableInterface;
 extern int Obj_IsObjectAlive();
 extern undefined4 ObjLink_DetachChild();
 
-/*
- * --INFO--
- *
- * Function: gunpowderbarrel_free
- * EN v1.0 Address: 0x801A189C
- * EN v1.0 Size: 196b
- */
 void gunpowderbarrel_free(int obj, int param_2)
 {
     int extra;
@@ -320,13 +269,6 @@ void gunpowderbarrel_free(int obj, int param_2)
 
 extern f32 lbl_803E42DC;
 
-/*
- * --INFO--
- *
- * Function: gunpowderbarrel_render
- * EN v1.0 Address: 0x801A1960
- * EN v1.0 Size: 256b
- */
 typedef struct
 {
     u8 playerHeld_ : 1;
@@ -661,7 +603,6 @@ void gunpowderbarrel_updatePhysics(int* obj)
     ((GpbFlags4A*)(sub + 0x4a))->wasOnGround = ((GpbFlags4A*)(sub + 0x4a))->onGround;
 }
 
-
 /* ================================================================ */
 /* Tail of the TU (0x801A1A60..0x801A27B8) - formerly the head of
  * cannontargetControl.c (now dll_0159_blasted.c). */
@@ -693,19 +634,6 @@ extern f32 lbl_803E432C;
 extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
 
-/*
- * --INFO--
- *
- * Function: gunpowderbarrel_hitDetect
- * EN v1.0 Address: 0x801A1A60
- * EN v1.0 Size: 920b
- * EN v1.1 Address: 0x801A1A78
- * EN v1.1 Size: 984b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gunpowderbarrel_hitDetect(int param_1)
 {
     GameObject* barrel;

@@ -43,19 +43,6 @@ extern f32 lbl_803E5400;
 extern f32 lbl_803E5404;
 extern f32 lbl_803E5408;
 
-/*
- * --INFO--
- *
- * Function: sh_queenearthwalker_getExtraSize
- * EN v1.0 Address: 0x801D4794
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int sh_queenearthwalker_getExtraSize(void)
 {
     return 0x40;

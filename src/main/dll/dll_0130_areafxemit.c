@@ -7,8 +7,6 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
@@ -27,21 +25,6 @@ extern f32 FLOAT_803e4b00;
 extern f32 lbl_803E3E68;
 extern f32 lbl_803E3E6C;
 extern f32 lbl_803E3E70;
-
-
-/*
- * --INFO--
- *
- * Function: fxemit_init
- * EN v1.0 Address: 0x8018EFE0
- * EN v1.0 Size: 376b
- * EN v1.1 Address: 0x8018F020
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 #pragma dont_inline on
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
@@ -94,64 +77,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: FUN_8018f158
- * EN v1.0 Address: 0x8018F158
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x8018F1B0
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f4fc
- * EN v1.0 Address: 0x8018F4FC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018F55C
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f500
- * EN v1.0 Address: 0x8018F500
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x8018F6C4
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f650
- * EN v1.0 Address: 0x8018F650
- * EN v1.0 Size: 1620b
- * EN v1.1 Address: 0x8018F854
- * EN v1.1 Size: 2220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8018f650(void)
@@ -381,114 +306,9 @@ void FUN_8018f650(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fd14
- * EN v1.0 Address: 0x8018FD14
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8019018C
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fd48
- * EN v1.0 Address: 0x8018FD48
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x801901CC
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fec4
- * EN v1.0 Address: 0x8018FEC4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80190354
- * EN v1.1 Size: 368b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018ffbc
- * EN v1.0 Address: 0x8018FFBC
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x801905C8
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80190004
- * EN v1.0 Address: 0x80190004
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80190618
- * EN v1.1 Size: 580b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80190008
- * EN v1.0 Address: 0x80190008
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x8019085C
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: warpPadFn_8019042c
- * EN v1.0 Address: 0x80190148
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801909A8
- * EN v1.1 Size: 1376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void warpPadFn_8019042c(int obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
 
 typedef struct CFEmitterFxArgs
 {
@@ -773,14 +593,9 @@ void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
 
 void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup);
 
-
 void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void lfxemitter_initialise(void);
-
-
-
-
 
 void areafxemit_free(AreaFxEmitObject* obj)
 {
@@ -789,9 +604,7 @@ void areafxemit_free(AreaFxEmitObject* obj)
 
 void lfxemitter_free(LfxEmitterObject* obj);
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void areafxemit_hitDetect(void)
 {
@@ -806,8 +619,6 @@ void areafxemit_initialise(void)
 }
 
 void lfxemitter_render(void);
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int areafxemit_getExtraSize(void) { return 0x20; }

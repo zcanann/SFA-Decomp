@@ -6,45 +6,7 @@
 
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: Effect10_func04
- * EN v1.0 Address: 0x800C291C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800C2BA8
- * EN v1.1 Size: 7700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
 extern void vecRotateZXY(void* params, f32* vec);
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_800c2924
- * EN v1.0 Address: 0x800C2924
- * EN v1.0 Size: 244b
- * EN v1.1 Address: 0x800C49BC
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
 
 extern EffectSrcParams lbl_8039C3E0;
 extern f32 lbl_803DFFA8;
@@ -358,35 +320,13 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800c2a20
- * EN v1.0 Address: 0x800C2A20
- * EN v1.0 Size: 1888b
- * EN v1.1 Address: 0x800C6840
- * EN v1.1 Size: 6724b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 extern f32 lbl_803E0000;
-
 
 /* sda21 externs for Effect10_func05 tick. */
 
 /* Advance two periodic counters; compute sin of phase. */
 
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
 
 void Effect12_func05_nop(void)
 {
@@ -405,6 +345,3 @@ void Effect12_initialise(void)
 }
 
 void Effect14_func05_nop(void);
-
-
-

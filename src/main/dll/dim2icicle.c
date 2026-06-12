@@ -73,18 +73,6 @@ typedef struct IcicleFxPos
     f32 z;
 } IcicleFxPos;
 
-/*
- * --INFO--
- *
- * Function: fn_801BB598
- * EN v1.0 Address: 0x801BB598
- * EN v1.0 Size: 1452b
- * EN v1.1 Size: 1452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void fn_801BB598(DIMbossObject* obj, DIMbossRuntime* runtime)
@@ -273,18 +261,6 @@ typedef struct IcicleWarpFlags
     u8 rest : 7;
 } IcicleWarpFlags;
 
-/*
- * --INFO--
- *
- * Function: warpDarkIceMines_801bbb44
- * EN v1.0 Address: 0x801BBB44
- * EN v1.0 Size: 1940b
- * EN v1.1 Size: 1940b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void warpDarkIceMines_801bbb44(int obj, int stateRaw)
 {
     u8* state;
@@ -507,18 +483,6 @@ typedef struct IcicleHitFx
     f32 z;
 } IcicleHitFx;
 
-/*
- * --INFO--
- *
- * Function: fn_801BC2D8
- * EN v1.0 Address: 0x801BC2D8
- * EN v1.0 Size: 1292b
- * EN v1.1 Size: 1292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801BC2D8(int obj, int stateRaw)
 {
     int* state;
@@ -656,18 +620,6 @@ void fn_801BC2D8(int obj, int stateRaw)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801BC7E4
- * EN v1.0 Address: 0x801BC7E4
- * EN v1.0 Size: 848b
- * EN v1.1 Size: 848b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801BC7E4(int obj, int arg2, int stateRaw, int mode)
 {
     IcicleState* state;

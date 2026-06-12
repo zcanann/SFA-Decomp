@@ -64,19 +64,6 @@ extern f32 lbl_803E356C;
 extern f32 lbl_803E3570;
 extern f32 lbl_803E35A4;
 
-/*
- * --INFO--
- *
- * Function: FUN_80152ec0
- * EN v1.0 Address: 0x80152EC0
- * EN v1.0 Size: 148b
- * EN v1.1 Address: 0x80152F40
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_80152ec0(uint param_1, int param_2)
@@ -103,20 +90,6 @@ void FUN_80152ec0(uint param_1, int param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80152fb4
- * EN v1.0 Address: 0x80152FB4
- * EN v1.0 Size: 932b
- * EN v1.1 Address: 0x8015303C
- * EN v1.1 Size: 816b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80152fb4(ushort* param_1, int param_2)
 {
     float fVar1;
@@ -226,20 +199,6 @@ void FUN_80152fb4(ushort* param_1, int param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801534d8
- * EN v1.0 Address: 0x801534D8
- * EN v1.0 Size: 608b
- * EN v1.1 Address: 0x801534EC
- * EN v1.1 Size: 520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801534d8(ushort* param_1, undefined4* param_2)
 {
     int iVar1;
@@ -293,19 +252,6 @@ void FUN_801534d8(ushort* param_1, undefined4* param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80153738
- * EN v1.0 Address: 0x80153738
- * EN v1.0 Size: 840b
- * EN v1.1 Address: 0x801536F4
- * EN v1.1 Size: 656b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80153738(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   ushort* param_9, undefined4* param_10)
@@ -386,20 +332,6 @@ void FUN_80153738(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80153b00
- * EN v1.0 Address: 0x80153B00
- * EN v1.0 Size: 224b
- * EN v1.1 Address: 0x80153A08
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80153b00(int param_1, int param_2)
 {
     char cVar1;
@@ -432,20 +364,6 @@ void FUN_80153b00(int param_1, int param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801544a4
- * EN v1.0 Address: 0x801544A4
- * EN v1.0 Size: 460b
- * EN v1.1 Address: 0x801540A8
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801544a4(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9, int param_10)

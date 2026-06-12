@@ -2,25 +2,10 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
 extern EffectInterface** gPartfxInterface;
-
-/*
- * --INFO--
- *
- * Function: wallanimator_setScale
- * EN v1.0 Address: 0x8019443C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80194688
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -31,7 +16,6 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
-
 
 typedef struct DimbossicesmashPlacement
 {
@@ -62,100 +46,9 @@ typedef struct DimbossicesmashPlacement
     s16 unk46;
 } DimbossicesmashPlacement;
 
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801950ac
- * EN v1.0 Address: 0x801950AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8019518C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f0
- * EN v1.0 Address: 0x801954F0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80195584
- * EN v1.1 Size: 4624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f4
- * EN v1.0 Address: 0x801954F4
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x80196794
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b40
- * EN v1.0 Address: 0x80195B40
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80196EA8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b74
- * EN v1.0 Address: 0x80195B74
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80196ED8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void dimbossicesmash_hitDetect(void)
 {
@@ -171,9 +64,7 @@ void dimbossicesmash_initialise(void)
 
 void texframeanimator_free(void);
 
-
 extern u8 framesThisStep;
-
 
 /* 8b "li r3, N; blr" returners. */
 int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
@@ -198,14 +89,12 @@ u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((int**)obj)[0x4c
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void disableHeavyFog(void);
 
-
 void dimbossicesmash_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
 void fogcontrol_free(int* obj);
-
 
 extern f32 sqrtf(f32);
 extern void Obj_FreeObject(u8 * obj);
@@ -543,6 +432,3 @@ void dimbossicesmash_init(u8* obj, u8* params)
 }
 
 extern f32 lbl_803E4068;
-
-/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
- * toward the gamebit-selected target and feed the heavy fog params. */

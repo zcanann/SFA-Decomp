@@ -8,7 +8,6 @@
 extern uint GameBit_Get(int eventId);
 extern void ObjHits_DisableObject(int obj);
 
-
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
@@ -16,29 +15,6 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
 STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
 STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
-
-
-/*
- * --INFO--
- *
- * Function: staffactivated_init
- * EN v1.0 Address: 0x8018A53C
- * EN v1.0 Size: 684b
- * EN v1.1 Address: 0x8018A7DC
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: treasurechest_SeqFn
- * EN v1.0 Address: 0x8018A8BC
- * EN v1.0 Size: 248b
- */
 int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -76,37 +52,11 @@ int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: treasurechest_getExtraSize
- * EN v1.0 Address: 0x8018A9B4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ABD4
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int treasurechest_getExtraSize(void)
 {
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: treasurechest_getObjectTypeId
- * EN v1.0 Address: 0x8018A9BC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ABDC
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int treasurechest_getObjectTypeId(void)
 {
     return 0;
@@ -181,19 +131,6 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
 
-/*
- * --INFO--
- *
- * Function: treasurechest_update
- * EN v1.0 Address: 0x8018AA60
- * EN v1.0 Size: 632b
- * EN v1.1 Address: 0x8018AA94
- * EN v1.1 Size: 896b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void treasurechest_update(int obj)
 {
     extern void GameBit_Set(int eventId, int value);
@@ -265,53 +202,13 @@ void treasurechest_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: treasurechest_release
- * EN v1.0 Address: 0x8018ADB4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018AF9C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void treasurechest_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: treasurechest_initialise
- * EN v1.0 Address: 0x8018ADB8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018AFA0
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void treasurechest_initialise(void)
 {
 }
-
-/*
- * --INFO--
- *
- * Function: magiccavebottom_getExtraSize
- * EN v1.0 Address: 0x8018ADBC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018AFA4
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 void magiccavebottom_free(int obj);
 

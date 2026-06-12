@@ -6,25 +6,6 @@
 
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: Effect10_func04
- * EN v1.0 Address: 0x800C291C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800C2BA8
- * EN v1.1 Size: 7700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
 extern f32 lbl_803DFEC8;
@@ -575,43 +556,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800c2924
- * EN v1.0 Address: 0x800C2924
- * EN v1.0 Size: 244b
- * EN v1.1 Address: 0x800C49BC
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern EffectSrcParams lbl_8039C3C8;
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_800c2a20
- * EN v1.0 Address: 0x800C2A20
- * EN v1.0 Size: 1888b
- * EN v1.1 Address: 0x800C6840
- * EN v1.1 Size: 6724b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 
 /* sda21 externs for Effect10_func05 tick. */
 extern f32 lbl_803DB838;
@@ -671,14 +616,3 @@ void Effect10_initialise(void)
 }
 
 void Effect11_func05_nop(void);
-
-
-
-
-
-
-
-
-
-
-

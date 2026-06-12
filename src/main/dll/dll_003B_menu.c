@@ -13,20 +13,6 @@ extern undefined4 DAT_803de3fe;
 extern undefined4 DAT_803de413;
 extern undefined4 DAT_803de445;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8012fdac
- * EN v1.0 Address: 0x8012FDAC
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x8012FDC8
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8012fdac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -62,19 +48,6 @@ void FUN_8012fdac(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8012fe70
- * EN v1.0 Address: 0x8012FE70
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x8012FE84
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8)
@@ -97,7 +70,6 @@ FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 extern u8 pauseDisabled;
@@ -107,7 +79,6 @@ extern s8 lbl_803DD8F4;
 extern s8 lbl_803DD8F5;
 extern s8 lbl_803DD8E8;
 extern int getScreenResolution(void);
-
 
 s32 Menu_func0B(void) { return lbl_803DD8F0; }
 #pragma peephole off
@@ -236,4 +207,3 @@ void Menu_initialise(void)
     lbl_803DD8F5 = 0;
     lbl_803DD8E8 = 0;
 }
-

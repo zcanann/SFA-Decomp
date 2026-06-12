@@ -1,12 +1,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
@@ -22,48 +16,6 @@ extern void* Shader_getLayer(void* shader, int idx);
 extern f32 lbl_803E4000;
 extern f32 lbl_803E4008;
 
-/*
- * --INFO--
- *
- * Function: wallanimator_setScale
- * EN v1.0 Address: 0x8019443C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80194688
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80194544
- * EN v1.0 Address: 0x80194544
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801947D4
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: objFn_801948c0
- * EN v1.0 Address: 0x801948C0
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
     u8* state;
@@ -89,35 +41,6 @@ f32 objFn_801948c0(u8* obj, u8 coord)
     }
     return lbl_803E4000;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_80194a70
- * EN v1.0 Address: 0x80194A70
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x80194E3C
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80194b10
- * EN v1.0 Address: 0x80194B10
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x80194EE0
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 typedef struct MapBlockHdr
 {
@@ -297,33 +220,6 @@ void fn_80194C40(undefined4 def, int state, int block)
     *(int*)block = return0_80060B90();
 }
 
-/*
- * --INFO--
- *
- * Function: wallanimator_getExtraSize
- * EN v1.0 Address: 0x8019469C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_getExtraSize
- * EN v1.0 Address: 0x80194B5C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int xyzanimator_getExtraSize(void)
 {
     return 0x50;
@@ -368,15 +264,11 @@ extern f32 lbl_803E3FF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4004;
 
-
 void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4004);
 }
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -388,31 +280,6 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int mmAlloc(int size, int pool, int tag);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj);
 extern f32 timeDelta;
@@ -876,121 +743,18 @@ done_lbl:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801950ac
- * EN v1.0 Address: 0x801950AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8019518C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f0
- * EN v1.0 Address: 0x801954F0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80195584
- * EN v1.1 Size: 4624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f4
- * EN v1.0 Address: 0x801954F4
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x80196794
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b40
- * EN v1.0 Address: 0x80195B40
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80196EA8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b74
- * EN v1.0 Address: 0x80195B74
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80196ED8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void explodeanimator_render(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
-
-
-
-
-
-
-
-
 
 void xyzanimator_init(int obj)
 {
@@ -1014,19 +778,4 @@ void xyzanimator_init(int obj)
 
 extern f32 sqrtf(f32);
 
-/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
- * trigger gamebit, integrate velocity/rotation with per-axis gravity
- * clamps, run the path-control hooks with surface bounce, fade alpha over
- * the lifetime window, and emit the two trail particles. */
-
-
-/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
- * state from the setup record: spawn position/rotation, launch velocity
- * (optionally homing on the target point), rotation velocities and the
- * gravity/clamp direction flags. */
-
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-
-/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
- * toward the gamebit-selected target and feed the heavy fog params. */

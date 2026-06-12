@@ -61,7 +61,6 @@ ObjectDescriptor14 expgfx_funcs = {
     (ObjectDescriptorCallback)expgfx_updateSourceFrameFlags,
 };
 
-
 static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex)
 {
     return &gExpgfxTableEntries[tableIndex];
@@ -111,19 +110,6 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
     return currentSource;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfxRemove
- * EN v1.0 Address: 0x8009B0E0
- * EN v1.0 Size: 372b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
@@ -190,19 +176,6 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
     }
 }
 
-/*
- * --INFO--
- *
- * Function: expgfxRemoveAll
- * EN v1.0 Address: 0x8009B254
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x8009B36C
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfxRemoveAll(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -277,19 +250,6 @@ void expgfxRemoveAll(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: expgfxGetSlot
- * EN v1.0 Address: 0x8009B3BC
- * EN v1.0 Size: 792b
- * EN v1.1 Address: 0x8009B648
- * EN v1.1 Size: 792b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
                   int preferredPoolIndex, uint sourceId)
 {
@@ -385,19 +345,6 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     return EXPGFX_INVALID_POOL_INDEX;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_initSlotQuad
- * EN v1.0 Address: 0x8009B6D4
- * EN v1.0 Size: 756b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: 756b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_initSlotQuad(void* slotPtr)
 {
     ExpgfxStaticDataLayout* staticData;
@@ -609,19 +556,6 @@ typedef struct ExpgfxCameraViewSlot
 
 STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
 
-/*
- * --INFO--
- *
- * Function: expgfx_updateActivePools
- * EN v1.0 Address: 0x8009B9C8
- * EN v1.0 Size: 9252b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
 {
     ExpgfxStaticDataLayout* staticData;
@@ -1903,19 +1837,6 @@ foundFirst:
     }
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_addToTable
- * EN v1.0 Address: 0x8009DDEC
- * EN v1.0 Size: 288b
- * EN v1.1 Address: 0x8009E078
- * EN v1.1 Size: 536b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey, s16 resourceId)
 {
@@ -1962,19 +1883,6 @@ int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey,
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: expgfx_updateSourceFrameFlags
- * EN v1.0 Address: 0x8009DF0C
- * EN v1.0 Size: 248b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int expgfx_updateSourceFrameFlags(void* sourceObject)
 {
     ExpgfxSourceObject* source;
@@ -2040,19 +1948,6 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
     return result;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_ownerFree3
- * EN v1.0 Address: 0x8009E004
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8009E290
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void expgfx_ownerFree3(u32 sourceId)
@@ -2061,71 +1956,19 @@ void expgfx_ownerFree3(u32 sourceId)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_func0B_nop
- * EN v1.0 Address: 0x8009E024
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_func0B_nop(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_func0A_nop
- * EN v1.0 Address: 0x8009E028
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_func0A_nop(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_func09
- * EN v1.0 Address: 0x8009E02C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int expgfx_func09(void)
 {
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_renderSourcePools
- * EN v1.0 Address: 0x8009E034
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x8009E2C0
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void expgfx_renderSourcePools(int sourceId, int sourceMode)
@@ -2172,19 +2015,6 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: drawGlow
- * EN v1.0 Address: 0x8009E13C
- * EN v1.0 Size: 2984b
- * EN v1.1 Address: 0x8009E3C8
- * EN v1.1 Size: 2984b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int getHudHiddenFrameCount(void);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
@@ -2621,19 +2451,6 @@ void drawGlow(uint slotPoolBase, int poolIndex)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: renderParticles
- * EN v1.0 Address: 0x8009ECE4
- * EN v1.0 Size: 468b
- * EN v1.1 Address: 0x8009EF70
- * EN v1.1 Size: 468b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void renderParticles(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -2709,19 +2526,6 @@ void renderParticles(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_free2
- * EN v1.0 Address: 0x8009EEB8
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8009F144
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void expgfx_free2(u32 sourceId)
@@ -2730,19 +2534,6 @@ void expgfx_free2(u32 sourceId)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_free
- * EN v1.0 Address: 0x8009EED8
- * EN v1.0 Size: 260b
- * EN v1.1 Address: 0x8009F164
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void expgfx_free(u32 sourceId)
@@ -2807,19 +2598,6 @@ void expgfx_free(u32 sourceId)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_resetAllPools
- * EN v1.0 Address: 0x8009EFDC
- * EN v1.0 Size: 464b
- * EN v1.1 Address: 0x8009F268
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_resetAllPools(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -2921,19 +2699,6 @@ void expgfx_resetAllPools(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_updateFrameState
- * EN v1.0 Address: 0x8009F1AC
- * EN v1.0 Size: 288b
- * EN v1.1 Address: 0x8009F438
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_updateFrameState(int sourceMode, int sourceId)
 {
     int renderMode;
@@ -2977,19 +2742,6 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_addremove
- * EN v1.0 Address: 0x8009C21C
- * EN v1.0 Size: 3840b
- * EN v1.1 Address: 0x8009F558
- * EN v1.1 Size: 2576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803DF350;
 extern f32 lbl_803DF41C;
 extern f32 lbl_803DF420;
@@ -3331,19 +3083,6 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
     }
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_onMapSetup
- * EN v1.0 Address: 0x8009FCDC
- * EN v1.0 Size: 416b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_onMapSetup(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -3408,19 +3147,6 @@ void expgfx_onMapSetup(void)
     gExpgfxTextureFreeInProgress = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_release
- * EN v1.0 Address: 0x8009FE7C
- * EN v1.0 Size: 84b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_release(void)
 {
     u32* slotPoolBases;
@@ -3439,19 +3165,6 @@ void expgfx_release(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: expgfx_initialise
- * EN v1.0 Address: 0x8009FED0
- * EN v1.0 Size: 288b
- * EN v1.1 Address: 0x8009FF68
- * EN v1.1 Size: 416b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void expgfx_initialise(void)
 {
     ExpgfxRuntimeDataLayout* runtime;

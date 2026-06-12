@@ -4,7 +4,6 @@
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 
-
 extern void modelLightStruct_getDiffuseColor(void* light, u8* a, u8* b, u8* c, u8* d);
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
@@ -79,15 +78,6 @@ extern FrustumPlane gViewFrustumPlanes[5];
 extern int lbl_803E8444;
 extern int lbl_803E8448;
 
-/*
- * --INFO--
- *
- * Function: mapBlockBounds_HasCornerPastDepthThreshold
- * EN v1.0 Address: 0x8005DF5C
- * EN v1.0 Size: 1004b
- * EN v1.1 Address: 0x8005E0D8
- * EN v1.1 Size: 1004b
- */
 u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds, float* xform)
 {
     float v[3];
@@ -162,15 +152,6 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds, float* xform)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: mapBlockRender_drawLightmapIndirectPasses
- * EN v1.0 Address: 0x8005E348
- * EN v1.0 Size: 536b
- * EN v1.1 Address: 0x8005E4C4
- * EN v1.1 Size: 536b
- */
 typedef struct IndMtxCopy
 {
     int w[6];
@@ -238,15 +219,6 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* par
     }
 }
 
-/*
- * --INFO--
- *
- * Function: mapBlockRender_setLightmapShader
- * EN v1.0 Address: 0x8005E560
- * EN v1.0 Size: 464b
- * EN v1.1 Address: 0x8005E6DC
- * EN v1.1 Size: 464b
- */
 int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
     int shader;
@@ -317,15 +289,6 @@ LAB_8005E718:
     return shader;
 }
 
-/*
- * --INFO--
- *
- * Function: mapBlockRender_drawDimmedAabbLights
- * EN v1.0 Address: 0x8005E730
- * EN v1.0 Size: 588b
- * EN v1.1 Address: 0x8005E8AC
- * EN v1.1 Size: 588b
- */
 void mapBlockRender_drawDimmedAabbLights(undefined4 bounds, undefined4 blockXform, int i)
 {
     int* lightPtr;
@@ -377,15 +340,6 @@ void mapBlockRender_drawDimmedAabbLights(undefined4 bounds, undefined4 blockXfor
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: frustumTestAabbWithPlaneOffsets
- * EN v1.0 Address: 0x8005E97C
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x8005EAF8
- * EN v1.1 Size: 296b
- */
 undefined4
 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ,
                                 f32 maxZ, f32* planeOffsets)
@@ -443,15 +397,6 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: mapBlockBounds_ComputeAndTestPlanes
- * EN v1.0 Address: 0x8005EAA4
- * EN v1.0 Size: 476b
- * EN v1.1 Address: 0x8005EC20
- * EN v1.1 Size: 476b
- */
 u8
 mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes, int planeCount, f32* minX,
                                     f32* minY, f32* minZ, f32* maxX, f32* maxY, f32* maxZ)
@@ -516,15 +461,6 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: mapBlockRender_callList
- * EN v1.0 Address: 0x8005EC80
- * EN v1.0 Size: 1376b
- * EN v1.1 Address: 0x8005EDFC
- * EN v1.1 Size: 1376b
- */
 void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, float* mtx)
 {
     u8 dBig[16];
@@ -721,15 +657,6 @@ end:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: mapBlockRender_setupShaderTextures
- * EN v1.0 Address: 0x8005F1E0
- * EN v1.0 Size: 888b
- * EN v1.1 Address: 0x8005F35C
- * EN v1.1 Size: 888b
- */
 void mapBlockRender_setupShaderTextures(int shader, int mode)
 {
     int texId;
@@ -885,15 +812,6 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: mapBlockRender_setShader
- * EN v1.0 Address: 0x8005F558
- * EN v1.0 Size: 968b
- * EN v1.1 Address: 0x8005F6D4
- * EN v1.1 Size: 968b
- */
 int mapBlockRender_setShader(byte doSetup, int blockData, int* bitReader)
 {
     uint shader;

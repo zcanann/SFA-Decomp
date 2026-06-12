@@ -14,45 +14,24 @@ typedef struct PortalspelldoorPlacement
     s16 unk1E;
 } PortalspelldoorPlacement;
 
-
-
-
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 /* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
 
-
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 /* portalspelldoor_getExtraSize == 0x10. */
 
-
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-
 extern u8 framesThisStep;
 
 extern int Obj_GetPlayerObject(void);
-/*
- * --INFO--
- *
- * Function: portalspelldoor_update
- * EN v1.0 Address: 0x80186748
- * EN v1.0 Size: 344b
- * EN v1.1 Address: 0x80186A38
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void portalspelldoor_update(int obj)
 {
     extern int playerHasSpell(int player, int spell);

@@ -51,19 +51,6 @@ typedef struct MmShrineAnimEvents
     u8 eventCount;
 } MmShrineAnimEvents;
 
-/*
- * --INFO--
- *
- * Function: FUN_801c5990
- * EN v1.0 Address: 0x801C5990
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x801C5B9C
- * EN v1.1 Size: 456b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
@@ -341,69 +328,16 @@ void ecsh_shrine_setScale(s16* out)
     *out = *(s16*)((char*)state + 0x20);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801c5f28
- * EN v1.0 Address: 0x801C5F28
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x801C5F44
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_getExtraSize
- * EN v1.0 Address: 0x801C5F40
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ecsh_shrine_getExtraSize(void)
 {
     return 0x38;
 }
 
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_getObjectTypeId
- * EN v1.0 Address: 0x801C5F48
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ecsh_shrine_getObjectTypeId(void)
 {
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_hitDetect
- * EN v1.0 Address: 0x801C60B4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ecsh_shrine_hitDetect(void)
 {
 }
@@ -478,19 +412,6 @@ extern undefined4 ObjMsg_AllocQueue();
 
 extern undefined4 DAT_803dc070;
 
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_update
- * EN v1.0 Address: 0x801C60B8
- * EN v1.0 Size: 3360b
- * EN v1.1 Address: 0x801C666C
- * EN v1.1 Size: 3104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(s16* obj, int* target, int id, int p);
 extern int objIsCurModelNotZero(int* player);
@@ -941,19 +862,6 @@ void ecsh_shrine_update(s16* obj)
 }
 #pragma opt_strength_reduction reset
 
-/*
- * --INFO--
- *
- * Function: FUN_801c6e04
- * EN v1.0 Address: 0x801C6E04
- * EN v1.0 Size: 704b
- * EN v1.1 Address: 0x801C7408
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9)
@@ -1091,4 +999,3 @@ void ecsh_shrine_init(s16* obj, s8* def)
 extern u8* mmAlloc(int size, int tag, int p);
 
 extern f32 mathSinf(f32 angle);
-

@@ -84,13 +84,6 @@ STATIC_ASSERT(sizeof(EdibleMushroomState) == 0x144);
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
 
-/*
- * --INFO--
- *
- * Function: edibleMushroomFn_801d083c
- * EN v1.0 Address: 0x801D083C
- * EN v1.0 Size: 2656b
- */
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
@@ -478,13 +471,6 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801D129C
- * EN v1.0 Address: 0x801D129C
- * EN v1.0 Size: 704b
- */
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
 {
     s16 angle;
@@ -551,38 +537,17 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
     return angle;
 }
 
-/*
- * --INFO--
- *
- * Function: ediblemushroom_free
- * EN v1.0 Address: 0x801D1564
- * EN v1.0 Size: 60b
- */
 void ediblemushroom_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0x47);
     ObjGroup_RemoveObject(obj, 0x31);
 }
 
-/*
- * --INFO--
- *
- * Function: ediblemushroom_getExtraSize
- * EN v1.0 Address: 0x801D155C
- * EN v1.0 Size: 8b
- */
 int ediblemushroom_getExtraSize(void)
 {
     return 0x144;
 }
 
-/*
- * --INFO--
- *
- * Function: ediblemushroom_hitDetect
- * EN v1.0 Address: 0x801D15A0
- * EN v1.0 Size: 332b
- */
 void ediblemushroom_hitDetect(u8* obj)
 {
     u8* state;
@@ -644,13 +609,6 @@ extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, 
 extern int ObjHits_GetPriorityHit(u8* obj, int* outOther, int a, int b);
 extern f32 sqrtf(f32 x);
 
-/*
- * --INFO--
- *
- * Function: ediblemushroom_update
- * EN v1.0 Address: 0x801D16EC
- * EN v1.0 Size: 652b
- */
 void ediblemushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
@@ -780,13 +738,6 @@ extern f32 lbl_803E52EC;
 extern f32 lbl_803E52F0;
 extern f32 lbl_803E52F4;
 
-/*
- * --INFO--
- *
- * Function: ediblemushroom_init
- * EN v1.0 Address: 0x801D1978
- * EN v1.0 Size: 644b
- */
 void ediblemushroom_init(int obj, int aux)
 {
     extern undefined4 ObjHits_DisableObject(); /* #57 */
@@ -883,47 +834,4 @@ void ediblemushroom_init(int obj, int aux)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: enemymushroom_getExtraSize
- * EN v1.0 Address: 0x801D1D58
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: enemymushroom_getObjectTypeId
- * EN v1.0 Address: 0x801D1D60
- * EN v1.0 Size: 20b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
-
-/*
- * --INFO--
- *
- * Function: enemymushroom_hitDetect
- * EN v1.0 Address: 0x801D1E20
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */

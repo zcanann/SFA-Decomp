@@ -4,7 +4,6 @@
 #include "main/dll/FRONT/attract_movie.h"
 #include "main/dll/FRONT/n_options.h"
 
-
 extern void* memset(void* dst, int value, uint size);
 extern void* memcpy(void* dst, const void* src, uint size);
 extern void gxSetPeControl_ZCompLoc_();
@@ -57,19 +56,6 @@ extern f32 lbl_803E1D50;
 extern char lbl_803A57C0[0x50C];
 extern OSMessageQueue lbl_803A5CCC;
 
-/*
- * --INFO--
- *
- * Function: THPPlayerDrawCurrentFrame
- * EN v1.0 Address: 0x80117668
- * EN v1.0 Size: 1280b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, uint width, uint height)
 {
     uint halfWidth;
@@ -156,19 +142,6 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, uint width, u
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Movie_SetVolumeFade
- * EN v1.0 Address: 0x80117C30
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x80117E10
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
 {
     BOOL interrupts;
@@ -214,19 +187,6 @@ BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
     return FALSE;
 }
 
-/*
- * --INFO--
- *
- * Function: AttractMovieAudio_Mix
- * EN v1.0 Address: 0x80117D5C
- * EN v1.0 Size: 940b
- * EN v1.1 Address: 0x80117F1C
- * EN v1.1 Size: 932b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
 {
     ushort volumeScale;
@@ -387,14 +347,6 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: AttractMovieAudio_DmaCallback
- * EN v1.0 Address: 0x80118018
- * EN v1.0 Size: 372b
- */
 void AttractMovieAudio_DmaCallback(void)
 {
     BOOL interrupts;
@@ -444,13 +396,6 @@ void AttractMovieAudio_DmaCallback(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: THPPlayerPostDrawDone
- * EN v1.0 Address: 0x8011818C
- * EN v1.0 Size: 108b
- */
 void THPPlayerPostDrawDone(void)
 {
     OSMessageQueue* queue;
@@ -479,13 +424,6 @@ void THPPlayerPostDrawDone(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: THPPlayerGetVideoInfo
- * EN v1.0 Address: 0x801181F8
- * EN v1.0 Size: 72b
- */
 BOOL THPPlayerGetVideoInfo(void* dst)
 {
     if (lbl_803A5D60.isOpen != 0)
@@ -496,13 +434,6 @@ BOOL THPPlayerGetVideoInfo(void* dst)
     return FALSE;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80118240
- * EN v1.0 Address: 0x80118240
- * EN v1.0 Size: 84b
- */
 void fn_80118240(void)
 {
     AttractMovieTextureSet* textureSet;
@@ -515,13 +446,6 @@ void fn_80118240(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: AttractMovie_DrawTextureCallback
- * EN v1.0 Address: 0x80118294
- * EN v1.0 Size: 144b
- */
 uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4* modelPtr, undefined4 renderOpIdx)
 {
     AttractMovieTextureSet* textureSet;
@@ -547,13 +471,6 @@ uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4* modelPtr, 
     return FALSE;
 }
 
-/*
- * --INFO--
- *
- * Function: ProperTimingForGettingNextFrame
- * EN v1.0 Address: 0x80118324
- * EN v1.0 Size: 328b
- */
 int ProperTimingForGettingNextFrame(void)
 {
     int frame;

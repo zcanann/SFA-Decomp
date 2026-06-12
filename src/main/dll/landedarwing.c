@@ -47,14 +47,6 @@ typedef struct
     u8 bit0 : 1;
 } LandedArwingFlags;
 
-
-/*
- * --INFO--
- *
- * Function: LandedArwing_UpdateFlightChase
- * EN v1.0 Address: 0x8016558C
- * EN v1.0 Size: 1068b
- */
 undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
 {
     int objLocal;
@@ -196,4 +188,3 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
 
     return 0;
 }
-

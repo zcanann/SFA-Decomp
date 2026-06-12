@@ -6,32 +6,13 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801c6e04
- * EN v1.0 Address: 0x801C6E04
- * EN v1.0 Size: 704b
- * EN v1.1 Address: 0x801C7408
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -41,24 +22,7 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-/*
- * --INFO--
- *
- * Function: gpsh_shrine_update
- * EN v1.0 Address: 0x801C7724
- * EN v1.0 Size: 2520b
- * EN v1.1 Address: 0x801C7CD8
- * EN v1.1 Size: 2124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void gpsh_scene_free(void)
 {
@@ -90,7 +54,6 @@ int ecsh_cup_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5058;
 
-
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -98,7 +61,6 @@ void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 void gpsh_scene_init(int* obj, int* def)
 {

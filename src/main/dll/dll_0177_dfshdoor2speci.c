@@ -27,75 +27,6 @@ extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
 
-/*
- * --INFO--
- *
- * Function: dfropenode_update
- * EN v1.0 Address: 0x801C2278
- * EN v1.0 Size: 824b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfropenode_init
- * EN v1.0 Address: 0x801C25B0
- * EN v1.0 Size: 132b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfropenode_release
- * EN v1.0 Address: 0x801C2634
- * EN v1.0 Size: 76b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfropenode_initialise
- * EN v1.0 Address: 0x801C2680
- * EN v1.0 Size: 96b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DFSH_Door2Speci_SeqFn
- * EN v1.0 Address: 0x801C26E0
- * EN v1.0 Size: 316b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DFSH_Door2Speci_SeqFn(int obj)
 {
     int* texture;
@@ -143,38 +74,11 @@ int DFSH_Door2Speci_SeqFn(int obj)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_getExtraSize
- * EN v1.0 Address: 0x801C281C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801C29EC
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfsh_door2speci_getExtraSize(void)
 {
     return sizeof(DFDoorSpeciExtra);
 }
 
-
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_getObjectTypeId
- * EN v1.0 Address: 0x801C2824
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801C2824
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 int dfsh_door2speci_getObjectTypeId(void)
@@ -189,38 +93,12 @@ extern uint GameBit_Get(int eventId);
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_free
- * EN v1.0 Address: 0x801C282C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void dfsh_door2speci_free(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_render
- * EN v1.0 Address: 0x801C2830
- * EN v1.0 Size: 48b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v;
@@ -232,53 +110,14 @@ void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_hitDetect
- * EN v1.0 Address: 0x801C2860
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_door2speci_hitDetect(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_update
- * EN v1.0 Address: 0x801C2864
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_door2speci_update(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_init
- * EN v1.0 Address: 0x801C2868
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_door2speci_init(int obj, int def)
 {
     int state;
@@ -309,106 +148,10 @@ void dfsh_door2speci_init(int obj, int def)
     *(short*)state = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_release
- * EN v1.0 Address: 0x801C290C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_door2speci_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_door2speci_initialise
- * EN v1.0 Address: 0x801C2910
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_door2speci_initialise(void)
 {
 }
-
-/*
- * --INFO--
- *
- * Function: fn_801C2914
- * EN v1.0 Address: 0x801C2914
- * EN v1.0 Size: 852b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_SeqFn
- * EN v1.0 Address: 0x801C2C68
- * EN v1.0 Size: 348b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_getExtraSize
- * EN v1.0 Address: 0x801C2DC4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_getObjectTypeId
- * EN v1.0 Address: 0x801C2DCC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_free
- * EN v1.0 Address: 0x801C2DD4
- * EN v1.0 Size: 148b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */

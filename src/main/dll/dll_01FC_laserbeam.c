@@ -18,7 +18,6 @@ extern f32 timeDelta;
 
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
-
 typedef struct Dll1FBSetup
 {
     ObjPlacement base;
@@ -51,7 +50,6 @@ typedef struct WMGalleonState
     s16 savedYaw;
 } WMGalleonState;
 
-
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
 STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
@@ -69,7 +67,6 @@ STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
 STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
-
 
 int LaserBeam_getExtraSize(void) { return 0x50; }
 int LaserBeam_getObjectTypeId(void) { return 0; }
@@ -116,9 +113,7 @@ typedef struct LaserBeamPlacement
     u8 pad2FB[0x300 - 0x2FB];
 } LaserBeamPlacement;
 
-
 /* Per-object extra state for the WM laser beam emitter. */
-
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
@@ -154,7 +149,6 @@ STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 /* dll_200_getExtraSize == 0x28 (kid attachment actor). */
 
-
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 extern undefined4 FUN_8000680c();
@@ -173,19 +167,6 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
-/*
- * --INFO--
- *
- * Function: LaserBeam_update
- * EN v1.0 Address: 0x801F0B50
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x801F0DA4
- * EN v1.1 Size: 488b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void LaserBeam_update(int obj2)
 {
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
@@ -511,20 +492,6 @@ void LaserBeam_update(int obj2)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801f1634
- * EN v1.0 Address: 0x801F1634
- * EN v1.0 Size: 768b
- * EN v1.1 Address: 0x801F22BC
- * EN v1.1 Size: 684b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -644,20 +611,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801f2b94
- * EN v1.0 Address: 0x801F2B94
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801F37A8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801f2b94(short* param_1)
 {
     int iVar1;
@@ -680,15 +633,11 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 extern f32 lbl_803E5D78;
 
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 
 extern void* lbl_803DDC80;
 
@@ -703,11 +652,9 @@ void lightsource_hitDetect(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
 /* if (o->_X == K) return A; else return B; */
 
 /* init pattern: short=-1; byte=0; return 0; */
-
 
 /* fn_X(lbl); lbl = 0; */
 void LaserBeam_release(void)
@@ -719,22 +666,18 @@ void LaserBeam_release(void)
 /* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
 void dll_1FF_init(s16* a, s8* b);
 
-
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-
 
 /* dll_200_render: when visible != 0 and
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
 
-
 /* dll_200_init: write a function pointer
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-
 
 #pragma opt_strength_reduction off
 
@@ -787,13 +730,10 @@ void LaserBeam_free(s16* obj, char* arg)
 
 extern ObjHitReactEntry lbl_80328898[];
 
-
 typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
 
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-

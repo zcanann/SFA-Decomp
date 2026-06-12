@@ -201,7 +201,6 @@ void sc_totempuzzle_hitDetect(void)
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
 extern undefined4 FUN_800067c0();
 extern int ObjHits_GetPriorityHitWithPosition();
 
@@ -225,24 +224,6 @@ extern int GameBit_Set(int eventId, int value);
 #define SC_TOTEMPUZZLE_FORWARD_STEP 4
 #define SC_TOTEMPUZZLE_SOLVED_COUNT 5
 
-
-/*
- * --INFO--
- *
-
-/*
- * --INFO--
- *
- * Function: sc_totempuzzle_update
- * EN v1.0 Address: 0x801DD46C
- * EN v1.0 Size: 588b
- * EN v1.1 Address: 0x801DD798
- * EN v1.1 Size: 656b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 {
     ScTotemPuzzleState* state;

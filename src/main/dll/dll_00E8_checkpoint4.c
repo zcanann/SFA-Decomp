@@ -4,68 +4,18 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003b818();
 
-
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 
 extern EffectInterface** gPartfxInterface;
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_render
- * EN v1.0 Address: 0x8016984C
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x80169CF8
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: pollenfragment_init
- * EN v1.0 Address: 0x8016B0A4
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x8016ACA4
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8016b228
- * EN v1.0 Address: 0x8016B228
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8016AE70
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
 void mikabomb_hitDetect(void);
-
 
 void mikabomb_free(int obj, int mode);
 
@@ -75,7 +25,6 @@ int mikabomb_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
 
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -203,7 +152,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
@@ -221,9 +169,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
@@ -237,7 +183,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-
 
 extern undefined4 FUN_80006810();
 extern undefined8 FUN_80006824();
@@ -336,39 +281,12 @@ extern f32 lbl_803E40C8;
 extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
 
-
-/*
- * --INFO--
- *
- * Function: staticCamera_free
- * EN v1.0 Address: 0x8016BAC4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8016BD54
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void staticCamera_free(int param_1)
 {
     ObjGroup_RemoveObject(param_1, 7);
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: staticCamera_render
- * EN v1.0 Address: 0x8016BAE8
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8016BD78
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -378,19 +296,6 @@ void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: staticCamera_init
- * EN v1.0 Address: 0x8016BB10
- * EN v1.0 Size: 168b
- * EN v1.1 Address: 0x8016BDB0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void staticCamera_init(short* param_1, int param_2, int param_3)
 {
     undefined* puVar1;
@@ -410,20 +315,6 @@ void staticCamera_init(short* param_1, int param_2, int param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8016d188
- * EN v1.0 Address: 0x8016D188
- * EN v1.0 Size: 2060b
- * EN v1.1 Address: 0x8016D394
- * EN v1.1 Size: 2820b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8016d188(int param_1, int param_2)
 {
     float fVar1;
@@ -671,19 +562,6 @@ void FUN_8016d188(int param_1, int param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8016d994
- * EN v1.0 Address: 0x8016D994
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x8016DE98
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
 {
     int iVar1;
@@ -694,20 +572,6 @@ void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8016e8cc
- * EN v1.0 Address: 0x8016E8CC
- * EN v1.0 Size: 1068b
- * EN v1.1 Address: 0x8016F0A8
- * EN v1.1 Size: 756b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -820,20 +684,6 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80170048
- * EN v1.0 Address: 0x80170048
- * EN v1.0 Size: 2352b
- * EN v1.1 Address: 0x8017082C
- * EN v1.1 Size: 1804b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80170048(void)
 {
     float fVar1;
@@ -1099,20 +949,6 @@ void FUN_80170048(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: checkpoint4_render
- * EN v1.0 Address: 0x80170F68
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x80171EA4
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803E3420;
 
 void checkpoint4_render(int param_1)
@@ -1120,19 +956,6 @@ void checkpoint4_render(int param_1)
     objRenderFn_8003b8f4(lbl_803E3420);
 }
 
-/*
- * --INFO--
- *
- * Function: checkpoint4_init
- * EN v1.0 Address: 0x80170F88
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x80171ED0
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement)
 {
     f32 radius;
@@ -1180,40 +1003,10 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
 
 extern u8 Obj_IsLoadingLocked(void);
 
-/*
- * --INFO--
- *
- * Function: sideload_update
- * EN v1.0 Address: 0x801710BC
- * EN v1.0 Size: 352b
- * EN v1.1 Address: 0x80172058
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 void mikabombshadow_update(int* obj);
-
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801713ac
- * EN v1.0 Address: 0x801713AC
- * EN v1.0 Size: 956b
- * EN v1.1 Address: 0x80172308
- * EN v1.1 Size: 744b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -1412,7 +1205,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 void shield_free(int obj);
 
 void curve_setScale(void);
@@ -1477,9 +1269,7 @@ int curve_getObjectTypeId(void);
 int dll_F7_getExtraSize(void);
 int dll_F7_getObjectTypeId(void);
 
-
 void dll_F7_free(int obj);
-
 
 void dim2roofrub_free(int* obj);
 
@@ -1921,7 +1711,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-
 /* Pattern wrappers. */
 s16 staff_getHitReactValue(int* obj);
 
@@ -1951,11 +1740,9 @@ void StaticCamera_free(int x);
 
 void flamethrowerspe_func0B(int* obj);
 
-
 void staff_func10(int* obj, s32 v);
 
 void staff_setHitReactValue(int* obj, s32 v);
-
 
 void staff_modelMtxFn(int* obj, int p4, int p5);
 
@@ -1967,11 +1754,9 @@ void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 
 void gcbaddieshield_init(int* obj, void* initData);
 
-
 void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-
 
 void gcbaddieshield_update(int* obj);
 
@@ -1979,90 +1764,64 @@ void staff_free(int* obj);
 
 void fireball_free(int* obj);
 
-
 void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
 
 void staff_release(void);
 
-
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-
 void flamethrowerspe_init(int* obj, int* params);
-
 
 void animatedobj_free(int* obj, int seqFlag);
 
-
 void staff_init(int* obj);
-
 
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-
 void dll_F7_init(int* obj, int* params);
-
 
 void fireball_hitDetect(int* obj);
 
-
 void dim2roofrub_init(int* obj, int* params);
-
 
 void animatedobj_init(int* obj, int* params);
 
-
 void flamethrowerspe_update(int* obj);
-
 
 void mikabomb_update(int* obj);
 
 void mikabomb_init(int* obj);
 
-
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
 
 void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
-
 void dim2roofrub_update(int* obj);
-
 
 void fireball_init(int* obj);
 
-
 void fireball_update(int* obj);
-
 
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-
 void shield_update(int* obj);
-
 
 /* dll_F7 (bouncing prop) object extra-state */
 
-
 void dll_F7_update(int* obj);
-
 
 void staff_initialise(void);
 
-
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
 
 /* per-swipe trail record (stride 0x18, 3 records) */
 
-
 void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
-
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 
@@ -2091,9 +1850,6 @@ extern void selectTexture(void* tex, int x);
 
 #pragma opt_common_subs off
 
-
 void staff_update(int* obj);
 
-
 void staffFn_80170380(int* obj, int cmd);
-

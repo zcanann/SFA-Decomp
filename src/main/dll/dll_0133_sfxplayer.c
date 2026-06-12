@@ -1,26 +1,10 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/effect_interfaces.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
 extern f32 lbl_803DC074;
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/MMP/MMP_moonrock.h"
@@ -29,7 +13,6 @@ extern f32 lbl_803DC074;
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-
 
 typedef struct SfxplayerObjPlacement
 {
@@ -42,32 +25,15 @@ typedef struct SfxplayerObjPlacement
     u8 pad26[0x28 - 0x26];
 } SfxplayerObjPlacement;
 
-
 extern f32 lbl_803E40B8;
 
 extern u8* Obj_GetPlayerObject(void);
 extern int getCurSeqNo(void);
 
-
-/*
- * --INFO--
- *
- * Function: lightning_free
- * EN v1.0 Address: 0x801978A8
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801978DC
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
-
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
-
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
@@ -295,82 +261,6 @@ void sfxplayerObj_update(u8* obj)
 }
 
 void fn_80198A00(u8* obj, int seqArg);
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197960
- * EN v1.0 Address: 0x80197960
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x801979B8
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e54
- * EN v1.0 Address: 0x80197E54
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80197E64
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e84
- * EN v1.0 Address: 0x80197E84
- * EN v1.0 Size: 940b
- * EN v1.1 Address: 0x80197E94
- * EN v1.1 Size: 828b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8019836c
- * EN v1.0 Address: 0x8019836C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80198350
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801983a0
- * EN v1.0 Address: 0x801983A0
- * EN v1.0 Size: 660b
- * EN v1.1 Address: 0x80198384
- * EN v1.1 Size: 916b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 

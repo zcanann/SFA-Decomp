@@ -20,7 +20,6 @@ typedef struct TREXLazerwallUpdateTimedChallengeState
     u8 pad9D7[0x9D8 - 0x9D7];
 } TREXLazerwallUpdateTimedChallengeState;
 
-
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
@@ -44,14 +43,6 @@ extern f32 lbl_803E59E0;
 extern u32 lbl_803E59D0;
 extern u32 lbl_803E59D4;
 
-
-/*
- * --INFO--
- *
- * Function: TREX_Lazerwall_popQueuedState
- * EN v1.0 Address: 0x801E67BC
- * EN v1.0 Size: 468b
- */
 int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 {
     int state;
@@ -124,13 +115,6 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: TREX_Lazerwall_waitForStartBit
- * EN v1.0 Address: 0x801E6990
- * EN v1.0 Size: 56b
- */
 int TREX_Lazerwall_waitForStartBit(void)
 {
     if (GameBit_Get(0x617) != 0)
@@ -140,13 +124,6 @@ int TREX_Lazerwall_waitForStartBit(void)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: TREX_Lazerwall_updateTimedChallenge
- * EN v1.0 Address: 0x801E69C8
- * EN v1.0 Size: 328b
- */
 int TREX_Lazerwall_updateTimedChallenge(int arg1)
 {
     int state;
@@ -189,4 +166,3 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
 
     return 0;
 }
-

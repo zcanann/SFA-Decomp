@@ -2,47 +2,25 @@
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: deathgas_free
- * EN v1.0 Address: 0x8018BC50
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8018BC64
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* Drift-recovery: add new fns with v1.0 names. */
 
-
 extern f32 timeDelta;
-
 
 #include "main/dll/CF/treasureRelated0177.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/screen_transition.h"
-
 
 extern void ModelLightStruct_free(void* effect);
 extern u32 GameBit_Get(int bit);
@@ -52,38 +30,7 @@ extern void queueGlowRender(void* effect);
 
 extern f32 lbl_803E3D78;
 
-/*
- * --INFO--
- *
- * Function: dll_127_update
- * EN v1.0 Address: 0x8018CDAC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018CDAC
- * EN v1.1 Size: 1116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_127_init
- * EN v1.0 Address: 0x8018CF80
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x8018D378
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 extern int* gSHthorntailAnimationInterface;
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
@@ -94,13 +41,6 @@ extern f32 lbl_803E3D84;
 
 typedef int (*ThorntailQueryFn)(u8*);
 
-/*
- * --INFO--
- *
- * Function: campfire_update
- * EN v1.0 Address: 0x8018CFA4
- * EN v1.0 Size: 556b
- */
 void campfire_update(int obj)
 {
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
@@ -211,13 +151,6 @@ extern f32 lbl_803E3D90;
 extern f32 lbl_803E3D94;
 extern f32 lbl_803E3D98;
 
-/*
- * --INFO--
- *
- * Function: campfire_init
- * EN v1.0 Address: 0x8018D1D0
- * EN v1.0 Size: 732b
- */
 void campfire_init(int obj, int p2)
 {
     int* state;
@@ -284,14 +217,6 @@ void campfire_init(int obj, int p2)
 
 extern f32 lbl_803E3DC0;
 
-/*
- * --INFO--
- *
- * Function: kt_torch_init
- * EN v1.0 Address: 0x8018D584
- * EN v1.0 Size: 348b
- */
-
 void campfire_free(int obj)
 {
     void** state;
@@ -328,11 +253,9 @@ void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5
 
 void kt_torch_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int campfire_getExtraSize(void) { return 0x14; }
 int campfire_getObjectTypeId(void) { return 0x1; }
 int kt_torch_getExtraSize(void);
-
 
 /* render-with-objRenderFn_8003b8f4 pattern. */

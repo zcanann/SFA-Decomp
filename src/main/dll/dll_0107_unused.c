@@ -11,25 +11,17 @@
 #include "main/audio/sfx_ids.h"
 #include "main/resource.h"
 
-
-
-
-
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 /* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
 
-
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 /* portalspelldoor_getExtraSize == 0x10. */
 
-
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
-
 
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_ClearHitVolumes();
@@ -42,7 +34,6 @@ extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 Obj_GetYawDeltaToObject();
 
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
@@ -51,34 +42,6 @@ extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(void* a, void* b);
 
-/*
- * --INFO--
- *
- * Function: FUN_80184a54
- * EN v1.0 Address: 0x80184A54
- * EN v1.0 Size: 3668b
- * EN v1.1 Address: 0x80184E88
- * EN v1.1 Size: 3476b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: fn_80185868
- * EN v1.0 Address: 0x80185A48
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x80185DC0
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void fn_80185868(int obj, f32 arg)
 {
@@ -122,19 +85,6 @@ void fn_80185868(int obj, f32 arg)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: fn_80185A24
- * EN v1.0 Address: 0x80185C9C
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x80185F7C
- * EN v1.1 Size: 336b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
     extern void fn_8003B5E0(int a, int b, int c, int d);
@@ -198,19 +148,6 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 end:;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80185B74
- * EN v1.0 Address: 0x80185DC4
- * EN v1.0 Size: 2392b
- * EN v1.1 Address: 0x801860CC
- * EN v1.1 Size: 1880b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma opt_common_subs off
 void fn_80185B74(int obj)
 {

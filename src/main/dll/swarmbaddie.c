@@ -2,23 +2,8 @@
 #include "main/dll/baddie/swarmBaddie.h"
 #include "main/game_object.h"
 
-
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: drawFn_80125424
- * EN v1.0 Address: 0x80125424
- * EN v1.0 Size: 1880b
- * EN v1.1 Address: 0x80125708
- * EN v1.1 Size: 1920b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void AudioStream_StopCurrent(void);
 extern void doNothing_8000CF54(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
@@ -234,7 +219,6 @@ void drawFn_80125424(void)
         drawScaledTexture(hudTextures[10], lbl_803E2054, (f32)x2, alpha & 0xff, 0x100, 5, 5, 2);
     }
 }
-
 
 extern void Obj_FreeObject(int* obj);
 

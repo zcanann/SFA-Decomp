@@ -11,9 +11,6 @@ typedef struct DimbridgecogmaiObjectDef
     u8 pad1D[0x20 - 0x1D];
 } DimbridgecogmaiObjectDef;
 
-
-
-
 typedef struct DimbridgecogmaiPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -23,31 +20,12 @@ typedef struct DimbridgecogmaiPlacement
     s16 unk1E;
 } DimbridgecogmaiPlacement;
 
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
-/*
- * --INFO--
- *
- * Function: dimlavasmash_init
- * EN v1.0 Address: 0x801B3658
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B367C
- * EN v1.1 Size: 636b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void dimbridgecogmai_hitDetect(void)
 {
@@ -59,12 +37,7 @@ void dimbridgecogmai_initialise(void)
 
 void dimdismountpoint_hitDetect(void);
 
-
-
-
-
 extern unsigned long GameBit_Set(int eventId, int value);
-
 
 /* 8b "li r3, N; blr" returners. */
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
@@ -105,7 +78,6 @@ void dimbridgecogmai_init(int* obj, int* def)
 }
 
 extern f32 lbl_803E490C;
-
 
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -188,5 +160,3 @@ void dimbridgecogmai_update(int* obj)
 }
 
 void dimdismountpoint_func11(int obj, int flag);
-
-

@@ -2,34 +2,8 @@
 
 extern f32 powfBitEstimate(f32 x, f32 y);
 
-/*
- * --INFO--
- *
- * Function: gameTextSetWindow
- * EN v1.0 Address: 0x80017434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001746C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* moved below GameTextSlot/global declarations */
 
-/*
- * --INFO--
- *
- * Function: FUN_80017460
- * EN v1.0 Address: 0x80017460
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800191FC
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -39,19 +13,6 @@ FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017468
- * EN v1.0 Address: 0x80017468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001947C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -61,37 +22,8 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textRenderStr
- * EN v1.0 Address: 0x800174D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001AE18
- * EN v1.1 Size: 1760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80017500
- * EN v1.0 Address: 0x80017500
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001BD8C
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -99,19 +31,6 @@ FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8001786c
- * EN v1.0 Address: 0x8001786C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80024F40
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -120,19 +39,6 @@ FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017998
- * EN v1.0 Address: 0x80017998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80029260
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined*
 FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -145,15 +51,11 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 /* ObjModel/model-file accessors. */
 
-
 /* Global game-state / text accessors. */
-
 
 /* Simple field/global accessors. */
 
-
 extern int randomGetRange(int lo, int hi);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -179,10 +81,8 @@ void Vec3_ScaleAdd(f32* a, f32 s, f32* b, f32* out)
     out[2] = s * b[2] + a[2];
 }
 
-
 extern float fn_802924B4(float y, float x);
 extern double lbl_803DE7D8;
-
 
 int getAngle(float y, float x)
 {
@@ -193,7 +93,6 @@ int atan2_8002178c(float y, float x)
 {
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
 }
-
 
 extern f32 fcos16(int angle);
 extern f32 sqrtf(f32 x);
@@ -210,7 +109,6 @@ int cos16(u16 angle)
 {
     return (int)(lbl_803DE7D0 * fcos16(angle));
 }
-
 
 f32 Vec3_Length(f32* v)
 {
@@ -267,15 +165,12 @@ void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out)
     }
 }
 
-
 typedef f32 Mtx[3][4];
 extern f32 lbl_803DE7C0;
 extern f32 lbl_803DE7C4;
 
-
 extern void mtxRotateByVec3s(f32* mtx, void* transform);
 extern void mtx44Transpose(f32* src, f32* dst);
-
 
 void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
 {
@@ -301,7 +196,6 @@ void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
     m[10] = c;
 }
 
-
 f32 interpolate(f32 a, f32 t, f32 exp)
 {
     if (t <= lbl_803DE7C4)
@@ -315,7 +209,6 @@ int atan2i(int y, int x)
 {
     return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, (f32)x));
 }
-
 
 void mtx44Transpose(f32* src, f32* dst)
 {
@@ -359,7 +252,6 @@ void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* o
     *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
     *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
 }
-
 
 extern f32 lbl_803DE810;
 
@@ -453,7 +345,6 @@ void Vec3_Normalize(f32* v)
     }
 }
 
-
 extern f32 fsin16(int angle);
 extern f32 lbl_803DE7F0;
 
@@ -531,10 +422,8 @@ void mtxRotateByVec3s(f32* mtx, void* transform)
     mtx[15] = lbl_803DE7C4;
 }
 
-
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
-
 
 /* Tail residual: a1/a2/b0 FP volatile rotation (f1/f2/f3) resists decl-order
    and fresh-web restructures -- recipe #82 named-local cap. */
@@ -708,7 +597,6 @@ void vecRotateYXZ(s16* a, f32* v)
     v[2] = z;
 }
 
-
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 
 #pragma peephole on
@@ -803,7 +691,6 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
     }
 }
 
-
 #pragma fp_contract off
 #pragma dont_inline off
 int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void* timerp)
@@ -854,7 +741,6 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void* timerp)
     return 0;
 }
 
-
 #pragma fp_contract on
 #pragma peephole on
 void vecRotateZXY(u8* p, f32* v)
@@ -879,22 +765,3 @@ void vecRotateZXY(u8* p, f32* v)
     v[0] = t5 * c0 + t2 * s0;
     v[2] = t2 * c0 - t5 * s0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

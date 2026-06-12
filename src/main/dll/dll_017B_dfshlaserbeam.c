@@ -3,40 +3,10 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern f32 timeDelta;
 
-
-
-/*
- * --INFO--
- *
- * Function: dfsh_objcreator_update
- * EN v1.0 Address: 0x801C3BB0
- * EN v1.0 Size: 740b
- * EN v1.1 Address: 0x801C3CC4
- * EN v1.1 Size: 612b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DFSH_LaserBeam_init
- * EN v1.0 Address: 0x801C3E94
- * EN v1.0 Size: 516b
- * EN v1.1 Address: 0x801C3F28
- * EN v1.1 Size: 520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
 extern void textureFree(void* tex);
@@ -54,49 +24,6 @@ void DFSH_LaserBeam_init(int* obj)
     *(void**)state = NULL;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801c4098
- * EN v1.0 Address: 0x801C4098
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801C4130
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dfsh_objcreator_release
- * EN v1.0 Address: 0x801C3E34
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfsh_objcreator_initialise
- * EN v1.0 Address: 0x801C3E38
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void dfsh_objcreator_init(int obj, s8* def);
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -111,7 +38,6 @@ void DFSH_LaserBeam_hitDetect(void)
 /* 8b "li r3, N; blr" returners. */
 int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
 int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -261,19 +187,6 @@ typedef struct DFSHLaserBeamObject
 #define RESOURCE_SPAWN(obj,id,a,flags,owner,unk) \
   ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*(int *)lbl_803DDBB8 + 0x4)))(obj,id,a,flags,owner,unk)
 
-/*
- * --INFO--
- *
- * Function: DFSH_LaserBeam_update
- * EN v1.0 Address: 0x801C3EB8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801C446C
- * EN v1.1 Size: 1768b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DFSH_LaserBeam_update(uint param_1)
 {
     extern int Sfx_PlayFromObject(void* obj, int sfxId);
@@ -505,12 +418,6 @@ void DFSH_LaserBeam_update(uint param_1)
 }
 
 /*
- * --INFO--
- *
- * Function: DFSH_LaserBeam_free
- * EN v1.0 Address: 0x801C45A0
- * EN v1.0 Size: 188b
- *
  * Object setup: initializes the rotating DarkIce Mines shrine laser beam state.
  */
 void DFSH_LaserBeam_free(void* objArg, void* configArg)
@@ -538,7 +445,6 @@ void DFSH_LaserBeam_free(void* objArg, void* configArg)
     }
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void DFSH_LaserBeam_release(void)
 {
@@ -549,12 +455,6 @@ void DFSH_LaserBeam_initialise(void)
 }
 
 /*
- * --INFO--
- *
- * Function: fn_801C4664
- * EN v1.0 Address: 0x801C4664
- * EN v1.0 Size: 852b
- *
  * Advances the ambient laser-beam bob, aim, and player proximity alpha.
  */
 void fn_801C4664(void* objArg)
@@ -637,12 +537,6 @@ void fn_801C4664(void* objArg)
 }
 
 /*
- * --INFO--
- *
- * Function: fn_801C49B8
- * EN v1.0 Address: 0x801C49B8
- * EN v1.0 Size: 344b
- *
  * Drives the shrine sway controller used by MMSH shrine sequences.
  */
 int fn_801C49B8(void* objArg)

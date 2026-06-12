@@ -6,59 +6,7 @@ extern u32 GameBit_Get(int bit);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
-/*
- * --INFO--
- *
- * Function: dll_127_update
- * EN v1.0 Address: 0x8018CDAC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018CDAC
- * EN v1.1 Size: 1116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dll_127_init
- * EN v1.0 Address: 0x8018CF80
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x8018D378
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
-
-/*
- * --INFO--
- *
- * Function: campfire_update
- * EN v1.0 Address: 0x8018CFA4
- * EN v1.0 Size: 556b
- */
-
-/*
- * --INFO--
- *
- * Function: campfire_init
- * EN v1.0 Address: 0x8018D1D0
- * EN v1.0 Size: 732b
- */
-
-/*
- * --INFO--
- *
- * Function: kt_torch_init
- * EN v1.0 Address: 0x8018D584
- * EN v1.0 Size: 348b
- */
 
 /* 8b "li r3, N; blr" returners. */
 int cfccrate_getExtraSize(void) { return 0x4c; }
@@ -187,13 +135,6 @@ extern f32 lbl_803E3E14;
 extern f64 lbl_803E3E18;
 extern f32 lbl_803E3E20;
 
-/*
- * --INFO--
- *
- * Function: cfccrate_update
- * EN v1.0 Address: 0x8018D8DC
- * EN v1.0 Size: 1992b
- */
 void cfccrate_update(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -411,13 +352,6 @@ extern f32 lbl_803E3E38;
 extern f32 lbl_803E3E3C;
 extern f32 lbl_803E3E40;
 
-/*
- * --INFO--
- *
- * Function: cfccrate_init
- * EN v1.0 Address: 0x8018E0A4
- * EN v1.0 Size: 1560b
- */
 void cfccrate_init(int obj, int aux)
 {
     extern u32 randomGetRange(int min, int max);
@@ -598,83 +532,14 @@ void cfccrate_init(int obj, int aux)
 
 #undef CFTREAS_PARTFX_SPAWN
 
-/*
- * --INFO--
- *
- * Function: cfccrate_release
- * EN v1.0 Address: 0x8018E6BC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018E69C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cfccrate_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: cfccrate_initialise
- * EN v1.0 Address: 0x8018E6C0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018E6A0
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cfccrate_initialise(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: fxemit_getExtraSize
- * EN v1.0 Address: 0x8018EC20
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ED50
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fxemit_getObjectTypeId
- * EN v1.0 Address: 0x8018EC28
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ED58
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fxemit_hitDetect
- * EN v1.0 Address: 0x8018EC90
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018EDC0
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 sqrtf(f32);
-

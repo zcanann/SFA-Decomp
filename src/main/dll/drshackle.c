@@ -43,13 +43,6 @@ extern f32 lbl_803E5B78; /* 2.0f */
 #define DRSHACKLE_SWING_RETURN_LEFT 0x100
 #define DRSHACKLE_ANGLE_RETURN_LIMIT 0x2aaa
 
-/*
- * --INFO--
- *
- * Function: drshackle_updateSwingBlend
- * EN v1.0 Address: 0x801EA854
- * EN v1.0 Size: 620b
- */
 int drshackle_updateSwingBlend(int obj, int state)
 {
     f32 fVar1;
@@ -145,13 +138,6 @@ int drshackle_updateSwingBlend(int obj, int state)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: drshackle_updateAttachedPosition
- * EN v1.0 Address: 0x801EAAC0
- * EN v1.0 Size: 908b
- */
 int drshackle_updateAttachedPosition(int obj, int state)
 {
     ShackleFlags* flags;

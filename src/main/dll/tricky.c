@@ -13,7 +13,6 @@ typedef struct GameUIWork10
     u8 padE[0x10 - 0xE];
 } GameUIWork10;
 
-
 typedef struct TrickyAirMeter
 {
     u8 pad0[0x18 - 0x0];
@@ -24,7 +23,6 @@ typedef struct TrickyAirMeter
     u16 unk2C;
     u8 pad2E[0x48 - 0x2E];
 } TrickyAirMeter;
-
 
 extern undefined4 FUN_80017488();
 extern undefined4 FUN_80017498();
@@ -50,19 +48,6 @@ extern f32 gViewFinderFadeLevel; /* ramped/clamped fade for the viewfinder HUD; 
  * import wrongly referenced 803DE4C4 here - target asm shows 803DD7F0 */
 extern f32 lbl_803E2AE0;
 
-/*
- * --INFO--
- *
- * Function: gameUiLoadResources
- * EN v1.0 Address: 0x8011D9B0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8011DC94
- * EN v1.1 Size: 896b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
 extern char* lbl_803DD85C;
@@ -175,34 +160,6 @@ void gameUiLoadResources(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8011d9b4
- * EN v1.0 Address: 0x8011D9B4
- * EN v1.0 Size: 324b
- * EN v1.1 Address: 0x8011E014
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8011daf8
- * EN v1.0 Address: 0x8011DAF8
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x8011E06C
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -236,78 +193,22 @@ void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8011e460
- * EN v1.0 Address: 0x8011E460
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8011F088
- * EN v1.1 Size: 428b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8011e460(double param_1, double param_2, int param_3, int param_4, undefined param_5,
                   uint param_6, byte param_7)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8011e7ac
- * EN v1.0 Address: 0x8011E7AC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8011F534
- * EN v1.1 Size: 244b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8011e7ac(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8011e800
- * EN v1.0 Address: 0x8011E800
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8011F670
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8011e800(undefined param_1)
 {
     DAT_803de412 = param_1;
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8011e844
- * EN v1.0 Address: 0x8011E844
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x8011F6AC
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8011e844(undefined param_1)
 {
     if (DAT_803de42c != '\0')
@@ -318,20 +219,6 @@ void FUN_8011e844(undefined param_1)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8011e868
- * EN v1.0 Address: 0x8011E868
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x8011F6D0
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8011e868(undefined2 param_1)
 {
     if (DAT_803de42a != 0)
@@ -342,26 +229,11 @@ void FUN_8011e868(undefined2 param_1)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8011eb10
- * EN v1.0 Address: 0x8011EB10
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8011F9B8
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8011eb10(ushort param_1)
 {
     DAT_803de3ee = param_1 & 0xff;
     return;
 }
-
 
 /* sda21 accessors. */
 extern u8 pauseMenuState;
@@ -781,8 +653,6 @@ void hudDrawTimedElement(int unused, int* e)
     drawTexture(lbl_803A9428, lbl_803E1FA4, (f32)(lbl_803DD740 + 0xaf),
                 (int)*(f32*)((char*)e + 0x8), 0x100);
 }
-
-
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 

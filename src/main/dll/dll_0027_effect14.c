@@ -6,63 +6,8 @@
 
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: Effect10_func04
- * EN v1.0 Address: 0x800C291C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800C2BA8
- * EN v1.1 Size: 7700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
 extern EffectSrcParams lbl_8039C3F8;
 extern void vecRotateZXY(void* params, f32* vec);
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_800c2924
- * EN v1.0 Address: 0x800C2924
- * EN v1.0 Size: 244b
- * EN v1.1 Address: 0x800C49BC
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_800c2a20
- * EN v1.0 Address: 0x800C2A20
- * EN v1.0 Size: 1888b
- * EN v1.1 Address: 0x800C6840
- * EN v1.1 Size: 6724b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 extern f32 lbl_803E0000;
 extern f32 lbl_803E0004;
@@ -619,16 +564,6 @@ extern f32 lbl_803DB838;
 void Effect10_func05(void);
 
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
 
 void Effect14_func05_nop(void)
 {

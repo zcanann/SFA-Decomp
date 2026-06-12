@@ -2,49 +2,11 @@
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/dll/shwgpipe_struct.h"
 
-
-
-
-
-
-
 extern void spscarab_hitDetect(void);
 extern void spscarab_render(void);
 extern void spscarab_free(int x);
 extern int spscarab_getObjectTypeId(void);
 extern int spscarab_getExtraSize(void);
-
-/*
- * --INFO--
- *
- * Function: spscarab_update
- * EN v1.0 Address: 0x801E8EE0
- * EN v1.0 Size: 588b
- */
-
-/*
- * --INFO--
- *
- * Function: spscarab_init
- * EN v1.0 Address: 0x801E912C
- * EN v1.0 Size: 500b
- */
-
-/*
- * --INFO--
- *
- * Function: spscarab_release
- * EN v1.0 Address: 0x801E9320
- * EN v1.0 Size: 4b
- */
-
-/*
- * --INFO--
- *
- * Function: spscarab_initialise
- * EN v1.0 Address: 0x801E9324
- * EN v1.0 Size: 4b
- */
 
 ObjectDescriptor gSPScarabObjDescriptor = {
     0,
@@ -63,134 +25,13 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     spscarab_getExtraSize,
 };
 
-/*
- * --INFO--
- *
- * Function: spdrape_getExtraSize
- * EN v1.0 Address: 0x801E9328
- * EN v1.0 Size: 8b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_getObjectTypeId
- * EN v1.0 Address: 0x801E9330
- * EN v1.0 Size: 8b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_free
- * EN v1.0 Address: 0x801E9338
- * EN v1.0 Size: 4b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_render
- * EN v1.0 Address: 0x801E933C
- * EN v1.0 Size: 4b
- */
-
-/*
- * --INFO--
- *
- * Function: spdrape_hitDetect
- * EN v1.0 Address: 0x801E9340
- * EN v1.0 Size: 4b
- */
-
 #include "main/objanim_internal.h"
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: spdrape_update
- * EN v1.0 Address: 0x801E9344
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E93B4
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e9368
- * EN v1.0 Address: 0x801E9368
- * EN v1.0 Size: 808b
- * EN v1.1 Address: 0x801E9518
- * EN v1.1 Size: 588b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e983c
- * EN v1.0 Address: 0x801E983C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E997C
- * EN v1.1 Size: 760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: spitembeam_init
- * EN v1.0 Address: 0x801E9900
- * EN v1.0 Size: 20b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
-
-
-
-
 
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 
@@ -244,13 +85,6 @@ extern f32 lbl_803E5AEC;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-/*
- * --INFO--
- *
- * Function: fn_801E991C
- * EN v1.0 Address: 0x801E991C
- * EN v1.0 Size: 740b
- */
 #pragma opt_common_subs off
 void fn_801E991C(int p1, char* table)
 {

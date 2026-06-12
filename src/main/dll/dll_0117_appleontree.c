@@ -6,10 +6,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
-
-
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjMsg_SendToObject();
 extern uint GameBit_Get(int eventId);
@@ -17,190 +13,6 @@ extern void GameBit_Set(int eventId, int value);
 extern f32 Vec_distance(float* posA, float* posB);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-
-/*
- * --INFO--
- *
- * Function: dll_115_update
- * EN v1.0 Address: 0x8017D0D4
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x8017D134
- * EN v1.1 Size: 244b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_115_init
- * EN v1.0 Address: 0x8017D1BC
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017D228
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dll_115_release_nop
- * EN v1.0 Address: 0x8017D1E0
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017D24C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dll_115_initialise_nop
- * EN v1.0 Address: 0x8017D208
- * EN v1.0 Size: 404b
- * EN v1.1 Address: 0x8017D280
- * EN v1.1 Size: 376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_getExtraSize
- * EN v1.0 Address: 0x8017D39C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017D3F8
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_getObjectTypeId
- * EN v1.0 Address: 0x8017D3A0
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x8017D4E8
- * EN v1.1 Size: 236b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_free
- * EN v1.0 Address: 0x8017D488
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017D5D4
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_render
- * EN v1.0 Address: 0x8017D4AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017D5F8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_hitDetect
- * EN v1.0 Address: 0x8017D4D4
- * EN v1.0 Size: 424b
- * EN v1.1 Address: 0x8017D62C
- * EN v1.1 Size: 420b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_update
- * EN v1.0 Address: 0x8017D67C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017D7D0
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_init
- * EN v1.0 Address: 0x8017D680
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8017D8E4
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_release
- * EN v1.0 Address: 0x8017D6CC
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x8017D92C
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: wm_column_initialise
- * EN v1.0 Address: 0x8017D730
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x8017D9AC
- * EN v1.1 Size: 784b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -253,21 +65,6 @@ u32 jumptable_803214DC[] = {
 
 /* appleontree extra block (size 0x64 = appleontree_getExtraSize). */
 
-
-
-/*
- * --INFO--
- *
- * Function: appleontree_func0B
- * EN v1.0 Address: 0x8017DAA0
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x8017DCBC
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void appleontree_func0B(int obj, float* pos)
 {
     AppleOnTreeState* state = ((GameObject*)obj)->extra;
@@ -288,34 +85,6 @@ void appleontree_func0B(int obj, float* pos)
     ((GameObject*)obj)->anim.localPosY = pos[1];
     ((GameObject*)obj)->anim.localPosZ = pos[2];
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_8017db40
- * EN v1.0 Address: 0x8017DB40
- * EN v1.0 Size: 792b
- * EN v1.1 Address: 0x8017DDAC
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017de58
- * EN v1.0 Address: 0x8017DE58
- * EN v1.0 Size: 672b
- * EN v1.1 Address: 0x8017E048
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
@@ -368,51 +137,6 @@ void appleontree_handleCollectableHit(int obj)
         }
     }
 }
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8017e12c
- * EN v1.0 Address: 0x8017E12C
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x8017E1F4
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8017e15c
- * EN v1.0 Address: 0x8017E15C
- * EN v1.0 Size: 612b
- * EN v1.1 Address: 0x8017E22C
- * EN v1.1 Size: 608b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017e3c0
- * EN v1.0 Address: 0x8017E3C0
- * EN v1.0 Size: 624b
- * EN v1.1 Address: 0x8017E48C
- * EN v1.1 Size: 620b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void appleontree_setScale(void)
@@ -810,7 +534,6 @@ typedef struct AppleontreeObjectDef
     s16 unk26;
 } AppleontreeObjectDef;
 
-
 extern undefined4 FUN_80017a78();
 extern undefined4 FUN_8002fc3c();
 extern int ObjHits_GetPriorityHit();
@@ -838,19 +561,6 @@ extern f32 lbl_803E3810;
 extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
-/*
- * --INFO--
- *
- * Function: appleontree_update
- * EN v1.0 Address: 0x8017E1A0
- * EN v1.0 Size: 2460b
- * EN v1.1 Address: 0x8017E6F8
- * EN v1.1 Size: 1988b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void appleontree_update(int param_1)
 {
     extern void playerAddHealth(u8* player, int v); /* #57 */
@@ -1145,19 +855,6 @@ switchD_8017e864_caseD_7:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: appleontree_init
- * EN v1.0 Address: 0x8017E964
- * EN v1.0 Size: 684b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void appleontree_init(int obj, int def)
 {
     int state;
@@ -1254,7 +951,6 @@ extern void dll_FC_release_nop(void);
 extern void dll_FC_init(int obj, int objDef);
 extern void dll_FC_update(int obj);
 extern void dll_FC_hitDetect(int* obj);
-
 
 void dll_FC_hitDetect(int* obj);
 

@@ -14,13 +14,6 @@ extern u16 lbl_803DC620[4];
 #define DSP_VOICE_ITD_DISABLED_MASK 0x7fffffff
 #define DSP_VOICE_ITD_CENTER 0x10
 
-/*
- * --INFO--
- *
- * Function: hwSetPitch
- * EN v1.0 Address: 0x80283710
- * EN v1.0 Size: 120b
- */
 void hwSetPitch(int slot, u32 pitch)
 {
     DSPvoice* entry;
@@ -53,13 +46,6 @@ void hwSetPitch(int slot, u32 pitch)
     entry->lastUpdate.pitch = salTimeOffset;
 }
 
-/*
- * --INFO--
- *
- * Function: hwSetSRCType
- * EN v1.0 Address: 0x80283788
- * EN v1.0 Size: 44b
- */
 void hwSetSRCType(int slot, u32 value)
 {
     DSPvoice* entry = (DSPvoice*)(dspVoice + slot * DSP_VOICE_STRIDE);
@@ -67,13 +53,6 @@ void hwSetSRCType(int slot, u32 value)
     entry->changed[0] |= DSP_VOICE_SRC_TYPE_CHANGE_FLAG;
 }
 
-/*
- * --INFO--
- *
- * Function: hwSetPolyPhaseFilter
- * EN v1.0 Address: 0x802837B4
- * EN v1.0 Size: 44b
- */
 void hwSetPolyPhaseFilter(int slot, u32 value)
 {
     DSPvoice* entry = (DSPvoice*)(dspVoice + slot * DSP_VOICE_STRIDE);
@@ -81,13 +60,6 @@ void hwSetPolyPhaseFilter(int slot, u32 value)
     entry->changed[0] |= DSP_VOICE_POLYPHASE_CHANGE_FLAG;
 }
 
-/*
- * --INFO--
- *
- * Function: hwSetITDMode
- * EN v1.0 Address: 0x802837E0
- * EN v1.0 Size: 92b
- */
 void hwSetITDMode(int slot, u32 value)
 {
     if ((u8)value == 0)

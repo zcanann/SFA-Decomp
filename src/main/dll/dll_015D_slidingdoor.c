@@ -3,91 +3,17 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
-
-
-/*
- * --INFO--
- *
- * Function: blasted_init
- * EN v1.0 Address: 0x801A2AF8
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801A2B9C
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801a2cb8
- * EN v1.0 Address: 0x801A2CB8
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801A2D6C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a32d4
- * EN v1.0 Address: 0x801A32D4
- * EN v1.0 Size: 800b
- * EN v1.1 Address: 0x801A3190
- * EN v1.1 Size: 676b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
-
-
-
-
-
-
 
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
 /* Per-fragment record inside DrExplodableState (stride 0x70). */
 
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -98,12 +24,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-
-
-
-
-
-
 
 typedef struct SlidingdoorPlacement
 {
@@ -117,7 +37,6 @@ typedef struct SlidingdoorPlacement
     u8 pad24[0x28 - 0x24];
 } SlidingdoorPlacement;
 
-
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
@@ -128,34 +47,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
-/*
- * --INFO--
- *
- * Function: cfforcefield_update
- * EN v1.0 Address: 0x801A39D0
- * EN v1.0 Size: 1128b
- * EN v1.1 Address: 0x801A3B20
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a4520
- * EN v1.0 Address: 0x801A4520
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x801A4660
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -177,53 +68,12 @@ void FUN_801a4520(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801a45cc
- * EN v1.0 Address: 0x801A45CC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801A4708
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a45cc(short* param_1, int param_2)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: cflevelcontrol_free
- * EN v1.0 Address: 0x801A45D4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x801A4880
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cflevelcontrol_free(int param_1);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a4810
- * EN v1.0 Address: 0x801A4810
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x801A4AD8
- * EN v1.1 Size: 180b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -248,10 +98,8 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void);
-
 
 void slidingdoor_free(void)
 {
@@ -270,22 +118,6 @@ void slidingdoor_initialise(void)
 }
 
 void attractor_hitDetect(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int slidingdoor_getExtraSize(void) { return 0x1; }
@@ -307,12 +139,6 @@ void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-
-
-
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
@@ -322,8 +148,6 @@ void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
 
 /* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
-
-
 
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
@@ -495,12 +319,7 @@ void slidingdoor_init(u8* obj, u8* data)
 
 extern void loadMapAndParent(int mapId);
 
-
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
-
-
-
-
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

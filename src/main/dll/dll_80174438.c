@@ -7,52 +7,6 @@
 
 extern uint GameBit_Get(int eventId);
 
-
-/*
- * --INFO--
- *
- * Function: collectible_init
- * EN v1.0 Address: 0x80172F14
- * EN v1.0 Size: 1104b
- * EN v1.1 Address: 0x801730D0
- * EN v1.1 Size: 752b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: collectible_release
- * EN v1.0 Address: 0x8017321C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80173378
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: collectible_initialise
- * EN v1.0 Address: 0x80173220
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017337C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -68,8 +22,6 @@ extern uint GameBit_Get(int eventId);
 #include "main/game_object.h"
 #include "main/resource.h"
 
-
-
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -77,67 +29,15 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 fn_80174BFC();
 extern u8* Obj_GetPlayerObject(void);
 
-
 /* magicdust extra block (collectible sparkle state; tail of the pickup record). */
-
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
-/*
- * --INFO--
- *
- * Function: magicdust_update
- * EN v1.0 Address: 0x801732A4
- * EN v1.0 Size: 2272b
- * EN v1.1 Address: 0x80173750
- * EN v1.1 Size: 2120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: magicdust_init
- * EN v1.0 Address: 0x80173B84
- * EN v1.0 Size: 1112b
- * EN v1.1 Address: 0x80173F98
- * EN v1.1 Size: 1188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: effectbox_free
- * EN v1.0 Address: 0x80173F90
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
 
 void fn_80174588(int obj, PushableState* p2)
 {
@@ -195,21 +95,6 @@ extern f32 lbl_803E356C;
 extern f32 lbl_803E3570;
 extern f32 lbl_803E3528;
 
-/*
- * --INFO--
- *
- * Function: effectbox_update
- * EN v1.0 Address: 0x80173FE4
- * EN v1.0 Size: 980b
- */
-
-/*
- * --INFO--
- *
- * Function: fn_80174438
- * EN v1.0 Address: 0x80174438
- * EN v1.0 Size: 336b
- */
 int fn_80174438(int obj, PushableState* state)
 {
     int def;
@@ -246,13 +131,6 @@ int fn_80174438(int obj, PushableState* state)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80174668
- * EN v1.0 Address: 0x80174668
- * EN v1.0 Size: 1048b
- */
 int fn_80174668(int obj, PushableState* state)
 {
     u8 flag;

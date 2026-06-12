@@ -16,8 +16,6 @@ typedef struct LandedArwingTriggerLaunchTargetState
     u8 pad406[0x408 - 0x406];
 } LandedArwingTriggerLaunchTargetState;
 
-
-
 extern void* gBaddieControlInterface;
 extern void* gPlayerInterface;
 
@@ -41,49 +39,9 @@ extern f32 lbl_803E2FF8;
 extern f32 lbl_803E2FFC;
 extern f32 lbl_803E3000;
 
-
-/*
- * --INFO--
- *
- * Function: tumbleweed_update
- * EN v1.0 Address: 0x80164EE4
- * EN v1.0 Size: 72b
- */
-
 /* 8b "li r3, N; blr" returners. */
 int LandedArwing_ReturnZero(void) { return 0x0; }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_updateStateMachine
- * EN v1.0 Address: 0x801641B0
- * EN v1.0 Size: 1936b
- */
-
-/*
- * --INFO--
- *
- * Function: tumbleweed_init
- * EN v1.0 Address: 0x80164F2C
- * EN v1.0 Size: 420b
- */
-
-/*
- * --INFO--
- *
- * Function: tumbleweed_updateEffects
- * EN v1.0 Address: 0x80164C44
- * EN v1.0 Size: 672b
- */
-
-/*
- * --INFO--
- *
- * Function: LandedArwing_TriggerLaunchTarget
- * EN v1.0 Address: 0x801650D8
- * EN v1.0 Size: 176b
- */
 int LandedArwing_TriggerLaunchTarget(int obj, int target)
 {
     int* aux = ((GameObject*)obj)->extra;
@@ -98,13 +56,6 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: LandedArwing_UpdateBounceFade
- * EN v1.0 Address: 0x80165188
- * EN v1.0 Size: 592b
- */
 int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
 {
     f32 horizontalDamping;
@@ -174,13 +125,6 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: LandedArwing_UpdateRetreatChase
- * EN v1.0 Address: 0x801653D8
- * EN v1.0 Size: 436b
- */
 int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
 {
     f32 scale;
@@ -272,11 +216,3 @@ update_action:
     state->scriptTimer -= framesThisStep;
     return 0;
 }
-
-/*
- * --INFO--
- *
- * Function: tumbleweed_updateTargetedStateMachine
- * EN v1.0 Address: 0x80164940
- * EN v1.0 Size: 772b
- */

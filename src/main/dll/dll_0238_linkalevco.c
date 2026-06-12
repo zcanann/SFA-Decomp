@@ -35,19 +35,6 @@ extern f32 lbl_803E64D8;
 #define LINKA_LEVCONTROL_INIT_GAMEBIT_2 0x90F
 #define LINKA_LEVCONTROL_INIT_COLLECTABLE_ID 0x2EE
 
-/*
- * --INFO--
- *
- * Function: fire_updateState
- * EN v1.0 Address: 0x8020930C
- * EN v1.0 Size: 576b
- * EN v1.1 Address: 0x802093B4
- * EN v1.1 Size: 624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int stateIndex;

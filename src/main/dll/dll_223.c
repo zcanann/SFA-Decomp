@@ -27,7 +27,6 @@ extern f32 lbl_803E4CB0;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-
 #define DIMBOSSTONSIL_HIT_EFFECT_ID 0x4b2
 #define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3
 #define DIMBOSSTONSIL_PRIMARY_HIT_SFX 0x18a
@@ -36,19 +35,6 @@ extern f32 playerMapOffsetZ;
 #define DIMBOSSTONSIL_HIT_GAMEBIT 0x20c
 #define DIMBOSSTONSIL_ADVANCE_MSG 0xe0001
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_updateHitReaction
- * EN v1.0 Address: 0x801BDCF8
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x801BDD60
- * EN v1.1 Size: 808b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int param_3)
 {
     if (state->active != 0)
@@ -62,19 +48,6 @@ int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int pa
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_enableHitReaction
- * EN v1.0 Address: 0x801BDD64
- * EN v1.0 Size: 80b
- * EN v1.1 Address: 0x801BE088
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMbosstonsil_enableHitReaction(void* obj, DIMbosstonsilState* state)
 {
     if (state->stunReady != 0)
@@ -85,19 +58,6 @@ int DIMbosstonsil_enableHitReaction(void* obj, DIMbosstonsilState* state)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_chooseHitReaction
- * EN v1.0 Address: 0x801BDDB4
- * EN v1.0 Size: 364b
- * EN v1.1 Address: 0x801BE0A8
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMbosstonsil_chooseHitReaction(void* obj, DIMbosstonsilState* state)
 {
     u16 moveId;
@@ -145,19 +105,6 @@ int DIMbosstonsil_chooseHitReaction(void* obj, DIMbosstonsilState* state)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_startIdleHitReaction
- * EN v1.0 Address: 0x801BDF20
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x801BE1C0
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMbosstonsil_startIdleHitReaction(void* obj, DIMbosstonsilState* state)
 {
     if (state->active != 0)
@@ -169,19 +116,6 @@ int DIMbosstonsil_startIdleHitReaction(void* obj, DIMbosstonsilState* state)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_checkHit
- * EN v1.0 Address: 0x801BDF7C
- * EN v1.0 Size: 544b
- * EN v1.1 Address: 0x801BE240
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
 {
     void* hitObj;

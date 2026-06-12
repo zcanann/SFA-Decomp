@@ -9,27 +9,19 @@ extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 
-
 extern int ObjHits_GetPriorityHit(int obj, int* outHitObj, int* outB, u32* outC);
-
 
 extern void objRenderFn_8003b8f4(f32 v);
 
-
 extern f32 timeDelta;
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* Pattern wrappers. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -42,7 +34,6 @@ extern f32 timeDelta;
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 typedef struct MmpMoonrockPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -51,12 +42,10 @@ typedef struct MmpMoonrockPlacement
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
 
-
 /*
  * Per-object extra state for the MoonSeedBush plant spot
  * (MoonSeedBush_getExtraSize == 0x2).
  */
-
 
 STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
@@ -72,7 +61,6 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
  * (mmp_trenchfx_getExtraSize == 0x30).
  */
 
-
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 /*
@@ -83,7 +71,6 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
-
 extern undefined8 FUN_80006728();
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();
@@ -93,20 +80,6 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a68b8
- * EN v1.0 Address: 0x801A68B8
- * EN v1.0 Size: 504b
- * EN v1.1 Address: 0x801A6BEC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 #pragma peephole on
@@ -139,20 +112,6 @@ FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a7874
- * EN v1.0 Address: 0x801A7874
- * EN v1.0 Size: 504b
- * EN v1.1 Address: 0x801A7500
- * EN v1.1 Size: 420b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
@@ -210,10 +169,8 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void);
-
 
 void mmp_moonrock_hitDetect(void)
 {
@@ -229,7 +186,6 @@ void mmp_moonrock_initialise(void)
 
 void mmp_trenchfx_hitDetect(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
@@ -237,7 +193,6 @@ int mmp_trenchfx_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -346,7 +301,6 @@ void fn_801A7B10(int obj)
     }
 }
 
-
 extern void saveGame_saveObjectPos(int obj);
 
 extern int objBboxFn_800640cc(int* from, int* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
@@ -401,7 +355,6 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
 
 /* mmp_trenchfx_free: expgfx interface freeObject callback. */
 void mmp_trenchfx_free(int obj);
-
 
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int* gCarryableInterface;
@@ -478,7 +431,6 @@ void fn_801A80F0(int obj, u8 flag)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
     }
 }
-
 
 extern void fn_801A7D74(int obj, u8 a, u8 b);
 
@@ -689,10 +641,8 @@ void fn_801A7D74(int obj, u8 a, u8 b)
 
 extern char lbl_803AC930[];
 
-
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern f32 mathSinf(f32);
-
 
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);

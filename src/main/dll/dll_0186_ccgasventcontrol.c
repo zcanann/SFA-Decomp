@@ -7,7 +7,6 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 typedef struct CcgasventcontrolState
 {
     u8 pad0[0x4 - 0x0];
@@ -16,7 +15,6 @@ typedef struct CcgasventcontrolState
     s16 unkC;
     u8 padE[0x10 - 0xE];
 } CcgasventcontrolState;
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -43,19 +41,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801a8f88(void)
@@ -114,20 +99,6 @@ void FUN_801a8f88(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -175,10 +146,8 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int ccgasventcontrol_getExtraSize(void) { return 0x10; }
@@ -194,7 +163,6 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4620);
 }
-
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
@@ -220,7 +188,6 @@ void ccgasventcontrol_init(int obj, u8* p)
         *(u8*)inner = 7;
     }
 }
-
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
@@ -397,4 +364,3 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 }
 
 extern int getTrickyObject(void);
-

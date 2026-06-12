@@ -12,23 +12,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-
-
-/*
- * --INFO--
- *
- * Function: dll_91_func03
- * EN v1.0 Address: 0x800FA5D8
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x800FA874
- * EN v1.1 Size: 1056b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_91_func01_nop(void)
 {
@@ -39,21 +22,6 @@ void dll_91_func00_nop(void)
 }
 
 void dll_92_func01_nop(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
  * the same large-struct + vtable-call pattern as foodbag's func03s; matching
@@ -277,16 +245,4 @@ void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, base, 0x10, base + 0xb4, 0x45, 0);
 }
 
-
 void dll_92_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
-
-
-
-
-
-
-
-
-
-
-

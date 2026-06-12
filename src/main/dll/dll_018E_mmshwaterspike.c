@@ -12,9 +12,6 @@ typedef struct MmshWaterspikePlacement
     s32 unk14;
 } MmshWaterspikePlacement;
 
-
-
-
 typedef struct MmshWaterspikeObjectDef
 {
     u8 pad0[0x1A - 0x0];
@@ -25,53 +22,9 @@ typedef struct MmshWaterspikeObjectDef
     u8 pad25[0x28 - 0x25];
 } MmshWaterspikeObjectDef;
 
-
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: mmsh_shrine_init
- * EN v1.0 Address: 0x801C52D8
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x801C533C
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: mmsh_scales_free
- * EN v1.0 Address: 0x801C53B0
- * EN v1.0 Size: 144b
- * EN v1.1 Address: 0x801C5418
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: mmsh_scales_update
- * EN v1.0 Address: 0x801C5474
- * EN v1.0 Size: 372b
- */
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 void mmsh_waterspike_free(void)
 {
@@ -99,14 +52,6 @@ void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 extern f32 lbl_803E4F68;
 extern void objRenderFn_8003b8f4(f32);
 
-
-/*
- * --INFO--
- *
- * Function: mmsh_waterspike_update
- * EN v1.0 Address: 0x801C57B0
- * EN v1.0 Size: 380b
- */
 extern void* ObjList_FindObjectById(int id);
 extern f32 objFn_801948c0(void* obj, int param_2);
 extern void fn_80137948(char* fmt, ...);
@@ -202,4 +147,3 @@ void mmsh_waterspike_init(int obj, s16* def)
 }
 
 extern f32 lbl_803E4F78;
-

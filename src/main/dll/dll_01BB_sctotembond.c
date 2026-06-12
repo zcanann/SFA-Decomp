@@ -12,8 +12,6 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-
 extern f32 timeDelta;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -43,7 +41,6 @@ extern void fn_80296124(int player, void* pos, void* obj, int arg);
 
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
 
-
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
 #define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b
@@ -53,20 +50,6 @@ extern void fn_80296124(int player, void* pos, void* obj, int arg);
 #define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
 #define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
 
-
-/*
- * --INFO--
- *
- * Function: sc_totembond_spawnGameBitOrbs
- * EN v1.0 Address: 0x801DD6E8
- * EN v1.0 Size: 592b
- * EN v1.1 Address: 0x801DE018
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
     u8* setup;
@@ -111,19 +94,6 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
     }
 }
 
-/*
- * --INFO--
- *
- * Function: sc_totempuzzle_processAnimEvents
- * EN v1.0 Address: 0x801DD938
- * EN v1.0 Size: 468b
- * EN v1.1 Address: 0x801DE210
- * EN v1.1 Size: 484b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
     ScTotemBondState* state;
@@ -187,8 +157,6 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 p
     }
     return 0;
 }
-
-
 
 void sc_totembond_hitDetect(void)
 {

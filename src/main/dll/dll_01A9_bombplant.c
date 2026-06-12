@@ -6,109 +6,25 @@
 
 #include "main/dll/bombplant_placement.h"
 
-
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 
-
-/*
-
-/*
- * --INFO--
- *
- * Function: enemymushroom_release
- * EN v1.0 Address: 0x801D2864
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: enemymushroom_initialise
- * EN v1.0 Address: 0x801D2868
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplant_getExtraSize
- * EN v1.0 Address: 0x801D2B34
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int bombplant_getExtraSize(void)
 {
     return 0x18;
 }
 
-/*
- * --INFO--
- *
- * Function: bombplant_getObjectTypeId
- * EN v1.0 Address: 0x801D2B3C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int bombplant_getObjectTypeId(void)
 {
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: bombplant_free
- * EN v1.0 Address: 0x801D2B44
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void bombplant_free(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: bombplant_hitDetect
- * EN v1.0 Address: 0x801D2B6C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void bombplant_hitDetect(void)
 {
 }
@@ -277,7 +193,6 @@ extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-
 /* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
  * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
 
@@ -291,9 +206,7 @@ extern f32 playerMapOffsetZ;
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-
 #include "main/dll/bombplant_placement.h"
-
 
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -311,56 +224,6 @@ extern f32 lbl_803E5380;
 extern u8 lbl_80326D20[];
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-
-/*
- * --INFO--
- *
- * Function: bombplantspore_getExtraSize
- * EN v1.0 Address: 0x801D3378
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplantspore_free
- * EN v1.0 Address: 0x801D3380
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801D3970
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplantspore_startDriftBurst
- * EN v1.0 Address: 0x801D33D4
- * EN v1.0 Size: 456b
- * EN v1.1 Address: 0x801D39C4
- * EN v1.1 Size: 456b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplant_init
- * EN v1.0 Address: 0x801D3238
- * EN v1.0 Size: 320b
- */
 void bombplant_init(void* obj, void* param, int flag)
 {
     extern undefined4 ObjHits_RefreshObjectState(); /* #57 */
@@ -409,13 +272,6 @@ void bombplant_init(void* obj, void* param, int flag)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: bombplant_update
- * EN v1.0 Address: 0x801D2C54
- * EN v1.0 Size: 1508b
- */
 void bombplant_update(void* obj)
 {
     extern void Obj_StartModelFadeIn(void* obj, int duration); /* #57 */

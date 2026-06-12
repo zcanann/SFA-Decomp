@@ -3,9 +3,6 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 
-
-
-
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 
@@ -77,15 +74,6 @@ extern int fn_8004B218(void* search, int timeout);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, int a, int b);
 
-/*
- * --INFO--
- *
- * Function: trickyFn_8013b368
- * EN v1.0 Address: 0x8013B368
- * EN v1.0 Size: 8764b
- * EN v1.1 Address: 0x8013B6F0
- * EN v1.1 Size: 8764b
- */
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
 {
     u8 moved;

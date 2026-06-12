@@ -1,60 +1,13 @@
 #include "main/dll/mmp_asteroid_re.h"
 #include "main/game_object.h"
 
-
-
-
-
-
-
-
 /*
- * --INFO--
- *
- * Function: transporter_init
- * EN v1.0 Address: 0x801916A0
- * EN v1.0 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Recovered: large switch on params[20] (32-bit id) that sets bits in
  * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
  * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
  * 0x10 directly. Tail: if state->flags & 0x40 (which 0x68 includes), set
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
-
-/*
- * --INFO--
- *
- * Function: FUN_801916e8
- * EN v1.0 Address: 0x801916E8
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80191BD4
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80191730
- * EN v1.0 Address: 0x80191730
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80191C1C
- * EN v1.1 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void cflightwall_free(void)
@@ -79,14 +32,6 @@ void cflightwall_initialise(void)
 
 void barrelpad_free(void);
 
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int cflightwall_getExtraSize(void) { return 0x0; }
 int cflightwall_getObjectTypeId(void) { return 0x0; }
@@ -97,8 +42,6 @@ extern f32 lbl_803E3EE8;
 extern void objRenderFn_8003b8f4(f32);
 void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
 void barrelpad_render(void);
-
-
 
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
@@ -123,4 +66,3 @@ void cflightwall_init(s16* obj, u8* def)
 }
 
 void cf_doorlight_update(int obj);
-

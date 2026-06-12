@@ -3,60 +3,9 @@
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/mm.h"
 
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeTestStrength_update
- * EN v1.0 Address: 0x8010B424
- * EN v1.0 Size: 2392b
- * EN v1.1 Address: 0x8010B6C0
- * EN v1.1 Size: 1652b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeTestStrength_init
- * EN v1.0 Address: 0x8010BD7C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010BD34
- * EN v1.1 Size: 1128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
 extern f32 timeDelta;
-
-/*
- * --INFO--
- *
- * Function: fn_8010BF08
- * EN v1.0 Address: 0x8010BF08
- * EN v1.0 Size: 348b
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_free
- * EN v1.0 Address: 0x8010C068
- * EN v1.0 Size: 112b
- */
-
 
 #include "main/dll/CAM/camdrakor.h"
 #include "main/camera_interface.h"
@@ -68,8 +17,6 @@ extern f32 timeDelta;
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
-
-
 
 extern CameraModeShipBattleState* lbl_803DD570;
 extern f32 lbl_803E1948;
@@ -88,51 +35,6 @@ extern f32 lbl_803E1978;
 extern f32 lbl_803E197C;
 extern f32 lbl_803E1980;
 
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_update
- * EN v1.0 Address: 0x8010C0D8
- * EN v1.0 Size: 3352b
- * EN v1.1 Address: 0x8010C374
- * EN v1.1 Size: 3204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_init
- * EN v1.0 Address: 0x8010CDF0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010CFF8
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeShipBattle_update
- * EN v1.0 Address: 0x8010CE20
- * EN v1.0 Size: 1580b
- * EN v1.1 Address: 0x8010D18C
- * EN v1.1 Size: 936b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int shipBattleFn_801eed24(int focus);
 
 void CameraModeShipBattle_update(short* cam)
@@ -239,19 +141,6 @@ void CameraModeShipBattle_update(short* cam)
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeShipBattle_init
- * EN v1.0 Address: 0x8010D44C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010D534
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeShipBattle_init(void)
 {
     float fval;
@@ -277,10 +166,8 @@ void CameraModeShipBattle_init(void)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeCombat_release(void);
-
 
 void CameraModeShipBattle_copyToCurrent_nop(void)
 {

@@ -1,97 +1,23 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
 
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018af28
- * EN v1.0 Address: 0x8018AF28
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8018AF64
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b220
- * EN v1.0 Address: 0x8018B220
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018B230
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b224
- * EN v1.0 Address: 0x8018B224
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8018B314
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
-
-
-
-
 extern f32 timeDelta;
 
-
-
-
-
-
-
-
-
-
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-
-
 
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
-
 
 extern u32 randomGetRange(int min, int max);
 extern void* ObjGroup_GetObjects();
@@ -104,29 +30,7 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 
-
-/*
- * --INFO--
- *
- * Function: deathgas_free
- * EN v1.0 Address: 0x8018BC50
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8018BC64
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int fuelcell_getExtraSize(void) { return 0x60; }
@@ -135,12 +39,9 @@ int deathseq_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern void mm_free_(void* ptr);
-
-
 
 typedef struct
 {
@@ -162,9 +63,6 @@ typedef struct
     s16 offBit; // 0x1e
     s16 onBit; // 0x20
 } FuelcellSetup;
-
-
-
 
 int fuelcell_func0B(int* obj)
 {
@@ -219,9 +117,7 @@ void fuelcell_init(int* obj)
 
 extern void disableHeavyFog(void);
 
-
 extern f32 Vec_distance(void* a, void* b);
-
 
 extern void gameBitIncrement(int eventId);
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
@@ -454,6 +350,3 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
     }
 }
 #pragma opt_loop_invariants reset
-
-
-

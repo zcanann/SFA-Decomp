@@ -1,7 +1,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
@@ -9,21 +8,6 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
 extern EffectInterface** gPartfxInterface;
-
-/*
- * --INFO--
- *
- * Function: wallanimator_setScale
- * EN v1.0 Address: 0x8019443C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80194688
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 #include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
@@ -33,14 +17,12 @@ extern EffectInterface** gPartfxInterface;
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 
-
 typedef struct ExplodeanimatorState
 {
     u8 pad0[0x2 - 0x0];
     u8 unk2;
     u8 pad3[0x4 - 0x3];
 } ExplodeanimatorState;
-
 
 typedef struct ExplodeanimatorPlacement
 {
@@ -62,97 +44,6 @@ typedef struct ExplodeanimatorPlacement
     s16 unk34;
     u8 pad36[0x38 - 0x36];
 } ExplodeanimatorPlacement;
-
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801950ac
- * EN v1.0 Address: 0x801950AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8019518C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f0
- * EN v1.0 Address: 0x801954F0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80195584
- * EN v1.1 Size: 4624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f4
- * EN v1.0 Address: 0x801954F4
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x80196794
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b40
- * EN v1.0 Address: 0x80195B40
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80196EA8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b74
- * EN v1.0 Address: 0x80195B74
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80196ED8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void explodeanimator_render(void)
@@ -205,14 +96,12 @@ void explodeanimator_update(int* obj)
 
 void dimbossicesmash_hitDetect(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int explodeanimator_getExtraSize(void) { return 0x4; }
 int explodeanimator_getObjectTypeId(void) { return 0x0; }
 int dimbossicesmash_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
@@ -221,7 +110,6 @@ void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
 u32 dimbossicesmash_getObjectTypeId(int* obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
 
 void explodeanimator_init(int* obj, int* def)
 {
@@ -239,23 +127,6 @@ void explodeanimator_init(int* obj, int* def)
     ObjGroup_AddObject(obj, 26);
 }
 
-
 void xyzanimator_init(int obj);
 
-
-/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
- * trigger gamebit, integrate velocity/rotation with per-axis gravity
- * clamps, run the path-control hooks with surface bounce, fade alpha over
- * the lifetime window, and emit the two trail particles. */
-
-
-/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
- * state from the setup record: spawn position/rotation, launch velocity
- * (optionally homing on the target point), rotation velocities and the
- * gravity/clamp direction flags. */
-
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-
-/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
- * toward the gamebit-selected target and feed the heavy fog params. */

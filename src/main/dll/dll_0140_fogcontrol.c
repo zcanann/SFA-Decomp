@@ -1,24 +1,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
 extern uint GameBit_Get(int eventId);
-
-
-/*
- * --INFO--
- *
- * Function: wallanimator_setScale
- * EN v1.0 Address: 0x8019443C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80194688
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 #include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
@@ -27,7 +10,6 @@ extern uint GameBit_Get(int eventId);
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
-
 
 typedef struct FogcontrolPlacement
 {
@@ -59,105 +41,13 @@ typedef struct FogcontrolPlacement
     s16 unk46;
 } FogcontrolPlacement;
 
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801950ac
- * EN v1.0 Address: 0x801950AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8019518C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f0
- * EN v1.0 Address: 0x801954F0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80195584
- * EN v1.1 Size: 4624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f4
- * EN v1.0 Address: 0x801954F4
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x80196794
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b40
- * EN v1.0 Address: 0x80195B40
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80196EA8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b74
- * EN v1.0 Address: 0x80195B74
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80196ED8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void fogcontrol_hitDetect(void)
 {
 }
-
 
 /* 8b "li r3, N; blr" returners. */
 int fogcontrol_getExtraSize(void) { return 0x8; }
@@ -166,14 +56,12 @@ int lightning_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void disableHeavyFog(void);
-
 
 void fogcontrol_free(int* obj)
 {
@@ -197,7 +85,6 @@ typedef struct FogControlState
     u8 full : 1;
     u8 rest : 6;
 } FogControlState;
-
 
 void fogcontrol_init(u8* obj, u8* params)
 {
@@ -238,18 +125,6 @@ void fogcontrol_init(u8* obj, u8* params)
 }
 
 void explodeanimator_init(int* obj, int* def);
-
-
-/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
- * trigger gamebit, integrate velocity/rotation with per-axis gravity
- * clamps, run the path-control hooks with surface bounce, fade alpha over
- * the lifetime window, and emit the two trail particles. */
-
-
-/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
- * state from the setup record: spawn position/rotation, launch velocity
- * (optionally homing on the target point), rotation velocities and the
- * gravity/clamp direction flags. */
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
 

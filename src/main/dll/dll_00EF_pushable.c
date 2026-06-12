@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
 
-
 extern uint GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
@@ -20,19 +19,6 @@ extern f32 lbl_803E356C;
 extern f32 lbl_803E3580;
 extern f32 lbl_803E3584;
 
-/*
- * --INFO--
- *
- * Function: fn_80174A80
- * EN v1.0 Address: 0x80174ED4
- * EN v1.0 Size: 376b
- * EN v1.1 Address: 0x80174F2C
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80174A80(int obj, PushableState* ext)
 {
     extern void GameBit_Set(int bit, int value); /* #57 */
@@ -89,13 +75,6 @@ void fn_80174A80(int obj, PushableState* ext)
     tex[0xe] = 10;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80174BFC
- * EN v1.0 Address: 0x80174BFC
- * EN v1.0 Size: 1296b
- */
 typedef struct Dll138PoseCopy
 {
     s16 rot[3];
@@ -287,19 +266,6 @@ void fn_80174BFC(int obj, int ext)
     memcpy(((PushableState*)ext)->cornerWorld, points, ((PushableState*)ext)->pointCount * 0xc);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8017510C
- * EN v1.0 Address: 0x80175468
- * EN v1.0 Size: 744b
- * EN v1.1 Address: 0x801755B8
- * EN v1.1 Size: 796b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 fn_8017510C(short* obj, short* refObj, int attach)
 {
     extern int Obj_GetPlayerObject(); /* #57 */
@@ -395,19 +361,6 @@ undefined4 fn_8017510C(short* obj, short* refObj, int attach)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80175428
- * EN v1.0 Address: 0x80175428
- * EN v1.0 Size: 248b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80175428(int obj)
 {
     extern void Obj_FreeObject(int obj); /* #57 */
@@ -445,37 +398,11 @@ void fn_80175428(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: pushable_render2
- * EN v1.0 Address: 0x80175520
- * EN v1.0 Size: 16b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int pushable_render2(int obj)
 {
     return (*(PushableState**)&((GameObject*)obj)->extra)->flags & 1;
 }
 
-/*
- * --INFO--
- *
- * Function: pushable_modelMtxFn
- * EN v1.0 Address: 0x80175530
- * EN v1.0 Size: 28b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pushable_modelMtxFn(int obj, int modelNo)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
@@ -483,20 +410,6 @@ void pushable_modelMtxFn(int obj, int modelNo)
 
     *(uint*)(extra + 0xa8) = flags | (1 << modelNo);
 }
-
-/*
- * --INFO--
- *
- * Function: pushable_func0B
- * EN v1.0 Address: 0x8017554C
- * EN v1.0 Size: 128b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 int pushable_func0B(int obj, int other)
 {
@@ -521,8 +434,6 @@ int pushable_func0B(int obj, int other)
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/objseq.h"
 
-
-
 typedef struct PushablePlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -537,15 +448,6 @@ typedef struct PushablePlacement
     u8 pad24[0x28 - 0x24];
 } PushablePlacement;
 
-
-
-
-
-
-
-
-
-
 typedef struct PushableObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -557,11 +459,6 @@ typedef struct PushableObjectDef
     u8 unk23;
     u8 pad24[0x28 - 0x24];
 } PushableObjectDef;
-
-
-
-
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -591,51 +488,10 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-/*
- * --INFO--
- *
- * Function: pushable_setScale
- * EN v1.0 Address: 0x801755CC
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x801758D4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* pushable_setScale: real v1.0 body defined at end of file (old v1.1 misimport removed). */
 
-
-/*
- * --INFO--
- *
- * Function: pushable_render
- * EN v1.0 Address: 0x80175FB8
- * EN v1.0 Size: 236b
- * EN v1.1 Address: 0x80176464
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* pushable_render: recovered v1.0 body defined at end of file. */
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80176920
- * EN v1.0 Address: 0x80176920
- * EN v1.0 Size: 200b
- * EN v1.1 Address: 0x80177470
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -655,39 +511,12 @@ FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801778d0
- * EN v1.0 Address: 0x801778D0
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x801784F8
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801778d0(int param_1)
 {
     *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801778e0
- * EN v1.0 Address: 0x801778E0
- * EN v1.0 Size: 396b
- * EN v1.1 Address: 0x80178508
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -751,14 +580,7 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
 
 extern int lbl_803DDAB8;
 extern int lbl_803AC6E0[];
@@ -810,18 +632,6 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
-
-
-
-
-
-
-
-
-
-
-
-
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
@@ -933,9 +743,6 @@ void pushable_update(int* obj)
 
 extern u32 fn_80296118(void);
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-
-
-
 
 extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
@@ -1153,7 +960,6 @@ void pushable_init(s16* obj, char* def)
         fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, ((ObjPlacement*)def)->mapId);
     }
 }
-
 
 extern int lbl_802C2270[];
 extern int fn_802969F0(void);

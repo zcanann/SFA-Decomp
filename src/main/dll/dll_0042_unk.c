@@ -18,19 +18,6 @@ extern f32 lbl_803E16B4;
 extern f32 lbl_803E16D0;
 extern f32 lbl_803E16D4;
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updateVerticalBounds
- * EN v1.0 Address: 0x801046F4
- * EN v1.0 Size: 612b
- * EN v1.1 Address: 0x80104990
- * EN v1.1 Size: 700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_3, float* upperBound,
                                      float* lowerBound)
 {
@@ -135,19 +122,6 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_
                                    *(int*)&camera->anim.parent);
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeNormal_func0A
- * EN v1.0 Address: 0x80104958
- * EN v1.0 Size: 88b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut,
                              float* lowerHeightOffsetOut, float* upperHeightOffsetOut,
                              float* targetHeightOut)
@@ -217,15 +191,6 @@ STATIC_ASSERT(offsetof(CamSlideObjectState, vectorX) == 0x1A4);
 STATIC_ASSERT(offsetof(CamSlideObjectState, vectorY) == 0x1A8);
 STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 
-/*
- * --INFO--
- *
- * Function: camslide_update
- * EN v1.0 Address: 0x801049B0
- * EN v1.0 Size: 1552b
- * EN v1.1 Address: 0x80104C4C
- * EN v1.1 Size: 1552b
- */
 void camslide_update(CameraObject* camera, GameObject* target)
 {
     extern uint getAngle();
@@ -454,15 +419,6 @@ void camslide_update(CameraObject* camera, GameObject* target)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: firstperson_updatePitch
- * EN v1.0 Address: 0x80104FC0
- * EN v1.0 Size: 220b
- * EN v1.1 Address: 0x8010525C
- * EN v1.1 Size: 220b
- */
 void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 {
     extern uint getAngle();
@@ -510,19 +466,6 @@ static inline f64 FirstPerson_S32AsDouble(s32 value)
     return *(f64*)&bits;
 }
 
-/*
- * --INFO--
- *
- * Function: firstperson_updatePosition
- * EN v1.0 Address: 0x80105178
- * EN v1.0 Size: 1352b
- * EN v1.1 Address: 0x80105338
- * EN v1.1 Size: 1140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 PSVECMag(f32 * vec);
 extern f32 lbl_803E1700;
 extern f32 lbl_803E1704;
@@ -648,19 +591,6 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: firstperson_loadSettings
- * EN v1.0 Address: 0x801056C0
- * EN v1.0 Size: 812b
- * EN v1.1 Address: 0x801057AC
- * EN v1.1 Size: 672b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
 {
     float fval;
@@ -774,19 +704,6 @@ extern f32 lbl_803E1730;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
-/*
- * --INFO--
- *
- * Function: camstatic_update
- * EN v1.0 Address: 0x80105810
- * EN v1.0 Size: 1644b
- * EN v1.1 Address: 0x80105AAC
- * EN v1.1 Size: 1644b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camstatic_update(CameraObject* camera)
 {
     extern s16 getAngle(f32 dx, f32 dz);
@@ -1000,19 +917,6 @@ extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
 
 #define gCamcontrolModeSettings cameraMtxVar57
-/*
- * --INFO--
- *
- * Function: pathcam_loadSettings
- * EN v1.0 Address: 0x80105E7C
- * EN v1.0 Size: 1900b
- * EN v1.1 Address: 0x80106118
- * EN v1.1 Size: 1904b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
 {
     extern int getAngle(f32 dx, f32 dz);
@@ -1241,4 +1145,3 @@ void camcontrol_initialiseModeSettings(void)
     memset(cameraMtxVar57, 0, sizeof(CamcontrolModeSettings));
     return;
 }
-

@@ -30,19 +30,6 @@ extern f32 lbl_803E1D94;
 extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
 
-/*
- * --INFO--
- *
- * Function: EnterSaveNameScreen_render
- * EN v1.0 Address: 0x8011B5D4
- * EN v1.0 Size: 656b
- * EN v1.1 Address: 0x8011B698
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void EnterSaveNameScreen_render(void)
 {
     extern u8 lbl_803DD6F0;
@@ -85,12 +72,10 @@ void EnterSaveNameScreen_render(void)
     titleScreenShowCopyright(0);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void EnterSaveNameScreen_frameEnd(void)
 {
 }
-
 
 #define ENTER_SAVE_NAME_CHAR_COUNT 40
 #define ENTER_SAVE_NAME_DELETE_INDEX 38
@@ -122,20 +107,6 @@ extern u32 lbl_803DD6E8;
 extern u8 lbl_803DD6EC;
 extern u8 lbl_803DD6ED;
 
-
-/*
- * --INFO--
- *
- * Function: EnterSaveNameScreen_run
- * EN v1.0 Address: 0x8011B868
- * EN v1.0 Size: 1636b
- * EN v1.1 Address: 0x8011BB4C
- * EN v1.1 Size: 1540b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 EnterSaveNameScreen_run(undefined4 param_1, undefined4 param_2, int param_3, undefined4 param_4, undefined4 param_5
                         , undefined4 param_6, undefined4 param_7, undefined4 param_8)

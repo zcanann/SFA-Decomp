@@ -3,13 +3,6 @@
 
 extern f32 lbl_803E4DFC;
 
-/*
- * --INFO--
- *
- * Function: DFPulley_integrateLinks
- * EN v1.0 Address: 0x801C0E60
- * EN v1.0 Size: 376b
- */
 void DFPulley_integrateLinks(u8* self)
 {
     u8* linkPtr;

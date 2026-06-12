@@ -2,19 +2,6 @@
 
 extern u8* dspVoice;
 
-/*
- * --INFO--
- *
- * Function: hwSetVirtualSampleLoopBuffer
- * EN v1.0 Address: 0x8028363C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8028364C
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwSetVirtualSampleLoopBuffer(int slot, u32 valueA, u32 valueB)
 {
     u8* entry;

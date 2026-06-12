@@ -16,19 +16,6 @@ typedef struct HwAdsrEnvelope
     u16 releaseTime;
 } HwAdsrEnvelope;
 
-/*
- * --INFO--
- *
- * Function: hwSetADSR
- * EN v1.0 Address: 0x8028348C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802835C0
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwSetADSR(int slot, u32* adsr, u8 mode)
 {
     u8* entry;
@@ -120,4 +107,3 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
     entry += offset;
     ((DSPvoice*)entry)->changed[0] |= 0x10;
 }
-

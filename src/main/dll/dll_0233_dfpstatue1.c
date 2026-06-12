@@ -9,19 +9,6 @@ extern f32 timeDelta;
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-/*
- * --INFO--
- *
- * Function: dfpstatue1_updateState
- * EN v1.0 Address: 0x802081F4
- * EN v1.0 Size: 436b
- * EN v1.1 Address: 0x8020831C
- * EN v1.1 Size: 728b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void dfpstatue1_updateState(DfpStatue1Object* obj)
 {
@@ -69,7 +56,6 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
     }
 }
 #pragma dont_inline reset
-
 
 int dfpstatue1_getExtraSize(void) { return 0xa; }
 int dfpstatue1_getObjectTypeId(void) { return 0x0; }

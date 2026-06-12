@@ -4,34 +4,8 @@
 extern int saveFileStruct_isCheatActive();
 extern void mm_free(void* ptr);
 
-/*
- * --INFO--
- *
- * Function: gameTextSetWindow
- * EN v1.0 Address: 0x80017434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001746C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* moved below GameTextSlot/global declarations */
 
-/*
- * --INFO--
- *
- * Function: FUN_80017460
- * EN v1.0 Address: 0x80017460
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800191FC
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -41,19 +15,6 @@ FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017468
- * EN v1.0 Address: 0x80017468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001947C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -63,19 +24,6 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textRenderStr
- * EN v1.0 Address: 0x800174D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001AE18
- * EN v1.1 Size: 1760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int curLanguage;
 extern u8* gameTextFonts;
 extern void* gameTextDrawFunc;
@@ -925,19 +873,6 @@ void* gameTextGet(int textId)
     return lbl_803DC974;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017500
- * EN v1.0 Address: 0x80017500
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001BD8C
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -946,19 +881,6 @@ FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8001786c
- * EN v1.0 Address: 0x8001786C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80024F40
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -967,19 +889,6 @@ FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017998
- * EN v1.0 Address: 0x80017998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80029260
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined*
 FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -992,14 +901,11 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 /* ObjModel/model-file accessors. */
 
-
 extern u8 framesThisStep;
-
 
 /* Global game-state / text accessors. */
 
 int getGameState(void);
-
 
 int getHudHiddenFrameCount(void);
 
@@ -1013,7 +919,6 @@ void* getCurGameText(void)
 {
     return curGameTextDir;
 }
-
 
 /* Simple field/global accessors. */
 
@@ -1031,12 +936,10 @@ void gameTextSetDrawFunc(void* fn)
 extern void* mmAlloc(int size, int type, int flag);
 extern void textureFree(void* tex);
 
-
 f32 gameTextFn_80019c00(void)
 {
     return *(f32*)(gameTextFonts + 0x20);
 }
-
 
 typedef struct
 {
@@ -1046,7 +949,6 @@ typedef struct
 } GameTextStateElem;
 
 extern GameTextStateElem lbl_8033AF40[];
-
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -1081,19 +983,15 @@ void mainLoopDoGameText(void)
     }
 }
 
-
 int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-
 extern void* textureLoadAsset(int assetId);
-
 
 extern void gameTextInitFn_8001c794(void);
 extern void gameTextLoadDir(int dirId);
 extern u8 lbl_803DC980;
-
 
 void gameTextInit(void)
 {
@@ -1102,9 +1000,7 @@ void gameTextInit(void)
     gameTextLoadDir(0x1c);
 }
 
-
 void mm_free(void* p);
-
 
 extern void subtitleFn_8001b700(void);
 extern int lbl_803DCA00;
@@ -1165,7 +1061,6 @@ void gameTextSetCharset(int charset, int flags)
         s->f4 = charset;
     }
 }
-
 
 #pragma dont_inline off
 void gameTextLoadDir(int dirId)
@@ -1301,7 +1196,6 @@ void gameTextSetCursor(s16 x, s16 y, int flags)
     }
 }
 
-
 typedef f32 Mtx[3][4];
 extern int lbl_803DB3E0;
 extern s16 lbl_802C9EE8[];
@@ -1312,7 +1206,6 @@ extern u8 lbl_803DC9F5;
 extern u8 lbl_803DC9F4;
 extern int gameTextGetTaskText(int taskId, int* textId, int* dirId);
 extern void loadGameTextSequence();
-
 
 int gameTextFn_8001b44c(int x)
 {
@@ -1392,15 +1285,11 @@ int subtitleIsActive(void)
     return ret;
 }
 
-
 int mmCreateMemoryStore(int size);
-
 
 extern void DCFlushRange(void* addr, u32 nBytes);
 
-
 extern void* memcpy(void* dst, const void* src, int n);
-
 
 #pragma dont_inline on
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
@@ -1542,7 +1431,6 @@ void subtitleFn_8001b700(void)
     }
 }
 
-
 #pragma dont_inline off
 void fn_8001BDD4(int mode)
 {
@@ -1584,9 +1472,7 @@ void subtitleStart(int x)
     }
 }
 
-
 extern u8 curGameTexts[];
-
 
 void dvdCancelCallback_8001b39c(int a, u8* match)
 {
@@ -1634,9 +1520,7 @@ void gameTextOpenCallback_8001b3d0(int status, u8* match)
     }
 }
 
-
 extern void DCStoreRange(void* p, int size);
-
 
 typedef struct
 {
@@ -2240,7 +2124,6 @@ void gameTextLoadForCurMap(int sourceId)
     testAndSet_onlyUseHeap3(oldHeap);
 }
 
-
 extern void* lbl_8033BE40[];
 extern int lbl_803DB3EC;
 extern void* lbl_803DCA24;
@@ -2432,7 +2315,6 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 
 extern int mmSetFreeDelay(int delay);
 
-
 extern u8* textureAlloc(u32 w, u32 h, int kind, int a, int b, int c, int d, int e, int f);
 
 typedef struct GameTextCharset
@@ -2601,7 +2483,6 @@ void setLanguageFn_8001ad64(void* reqp)
     cs->status = 2;
     *(int*)(req + 0x44) = 3;
 }
-
 
 extern u16 OSGetFontEncode(void);
 extern void OSLoadFont(void* buf, void* tmp);
@@ -2821,12 +2702,9 @@ void gameTextLoadGraphicsFn_8001a918(void)
     *(int*)(base31 + 0x6c) = 2;
 }
 
-
 void* mmAlloc(int size, int type, int flag);
 
-
 extern void subtitleUpdateAndDraw(int a);
-
 
 extern int lbl_803DCA08;
 extern f32 lbl_803DCA0C;
@@ -2945,7 +2823,6 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
         lbl_803DCA20, (f32)midX, (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 3);
 }
-
 
 extern s16 lbl_803DB3E8;
 extern u16 lbl_802C9F00[];
@@ -3082,7 +2959,6 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)lbl_803DCA20 + 0x60, 800);
 }
-
 
 extern f32 lbl_803DE730;
 extern f32 lbl_803DE734;
@@ -3245,7 +3121,6 @@ int GameText_CountPrintableChars(u8* str)
     return count;
 }
 
-
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
 {
     int off;
@@ -3280,7 +3155,6 @@ int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
     }
     return 0;
 }
-
 
 extern u32 lbl_80339C40[];
 
@@ -3341,10 +3215,3 @@ SubtitleCmd* subtitleParseControlCmds(int str, int* count)
         return (SubtitleCmd*)buf;
     }
 }
-
-
-
-
-
-
-

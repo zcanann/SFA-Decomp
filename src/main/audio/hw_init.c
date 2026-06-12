@@ -23,19 +23,6 @@ extern void audioFn_80271498(u32 value);
 extern void synthUpdateJobTable(void);
 extern void synthUpdateVirtualSamples(void);
 
-/*
- * --INFO--
- *
- * Function: snd_handle_irq
- * EN v1.0 Address: 0x80282FE0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283134
- * EN v1.1 Size: 740b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void snd_handle_irq(void)
 {
     u32 offset;
@@ -105,19 +92,6 @@ void snd_handle_irq(void)
     hwIRQLeaveCritical();
 }
 
-/*
- * --INFO--
- *
- * Function: hwInit
- * EN v1.0 Address: 0x80282FE4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80283418
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int hwInit(u32* sampleRate, u8 valueA, u8 valueB, u32 flags)
 {
     hwInitIrq();

@@ -3,38 +3,10 @@
 #include "main/model_light.h"
 #include "main/objanim_internal.h"
 
-
-
 extern void mm_free(void* ptr);
 
-/*
- * --INFO--
- *
- * Function: gameTextSetWindow
- * EN v1.0 Address: 0x80017434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001746C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* moved below GameTextSlot/global declarations */
 
-/*
- * --INFO--
- *
- * Function: FUN_80017460
- * EN v1.0 Address: 0x80017460
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800191FC
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -44,19 +16,6 @@ FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017468
- * EN v1.0 Address: 0x80017468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001947C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -66,37 +25,8 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textRenderStr
- * EN v1.0 Address: 0x800174D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001AE18
- * EN v1.1 Size: 1760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80017500
- * EN v1.0 Address: 0x80017500
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001BD8C
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -104,19 +34,6 @@ FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8001786c
- * EN v1.0 Address: 0x8001786C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80024F40
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -125,19 +42,6 @@ FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017998
- * EN v1.0 Address: 0x80017998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80029260
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined*
 FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -150,15 +54,12 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 /* ObjModel/model-file accessors. */
 
-
 /* Global game-state / text accessors. */
-
 
 void objSetEventName(u8* obj, void* name)
 {
     ((GameObject*)obj)->anim.eventTable = name;
 }
-
 
 /* Simple field/global accessors. */
 
@@ -206,7 +107,6 @@ f32 modelLightStruct_getRadius(ModelLightStruct* p)
 {
     return p->attenuationFar;
 }
-
 
 void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct* p, u8 v)
 {
@@ -544,7 +444,6 @@ void modelLightStruct_setProjectionTevModes(ModelLightStruct* p, void* a, void* 
     p->projectionTevAlphaMode = (int)b;
 }
 
-
 extern u8 lbl_803DB408;
 
 void modelLightStruct_setGlowColor(ModelLightStruct* light, u8 red, u8 green, u8 blue, u8 alpha)
@@ -577,7 +476,6 @@ void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, u8 a, u8 b, u8 
     p->diffuseFadeTargetColor[3] = d;
 }
 
-
 void modelLightStruct_getPosition(ModelLightStruct* p, f32* a, f32* b, f32* c)
 {
     *a = p->viewX;
@@ -592,7 +490,6 @@ void modelLightStruct_getWorldPosition(ModelLightStruct* p, f32* a, f32* b, f32*
     *c = p->worldZ;
 }
 
-
 void lightSetColor(int i, u8 a, u8 b, u8 c)
 {
     u8* base = &lbl_803DB408;
@@ -606,7 +503,6 @@ void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct* p, int n)
     p->objectLightMaskIndex = n;
     p->objectLightMask = (u8)(1 << n);
 }
-
 
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE778;
@@ -669,7 +565,6 @@ void lightGetColor(int i, u8* a, u8* b, u8* c)
     *b = base[i * 4 + 1];
     *c = base[i * 4 + 2];
 }
-
 
 void modelLightStruct_updateColorFade(ModelLightStruct* light)
 {
@@ -845,7 +740,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct* p, f32 v)
     p->projectionNearZ = (v < lbl_803DE78C) ? lbl_803DE78C : ((v > p->projectionFarZ) ? p->projectionFarZ : v);
 }
 
-
 extern u8 gModelLightUseModelRelativePositions;
 extern int gModelLightNextGXLightId;
 
@@ -859,7 +753,6 @@ typedef struct
 } ModelLightChannelState;
 
 extern ModelLightChannelState gModelLightChannelStates[];
-
 
 void mm_free(void* p);
 
@@ -883,17 +776,13 @@ void modelLightChannels_reset(u8 v)
     gModelLightChannelStates[5].active = 0;
 }
 
-
 typedef f32 Mtx[3][4];
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
 
-
 void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 
-
 void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
-
 
 void modelLightStruct_setDirection(ModelLightStruct* s, f32 x, f32 y, f32 z)
 {
@@ -1313,13 +1202,11 @@ void updateLights(void)
     }
 }
 
-
 extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
 extern f32 PSVECMag(f32 * v);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern f32 lbl_803DE768;
 extern f32 lbl_802C1A88[];
-
 
 void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int mode)
 {
@@ -1693,7 +1580,6 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
     }
 }
 
-
 void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
 {
     s16 v;
@@ -1720,9 +1606,7 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
     light->glowAlpha = v;
 }
 
-
 int randomGetRange(int lo, int hi);
-
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
@@ -1760,7 +1644,6 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, 
                     lbl_803DE790, lbl_803DE790);
 }
 
-
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b)
 {
     u8* lightObj;
@@ -1777,53 +1660,6 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b
     GXInitLightAttn(lightObj, zero, zero, one, atten, zero, one - atten);
 }
 
-
 void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 
-
 void* mmAlloc(int size, int type, int flag);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

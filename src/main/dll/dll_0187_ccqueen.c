@@ -4,40 +4,8 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* 8b "li r3, N; blr" returners. */
 int ccqueen_getExtraSize(void) { return 0x654; }
@@ -46,9 +14,7 @@ int ccqueen_getExtraSize(void) { return 0x654; }
 extern f32 lbl_803E45C8;
 extern void objRenderFn_8003b8f4(f32);
 
-
 extern f32 timeDelta;
-
 
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -69,19 +35,6 @@ extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
 extern f32 lbl_803E5360;
 
-/*
- * --INFO--
- *
- * Function: ccqueen_render
- * EN v1.0 Address: 0x801AA560
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x801AA584
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern undefined4 ccqueen_render();
@@ -90,34 +43,6 @@ void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     dll_2E_func06(obj, state, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801aa684
- * EN v1.0 Address: 0x801AA684
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801AA6C0
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801aaa6c
- * EN v1.0 Address: 0x801AAA6C
- * EN v1.0 Size: 148b
- * EN v1.1 Address: 0x801AAE2C
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
@@ -151,20 +76,6 @@ void FUN_801aaa6c(double param_1, int param_2, int param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801abf38
- * EN v1.0 Address: 0x801ABF38
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x801AC038
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -178,7 +89,6 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
 
@@ -186,15 +96,10 @@ int cclightfoot_getExtraSize(void);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
-
-
-
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
-
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
@@ -203,7 +108,6 @@ int cclightfoot_getExtraSize(void);
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
 
-
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
  * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
  * sets bit 8 again and selects model 0; if clear, selects model 1 and
@@ -211,7 +115,6 @@ int cclightfoot_getExtraSize(void);
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-
 
 extern void dll_2E_func05(int* obj, u8* sub, int a, int b, int c);
 extern void dll_2E_func08(u8* sub, int a, int b);
@@ -279,9 +182,4 @@ void ccqueen_update(int* obj)
 
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-
-
-
-
 #include "main/dll/SC/SCtotemlogpuz.h"
-

@@ -4,10 +4,6 @@
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 
-
-
-
-
 typedef struct
 {
     u32 mode;
@@ -24,7 +20,6 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
-
 
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
@@ -131,74 +126,17 @@ extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: saveFileStruct_unlockCheat
- * EN v1.0 Address: 0x800E7ED8
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x800E815C
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void saveFileStruct_unlockCheat(uint cheatId)
 {
     gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: isCheatUnlocked
- * EN v1.0 Address: 0x800E7EFC
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x800E8180
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint isCheatUnlocked(uint cheatId)
 {
     return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
 }
 
-/*
- * --INFO--
- *
- * Function: saveFileStruct_resetVolumes
- * EN v1.0 Address: 0x800E7F1C
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x800E81A0
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void saveFileStruct_resetVolumes(void)
 {
     gGameplayPreviewColorRed = 0x7f;
@@ -207,37 +145,11 @@ void saveFileStruct_resetVolumes(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: getSaveFileStruct
- * EN v1.0 Address: 0x800E7F38
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x800E81BC
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 u8* getSaveFileStruct(void)
 {
     return &gGameplayPreviewSettings;
 }
 
-/*
- * --INFO--
- *
- * Function: loadSaveSettings
- * EN v1.0 Address: 0x800E7F44
- * EN v1.0 Size: 256b
- * EN v1.1 Address: 0x800E81C8
- * EN v1.1 Size: 256b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                       undefined8 param_5, undefined8 param_6, undefined8 param_7,
                       undefined8 param_8)
@@ -254,38 +166,11 @@ void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800e82d8
- * EN v1.0 Address: 0x800E82D8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800E82C8
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined* FUN_800e82d8(void)
 {
     return (undefined*)&DAT_803a4460;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800e8630
- * EN v1.0 Address: 0x800E8630
- * EN v1.0 Size: 356b
- * EN v1.1 Address: 0x800E85F4
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800e8630(int param_1)
 {
     int iVar1;
@@ -343,119 +228,20 @@ void FUN_800e8630(int param_1)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800e87a8
- * EN v1.0 Address: 0x800E87A8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800E877C
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
 
-/*
- * --INFO--
- *
- * Function: saveFn_800e8508
- * EN v1.0 Address: 0x800E8508
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x800E878C
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
-
-/*
- * --INFO--
- *
- * Function: gplaySaveGame
- * EN v1.0 Address: 0x800E85A0
- * EN v1.0 Size: 204b
- * EN v1.1 Address: 0x800E8824
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: titleDoLoadSave
- * EN v1.0 Address: 0x800E866C
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x800E88F0
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: saveGame_save
- * EN v1.0 Address: 0x800E86D0
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x800E8954
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_800e8b98
- * EN v1.0 Address: 0x800E8B98
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x800E8A48
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined FUN_800e8b98(void)
 {
     return DAT_803de100;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800e8f58
- * EN v1.0 Address: 0x800E8F58
- * EN v1.0 Size: 832b
- * EN v1.1 Address: 0x800E8D40
- * EN v1.1 Size: 736b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
@@ -566,20 +352,6 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800e95e8
- * EN v1.0 Address: 0x800E95E8
- * EN v1.0 Size: 1040b
- * EN v1.1 Address: 0x800E927C
- * EN v1.1 Size: 1056b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
 {
     bool bVar1;
@@ -758,20 +530,6 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800e9e9c
- * EN v1.0 Address: 0x800E9E9C
- * EN v1.0 Size: 356b
- * EN v1.1 Address: 0x800E9E64
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800e9e9c(void)
 {
     uint uVar1;
@@ -813,20 +571,6 @@ void FUN_800e9e9c(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800ea8c8
- * EN v1.0 Address: 0x800EA8C8
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x800EA4E8
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
@@ -844,19 +588,6 @@ FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800ea9ac
- * EN v1.0 Address: 0x800EA9AC
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x800EA540
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined FUN_800ea9ac(void)
 {
     undefined* puVar1;
@@ -865,19 +596,6 @@ undefined FUN_800ea9ac(void)
     return puVar1[5];
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800ea9b8
- * EN v1.0 Address: 0x800EA9B8
- * EN v1.0 Size: 408b
- * EN v1.1 Address: 0x800EA564
- * EN v1.1 Size: 488b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_800ea9b8(void)
 {
     uint uVar1;
@@ -947,53 +665,8 @@ void FUN_800ea9b8(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: dll_60_func03
- * EN v1.0 Address: 0x800ED5E4
- * EN v1.0 Size: 168b
- * EN v1.1 Address: 0x800F24A8
- * EN v1.1 Size: 1160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void SaveGame_func08_nop(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void dll_67_func01_nop(void)
 {
@@ -1005,62 +678,15 @@ void dll_67_func00_nop(void)
 
 void dll_68_func01_nop(void);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* sda21 accessors. */
-
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* lbl = N (byte) */
 
 /* 12b 3-insn patterns. */
-
-
-
-
 
 /* misc 8b leaves */
 
@@ -1072,65 +698,7 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-
-
-
-
 /* conditional init/free pair. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 extern u8 lbl_803133B8[];
 extern f32 lbl_803E09C8;
@@ -1139,16 +707,6 @@ extern f32 lbl_803E09D0;
 extern f32 lbl_803E09D4;
 extern f32 lbl_803E09D8;
 extern f32 lbl_803E09DC;
-
-
-
-
-
-
-
-
-
-
 
 void dll_67_func03(int sourceObj, int variant, int posSource, uint flags)
 {
@@ -1269,38 +827,4 @@ void dll_67_func03(int sourceObj, int variant, int posSource, uint flags)
 
 void dll_68_func03(int sourceObj, int variant, int posSource, uint flags);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

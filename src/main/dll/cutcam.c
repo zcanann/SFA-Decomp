@@ -6,7 +6,6 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 
-
 extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
 extern ushort getPadFn_80014d9c(int controller);
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
@@ -34,19 +33,6 @@ extern f32 lbl_803E1694;
 extern f32 lbl_803E16A4;
 extern f32 lbl_803E16AC;
 
-/*
- * --INFO--
- *
- * Function: camcontrol_traceMove
- * EN v1.0 Address: 0x80103768
- * EN v1.0 Size: 284b
- * EN v1.1 Address: 0x801037C0
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 int
 camcontrol_traceMove(float* startPos, float* targetPos, float* endPosOut, u8* trace,
@@ -89,19 +75,6 @@ camcontrol_traceMove(float* startPos, float* targetPos, float* endPosOut, u8* tr
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: camcontrol_traceFromTarget
- * EN v1.0 Address: 0x80103888
- * EN v1.0 Size: 316b
- * EN v1.1 Address: 0x80103900
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined camcontrol_traceFromTarget(float* fromPos, int channel, float* outPos)
 {
     float targetPos[3];
@@ -121,19 +94,6 @@ undefined camcontrol_traceFromTarget(float* fromPos, int channel, float* outPos)
     return traceRec[110];
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_getTargetPosition
- * EN v1.0 Address: 0x801039C4
- * EN v1.0 Size: 596b
- * EN v1.1 Address: 0x801039A4
- * EN v1.1 Size: 584b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* arg3)
 {
     short* pitchOut;
@@ -201,19 +161,6 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
     return box[110];
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updateTargetAction
- * EN v1.0 Address: 0x80103C18
- * EN v1.0 Size: 488b
- * EN v1.1 Address: 0x80103BEC
- * EN v1.1 Size: 496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_updateTargetAction(int camState, int targetObj)
 {
     short classId;
@@ -278,13 +225,6 @@ void camcontrol_updateTargetAction(int camState, int targetObj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: cameraFn_80103b40
- * EN v1.0 Address: 0x80103B40
- * EN v1.0 Size: 1280b
- */
 extern u32 OSGetTick(void);
 extern f32 lbl_803E16A0;
 extern f32 lbl_803E16A8;
@@ -520,13 +460,6 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     return result;
 }
 
-/*
- * --INFO--
- *
- * Function: camMoveFn_80104040
- * EN v1.0 Address: 0x80104040
- * EN v1.0 Size: 1280b
- */
 void camMoveFn_80104040(int cam, short* tgt)
 {
     float path[39];
@@ -658,13 +591,6 @@ void camMoveFn_80104040(int cam, short* tgt)
                                    *(int*)(cam + 0x30));
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updateModeSettings
- * EN v1.0 Address: 0x80104540
- * EN v1.0 Size: 436b
- */
 void camcontrol_updateModeSettings(int camera)
 {
     f32 blend;
@@ -725,7 +651,6 @@ void camcontrol_updateModeSettings(int camera)
     }
     return;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void doNothing_80103660(void)

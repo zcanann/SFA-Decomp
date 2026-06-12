@@ -26,19 +26,6 @@ extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 extern f32 lbl_803E4CC4;
 
-/*
- * --INFO--
- *
- * Function: dll_DIM_BossGutSpik_update
- * EN v1.0 Address: 0x801BE44C
- * EN v1.0 Size: 804b
- * EN v1.1 Address: 0x801BE750
- * EN v1.1 Size: 688b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
     extern u8 lbl_803DDBA8;
@@ -197,90 +184,25 @@ int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_func0B
- * EN v1.0 Address: 0x801BE86C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbosstonsil_func0B(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_setScale
- * EN v1.0 Address: 0x801BE870
- * EN v1.0 Size: 12b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMbosstonsil_setScale(int obj)
 {
     return (*(DIMbosstonsilState**)&((GameObject*)obj)->extra)->scale;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_getExtraSize
- * EN v1.0 Address: 0x801BE87C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMbosstonsil_getExtraSize(void)
 {
     return DIMBOSSTONSIL_STATE_SIZE;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_getObjectTypeId
- * EN v1.0 Address: 0x801BE884
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int DIMbosstonsil_getObjectTypeId(void)
 {
     return DIMBOSSTONSIL_OBJECT_TYPE;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_free
- * EN v1.0 Address: 0x801BE88C
- * EN v1.0 Size: 108b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbosstonsil_free(void* obj)
 {
     extern void* gBaddieControlInterface;
@@ -311,13 +233,6 @@ extern f32 lbl_803DDBA4;
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4CC8;
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_render
- * EN v1.0 Address: 0x801BE8F8
- * EN v1.0 Size: 324b
- */
 void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     struct
@@ -359,13 +274,6 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
     }
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_hitDetect
- * EN v1.0 Address: 0x801BEA3C
- * EN v1.0 Size: 56b
- */
 void DIMbosstonsil_hitDetect(void* obj)
 {
     extern void* gPlayerInterface;
@@ -374,13 +282,6 @@ void DIMbosstonsil_hitDetect(void* obj)
         obj, ((GameObject*)obj)->extra, &lbl_803DDBB0);
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_update
- * EN v1.0 Address: 0x801BEA74
- * EN v1.0 Size: 0x1FC
- */
 void DIMbosstonsil_update(void* obj)
 {
     extern void* gBaddieControlInterface;
@@ -475,19 +376,6 @@ extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_init
- * EN v1.0 Address: 0x801BEC70
- * EN v1.0 Size: 496b
- * EN v1.1 Address: 0x801BEE40
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
 {
     extern undefined4* gBaddieControlInterface;
@@ -539,19 +427,6 @@ void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbosstonsil_release
- * EN v1.0 Address: 0x801BEE60
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbosstonsil_release(void)
 {
 }

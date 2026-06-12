@@ -7,21 +7,14 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-
-
-
 /* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
-
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 /* shopkeeper_getExtraSize == 0x9d8. */
 
-
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -34,19 +27,6 @@ extern undefined4* gBoneParticleEffectInterface;
 extern f32 lbl_803E59D8;
 extern void objRenderFn_8003b8f4(f32);
 
-/*
- * --INFO--
- *
- * Function: FUN_801e76a0
- * EN v1.0 Address: 0x801E76A0
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x801E7714
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 undefined4 FUN_801e76a0(int param_1)
@@ -74,37 +54,6 @@ undefined4 FUN_801e76a0(int param_1)
     }
     return uVar2;
 }
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e7be4
- * EN v1.0 Address: 0x801E7BE4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E7C90
- * EN v1.1 Size: 1452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e7be8
- * EN v1.0 Address: 0x801E7BE8
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801E823C
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -162,34 +111,6 @@ void fn_801E7DC8(int p1, int p2, int count)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801e7d3c
- * EN v1.0 Address: 0x801E7D3C
- * EN v1.0 Size: 688b
- * EN v1.1 Address: 0x801E83B8
- * EN v1.1 Size: 508b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: shopkeeper_render
- * EN v1.0 Address: 0x801E7FEC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801E85B4
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Stack_Free();
 
 void shopkeeper_free(int obj)
@@ -198,19 +119,6 @@ void shopkeeper_free(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: shopkeeper_render
- * EN v1.0 Address: 0x801E8014
- * EN v1.0 Size: 156b
- * EN v1.1 Address: 0x801E85DC
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -229,83 +137,7 @@ void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801e80b0
- * EN v1.0 Address: 0x801E80B0
- * EN v1.0 Size: 452b
- * EN v1.1 Address: 0x801E8680
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e8274
- * EN v1.0 Address: 0x801E8274
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E87C4
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e8300
- * EN v1.0 Address: 0x801E8300
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x801E89A0
- * EN v1.1 Size: 688b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e85b0
- * EN v1.0 Address: 0x801E85B0
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801E8CE4
- * EN v1.1 Size: 452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e85b8
- * EN v1.0 Address: 0x801E85B8
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x801E8EA8
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 int fn_801E86F4(int obj, int p2, ObjSeqState* seq);
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void shopkeeper_hitDetect(void)
@@ -318,18 +150,10 @@ void shopkeeper_release(void)
 
 void shopitem_hitDetect(void);
 
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int shopkeeper_getExtraSize(void) { return 0x9d8; }
 int shopkeeper_getObjectTypeId(void) { return 0x0; }
 int shopitem_getExtraSize(void);
-
-
-
-
 
 extern void* lbl_803AD068[8];
 extern void* lbl_803DDC58;
@@ -342,8 +166,6 @@ extern void TREX_Lazerwall_popQueuedState(int);
 extern void fn_801E66EC(int);
 extern void fn_801E66E4(int);
 extern void fn_801E66DC(int);
-
-
 
 void shopkeeper_initialise(void)
 {
@@ -370,7 +192,6 @@ extern void characterDoEyeAnims(int obj, int p2);
 extern void dll_2E_func03(int, int);
 extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
 extern int* gPlayerInterface;
-
 
 void shopkeeper_update(int obj)
 {
@@ -413,7 +234,6 @@ extern void* allocModelStruct_800139e8(int, int);
 extern void dll_2E_func05(int, int, int, int, int);
 extern int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
 
-
 void shopkeeper_init(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -429,12 +249,7 @@ void shopkeeper_init(int obj)
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
 
-
-
-
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 
 extern void DRlaserturret_startTimedChallenge(int);
 extern void DRlaserturret_handlePromptChoice(int);
@@ -660,6 +475,3 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
 }
 
 extern f32 lbl_803E5A34;
-
-
-

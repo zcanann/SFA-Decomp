@@ -26,19 +26,6 @@ extern f32 lbl_803E4FEC;
 extern f32 lbl_803E4FF0;
 extern f32 lbl_803E4FF4;
 
-/*
- * --INFO--
- *
- * Function: blasted_init
- * EN v1.0 Address: 0x801A2AF8
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801A2B9C
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void fn_blasted_init_v11_unused(int param_1, int param_2)
@@ -89,19 +76,6 @@ void fn_blasted_init_v11_unused(int param_1, int param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801a2cb8
- * EN v1.0 Address: 0x801A2CB8
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801A2D6C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_801a2cb8(int param_1, uint param_2)
 {
     int iVar1;
@@ -148,20 +122,6 @@ undefined4 FUN_801a2cb8(int param_1, uint param_2)
     return uVar2;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a32d4
- * EN v1.0 Address: 0x801A32D4
- * EN v1.0 Size: 800b
- * EN v1.1 Address: 0x801A3190
- * EN v1.1 Size: 676b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -230,17 +190,13 @@ FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     return uVar3;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void explodable_render(void)
 {
 }
 
 void cfforcefield_free(void);
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -265,18 +221,10 @@ typedef struct ExplodablePlacement
     u8 pad42[0x48 - 0x42];
 } ExplodablePlacement;
 
-
-
-
-
-
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
 /* Per-fragment record inside DrExplodableState (stride 0x70). */
 
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
@@ -311,7 +259,6 @@ void explodable_free(int obj, int flag)
 }
 
 extern void objSetSlot(int* obj, int slot);
-
 
 extern void fn_801A2E80(int obj, int def, int p3, int state);
 

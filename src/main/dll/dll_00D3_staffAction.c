@@ -61,19 +61,6 @@ extern f32 lbl_803E3CC0;
 extern f32 lbl_803E3CC4;
 extern f32 lbl_803E3CC8;
 
-/*
- * --INFO--
- *
- * Function: FUN_801659b8
- * EN v1.0 Address: 0x801659B8
- * EN v1.0 Size: 1212b
- * EN v1.1 Address: 0x80165A38
- * EN v1.1 Size: 1068b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 #pragma peephole on
@@ -208,19 +195,6 @@ FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80165e74
- * EN v1.0 Address: 0x80165E74
- * EN v1.0 Size: 588b
- * EN v1.1 Address: 0x80165E64
- * EN v1.1 Size: 388b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80165e74(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9, uint* param_10,
@@ -272,19 +246,6 @@ FUN_80165e74(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801660c0
- * EN v1.0 Address: 0x801660C0
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x80165FE8
- * EN v1.1 Size: 336b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801660c0(int param_1, int param_2)
 {
     float fVar1;
@@ -332,19 +293,6 @@ void FUN_801660c0(int param_1, int param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801661ec
- * EN v1.0 Address: 0x801661EC
- * EN v1.0 Size: 1872b
- * EN v1.1 Address: 0x80166138
- * EN v1.1 Size: 1976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
@@ -658,19 +606,6 @@ void FUN_801661ec(short* param_1, int param_2)
     landedarwing_moveSurfaceCrawler(param_1, (LandedArwingState*)param_2);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8016693c
- * EN v1.0 Address: 0x8016693C
- * EN v1.0 Size: 816b
- * EN v1.1 Address: 0x801668F0
- * EN v1.1 Size: 1020b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8016693c(int param_1, int param_2)
 {
     float fVar1;
@@ -790,19 +725,6 @@ void FUN_8016693c(int param_1, int param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80166c6c
- * EN v1.0 Address: 0x80166C6C
- * EN v1.0 Size: 560b
- * EN v1.1 Address: 0x80166CEC
- * EN v1.1 Size: 528b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80166c6c(int param_1, int param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -1397,13 +1319,6 @@ extern void LandedArwing_ReturnZero(void);
 extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
 extern void fn_80167550(int* obj);
 
-/*
- * --INFO--
- *
- * Function: dll_D3_update
- * EN v1.0 Address: 0x80166F2C
- * EN v1.0 Size: 1228b
- */
 void dll_D3_update(int* obj)
 {
     int trans;
@@ -1566,13 +1481,6 @@ void dll_D3_update(int* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_D3_init
- * EN v1.0 Address: 0x801673F8
- * EN v1.0 Size: 344b
- */
 void dll_D3_init(int obj, int def, int flag)
 {
     int state;

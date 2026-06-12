@@ -9,7 +9,6 @@
 #include "main/objlib.h"
 #include "main/resource.h"
 
-
 typedef struct ObjLibRegionList ObjLibRegionList;
 
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -177,21 +176,6 @@ typedef struct ObjPathPoint
     s8 modelIndex[6];
 } ObjPathPoint;
 
-
-
-/*
- * --INFO--
- *
- * Function: ObjHitbox_SetStateIndex
- * EN v1.0 Address: 0x800358D4
- * EN v1.0 Size: 140b
- * EN v1.1 Address: 0x800359CC
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma optimization_level 1
 #pragma scheduling off
 void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
@@ -236,19 +220,6 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
 }
 #pragma optimization_level reset
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SetTargetMask
- * EN v1.0 Address: 0x80035960
- * EN v1.0 Size: 20b
- * EN v1.1 Address: 0x80035A58
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole off
 void ObjHits_SetTargetMask(int objPtr, undefined targetMask)
 {
@@ -263,19 +234,6 @@ void ObjHits_SetTargetMask(int objPtr, undefined targetMask)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitbox_SetSphereRadius
- * EN v1.0 Address: 0x80035974
- * EN v1.0 Size: 476b
- * EN v1.1 Address: 0x80035A6C
- * EN v1.1 Size: 476b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHitbox_SetSphereRadius(int objPtr, s16 radius)
 {
     ObjAnimComponent* obj;
@@ -324,19 +282,6 @@ void ObjHitbox_SetSphereRadius(int objPtr, s16 radius)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitbox_SetCapsuleBounds
- * EN v1.0 Address: 0x80035B50
- * EN v1.0 Size: 604b
- * EN v1.1 Address: 0x80035C48
- * EN v1.1 Size: 604b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHitbox_SetCapsuleBounds(int objPtr, undefined2 radius, short verticalMin, short verticalMax)
 {
     ObjAnimComponent* obj;
@@ -425,19 +370,6 @@ void ObjHitbox_SetCapsuleBounds(int objPtr, undefined2 radius, short verticalMin
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_ClearHitVolumes
- * EN v1.0 Address: 0x80035DAC
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x80035EA4
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_ClearHitVolumes(int objPtr)
 {
     ObjHitsPriorityState* hitState;
@@ -450,19 +382,6 @@ void ObjHits_ClearHitVolumes(int objPtr)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SetHitVolumeMasks
- * EN v1.0 Address: 0x80035DC8
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80035EC0
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_SetHitVolumeMasks(int objPtr, int hitVolume, int hitType, int sourceMask)
 {
     ObjHitsPriorityState* hitState;
@@ -479,19 +398,6 @@ void ObjHits_SetHitVolumeMasks(int objPtr, int hitVolume, int hitType, int sourc
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SetHitVolumeSlot
- * EN v1.0 Address: 0x80035DF4
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x80035EEC
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot)
 {
     int hitMask;
@@ -514,19 +420,6 @@ void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int source
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_ClearSourceMask
- * EN v1.0 Address: 0x80035E30
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x80035F28
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_ClearSourceMask(int objPtr, int sourceMask)
 {
     ObjHitsPriorityState* hitState;
@@ -536,19 +429,6 @@ void ObjHits_ClearSourceMask(int objPtr, int sourceMask)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SetSourceMask
- * EN v1.0 Address: 0x80035E48
- * EN v1.0 Size: 20b
- * EN v1.1 Address: 0x80035F40
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_SetSourceMask(int objPtr, u8 sourceMask)
 {
     ObjHitsPriorityState* hitState;
@@ -558,19 +438,6 @@ void ObjHits_SetSourceMask(int objPtr, u8 sourceMask)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_ClearFlags
- * EN v1.0 Address: 0x80035E5C
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x80035F54
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_ClearFlags(int objPtr, int flags)
 {
     ObjHitsPriorityState* hitState;
@@ -580,19 +447,6 @@ void ObjHits_ClearFlags(int objPtr, int flags)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SetFlags
- * EN v1.0 Address: 0x80035E74
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x80035F6C
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_SetFlags(int objPtr, int flags)
 {
     ObjHitsPriorityState* hitState;
@@ -602,19 +456,6 @@ void ObjHits_SetFlags(int objPtr, int flags)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_MarkObjectPositionDirty
- * EN v1.0 Address: 0x80035E8C
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x80035F84
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_MarkObjectPositionDirty(int objPtr)
 {
     ObjHitsPriorityState* hitState;
@@ -624,19 +465,6 @@ void ObjHits_MarkObjectPositionDirty(int objPtr)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SyncObjectPositionIfDirty
- * EN v1.0 Address: 0x80035EA4
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x80035F9C
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
 {
     ObjAnimComponent* obj;
@@ -664,19 +492,6 @@ void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_DisableObject
- * EN v1.0 Address: 0x80035F00
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x80035FF8
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_DisableObject(u32 objPtr)
 {
     ObjHitsPriorityState* hitState;
@@ -690,19 +505,6 @@ void ObjHits_DisableObject(u32 objPtr)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_EnableObject
- * EN v1.0 Address: 0x80035F20
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x80036018
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_EnableObject(u32 objPtr)
 {
     ObjAnimComponent* obj;
@@ -730,38 +532,12 @@ void ObjHits_EnableObject(u32 objPtr)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_IsObjectEnabled
- * EN v1.0 Address: 0x80035F7C
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80036074
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 ushort ObjHits_IsObjectEnabled(int objPtr)
 {
     return ((ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState)->flags &
         OBJHITS_PRIORITY_STATE_ENABLED;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SyncObjectPosition
- * EN v1.0 Address: 0x80035F8C
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x80036084
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_SyncObjectPosition(u32 objPtr)
 {
     ObjAnimComponent* obj;
@@ -782,19 +558,6 @@ void ObjHits_SyncObjectPosition(u32 objPtr)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_AllocObjectState
- * EN v1.0 Address: 0x80035FCC
- * EN v1.0 Size: 120b
- * EN v1.1 Address: 0x800360C4
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_AllocObjectState(int objPtr, uint arena)
 {
     uint stateArena;
@@ -812,19 +575,6 @@ int ObjHits_AllocObjectState(int objPtr, uint arena)
     return stateArena + 0xb8;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_RefreshObjectState
- * EN v1.0 Address: 0x80036044
- * EN v1.0 Size: 1036b
- * EN v1.1 Address: 0x8003613C
- * EN v1.1 Size: 1036b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_RefreshObjectState(int objPtr)
 {
     ObjAnimComponent* obj;
@@ -941,19 +691,6 @@ void ObjHits_RefreshObjectState(int objPtr)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_RecordObjectHit
- * EN v1.0 Address: 0x80036450
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x80036548
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex)
 {
     ObjAnimComponent* sourceObj;
@@ -1009,19 +746,6 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_RecordPositionHit
- * EN v1.0 Address: 0x800365B8
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x800366B0
- * EN v1.1 Size: 336b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, int hitObj, char priority,
                               u8 hitVolume, u8 sphereIndex)
 {
@@ -1078,19 +802,6 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_AddContactObject
- * EN v1.0 Address: 0x80036708
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x80036800
- * EN v1.1 Size: 104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_AddContactObject(int obj, int contactObj)
 {
     int contactObjectIndex;
@@ -1130,19 +841,6 @@ void ObjHits_AddContactObject(int obj, int contactObj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_GetPriorityHitWithPosition
- * EN v1.0 Address: 0x80036770
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x80036868
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSphereIndex,
                                        uint* outHitVolume, float* outHitPosX, float* outHitPosY, float* outHitPosZ)
@@ -1200,19 +898,6 @@ int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSpher
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: ObjHits_GetPriorityHit
- * EN v1.0 Address: 0x8003687C
- * EN v1.0 Size: 200b
- * EN v1.1 Address: 0x80036974
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, uint* outHitVolume)
 {
@@ -1263,19 +948,6 @@ int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, uint
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: ObjHitReact_UpdateResetObjects
- * EN v1.0 Address: 0x80036944
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x80036A3C
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHitReact_UpdateResetObjects(void)
 {
     ObjAnimComponent* obj;
@@ -1302,19 +974,6 @@ void ObjHitReact_UpdateResetObjects(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_ResetWorkBuffers
- * EN v1.0 Address: 0x800369F0
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x80036AE8
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_ResetWorkBuffers(void)
 {
     int slotIndex;
@@ -1326,38 +985,12 @@ void ObjHits_ResetWorkBuffers(void)
     gObjHitReactResetObjectCount = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitReact_GetResetObjects
- * EN v1.0 Address: 0x80036AFC
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80036BF4
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 ObjAnimComponent** ObjHitReact_GetResetObjects(int* outObjectCount)
 {
     *outObjectCount = gObjHitReactResetObjectCount;
     return gObjHitReactResetObjects;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_InitWorkBuffers
- * EN v1.0 Address: 0x80036B0C
- * EN v1.0 Size: 256b
- * EN v1.1 Address: 0x80036C04
- * EN v1.1 Size: 256b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_InitWorkBuffers(void)
 {
     int hitVolumeIndex;
@@ -1381,19 +1014,6 @@ void ObjHits_InitWorkBuffers(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_ContainsObject
- * EN v1.0 Address: 0x80036C0C
- * EN v1.0 Size: 116b
- * EN v1.1 Address: 0x80036D04
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint ObjGroup_ContainsObject(uint obj, int group)
 {
     uint* entry;
@@ -1418,19 +1038,6 @@ uint ObjGroup_ContainsObject(uint obj, int group)
     return (uint)(halfDiff - limitXorIndex) >> 0x1f;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_FindNearestObjectToPoint
- * EN v1.0 Address: 0x80036C80
- * EN v1.0 Size: 224b
- * EN v1.1 Address: 0x80036D78
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistance)
 {
     uint nearest;
@@ -1470,19 +1077,6 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     return nearest;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_FindNearestObjectForObject
- * EN v1.0 Address: 0x80036D60
- * EN v1.0 Size: 248b
- * EN v1.1 Address: 0x80036E58
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
 {
     uint nearest;
@@ -1529,19 +1123,6 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
     return nearest;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_FindNearestObject
- * EN v1.0 Address: 0x80036E58
- * EN v1.0 Size: 248b
- * EN v1.1 Address: 0x80036F50
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
 {
     uint nearest;
@@ -1588,19 +1169,6 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     return nearest;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_GetObjects
- * EN v1.0 Address: 0x80036F50
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x80037048
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint* ObjGroup_GetObjects(int group, int* countOut)
 {
     if ((group < 0) || (group >= OBJGROUP_COUNT))
@@ -1612,19 +1180,6 @@ uint* ObjGroup_GetObjects(int group, int* countOut)
     return (uint*)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_RemoveObject
- * EN v1.0 Address: 0x80036FA4
- * EN v1.0 Size: 496b
- * EN v1.1 Address: 0x8003709C
- * EN v1.1 Size: 496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjGroup_RemoveObject(uint obj, int group)
 {
     u8* offset;
@@ -1669,19 +1224,6 @@ void ObjGroup_RemoveObject(uint obj, int group)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_GetObjectGroup
- * EN v1.0 Address: 0x80037194
- * EN v1.0 Size: 108b
- * EN v1.1 Address: 0x8003728C
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjGroup_GetObjectGroup(uint obj)
 {
     int group;
@@ -1704,19 +1246,6 @@ int ObjGroup_GetObjectGroup(uint obj)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_AddObject
- * EN v1.0 Address: 0x80037200
- * EN v1.0 Size: 588b
- * EN v1.1 Address: 0x800372F8
- * EN v1.1 Size: 588b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjGroup_AddObject(uint obj, int group)
 {
     u8* offset;
@@ -1771,19 +1300,6 @@ void ObjGroup_AddObject(uint obj, int group)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ObjGroup_ClearAll
- * EN v1.0 Address: 0x8003744C
- * EN v1.0 Size: 56b
- * EN v1.1 Address: 0x80037544
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void* memset(void* dst, int val, u32 n);
 
 void ObjGroup_ClearAll(void)
@@ -1793,19 +1309,6 @@ void ObjGroup_ClearAll(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjMsg_Peek
- * EN v1.0 Address: 0x80037484
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x8003757C
- * EN v1.1 Size: 104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 ObjMsg_Peek(void* obj, uint* outMessage, uint* outSender, uint* outParam)
 {
     ObjMsgQueue* queue;
@@ -1834,19 +1337,6 @@ undefined4 ObjMsg_Peek(void* obj, uint* outMessage, uint* outSender, uint* outPa
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjMsg_Pop
- * EN v1.0 Address: 0x800374EC
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x800375E4
- * EN v1.1 Size: 176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 ObjMsg_Pop(void* obj, uint* outMessage, uint* outSender, uint* outParam)
 {
     ObjMsgQueue* queue;
@@ -1885,19 +1375,6 @@ undefined4 ObjMsg_Pop(void* obj, uint* outMessage, uint* outSender, uint* outPar
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjMsg_SendToNearbyObjects
- * EN v1.0 Address: 0x8003759C
- * EN v1.0 Size: 316b
- * EN v1.1 Address: 0x80037694
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* sender, uint message, uint param)
 {
     int* objects;
@@ -1942,19 +1419,6 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjMsg_SendToObjects
- * EN v1.0 Address: 0x800376D8
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x800377D0
- * EN v1.1 Size: 492b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjMsg_SendToObjects(int targetId, uint flags, void* sender, uint message, uint param)
 {
     int* objects;
@@ -2031,19 +1495,6 @@ void ObjMsg_SendToObjects(int targetId, uint flags, void* sender, uint message, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjMsg_SendToObject
- * EN v1.0 Address: 0x800378C4
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x800379BC
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint ObjMsg_SendToObject(void* obj, uint message, void* sender, uint param)
 {
     uint count;
@@ -2078,19 +1529,6 @@ uint ObjMsg_SendToObject(void* obj, uint message, void* sender, uint param)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjMsg_AllocQueue
- * EN v1.0 Address: 0x80037964
- * EN v1.0 Size: 120b
- * EN v1.1 Address: 0x80037A5C
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjMsg_AllocQueue(void* obj, int capacity)
 {
     int queueBytes;
@@ -2108,19 +1546,6 @@ void ObjMsg_AllocQueue(void* obj, int capacity)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: Obj_IsObjectAlive
- * EN v1.0 Address: 0x800379DC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80037AD4
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 Obj_IsObjectAlive(u32 obj)
 {
     undefined4 alive;
@@ -2133,19 +1558,6 @@ undefined4 Obj_IsObjectAlive(u32 obj)
     return alive;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjTrigger_UpdateIdBlockFlag
- * EN v1.0 Address: 0x80037A04
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x80037AFC
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 bool ObjTrigger_UpdateIdBlockFlag(int obj)
 {
     int val;
@@ -2164,19 +1576,6 @@ bool ObjTrigger_UpdateIdBlockFlag(int obj)
     return true;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_PollPriorityHitWithCooldown
- * EN v1.0 Address: 0x80037A68
- * EN v1.0 Size: 216b
- * EN v1.1 Address: 0x80037B60
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_PollPriorityHitWithCooldown(int obj, float* cooldown, int* outHitObject, float* outHitPos)
 {
     int collisionType;
@@ -2206,19 +1605,6 @@ int ObjHits_PollPriorityHitWithCooldown(int obj, float* cooldown, int* outHitObj
     return collisionType;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_PollPriorityHitEffectWithCooldown
- * EN v1.0 Address: 0x80037B40
- * EN v1.0 Size: 368b
- * EN v1.1 Address: 0x80037C38
- * EN v1.1 Size: 368b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colorR, uint colorG,
                                               uint colorB, uint sfxId, float* cooldown)
 {
@@ -2262,19 +1648,6 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colo
     return collisionType;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjLink_DetachChild
- * EN v1.0 Address: 0x80037CB0
- * EN v1.0 Size: 124b
- * EN v1.1 Address: 0x80037DA8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjLink_DetachChild(int obj, int child)
 {
     int q;
@@ -2304,19 +1677,6 @@ void ObjLink_DetachChild(int obj, int child)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjLink_AttachChild
- * EN v1.0 Address: 0x80037D2C
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80037E24
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjLink_AttachChild(int parent, int child, ushort linkMode)
 {
     int childIndex;
@@ -2336,19 +1696,6 @@ void ObjLink_AttachChild(int parent, int child, ushort linkMode)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjContact_DispatchCallbacks
- * EN v1.0 Address: 0x80037D74
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x80037E6C
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjContact_DispatchCallbacks(int objA, int objB)
 {
     int objARefCount;
@@ -2377,19 +1724,6 @@ void ObjContact_DispatchCallbacks(int objA, int objB)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjContact_RemoveObjectCallbacks
- * EN v1.0 Address: 0x80037E44
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x80037F3C
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjContact_RemoveObjectCallbacks(int obj)
 {
     int count;
@@ -2416,19 +1750,6 @@ void ObjContact_RemoveObjectCallbacks(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjContact_AddCallback
- * EN v1.0 Address: 0x80037EF0
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x80037FE8
- * EN v1.1 Size: 180b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
 {
     int count;
@@ -2465,19 +1786,6 @@ undefined4 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback call
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjTrigger_IsSetById
- * EN v1.0 Address: 0x80037FA4
- * EN v1.0 Size: 128b
- * EN v1.1 Address: 0x8003809C
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 ObjTrigger_IsSetById(int obj, short eventId)
 {
     int val;
@@ -2503,19 +1811,6 @@ undefined4 ObjTrigger_IsSetById(int obj, short eventId)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjTrigger_IsSet
- * EN v1.0 Address: 0x80038024
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x8003811C
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 ObjTrigger_IsSet(int obj)
 {
     uint flags;
@@ -2550,19 +1845,6 @@ undefined4 ObjTrigger_IsSet(int obj)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjList_FindNearestObjectByDefNo
- * EN v1.0 Address: 0x800380E0
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x800381D8
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
 {
     int startIndex;
@@ -2615,19 +1897,6 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     return foundObj;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjList_ContainsObject
- * EN v1.0 Address: 0x80038208
- * EN v1.0 Size: 120b
- * EN v1.1 Address: 0x80038300
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 ObjList_ContainsObject(int obj)
 {
     uint* entry;
@@ -2648,19 +1917,6 @@ undefined4 ObjList_ContainsObject(int obj)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjPath_GetPointWorldPositionArray
- * EN v1.0 Address: 0x80038280
- * EN v1.0 Size: 112b
- * EN v1.1 Address: 0x80038378
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, float* positions)
 {
     float* position;
@@ -2676,19 +1932,6 @@ void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, floa
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ObjPath_GetPointLocalPosition
- * EN v1.0 Address: 0x800382F0
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x800383E8
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjPath_GetPointLocalPosition(int obj, int pointIndex, float* xOut, float* yOut,
                                    float* zOut)
 {
@@ -2701,19 +1944,6 @@ void ObjPath_GetPointLocalPosition(int obj, int pointIndex, float* xOut, float* 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjPath_GetPointLocalMtx
- * EN v1.0 Address: 0x80038330
- * EN v1.0 Size: 112b
- * EN v1.1 Address: 0x80038428
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjPath_GetPointLocalMtx(int obj, int pointIndex, float* mtxOut)
 {
     ObjPathPoint* pathPoint;
@@ -2733,19 +1963,6 @@ void ObjPath_GetPointLocalMtx(int obj, int pointIndex, float* mtxOut)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjPath_GetPointModelMtx
- * EN v1.0 Address: 0x800383A0
- * EN v1.0 Size: 140b
- * EN v1.1 Address: 0x80038498
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjPath_GetPointModelMtx(int obj, int pointIndex)
 {
     int* model;
@@ -2768,19 +1985,6 @@ void ObjPath_GetPointModelMtx(int obj, int pointIndex)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjPath_GetPointWorldPosition
- * EN v1.0 Address: 0x8003842C
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x80038524
- * EN v1.1 Size: 444b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                    int useInputPosition)
 {
@@ -2862,19 +2066,6 @@ void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* 
     }
 }
 
-/*
- * --INFO--
- *
- * Function: Obj_GetYawDeltaToObject
- * EN v1.0 Address: 0x800385E8
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x800386E0
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int Obj_GetYawDeltaToObject(ushort* obj, int target, float* distOut)
 {
     int yawDelta;
@@ -2900,19 +2091,6 @@ int Obj_GetYawDeltaToObject(ushort* obj, int target, float* distOut)
     return (int)(short)yawDelta;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitRegion_FindContainingId
- * EN v1.0 Address: 0x800386BC
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x800387B4
- * EN v1.1 Size: 716b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
 {
     ObjLibRegionList** lists;
@@ -2985,19 +2163,6 @@ uint ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
     return (uint)hitId & 0xffff;
 }
 
-/*
- * --INFO--
- *
- * Function: playerEyeAnimFn_80038988
- * EN v1.0 Address: 0x80038988
- * EN v1.0 Size: 1428b
- * EN v1.1 Address: 0x80038A80
- * EN v1.1 Size: 1428b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct PlayerBlinkState
 {
     u8 pad[0x2b];
@@ -3181,7 +2346,6 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, uint flags)
     }
     *(s16*)(joint + 2) = -rotation;
 }
-
 
 typedef struct ObjLibFlagByte
 {

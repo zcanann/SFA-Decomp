@@ -3,34 +3,6 @@
 #include "main/game_object.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
 
-
-/*
- * --INFO--
- *
- * Function: chuka_init
- * EN v1.0 Address: 0x8020637C
- * EN v1.0 Size: 240b
- * EN v1.1 Address: 0x80206444
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfpfloorbar_free
- * EN v1.0 Address: 0x80206480
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80206590
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfpfloorbar_free(int* obj)
 {
     DfpFloorbarState* state;
@@ -47,47 +19,6 @@ int dfpfloorbar_SeqFn(void) { return 0; }
 /* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
 int dfpfloorbar_getObjectTypeId(void) { return 0; }
 
-/*
- * --INFO--
- *
- * Function: chuka_release
- * EN v1.0 Address: 0x8020646C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: chuka_initialise
- * EN v1.0 Address: 0x80206470
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfpfloorbar_getExtraSize
- * EN v1.0 Address: 0x8020647C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfpfloorbar_getExtraSize(void)
 {
     return 0xc;
@@ -136,7 +67,6 @@ typedef struct DfpfloorbarPlacement
     f32 unkC;
 } DfpfloorbarPlacement;
 
-
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern u8* Obj_GetPlayerObject(void);
@@ -153,19 +83,6 @@ extern f32 lbl_803E6410;
 extern f32 lbl_803E6414;
 extern f32 lbl_803E642C;
 
-/*
- * --INFO--
- *
- * Function: dfpfloorbar_update
- * EN v1.0 Address: 0x8020652C
- * EN v1.0 Size: 792b
- * EN v1.1 Address: 0x802065F0
- * EN v1.1 Size: 964b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfpfloorbar_update(int obj)
 {
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -297,30 +214,10 @@ void dfpfloorbar_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dfpfloorbar_release
- * EN v1.0 Address: 0x80206928
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfpfloorbar_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dfpfloorbar_init
- * EN v1.0 Address: 0x80206844
- * EN v1.0 Size: 228b
- */
 void dfpfloorbar_init(int obj, int params)
 {
     DfpFloorbarState* state = ((GameObject*)obj)->extra;

@@ -14,34 +14,8 @@
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();
 
-/*
- * --INFO--
- *
- * Function: gameTextSetWindow
- * EN v1.0 Address: 0x80017434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001746C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* moved below GameTextSlot/global declarations */
 
-/*
- * --INFO--
- *
- * Function: FUN_80017460
- * EN v1.0 Address: 0x80017460
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800191FC
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -51,19 +25,6 @@ FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017468
- * EN v1.0 Address: 0x80017468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001947C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -73,40 +34,10 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textRenderStr
- * EN v1.0 Address: 0x800174D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001AE18
- * EN v1.1 Size: 1760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern f32 timeDelta;
-
 
 void* gameTextGetStr(int textId);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80017500
- * EN v1.0 Address: 0x80017500
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001BD8C
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -114,19 +45,6 @@ FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8001786c
- * EN v1.0 Address: 0x8001786C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80024F40
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -135,19 +53,6 @@ FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017998
- * EN v1.0 Address: 0x80017998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80029260
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined*
 FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -174,10 +79,8 @@ int return0_8002969C(void);
 
 /* ObjModel/model-file accessors. */
 
-
 extern void* gBoneParticleEffectInterface;
 extern u8 framesThisStep;
-
 
 /* Global game-state / text accessors. */
 extern u8 gameState;
@@ -244,22 +147,18 @@ s16 getScreenBlankFrameCount(void)
     return screenBlankFrameCount;
 }
 
-
 void crash(void)
 {
     *(u8*)0 = 0;
 }
 
-
 /* Simple field/global accessors. */
 extern int lbl_803DCAE8[2];
 extern u8 lbl_803DCA48;
 
-
 void gameTextSetDrawFunc(void* fn);
 
 extern void* memset(void* dst, int val, int n);
-
 
 u8 getButtonObjects(void** p)
 {
@@ -267,10 +166,8 @@ u8 getButtonObjects(void** p)
     return lbl_803DCA48;
 }
 
-
 extern u16 lbl_803DCA42;
 extern u8 lbl_803DCAF0;
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -285,7 +182,6 @@ void fn_8001FEA8(void)
     lbl_803DCA42++;
     lbl_803DCAF0 = 0xc9;
 }
-
 
 void mainLoopDoGameText(void);
 
@@ -311,9 +207,7 @@ int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-
 void* getCache(void);
-
 
 extern void Sfx_SetObjectSoundsPaused(s32 paused);
 extern void gameTextLoadDir(int dirId);
@@ -328,9 +222,7 @@ void cutsceneExit(void)
 
 void gameTextInit(void);
 
-
 void* Obj_GetPlayerObject(void);
-
 
 extern void mapReloadWithFadeout(void);
 extern void* loadAsset(void* req);
@@ -399,7 +291,6 @@ void* loadAsset(void* reqVoid)
     }
 }
 
-
 #pragma scheduling off
 #pragma peephole off
 void mapReload(void)
@@ -407,7 +298,6 @@ void mapReload(void)
     mapReloadWithFadeout();
     lbl_803DCA39 = 1;
 }
-
 
 #pragma dont_inline on
 void* loadAssetFileById(int id, int arg)
@@ -428,7 +318,6 @@ void* loadTextureFile(int id, int arg)
     return loadAsset(&lbl_8033BF88);
 }
 
-
 void gameTextLoadDir(int dirId);
 
 void* getTabEntry(void* dst, int fileId, int offset, int size)
@@ -442,7 +331,6 @@ void* getTabEntry(void* dst, int fileId, int offset, int size)
     return loadAsset(&lbl_8033BF88);
 }
 
-
 typedef f32 Mtx[3][4];
 extern void cutsceneEnterExit(int a, int b);
 extern u32 GameBit_Get(int eventId);
@@ -453,7 +341,6 @@ void cutsceneFadeInOut(int a)
 {
     cutsceneEnterExit(a, 1);
 }
-
 
 int gameBitDecrement(int bit)
 {
@@ -467,7 +354,6 @@ int gameBitDecrement(int bit)
     return 0;
 }
 
-
 extern void OSReport(char* fmt, ...);
 extern void waitNextFrame(void);
 extern void GXFlush_(int a, int b);
@@ -478,10 +364,8 @@ extern void* lbl_803DCAFC;
 
 void mmInit(void);
 
-
 extern void* memcpy(void* dst, const void* src, int n);
 extern void LCEnable(void);
-
 
 void copyToCache(void* dst, void* src, u32 count);
 
@@ -532,7 +416,6 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 
 
 void ObjModel_InitRenderBuffers(void);
 
-
 #pragma dont_inline on
 void* animationLoad(int id, s16 a, s16 b, int e, int f)
 {
@@ -546,12 +429,9 @@ void* animationLoad(int id, s16 a, s16 b, int e, int f)
     return loadAsset(&lbl_8033BF88);
 }
 
-
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
-
 void gameTextInitFn_8001bd14(void);
-
 
 void Obj_ApplyPendingParentLinks(void);
 
@@ -726,12 +606,9 @@ int gameBitIncrement(int bit)
     return val;
 }
 
-
 void Obj_FlushDeferredFreeList(void);
 
-
 void ObjModel_InitResourceCaches(void);
-
 
 extern void mapSetup();
 extern void Music_Trigger(int triggerId, int mode);
@@ -745,7 +622,6 @@ extern int lbl_803DCAD4;
 extern u8 lbl_803DCA44;
 extern f32 lbl_803DE7B4;
 extern f32 lbl_803DB420;
-
 
 void mapLoadByCoords(int arg)
 {
@@ -762,14 +638,11 @@ void mapLoadByCoords(int arg)
     lbl_803DB420 = lbl_803DE7B4;
 }
 
-
 void gameTextInitFn_8001a234(void);
 
 void gameTextRun(void);
 
-
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
-
 
 extern void OSInit(void);
 extern void DVDInit(void);
@@ -1038,14 +911,11 @@ void init(void)
     OSReport(sMainFinishedInitMessage);
 }
 
-
 void Obj_UpdateAllObjects(u8 flags);
 
 extern void playerUpdateFn_8005649c(void);
 
-
 void Obj_InitObjectSystem(void);
-
 
 extern void uiDll_runFrameStartAndLoadNext(void);
 extern u32 getButtonsJustPressed(int pad);
@@ -1311,13 +1181,11 @@ void doQueuedLoads(void)
     }
 }
 
-
 void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 extern void gameTextShowStr(int str, int a, int b, int c);
 
 void subtitleUpdateAndDraw(int a);
-
 
 extern int saveGameGetStatus(void);
 extern void gameTextShow(int id);
@@ -1407,7 +1275,6 @@ void cardShowMessage(void)
     }
 }
 
-
 extern void stopRumble2(void);
 
 void cutsceneEnterExit(int entering, int affectSounds)
@@ -1440,7 +1307,6 @@ void cutsceneEnterExit(int entering, int affectSounds)
     }
 }
 
-
 #pragma peephole on
 void removeButtonObject(u32 h)
 {
@@ -1468,7 +1334,6 @@ void removeButtonObject(u32 h)
     }
     lbl_803DCA48--;
 }
-
 
 extern u8* gameTextGetBox(int boxId);
 extern int padGetStickX(int pad);
@@ -1762,6 +1627,3 @@ void checkReset(void)
         break;
     }
 }
-
-
-

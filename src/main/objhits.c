@@ -6,7 +6,6 @@
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 
-
 extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj);
 extern uint getAngle(f32 a, f32 b);
@@ -61,19 +60,6 @@ static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
     return (ObjHitsModelBank*)objAnim->banks[objAnim->bankIndex];
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_CollectSkeletonHitsXZ
- * EN v1.0 Address: 0x80030688
- * EN v1.0 Size: 1124b
- * EN v1.1 Address: 0x80030780
- * EN v1.1 Size: 1124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData,
                                   int* model, ObjHitsSkeletonHit* hits,
                                   ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin, f32* outAccum)
@@ -233,19 +219,6 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
     return cur != hits;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_CollectSkeletonHits3D
- * EN v1.0 Address: 0x80030AEC
- * EN v1.0 Size: 988b
- * EN v1.1 Address: 0x80030BE4
- * EN v1.1 Size: 988b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData,
                                   int* model, ObjHitsSkeletonHit* hits,
                                   ObjHitsSkeletonHit** outBest, f32* outAccum)
@@ -394,19 +367,6 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
     return cur != hits;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_CalcSkeletonResponseXZ
- * EN v1.0 Address: 0x80030EC8
- * EN v1.0 Size: 1248b
- * EN v1.1 Address: 0x80030FC0
- * EN v1.1 Size: 1248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeletonHit* hits,
                                    ObjHitsSkeletonJointData* jointPoints, int jointModel,
                                    ObjHitsSkeletonHit* bestHit, f32 t, f32 axial, f32* out)
@@ -539,19 +499,6 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeleto
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_CalcSkeletonResponse3D
- * EN v1.0 Address: 0x800313A8
- * EN v1.0 Size: 1196b
- * EN v1.1 Address: 0x800314A0
- * EN v1.1 Size: 1196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, int obj, ObjHitsSkeletonHit* hits,
                                    ObjHitsSkeletonJointData* jointPoints, int jointModel,
                                    ObjHitsSkeletonHit* bestHit, f32 t, f32 axial, f32* out)
@@ -680,19 +627,6 @@ int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, int obj, ObjHitsSkeleto
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_ProjectPointToTaperedCapsuleXZ
- * EN v1.0 Address: 0x80031854
- * EN v1.0 Size: 732b
- * EN v1.1 Address: 0x8003194C
- * EN v1.1 Size: 732b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, float axial,
                                               float* base, float* tip, float baseRadius,
                                               float tipRadius, float length, float* out)
@@ -754,19 +688,6 @@ float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, f
     return out;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_ProjectPointToTaperedCapsule3D
- * EN v1.0 Address: 0x80031B30
- * EN v1.0 Size: 764b
- * EN v1.1 Address: 0x80031C28
- * EN v1.1 Size: 764b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 float* ObjHits_ProjectPointToTaperedCapsule3D(float* point, float pointRadius, float axial,
                                               float* base, float* tip, float baseRadius,
                                               float tipRadius, float length, float* out)
@@ -828,19 +749,6 @@ float* ObjHits_ProjectPointToTaperedCapsule3D(float* point, float pointRadius, f
     return out;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_CalcTaperedCapsuleNormal
- * EN v1.0 Address: 0x80031E2C
- * EN v1.0 Size: 612b
- * EN v1.1 Address: 0x80031F24
- * EN v1.1 Size: 612b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, float* tip,
                                         float baseRadius, float tipRadius, float length,
                                         float* out)
@@ -909,19 +817,6 @@ float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, 
     return out;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_TestTaperedCapsuleXZ
- * EN v1.0 Address: 0x80032090
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x80032188
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_TestTaperedCapsuleXZ(float* point, float pointRadius, float baseRadius, float tipRadius,
                                  float* base, float* axis, float* tip, float length,
                                  float* axial, float* dist2, float* sumR)
@@ -959,19 +854,6 @@ int ObjHits_TestTaperedCapsuleXZ(float* point, float pointRadius, float baseRadi
     return *dist2 <= radiusSum * radiusSum;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_TestTaperedCapsule3D
- * EN v1.0 Address: 0x800321A4
- * EN v1.0 Size: 324b
- * EN v1.1 Address: 0x8003229C
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadius, float tipRadius,
                                  float* base, float* axis, float* tip, float length,
                                  float* axial, float* dist2, float* sumR)
@@ -1011,19 +893,6 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
     return *dist2 <= radiusSum * radiusSum;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_SortSweepEntries
- * EN v1.0 Address: 0x800322E8
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x800323E0
- * EN v1.1 Size: 232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
 {
@@ -1058,19 +927,6 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: ObjHits_TickPriorityHitCooldowns
- * EN v1.0 Address: 0x800323D0
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x800324C8
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_TickPriorityHitCooldowns(void)
 {
     int slotOffset;
@@ -1096,19 +952,6 @@ void ObjHits_TickPriorityHitCooldowns(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitbox_UpdateRotatedBounds
- * EN v1.0 Address: 0x80032410
- * EN v1.0 Size: 432b
- * EN v1.1 Address: 0x80032508
- * EN v1.1 Size: 432b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
 {
     typedef struct HitboxTransform
@@ -1188,19 +1031,6 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_CheckHitVolumes
- * EN v1.0 Address: 0x800325C0
- * EN v1.0 Size: 3592b
- * EN v1.1 Address: 0x800326B8
- * EN v1.1 Size: 3592b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB, uint mask,
                            uint volMask)
 {
@@ -1705,38 +1535,12 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: doNothing_800333C8
- * EN v1.0 Address: 0x800333C8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800334C0
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState, f32 dt)
 {
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: ObjHits_CheckObjectHitVolumes
- * EN v1.0 Address: 0x800333CC
- * EN v1.0 Size: 1392b
- * EN v1.1 Address: 0x800334C4
- * EN v1.1 Size: 1392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt)
 {
     ObjHitsPriorityState* stateA;
@@ -1887,20 +1691,6 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: ObjHits_RegisterActiveHitVolumeObject
- * EN v1.0 Address: 0x8003393C
- * EN v1.0 Size: 88b
- * EN v1.1 Address: 0x80033A34
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
     int index;
@@ -1920,19 +1710,6 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_ApplyPairResponse
- * EN v1.0 Address: 0x80033994
- * EN v1.0 Size: 1520b
- * EN v1.1 Address: 0x80033A8C
- * EN v1.1 Size: 1520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag)
 {
     ObjAnimComponent* animA;
@@ -2129,20 +1906,6 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: ObjHits_DetectObjectPair
- * EN v1.0 Address: 0x80033F84
- * EN v1.0 Size: 1232b
- * EN v1.1 Address: 0x8003407C
- * EN v1.1 Size: 1232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_DetectObjectPair(int objA, int objB)
 {
     extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume,
@@ -2319,20 +2082,6 @@ void ObjHits_DetectObjectPair(int objA, int objB)
 end:;
 }
 
-
-/*
- * --INFO--
- *
- * Function: ObjHits_CheckSkeletonPair
- * EN v1.0 Address: 0x80034454
- * EN v1.0 Size: 1116b
- * EN v1.1 Address: 0x8003454C
- * EN v1.1 Size: 1116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, void* scratchC,
                                void* scratchD, void* scratchE, int depth)
 {
@@ -2455,20 +2204,6 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: ObjHits_CheckTrackContact
- * EN v1.0 Address: 0x800348B0
- * EN v1.0 Size: 1068b
- * EN v1.1 Address: 0x800349A8
- * EN v1.1 Size: 1068b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_CheckTrackContact(int objA, int objB)
 {
     uint sphereIdx;
@@ -2646,19 +2381,6 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHits_Update
- * EN v1.0 Address: 0x80034CDC
- * EN v1.0 Size: 1736b
- * EN v1.1 Address: 0x80034DD4
- * EN v1.1 Size: 1736b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void ObjHits_Update(int objectCount)
 {
     u8 skeletonScratchB[1052];

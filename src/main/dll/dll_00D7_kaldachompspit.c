@@ -17,14 +17,6 @@ extern f32 lbl_803E3D78;
 extern f32 timeDelta;
 extern f32 lbl_803E30E0;
 
-/*
- * --INFO--
- *
- * Function: kaldachompme_setLinkedMouthMode
- * EN v1.0 Address: 0x80169360
- * EN v1.0 Size: 556b
- */
-
 int kaldachompme_getExtraSize(void);
 
 int kaldachompme_getObjectTypeId(void);
@@ -57,33 +49,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     kaldachompme_getExtraSize,
 };
 
-/*
- * --INFO--
- *
- * Function: FUN_801695e8
- * EN v1.0 Address: 0x801695E8
- * EN v1.0 Size: 548b
- * EN v1.1 Address: 0x8016980C
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016980c
- * EN v1.0 Address: 0x8016980C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80169A4C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
@@ -95,19 +60,6 @@ void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80169a44
- * EN v1.0 Address: 0x80169A44
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x80169B80
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -143,20 +95,6 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
     }
     return;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_80169c04
- * EN v1.0 Address: 0x80169C04
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80169CC8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
@@ -208,13 +146,6 @@ extern f32 lbl_803E30F8;
 extern f32 lbl_803E30FC;
 void kaldachompspit_burst(int obj);
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_update
- * EN v1.0 Address: 0x801698E8
- * EN v1.0 Size: 988b
- */
 void kaldachompspit_update(int obj)
 {
     extern int getTrickyObject(void); /* #57 */
@@ -330,13 +261,6 @@ void kaldachompspit_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_burst
- * EN v1.0 Address: 0x801696D4
- * EN v1.0 Size: 312b
- */
 void kaldachompspit_burst(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, u32 sfxId); /* #57 */
@@ -378,33 +302,6 @@ void kaldachompspit_burst(int obj)
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_render
- * EN v1.0 Address: 0x8016984C
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x80169CF8
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: kaldachompspit_init
- * EN v1.0 Address: 0x80169CC4
- * EN v1.0 Size: 552b
- * EN v1.1 Address: 0x8016A170
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void* objCreateLight(int obj, int kind);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -467,35 +364,6 @@ void kaldachompspit_init(int obj)
         modelLightStruct_startColorFade(*extra, 1, 3);
     }
 }
-
-
-/*
- * --INFO--
- *
- * Function: pollenfragment_init
- * EN v1.0 Address: 0x8016B0A4
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x8016ACA4
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016b228
- * EN v1.0 Address: 0x8016B228
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8016AE70
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_release(void)
@@ -651,4 +519,3 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-

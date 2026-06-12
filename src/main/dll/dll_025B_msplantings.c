@@ -7,13 +7,11 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 typedef struct MoonSeedPlantingSpotPlacement
 {
     u8 pad0[0xC - 0x0];
     f32 unkC;
 } MoonSeedPlantingSpotPlacement;
-
 
 typedef struct MoonSeedPlantingSpotState
 {
@@ -39,7 +37,6 @@ typedef struct MoonSeedPlantingSpotState
     s32 unk98;
     u8 pad9C[0xA0 - 0x9C];
 } MoonSeedPlantingSpotState;
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -67,19 +64,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -136,20 +120,6 @@ void FUN_801a8f88(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -197,10 +167,8 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void);
-
 
 void MoonSeedPlantingSpot_hitDetect(void)
 {
@@ -213,7 +181,6 @@ void MoonSeedPlantingSpot_release(void)
 void MoonSeedPlantingSpot_initialise(void)
 {
 }
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -294,7 +261,6 @@ extern void objRenderFn_8003b8f4(f32);
 void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 void ccgasvent_free(int x);
 
-
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int*)&((GameObject*)obj)->extra;
@@ -309,9 +275,7 @@ extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int id);
 
-
 extern f32 getXZDistance(f32 * a, f32 * b);
-
 
 extern int getTrickyObject(void);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
@@ -479,7 +443,6 @@ void MoonSeedPlantingSpot_update(int obj)
 
 extern int Obj_AllocObjectSetup(int size, int type);
 
-
 int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 {
     int* sub;
@@ -560,4 +523,3 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
 }
 
 extern void objSetSlot(void* obj, int slot);
-

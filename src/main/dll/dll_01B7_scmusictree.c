@@ -4,7 +4,6 @@
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
 
-
 typedef struct ScMusictreePlacement
 {
     u8 pad0[0x20 - 0x0];
@@ -13,9 +12,6 @@ typedef struct ScMusictreePlacement
     u8 unk22;
     u8 pad23[0x28 - 0x23];
 } ScMusictreePlacement;
-
-
-
 
 typedef struct ScMusictreeSpawnAmbientEffectPlacement
 {
@@ -31,106 +27,9 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
     u8 pad23[0x28 - 0x23];
 } ScMusictreeSpawnAmbientEffectPlacement;
 
-
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: sh_emptytumblew_init
- * EN v1.0 Address: 0x801DAFDC
- * EN v1.0 Size: 1440b
- * EN v1.1 Address: 0x801DB048
- * EN v1.1 Size: 1080b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801db580
- * EN v1.0 Address: 0x801DB580
- * EN v1.0 Size: 56b
- * EN v1.1 Address: 0x801DB594
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: sc_levelcontrol_processAnimEvents
- * EN v1.0 Address: 0x801DB670
- * EN v1.0 Size: 324b
- * EN v1.1 Address: 0x801DB688
- * EN v1.1 Size: 352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: sc_levelcontrol_setAnimEventState
- * EN v1.0 Address: 0x801DB7B4
- * EN v1.0 Size: 272b
- * EN v1.1 Address: 0x801DB7E8
- * EN v1.1 Size: 284b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801db8c4
- * EN v1.0 Address: 0x801DB8C4
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x801DB904
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801db924
- * EN v1.0 Address: 0x801DB924
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801DB964
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
 
 void sc_musictree_free(void)
 {
@@ -148,7 +47,6 @@ int sc_musictree_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
 
 extern void fn_8003B608(int a, int b, int c);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
@@ -194,17 +92,10 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     ((GameObject*)obj)->unkF8 = 1;
 }
 
-
-
 extern void GameBit_Set(int bit, int val);
 extern void Sfx_PlayFromObject(int a, int b);
 
-
-
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
-
-
-
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
@@ -303,8 +194,6 @@ extern u16 lbl_803DC060[4];
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-
-
 typedef struct ScMusictreeState
 {
     u8 pad0[0x30 - 0x0];
@@ -316,7 +205,6 @@ typedef struct ScMusictreeState
     u8 unk4C;
     u8 pad4D[0x50 - 0x4D];
 } ScMusictreeState;
-
 
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -330,8 +218,6 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, 
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void* vec);
 extern f32 sqrtf(f32 x);
-
-
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -351,9 +237,6 @@ extern f32 lbl_803E55B4;
 extern f32 lbl_803E55B8;
 extern f32 lbl_803E55BC;
 extern f32 lbl_803E55C0;
-
-
-
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
@@ -552,23 +435,3 @@ void sc_musictree_release(void)
 void sc_musictree_initialise(void)
 {
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

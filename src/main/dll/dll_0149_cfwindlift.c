@@ -53,34 +53,6 @@ extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;
 extern f32 lbl_803E4ECC;
 
-/*
- * --INFO--
- *
- * Function: FUN_8019b1d8
- * EN v1.0 Address: 0x8019B1D8
- * EN v1.0 Size: 260b
- * EN v1.1 Address: 0x8019B3B8
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8019b2e0
- * EN v1.0 Address: 0x8019B2E0
- * EN v1.0 Size: 680b
- * EN v1.1 Address: 0x8019B754
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
@@ -164,20 +136,6 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
     return uVar3;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019b650
- * EN v1.0 Address: 0x8019B650
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8019BA44
- * EN v1.1 Size: 3800b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019b650(undefined8 param_1, double param_2, double param_3, double param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9,
@@ -187,19 +145,6 @@ FUN_8019b650(undefined8 param_1, double param_2, double param_3, double param_4,
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8019b658
- * EN v1.0 Address: 0x8019B658
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x8019C91C
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -256,20 +201,6 @@ FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019c318
- * EN v1.0 Address: 0x8019C318
- * EN v1.0 Size: 848b
- * EN v1.1 Address: 0x8019DAF4
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -328,20 +259,6 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019d238
- * EN v1.0 Address: 0x8019D238
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x8019E970
- * EN v1.1 Size: 372b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
@@ -395,24 +312,9 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: babycloudrunner_getObjectTypeId
- * EN v1.0 Address: 0x8019EBBC
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x801A0A24
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void babycloudrunner_init_OLD_v1_1(int obj);
 
 extern uint GameBit_Get(int eventId);
-
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -450,36 +352,16 @@ typedef struct BabyCloudRunnerState
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019f1dc
- * EN v1.0 Address: 0x8019F1DC
- * EN v1.0 Size: 496b
- * EN v1.1 Address: 0x801A1190
- * EN v1.1 Size: 496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-
 extern void* Obj_GetPlayerObject(void);
-
 
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 timeDelta;
-
 
 void windlift_hitDetect(void)
 {
@@ -495,39 +377,32 @@ void windlift_initialise(void)
 
 void cfpowerbase_free(void);
 
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
-
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 /* Per-object extra state for the CloudRunner power base
  * (cfpowerbase_getExtraSize == 0x6). */
 
-
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
 /* Per-object extra state for the CloudRunner prison guard
  * (cfprisonguard_getExtraSize == 0x3c). */
-
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 /* Per-object extra state for the CloudRunner prison uncle
  * (cfprisonuncle_getExtraSize == 0xa8). */
 
-
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
 
-
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 /* spiritdoorspirit_getExtraSize == 0x1. */
-
 
 typedef struct WindliftPlacement
 {
@@ -542,7 +417,6 @@ typedef struct WindliftPlacement
     s16 unk22;
     u8 pad24[0x28 - 0x24];
 } WindliftPlacement;
-
 
 typedef struct WindliftObjectDef
 {
@@ -560,9 +434,7 @@ typedef struct WindliftObjectDef
     u8 pad24[0x28 - 0x24];
 } WindliftObjectDef;
 
-
 extern u8 framesThisStep;
-
 
 /* 8b "li r3, N; blr" returners. */
 int windlift_getExtraSize(void) { return 0x178; }
@@ -580,11 +452,7 @@ void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-
-
-
 /* chained byte bit-extract. */
-
 
 /* plain forwarder. */
 
@@ -594,8 +462,6 @@ extern f32 lbl_803E416C;
 extern f32 fn_80296214(void* p);
 /* ObjMsg_AllocQueue already declared as undefined */
 extern void Music_Trigger(int a, int b);
-
-
 
 #pragma scheduling off
 void windlift_free(int* obj)
@@ -609,9 +475,6 @@ void windlift_free(int* obj)
 }
 
 void cfguardian_free(int* obj, int p2);
-
-
-
 
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern u8 lbl_80322A48[];
@@ -714,7 +577,6 @@ void windlift_init(int* obj, u8* def)
 }
 
 extern f32 lbl_803E42E0;
-
 
 extern f32 Vec_xzDistance(void* a, void* b);
 extern void fn_80296220(int* rider, f32 v);
@@ -1098,4 +960,3 @@ void windlift_update(int* obj)
 }
 
 extern int fn_80080150(void* p);
-

@@ -28,14 +28,6 @@ extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern s16 lbl_803DBDE0[4];
 
-
-/*
- * --INFO--
- *
- * Function: staffactivated_updateLiftHeight
- * EN v1.0 Address: 0x801899B4
- * EN v1.0 Size: 560b
- */
 void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
 {
     u32 flags;
@@ -101,13 +93,6 @@ typedef struct PrisonGuardStateFlags
     u8 mirror : 1;
 } PrisonGuardStateFlags;
 
-/*
- * --INFO--
- *
- * Function: cfPrisonGuard_setGameBitMirror
- * EN v1.0 Address: 0x80189BE4
- * EN v1.0 Size: 116b
- */
 void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
 {
     register StaffActivatedSetup* setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
@@ -141,13 +126,6 @@ typedef struct PrisonGuardRotationWork
     f32 tz;
 } PrisonGuardRotationWork;
 
-/*
- * --INFO--
- *
- * Function: staffactivated_spawnMapEventDebris
- * EN v1.0 Address: 0x80189C68
- * EN v1.0 Size: 732b
- */
 void staffactivated_spawnMapEventDebris(int obj)
 {
     int i;
@@ -243,43 +221,6 @@ void staffactivated_spawnMapEventDebris(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80189cc4
- * EN v1.0 Address: 0x80189CC4
- * EN v1.0 Size: 328b
- * EN v1.1 Address: 0x80189DB0
- * EN v1.1 Size: 348b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018a0d0
- * EN v1.0 Address: 0x8018A0D0
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x8018A1B0
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: cfPrisonGuard_getPullRateMode
- * EN v1.0 Address: 0x80189F44
- * EN v1.0 Size: 24b
- */
 u32 cfPrisonGuard_getPullRateMode(int obj)
 {
     u32 v;

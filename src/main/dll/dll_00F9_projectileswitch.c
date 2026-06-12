@@ -5,20 +5,6 @@
 
 extern void GameBit_Set(int gameBit, int value);
 
-/*
- * --INFO--
- *
- * Function: sidekickball_init
- * EN v1.0 Address: 0x80179EB0
- * EN v1.0 Size: 1220b
- * EN v1.1 Address: 0x80179F40
- * EN v1.1 Size: 1204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 
@@ -120,13 +106,6 @@ extern f32 lbl_803E3708;
 extern f32 lbl_803E3718;
 extern f32 lbl_803E3728;
 
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_render
- * EN v1.0 Address: 0x8017A38C
- * EN v1.0 Size: 140b
- */
 void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
 {
     int state = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -141,13 +120,6 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_hitDetect
- * EN v1.0 Address: 0x8017A418
- * EN v1.0 Size: 460b
- */
 void ProjectileSwitch_hitDetect(int obj)
 {
     int state2;
@@ -222,13 +194,6 @@ void ProjectileSwitch_hitDetect(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_update
- * EN v1.0 Address: 0x8017A5E4
- * EN v1.0 Size: 280b
- */
 void ProjectileSwitch_update(int obj)
 {
     extern uint GameBit_Get(int eventId);
@@ -270,13 +235,6 @@ void ProjectileSwitch_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_init
- * EN v1.0 Address: 0x8017A6FC
- * EN v1.0 Size: 488b
- */
 void ProjectileSwitch_init(int obj, u8* initData)
 {
     extern uint GameBit_Get(int eventId);
@@ -363,26 +321,4 @@ void ProjectileSwitch_initialise(void)
 /* 8b "li r3, N; blr" returners. */
 int InvisibleHitSwitch_getExtraSize(void);
 
-/*
- * --INFO--
- *
- * Function: InvisibleHitSwitch_update
- * EN v1.0 Address: 0x8017A8F4
- * EN v1.0 Size: 556b
- */
-
 #include "main/game_object.h"
-
-/*
- * --INFO--
- *
- * Function: InvisibleHitSwitch_init
- * EN v1.0 Address: 0x8017AB20
- * EN v1.0 Size: 268b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */

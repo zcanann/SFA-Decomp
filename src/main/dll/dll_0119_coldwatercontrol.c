@@ -6,30 +6,6 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_RecordObjectHit();
@@ -49,50 +25,6 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80187664
- * EN v1.0 Address: 0x80187664
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x80187720
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: infopoint_hitDetect
- * EN v1.0 Address: 0x8018843C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801884A0
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80189054
- * EN v1.0 Address: 0x80189054
- * EN v1.0 Size: 2620b
- * EN v1.1 Address: 0x80189218
- * EN v1.1 Size: 1552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -366,28 +298,12 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 int infopoint_getExtraSize(void);
-
-
 
 extern f32 timeDelta;
 
@@ -395,13 +311,7 @@ extern f32 timeDelta;
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
-
-
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
 
@@ -464,39 +374,13 @@ void landed_arwing_free(int obj);
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 
-
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
 
-
 #pragma dont_inline on
 #pragma dont_inline reset
-
-
-
-
-
-
-
-
-
-
-

@@ -30,36 +30,10 @@ int projcore2_doUnsupported(void)
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
 
-/*
- * --INFO--
- *
- * Function: projcore2_release
- * EN v1.0 Address: 0x80100A18
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80100A18
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void projcore2_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: projcore2_initialise
- * EN v1.0 Address: 0x80100A1C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80100A1C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void projcore2_initialise(void)
 {
 }

@@ -1,28 +1,11 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E54C8;
-
-/*
- * --INFO--
- *
- * Function: sh_levelcontrol_update
- * EN v1.0 Address: 0x801D8D20
- * EN v1.0 Size: 2452b
- * EN v1.1 Address: 0x801D90F0
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void warpstonelift_free(void)
@@ -48,7 +31,6 @@ int sh_staff_getExtraSize(void);
 
 extern s32 lbl_803DC058[2];
 extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-
 
 void warpstonelift_init(int obj, s8* def)
 {

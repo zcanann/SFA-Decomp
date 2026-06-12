@@ -18,72 +18,20 @@ extern f32 lbl_803E6490;
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
 #define DFPTARGETBLOCK_POINT_STRIDE 0x0C
 
-/*
- * --INFO--
- *
- * Function: dfptargetblock_getExtraSize
- * EN v1.0 Address: 0x80208660
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8020874C
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfptargetblock_getExtraSize(void)
 {
     return 0x6c;
 }
 
-/*
- * --INFO--
- *
- * Function: dfptargetblock_getObjectTypeId
- * EN v1.0 Address: 0x80208668
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80208754
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfptargetblock_getObjectTypeId(void)
 {
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfptargetblock_free
- * EN v1.0 Address: 0x80208670
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8020875C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfptargetblock_free(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dfptargetblock_render
- * EN v1.0 Address: 0x80208674
- * EN v1.0 Size: 80b
- * EN v1.1 Address: 0x80208760
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DfpTargetBlockAudioState* state;
@@ -173,19 +121,6 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dfptargetblock_hitDetect
- * EN v1.0 Address: 0x802086C4
- * EN v1.0 Size: 1196b
- * EN v1.1 Address: 0x802086D0
- * EN v1.1 Size: 348b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 {
     DfpTargetBlockAudioState* state;
@@ -354,13 +289,6 @@ extern f32 lbl_803E64CC;
 extern f32 lbl_803E64D0;
 extern f32 lbl_803E64D4;
 
-/*
- * --INFO--
- *
- * Function: dfptargetblock_update
- * EN v1.0 Address: 0x80208B70
- * EN v1.0 Size: 524b
- */
 void dfptargetblock_update(DfpTargetBlockObject* obj)
 {
     u8 mode;
@@ -429,14 +357,6 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
     }
     return;
 }
-
-/*
- * --INFO--
- *
- * Function: dfptargetblock_init
- * EN v1.0 Address: 0x80208D7C
- * EN v1.0 Size: 600b
- */
 
 void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
 {
@@ -544,19 +464,6 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
 };
 
 /* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
-/*
- * --INFO--
- *
- * Function: dfptargetblock_resolveCollisionPoints
- * EN v1.0 Address: 0x80208508
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802085F4
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj,
                                            DfpTargetBlockCollisionPoints* collisionPoints)
 {

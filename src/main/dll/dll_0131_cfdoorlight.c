@@ -9,11 +9,9 @@ typedef struct CfDoorlightObjectDef
     u8 pad1E[0x20 - 0x1E];
 } CfDoorlightObjectDef;
 
-
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* objFindTexture(void* obj, int target, int param_3);
-
 
 typedef struct CfDoorLightState
 {
@@ -34,18 +32,7 @@ typedef struct CfDoorLightDef
     s16 triggerEvent;
 } CfDoorLightDef;
 
-
 /*
- * --INFO--
- *
- * Function: transporter_init
- * EN v1.0 Address: 0x801916A0
- * EN v1.0 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Recovered: large switch on params[20] (32-bit id) that sets bits in
  * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
  * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
@@ -53,45 +40,7 @@ typedef struct CfDoorLightDef
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 
-/*
- * --INFO--
- *
- * Function: FUN_801916e8
- * EN v1.0 Address: 0x801916E8
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80191BD4
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80191730
- * EN v1.0 Address: 0x80191730
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80191C1C
- * EN v1.1 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
 
 void cf_doorlight_free(void)
 {
@@ -120,10 +69,6 @@ int cf_doorlight_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
-
-
-
-
 
 void cf_doorlight_update(int obj)
 {

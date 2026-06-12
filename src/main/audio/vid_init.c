@@ -12,19 +12,6 @@ extern int vidCurrentId;
 extern int vidRoot;
 extern VoiceNode* vidFree;
 
-/*
- * --INFO--
- *
- * Function: vidInit
- * EN v1.0 Address: 0x80278F0C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80278F74
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void vidInit(void)
 {
     int i;

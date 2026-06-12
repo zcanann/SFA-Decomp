@@ -33,14 +33,6 @@ extern void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state);
 #define DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD 3
 #define DIMBOSSSPIT_RUMBLE_SFX 0x189
 
-
-/*
- * --INFO--
- *
- * Function: dimBossTonsil_newState_hitFightMain
- * EN v1.0 Address: 0x801BE19C
- * EN v1.0 Size: 688b
- */
 void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate,
                                          DIMbosstonsilState* state,
                                          DIMbosstonsilState* updateState)
@@ -131,4 +123,3 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
 
     *(u32*)&((GameObject*)obj)->pendingParentObj = state->savedObjFieldC0;
 }
-

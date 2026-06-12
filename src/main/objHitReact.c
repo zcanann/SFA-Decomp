@@ -13,13 +13,6 @@ extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-/*
- * --INFO--
- *
- * Function: ObjHitReact_Update
- * EN v1.0 Address: 0x800353A4
- * EN v1.0 Size: 652b
- */
 int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
                        u32 reactionState, float* reactionStepScale)
 {
@@ -112,13 +105,6 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
     return reactionState;
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitReact_ResetActiveObjects
- * EN v1.0 Address: 0x80035630
- * EN v1.0 Size: 192b
- */
 void ObjHitReact_ResetActiveObjects(int objectCount)
 {
     ObjHitReactState* hitState;
@@ -158,19 +144,6 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitbox_AllocRotatedBounds
- * EN v1.0 Address: 0x800356F0
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x800357E8
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
 {
     ObjHitboxTransformState* transformState;
@@ -188,19 +161,6 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
     return (u32)transformState + sizeof(ObjHitboxTransformState);
 }
 
-/*
- * --INFO--
- *
- * Function: ObjHitReact_LoadMoveEntries
- * EN v1.0 Address: 0x80035774
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x8003586C
- * EN v1.1 Size: 180b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType,
                                  ObjHitReactState* hitState, int moveId, int async)
@@ -244,19 +204,6 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: ObjHitReact_InitState
- * EN v1.0 Address: 0x80035828
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x80035920
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState,
                           u32 entryArena, ObjAnimComponent* objAnim)
 {

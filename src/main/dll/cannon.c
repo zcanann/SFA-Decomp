@@ -9,14 +9,12 @@ typedef struct TrickyFlameState
     u8 pad59[0x60 - 0x59];
 } TrickyFlameState;
 
-
 typedef struct TrickyGuardState
 {
     u8 pad0[0x58 - 0x0];
     u8 unk58;
     u8 pad59[0x60 - 0x59];
 } TrickyGuardState;
-
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
@@ -88,7 +86,6 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
         *(s8 *)((u8 *)(st) + 0xd) = -1; \
     }
 
-
 extern void* ObjGroup_GetObjects();
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern f32 getXZDistance(float* a, float* b);
@@ -96,13 +93,11 @@ extern int trickyFn_8013b368(void* p1, f32 f, void* p2);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime * state);
 
-
 /* FUN_8013ffb8 removed: in v1.0 this address is the start of trickyGuard. */
 
 /* FUN_8013ffbc removed: duplicate of trickyGuardFindBaddieTarget. */
 
 /* FUN_801400fc removed: duplicate of trickyGuard. */
-
 
 extern int trickyDebugPrint(const char* fmt, ...);
 extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
@@ -149,13 +144,6 @@ extern f32 lbl_803E24AC;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E2504;
 
-/*
- * --INFO--
- *
- * Function: trickyFlame
- * EN v1.0 Address: 0x801409DC
- * EN v1.0 Size: 2224b
- */
 void trickyFlame(int p1, int p2)
 {
     register char* strBase = lbl_8031D2E8;
@@ -454,13 +442,6 @@ void trickyFlame(int p1, int p2)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: trickyGuard
- * EN v1.0 Address: 0x8013FFB8
- * EN v1.0 Size: 2276b
- */
 #pragma scheduling on
 static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 {
@@ -742,13 +723,6 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: trickyGuardFindBaddieTarget
- * EN v1.0 Address: 0x8014089C
- * EN v1.0 Size: 320b
- */
 int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
 {
     int count;

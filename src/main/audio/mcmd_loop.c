@@ -3,19 +3,6 @@
 extern u32 sndRand(void);
 extern u32 hwIsActive(u8 voiceId);
 
-/*
- * --INFO--
- *
- * Function: mcmdLoop
- * EN v1.0 Address: 0x8027566C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802757BC
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void mcmdLoop(McmdVoiceState* state, McmdCommandArgs* params)
 {
     u16 counter;

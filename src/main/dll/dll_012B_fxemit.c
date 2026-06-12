@@ -12,14 +12,6 @@ extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
 extern void fn_80137948(char* fmt, ...);
 
-/*
- * --INFO--
- *
- * Function: cfccrate_init
- * EN v1.0 Address: 0x8018E0A4
- * EN v1.0 Size: 1560b
- */
-
 typedef struct CFTreasSharpyFxSpawnArgs
 {
     s16 yaw;
@@ -254,65 +246,11 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: cfccrate_release
- * EN v1.0 Address: 0x8018E6BC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018E69C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: cfccrate_initialise
- * EN v1.0 Address: 0x8018E6C0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018E6A0
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fxemit_getExtraSize
- * EN v1.0 Address: 0x8018EC20
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ED50
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fxemit_getExtraSize(void)
 {
     return 0x20;
 }
 
-/*
- * --INFO--
- *
- * Function: fxemit_getObjectTypeId
- * EN v1.0 Address: 0x8018EC28
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018ED58
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fxemit_getObjectTypeId(void)
 {
     return 0;
@@ -324,19 +262,6 @@ void fxemit_free(FxEmitObject* obj)
     (*gModgfxInterface)->freeSourceEffects(obj);
 }
 
-/*
- * --INFO--
- *
- * Function: fxemit_hitDetect
- * EN v1.0 Address: 0x8018EC90
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018EDC0
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fxemit_hitDetect(void)
 {
 }
@@ -489,19 +414,6 @@ extern f32 sqrtf(f32 value);
 
 extern f32 lbl_803E3E50;
 
-/*
- * --INFO--
- *
- * Function: fxemit_init
- * EN v1.0 Address: 0x8018EFE0
- * EN v1.0 Size: 376b
- * EN v1.1 Address: 0x8018F020
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 {
     FxEmitState* state;
@@ -541,161 +453,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
     state->startDelay = (s16)randomGetRange(0, 10);
     state->altEffectId = 0;
 }
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f158
- * EN v1.0 Address: 0x8018F158
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x8018F1B0
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f4fc
- * EN v1.0 Address: 0x8018F4FC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018F55C
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f500
- * EN v1.0 Address: 0x8018F500
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x8018F6C4
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f650
- * EN v1.0 Address: 0x8018F650
- * EN v1.0 Size: 1620b
- * EN v1.1 Address: 0x8018F854
- * EN v1.1 Size: 2220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fd14
- * EN v1.0 Address: 0x8018FD14
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8019018C
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fd48
- * EN v1.0 Address: 0x8018FD48
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x801901CC
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fec4
- * EN v1.0 Address: 0x8018FEC4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80190354
- * EN v1.1 Size: 368b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8018ffbc
- * EN v1.0 Address: 0x8018FFBC
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x801905C8
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80190004
- * EN v1.0 Address: 0x80190004
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80190618
- * EN v1.1 Size: 580b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80190008
- * EN v1.0 Address: 0x80190008
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x8019085C
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: warpPadFn_8019042c
- * EN v1.0 Address: 0x80190148
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801909A8
- * EN v1.1 Size: 1376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];

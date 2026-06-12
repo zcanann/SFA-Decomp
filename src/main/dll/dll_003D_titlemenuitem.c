@@ -2,10 +2,6 @@
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
-
-
-
-
 #define TITLE_MENU_FLAG_ENABLED        0x01
 #define TITLE_MENU_FLAG_WRAP           0x02
 #define TITLE_MENU_FLAG_MOVED_LEFT     0x04
@@ -15,25 +11,7 @@
 #define TITLE_MENU_FLAG_VOLUME_PREVIEW 0x40
 #define TITLE_MENU_FLAG_MUSIC_PREVIEW  0x80
 
-
-
 extern u32 getButtonsJustPressed(int pad);
-
-
-/*
- * --INFO--
- *
- * Function: Link_update
- * EN v1.0 Address: 0x80130CF0
- * EN v1.0 Size: 936b
- * EN v1.1 Address: 0x80131078
- * EN v1.1 Size: 1168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
@@ -369,7 +347,6 @@ extern void* textureLoadAsset(int id);
 extern void textureFree(void* p);
 extern void* mmAlloc(int size, int heap, int flags);
 
-
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
 TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue,
                                               s16 maxValue, s16 value)
@@ -473,8 +450,6 @@ void fn_80131F0C(void)
 
 void Link_release(void);
 
-
-
 void TitleMenuItem_release(void)
 {
     void** p;
@@ -491,4 +466,3 @@ void TitleMenuItem_release(void)
 }
 
 void Link_free(void);
-

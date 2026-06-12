@@ -14,174 +14,9 @@ typedef struct DimbosscrackparPlacement
     s16 unk1E;
 } DimbosscrackparPlacement;
 
-
-
-
-
-
-
-
-
-
-
-
 extern EffectInterface** gPartfxInterface;
 
-/*
- * --INFO--
- *
- * Function: dimbossgut2_updateTracking
- * EN v1.0 Address: 0x801BF048
- * EN v1.0 Size: 652b
- * EN v1.1 Address: 0x801BF5FC
- * EN v1.1 Size: 680b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_free
- * EN v1.0 Address: 0x801BF2F0
- * EN v1.0 Size: 140b
- * EN v1.1 Address: 0x801BF8A4
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_render
- * EN v1.0 Address: 0x801BF37C
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x801BF930
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_update
- * EN v1.0 Address: 0x801BF3E8
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x801BF99C
- * EN v1.1 Size: 716b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimbossgut2_init
- * EN v1.0 Address: 0x801BF6B4
- * EN v1.0 Size: 540b
- * EN v1.1 Address: 0x801BFC68
- * EN v1.1 Size: 540b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_updateBurst
- * EN v1.0 Address: 0x801BF8D8
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801BFE8C
- * EN v1.1 Size: 664b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_free
- * EN v1.0 Address: 0x801BFB70
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801C0124
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_render
- * EN v1.0 Address: 0x801BFBC4
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x801C0178
- * EN v1.1 Size: 104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_update
- * EN v1.0 Address: 0x801BFC2C
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801C01E0
- * EN v1.1 Size: 648b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_init
- * EN v1.0 Address: 0x801BFEB4
- * EN v1.0 Size: 312b
- * EN v1.1 Address: 0x801C0468
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
 
 void dimbosscrackpar_hitDetect(void)
 {
@@ -195,19 +30,6 @@ void dimbosscrackpar_initialise(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: magicmaker_update
- * EN v1.0 Address: 0x801C0080
- * EN v1.0 Size: 624b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 Obj_IsLoadingLocked(void);
 
 void magicmaker_update(int obj);
@@ -256,21 +78,6 @@ void dimbosscrackpar_init(s16* obj, s8* def)
 }
 
 void dimbossfire_hitDetect(void);
-
-/*
- * --INFO--
- *
- * Function: dimbossfire_free
- * EN v1.0 Address: 0x801C04C8
- * EN v1.0 Size: 100b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* 8b "li r3, N; blr" returners. */
 int dimbosscrackpar_getExtraSize(void) { return 0x0; }

@@ -4,7 +4,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
-
 extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -48,7 +47,6 @@ typedef struct PollenFragmentExtra
     PollenFragmentDef* def; /* 0x1C */
 } PollenFragmentExtra;
 
-
 extern void storeZeroToFloatParam(void* timer);
 
 extern EffectInterface** gPartfxInterface;
@@ -57,34 +55,6 @@ extern f32 lbl_803E3DF8;
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_render
- * EN v1.0 Address: 0x8016984C
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x80169CF8
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: pollenfragment_init
- * EN v1.0 Address: 0x8016B0A4
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x8016ACA4
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pollenfragment_init(int obj, int config)
 {
     bool keepSpawning;
@@ -138,20 +108,6 @@ void pollenfragment_init(int obj, int config)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8016b228
- * EN v1.0 Address: 0x8016B228
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8016AE70
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -193,9 +149,7 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void pinponspike_render(void);
 
@@ -218,7 +172,6 @@ void pollenfragment_initialise(void)
 }
 
 void mikabomb_hitDetect(void);
-
 
 void pinponspike_free(int obj);
 
@@ -254,7 +207,6 @@ int mikabomb_getExtraSize(void);
 extern void objRenderFn_8003b8f4(f32);
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -407,11 +359,9 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-
 void pollen_init(int* obj);
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 typedef struct
 {
@@ -443,7 +393,6 @@ extern f32 PSVECMag(void* v);
 extern void PSVECNormalize(void* src, void* dst);
 extern void PSVECScale(void* src, void* dst, f32 scale);
 extern void PSVECAdd(void* a, void* b, void* out);
-
 
 void pinponspike_update(int obj);
 

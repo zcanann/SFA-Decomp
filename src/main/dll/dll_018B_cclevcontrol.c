@@ -4,50 +4,16 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int id);
-
 
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -64,48 +30,6 @@ extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
 extern f32 lbl_803E5360;
 
-/*
- * --INFO--
- *
- * Function: ccqueen_render
- * EN v1.0 Address: 0x801AA560
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x801AA584
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801aa684
- * EN v1.0 Address: 0x801AA684
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801AA6C0
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801aaa6c
- * EN v1.0 Address: 0x801AAA6C
- * EN v1.0 Size: 148b
- * EN v1.1 Address: 0x801AAE2C
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
@@ -139,20 +63,6 @@ void FUN_801aaa6c(double param_1, int param_2, int param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801abf38
- * EN v1.0 Address: 0x801ABF38
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x801AC038
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -165,7 +75,6 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     return 0;
 }
-
 
 /* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
@@ -180,8 +89,6 @@ extern void envFxActFn_800887f8(int a);
 extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 lbl_803E46C8;
-
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -213,7 +120,6 @@ extern void getEnvfxAct(int obj, int target, int id, int p);
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
 
-
 void cclevcontrol_init(int* obj)
 {
     void* envfxTable;
@@ -237,12 +143,10 @@ void cclevcontrol_init(int* obj)
     state[3] = (u32)(u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
 }
 
-
 extern f32 lbl_803E4674;
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
@@ -250,7 +154,6 @@ extern f32 lbl_803E4674;
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
-
 
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
  * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
@@ -260,15 +163,9 @@ extern f32 lbl_803E4674;
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
 
-
-
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-
-
 #include "main/dll/SC/SCtotemlogpuz.h"
-
 
 extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
@@ -368,4 +265,3 @@ void cclevcontrol_update(int obj)
 
 extern f32 lbl_803E4680;
 extern int Obj_FreeObject(int o);
-

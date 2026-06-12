@@ -9,26 +9,7 @@
 
 extern u8* Obj_GetPlayerObject(void);
 
-/*
- * --INFO--
- *
- * Function: platform1_control
- * EN v1.0 Address: 0x801DE430
- * EN v1.0 Size: 3368b
- * EN v1.1 Address: 0x801DEA20
- * EN v1.1 Size: 2596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-/* EN v1.0 0x801DE430  size: 2596b  platform1_control: tug-of-war rope
- * minigame. Resolves the anchor object, applies sequence events, then per
- * frame works the rope position from A-press mashing, runs both pull anims
- * and grunt/creak sfx, and ends the game through the screen transition
- * when either side wins. */
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -66,9 +47,6 @@ typedef struct KioskTextPair
 } KioskTextPair;
 
 extern KioskTextPair lbl_80327AF0[];
-
-/* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
- * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
 
 /* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
 u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
@@ -200,19 +178,6 @@ void paymentkiosk_update(int obj)
 extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
 
-/*
- * --INFO--
- *
- * Function: paymentkiosk_init
- * EN v1.0 Address: 0x801DF43C
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x801DF458
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
 {
     register int self = obj;
@@ -233,49 +198,6 @@ void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
 
 static int FEseqobject_findControlObject(void);
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801df45c
- * EN v1.0 Address: 0x801DF45C
- * EN v1.0 Size: 576b
- * EN v1.1 Address: 0x801DF480
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801df784
- * EN v1.0 Address: 0x801DF784
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801DF7DC
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801df788
- * EN v1.0 Address: 0x801DF788
- * EN v1.0 Size: 252b
- * EN v1.1 Address: 0x801DF918
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 void paymentkiosk_release(void)

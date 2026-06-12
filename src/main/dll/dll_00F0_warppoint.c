@@ -6,16 +6,6 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
-
-
-
-
 typedef struct WarpPointObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -25,11 +15,6 @@ typedef struct WarpPointObjectDef
     s16 unk20;
     u8 pad22[0x28 - 0x22];
 } WarpPointObjectDef;
-
-
-
-
-
 
 typedef struct WarpPointState
 {
@@ -42,7 +27,6 @@ typedef struct WarpPointState
     u8 unk11;
     u8 pad12[0x18 - 0x12];
 } WarpPointState;
-
 
 static inline int* Transporter_GetActiveModel(void* obj)
 {
@@ -63,51 +47,10 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-/*
- * --INFO--
- *
- * Function: pushable_setScale
- * EN v1.0 Address: 0x801755CC
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x801758D4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* pushable_setScale: real v1.0 body defined at end of file (old v1.1 misimport removed). */
 
-
-/*
- * --INFO--
- *
- * Function: pushable_render
- * EN v1.0 Address: 0x80175FB8
- * EN v1.0 Size: 236b
- * EN v1.1 Address: 0x80176464
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* pushable_render: recovered v1.0 body defined at end of file. */
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80176920
- * EN v1.0 Address: 0x80176920
- * EN v1.0 Size: 200b
- * EN v1.1 Address: 0x80177470
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -127,39 +70,12 @@ FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801778d0
- * EN v1.0 Address: 0x801778D0
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x801784F8
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801778d0(int param_1)
 {
     *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801778e0
- * EN v1.0 Address: 0x801778E0
- * EN v1.0 Size: 396b
- * EN v1.1 Address: 0x80178508
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -223,24 +139,15 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void invhit_hitDetect(void);
 
-
-
-
-
-
-
 extern unsigned long GameBit_Set(int eventId, int value);
-
 
 /* 8b "li r3, N; blr" returners. */
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 int invhit_getExtraSize(void);
-
 
 /* 16b chained patterns. */
 
@@ -256,7 +163,6 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 void invhit_free(int obj);
-
 
 extern void warpToMap(int mapId, int flag);
 
@@ -280,9 +186,7 @@ int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 extern f32 timeDelta;
 
-
 extern void* Obj_GetPlayerObject(void);
-
 
 void WarpPoint_init(int* obj, u8* def)
 {
@@ -317,7 +221,6 @@ void WarpPoint_init(int* obj, u8* def)
 
 void iceblast_update(int* obj);
 
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
@@ -327,10 +230,8 @@ void iceblast_update(int* obj);
 
 extern u32 GameBit_Get(int eventId);
 
-
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
-
 
 extern int getCurMapLayer(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
@@ -486,14 +387,3 @@ void WarpPoint_update(int* obj)
 }
 
 extern void objSetSlot(s16* obj, int slot);
-
-
-
-
-
-
-
-
-
-
-

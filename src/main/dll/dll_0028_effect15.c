@@ -34,34 +34,8 @@ extern f32 lbl_803E0E84;
 extern f32 lbl_803E0E88;
 extern f32 lbl_803E0E8C;
 
-/*
- * --INFO--
- *
- * Function: Effect16_func04
- * EN v1.0 Address: 0x800C8008
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800C8294
- * EN v1.1 Size: 4100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* Effect16_func04 is defined further below (full recovered body). */
 
-/*
- * --INFO--
- *
- * Function: FUN_800c8110
- * EN v1.0 Address: 0x800C8110
- * EN v1.0 Size: 904b
- * EN v1.1 Address: 0x800CABBC
- * EN v1.1 Size: 3116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4, u8 param_5,
              int param_6)
@@ -441,19 +415,6 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
     return uVar1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800c9030
- * EN v1.0 Address: 0x800C9030
- * EN v1.0 Size: 128b
- * EN v1.1 Address: 0x800D57BC
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_800c9030(uint param_1, int* param_2)
 {
     int iVar1;
@@ -1044,21 +1005,6 @@ void Effect13_func05_nop(void);
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
-
-/*
- * --INFO--
- *
- * Function: FUN_800d7780
- * EN v1.0 Address: 0x800D7780
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x800D7CFC
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
@@ -1078,4 +1024,3 @@ void Effect13_func05_nop(void);
 /* fcmp-eq-to-bool. */
 
 /* multi-store leaf (single float broadcast). */
-

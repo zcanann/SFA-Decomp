@@ -11,20 +11,6 @@ extern CameraModeBikeState* lbl_803DD540;
 
 static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
-/*
- * --INFO--
- *
- * Function: CameraModeStaffAnim_init
- * EN v1.0 Address: 0x8010747C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80107718
- * EN v1.1 Size: 1640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void CameraModeBike_copyToCurrent(f32* param_1)
 {
     lbl_803DD540->turnInput = param_1[0];
@@ -33,9 +19,7 @@ void CameraModeBike_copyToCurrent(f32* param_1)
     lbl_803DD540->pitchTarget = param_1[3];
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* fn_X(lbl); lbl = 0; */
 void CameraModeBike_free(void)
@@ -88,19 +72,6 @@ extern f32 lbl_803E17D0;
 
 /* FUN_80107b4c removed: in v1.0 this address is the start of CameraModeBike_update. */
 
-/*
- * --INFO--
- *
- * Function: CameraModeBike_update
- * EN v1.0 Address: 0x80107B78
- * EN v1.0 Size: 872b
- * EN v1.1 Address: 0x80107DE8
- * EN v1.1 Size: 1076b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole on
 void CameraModeBike_update(CameraObject* camera)
 {
@@ -218,19 +189,6 @@ void CameraModeBike_update(CameraObject* camera)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeBike_init
- * EN v1.0 Address: 0x80107EE0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010821C
- * EN v1.1 Size: 144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole off
 void CameraModeBike_init(CameraObject* camera)
 {
@@ -246,19 +204,6 @@ void CameraModeBike_init(CameraObject* camera)
     lbl_803DD540->followDistance = lbl_803E17AC;
 }
 
-/*
- * --INFO--
- *
- * Function: firstPersonPlaceCamera
- * EN v1.0 Address: 0x80107EE4
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x801082AC
- * EN v1.1 Size: 388b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
 {
     register GameObject* self = focus;
@@ -306,19 +251,6 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: firstPersonExit
- * EN v1.0 Address: 0x80108074
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80108430
- * EN v1.1 Size: 744b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void firstPersonExit(CameraObject* camera)
 {
     extern undefined4 camcontrol_getTargetPosition(int param_1, int param_2, float* outPos, void* outAngle);
@@ -399,7 +331,6 @@ void firstPersonExit(CameraObject* camera)
     }
     curvesMove(&lbl_803DD548->viewCurve);
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeBike_release(void)

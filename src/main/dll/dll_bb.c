@@ -27,19 +27,6 @@ extern f32 lbl_803E1630;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
-/*
- * --INFO--
- *
- * Function: camcontrol_applyState
- * EN v1.0 Address: 0x80101980
- * EN v1.0 Size: 1332b
- * EN v1.1 Address: 0x80101C1C
- * EN v1.1 Size: 1340b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_applyState(short* camObj)
 {
     float fa;
@@ -193,13 +180,6 @@ void camcontrol_applyState(short* camObj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_applyQueuedAction
- * EN v1.0 Address: 0x80101EBC
- * EN v1.0 Size: 400b
- */
 void camcontrol_applyQueuedAction(void)
 {
     CameraViewSlot* view;

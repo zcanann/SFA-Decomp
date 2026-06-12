@@ -8,13 +8,11 @@
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 
-
 extern void objRenderFn_8003b8f4(f32 v);
 extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
 extern int getEnvfxAct(int obj, int player, int id, int p);
 extern void MMP_levelcontrol_update(int obj);
-
 
 extern f32 timeDelta;
 
@@ -25,7 +23,6 @@ extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void MMP_levelcontrol_hitDetect(void)
 {
@@ -45,15 +42,12 @@ void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E44C4);
 }
 
-
 void MMP_levelcontrol_free(int obj)
 {
     lbl_803DDB28 = lbl_803E44C0;
     lbl_803DDB2C = 0;
     Music_Trigger(0xd5, 0);
 }
-
-
 
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -91,12 +85,10 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 /*
  * Per-object extra state for the MoonSeedBush plant spot
  * (MoonSeedBush_getExtraSize == 0x2).
  */
-
 
 STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
@@ -112,7 +104,6 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
  * (mmp_trenchfx_getExtraSize == 0x30).
  */
 
-
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 /*
@@ -122,7 +113,6 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
  */
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
-
 
 extern undefined8 FUN_80006728();
 extern uint GameBit_Get(int eventId);
@@ -141,19 +131,6 @@ extern void Music_Trigger(int id, int mode);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
                                   int setBit, int textId);
 
-/*
- * --INFO--
- *
- * Function: MMP_levelcontrol_update
- * EN v1.0 Address: 0x801A6778
- * EN v1.0 Size: 972b
- * EN v1.1 Address: 0x801A6AD0
- * EN v1.1 Size: 284b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole on
 void MMP_levelcontrol_update(int obj)
 {
@@ -256,19 +233,6 @@ void MMP_levelcontrol_update(int obj)
     SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801a68b8
- * EN v1.0 Address: 0x801A68B8
- * EN v1.0 Size: 504b
- * EN v1.1 Address: 0x801A6BEC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -300,20 +264,6 @@ FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a7874
- * EN v1.0 Address: 0x801A7874
- * EN v1.0 Size: 504b
- * EN v1.1 Address: 0x801A7500
- * EN v1.1 Size: 420b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
@@ -371,7 +321,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void)
 {
@@ -383,17 +332,14 @@ void MMP_levelcontrol_initialise(void)
 
 void MoonSeedBush_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
 extern f32 lbl_803E44C8;
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -423,4 +369,3 @@ void MMP_levelcontrol_init(int obj)
 }
 
 extern void setDrawLights(int v);
-

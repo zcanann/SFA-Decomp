@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 
-
 #define CANNONBALL_INIT_DONE 0x0a
 #define CANNONBALL_SPEED 0x14
 #define CANNONBALL_FLAGS 0x54
@@ -41,19 +40,6 @@ extern f32 lbl_803E2488;
 extern f32 lbl_803E2508;
 extern f32 lbl_803E250C;
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80141290
- * EN v1.0 Address: 0x80141290
- * EN v1.0 Size: 1520b
- * EN v1.1 Address: 0x80141618
- * EN v1.1 Size: 1520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void trickyFn_80141290(int obj, int ball)
 {
     int nodeIds[4];

@@ -3,8 +3,6 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 
-
-
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
@@ -40,20 +38,6 @@ extern short lbl_803DBA66;
 extern int gTrickyHudItemMask;
 extern short lbl_8031B4E0[];
 
-
-/*
- * --INFO--
- *
- * Function: hudDrawMagicBar
- * EN v1.0 Address: 0x80121C4C
- * EN v1.0 Size: 0x9A8
- * EN v1.1 Address: 0x80121F30
- * EN v1.1 Size: 2472b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void pauseMenuDrawElement(int tex, f32 x, f32 y, int a, int b, int c, int d);
 extern void drawPartialTexture(int tex, f32 x, f32 y, int alpha, int arg, int w, int h, int off, int m);
 extern void drawFn_8011eb3c(int tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
@@ -288,19 +272,6 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: hudDrawCounter
- * EN v1.0 Address: 0x801225F4
- * EN v1.0 Size: 0x308
- * EN v1.1 Address: 0x801228D8
- * EN v1.1 Size: 776b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int arg);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -387,19 +358,6 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yP
     }
 }
 
-/*
- * --INFO--
- *
- * Function: pauseMenuDrawStatus
- * EN v1.0 Address: 0x801228FC
- * EN v1.0 Size: 0x810
- * EN v1.1 Address: 0x80122BE0
- * EN v1.1 Size: 2064b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int lbl_803A87F0[];
 extern f32 lbl_803DD83C;
@@ -698,19 +656,6 @@ void pauseMenuDrawStatus(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: minimapFn_8012310c
- * EN v1.0 Address: 0x8012310C
- * EN v1.0 Size: 0xF8
- * EN v1.1 Address: 0x801233F0
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void minimapFn_8012310c(void)
 {
     if (lbl_803DD7A0 != '\0')
@@ -756,19 +701,6 @@ void minimapFn_8012310c(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: hudDrawButtons
- * EN v1.0 Address: 0x80123204
- * EN v1.0 Size: 0xE64
- * EN v1.1 Address: 0x801234E8
- * EN v1.1 Size: 3684b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawCMenu(int a, int b, int c);
 extern int gameTextGet();
@@ -1213,13 +1145,6 @@ void hudDrawButtons(int param1, int param2, int param3)
     fn_8005D118(0, 0xFF, 0xFF, 0xFF, 0xFF);
 }
 
-/*
- * --INFO--
- *
- * Function: cMenuUpdateAnims
- * EN v1.0 Address: 0x80124068
- * EN v1.0 Size: 0x164
- */
 void cMenuUpdateAnims(void)
 {
     sbyte s;
@@ -1284,13 +1209,6 @@ void cMenuUpdateAnims(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: trickyBitFn_801241cc
- * EN v1.0 Address: 0x801241CC
- * EN v1.0 Size: 0x110
- */
 int trickyBitFn_801241cc(short* arr, sbyte flag)
 {
     short* entry;

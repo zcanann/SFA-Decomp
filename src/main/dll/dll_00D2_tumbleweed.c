@@ -2,7 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 
-
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
 
@@ -19,14 +18,6 @@ extern f32 lbl_803E2F88;
 extern f32 lbl_803E2F98;
 extern f32 lbl_803E2F9C;
 
-
-/*
- * --INFO--
- *
- * Function: tumbleweed_updateRollingMotion
- * EN v1.0 Address: 0x80163BBC
- * EN v1.0 Size: 976b
- */
 #pragma peephole on
 void tumbleweed_updateRollingMotion(short* obj, int state)
 {
@@ -150,38 +141,17 @@ void tumbleweed_updateRollingMotion(short* obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_func0F
- * EN v1.0 Address: 0x80163F8C
- * EN v1.0 Size: 12b
- */
 #pragma peephole off
 void tumbleweed_func0F(int obj, int value)
 {
     *(int*)(*(int*)&((GameObject*)obj)->extra + 0x284) = value;
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_func0E
- * EN v1.0 Address: 0x80163F98
- * EN v1.0 Size: 24b
- */
 int tumbleweed_func0E(int obj)
 {
     return *(byte*)(*(int*)&((GameObject*)obj)->extra + 0x278) == 6;
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_render2
- * EN v1.0 Address: 0x80163FB0
- * EN v1.0 Size: 64b
- */
 void tumbleweed_render2(int* obj, int p2)
 {
     extern void ObjHits_DisableObject(int obj); /* #57 */
@@ -192,13 +162,6 @@ void tumbleweed_render2(int* obj, int p2)
     ObjHits_DisableObject((int)obj);
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_modelMtxFn
- * EN v1.0 Address: 0x80163FF0
- * EN v1.0 Size: 112b
- */
 void tumbleweed_modelMtxFn(int obj)
 {
     extern void ObjHits_EnableObject(int obj); /* #57 */
@@ -215,13 +178,6 @@ void tumbleweed_modelMtxFn(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_func0B
- * EN v1.0 Address: 0x80164060
- * EN v1.0 Size: 16b
- */
 void tumbleweed_func0B(int obj, float x, float y)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
@@ -230,37 +186,16 @@ void tumbleweed_func0B(int obj, float x, float y)
     *(float*)(extra + 0x28c) = y;
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_setScale
- * EN v1.0 Address: 0x80164070
- * EN v1.0 Size: 12b
- */
 int tumbleweed_setScale(int obj)
 {
     return *(byte*)(*(int*)&((GameObject*)obj)->extra + 0x278);
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_getExtraSize
- * EN v1.0 Address: 0x8016407C
- * EN v1.0 Size: 8b
- */
 int tumbleweed_getExtraSize(void)
 {
     return 0x2a4;
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_free
- * EN v1.0 Address: 0x80164084
- * EN v1.0 Size: 252b
- */
 void tumbleweed_free(int* obj)
 {
     extern int* ObjList_GetObjects(int* startIndex, int* objectCount); /* #57 */
@@ -300,13 +235,6 @@ void tumbleweed_free(int* obj)
     ObjGroup_RemoveObject(obj, 0x31);
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_render
- * EN v1.0 Address: 0x80164180
- * EN v1.0 Size: 48b
- */
 void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32); /* #57 */
@@ -322,8 +250,6 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #include "main/dll/backpack.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objlib.h"
-
-
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
@@ -355,13 +281,6 @@ extern f32 lbl_803E2FC4;
 
 extern f32 sqrtf(f32 x);
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_update
- * EN v1.0 Address: 0x80164EE4
- * EN v1.0 Size: 72b
- */
 void tumbleweed_update(int obj)
 {
     if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_1)
@@ -377,13 +296,6 @@ void tumbleweed_update(int obj)
 
 /* 8b "li r3, N; blr" returners. */
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_updateStateMachine
- * EN v1.0 Address: 0x801641B0
- * EN v1.0 Size: 1936b
- */
 void tumbleweed_updateStateMachine(int obj)
 {
     extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */
@@ -617,13 +529,6 @@ void tumbleweed_updateStateMachine(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_init
- * EN v1.0 Address: 0x80164F2C
- * EN v1.0 Size: 420b
- */
 void tumbleweed_init(int obj, int defData)
 {
     extern void ObjHits_DisableObject(int obj); /* #57 */
@@ -655,13 +560,6 @@ void tumbleweed_init(int obj, int defData)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: tumbleweed_updateEffects
- * EN v1.0 Address: 0x80164C44
- * EN v1.0 Size: 672b
- */
 void tumbleweed_updateEffects(int obj)
 {
     extern void ObjHits_DisableObject(int obj); /* #57 */
@@ -753,37 +651,6 @@ void tumbleweed_updateEffects(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: LandedArwing_TriggerLaunchTarget
- * EN v1.0 Address: 0x801650D8
- * EN v1.0 Size: 176b
- */
-
-/*
- * --INFO--
- *
- * Function: LandedArwing_UpdateBounceFade
- * EN v1.0 Address: 0x80165188
- * EN v1.0 Size: 592b
- */
-
-/*
- * --INFO--
- *
- * Function: LandedArwing_UpdateRetreatChase
- * EN v1.0 Address: 0x801653D8
- * EN v1.0 Size: 436b
- */
-
-/*
- * --INFO--
- *
- * Function: tumbleweed_updateTargetedStateMachine
- * EN v1.0 Address: 0x80164940
- * EN v1.0 Size: 772b
- */
 void tumbleweed_updateTargetedStateMachine(int obj)
 {
     extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */

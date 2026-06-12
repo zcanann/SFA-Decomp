@@ -122,18 +122,6 @@ extern f32 lbl_803E25D4;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 
-/*
- * --INFO--
- *
- * Function: objAnimFn_8014a9f0
- * EN v1.0 Address: 0x8014A9F0
- * EN v1.0 Size: 3720b
- * EN v1.1 Address: 0x8014AE50
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void objAnimFn_8014a9f0(short* obj, int state)
 {
     f32 vy;
@@ -575,61 +563,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014ab58
- * EN v1.0 Address: 0x8014AB58
- * EN v1.0 Size: 5468b
- * EN v1.1 Address: 0x8014AE50
- * EN v1.1 Size: 3744b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8014c690
- * EN v1.0 Address: 0x8014C690
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8014C294
- * EN v1.1 Size: 584b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8014c694
- * EN v1.0 Address: 0x8014C694
- * EN v1.0 Size: 248b
- * EN v1.1 Address: 0x8014C4DC
- * EN v1.1 Size: 184b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8014c78c
- * EN v1.0 Address: 0x8014C78C
- * EN v1.0 Size: 772b
- * EN v1.1 Address: 0x8014C594
- * EN v1.1 Size: 956b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* param_4)
@@ -782,19 +715,6 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014cbcc
- * EN v1.0 Address: 0x8014CBCC
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x8014CA48
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 double FUN_8014cbcc(int param_1)
 {
     int iVar1;
@@ -819,19 +739,6 @@ double FUN_8014cbcc(int param_1)
     return dVar2;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014ccac
- * EN v1.0 Address: 0x8014CCAC
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8014CAE4
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void FUN_8014ccac(int param_1, undefined4 param_2)
@@ -840,19 +747,6 @@ void FUN_8014ccac(int param_1, undefined4 param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014ccb8
- * EN v1.0 Address: 0x8014CCB8
- * EN v1.0 Size: 756b
- * EN v1.1 Address: 0x8014CAF0
- * EN v1.1 Size: 680b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, int param_5,
@@ -1227,17 +1121,6 @@ extern int getAngle(f32 x, f32 z);
 extern uint lbl_8031DBF0[];
 extern uint lbl_8031DC10[];
 
-/*
- * --INFO--
- *
- * Function: fn_8014C11C
- * EN v1.0 Address: 0x8014C11C
- * EN v1.0 Size: 956b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b);
@@ -1890,19 +1773,6 @@ extern f32 lbl_803E3284;
 extern f32 lbl_803E3288;
 extern f32 lbl_803E328C;
 
-/*
- * --INFO--
- *
- * Function: enemy_free
- * EN v1.0 Address: 0x8014D164
- * EN v1.0 Size: 620b
- * EN v1.1 Address: 0x8014D194
- * EN v1.1 Size: 608b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, uint param_5,
                   char param_6)
 {
@@ -1975,19 +1845,6 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014d3d0
- * EN v1.0 Address: 0x8014D3D0
- * EN v1.0 Size: 248b
- * EN v1.1 Address: 0x8014D3F4
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_4)
 {
     float fVar1;
@@ -2016,19 +1873,6 @@ void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014d4c8
- * EN v1.0 Address: 0x8014D4C8
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x8014D504
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5
                   , undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
                   uint param_11, uint param_12, undefined4 param_13, undefined4 param_14,
@@ -2053,20 +1897,6 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
     }
     return;
 }
-
-/*
- * --INFO--
- *
- * Function: enemy_init
- * EN v1.0 Address: 0x8014D9E4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8014D984
- * EN v1.1 Size: 1268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* conditional init/free pair. */
 extern void* lbl_803DDA50;

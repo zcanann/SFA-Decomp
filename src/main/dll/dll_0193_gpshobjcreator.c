@@ -7,51 +7,17 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_update
- * EN v1.0 Address: 0x801C60B8
- * EN v1.0 Size: 3360b
- * EN v1.1 Address: 0x801C666C
- * EN v1.1 Size: 3104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801c6e04
- * EN v1.0 Address: 0x801C6E04
- * EN v1.0 Size: 704b
- * EN v1.1 Address: 0x801C7408
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
 extern u8 Obj_IsLoadingLocked(void);
-
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -68,7 +34,6 @@ typedef struct GpshObjcreatorState
     u8 pad5[0x8 - 0x5];
 } GpshObjcreatorState;
 
-
 typedef struct GpshObjcreatorObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -80,24 +45,7 @@ typedef struct GpshObjcreatorObjectDef
     u8 pad1F[0x20 - 0x1F];
 } GpshObjcreatorObjectDef;
 
-
-/*
- * --INFO--
- *
- * Function: gpsh_shrine_update
- * EN v1.0 Address: 0x801C7724
- * EN v1.0 Size: 2520b
- * EN v1.1 Address: 0x801C7CD8
- * EN v1.1 Size: 2124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void gpsh_objcreator_free(void)
 {
@@ -171,7 +119,6 @@ void gpsh_objcreator_update(int* obj)
 
 void gpsh_scene_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
 int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
@@ -187,7 +134,6 @@ void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 void gpsh_objcreator_init(int* obj, int* def)
 {

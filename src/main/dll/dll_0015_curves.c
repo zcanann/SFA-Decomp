@@ -7,7 +7,6 @@
 #include <string.h>
 #include "main/game_object.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -113,150 +112,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
 int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY,
                                           f32 z, f32 unusedW);
 
-/*
- * --INFO--
- *
- * Function: RomCurve_projectPointToAdjacentWindow
- * EN v1.0 Address: 0x800E1B24
- * EN v1.0 Size: 1048b
- * EN v1.1 Address: 0x800E1DA8
- * EN v1.1 Size: 1048b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: curves_distFn15
- * EN v1.0 Address: 0x800E1FF4
- * EN v1.0 Size: 536b
- * EN v1.1 Address: 0x800E2278
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_distanceToNearestOfType16
- * EN v1.0 Address: 0x800E2214
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x800E2498
- * EN v1.1 Size: 372b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_func13
- * EN v1.0 Address: 0x800E2090
- * EN v1.0 Size: 1280b
- * EN v1.1 Address: 0x800E260C
- * EN v1.1 Size: 1416b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: RomCurve_getRandomLinkedOfTypes
- * EN v1.0 Address: 0x800E2F5C
- * EN v1.0 Size: 572b
- * EN v1.1 Address: 0x800E31E0
- * EN v1.1 Size: 980b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_distXZ
- * EN v1.0 Address: 0x800E3330
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x800E35B4
- * EN v1.1 Size: 176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_distFn0B
- * EN v1.0 Address: 0x800E33E0
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x800E3664
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: curves_find
- * EN v1.0 Address: 0x800E34B0
- * EN v1.0 Size: 564b
- * EN v1.1 Address: 0x800E3734
- * EN v1.1 Size: 584b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_findByIdWithIndex
- * EN v1.0 Address: 0x800E36F8
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x800E397C
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_func20
- * EN v1.0 Address: 0x800E31DC
- * EN v1.0 Size: 2296b
- * EN v1.1 Address: 0x800E3A00
- * EN v1.1 Size: 2996b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 {
     int bit;
@@ -285,190 +140,10 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
     return 1;
 }
 
-
 /*
- * --INFO--
- *
- * Function: RomCurve_countRandomPoints
- * EN v1.0 Address: 0x800E3AD4
- * EN v1.0 Size: 536b
- * EN v1.1 Address: 0x800E45B4
- * EN v1.1 Size: 672b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_func1E
- * EN v1.0 Address: 0x800E3CEC
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x800E4854
- * EN v1.1 Size: 500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_getAdjacentWindow
- * EN v1.0 Address: 0x800E47C4
- * EN v1.0 Size: 572b
- * EN v1.1 Address: 0x800E4A48
- * EN v1.1 Size: 572b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_getNearestAdjacentLink
- * EN v1.0 Address: 0x800E4A00
- * EN v1.0 Size: 484b
- * EN v1.1 Address: 0x800E4C84
- * EN v1.1 Size: 484b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_distanceToSegment
- * EN v1.0 Address: 0x800E4BE4
- * EN v1.0 Size: 324b
- * EN v1.1 Address: 0x800E4E68
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_getRandomBlockedLink
- * EN v1.0 Address: 0x800E4D28
- * EN v1.0 Size: 316b
- * EN v1.1 Address: 0x800E4FAC
- * EN v1.1 Size: 472b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_getLinkIds
- * EN v1.0 Address: 0x800E4E64
- * EN v1.0 Size: 156b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_getRandomUnblockedLink
- * EN v1.0 Address: 0x800E4F00
- * EN v1.0 Size: 316b
- * EN v1.1 Address: 0x800E5184
- * EN v1.1 Size: 428b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_getById
- * EN v1.0 Address: 0x800E503C
- * EN v1.0 Size: 112b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: RomCurve_find
- * EN v1.0 Address: 0x800E4628
- * EN v1.0 Size: 252b
- * EN v1.1 Address: 0x800E5330
- * EN v1.1 Size: 572b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_remove
- * EN v1.0 Address: 0x800E51EC
- * EN v1.0 Size: 252b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: curves_addCurveDef
- * EN v1.0 Address: 0x800E52E8
- * EN v1.0 Size: 312b
- * EN v1.1 Address: 0x800E556C
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Retail source-tag string: Hcurves.c: MAX_ROMCURVES exceeded!!
  */
 
-/*
- * --INFO--
- *
- * Function: curves_countRandomPoints
- * EN v1.0 Address: 0x800E5434
- * EN v1.0 Size: 624b
- * EN v1.1 Address: 0x800E56B8
- * EN v1.1 Size: 624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void curves_countRandomPoints(int obj, uint* curve)
 {
     CurvesCollisionState* collision;
@@ -564,7 +239,6 @@ void curves_countRandomPoints(int obj, uint* curve)
     }
 }
 
-
 void fn_800E56A4(int obj, f32* state)
 {
     CurvesCollisionState* collision;
@@ -642,19 +316,6 @@ void fn_800E56A4(int obj, f32* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: fn_800E58FC
- * EN v1.0 Address: 0x800E49C4
- * EN v1.0 Size: 672b
- * EN v1.1 Address: 0x800E5B80
- * EN v1.1 Size: 960b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_800E58FC(int obj, f32* state)
 {
     CurvesCollisionState* collision;
@@ -773,19 +434,6 @@ void fn_800E58FC(int obj, f32* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: fn_800E5CBC
- * EN v1.0 Address: 0x800E4C64
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x800E5F40
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void fn_800E5CBC(short* obj, int state)
 {
@@ -851,19 +499,6 @@ void fn_800E5CBC(short* obj, int state)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: fn_800E5E38
- * EN v1.0 Address: 0x800E5E38
- * EN v1.0 Size: 228b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void fn_800E5E38(int obj, f32* state)
 {
@@ -899,19 +534,6 @@ void fn_800E5E38(int obj, f32* state)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: fn_800E5F1C
- * EN v1.0 Address: 0x800E5F1C
- * EN v1.0 Size: 624b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_800E5F1C(int obj, f32* state)
 {
     CurvesCollisionState* collision;
@@ -996,20 +618,6 @@ void fn_800E5F1C(int obj, f32* state)
     collision->resultFloorGap = collision->floorGap[0];
 }
 
-
-/*
- * --INFO--
- *
- * Function: curves_updateLocalPointCollision
- * EN v1.0 Address: 0x800E4DBC
- * EN v1.0 Size: 912b
- * EN v1.1 Address: 0x800E6410
- * EN v1.1 Size: 872b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void curves_updateLocalPointCollision(int obj, f32* state)
 {
     u8 pointCount;
@@ -1160,19 +768,6 @@ buildTransform:
     }
 }
 
-/*
- * --INFO--
- *
- * Function: curves_preparePointCollisionFrame
- * EN v1.0 Address: 0x800E514C
- * EN v1.0 Size: 732b
- * EN v1.1 Address: 0x800E6778
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void curves_preparePointCollisionFrame(int obj, u32* state)
 {
     u8* stateBytes;
@@ -1303,19 +898,6 @@ void curves_preparePointCollisionFrame(int obj, u32* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: curves_updateLocalPointTransforms
- * EN v1.0 Address: 0x800E5428
- * EN v1.0 Size: 328b
- * EN v1.1 Address: 0x800E6A30
- * EN v1.1 Size: 368b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void curves_updateLocalPointTransforms(int obj, u32* state)
 {
     CurvesCollisionState* collision;
@@ -1378,19 +960,6 @@ void curves_updateLocalPointTransforms(int obj, u32* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_15_func0A
- * EN v1.0 Address: 0x800E5570
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x800E6BA0
- * EN v1.1 Size: 372b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_15_func0A(int obj, u32* state)
 {
     CurvesCollisionState* collision;
@@ -1454,19 +1023,6 @@ void dll_15_func0A(int obj, u32* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_15_func0B
- * EN v1.0 Address: 0x800E6A90
- * EN v1.0 Size: 168b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
 {
     u32 hitCount;
@@ -1489,20 +1045,6 @@ f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
     return baseY;
 }
 
-
-/*
- * --INFO--
- *
- * Function: curves_getCurves
- * EN v1.0 Address: 0x800E6B38
- * EN v1.0 Size: 428b
- * EN v1.1 Address: 0x800E6DBC
- * EN v1.1 Size: 428b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 RomCurvePoint*
 curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
 {
@@ -1548,19 +1090,6 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
     return sCurvesHitPoints;
 }
 
-/*
- * --INFO--
- *
- * Function: dll_15_func08
- * EN v1.0 Address: 0x800E58B8
- * EN v1.0 Size: 2184b
- * EN v1.1 Address: 0x800E6F68
- * EN v1.1 Size: 2472b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 
 void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
@@ -1941,20 +1470,6 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: dll_15_func06
- * EN v1.0 Address: 0x800E61A4
- * EN v1.0 Size: 1060b
- * EN v1.1 Address: 0x800E79A0
- * EN v1.1 Size: 1384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803E06C0;
 
 void dll_15_func06(short* curveObj, int* state)
@@ -2136,19 +1651,6 @@ void dll_15_func06(short* curveObj, int* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_15_func05
- * EN v1.0 Address: 0x800E7AE8
- * EN v1.0 Size: 412b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii,
                    s8* types)
 {
@@ -2165,7 +1667,6 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     }
     state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
-
 
 /* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
 extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
@@ -2216,19 +1717,6 @@ void dll_15_func04(CurvesCollisionState* state, int pointCount, f32* localPointP
     state->activeTimer = 0xa;
 }
 
-/*
- * --INFO--
- *
- * Function: curves_clear
- * EN v1.0 Address: 0x800E7D20
- * EN v1.0 Size: 120b
- * EN v1.1 Address: 0x800E7FA4
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void curves_clear(CurvesCollisionState* state, int updateMode, uint flags, int subtype)
 {
     memset(state, 0, CURVES_COLLISION_STATE_SIZE);
@@ -2239,19 +1727,6 @@ void curves_clear(CurvesCollisionState* state, int updateMode, uint flags, int s
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: playerHasKrazoaSpirit
- * EN v1.0 Address: 0x800E6680
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x800E8024
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint playerHasKrazoaSpirit(u8 checkStoryBits, uint bit)
 {
     if (checkStoryBits == 0)
@@ -2266,21 +1741,6 @@ uint playerHasKrazoaSpirit(u8 checkStoryBits, uint bit)
     }
     return 0;
 }
-
-/*
- * --INFO--
- *
- * Function: saveFileStruct_setCheatActive
- * EN v1.0 Address: 0x800E6734
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x800E80C4
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 extern SaveData saveData;
 
@@ -2303,7 +1763,6 @@ void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
     }
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 
 void RomCurve_initialise(void);
@@ -2316,19 +1775,6 @@ void dll_15_initialise_nop(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: loadSaveSettings
- * EN v1.0 Address: 0x800E7F44
- * EN v1.0 Size: 256b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
 extern void setRumbleEnabled(u8 value);

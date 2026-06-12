@@ -4,19 +4,6 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-/*
- * --INFO--
- *
- * Function: Transporter_SeqFn
- * EN v1.0 Address: 0x80190BD4
- * EN v1.0 Size: 4684b
- * EN v1.1 Address: 0x80191150
- * EN v1.1 Size: 2252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Sfx_PlayFromObject(int* obj, int soundId);
 extern void unlockLevel(int a, int b, int c);
 extern void lockLevel(int dirIdx, int v);
@@ -227,19 +214,6 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: transporter_getExtraSize
- * EN v1.0 Address: 0x801914A0
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80191640
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int transporter_getExtraSize(void)
 {
     return 0x10;
@@ -249,13 +223,6 @@ extern void objRenderFn_80041018(int obj);
 extern uint GameBit_Get(int eventId);
 extern short lbl_803DCEB8;
 
-/*
- * --INFO--
- *
- * Function: transporter_update
- * EN v1.0 Address: 0x80191658
- * EN v1.0 Size: 72b
- */
 void transporter_update(int obj)
 {
     register int self = obj;
@@ -267,13 +234,6 @@ void transporter_update(int obj)
     warpPadFn_8019042c(self);
 }
 
-/*
- * --INFO--
- *
- * Function: transporter_hitDetect
- * EN v1.0 Address: 0x801914AC
- * EN v1.0 Size: 428b
- */
 void transporter_hitDetect(int obj)
 {
     register int self = obj;
@@ -339,19 +299,6 @@ void transporter_hitDetect(int obj)
     state->flags = (u8)((u32)state->flags & ~1);
 }
 
-/*
- * --INFO--
- *
- * Function: transporter_render
- * EN v1.0 Address: 0x801914A8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80191648
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void transporter_render(void)
 {
 }
@@ -361,16 +308,6 @@ void transporter_render(void)
 #include "main/game_object.h"
 
 /*
- * --INFO--
- *
- * Function: transporter_init
- * EN v1.0 Address: 0x801916A0
- * EN v1.0 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Recovered: large switch on params[20] (32-bit id) that sets bits in
  * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
  * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
@@ -462,38 +399,9 @@ void transporter_init(int obj, u8* params)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801916e8
- * EN v1.0 Address: 0x801916E8
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80191BD4
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80191730
- * EN v1.0 Address: 0x80191730
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80191C1C
- * EN v1.1 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
-

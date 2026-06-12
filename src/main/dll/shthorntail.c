@@ -19,19 +19,6 @@ extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
 extern SHthorntailEventInterface** gMapEventInterface;
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateState
- * EN v1.0 Address: 0x801D5174
- * EN v1.0 Size: 920b
- * EN v1.1 Address: 0x801D5764
- * EN v1.1 Size: 920b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime)
 {
     int alertTriggered;
@@ -163,19 +150,6 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateRootControlMode3
- * EN v1.0 Address: 0x801D550C
- * EN v1.0 Size: 440b
- * EN v1.1 Address: 0x801D5AFC
- * EN v1.1 Size: 440b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRuntime* runtime)
 {
     int randomIdleWait;
@@ -257,19 +231,6 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
     SHthorntail_updateState(obj, runtime);
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateRootControlMode2
- * EN v1.0 Address: 0x801D56C4
- * EN v1.0 Size: 544b
- * EN v1.1 Address: 0x801D5CB4
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRuntime* runtime)
 {
     int linkedEventPending;

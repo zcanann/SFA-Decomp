@@ -14,7 +14,6 @@ typedef struct AnimsharpclawPlacement
     u8 pad1A[0x20 - 0x1A];
 } AnimsharpclawPlacement;
 
-
 typedef struct AnimsharpclawState
 {
     u8 pad0[0x24 - 0x0];
@@ -31,7 +30,6 @@ typedef struct AnimsharpclawState
     s32 unk98;
     u8 pad9C[0x140 - 0x9C];
 } AnimsharpclawState;
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017748();
@@ -57,19 +55,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -126,20 +111,6 @@ void FUN_801a8f88(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -187,7 +158,6 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void)
 {
@@ -202,7 +172,6 @@ void animsharpclaw_initialise(void)
 }
 
 void MoonSeedPlantingSpot_hitDetect(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int animsharpclaw_getExtraSize(void) { return 0x140; }
@@ -221,7 +190,6 @@ void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 #pragma scheduling off
 void animsharpclaw_free(int obj)
@@ -239,7 +207,6 @@ void animsharpclaw_free(int obj)
     (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
-
 
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
@@ -285,7 +252,6 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 #pragma dont_inline reset
 
 extern f32 lbl_803E4610;
-
 
 extern void objSetSlot(void* obj, int slot);
 

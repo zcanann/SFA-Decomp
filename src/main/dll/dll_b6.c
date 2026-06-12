@@ -17,18 +17,6 @@ extern f32 lbl_803E1644;
 extern f32 lbl_803E1648;
 extern f32 lbl_803E1658;
 
-/*
- * --INFO--
- *
- * Function: camcontrol_findBestTarget
- * EN v1.0 Address: 0x801010B4
- * EN v1.0 Size: 1268b
- * EN v1.1 Address: 0x80101350
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void* camcontrol_findBestTarget(int param_1, u8* focus)
 {
     int objIndex;
@@ -192,18 +180,6 @@ void* camcontrol_findBestTarget(int param_1, u8* focus)
     return NULL;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updateMoveAverage
- * EN v1.0 Address: 0x801015A8
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801018A4
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_updateMoveAverage(int* obj, void* p)
 {
     f32 mag;

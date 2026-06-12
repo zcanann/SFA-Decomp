@@ -7,7 +7,6 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
@@ -32,19 +31,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -101,20 +87,6 @@ void FUN_801a8f88(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
@@ -162,10 +134,8 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void);
-
 
 void ccgasvent_render(void)
 {
@@ -175,7 +145,6 @@ void ccgasvent_render(void)
 int animsharpclaw_getExtraSize(void);
 int ccgasvent_getExtraSize(void) { return 0x1; }
 int ccgasventcontrol_getExtraSize(void);
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
@@ -189,7 +158,6 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
-
 
 extern f32 lbl_803E4610;
 extern f32 lbl_803E4614;
@@ -226,4 +194,3 @@ void ccgasvent_update(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-

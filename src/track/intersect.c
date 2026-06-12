@@ -34,7 +34,6 @@ extern Mtx lbl_80396850;
 extern f32 lbl_803DFB10;
 extern f32 sqrtf(f32 x);
 
-
 extern u8 gDepthReadResults[0xF0];
 extern u8 gDepthReadPendingQueue[0xF0];
 extern GXColor lbl_803DB6D0;
@@ -80,33 +79,6 @@ extern u8 lbl_803DCFF9;
 extern u16 gDepthReadPendingCount;
 extern u16 gDepthReadResultCount;
 
-/*
- * --INFO--
- *
- * Function: objAudioFn_8006ef38
- * EN v1.0 Address: 0x8006EF38
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8006F0B4
- * EN v1.1 Size: 1224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fn_8006F388
- * EN v1.0 Address: 0x8006EF3C
- * EN v1.0 Size: 120b
- * EN v1.1 Address: 0x8006F504
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void* fn_8006F388(u32 i)
 {
     extern u8 lbl_8030E8B0[];
@@ -251,19 +223,6 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006efb4
- * EN v1.0 Address: 0x8006EFB4
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x8006F57C
- * EN v1.1 Size: 256b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* EN v1.0 Size: 256b - 77% match. Per-iteration byte decrement:
  *   if (b != 0) {
  *     v = (f32)(u32)b - step;
@@ -306,19 +265,6 @@ void timeFn_8006f400(f32 step)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: drawFn_8006f500
- * EN v1.0 Address: 0x8006F500
- * EN v1.0 Size: 1104b
- * EN v1.1 Address: 0x8006F67C
- * EN v1.1 Size: 1104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void drawFn_8006f500(void)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
@@ -422,19 +368,6 @@ void drawFn_8006f500(void)
     Camera_ApplyFullViewport();
 }
 
-/*
- * --INFO--
- *
- * Function: playerEarthWalkerAudioFn_8006f950
- * EN v1.0 Address: 0x8006F0A0
- * EN v1.0 Size: 1016b
- * EN v1.1 Address: 0x8006FACC
- * EN v1.1 Size: 688b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct {
     f32 x, y, z;
     u16 id;
@@ -549,19 +482,6 @@ void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f498
- * EN v1.0 Address: 0x8006F498
- * EN v1.0 Size: 204b
- * EN v1.1 Address: 0x8006FD7C
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8006FC00(int enable)
 {
     int i;
@@ -593,19 +513,6 @@ void fn_8006FC00(int enable)
     *(u8*)&lbl_803DCFF8 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f564
- * EN v1.0 Address: 0x8006F564
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x8006FE48
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void mapInitFn_8006fccc(void)
 {
     extern u8 lbl_80391DC0[];
@@ -652,19 +559,6 @@ void mapInitFn_8006fccc(void)
     lbl_803DCFF4 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: depthReadRequestPoll
- * EN v1.0 Address: 0x8006F690
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x8006FF74
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* Queues a GXPeekZ read at (x,y) tagged by an opaque requestKey (callers pass
  * any unique value - object ptrs, loop indices, even a function address) and
  * returns the previously completed result for that key, 0 until ready. */
@@ -707,19 +601,6 @@ int depthReadRequestPoll(int x, int y, int requestKey)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f764
- * EN v1.0 Address: 0x8006F764
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x80070050
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint getScreenResolution(void)
 {
     u32 v = screenWidth;
@@ -729,55 +610,16 @@ uint getScreenResolution(void)
     return 0x01E00280;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f788
- * EN v1.0 Address: 0x8006F788
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80070074
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void setScreenWidth(u32 width)
 {
     screenWidth = width;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f790
- * EN v1.0 Address: 0x8006F790
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8007007C
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void clearScreenWidth(void)
 {
     screenWidth = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: matrixFn_8006ff0c
- * EN v1.0 Address: 0x8006F79C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80070088
- * EN v1.1 Size: 664b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803DEE68;
 extern f32 lbl_803DEE6C;
 extern f32 lbl_803DEE70;
@@ -829,19 +671,6 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
     lbl_803DD03C = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f7a0
- * EN v1.0 Address: 0x8006F7A0
- * EN v1.0 Size: 144b
- * EN v1.1 Address: 0x80070320
- * EN v1.1 Size: 144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void normalize(f32* x, f32* y, f32* z)
 {
     f32 scale;
@@ -854,19 +683,6 @@ void normalize(f32* x, f32* y, f32* z)
     *z = *z * scale;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f830
- * EN v1.0 Address: 0x8006F830
- * EN v1.0 Size: 116b
- * EN v1.1 Address: 0x800703B0
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803DEE98;
 extern f32 lbl_803DEE9C;
 
@@ -891,19 +707,6 @@ void fn_80070234(f32* mat)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f8a4
- * EN v1.0 Address: 0x8006F8A4
- * EN v1.0 Size: 88b
- * EN v1.1 Address: 0x80070434
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole on
 void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
 {
@@ -915,19 +718,6 @@ void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f8fc
- * EN v1.0 Address: 0x8006F8FC
- * EN v1.0 Size: 156b
- * EN v1.1 Address: 0x8007048C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
 {
     extern void GXSetZMode();
@@ -948,19 +738,6 @@ void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f998
- * EN v1.0 Address: 0x8006F998
- * EN v1.0 Size: 16b
- * EN v1.1 Address: 0x80070528
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole off
 void resetSomeGxFlags(void)
 {
@@ -968,56 +745,17 @@ void resetSomeGxFlags(void)
     lbl_803DD019 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f9a8
- * EN v1.0 Address: 0x8006F9A8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80070538
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void setHudOpacity(u8 opacity)
 {
     hudOpacity = opacity;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f9b0
- * EN v1.0 Address: 0x8006F9B0
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x80070540
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void _gxSetFogParams(void)
 {
     GXColor c = lbl_803DD01C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006f9f0
- * EN v1.0 Address: 0x8006F9F0
- * EN v1.0 Size: 220b
- * EN v1.1 Address: 0x80070580
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fogFn_80070404(f32 a, f32 b)
 {
     extern f32 Camera_GetNearPlane(void);
@@ -1045,19 +783,6 @@ void fogFn_80070404(f32 a, f32 b)
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006facc
- * EN v1.0 Address: 0x8006FACC
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x80070658
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void getColor803dd01c(u8* rgbOut)
 {
     rgbOut[0] = lbl_803DD01C.r;
@@ -1065,19 +790,6 @@ void getColor803dd01c(u8* rgbOut)
     rgbOut[2] = lbl_803DD01C.b;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006faec
- * EN v1.0 Address: 0x8006FAEC
- * EN v1.0 Size: 20b
- * EN v1.1 Address: 0x80070678
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_800704FC(u8 red, u8 green, u8 blue)
 {
     extern GXColor lbl_803DD01C;
@@ -1086,19 +798,6 @@ void fn_800704FC(u8 red, u8 green, u8 blue)
     lbl_803DD01C.b = blue;
 }
 
-/*
- * --INFO--
- *
- * Function: renderWhirlpool
- * EN v1.0 Address: 0x8006FB00
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007068C
- * EN v1.1 Size: 2500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
@@ -1306,19 +1005,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: screenImageDraw
- * EN v1.0 Address: 0x8006FB04
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80071050
- * EN v1.1 Size: 2344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void screenImageDraw(u8 alpha)
 {
     extern f32 lbl_803DEEE4, lbl_803DEEEC, lbl_803DEEF0;
@@ -1517,19 +1203,6 @@ void screenImageDraw(u8 alpha)
     GXSetCurrentMtx(0);
 }
 
-/*
- * --INFO--
- *
- * Function: doSpiritVisionFilter
- * EN v1.0 Address: 0x8006FB08
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80071978
- * EN v1.1 Size: 1368b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void doSpiritVisionFilter(void)
 {
     extern Mtx hudMatrix;
@@ -1650,19 +1323,6 @@ void doSpiritVisionFilter(void)
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
 
-/*
- * --INFO--
- *
- * Function: doColorFilter
- * EN v1.0 Address: 0x8006FB0C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80071ED0
- * EN v1.1 Size: 1372b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void doColorFilter(u8* mod)
 {
     extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4;
@@ -1795,19 +1455,6 @@ void doColorFilter(u8* mod)
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
 
-/*
- * --INFO--
- *
- * Function: doDistortionFilter
- * EN v1.0 Address: 0x8006FB10
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007242C
- * EN v1.1 Size: 2892b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 static inline float distortSqrtf(float x) {
     static const double half = 0.5;
     static const double three = 3.0;
@@ -2080,19 +1727,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: gxTextureFn_80072dfc
- * EN v1.0 Address: 0x8006FB14
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80072F78
- * EN v1.1 Size: 2160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2263,18 +1897,6 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 }
 
 /*
- * --INFO--
- *
- * Function: quakeSpellTextureFn_8007366c
- * EN v1.0 Address: 0x8007366C
- * EN v1.0 Size: 1088b
- * EN v1.1 Address: 0x800737E8
- * EN v1.1 Size: 1088b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Three-tex-coord-gen ind+direct TEV setup. Loads the active env-mtx
  * (lbl_80396820) for tex0, scales tex1 by hudScale through a 3x4
  * matrix from PSMTXScale, and stamps an indirect tex matrix from local
@@ -2390,19 +2012,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     GXSetCullMode(2);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006fb1c
- * EN v1.0 Address: 0x8006FB1C
- * EN v1.0 Size: 600b
- * EN v1.1 Address: 0x80073C28
- * EN v1.1 Size: 600b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 {
     extern void fn_8004C460(void*, int);
@@ -2448,19 +2057,6 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
     GXSetCullMode(2);
 }
 
-/*
- * --INFO--
- *
- * Function: modelCb_80073d04
- * EN v1.0 Address: 0x8006FD74
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80073E80
- * EN v1.1 Size: 1036b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int modelCb_80073d04(u8 *obj, int *objB)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEF34;
@@ -2553,19 +2149,6 @@ int modelCb_80073d04(u8 *obj, int *objB)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: moonFxCb_80074110
- * EN v1.0 Address: 0x8006FD7C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8007428C
- * EN v1.1 Size: 1032b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int moonFxCb_80074110(u8 *obj, int *objB, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEF38;
@@ -2644,19 +2227,6 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: modelCb_80074518
- * EN v1.0 Address: 0x8006FD84
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80074694
- * EN v1.1 Size: 2028b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void modelCb_80074518(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2811,19 +2381,6 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: objCallback_80074d04
- * EN v1.0 Address: 0x8006FD88
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80074E80
- * EN v1.1 Size: 1716b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
@@ -2999,19 +2556,6 @@ u32 objCallback_80074d04(int handle, void* model)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8006fd90
- * EN v1.0 Address: 0x8006FD90
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x80075534
- * EN v1.1 Size: 716b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3088,19 +2632,6 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007005c
- * EN v1.0 Address: 0x8007005C
- * EN v1.0 Size: 952b
- * EN v1.1 Address: 0x80075800
- * EN v1.1 Size: 920b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3188,19 +2719,6 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80070414
- * EN v1.0 Address: 0x80070414
- * EN v1.0 Size: 856b
- * EN v1.1 Address: 0x80075B98
- * EN v1.1 Size: 832b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3279,19 +2797,6 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007076c
- * EN v1.0 Address: 0x8007076C
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x80075ED8
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3336,19 +2841,6 @@ void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, 
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007089c
- * EN v1.0 Address: 0x8007089C
- * EN v1.0 Size: 316b
- * EN v1.1 Address: 0x80076008
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3393,19 +2885,6 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: drawPartialTexture
- * EN v1.0 Address: 0x800709D8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80076144
- * EN v1.1 Size: 1352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset, int v_offset)
 {
     extern f32 hudScale;
@@ -3511,18 +2990,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
 }
 
 /*
- * --INFO--
- *
- * Function: drawRect
- * EN v1.0 Address: 0x80076510
- * EN v1.0 Size: 780b
- * EN v1.1 Address: 0x8007668C
- * EN v1.1 Size: 780b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Generic ortho-projected single-color quad blit. Sets the GX state up
  * fresh (no tex coords, color from constant K0, additive blend, fixed
  * 0x3C texmtx) then emits four GX_VTXFMT1 vertices at z=-0x18C with
@@ -3597,19 +3064,6 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXSetColorUpdate(1);
 }
 
-/*
- * --INFO--
- *
- * Function: drawScaledTexture
- * EN v1.0 Address: 0x800709E0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80076998
- * EN v1.1 Size: 1372b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags)
 {
     extern f32 hudScale;
@@ -3736,18 +3190,6 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
 }
 
 /*
- * --INFO--
- *
- * Function: hudDrawColored
- * EN v1.0 Address: 0x80076D78
- * EN v1.0 Size: 1060b
- * EN v1.1 Address: 0x80076EF4
- * EN v1.1 Size: 1060b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Caller-coloured asset blit. Same mechanic as drawTexture but the K0
  * color comes from a writable GXColor the caller passes in (we apply the
  * lbl_803DB679 alpha tint to it in place). The flag arg picks between
@@ -3858,18 +3300,6 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 }
 
 /*
- * --INFO--
- *
- * Function: drawTexture
- * EN v1.0 Address: 0x8007719C
- * EN v1.0 Size: 1128b
- * EN v1.1 Address: 0x80077318
- * EN v1.1 Size: 1128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Quad-from-asset blit: takes an "asset record" (with width at +0xA,
  * height at +0xC, and an optional second-stage flag at +0x50), a per-
  * call alpha multiplier, screen-pos (sx, sy), and a u16 size scale.
@@ -3979,19 +3409,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800709ec
- * EN v1.0 Address: 0x800709EC
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x80077780
- * EN v1.1 Size: 648b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
@@ -4042,19 +3459,6 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80070c74
- * EN v1.0 Address: 0x80070C74
- * EN v1.0 Size: 588b
- * EN v1.1 Address: 0x80077A08
- * EN v1.1 Size: 588b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
@@ -4102,19 +3506,6 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80077AD8
- * EN v1.0 Address: 0x80070EC0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80077C54
- * EN v1.1 Size: 1056b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -4207,19 +3598,6 @@ void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80077EF8
- * EN v1.0 Address: 0x80070EC4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80078074
- * EN v1.1 Size: 2120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -4434,19 +3812,6 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80070ec8
- * EN v1.0 Address: 0x80070EC8
- * EN v1.0 Size: 204b
- * EN v1.1 Address: 0x800788BC
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80078740(void)
 {
     extern void GXSetZMode();
@@ -4471,19 +3836,6 @@ void fn_80078740(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80070f94
- * EN v1.0 Address: 0x80070F94
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x80078988
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8007880C(void)
 {
     extern void GXSetZMode();
@@ -4508,19 +3860,6 @@ void fn_8007880C(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071064
- * EN v1.0 Address: 0x80071064
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x80078A58
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_800788DC(void)
 {
     extern void GXSetZMode();
@@ -4545,19 +3884,6 @@ void fn_800788DC(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071134
- * EN v1.0 Address: 0x80071134
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x80078B28
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxBlendFn_800789ac(void)
 {
     extern void GXSetZMode();
@@ -4582,19 +3908,6 @@ void gxBlendFn_800789ac(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071204
- * EN v1.0 Address: 0x80071204
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x80078BF8
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textBlendSetupFn_80078a7c(void)
 {
     extern void GXSetZMode();
@@ -4619,19 +3932,6 @@ void textBlendSetupFn_80078a7c(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800712d4
- * EN v1.0 Address: 0x800712D4
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x80078CC8
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxBlendFn_80078b4c(void)
 {
     extern void GXSetZMode();
@@ -4656,19 +3956,6 @@ void gxBlendFn_80078b4c(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800713a4
- * EN v1.0 Address: 0x800713A4
- * EN v1.0 Size: 480b
- * EN v1.1 Address: 0x80078D98
- * EN v1.1 Size: 480b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxDebugTextureFn_80078c1c(void)
 {
     extern void GXSetZMode();
@@ -4707,19 +3994,6 @@ void gxDebugTextureFn_80078c1c(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071584
- * EN v1.0 Address: 0x80071584
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x80078F78
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80078DFC(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -4734,19 +4008,6 @@ void fn_80078DFC(void)
     lbl_803DD009 += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071658
- * EN v1.0 Address: 0x80071658
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x8007904C
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80078ED0(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -4761,19 +4022,6 @@ void fn_80078ED0(void)
     lbl_803DD009 += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007172c
- * EN v1.0 Address: 0x8007172C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80079120
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textRenderSetup(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -4791,19 +4039,6 @@ void textRenderSetup(void)
     lbl_803DD028 += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071834
- * EN v1.0 Address: 0x80071834
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x80079228
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_800790AC(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -4818,19 +4053,6 @@ void fn_800790AC(void)
     lbl_803DD009 += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071908
- * EN v1.0 Address: 0x80071908
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x800792FC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80079180(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -4845,19 +4067,6 @@ void fn_80079180(void)
     lbl_803DD009 += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800719dc
- * EN v1.0 Address: 0x800719DC
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x800793D0
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxTexColorFn_80079254(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -4872,19 +4081,6 @@ void gxTexColorFn_80079254(void)
     lbl_803DD009 += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071ab0
- * EN v1.0 Address: 0x80071AB0
- * EN v1.0 Size: 440b
- * EN v1.1 Address: 0x800794A4
- * EN v1.1 Size: 440b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxTevAddTextureFrameBlendStages(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -4912,19 +4108,6 @@ void gxTevAddTextureFrameBlendStages(void)
     lbl_803DD028 += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071c68
- * EN v1.0 Address: 0x80071C68
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x8007965C
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxTextureFn_800794e0(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -4942,19 +4125,6 @@ void gxTextureFn_800794e0(void)
     lbl_803DD00A += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071d70
- * EN v1.0 Address: 0x80071D70
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80079764
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textRenderSetupFn_800795e8(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -4972,19 +4142,6 @@ void textRenderSetupFn_800795e8(void)
     lbl_803DD00A += 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071e78
- * EN v1.0 Address: 0x80071E78
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x8007986C
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void geomDrawFn_800796f0(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 4);
@@ -5004,18 +4161,6 @@ void geomDrawFn_800796f0(void)
 }
 
 /*
- * --INFO--
- *
- * Function: textRenderSetupFn_80079804
- * EN v1.0 Address: 0x80079804
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x80079980
- * EN v1.1 Size: 444b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Closes out the TEV pipeline configuration that drawViewFinderAperture etc. open:
  * pushes the current ind-stage / chan-ctrl / tex-gen counts in
  * lbl_803DD008..00B back into GX, and if the global tint alpha
@@ -5060,19 +4205,6 @@ void textRenderSetupFn_80079804(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071f90
- * EN v1.0 Address: 0x80071F90
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x80079B3C
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textureSetupFn_800799c0(void)
 {
     lbl_803DD008 = 0;
@@ -5084,19 +4216,6 @@ void textureSetupFn_800799c0(void)
     lbl_803DD028 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071fb4
- * EN v1.0 Address: 0x80071FB4
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x80079B60
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
@@ -5107,19 +4226,6 @@ void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
     GXSetTevColor(GX_TEVREG1, c);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80071ff4
- * EN v1.0 Address: 0x80071FF4
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x80079BA0
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
@@ -5131,18 +4237,6 @@ void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
 }
 
 /*
- * --INFO--
- *
- * Function: drawViewFinderAperture
- * EN v1.0 Address: 0x80079A64
- * EN v1.0 Size: 1024b
- * EN v1.1 Address: 0x80079BE0
- * EN v1.1 Size: 1024b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Fullscreen 640x480 texture-tinted quad with shape-controlled alpha:
  * `flag != 0` lights the screen with three pre-set GXColors stamped into
  * K0/T1/T2; `flag == 0` instead does a single K0 modulate where K0's
@@ -5266,19 +4360,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     GXSetCurrentMtx(0);
 }
 
-/*
- * --INFO--
- *
- * Function: drawFn_80079e64
- * EN v1.0 Address: 0x80072038
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80079FE0
- * EN v1.1 Size: 2232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
@@ -5467,19 +4548,6 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     GXSetCurrentMtx(0);
 }
 
-/*
- * --INFO--
- *
- * Function: doHeatEffect
- * EN v1.0 Address: 0x8007203C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007A898
- * EN v1.1 Size: 1524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct {
     f32 m[6];
 } IndMtxInit;
@@ -5653,18 +4721,6 @@ void doHeatEffect(u8 alpha)
 }
 
 /*
- * --INFO--
- *
- * Function: renderMotionBlur
- * EN v1.0 Address: 0x8007AD10
- * EN v1.0 Size: 780b
- * EN v1.1 Address: 0x8007AE8C
- * EN v1.1 Size: 780b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Fullscreen 640x480 textured quad with caller-supplied alpha. The alpha
  * is multiplied by lbl_803DEF20 (a 0..255 scale), fctiwz'd to int and
  * stamped into byte 3 of the K0 GXColor cache (lbl_803DB6A0). Sets up
@@ -5760,19 +4816,6 @@ void renderMotionBlur(f32 alpha)
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: doBlurFilter
- * EN v1.0 Address: 0x80072044
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007B198
- * EN v1.1 Size: 3440b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
@@ -6062,19 +5105,6 @@ void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
     Camera_RebuildProjectionMatrix();
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8007BD8C
- * EN v1.0 Address: 0x80072048
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007BF08
- * EN v1.1 Size: 1604b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8007BD8C(int handle1, int handle2)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -6210,19 +5240,6 @@ void fn_8007BD8C(int handle1, int handle2)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007204c
- * EN v1.0 Address: 0x8007204C
- * EN v1.0 Size: 660b
- * EN v1.1 Address: 0x8007C54C
- * EN v1.1 Size: 660b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void setupReflectionIndirectTev(u8 flag)
 {
     extern f32 lbl_803DEEDC;
@@ -6268,19 +5285,6 @@ void setupReflectionIndirectTev(u8 flag)
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8007C664
- * EN v1.0 Address: 0x800722E0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007C7E0
- * EN v1.1 Size: 1168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8007C664(int texHandle)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -6374,19 +5378,6 @@ void fn_8007C664(int texHandle)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8007CAF4
- * EN v1.0 Address: 0x800722E4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007CC70
- * EN v1.1 Size: 1160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8007CAF4(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEEC;
@@ -6479,19 +5470,6 @@ void fn_8007CAF4(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: gxTextureSetupFn_8007cf7c
- * EN v1.0 Address: 0x800722E8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007D0F8
- * EN v1.1 Size: 1780b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
@@ -6648,19 +5626,6 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800722ec
- * EN v1.0 Address: 0x800722EC
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x8007D7EC
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* EN v1.0 Size: 108b - 77% match. MWCC recomputes &lbl_803967C0 for
  * each PSMTXConcat call; target caches it once in r31 (callee-save)
  * and reuses across both calls. Register-allocator preference -- not
@@ -6676,18 +5641,6 @@ void fn_8007D670(void)
 }
 
 /*
- * --INFO--
- *
- * Function: OSReport
- * EN v1.0 Address: 0x800723A0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007D858
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Retail ships a locally-defined empty OSReport that disables debug
  * output. MWCC generates a varargs prologue saving r3-r10 and, if
  * cr1 indicates FP args, f1-f8 -- exactly what the empty body emits.
@@ -6697,18 +5650,6 @@ void OSReport(const char* msg, ...)
 }
 
 /*
- * --INFO--
- *
- * Function: cardLoadFn_8007d72c
- * EN v1.0 Address: 0x8007D72C
- * EN v1.0 Size: 564b
- * EN v1.1 Address: 0x8007D8A8
- * EN v1.1 Size: 564b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Card init / serial-no validation. Mounts slot 0; if the mount comes back
  * "no card filesystem" (-13) it remembers we need to format. On a check
  * error (-6) it runs CARDCheck; if that also returns -6 it formats. On a
@@ -6796,19 +5737,6 @@ int cardLoadFn_8007d72c(void)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800723ac
- * EN v1.0 Address: 0x800723AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8007DADC
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void saveFn_8007d960(u32 enable)
 {
     u8 v = (u8)enable;
@@ -6822,55 +5750,16 @@ void saveFn_8007d960(u32 enable)
     lbl_803DD050 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800723d4
- * EN v1.0 Address: 0x800723D4
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8007DB04
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cardSetStatusNeedInit(void)
 {
     lbl_803DB700 = 0xd;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800723e0
- * EN v1.0 Address: 0x800723E0
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8007DB10
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 s32 saveGameGetStatus(void)
 {
     return lbl_803DB700;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800723e8
- * EN v1.0 Address: 0x800723E8
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x8007DB18
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int saveGame_prepareAndWrite(int, int, int, int, int, void*);
 extern void saveCb_8007e77c(void);
 extern u8 lbl_803DD058;
@@ -6928,19 +5817,6 @@ int cardDeleteFn_8007d99c(void)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80072564
- * EN v1.0 Address: 0x80072564
- * EN v1.0 Size: 156b
- * EN v1.1 Address: 0x8007DCA0
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int _saveGame(int a, int b, int c)
 {
     int ret;
@@ -6956,19 +5832,6 @@ int _saveGame(int a, int b, int c)
     return ret;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80072600
- * EN v1.0 Address: 0x80072600
- * EN v1.0 Size: 156b
- * EN v1.1 Address: 0x8007DD3C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int maybeTryLoadSave(int a)
 {
     int ret;
@@ -6984,19 +5847,6 @@ int maybeTryLoadSave(int a)
     return ret;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007269c
- * EN v1.0 Address: 0x8007269C
- * EN v1.0 Size: 168b
- * EN v1.1 Address: 0x8007DDD8
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int loadSaveGame(int a, int b)
 {
     int ret;
@@ -7163,19 +6013,6 @@ void showMemCardError(u8 err)
     } while (lbl_803DB700 != 0xd);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80072744
- * EN v1.0 Address: 0x80072744
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x8007DE80
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int memCardFn_8007dd04(u8 retry)
 {
     extern int saveGame(int);
@@ -7217,19 +6054,6 @@ int memCardFn_8007dd04(u8 retry)
     return ret;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007284c
- * EN v1.0 Address: 0x8007284C
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x8007DF88
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int cardProbe(u8 retry)
 {
     extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
@@ -7266,37 +6090,11 @@ int cardProbe(u8 retry)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80072930
- * EN v1.0 Address: 0x80072930
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8007E06C
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void _initCardAndDsp(void)
 {
     CARDInit();
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80072950
- * EN v1.0 Address: 0x80072950
- * EN v1.0 Size: 664b
- * EN v1.1 Address: 0x8007E08C
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cardGetMessage(u32* buttons, u32* texts, u32* count)
 {
     extern u8 lbl_803DD059;
@@ -7407,31 +6205,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
 }
 
 /*
- * --INFO--
- *
- * Function: showMemCardError
- * EN v1.0 Address: 0x8007E1AC
- * EN v1.0 Size: 928b
- * EN v1.1 Address: 0x8007E328
- * EN v1.1 Size: 1144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-/*
- * --INFO--
- *
- * Function: cardShowLoadingMsg
- * EN v1.0 Address: 0x8007E54C
- * EN v1.0 Size: 392b
- * EN v1.1 Address: 0x8007E7A0
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Per-frame "blocking" dialog renderer driven by the card-write retry
  * loops in _saveGame/DBC0/DC5C/DD04. Pumps 60 frames of the GX/dialog
  * pipeline; on each frame either lets the active controller draw its own
@@ -7502,18 +6275,6 @@ void cardShowLoadingMsg(u8 kind)
 }
 
 /*
- * --INFO--
- *
- * Function: cardCb_8007e6d4
- * EN v1.0 Address: 0x8007E6D4
- * EN v1.0 Size: 116b
- * EN v1.1 Address: 0x8007E928
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Card-write callback dispatched through saveGame_prepareAndWrite from _saveGame.
  * Stages a per-slot 0x6EC-byte block plus the shared 0xE4-byte trailer
  * into the card-IO buffer (lbl_803DD044), then asks saveGame_doWrite(2) to
@@ -7534,18 +6295,6 @@ int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
 }
 
 /*
- * --INFO--
- *
- * Function: saveCb_8007e748
- * EN v1.0 Address: 0x8007E748
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8007E99C
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Card-write callback dispatched through saveGame_prepareAndWrite from maybeTryLoadSave.
  * Copies the 0xE4-byte block at offset 0x1F14 in the card buffer (held in
  * lbl_803DD044) into the caller-supplied destination.

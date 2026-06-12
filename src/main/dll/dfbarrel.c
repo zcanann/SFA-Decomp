@@ -15,14 +15,6 @@ extern void DFPulley_integrateLinks(u8 * self);
 
 #define DFBARREL_NODE_LINKS_OFFSET 0x28
 
-
-/*
- * --INFO--
- *
- * Function: DFRope_UpdateSimulation
- * EN v1.0 Address: 0x801C0FD8
- * EN v1.0 Size: 480b
- */
 void DFRope_UpdateSimulation(u8* self)
 {
     int j;
@@ -108,13 +100,6 @@ void DFRope_UpdateSimulation(u8* self)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: DFRopeLink_AttachNodes
- * EN v1.0 Address: 0x801C11B8
- * EN v1.0 Size: 128b
- */
 void DFRopeLink_AttachNodes(DFRopeLink* linkSelf, DFRopeNode* firstNode, DFRopeNode* secondNode)
 {
     u8* nodeLinkIter;

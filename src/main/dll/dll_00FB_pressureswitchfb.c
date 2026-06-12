@@ -26,19 +26,6 @@ extern undefined8 ObjGroup_RemoveObject();
 #define PRESSURESWITCHFB_OBJ_LINK_UNDERW 0x0274
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
 
-/*
- * --INFO--
- *
- * Function: pressureswitchfb_updateStateMode
- * EN v1.0 Address: 0x8017AC2C
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x8017AC40
- * EN v1.1 Size: 388b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam)
 {
     extern void GameBit_Set(int eventId, int value); /* #57 */
@@ -101,37 +88,11 @@ undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int sta
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: pressureswitchfb_getExtraSize
- * EN v1.0 Address: 0x8017AD88
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8017ADC4
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int pressureswitchfb_getExtraSize(void)
 {
     return PRESSURESWITCHFB_EXTRA_SIZE;
 }
 
-/*
- * --INFO--
- *
- * Function: pressureswitchfb_free
- * EN v1.0 Address: 0x8017AD90
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017ADCC
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pressureswitchfb_free(int obj)
 {
     ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
@@ -171,19 +132,6 @@ extern undefined4 ObjGroup_AddObject();
 
 extern f32 timeDelta;
 
-/*
- * --INFO--
- *
- * Function: pressureswitchfb_update
- * EN v1.0 Address: 0x8017ADB4
- * EN v1.0 Size: 1540b
- * EN v1.1 Address: 0x8017B2F8
- * EN v1.1 Size: 1604b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     u8 pad[4];
@@ -489,76 +437,6 @@ void pressureswitchfb_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8017b3bc
- * EN v1.0 Address: 0x8017B3BC
- * EN v1.0 Size: 768b
- * EN v1.1 Address: 0x8017BB20
- * EN v1.1 Size: 796b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017b6bc
- * EN v1.0 Address: 0x8017B6BC
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8017BE3C
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017b6dc
- * EN v1.0 Address: 0x8017B6DC
- * EN v1.0 Size: 204b
- * EN v1.1 Address: 0x8017BE60
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017b7a8
- * EN v1.0 Address: 0x8017B7A8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017BF24
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017b7ac
- * EN v1.0 Address: 0x8017B7AC
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x8017C0F4
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 void mmp_bridge_free(void);
 
@@ -656,30 +534,6 @@ int Door_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
-/*
- * --INFO--
- *
- * Function: Door_SeqFn
- * EN v1.0 Address: 0x8017B5C8
- * EN v1.0 Size: 788b
- */
-
-/*
- * --INFO--
- *
- * Function: Lock_DoorLock_SeqFn
- * EN v1.0 Address: 0x8017BCF8
- * EN v1.0 Size: 180b
- */
-
-/*
- * --INFO--
- *
- * Function: doorlock_update
- * EN v1.0 Address: 0x8017BE28
- * EN v1.0 Size: 848b
- */
-
 /* segment pragma-stack balance (re-split): */
 
 #include "main/dll/alphaanim.h"
@@ -688,146 +542,6 @@ int Door_getExtraSize(void);
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
-
-/*
- * --INFO--
- *
- * Function: doorlock_init
- * EN v1.0 Address: 0x8017C178
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x8017C250
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017c5c4
- * EN v1.0 Address: 0x8017C5C4
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x8017C7EC
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017c608
- * EN v1.0 Address: 0x8017C608
- * EN v1.0 Size: 456b
- * EN v1.1 Address: 0x8017C82C
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_free
- * EN v1.0 Address: 0x8017C7D0
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017C960
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_render
- * EN v1.0 Address: 0x8017C7F4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017C984
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_update
- * EN v1.0 Address: 0x8017C81C
- * EN v1.0 Size: 548b
- * EN v1.1 Address: 0x8017C9B4
- * EN v1.1 Size: 592b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_init
- * EN v1.0 Address: 0x8017CA40
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017CC04
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObj2_free
- * EN v1.0 Address: 0x8017CAF4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017CDE4
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObj2_update
- * EN v1.0 Address: 0x8017CB18
- * EN v1.0 Size: 460b
- * EN v1.1 Address: 0x8017CE10
- * EN v1.1 Size: 596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObj2_init
- * EN v1.0 Address: 0x8017CCE4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017D064
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 

@@ -45,41 +45,15 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-
-
-
 
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
 
-/*
- * --INFO--
- *
- * Function: WM_ObjCreator_update
- * EN v1.0 Address: 0x801EF3A8
- * EN v1.0 Size: 3548b
- * EN v1.1 Address: 0x801EF9E0
- * EN v1.1 Size: 2956b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
-
-
 
 #include "main/dll/WC/WClaser.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
@@ -90,7 +64,6 @@ extern u32 randomGetRange(int min, int max);
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
@@ -166,10 +139,6 @@ STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
 STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
-
-
-
-
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -299,15 +268,3 @@ void WM_seqobject_initialise(void)
 }
 
 int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
-
-
-
-
-
-
-
-
-
-
-
-

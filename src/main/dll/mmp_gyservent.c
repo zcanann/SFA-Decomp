@@ -19,7 +19,6 @@ typedef struct MmpGyserventState
     f32 unk34;
 } MmpGyserventState;
 
-
 extern void mtxRotateByVec3s(void* out, void* vec);
 extern void mtx44Transpose(void* m, void* out);
 extern void Matrix_TransformPoint(void* mtx, float x, float y, float z, float* ox, float* oy, float* oz);
@@ -34,13 +33,6 @@ extern f32 lbl_803E40E0;
 extern f32 lbl_803E40E4;
 extern f32 lbl_803E40E8;
 
-/*
- * --INFO--
- *
- * Function: objFn_80198fa4
- * EN v1.0 Address: 0x80198FA4
- * EN v1.0 Size: 484b
- */
 void objFn_80198fa4(s16* obj, void* arg2)
 {
     void* state;
@@ -94,13 +86,6 @@ void objFn_80198fa4(s16* obj, void* arg2)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: objSeqMoveFn_80199188
- * EN v1.0 Address: 0x80199188
- * EN v1.0 Size: 356b
- */
 void objSeqMoveFn_80199188(void* obj, int arg2)
 {
     f32 speed;
@@ -179,13 +164,6 @@ end:
     objInterpretSeq(obj, arg2, (int)leg, (int)dz2);
 }
 
-/*
- * --INFO--
- *
- * Function: objSeqFn_801992ec
- * EN v1.0 Address: 0x801992EC
- * EN v1.0 Size: 196b
- */
 void objSeqFn_801992ec(void* obj, int arg2)
 {
     void* state;
@@ -216,4 +194,3 @@ void objSeqFn_801992ec(void* obj, int arg2)
     }
     objInterpretSeq(obj, arg2, (int)cat, (int)d1);
 }
-

@@ -3,31 +3,13 @@
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/game_object.h"
 
-
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
-
-
-/*
- * --INFO--
- *
- * Function: sh_emptytumblew_init
- * EN v1.0 Address: 0x801DAFDC
- * EN v1.0 Size: 1440b
- * EN v1.1 Address: 0x801DB048
- * EN v1.1 Size: 1080b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
-
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
@@ -36,7 +18,6 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
-
 
 int fn_801DD170(void)
 {

@@ -6,19 +6,6 @@ extern f32 lbl_803E2540;
 extern f32 lbl_803E2544;
 extern f32 lbl_803E2548;
 
-/*
- * --INFO--
- *
- * Function: camdrakor_computeTargetOffset
- * EN v1.0 Address: 0x8010C0D8
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x8010C1A4
- * EN v1.1 Size: 352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camdrakor_computeTargetOffset
 (int param_1, float* param_2, float* param_3, float* param_4, float* param_5)
 {

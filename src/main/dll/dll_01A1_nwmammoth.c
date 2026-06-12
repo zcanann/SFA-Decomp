@@ -34,38 +34,12 @@ extern f32 lbl_803E5EC8;
 extern f32 lbl_803E5ECC;
 extern f32 lbl_803E5ED0;
 
-/*
- * --INFO--
- *
- * Function: FUN_801ce078
- * EN v1.0 Address: 0x801CE078
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CE1A0
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801ce078(undefined2* param_1, int param_2)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801ce340
- * EN v1.0 Address: 0x801CE340
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x801CE548
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801ce340(short* param_1, int param_2, int param_3)
 {
     if (((param_3 == 0) || (*(int*)(param_2 + 0x28) == 0)) ||
@@ -93,19 +67,6 @@ void FUN_801ce340(short* param_1, int param_2, int param_3)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: nw_mammoth_getExtraSize
- * EN v1.0 Address: 0x801CEFB4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int nw_mammoth_getExtraSize(void)
 {
     return 0x48c;
@@ -707,13 +668,6 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 
 extern f32 lbl_803E5210;
 
-/*
- * --INFO--
- *
- * Function: nw_mammoth_free
- * EN v1.0 Address: 0x801CEFBC
- * EN v1.0 Size: 84b
- */
 void nw_mammoth_free(void* obj)
 {
     extern void ObjGroup_RemoveObject(void* obj, int group); /* #57 */
@@ -727,13 +681,6 @@ void nw_mammoth_free(void* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: nw_mammoth_render
- * EN v1.0 Address: 0x801CF010
- * EN v1.0 Size: 156b
- */
 void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag); /* #57 */
@@ -823,19 +770,6 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
 
-/*
- * --INFO--
- *
- * Function: nw_mammoth_update
- * EN v1.0 Address: 0x801CF0AC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CF2E0
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void nw_mammoth_update(NwMammothObject* obj, int param_2)
 {
     extern void fn_801CE2BC(int obj, void* state, void* objDef); /* #57 */
@@ -977,13 +911,6 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: nw_mammoth_init
- * EN v1.0 Address: 0x801CF4F0
- * EN v1.0 Size: 668b
- */
 void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload)
 {
     u32 pathParam;
@@ -1065,55 +992,6 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801cf0b4
- * EN v1.0 Address: 0x801CF0B4
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801CF570
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: nw_tricky_getExtraSize
- * EN v1.0 Address: 0x801CF7B8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: nw_tricky_SeqFn
- * EN v1.0 Address: 0x801CF78C
- * EN v1.0 Size: 44b
- */
 int nw_tricky_SeqFn(void);
-
-/*
- * --INFO--
- *
- * Function: FUN_801cf108
- * EN v1.0 Address: 0x801CF108
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801CF5C4
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 void nw_tricky_free(int obj);

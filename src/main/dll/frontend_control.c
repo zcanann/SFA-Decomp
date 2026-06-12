@@ -1,7 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/FRONT/frontend_control.h"
 
-
 extern u32 getButtonsHeld(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void Sfx_PlayFromObject(int sfx, int id);
@@ -28,13 +27,6 @@ extern char sFrontendTimeFormat[];
 __declspec(section ".sdata") extern char sFrontendCompletionPercentFormat[];
 __declspec(section ".sdata") extern char sFrontendSingleDigitFormat[];
 
-/*
- * --INFO--
- *
- * Function: saveFileSelect_checkCheatCodes
- * EN v1.0 Address: 0x80119C20
- * EN v1.0 Size: 436b
- */
 void saveFileSelect_checkCheatCodes(void)
 {
     u32 held;
@@ -100,13 +92,6 @@ void saveFileSelect_checkCheatCodes(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: saveSelect_drawText
- * EN v1.0 Address: 0x80119DD4
- * EN v1.0 Size: 472b
- */
 void saveSelect_drawText(int unused, int alpha)
 {
     char buf[16];

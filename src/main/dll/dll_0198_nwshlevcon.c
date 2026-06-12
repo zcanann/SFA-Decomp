@@ -4,55 +4,8 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
-
 extern undefined4 FUN_8003b818();
 
-
-/*
- * --INFO--
- *
- * Function: dll_197_init
- * EN v1.0 Address: 0x801CA5B4
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801CA6BC
- * EN v1.1 Size: 1196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caa30
- * EN v1.0 Address: 0x801CAA30
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x801CAB68
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801cacd4
- * EN v1.0 Address: 0x801CACD4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801CAE40
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
@@ -64,39 +17,7 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeac
- * EN v1.0 Address: 0x801CAEAC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CAEF8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeb0
- * EN v1.0 Address: 0x801CAEB0
- * EN v1.0 Size: 1240b
- * EN v1.1 Address: 0x801CAF74
- * EN v1.1 Size: 788b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -112,7 +33,6 @@ void nwsh_levcon_initialise(void)
 {
 }
 
-
 /* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void) { return 0x0; }
 int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
@@ -126,7 +46,6 @@ void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5150);
 }
-
 
 extern void Music_Trigger(int track, int param);
 extern int GameBit_Set(int eventId, int value);
@@ -168,7 +87,6 @@ void nwsh_levcon_init(int* obj)
 }
 
 extern ModgfxInterface** gModgfxInterface;
-
 
 extern void* Obj_GetPlayerObject(void);
 extern void fn_80296518(void* player, int a, int b);

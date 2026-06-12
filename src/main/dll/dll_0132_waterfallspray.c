@@ -2,26 +2,10 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/effect_interfaces.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
 extern EffectInterface** gPartfxInterface;
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 extern u8 framesThisStep;
 extern f32 sqrtf(f32);
@@ -34,37 +18,19 @@ extern f32 sqrtf(f32);
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
-
 typedef struct WaterFallSprayState
 {
     u32 unk0;
     u32 unk4;
 } WaterFallSprayState;
 
-
 extern u8* Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
 
-
-/*
- * --INFO--
- *
- * Function: lightning_free
- * EN v1.0 Address: 0x801978A8
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801978DC
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
-
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
-
 
 void WaterFallSpray_free(u8* obj)
 {
@@ -209,82 +175,6 @@ void sfxplayerObj_init(u8* obj, u8* data);
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197960
- * EN v1.0 Address: 0x80197960
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x801979B8
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e54
- * EN v1.0 Address: 0x80197E54
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80197E64
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e84
- * EN v1.0 Address: 0x80197E84
- * EN v1.0 Size: 940b
- * EN v1.1 Address: 0x80197E94
- * EN v1.1 Size: 828b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8019836c
- * EN v1.0 Address: 0x8019836C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80198350
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801983a0
- * EN v1.0 Address: 0x801983A0
- * EN v1.0 Size: 660b
- * EN v1.1 Address: 0x80198384
- * EN v1.1 Size: 916b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void WaterFallSpray_render(void)

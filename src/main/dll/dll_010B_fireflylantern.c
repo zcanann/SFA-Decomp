@@ -14,7 +14,6 @@ extern void Obj_FreeObject(int obj);
 extern void gameBitDecrement(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -127,19 +126,6 @@ void FireFlyLantern_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FireFlyLantern_init
- * EN v1.0 Address: 0x80187524
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x80187608
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FireFlyLantern_init(int obj, int def)
 {
     void* player;

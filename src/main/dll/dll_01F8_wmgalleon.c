@@ -45,7 +45,6 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
@@ -57,7 +56,6 @@ extern int* gScreensInterface;
 extern undefined4* lbl_803DCA94;
 extern void* lbl_803DDC74;
 extern f32 lbl_803E5CE8;
-
 
 #define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
 #define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1
@@ -79,24 +77,7 @@ extern f32 lbl_803E5CE8;
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
 
-/*
- * --INFO--
- *
- * Function: WM_ObjCreator_update
- * EN v1.0 Address: 0x801EF3A8
- * EN v1.0 Size: 3548b
- * EN v1.1 Address: 0x801EF9E0
- * EN v1.1 Size: 2956b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void WM_Galleon_hitDetect(void)
 {
@@ -422,24 +403,3 @@ void WM_Galleon_initialise(void)
 }
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

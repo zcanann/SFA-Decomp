@@ -4,14 +4,6 @@ extern void DCInvalidateRange(void* start, u32 nBytes);
 
 #define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 
-
-/*
- * --INFO--
- *
- * Function: AttractMovie_AssignBuffers
- * EN v1.0 Address: 0x80118C88
- * EN v1.0 Size: 548b
- */
 int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,
                                void* uTextureBuffer, void* vTextureBuffer, void* audioBuffer,
                                void* thpWorkBuffer)
@@ -90,13 +82,6 @@ fail:
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: AttractMovie_GetBufferSizes
- * EN v1.0 Address: 0x80118EAC
- * EN v1.0 Size: 256b
- */
 void AttractMovie_GetBufferSizes(uint* movieOrReadBufferSize, int* yTextureBufferSize,
                                  int* uTextureBufferSize, int* vTextureBufferSize,
                                  uint* audioBufferSize, int* thpWorkBufferSize)
@@ -142,13 +127,6 @@ void AttractMovie_GetBufferSizes(uint* movieOrReadBufferSize, int* yTextureBuffe
     *thpWorkBufferSize = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: AttractMovie_CloseFile
- * EN v1.0 Address: 0x80118FAC
- * EN v1.0 Size: 84b
- */
 int AttractMovie_CloseFile(void)
 {
     AttractMoviePlayer* player;
@@ -163,4 +141,3 @@ int AttractMovie_CloseFile(void)
 
     return 0;
 }
-

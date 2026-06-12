@@ -2,7 +2,6 @@
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/dll/shwgpipe_struct.h"
 
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern f32 timeDelta;
@@ -12,38 +11,6 @@ extern void spscarab_render(void);
 extern void spscarab_free(int x);
 extern int spscarab_getObjectTypeId(void);
 extern int spscarab_getExtraSize(void);
-
-/*
- * --INFO--
- *
- * Function: spscarab_update
- * EN v1.0 Address: 0x801E8EE0
- * EN v1.0 Size: 588b
- */
-
-/*
- * --INFO--
- *
- * Function: spscarab_init
- * EN v1.0 Address: 0x801E912C
- * EN v1.0 Size: 500b
- */
-
-/*
- * --INFO--
- *
- * Function: spscarab_release
- * EN v1.0 Address: 0x801E9320
- * EN v1.0 Size: 4b
- */
-
-/*
- * --INFO--
- *
- * Function: spscarab_initialise
- * EN v1.0 Address: 0x801E9324
- * EN v1.0 Size: 4b
- */
 
 ObjectDescriptor gSPScarabObjDescriptor = {
     0,
@@ -62,59 +29,24 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     spscarab_getExtraSize,
 };
 
-/*
- * --INFO--
- *
- * Function: spdrape_getExtraSize
- * EN v1.0 Address: 0x801E9328
- * EN v1.0 Size: 8b
- */
 int spdrape_getExtraSize(void)
 {
     return 0x18;
 }
 
-/*
- * --INFO--
- *
- * Function: spdrape_getObjectTypeId
- * EN v1.0 Address: 0x801E9330
- * EN v1.0 Size: 8b
- */
 int spdrape_getObjectTypeId(void)
 {
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: spdrape_free
- * EN v1.0 Address: 0x801E9338
- * EN v1.0 Size: 4b
- */
 void spdrape_free(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: spdrape_render
- * EN v1.0 Address: 0x801E933C
- * EN v1.0 Size: 4b
- */
 void spdrape_render(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: spdrape_hitDetect
- * EN v1.0 Address: 0x801E9340
- * EN v1.0 Size: 4b
- */
 void spdrape_hitDetect(void)
 {
 }
@@ -122,7 +54,6 @@ void spdrape_hitDetect(void)
 #include "main/objanim_internal.h"
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
-
 
 typedef struct SpdrapeObjectDef
 {
@@ -133,7 +64,6 @@ typedef struct SpdrapeObjectDef
     u8 pad1C[0x20 - 0x1C];
 } SpdrapeObjectDef;
 
-
 typedef struct SpdrapeState
 {
     u8 pad0[0x10 - 0x0];
@@ -143,20 +73,6 @@ typedef struct SpdrapeState
     u8 pad17[0x18 - 0x17];
 } SpdrapeState;
 
-
-/*
- * --INFO--
- *
- * Function: spdrape_update
- * EN v1.0 Address: 0x801E9344
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E93B4
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Camera_GetCurrentViewSlot(void);
@@ -269,52 +185,7 @@ void spdrape_update(int obj)
         obj, *state, timeDelta, NULL);
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801e9368
- * EN v1.0 Address: 0x801E9368
- * EN v1.0 Size: 808b
- * EN v1.1 Address: 0x801E9518
- * EN v1.1 Size: 588b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801e983c
- * EN v1.0 Address: 0x801E983C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E997C
- * EN v1.1 Size: 760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: spitembeam_init
- * EN v1.0 Address: 0x801E9900
- * EN v1.0 Size: 20b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void spitembeam_init(int obj);
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void spdrape_release(void)
@@ -326,7 +197,6 @@ void spdrape_initialise(void)
 }
 
 void spitembeam_free(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -372,7 +242,6 @@ void spdrape_init(int* obj, u8* def)
     }
 }
 
-
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 
 static inline void shPos3f32(const f32 x, const f32 y, const f32 z)
@@ -395,4 +264,3 @@ static inline void shTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-

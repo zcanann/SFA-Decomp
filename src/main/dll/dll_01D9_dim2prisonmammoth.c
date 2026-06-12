@@ -11,7 +11,6 @@ typedef struct Dim2prisonmammothPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dim2prisonmammothPlacement;
 
-
 typedef struct Dim2prisonmammothState
 {
     s32 unk0;
@@ -36,26 +35,7 @@ typedef struct Dim2prisonmammothState
     u8 pad5FD[0x604 - 0x5FD];
 } Dim2prisonmammothState;
 
-
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: DIMSnowHorn1_update
- * EN v1.0 Address: 0x802BB720
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802BBC14
- * EN v1.1 Size: 620b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 extern void fn_8003A168(int obj, int q);
 extern void characterDoEyeAnims(int obj, int q);
@@ -68,9 +48,7 @@ extern int GameBit_Get(int id);
 extern f32 lbl_803E82D0;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-
 extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
-
 
 extern int gDim2PrisonMammothStateHandlers[];
 extern void* gDim2PrisonMammothDefaultStateHandler;
@@ -89,33 +67,13 @@ extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void Sfx_PlayFromObject(int obj, int id);
 
-
-
-
-
-
-
 extern int* gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState* animUpdate);
-
-
-
-
-
-
-
 
 extern u8 lbl_803DC750;
 extern ObjHitReactEntry lbl_803351A8[];
 extern f32 timeDelta;
 extern void saveGame_saveObjectPos(int obj);
-
-
-
-
-
-
-
 
 /* Pattern wrappers. */
 int dim2prisonmammoth_defaultStateHandler(void) { return 0x0; }

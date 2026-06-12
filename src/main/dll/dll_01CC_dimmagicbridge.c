@@ -16,14 +16,6 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
-
-
-
-
-
-
 typedef struct DimmagicbridgeFlameSeqFnState
 {
     u8 pad0[0x51 - 0x0];
@@ -35,15 +27,10 @@ typedef struct DimmagicbridgeFlameSeqFnState
     u8 pad66[0x68 - 0x66];
 } DimmagicbridgeFlameSeqFnState;
 
-
-
-
-
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
  */
-
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -51,7 +38,6 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
  * Per-object extra state for the dll_1CE hatch door
  * (dll_1CE_getExtraSize == 0xC).
  */
-
 
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
@@ -62,8 +48,6 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
  */
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
-
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -83,7 +67,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
-
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -121,39 +104,12 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
-/*
- * --INFO--
- *
- * Function: FUN_801b3de4
- * EN v1.0 Address: 0x801B3DE4
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x801B401C
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801b3de4(undefined4 param_1, uint param_2)
 {
     (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801b40f0
- * EN v1.0 Address: 0x801B40F0
- * EN v1.0 Size: 696b
- * EN v1.1 Address: 0x801B4398
- * EN v1.1 Size: 724b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double param_4)
 {
     byte bVar1;
@@ -251,20 +207,6 @@ LAB_801b44d4:
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: explosion_release
- * EN v1.0 Address: 0x801B5650
- * EN v1.0 Size: 356b
- * EN v1.1 Address: 0x801B5DB8
- * EN v1.1 Size: 384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void textureFree(int tex);
 
 void explosion_release(uint obj);
@@ -337,20 +279,6 @@ void fn_explosion_release_v11_unused(uint param_1)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801b5b8c
- * EN v1.0 Address: 0x801B5B8C
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x801B62FC
- * EN v1.1 Size: 468b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801b5b8c(void)
 {
     int iVar1;
@@ -396,19 +324,6 @@ void FUN_801b5b8c(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801b5d00
- * EN v1.0 Address: 0x801B5D00
- * EN v1.0 Size: 240b
- * EN v1.1 Address: 0x801B64D0
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801b5d00(int param_1, int param_2)
 {
     int iVar1;
@@ -446,16 +361,8 @@ void FUN_801b5d00(int param_1, int param_2)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void explosion_hitDetect(void);
-
-
-
-
-
-
-
 
 void dimmagicbridge_free(void)
 {
@@ -564,8 +471,6 @@ int dim_levelcontrol_getExtraSize(void);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E4A18;
 
-
-
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -617,13 +522,11 @@ void dimmagicbridge_update(int obj)
  * and using mask 0x6000 + initial state byte 3 at +0. */
 void dimwooddoor2_init(u8* obj, u8* params);
 
-
 /* explosion_free: model-light release if present. */
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
-
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
@@ -705,22 +608,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
 
 extern f32 timeDelta;
 
-/* EN v1.0 0x801B5804  size: 380b  dimwooddoor2_update: advance the door's
- * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
- * alpha, otherwise scan the nearby objects and, if a key object is present,
- * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
-
-
-/* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic - coast
- * the lid open with clamped velocity while idle, and once a key object is
- * nearby, count down then ring the gamebit and (if the load isn't locked)
- * spawn the contents object seeded from the door's transform. */
-
-
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-
 
 extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;
@@ -730,13 +618,6 @@ extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 
 extern f32 mathSinf(f32 x);
 extern void DCStoreRange(void* p, int n);
-
-
-
-
-
-
-
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {

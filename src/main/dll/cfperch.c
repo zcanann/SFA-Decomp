@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfperch.h"
 
-
-
 #define SMALLBASKET_LINKED_ID_BASE 0x40000
 #define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
 #define SMALLBASKET_ROB_WAVE_ID_65D0 0x65d0
@@ -12,8 +10,6 @@
 #define SMALLBASKET_ROB_WAVE_ID_65D6 0x65d6
 #define SMALLBASKET_ROB_WAVE_ID_65D7 0x65d7
 #define GAMEBIT_SFX_MUTE 0xa71
-
-
 
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
@@ -33,7 +29,6 @@ f32 fn_80183204(int obj)
 }
 
 extern void ObjGroup_AddObject(int obj, int group);
-
 
 void fn_80183250(int obj, int def)
 {
@@ -95,12 +90,3 @@ void fn_80183250(int obj, int def)
 }
 
 extern void ObjHits_ClearHitVolumes(int obj);
-
-
-/*
- * --INFO--
- *
- * Function: smallbasket_update
- * EN v1.0 Address: 0x801826E8
- * EN v1.0 Size: 2476b
- */

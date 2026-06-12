@@ -4,54 +4,19 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjLink_AttachChild();
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a8f88
- * EN v1.0 Address: 0x801A8F88
- * EN v1.0 Size: 836b
- * EN v1.1 Address: 0x801A9044
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a9408
- * EN v1.0 Address: 0x801A9408
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801A953C
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* 8b "li r3, N; blr" returners. */
-
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int id);
 
-
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
-
 
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -71,48 +36,6 @@ extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
 extern f32 lbl_803E5360;
 
-/*
- * --INFO--
- *
- * Function: ccqueen_render
- * EN v1.0 Address: 0x801AA560
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x801AA584
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801aa684
- * EN v1.0 Address: 0x801AA684
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801AA6C0
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801aaa6c
- * EN v1.0 Address: 0x801AAA6C
- * EN v1.0 Size: 148b
- * EN v1.1 Address: 0x801AAE2C
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
@@ -146,20 +69,6 @@ void FUN_801aaa6c(double param_1, int param_2, int param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801abf38
- * EN v1.0 Address: 0x801ABF38
- * EN v1.0 Size: 180b
- * EN v1.1 Address: 0x801AC038
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -173,7 +82,6 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void) { return 0x18; }
 int ccsharpclawpad_getExtraSize(void);
@@ -181,9 +89,6 @@ int ccsharpclawpad_getExtraSize(void);
 /* render-with-fn(lbl) (no visibility check). */
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
-
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -217,7 +122,6 @@ void cclightfoot_free(int* obj, int p2)
 }
 
 extern void fn_80088870(void* a, void* b, void* c, void* d);
-
 
 extern f32 lbl_803E4674;
 extern f32 lbl_803E4678;
@@ -280,7 +184,6 @@ extern int ObjTrigger_IsSet(int obj);
 extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4670;
 
-
 #pragma scheduling off
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -314,16 +217,10 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void ccpedstal_update(int obj);
 
-
-
-
 extern int playerIsDisguised(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-
-
 #include "main/dll/SC/SCtotemlogpuz.h"
-
 
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;

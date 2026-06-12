@@ -2,12 +2,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
 typedef struct DimdismountpointState
 {
     f32 unk0;
@@ -16,30 +10,11 @@ typedef struct DimdismountpointState
     f32 unkC;
 } DimdismountpointState;
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
-/*
- * --INFO--
- *
- * Function: dimlavasmash_init
- * EN v1.0 Address: 0x801B3658
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B367C
- * EN v1.1 Size: 636b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 void dimdismountpoint_hitDetect(void)
 {
@@ -122,7 +97,6 @@ int dimdismountpoint_getExtraSize(void) { return 0x10; }
 extern f32 lbl_803E4900;
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 
@@ -152,7 +126,6 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 
 void dimdismountpoint_func11(int obj, int flag)
 {

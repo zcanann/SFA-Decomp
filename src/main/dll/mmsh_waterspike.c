@@ -11,13 +11,6 @@ extern f32 lbl_803E4D10;
 
 extern int cos16(s16 angle);
 
-/*
- * --INFO--
- *
- * Function: fn_801BEEA0
- * EN v1.0 Address: 0x801BEEA0
- * EN v1.0 Size: 424b
- */
 void fn_801BEEA0(s16* obj, u8* state)
 {
     u8* motion;

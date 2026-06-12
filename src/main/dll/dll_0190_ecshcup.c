@@ -3,48 +3,11 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: gpsh_shrine_update
- * EN v1.0 Address: 0x801C7724
- * EN v1.0 Size: 2520b
- * EN v1.1 Address: 0x801C7CD8
- * EN v1.1 Size: 2124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 extern void* Obj_GetPlayerObject(void);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
 
 void ecsh_cup_hitDetect(void)
 {
@@ -60,8 +23,6 @@ extern f32 lbl_803E5048;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5060;
 
-
-
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -74,7 +35,6 @@ void ecsh_cup_free(int* obj)
 }
 
 void gpsh_scene_init(int* obj, int* def);
-
 
 #include "main/dll/dll_0190_ecshcup.h"
 #include "main/effect_interfaces.h"
@@ -100,12 +60,10 @@ typedef struct EcshCupState
     u8 pad2F[0x30 - 0x2F];
 } EcshCupState;
 
-
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_FindNearestObject();
-
 
 extern f32 lbl_803E5064;
 extern f32 lbl_803E5068;
@@ -119,19 +77,6 @@ extern f32 lbl_803E5084;
 extern f32 lbl_803E5088;
 extern undefined4 lbl_803DDBC8;
 
-/*
- * --INFO--
- *
- * Function: ecsh_cup_update
- * EN v1.0 Address: 0x801C83D0
- * EN v1.0 Size: 1636b
- * EN v1.1 Address: 0x801C8524
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     f32 x;
@@ -316,46 +261,11 @@ void ecsh_cup_update(short* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801c83d4
- * EN v1.0 Address: 0x801C83D4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801C864C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: ecsh_cup_release
- * EN v1.0 Address: 0x801C8B60
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 void ecsh_cup_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: ecsh_cup_init
- * EN v1.0 Address: 0x801C8A34
- * EN v1.0 Size: 300b
- */
 #pragma scheduling off
 #pragma peephole off
 void ecsh_cup_init(int obj, int p2)
@@ -394,25 +304,11 @@ void ecsh_cup_init(int obj, int p2)
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
 
-/*
- * --INFO--
- *
- * Function: ecsh_cup_initialise
- * EN v1.0 Address: 0x801C8B64
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void ecsh_cup_initialise(void)
 {
 }
-
 
 extern f32 mathSinf(f32 v);
 extern int getAngle(f32 dx, f32 dz);
@@ -429,13 +325,6 @@ extern f32 lbl_803E50C0;
 extern f32 lbl_803E50C4;
 extern f32 lbl_803E50C8;
 
-/*
- * --INFO--
- *
- * Function: fn_801C8B68
- * EN v1.0 Address: 0x801C8B68
- * EN v1.0 Size: 852b
- */
 #pragma scheduling off
 #pragma peephole off
 void fn_801C8B68(int obj)

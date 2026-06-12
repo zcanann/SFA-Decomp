@@ -9,14 +9,6 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z,
 extern void objRenderFn_8003b8f4(u8* reticle, undefined4 a, undefined4 b, undefined4 c,
                                  undefined4 d, f32 f);
 
-
-/*
- * --INFO--
- *
- * Function: camcontrol_updateTargetReticle
- * EN v1.0 Address: 0x80100AA4
- * EN v1.0 Size: 492b
- */
 void camcontrol_updateTargetReticle(CamcontrolTargetObject* fallbackTarget, int unused2,
                                     undefined4 arg3, undefined4 arg4,
                                     undefined4 arg5, undefined4 arg6)

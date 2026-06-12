@@ -11,11 +11,9 @@
 
 /* SB_Propeller_getExtraSize == 0x10. */
 
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 /* SB_ShipHead_getExtraSize == 0x10. */
-
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -27,19 +25,6 @@ extern undefined4 ObjGroup_AddObject();
 
 extern EffectInterface** gPartfxInterface;
 
-/*
- * --INFO--
- *
- * Function: SB_Galleon_animEventCallback
- * EN v1.0 Address: 0x801E1AAC
- * EN v1.0 Size: 764b
- * EN v1.1 Address: 0x801E18DC
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void DBprotection_storeHomePosition(int obj);
 extern int ObjList_GetObjects(int* start, int* end);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -194,19 +179,6 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801E1588
- * EN v1.0 Address: 0x801E1588
- * EN v1.0 Size: 1316b
- * EN v1.1 Address: 0x801E1B78
- * EN v1.1 Size: 1316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     f32 x, y, z;
@@ -338,69 +310,12 @@ void fn_801E1588(int obj, int state)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: SB_Propeller_update
- * EN v1.0 Address: 0x801E21B4
- * EN v1.0 Size: 1364b
- * EN v1.1 Address: 0x801E2BBC
- * EN v1.1 Size: 1212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u8 framesThisStep;
 
 void SB_Propeller_update(int obj);
 
-/*
- * --INFO--
- *
- * Function: SB_Propeller_init
- * EN v1.0 Address: 0x801E2708
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801E3078
- * EN v1.1 Size: 176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: SB_ShipHead_render
- * EN v1.0 Address: 0x801E27C4
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x801E314C
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: SB_ShipHead_update
- * EN v1.0 Address: 0x801E2940
- * EN v1.0 Size: 1892b
- * EN v1.1 Address: 0x801E32D4
- * EN v1.1 Size: 1384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u32 getSbGalleon(void);
-
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void SB_Galleon_release(void)
@@ -412,12 +327,6 @@ void SB_Galleon_initialise(void)
 }
 
 void SB_ShipMast_free(void);
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
@@ -437,8 +346,6 @@ s32 SB_Galleon_func0B(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
@@ -537,14 +444,6 @@ void SB_Galleon_hitDetect(int obj)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: SB_Galleon_update
- * EN v1.0 Address: 0x801E21AC
- * EN v1.0 Size: 568b
- */
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int idx, int p2);
 extern void fn_801DFA28(int obj);
@@ -599,13 +498,6 @@ void SB_Galleon_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: SB_Galleon_init
- * EN v1.0 Address: 0x801E23E4
- * EN v1.0 Size: 388b
- */
 extern void objSetSlot(void* obj, int slot);
 extern void* textureLoadAsset(int id);
 extern int lbl_803DDC18;
@@ -651,7 +543,6 @@ void SB_Galleon_init(int obj)
     Music_Trigger(((SBGalleonState*)p)->musicIdB, 1);
 }
 
-
 /* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
 extern void textureFree(void* tex);
 
@@ -685,7 +576,6 @@ extern void ObjMsg_AllocQueue(int obj, int n);
 void SB_ShipHead_init(int obj);
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
-
 
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
 int SB_Galleon_modelMtxFn(int* obj)

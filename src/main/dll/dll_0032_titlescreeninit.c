@@ -60,19 +60,6 @@ typedef struct LoadingScreenTexture
     u8 imageData[1];
 } LoadingScreenTexture;
 
-/*
- * --INFO--
- *
- * Function: runLoadingScreens
- * EN v1.0 Address: 0x801159E4
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x80115C80
- * EN v1.1 Size: 880b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void runLoadingScreens(void)
 {
     int alpha;
@@ -171,19 +158,6 @@ void runLoadingScreens(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: initLoadingScreenTextures
- * EN v1.0 Address: 0x80115D54
- * EN v1.0 Size: 280b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void initLoadingScreenTextures(void)
 {
     int textureSize;
@@ -232,19 +206,6 @@ void TitleScreenInit_frameEnd(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: TitleScreenInit_frameStart
- * EN v1.0 Address: 0x80115E74
- * EN v1.0 Size: 72b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int TitleScreenInit_frameStart(void)
 {
     if (lbl_803DD5F0 != 0)
@@ -260,19 +221,6 @@ void TitleScreenInit_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: TitleScreenInit_initialise
- * EN v1.0 Address: 0x80115EC0
- * EN v1.0 Size: 96b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void TitleScreenInit_initialise(void)
 {
     lbl_803DD5F0 = 1;
@@ -286,18 +234,3 @@ void TitleScreenInit_initialise(void)
     lockIconInit();
     warpToMap(0x12, 0);
 }
-
-/*
- * --INFO--
- *
- * Function: n_rareware_render
- * EN v1.0 Address: 0x80115F20
- * EN v1.0 Size: 152b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-

@@ -1,20 +1,7 @@
 /* DLL 0x0207 — wmworm (WarpZone Module worm enemy). TU: 0x801F3C2C–0x801F3F18. */
 #include "main/dll_000A_expgfx.h"
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: lightsource_init
- * EN v1.0 Address: 0x801F37CC
- * EN v1.0 Size: 1112b
- */
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void wmworm_hitDetect(void)
 {
@@ -37,9 +24,6 @@ void wmworm_free(int obj)
 
 extern undefined4 FUN_8001753c();
 
-
-
-
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern EffectInterface** gPartfxInterface;
@@ -49,19 +33,6 @@ extern f32 lbl_803E5E5C;
 extern f32 lbl_803E5E60;
 extern f32 timeDelta;
 
-/*
- * --INFO--
- *
- * Function: wmworm_update
- * EN v1.0 Address: 0x801F3C7C
- * EN v1.0 Size: 524b
- * EN v1.1 Address: 0x801F42B4
- * EN v1.1 Size: 524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole on
 void wmworm_update(GameObject* obj)
 {
@@ -158,7 +129,6 @@ void wmworm_init(GameObject* obj, WmWormSetup* setup)
     state->homeY = obj->anim.localPosY;
     state->homeZ = obj->anim.localPosZ;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void wmworm_release(void)

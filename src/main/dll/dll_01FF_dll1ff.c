@@ -7,9 +7,7 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 
-
 /* Per-object extra state for the WM laser beam emitter. */
-
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
@@ -54,7 +52,6 @@ typedef struct Dll1FFState
 
 /* dll_200_getExtraSize == 0x28 (kid attachment actor). */
 
-
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 extern undefined4 FUN_8000680c();
@@ -74,34 +71,6 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
-/*
- * --INFO--
- *
- * Function: LaserBeam_update
- * EN v1.0 Address: 0x801F0B50
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x801F0DA4
- * EN v1.1 Size: 488b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801f1634
- * EN v1.0 Address: 0x801F1634
- * EN v1.0 Size: 768b
- * EN v1.1 Address: 0x801F22BC
- * EN v1.1 Size: 684b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -219,20 +188,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801f2b94
- * EN v1.0 Address: 0x801F2B94
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801F37A8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801f2b94(short* param_1)
 {
     int iVar1;
@@ -255,12 +210,9 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
 extern f32 lbl_803E5D78;
-
 
 void dll_1FF_free_nop(void)
 {
@@ -278,12 +230,9 @@ void dll_1FF_initialise_nop(void)
 {
 }
 
-
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
-
 extern f32 timeDelta;
-
 
 /* 8b "li r3, N; blr" returners. */
 int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
@@ -291,7 +240,6 @@ int dll_200_getExtraSize_ret_40(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
 
 /* if (o->_X == K) return A; else return B; */
 int dll_1FF_getObjectTypeId(int* obj)
@@ -301,7 +249,6 @@ int dll_1FF_getObjectTypeId(int* obj)
 }
 
 /* init pattern: short=-1; byte=0; return 0; */
-
 
 /* fn_X(lbl); lbl = 0; */
 void LaserBeam_release(void);
@@ -317,9 +264,7 @@ void WM_colrise_init(s16* a, s8* b);
 
 extern int GameBit_Get(int id);
 
-
 extern int Obj_GetPlayerObject(void);
-
 
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
@@ -366,17 +311,14 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
 
-
 #pragma opt_strength_reduction off
 
 #pragma opt_strength_reduction off
-
 
 typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
-
 
 typedef struct Dll1FFSlot
 {
@@ -491,7 +433,5 @@ void dll_1FF_update(int obj)
     }
 }
 
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-

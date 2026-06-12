@@ -22,37 +22,11 @@ extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
 extern int lbl_803DC050;
 extern int lbl_803DDBF4;
 
-/*
- * --INFO--
- *
- * Function: warpstone_getExtraSize
- * EN v1.0 Address: 0x801D7468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int warpstone_getExtraSize(void)
 {
     return 0xd8;
 }
 
-/*
- * --INFO--
- *
- * Function: warpstone_getObjectTypeId
- * EN v1.0 Address: 0x801D7470
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int warpstone_getObjectTypeId(void)
 {
     return 0x48;
@@ -438,19 +412,6 @@ extern f32 lbl_803E54A4;
 extern f32 lbl_803E54A8;
 extern f32 lbl_803E54AC;
 
-/*
- * --INFO--
- *
- * Function: warpstone_update
- * EN v1.0 Address: 0x801D7674
- * EN v1.0 Size: 1164b
- * EN v1.1 Address: 0x801D76A4
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct WarpstoneFlags
 {
     u8 b7 : 1;
@@ -624,36 +585,10 @@ void warpstone_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: warpstone_release
- * EN v1.0 Address: 0x801D7BA0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void warpstone_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: warpstone_initialise
- * EN v1.0 Address: 0x801D7BA4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void warpstone_initialise(void)
 {
 }
@@ -681,17 +616,3 @@ void warpstone_init(int obj, u8* setup)
     GameBit_Set(((WarpstoneState*)state)->unk10, 0);
     *(int*)state = 0;
 }
-
-/*
- * --INFO--
- *
- * Function: sh_levelcontrol_getExtraSize
- * EN v1.0 Address: 0x801D7BA8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */

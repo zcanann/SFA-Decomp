@@ -5,7 +5,6 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_802420e0();
@@ -24,19 +23,6 @@ extern f64 DOUBLE_803dfc28;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DFC20;
 
-/*
- * --INFO--
- *
- * Function: saveCb_8007e77c
- * EN v1.0 Address: 0x8007E77C
- * EN v1.0 Size: 672b
- * EN v1.1 Address: 0x8007E7A0
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int lbl_803DD044;
 extern void* memcpy(void* dst, const void* src, u32 n);
 
@@ -46,20 +32,6 @@ int saveCb_8007e77c(u8 idx, int unused, void* dst)
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8007eb04
- * EN v1.0 Address: 0x8007EB04
- * EN v1.0 Size: 1288b
- * EN v1.1 Address: 0x8007EA14
- * EN v1.1 Size: 900b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_8007eb04(uint param_1)
 {
     uint uVar1;
@@ -214,20 +186,6 @@ int FUN_8007eb04(uint param_1)
     return iVar13;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8007f350
- * EN v1.0 Address: 0x8007F350
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8007FAC8
- * EN v1.1 Size: 1480b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8007f350(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, char param_9
@@ -237,20 +195,6 @@ FUN_8007f350(undefined8 param_1, double param_2, undefined8 param_3, undefined8 
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8007f3c8
- * EN v1.0 Address: 0x8007F3C8
- * EN v1.0 Size: 56b
- * EN v1.1 Address: 0x80080100
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_8007f3c8(int* param_1, int param_2, int param_3)
 {
     int iVar1;
@@ -275,20 +219,6 @@ int FUN_8007f3c8(int* param_1, int param_2, int param_3)
     return -1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8007f56c
- * EN v1.0 Address: 0x8007F56C
- * EN v1.0 Size: 128b
- * EN v1.1 Address: 0x80080284
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int FUN_8007f56c(int* param_1, int param_2, int param_3)
 {
     int iVar1;
@@ -329,76 +259,23 @@ int FUN_8007f56c(int* param_1, int param_2, int param_3)
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8007f6c8
- * EN v1.0 Address: 0x8007F6C8
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x800803DC
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint FUN_8007f6c8(float* param_1)
 {
     return ((uint)(byte)((lbl_803DFC20 == *param_1) << 1) << 0x1c) >> 0x1d ^ 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007f6e4
- * EN v1.0 Address: 0x8007F6E4
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x800803F8
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8007f6e4(undefined4* param_1)
 {
     *param_1 = lbl_803DFC20;
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007f718
- * EN v1.0 Address: 0x8007F718
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x80080404
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8007f718(float* param_1, short param_2)
 {
     *param_1 = (float)((double)CONCAT44(0x43300000, (int)param_2 ^ 0x80000000) - DOUBLE_803dfc28);
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8007f764
- * EN v1.0 Address: 0x8007F764
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x80080434
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_8007f764(float* param_1)
 {
     float fVar1;
@@ -416,25 +293,10 @@ undefined4 FUN_8007f764(float* param_1)
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8007f7c0
- * EN v1.0 Address: 0x8007F7C0
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x80080490
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 u8 FUN_8007f7c0(void)
 {
     return DAT_803ddd0c;
 }
-
 
 /* sda21 accessors. */
 extern u8 curSeqNo;

@@ -11,7 +11,6 @@
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/resource.h"
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -36,14 +35,12 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
  * (magiclight_getExtraSize == 0x14 for non-0x172 types).
  */
 
-
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 /*
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
  */
-
 
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
@@ -52,9 +49,7 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * (crrockfall_getExtraSize == 0x14).
  */
 
-
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
-
 
 extern undefined4 getLActions();
 extern uint GameBit_Get(int eventId);
@@ -74,39 +69,12 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
-/*
- * --INFO--
- *
- * Function: FUN_801ac248
- * EN v1.0 Address: 0x801AC248
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801AC4FC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801ad984
- * EN v1.0 Address: 0x801AD984
- * EN v1.0 Size: 420b
- * EN v1.1 Address: 0x801AD9F4
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -144,20 +112,6 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801adca0
- * EN v1.0 Address: 0x801ADCA0
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x801ADD98
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
 {
@@ -196,19 +150,6 @@ void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801addec
- * EN v1.0 Address: 0x801ADDEC
- * EN v1.0 Size: 896b
- * EN v1.1 Address: 0x801ADEE4
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -298,7 +239,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     return 0;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void imicemountain_free(void)
@@ -397,7 +337,6 @@ void imicemountain_init(int* obj)
 #undef MEVT_QUERY
 void crrockfall_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int imicemountain_getExtraSize(void) { return 0x14; }
 int imicemountain_getObjectTypeId(void) { return 0x0; }
@@ -416,9 +355,7 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E46D8);
 }
 
-
 /* conditional init/free pair. */
-
 
 #pragma scheduling off
 #pragma peephole on
@@ -436,7 +373,6 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
 
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(int* obj, int* extra);
@@ -555,7 +491,6 @@ void imicemountain_updateEventState(int* obj)
 
 extern u8 Obj_IsLoadingLocked(void);
 
-
 extern void fn_801AC01C(int* obj);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
@@ -633,4 +568,3 @@ void imicemountain_update(int* obj)
 }
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
-

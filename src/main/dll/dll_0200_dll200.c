@@ -9,18 +9,7 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
-
-
-
-
 /* Per-object extra state for the WM laser beam emitter. */
-
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
@@ -56,7 +45,6 @@ STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 /* dll_200_getExtraSize == 0x28 (kid attachment actor). */
 
-
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 extern undefined4 FUN_8000680c();
@@ -78,34 +66,6 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
-/*
- * --INFO--
- *
- * Function: LaserBeam_update
- * EN v1.0 Address: 0x801F0B50
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x801F0DA4
- * EN v1.1 Size: 488b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801f1634
- * EN v1.0 Address: 0x801F1634
- * EN v1.0 Size: 768b
- * EN v1.1 Address: 0x801F22BC
- * EN v1.1 Size: 684b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -223,7 +183,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-
 #pragma dont_inline on
 void fn_801F20D4(int obj)
 {
@@ -284,7 +243,6 @@ void fn_801F20D4(int obj)
 }
 #pragma dont_inline reset
 
-
 #pragma dont_inline on
 void fn_801F27E4(int obj)
 {
@@ -343,20 +301,6 @@ void fn_801F27E4(int obj)
 }
 #pragma dont_inline reset
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801f2b94
- * EN v1.0 Address: 0x801F2B94
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801F37A8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801f2b94(short* param_1)
 {
     int iVar1;
@@ -379,25 +323,9 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
 extern f32 lbl_803E5D78;
-
-
-
-
-
-
-
-
-
-
-
-
 
 void dll_200_free_nop(void)
 {
@@ -417,20 +345,7 @@ void dll_200_initialise_nop(void)
 
 void WM_colrise_free(void);
 
-
-
-
 extern f32 timeDelta;
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int dll_200_getExtraSize_ret_40(void) { return 0x28; }
@@ -440,34 +355,21 @@ int WM_colrise_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
-
-
-
 /* if (o->_X == K) return A; else return B; */
 
 /* init pattern: short=-1; byte=0; return 0; */
-
 
 /* fn_X(lbl); lbl = 0; */
 
 /* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
 
-
 extern int GameBit_Get(int id);
 
-
 extern int Obj_GetPlayerObject(void);
-
-
-
-
-
 
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-
 
 /* dll_200_render: when visible != 0 and
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
@@ -611,7 +513,6 @@ int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
 
 extern int textureLoadAsset(int id);
 
-
 extern ObjHitReactEntry lbl_80328898[];
 void fn_801F2290(int obj);
 
@@ -670,11 +571,6 @@ typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
-
-
-
-
-
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset

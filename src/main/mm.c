@@ -2,34 +2,8 @@
 
 extern void mm_free(void* ptr);
 
-/*
- * --INFO--
- *
- * Function: gameTextSetWindow
- * EN v1.0 Address: 0x80017434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001746C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* moved below GameTextSlot/global declarations */
 
-/*
- * --INFO--
- *
- * Function: FUN_80017460
- * EN v1.0 Address: 0x80017460
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800191FC
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -39,19 +13,6 @@ FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017468
- * EN v1.0 Address: 0x80017468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001947C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -61,34 +22,6 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textRenderStr
- * EN v1.0 Address: 0x800174D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001AE18
- * EN v1.1 Size: 1760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80017500
- * EN v1.0 Address: 0x80017500
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001BD8C
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -96,19 +29,6 @@ FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8001786c
- * EN v1.0 Address: 0x8001786C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80024F40
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -117,19 +37,6 @@ FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017998
- * EN v1.0 Address: 0x80017998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80029260
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined*
 FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -142,9 +49,7 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 /* ObjModel/model-file accessors. */
 
-
 /* Global game-state / text accessors. */
-
 
 int roundUpTo4(int x)
 {
@@ -189,9 +94,7 @@ int roundUpTo32(int x)
 /* Simple field/global accessors. */
 extern u8 lbl_803DCB10;
 
-
 extern void* mmAlloc(int size, int type, int flag);
-
 
 void texFlagFn_80023cbc(int v)
 {
@@ -202,7 +105,6 @@ extern int gMmFreeDelay;
 extern int lbl_803DCB14;
 extern int lbl_803DCB08;
 extern int lbl_803DB434;
-
 
 #pragma dont_inline on
 int mmSetFreeDelay(int v)
@@ -244,10 +146,8 @@ int alignUp2(int x)
     return x;
 }
 
-
 extern int gAttractMovieState;
 extern void* gAttractMovieScratchBuffer;
-
 
 void* getCache(void)
 {
@@ -258,11 +158,9 @@ void* getCache(void)
     return (void*)0xe0000000;
 }
 
-
 extern void LCQueueWait();
 extern void mmFree(void* p);
 extern void mmFreeDeferred(void* p);
-
 
 void cacheQueueWait(int sync)
 {
@@ -284,10 +182,8 @@ void mm_free(void* p)
     }
 }
 
-
 extern int OSDisableInterrupts(void);
 extern int OSRestoreInterrupts(int level);
-
 
 void AtomicSList_Push(void** list, void* node)
 {
@@ -296,7 +192,6 @@ void AtomicSList_Push(void** list, void* node)
     *list = node;
     OSRestoreInterrupts(intr);
 }
-
 
 typedef f32 Mtx[3][4];
 extern u8 lbl_803DCB42;
@@ -311,7 +206,6 @@ typedef struct
 } MmRegion;
 
 extern MmRegion gMmRegionTable[];
-
 
 int mmGetRegionForPtr(u8* ptr)
 {
@@ -1103,10 +997,8 @@ void* AtomicSList_Pop(void** list)
     return head;
 }
 
-
 extern void* memcpy(void* dst, const void* src, int n);
 extern void LCLoadBlocks(void* destTag, void* srcAddr, u32 numBlocks);
-
 
 void copyToCache(void* dst, void* src, u32 count)
 {
@@ -1129,9 +1021,7 @@ void copyToCache(void* dst, void* src, u32 count)
     }
 }
 
-
 extern void LCStoreBlocks(void* destAddr, void* srcTag, u32 numBlocks);
-
 
 void memcpyToCache(void* dst, void* src, u32 count)
 {
@@ -1154,7 +1044,6 @@ void memcpyToCache(void* dst, void* src, u32 count)
         LCStoreBlocks(dst, src, count);
     }
 }
-
 
 void* stackCreate(int count, int size)
 {
@@ -1270,47 +1159,3 @@ void* mmAlloc(int size, int type, int flag)
     }
     return result;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

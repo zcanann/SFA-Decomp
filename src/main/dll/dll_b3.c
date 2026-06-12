@@ -17,19 +17,6 @@ extern f32 lbl_803E1634;
 extern f32 lbl_803E1638;
 extern f32 lbl_803E163C;
 
-/*
- * --INFO--
- *
- * Function: lockIconTexCb
- * EN v1.0 Address: 0x80100DCC
- * EN v1.0 Size: 468b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
 {
     u8* renderOp;

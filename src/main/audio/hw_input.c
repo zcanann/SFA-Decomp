@@ -3,19 +3,6 @@
 extern u8 lbl_803CC1E0[];
 extern void salAddStudioInput(void* entry, void* input);
 
-/*
- * --INFO--
- *
- * Function: hwAddInput
- * EN v1.0 Address: 0x80283BA0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283BA0
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwAddInput(u8 index, void* input)
 {
     salAddStudioInput(lbl_803CC1E0 + index * 0xbc, input);

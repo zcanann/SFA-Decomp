@@ -26,19 +26,6 @@ extern undefined4 DAT_8031ff70;
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3954;
 
-/*
- * --INFO--
- *
- * Function: FUN_80157004
- * EN v1.0 Address: 0x80157004
- * EN v1.0 Size: 252b
- * EN v1.1 Address: 0x801570E0
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_80157004(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -69,20 +56,6 @@ void FUN_80157004(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8015853c
- * EN v1.0 Address: 0x8015853C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80158188
- * EN v1.1 Size: 480b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void FUN_8015853c(undefined8 param_1, double param_2, double param_3, double param_4, double param_5,
@@ -90,128 +63,12 @@ void FUN_8015853c(undefined8 param_1, double param_2, double param_3, double par
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80158540
- * EN v1.0 Address: 0x80158540
- * EN v1.0 Size: 1816b
- * EN v1.1 Address: 0x80158368
- * EN v1.1 Size: 1496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80158c58
- * EN v1.0 Address: 0x80158C58
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80158940
- * EN v1.1 Size: 1944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80158c5c
- * EN v1.0 Address: 0x80158C5C
- * EN v1.0 Size: 2244b
- * EN v1.1 Address: 0x801590D8
- * EN v1.1 Size: 1624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80159cdc
- * EN v1.0 Address: 0x80159CDC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80159E04
- * EN v1.1 Size: 1652b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80159cdc(undefined8 param_1, undefined8 param_2, double param_3, double param_4, double param_5
                   , double param_6, double param_7, undefined8 param_8, ushort* param_9,
                   undefined4* param_10)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80159ce0
- * EN v1.0 Address: 0x80159CE0
- * EN v1.0 Size: 1596b
- * EN v1.1 Address: 0x8015A478
- * EN v1.1 Size: 1112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015a31c
- * EN v1.0 Address: 0x8015A31C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8015A8D0
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015a320
- * EN v1.0 Address: 0x8015A320
- * EN v1.0 Size: 420b
- * EN v1.1 Address: 0x8015A9D8
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015a6c0
- * EN v1.0 Address: 0x8015A6C0
- * EN v1.0 Size: 432b
- * EN v1.1 Address: 0x8015AC28
- * EN v1.1 Size: 424b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8015a6c0(uint param_1, int param_2)
@@ -285,7 +142,6 @@ void FUN_8015a6c0(uint param_1, int param_2)
     }
     return;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
@@ -1331,7 +1187,6 @@ typedef struct
     f32 y; // 0x10
     f32 z; // 0x14
 } BasketSfxParams;
-
 
 void fn_80159FCC(s16* obj, u8* state)
 {

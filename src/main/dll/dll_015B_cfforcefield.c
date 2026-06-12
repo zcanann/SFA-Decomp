@@ -5,54 +5,7 @@
 
 extern u32 randomGetRange(int min, int max);
 
-
-/*
- * --INFO--
- *
- * Function: blasted_init
- * EN v1.0 Address: 0x801A2AF8
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801A2B9C
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801a2cb8
- * EN v1.0 Address: 0x801A2CB8
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801A2D6C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a32d4
- * EN v1.0 Address: 0x801A32D4
- * EN v1.0 Size: 800b
- * EN v1.1 Address: 0x801A3190
- * EN v1.1 Size: 676b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -70,19 +23,10 @@ void cfforcefield_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 
-
-
-
-
-
-
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
 /* Per-fragment record inside DrExplodableState (stride 0x70). */
 
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
@@ -91,18 +35,6 @@ int cfforcefield_getExtraSize(void) { return 0x8; }
 int cfforcefield_getObjectTypeId(void) { return 0x0; }
 
 extern void Obj_FreeObject(int obj);
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -114,8 +46,6 @@ extern void Obj_FreeObject(int obj);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
 typedef struct CfforcefieldPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -125,11 +55,6 @@ typedef struct CfforcefieldPlacement
     s16 unk20;
     u8 pad22[0x28 - 0x22];
 } CfforcefieldPlacement;
-
-
-
-
-
 
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80041ff8();
@@ -162,19 +87,6 @@ extern f32 lbl_803E43A4;
 extern f32 lbl_803E43A8;
 extern f32 lbl_803E43AC;
 
-/*
- * --INFO--
- *
- * Function: cfforcefield_update
- * EN v1.0 Address: 0x801A39D0
- * EN v1.0 Size: 1128b
- * EN v1.1 Address: 0x801A3B20
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void cfforcefield_update(u8* obj)
@@ -299,20 +211,6 @@ void cfforcefield_update(u8* obj)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a4520
- * EN v1.0 Address: 0x801A4520
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x801A4660
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -334,53 +232,12 @@ void FUN_801a4520(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801a45cc
- * EN v1.0 Address: 0x801A45CC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801A4708
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a45cc(short* param_1, int param_2)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: cflevelcontrol_free
- * EN v1.0 Address: 0x801A45D4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x801A4880
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cflevelcontrol_free(int param_1);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a4810
- * EN v1.0 Address: 0x801A4810
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x801A4AD8
- * EN v1.1 Size: 180b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -405,7 +262,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void)
 {
@@ -417,40 +273,13 @@ void cfforcefield_initialise(void)
 
 void slidingdoor_free(void);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern void storeZeroToFloatParam(void* p);
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* Pattern wrappers. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
@@ -461,9 +290,6 @@ extern void storeZeroToFloatParam(void* p);
 /* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
 
 /* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
-
-
-
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
@@ -488,8 +314,6 @@ extern void storeZeroToFloatParam(void* p);
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
 
-
-
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 void cfforcefield_init(s16* obj, void* data)
 {
@@ -509,9 +333,6 @@ void cfforcefield_init(s16* obj, void* data)
 }
 
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
-
-
-
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

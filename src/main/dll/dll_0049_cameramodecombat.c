@@ -3,39 +3,7 @@
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/mm.h"
 
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeTestStrength_update
- * EN v1.0 Address: 0x8010B424
- * EN v1.0 Size: 2392b
- * EN v1.1 Address: 0x8010B6C0
- * EN v1.1 Size: 1652b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeTestStrength_init
- * EN v1.0 Address: 0x8010BD7C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010BD34
- * EN v1.1 Size: 1128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void CameraModeCombat_copyToCurrent_nop(void)
 {
@@ -48,13 +16,6 @@ extern f32 lbl_803E18C8;
 extern f32 timeDelta;
 extern void Rcp_DisableBlurFilter(void);
 
-/*
- * --INFO--
- *
- * Function: fn_8010BF08
- * EN v1.0 Address: 0x8010BF08
- * EN v1.0 Size: 348b
- */
 typedef struct
 {
     u8 pad[0xc];
@@ -119,13 +80,6 @@ void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFlo
     lbl_803DD568->pathBlendTargetIndex = *(u8*)(settings + 0xe4);
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_free
- * EN v1.0 Address: 0x8010C068
- * EN v1.0 Size: 112b
- */
 typedef struct
 {
     u8 flag80 : 1;
@@ -153,7 +107,6 @@ void CameraModeCombat_free(int obj)
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
-
 
 extern void* FUN_800069a8();
 extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
@@ -193,19 +146,6 @@ extern f32 lbl_803E192C;
 extern f32 lbl_803E1930;
 extern f32 lbl_803E1940;
 
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_update
- * EN v1.0 Address: 0x8010C0D8
- * EN v1.0 Size: 3352b
- * EN v1.1 Address: 0x8010C374
- * EN v1.1 Size: 3204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     f32 pad0;
@@ -563,19 +503,6 @@ void CameraModeCombat_update(short* cam)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_init
- * EN v1.0 Address: 0x8010CDF0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010CFF8
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args)
 {
     float dx;
@@ -637,38 +564,9 @@ void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: CameraModeShipBattle_update
- * EN v1.0 Address: 0x8010CE20
- * EN v1.0 Size: 1580b
- * EN v1.1 Address: 0x8010D18C
- * EN v1.1 Size: 936b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int shipBattleFn_801eed24(int focus);
 
 void CameraModeShipBattle_update(short* cam);
-
-/*
- * --INFO--
- *
- * Function: CameraModeShipBattle_init
- * EN v1.0 Address: 0x8010D44C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010D534
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeCombat_release(void)
@@ -681,8 +579,4 @@ void CameraModeCombat_initialise(void)
 
 void CameraModeShipBattle_copyToCurrent_nop(void);
 
-
-
-
 /* fn_X(lbl); lbl = 0; */
-

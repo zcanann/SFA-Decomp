@@ -4,19 +4,6 @@ extern void salActivateVoice(void* entry, u8 studioIndex);
 extern u8* dspVoice;
 extern u8 salTimeOffset;
 
-/*
- * --INFO--
- *
- * Function: hwStart
- * EN v1.0 Address: 0x802836AC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802836E4
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwStart(int slot, u8 studioIndex)
 {
     int offset;

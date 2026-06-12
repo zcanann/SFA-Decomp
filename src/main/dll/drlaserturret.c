@@ -2,7 +2,6 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Stack_IsFull(void* stack);
 extern int Stack_Push(void* stack, void* value);
@@ -47,13 +46,6 @@ extern f32 lbl_803E5A18;
 extern f32 lbl_803E5A1C;
 extern f32 lbl_803E5A20;
 
-/*
- * --INFO--
- *
- * Function: DRlaserturret_updateIdle
- * EN v1.0 Address: 0x801E6B10
- * EN v1.0 Size: 504b
- */
 int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* animState)
 {
     void* playerObj;
@@ -115,13 +107,6 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DRlaserturret_updateTracking
- * EN v1.0 Address: 0x801E6D08
- * EN v1.0 Size: 1052b
- */
 int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimState* animState)
 {
     void* playerObj;
@@ -262,13 +247,6 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DRlaserturret_startLinkedTarget
- * EN v1.0 Address: 0x801E7124
- * EN v1.0 Size: 128b
- */
 int DRlaserturret_startLinkedTarget(DRLaserTurretObject* obj)
 {
     DRLaserTurretState* state;
@@ -290,13 +268,6 @@ int DRlaserturret_startLinkedTarget(DRLaserTurretObject* obj)
     return DR_LASERTURRET_STATE_LINKED_TARGET;
 }
 
-/*
- * --INFO--
- *
- * Function: DRlaserturret_handlePromptChoice
- * EN v1.0 Address: 0x801E71A4
- * EN v1.0 Size: 1096b
- */
 int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int dispatch)
 {
     DRLaserTurretState* state;
@@ -425,13 +396,6 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: DRlaserturret_startTimedChallenge
- * EN v1.0 Address: 0x801E75EC
- * EN v1.0 Size: 180b
- */
 void DRlaserturret_startTimedChallenge(DRLaserTurretObject* obj)
 {
     DRLaserTurretState* state;
@@ -454,4 +418,3 @@ void DRlaserturret_startTimedChallenge(DRLaserTurretObject* obj)
     }
     state->flags = 0;
 }
-

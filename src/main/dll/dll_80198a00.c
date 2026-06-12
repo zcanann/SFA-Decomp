@@ -2,22 +2,6 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/effect_interfaces.h"
 
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_update
- * EN v1.0 Address: 0x80195008
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801950E0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/camera_interface.h"
@@ -25,7 +9,6 @@
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-
 
 extern undefined4 objInterpretSeq();
 
@@ -41,25 +24,10 @@ extern const char sMoonrockTriggerIdentFormat[];
 
 #define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)
 
-/*
- * --INFO--
- *
- * Function: lightning_free
- * EN v1.0 Address: 0x801978A8
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801978DC
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
-
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
-
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
@@ -70,11 +38,9 @@ extern const char sMoonrockTriggerIdentFormat[];
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 
-
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
-
 
 void fn_80198A00(u8* obj, int seqArg)
 {
@@ -250,83 +216,7 @@ void fn_80198DE8(u8* obj, int seqArg)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80197960
- * EN v1.0 Address: 0x80197960
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x801979B8
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e54
- * EN v1.0 Address: 0x80197E54
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80197E64
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80197e84
- * EN v1.0 Address: 0x80197E84
- * EN v1.0 Size: 940b
- * EN v1.1 Address: 0x80197E94
- * EN v1.1 Size: 828b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8019836c
- * EN v1.0 Address: 0x8019836C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80198350
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801983a0
- * EN v1.0 Address: 0x801983A0
- * EN v1.0 Size: 660b
- * EN v1.1 Address: 0x80198384
- * EN v1.1 Size: 916b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void WaterFallSpray_render(void);
 
 /* 8b "li r3, N; blr" returners. */
-

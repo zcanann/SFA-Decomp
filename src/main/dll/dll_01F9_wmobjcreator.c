@@ -1,123 +1,11 @@
 /* DLL 0x1F9 - WMObjCreator [801EF360-801EF3A8) */
 #include "main/dll_000A_expgfx.h"
 
-
-
 extern uint GameBit_Get(int eventId);
 
 extern EffectInterface** gPartfxInterface;
 
-/*
- * --INFO--
- *
- * Function: FUN_801ee668
- * EN v1.0 Address: 0x801EE668
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801EE880
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801eefcc
- * EN v1.0 Address: 0x801EEFCC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801EF0A0
- * EN v1.1 Size: 232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801eefd0
- * EN v1.0 Address: 0x801EEFD0
- * EN v1.0 Size: 468b
- * EN v1.1 Address: 0x801EF188
- * EN v1.1 Size: 468b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef1a4
- * EN v1.0 Address: 0x801EF1A4
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x801EF35C
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef200
- * EN v1.0 Address: 0x801EF200
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801EF3B8
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef980
- * EN v1.0 Address: 0x801EF980
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801EF8E8
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef984
- * EN v1.0 Address: 0x801EF984
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801EF9AC
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
 
 void WM_ObjCreator_free(void)
 {
@@ -144,40 +32,20 @@ void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 extern f32 lbl_803E5C70;
 
-
 /* copy 3 floats from struct to out args */
 
 /* virtual call through obj[0xb8][0x10] context, vtable double-deref at +0x68 */
 
 /* copy 3 floats from obj->b8 [0x4c..0x54] to out args */
 
-
-
-
-
 /* Path-follow steering update for the cloudrunner block (target 0x801EE668;
  * Ghidra split this body as FUN_801eeafc). */
 extern u8 framesThisStep;
-
-
-
 
 /* SB_CloudRunner_HandlePriorityHit: when the laser hits an object whose
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
  * play SFX, gate further damage on a GameBit, then if the hit type is 154
  * emit 3 partfx of effect 168 followed by a 10-shot burst of effect 169. */
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -226,26 +94,8 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-
 extern u32 randomGetRange(int min, int max);
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: WM_ObjCreator_update
- * EN v1.0 Address: 0x801EF3A8
- * EN v1.0 Size: 3548b
- * EN v1.1 Address: 0x801EF9E0
- * EN v1.1 Size: 2956b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
@@ -538,7 +388,6 @@ void WM_ObjCreator_update(int obj)
     }
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void WM_ObjCreator_release(void)
 {
@@ -549,8 +398,6 @@ void WM_ObjCreator_initialise(void)
 }
 
 void WM_Galleon_hitDetect(void);
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -565,4 +412,3 @@ void WM_ObjCreator_init(int* obj, s8* def)
     state->spawnJitter = (s16)(s32)
     placement->spawnJitter;
 }
-

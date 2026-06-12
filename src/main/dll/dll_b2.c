@@ -13,14 +13,6 @@ extern void gxSetPeControl_ZCompLoc_(u32 a);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 extern void GXSetCullMode(int mode);
 
-/*
- * --INFO--
- *
- * Function: aButtonIconTexCb
- * EN v1.0 Address: 0x80100C90
- * EN v1.0 Size: 316b
- */
-
 int aButtonIconTexCb(GameObject* obj, void** objPtr, undefined4 arg3)
 {
     u8* renderOp;

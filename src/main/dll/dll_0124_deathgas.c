@@ -1,57 +1,9 @@
 /* DLL 0x0124 — death-gas objects [8018BC48-8018BC50) */
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8018af28
- * EN v1.0 Address: 0x8018AF28
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8018AF64
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b220
- * EN v1.0 Address: 0x8018B220
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018B230
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b224
- * EN v1.0 Address: 0x8018B224
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8018B314
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 int deathgas_getExtraSize(void) { return 0x10; }
@@ -60,10 +12,8 @@ int deathgas_getExtraSize(void) { return 0x10; }
 
 extern void objSetHintTextIdx(int obj, int idx);
 
-
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
-
 
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -71,33 +21,14 @@ extern f32 timeDelta;
 #include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
 
-
 extern undefined4 ObjHits_RecordObjectHit();
 extern undefined8 ObjGroup_RemoveObject();
 
-
-/*
- * --INFO--
- *
- * Function: deathgas_free
- * EN v1.0 Address: 0x8018BC50
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8018BC64
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E3CC0;
@@ -120,7 +51,6 @@ typedef struct
     s16 activeBit; // 0x1a
 } DeathGasSetup;
 
-
 void deathgas_init(int* obj)
 {
     register DeathGasState* state = ((GameObject*)obj)->extra;
@@ -132,7 +62,6 @@ void deathgas_init(int* obj)
 }
 
 int fuelcell_func0B(int* obj);
-
 
 extern void disableHeavyFog(void);
 
@@ -255,4 +184,3 @@ void deathgas_update(int* obj)
 }
 
 extern void gameBitIncrement(int eventId);
-

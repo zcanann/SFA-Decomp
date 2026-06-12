@@ -3,30 +3,10 @@
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
 
-
-
-
 extern int* Obj_GetPlayerObject(void);
 extern void GameBit_Set(int gameBit, int value);
 extern u32 GameBit_Get(int gameBit);
 extern int* gameTextGet(int textId);
-
-
-
-/*
- * --INFO--
- *
- * Function: sidekickball_init
- * EN v1.0 Address: 0x80179EB0
- * EN v1.0 Size: 1220b
- * EN v1.1 Address: 0x80179F40
- * EN v1.1 Size: 1204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
@@ -160,7 +140,6 @@ void ProjectileSwitch_free(void);
 int levelname_getExtraSize(void) { return 0x18; }
 int levelname_getObjectTypeId(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void);
-
 
 int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

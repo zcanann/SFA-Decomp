@@ -5,35 +5,9 @@
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjGroup_RemoveObject();
 
-
-/*
- * --INFO--
- *
- * Function: nw_mammoth_update
- * EN v1.0 Address: 0x801CF0AC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CF2E0
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: nw_mammoth_init
- * EN v1.0 Address: 0x801CF4F0
- * EN v1.0 Size: 668b
- */
-
-
 #include "main/dll/creator1D6.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void nw_animice_render(void)
@@ -68,9 +42,7 @@ int nw_ice_getExtraSize(void);
 void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
 void nw_ice_free(int x);
 
-
 /* call(x, N) wrappers. */
-
 
 void nw_animice_init(int* obj)
 {

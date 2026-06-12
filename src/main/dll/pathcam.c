@@ -4,27 +4,9 @@
 #include "main/object_transform.h"
 #include "string.h"
 
-
-
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
 extern f32 lbl_803E1748;
-
-/*
- * --INFO--
- *
- * Function: pathcam_loadSettings
- * EN v1.0 Address: 0x80105E7C
- * EN v1.0 Size: 1900b
- * EN v1.1 Address: 0x80106118
- * EN v1.1 Size: 1904b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 
 void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 param_4, int param_5)
 {

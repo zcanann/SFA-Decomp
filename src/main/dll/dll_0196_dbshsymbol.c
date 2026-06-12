@@ -18,19 +18,6 @@ extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u8 framesThisStep;
 
-/*
- * --INFO--
- *
- * Function: DBSH_Symbol_SeqFn
- * EN v1.0 Address: 0x801C9660
- * EN v1.0 Size: 2276b
- * EN v1.1 Address: 0x801C9C14
- * EN v1.1 Size: 1500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfx);
 extern void gameTimerInit(int a, int b);
@@ -236,19 +223,6 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_update
- * EN v1.0 Address: 0x801C9F84
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x801CA234
- * EN v1.1 Size: 484b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dbsh_symbol_update(int obj)
 {
     extern undefined4 GameBit_Set(int eventId, int value);
@@ -306,55 +280,16 @@ void dbsh_symbol_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_getExtraSize
- * EN v1.0 Address: 0x801C9C34
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dbsh_symbol_getExtraSize(void)
 {
     return 0x24;
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_free
- * EN v1.0 Address: 0x801C9C3C
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dbsh_symbol_free(void)
 {
     gameTimerStop();
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_symbol_render
- * EN v1.0 Address: 0x801CA0E0
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x801CA418
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void objRenderFn_8003b8f4(f32);
 
 void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -394,79 +329,8 @@ void dbsh_symbol_init(int* obj)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-/*
- * --INFO--
- *
- * Function: dll_197_init
- * EN v1.0 Address: 0x801CA5B4
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801CA6BC
- * EN v1.1 Size: 1196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801caa30
- * EN v1.0 Address: 0x801CAA30
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x801CAB68
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801cacd4
- * EN v1.0 Address: 0x801CACD4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801CAE40
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeac
- * EN v1.0 Address: 0x801CAEAC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CAEF8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeb0
- * EN v1.0 Address: 0x801CAEB0
- * EN v1.0 Size: 1240b
- * EN v1.1 Address: 0x801CAF74
- * EN v1.1 Size: 788b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-

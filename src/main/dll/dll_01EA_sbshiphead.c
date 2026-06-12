@@ -11,11 +11,9 @@
 
 /* SB_Propeller_getExtraSize == 0x10. */
 
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 /* SB_ShipHead_getExtraSize == 0x10. */
-
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -35,88 +33,16 @@ extern f32 lbl_803E64CC;
 extern f32 lbl_803E64D0;
 extern f32 lbl_803E64D4;
 
-/*
- * --INFO--
- *
- * Function: SB_Galleon_animEventCallback
- * EN v1.0 Address: 0x801E1AAC
- * EN v1.0 Size: 764b
- * EN v1.1 Address: 0x801E18DC
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int ObjList_GetObjects(int* start, int* end);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: fn_801E1588
- * EN v1.0 Address: 0x801E1588
- * EN v1.0 Size: 1316b
- * EN v1.1 Address: 0x801E1B78
- * EN v1.1 Size: 1316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: SB_Propeller_update
- * EN v1.0 Address: 0x801E21B4
- * EN v1.0 Size: 1364b
- * EN v1.1 Address: 0x801E2BBC
- * EN v1.1 Size: 1212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern int Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p);
 
-
-/*
- * --INFO--
- *
- * Function: SB_Propeller_init
- * EN v1.0 Address: 0x801E2708
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801E3078
- * EN v1.1 Size: 176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: SB_ShipHead_render
- * EN v1.0 Address: 0x801E27C4
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x801E314C
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     int ref;
@@ -162,19 +88,6 @@ void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int para
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: SB_ShipHead_update
- * EN v1.0 Address: 0x801E2940
- * EN v1.0 Size: 1892b
- * EN v1.1 Address: 0x801E32D4
- * EN v1.1 Size: 1384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u32 getSbGalleon(void);
 extern f32 Vec_distance(void* a, void* b);
 extern void Sfx_StopObjectChannel(int obj, int ch);
@@ -355,17 +268,8 @@ void SB_ShipHead_update(int obj)
     lbl_803DDC48 = state;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void SB_Galleon_release(void);
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int SB_ShipHead_getExtraSize(void) { return 0x10; }
@@ -381,8 +285,6 @@ u32 getSbGalleon(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 
@@ -395,30 +297,7 @@ void SB_Propeller_hitDetect(int obj);
 
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 
-
-
-
-/*
- * --INFO--
- *
- * Function: SB_Galleon_update
- * EN v1.0 Address: 0x801E21AC
- * EN v1.0 Size: 568b
- */
-
-
-/*
- * --INFO--
- *
- * Function: SB_Galleon_init
- * EN v1.0 Address: 0x801E23E4
- * EN v1.0 Size: 388b
- */
-
-
-
 /* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
-
 
 /* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
 extern void ObjMsg_AllocQueue(int obj, int n);

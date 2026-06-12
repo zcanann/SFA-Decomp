@@ -2,39 +2,11 @@
 #include "main/game_object.h"
 #include "main/dll/beaconflags_types.h"
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: sh_levelcontrol_update
- * EN v1.0 Address: 0x801D8D20
- * EN v1.0 Size: 2452b
- * EN v1.1 Address: 0x801D90F0
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
-
-
-
-
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
 
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
@@ -45,8 +17,6 @@
 
 #include "main/dll/DR/shstaff_state.h"
 
-
-
 typedef struct ShBeaconPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -55,32 +25,13 @@ typedef struct ShBeaconPlacement
     u8 pad22[0x28 - 0x22];
 } ShBeaconPlacement;
 
-
 /* sh_beacon_getExtraSize == 0x18. */
-
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
-
 extern uint GameBit_Get(int eventId);
 
-
-/*
- * --INFO--
- *
- * Function: sh_staff_render
- * EN v1.0 Address: 0x801D9BDC
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801DA010
- * EN v1.1 Size: 444b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 timeDelta;
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int sh_beacon_getExtraSize(void) { return 0x18; }
@@ -143,11 +94,8 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-
 
 void sh_beacon_init(int obj, int defData)
 {
@@ -193,15 +141,6 @@ extern f32 lbl_803E5538;
 extern f32 lbl_803E553C;
 extern int lbl_803DDBF8;
 
-
-
-/*
- * --INFO--
- *
- * Function: sh_beacon_update
- * EN v1.0 Address: 0x801DAA58
- * EN v1.0 Size: 1080b
- */
 void sh_beacon_update(int obj)
 {
     u8* state;

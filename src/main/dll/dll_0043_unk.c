@@ -8,19 +8,6 @@ extern undefined4 FUN_80017814();
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updatePathTargetAction
- * EN v1.0 Address: 0x801071A8
- * EN v1.0 Size: 328b
- * EN v1.1 Address: 0x80107214
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 {
     short sVar1;
@@ -78,19 +65,6 @@ done:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_releasePathState
- * EN v1.0 Address: 0x801072F0
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x8010736C
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_releasePathState(void)
 {
     FUN_80017814(gCamcontrolPathState);
@@ -117,19 +91,6 @@ extern f32 lbl_803E1740;
 extern f32 lbl_803E1758;
 extern f32 lbl_803E175C;
 
-/*
- * --INFO--
- *
- * Function: camclimb_update
- * EN v1.0 Address: 0x801070FC
- * EN v1.0 Size: 896b
- * EN v1.1 Address: 0x80107398
- * EN v1.1 Size: 896b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camclimb_update(CameraObject* cam)
 {
     extern char camcontrol_getTargetPosition();
@@ -265,19 +226,6 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
     return (lbl_803E1760 * (f32)angle) / lbl_803E1764;
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeStaffAnim_init
- * EN v1.0 Address: 0x8010747C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80107718
- * EN v1.1 Size: 1640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* settings)

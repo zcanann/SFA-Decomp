@@ -5,20 +5,6 @@
 
 extern void GameBit_Set(int gameBit, int value);
 
-/*
- * --INFO--
- *
- * Function: sidekickball_init
- * EN v1.0 Address: 0x80179EB0
- * EN v1.0 Size: 1220b
- * EN v1.1 Address: 0x80179F40
- * EN v1.1 Size: 1204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 
@@ -94,50 +80,11 @@ extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
 extern f32 lbl_803E373C;
 
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_render
- * EN v1.0 Address: 0x8017A38C
- * EN v1.0 Size: 140b
- */
-
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_hitDetect
- * EN v1.0 Address: 0x8017A418
- * EN v1.0 Size: 460b
- */
-
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_update
- * EN v1.0 Address: 0x8017A5E4
- * EN v1.0 Size: 280b
- */
-
-/*
- * --INFO--
- *
- * Function: ProjectileSwitch_init
- * EN v1.0 Address: 0x8017A6FC
- * EN v1.0 Size: 488b
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
 
-/*
- * --INFO--
- *
- * Function: InvisibleHitSwitch_update
- * EN v1.0 Address: 0x8017A8F4
- * EN v1.0 Size: 556b
- */
 void InvisibleHitSwitch_update(int obj)
 {
     extern uint GameBit_Get(int eventId);
@@ -231,19 +178,6 @@ void InvisibleHitSwitch_update(int obj)
 
 extern f32 lbl_803E3750;
 
-/*
- * --INFO--
- *
- * Function: InvisibleHitSwitch_init
- * EN v1.0 Address: 0x8017AB20
- * EN v1.0 Size: 268b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void InvisibleHitSwitch_init(int obj, u8* param_2)
 {
     extern int GameBit_Get(int bitId);

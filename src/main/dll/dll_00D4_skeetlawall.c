@@ -2,34 +2,11 @@
 #include "main/objseq.h"
 #include "main/object_descriptor.h"
 
-
-
 extern void objRenderFn_8003b8f4(f32);
-
-
 
 extern f32 lbl_803E3058;
 
-
 extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
-
-/*
- * --INFO--
- *
- * Function: dll_D3_update
- * EN v1.0 Address: 0x80166F2C
- * EN v1.0 Size: 1228b
- */
-
-/*
- * --INFO--
- *
- * Function: dll_D3_init
- * EN v1.0 Address: 0x801673F8
- * EN v1.0 Size: 344b
- */
-
-
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -113,7 +90,6 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     },
     0,
 };
-
 
 void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte)
 {

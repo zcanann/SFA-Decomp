@@ -6,93 +6,9 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
-
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-/*
- * --INFO--
- *
- * Function: dll_197_init
- * EN v1.0 Address: 0x801CA5B4
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801CA6BC
- * EN v1.1 Size: 1196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caa30
- * EN v1.0 Address: 0x801CAA30
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x801CAB68
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801cacd4
- * EN v1.0 Address: 0x801CACD4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801CAE40
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeac
- * EN v1.0 Address: 0x801CAEAC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CAEF8
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801caeb0
- * EN v1.0 Address: 0x801CAEB0
- * EN v1.0 Size: 1240b
- * EN v1.1 Address: 0x801CAF74
- * EN v1.1 Size: 788b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 void dll_199_hitDetect(void)
 {
@@ -108,7 +24,6 @@ extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
 
-
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -118,10 +33,7 @@ void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 extern void Music_Trigger(int track, int param);
 extern int GameBit_Set(int eventId, int value);
 
-
 extern void getEnvfxAct(int a, int b, int c, int d);
-
-
 
 extern ModgfxInterface** gModgfxInterface;
 
@@ -138,7 +50,6 @@ extern int getButtonsHeld(int pad);
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
-
 
 int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
@@ -256,10 +167,6 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
-
-
 typedef struct Dll199ObjectDef
 {
     u8 pad0[0x1A - 0x0];
@@ -267,16 +174,11 @@ typedef struct Dll199ObjectDef
     u8 pad1C[0x20 - 0x1C];
 } Dll199ObjectDef;
 
-
-
-
-
 extern u32 GameBit_Get(int eventId);
 extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
 extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
 extern void Obj_FreeObject(char* obj);
 extern f32 Vec_distance(f32 * a, f32 * b);
-
 
 extern byte framesThisStep;
 
@@ -288,13 +190,6 @@ extern f32 lbl_803E516C;
 extern f32 lbl_803E5170;
 extern f32 lbl_803E5174;
 
-/*
- * --INFO--
- *
- * Function: dll_199_update
- * EN v1.0 Address: 0x801CAD80
- * EN v1.0 Size: 2228b
- */
 void dll_199_update(int obj)
 {
     extern int* gTitleMenuControlInterface;
@@ -540,13 +435,6 @@ void dll_199_update(int obj)
 
 extern void ObjMsg_AllocQueue(int obj, int n);
 
-/*
- * --INFO--
- *
- * Function: dll_199_init
- * EN v1.0 Address: 0x801CB634
- * EN v1.0 Size: 364b
- */
 void dll_199_init(int obj, int def)
 {
     extern int* gTitleMenuControlInterface;
@@ -588,14 +476,6 @@ void dll_199_init(int obj, int def)
 
 extern u8 Obj_IsLoadingLocked(void);
 
-/*
- * --INFO--
- *
- * Function: dll_19A_update
- * EN v1.0 Address: 0x801CB7F0
- * EN v1.0 Size: 612b
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_199_release(void)
 {
@@ -607,11 +487,6 @@ void dll_199_initialise(void)
 
 void dll_19A_free(void);
 
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
-

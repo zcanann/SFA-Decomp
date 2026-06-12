@@ -11,19 +11,6 @@ int textblockObj_getObjectTypeId(void)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textblockObj_freeUnsupported
- * EN v1.0 Address: 0x80209820
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textblockObj_freeUnsupported(void)
 {
     OSReport(sTextBlockObjInitNoLongerSupported);
@@ -38,38 +25,12 @@ void textblockObj_hitDetect(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: textblockObj_updateUnsupported
- * EN v1.0 Address: 0x80209854
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textblockObj_updateUnsupported(void)
 {
     OSReport(sTextBlockObjInitNoLongerSupported);
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: textblockObj_init
- * EN v1.0 Address: 0x80209880
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void textblockObj_init(void)
 {
     OSReport(sTextBlockObjInitNoLongerSupported);

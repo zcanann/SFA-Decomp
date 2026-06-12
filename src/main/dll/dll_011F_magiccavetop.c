@@ -5,76 +5,12 @@ extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: treasurechest_update
- * EN v1.0 Address: 0x8018AA60
- * EN v1.0 Size: 632b
- * EN v1.1 Address: 0x8018AA94
- * EN v1.1 Size: 896b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: treasurechest_release
- * EN v1.0 Address: 0x8018ADB4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018AF9C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: treasurechest_initialise
- * EN v1.0 Address: 0x8018ADB8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018AFA0
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: magiccavebottom_getExtraSize
- * EN v1.0 Address: 0x8018ADBC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8018AFA4
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/camera_interface.h"
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
-
-
 
 typedef struct MagiccavetopPlacement
 {
@@ -86,7 +22,6 @@ typedef struct MagiccavetopPlacement
     s8 unk21;
     u8 pad22[0x28 - 0x22];
 } MagiccavetopPlacement;
-
 
 typedef struct MagiccavetopObjectDef
 {
@@ -101,7 +36,6 @@ typedef struct MagiccavetopObjectDef
     u8 pad26[0x28 - 0x26];
 } MagiccavetopObjectDef;
 
-
 typedef struct MagiccavetopState
 {
     u8 pad0[0x1 - 0x0];
@@ -111,59 +45,7 @@ typedef struct MagiccavetopState
     u8 pad8[0xC - 0x8];
 } MagiccavetopState;
 
-
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018af28
- * EN v1.0 Address: 0x8018AF28
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8018AF64
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b220
- * EN v1.0 Address: 0x8018B220
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018B230
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018b224
- * EN v1.0 Address: 0x8018B224
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8018B314
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void) { return 0xc; }
@@ -171,12 +53,7 @@ int trickyguardspot_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
-
-
-
-
 extern f32 timeDelta;
-
 
 extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
@@ -240,9 +117,6 @@ void magiccavetop_free(int* obj)
 
 extern void envFxActFn_800887f8(int a);
 extern void warpToMap(int mapId, int b);
-
-
-
 
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern int loadMapAndParent(int mapId);

@@ -7,48 +7,16 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
 
-
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_update
- * EN v1.0 Address: 0x801C60B8
- * EN v1.0 Size: 3360b
- * EN v1.1 Address: 0x801C666C
- * EN v1.1 Size: 3104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void skyFn_80088c94(int a, int b);
 extern void audioStopByMask(int mask);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801c6e04
- * EN v1.0 Address: 0x801C6E04
- * EN v1.0 Size: 704b
- * EN v1.1 Address: 0x801C7408
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void gpsh_shrine_hitDetect(void)
 {
@@ -116,7 +84,6 @@ void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
 
-
 extern void fn_80296518(int* player, int a, int b);
 
 typedef struct EcshShrineByte15
@@ -178,9 +145,7 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-
 extern u8* mmAlloc(int size, int tag, int p);
-
 
 extern int getAngle(f32 dx, f32 dz);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -270,7 +235,6 @@ void fn_801C70F0(s16* obj)
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
 typedef struct GpshShrineState
 {
     u8 pad0[0x4 - 0x0];
@@ -283,24 +247,7 @@ typedef struct GpshShrineState
     u8 pad15[0x18 - 0x15];
 } GpshShrineState;
 
-
 extern void* ObjGroup_GetObjects();
-
-
-/*
- * --INFO--
- *
- * Function: gpsh_shrine_update
- * EN v1.0 Address: 0x801C7724
- * EN v1.0 Size: 2520b
- * EN v1.1 Address: 0x801C7CD8
- * EN v1.1 Size: 2124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 extern int mapGetDirIdx(int a);
 extern int unlockLevel(int a, int b, int c);
@@ -549,7 +496,6 @@ void gpsh_shrine_update(int obj)
     }
 }
 
-
 void gpsh_shrine_init(int* obj, int* def)
 {
     extern int GameBit_Set(int bit, int val); /* #57 */
@@ -592,8 +538,6 @@ void gpsh_shrine_initialise(void)
 
 void gpsh_objcreator_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-

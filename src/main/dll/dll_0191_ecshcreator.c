@@ -13,19 +13,6 @@ extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;
 
-/*
- * --INFO--
- *
- * Function: FUN_801c5990
- * EN v1.0 Address: 0x801C5990
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x801C5B9C
- * EN v1.1 Size: 456b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
@@ -95,7 +82,6 @@ void fn_801C5990(MmShrineAnimObj* obj);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/obj_placement.h"
@@ -117,36 +103,9 @@ extern undefined4 FUN_80017830();
 
 extern undefined4 DAT_803dc070;
 
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_update
- * EN v1.0 Address: 0x801C60B8
- * EN v1.0 Size: 3360b
- * EN v1.1 Address: 0x801C666C
- * EN v1.1 Size: 3104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern int GameBit_Get(int bit);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801c6e04
- * EN v1.0 Address: 0x801C6E04
- * EN v1.0 Size: 704b
- * EN v1.1 Address: 0x801C7408
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -343,4 +302,3 @@ void ecsh_creator_update(s16* obj)
 }
 
 extern f32 lbl_803E5000;
-

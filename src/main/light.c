@@ -53,19 +53,6 @@ typedef struct SeqPointState
 
 STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
 
-/*
- * --INFO--
- *
- * Function: vfpblock1_update
- * EN v1.0 Address: 0x801FB9F4
- * EN v1.0 Size: 732b
- * EN v1.1 Address: 0x801FBA6C
- * EN v1.1 Size: 772b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E6100;
@@ -91,33 +78,6 @@ void vfpblock1_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801fbcd0
- * EN v1.0 Address: 0x801FBCD0
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801FBD70
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801fc978
- * EN v1.0 Address: 0x801FC978
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x801FCB6C
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 void FUN_801fc978(int param_1)
 {
@@ -125,19 +85,6 @@ void FUN_801fc978(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801fcccc
- * EN v1.0 Address: 0x801FCCCC
- * EN v1.0 Size: 1016b
- * EN v1.1 Address: 0x801FCD2C
- * EN v1.1 Size: 644b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -1124,21 +1071,7 @@ void vfpplatform_update(int obj)
 #include "main/objlib.h"
 #include "main/resource.h"
 
-/*
- * --INFO--
- *
- * Function: FUN_801fd398
- * EN v1.0 Address: 0x801FD398
- * EN v1.0 Size: 852b
- * EN v1.1 Address: 0x801FD3A4
- * EN v1.1 Size: 720b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
-
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
@@ -1153,9 +1086,7 @@ void dll_224_initialise_nop(void)
 
 /* 8b "li r3, N; blr" returners. */
 
-
 /* plain forwarder. */
-
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 
@@ -1197,7 +1128,6 @@ void dll_224_update(void* param_1)
     spellStoneUseFn_801fd270(obj);
 }
 
-
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 void dll_224_init(void* obj, void* other)
 {
@@ -1210,5 +1140,3 @@ void dll_224_init(void* obj, void* other)
     t = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
 }
-
-

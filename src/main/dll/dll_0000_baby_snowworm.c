@@ -62,10 +62,6 @@ extern void fn_8000FB20(void);
 extern void fn_8000F7A0(void);
 extern undefined4 DAT_803de3f6;
 
-
-
-
-
 void fn_80129FB0(void)
 {
     fn_8000F478(0);
@@ -110,13 +106,9 @@ int fn_8012B9F8(void)
     return 1;
 }
 
-
-
 void FUN_8012c894()
 {
 }
-
-
 
 void FUN_8012dab8()
 {
@@ -3974,19 +3966,6 @@ extern undefined4 DAT_803de550;
 extern f64 DOUBLE_803e2b08;
 extern f32 FLOAT_803e2af0;
 
-/*
- * --INFO--
- *
- * Function: FUN_8012eb7c
- * EN v1.0 Address: 0x8012EB7C
- * EN v1.0 Size: 388b
- * EN v1.1 Address: 0x8012EBBC
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8012eb7c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -4035,47 +4014,6 @@ void FUN_8012eb7c(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8012ef0c
- * EN v1.0 Address: 0x8012EF0C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8012EE7C
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8012ef14
- * EN v1.0 Address: 0x8012EF14
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x8012EE94
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8012efc4
- * EN v1.0 Address: 0x8012EFC4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8012F000
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 int FUN_8012efc4(void)
@@ -4083,19 +4021,6 @@ int FUN_8012efc4(void)
     return (int)DAT_803de540;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8012F04C
- * EN v1.0 Address: 0x8012EFCC
- * EN v1.0 Size: 1912b
- * EN v1.1 Address: 0x8012F04C
- * EN v1.1 Size: 572b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void fn_8012F04C(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -4199,19 +4124,6 @@ void fn_8012F04C(undefined8 param_1, double param_2, double param_3, undefined8 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8012f744
- * EN v1.0 Address: 0x8012F744
- * EN v1.0 Size: 20b
- * EN v1.1 Address: 0x8012F288
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8012f744(undefined2 param_1)
 {
     DAT_803de439 = 1;
@@ -4967,20 +4879,6 @@ void GameUI_update(void)
 
 /* segment pragma-stack balance (re-split): */
 
-
-/*
- * --INFO--
- *
- * Function: textureFreeFn_8012fcec
- * EN v1.0 Address: 0x8012FCEC
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8012FD0C
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void textureFree(void* p);
 
 void textureFreeFn_8012fcec(void)
@@ -5011,33 +4909,6 @@ void textureFreeFn_8012fcec(void)
     gTrickyHudCachedIconTexture = NULL;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8012fdac
- * EN v1.0 Address: 0x8012FDAC
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x8012FDC8
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8012fe70
- * EN v1.0 Address: 0x8012FE70
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x8012FE84
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8);
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
@@ -5054,7 +4925,6 @@ extern int airMeter;
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
 void CMenu_SetFadeCounter(s16 v) { cMenuFadeCounter = v; }
-
 
 /* Stubs added to align function set with v1.0 asm. Source had many Ghidra
  * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
@@ -5100,5 +4970,3 @@ void GameUI_initialise(void)
     yButtonState = 0;
     airMeter = 0;
 }
-
-

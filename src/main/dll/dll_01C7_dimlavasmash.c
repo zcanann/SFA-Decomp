@@ -43,19 +43,6 @@ extern f32 lbl_803DCB60;
 extern f32 lbl_803DCB64;
 extern f32 lbl_803DCB70;
 
-/*
- * --INFO--
- *
- * Function: FUN_801b2550
- * EN v1.0 Address: 0x801B2550
- * EN v1.0 Size: 1672b
- * EN v1.1 Address: 0x801B2B04
- * EN v1.1 Size: 1560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
@@ -475,20 +462,6 @@ typedef struct DimlavasmashObjectDef
     s16 unk1E;
 } DimlavasmashObjectDef;
 
-/*
- * --INFO--
- *
- * Function: dimlavasmash_init
- * EN v1.0 Address: 0x801B3658
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B367C
- * EN v1.1 Size: 636b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void dimlavasmash_init(s16* obj, s8* def)
 {
     extern int* mapGetBlock(int idx);
@@ -541,4 +514,3 @@ extern unsigned long GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-

@@ -1,23 +1,8 @@
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 
-
 extern void vecRotateZXY(s16 * rot, f32 * vec);
 
-
-/*
- * --INFO--
- *
- * Function: camcontrol_buildPathAngles
- * EN v1.0 Address: 0x8010684C
- * EN v1.0 Size: 1336b
- * EN v1.1 Address: 0x80106888
- * EN v1.1 Size: 1336b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma inline_depth(4)
 void camcontrol_buildPathAngles(s16* outArr, u16* outCount, s16 baseAngle, s16 deltaAngle,
                                 s16 limit)
@@ -34,19 +19,6 @@ void camcontrol_buildPathAngles(s16* outArr, u16* outCount, s16 baseAngle, s16 d
     }
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_buildPathPoints
- * EN v1.0 Address: 0x80106D84
- * EN v1.0 Size: 500b
- * EN v1.1 Address: 0x80106DC0
- * EN v1.1 Size: 500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f32 targetZ,
                                 f32 targetY, s16 angleRange, s16 angleLimit,
                                 int* outPointCount)
@@ -102,4 +74,3 @@ void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f3
 
     *outPointCount = pointCount;
 }
-

@@ -11,7 +11,6 @@
 #include "main/objseq.h"
 #include "stdarg.h"
 
-
 extern int ObjGroup_FindNearestObject();
 extern undefined8 FUN_80053754();
 extern undefined4 FUN_80246dcc();
@@ -26,41 +25,12 @@ extern undefined4 DAT_803de6bc;
 extern undefined4 DAT_803de6c0;
 extern f32 FLOAT_803e3098;
 
-/*
- * --INFO--
- *
- * Function: Minimap_update
- * EN v1.0 Address: 0x80132024
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801323AC
- * EN v1.1 Size: 5296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80132034
- * EN v1.0 Address: 0x80132034
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80133868
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80132034(void)
 {
     bool bVar1;
@@ -78,20 +48,6 @@ void FUN_80132034(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801334d4
- * EN v1.0 Address: 0x801334D4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x80134B90
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801334d4(void)
 {
     FUN_80053754();
@@ -99,40 +55,12 @@ void FUN_801334d4(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80134bc4
- * EN v1.0 Address: 0x80134BC4
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x80136C5C
- * EN v1.1 Size: 12b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80134bc4(void)
 {
     DAT_803de62b = 0;
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80135810
- * EN v1.0 Address: 0x80135810
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80137C30
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   char* param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
@@ -140,38 +68,11 @@ void FUN_80135810(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80135814
- * EN v1.0 Address: 0x80135814
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80137CD0
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135814(void)
 {
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80135c48
- * EN v1.0 Address: 0x80135C48
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x80138C58
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)
 {
     DAT_803de6b4 = param_4;
@@ -182,19 +83,6 @@ void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, un
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80135c84
- * EN v1.0 Address: 0x80135C84
- * EN v1.0 Size: 24b
- * EN v1.1 Address: 0x80138C90
- * EN v1.1 Size: 24b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80135c84(int param_1, uint param_2)
 {
     *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) =
@@ -202,20 +90,6 @@ void FUN_80135c84(int param_1, uint param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8013651c
- * EN v1.0 Address: 0x8013651C
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x80139280
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8013651c(int param_1)
 {
     int iVar1;
@@ -226,7 +100,6 @@ void FUN_8013651c(int param_1)
     return;
 }
 
-
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 extern u8 warpstoneUIState;
@@ -234,13 +107,11 @@ extern u8 showCredits;
 
 /* 4-byte and 8-byte trivial leaves. */
 
-
 void WarpstoneUI_frameEnd(void)
 {
 }
 
 void reportAllocFail(void);
-
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 
@@ -266,8 +137,6 @@ int titlescreen_getExtraSize(void);
 /* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
 void titlescreen_hitDetect(void);
 
-/* EN v1.0 0x80135BCC  size: 36b  titlescreen_getObjectTypeId: returns 74 if
- * obj->_46 (s16) is in [1917, 1920], else returns 0. */
 int titlescreen_getObjectTypeId(u8* obj);
 
 extern void titlescreen_free(u8 * obj);
@@ -296,7 +165,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     },
     0,
 };
-
 
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
@@ -342,7 +210,6 @@ void fn_80133F70(void* obj)
 
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
-
 /* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
 
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
@@ -351,13 +218,10 @@ extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
 
-
 /* lbl_803DD940 declared later as void* */
-
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
-
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 
@@ -425,7 +289,6 @@ void WarpstoneUI_initialise(void)
 }
 #pragma scheduling reset
 
-
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from getCurUiDll is in {2..6} or equals 7, else 0. */
 
@@ -433,19 +296,13 @@ void WarpstoneUI_initialise(void)
  * minimapTexture is non-null, release via textureFree and zero both
  * minimapTexture and lbl_803DD92C. */
 
-
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
  * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
  * the rlwimi only uses bit 0 of r4. No C form found to force it. */
 
-/* EN v1.0 0x80135BF0  size: 60b  titlescreen_free: if obj->_46 == 0x77d,
- * trigger Music_Trigger(0x3a, 0) and clear showCredits. */
-
 void titlescreen_free(u8* obj);
 
-
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -501,9 +358,7 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
 
 extern f32 lbl_803E2354;
 
-
 extern void gameTextFn_80016810(int textId, int a, int b);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -579,43 +434,28 @@ void WarpstoneUI_showUI(int param_1)
     }
 }
 
+#pragma peephole off
+#pragma peephole reset
 
 #pragma peephole off
 #pragma peephole reset
 
-
 #pragma peephole off
 #pragma peephole reset
-
-
-#pragma peephole off
-#pragma peephole reset
-
 
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
 
 #pragma peephole off
 #pragma peephole reset
 
+#pragma peephole off
+#pragma peephole reset
 
 #pragma peephole off
 #pragma peephole reset
 
-
 #pragma peephole off
 #pragma peephole reset
 
-
-/* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
- * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
- * stack trace and GPR dump via debugPrintfxy, draws the underline and
- * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma peephole off
-#pragma peephole reset
-
-
-/* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
- * twice (measure pass then draw pass), drawing the backing rect between
- * the passes when the log produced any extent. */
 #pragma peephole off
 #pragma peephole reset

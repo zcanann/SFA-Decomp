@@ -79,19 +79,6 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
-/*
- * --INFO--
- *
- * Function: FUN_8019b1d8
- * EN v1.0 Address: 0x8019B1D8
- * EN v1.0 Size: 260b
- * EN v1.1 Address: 0x8019B3B8
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -142,20 +129,6 @@ void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019b2e0
- * EN v1.0 Address: 0x8019B2E0
- * EN v1.0 Size: 680b
- * EN v1.1 Address: 0x8019B754
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
@@ -239,20 +212,6 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
     return uVar3;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019b650
- * EN v1.0 Address: 0x8019B650
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8019BA44
- * EN v1.1 Size: 3800b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019b650(undefined8 param_1, double param_2, double param_3, double param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9,
@@ -262,19 +221,6 @@ FUN_8019b650(undefined8 param_1, double param_2, double param_3, double param_4,
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8019b658
- * EN v1.0 Address: 0x8019B658
- * EN v1.0 Size: 372b
- * EN v1.1 Address: 0x8019C91C
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -331,20 +277,6 @@ FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019c318
- * EN v1.0 Address: 0x8019C318
- * EN v1.0 Size: 848b
- * EN v1.1 Address: 0x8019DAF4
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -403,20 +335,6 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019d238
- * EN v1.0 Address: 0x8019D238
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x8019E970
- * EN v1.1 Size: 372b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
@@ -470,20 +388,6 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 1;
 }
 
-
-/*
- * --INFO--
- *
- * Function: babycloudrunner_getObjectTypeId
- * EN v1.0 Address: 0x8019EBBC
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x801A0A24
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void babycloudrunner_init_OLD_v1_1(int obj)
 {
     undefined4* state;
@@ -504,7 +408,6 @@ extern u8 lbl_803DBE30;
 extern void storeZeroToFloatParam(void* p);
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
-
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -598,19 +501,6 @@ void babycloudrunner_init(int* obj, u8* def)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: babycloudrunner_render
- * EN v1.0 Address: 0x8019EC00
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x801A0A70
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
@@ -624,20 +514,6 @@ void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, 
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8019f1dc
- * EN v1.0 Address: 0x8019F1DC
- * EN v1.0 Size: 496b
- * EN v1.1 Address: 0x801A1190
- * EN v1.1 Size: 496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole on
 void FUN_8019f1dc(void)
 {
@@ -745,18 +621,14 @@ void FUN_8019f1dc(void)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
-
 
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-
 extern void* Obj_GetPlayerObject(void);
-
 
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 lbl_803E4218;
@@ -813,7 +685,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
 }
 #pragma dont_inline reset
 
-
 extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
@@ -867,39 +738,32 @@ int babycloudrunner_func0B(void* p)
 }
 void windlift_hitDetect(void);
 
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
-
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 /* Per-object extra state for the CloudRunner power base
  * (cfpowerbase_getExtraSize == 0x6). */
 
-
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
 /* Per-object extra state for the CloudRunner prison guard
  * (cfprisonguard_getExtraSize == 0x3c). */
-
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 /* Per-object extra state for the CloudRunner prison uncle
  * (cfprisonuncle_getExtraSize == 0xa8). */
 
-
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
 
-
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 /* spiritdoorspirit_getExtraSize == 0x1. */
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -917,17 +781,13 @@ void babycloudrunner_initialise(void)
 
 void cfprisonguard_free(void);
 
-
 extern void objAudioFn_80039270(int obj, void* p, int id);
-
 
 /* 8b "li r3, N; blr" returners. */
 int babycloudrunner_getExtraSize(void) { return 0x248; }
 int cfprisonguard_getExtraSize(void);
 
-
 /* chained byte bit-extract. */
-
 
 /* plain forwarder. */
 
@@ -935,11 +795,9 @@ int cfprisonguard_getExtraSize(void);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 /* ObjMsg_AllocQueue already declared as undefined */
 
-
 int babycloudrunner_getObjectTypeId(void) { return 0; }
 
 void spiritdoorspirit_init(int* obj);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -951,7 +809,6 @@ int babycloudrunner_setScale(int* obj)
 
 void cfperch_init(int* obj);
 
-
 void babycloudrunner_free(int* obj)
 {
     ObjGroup_RemoveObject(obj, 32);
@@ -960,13 +817,9 @@ void babycloudrunner_free(int* obj)
 
 void gcrobotlightbea_init(int* obj);
 
-
-
-
 extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
 extern f32 lbl_803DBE4C;
-
 
 /* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
  * from the vertical speed, clamp the playback rate, latch the spit SFX
@@ -1022,9 +875,7 @@ int fn_8019E3F4(int* obj)
 
 extern int objUpdateOpacity(int sub);
 
-
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-
 
 extern void* getTrickyObject(void);
 extern f32 lbl_803E4248;
@@ -1141,7 +992,6 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 extern void Sfx_StopObjectChannel(int obj, int ch);
-
 
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);
@@ -1391,4 +1241,3 @@ void babycloudrunner_update(int* obj)
 }
 
 extern void getEnvfxAct(int a, int b, int c, int d);
-

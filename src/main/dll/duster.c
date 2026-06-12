@@ -92,20 +92,6 @@ extern f32 lbl_803E2B00;
 extern f32 lbl_803E2B04;
 extern f32 lbl_803DBCEC;
 
-
-/*
- * --INFO--
- *
- * Function: fn_8015536C
- * EN v1.0 Address: 0x801556D4
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x80155818
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
 {
     float hi;
@@ -160,19 +146,6 @@ void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
     outPos[2] = lbl_803E2A2C * anchor[2] + outPos[2];
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801554B4
- * EN v1.0 Address: 0x80155830
- * EN v1.0 Size: 728b
- * EN v1.1 Address: 0x80155960
- * EN v1.1 Size: 700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801554B4(int* obj, int state)
 {
     u8 didHit;
@@ -247,19 +220,6 @@ void fn_801554B4(int* obj, int state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: rachnopUpdateWhileFrozen
- * EN v1.0 Address: 0x80155B08
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x80155C1C
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
     if (eventKind == 0x10)
@@ -275,19 +235,6 @@ void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int event
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801557D4
- * EN v1.0 Address: 0x80155B6C
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x80155C80
- * EN v1.1 Size: 176b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801557D4(int* obj, int state)
 {
     int cond;
@@ -312,19 +259,6 @@ void fn_801557D4(int* obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80155884
- * EN v1.0 Address: 0x80155CAC
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x80155D30
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80155884(int* obj, int state)
 {
     int cond;
@@ -350,19 +284,6 @@ void fn_80155884(int* obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80155948
- * EN v1.0 Address: 0x80155E00
- * EN v1.0 Size: 572b
- * EN v1.1 Address: 0x80155DF4
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80155948(int* obj, int state)
 {
     short move;
@@ -409,19 +330,6 @@ void fn_80155948(int* obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: rachnopInit
- * EN v1.0 Address: 0x8015603C
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x80155F58
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void rachnopInit(undefined4 param_1, int state)
 {
     float fa;
@@ -448,19 +356,6 @@ void rachnopInit(undefined4 param_1, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: pollenFn_80155b10
- * EN v1.0 Address: 0x801560A0
- * EN v1.0 Size: 628b
- * EN v1.1 Address: 0x80155FBC
- * EN v1.1 Size: 488b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void pollenFn_80155b10(uint obj, int state)
 {
     uint loadLocked;
@@ -531,19 +426,6 @@ void pollenFn_80155b10(uint obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: timeOfDayFn_80155cf8
- * EN v1.0 Address: 0x80156314
- * EN v1.0 Size: 472b
- * EN v1.1 Address: 0x801561A4
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void timeOfDayFn_80155cf8(int obj, int state)
 {
     byte isDaytime;
@@ -573,19 +455,6 @@ void timeOfDayFn_80155cf8(int obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: baddieUpdateWhileFrozen_80155e10
- * EN v1.0 Address: 0x801564EC
- * EN v1.0 Size: 384b
- * EN v1.1 Address: 0x801562BC
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 param_11, int eventKind, undefined4 param_13,
                                       int damage)
 {
@@ -624,19 +493,6 @@ void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 param_11, 
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80155F20
- * EN v1.0 Address: 0x8015666C
- * EN v1.0 Size: 780b
- * EN v1.1 Address: 0x801563CC
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80155F20(int obj, int state)
 {
     *(float*)(state + 0x324) = lbl_803E2A60;
@@ -665,19 +521,6 @@ void fn_80155F20(int obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80156010
- * EN v1.0 Address: 0x80156978
- * EN v1.0 Size: 1132b
- * EN v1.1 Address: 0x801564BC
- * EN v1.1 Size: 376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80156010(uint obj, int state)
 {
     bool timerExpired;
@@ -720,19 +563,6 @@ void fn_80156010(uint obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: baddieInit_80156188
- * EN v1.0 Address: 0x80156DE4
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x80156634
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void baddieInit_80156188(undefined4 param_1, int state)
 {
     float fa;
@@ -757,19 +587,6 @@ void baddieInit_80156188(undefined4 param_1, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: wbUpdateWhileFrozen
- * EN v1.0 Address: 0x80156E48
- * EN v1.0 Size: 112b
- * EN v1.1 Address: 0x80156698
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wbUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
     if (eventKind != 0x11)
@@ -789,19 +606,6 @@ void wbUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8015625C
- * EN v1.0 Address: 0x80156EB8
- * EN v1.0 Size: 872b
- * EN v1.1 Address: 0x80156708
- * EN v1.1 Size: 720b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8015625C(uint obj, int state)
 {
     f32 zero;
@@ -897,19 +701,6 @@ void fn_8015625C(uint obj, int state)
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_8015652C
- * EN v1.0 Address: 0x80157220
- * EN v1.0 Size: 1284b
- * EN v1.1 Address: 0x801569D8
- * EN v1.1 Size: 892b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8015652C(uint obj, int state)
 {
     f32 zero;
@@ -1022,19 +813,6 @@ void fn_8015652C(uint obj, int state)
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: wbInit
- * EN v1.0 Address: 0x80157724
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x80156D54
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wbInit(undefined4 param_1, int state)
 {
     float fa;
@@ -1058,19 +836,6 @@ void wbInit(undefined4 param_1, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80156950
- * EN v1.0 Address: 0x801577C8
- * EN v1.0 Size: 252b
- * EN v1.1 Address: 0x80156DFC
- * EN v1.1 Size: 244b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80156950(uint obj, int state)
 {
     switch (*(short*)(obj + 0xa0))
@@ -1121,19 +886,6 @@ void fn_80156950(uint obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: mutatedEbaUpdateWhileFrozen
- * EN v1.0 Address: 0x801578C4
- * EN v1.0 Size: 304b
- * EN v1.1 Address: 0x80156EF0
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int eventKind)
 {
     short move;
@@ -1164,19 +916,6 @@ void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int e
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80156B0C
- * EN v1.0 Address: 0x801579F4
- * EN v1.0 Size: 676b
- * EN v1.1 Address: 0x80156FB8
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80156B0C(uint obj, int state)
 {
     int tblOff;
@@ -1212,12 +951,6 @@ void fn_80156B0C(uint obj, int state)
     return;
 }
 
-/*
- * --INFO--
- * Function: fn_80156C34
- * EN v1.0 Address: 0x80156C34
- * EN v1.0 Size: 168b
- */
 void fn_80156C34(uint obj, int state)
 {
     int tblOff;
@@ -1242,12 +975,6 @@ void fn_80156C34(uint obj, int state)
     return;
 }
 
-/*
- * --INFO--
- * Function: mutatedEbaInit
- * EN v1.0 Address: 0x80156CDC
- * EN v1.0 Size: 104b
- */
 void mutatedEbaInit(undefined4 param_1, int state)
 {
     float fa;
@@ -1269,12 +996,6 @@ void mutatedEbaInit(undefined4 param_1, int state)
     return;
 }
 
-/*
- * --INFO--
- * Function: hoodedZyckUpdateWhileFrozen
- * EN v1.0 Address: 0x80156D44
- * EN v1.0 Size: 92b
- */
 void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
     if (eventKind == 0x10)
@@ -1290,12 +1011,6 @@ void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int ev
     return;
 }
 
-/*
- * --INFO--
- * Function: fn_80156DA0
- * EN v1.0 Address: 0x80156DA0
- * EN v1.0 Size: 612b
- */
 void fn_80156DA0(int obj, int state)
 {
     bool resetting;

@@ -4,62 +4,6 @@
 
 extern CameraModeClimbState* lbl_803DD578;
 
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_update
- * EN v1.0 Address: 0x8010C0D8
- * EN v1.0 Size: 3352b
- * EN v1.1 Address: 0x8010C374
- * EN v1.1 Size: 3204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_init
- * EN v1.0 Address: 0x8010CDF0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010CFF8
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeShipBattle_update
- * EN v1.0 Address: 0x8010CE20
- * EN v1.0 Size: 1580b
- * EN v1.1 Address: 0x8010D18C
- * EN v1.1 Size: 936b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeShipBattle_init
- * EN v1.0 Address: 0x8010D44C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010D534
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 void CameraModeClimb_copyToCurrent_nop(void)
@@ -93,19 +37,6 @@ extern f32 lbl_803E19AC;
 extern f32 lbl_803E19B0;
 extern f32 lbl_803E19B4;
 
-/*
- * --INFO--
- *
- * Function: CameraModeClimb_update
- * EN v1.0 Address: 0x8010D36C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010D608
- * EN v1.1 Size: 1188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeClimb_update(short* camObj)
 {
     f32 blend;

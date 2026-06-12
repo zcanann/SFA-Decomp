@@ -4,7 +4,6 @@
 #include "main/dll/FRONT/title_menu.h"
 #include "main/screen_transition.h"
 
-
 typedef struct SaveSelectPanel
 {
     TitleMenuTextEntry* entries;
@@ -70,19 +69,6 @@ extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
 extern int sprintf(char* dst, const char* fmt, ...);
 
-/*
- * --INFO--
- *
- * Function: saveSelectOpenFile
- * EN v1.0 Address: 0x8011A0DC
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x8011A254
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void saveSelectOpenFile(int sel, int slot)
 {
@@ -139,13 +125,6 @@ void saveSelectOpenFile(int sel, int slot)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: SaveSelectScreen_release
- * EN v1.0 Address: 0x8011B354
- * EN v1.0 Size: 96b
- */
 void SaveSelectScreen_release(void)
 {
     void** p;
@@ -216,13 +195,6 @@ void saveFileSelect_init(int param_1, int param_2)
     }
 }
 #pragma dont_inline reset
-/*
- * --INFO--
- *
- * Function: saveSelectSetupMenuItems
- * EN v1.0 Address: 0x8011A410
- * EN v1.0 Size: 216b
- */
 void saveSelectSetupMenuItems(void** p)
 {
     int off1;
@@ -314,13 +286,6 @@ void saveSelectGoToChapterSelect(void)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: saveSelectFn_8011a70c
- * EN v1.0 Address: 0x8011A70C
- * EN v1.0 Size: 216b
- */
 #pragma dont_inline on
 void saveSelectFn_8011a70c(void)
 {
@@ -357,13 +322,6 @@ void saveSelectFn_8011a70c(void)
     }
 }
 #pragma dont_inline reset
-/*
- * --INFO--
- *
- * Function: saveSelectGoToChooseSlot
- * EN v1.0 Address: 0x8011A7E4
- * EN v1.0 Size: 304b
- */
 #pragma dont_inline on
 void saveSelectGoToChooseSlot(int arg)
 {
@@ -411,13 +369,6 @@ void saveSelectGoToChooseSlot(int arg)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: saveSelectScreenFree
- * EN v1.0 Address: 0x8011A914
- * EN v1.0 Size: 316b
- */
 #pragma dont_inline on
 void saveSelectScreenFree(int param_1)
 {
@@ -506,13 +457,6 @@ extern void* lbl_803DD498;
 extern char sFrontendFoxName;
 extern char sSaveGameBinPathFormat[];
 
-/*
- * --INFO--
- *
- * Function: SaveSelectScreen_render
- * EN v1.0 Address: 0x8011AA50
- * EN v1.0 Size: 976b
- */
 void SaveSelectScreen_render(int param)
 {
     SaveSelectPanel* panel;
@@ -627,13 +571,6 @@ void SaveSelectScreen_render(int param)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: SaveSelectScreen_run
- * EN v1.0 Address: 0x8011AE24
- * EN v1.0 Size: 1328b
- */
 int SaveSelectScreen_run(void)
 {
     char buf[32];

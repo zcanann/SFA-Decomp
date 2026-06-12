@@ -30,36 +30,10 @@ int projwallpower_doUnsupported(void)
     return PROJECTILE_UNSUPPORTED_FALSE_RETURN;
 }
 
-/*
- * --INFO--
- *
- * Function: projwallpower_release
- * EN v1.0 Address: 0x80100900
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80100900
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void projwallpower_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: projwallpower_initialise
- * EN v1.0 Address: 0x80100904
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80100904
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void projwallpower_initialise(void)
 {
 }

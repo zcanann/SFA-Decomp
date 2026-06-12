@@ -5,25 +5,12 @@
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
 
-
-
-/*
- * --INFO--
- *
- * Function: dll_19B_SeqFn
- * EN v1.0 Address: 0x801CBA98
- * EN v1.0 Size: 636b
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
-
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -46,38 +33,10 @@ typedef struct Dll19CPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dll19CPlacement;
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: dll_19B_update
- * EN v1.0 Address: 0x801CBD88
- * EN v1.0 Size: 2124b
- * EN v1.1 Address: 0x801CC33C
- * EN v1.1 Size: 2032b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern uint GameBit_Get(int eventId);
 extern u8 framesThisStep;
 
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void dll_19C_free(void)
 {
@@ -96,8 +55,6 @@ void dll_19C_initialise(void)
 }
 
 void dll_19D_render(void);
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int dll_19C_getExtraSize(void) { return 0x8; }
@@ -198,13 +155,11 @@ void dll_19C_init(int obj, u8* initData)
  */
 void dll_19D_free(int obj);
 
-
 /*
  * Function: dll_19D_init
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
-
 
 /*
  * Function: dll_19D_hitDetect

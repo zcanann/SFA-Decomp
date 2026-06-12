@@ -6,12 +6,6 @@
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
-
-
-
-
-
-
 typedef struct Dimbossgut2State
 {
     u8 pad0[0x4 - 0x0];
@@ -24,9 +18,6 @@ typedef struct Dimbossgut2State
     s32 unk40C;
     u8 pad410[0x42C - 0x410];
 } Dimbossgut2State;
-
-
-
 
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int min, int max);
@@ -63,19 +54,6 @@ extern f32 lbl_803E4D14;
 extern f32 lbl_803E4D18;
 extern f32 lbl_803E4D1C;
 
-/*
- * --INFO--
- *
- * Function: dimbossgut2_updateTracking
- * EN v1.0 Address: 0x801BF048
- * EN v1.0 Size: 652b
- * EN v1.1 Address: 0x801BF5FC
- * EN v1.1 Size: 680b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dimbossgut2_updateTracking(int obj, int state)
 {
     int curve;
@@ -152,19 +130,6 @@ void dimbossgut2_updateTracking(int obj, int state)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: dimbossgut2_free
- * EN v1.0 Address: 0x801BF2F0
- * EN v1.0 Size: 140b
- * EN v1.1 Address: 0x801BF8A4
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dimbossgut2_free(int arg9)
 {
     int obj = arg9;
@@ -189,19 +154,6 @@ void dimbossgut2_free(int arg9)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: dimbossgut2_render
- * EN v1.0 Address: 0x801BF37C
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x801BF930
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     u8* light;
@@ -220,19 +172,6 @@ void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int para
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: dimbossgut2_update
- * EN v1.0 Address: 0x801BF3E8
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x801BF99C
- * EN v1.1 Size: 716b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dimbossgut2_update(int obj)
 {
     int state;
@@ -319,19 +258,6 @@ void dimbossgut2_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: dimbossgut2_init
- * EN v1.0 Address: 0x801BF6B4
- * EN v1.0 Size: 540b
- * EN v1.1 Address: 0x801BFC68
- * EN v1.1 Size: 540b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void* objCreateLight(int obj, int n);
@@ -407,78 +333,7 @@ void dimbossgut2_init(int obj, int def, int p3)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: DIMbossspit_updateBurst
- * EN v1.0 Address: 0x801BF8D8
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801BFE8C
- * EN v1.1 Size: 664b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIMbossspit_updateBurst(int obj);
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_free
- * EN v1.0 Address: 0x801BFB70
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801C0124
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_render
- * EN v1.0 Address: 0x801BFBC4
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x801C0178
- * EN v1.1 Size: 104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_update
- * EN v1.0 Address: 0x801BFC2C
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801C01E0
- * EN v1.1 Size: 648b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: DIMbossspit_init
- * EN v1.0 Address: 0x801BFEB4
- * EN v1.0 Size: 312b
- * EN v1.1 Address: 0x801C0468
- * EN v1.1 Size: 312b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void dimbossgut2_func11(void)
@@ -498,53 +353,6 @@ void dimbossgut2_initialise(void)
 }
 
 void DIMbossspit_hitDetect(void);
-
-
-
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: magicmaker_update
- * EN v1.0 Address: 0x801C0080
- * EN v1.0 Size: 624b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: dimbossfire_free
- * EN v1.0 Address: 0x801C04C8
- * EN v1.0 Size: 100b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void) { return 0x0; }

@@ -5,52 +5,6 @@
 
 extern uint GameBit_Get(int eventId);
 
-
-/*
- * --INFO--
- *
- * Function: collectible_init
- * EN v1.0 Address: 0x80172F14
- * EN v1.0 Size: 1104b
- * EN v1.1 Address: 0x801730D0
- * EN v1.1 Size: 752b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: collectible_release
- * EN v1.0 Address: 0x8017321C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80173378
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: collectible_initialise
- * EN v1.0 Address: 0x80173220
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017337C
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -83,67 +37,21 @@ typedef struct EffectboxPlacement
     u8 pad23[0x28 - 0x23];
 } EffectboxPlacement;
 
-
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 extern void* ObjGroup_GetObjects();
 extern u8* Obj_GetPlayerObject(void);
 
-
 /* magicdust extra block (collectible sparkle state; tail of the pickup record). */
-
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
-/*
- * --INFO--
- *
- * Function: magicdust_update
- * EN v1.0 Address: 0x801732A4
- * EN v1.0 Size: 2272b
- * EN v1.1 Address: 0x80173750
- * EN v1.1 Size: 2120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: magicdust_init
- * EN v1.0 Address: 0x80173B84
- * EN v1.0 Size: 1112b
- * EN v1.1 Address: 0x80173F98
- * EN v1.1 Size: 1188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern void fn_8002B758(void);
 
-/*
- * --INFO--
- *
- * Function: effectbox_free
- * EN v1.0 Address: 0x80173F90
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void effectbox_free(void)
 {
     fn_8002B758();
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void effectbox_hitDetect(void)
@@ -203,13 +111,6 @@ extern f32 lbl_803E350C;
 extern f32 lbl_803E3510;
 extern f32 lbl_803E3514;
 
-/*
- * --INFO--
- *
- * Function: effectbox_update
- * EN v1.0 Address: 0x80173FE4
- * EN v1.0 Size: 980b
- */
 void effectbox_update(int obj)
 {
     int def;
@@ -309,19 +210,4 @@ void effectbox_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80174438
- * EN v1.0 Address: 0x80174438
- * EN v1.0 Size: 336b
- */
 int fn_80174438(int obj, PushableState* state);
-
-/*
- * --INFO--
- *
- * Function: fn_80174668
- * EN v1.0 Address: 0x80174668
- * EN v1.0 Size: 1048b
- */

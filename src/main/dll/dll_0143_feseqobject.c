@@ -12,22 +12,6 @@ extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E56B0;
 extern f32 lbl_803E56B4;
 
-/*
- * --INFO--
- *
- * Function: paymentkiosk_init
- * EN v1.0 Address: 0x801DF43C
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x801DF458
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
 #pragma scheduling on
 #pragma peephole on
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params)
@@ -145,53 +129,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801df45c
- * EN v1.0 Address: 0x801DF45C
- * EN v1.0 Size: 576b
- * EN v1.1 Address: 0x801DF480
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801df784
- * EN v1.0 Address: 0x801DF784
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801DF7DC
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801df788
- * EN v1.0 Address: 0x801DF788
- * EN v1.0 Size: 252b
- * EN v1.1 Address: 0x801DF918
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void FEseqobject_free(void)
 {
@@ -219,11 +157,6 @@ void FElevControl_release(void);
 
 void FElevControl_initialise(void);
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
@@ -240,7 +173,6 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 /* call(x, N) wrappers. */
 void FElevControl_init(int x);

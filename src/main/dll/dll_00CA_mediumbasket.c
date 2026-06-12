@@ -99,19 +99,6 @@ extern f32 lbl_803E3A14;
 extern f32 lbl_803E3A18;
 extern void* PTR_DAT_80320998;
 
-/*
- * --INFO--
- *
- * Function: FUN_8015ad60
- * EN v1.0 Address: 0x8015AD60
- * EN v1.0 Size: 940b
- * EN v1.1 Address: 0x8015ADD0
- * EN v1.1 Size: 728b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8015ad60(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -200,19 +187,6 @@ void FUN_8015ad60(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015b2d0
- * EN v1.0 Address: 0x8015B2D0
- * EN v1.0 Size: 124b
- * EN v1.1 Address: 0x8015B20C
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8015b2d0(short* param_1, int param_2)
 {
     if (*(char*)(param_2 + 0x33b) == '\0')
@@ -226,19 +200,6 @@ void FUN_8015b2d0(short* param_1, int param_2)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015b7f0
- * EN v1.0 Address: 0x8015B7F0
- * EN v1.0 Size: 748b
- * EN v1.1 Address: 0x8015B74C
- * EN v1.1 Size: 644b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015b7f0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10)
@@ -322,19 +283,6 @@ FUN_8015b7f0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar4;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015bc20
- * EN v1.0 Address: 0x8015BC20
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x8015BB1C
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015bc20(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -372,19 +320,6 @@ FUN_8015bc20(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015c00c
- * EN v1.0 Address: 0x8015C00C
- * EN v1.0 Size: 424b
- * EN v1.1 Address: 0x8015BE64
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015c00c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -434,19 +369,6 @@ FUN_8015c00c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015c1b4
- * EN v1.0 Address: 0x8015C1B4
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8015BFAC
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015c1b4(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -488,19 +410,6 @@ FUN_8015c1b4(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015c3b4
- * EN v1.0 Address: 0x8015C3B4
- * EN v1.0 Size: 352b
- * EN v1.1 Address: 0x8015C0C4
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015c3b4(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -543,19 +452,6 @@ FUN_8015c3b4(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015c514
- * EN v1.0 Address: 0x8015C514
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x8015C1D8
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015c514(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -593,19 +489,6 @@ FUN_8015c514(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015c654
- * EN v1.0 Address: 0x8015C654
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x8015C2B4
- * EN v1.1 Size: 236b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015c654(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -751,19 +634,6 @@ int mediumbasket_updateOpenHitState(int obj, int p)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015c7a0
- * EN v1.0 Address: 0x8015C7A0
- * EN v1.0 Size: 284b
- * EN v1.1 Address: 0x8015C3A0
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 #pragma peephole on
@@ -788,19 +658,6 @@ FUN_8015c7a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015c8bc
- * EN v1.0 Address: 0x8015C8BC
- * EN v1.0 Size: 408b
- * EN v1.1 Address: 0x8015C44C
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015c8bc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -849,19 +706,6 @@ FUN_8015c8bc(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015ca54
- * EN v1.0 Address: 0x8015CA54
- * EN v1.0 Size: 728b
- * EN v1.1 Address: 0x8015C560
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015ca54(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -923,19 +767,6 @@ FUN_8015ca54(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015cd2c
- * EN v1.0 Address: 0x8015CD2C
- * EN v1.0 Size: 736b
- * EN v1.1 Address: 0x8015C758
- * EN v1.1 Size: 512b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015cd2c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -1001,19 +832,6 @@ FUN_8015cd2c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015d00c
- * EN v1.0 Address: 0x8015D00C
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x8015C958
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015d00c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9, int param_10,
@@ -1048,19 +866,6 @@ FUN_8015d00c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015d19c
- * EN v1.0 Address: 0x8015D19C
- * EN v1.0 Size: 392b
- * EN v1.1 Address: 0x8015CA70
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015d19c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -1094,19 +899,6 @@ FUN_8015d19c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015d324
- * EN v1.0 Address: 0x8015D324
- * EN v1.0 Size: 500b
- * EN v1.1 Address: 0x8015CB60
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015d324(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -1145,19 +937,6 @@ FUN_8015d324(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015d518
- * EN v1.0 Address: 0x8015D518
- * EN v1.0 Size: 468b
- * EN v1.1 Address: 0x8015CC74
- * EN v1.1 Size: 404b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015d518(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -1208,19 +987,6 @@ FUN_8015d518(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015d6ec
- * EN v1.0 Address: 0x8015D6EC
- * EN v1.0 Size: 560b
- * EN v1.1 Address: 0x8015CE08
- * EN v1.1 Size: 432b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8015d6ec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -2546,19 +2312,6 @@ return0:
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-/*
- * --INFO--
- *
- * Function: dll_CA_update
- * EN v1.0 Address: 0x8015D7B0
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x8015D86C
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_CA_update(int obj, int p2, int p3)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -2627,79 +2380,7 @@ void dll_CA_update(int obj, int p2, int p3)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8015d99c
- * EN v1.0 Address: 0x8015D99C
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x8015DA64
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 int fn_8015E3A0(int obj, int p2);
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e0d0
- * EN v1.0 Address: 0x8015E0D0
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x8015E3CC
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e260
- * EN v1.0 Address: 0x8015E260
- * EN v1.0 Size: 128b
- * EN v1.1 Address: 0x8015E4F0
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e2e0
- * EN v1.0 Address: 0x8015E2E0
- * EN v1.0 Size: 424b
- * EN v1.1 Address: 0x8015E574
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e488
- * EN v1.0 Address: 0x8015E488
- * EN v1.0 Size: 496b
- * EN v1.1 Address: 0x8015E6BC
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 #pragma dont_inline on
 void fn_8015DAE8(void);
@@ -2744,256 +2425,16 @@ void dll_CA_init(int obj, u8* p, int flags)
 
 int fn_8015E5DC(short* obj, GroundBaddieState* p);
 
-/*
- * --INFO--
- *
- * Function: FUN_8015e678
- * EN v1.0 Address: 0x8015E678
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x8015E84C
- * EN v1.1 Size: 384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e88c
- * EN v1.0 Address: 0x8015E88C
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x8015E9CC
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8015e9f4
- * EN v1.0 Address: 0x8015E9F4
- * EN v1.0 Size: 676b
- * EN v1.1 Address: 0x8015EA88
- * EN v1.1 Size: 444b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015ec98
- * EN v1.0 Address: 0x8015EC98
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8015EC44
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dll_CE_func0B
- * EN v1.0 Address: 0x8015EE98
- * EN v1.0 Size: 464b
- * EN v1.1 Address: 0x8015ED68
- * EN v1.1 Size: 396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8015f068
- * EN v1.0 Address: 0x8015F068
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x8015EEF4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
 static inline u8 scarab_isObjectInList(void* o);
 
-/*
- * --INFO--
- *
- * Function: FUN_8015fb0c
- * EN v1.0 Address: 0x8015FB0C
- * EN v1.0 Size: 1212b
- * EN v1.1 Address: 0x8015FBEC
- * EN v1.1 Size: 944b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: iceball_update
- * EN v1.0 Address: 0x8015FFC8
- * EN v1.0 Size: 224b
- * EN v1.1 Address: 0x8015FF9C
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-/*
- * --INFO--
- *
- * Function: FUN_801600a8
- * EN v1.0 Address: 0x801600A8
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x80160098
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016043c
- * EN v1.0 Address: 0x8016043C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80160440
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80160798
- * EN v1.0 Address: 0x80160798
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x80160670
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80160aa4
- * EN v1.0 Address: 0x80160AA4
- * EN v1.0 Size: 440b
- * EN v1.1 Address: 0x801608E8
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80160cd0
- * EN v1.0 Address: 0x80160CD0
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80160A80
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80161130
- * EN v1.0 Address: 0x80161130
- * EN v1.0 Size: 240b
- * EN v1.1 Address: 0x80161180
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801615d4
- * EN v1.0 Address: 0x801615D4
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x80161638
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80161c08
- * EN v1.0 Address: 0x80161C08
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x80161B58
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80161ea0
- * EN v1.0 Address: 0x80161EA0
- * EN v1.0 Size: 888b
- * EN v1.1 Address: 0x80161D2C
- * EN v1.1 Size: 632b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
@@ -3026,7 +2467,6 @@ void iceball_hitDetect(void);
 void iceball_release(void);
 
 void iceball_initialise(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int chukchuk_getExtraSize(void);
@@ -3073,9 +2513,6 @@ void iceball_init(void* obj);
 /* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
-
-
-
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {

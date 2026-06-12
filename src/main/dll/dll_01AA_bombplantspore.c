@@ -12,7 +12,6 @@ typedef struct BombplantsporeStartDriftBurstPlacement
     u8 pad1E[0x20 - 0x1E];
 } BombplantsporeStartDriftBurstPlacement;
 
-
 typedef struct BombplantsporeUpdateDriftPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -21,16 +20,12 @@ typedef struct BombplantsporeUpdateDriftPlacement
     u8 pad1E[0x20 - 0x1E];
 } BombplantsporeUpdateDriftPlacement;
 
-
-
-
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int min, int max);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sndId);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-
 
 extern EffectInterface** gPartfxInterface;
 
@@ -45,37 +40,11 @@ extern f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
 extern f32 lbl_803E53B4;
 
-/*
- * --INFO--
- *
- * Function: bombplantspore_getExtraSize
- * EN v1.0 Address: 0x801D3378
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int bombplantspore_getExtraSize(void)
 {
     return 0x2b4;
 }
 
-/*
- * --INFO--
- *
- * Function: bombplantspore_free
- * EN v1.0 Address: 0x801D3380
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801D3970
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void bombplantspore_free(void* obj)
 {
     void* state;
@@ -91,19 +60,6 @@ void bombplantspore_free(void* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: bombplantspore_startDriftBurst
- * EN v1.0 Address: 0x801D33D4
- * EN v1.0 Size: 456b
- * EN v1.1 Address: 0x801D39C4
- * EN v1.1 Size: 456b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* Keep the cross-TU bl: these two drift helpers' only callers
  * (bombplantspore_update/init) live in the BombPlantSpore TU
  * (SHrocketmushroom.c). Once they land there, dont_inline stops MWCC
@@ -157,19 +113,6 @@ void bombplantspore_startDriftBurst(void* obj, void* state)
         mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2aa) / lbl_803E539C);
 }
 
-/*
- * --INFO--
- *
- * Function: bombplantspore_updateDrift
- * EN v1.0 Address: 0x801D359C
- * EN v1.0 Size: 672b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void bombplantspore_updateDrift(void* obj, void* state)
 {
     s16 baseAngle;
@@ -249,22 +192,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: bombplant_init
- * EN v1.0 Address: 0x801D3238
- * EN v1.0 Size: 320b
- */
 void bombplant_init(void* obj, void* param, int flag);
-
-/*
- * --INFO--
- *
- * Function: bombplant_update
- * EN v1.0 Address: 0x801D2C54
- * EN v1.0 Size: 1508b
- */
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -274,7 +202,6 @@ void bombplant_init(void* obj, void* param, int flag);
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
-
 
 extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(void* obj, int id);
@@ -536,5 +463,3 @@ void bombplantspore_init(void* obj, void* param2)
 }
 
 void bombplantingspot_update(void* obj);
-
-

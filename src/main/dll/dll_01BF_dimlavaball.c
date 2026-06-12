@@ -10,7 +10,6 @@
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -35,14 +34,12 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
  * (magiclight_getExtraSize == 0x14 for non-0x172 types).
  */
 
-
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 /*
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
  */
-
 
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
@@ -51,94 +48,22 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * (crrockfall_getExtraSize == 0x14).
  */
 
-
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
-
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017ac8();
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801ac248
- * EN v1.0 Address: 0x801AC248
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801AC4FC
- * EN v1.1 Size: 212b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ad984
- * EN v1.0 Address: 0x801AD984
- * EN v1.0 Size: 420b
- * EN v1.1 Address: 0x801AD9F4
- * EN v1.1 Size: 272b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801adca0
- * EN v1.0 Address: 0x801ADCA0
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x801ADD98
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801addec
- * EN v1.0 Address: 0x801ADDEC
- * EN v1.0 Size: 896b
- * EN v1.1 Address: 0x801ADEE4
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
 
-/* EN v1.0 0x801AC9C0  size: 828b  imicemountain_init: clear the ice-mountain
- * gamebit block, arm the map-event triggers, then branch on the queried level
- * state to set the boulder's start state and fire the appropriate triggers. */
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
 
-
 extern u32 randomGetRange(int min, int max);
-
-/* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
- * for the non-172 variants pick a random lifetime and, for type 0x16b, map
- * the spawn subtype to a light-pair / intensity preset. */
-
 
 void imicepillar_free(void);
 
@@ -151,17 +76,13 @@ int imicepillar_getObjectTypeId(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* if (o->_X == K) return A; else return B; */
-
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
 
-
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
-
 
 extern void warpToMap(int mapId, int flags);
 
@@ -176,7 +97,6 @@ extern void warpToMap(int mapId, int flags);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 
-
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
 
@@ -189,15 +109,12 @@ extern f32 timeDelta;
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
 
-
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
-
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
  * state-table variant by object type. */
-
 
 /* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
  * height/distance, trigger the fall when the player is in range, integrate the
@@ -213,7 +130,6 @@ extern f32 timeDelta;
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-
 typedef struct Lavaball1bfPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -225,29 +141,23 @@ typedef struct Lavaball1bfPlacement
     u8 pad26[0x28 - 0x26];
 } Lavaball1bfPlacement;
 
-
 /* imanimspacecraft_getExtraSize == 0x4. */
-
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 /* imspacethruster_getExtraSize == 0xc. */
 
-
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 
 /* link_levcontrol_getExtraSize == 0x10. */
-
 
 STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 
 /* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
 
-
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 /* lavaball1bf_getExtraSize == 0x1c (launcher). */
-
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
@@ -263,20 +173,6 @@ extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
 
-
-/*
- * --INFO--
- *
- * Function: imicepillar_render
- * EN v1.0 Address: 0x801AE100
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x801AE134
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 param_2, undefined8 param_3,
@@ -293,19 +189,6 @@ void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 pa
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801ae184
- * EN v1.0 Address: 0x801AE184
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x801AE160
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, char param_6)
 {
@@ -369,97 +252,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801ae9e4
- * EN v1.0 Address: 0x801AE9E4
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801AE9BC
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801aea18
- * EN v1.0 Address: 0x801AEA18
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801AE9EC
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801aea40
- * EN v1.0 Address: 0x801AEA40
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801AEA38
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801aea44
- * EN v1.0 Address: 0x801AEA44
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x801AEACC
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b0190
- * EN v1.0 Address: 0x801B0190
- * EN v1.0 Size: 88b
- * EN v1.1 Address: 0x801AFE04
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b01e8
- * EN v1.0 Address: 0x801B01E8
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x801AFE64
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void imicepillar_hitDetect(void);
 
@@ -488,7 +280,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-
 #pragma scheduling off
 #pragma peephole off
 void lavaball1bf_hitDetect(void)
@@ -516,7 +307,6 @@ int dimlogfire_getExtraSize(void);
 /* If obj->_F4 == 0, set it to 1; else early-return. */
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
-
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 
@@ -550,7 +340,6 @@ extern f32 lbl_803E4810;
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -560,15 +349,11 @@ void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 /* if (o->_X == K) return A; else return B;  pattern. */
 int lavaball1be_getExtraSize(int* obj);
 
-
 /* chained byte mask. */
-
 
 extern void Music_Trigger(int id, int p2);
 
-
 extern int Obj_AllocObjectSetup(int extraSize, int id);
-
 
 extern f32 lbl_803E4814;
 
@@ -599,7 +384,6 @@ void lavaball1bf_free(int obj, int mode)
 }
 
 void lavaball1be_free(int obj);
-
 
 void lavaball1bf_update(int* obj)
 {

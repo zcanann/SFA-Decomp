@@ -11,13 +11,6 @@ extern void* return0_8005669C(int);
 extern int lbl_803DB610;
 extern void* lbl_803DDBE0;
 
-/*
- * --INFO--
- *
- * Function: dll_19B_SeqFn
- * EN v1.0 Address: 0x801CBA98
- * EN v1.0 Size: 636b
- */
 int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int* gTitleMenuControlInterface;
@@ -147,15 +140,6 @@ void dll_19B_free(int* obj)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
-
-
-
-
-
-
-
 typedef struct Dll19BState
 {
     u8 pad0[0x12 - 0x0];
@@ -167,23 +151,8 @@ typedef struct Dll19BState
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
-
 extern undefined4 ObjMsg_AllocQueue();
 
-
-/*
- * --INFO--
- *
- * Function: dll_19B_update
- * EN v1.0 Address: 0x801CBD88
- * EN v1.0 Size: 2124b
- * EN v1.1 Address: 0x801CC33C
- * EN v1.1 Size: 2032b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
@@ -421,7 +390,6 @@ void dll_19B_update(int obj)
     }
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_19B_release(void)
 {
@@ -433,18 +401,11 @@ void dll_19B_initialise(void)
 
 void dll_19C_free(void);
 
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 /* Stubs to align function set with v1.0 asm. */
-
 
 void dll_19B_init(u8* obj, u8* params)
 {
@@ -504,13 +465,11 @@ void dll_19C_init(int obj, u8* initData);
  * EN v1.0 Size: 132b
  */
 
-
 /*
  * Function: dll_19D_init
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
-
 
 /*
  * Function: dll_19D_hitDetect

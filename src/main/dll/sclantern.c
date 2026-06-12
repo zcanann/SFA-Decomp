@@ -30,19 +30,6 @@ typedef struct SClanternAnimObject
     s16 currentMove;
 } SClanternAnimObject;
 
-/*
- * --INFO--
- *
- * Function: SClantern_advanceAnimEvents
- * EN v1.0 Address: 0x801D6C04
- * EN v1.0 Size: 340b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
     undefined4 advanceResult;
@@ -104,19 +91,6 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     return advanceResult;
 }
 
-/*
- * --INFO--
- *
- * Function: playerFn_801d6d58
- * EN v1.0 Address: 0x801D6D58
- * EN v1.0 Size: 64b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 playerFn_801d6d58(void)
 {
     undefined4 playerObj;

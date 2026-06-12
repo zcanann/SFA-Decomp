@@ -22,7 +22,6 @@ typedef struct SBCloudRunnerState
     u8 pad6F[0x84 - 0x6F];
 } SBCloudRunnerState;
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 ObjHits_SetTargetMask();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -45,19 +44,6 @@ extern f32 lbl_803E6928;
 extern f32 lbl_803E692C;
 extern f32 lbl_803E6930;
 
-/*
- * --INFO--
- *
- * Function: FUN_801ee668
- * EN v1.0 Address: 0x801EE668
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801EE880
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801ee668(ushort* param_1, int param_2)
@@ -93,97 +79,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801eefcc
- * EN v1.0 Address: 0x801EEFCC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801EF0A0
- * EN v1.1 Size: 232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801eefd0
- * EN v1.0 Address: 0x801EEFD0
- * EN v1.0 Size: 468b
- * EN v1.1 Address: 0x801EF188
- * EN v1.1 Size: 468b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef1a4
- * EN v1.0 Address: 0x801EF1A4
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x801EF35C
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef200
- * EN v1.0 Address: 0x801EF200
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801EF3B8
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef980
- * EN v1.0 Address: 0x801EF980
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801EF8E8
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801ef984
- * EN v1.0 Address: 0x801EF984
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801EF9AC
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
@@ -213,7 +108,6 @@ void SB_CloudRunner_initialise(void)
 
 void WM_ObjCreator_free(void);
 
-
 /* 8b "li r3, N; blr" returners. */
 int fn_801EEDAC(void) { return 0x0; }
 int fn_801EEDD8(void) { return 0x2; }
@@ -227,7 +121,6 @@ int WM_ObjCreator_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
 
 extern f32 lbl_803E5C70;
 

@@ -19,9 +19,6 @@ extern f32 lbl_803E5480;
 extern f32 lbl_803E5484;
 extern f32 lbl_803E5488;
 
-
-
-
 typedef struct SHthorntailDustEffectParams
 {
     undefined2 flags;
@@ -32,48 +29,6 @@ typedef struct SHthorntailDustEffectParams
     Vec position;
 } SHthorntailDustEffectParams;
 
-
-/*
- * --INFO--
- *
- * Function: SHthorntail_update
- * EN v1.0 Address: 0x801D5F58
- * EN v1.0 Size: 1928b
- * EN v1.1 Address: 0x801D6548
- * EN v1.1 Size: 1928b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: SHthorntail_init
- * EN v1.0 Address: 0x801D66E0
- * EN v1.0 Size: 564b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateDustEffects
- * EN v1.0 Address: 0x801D6914
- * EN v1.0 Size: 752b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_updateDustEffects(SHthorntailObject* obj)
 {
     undefined4 playerObj;

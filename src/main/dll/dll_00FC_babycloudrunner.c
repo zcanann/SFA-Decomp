@@ -1,38 +1,5 @@
 #include "main/dll/dll_0117_appleontree.h"
 
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: appleontree_update
- * EN v1.0 Address: 0x8017E1A0
- * EN v1.0 Size: 2460b
- * EN v1.1 Address: 0x8017E6F8
- * EN v1.1 Size: 1988b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: appleontree_init
- * EN v1.0 Address: 0x8017E964
- * EN v1.0 Size: 684b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_FC_free_nop(void)
 {
@@ -57,7 +24,6 @@ extern void dll_FC_release_nop(void);
 extern void dll_FC_init(int obj, int objDef);
 extern void dll_FC_update(int obj);
 extern void dll_FC_hitDetect(int* obj);
-
 
 void dll_FC_hitDetect(int* obj)
 {
@@ -222,19 +188,6 @@ end:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: dll_FC_init
- * EN v1.0 Address: 0x8017EF3C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017F17C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_FC_init(int obj, int objDef)
 {
     BabyCloudRunnerState* state;
@@ -248,21 +201,6 @@ void dll_FC_init(int obj, int objDef)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: dll_14D_hitDetect
- * EN v1.0 Address: 0x8017EFB0
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x8017F1AC
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_FC_release_nop(void)
 {
@@ -272,9 +210,7 @@ void dll_FC_initialise_nop(void)
 {
 }
 
-
 /* 8b "li r3, N; blr" returners. */
 int dll_14D_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-

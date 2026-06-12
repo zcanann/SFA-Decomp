@@ -44,118 +44,6 @@ extern void imicepillar_free(void);
 extern int imicepillar_getObjectTypeId(void);
 extern int imicepillar_getExtraSize(void);
 
-/*
- * --INFO--
- *
- * Function: imicepillar_render
- * EN v1.0 Address: 0x801AE100
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x801AE134
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801ae184
- * EN v1.0 Address: 0x801AE184
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x801AE160
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801ae9e4
- * EN v1.0 Address: 0x801AE9E4
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801AE9BC
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801aea18
- * EN v1.0 Address: 0x801AEA18
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801AE9EC
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801aea40
- * EN v1.0 Address: 0x801AEA40
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801AEA38
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801aea44
- * EN v1.0 Address: 0x801AEA44
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x801AEACC
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801b0190
- * EN v1.0 Address: 0x801B0190
- * EN v1.0 Size: 88b
- * EN v1.1 Address: 0x801AFE04
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801b01e8
- * EN v1.0 Address: 0x801B01E8
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x801AFE64
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 void imicepillar_hitDetect(void);
 
@@ -357,19 +245,6 @@ extern f32 lbl_803E4834;
 extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
 
-/*
- * --INFO--
- *
- * Function: dimlogfire_update
- * EN v1.0 Address: 0x801B0924
- * EN v1.0 Size: 708b
- * EN v1.1 Address: 0x801B0B58
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dimlogfire_update(int obj)
 {
     extern int getTrickyObject(void); /* #57 */
@@ -485,33 +360,6 @@ void dimlogfire_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801b09dc
- * EN v1.0 Address: 0x801B09DC
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801B0C24
- * EN v1.1 Size: 336b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimlogfire_init
- * EN v1.0 Address: 0x801B0BE8
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x801B0DFC
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dimlogfire_init(int obj, int def)
 {
     extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius); /* #57 */
@@ -559,50 +407,8 @@ void dimlogfire_init(int obj, int def)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dimsnowball_getExtraSize
- * EN v1.0 Address: 0x801B0DD4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801B0F50
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dimsnowball_getExtraSize(void);
-
-/*
- * --INFO--
- *
- * Function: dimsnowball_getObjectTypeId
- * EN v1.0 Address: 0x801B0DDC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801B0F58
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dimsnowball_free
- * EN v1.0 Address: 0x801B0DE4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B0F60
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 /* segment pragma-stack balance (re-split): */
-

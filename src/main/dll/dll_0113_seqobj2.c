@@ -6,7 +6,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
@@ -17,14 +16,6 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-
-
-
-
-
-
-
 
 STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);
@@ -68,35 +59,6 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 #define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
 #define SEQOBJECT_FLAG_UNUSED_20 0x20
 
-
-/*
- * --INFO--
- *
- * Function: doorlock_init
- * EN v1.0 Address: 0x8017C178
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x8017C250
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8017c5c4
- * EN v1.0 Address: 0x8017C5C4
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x8017C7EC
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8017c5c4(int param_1)
 {
     if (param_1 != 0)
@@ -107,19 +69,6 @@ void FUN_8017c5c4(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8017c608
- * EN v1.0 Address: 0x8017C608
- * EN v1.0 Size: 456b
- * EN v1.1 Address: 0x8017C82C
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -171,38 +120,12 @@ FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: seqObject_free
- * EN v1.0 Address: 0x8017C7D0
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017C960
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void seqObject_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0xf);
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: seqObject_render
- * EN v1.0 Address: 0x8017C7F4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017C984
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (visible != 0)
@@ -212,19 +135,6 @@ void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: seqObject_update
- * EN v1.0 Address: 0x8017C81C
- * EN v1.0 Size: 548b
- * EN v1.1 Address: 0x8017C9B4
- * EN v1.1 Size: 592b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void seqObject_update(int obj)
 {
     uint bitValue;
@@ -298,56 +208,16 @@ void seqObject_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: seqObject_init
- * EN v1.0 Address: 0x8017CA40
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017CC04
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void seqObject_init(short* param_1, int param_2)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: seqObj2_free
- * EN v1.0 Address: 0x8017CAF4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017CDE4
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void seqObj2_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0xf);
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: seqObj2_update
- * EN v1.0 Address: 0x8017CB18
- * EN v1.0 Size: 460b
- * EN v1.1 Address: 0x8017CE10
- * EN v1.1 Size: 596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void seqObj2_update(int obj)
 {
     uint bitValue;
@@ -414,23 +284,9 @@ void seqObj2_update(int obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: seqObj2_init
- * EN v1.0 Address: 0x8017CCE4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017D064
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void seqObj2_init(short* param_1, int param_2)
 {
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void seqobj2_render(void)
@@ -451,20 +307,12 @@ void SeqObj2_initialise(void)
 
 void immultiseq_hitDetect(void);
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int seqobj2_getExtraSize(void) { return 0x1; }
 int seqobj2_getObjectTypeId(void) { return 0x0; }
 int immultiseq_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void seqobj2_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
@@ -483,7 +331,6 @@ extern int GameBit_Set(int eventId, int value);
  * its GameBit, compare against the def[0x30] mask bit for that slot, and
  * if the polarity flips (GameBit != mask bit) end the current sequence.
  * Always latches state[1] bit 0 before returning 0. */
-
 
 void seqobj2_init(int* obj, SeqObjectPlacement* def)
 {
@@ -528,7 +375,6 @@ int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 }
 
 int seqobject_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
-
 
 void seqobj2_update(int* obj)
 {
@@ -595,5 +441,3 @@ void seqobj2_update(int* obj)
 }
 
 void immultiseq_update(int* obj);
-
-

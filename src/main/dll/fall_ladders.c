@@ -29,19 +29,6 @@ extern f32 lbl_803E3604;
 extern f32 lbl_803E3608;
 extern f32 lbl_803E360C;
 
-/*
- * --INFO--
- *
- * Function: FUN_801540a0
- * EN v1.0 Address: 0x801540A0
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x8015413C
- * EN v1.1 Size: 104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801540a0(undefined4 param_1, int param_2)
@@ -68,7 +55,6 @@ void FUN_801540a0(undefined4 param_1, int param_2)
     *(float*)(param_2 + 0x2fc) = fVar1;
     return;
 }
-
 
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
@@ -276,20 +262,6 @@ void fn_80154328(int obj, int p)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80154724
- * EN v1.0 Address: 0x80154724
- * EN v1.0 Size: 852b
- * EN v1.1 Address: 0x8015454C
- * EN v1.1 Size: 524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_80154724(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -360,7 +332,6 @@ void FUN_80154724(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 extern f32 lbl_803E2978;
 extern f32 lbl_803E297C;
 extern f32 lbl_803E2954;
@@ -368,7 +339,6 @@ extern f32 lbl_803E2980;
 extern f32 lbl_803E2984;
 extern f32 lbl_803E2988;
 extern f32 lbl_803E298C;
-
 
 #pragma scheduling off
 void fn_801544E8(int* obj, u8* state, int p3, int p4)

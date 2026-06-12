@@ -1,7 +1,6 @@
 #include "main/dll/DR/DRpickup.h"
 #include "main/camera_interface.h"
 
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Matrix_TransformPoint(void* mtx, float x, float y, float z, float* ox, float* oy, float* oz);
 extern void PSVECAdd(const void* a, const void* b, void* ab);
@@ -18,13 +17,6 @@ extern f32 lbl_803E5C28;
 extern f32 lbl_803E5C2C;
 extern f32 lbl_803E5C30;
 
-/*
- * --INFO--
- *
- * Function: fn_801EC1AC
- * EN v1.0 Address: 0x801EC1AC
- * EN v1.0 Size: 1524b
- */
 void fn_801EC1AC(int obj, int state)
 {
     PickupFlags* flags;

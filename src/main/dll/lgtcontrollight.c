@@ -14,33 +14,12 @@ extern f32 lbl_803E5EC8;
 
 extern void FireFlyFn_801f4f88(int* obj);
 
-/*
- * --INFO--
- *
- * Function: fn_801F4C04
- * EN v1.0 Address: 0x801F4C04
- * EN v1.0 Size: 36b
- */
 int fn_801F4C04(int* obj)
 {
     FireFlyFn_801f4f88(obj);
     return 0;
 }
 
-
-/*
- * --INFO--
- *
- * Function: fn_801F4C28
- * EN v1.0 Address: 0x801F4C28
- * EN v1.0 Size: 300b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801F4C28(u8* obj, u8* rec)
 {
     *(f32*)(rec + 0x04) = *(f32*)(obj + 0x0c);
@@ -73,19 +52,6 @@ void fn_801F4C28(u8* obj, u8* rec)
     *(f32*)(rec + 0x78) = lbl_803E5EC0;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801F4D54
- * EN v1.0 Address: 0x801F4D54
- * EN v1.0 Size: 376b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801F4D54(int obj, u8* rec)
 {
     struct

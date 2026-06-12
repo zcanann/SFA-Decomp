@@ -2,13 +2,9 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-
-
-
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 
 typedef struct DfshShrinePlacement
 {
@@ -23,82 +19,7 @@ STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
-/*
- * --INFO--
- *
- * Function: dfsh_shrine_render
- * EN v1.0 Address: 0x801C2E68
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801C2EC8
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3134
- * EN v1.0 Address: 0x801C3134
- * EN v1.0 Size: 340b
- * EN v1.1 Address: 0x801C321C
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3a9c
- * EN v1.0 Address: 0x801C3A9C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801C3ABC
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801c3aa0
- * EN v1.0 Address: 0x801C3AA0
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x801C3BDC
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void dfsh_objcreator_free(void)
 {
@@ -124,7 +45,6 @@ void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-
 /* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
@@ -133,11 +53,9 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 #include "main/game_object.h"
 #include "main/resource.h"
 
-
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int objectId);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
-
 
 typedef struct DfshObjCreatorState
 {
@@ -145,19 +63,6 @@ typedef struct DfshObjCreatorState
     s16 spawnTimerStep;
 } DfshObjCreatorState;
 
-/*
- * --INFO--
- *
- * Function: dfsh_objcreator_update
- * EN v1.0 Address: 0x801C3BB0
- * EN v1.0 Size: 740b
- * EN v1.1 Address: 0x801C3CC4
- * EN v1.1 Size: 612b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_objcreator_update(int obj)
 {
     extern uint GameBit_Get(int eventId);
@@ -227,67 +132,12 @@ void dfsh_objcreator_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: DFSH_LaserBeam_init
- * EN v1.0 Address: 0x801C3E94
- * EN v1.0 Size: 516b
- * EN v1.1 Address: 0x801C3F28
- * EN v1.1 Size: 520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern ModgfxInterface** gModgfxInterface;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801c4098
- * EN v1.0 Address: 0x801C4098
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801C4130
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: dfsh_objcreator_release
- * EN v1.0 Address: 0x801C3E34
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_objcreator_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dfsh_objcreator_initialise
- * EN v1.0 Address: 0x801C3E38
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfsh_objcreator_initialise(void)
 {
 }
@@ -304,6 +154,5 @@ void dfsh_objcreator_init(int obj, s8* def)
 }
 
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */

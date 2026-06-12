@@ -58,19 +58,6 @@ extern f32 lbl_803E3BA4;
 extern f32 lbl_803E3BB0;
 extern f32 lbl_803E3BB4;
 
-/*
- * --INFO--
- *
- * Function: grimble_stateHandlerA02
- * EN v1.0 Address: 0x80161F0C
- * EN v1.0 Size: 436b
- * EN v1.1 Address: 0x80161FA4
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int getAngle(f32 dx, f32 dz);
 extern void* Obj_GetPlayerObject(void);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
@@ -530,19 +517,6 @@ void grimble_init(int obj, int p2, int p3)
     *(int*)(*(int*)(state + 0x40c) + 0x34) = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801620c0
- * EN v1.0 Address: 0x801620C0
- * EN v1.0 Size: 460b
- * EN v1.1 Address: 0x801620F0
- * EN v1.1 Size: 356b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma scheduling on
 #pragma peephole on
@@ -594,19 +568,6 @@ FUN_801620c0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar2;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80162450
- * EN v1.0 Address: 0x80162450
- * EN v1.0 Size: 1140b
- * EN v1.1 Address: 0x801623B8
- * EN v1.1 Size: 968b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80162450(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9, int param_10,
@@ -728,19 +689,6 @@ FUN_80162450(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar4;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801628c4
- * EN v1.0 Address: 0x801628C4
- * EN v1.0 Size: 692b
- * EN v1.1 Address: 0x80162780
- * EN v1.1 Size: 580b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801628c4(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -823,19 +771,6 @@ FUN_801628c4(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar2;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80162b78
- * EN v1.0 Address: 0x80162B78
- * EN v1.0 Size: 840b
- * EN v1.1 Address: 0x801629C4
- * EN v1.1 Size: 732b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -926,20 +861,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-/*
- * --INFO--
- *
- * Function: cannonclaw_release
- * EN v1.0 Address: 0x801631C0
- * EN v1.0 Size: 96b
- * EN v1.1 Address: 0x80162F5C
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 void grimble_release(void)
 {
@@ -1000,77 +921,8 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 #include "main/game_object.h"
 #include "main/objanim.h"
 
-/*
- * --INFO--
- *
- * Function: cannonclaw_update
- * EN v1.0 Address: 0x801630EC
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x801630F0
- * EN v1.1 Size: 672b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
-
-/*
- * --INFO--
- *
- * Function: FUN_801633b0
- * EN v1.0 Address: 0x801633B0
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80163554
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801638bc
- * EN v1.0 Address: 0x801638BC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801639B8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801638e4
- * EN v1.0 Address: 0x801638E4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801639EC
- * EN v1.1 Size: 432b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801638e8
- * EN v1.0 Address: 0x801638E8
- * EN v1.0 Size: 480b
- * EN v1.1 Address: 0x80163B9C
- * EN v1.1 Size: 460b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 

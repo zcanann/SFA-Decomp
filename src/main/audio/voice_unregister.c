@@ -4,19 +4,6 @@
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
 
-/*
- * --INFO--
- *
- * Function: voiceUnregister
- * EN v1.0 Address: 0x8027A2B4
- * EN v1.0 Size: 124b
- * EN v1.1 Address: 0x8027A2FC
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void voiceUnregister(int obj)
 {
     SynthVoiceState* voice;

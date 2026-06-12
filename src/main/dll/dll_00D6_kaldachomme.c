@@ -28,13 +28,6 @@ typedef struct KaldaChompMeState
     u8 pad0D[3];
 } KaldaChompMeState;
 
-/*
- * --INFO--
- *
- * Function: kaldachompme_setLinkedMouthMode
- * EN v1.0 Address: 0x80169360
- * EN v1.0 Size: 556b
- */
 void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 {
     KaldaChompMeState* state;
@@ -208,33 +201,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     kaldachompme_getExtraSize,
 };
 
-/*
- * --INFO--
- *
- * Function: FUN_801695e8
- * EN v1.0 Address: 0x801695E8
- * EN v1.0 Size: 548b
- * EN v1.1 Address: 0x8016980C
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016980c
- * EN v1.0 Address: 0x8016980C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80169A4C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
@@ -246,19 +212,6 @@ void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80169a44
- * EN v1.0 Address: 0x80169A44
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x80169B80
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -295,20 +248,6 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80169c04
- * EN v1.0 Address: 0x80169C04
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80169CC8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_hitDetect(void);
 
@@ -320,22 +259,7 @@ void kaldachompspit_free(int* obj);
 
 void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_update
- * EN v1.0 Address: 0x801698E8
- * EN v1.0 Size: 988b
- */
 void kaldachompspit_update(int obj);
-
-/*
- * --INFO--
- *
- * Function: kaldachompspit_burst
- * EN v1.0 Address: 0x801696D4
- * EN v1.0 Size: 312b
- */
 
 /* segment pragma-stack balance (re-split): */
 
@@ -348,64 +272,7 @@ void kaldachompspit_update(int obj);
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
 
-/*
- * --INFO--
- *
- * Function: kaldachompspit_render
- * EN v1.0 Address: 0x8016984C
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x80169CF8
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: kaldachompspit_init
- * EN v1.0 Address: 0x80169CC4
- * EN v1.0 Size: 552b
- * EN v1.1 Address: 0x8016A170
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void kaldachompspit_init(int obj);
-
-
-/*
- * --INFO--
- *
- * Function: pollenfragment_init
- * EN v1.0 Address: 0x8016B0A4
- * EN v1.0 Size: 208b
- * EN v1.1 Address: 0x8016ACA4
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8016b228
- * EN v1.0 Address: 0x8016B228
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x8016AE70
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_release(void);
@@ -553,4 +420,3 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
-

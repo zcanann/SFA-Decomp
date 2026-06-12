@@ -6,30 +6,6 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_80041ff8();
@@ -46,50 +22,6 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80187664
- * EN v1.0 Address: 0x80187664
- * EN v1.0 Size: 332b
- * EN v1.1 Address: 0x80187720
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: infopoint_hitDetect
- * EN v1.0 Address: 0x8018843C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801884A0
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80189054
- * EN v1.0 Address: 0x80189054
- * EN v1.0 Size: 2620b
- * EN v1.1 Address: 0x80189218
- * EN v1.1 Size: 1552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -363,20 +295,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
-
-
-
-
-
-
-
-
-
-
-
 
 void decoration11a_free(void)
 {
@@ -391,16 +311,11 @@ int flammablevine_getExtraSize(void);
 int decoration11a_getExtraSize(void) { return 0x1c; }
 int landed_arwing_getExtraSize(void);
 
-
-
-
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B78;
-
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -413,40 +328,21 @@ void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void flammablevine_free(int x);
 
-
-
-
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-
 
 /* landed_arwing_free: free child object + detach link. */
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 
-
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
-
 
 #pragma dont_inline on
 #pragma peephole on
@@ -466,13 +362,6 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 #pragma dont_inline reset
 
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-
-
-
-
-
-
 
 extern f32 lbl_803E3B7C;
 extern f32 lbl_803E3B88;

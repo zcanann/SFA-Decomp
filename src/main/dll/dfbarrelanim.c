@@ -2,10 +2,8 @@
 #include "main/game_object.h"
 #include "main/dll/DF/dfropenode.h"
 
-
 extern f32 sqrtf(f32 x);
 extern void* mmAlloc(int size, int heap, int flags);
-
 
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
@@ -17,19 +15,6 @@ extern f32 lbl_803E4E10;
 extern f32 lbl_803E4E14;
 extern f32 lbl_803E4E18;
 
-/*
- * --INFO--
- *
- * Function: DFRope_Create
- * EN v1.0 Address: 0x801C1238
- * EN v1.0 Size: 536b
- * EN v1.1 Address: 0x801C1414
- * EN v1.1 Size: 376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
                       f32 unused, f32 tickScale)
 {
@@ -139,19 +124,6 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     return rope;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_func12
- * EN v1.0 Address: 0x801C1618
- * EN v1.0 Size: 12b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_func12(int obj, float value)
 {
     ((DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra)->minY = value;
@@ -183,37 +155,11 @@ void dfropenode_func10(int obj, int value)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_func13
- * EN v1.0 Address: 0x801C1688
- * EN v1.0 Size: 16b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dfropenode_func13(int obj)
 {
     ((DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra)->linkedObj = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: dfropenode_func0F
- * EN v1.0 Address: 0x801C167C
- * EN v1.0 Size: 12b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dfropenode_func0F(int obj)
 {
     return ((DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra)->angle;

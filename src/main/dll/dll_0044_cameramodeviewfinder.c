@@ -11,7 +11,6 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 
-
 extern char padGetCY(int port);
 extern uint getAngle();
 extern int ObjHits_GetPriorityHit();
@@ -48,7 +47,6 @@ extern f32 lbl_803E1828;
 extern f32 lbl_803E182C;
 extern f32 lbl_803E1830;
 
-
 extern char padGetStickX(int port);
 extern char padGetStickY(int port);
 extern f32 interpolate(f32 v, f32 a, f32 b);
@@ -57,19 +55,6 @@ extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 
-/*
- * --INFO--
- *
- * Function: firstPersonDoControls
- * EN v1.0 Address: 0x8010847C
- * EN v1.0 Size: 1012b
- * EN v1.1 Address: 0x80108718
- * EN v1.1 Size: 1024b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void firstPersonDoControls(short* obj)
 {
     short pitchDelta;
@@ -158,20 +143,6 @@ void firstPersonDoControls(short* obj)
     }
 }
 
-
-/*
- * --INFO--
- *
- * Function: firstPersonEnter
- * EN v1.0 Address: 0x80108870
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80108B18
- * EN v1.1 Size: 596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int fn_802966D4(int obj, int* out);
 
 int firstPersonEnter(u8* cam, s16* p2)
@@ -251,19 +222,6 @@ int firstPersonEnter(u8* cam, s16* p2)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_copyToCurrent
- * EN v1.0 Address: 0x80108874
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x80108D6C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeViewfinder_copyToCurrent(undefined2* camObj)
 {
     u8* src = (u8*)camObj;
@@ -285,19 +243,6 @@ void CameraModeViewfinder_copyToCurrent(undefined2* camObj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_free
- * EN v1.0 Address: 0x80108914
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x80108E08
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void Rcp_SetViewFinderHudEnabled(int on);
 
 void CameraModeViewfinder_free(int camObj)
@@ -338,19 +283,6 @@ extern void firstPersonZoomOutOnExit(int a, int b);
 extern void fn_80137948(char* fmt, ...);
 extern char sCam5BYDebugFormat;
 
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_update
- * EN v1.0 Address: 0x801089D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80108EC8
- * EN v1.1 Size: 1452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeViewfinder_update(s16* obj)
 {
     u8* targetObj;
@@ -530,19 +462,6 @@ extern u32 GameBit_Get(int bit);
 extern void* memset(void* dst, int v, int n);
 extern f32 lbl_803E1834;
 
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_init
- * EN v1.0 Address: 0x801089D4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80109474
- * EN v1.1 Size: 1396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeViewfinder_init(s16* obj, int mode, int* args)
 {
     s16* camObj;
@@ -666,94 +585,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->clampedPosY = lbl_803DD548->camPosY;
 }
 
-
-/*
- * --INFO--
- *
- * Function: CameraModeDebug_update
- * EN v1.0 Address: 0x80108A04
- * EN v1.0 Size: 848b
- * EN v1.1 Address: 0x80109A14
- * EN v1.1 Size: 816b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeDebug_update(short* camObj);
-
-/*
- * --INFO--
- *
- * Function: CameraModeDebug_init
- * EN v1.0 Address: 0x80108D54
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80109D44
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeStatic_update
- * EN v1.0 Address: 0x80108EA8
- * EN v1.0 Size: 608b
- * EN v1.1 Address: 0x80109EE0
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeStatic_init
- * EN v1.0 Address: 0x80109108
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010A198
- * EN v1.1 Size: 520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: fn_8010A104
- * EN v1.0 Address: 0x8010910C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010A3A0
- * EN v1.1 Size: 888b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fn_8010A47C
- * EN v1.0 Address: 0x80109110
- * EN v1.0 Size: 280b
- * EN v1.1 Address: 0x8010A718
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeViewfinder_release(void)
@@ -766,6 +598,4 @@ void CameraModeViewfinder_initialise(void)
 
 void CameraModeDebug_copyToCurrent_nop(void);
 
-
 /* fn_X(lbl); lbl = 0; */
-

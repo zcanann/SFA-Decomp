@@ -39,7 +39,6 @@ typedef struct Doorf4State
     u8 pad1E[0x24 - 0x1E];
 } Doorf4State;
 
-
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Peek();
@@ -53,19 +52,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B8;
 
-/*
- * --INFO--
- *
- * Function: FUN_80178338
- * EN v1.0 Address: 0x80178338
- * EN v1.0 Size: 56b
- * EN v1.1 Address: 0x80178648
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_80178338(undefined4 param_1)
@@ -80,37 +66,6 @@ void FUN_80178338(undefined4 param_1)
     FUN_80081110(param_1, 2, 0, 0, &local_18);
     return;
 }
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801799bc
- * EN v1.0 Address: 0x801799BC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017967C
- * EN v1.1 Size: 468b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801799c0
- * EN v1.0 Address: 0x801799C0
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80179850
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
@@ -143,7 +98,6 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 int fn_801793A4(int* obj);
 
-
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 
@@ -162,16 +116,9 @@ void doorf4_free(int obj)
 
 extern f32 lbl_803E36A0;
 
-
-
-
-
-
-
 extern int* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 /* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); -- already declared */
-
 
 extern u32 GameBit_Get(int eventId);
 
@@ -264,7 +211,6 @@ void doorf4_init(int* obj, int* params)
     state->planeD = -(state->cosYaw * ((GameObject*)obj)->anim.localPosX +
         state->sinYaw * ((GameObject*)obj)->anim.localPosZ);
 }
-
 
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 sqrtf(f32 x);

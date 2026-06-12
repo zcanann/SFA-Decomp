@@ -8,14 +8,6 @@ extern uint GameBit_Get(int bit);
 extern int coordsToMapCell(u8* p, f32 a, f32 b);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 
-
-/*
- * --INFO--
- *
- * Function: trickyFoodFn_8013db3c
- * EN v1.0 Address: 0x8013DB3C
- * EN v1.0 Size: 332b
- */
 int trickyFoodFn_8013db3c(u8* arg1, u8* arg2)
 {
     int result = 0;
@@ -71,4 +63,3 @@ int trickyFoodFn_8013db3c(u8* arg1, u8* arg2)
     }
     return result;
 }
-

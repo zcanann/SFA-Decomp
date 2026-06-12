@@ -4,24 +4,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
 extern EffectInterface** gPartfxInterface;
-
-/*
- * --INFO--
- *
- * Function: paymentkiosk_init
- * EN v1.0 Address: 0x801DF43C
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x801DF458
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -53,57 +36,7 @@ static int FEseqobject_findControlObject(void)
 
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-/*
- * --INFO--
- *
- * Function: FUN_801df45c
- * EN v1.0 Address: 0x801DF45C
- * EN v1.0 Size: 576b
- * EN v1.1 Address: 0x801DF480
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801df784
- * EN v1.0 Address: 0x801DF784
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801DF7DC
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801df788
- * EN v1.0 Address: 0x801DF788
- * EN v1.0 Size: 252b
- * EN v1.1 Address: 0x801DF918
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -129,10 +62,6 @@ void FElevControl_initialise(void)
 
 void dll_144_free(void);
 
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int FElevControl_getExtraSize(void) { return 0x0; }
 int FElevControl_getObjectTypeId(void) { return 0x0; }
@@ -141,7 +70,6 @@ int dll_144_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E56B8;
-
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

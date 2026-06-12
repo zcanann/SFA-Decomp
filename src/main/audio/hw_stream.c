@@ -10,26 +10,12 @@ extern void DCStoreRange(void* addr, u32 nBytes);
 extern u8 lbl_803CC1E0[];
 extern u8* dspVoice;
 
-/*
- * --INFO--
- *
- * Function: hwRemoveInput
- * EN v1.0 Address: 0x80283BD4
- * EN v1.0 Size: 52b
- */
 void hwRemoveInput(u32 idx, void* input)
 {
     u32 offset = (idx & 0xff) * 0xbc;
     salRemoveStudioInput(lbl_803CC1E0 + offset, input);
 }
 
-/*
- * --INFO--
- *
- * Function: hwChangeStudio
- * EN v1.0 Address: 0x80283C08
- * EN v1.0 Size: 164b
- */
 int hwChangeStudio(int slot)
 {
     int mode;
@@ -73,13 +59,6 @@ int hwChangeStudio(int slot)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: hwGetPos
- * EN v1.0 Address: 0x80283CAC
- * EN v1.0 Size: 136b
- */
 void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
               undefined4 callbackArg)
 {
@@ -104,25 +83,11 @@ void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 cal
     aramUploadData(uploadDest, offset + streamPos, size, 1, uploadCallback, uploadCallbackArg);
 }
 
-/*
- * --INFO--
- *
- * Function: hwFlushStream
- * EN v1.0 Address: 0x80283D34
- * EN v1.0 Size: 36b
- */
 void hwFlushStream(int stream)
 {
     aramGetStreamBufferAddress(stream, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: hwInitStream
- * EN v1.0 Address: 0x80283D58
- * EN v1.0 Size: 4b
- */
 void hwInitStream(void)
 {
 }

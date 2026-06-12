@@ -50,19 +50,6 @@ extern f32 lbl_803E50DC;
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 
-/*
- * --INFO--
- *
- * Function: dbsh_shrine_update
- * EN v1.0 Address: 0x801C91B0
- * EN v1.0 Size: 916b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dbsh_shrine_update(DbshShrineObject* obj)
 {
     extern void GameBit_Set(u32 id, u32 value);
@@ -184,19 +171,6 @@ extern void fn_80296518(int obj, int param_2, int param_3);
 
 extern f32 lbl_803E50D8;
 
-/*
- * --INFO--
- *
- * Function: fn_801C8EBC
- * EN v1.0 Address: 0x801C8EBC
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x801C8FE8
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
 {
     extern void GameBit_Set(int eventId, int value);
@@ -255,51 +229,11 @@ int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801c9018
- * EN v1.0 Address: 0x801C9018
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x801C911C
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dbsh_shrine_getExtraSize
- * EN v1.0 Address: 0x801C9040
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dbsh_shrine_getExtraSize(void)
 {
     return 0x18;
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_shrine_getObjectTypeId
- * EN v1.0 Address: 0x801C9048
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int dbsh_shrine_getObjectTypeId(void)
 {
     return 0;
@@ -350,19 +284,6 @@ void dbsh_shrine_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, un
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_shrine_hitDetect
- * EN v1.0 Address: 0x801C91AC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dbsh_shrine_hitDetect(void)
 {
 }
@@ -382,19 +303,6 @@ extern void* objCreateLight(int obj, int lightType);
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 
-/*
- * --INFO--
- *
- * Function: dbsh_shrine_init
- * EN v1.0 Address: 0x801C9544
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x801C9604
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dbsh_shrine_init(DbshShrineObject* obj)
 {
     extern void GameBit_Set(u32 id, u32 value);
@@ -429,36 +337,10 @@ void dbsh_shrine_init(DbshShrineObject* obj)
     GameBit_Set(DBSH_SHRINE_GB_INITIALIZED, 1);
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_shrine_release
- * EN v1.0 Address: 0x801C9658
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dbsh_shrine_release(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dbsh_shrine_initialise
- * EN v1.0 Address: 0x801C965C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dbsh_shrine_initialise(void)
 {
 }

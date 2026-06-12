@@ -7,7 +7,6 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
@@ -33,65 +32,6 @@ extern f32 lbl_803E3E80;
 extern f32 lbl_803E3E84;
 extern f32 lbl_803E3E88;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f158
- * EN v1.0 Address: 0x8018F158
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x8018F1B0
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f4fc
- * EN v1.0 Address: 0x8018F4FC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018F55C
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f500
- * EN v1.0 Address: 0x8018F500
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x8018F6C4
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018f650
- * EN v1.0 Address: 0x8018F650
- * EN v1.0 Size: 1620b
- * EN v1.1 Address: 0x8018F854
- * EN v1.1 Size: 2220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8018f650(void)
@@ -321,116 +261,11 @@ void FUN_8018f650(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fd14
- * EN v1.0 Address: 0x8018FD14
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8019018C
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fd48
- * EN v1.0 Address: 0x8018FD48
- * EN v1.0 Size: 380b
- * EN v1.1 Address: 0x801901CC
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018fec4
- * EN v1.0 Address: 0x8018FEC4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80190354
- * EN v1.1 Size: 368b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8018ffbc
- * EN v1.0 Address: 0x8018FFBC
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x801905C8
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80190004
- * EN v1.0 Address: 0x80190004
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80190618
- * EN v1.1 Size: 580b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80190008
- * EN v1.0 Address: 0x80190008
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x8019085C
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: warpPadFn_8019042c
- * EN v1.0 Address: 0x80190148
- * EN v1.0 Size: 1148b
- * EN v1.1 Address: 0x801909A8
- * EN v1.1 Size: 1376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void warpPadFn_8019042c(int obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
 extern void mm_free(void* p);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -594,7 +429,6 @@ void lfxemitter_update(LfxEmitterObject* obj)
 
 void warpPadPlayerStandingOn(int obj);
 
-
 void lfxemitter_free(LfxEmitterObject* obj)
 {
     LfxEmitterState* state = obj->state;
@@ -606,10 +440,8 @@ void lfxemitter_free(LfxEmitterObject* obj)
     ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void fxemit_release(void);
-
 
 void lfxemitter_render(void)
 {

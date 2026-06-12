@@ -1,14 +1,9 @@
 #include "main/dll/mmp_asteroid_re.h"
 #include "main/game_object.h"
 
-
-
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
-
-
-
 
 typedef struct BarrelPadParticleArgs
 {
@@ -17,16 +12,6 @@ typedef struct BarrelPadParticleArgs
 } BarrelPadParticleArgs;
 
 /*
- * --INFO--
- *
- * Function: transporter_init
- * EN v1.0 Address: 0x801916A0
- * EN v1.0 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- *
  * Recovered: large switch on params[20] (32-bit id) that sets bits in
  * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
  * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
@@ -34,41 +19,7 @@ typedef struct BarrelPadParticleArgs
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 
-/*
- * --INFO--
- *
- * Function: FUN_801916e8
- * EN v1.0 Address: 0x801916E8
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80191BD4
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80191730
- * EN v1.0 Address: 0x80191730
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80191C1C
- * EN v1.1 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 void barrelpad_free(void)
 {
@@ -87,10 +38,6 @@ void barrelpad_initialise(void)
 }
 
 void cf_doorlight_free(void);
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int barrelpad_getExtraSize(void) { return 0x0; }
@@ -153,6 +100,3 @@ void barrelpad_init(s16* obj, u8* def)
 }
 
 extern f32 lbl_803E3EEC;
-
-
-

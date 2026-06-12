@@ -3,172 +3,12 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
 extern undefined8 ObjGroup_RemoveObject();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-
-
-
-
-
-
-
-
-/*
- * --INFO--
- *
- * Function: doorlock_init
- * EN v1.0 Address: 0x8017C178
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x8017C250
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8017c5c4
- * EN v1.0 Address: 0x8017C5C4
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x8017C7EC
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017c608
- * EN v1.0 Address: 0x8017C608
- * EN v1.0 Size: 456b
- * EN v1.1 Address: 0x8017C82C
- * EN v1.1 Size: 308b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_free
- * EN v1.0 Address: 0x8017C7D0
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017C960
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_render
- * EN v1.0 Address: 0x8017C7F4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017C984
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_update
- * EN v1.0 Address: 0x8017C81C
- * EN v1.0 Size: 548b
- * EN v1.1 Address: 0x8017C9B4
- * EN v1.1 Size: 592b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObject_init
- * EN v1.0 Address: 0x8017CA40
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017CC04
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: seqObj2_free
- * EN v1.0 Address: 0x8017CAF4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017CDE4
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObj2_update
- * EN v1.0 Address: 0x8017CB18
- * EN v1.0 Size: 460b
- * EN v1.1 Address: 0x8017CE10
- * EN v1.1 Size: 596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: seqObj2_init
- * EN v1.0 Address: 0x8017CCE4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017D064
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
 
 void dll_115_hitDetect_nop(void)
 {
@@ -180,8 +20,6 @@ int dll_115_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E37B0;
-
-
 
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -195,19 +33,11 @@ void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
-
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
  * its GameBit, compare against the def[0x30] mask bit for that slot, and
  * if the polarity flips (GameBit != mask bit) end the current sequence.
  * Always latches state[1] bit 0 before returning 0. */
-
-
-
-
-
-
-
 
 int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
@@ -264,9 +94,6 @@ typedef struct Dll115Placement
     u8 pad3E[0x40 - 0x3E];
 } Dll115Placement;
 
-
-
-
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
@@ -298,20 +125,6 @@ extern f32 lbl_803E4490;
 extern f32 lbl_803E4494;
 extern f32 lbl_803E4498;
 
-
-/*
- * --INFO--
- *
- * Function: dll_115_update
- * EN v1.0 Address: 0x8017D0D4
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x8017D134
- * EN v1.1 Size: 244b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     s16 pad0[12];
@@ -383,19 +196,6 @@ void dll_115_update(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_115_init
- * EN v1.0 Address: 0x8017D1BC
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017D228
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_115_init(short* obj, int mapData)
 {
     short* p;
@@ -431,173 +231,30 @@ void dll_115_init(short* obj, int mapData)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: dll_115_release_nop
- * EN v1.0 Address: 0x8017D1E0
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017D24C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_115_release_nop(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: dll_115_initialise_nop
- * EN v1.0 Address: 0x8017D208
- * EN v1.0 Size: 404b
- * EN v1.1 Address: 0x8017D280
- * EN v1.1 Size: 376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void dll_115_initialise_nop(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: wm_column_getExtraSize
- * EN v1.0 Address: 0x8017D39C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017D3F8
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int wm_column_getExtraSize(void);
 
-/*
- * --INFO--
- *
- * Function: wm_column_getObjectTypeId
- * EN v1.0 Address: 0x8017D3A0
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x8017D4E8
- * EN v1.1 Size: 236b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int wm_column_getObjectTypeId(void);
 
-/*
- * --INFO--
- *
- * Function: wm_column_free
- * EN v1.0 Address: 0x8017D488
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x8017D5D4
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wm_column_free(int obj);
 
-/*
- * --INFO--
- *
- * Function: wm_column_render
- * EN v1.0 Address: 0x8017D4AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8017D5F8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
-/*
- * --INFO--
- *
- * Function: wm_column_hitDetect
- * EN v1.0 Address: 0x8017D4D4
- * EN v1.0 Size: 424b
- * EN v1.1 Address: 0x8017D62C
- * EN v1.1 Size: 420b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wm_column_hitDetect(void);
 
-/*
- * --INFO--
- *
- * Function: wm_column_update
- * EN v1.0 Address: 0x8017D67C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017D7D0
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wm_column_update(int obj);
 
-/*
- * --INFO--
- *
- * Function: wm_column_init
- * EN v1.0 Address: 0x8017D680
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x8017D8E4
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wm_column_init(short* obj, int mapData);
 
-/*
- * --INFO--
- *
- * Function: wm_column_release
- * EN v1.0 Address: 0x8017D6CC
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x8017D92C
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wm_column_release(void);
 
-/*
- * --INFO--
- *
- * Function: wm_column_initialise
- * EN v1.0 Address: 0x8017D730
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x8017D9AC
- * EN v1.1 Size: 784b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void wm_column_initialise(void);
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
@@ -651,39 +308,11 @@ u32 jumptable_803214DC[] = {
 
 /* appleontree extra block (size 0x64 = appleontree_getExtraSize). */
 
-
 STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
 STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
 STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
 STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
 
-/*
- * --INFO--
- *
- * Function: appleontree_func0B
- * EN v1.0 Address: 0x8017DAA0
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x8017DCBC
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8017db40
- * EN v1.0 Address: 0x8017DB40
- * EN v1.0 Size: 792b
- * EN v1.1 Address: 0x8017DDAC
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8017db40(uint param_1, int param_2)
@@ -823,19 +452,6 @@ LAB_8017de10:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8017de58
- * EN v1.0 Address: 0x8017DE58
- * EN v1.0 Size: 672b
- * EN v1.1 Address: 0x8017E048
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -899,35 +515,6 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
 extern f32 Vec_xzDistance(float* a, float* b);
 void appleontree_handleCollectableHit(int obj);
 
-
-/*
- * --INFO--
- *
- * Function: FUN_8017e12c
- * EN v1.0 Address: 0x8017E12C
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x8017E1F4
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8017e15c
- * EN v1.0 Address: 0x8017E15C
- * EN v1.0 Size: 612b
- * EN v1.1 Address: 0x8017E22C
- * EN v1.1 Size: 608b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_8017e15c(double param_1, undefined2* param_2, int param_3)
 {
     float fVar1;
@@ -1031,19 +618,6 @@ undefined4 FUN_8017e15c(double param_1, undefined2* param_2, int param_3)
     return uVar4;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8017e3c0
- * EN v1.0 Address: 0x8017E3C0
- * EN v1.0 Size: 624b
- * EN v1.1 Address: 0x8017E48C
- * EN v1.1 Size: 620b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
 {
     float fVar1;
@@ -1138,7 +712,6 @@ undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
     return uVar4;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void appleontree_setScale(void);
 
@@ -1153,6 +726,3 @@ void appleontree_free(int* obj);
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
 /* v1.0 ground-animator drop physics (drift twins of FUN_8017db40/FUN_8017e15c/FUN_8017e3c0). */
-
-
-

@@ -8,41 +8,24 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* dim2conveyor_getExtraSize == 0x14. */
-
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 /* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 
-
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
 /* dimtruthhornice_getExtraSize == 0x8. */
-
 
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 /* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 
-
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
-
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
@@ -50,136 +33,9 @@ static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 extern undefined4 GameBit_Set(int eventId, int value);
 
-
-/*
- * --INFO--
- *
- * Function: dim_levelcontrol_update
- * EN v1.0 Address: 0x801B6464
- * EN v1.0 Size: 1352b
- * EN v1.1 Address: 0x801B6A18
- * EN v1.1 Size: 1352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801b6d24
- * EN v1.0 Address: 0x801B6D24
- * EN v1.0 Size: 404b
- * EN v1.1 Address: 0x801B6F60
- * EN v1.1 Size: 428b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b6f88
- * EN v1.0 Address: 0x801B6F88
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x801B71F4
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b6fa8
- * EN v1.0 Address: 0x801B6FA8
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x801B721C
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b7314
- * EN v1.0 Address: 0x801B7314
- * EN v1.0 Size: 356b
- * EN v1.1 Address: 0x801B7708
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b7fcc
- * EN v1.0 Address: 0x801B7FCC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B8344
- * EN v1.1 Size: 1344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b7fd0
- * EN v1.0 Address: 0x801B7FD0
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801B8884
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void dll_1DA_free(void)
 {
@@ -197,10 +53,6 @@ extern f32 lbl_803E4A30;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4AD8;
 
-
-
-
-
 void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -213,7 +65,6 @@ extern f32 lbl_803E4A38;
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
-
 
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 extern float Vec_distance(float* a, float* b);
@@ -243,28 +94,6 @@ extern int ObjList_FindObjectById(int id);
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* segment pragma-stack balance (re-split): */
 
 #include "main/effect_interfaces.h"
@@ -272,10 +101,6 @@ extern int ObjList_FindObjectById(int id);
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
-
-
-
-
 
 typedef struct Dll1DAState
 {
@@ -286,77 +111,9 @@ typedef struct Dll1DAState
     u8 pad7[0x8 - 0x7];
 } Dll1DAState;
 
-
-
-
-
-
-
-
-
-
 extern undefined4 ObjHits_AddContactObject();
 extern int ObjHits_GetPriorityHit();
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801b8c60
- * EN v1.0 Address: 0x801B8C60
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801B8D60
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b9728
- * EN v1.0 Address: 0x801B9728
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B9578
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b972c
- * EN v1.0 Address: 0x801B972C
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801B97B8
- * EN v1.1 Size: 524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b9cc4
- * EN v1.0 Address: 0x801B9CC4
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x801B9DC4
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801b9cc4(int param_1)
@@ -377,7 +134,6 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
@@ -391,30 +147,11 @@ void dll_1DA_initialise(void)
 
 void dll_1DB_free(void);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* dim2icefloe: per-frame curve-follow update + path-param init. */
-
-
-
-
 
 /* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
 
-
 /* dll_1DB_update: geyser state machine driven by player standing on it. */
-
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
@@ -536,22 +273,11 @@ void dll_1DA_update(int obj)
  * from distance/anim-state via the interface vtables. */
 extern int* gBaddieControlInterface;
 
-
-
 int fn_801B9ECC(int a, int obj);
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
 
 /* dll_1DA_init: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
 void dll_1DA_init(void* obj)
@@ -575,7 +301,6 @@ void dll_1DF_init(void* obj, void* p);
 
 /* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
 
-
 /* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
  *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
@@ -584,10 +309,5 @@ void dll_1DF_init(void* obj, void* p);
  *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
  *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
 
-
 /* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
-
-
-
-

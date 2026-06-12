@@ -6,53 +6,12 @@
 
 extern u32 randomGetRange(int min, int max);
 
-/*
- * --INFO--
- *
- * Function: textureFreeFn_8012fcec
- * EN v1.0 Address: 0x8012FCEC
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8012FD0C
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void textureFree(void* p);
 
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
-
-/*
- * --INFO--
- *
- * Function: FUN_8012fdac
- * EN v1.0 Address: 0x8012FDAC
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x8012FDC8
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_8012fe70
- * EN v1.0 Address: 0x8012FE70
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x8012FE84
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
@@ -322,19 +281,6 @@ extern s16 lbl_803DD904;
 #define LINK_FLAG_HIDDEN           0x4000
 #define LINK_FLAG_SELECTED_COLOR   0x0080
 
-/*
- * --INFO--
- *
- * Function: Link_render
- * EN v1.0 Address: 0x80130888
- * EN v1.0 Size: 1128b
- * EN v1.1 Address: 0x801309A8
- * EN v1.1 Size: 616b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void Link_render(void)
 {
     extern LinkMenuItemDA lbl_803A9458[40]; /* #57 */
@@ -555,19 +501,6 @@ extern u8 framesThisStep;
 extern s8 lbl_803DD910;
 extern s8 lbl_803DD913;
 
-/*
- * --INFO--
- *
- * Function: Link_update
- * EN v1.0 Address: 0x80130CF0
- * EN v1.0 Size: 936b
- * EN v1.1 Address: 0x80131078
- * EN v1.1 Size: 1168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 Link_update(void)
 {
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */

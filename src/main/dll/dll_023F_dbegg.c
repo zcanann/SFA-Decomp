@@ -16,20 +16,6 @@
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
-/*
- * --INFO--
- *
- * Function: FUN_801fd398
- * EN v1.0 Address: 0x801FD398
- * EN v1.0 Size: 852b
- * EN v1.1 Address: 0x801FD3A4
- * EN v1.1 Size: 720b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 void dbegg_processMessages(int obj)
 {
     extern int gameBitIncrement(int);
@@ -215,8 +201,6 @@ int dbegg_func0B(int obj, f32* v)
     return 0;
 }
 
-
-
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E61CC;
@@ -236,7 +220,6 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 void dll_224_init(void* obj, void* other);
-
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
@@ -293,13 +276,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
-
-
-
-
-
-
-
 
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
@@ -609,19 +585,6 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
-/*
- * --INFO--
- *
- * Function: FUN_80200558
- * EN v1.0 Address: 0x80200558
- * EN v1.0 Size: 488b
- * EN v1.1 Address: 0x80200D88
- * EN v1.1 Size: 256b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 #pragma peephole off
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -658,19 +621,6 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80200740
- * EN v1.0 Address: 0x80200740
- * EN v1.0 Size: 556b
- * EN v1.1 Address: 0x80200E88
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -758,19 +708,6 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80201260
- * EN v1.0 Address: 0x80201260
- * EN v1.0 Size: 616b
- * EN v1.1 Address: 0x802028CC
- * EN v1.1 Size: 404b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -834,19 +771,6 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_802014c8
- * EN v1.0 Address: 0x802014C8
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x80202A60
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -889,19 +813,6 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 int dbstealerworm_stateHandlerA09(int obj, int p);
 
-/*
- * --INFO--
- *
- * Function: FUN_80201658
- * EN v1.0 Address: 0x80201658
- * EN v1.0 Size: 328b
- * EN v1.1 Address: 0x80202B5C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -929,19 +840,6 @@ FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_802017a0
- * EN v1.0 Address: 0x802017A0
- * EN v1.0 Size: 568b
- * EN v1.1 Address: 0x80202BF8
- * EN v1.1 Size: 352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
@@ -996,19 +894,6 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80202004
- * EN v1.0 Address: 0x80202004
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x802032B0
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
              int param_6)
@@ -1060,19 +945,6 @@ FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4,
 
 int dbstealerworm_stateHandlerA06(int obj, int p2);
 
-/*
- * --INFO--
- *
- * Function: FUN_80202130
- * EN v1.0 Address: 0x80202130
- * EN v1.0 Size: 312b
- * EN v1.1 Address: 0x802033DC
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
              int param_6)
@@ -1115,19 +987,6 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
 
 int dbstealerworm_stateHandlerA05(int obj, int p);
 
-/*
- * --INFO--
- *
- * Function: FUN_80204320
- * EN v1.0 Address: 0x80204320
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x802051FC
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -1192,7 +1051,6 @@ void dbegg_init(int obj)
 }
 
 void DFP_Torch_free(int obj);
-
 
 void dbegg_update(int obj)
 {
@@ -1635,79 +1493,9 @@ void dbegg_update(int obj)
 
 extern u8 gChukaModeTable[9];
 
-/*
- * --INFO--
- *
- * Function: chuka_init
- * EN v1.0 Address: 0x8020637C
- * EN v1.0 Size: 240b
- * EN v1.1 Address: 0x80206444
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfpfloorbar_free
- * EN v1.0 Address: 0x80206480
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80206590
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 
 /* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
-
-/*
- * --INFO--
- *
- * Function: chuka_release
- * EN v1.0 Address: 0x8020646C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: chuka_initialise
- * EN v1.0 Address: 0x80206470
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: dfpfloorbar_getExtraSize
- * EN v1.0 Address: 0x8020647C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
  * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.

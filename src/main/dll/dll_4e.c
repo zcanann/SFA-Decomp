@@ -26,13 +26,11 @@
 #define OPTIONS_SUBMENU_AUDIO 2
 #define OPTIONS_SUBMENU_LANGUAGE 3
 
-
 extern void audioSetSoundMode(u8 mode, u8 enabled);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveFileStruct_resetVolumes(void);
-
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int* gTitleMenuControlInterface;
@@ -43,19 +41,6 @@ extern u8 lbl_803DD704;
 extern u8 lbl_803DD705;
 extern u8* lbl_803DD708;
 
-/*
- * --INFO--
- *
- * Function: optionsMenu_applyAudioSetting
- * EN v1.0 Address: 0x8011BFC8
- * EN v1.0 Size: 872b
- * EN v1.1 Address: 0x8011C2AC
- * EN v1.1 Size: 848b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void optionsMenu_applyAudioSetting(int p1, int p2)
 {
     int value;

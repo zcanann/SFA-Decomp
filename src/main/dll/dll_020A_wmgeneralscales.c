@@ -7,8 +7,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
-
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
@@ -22,13 +20,6 @@ extern f32 lbl_803E5EA0;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
 
-/*
- * --INFO--
- *
- * Function: wmgeneralscales_SeqFn
- * EN v1.0 Address: 0x801F48C0
- * EN v1.0 Size: 652b
- */
 int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     f32* state;

@@ -15,19 +15,6 @@ extern undefined4 DAT_803de944;
 extern undefined4 DAT_803de946;
 extern f32 lbl_803DC074;
 
-/*
- * --INFO--
- *
- * Function: FUN_801fd398
- * EN v1.0 Address: 0x801FD398
- * EN v1.0 Size: 852b
- * EN v1.1 Address: 0x801FD3A4
- * EN v1.1 Size: 720b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -104,9 +91,7 @@ void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void VFP_lavapool_free_nop(void)
 {
@@ -163,7 +148,6 @@ int vfpspellplace_getExtraSize(void) { return 0x6; }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
 int dbegg_getExtraSize(void);
 
-
 /* plain forwarder. */
 extern void fn_801FD6B4(int obj);
 void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
@@ -179,7 +163,6 @@ void vfplavastar_release(void)
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 extern void objRenderFn_80041018(void* obj);
-
 
 typedef struct
 {
@@ -207,7 +190,6 @@ int dbegg_setScale(int obj);
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
-
 
 void vfplavastar_initialise(void)
 {
@@ -250,7 +232,6 @@ void vfpflamepoint_init(int* obj, s8* def)
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
-
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -536,4 +517,3 @@ void vfpspellplace_init(int obj, s8* def)
     }
     spellPlace->objectFlags |= LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
 }
-

@@ -2,41 +2,11 @@
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 
-
-
-
-/*
- * --INFO--
- *
- * Function: dll_9A_func03
- * EN v1.0 Address: 0x800FC5B8
- * EN v1.0 Size: 2428b
- * EN v1.1 Address: 0x800FC854
- * EN v1.1 Size: 2436b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* dll_9A_func03 rewritten below (after shared screen-fx typedefs). */
 
-/*
- * --INFO--
- *
- * Function: dll_9B_func03
- * EN v1.0 Address: 0x800FCF3C
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x800FD1D8
- * EN v1.1 Size: 888b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
  /* 0x18 */
 
  /* 0x60 */
-
 
 extern u8 lbl_80317BD8[];
 extern ModgfxInterface** gModgfxInterface;
@@ -50,9 +20,6 @@ extern f32 lbl_803E13B8;
 extern f32 lbl_803E13BC;
 extern f32 lbl_803E13C0;
 extern f32 lbl_803E13C4;
-
-
-
 
 void dll_9B_func03(int a, int b, int p, uint flags)
 {
@@ -205,26 +172,11 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x156, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: dll_9C_func03
- * EN v1.0 Address: 0x800FD2B4
- * EN v1.0 Size: 1160b
- * EN v1.1 Address: 0x800FD550
- * EN v1.1 Size: 1160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 lbl_80317E00[];
 
 void dll_9C_func03(int a, int b, int p, uint flags);
 
-
 /* Trivial nops */
-
 
 void dll_9B_func01_nop(void)
 {
@@ -235,4 +187,3 @@ void dll_9B_func00_nop(void)
 }
 
 void dll_9C_func01_nop(void);
-

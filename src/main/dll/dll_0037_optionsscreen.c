@@ -3,8 +3,6 @@
 #include "main/dll/debug/dimenu.h"
 #include "main/screen_transition.h"
 
-
-
 extern undefined8 FUN_80006b84();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80053c98();
@@ -15,19 +13,6 @@ extern undefined4 languageMenuInit();
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de3a8;
 
-/*
- * --INFO--
- *
- * Function: OptionsScreen_render
- * EN v1.0 Address: 0x8011CD54
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8011CD58
- * EN v1.1 Size: 736b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;
@@ -156,19 +141,6 @@ void OptionsScreen_initialise(void)
     lbl_803DD6F9 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: OptionsScreen_run
- * EN v1.0 Address: 0x8011D11C
- * EN v1.0 Size: 1376b
- * EN v1.1 Address: 0x8011D260
- * EN v1.1 Size: 1300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma peephole off
 int OptionsScreen_run(void)
 {
@@ -312,34 +284,6 @@ int OptionsScreen_run(void)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8011d67c
- * EN v1.0 Address: 0x8011D67C
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x8011D774
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8011daf8
- * EN v1.0 Address: 0x8011DAF8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8011DA84
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
@@ -349,19 +293,6 @@ void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8011dafc
- * EN v1.0 Address: 0x8011DAFC
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x8011DB40
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -386,7 +317,6 @@ FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void OptionsScreen_frameEnd(void)
 {
@@ -398,20 +328,6 @@ void OptionsScreen_release(void)
 
 void WeirdUnusedMenu_render(void);
 
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* Pattern wrappers. */
-
-
-
-
-
-
-

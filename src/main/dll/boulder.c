@@ -4,19 +4,6 @@ extern u32 randomGetRange(int min, int max);
 
 extern f32 lbl_803E5ED8;
 
-/*
- * --INFO--
- *
- * Function: fn_801F4ECC
- * EN v1.0 Address: 0x801F4ECC
- * EN v1.0 Size: 188b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801F4ECC(int obj, u8* rec)
 {
     *(f32*)(rec + 0x04) = *(f32*)(rec + 0x08);

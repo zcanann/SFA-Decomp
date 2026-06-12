@@ -2,61 +2,6 @@
 #include "main/game_ui_interface.h"
 #include "main/dll/SC/SClantern.h"
 
-/*
- * --INFO--
- *
- * Function: warpstone_update
- * EN v1.0 Address: 0x801D7674
- * EN v1.0 Size: 1164b
- * EN v1.1 Address: 0x801D76A4
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: warpstone_release
- * EN v1.0 Address: 0x801D7BA0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: warpstone_initialise
- * EN v1.0 Address: 0x801D7BA4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: sh_levelcontrol_getExtraSize
- * EN v1.0 Address: 0x801D7BA8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int sh_levelcontrol_getExtraSize(void)
 {
     return 0x14;
@@ -88,13 +33,6 @@ extern int mapUnload(int id, int flags);
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
 
-/*
- * --INFO--
- *
- * Function: SH_LevelControl_SeqFn
- * EN v1.0 Address: 0x801D7C14
- * EN v1.0 Size: 128b
- */
 int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* updateState)
 {
     extern void SH_LevelControl_setMusic(void* p); /* #57 */
@@ -116,13 +54,6 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: mapUnloadFn_801d7c94
- * EN v1.0 Address: 0x801D7C94
- * EN v1.0 Size: 576b
- */
 #pragma dont_inline on
 void mapUnloadFn_801d7c94(void* obj, void* p2)
 {
@@ -167,13 +98,6 @@ dec:
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: SCGameBitLatch_Update
- * EN v1.0 Address: 0x801D7ED4
- * EN v1.0 Size: 396b
- */
 void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                            s16 clearIfClearBit, s16 latchBit, int musicId)
 {
@@ -231,12 +155,6 @@ end:
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: SCGameBitLatch_UpdateInverted
- * EN v1.0 Address: 0x801D8060
- */
 void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                                    s16 clearIfClearBit, s16 latchBit, int musicId)
 {
@@ -249,13 +167,6 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-/*
- * --INFO--
- *
- * Function: SH_LevelControl_setMusic
- * EN v1.0 Address: 0x801D80F4
- * EN v1.0 Size: 532b
- */
 #pragma dont_inline on
 void SH_LevelControl_setMusic(short* obj)
 {
@@ -341,19 +252,6 @@ extern f32 timeDelta;
 extern void fn_80137948(char* fmt, ...);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-/*
- * --INFO--
- *
- * Function: SH_LevelControl_runBloopEvent
- * EN v1.0 Address: 0x801D8308
- * EN v1.0 Size: 1264b
- * EN v1.1 Address: 0x801D84C4
- * EN v1.1 Size: 396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void SH_LevelControl_runBloopEvent(int obj, int state)
 {
@@ -495,19 +393,6 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: FUN_801d8480
- * EN v1.0 Address: 0x801D8480
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801D8650
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801d8480(undefined4 param_1, undefined4 param_2, short param_3, short param_4, short param_5,
@@ -533,20 +418,6 @@ void FUN_801d8480(undefined4 param_1, undefined4 param_2, short param_3, short p
     FUN_80286884();
     return;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_801d8524
- * EN v1.0 Address: 0x801D8524
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801D86E4
- * EN v1.1 Size: 532b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
 /* segment pragma-stack balance (re-split): */
 
@@ -599,19 +470,6 @@ extern int playerHasSpell(int obj, int spell);
         (state)->mapOverride = -1;                            \
     }
 
-/*
- * --INFO--
- *
- * Function: SH_LevelControl_doThornTailEvents
- * EN v1.0 Address: 0x801D87F8
- * EN v1.0 Size: 776b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* state)
@@ -703,19 +561,6 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
     }
 }
 
-/*
- * --INFO--
- *
- * Function: SH_LevelControl_doEarlyScenes
- * EN v1.0 Address: 0x801D8B00
- * EN v1.0 Size: 544b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 {
     extern int Obj_GetPlayerObject(void); /* #57 */
@@ -804,19 +649,6 @@ extern void skyFn_80088e54(int a, f32 b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 
-/*
- * --INFO--
- *
- * Function: sh_levelcontrol_update
- * EN v1.0 Address: 0x801D8D20
- * EN v1.0 Size: 2452b
- * EN v1.1 Address: 0x801D90F0
- * EN v1.1 Size: 544b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sh_levelcontrol_update(int obj)
 {
     extern u8 lbl_80327618[0x104]; /* #57 */
@@ -1203,4 +1035,3 @@ void sh_levelcontrol_init(int obj)
 void warpstonelift_init(int obj, s8* def);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-

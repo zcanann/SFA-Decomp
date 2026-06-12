@@ -30,19 +30,6 @@ extern SHthorntailDataTables gSHthorntailDataTables;
 #define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL 0x7F
 #define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG 0x40
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateLevelControlMode1
- * EN v1.0 Address: 0x801D58E4
- * EN v1.0 Size: 644b
- * EN v1.1 Address: 0x801D5ED4
- * EN v1.1 Size: 644b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
@@ -160,19 +147,6 @@ void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runt
     }
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateLevelControlMode0
- * EN v1.0 Address: 0x801D5B68
- * EN v1.0 Size: 480b
- * EN v1.1 Address: 0x801D6158
- * EN v1.1 Size: 480b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
@@ -252,19 +226,6 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     SHthorntail_updateState(obj, runtime);
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateLevelControlState
- * EN v1.0 Address: 0x801D5D48
- * EN v1.0 Size: 324b
- * EN v1.1 Address: 0x801D6338
- * EN v1.1 Size: 324b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused,
                                                ObjAnimUpdateState* animUpdate)
 {
@@ -306,37 +267,11 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unuse
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_getExtraSize
- * EN v1.0 Address: 0x801D5E8C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int SHthorntail_getExtraSize(void)
 {
     return SHTHORNTAIL_EXTRA_STATE_BYTES;
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_free
- * EN v1.0 Address: 0x801D5E94
- * EN v1.0 Size: 64b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_free(SHthorntailObject* obj)
 {
     u32 activeConfigToken;
@@ -353,19 +288,6 @@ extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int param_3);
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_render
- * EN v1.0 Address: 0x801D5ED4
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x801D64C4
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_render(SHthorntailObject* obj)
 {
     SHthorntailRuntime* runtime;
@@ -443,19 +365,6 @@ typedef struct SHthorntailTailSwingEffectScratch
     Vec position;
 } SHthorntailTailSwingEffectScratch;
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_update
- * EN v1.0 Address: 0x801D5F58
- * EN v1.0 Size: 1928b
- * EN v1.1 Address: 0x801D6548
- * EN v1.1 Size: 1928b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_update(SHthorntailObject* obj)
 {
     extern int randomGetRange(int min, int max); /* #57 */
@@ -699,19 +608,6 @@ void SHthorntail_update(SHthorntailObject* obj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: SHthorntail_init
- * EN v1.0 Address: 0x801D66E0
- * EN v1.0 Size: 564b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
     extern int randomGetRange(int min, int max); /* #57 */
@@ -766,17 +662,3 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     dll_2E_func08((int)runtime, 400, 0x78);
     ObjGroup_AddObject((int)obj, 0x4d);
 }
-
-/*
- * --INFO--
- *
- * Function: SHthorntail_updateDustEffects
- * EN v1.0 Address: 0x801D6914
- * EN v1.0 Size: 752b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */

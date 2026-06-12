@@ -67,17 +67,6 @@ extern f32 lbl_803E5C0C;
 extern f32 lbl_803E5C10;
 extern f32 lbl_803E5C14;
 
-/*
- * --INFO--
- *
- * Function: fn_801EAE4C
- * EN v1.0 Address: 0x801EAE4C
- * EN v1.0 Size: 648b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern int lbl_803DC0BC;
 extern s16 lbl_803DC0DC;
 extern f32 lbl_803E5B68;
@@ -192,17 +181,6 @@ void fn_801EAE4C(short* obj, int stateRaw)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801EB0D4
- * EN v1.0 Address: 0x801EB0D4
- * EN v1.0 Size: 608b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_801EB0D4(uint obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
@@ -318,19 +296,6 @@ void fn_801EB334(int* obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_animEventCallback
- * EN v1.0 Address: 0x801EB420
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x801EBA58
- * EN v1.1 Size: 532b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* seq)
 {
     typedef struct HightopMatrixSeed
@@ -410,17 +375,6 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801EB634
- * EN v1.0 Address: 0x801EB634
- * EN v1.0 Size: 780b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803E5AF4;
 extern f32 lbl_803E5BA8;
 extern f32 lbl_803E5BAC;
@@ -521,17 +475,6 @@ void fn_801EB634(int obj, int stateRaw)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801EB940
- * EN v1.0 Address: 0x801EB940
- * EN v1.0 Size: 1056b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct HightopFlagsB
 {
     u8 resetLatch : 1;
@@ -668,17 +611,6 @@ void fn_801EB940(short* obj, int stateRaw)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801EBD60
- * EN v1.0 Address: 0x801EBD60
- * EN v1.0 Size: 1100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 sqrtf(f32);
 
 void fn_801EBD60(int obj, int stateRaw)

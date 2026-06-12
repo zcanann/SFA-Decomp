@@ -3,7 +3,6 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcannon_state.h"
 
-
 extern f32 Curve_EvalLinear(f32 param_1, float* param_2, float* param_3);
 extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
 extern f32 sqrtf(f32 x);
@@ -20,19 +19,6 @@ extern f32 lbl_803E18B0;
 extern f32 lbl_803E18B4;
 extern f32 lbl_803E18B8;
 
-/*
- * --INFO--
- *
- * Function: fn_8010AEA8
- * EN v1.0 Address: 0x8010AEA8
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x8010B144
- * EN v1.1 Size: 912b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 uint fn_8010AEA8(CameraObject* camera, uint flagsIn)
 {
     u8 flags;
@@ -137,19 +123,6 @@ uint fn_8010AEA8(CameraObject* camera, uint flagsIn)
     return q >= lbl_803E188C;
 }
 
-/*
- * --INFO--
- *
- * Function: cameraModeTestStrengthFn_8010b238
- * EN v1.0 Address: 0x8010B218
- * EN v1.0 Size: 528b
- * EN v1.1 Address: 0x8010B4D4
- * EN v1.1 Size: 448b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd,
                                        s32 rotXEnd, s32 rotYEnd, s32 rotZEnd)
 {
@@ -185,7 +158,6 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
                                     (f64)lbl_803E18B4, (f64)lbl_803E18B8);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeTestStrength_copyToCurrent_nop(void)
 {
@@ -210,7 +182,6 @@ void CameraModeTestStrength_free(void)
 #include "main/object_transform.h"
 #include "main/pad.h"
 
-
 extern undefined4 FUN_800033a8();
 extern f32 Curve_EvalCatmullRom(f32* samples, f32 t, f32* out);
 extern f32 Curve_EvalBSpline(f32* samples, f32 t, f32* out);
@@ -224,19 +195,6 @@ extern void* memset(void* p, int c, int n);
 extern u8 framesThisStep;
 extern f32 lbl_803E18BC;
 
-/*
- * --INFO--
- *
- * Function: CameraModeTestStrength_update
- * EN v1.0 Address: 0x8010B424
- * EN v1.0 Size: 2392b
- * EN v1.1 Address: 0x8010B6C0
- * EN v1.1 Size: 1652b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeTestStrength_update(short* cam)
 {
     extern int fn_8010AEA8(short* cam, int flags); /* #57 */
@@ -415,19 +373,6 @@ void CameraModeTestStrength_update(short* cam)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeTestStrength_init
- * EN v1.0 Address: 0x8010BD7C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010BD34
- * EN v1.1 Size: 1128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeTestStrength_init(short* cam, int param2, int* param3)
 {
     extern void cameraModeTestStrengthFn_8010b238(int camera, f32* pos, s16 pitch, s16 yaw, s16 roll); /* #57 */
@@ -549,7 +494,6 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     lbl_803DD560->pathProgress = t;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeTestStrength_release(void)
 {
@@ -560,22 +504,3 @@ void CameraModeTestStrength_initialise(void)
 }
 
 void CameraModeCombat_copyToCurrent_nop(void);
-
-
-/*
- * --INFO--
- *
- * Function: fn_8010BF08
- * EN v1.0 Address: 0x8010BF08
- * EN v1.0 Size: 348b
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeCombat_free
- * EN v1.0 Address: 0x8010C068
- * EN v1.0 Size: 112b
- */
-

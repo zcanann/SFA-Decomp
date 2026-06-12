@@ -7,30 +7,24 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-
 /* dim2conveyor_getExtraSize == 0x14. */
-
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 /* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 
-
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
 /* dimtruthhornice_getExtraSize == 0x8. */
-
 
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 /* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 
-
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
-
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
@@ -41,25 +35,10 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 extern EffectInterface** gPartfxInterface;
 
-/*
- * --INFO--
- *
- * Function: dim_levelcontrol_update
- * EN v1.0 Address: 0x801B6464
- * EN v1.0 Size: 1352b
- * EN v1.1 Address: 0x801B6A18
- * EN v1.1 Size: 1352b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 extern void getEnvfxActImmediately(int a, int b, int id, int d);
 extern void getEnvfxAct(int a, int b, int id, int d);
 extern void Music_Trigger(int id, int value);
 extern f32 timeDelta;
-
 
 extern void objRenderFn_8003b8f4(f32);
 extern void Music_Trigger(int trackId, int restart);
@@ -84,7 +63,6 @@ typedef struct Dim2lavacontrolPlacement
     s16 unk1E;
 } Dim2lavacontrolPlacement;
 
-
 typedef struct Dim2lavacontrolState
 {
     s8 unk0;
@@ -94,65 +72,6 @@ typedef struct Dim2lavacontrolState
     f32 unk24;
 } Dim2lavacontrolState;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801b8c60
- * EN v1.0 Address: 0x801B8C60
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801B8D60
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b9728
- * EN v1.0 Address: 0x801B9728
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B9578
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b972c
- * EN v1.0 Address: 0x801B972C
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801B97B8
- * EN v1.1 Size: 524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b9cc4
- * EN v1.0 Address: 0x801B9CC4
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x801B9DC4
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_801b9cc4(int param_1)
@@ -173,30 +92,22 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_1DA_release(void);
 
-
 extern u32 GameBit_Get(int id);
-
 
 /* dim2icefloe: per-frame curve-follow update + path-param init. */
 
-
 /* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
 
-
 /* dll_1DB_update: geyser state machine driven by player standing on it. */
-
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
 
-
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
-
 
 /* 8b "li r3, N; blr" returners. */
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
@@ -204,7 +115,6 @@ int dll_1DF_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B90;
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -223,7 +133,6 @@ void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
  *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
  *              obj[8]. Also sets obj[0xB8]->f10 from a constant and OR-merges flags
  *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
-
 
 /* dim2lavacontrol_setScale: every-frame tick -- if not already "armed" (bit 0 of
  *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit

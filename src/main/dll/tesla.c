@@ -60,19 +60,6 @@ extern f32 lbl_803E6448;
 #define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \
     (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (mode), (arg5), (arg6))
 
-/*
- * --INFO--
- *
- * Function: fn_80206968
- * EN v1.0 Address: 0x80206968
- * EN v1.0 Size: 688b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80206968(TrickyCurveObject* obj)
 {
     u8 insideAxes;
@@ -169,19 +156,6 @@ void fn_80206968(TrickyCurveObject* obj)
     state->zSide = zSide;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80206C18
- * EN v1.0 Address: 0x80206C18
- * EN v1.0 Size: 792b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_80206C18(TrickyCurveObject* obj)
 {
     u8 insideAxes;

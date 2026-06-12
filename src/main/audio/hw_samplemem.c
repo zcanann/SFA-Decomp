@@ -4,19 +4,6 @@ extern u32 dspHRTFOn;
 extern u8* dspVoice;
 extern void*(*gSalMallocHook)(u32 size);
 
-/*
- * --INFO--
- *
- * Function: hwSaveSample
- * EN v1.0 Address: 0x80283DFC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283E4C
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwSaveSample(u32** sample, void** ptr)
 {
     u32 size;
@@ -50,19 +37,6 @@ save:
     *ptr = (void*)aramStoreData(*ptr, size);
 }
 
-/*
- * --INFO--
- *
- * Function: hwRemoveSample
- * EN v1.0 Address: 0x80283E04
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283EEC
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwRemoveSample(u32* sample, void* ptr)
 {
     u32 size;
@@ -96,19 +70,6 @@ remove:
     aramRemoveData(ptr, size);
 }
 
-/*
- * --INFO--
- *
- * Function: hwSyncSampleMem
- * EN v1.0 Address: 0x80283E08
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283F18
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void hwSyncSampleMem(void)
 {
     aramSyncTransferQueue();

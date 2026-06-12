@@ -3,91 +3,17 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
-
-
-/*
- * --INFO--
- *
- * Function: blasted_init
- * EN v1.0 Address: 0x801A2AF8
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801A2B9C
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801a2cb8
- * EN v1.0 Address: 0x801A2CB8
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801A2D6C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a32d4
- * EN v1.0 Address: 0x801A32D4
- * EN v1.0 Size: 800b
- * EN v1.1 Address: 0x801A3190
- * EN v1.1 Size: 676b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
-
-
-
-
-
-
 
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
 /* Per-fragment record inside DrExplodableState (stride 0x70). */
 
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 
@@ -99,10 +25,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
-
-
 typedef struct CflevelcontrolState
 {
     u8 pad0[0x8 - 0x0];
@@ -111,9 +33,6 @@ typedef struct CflevelcontrolState
     s8 unkD;
     u8 padE[0x10 - 0xE];
 } CflevelcontrolState;
-
-
-
 
 extern undefined8 FUN_80017698();
 extern undefined8 ObjGroup_RemoveObject();
@@ -128,34 +47,6 @@ extern void GameBit_Set(int eventId, int value);
 extern void s16toFloat(void* p, int duration);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-/*
- * --INFO--
- *
- * Function: cfforcefield_update
- * EN v1.0 Address: 0x801A39D0
- * EN v1.0 Size: 1128b
- * EN v1.1 Address: 0x801A3B20
- * EN v1.1 Size: 124b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801a4520
- * EN v1.0 Address: 0x801A4520
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x801A4660
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -177,55 +68,14 @@ void FUN_801a4520(int param_1)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801a45cc
- * EN v1.0 Address: 0x801A45CC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801A4708
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void FUN_801a45cc(short* param_1, int param_2)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: cflevelcontrol_free
- * EN v1.0 Address: 0x801A45D4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x801A4880
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void cflevelcontrol_free(int param_1)
 {
 }
 
-
-/*
- * --INFO--
- *
- * Function: FUN_801a4810
- * EN v1.0 Address: 0x801A4810
- * EN v1.0 Size: 276b
- * EN v1.1 Address: 0x801A4AD8
- * EN v1.1 Size: 180b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -250,22 +100,8 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void cflevelcontrol_hitDetect(void)
 {
@@ -324,9 +160,6 @@ void cflevelcontrol_init(u8* obj, u8* params)
 
 void exploded_free(void);
 
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int cflevelcontrol_getExtraSize(void) { return 0x10; }
 int cflevelcontrol_getObjectTypeId(void) { return 0x0; }
@@ -339,9 +172,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E43E8;
 
-
-
-
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -349,7 +179,6 @@ void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 extern int ObjList_FindObjectById(int objectId);
 extern void fn_8017C294(int obj);
@@ -526,9 +355,6 @@ void attractor_free(int x);
 
 /* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
 
-
-
-
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
  * (state[0] bits 5..7) through the door's open/close machine. Returns 1
@@ -578,10 +404,6 @@ int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 void cfforcefield_init(s16* obj, void* data);
-
-
-
-
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

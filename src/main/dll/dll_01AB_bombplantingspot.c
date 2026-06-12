@@ -4,70 +4,9 @@
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objseq.h"
 
-
 extern u32 GameBit_Get(int eventId);
 
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-
-/*
- * --INFO--
- *
- * Function: bombplantspore_getExtraSize
- * EN v1.0 Address: 0x801D3378
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplantspore_free
- * EN v1.0 Address: 0x801D3380
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801D3970
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplantspore_startDriftBurst
- * EN v1.0 Address: 0x801D33D4
- * EN v1.0 Size: 456b
- * EN v1.1 Address: 0x801D39C4
- * EN v1.1 Size: 456b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: bombplant_init
- * EN v1.0 Address: 0x801D3238
- * EN v1.0 Size: 320b
- */
-
-/*
- * --INFO--
- *
- * Function: bombplant_update
- * EN v1.0 Address: 0x801D2C54
- * EN v1.0 Size: 1508b
- */
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -78,18 +17,15 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
-
 extern uint GameBit_Get(int bit);
 extern int gameBitDecrement(int bit);
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(void* obj);
 
-
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
 #define BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER 0x196
 #define BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG 0x08
 #define BOMBPLANTINGSPOT_READY_FLAG 0x10
-
 
 void bombplantingspot_update(void* obj)
 {

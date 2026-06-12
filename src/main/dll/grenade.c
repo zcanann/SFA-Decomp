@@ -7,7 +7,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
 extern int randomGetRange(int min, int max);
 extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjGroup_FindNearestObject();
@@ -30,19 +29,6 @@ extern f32 lbl_803E2518;
 extern f32 lbl_803E251C;
 extern f32 lbl_803E2524;
 
-/*
- * --INFO--
- *
- * Function: trickyDigTunnel
- * EN v1.0 Address: 0x80141880
- * EN v1.0 Size: 1900b
- * EN v1.1 Address: 0x80141C08
- * EN v1.1 Size: 1900b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void trickyDebugPrint(const char* fmt, ...);
 extern void getYButtonItem(s16 * out);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -291,19 +277,6 @@ void trickyDigTunnel(u8* obj, u8* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80141fec
- * EN v1.0 Address: 0x80142100
- * EN v1.0 Size: 1948b
- * EN v1.1 Address: 0x80142374
- * EN v1.1 Size: 1336b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
 extern float getXZDistance(float* a, float* b);
 extern float sqrtf(float x);
@@ -456,19 +429,6 @@ void trickyFn_80141fec(u8* obj, u8* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80142524
- * EN v1.0 Address: 0x8014289C
- * EN v1.0 Size: 1752b
- * EN v1.1 Address: 0x801428AC
- * EN v1.1 Size: 1264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void fn_80144B50(u8 * obj, u8 * state);
 
 typedef struct TrickyFnRow
@@ -654,19 +614,6 @@ void trickyFn_80142524(u8* obj, u8* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80142a14
- * EN v1.0 Address: 0x80142F74
- * EN v1.0 Size: 492b
- * EN v1.1 Address: 0x80142D9C
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void objPosFn_80039510(int obj, int flags, float* out);
 extern f32 lbl_803E24C8;
 
@@ -714,19 +661,6 @@ int trickyFn_80142a14(int obj, int state)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFlameFn_80142b6c
- * EN v1.0 Address: 0x80143160
- * EN v1.0 Size: 616b
- * EN v1.1 Address: 0x80142EF4
- * EN v1.1 Size: 448b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u8 Obj_IsLoadingLocked(void);
 extern u8* Obj_AllocObjectSetup(int size, int id);
 extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);
@@ -795,19 +729,6 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFoodFn_80142d2c
- * EN v1.0 Address: 0x801433C8
- * EN v1.0 Size: 556b
- * EN v1.1 Address: 0x801430B4
- * EN v1.1 Size: 388b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern u32 lbl_802C21DC[];
 
 int trickyFoodFn_80142d2c(int obj, int state)
@@ -862,19 +783,6 @@ skip:
     return (u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80142eb0
- * EN v1.0 Address: 0x801435F4
- * EN v1.0 Size: 608b
- * EN v1.1 Address: 0x80143238
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
 extern EffectInterface** gPartfxInterface;
@@ -955,20 +863,6 @@ int trickyFn_80142eb0(int obj, int state)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_801430e0
- * EN v1.0 Address: 0x80143854
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x80143468
- * EN v1.1 Size: 304b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
 int trickyFn_801430e0(u8* obj, u8* state)
 {
     u8* ptr;
@@ -1008,19 +902,6 @@ int trickyFn_801430e0(u8* obj, u8* state)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80143210
- * EN v1.0 Address: 0x80143A14
- * EN v1.0 Size: 168b
- * EN v1.1 Address: 0x80143598
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 trickyFn_80143210(int obj, int* trickyState)
 {
     short sVar1;
@@ -1050,19 +931,6 @@ undefined4 trickyFn_80143210(int obj, int* trickyState)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_801432cc
- * EN v1.0 Address: 0x80143ABC
- * EN v1.0 Size: 168b
- * EN v1.1 Address: 0x80143654
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 trickyFn_801432cc(int obj, int* trickyState)
 {
     short sVar1;
@@ -1092,19 +960,6 @@ undefined4 trickyFn_801432cc(int obj, int* trickyState)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80143388
- * EN v1.0 Address: 0x80143B64
- * EN v1.0 Size: 256b
- * EN v1.1 Address: 0x80143710
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 trickyFn_80143388(int obj, int* trickyState)
 {
     int val;
@@ -1144,19 +999,6 @@ undefined4 trickyFn_80143388(int obj, int* trickyState)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_801434b0
- * EN v1.0 Address: 0x80143C64
- * EN v1.0 Size: 972b
- * EN v1.1 Address: 0x80143838
- * EN v1.1 Size: 804b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
 extern int* gSHthorntailAnimationInterface;
@@ -1268,19 +1110,6 @@ int trickyFn_801434b0(int obj, int* trickyState)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFoodFn_801437d4
- * EN v1.0 Address: 0x80144030
- * EN v1.0 Size: 1136b
- * EN v1.1 Address: 0x80143B5C
- * EN v1.1 Size: 816b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct TrickyPackedSlots
 {
     u8 a : 2;
@@ -1388,19 +1217,6 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80143b04
- * EN v1.0 Address: 0x801444A0
- * EN v1.0 Size: 104b
- * EN v1.1 Address: 0x80143E8C
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 trickyFn_80143b04(int obj, int* trickyState)
 {
     int val;
@@ -1420,19 +1236,6 @@ undefined4 trickyFn_80143b04(int obj, int* trickyState)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80143b78
- * EN v1.0 Address: 0x80144508
- * EN v1.0 Size: 344b
- * EN v1.1 Address: 0x80143F00
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4 trickyFn_80143b78(int obj, int* trickyState)
 {
     int val;
@@ -1455,19 +1258,6 @@ undefined4 trickyFn_80143b78(int obj, int* trickyState)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFn_80143c04
- * EN v1.0 Address: 0x80144660
- * EN v1.0 Size: 676b
- * EN v1.1 Address: 0x80143F8C
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int trickyFn_80143c04(int obj, int state)
 {
     int tex;
@@ -1544,19 +1334,6 @@ int trickyFn_80143c04(int obj, int state)
     return fn_80143DD4(obj, (int*)state);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80143DD4
- * EN v1.0 Address: 0x80144904
- * EN v1.0 Size: 1212b
- * EN v1.1 Address: 0x8014415C
- * EN v1.1 Size: 1004b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 typedef struct
 {
     u8 bf7 : 1;
@@ -1679,19 +1456,6 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
     return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: objAnimFn_801441c0
- * EN v1.0 Address: 0x80144DC0
- * EN v1.0 Size: 692b
- * EN v1.1 Address: 0x80144548
- * EN v1.1 Size: 740b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 mathSinf(f64 x);
 extern f64 mathCosf(f64 x);
 extern f64 lbl_803E2528;
@@ -1772,19 +1536,6 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: tricky_startRandomIdleMove
- * EN v1.0 Address: 0x80145074
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x8014482C
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void tricky_startRandomIdleMove(int obj, int trickyState)
 {
     int val;
@@ -1827,19 +1578,6 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: trickyFoodFn_8014460c
- * EN v1.0 Address: 0x801451DC
- * EN v1.0 Size: 1244b
- * EN v1.1 Address: 0x80144994
- * EN v1.1 Size: 1348b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int trickyFoodFn_8014460c(int objArg, int* trickyState)
 {
     u8* obj = (u8*)objArg;
@@ -2034,13 +1772,6 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80144B50
- * EN v1.0 Address: 0x80144B50
- * EN v1.0 Size: 752b
- */
 extern int ObjHits_GetPriorityHit(int obj, int* out, int a, int b);
 extern f32 lbl_803E2534;
 extern f32 lbl_803E24A8;

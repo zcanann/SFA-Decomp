@@ -1,21 +1,7 @@
 #include "main/audio/vid_get.h"
 
-
 extern u32* vidRoot;
 
-/*
- * --INFO--
- *
- * Function: get_vidlist
- * EN v1.0 Address: 0x80279004
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80279018
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 u32* get_vidlist(u32 key)
 {
     u32* node;
@@ -37,4 +23,3 @@ u32* get_vidlist(u32 key)
     }
     return NULL;
 }
-

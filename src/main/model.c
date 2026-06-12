@@ -14,34 +14,8 @@ extern void gxSetZMode_(u32 enable, int func, u32 update);
 extern void gxSetPeControl_ZCompLoc_(u32 beforeTex);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 
-/*
- * --INFO--
- *
- * Function: gameTextSetWindow
- * EN v1.0 Address: 0x80017434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001746C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 /* moved below GameTextSlot/global declarations */
 
-/*
- * --INFO--
- *
- * Function: FUN_80017460
- * EN v1.0 Address: 0x80017460
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800191FC
- * EN v1.1 Size: 640b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -51,19 +25,6 @@ FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017468
- * EN v1.0 Address: 0x80017468
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001947C
- * EN v1.1 Size: 300b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined2*
 FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -73,37 +34,8 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: textRenderStr
- * EN v1.0 Address: 0x800174D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8001AE18
- * EN v1.1 Size: 1760b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 extern f32 timeDelta;
 
-
-/*
- * --INFO--
- *
- * Function: FUN_80017500
- * EN v1.0 Address: 0x80017500
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8001BD8C
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -111,19 +43,6 @@ FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8001786c
- * EN v1.0 Address: 0x8001786C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80024F40
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined4
 FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
@@ -132,19 +51,6 @@ FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80017998
- * EN v1.0 Address: 0x80017998
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80029260
- * EN v1.1 Size: 344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 undefined*
 FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -158,11 +64,6 @@ int return0_8002969C(void) { return 0x0; }
 int return0_8002A5B8(void) { return 0x0; }
 
 /* ObjModel/model-file accessors. */
-
-
-
-
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -310,12 +211,9 @@ int ObjModel_GetUnpackedResourceSize(u8* resource, int baseSize)
     return baseSize + resource[8] * resource[7];
 }
 
-
 /* Global game-state / text accessors. */
 
-
 int getHudHiddenFrameCount(void);
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -339,7 +237,6 @@ void fn_80026C30(u8* p, u8 v)
     p[0x1a] = v;
 }
 
-
 extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
@@ -348,7 +245,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void textureFree(void* tex);
 
-
 void tailFn_80026c38(u8* p, f32 a, f32 b, f32 c)
 {
     *(f32*)(p + 8) = a;
@@ -356,19 +252,14 @@ void tailFn_80026c38(u8* p, f32 a, f32 b, f32 c)
     *(f32*)(p + 0x10) = c;
 }
 
-
 int alignUp2(int x);
-
 
 extern int getLoadedFileFlags(int);
 extern int randomGetRange(int lo, int hi);
 
-
 void* getCache(void);
 
-
 extern f32 lbl_803DE854;
-
 
 void cacheQueueWait(int sync);
 
@@ -386,12 +277,10 @@ void fn_80026C54(u8* p)
 
 void mm_free(void* p);
 
-
 extern void setGQR7(u32 v);
 
 extern int textureLoad(int id, int flag);
 extern void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
-
 
 asm
 void setGQR6(register u32 v)
@@ -414,7 +303,6 @@ void setGQR7Packed(int a, int b, int c, int d)
 {
     setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
 }
-
 
 #pragma dont_inline off
 int ObjModel_HasActiveBlendChannels(u8* model)
@@ -465,10 +353,8 @@ typedef f32 Mtx[3][4];
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
 
-
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
-
 
 extern int* lbl_803DCB60;
 
@@ -495,7 +381,6 @@ int modelGetAmapSize(int a, int b, int c)
     }
     return size;
 }
-
 
 extern void* getCurrentDataFile(int id);
 extern int lbl_803DCB68;
@@ -774,9 +659,7 @@ int loadModelAndAnimTabs(void)
     return 1;
 }
 
-
 extern void DCFlushRange(void* addr, u32 nBytes);
-
 
 extern void* memcpy(void* dst, const void* src, int n);
 extern u32 PPCMfhid2(void);
@@ -786,9 +669,7 @@ extern void ObjModel_InitScratchBuffers(void);
 extern void setGQR6_2(int a, int b, int c, int d);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 
-
 void copyToCache(void* dst, void* src, u32 count);
-
 
 void ObjModel_InitRenderBuffers(void)
 {
@@ -836,7 +717,6 @@ void modelFn_800292e0(void)
 
 void* animationLoad(int id, int a, int b, int e, int f);
 
-
 void model_multMtxs(u8* model, f32* out)
 {
     u8* hdr = *(u8**)model;
@@ -864,7 +744,6 @@ void model_multMtxs(u8* model, f32* out)
         PSMTXConcat(out, base + j * 0x10, base + j * 0x10);
     }
 }
-
 
 void fn_80026C88(u8* p)
 {
@@ -931,7 +810,6 @@ void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
     }
 }
 
-
 int randomGetRange(int lo, int hi);
 
 void memcpyToCache(void* dst, void* src, u32 count);
@@ -945,7 +823,6 @@ void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* a
 
 extern u8* lbl_80340898[];
 extern u8* lbl_80340880[];
-
 
 #pragma dont_inline on
 void ObjModel_InitScratchBuffers(void)
@@ -963,7 +840,6 @@ void ObjModel_InitScratchBuffers(void)
     lbl_80340880[4] = c + 0x3000;
     lbl_80340880[5] = c + 0x3800;
 }
-
 
 extern void ObjModel_SetBlendChannelTargets(u8* model, int ch, int a, int b, f32 w, int c);
 
@@ -1303,7 +1179,6 @@ void* ObjModel_Load(int id, int arg2, int* outSize)
     return header;
 }
 
-
 extern void ShaderDef_free(int* def);
 extern void model_adjustModelList(void* list, int index);
 extern void model_findIdxInModelList(void* list, void* header, int* outIndex);
@@ -1367,15 +1242,12 @@ void ObjModel_Release(u8* model)
     }
 }
 
-
 void setGQR6_2(int a, int b, int c, int d)
 {
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 
-
 extern void debugPrintf(char* fmt, ...);
-
 
 extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
 extern u8 lbl_80340740[];
@@ -2101,9 +1973,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
 
 extern void Obj_GetWorldPosition(u8* obj, void* x, void* y, void* z);
 
-
 void* mmAlloc(int size, int type, int flag);
-
 
 #pragma opt_loop_invariants on
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
@@ -2318,7 +2188,6 @@ void fn_80026928(int* obj, int b, int* p3)
     }
 }
 
-
 #pragma opt_common_subs off
 void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
 {
@@ -2390,9 +2259,7 @@ typedef struct
     u8* buf;
 } AnimBufSel;
 
-
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
-
 
 extern f32 lbl_802CABB8[];
 
@@ -2455,7 +2322,6 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
 }
 
 extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
-
 
 typedef struct ObjHitBufs
 {
@@ -2577,7 +2443,6 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
         prev += 0x10;
     }
 }
-
 
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXReorder(f32 * src, f32 * dst);
@@ -2730,7 +2595,6 @@ void modelApplyBoneTransforms(int a, int b, u16 c, void* d, void* e, int f)
     cacheQueueWait(0);
 }
 
-
 extern void fn_80026308(int* a, int b, u8* p, u8* q, int d, int i);
 extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 
@@ -2765,7 +2629,6 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
         *(u8*)(p + 0x19) = 1;
     }
 }
-
 
 typedef struct
 {
@@ -3123,7 +2986,6 @@ void ObjModel_BlendSecondaryVertexStream(u8* mtxs, u8* hdr, u8* data, u8** outs,
     }
 }
 
-
 extern f32 lbl_803DE880;
 extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 
@@ -3204,7 +3066,6 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
     outPos[1] *= s;
     outPos[2] *= s;
 }
-
 
 extern void PSMTXCopy(f32 * src, f32 * dst);
 extern void PSMTXTranspose(f32 * src, f32 * dst);

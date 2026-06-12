@@ -4,25 +4,12 @@
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
 
-
-
-/*
- * --INFO--
- *
- * Function: dll_19B_SeqFn
- * EN v1.0 Address: 0x801CBA98
- * EN v1.0 Size: 636b
- */
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
-
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -34,15 +21,12 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
 typedef struct Dll19DPlacement
 {
     u8 pad0[0x19 - 0x0];
     u8 unk19;
     u8 pad1A[0x20 - 0x1A];
 } Dll19DPlacement;
-
 
 typedef struct Dll19DState
 {
@@ -60,38 +44,12 @@ typedef struct Dll19DState
     u8 pad37[0x38 - 0x37];
 } Dll19DState;
 
-
-
-
-
-
 extern undefined4 getLActions();
 
-
-/*
- * --INFO--
- *
- * Function: dll_19B_update
- * EN v1.0 Address: 0x801CBD88
- * EN v1.0 Size: 2124b
- * EN v1.1 Address: 0x801CC33C
- * EN v1.1 Size: 2032b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
 
 void dll_19D_render(void)
 {
@@ -117,8 +75,6 @@ extern f32 lbl_803E51B0;
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
-
-
 
 /*
  * Function: dll_19C_init

@@ -93,13 +93,6 @@ int SnowBike_getObjectTypeId(void) { return 0x3; }
 /* Pattern wrappers. */
 u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x420); }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_mount
- * EN v1.0 Address: 0x801ECD98
- * EN v1.0 Size: 56b
- */
 void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -111,13 +104,6 @@ void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
     *z = ((SnowBikeMountState*)t)->unk408;
 }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_modelMtxFn
- * EN v1.0 Address: 0x801ECDE0
- * EN v1.0 Size: 32b
- */
 void SnowBike_modelMtxFn(int obj, f32* x, f32* y, f32* z)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -160,13 +146,6 @@ extern int GameBit_Set(int bit, int val);
 extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int lbl_80328590[];
 
-/*
- * --INFO--
- *
- * Function: SnowBike_func15
- * EN v1.0 Address: 0x801ECA64
- * EN v1.0 Size: 352b
- */
 void SnowBike_func15(int obj)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -219,13 +198,6 @@ typedef struct DRcradleSnowBikeFlags
     u8 flags : 4;
 } DRcradleSnowBikeFlags;
 
-/*
- * --INFO--
- *
- * Function: fn_801EC7A0
- * EN v1.0 Address: 0x801EC7A0
- * EN v1.0 Size: 208b
- */
 void fn_801EC7A0(int p1, int p2)
 {
     extern void mtxRotateByVec3s(void* mtx, s16* vec); /* #57 */
@@ -261,13 +233,6 @@ void fn_801EC7A0(int p1, int p2)
     mtxRotateByVec3s((void*)(p2 + 0x12c), v.angles);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801EC870
- * EN v1.0 Address: 0x801EC870
- * EN v1.0 Size: 184b
- */
 #pragma dont_inline on
 void fn_801EC870(int p1, register int p2_int)
 {
@@ -305,13 +270,6 @@ void fn_801EC870(int p1, register int p2_int)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: fn_801EC928
- * EN v1.0 Address: 0x801EC928
- * EN v1.0 Size: 148b
- */
 void fn_801EC928(int p1, int p2)
 {
     f32 fa, fz;
@@ -338,13 +296,6 @@ void fn_801EC928(int p1, int p2)
     *(f32*)(p2 + 0x4ac) = fz;
 }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_setType
- * EN v1.0 Address: 0x801ECC94
- * EN v1.0 Size: 244b
- */
 void SnowBike_setType(int obj, int type)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -374,13 +325,6 @@ void SnowBike_setType(int obj, int type)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_func12
- * EN v1.0 Address: 0x801ECC38
- * EN v1.0 Size: 92b
- */
 void SnowBike_func12(int obj, f32* outFloat, s32* outBool)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -391,13 +335,6 @@ void SnowBike_func12(int obj, f32* outFloat, s32* outBool)
     *outBool = *(f32*)(t + 0x414) < lbl_803E5AE8;
 }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_func13
- * EN v1.0 Address: 0x801ECBD4
- * EN v1.0 Size: 100b
- */
 f32 SnowBike_func13(int obj, f32* out)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -414,13 +351,6 @@ f32 SnowBike_func13(int obj, f32* out)
     return r;
 }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_setScale
- * EN v1.0 Address: 0x801ECE0C
- * EN v1.0 Size: 36b
- */
 u32 SnowBike_setScale(int obj)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -432,25 +362,11 @@ u32 SnowBike_setScale(int obj)
     return *(u8*)(t + 0x420);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801EC9BC
- * EN v1.0 Address: 0x801EC9BC
- * EN v1.0 Size: 56b
- */
 void fn_801EC9BC(int obj)
 {
     (*(void (**)(int))((char*)*(int*)gCheckpointInterface + 0x34))(*(int*)&((GameObject*)obj)->extra + 0x28);
 }
 
-/*
- * --INFO--
- *
- * Function: fn_801EC9F4
- * EN v1.0 Address: 0x801EC9F4
- * EN v1.0 Size: 104b
- */
 u32 fn_801EC9F4(int obj)
 {
     int result = (*(int (**)(int))((char*)*(int*)gCheckpointInterface +
@@ -465,13 +381,6 @@ u32 fn_801EC9F4(int obj)
     return (u32)__cntlzw(lbl_803DC0BC - 1 - result) >> 5;
 }
 
-/*
- * --INFO--
- *
- * Function: SnowBike_free
- * EN v1.0 Address: 0x801ECE40
- * EN v1.0 Size: 132b
- */
 void SnowBike_free(int obj)
 {
     char* p;
@@ -505,13 +414,6 @@ extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefi
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 
-/*
- * --INFO--
- *
- * Function: SnowBike_render
- * EN v1.0 Address: 0x801ECEC4
- * EN v1.0 Size: 208b
- */
 void SnowBike_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     void* path;
@@ -534,19 +436,6 @@ void SnowBike_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, und
 #include "main/objhits_types.h"
 #include "main/dll/BW/BWalphaanim.h"
 
-/*
- * --INFO--
- *
- * Function: SnowBike_hitDetect
- * EN v1.0 Address: 0x801ECF94
- * EN v1.0 Size: 128b
- * EN v1.1 Address: 0x801ED20C
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void fn_801EB940(int obj, u8* state);
 extern f32 PSVECMag(f32 * v);
 extern void doRumble(f32 f);

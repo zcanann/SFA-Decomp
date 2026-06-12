@@ -52,47 +52,7 @@ extern f32 lbl_803E1D18;
 #define NATTRACTMODE_RESTRUCT_MOVIE_OFFSET 0x18C
 #define NATTRACTMODE_SOURCE_FILE_OFFSET 0x1B4
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
-/*
- * --INFO--
- *
- * Function: n_rareware_frameStart
- * EN v1.0 Address: 0x80115FBC
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x80115FF0
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 
-/*
- * --INFO--
- *
- * Function: n_rareware_initialise
- * EN v1.0 Address: 0x801160E0
- * EN v1.0 Size: 60b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: n_attractmode_releaseMovieBuffers
- * EN v1.0 Address: 0x8011611C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x801163B8
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void n_attractmode_releaseMovieBuffers(void)
 {
@@ -148,19 +108,6 @@ void n_attractmode_releaseMovieBuffers(void)
 
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: n_attractmode_prepareMovie
- * EN v1.0 Address: 0x80116224
- * EN v1.0 Size: 920b
- * EN v1.1 Address: 0x801164C0
- * EN v1.1 Size: 920b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void n_attractmode_prepareMovie(void)
 {
     extern char sNAttractModeStringBlock[]; /* #57 */
@@ -300,19 +247,6 @@ void n_attractmode_prepareMovie(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: TitleMenu_render
- * EN v1.0 Address: 0x801165BC
- * EN v1.0 Size: 264b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void TitleMenu_render(u8* param_1)
 {
     extern ScreenTransitionInterface** gScreenTransitionInterface; /* #57 */
@@ -421,19 +355,6 @@ extern f32 lbl_803E1D28;
     loadSaveSettings(); \
   } while (0)
 
-/*
- * --INFO--
- *
- * Function: TitleMenu_run
- * EN v1.0 Address: 0x801166C8
- * EN v1.0 Size: 2124b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int TitleMenu_run(void)
 {
     extern u8 shouldShowCredits(void); /* #57 */
@@ -713,19 +634,6 @@ extern void titleScreenPositionElements(f32 x, f32 y);
 
 extern u8* lbl_803DD498;
 
-/*
- * --INFO--
- *
- * Function: TitleMenu_initialise
- * EN v1.0 Address: 0x80116F84
- * EN v1.0 Size: 904b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void TitleMenu_initialise(void)
 {
     extern TitleMenuControl* gScreenTransitionInterface; /* #57 */
@@ -821,4 +729,3 @@ void TitleMenu_initialise(void)
     audioFn_8000b694(0);
     gAttractMovieIdleFrameCount = 0;
 }
-

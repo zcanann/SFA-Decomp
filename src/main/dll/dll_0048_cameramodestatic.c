@@ -20,7 +20,6 @@ typedef struct CameraModeStaticPlacement
     u8 pad22[0x28 - 0x22];
 } CameraModeStaticPlacement;
 
-
 extern uint getAngle();
 extern void* ObjGroup_GetObjects();
 extern f32 sqrtf(f32 x);
@@ -29,139 +28,6 @@ extern u8 framesThisStep;
 extern CameraModeStaticState* lbl_803DD558;
 extern f32 lbl_803E1878;
 
-
-
-/*
- * --INFO--
- *
- * Function: firstPersonDoControls
- * EN v1.0 Address: 0x8010847C
- * EN v1.0 Size: 1012b
- * EN v1.1 Address: 0x80108718
- * EN v1.1 Size: 1024b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: firstPersonEnter
- * EN v1.0 Address: 0x80108870
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80108B18
- * EN v1.1 Size: 596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_copyToCurrent
- * EN v1.0 Address: 0x80108874
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x80108D6C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_free
- * EN v1.0 Address: 0x80108914
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x80108E08
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_update
- * EN v1.0 Address: 0x801089D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80108EC8
- * EN v1.1 Size: 1452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_init
- * EN v1.0 Address: 0x801089D4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80109474
- * EN v1.1 Size: 1396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeDebug_update
- * EN v1.0 Address: 0x80108A04
- * EN v1.0 Size: 848b
- * EN v1.1 Address: 0x80109A14
- * EN v1.1 Size: 816b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeDebug_init
- * EN v1.0 Address: 0x80108D54
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80109D44
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fn_80109B04
- * EN v1.0 Address: 0x80108D58
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80109DA0
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma dont_inline on
 void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 {
@@ -202,20 +68,6 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 }
 #pragma dont_inline reset
 
-
-/*
- * --INFO--
- *
- * Function: CameraModeStatic_update
- * EN v1.0 Address: 0x80108EA8
- * EN v1.0 Size: 608b
- * EN v1.1 Address: 0x80109EE0
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeStatic_update(short* camObj)
 {
     int angle;
@@ -293,19 +145,6 @@ void CameraModeStatic_update(short* camObj)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeStatic_init
- * EN v1.0 Address: 0x80109108
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010A198
- * EN v1.1 Size: 520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeStatic_init(u8* cam, int p2, int* p3)
 {
     GameObject* state;
@@ -376,42 +215,9 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
 
-
-/*
- * --INFO--
- *
- * Function: fn_8010A104
- * EN v1.0 Address: 0x8010910C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010A3A0
- * EN v1.1 Size: 888b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
 
-/*
- * --INFO--
- *
- * Function: fn_8010A47C
- * EN v1.0 Address: 0x80109110
- * EN v1.0 Size: 280b
- * EN v1.1 Address: 0x8010A718
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 void CameraModeStatic_copyToCurrent_nop(void)
 {

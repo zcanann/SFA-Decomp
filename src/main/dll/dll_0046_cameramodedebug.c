@@ -11,7 +11,6 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 
-
 extern u32 getButtonsHeld(int port);
 extern char padGetCX(int port);
 extern char padGetCY(int port);
@@ -30,109 +29,6 @@ extern f32 lbl_803E185C;
 extern f32 lbl_803E1860;
 extern f32 lbl_803E1870;
 
-
-/*
- * --INFO--
- *
- * Function: firstPersonDoControls
- * EN v1.0 Address: 0x8010847C
- * EN v1.0 Size: 1012b
- * EN v1.1 Address: 0x80108718
- * EN v1.1 Size: 1024b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: firstPersonEnter
- * EN v1.0 Address: 0x80108870
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80108B18
- * EN v1.1 Size: 596b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_copyToCurrent
- * EN v1.0 Address: 0x80108874
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x80108D6C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_free
- * EN v1.0 Address: 0x80108914
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x80108E08
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_update
- * EN v1.0 Address: 0x801089D0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80108EC8
- * EN v1.1 Size: 1452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeViewfinder_init
- * EN v1.0 Address: 0x801089D4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80109474
- * EN v1.1 Size: 1396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: CameraModeDebug_update
- * EN v1.0 Address: 0x80108A04
- * EN v1.0 Size: 848b
- * EN v1.1 Address: 0x80109A14
- * EN v1.1 Size: 816b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeDebug_update(short* camObj)
 {
     u8* cam = (u8*)camObj;
@@ -195,19 +91,6 @@ void CameraModeDebug_update(short* camObj)
                                    *(int*)(cam + 48));
 }
 
-/*
- * --INFO--
- *
- * Function: CameraModeDebug_init
- * EN v1.0 Address: 0x80108D54
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80109D44
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void CameraModeDebug_init(void)
 {
     if (lbl_803DD550 == NULL)
@@ -219,67 +102,7 @@ void CameraModeDebug_init(void)
     return;
 }
 
-
-/*
- * --INFO--
- *
- * Function: CameraModeStatic_update
- * EN v1.0 Address: 0x80108EA8
- * EN v1.0 Size: 608b
- * EN v1.1 Address: 0x80109EE0
- * EN v1.1 Size: 696b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: CameraModeStatic_init
- * EN v1.0 Address: 0x80109108
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010A198
- * EN v1.1 Size: 520b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: fn_8010A104
- * EN v1.0 Address: 0x8010910C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8010A3A0
- * EN v1.1 Size: 888b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: fn_8010A47C
- * EN v1.0 Address: 0x80109110
- * EN v1.0 Size: 280b
- * EN v1.1 Address: 0x8010A718
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
 
 void CameraModeDebug_copyToCurrent_nop(void)
 {
@@ -294,7 +117,6 @@ void CameraModeDebug_initialise_nop(void)
 }
 
 void CameraModeStatic_copyToCurrent_nop(void);
-
 
 /* fn_X(lbl); lbl = 0; */
 void CameraModeDebug_free(void)

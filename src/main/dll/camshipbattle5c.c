@@ -1,21 +1,6 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/rom_curve_interface.h"
 
-
-
-/*
- * --INFO--
- *
- * Function: pathcam_buildWindowSamples
- * EN v1.0 Address: 0x8010A590
- * EN v1.0 Size: 1236b
- * EN v1.1 Address: 0x8010A82C
- * EN v1.1 Size: 1220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern f32 lbl_803E1890;
 extern f32 lbl_803E1894;
 extern f32 lbl_803E1898;
@@ -173,13 +158,6 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
 extern char sPathCamNeedTwoControlPointsError[];
 extern void debugPrintf(const char* fmt, ...);
 
-/*
- * --INFO--
- *
- * Function: pathcam_findTaggedNodeWindow
- * EN v1.0 Address: 0x8010AA54
- * EN v1.0 Size: 500b
- */
 void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 {
     int i;
