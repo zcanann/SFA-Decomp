@@ -494,7 +494,10 @@ int cfguardian_updateMain(int obj)
             else
             {
                 f32 w = cfguardianAbs(lbl_803E4144 * ((GameObject*)obj)->anim.velocityY);
-                *(s16*)obj = (f32)*(s16*)obj + w;
+                f32 r;
+                r = (f32)*(s16*)obj;
+                r = r + w;
+                *(s16*)obj = r;
                 sub->moveSpeed = lbl_803E4148;
                 if (GameBit_Get(0x8e9) != 0)
                 {

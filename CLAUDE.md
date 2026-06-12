@@ -1326,23 +1326,6 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     forms per site; the ternary stays right when the result is stored or
     multi-use (the fn_80151DB8/d-site cases), the empty-else wins when the
     sole consumer is a larger expression.
-    ⚠️ **THE SUBSTITUTED FORM IS RESCUED — `static inline` 2-return helper
-    + volatile-laundered compare constant (cfguardian_updateMain → 100,
-    unit 100.0).** `static inline f32 abs2(f32 x) { if (x >= *(volatile
-    f32*)&lbl_ZERO) return x; return -x; }` called with the product as the
-    argument (`w = abs2(k * field);`) lands target's exact shape: the
-    inlined return-join is a multi-def web (ONE web — diamond emitted with
-    bne;b, in-place `fneg fX,fX`, keep-arm empty, product takes the fresh
-    f2 because the web crosses the consumer's conversion), and the
-    volatile read blocks the forward-substitution that otherwise hoists
-    the consumer's conversion above the compare. BOTH halves load-bearing:
-    helper alone → conv hoists above the fcmpo (substitution); volatile
-    ternary alone → SSA-renamed split webs (product squeezes into frA's
-    f1, join forced to f2, visible `fmr` in the keep-arm). Contradicts
-    #92's "a small helper gets simplified away" for the FP-cror case —
-    the 2-return FP keep-or-negate helper's join SURVIVES inlining.
-    Retry list: trickyBallMove dy/dx/dz (current shows the exact split-web
-    fmr shape ×3), drakorhoverpad_updateMain, hightop_stateHandler04.
 
 64. **`int` local + `(u32)` cast in the test for a direct saved-reg `lbz` +
     `cmplwi`.** A `u8 vr = p->byteField; if (vr != 0)` local that lives across
