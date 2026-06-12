@@ -641,9 +641,11 @@ void cfmaincrystal_update(int* obj)
         payload = 0;
         while (ObjMsg_Pop(obj, &msgType, &srcObjId, &payload) != 0)
         {
-            if (msgType == 0x110004)
+            switch (msgType)
             {
+            case 0x110004:
                 ObjMsg_SendToObject((void*)srcObjId, 0x110004, obj, 0);
+                break;
             }
         }
         lbl_803DDB10 = obj;
@@ -775,7 +777,7 @@ void fn_8019D9F0(int* obj)
         p32 = (char*)sub;
         do
         {
-            if (i < 3 && *(s16*)(p16 + 0x30) != 0)
+            if (i <= 2 && *(s16*)(p16 + 0x30) != 0)
             {
                 CrystalBeam* sl = &sub->beams[idx++];
                 sl->b1b = 1;
@@ -820,7 +822,8 @@ void fn_8019D9F0(int* obj)
                 pay.y = *(f32*)(p32 + 0x10);
                 pay.z = *(f32*)(p32 + 0x20);
                 pay.c = i;
-                sub->beams[idx++].b1b = 1;
+                sl = &sub->beams[idx++];
+                sl->b1b = 1;
                 count++;
             }
             p16 += 2;
@@ -828,7 +831,7 @@ void fn_8019D9F0(int* obj)
             i++;
         }
         while (i < 3);
-        if (sub->pylonTimer[0] + (sub->pylonTimer[1] + sub->pylonTimer[2]) < 0x12c
+        if (sub->pylonTimer[0] + sub->pylonTimer[1] + sub->pylonTimer[2] < 0x12c
             && (int)randomGetRange(0, 3) == 0)
         {
             (*gPartfxInterface)->spawnObject(obj, 0x81, NULL, 0, -1, NULL);
@@ -867,8 +870,10 @@ void fn_8019D9F0(int* obj)
         }
         if (sub->charge >= 0x3c)
         {
-            f32 fr = (f32)(sub->charge - 0x3c) / lbl_803E41EC;
-            CrystalBeam* sl = &sub->beams[idx];
+            f32 fr = (f32)(sub->charge - 0x3c);
+            CrystalBeam* sl;
+            fr = fr / lbl_803E41EC;
+            sl = &sub->beams[idx];
             sl->b1b = 1;
             sl->b18 = 0;
             sl->b19 = 0;
@@ -892,7 +897,10 @@ void fn_8019D9F0(int* obj)
         else
         {
             f32 vol = lbl_803E41FC + (f32)count / lbl_803E4200;
-            sub->humVolume = (vol - sub->humVolume) * lbl_803E4204 + sub->humVolume;
+            {
+                f32 d = vol - sub->humVolume;
+                sub->humVolume = d * lbl_803E4204 + sub->humVolume;
+            }
             if (sub->charge >= 0x3c)
             {
                 sub->humVolume = vol;
@@ -901,23 +909,21 @@ void fn_8019D9F0(int* obj)
         }
     }
     i = 0;
-    p16 = (char*)sub;
     do
     {
-        s16 v = *(s16*)(p16 + 0x30);
+        s16 v = sub->pylonTimer[i];
         if (v != 0 && v < 0x80)
         {
-            *(s16*)(p16 + 0x30) = v + framesThisStep;
-            if (v == 1 && *(s16*)(p16 + 0x30) > 1)
+            sub->pylonTimer[i] += framesThisStep;
+            if (v == 1 && sub->pylonTimer[i] > 1)
             {
                 Sfx_PlayFromObject((int)obj, SFXsk_toysq2_c);
             }
-            if (v < 0x1e && *(s16*)(p16 + 0x30) >= 0x1e)
+            if (v < 0x1e && sub->pylonTimer[i] >= 0x1e)
             {
                 Sfx_PlayFromObject((int)obj, SFXsk_trbark1);
             }
         }
-        p16 += 2;
         i++;
     }
     while (i < 3);
