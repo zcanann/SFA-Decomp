@@ -1136,8 +1136,6 @@ void newshadows_getShadowTextureTable16(int* tableOut, int* countOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -1153,6 +1151,8 @@ void newshadows_getShadowTextureTable16(int* tableOut, int* countOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void newshadows_getShadowTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc30;
@@ -1230,8 +1230,6 @@ void newshadows_getSoftShadowTexture(int* textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -1247,8 +1245,6 @@ void newshadows_getSoftShadowTexture(int* textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void newshadows_getShadowRampTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc1c;
@@ -1370,8 +1366,6 @@ double newshadows_getShadowNoiseScale(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -1387,6 +1381,8 @@ double newshadows_getShadowNoiseScale(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_bindShadowRenderTexture(int textureSlot)
 {
     if (*(char*)(DAT_803ddbfc + 0x48) == '\0')
@@ -1668,8 +1664,6 @@ void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -1685,8 +1679,6 @@ void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void newshadows_freeShadowDirectionTexture(void)
 {
     FUN_80017814(DAT_803ddc3c);

@@ -1048,9 +1048,9 @@ typedef struct
 extern GameTextStateElem lbl_8033AF40[];
 
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 int gameTextGetState(int i)
 {
     return lbl_8033AF40[i].state;
@@ -2445,8 +2445,8 @@ typedef struct GameTextCharset
     int status;
 } GameTextCharset;
 
-#pragma peephole on
 #pragma dont_inline off
+#pragma peephole on
 void setLanguageFn_8001ad64(void* reqp)
 {
     u8* req = (u8*)reqp;
@@ -3105,9 +3105,9 @@ typedef struct SubtitleTextEntry
     char** strs;
 } SubtitleTextEntry;
 
-#pragma peephole off
 #pragma opt_strength_reduction on
 #pragma optimization_level 1
+#pragma peephole off
 void subtitleBuildLineTable(void)
 {
     int total;

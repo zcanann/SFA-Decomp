@@ -748,8 +748,8 @@ void setMatrixFromObjectPos(f32* m, u8* p)
 
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 
-#pragma peephole off
 #pragma dont_inline on
+#pragma peephole off
 void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 {
     extern f32 __kernel_sin(f32);
@@ -855,8 +855,8 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void* timerp)
 }
 
 
-#pragma peephole on
 #pragma fp_contract on
+#pragma peephole on
 void vecRotateZXY(u8* p, f32* v)
 {
     f32 s2;

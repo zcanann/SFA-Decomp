@@ -104,7 +104,6 @@ void vfpblock1_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 
 /*
  * --INFO--
@@ -119,6 +118,7 @@ void vfpblock1_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void FUN_801fc978(int param_1)
 {
     FUN_8003b818(param_1);
@@ -1115,14 +1115,6 @@ void vfpplatform_update(int obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -1149,6 +1141,8 @@ void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling on
+#pragma peephole on
 void dll_224_release_nop(void)
 {
 }
@@ -1202,13 +1196,9 @@ void dll_224_update(void* param_1)
     }
     spellStoneUseFn_801fd270(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
-#pragma scheduling off
-#pragma peephole off
 void dll_224_init(void* obj, void* other)
 {
     s16* extra = ((GameObject*)obj)->extra;
@@ -1221,6 +1211,4 @@ void dll_224_init(void* obj, void* other)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 

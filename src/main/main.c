@@ -176,7 +176,6 @@ void vfplavastar_release(void)
     Resource_Release(lbl_803DDCD8);
     lbl_803DDCD8 = NULL;
 }
-#pragma scheduling reset
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 extern void objRenderFn_80041018(void* obj);
@@ -192,7 +191,6 @@ typedef struct
 } VfpFlamePointData;
 
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
-#pragma scheduling off
 int fn_801FD4A8(void* obj, int x)
 {
     u8* extra = ((GameObject*)obj)->extra;
@@ -204,7 +202,6 @@ int fn_801FD4A8(void* obj, int x)
     }
     return 0;
 }
-#pragma scheduling reset
 
 int dbegg_setScale(int obj);
 
@@ -212,26 +209,21 @@ int dbegg_setScale(int obj);
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
 
 
-#pragma scheduling off
 void vfplavastar_initialise(void)
 {
     lbl_803DDCD8 = NULL;
     lbl_803DDCD8 = Resource_Acquire(0xa6, 1);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void vfplavastar_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
 }
-#pragma scheduling reset
 
 extern void fn_8003B608(int r, int g, int b);
 extern f32 lbl_803E6168;
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
 #pragma peephole off
 void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -241,14 +233,10 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E6168);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E61CC;
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
-#pragma scheduling off
-#pragma peephole off
 
 void vfpflamepoint_init(int* obj, s8* def)
 {
@@ -259,8 +247,6 @@ void vfpflamepoint_init(int* obj, s8* def)
     d->checkGameBit = *(s16*)(def + 0x20);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
@@ -292,8 +278,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* objFindTexture(int obj, int idx, int p3);
 extern f32 mathSinf(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
 void vfpflamepoint_update(int obj)
 {
     VfpFlamePointData* d;
@@ -340,10 +324,8 @@ void vfpflamepoint_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void fn_801FD6B4(int obj)
 {
     u8* extra;
@@ -422,9 +404,7 @@ void fn_801FD6B4(int obj)
         v;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void VFP_lavapool_init(int obj, int def)
 {
@@ -446,11 +426,7 @@ void VFP_lavapool_init(int obj, int def)
     *(f32*)(extra + 0x10) = (f32)(int)
     randomGetRange(0x32, 100);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void vfplavastar_update(int obj)
 {
     int def;
@@ -478,11 +454,7 @@ void vfplavastar_update(int obj)
     }
     *(u8*)(extra + 4) ^= 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void vfplavastar_init(int obj, int def)
 {
     f32* extra;
@@ -499,11 +471,7 @@ void vfplavastar_init(int obj, int def)
     extra[2] = (f32)(int)
     randomGetRange(100, 200);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void vfpspellplace_update(int obj)
 {
     LaserObject* spellPlace;
@@ -547,11 +515,7 @@ void vfpspellplace_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void vfpspellplace_init(int obj, s8* def)
 {
     LaserObject* spellPlace;
@@ -572,6 +536,4 @@ void vfpspellplace_init(int obj, s8* def)
     }
     spellPlace->objectFlags |= LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 

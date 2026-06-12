@@ -2922,8 +2922,6 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -2939,6 +2937,8 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80045328(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, uint param_11, uint param_12,

@@ -859,8 +859,8 @@ extern void* gCarryableInterface;
 extern void* gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 
-#pragma peephole on
 #pragma dont_inline on
+#pragma peephole on
 void init(void)
 {
     u8 audioDone;
@@ -1062,8 +1062,8 @@ extern int lbl_803DCAD0;
 extern f32 lbl_803DE7B0;
 extern f32 lbl_803DE7B8;
 
-#pragma peephole off
 #pragma dont_inline off
+#pragma peephole off
 void gameUpdate(void)
 {
     Obj_GetPlayerObject();
