@@ -6,6 +6,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
+#include "main/objhits.h"
 
 typedef struct HagabonPlacement
 {
@@ -24,10 +25,6 @@ extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
 extern undefined4 DAT_803de6d0;
@@ -266,7 +263,10 @@ void fn_8014E1DC(int obj, HagabonState* state)
 
 void hagabon_hitDetect(int obj)
 {
-    if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+    ObjHitsPriorityState* hitState;
+
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    if (hitState->lastHitObject != 0)
     {
         Sfx_PlayFromObject(obj, SFXand_swipe2);
     }
