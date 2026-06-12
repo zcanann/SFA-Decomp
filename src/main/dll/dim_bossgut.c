@@ -1,3 +1,195 @@
+/* === moved from main/dll/NW/NWmammoth.c [801D1BFC-801D1E24) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/ediblemushroom.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/objanim_internal.h"
+
+#include "main/dll/NW/ediblemushroom_state.h"
+
+
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80017688();
+extern undefined4 GameBit_Set(int eventId, int value);
+extern double FUN_80017714();
+extern undefined4 FUN_8001771c();
+extern undefined4 FUN_80017a28();
+extern byte FUN_80017a34();
+extern undefined4 FUN_80017a3c();
+extern int FUN_80017a90();
+extern int FUN_80017a98();
+extern undefined4 FUN_800305f8();
+extern undefined4 ObjHits_DisableObject();
+extern void ObjHits_EnableObject(int obj);
+extern int ObjHits_GetPriorityHit();
+extern undefined8 ObjGroup_RemoveObject();
+extern int ObjMsg_Pop();
+extern undefined4 ObjMsg_AllocQueue();
+extern u32 randomGetRange(int min, int max);
+extern int FUN_800620e8();
+extern int FUN_800632f4();
+extern undefined4 FUN_80081118();
+extern undefined4 edibleMushroomFn_801d083c();
+extern undefined4 FUN_80286840();
+extern undefined4 FUN_8028688c();
+extern double FUN_80293900();
+
+extern undefined4* DAT_803dd71c;
+extern f64 DOUBLE_803e5f58;
+extern f32 FLOAT_803e5f20;
+extern f32 FLOAT_803e5f2c;
+extern f32 FLOAT_803e5f38;
+extern f32 FLOAT_803e5f40;
+extern f32 FLOAT_803e5f78;
+extern f32 FLOAT_803e5f7c;
+extern f32 FLOAT_803e5f80;
+extern f32 FLOAT_803e5f84;
+extern f32 FLOAT_803e5f88;
+extern f32 FLOAT_803e5f8c;
+
+extern void* Obj_GetPlayerObject(void);
+extern u32 GameBit_Get(int bit);
+
+extern f32 lbl_803E5288;
+extern f32 lbl_803E52A0;
+extern f32 lbl_803E52A8;
+extern f64 lbl_803E52C0;
+extern f32 lbl_803E52E0;
+extern f32 lbl_803E52E4;
+extern f32 lbl_803E52E8;
+extern f32 lbl_803E52EC;
+extern f32 lbl_803E52F0;
+extern f32 lbl_803E52F4;
+extern f32 lbl_803E52F8;
+extern f32 lbl_803E52FC;
+extern f32 lbl_803E5300;
+extern f32 lbl_803E5304;
+extern f64 lbl_803E5308;
+
+/*
+ * --INFO--
+ *
+ * Function: ediblemushroom_init
+ * EN v1.0 Address: 0x801D1978
+ * EN v1.0 Size: 644b
+ */
+void ediblemushroom_init(int obj, int aux);
+
+/* Keep the cross-TU bl: target calls this; once it lands in the
+ * EnemyMushroom TU (dim_bossgut.c) alongside its callers, dont_inline stops
+ * MWCC auto-inlining it into enemymushroom_init/update. */
+#pragma dont_inline on
+void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
+{
+    extern void ObjHits_RefreshObjectState(int obj); /* #57 */
+    EnemyMushroomMapData* mapData;
+    u32 randomValue;
+    f32 fr;
+
+    mapData = obj->mapData;
+    obj->rotZ = (s16)randomGetRange(-0x5dc, 0x5dc);
+    obj->rotY = (s16)randomGetRange(-0x5dc, 0x5dc);
+    obj->rotX = (s16)randomGetRange(-0x5dc, 0x5dc);
+    obj->alpha = 0xff;
+    obj->flags = (s16)(obj->flags & ~0x4000);
+    obj->posX = mapData->posX;
+    obj->posY = mapData->posY;
+    obj->posZ = mapData->posZ;
+    if (enableTimer != 0)
+    {
+        obj->scale = lbl_803E52F8;
+        state->timer = lbl_803E52FC;
+        randomValue = randomGetRange(0, 100);
+        fr = (f32)(s32)
+        randomValue;
+        fr = lbl_803E5300 + fr;
+        state->riseDuration = fr;
+        randomValue = randomGetRange(-100, 100);
+        fr = (f32)(s32)
+        randomValue;
+        fr = lbl_803E5304 * fr + state->baseScale;
+        state->heightTarget = fr;
+        state->riseStep = state->heightTarget / state->riseDuration;
+    }
+    ObjHits_EnableObject((int)obj);
+    ObjHits_RefreshObjectState((int)obj);
+}
+#pragma dont_inline reset
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_getExtraSize
+ * EN v1.0 Address: 0x801D1D58
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int enemymushroom_getExtraSize(void)
+{
+    return 0x3c;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_getObjectTypeId
+ * EN v1.0 Address: 0x801D1D60
+ * EN v1.0 Size: 20b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int enemymushroom_getObjectTypeId(EnemyMushroomObject* obj)
+{
+    return (*(byte*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1f) << 0xb) | 0x400;
+}
+
+void enemymushroom_free(EnemyMushroomObject* obj)
+{
+    (*gExpgfxInterface)->freeSource((u32)obj);
+    ObjGroup_RemoveObject((int)obj, 3);
+}
+
+extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+extern f32 lbl_803E5310;
+
+void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+{
+    extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
+    void* state = ((GameObject*)obj)->extra;
+    if (visible != 0)
+    {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5310);
+        ObjPath_GetPointWorldPosition(obj, 0, (char*)state + 0x20, (char*)state + 0x24, (char*)state + 0x28, 0);
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_hitDetect
+ * EN v1.0 Address: 0x801D1E20
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void enemymushroom_hitDetect(void)
+{
+}
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -35,7 +227,6 @@ extern byte FUN_80017a34();
 extern undefined4 FUN_80017a3c();
 extern undefined4 FUN_80017a68();
 extern int FUN_80017a98();
-extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_DisableObject();
@@ -118,10 +309,7 @@ void enemymushroom_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int bombplant_getExtraSize(void)
-{
-    return 0x18;
-}
+int bombplant_getExtraSize(void);
 
 /*
  * --INFO--
@@ -136,10 +324,7 @@ int bombplant_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int bombplant_getObjectTypeId(void)
-{
-    return 0;
-}
+int bombplant_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -154,9 +339,7 @@ int bombplant_getObjectTypeId(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplant_free(void)
-{
-}
+void bombplant_free(void);
 
 /*
  * --INFO--
@@ -171,14 +354,11 @@ void bombplant_free(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplant_hitDetect(void)
-{
-}
+void bombplant_hitDetect(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5370;
-extern void objRenderFn_8003b8f4(f32);
-void bombplant_render(void) { objRenderFn_8003b8f4(lbl_803E5370); }
+void bombplant_render(void);
 
 extern void* getTrickyObject(void);
 extern void trickyImpress(void* trickyObj);
@@ -186,39 +366,8 @@ extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, i
 extern void fn_801D29E4(int* obj, int* p2);
 extern f32 lbl_803E5378;
 
-void fn_801D2B70(int* obj, int unused, int* p3)
-{
-    int* p4 = *(int**)&((GameObject*)obj)->anim.placementData;
-    void* trickyObj = getTrickyObject();
-    s16 gbId;
-    int i;
-    if (trickyObj != NULL)
-    {
-        trickyImpress(trickyObj);
-    }
-    Sfx_PlayFromObject(obj, SFXmv_curtainrustle);
-    {
-        int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | 0x40);
-    }
-    spawnExplosion((int)obj, lbl_803E5378, 0, 1, 1, 1, 0, 1, 0);
-    *(u8*)((char*)p3 + 0x14) = 1;
-    *(u8*)((char*)p3 + 0x15) = (u8)(*(u8*)((char*)p3 + 0x15) | 2);
-    gbId = *(s16*)((char*)p4 + 0x1c);
-    if (gbId != -1)
-    {
-        GameBit_Set(gbId, 0);
-    }
-    else
-    {
-        for (i = 0; i < 3; i++)
-        {
-            fn_801D29E4(obj, p3);
-        }
-    }
-}
+void fn_801D2B70(int* obj, int unused, int* p3);
 
-extern void ObjGroup_AddObject(int* obj, int group);
 extern f32 lbl_803E52FC;
 extern f32 lbl_803E5350;
 
@@ -227,6 +376,7 @@ extern f32 lbl_803E5350;
  * optionally resets to spawn, and registers in object group 3. */
 void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag)
 {
+    extern void ObjGroup_AddObject(int* obj, int group); /* #57 */
     EnemyMushroomState* state = obj->state;
     f32 z = lbl_803E52FC;
 
@@ -267,45 +417,9 @@ typedef struct
 
 /* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-void fn_801D29E4(int* obj, int* p2)
-{
-    int* spore;
-    int* base = *(int**)&((GameObject*)obj)->anim.placementData;
-
-    if (Obj_IsLoadingLocked())
-    {
-        MushSpawnBuild bd;
-        f32 mtx[4][4];
-        f32 tz, ty, tx;
-        f32 sx;
-
-        spore = Obj_AllocObjectSetup(0x24, 0x198);
-        bd.pos[0] = ((GameObject*)obj)->anim.rotX;
-        bd.pos[1] = ((GameObject*)obj)->anim.rotY;
-        bd.pos[2] = ((GameObject*)obj)->anim.rotZ;
-        bd.v[0] = lbl_803E536C;
-        bd.v[1] = lbl_803E536C;
-        bd.v[2] = lbl_803E536C;
-        bd.w = lbl_803E5370;
-        setMatrixFromObjectPos(mtx, &bd);
-        Matrix_TransformPoint(mtx, lbl_803E536C, lbl_803E5370, lbl_803E536C, &tx, &ty, &tz);
-        sx = lbl_803E5374 * tx;
-        bd.v[0] = sx;
-        bd.v[1] = lbl_803E5374 * ty;
-        bd.v[2] = lbl_803E5374 * tz;
-        *(f32*)((char*)spore + 0x8) = ((GameObject*)obj)->anim.localPosX + sx;
-        *(f32*)((char*)spore + 0xc) = ((GameObject*)obj)->anim.localPosY + bd.v[1];
-        *(f32*)&((ObjDef*)spore)->jointData = ((GameObject*)obj)->anim.localPosZ + bd.v[2];
-        *(u8*)((char*)spore + 0x5) = 1;
-        *(u8*)((char*)spore + 0x4) = 2;
-        *(s16*)((char*)spore + 0x1a) = (s16)((s8) * (s8*)((char*)base + 0x1e) << 8);
-        *(s16*)((char*)spore + 0x1c) = ((GameObject*)obj)->anim.rotX;
-        Obj_SetupObject(spore, 5, -1, -1, 0);
-    }
-}
+void fn_801D29E4(int* obj, int* p2);
 
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-extern void ObjHits_RefreshObjectState(int* obj);
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5358;
 extern f32 lbl_803E535C;
@@ -313,54 +427,9 @@ extern f32 lbl_803E535C;
 /* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
-int bombplant_SeqFn(int* obj)
-{
-    float* state = ((GameObject*)obj)->extra;
-
-    if (((EnemyMushroomState*)state)->resetToSpawn != 0)
-    {
-        int* src;
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-        src = *(int**)&((GameObject*)obj)->anim.placementData;
-        ((GameObject*)obj)->anim.alpha = 0xff;
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)src)->unk8;
-        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)src)->unkC;
-        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)src)->unk10;
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5358;
-        ((EnemyMushroomState*)state)->riseDuration = lbl_803E535C;
-        ((EnemyMushroomState*)state)->heightTarget = ((EnemyMushroomState*)state)->baseScale;
-        ((EnemyMushroomState*)state)->riseStep = ((EnemyMushroomState*)state)->heightTarget / ((EnemyMushroomState*)
-            state)->riseDuration;
-        ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->riseDuration;
-        ObjHits_RefreshObjectState(obj);
-        ((EnemyMushroomState*)state)->resetToSpawn = 0;
-        ((EnemyMushroomState*)state)->flags = (u8)(((EnemyMushroomState*)state)->flags | 2);
-    }
-    else
-    {
-        int* base;
-        u8 flags;
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
-        base = *(int**)&((GameObject*)obj)->anim.placementData;
-        flags = ((EnemyMushroomState*)state)->flags;
-        if (flags & 0x2)
-        {
-            int v;
-            ((EnemyMushroomState*)state)->flags = (u8)(flags & ~0x2);
-            v = ((BombplantPlacement*)base)->unk1A + randomGetRange(-0x32, 0x32);
-            ((EnemyMushroomState*)state)->timer = (f32)v;
-        }
-        if (((GameObject*)obj)->objectFlags & 0x800)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
-        }
-    }
-    return 0;
-}
+int bombplant_SeqFn(int* obj);
 
 extern int objIsFrozen(int* obj);
-extern f32 Vec_distance(f32 * a, f32 * b);
 extern int EmissionController_IsLingering(u8 * player);
 extern int fn_80296448(u8 * player);
 extern f32 fn_8029610C(u8 * player);
@@ -399,6 +468,7 @@ typedef struct
  * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
 void enemymushroom_update(int* obj)
 {
+    extern f32 Vec_distance(f32 * a, f32 * b); /* #57 */
     char* state = ((GameObject*)obj)->extra;
     u8* player;
     int* src;

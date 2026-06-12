@@ -985,28 +985,22 @@ main/dll/projball1D8.c:
 	.text       start:0x801CFD68 end:0x801D083C
 
 main/dll/NW/NWsfx.c:
-	.text       start:0x801D083C end:0x801D16EC
-
-main/dll/NW/dll_1DB.c:
-	.text       start:0x801D16EC end:0x801D1978
+	.text       start:0x801D083C end:0x801D1BFC
 
 main/dll/NW/dll_1DC.c:
-	.text       start:0x801D1978 end:0x801D1978
-
-main/dll/NW/NWmammoth.c:
-	.text       start:0x801D1978 end:0x801D1E24
+	.text       start:0x801D1BFC end:0x801D1BFC
 
 main/dll/dim_boss.c:
-	.text       start:0x801D1E24 end:0x801D1E24
+	.text       start:0x801D1BFC end:0x801D1BFC
 
 main/dll/dim_bossgut.c:
-	.text       start:0x801D1E24 end:0x801D2C54
+	.text       start:0x801D1BFC end:0x801D286C
 
 main/dll/SH/SHkillermushroom.c:
-	.text       start:0x801D2C54 end:0x801D383C
+	.text       start:0x801D286C end:0x801D3378
 
 main/dll/SH/SHrocketmushroom.c:
-	.text       start:0x801D383C end:0x801D4364
+	.text       start:0x801D3378 end:0x801D4364
 
 main/dll/SH/SHspore.c:
 	.text       start:0x801D4364 end:0x801D4CD0

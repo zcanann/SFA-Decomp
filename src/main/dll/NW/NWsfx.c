@@ -13,7 +13,6 @@ extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, i
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
                               int p7, int p8, int p9, int p10);
 
-extern void* Obj_GetPlayerObject(void);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -24,7 +23,6 @@ extern void ObjHits_ClearSourceMask(u8* obj, int mask);
 extern void ObjHits_SetSourceMask(u8* obj, int mask);
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern undefined4 ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
@@ -98,6 +96,8 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
  */
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
+    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     u8 sval;
     int curMove;
     int moveId;
@@ -622,3 +622,380 @@ void ediblemushroom_hitDetect(u8* obj)
         }
     }
 }
+
+/* === merged from main/dll/NW/dll_1DB.c [801D16EC-801D1978) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/dll/NW/dll_1DB.h"
+#include "main/game_object.h"
+
+typedef struct EdiblemushroomPlacement
+{
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+} EdiblemushroomPlacement;
+
+
+#include "main/dll/NW/ediblemushroom_state.h"
+
+
+extern f32 lbl_803E52A8;
+
+extern u8* getTrickyObject(void);
+extern int objIsFrozen(u8 * self);
+extern void gameBitIncrement(s16 bit);
+extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
+extern void Sfx_PlayFromObject(u8* obj, int sfxId);
+extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern void Obj_StartModelFadeIn(u8* obj, int frames);
+extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
+extern int ObjHits_GetPriorityHit(u8* obj, int* outOther, int a, int b);
+extern f32 sqrtf(f32 x);
+
+
+/*
+ * --INFO--
+ *
+ * Function: ediblemushroom_update
+ * EN v1.0 Address: 0x801D16EC
+ * EN v1.0 Size: 652b
+ */
+void ediblemushroom_update(u8* self)
+{
+    extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
+    extern void ObjHits_DisableObject(u8 * obj); /* #57 */
+    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern u8* Obj_GetPlayerObject(void); /* #57 */
+    u8* state;
+    u8* other;
+    u8* player;
+    u8* enemy;
+    int hitObj;
+    int msg;
+    int hitKind;
+    f32 distState;
+    f32 distEnemy;
+
+    state = (u8*)*(int*)&((GameObject*)self)->extra;
+    other = (u8*)*(int*)&((GameObject*)self)->anim.placementData;
+    player = Obj_GetPlayerObject();
+    enemy = getTrickyObject();
+
+    if (objIsFrozen(self) != 0) goto end;
+
+    if (state[0x136] == 8)
+    {
+        while (ObjMsg_Pop(self, &msg, 0, 0) != 0)
+        {
+            if (((u32)msg - 0x70000) != 0xB) continue;
+            ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | 0x4000);
+            ObjHits_DisableObject(self);
+            gameBitIncrement(((EdiblemushroomState*)state)->eventId);
+            GameBit_Set(0x12E, 0);
+            if (((GameObject*)self)->anim.seqId == 0x658)
+            {
+                itemPickupDoParticleFx(self, lbl_803E52A8, 0xFF, 0x28);
+            }
+            else
+            {
+                itemPickupDoParticleFx(self, lbl_803E52A8, 6, 0x28);
+            }
+            Sfx_PlayFromObject(self, SFXen_waterblock_stop);
+        }
+        goto end;
+    }
+
+    if (state[0x139] != 0)
+    {
+        ((GameObject*)self)->anim.localPosX = ((EdiblemushroomPlacement*)other)->unk8;
+        ((GameObject*)self)->anim.localPosY = ((EdiblemushroomPlacement*)other)->unkC;
+        ((GameObject*)self)->anim.localPosZ = ((EdiblemushroomPlacement*)other)->unk10;
+        ((GameObject*)self)->anim.alpha = 0xFF;
+        state[0x139] = 0;
+    }
+
+    ((EdiblemushroomState*)state)->unk10C = ((EdiblemushroomState*)state)->unk108;
+    distState = vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(self + 0x18));
+    if (enemy == NULL)
+    {
+        ((EdiblemushroomState*)state)->unk108 = sqrtf(distState);
+    }
+    else
+    {
+        distEnemy = vec3f_distanceSquared((f32*)(enemy + 0x18), (f32*)(self + 0x18));
+        if (distState < distEnemy)
+        {
+            ((EdiblemushroomState*)state)->unk108 = sqrtf(distState);
+        }
+        else
+        {
+            ((EdiblemushroomState*)state)->unk108 = sqrtf(distEnemy);
+        }
+        if (((EdiblemushroomState*)state)->unk108 < (f32)(u32)other[0x1F]
+        )
+        {
+            (*(void (**)(u8*, u8*, int, int))(*(int*)*(int*)(enemy + 0x68) + 0x28))
+                (enemy, self, 0, 1);
+        }
+    }
+
+    hitKind = ObjHits_GetPriorityHit(self, &hitObj, 0, 0);
+    if (hitKind != 0)
+    {
+        if (hitKind == 0x10)
+        {
+            Obj_StartModelFadeIn(self, 0x12C);
+        }
+        else
+        {
+            Obj_SetModelColorFadeRecursive(self, 0xF, 0xC8, 0, 0, 1);
+            if (*(s16*)((u8*)hitObj + 0x46) != 0x416)
+            {
+                if ((state[0x137] & 0x10) == 0)
+                {
+                    Sfx_PlayFromObject(self, SFXmv_curtainloop16);
+                }
+                state[0x137] = (u8)(state[0x137] | 0x10);
+            }
+        }
+    }
+    edibleMushroomFn_801d083c(self, state, other);
+
+end:
+    ;
+}
+
+/* === moved from main/dll/NW/NWmammoth.c [801D1978-801D1BFC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/ediblemushroom.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/objanim_internal.h"
+
+#include "main/dll/NW/ediblemushroom_state.h"
+
+
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80017688();
+extern double FUN_80017714();
+extern undefined4 FUN_8001771c();
+extern undefined4 FUN_80017a28();
+extern byte FUN_80017a34();
+extern undefined4 FUN_80017a3c();
+extern int FUN_80017a90();
+extern int FUN_80017a98();
+extern undefined4 FUN_8002fc3c();
+extern undefined4 FUN_800305f8();
+extern void ObjHits_EnableObject(int obj);
+extern void ObjHits_RefreshObjectState(int obj);
+extern int ObjHits_GetPriorityHit();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
+extern undefined4 ObjMsg_AllocQueue();
+extern u32 randomGetRange(int min, int max);
+extern int FUN_800620e8();
+extern int FUN_800632f4();
+extern undefined4 FUN_80081118();
+extern undefined4 FUN_80286840();
+extern undefined4 FUN_8028688c();
+extern double FUN_80293900();
+
+extern undefined4* DAT_803dd71c;
+extern f64 DOUBLE_803e5f58;
+extern f32 FLOAT_803e5f20;
+extern f32 FLOAT_803e5f2c;
+extern f32 FLOAT_803e5f38;
+extern f32 FLOAT_803e5f40;
+extern f32 FLOAT_803e5f78;
+extern f32 FLOAT_803e5f7c;
+extern f32 FLOAT_803e5f80;
+extern f32 FLOAT_803e5f84;
+extern f32 FLOAT_803e5f88;
+extern f32 FLOAT_803e5f8c;
+
+extern u32 GameBit_Get(int bit);
+extern f32 Vec_distance(int a, int b);
+
+extern f32 lbl_803E5288;
+extern f32 lbl_803E52A0;
+extern f32 lbl_803E52A8;
+extern f64 lbl_803E52C0;
+extern f32 lbl_803E52E0;
+extern f32 lbl_803E52E4;
+extern f32 lbl_803E52E8;
+extern f32 lbl_803E52EC;
+extern f32 lbl_803E52F0;
+extern f32 lbl_803E52F4;
+extern f32 lbl_803E52F8;
+extern f32 lbl_803E52FC;
+extern f32 lbl_803E5300;
+extern f32 lbl_803E5304;
+extern f64 lbl_803E5308;
+
+/*
+ * --INFO--
+ *
+ * Function: ediblemushroom_init
+ * EN v1.0 Address: 0x801D1978
+ * EN v1.0 Size: 644b
+ */
+void ediblemushroom_init(int obj, int aux)
+{
+    extern undefined4 ObjHits_DisableObject(); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
+    int state;
+    int player;
+    int local_x;
+    ObjAnimEventList animEvents;
+    f32 dist;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    local_x = 0x19;
+    player = (int)Obj_GetPlayerObject();
+
+    ((GameObject*)obj)->animEventCallback = (void*)EdibleMushroom_SeqFn;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+
+    if (GameBit_Get(*(short*)(aux + 0x1a)) != 0)
+    {
+        ((EdiblemushroomState*)state)->unk136 = 8;
+        ObjHits_DisableObject(obj);
+        ((GameObject*)obj)->anim.flags = (short)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+    }
+
+    ((GameObject*)obj)->anim.modelState->flags |= 0x810;
+
+    ((EdiblemushroomState*)state)->unk110 = lbl_803E52E0;
+    ((EdiblemushroomState*)state)->unk114 = lbl_803E52E4 *
+        ((f32) * (u8*)(aux + 0x1c) / lbl_803E52E8);
+
+    ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, *(f32*)&lbl_803E52A8, &animEvents);
+    ((EdiblemushroomState*)state)->unk118 = animEvents.rootDeltaX;
+    if (((EdiblemushroomState*)state)->unk118 < lbl_803E5288)
+    {
+        ((EdiblemushroomState*)state)->unk118 = -((EdiblemushroomState*)state)->unk118;
+    }
+    ((EdiblemushroomState*)state)->unk118 = ((EdiblemushroomState*)state)->unk118 * ((EdiblemushroomState*)state)->
+        unk110;
+    ((EdiblemushroomState*)state)->unk118 = ((EdiblemushroomState*)state)->unk118 + lbl_803E52A0;
+
+    ObjAnim_SetCurrentMove(obj, 4, lbl_803E5288, 0);
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, *(f32*)&lbl_803E52A8, &animEvents);
+    ((EdiblemushroomState*)state)->unk11C = animEvents.rootDeltaZ;
+    if (((EdiblemushroomState*)state)->unk11C < lbl_803E5288)
+    {
+        ((EdiblemushroomState*)state)->unk11C = -((EdiblemushroomState*)state)->unk11C;
+    }
+    ((EdiblemushroomState*)state)->unk11C = ((EdiblemushroomState*)state)->unk11C + lbl_803E52A0;
+
+    ObjMsg_AllocQueue(obj, 1);
+
+    {
+        int v = *(u8*)(aux + 0x18);
+        switch (v)
+        {
+        case 4:
+        case 5:
+            ((EdiblemushroomState*)state)->unk137 |= 2;
+            (*gRomCurveInterface)->initCurve((void*)state, (void*)obj, lbl_803E52EC, &local_x, -1);
+            ((GameObject*)obj)->anim.localPosX = ((EdiblemushroomState*)state)->unk68;
+            ((GameObject*)obj)->anim.localPosZ = ((EdiblemushroomState*)state)->unk70;
+            break;
+        }
+    }
+
+    ((EdiblemushroomState*)state)->unk120 = lbl_803E52F0;
+
+    if ((void*)player != NULL)
+    {
+        dist = Vec_distance(player + 0x18, obj + 0x18);
+        ((EdiblemushroomState*)state)->unk108 = dist;
+        ((EdiblemushroomState*)state)->unk10C = dist;
+    }
+    else
+    {
+        {
+            f32 z = lbl_803E52F4;
+            ((EdiblemushroomState*)state)->unk108 = z;
+            ((EdiblemushroomState*)state)->unk10C = z;
+        }
+    }
+
+    ObjGroup_AddObject(obj, 0x31);
+    ObjGroup_AddObject(obj, 0x47);
+
+    if (((GameObject*)obj)->anim.seqId == 0x658)
+    {
+        *(short*)(state + 0x134) = 0x66d;
+    }
+    else
+    {
+        *(short*)(state + 0x134) = 0xc1;
+    }
+}
+
+/* Keep the cross-TU bl: target calls this; once it lands in the
+ * EnemyMushroom TU (dim_bossgut.c) alongside its callers, dont_inline stops
+ * MWCC auto-inlining it into enemymushroom_init/update. */
+#pragma dont_inline on
+void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer);
+#pragma dont_inline reset
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_getExtraSize
+ * EN v1.0 Address: 0x801D1D58
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int enemymushroom_getExtraSize(void);
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_getObjectTypeId
+ * EN v1.0 Address: 0x801D1D60
+ * EN v1.0 Size: 20b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int enemymushroom_getObjectTypeId(EnemyMushroomObject* obj);
+
+void enemymushroom_free(EnemyMushroomObject* obj);
+
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+extern f32 lbl_803E5310;
+
+void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible);
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_hitDetect
+ * EN v1.0 Address: 0x801D1E20
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void enemymushroom_hitDetect(void);

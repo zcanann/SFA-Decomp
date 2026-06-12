@@ -1,3 +1,328 @@
+/* === moved from main/dll/SH/SHkillermushroom.c [801D3378-801D383C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/dim_bossgut.h"
+#include "main/dll/SH/SHkillermushroom.h"
+#include "main/objanim.h"
+#include "main/objfx.h"
+#include "main/objseq.h"
+
+typedef struct BombplantsporeStartDriftBurstPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} BombplantsporeStartDriftBurstPlacement;
+
+
+typedef struct BombplantsporeUpdateDriftPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} BombplantsporeUpdateDriftPlacement;
+
+
+#include "main/dll/bombplant_placement.h"
+
+
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_800068c4();
+extern void ModelLightStruct_free(void* light);
+extern double FUN_80017714();
+extern int randomGetRange(int min, int max);
+extern undefined4 FUN_80017a28();
+extern byte FUN_80017a34();
+extern undefined4 FUN_80017a3c();
+extern int FUN_80017a90();
+extern int FUN_80017a98();
+extern int FUN_8002fc3c();
+extern undefined4 FUN_800305f8();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern undefined4 ObjHits_MarkObjectPositionDirty();
+extern undefined4 ObjHits_RefreshObjectState();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_80081120();
+extern undefined4 FUN_8008112c();
+extern undefined4 FUN_8013651c();
+extern u32 GameBit_Get(int eventId);
+extern void fn_801D2B70(void* obj, void* stateEntry, void* state);
+extern void* Obj_GetPlayerObject(void);
+extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern void Sfx_PlayFromObject(void* obj, int sndId);
+extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId);
+extern void Obj_StartModelFadeIn(void* obj, int duration);
+extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d, int e);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+
+extern f32 lbl_803E5358;
+extern f32 lbl_803E535C;
+extern f64 lbl_803E5360;
+extern f32 lbl_803E5368;
+extern f32 lbl_803E536C;
+extern f32 lbl_803E537C;
+extern f32 lbl_803E5380;
+
+extern u8 lbl_80326D20[];
+extern EffectInterface** gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+extern undefined4 DAT_80327960;
+extern undefined4 DAT_80327964;
+extern undefined4 DAT_80327968;
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f64 DOUBLE_803e5ff8;
+extern f32 FLOAT_803dc074;
+extern f32 FLOAT_803dda58;
+extern f32 FLOAT_803dda5c;
+extern f32 FLOAT_803e5ff0;
+extern f32 FLOAT_803e5ff4;
+extern f32 FLOAT_803e6000;
+extern f32 FLOAT_803e6004;
+extern f32 FLOAT_803e6010;
+extern f32 FLOAT_803e6014;
+extern f32 lbl_803E5390;
+extern f32 lbl_803E5394;
+extern f32 lbl_803E5398;
+extern f32 lbl_803E539C;
+extern f64 lbl_803E53A0;
+extern f32 lbl_803E53A8;
+extern f32 lbl_803E53AC;
+extern f32 lbl_803E53B0;
+extern f32 lbl_803E53B4;
+
+/*
+ * --INFO--
+ *
+ * Function: bombplantspore_getExtraSize
+ * EN v1.0 Address: 0x801D3378
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int bombplantspore_getExtraSize(void)
+{
+    return 0x2b4;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplantspore_free
+ * EN v1.0 Address: 0x801D3380
+ * EN v1.0 Size: 84b
+ * EN v1.1 Address: 0x801D3970
+ * EN v1.1 Size: 84b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void bombplantspore_free(void* obj)
+{
+    void* state;
+    void* light;
+
+    state = ((GameObject*)obj)->extra;
+    (*gExpgfxInterface)->freeSource((u32)obj);
+    light = ((BombPlantSporeState*)state)->light;
+    if (light != NULL)
+    {
+        ModelLightStruct_free(light);
+        ((BombPlantSporeState*)state)->light = NULL;
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplantspore_startDriftBurst
+ * EN v1.0 Address: 0x801D33D4
+ * EN v1.0 Size: 456b
+ * EN v1.1 Address: 0x801D39C4
+ * EN v1.1 Size: 456b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+/* Keep the cross-TU bl: these two drift helpers' only callers
+ * (bombplantspore_update/init) live in the BombPlantSpore TU
+ * (SHrocketmushroom.c). Once they land there, dont_inline stops MWCC
+ * auto-inlining them into bombplantspore_update. */
+#pragma dont_inline on
+void bombplantspore_startDriftBurst(void* obj, void* state)
+{
+    s16 baseAngle;
+    void* params;
+    s32 angleDelta;
+
+    params = ((GameObject*)obj)->anim.placementData;
+    baseAngle = ((BombplantsporeStartDriftBurstPlacement*)params)->unk1C;
+
+    ((BombPlantSporeState*)state)->spinTimer = (f32)(int)
+    randomGetRange(0x1e, 0x2d);
+
+    ((BombPlantSporeState*)state)->driftTimer =
+        ((BombPlantSporeState*)state)->spinTimer + (f32)(int)
+    randomGetRange(0x78, 0xb4);
+
+    ((BombPlantSporeState*)state)->unk2aa =
+        ((BombPlantSporeState*)state)->unk2a8 + (s16)randomGetRange(-2000, 2000);
+    angleDelta = (s32)((BombPlantSporeState*)state)->unk2aa - (u16)baseAngle;
+    if (0x8000 < angleDelta)
+    {
+        angleDelta -= 0xffff;
+    }
+    if (angleDelta < -0x8000)
+    {
+        angleDelta += 0xffff;
+    }
+    if (((BombplantsporeStartDriftBurstPlacement*)params)->unk1A < angleDelta)
+    {
+        ((BombPlantSporeState*)state)->unk2aa = (s16)(
+            baseAngle + ((BombplantsporeStartDriftBurstPlacement*)params)->unk1A);
+    }
+    if (angleDelta < -(s32)((BombplantsporeStartDriftBurstPlacement*)params)->unk1A)
+    {
+        ((BombPlantSporeState*)state)->unk2aa = (s16)(
+            baseAngle - ((BombplantsporeStartDriftBurstPlacement*)params)->unk1A);
+    }
+
+    ((BombPlantSporeState*)state)->driftSpeedTarget = (f32)(int)
+    randomGetRange(900, 0x514) / lbl_803E5390;
+    ((BombPlantSporeState*)state)->driftSpeed = lbl_803E5394;
+
+    ((BombPlantSporeState*)state)->driftSin =
+        mathSinf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2aa) / lbl_803E539C);
+    ((BombPlantSporeState*)state)->driftCos =
+        mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2aa) / lbl_803E539C);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplantspore_updateDrift
+ * EN v1.0 Address: 0x801D359C
+ * EN v1.0 Size: 672b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void bombplantspore_updateDrift(void* obj, void* state)
+{
+    s16 baseAngle;
+    void* params;
+    s32 angleDelta;
+
+    params = ((GameObject*)obj)->anim.placementData;
+    baseAngle = ((BombplantsporeUpdateDriftPlacement*)params)->unk1C;
+
+    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->unk2a0 <= lbl_803E5394)
+    {
+        ((BombPlantSporeState*)state)->spinAngle = (s16)randomGetRange(2000, 4000);
+        if (randomGetRange(0, 1) != 0)
+        {
+            ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
+        }
+        ((BombPlantSporeState*)state)->spinAngle =
+            ((BombPlantSporeState*)state)->spinAngle + ((BombPlantSporeState*)state)->unk2a8;
+        angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
+        if (0x8000 < angleDelta)
+        {
+            angleDelta -= 0xffff;
+        }
+        if (angleDelta < -0x8000)
+        {
+            angleDelta += 0xffff;
+        }
+        if (((BombplantsporeUpdateDriftPlacement*)params)->unk1A < angleDelta)
+        {
+            ((BombPlantSporeState*)state)->spinAngle = (s16)(
+                baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->unk1A);
+        }
+        if (angleDelta < -(s32)((BombplantsporeUpdateDriftPlacement*)params)->unk1A)
+        {
+            ((BombPlantSporeState*)state)->spinAngle = (s16)(
+                baseAngle - ((BombplantsporeUpdateDriftPlacement*)params)->unk1A);
+        }
+        ((BombPlantSporeState*)state)->unk2a0 = lbl_803E53A8;
+    }
+
+    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->unk2a0 <= lbl_803E5394)
+    {
+        ((BombPlantSporeState*)state)->randomPhase =
+            ((BombPlantSporeState*)state)->unk278 + (f32)(int)
+        randomGetRange(-200, 200) / lbl_803E5390;
+        if (((BombPlantSporeState*)state)->randomPhase < lbl_803E53AC)
+        {
+            ((BombPlantSporeState*)state)->randomPhase = lbl_803E53AC;
+        }
+        else if (lbl_803E53B0 < ((BombPlantSporeState*)state)->randomPhase)
+        {
+            ((BombPlantSporeState*)state)->randomPhase = lbl_803E53B0;
+        }
+    }
+
+    angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)((BombPlantSporeState*)state)->unk2a8;
+    if (0x8000 < angleDelta)
+    {
+        angleDelta -= 0xffff;
+    }
+    if (angleDelta < -0x8000)
+    {
+        angleDelta += 0xffff;
+    }
+    ((BombPlantSporeState*)state)->unk2a8 += (s16)((angleDelta * (s32)framesThisStep) >> 4);
+    ((BombPlantSporeState*)state)->unk278 =
+        lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->unk278) *
+        timeDelta +
+        ((BombPlantSporeState*)state)->unk278;
+
+    ((BombPlantSporeState*)state)->driftBaseX =
+        ((BombPlantSporeState*)state)->unk278 *
+        mathSinf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2a8) / lbl_803E539C);
+    ((BombPlantSporeState*)state)->driftBaseZ =
+        ((BombPlantSporeState*)state)->unk278 *
+        mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2a8) / lbl_803E539C);
+}
+#pragma dont_inline reset
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_init
+ * EN v1.0 Address: 0x801D3238
+ * EN v1.0 Size: 320b
+ */
+void bombplant_init(void* obj, void* param, int flag);
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_update
+ * EN v1.0 Address: 0x801D2C54
+ * EN v1.0 Size: 1508b
+ */
+void bombplant_update(void* obj);
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -9,13 +334,9 @@
 
 
 extern uint GameBit_Get(int bit);
-extern int GameBit_Set(int bit, int value);
 extern int gameBitDecrement(int bit);
 extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(void* obj, int id);
-extern void ObjHits_DisableObject(void* obj);
-extern void ObjHits_EnableObject(void* obj);
-extern void* ObjHits_GetPriorityHitWithPosition(void* obj, int* hit, void* pos, int flags);
 extern void* ObjHits_GetPriorityHit(void* obj, void* pos, int p3, int p4);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
@@ -82,6 +403,8 @@ extern f32 lbl_803E53F4;
 
 void bombplantspore_update(void* obj)
 {
+    extern void ObjHits_EnableObject(void* obj); /* #57 */
+    extern void ObjHits_DisableObject(void* obj); /* #57 */
     BombPlantSporeState* state;
     s32 particleAlpha;
     s16 hitId;
@@ -258,6 +581,7 @@ void bombplantspore_update(void* obj)
 
 void bombplantspore_init(void* obj, void* param2)
 {
+    extern void ObjHits_DisableObject(void* obj); /* #57 */
     BombPlantSporeState* state;
     void* light;
     f32 randomPhase;
@@ -295,6 +619,7 @@ void bombplantspore_init(void* obj, void* param2)
 
 void bombplantingspot_update(void* obj)
 {
+    extern int GameBit_Set(int bit, int value); /* #57 */
     BombPlantingSpotMapData* mapData = *(BombPlantingSpotMapData**)&((GameObject*)obj)->anim.placementData;
     s32 trigBit;
 
