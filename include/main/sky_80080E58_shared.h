@@ -2,6 +2,7 @@
 #define MAIN_SKY_80080E58_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/cloud_action_runtime.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"

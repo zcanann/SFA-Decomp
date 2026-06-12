@@ -1,6 +1,7 @@
 #include "main/newclouds_state.h"
 #include "main/newclouds.h"
 #include "main/audio/sfx.h"
+#include "main/cloud_action_runtime.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/objtexture.h"
@@ -342,7 +343,6 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
 extern int ObjModel_GetRenderOp(int model, int x);
 extern int Shader_getLayer(int renderOp, int x);
 extern void* textureIdxToPtr(int idx);
-extern void* lbl_8039AB28[];
 extern f32 lbl_803DF2B0;
 extern f32 lbl_803DF2B4;
 
@@ -352,11 +352,11 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
     ObjTextureRuntimeSlot* tex;
     int* layer;
 
-    if (lbl_8039AB28[0] != NULL)
+    if (lbl_8039AB28.mainCloudObj != NULL)
     {
         layer = (int*)Shader_getLayer(
-            ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(lbl_8039AB28[0]), 0), 0);
-        tex = objFindTexture(lbl_8039AB28[0], 0, 0);
+            ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(lbl_8039AB28.mainCloudObj), 0), 0);
+        tex = objFindTexture(lbl_8039AB28.mainCloudObj, 0, 0);
         if (tex != NULL)
         {
             f32 scale = lbl_803DF2B0;

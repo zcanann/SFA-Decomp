@@ -64,24 +64,24 @@ void cloudaction_func09_nop(void)
 
 void cloudaction_free(void)
 {
-    if (*(void**)lbl_8039AB28 != NULL)
+    if (lbl_8039AB28.mainCloudObj != NULL)
     {
-        Obj_FreeObject(*(int*)lbl_8039AB28);
-        *(int*)lbl_8039AB28 = 0;
+        Obj_FreeObject((int)lbl_8039AB28.mainCloudObj);
+        lbl_8039AB28.mainCloudObj = NULL;
     }
-    *(int*)(lbl_8039AB28 + 0xc) = 0;
-    if (*(void**)(lbl_8039AB28 + 4) != NULL)
+    lbl_8039AB28.mainCloudAssetId = 0;
+    if (lbl_8039AB28.upperCloudObj != NULL)
     {
-        Obj_FreeObject(*(int*)(lbl_8039AB28 + 4));
-        *(int*)(lbl_8039AB28 + 4) = 0;
+        Obj_FreeObject((int)lbl_8039AB28.upperCloudObj);
+        lbl_8039AB28.upperCloudObj = NULL;
     }
-    *(int*)(lbl_8039AB28 + 0x10) = 0;
-    if (*(void**)(lbl_8039AB28 + 8) != NULL)
+    lbl_8039AB28.upperCloudAssetId = 0;
+    if (lbl_8039AB28.lowerCloudObj != NULL)
     {
-        Obj_FreeObject(*(int*)(lbl_8039AB28 + 8));
-        *(int*)(lbl_8039AB28 + 8) = 0;
+        Obj_FreeObject((int)lbl_8039AB28.lowerCloudObj);
+        lbl_8039AB28.lowerCloudObj = NULL;
     }
-    *(int*)(lbl_8039AB28 + 0x14) = 0;
+    lbl_8039AB28.lowerCloudAssetId = 0;
 }
 
 void renderClouds(int a, int b, int c, int d)
@@ -137,49 +137,49 @@ void renderClouds(int a, int b, int c, int d)
         return;
     }
 
-    if (*(void**)(lbl_8039AB28 + 4) != NULL)
+    if (lbl_8039AB28.upperCloudObj != NULL)
     {
-        model = Obj_GetActiveModel(*(int*)(lbl_8039AB28 + 4));
+        model = Obj_GetActiveModel((int)lbl_8039AB28.upperCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        *(u8*)(*(int*)(lbl_8039AB28 + 4) + 0x37) = 0xff;
+        lbl_8039AB28.upperCloudObj->anim.alpha = 0xff;
         if ((u32)cloudOverridePosition != 0)
         {
-            *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0xc) = lbl_803DD1E8;
-            *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0x10) = lbl_803DF2C0 + lbl_803DD1E4;
-            *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0x14) = lbl_803DD1E0;
+            lbl_8039AB28.upperCloudObj->anim.localPosX = lbl_803DD1E8;
+            lbl_8039AB28.upperCloudObj->anim.localPosY = lbl_803DF2C0 + lbl_803DD1E4;
+            lbl_8039AB28.upperCloudObj->anim.localPosZ = lbl_803DD1E0;
         }
         else
         {
-            fn_8008DAE8(*(int*)(lbl_8039AB28 + 4));
-            *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0xc) = *(f32*)(view + 0xc);
-            *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0x10) = *(f32*)(view + 0x10);
-            *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0x14) = *(f32*)(view + 0x14);
+            fn_8008DAE8((int)lbl_8039AB28.upperCloudObj);
+            lbl_8039AB28.upperCloudObj->anim.localPosX = *(f32*)(view + 0xc);
+            lbl_8039AB28.upperCloudObj->anim.localPosY = *(f32*)(view + 0x10);
+            lbl_8039AB28.upperCloudObj->anim.localPosZ = *(f32*)(view + 0x14);
         }
         fn_800412B8(p0, p1, p2);
-        objRender(a, b, c, d, *(int*)(lbl_8039AB28 + 4), 1);
+        objRender(a, b, c, d, (int)lbl_8039AB28.upperCloudObj, 1);
     }
 
-    if (*(void**)lbl_8039AB28 != NULL)
+    if (lbl_8039AB28.mainCloudObj != NULL)
     {
         if (isOvercast())
         {
-            fn_8008DAE8(*(int*)lbl_8039AB28);
+            fn_8008DAE8((int)lbl_8039AB28.mainCloudObj);
         }
-        model = Obj_GetActiveModel(*(int*)lbl_8039AB28);
+        model = Obj_GetActiveModel((int)lbl_8039AB28.mainCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        *(u8*)(*(int*)lbl_8039AB28 + 0x37) = 0xff;
+        lbl_8039AB28.mainCloudObj->anim.alpha = 0xff;
         v = *(f32*)(view + 0xc);
-        *(f32*)(*(int*)lbl_8039AB28 + 0x18) = v;
-        *(f32*)(*(int*)lbl_8039AB28 + 0xc) = v;
+        lbl_8039AB28.mainCloudObj->anim.worldPosX = v;
+        lbl_8039AB28.mainCloudObj->anim.localPosX = v;
         v = lbl_803DF2C4 + *(f32*)(view + 0x10);
-        *(f32*)(*(int*)lbl_8039AB28 + 0x1c) = v;
-        *(f32*)(*(int*)lbl_8039AB28 + 0x10) = v;
+        lbl_8039AB28.mainCloudObj->anim.worldPosY = v;
+        lbl_8039AB28.mainCloudObj->anim.localPosY = v;
         v = *(f32*)(view + 0x14);
-        *(f32*)(*(int*)lbl_8039AB28 + 0x20) = v;
-        *(f32*)(*(int*)lbl_8039AB28 + 0x14) = v;
-        *(u16*)(*(int*)lbl_8039AB28 + 2) = 0;
+        lbl_8039AB28.mainCloudObj->anim.worldPosZ = v;
+        lbl_8039AB28.mainCloudObj->anim.localPosZ = v;
+        *(u16*)((u8*)lbl_8039AB28.mainCloudObj + 2) = 0;
         fn_800412B8(p0, p1, p2);
-        objRender(a, b, c, d, *(int*)lbl_8039AB28, 1);
+        objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
 
         fn_80060490(&s0, &s1, &s2, &s3);
         if (s2 > 0 && s3 > 0)
@@ -189,7 +189,7 @@ void renderClouds(int a, int b, int c, int d)
             *(u16*)(*(int*)model + 2) = *(u16*)(*(int*)model + 2) | 0x2000;
             fn_8003BB7C(0x80);
             GXSetColorUpdate(0);
-            objRender(a, b, c, d, *(int*)lbl_8039AB28, 1);
+            objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
             *(u16*)(*(int*)model + 2) = *(u16*)(*(int*)model + 2) & ~0x2000;
             fn_8003BB7C(0);
             GXSetColorUpdate(1);
@@ -243,37 +243,37 @@ void renderClouds(int a, int b, int c, int d)
         GXTex2f32(lbl_803DF2B4, lbl_803DF2D4);
     }
 
-    if (*(void**)(lbl_8039AB28 + 8) != NULL)
+    if (lbl_8039AB28.lowerCloudObj != NULL)
     {
-        model = Obj_GetActiveModel(*(int*)(lbl_8039AB28 + 8));
+        model = Obj_GetActiveModel((int)lbl_8039AB28.lowerCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        *(u8*)(*(int*)(lbl_8039AB28 + 8) + 0x37) = 0xff;
+        lbl_8039AB28.lowerCloudObj->anim.alpha = 0xff;
         if ((u32)cloudOverridePosition != 0)
         {
-            *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0xc) = lbl_803DD1E8;
-            *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0x10) = lbl_803DD1E4 - lbl_803DF2D8;
-            *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0x14) = lbl_803DD1E0;
+            lbl_8039AB28.lowerCloudObj->anim.localPosX = lbl_803DD1E8;
+            lbl_8039AB28.lowerCloudObj->anim.localPosY = lbl_803DD1E4 - lbl_803DF2D8;
+            lbl_8039AB28.lowerCloudObj->anim.localPosZ = lbl_803DD1E0;
         }
         else
         {
-            fn_8008DAE8(*(int*)(lbl_8039AB28 + 8));
-            *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0xc) = *(f32*)(view + 0xc);
-            *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0x10) = *(f32*)(view + 0x10);
-            *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0x14) = *(f32*)(view + 0x14);
+            fn_8008DAE8((int)lbl_8039AB28.lowerCloudObj);
+            lbl_8039AB28.lowerCloudObj->anim.localPosX = *(f32*)(view + 0xc);
+            lbl_8039AB28.lowerCloudObj->anim.localPosY = *(f32*)(view + 0x10);
+            lbl_8039AB28.lowerCloudObj->anim.localPosZ = *(f32*)(view + 0x14);
         }
-        objRender(a, b, c, d, *(int*)(lbl_8039AB28 + 8), 1);
+        objRender(a, b, c, d, (int)lbl_8039AB28.lowerCloudObj, 1);
     }
 }
 
 void cloudaction_func05(void)
 {
     ObjTextureRuntimeSlot* tex;
-    if (*(void**)lbl_8039AB28 != NULL)
+    if (lbl_8039AB28.mainCloudObj != NULL)
     {
-        tex = objFindTexture(*(void**)lbl_8039AB28, 0, 0);
+        tex = objFindTexture(lbl_8039AB28.mainCloudObj, 0, 0);
         if (tex != NULL)
         {
-            tex->offsetS -= lbl_8039AB28[0x18];
+            tex->offsetS -= lbl_8039AB28.textureScrollStep;
             if (tex->offsetS < -0x2710)
             {
                 tex->offsetS += 0x2710;
@@ -284,7 +284,7 @@ void cloudaction_func05(void)
 
 void cloudaction_onMapSetup(void)
 {
-    memset(lbl_8039AB28, 0, 0x1c);
+    memset(&lbl_8039AB28, 0, sizeof(CloudActionRuntime));
 }
 
 void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
@@ -308,90 +308,90 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     }
     lbl_803DB618[0] = lbl_803DB618[1];
     lbl_803DB618[1] = (u16)val;
-    lbl_8039AB28[0x18] = *(f32*)(state + 8) / lbl_803DF2DC;
-    lbl_8039AB28[0x19] = 0;
+    lbl_8039AB28.textureScrollStep = *(f32*)(state + 8) / lbl_803DF2DC;
+    lbl_8039AB28.pad19 = 0;
     if ((*(volatile u8*)(state + 0x59) & 4) != 0)
     {
-        lbl_8039AB28[0x1a] = 0;
+        lbl_8039AB28.layerRenderEnabled = 0;
     }
     else
     {
-        lbl_8039AB28[0x1a] = 1;
+        lbl_8039AB28.layerRenderEnabled = 1;
     }
     if (state[0x5d] != 0)
     {
         if (state[0x5d] < 5)
         {
-            if (*(int*)(lbl_8039AB28 + 0xc) != tbl->a[state[0x5d]])
+            if (lbl_8039AB28.mainCloudAssetId != tbl->a[state[0x5d]])
             {
-                if (*(void**)lbl_8039AB28 != NULL)
+                if (lbl_8039AB28.mainCloudObj != NULL)
                 {
-                    Obj_FreeObject(*(int*)lbl_8039AB28);
+                    Obj_FreeObject((int)lbl_8039AB28.mainCloudObj);
                 }
-                *(int*)lbl_8039AB28 = (int)Obj_SetupObject(
+                lbl_8039AB28.mainCloudObj = (GameObject*)Obj_SetupObject(
                     Obj_AllocObjectSetup(0x20, tbl->a[state[0x5d]]), 4, -1, -1, 0);
-                *(int*)(lbl_8039AB28 + 0xc) = tbl->a[state[0x5d]];
+                lbl_8039AB28.mainCloudAssetId = tbl->a[state[0x5d]];
             }
         }
     }
     else
     {
-        if (*(void**)lbl_8039AB28 != NULL)
+        if (lbl_8039AB28.mainCloudObj != NULL)
         {
-            Obj_FreeObject(*(int*)lbl_8039AB28);
-            *(int*)lbl_8039AB28 = 0;
+            Obj_FreeObject((int)lbl_8039AB28.mainCloudObj);
+            lbl_8039AB28.mainCloudObj = NULL;
         }
-        *(int*)(lbl_8039AB28 + 0xc) = 0;
+        lbl_8039AB28.mainCloudAssetId = 0;
     }
     if (state[0x5b] != 0)
     {
         if (state[0x5b] < 4)
         {
-            if (*(int*)(lbl_8039AB28 + 0x10) != tbl->b[state[0x5b]])
+            if (lbl_8039AB28.upperCloudAssetId != tbl->b[state[0x5b]])
             {
-                if (*(void**)(lbl_8039AB28 + 4) != NULL)
+                if (lbl_8039AB28.upperCloudObj != NULL)
                 {
-                    Obj_FreeObject(*(int*)(lbl_8039AB28 + 4));
+                    Obj_FreeObject((int)lbl_8039AB28.upperCloudObj);
                 }
-                *(int*)(lbl_8039AB28 + 4) = (int)Obj_SetupObject(
+                lbl_8039AB28.upperCloudObj = (GameObject*)Obj_SetupObject(
                     Obj_AllocObjectSetup(0x20, tbl->b[state[0x5b]]), 4, -1, -1, 0);
-                *(int*)(lbl_8039AB28 + 0x10) = tbl->b[state[0x5b]];
+                lbl_8039AB28.upperCloudAssetId = tbl->b[state[0x5b]];
             }
         }
     }
     else
     {
-        if (*(void**)(lbl_8039AB28 + 4) != NULL)
+        if (lbl_8039AB28.upperCloudObj != NULL)
         {
-            Obj_FreeObject(*(int*)(lbl_8039AB28 + 4));
-            *(int*)(lbl_8039AB28 + 4) = 0;
+            Obj_FreeObject((int)lbl_8039AB28.upperCloudObj);
+            lbl_8039AB28.upperCloudObj = NULL;
         }
-        *(int*)(lbl_8039AB28 + 0x10) = 0;
+        lbl_8039AB28.upperCloudAssetId = 0;
     }
     if (state[0x5a] != 0)
     {
         if (state[0x5a] < 5)
         {
-            if (*(int*)(lbl_8039AB28 + 0x14) != tbl->c[state[0x5a]])
+            if (lbl_8039AB28.lowerCloudAssetId != tbl->c[state[0x5a]])
             {
-                if (*(void**)(lbl_8039AB28 + 8) != NULL)
+                if (lbl_8039AB28.lowerCloudObj != NULL)
                 {
-                    Obj_FreeObject(*(int*)(lbl_8039AB28 + 8));
+                    Obj_FreeObject((int)lbl_8039AB28.lowerCloudObj);
                 }
-                *(int*)(lbl_8039AB28 + 8) = (int)Obj_SetupObject(
+                lbl_8039AB28.lowerCloudObj = (GameObject*)Obj_SetupObject(
                     Obj_AllocObjectSetup(0x20, tbl->c[state[0x5a]]), 4, -1, -1, 0);
-                *(int*)(lbl_8039AB28 + 0x14) = tbl->c[state[0x5a]];
+                lbl_8039AB28.lowerCloudAssetId = tbl->c[state[0x5a]];
             }
         }
     }
     else
     {
-        if (*(void**)(lbl_8039AB28 + 8) != NULL)
+        if (lbl_8039AB28.lowerCloudObj != NULL)
         {
-            Obj_FreeObject(*(int*)(lbl_8039AB28 + 8));
-            *(int*)(lbl_8039AB28 + 8) = 0;
+            Obj_FreeObject((int)lbl_8039AB28.lowerCloudObj);
+            lbl_8039AB28.lowerCloudObj = NULL;
         }
-        *(int*)(lbl_8039AB28 + 0x14) = 0;
+        lbl_8039AB28.lowerCloudAssetId = 0;
     }
 }
 
