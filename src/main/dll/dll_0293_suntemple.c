@@ -98,11 +98,11 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
         default:
             if (setup->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT)
             {
-                int* tex;
+                ObjTextureRuntimeSlot* tex;
                 GameBit_Set(setup->activationGameBit, 1);
-                tex = (int*)objFindTexture(obj, 0, 0);
+                tex = objFindTexture((void*)obj, 0, 0);
                 if (tex != NULL)
-                    *tex = SUNTEMPLE_TEXTURE_LATCHED;
+                    tex->textureId = SUNTEMPLE_TEXTURE_LATCHED;
             }
             break;
         case 2:
@@ -144,10 +144,10 @@ void suntemple_init(u8* obj, u8* setup)
     }
     if (state->activationLatched != 0)
     {
-        int* texture = objFindTexture((int)obj, 0, 0);
+        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
-            *texture = SUNTEMPLE_TEXTURE_LATCHED;
+            texture->textureId = SUNTEMPLE_TEXTURE_LATCHED;
         }
     }
 }
@@ -157,7 +157,7 @@ void suntemple_update(int obj)
     GameObject* gameObj = (GameObject*)obj;
     SunTempleState* state;
     SunTempleSetup* cfg;
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
     int flags;
 
     state = gameObj->extra;
@@ -165,10 +165,10 @@ void suntemple_update(int obj)
     state->activationLatched = (u8)GameBit_Get(cfg->activationGameBit);
     if (state->activationLatched == 0)
     {
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            *texture = 0;
+            texture->textureId = 0;
         }
         gameObj->anim.localPosX = cfg->base.posX;
         gameObj->anim.localPosY = cfg->base.posY;
@@ -238,10 +238,10 @@ void suntemple_update(int obj)
                 if ((cfg->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT) == 0)
                 {
                     GameBit_Set(cfg->activationGameBit, 1);
-                    texture = objFindTexture(obj, 0, 0);
+                    texture = objFindTexture((void*)obj, 0, 0);
                     if (texture != NULL)
                     {
-                        *texture = SUNTEMPLE_TEXTURE_LATCHED;
+                        texture->textureId = SUNTEMPLE_TEXTURE_LATCHED;
                     }
                 }
                 if ((cfg->flags & SUNTEMPLE_FLAG_CLEAR_GATE_BIT) != 0)

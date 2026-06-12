@@ -375,8 +375,8 @@ void androsshand_handleDamage(int obj, int hand)
         state->damageTextureState = 2;
     }
     {
-        int* texture = objFindTexture(obj, 0, 0);
-        *texture = state->damageTextureState << 8;
+        ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
+        texture->textureId = state->damageTextureState << 8;
     }
 }
 

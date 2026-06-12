@@ -78,17 +78,17 @@ STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == WCTEMPLEBRI_SETUP_SOLVED_
 void wctemplebri_updateModelWarp(int obj, int p2)
 {
     WCTempleBriState* state = (WCTempleBriState*)p2;
-    int tex;
+    ObjTextureRuntimeSlot* tex;
     int v;
 
-    tex = (int)objFindTexture(obj, 0, 0);
-    *(s16*)(tex + 0xa) += WCTEMPLEBRI_UV0_V_STEP;
-    if (*(s16*)(tex + 0xa) > WCTEMPLEBRI_WARP_WRAP) *(s16*)(tex + 0xa) -= WCTEMPLEBRI_WARP_WRAP;
-    *(s16*)(tex + 8) += WCTEMPLEBRI_UV0_U_STEP;
-    if (*(s16*)(tex + 8) > WCTEMPLEBRI_WARP_WRAP) *(s16*)(tex + 8) -= WCTEMPLEBRI_WARP_WRAP;
-    tex = (int)objFindTexture(obj, 1, 0);
-    *(s16*)(tex + 0xa) += WCTEMPLEBRI_UV1_V_STEP;
-    if (*(s16*)(tex + 0xa) > WCTEMPLEBRI_WARP_WRAP) *(s16*)(tex + 0xa) -= WCTEMPLEBRI_WARP_WRAP;
+    tex = objFindTexture((void*)obj, 0, 0);
+    tex->offsetT += WCTEMPLEBRI_UV0_V_STEP;
+    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP) tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
+    tex->offsetS += WCTEMPLEBRI_UV0_U_STEP;
+    if (tex->offsetS > WCTEMPLEBRI_WARP_WRAP) tex->offsetS -= WCTEMPLEBRI_WARP_WRAP;
+    tex = objFindTexture((void*)obj, 1, 0);
+    tex->offsetT += WCTEMPLEBRI_UV1_V_STEP;
+    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP) tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
     v = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
     if (v > WCTEMPLEBRI_WAVE_WRAP) v -= WCTEMPLEBRI_WAVE_WRAP;
     state->wavePhaseA = (u16)v;

@@ -15,7 +15,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     VortexState* state = ((GameObject*)obj)->extra;
     VortexSetup* setup = (VortexSetup*)((GameObject*)obj)->anim.placementData;
     f32 dt;
-    s16* texture;
+    ObjTextureRuntimeSlot* texture;
     int model;
     f32 objScale;
     f32 objZ;
@@ -47,7 +47,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     if (((GameObject*)obj)->anim.seqId == 0x835 || ((GameObject*)obj)->anim.seqId == 0x838)
     {
-        texture = (s16*)objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
             u8 reverse = setup->reverseTextureScroll != 0;
@@ -57,18 +57,18 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             if (reverse != 0)
             {
-                texture[4] = (s16)(texture[4] - (s16)(int)(lbl_803E73D4 * dt));
-                if ((f32)texture[4] <= lbl_803E73D0)
+                texture->offsetS = (s16)(texture->offsetS - (s16)(int)(lbl_803E73D4 * dt));
+                if ((f32)texture->offsetS <= lbl_803E73D0)
                 {
-                    texture[4] = (s16)(texture[4] + 10000);
+                    texture->offsetS = (s16)(texture->offsetS + 10000);
                 }
             }
             else
             {
-                texture[4] = (s16)(texture[4] + (s16)(int)(lbl_803E73D4 * dt));
-                if (texture[4] >= 10000)
+                texture->offsetS = (s16)(texture->offsetS + (s16)(int)(lbl_803E73D4 * dt));
+                if (texture->offsetS >= 10000)
                 {
-                    texture[4] = (s16)(texture[4] - 10000);
+                    texture->offsetS = (s16)(texture->offsetS - 10000);
                 }
             }
         }
@@ -107,15 +107,15 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else if (((GameObject*)obj)->anim.seqId == 0x83d)
     {
-        texture = (s16*)objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            texture[4] = (s16)(texture[4] + (s16)(int)(lbl_803E73E4 * dt));
+            texture->offsetS = (s16)(texture->offsetS + (s16)(int)(lbl_803E73E4 * dt));
         }
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s16)(int)(lbl_803E73D4 * dt));
-        if (texture[4] >= 10000)
+        if (texture->offsetS >= 10000)
         {
-            texture[4] = (s16)(texture[4] - 10000);
+            texture->offsetS = (s16)(texture->offsetS - 10000);
         }
 
         model = Obj_GetActiveModel(obj);
@@ -141,15 +141,15 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else
     {
-        texture = (s16*)objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            texture[4] = (s16)(texture[4] + (s16)(int)(lbl_803E73E4 * dt));
+            texture->offsetS = (s16)(texture->offsetS + (s16)(int)(lbl_803E73E4 * dt));
         }
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s16)(int)(lbl_803E73D4 * dt));
-        if (texture[4] >= 10000)
+        if (texture->offsetS >= 10000)
         {
-            texture[4] = (s16)(texture[4] - 10000);
+            texture->offsetS = (s16)(texture->offsetS - 10000);
         }
 
         particleArgs[2] = ((GameObject*)obj)->anim.rootMotionScale * state->alpha;

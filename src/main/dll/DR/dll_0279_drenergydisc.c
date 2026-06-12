@@ -29,7 +29,7 @@ void drenergydisc_hitDetect(void)
 
 void drenergydisc_update(int obj)
 {
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
     DrEnergyDiscState* state = ((GameObject*)obj)->extra;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
 
@@ -41,20 +41,19 @@ void drenergydisc_update(int obj)
             Sfx_PlayFromObject(obj, SFXfend_rob_servo2);
         }
 
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            *texture = 0x100;
+            texture->textureId = 0x100;
         }
 
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            *(s16*)((char*)texture + 0xa) =
-                *(s16*)((char*)texture + 0xa) + lbl_803DC380 * framesThisStep;
-            if (*(s16*)((char*)texture + 0xa) < -0x1000)
+            texture->offsetT = texture->offsetT + lbl_803DC380 * framesThisStep;
+            if (texture->offsetT < -0x1000)
             {
-                *(s16*)((char*)texture + 0xa) = 0;
+                texture->offsetT = 0;
             }
         }
     }
@@ -67,7 +66,7 @@ void drenergydisc_update(int obj)
 
 void drenergydisc_init(u8* obj, u8* setup)
 {
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
     DrEnergyDiscState* state = ((GameObject*)obj)->extra;
     s16 objType;
 
@@ -77,19 +76,19 @@ void drenergydisc_init(u8* obj, u8* setup)
     {
         state->activated = 1;
         Sfx_PlayFromObject((int)obj, SFXfend_rob_servo2);
-        texture = objFindTexture((int)obj, 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
-            *texture = 0x100;
+            texture->textureId = 0x100;
         }
     }
     else
     {
         state->activated = 0;
-        texture = objFindTexture((int)obj, 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
-            *texture = 0;
+            texture->textureId = 0;
         }
     }
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);

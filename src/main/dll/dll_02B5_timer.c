@@ -207,15 +207,15 @@ void timer_update(int obj)
             f32 fm;
             int tv = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer *
                 (fm = lbl_803DC41C));
-            int* texPtr = objFindTexture(obj, 0, 0);
+            ObjTextureRuntimeSlot* texPtr = objFindTexture((void*)obj, 0, 0);
             if (texPtr != 0)
             {
-                v = *texPtr + tv * framesThisStep;
+                v = texPtr->textureId + tv * framesThisStep;
                 if (v > 512)
                 {
                     v -= 512;
                 }
-                *texPtr = v;
+                texPtr->textureId = v;
             }
             if (hold != NULL)
             {

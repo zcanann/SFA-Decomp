@@ -16,6 +16,7 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
+#include "main/objtexture.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -26,7 +27,6 @@
 extern byte framesThisStep;
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void mm_free(void *ptr);
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E6BC8;

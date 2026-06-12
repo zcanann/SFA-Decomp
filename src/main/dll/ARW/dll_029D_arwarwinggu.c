@@ -103,10 +103,10 @@ void arwarwinggu_update(int obj)
         {
             ArwingGuState* state = ((GameObject*)obj)->extra;
             int model = Obj_GetActiveModel(obj);
-            int texture = (int)objFindTexture(obj, 0, 0);
+            ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
             int anim = ObjModel_GetTexture(*(int*)model, 0);
             fn_800541A4(anim, (u16)state->texture.textureFrame);
-            textureAnimFn_80053f2c(anim, (int)state, texture);
+            textureAnimFn_80053f2c(anim, (int)state, (int)texture);
             break;
         }
     case 0x610:
@@ -166,7 +166,7 @@ void fn_8022F27C(int obj)
 {
     ArwingGuState* state = ((GameObject*)obj)->extra;
     int model = Obj_GetActiveModel(obj);
-    int* texture = objFindTexture(obj, 0, 0);
+    ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
     int anim = ObjModel_GetTexture(*(int*)model, 0);
     fn_800541A4(anim, (u16)state->texture.textureFrame);
     textureAnimFn_80053f2c(anim, (int)state, (int)texture);

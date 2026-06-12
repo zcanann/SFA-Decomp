@@ -42,11 +42,11 @@ int wctrexstatu_interactCallback(int obj, int unused, ObjAnimUpdateState* animUp
     {
         if (animUpdate->eventIds[i] == WCTREXSTATU_CALLBACK_TRIGGER)
         {
-            int* texture = objFindTexture(obj, 0, 0);
+            ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
 
             if (texture != NULL)
             {
-                *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
+                texture->textureId = WCTREXSTATU_TEXTURE_TRIGGERED;
             }
             ((GameObject*)obj)->unkF4 = 1;
         }
@@ -134,11 +134,11 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
 
     if ((u32)GameBit_Get(setupData->raisedBit) != 0)
     {
-        int* texture = objFindTexture(obj, 0, 0);
+        ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
 
         if (texture != NULL)
         {
-            *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
+            texture->textureId = WCTREXSTATU_TEXTURE_TRIGGERED;
         }
         ((GameObject*)obj)->unkF4 = 1;
     }

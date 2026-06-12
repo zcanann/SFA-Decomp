@@ -377,7 +377,7 @@ void fn_8023A3E4(int p1, int p2)
     u8 adjusted;
     u8 texIdx;
     u8 state;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
 
     got = ObjHits_GetPriorityHit(obj, &hitObj, &hitType, &hitVol);
     for (i = 0; i < 4; i++)
@@ -447,11 +447,11 @@ void fn_8023A3E4(int p1, int p2)
         texIdx = (&lbl_803DC4C8)[i];
         if (texIdx < 2 && state == 1)
             adjusted = 0;
-        tex = objFindTexture(obj, texIdx * 2, 0);
-        *tex = adjusted << 8;
+        tex = objFindTexture((void *)obj, texIdx * 2, 0);
+        tex->textureId = adjusted << 8;
         if (texIdx == 2 && state == 1)
             state = 0;
-        tex = objFindTexture(obj, texIdx * 2 + 1, 0);
-        *tex = state << 8;
+        tex = objFindTexture((void *)obj, texIdx * 2 + 1, 0);
+        tex->textureId = state << 8;
     }
 }

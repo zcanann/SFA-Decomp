@@ -266,13 +266,11 @@ void wcpressures_update(int obj)
         break;
     }
     {
-        int* tex = objFindTexture(obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
-        if (tex != 0)
-        {
-            *tex = state->mode == WCPRESSURES_MODE_PRESSED
-                       ? WCPRESSURES_TEXTURE_PRESSED
-                       : WCPRESSURES_TEXTURE_DEFAULT;
-            *tex = *tex << WCPRESSURES_TEXTURE_SHIFT;
+        ObjTextureRuntimeSlot *tex = objFindTexture((void *)obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
+        if (tex != 0) {
+            tex->textureId = state->mode == WCPRESSURES_MODE_PRESSED ? WCPRESSURES_TEXTURE_PRESSED
+                                                                      : WCPRESSURES_TEXTURE_DEFAULT;
+            tex->textureId = tex->textureId << WCPRESSURES_TEXTURE_SHIFT;
         }
     }
 }

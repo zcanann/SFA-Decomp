@@ -179,7 +179,7 @@ void wcpushblock_update(int obj)
     int player = Obj_GetPlayerObject();
     f32 range = lbl_803E6D58;
     f32 dist;
-    int* tex;
+    ObjTextureRuntimeSlot *tex;
     int moved;
 
     if ((void*)WCPUSHBLOCK_CONTROLLER(state) == 0)
@@ -188,10 +188,9 @@ void wcpushblock_update(int obj)
         objAnim->alpha = 0;
         return;
     }
-    tex = objFindTexture(obj, 0, 0);
-    if (tex != 0)
-    {
-        *tex = WCPUSHBLOCK_TEXTURE_DEFAULT;
+    tex = objFindTexture((void *)obj, 0, 0);
+    if (tex != 0) {
+        tex->textureId = WCPUSHBLOCK_TEXTURE_DEFAULT;
     }
     ((GameObject*)obj)->objectFlags &= ~WCPUSHBLOCK_OBJFLAG_LOCKED;
 
@@ -588,10 +587,9 @@ void wcpushblock_update(int obj)
     case WCPUSHBLOCK_PHASE_SOLVED:
         objAnim->alpha = WCPUSHBLOCK_ALPHA_OPAQUE;
     case WCPUSHBLOCK_PHASE_LOCKED:
-        tex = objFindTexture(obj, 0, 0);
-        if (tex != 0)
-        {
-            *tex = WCPUSHBLOCK_TEXTURE_LOCKED;
+        tex = objFindTexture((void *)obj, 0, 0);
+        if (tex != 0) {
+            tex->textureId = WCPUSHBLOCK_TEXTURE_LOCKED;
         }
         ((GameObject*)obj)->objectFlags |= WCPUSHBLOCK_OBJFLAG_LOCKED;
         break;
