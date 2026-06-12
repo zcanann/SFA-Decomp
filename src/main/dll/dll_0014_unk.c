@@ -2352,25 +2352,15 @@ int mathFn_800dbff0(float* point)
 void player_release(void);
 
 
-void UIController_release(void);
 
-void UIController_initialise(void);
 
-void dll_12_func0A_nop(void);
 
-void dll_12_func08_nop(void);
 
-void dll_12_func07_nop(void);
 
-void dll_12_func04_nop(void);
 
-void dll_12_func03_nop(void);
 
-void dll_12_func05_nop(void);
 
-void Dummy12_release(void);
 
-void Dummy12_initialise(void);
 
 void doNothing_onTrickyFree(void)
 {
@@ -2384,11 +2374,8 @@ void doNothing_onTrickyInit(void)
 int dll_12_func06_ret_0(void);
 
 /* sda21 accessors. */
-extern u32 playerOverride;
 
 /* Pattern wrappers. */
-extern u32 lbl_803DD458;
-void dll_12_func09(void);
 
 /* player_init: memset constructor */
 extern void* memset(void* dst, int val, u32 n);
@@ -2398,7 +2385,6 @@ extern f32 lbl_803E05F4;
 extern int Curve_AdvanceAlongPath(float* p, f32 dt);
 #pragma scheduling off
 #pragma peephole off
-void player_init(int unused, void* obj, int a, int b);
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 extern f32 lbl_803E05D0;
@@ -4093,19 +4079,13 @@ int RomCurve_func16(double x, double y, double z)
 
 /* UIController dispatch through the shared GameUI interface. */
 extern u8 gameTimerIsRunning(void* p, int a, int b);
-extern void hudNumberFn_80014060(void* p);
-extern void gameTimerRun(void* p);
 #pragma scheduling on
 #pragma peephole on
-void UIController_frameStart(void);
 
-void UIController_frameEnd(void);
 #pragma scheduling off
 #pragma peephole off
-void UIController_render(void* p, int a, int b);
 
 /* player_setState */
-void player_setState(void* ctx, void* p, int new_state);
 
 /* walkPath_writeU16LE: split a path id into two little-endian bytes. */
 void walkPath_writeU16LE(u32 v, u8* dst)
