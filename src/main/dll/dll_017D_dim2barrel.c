@@ -81,17 +81,11 @@ extern f32 lbl_803E44B8;
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void SpiritDoorLock_hitDetect(void)
-{
-}
+void SpiritDoorLock_hitDetect(void);
 
-void SpiritDoorLock_release(void)
-{
-}
+void SpiritDoorLock_release(void);
 
-void SpiritDoorLock_initialise(void)
-{
-}
+void SpiritDoorLock_initialise(void);
 
 void RollingBarrel_hitDetect(void)
 {
@@ -103,8 +97,8 @@ void RollingBarrel_release(void)
 
 
 /* 8b "li r3, N; blr" returners. */
-int SpiritDoorLock_getExtraSize(void) { return SPIRITDOORLOCK_EXTRA_SIZE; }
-int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
+int SpiritDoorLock_getExtraSize(void);
+int SpiritDoorLock_getObjectTypeId(void);
 int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 
@@ -112,11 +106,7 @@ int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4440);
-}
+void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -128,14 +118,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-void SpiritDoorLock_free(int obj)
-{
-    SpiritDoorLockState* state = ((GameObject*)obj)->extra;
-    if ((void*)state->light != NULL)
-    {
-        modelLightStruct_freeSlot(state);
-    }
-}
+void SpiritDoorLock_free(int obj);
 
 
 void RollingBarrel_free(int obj)
@@ -187,169 +170,9 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     (*gRomCurveInterface)->initCurve(state, (void*)obj, lbl_803E44B8, tmp, -1);
 }
 
-void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
-{
-    SpiritDoorLockState* state = ((GameObject*)obj)->extra;
-    f32 mult;
+void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
 
-    *(s16*)obj = (s16)(params->yaw << 8);
-    state->orbitCount = params->orbitCount;
-    state->active = 0;
-
-    mult = (f32)params->scale * lbl_803E4448;
-    if (mult < lbl_803E4430)
-    {
-        mult = lbl_803E4440;
-    }
-    ((GameObject*)obj)->anim.rootMotionScale = (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] * mult;
-    state->spinAngle = 0;
-
-    ObjHits_DisableObject(obj);
-    state->flags &= ~0x80;
-
-    if (mode == 0)
-    {
-        ((GameObject*)obj)->anim.alpha = 0;
-        state->light = modelLightStruct_createPointLight(obj, 255, 0, 77, 0);
-    }
-}
-
-void SpiritDoorLock_update(int obj)
-{
-    SpiritDoorLockState* state;
-    SpiritDoorLockMapData* descriptor;
-    int player;
-    int local_68;
-    f32 local_58[3];
-    f32 local_5c[3];
-
-    ((int*)local_58)[0] = lbl_802C22F8[0];
-    ((int*)local_58)[1] = lbl_802C22F8[1];
-    ((int*)local_58)[2] = lbl_802C22F8[2];
-
-    state = ((GameObject*)obj)->extra;
-    descriptor = *(SpiritDoorLockMapData**)&((GameObject*)obj)->anim.placementData;
-
-    player = Obj_GetPlayerObject();
-
-    if (GameBit_Get(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) == 0)
-    {
-        if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < lbl_803E4444)
-        {
-            if (state->active != 0)
-            {
-                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            }
-            GameBit_Set(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED, 1);
-        }
-    }
-
-    if (state->active == 0)
-    {
-        if (GameBit_Get(descriptor->doneGameBit) == 0)
-        {
-            state->active = GameBit_Get(descriptor->activeGameBit);
-            if (state->active != 0)
-            {
-                ((GameObject*)obj)->anim.rootMotionScale =
-                    (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] *
-                    (f32)(int)
-                descriptor->scale *
-                    lbl_803E4448;
-                if (state->light == 0)
-                {
-                    state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
-                }
-            }
-        }
-        else
-        {
-            if ((s8)((GameObject*)obj)->anim.alpha == -1)
-            {
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            }
-            if (((GameObject*)obj)->anim.alpha == 0)
-            {
-                if (state->light != 0)
-                {
-                    modelLightStruct_freeSlot(state);
-                }
-            }
-            else
-            {
-                ((GameObject*)obj)->anim.alpha -= 1;
-                if (state->light != 0)
-                {
-                    u32 b = ((GameObject*)obj)->anim.alpha >> 2;
-                    modelLightStruct_setDistanceAttenuation((void*)state->light, (f32)(int)b,
-                                                            (f32)(int)(b + 10));
-                }
-                ((GameObject*)obj)->anim.rootMotionScale *= lbl_803E444C;
-                ((GameObject*)obj)->anim.rotZ =
-                    (s16)(s32)((f32)(int)((GameObject*)obj)->anim.rotZ - lbl_803E4450 * timeDelta);
-            }
-        }
-    }
-    else
-    {
-        int cam_state;
-        int* list_ptr;
-        int* piTex;
-        int i;
-        s16 angle;
-        s16 stride;
-        f32 max_dist;
-        cam_state = (*gCameraInterface)->getMode();
-        if (cam_state != 0x51)
-        {
-            Sfx_KeepAliveLoopedObjectSound(obj, SPIRITDOORLOCK_LOOP_SFX);
-        }
-        list_ptr = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &local_68);
-        stride = (s16)(0x10000 / state->orbitCount);
-        angle = (s16)state->spinAngle;
-        local_58[1] = lbl_803E4454;
-        max_dist = lbl_803E4458;
-        for (i = 0; i < local_68; i++)
-        {
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)list_ptr[i] + 0x18)) <= max_dist)
-            {
-                ((GameObject*)obj)->anim.rotZ = angle;
-                Obj_TransformLocalVectorByWorldMatrix(obj, local_58, local_5c);
-                PSVECAdd(&((GameObject*)obj)->anim.localPosX, local_5c, (f32*)((char*)list_ptr[i] + 0xc));
-                *(s16*)list_ptr[i] = *(s16*)obj;
-                *(s16*)((char*)list_ptr[i] + 4) = (s16)(angle + 0x8000);
-                *(f32*)((char*)list_ptr[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
-                angle = (s16)(angle + stride);
-            }
-        }
-        state->spinAngle += (int)lbl_803DBED0;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        if (local_68 == 0)
-        {
-            state->active = 0;
-            GameBit_Set(descriptor->doneGameBit, 1);
-            ObjHits_DisableObject(obj);
-        }
-        piTex = objFindTexture(obj, 0, 0);
-        if (piTex != NULL)
-        {
-            *(s16*)((char*)piTex + 0xa) = (s16)(*(s16*)((char*)piTex + 0xa) + lbl_803DBED4 * (s32)framesThisStep);
-            *(s16*)((char*)piTex + 0x8) = (s16)(*(s16*)((char*)piTex + 0x8) + lbl_803DBED4 * (s32)framesThisStep);
-            if ((s32) * (s16*)((char*)piTex + 0xa) > (s32)(lbl_803DBED8 << 8))
-            {
-                *(s16*)((char*)piTex + 0xa) = (s16)(*(s16*)((char*)piTex + 0xa) - (lbl_803DBED8 << 8));
-            }
-            if ((s32) * (s16*)((char*)piTex + 0x8) > (s32)(lbl_803DBED8 << 8))
-            {
-                *(s16*)((char*)piTex + 0x8) = (s16)(*(s16*)((char*)piTex + 0x8) - (lbl_803DBED8 << 8));
-            }
-        }
-        if (((GameObject*)obj)->anim.alpha < 0xff)
-        {
-            ((GameObject*)obj)->anim.alpha += 1;
-        }
-    }
-}
+void SpiritDoorLock_update(int obj);
 
 #pragma peephole on
 void RollingBarrel_update(int obj)
