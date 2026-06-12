@@ -6,6 +6,7 @@ extern f32 timeDelta;
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 #include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
 
@@ -24,7 +25,6 @@ extern void fn_80296C6C(int* player, int v);
 extern void AudioStream_StopCurrent(void);
 extern void AudioStream_StartPrepared(void);
 extern void AudioStream_Play(int streamId, void* cb);
-extern int* objFindTexture(int* obj, int idx, int p3);
 extern void cutsceneFadeInOut(int v);
 extern void Obj_FreeObject(int* obj);
 extern void showDeathMenu(void);
@@ -120,7 +120,7 @@ void deathseq_update(int* obj)
     DeathSeqState* state = ((GameObject*)obj)->extra;
     int ready;
     int* player = Obj_GetPlayerObject();
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
 
     ready = 0;
     if (fn_80296C5C() != 0)
@@ -136,9 +136,9 @@ void deathseq_update(int* obj)
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)
         {
             tex = objFindTexture(obj, 5, 0);
-            *tex = 0;
+            tex->textureId = 0;
             tex = objFindTexture(obj, 4, 0);
-            *tex = 0;
+            tex->textureId = 0;
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3D28)
         {
@@ -175,9 +175,9 @@ void deathseq_update(int* obj)
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)
         {
             tex = objFindTexture(obj, 5, 0);
-            *tex = 0x200;
+            tex->textureId = 0x200;
             tex = objFindTexture(obj, 4, 0);
-            *tex = 0x200;
+            tex->textureId = 0x200;
         }
         state->timer -= timeDelta;
         if (state->timer <= *(f32*)&lbl_803E3D1C)

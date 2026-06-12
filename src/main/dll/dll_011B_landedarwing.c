@@ -4,6 +4,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
+#include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
 
 typedef struct LandedArwingPlacement
@@ -821,8 +822,6 @@ extern f32 lbl_803E3BB8;
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BC0;
 extern f32 lbl_803E3BC4;
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
-
 void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
 {
     int i;
@@ -910,7 +909,7 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
 void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
 {
     int def;
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
     u32 bit;
     LandedArwingHitFlagBits* flags;
 
@@ -948,23 +947,23 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
         }
     }
 
-    texture = objFindTexture(obj, 0, 0);
+    texture = objFindTexture((void*)obj, 0, 0);
     if (texture != NULL)
     {
         if (flags->damaged != 0)
         {
             if (flags->gameBit24Set != 0)
             {
-                *texture = 0x200;
+                texture->textureId = 0x200;
             }
             else
             {
-                *texture = 0x100;
+                texture->textureId = 0x100;
             }
         }
         else
         {
-            *texture = 0;
+            texture->textureId = 0;
         }
     }
 }

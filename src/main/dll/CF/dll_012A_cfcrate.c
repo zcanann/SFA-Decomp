@@ -15,6 +15,7 @@
 #include "main/objseq.h"
 #include "main/dll/CF/dll_179.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 
 typedef struct CfccratePlacement
 {
@@ -35,7 +36,6 @@ extern void* Camera_GetCurrentViewSlot(void);
 extern u32 GameBit_Set(int bit, int value);
 extern int ObjHits_GetPriorityHit(int obj, u32* outHit, int* outIdx, u32* outVol);
 extern void Obj_FreeObject(int obj);
-extern int objFindTexture(int p1, int p2, int p3);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -224,11 +224,11 @@ void cfccrate_update(int obj)
         break;
     case 0x622: /* VFP_locksym */
         {
-            int* p = (int*)objFindTexture(obj, 0, 0);
-            if ((p != NULL) && (GameBit_Get(state->gameBit) != 0) && (*p == 0))
+            ObjTextureRuntimeSlot* p = objFindTexture((void*)obj, 0, 0);
+            if ((p != NULL) && (GameBit_Get(state->gameBit) != 0) && (p->textureId == 0))
             {
                 Sfx_PlayFromObject(obj, 0x3c4);
-                *p = 0x100;
+                p->textureId = 0x100;
             }
             break;
         }
