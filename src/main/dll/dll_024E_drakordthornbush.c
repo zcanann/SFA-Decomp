@@ -162,8 +162,10 @@ void drakord_thornbush_update(int obj)
                 ((DrakordThornbushState*)inner)->unk68 = lbl_803E65AC * (f32)(u32)
                 framesThisStep + ((DrakordThornbushState*)inner)->unk68;
                 ((GameObject*)obj)->anim.rootMotionScale =
-                    ((DrakordThornbushState*)inner)->unk68 * (*(f32*)((char*)*(int*)&((GameObject*)obj)->anim.
-                        modelInstance + 4) * (f32)(s32)((DrakordThornbushPlacement*)setup)->unk1C) / lbl_803E65B0;
+                    ((DrakordThornbushState*)inner)->unk68 *
+                    (((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
+                     (f32)(s32)((DrakordThornbushPlacement*)setup)->unk1C) /
+                    lbl_803E65B0;
             }
         }
     }
@@ -264,14 +266,14 @@ void drakord_thornbush_init(int obj, u8* init)
         ((DrakordThornbushState*)inner)->radius = *(s16*)((char*)init + 0x1c);
         ((DrakordThornbushState*)inner)->unk70 = lbl_803E65C0;
         ((GameObject*)obj)->anim.rootMotionScale =
-            *(f32*)((char*)*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * (f32)(s32) * (s16*)((char*)init + 0x1c)
-            / lbl_803E6590;
+            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32) * (s16*)((char*)init + 0x1c) /
+            lbl_803E6590;
         break;
     case 0x709:
         *(void**)&((DrakordThornbushState*)inner)->unk6C = &lbl_803DC1A0;
         ((GameObject*)obj)->anim.rootMotionScale =
-            *(f32*)((char*)*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * (f32)(s32) * (s16*)((char*)init + 0x1c)
-            / lbl_803E65C4;
+            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32) * (s16*)((char*)init + 0x1c) /
+            lbl_803E65C4;
         ObjHitbox_SetSphereRadius(obj, (s16)(*(s16*)((char*)init + 0x1c) / 7));
         s16toFloat((f32*)((char*)inner + 0x10), (int)lbl_803DC1B0);
         ((DrakordThornbushState*)inner)->unk70 = lbl_803E65C8;

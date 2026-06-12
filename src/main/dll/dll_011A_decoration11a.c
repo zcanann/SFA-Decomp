@@ -472,8 +472,8 @@ void decoration11a_init(int* obj, u8* def)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B78;
         }
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)(*(int*)&((
-            GameObject*)obj)->anim.modelInstance + 4);
+        ((GameObject*)obj)->anim.rootMotionScale =
+            ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     }
     {
         s16 model = ((GameObject*)obj)->anim.seqId;

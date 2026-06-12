@@ -365,7 +365,7 @@ void curvefish_init(int obj, u8* param_2)
     v = ((GameObject*)obj)->objectFlags;
     v |= 0x6000;
     ((GameObject*)obj)->objectFlags = (u16)v;
-    ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
+    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
         ((f32)(u32)
     param_2[0x18] / lbl_803E3928
     )
