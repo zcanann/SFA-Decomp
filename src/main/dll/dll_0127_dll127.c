@@ -33,6 +33,7 @@ void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dll_127_update(int obj)
 {
     int flags;
+    ObjHitsPriorityState* hitState;
 
     if (((GameObject*)obj)->anim.hitReactState == 0)
     {
@@ -42,7 +43,8 @@ void dll_127_update(int obj)
     {
         *(short*)(obj + 0xf8) -= framesThisStep;
     }
-    flags = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags & 8;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    flags = hitState->flags & 8;
     if (flags == 0)
     {
         return;
