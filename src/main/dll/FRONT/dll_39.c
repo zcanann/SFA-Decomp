@@ -160,6 +160,7 @@ void n_rareware_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void n_attractmode_releaseMovieBuffers(void)
 {
     int freeDelay;
@@ -211,6 +212,8 @@ void n_attractmode_releaseMovieBuffers(void)
     }
     return;
 }
+
+#pragma dont_inline reset
 
 /*
  * --INFO--
