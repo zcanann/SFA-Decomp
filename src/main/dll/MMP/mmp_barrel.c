@@ -1,3 +1,104 @@
+/* === moved from main/dll/mmp_moonrock.c [80192394-801923C4) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling off
+#pragma peephole off
+#include "main/map_block.h"
+#include "main/game_object.h"
+#include "main/dll/mmp_moonrock.h"
+#include "global.h"
+
+typedef struct WaveanimatorState
+{
+    u8 pad0[0x34 - 0x0];
+    u8 unk34;
+    u8 pad35[0x36 - 0x35];
+    u8 unk36;
+    u8 unk37;
+    u8 unk38;
+    u8 pad39[0x40 - 0x39];
+} WaveanimatorState;
+
+
+extern uint GameBit_Get(int eventId);
+
+void texscroll2_setScale(TexScroll2Object* obj, s8 scale);
+
+extern void* mapGetBlock(int idx);
+extern int* getTablesBinEntry(int id);
+extern void* getLoadedTexture(int id);
+extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
+                                    int unusedXStep, int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
+extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int unusedXStep,
+                                   int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
+
+typedef struct TexScrollMapBlock
+{
+    u8 pad00[0xA2];
+    u8 layerCount;
+} TexScrollMapBlock;
+
+typedef struct TexScrollMapLayer
+{
+    u8 pad00[0x24];
+    void* texture;
+    u8 pad28[2];
+    u8 scrollSlot;
+    u8 pad2B[0x41 - 0x2B];
+    u8 materialCount;
+} TexScrollMapLayer;
+
+void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state);
+
+void texscroll2_free(void);
+
+void texscroll2_hitDetect(void);
+
+void texscroll2_release(void);
+
+void texscroll2_initialise(void);
+
+
+void texscroll2_update(TexScroll2Object* obj);
+
+void texscroll_free(void);
+
+void texscroll_hitDetect(void);
+
+void texscroll_update(void);
+
+void texscroll_release(void);
+
+void texscroll_initialise(void);
+
+int texscroll2_getExtraSize(void);
+int texscroll2_getObjectTypeId(void);
+int texscroll_getExtraSize(void);
+int texscroll_getObjectTypeId(void);
+
+void waveanimator_modelMtxFn(int obj, int a, int b, int c)
+{
+    int* state = ((GameObject*)obj)->extra;
+    u32 v;
+    v = (u32)((WaveanimatorState*)state)->unk34 | 4;
+    ((WaveanimatorState*)state)->unk34 = (u8)v;
+    ((WaveanimatorState*)state)->unk36 = (u8)a;
+    ((WaveanimatorState*)state)->unk37 = (u8)b;
+    ((WaveanimatorState*)state)->unk38 = (u8)c;
+}
+
+void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int loadFlags);
+
+void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags);
+
+extern f32 lbl_803E3F30;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3F38;
+
+void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+#pragma scheduling reset
+#pragma peephole reset
+
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
@@ -211,11 +312,7 @@ void waveanimator_func0B(int* obj)
     p->flags |= 2;
 }
 
-u8 wallanimator_func0B(int* obj)
-{
-    int* p = ((int**)obj)[0xb8 / 4];
-    return *p >= WALLANIMATOR_DONE_TIMER;
-}
+u8 wallanimator_func0B(int* obj);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -412,7 +509,7 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* wall variant: hashes lha to byte */
 #pragma peephole off
-u8 wallanimator_modelMtxFn(int* obj) { return (u8) * (s16*)((char*)((int**)obj)[0x4c / 4] + 0x1c); }
+u8 wallanimator_modelMtxFn(int* obj);
 
 void waveanimator_setScale(int* obj, f32 fval)
 {
@@ -434,7 +531,6 @@ u8 groundanimator_func0B(int* obj)
 }
 #pragma scheduling reset
 
-extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void* mapGetBlock(int idx);
 extern void fn_801923F8(int* cfg);
 extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
@@ -474,6 +570,7 @@ void waveanimator_init(int* obj, int* desc)
 #pragma scheduling off
 void hitanimator_update(HitAnimatorObject* obj)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     HitAnimatorPlacement* setup = (HitAnimatorPlacement*)obj->objAnim.placementData;
     HitAnimatorState* state = obj->state;
     void* block;
@@ -566,6 +663,7 @@ void groundanimator_init(int* obj, int* desc)
 #pragma scheduling off
 void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     HitAnimatorState* state = obj->state;
     void* block;
     u8 g;
@@ -609,6 +707,7 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 #pragma scheduling off
 void visanimator_init(int* obj, int* desc)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     VisAnimatorState* vstate;
     u32 gate;
     u8 tmp;
@@ -635,6 +734,7 @@ void visanimator_init(int* obj, int* desc)
 
 void visanimator_update(int* obj)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     int* state = ((int**)obj)[0x4C / 4];
     VisAnimatorState* vstate = (VisAnimatorState*)((int**)obj)[0xB8 / 4];
     int idx = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
@@ -725,6 +825,7 @@ extern void fn_8006058C(void* cell, void* in);
 #pragma peephole off
 void groundanimator_free(int* obj, int flag)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     GroundAnimatorState * w;
     int* r21;
     void* block;
@@ -846,6 +947,7 @@ extern f32 lbl_803E3FC0;
 #pragma peephole off
 void fn_801932C8(int* obj, GroundAnimatorState* p2, int* p3)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     void* block;
     void* entry;
     void* vtx;
@@ -927,6 +1029,7 @@ extern u16 lbl_803DBDF0[];
 #pragma peephole off
 void groundanimator_update(int* obj)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     GroundAnimatorState * g;
     int* r20;
     s8 bi;
@@ -1144,6 +1247,7 @@ extern f32 lbl_803E3F84;
 
 void alphaanimator_update(int* obj)
 {
+    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     int* d;
     AlphaAnimatorState* s;
     int mode;
@@ -1483,11 +1587,11 @@ void fn_801923F8(int* cfgArg)
     }
 }
 
-extern char* fn_8006070C(void* block, int idx);
 extern u8* Shader_getLayer(char* s, int layer);
 
 void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate, HitAnimatorPlacement* desc)
 {
+    extern char* fn_8006070C(void* block, int idx); /* #57 */
     int i;
     char* m;
 

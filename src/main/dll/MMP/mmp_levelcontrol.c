@@ -1,3 +1,433 @@
+/* === moved from main/dll/MMP/mmp_barrel.c [80194408-8019443C) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling on
+#pragma peephole on
+#include "main/map_block.h"
+#include "main/dll/groundanimator_state.h"
+#include "main/dll/MMP/mmp_barrel.h"
+#include "main/game_object.h"
+#include "global.h"
+
+typedef struct WaveanimatorObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    s16 originX;
+    s16 originY;
+    s8 spanX;
+    s8 spanY;
+    s16 modelVariant;
+    s8 unk20;
+    s8 period;
+    s8 gridN;
+    u8 pad23[0x25 - 0x23];
+    u8 unk25;
+    u8 radius;
+    u8 yOffset;
+} WaveanimatorObjectDef;
+
+
+typedef struct GroundanimatorPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 pad23[0x25 - 0x23];
+    u8 unk25;
+    u8 pad26[0x28 - 0x26];
+} GroundanimatorPlacement;
+
+
+typedef struct AlphaanimatorPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s8 unk1C;
+    s8 unk1D;
+    u8 active;
+    u8 unk1F;
+    u8 unk20;
+    u8 pad21[0x22 - 0x21];
+    u16 fadeMax;
+    u16 sfxId;
+    u8 pad26[0x28 - 0x26];
+} AlphaanimatorPlacement;
+
+
+/* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
+ * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
+ * globals). */
+typedef struct WaveAnimatorState
+{
+    int originX; /* 0x00 */
+    int originY; /* 0x04 */
+    int spanX; /* 0x08 */
+    int spanY; /* 0x0c */
+    f32 ampX; /* 0x10 */
+    f32 ampY; /* 0x14 */
+    int unk18; /* 0x18 */
+    int period; /* 0x1c */
+    int gridN; /* 0x20 */
+    f32 minHeight; /* 0x24 */
+    f32 maxHeight; /* 0x28 */
+    f32 scaleA; /* 0x2c */
+    f32 scaleB; /* 0x30 */
+    u8 flags; /* 0x34: 1 = scale pending, 2 = func0B latch */
+    u8 pad35[7];
+} WaveAnimatorState;
+
+STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
+
+/* alphaanimator_getExtraSize == 0x1c. */
+typedef struct AlphaAnimatorState
+{
+    int vertCount; /* 0x00 */
+    f32 fadeA; /* 0x04 */
+    f32 fadeB; /* 0x08 */
+    f32 fadeMax; /* 0x0c */
+    void* buf; /* 0x10: mode-3 per-vertex alpha buffer */
+    s16 alphaLevel; /* 0x14 */
+    u8 active; /* 0x16 */
+    u8 gateVal; /* 0x17 */
+    u8 doneCount; /* 0x18 */
+    u8 prevGate; /* 0x19 */
+    u8 pad1A[2];
+} AlphaAnimatorState;
+
+STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
+
+/* groundanimator_getExtraSize == 0x30. */
+STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
+
+/* visanimator_getExtraSize == 0x5. */
+typedef struct VisAnimatorState
+{
+    u8 flags; /* 0x00: 1 = refresh pending */
+    s8 visBit; /* 0x01 */
+    u8 gateNow; /* 0x02 */
+    u8 gatePrev; /* 0x03 */
+    u8 gateMask; /* 0x04 */
+} VisAnimatorState;
+
+STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
+
+extern undefined4 FUN_80006824();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern undefined4 FUN_80017814();
+extern int FUN_80017830();
+extern int FUN_80017a90();
+extern undefined4 FUN_80017a98();
+extern int FUN_80017af0();
+extern int ObjGroup_FindNearestObject();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_800400b0();
+extern int FUN_800480a0();
+extern int FUN_8005337c();
+extern undefined4 FUN_80056418();
+extern int FUN_80056448();
+extern int FUN_8005af70();
+extern int FUN_8005b398();
+extern undefined4 FUN_8005ff38();
+extern undefined4 FUN_8005ff90();
+extern uint FUN_80060058();
+extern int FUN_80060064();
+extern undefined4 FUN_800600b4();
+extern int FUN_800600e4();
+extern undefined4 FUN_800631d4();
+extern int FUN_80063298();
+extern undefined4 FUN_801a8ae8();
+extern undefined4 FUN_801a8b20();
+extern undefined4 FUN_80242178();
+extern uint FUN_80286810();
+extern undefined8 FUN_8028681c();
+extern undefined8 FUN_80286820();
+extern undefined8 FUN_8028682c();
+extern uint FUN_80286840();
+extern undefined4 TRKNubMainLoop();
+extern undefined4 FUN_80286868();
+extern undefined4 FUN_8028686c();
+extern undefined4 FUN_80286878();
+extern undefined4 FUN_8028688c();
+extern undefined4 FUN_802924c4();
+extern undefined4 FUN_80293f90();
+
+extern undefined4 DAT_803dc070;
+extern undefined4 DAT_803de768;
+extern undefined4 DAT_803de76c;
+extern undefined4 DAT_803de770;
+extern undefined4 DAT_803de774;
+extern f64 DOUBLE_803e4c00;
+extern f64 DOUBLE_803e4c20;
+extern f64 DOUBLE_803e4c28;
+extern f64 DOUBLE_803e4c38;
+extern f64 DOUBLE_803e4c60;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DDA58;
+extern f32 lbl_803DDA5C;
+extern f32 lbl_803E4BDC;
+extern f32 lbl_803E4BE8;
+extern f32 lbl_803E4BEC;
+extern f32 lbl_803E4BF0;
+extern f32 lbl_803E4BF4;
+extern f32 lbl_803E4BF8;
+extern f32 lbl_803E4BFC;
+extern f32 lbl_803E4C08;
+extern f32 lbl_803E4C10;
+extern f32 lbl_803E4C14;
+extern f32 lbl_803E4C18;
+extern f32 lbl_803E4C1C;
+extern f32 lbl_803E4C30;
+extern f32 lbl_803E4C40;
+extern f32 lbl_803E4C44;
+extern f32 lbl_803E4C48;
+extern f32 lbl_803E4C4C;
+extern f32 lbl_803E4C50;
+extern f32 lbl_803E4C54;
+extern f32 lbl_803E4C58;
+extern f32 lbl_803E4C5C;
+
+/*
+ * --INFO--
+ *
+ * Function: waveanimator_func0B
+ * EN v1.0 Address: 0x801923C4
+ * EN v1.0 Size: 196b
+ * EN v1.1 Address: 0x801923CC
+ * EN v1.1 Size: 260b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma peephole off
+#pragma scheduling off
+void waveanimator_func0B(int* obj);
+
+u8 wallanimator_func0B(int* obj)
+{
+    int* p = ((int**)obj)[0xb8 / 4];
+    return *p >= WALLANIMATOR_DONE_TIMER;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void mm_free(void* p);
+
+void alphaanimator_free(int* obj);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80192488
+ * EN v1.0 Address: 0x80192488
+ * EN v1.0 Size: 400b
+ * EN v1.1 Address: 0x801924D0
+ * EN v1.1 Size: 500b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_80192488(void);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void waveanimator_update(void);
+
+void waveanimator_release(void);
+
+void waveanimator_initialise(void);
+
+void alphaanimator_hitDetect(void);
+
+void alphaanimator_release(void);
+
+void alphaanimator_initialise(void);
+
+void visanimator_free(void);
+
+void visanimator_render(void);
+
+void visanimator_hitDetect(void);
+
+void visanimator_release(void);
+
+void visanimator_initialise(void);
+
+/* 8b "li r3, N; blr" returners. */
+int waveanimator_getExtraSize(void);
+int waveanimator_getObjectTypeId(void);
+int alphaanimator_getExtraSize(void);
+int alphaanimator_getObjectTypeId(void);
+int groundanimator_getExtraSize(void);
+int hitanimator_getExtraSize(void);
+int visanimator_getExtraSize(void);
+int visanimator_getObjectTypeId(void);
+
+/* Pattern wrappers. */
+u8 groundanimator_modelMtxFn(int* obj);
+
+/* 16b chained patterns. */
+#pragma scheduling off
+void alphaanimator_init(int* obj);
+#pragma scheduling reset
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E3F70;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3F78;
+extern f32 lbl_803E3FC4;
+#pragma peephole off
+void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+#pragma peephole reset
+
+/* wall variant: hashes lha to byte */
+#pragma peephole off
+u8 wallanimator_modelMtxFn(int* obj) { return (u8) * (s16*)((char*)((int**)obj)[0x4c / 4] + 0x1c); }
+
+void waveanimator_setScale(int* obj, f32 fval);
+#pragma peephole reset
+
+extern f32 lbl_803E3F98;
+#pragma scheduling off
+u8 groundanimator_func0B(int* obj);
+#pragma scheduling reset
+
+extern int objPosToMapBlockIdx(double x, double y, double z);
+extern void fn_801923F8(int* cfg);
+extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
+                                   HitAnimatorPlacement* desc);
+extern int fn_80065640(void);
+extern void fn_80065574(int a, int b, int c);
+extern u8 lbl_803DDAE8;
+#pragma peephole off
+#pragma scheduling off
+void waveanimator_init(int* obj, int* desc);
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void hitanimator_update(HitAnimatorObject* obj);
+#pragma scheduling reset
+#pragma peephole reset
+
+extern f32 lbl_803E3FB8;
+#pragma peephole off
+#pragma scheduling off
+void groundanimator_init(int* obj, int* desc);
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc);
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void visanimator_init(int* obj, int* desc);
+
+void visanimator_update(int* obj);
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void* lbl_803DDAEC;
+extern void* lbl_803DDAF0;
+extern void* lbl_803DDAF4;
+#pragma peephole off
+#pragma scheduling off
+void waveanimator_free(int* obj);
+#pragma scheduling reset
+#pragma peephole reset
+extern u8 lbl_803DDAF8;
+extern u8 framesThisStep;
+#pragma scheduling off
+#pragma peephole off
+void waveanimator_hitDetect(int* obj);
+
+extern void fn_800605F0(void* cell, void* out);
+extern void fn_8006058C(void* cell, void* in);
+#pragma scheduling off
+#pragma peephole off
+void groundanimator_free(int* obj, int flag);
+
+extern f32 lbl_803E3FA8;
+extern f32 lbl_803E3FAC;
+extern f32 lbl_803E3FB0;
+extern f32 lbl_803E3FB4;
+extern f32 lbl_803E3FBC;
+extern f32 timeDelta;
+extern void fn_801A80F0(int* e, int arg);
+#pragma scheduling off
+#pragma peephole off
+f32 groundanimator_setScale(int* obj, int* target);
+
+extern float fastFloorf(float x);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E3FC0;
+#pragma scheduling off
+#pragma peephole off
+void fn_801932C8(int* obj, GroundAnimatorState* p2, int* p3);
+
+extern int* Obj_GetPlayerObject(void);
+extern int fn_80060688(void* block, int v);
+extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
+extern void DCStoreRangeNoSync(void* addr, int len);
+extern void* mmAlloc(int size, int align, int tag);
+extern u16 lbl_803DBDF0[];
+#pragma scheduling off
+#pragma peephole off
+void groundanimator_update(int* obj);
+
+extern f32 lbl_803E3F7C;
+extern f32 lbl_803E3F80;
+extern f32 lbl_803E3F84;
+
+void alphaanimator_update(int* obj);
+
+extern f32 lbl_803E3F40;
+extern f32 lbl_803E3F44;
+extern f32 lbl_803E3F48;
+extern f32 lbl_803E3F4C;
+extern f32 lbl_803E3F50;
+extern f32 lbl_803E3F54;
+extern f32 lbl_803E3F58;
+extern f32 lbl_803E3F5C;
+extern f32 lbl_803E3F60;
+extern f32 lbl_803E3F64;
+extern f32 mathSinf(f32);
+
+void fn_801923F8(int* cfgArg);
+
+
+void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate, HitAnimatorPlacement* desc);
+#pragma scheduling reset
+#pragma peephole reset
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -28,38 +458,27 @@ typedef struct XyzanimatorState
 
 
 extern undefined4 FUN_80006824();
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
 extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
-extern int getTrickyObject(void);
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
-extern void objRenderFn_80041018(int obj);
 extern int FUN_8005af70();
 extern int FUN_8005b398();
-extern int mapGetBlock(int blockIdx);
-extern uint mapBlockFn_80060678(int* block);
-extern void* mapBlockFn_800606ec(int* obj, int idx);
-extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
-extern void* fn_8006070C(int* obj, int idx);
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void mm_free(void* ptr);
 extern void DCStoreRange(void* addr, u32 nBytes);
 extern int return0_80060B90(void);
-extern void* Shader_getLayer(void* shader, int idx);
 extern uint FUN_80060058();
 extern undefined4 FUN_800600b4();
-extern undefined4 FUN_800600c4();
 extern int FUN_800600d4();
-extern undefined4 FUN_80193a50();
 extern undefined8 FUN_80286830();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_8028687c();
@@ -208,31 +627,7 @@ f32 wallanimator_setScale(int obj, int target)
  */
 #pragma scheduling off
 #pragma peephole off
-f32 objFn_801948c0(u8* obj, u8 coord)
-{
-    u8* state;
-
-    if (obj == NULL || (state = ((GameObject*)obj)->extra, state == NULL))
-    {
-        return lbl_803E4000;
-    }
-    switch (coord)
-    {
-    case 1:
-        return ((GameObject*)obj)->anim.localPosX + *(f32*)(state + 0x40);
-    case 2:
-        return *(f32*)(state + 0x40);
-    case 3:
-        return ((GameObject*)obj)->anim.localPosY + *(f32*)(state + 0x44);
-    case 4:
-        return *(f32*)(state + 0x44);
-    case 5:
-        return ((GameObject*)obj)->anim.localPosZ + *(f32*)(state + 0x48);
-    case 6:
-        return *(f32*)(state + 0x48);
-    }
-    return lbl_803E4000;
-}
+f32 objFn_801948c0(u8* obj, u8 coord);
 
 /*
  * --INFO--
@@ -333,153 +728,9 @@ typedef struct EdgeVerts
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80194964(int obj, int state, int block)
-{
-    ushort blockEnd;
-    ushort* mapBlock;
-    int blockLayer;
-    int coordOffset;
-    VertexS16* vtx;
-    uint triangle;
-    int triangleOffset;
-    int edge;
-    int edgeOffset;
-    int blockIndex;
+void fn_80194964(int obj, int state, int block);
 
-    triangleOffset = 0;
-    coordOffset = 0;
-    edgeOffset = 0;
-    for (blockIndex = 0; blockIndex < (int)(uint) * (ushort*)(block + 0x9a); blockIndex++)
-    {
-        mapBlock = (ushort*)mapBlockFn_800606ec((int*)block, blockIndex);
-        blockLayer = mapBlockFn_80060678((int*)mapBlock);
-        if ((int)*(char*)(obj + 0x28) == blockLayer)
-        {
-            *(s16*)(*(int*)(state + 0x10) + coordOffset) = ((MapBlockHdr*)mapBlock)->posA;
-            *(s16*)(*(int*)(state + 0x14) + coordOffset) = ((MapBlockHdr*)mapBlock)->posB;
-            coordOffset += 2;
-            blockEnd = mapBlock[10];
-            triangle = (uint) * mapBlock;
-            edgeOffset = triangleOffset;
-            for (; (int)triangle < (int)(uint)blockEnd; triangle++)
-            {
-                mapBlock = (ushort*)fn_800606DC((int*)block, triangle);
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint) * mapBlock * 6);
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset) = vtx->x;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 2) = vtx->y;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 4) = vtx->z;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint)mapBlock[1] * 6);
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 6) = vtx->x;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 8) = vtx->y;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 10) = vtx->z;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint)mapBlock[2] * 6);
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 0xc) = vtx->x;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 0xe) = vtx->y;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 0x10) = vtx->z;
-                edgeOffset += 0x12;
-                triangleOffset += 0x12;
-            }
-        }
-    }
-    edge = 0;
-    for (edgeOffset = 0; edgeOffset < (int)(uint) * (byte*)(block + 0xa1); edgeOffset++)
-    {
-        blockIndex = (int)fn_800606FC((int*)block, edgeOffset);
-        *(s16*)(*(int*)(state + 0x28) + edge) = ((EdgeVerts*)blockIndex)->a;
-        *(s16*)(*(int*)(state + 0x2c) + edge) = ((EdgeVerts*)blockIndex)->d;
-        *(s16*)(*(int*)(state + 0x30) + edge) = ((EdgeVerts*)blockIndex)->b;
-        *(s16*)(*(int*)(state + 0x34) + edge) = ((EdgeVerts*)blockIndex)->e;
-        *(s16*)(*(int*)(state + 0x38) + edge) = ((EdgeVerts*)blockIndex)->c;
-        *(s16*)(*(int*)(state + 0x3c) + edge) = ((EdgeVerts*)blockIndex)->f;
-        edge += 2;
-    }
-}
-
-void fn_80194C40(undefined4 def, int state, int block)
-{
-    ushort blockEnd;
-    f32 scale;
-    int edgeData;
-    ushort* mapBlock;
-    int blockLayer;
-    void* shader;
-    VertexS16* vtx;
-    uint triangle;
-    int triangleOffset;
-    int vertexOffset;
-    int coordOffset;
-    int blockIndex;
-    int edgeIndex;
-    int edgeOffset;
-    int vertexIndex;
-
-    triangleOffset = 0;
-    coordOffset = triangleOffset;
-    vertexOffset = coordOffset;
-    for (blockIndex = 0; blockIndex < (int)(uint) * (ushort*)(block + 0x9a); blockIndex++)
-    {
-        mapBlock = (ushort*)mapBlockFn_800606ec((int*)block, blockIndex);
-        blockLayer = mapBlockFn_80060678((int*)mapBlock);
-        if ((int)*(char*)(def + 0x28) == blockLayer)
-        {
-            ((MapBlockHdr*)mapBlock)->posA = (int)(*(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x10) + coordOffset));
-            ((MapBlockHdr*)mapBlock)->posB = (int)(*(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x14) + coordOffset));
-            coordOffset += 2;
-            blockEnd = mapBlock[10];
-            scale = lbl_803E4008;
-            triangle = (uint) * mapBlock;
-            edgeOffset = vertexOffset;
-            for (; (int)triangle < (int)(uint)blockEnd; triangle++)
-            {
-                mapBlock = (ushort*)fn_800606DC((int*)block, triangle);
-                vertexIndex = edgeOffset;
-                for (edgeIndex = 3; edgeIndex != 0; edgeIndex--)
-                {
-                    vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint) * mapBlock * 6);
-                    vtx->x = (int)(scale * *(float*)(state + 0x40) +
-                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset));
-                    vtx->y = (int)(scale * *(float*)(state + 0x44) +
-                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset + 2));
-                    vtx->z = (int)(scale * *(float*)(state + 0x48) +
-                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset + 4));
-                    edgeOffset += 6;
-                    vertexIndex += 6;
-                    vertexOffset += 6;
-                    mapBlock++;
-                }
-                edgeOffset = vertexIndex;
-            }
-        }
-    }
-    DCStoreRange(*(void**)(block + 0x58), (uint) * (ushort*)(block + 0x90) * 6);
-    edgeData = 0;
-    for (edgeOffset = 0; edgeOffset < (int)(uint) * (byte*)(block + 0xa1); edgeOffset++)
-    {
-        vertexOffset = (int)fn_800606FC((int*)block, edgeOffset);
-        shader = fn_8006070C((int*)block, *(byte*)(vertexOffset + 0x13));
-        shader = Shader_getLayer(shader, 0);
-        scale = lbl_803E4008;
-        if ((uint) * (byte*)((int)shader + 5) == (int)*(char*)(def + 0x28))
-        {
-            ((EdgeVerts*)vertexOffset)->a = (int)(scale * *(float*)(state + 0x40) +
-                (f32) * (s16*)(*(int*)(state + 0x28) + edgeData));
-            ((EdgeVerts*)vertexOffset)->d = (int)(scale * *(float*)(state + 0x40) +
-                (f32) * (s16*)(*(int*)(state + 0x2c) + edgeData));
-            ((EdgeVerts*)vertexOffset)->b = (int)(scale * *(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x30) + edgeData));
-            ((EdgeVerts*)vertexOffset)->e = (int)(scale * *(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x34) + edgeData));
-            ((EdgeVerts*)vertexOffset)->c = (int)(scale * *(float*)(state + 0x48) +
-                (f32) * (s16*)(*(int*)(state + 0x38) + edgeData));
-            ((EdgeVerts*)vertexOffset)->f = (int)(scale * *(float*)(state + 0x48) +
-                (f32) * (s16*)(*(int*)(state + 0x3c) + edgeData));
-        }
-        edgeData += 2;
-    }
-    *(int*)block = return0_80060B90();
-}
+void fn_80194C40(undefined4 def, int state, int block);
 
 /*
  * --INFO--
@@ -512,42 +763,9 @@ int wallanimator_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int xyzanimator_getExtraSize(void)
-{
-    return 0x50;
-}
+int xyzanimator_getExtraSize(void);
 
-void xyzanimator_free(int obj, int param_2)
-{
-    int block;
-    int state;
-    undefined4 def;
-    f32 zero;
-
-    zero = lbl_803E4000;
-    state = *(int*)&((GameObject*)obj)->extra;
-    def = *(undefined4*)&((GameObject*)obj)->anim.placementData;
-    *(float*)(state + 0x40) = lbl_803E4000;
-    *(float*)(state + 0x44) = zero;
-    *(float*)(state + 0x48) = zero;
-    if (param_2 == 0)
-    {
-        block = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                    (double)((GameObject*)obj)->anim.localPosY,
-                                    (double)((GameObject*)obj)->anim.localPosZ);
-        block = mapGetBlock(block);
-        if ((block != 0) && (*(int*)(state + 4) != 0))
-        {
-            fn_80194C40(def, state, block);
-        }
-    }
-    if (*(int*)(state + 0xc) != 0)
-    {
-        mm_free(*(void**)(state + 0xc));
-    }
-    ObjGroup_RemoveObject(obj, 0x51);
-    return;
-}
+void xyzanimator_free(int obj, int param_2);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FF8;
@@ -560,11 +778,7 @@ void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3FF8);
 }
 
-void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4004);
-}
+void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void wallanimator_free(int obj)
 {
@@ -574,6 +788,9 @@ void wallanimator_free(int obj)
 
 void wallanimator_update(int obj)
 {
+    extern void objRenderFn_80041018(int obj); /* #57 */
+    extern int getTrickyObject(void); /* #57 */
+    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
     int nearby;
     int* state;
     int desc;

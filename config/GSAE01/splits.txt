@@ -766,19 +766,19 @@ main/dll/holoPoint.c:
 	.text       start:0x80191F2C end:0x80191F2C
 
 main/dll/mmp_moonrock.c:
-	.text       start:0x80191F2C end:0x801923C4
+	.text       start:0x80191F2C end:0x80192394
 
 main/dll/MMP/mmp_barrel.c:
-	.text       start:0x801923C4 end:0x8019443C
+	.text       start:0x80192394 end:0x80194408
 
 main/dll/MMP/mmp_levelcontrol.c:
-	.text       start:0x8019443C end:0x80195008
+	.text       start:0x80194408 end:0x801948C0
 
 main/dll/MMP/MMP_asteroid.c:
-	.text       start:0x80195008 end:0x801978A8
+	.text       start:0x801948C0 end:0x801978A0
 
 main/dll/MMP/MMP_moonrock.c:
-	.text       start:0x801978A8 end:0x80198FA4
+	.text       start:0x801978A0 end:0x80198FA4
 
 main/dll/MMP/MMP_gyservent.c:
 	.text       start:0x80198FA4 end:0x801993B0

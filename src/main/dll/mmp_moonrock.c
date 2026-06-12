@@ -215,16 +215,7 @@ int texscroll2_getObjectTypeId(void) { return 0x0; }
 int texscroll_getExtraSize(void) { return 0x1c; }
 int texscroll_getObjectTypeId(void) { return 0x0; }
 
-void waveanimator_modelMtxFn(int obj, int a, int b, int c)
-{
-    int* state = ((GameObject*)obj)->extra;
-    u32 v;
-    v = (u32)((WaveanimatorState*)state)->unk34 | 4;
-    ((WaveanimatorState*)state)->unk34 = (u8)v;
-    ((WaveanimatorState*)state)->unk36 = (u8)a;
-    ((WaveanimatorState*)state)->unk37 = (u8)b;
-    ((WaveanimatorState*)state)->unk38 = (u8)c;
-}
+void waveanimator_modelMtxFn(int obj, int a, int b, int c);
 
 void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int loadFlags)
 {
