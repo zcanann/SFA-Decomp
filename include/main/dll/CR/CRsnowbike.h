@@ -41,8 +41,10 @@ int sc_musictree_getObjectTypeId(void);
 void sc_musictree_free(void);
 void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void sc_musictree_hitDetect(void);
-void sc_musictree_update(void);
-void sc_musictree_init(void);
+void sc_musictree_update(int obj);
+/* sc_musictree_init is defined in DRcloudrunner.c with a private setup type;
+ * declared there. Not referenced here, so no prototype is carried (a (void)
+ * drift prototype collides with the real def when the TUs merge). */
 void sc_musictree_release(void);
 void sc_musictree_initialise(void);
 
