@@ -13,21 +13,6 @@ typedef struct MmshWaterspikePlacement
 } MmshWaterspikePlacement;
 
 
-typedef struct MmshScalesState
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x14 - 0x10];
-    s32 unk14;
-    u8 pad18[0x24 - 0x18];
-    f32 unk24;
-    s32 unk28;
-    u8 pad2C[0x6A - 0x2C];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 pad70[0x140 - 0x70];
-} MmshScalesState;
 
 
 typedef struct MmshWaterspikeObjectDef
@@ -42,11 +27,7 @@ typedef struct MmshWaterspikeObjectDef
 
 
 extern u32 randomGetRange(int min, int max);
-extern void Obj_FreeObject(void* obj);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 /*
  * --INFO--
@@ -75,7 +56,6 @@ extern int* gTitleMenuControlInterfaceCopy;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_scales_free(int obj, int arg2);
 
 /*
  * --INFO--
@@ -84,20 +64,14 @@ void mmsh_scales_free(int obj, int arg2);
  * EN v1.0 Address: 0x801C5474
  * EN v1.0 Size: 372b
  */
-extern u8 lbl_803DB411;
 
-void mmsh_scales_update(int objArg);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void mmsh_shrine_release(void);
 
 
-void mmsh_scales_hitDetect(void);
 
-void mmsh_scales_release(void);
 
-void mmsh_scales_initialise(void);
 
 void mmsh_waterspike_free(void)
 {
@@ -117,7 +91,6 @@ void mmsh_waterspike_initialise(void)
 
 /* 8b "li r3, N; blr" returners. */
 int mmsh_scales_getExtraSize(void);
-int mmsh_scales_getObjectTypeId(void);
 int mmsh_waterspike_getExtraSize(void) { return 0x0; }
 int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
 void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
@@ -126,7 +99,6 @@ void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 extern f32 lbl_803E4F68;
 extern void objRenderFn_8003b8f4(f32);
 
-void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /*
  * --INFO--
@@ -230,8 +202,4 @@ void mmsh_waterspike_init(int obj, s16* def)
 }
 
 extern f32 lbl_803E4F78;
-extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int type);
-extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 
-void mmsh_scales_init(int* obj, s16* def);

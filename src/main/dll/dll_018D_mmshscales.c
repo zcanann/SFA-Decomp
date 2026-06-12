@@ -4,13 +4,6 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 
-typedef struct MmshWaterspikePlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x14 - 0x10];
-    s32 unk14;
-} MmshWaterspikePlacement;
 
 
 typedef struct MmshScalesState
@@ -30,18 +23,8 @@ typedef struct MmshScalesState
 } MmshScalesState;
 
 
-typedef struct MmshWaterspikeObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x24 - 0x1E];
-    u8 unk24;
-    u8 pad25[0x28 - 0x25];
-} MmshWaterspikeObjectDef;
 
 
-extern u32 randomGetRange(int min, int max);
 extern void Obj_FreeObject(void* obj);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -163,18 +146,13 @@ void mmsh_scales_initialise(void)
 
 void mmsh_waterspike_free(void);
 
-void mmsh_waterspike_hitDetect(void);
 
-void mmsh_waterspike_release(void);
 
-void mmsh_waterspike_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int mmsh_scales_getExtraSize(void) { return 0x140; }
 int mmsh_scales_getObjectTypeId(void) { return 0xb; }
 int mmsh_waterspike_getExtraSize(void);
-int mmsh_waterspike_getObjectTypeId(void);
-void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4F68;
@@ -194,19 +172,9 @@ void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
  * EN v1.0 Size: 380b
  */
 extern void* ObjList_FindObjectById(int id);
-extern f32 objFn_801948c0(void* obj, int param_2);
-extern void fn_80137948(char* fmt, ...);
-extern char sWaterSpikeInvalidXyzAnimIdWarning[];
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
-extern u8 framesThisStep;
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E4F80;
-extern f32 lbl_803E4F84;
-extern f32 lbl_803E4F88;
 
 void mmsh_waterspike_update(int obj);
 
-void mmsh_waterspike_init(int obj, s16* def);
 
 extern f32 lbl_803E4F78;
 extern u8 Obj_IsLoadingLocked(void);
