@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
+#include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -11,7 +12,6 @@ extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int p3);
 
-extern f32 Curve_AdvanceAlongPath(void* state, f32 t);
 extern s16 getAngle(f32 dx, f32 dz);
 
 extern void ObjHitbox_SetSphereRadius(int obj, int r);
@@ -126,7 +126,7 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     state->pitchRising = 1;
     state->timer = lbl_803E4468;
 
-    (*gRomCurveInterface)->initCurve(state, (void*)obj, lbl_803E44B8, tmp, -1);
+    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, lbl_803E44B8, tmp, -1);
 }
 
 void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
@@ -174,10 +174,10 @@ void RollingBarrel_update(int obj)
                 f32 vmax = lbl_803E446C;
                 while (blocked == 0 && dist_sq < vmax * timeDelta)
                 {
-                    blocked = (int)Curve_AdvanceAlongPath(state, state->curveSpeed);
+                    blocked = Curve_AdvanceAlongPath(&state->curve, state->curveSpeed);
                     if (blocked == 0 && state->curve.atSegmentEnd != 0)
                     {
-                        (*gRomCurveInterface)->goNextPoint(state);
+                        (*gRomCurveInterface)->goNextPoint(&state->curve);
                     }
                     {
                         f32 dx = state->curve.posX - ((GameObject*)obj)->anim.previousLocalPosX;
@@ -188,10 +188,10 @@ void RollingBarrel_update(int obj)
             }
             else
             {
-                blocked = (int)Curve_AdvanceAlongPath(state, state->curveSpeed);
+                blocked = Curve_AdvanceAlongPath(&state->curve, state->curveSpeed);
                 if (blocked == 0 && state->curve.atSegmentEnd != 0)
                 {
-                    (*gRomCurveInterface)->goNextPoint(state);
+                    (*gRomCurveInterface)->goNextPoint(&state->curve);
                 }
             }
 
