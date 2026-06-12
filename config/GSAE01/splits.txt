@@ -1032,11 +1032,8 @@ main/dll/dim2conveyor.c:
 main/dll/creator1D6.c:
 	.text       start:0x801CF7E8 end:0x801CFD68
 
-main/dll/flybaddie1D7.c:
-	.text       start:0x801CFD68 end:0x801CFF20
-
 main/dll/projball1D8.c:
-	.text       start:0x801CFF20 end:0x801D083C
+	.text       start:0x801CFD68 end:0x801D083C
 
 main/dll/NW/NWsfx.c:
 	.text       start:0x801D083C end:0x801D16EC

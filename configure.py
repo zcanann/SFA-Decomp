@@ -1131,7 +1131,6 @@ config.libs = [
             Object(NonMatching, "main/dll/creator1D4.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dim2conveyor.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/creator1D6.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/flybaddie1D7.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/projball1D8.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/NW/NWsfx.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/NW/dll_1DB.c", cflags=cflags_dll_noopt),
