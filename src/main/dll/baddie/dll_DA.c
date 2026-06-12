@@ -40,7 +40,7 @@ extern void gameTextShow(int textId);
 extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
 extern void MWTRACE(int boxId);
 
-extern LinkTexture linkTextures[6];
+extern u8 linkTextures[0x30];
 extern LinkMenuItemDA lbl_803A9458[40];
 extern void* saveFileSelect_saveSlots;
 extern s16 lbl_803DD8FA;
@@ -123,8 +123,8 @@ void Link_render(void)
                     while (drawItem->slots[slotIndex] != -1 && slotIndex < 25)
                     {
                         textureIndex = drawItem->slots[slotIndex];
-                        drawTexture(linkTextures[textureIndex].texture, 0xff, (f32)x, (f32)y, 0x100);
-                        x += linkTextures[drawItem->slots[slotIndex]].width;
+                        drawTexture(((LinkTexture*)linkTextures)[textureIndex].texture, 0xff, (f32)x, (f32)y, 0x100);
+                        x += ((LinkTexture*)linkTextures)[drawItem->slots[slotIndex]].width;
                         slotIndex++;
                     }
                 }
