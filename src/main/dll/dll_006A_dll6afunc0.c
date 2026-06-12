@@ -4,31 +4,8 @@
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 
-typedef struct SaveGameData
-{
-    u8 pad0[0x20 - 0x0];
-    u8 currentCharacter;
-    u8 pad21[0x55E - 0x21];
-    u8 unk55E;
-    u8 pad55F[0x560 - 0x55F];
-    f32 playTime;
-    u8 pad564[0x6A4 - 0x564];
-    s16 camActionNo;
-    u8 pad6A6[0xF70 - 0x6A6];
-} SaveGameData;
 
 
-typedef struct CarryableUpdateHeldState
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    u8 pad4[0x5 - 0x4];
-    s8 unk5;
-    u8 unk6;
-    u8 unk7;
-    u8 unk8;
-    u8 pad9[0x10 - 0x9];
-} CarryableUpdateHeldState;
 
 
 typedef struct
@@ -65,18 +42,11 @@ extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_800176cc();
 extern undefined4 FUN_800176dc();
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_8005d018();
 extern undefined4 FUN_80072564();
 extern undefined4 FUN_800d783c();
 extern undefined4 FUN_8011e80c();
-extern void OSSetSaveRegion(void* start, void* end);
 extern longlong FUN_80286830();
 extern uint FUN_80286834();
 extern undefined8 FUN_80286840();
@@ -154,136 +124,30 @@ extern undefined4 DAT_803a4e78;
 extern undefined4 DAT_803dc4f0;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6e8;
-extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de100;
 extern undefined4 DAT_803de104;
 extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-extern u8 gSaveGameData[];
-extern u8 saveGameLoadStatus;
-extern s8 lbl_803DB890;
-extern u8* lbl_803DD498;
-extern char sGameplayFoxName;
-extern u8 saveData[228];
-extern f32 lbl_803E06C8;
-extern f32 lbl_803E06CC;
-extern u16 lbl_80311720[];
-extern u16 lbl_80311810[];
-extern u32 gMapObjGroupStatuses[];
-extern u8 gExtendedMapActLookup[];
-extern int lbl_803DD48C;
 
-#define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
-#define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
-#define SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET 0x20158
-#define SAVEGAME_LIVE_BUFFER_SIZE 0xf70
-#define SAVEGAME_ACTIVE_SIZE 0x6ec
-#define SAVEGAME_PLAYER_NAME_OFFSET 0x1c
-#define SAVEGAME_CURRENT_CHARACTER_OFFSET 0x20
-#define SAVEGAME_NEW_FILE_FLAG_OFFSET 0x21
-#define SAVEGAME_CHARACTER_POSITION_OFFSET 0x684
-#define SAVE_SCORE_FILE_STRIDE 0x28
-#define SAVE_SCORE_TABLE_OFFSET 0x1c
-#define SAVE_SCORE_ENTRY_COUNT 5
-#define SAVEGAME_MAP_COUNT 0x78
-#define SAVEGAME_EXTENDED_MAP_THRESHOLD 0x50
-#define SAVEGAME_TRANSIENT_MAP_BIT_COUNT 20
-#define SAVEGAME_TRANSIENT_MAP_BIT_TTL 3
-#define SAVEGAME_CHARACTER_POSITION(save)                                                     \
-    ((SaveGameCharacterPosition *)((save) +                                                     \
-                                  (save)[SAVEGAME_CURRENT_CHARACTER_OFFSET] *                  \
-                                      sizeof(SaveGameCharacterPosition) +                       \
-                                  SAVEGAME_CHARACTER_POSITION_OFFSET))
 
-typedef struct SaveGameObjectPosition
-{
-    u32 objectId;
-    f32 x;
-    f32 y;
-    f32 z;
-} SaveGameObjectPosition;
 
-typedef struct SaveGameRomListPosition
-{
-    u8 pad0[0x8];
-    f32 x;
-    f32 y;
-    f32 z;
-    u32 objectId;
-} SaveGameRomListPosition;
 
-typedef struct SaveScoreEntry
-{
-    u32 score : 31;
-    u32 flag : 1;
-    u8 initials[4];
-} SaveScoreEntry;
 
-typedef struct SaveGameDefaultPosition
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} SaveGameDefaultPosition;
 
-typedef struct SaveGameCharacterPosition
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    s8 angle;
-    s8 map;
-    u8 padE[2];
-} SaveGameCharacterPosition;
 
-typedef struct SaveSelectInfo
-{
-    u8 name[4];
-    u8 percentComplete;
-    u8 rankA;
-    u8 rankB;
-    u8 pad7;
-    u32 playTime;
-    void* taskTexts[5];
-    u8 valid;
-    u8 active;
-    u8 pad22[2];
-} SaveSelectInfo;
 
-typedef struct MapBitTransient
-{
-    s8 mapId;
-    u8 shift;
-    s8 timer;
-} MapBitTransient;
 
-extern MapBitTransient gTransientMapBits[];
 
-extern SaveGameDefaultPosition lbl_802C2170;
 
-int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object);
 
-void saveGame_unsaveObjectPos(u8* obj);
 
-extern void* memset(void* dst, int val, u32 n);
-extern void* memcpy(void* dst, const void* src, u32 n);
-extern int loadSaveGame(int slot, void* save);
-extern int _saveGame(int slot, int save, int data);
-extern void GameBit_Set(int eventId, int value);
-extern u32 GameBit_Get(int eventId);
-extern void* gameTextGetPhrase(int textId, int variant);
 
-int trySaveGame(int slot);
 
-int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials);
 
-int gplayNewGame(char* name, int slot);
 
-void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
 
-int saveSelect_getInfo(void* outPtr);
 
 /*
  * --INFO--
@@ -529,9 +393,7 @@ int saveFn_800e8508(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u32 pRestartPoint;
 
-void gplaySaveGame(int param);
 
 /*
  * --INFO--
@@ -546,7 +408,6 @@ void gplaySaveGame(int param);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void titleDoLoadSave(void);
 
 /*
  * --INFO--
@@ -561,7 +422,6 @@ void titleDoLoadSave(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void saveGame_save(void);
 
 
 /*
@@ -1106,79 +966,42 @@ void FUN_800ea9b8(void)
 /* Trivial 4b 0-arg blr leaves. */
 void SaveGame_func08_nop(void);
 
-void screens_release(void);
 
-void Carryable_release(void);
 
-void Carryable_initialise(void);
 
-void dll_59_func01_nop(void);
 
-void dll_59_func00_nop(void);
 
-void dll_5C_func01_nop(void);
 
-void dll_5C_func00_nop(void);
 
-void dll_5D_func01_nop(void);
 
-void dll_5D_func00_nop(void);
 
-void dll_5E_func01_nop(void);
 
-void dll_5E_func00_nop(void);
 
-void dll_5F_func01_nop(void);
 
-void dll_5F_func00_nop(void);
 
-void dll_60_func01_nop(void);
 
-void dll_60_func00_nop(void);
 
-void dll_61_func01_nop(void);
 
-void dll_61_func00_nop(void);
 
-void dll_62_func01_nop(void);
 
-void dll_62_func00_nop(void);
 
-void dll_63_func01_nop(void);
 
-void dll_63_func00_nop(void);
 
-void dll_64_func01_nop(void);
 
-void dll_64_func00_nop(void);
 
-void dll_65_func01_nop(void);
 
-void dll_65_func00_nop(void);
 
-void dll_A3_func01_nop(void);
 
-void dll_A3_func00_nop(void);
 
-void dll_66_func01_nop(void);
 
-void dll_66_func00_nop(void);
 
-void dll_67_func01_nop(void);
 
-void dll_67_func00_nop(void);
 
-void dll_68_func01_nop(void);
 
-void dll_68_func00_nop(void);
 
-void Dummy58_release(void);
 
-void Dummy58_initialise(void);
 
-void dll_69_func01_nop(void);
 
-void dll_69_func00_nop(void);
 
 void dll_6A_func01_nop(void)
 {
@@ -1190,108 +1013,58 @@ void dll_6A_func00_nop(void)
 
 void dll_6B_func01_nop(void);
 
-void dll_6B_func00_nop(void);
 
-void Dummy6C_release(void);
 
-void Dummy6C_initialise(void);
 
-void dll_6D_func01_nop(void);
 
-void dll_6D_func00_nop(void);
 
-void dll_6E_func01_nop(void);
 
-void dll_6E_func00_nop(void);
 
-void dll_6F_func01_nop(void);
 
-void dll_6F_func00_nop(void);
 
-void dll_70_func01_nop(void);
 
-void dll_70_func00_nop(void);
 
-void dll_71_func01_nop(void);
 
-void dll_71_func00_nop(void);
 
-void dll_72_func01_nop(void);
 
-void dll_72_func00_nop(void);
 
-void dll_73_func01_nop(void);
 
-void dll_73_func00_nop(void);
 
-void dll_74_func01_nop(void);
 
-void dll_74_func00_nop(void);
 
-void dll_75_func01_nop(void);
 
-void dll_75_func00_nop(void);
 
-void dll_76_func01_nop(void);
 
-void dll_76_func00_nop(void);
 
-void dll_77_func01_nop(void);
 
-void dll_77_func00_nop(void);
 
-void dll_78_func01_nop(void);
 
-void dll_78_func00_nop(void);
 
-void dll_79_func01_nop(void);
 
-void dll_79_func00_nop(void);
 
-void dll_7A_func01_nop(void);
 
-void dll_7A_func00_nop(void);
 
-void dll_7B_func01_nop(void);
 
-void dll_7B_func00_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int Dummy58_func03_ret_0(void);
-int Dummy6C_func03_ret_0(void);
 
 /* sda21 accessors. */
-u8 getSaveGameLoadStatus(void);
 
-void setSaveGameLoadingFlag(void);
-s32 isSaveGameLoading(void);
 
-void Carryable_init(int obj, int state);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void Carryable_free(int x);
 
 /* lbl = N (byte) */
-void clearSaveGameLoadingFlag(void);
 
 /* 12b 3-insn patterns. */
-s32 Carryable_isHeld(u8* obj);
-s32 Carryable_getFlag01(u8* state);
 
-void Carryable_setFlag08(u8* state, u8 enable);
 
-s32 Carryable_getFlag04(u8* state);
 
-void Carryable_setFlag04(u8* state, u8 enable);
 
-void Carryable_setFlag02Inverted(u8* state, u8 clear);
 
 /* misc 8b leaves */
-u8 Carryable_getSurfaceType(u8* state);
 
 /* if (lbl) fn(lbl); */
-extern void mm_free(u32);
-void SaveGame_release(void);
 
 enum
 {
@@ -1299,300 +1072,67 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-extern s8 lbl_803DD494;
 
-void SaveGame_initialise(void);
 
-extern void* getLastSavedGameTexts(void);
 
-u8 getNextTaskHintText(void);
 
 /* conditional init/free pair. */
-void SaveGame_gplayClearRestartPoint(void);
-
-extern void loadMapForCurrentSaveGame(void);
-
-void SaveGame_gplayGotoRestartPoint(void);
-
-void SaveGame_gplayGotoSavegame(void);
-
-extern void unlockLevel(int a, int b, int c);
-extern void cutsceneExit(void);
-extern void audioStopByMask(int mask);
-extern void stopRumble2(void);
-extern void resetYbutton(void);
-extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
-extern int getCurUiDll(void);
-extern void loadUiDll(int dll);
-extern void screenTransitionFn_800d7b04(int duration, int type);
-
-void loadMapForCurrentSaveGame(void);
-
-extern void* Obj_GetPlayerObject(void);
-extern int fn_802966D4(int obj, int* out);
-extern void playerSetHeldObject(void* player, int held);
-extern f32 lbl_803E06D8;
-extern uint buttonGetDisabled(int idx);
-extern void buttonDisable(int index, uint flags);
-extern uint getButtonsJustPressed(int idx);
-extern int fn_80295BF0(void* player);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-extern f32 timeDelta;
-void saveGame_saveObjectPos(int* obj);
-extern const f32 lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
-
-int Carryable_updateHeld(u8* obj);
-
-void objSaveFn_800ea774(int* obj);
-
-void saveGame_saveObjectPos(int* obj);
-
-void Carryable_stopCarrying(int* obj, u8* param2);
-
-int Carryable_updateRenderState(int* obj, int flag);
 
 
-void SaveGame_setCamActionNo(s16 actionNo);
-void* SaveGame_getLast(void);
-s32 SaveGame_getCamActionNo(void);
-void* saveGameGetEnvState(void);
-f32 SaveGame_getPlayTime(void);
-extern f32 lbl_803E06D0;
-extern f32 lbl_803E06D4;
 
-void SaveGame_updateTimes(void);
 
-f32 SaveGame_gplayGetTime(int id);
 
-int SaveGame_gplayShouldNotSaveTime(int id);
 
-void SaveGame_gplayAddTime(int id, f32 time);
 
-void* SaveGame_getTrickyEnergy(void);
-void SaveGame_setCharacter(u8 c);
-u8 SaveGame_getCurChar(void);
-char* getSaveFileName(void);
 
-void* SaveGame_getCurCharPos(void);
 
-void* SaveGame_getCurCharacterState(void);
 
-s32 SaveGame_gplayGetRestartGameNotCleared(void);
-u16 SaveGame_getMapObjGroupBit(int idx);
 
-void SaveGame_setMapActLut(int val, int idx);
 
-extern u32 lbl_803DD4A0;
-extern u32 lbl_803DD4A4;
-extern u32 lbl_803DD4A8;
-extern u32 lbl_803DD4AC;
 
-void screens_initialise(void);
 
-void updateSavedHealth(void);
 
-extern void* gameTextGet(int idx);
 
-void* saveGameGetCurHint(void);
 
-u32 SaveGame_mapGetObjGroups(int idx);
 
-void mapClearBit(int idx, int bit);
 
-void SaveGame_resetObjGroups(int idx);
 
-void SaveGame_mapUpdateObjGroups(int idx);
 
-u8 SaveGame_getMapAct(int idx);
 
-int SaveGame_gplayGetObjGroupStatus(int idx, int shift);
 
-void SaveGame_gplaySetAct(int idx, int act);
 
-s8 SaveGame_findTransientMapBit(int a, int b);
 
-void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapByte);
 
-extern int fn_80296AE8(int obj);
-extern void playerAddHealth(u8* player, int v);
-extern void* mmAlloc(int size, int heap, int flags);
 
-void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag);
 
-extern char* sMapDirectoryNameTable[];
-extern u8 lbl_803A4218[];
 
-void loadTaskTexts(void);
 
-void SaveGame_updateTransientMapBits(void);
 
-extern s16 lbl_803119E0[];
 
-u8 getCurTaskHintTextMap(void);
 
-void hintTextFn_800ea174(u8* out);
 
-extern int getCurGameText(void);
-extern void gameTextLoadDir(int dirId);
 
-int hintTextMapFn_800ea264(void);
 
-void gameBitFn_800ea2e0(u8 id);
 
-void* fn_800E888C(u8 a, u8 b);
 
-void screens_remove(void);
 
-void screens_remove2(void);
 
-extern void loadAssetFileById(void** out, int id);
 
-void screens_show(int id);
 
-extern u8 lbl_80313A40[];
-extern f32 lbl_803E0A58;
-extern f32 lbl_803E0A5C;
-extern f32 lbl_803E0A60;
-extern f32 lbl_803E0A64;
-extern f32 lbl_803E0A68;
-extern f32 lbl_803E0A6C;
 
-void dll_6B_func03(int sourceObj, int variant, int posSource, uint flags);
 
-extern u8 lbl_80311C58[];
-extern u8 lbl_80311F20[];
-extern u8 lbl_80312130[];
-extern u8 lbl_80312650[];
-extern u8 lbl_803128E8[];
-extern u8 lbl_803129C8[];
-extern u8 lbl_80312D18[];
-extern u8 lbl_80312E58[];
-extern u8 lbl_803131A8[];
-extern u8 lbl_803133B8[];
-extern u8 lbl_803135C8[];
-extern u8 lbl_803137F8[];
+
+
+
+
+
+
+
+
+
+
+
 extern u8 lbl_803138A0[];
-extern u8 lbl_80313AF0[];
-extern u8 lbl_80313C30[];
-extern u8 lbl_80313CC0[];
-extern u8 lbl_80313E98[];
-extern u8 lbl_80314060[];
-extern u8 lbl_80314288[];
-extern u8 lbl_803144B0[];
-extern u8 lbl_80314950[];
-extern u8 lbl_80314980[];
-extern u8 lbl_803149B0[];
-extern u8 lbl_80314BD0[];
-extern f32 lbl_803E06F0;
-extern f32 lbl_803E06F4;
-extern f32 lbl_803E06F8;
-extern f32 lbl_803E06FC;
-extern f32 lbl_803E0700;
-extern f32 lbl_803E0704;
-extern f32 lbl_803E0708;
-extern f32 lbl_803E0760;
-extern f32 lbl_803E0764;
-extern f32 lbl_803E0768;
-extern f32 lbl_803E076C;
-extern f32 lbl_803E0770;
-extern f32 lbl_803E0774;
-extern f32 lbl_803E0778;
-extern f32 lbl_803E077C;
-extern f32 lbl_803E0780;
-extern f32 lbl_803E0784;
-extern f32 lbl_803E078C;
-extern f32 lbl_803E0790;
-extern f32 lbl_803E0794;
-extern f32 lbl_803E0798;
-extern f32 lbl_803E079C;
-extern f32 lbl_803E07A0;
-extern f32 lbl_803E07A4;
-extern f32 lbl_803E07A8;
-extern f32 lbl_803E07AC;
-extern f32 lbl_803E07B0;
-extern f32 lbl_803E07B4;
-extern f32 lbl_803E07BC;
-extern f32 lbl_803E0800;
-extern f32 lbl_803E0804;
-extern f32 lbl_803E0808;
-extern f32 lbl_803E080C;
-extern f32 lbl_803E0810;
-extern f32 lbl_803E0814;
-extern f32 lbl_803E0818;
-extern f32 lbl_803E081C;
-extern f32 lbl_803E0820;
-extern f32 lbl_803E0824;
-extern f32 lbl_803E0828;
-extern f32 lbl_803E0858;
-extern f32 lbl_803E085C;
-extern f32 lbl_803E0860;
-extern f32 lbl_803E0864;
-extern f32 lbl_803E0868;
-extern f32 lbl_803E0870;
-extern f32 lbl_803E0874;
-extern f32 lbl_803E0878;
-extern f32 lbl_803E087C;
-extern f32 lbl_803E0880;
-extern f32 lbl_803E0884;
-extern f32 lbl_803E088C;
-extern f32 lbl_803E0898;
-extern f32 lbl_803E08A0;
-extern f32 lbl_803E08A4;
-extern f32 lbl_803E08A8;
-extern f32 lbl_803E08AC;
-extern f32 lbl_803E08B0;
-extern f32 lbl_803E08B4;
-extern f32 lbl_803E0908;
-extern f32 lbl_803E090C;
-extern f32 lbl_803E0910;
-extern f32 lbl_803E0914;
-extern f32 lbl_803E0918;
-extern f32 lbl_803E091C;
-extern f32 lbl_803E0920;
-extern f32 lbl_803E0924;
-extern f32 lbl_803E0930;
-extern f32 lbl_803E0934;
-extern f32 lbl_803E0938;
-extern f32 lbl_803E093C;
-extern f32 lbl_803E0940;
-extern f32 lbl_803E0944;
-extern f32 lbl_803E0948;
-extern f32 lbl_803E094C;
-extern f32 lbl_803E0950;
-extern f32 lbl_803E0954;
-extern f32 lbl_803E0958;
-extern f32 lbl_803E0990;
-extern f32 lbl_803E0994;
-extern f32 lbl_803E0998;
-extern f32 lbl_803E099C;
-extern f32 lbl_803E09A0;
-extern f32 lbl_803E09A4;
-extern f32 lbl_803E09A8;
-extern f32 lbl_803E09AC;
-extern f32 lbl_803E09B0;
-extern f32 lbl_803E09B4;
-extern f32 lbl_803E09B8;
-extern f32 lbl_803E09BC;
-extern f32 lbl_803E09C0;
-extern f32 lbl_803E09C8;
-extern f32 lbl_803E09CC;
-extern f32 lbl_803E09D0;
-extern f32 lbl_803E09D4;
-extern f32 lbl_803E09D8;
-extern f32 lbl_803E09DC;
-extern f32 lbl_803E09E0;
-extern f32 lbl_803E09E4;
-extern f32 lbl_803E09E8;
-extern f32 lbl_803E09EC;
-extern f32 lbl_803E09F0;
-extern f32 lbl_803E09F4;
-extern f32 lbl_803E09F8;
-extern f32 lbl_803E0A00;
-extern f32 lbl_803E0A04;
-extern f32 lbl_803E0A08;
-extern f32 lbl_803E0A0C;
-extern f32 lbl_803E0A10;
 extern f32 lbl_803E0A28;
 extern f32 lbl_803E0A2C;
 extern f32 lbl_803E0A30;
@@ -1603,137 +1143,20 @@ extern f32 lbl_803E0A40;
 extern f32 lbl_803E0A44;
 extern f32 lbl_803E0A48;
 extern f32 lbl_803E0A4C;
-extern f32 lbl_803E0A78;
-extern f32 lbl_803E0A7C;
-extern f32 lbl_803E0A80;
-extern f32 lbl_803E0A84;
-extern f32 lbl_803E0A88;
-extern f32 lbl_803E0A8C;
-extern f32 lbl_803E0A90;
-extern f32 lbl_803E0A98;
-extern f32 lbl_803E0A9C;
-extern f32 lbl_803E0AA0;
-extern f32 lbl_803E0AA4;
-extern f32 lbl_803E0AA8;
-extern f32 lbl_803E0AAC;
-extern f32 lbl_803E0AB8;
-extern f32 lbl_803E0ABC;
-extern f32 lbl_803E0AC0;
-extern f32 lbl_803E0AC4;
-extern f32 lbl_803E0AC8;
-extern f32 lbl_803E0ACC;
-extern f32 lbl_803E0AD0;
-extern f32 lbl_803E0AD4;
-extern f32 lbl_803E0AD8;
-extern f32 lbl_803E0ADC;
-extern f32 lbl_803E0AE0;
-extern f32 lbl_803E0AE4;
-extern f32 lbl_803E0AE8;
-extern f32 lbl_803E0AEC;
-extern f32 lbl_803E0AF0;
-extern f32 lbl_803E0AF8;
-extern f32 lbl_803E0AFC;
-extern f32 lbl_803E0B00;
-extern f32 lbl_803E0B04;
-extern f32 lbl_803E0B08;
-extern f32 lbl_803E0B0C;
-extern f32 lbl_803E0B10;
-extern f32 lbl_803E0B14;
-extern f32 lbl_803E0B18;
-extern f32 lbl_803E0B1C;
-extern f32 lbl_803E0B20;
-extern f32 lbl_803E0B24;
-extern f32 lbl_803E0B28;
-extern f32 lbl_803E0B2C;
-extern f32 lbl_803E0B30;
-extern f32 lbl_803E0B38;
-extern f32 lbl_803E0B3C;
-extern f32 lbl_803E0B40;
-extern f32 lbl_803E0B44;
-extern f32 lbl_803E0B48;
-extern f32 lbl_803E0B4C;
-extern f32 lbl_803E0B50;
-extern f32 lbl_803E0B54;
-extern f32 lbl_803E0B58;
-extern f32 lbl_803E0B60;
-extern f32 lbl_803E0B64;
-extern f32 lbl_803E0B68;
-extern f32 lbl_803E0B6C;
-extern f32 lbl_803E0B70;
-extern f32 lbl_803E0B74;
-extern f32 lbl_803E0B78;
-extern f32 lbl_803E0B7C;
-extern f32 lbl_803E0B80;
-extern f32 lbl_803E0B84;
-extern f32 lbl_803E0B88;
-extern f32 lbl_803E0B8C;
-extern f32 lbl_803E0B90;
-extern f32 lbl_803E0B94;
-extern f32 lbl_803E0B98;
-extern f32 lbl_803E0B9C;
-extern f32 lbl_803E0BA0;
-extern f32 lbl_803E0BA4;
-extern f32 lbl_803E0BA8;
-extern f32 lbl_803E0BAC;
-extern f32 lbl_803E0C40;
-extern f32 lbl_803E0C44;
-extern f32 lbl_803E0C48;
-extern f32 lbl_803E0C4C;
-extern f32 lbl_803E0C50;
-extern f32 lbl_803E0C54;
-extern f32 lbl_803E0C58;
-extern f32 lbl_803E0C5C;
-extern f32 lbl_803E0C60;
-extern f32 lbl_803E0C64;
-extern f32 lbl_803E0C68;
-extern f32 lbl_803E0C6C;
-extern f32 lbl_803E0C70;
-extern f32 lbl_803E0C74;
-extern f32 lbl_803E0C78;
-extern f32 lbl_803E0C7C;
-extern f32 lbl_803E0C80;
-extern f32 lbl_803E0C88;
-extern f32 lbl_803E0C8C;
-extern f32 lbl_803E0C90;
-extern f32 lbl_803E0C94;
-extern f32 lbl_803E0C98;
-extern f32 lbl_803E0C9C;
-extern f32 lbl_803E0CA0;
-extern f32 lbl_803E0D08;
-extern f32 lbl_803E0D0C;
-extern f32 lbl_803E0D10;
-extern f32 lbl_803E0D14;
-extern f32 lbl_803E0D18;
-extern f32 lbl_803E0D1C;
 
-void dll_59_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_5C_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_5D_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_5F_func03(int sourceObj, int variant, int posSource, uint flags);
 
-extern f32 lbl_803E086C;
-extern f32 lbl_803E0888;
 
-void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-void dll_62_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_64_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-void dll_65_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_66_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_67_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_68_func03(int sourceObj, int variant, int posSource, uint flags);
 
-extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
-void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int param_5, int* overrideParams);
 
 void dll_6A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
@@ -1872,110 +1295,34 @@ void dll_6A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 
 void dll_6D_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_6E_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_6F_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_70_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_71_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_72_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_73_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-void dll_76_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_77_func03(int sourceObj, int variant, int posSource, uint flags);
 
-extern f32 lbl_803E0C84;
 
-void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-extern u8 lbl_80312F98[];
-extern f32 lbl_803E0830;
-extern f32 lbl_803E0834;
-extern f32 lbl_803E0838;
-extern f32 lbl_803E083C;
-extern f32 lbl_803E0840;
-extern f32 lbl_803E0844;
-extern f32 lbl_803E0848;
-extern f32 lbl_803E084C;
-extern f32 lbl_803E0968;
-extern f32 lbl_803E096C;
-extern f32 lbl_803E0970;
-extern f32 lbl_803E0974;
-extern f32 lbl_803E0978;
-extern f32 lbl_803E097C;
-extern f32 lbl_803E0984;
-extern u8 lbl_80312790[];
-extern f32 lbl_803E0D08, lbl_803E0D0C, lbl_803E0D10, lbl_803E0D14, lbl_803E0D18, lbl_803E0D1C;
-extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
 
-int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-void dll_A3_func03(int sourceObj, int variant, int posSource, uint flags);
-
-extern u8 lbl_803146D8[];
-extern f32 lbl_803E0BB8, lbl_803E0BBC, lbl_803E0BC0, lbl_803E0BC4, lbl_803E0BC8, lbl_803E0BCC;
-extern f32 lbl_803E0BD0, lbl_803E0BD4, lbl_803E0BD8, lbl_803E0BDC, lbl_803E0BE0, lbl_803E0BE4;
-
-void dll_74_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
-
-extern u8 lbl_80312BD8[];
-extern f32 lbl_803E08C8, lbl_803E08CC, lbl_803E08D0, lbl_803E08D4, lbl_803E08D8, lbl_803E08DC;
-extern f32 lbl_803E08E0, lbl_803E08E4, lbl_803E08E8, lbl_803E08EC, lbl_803E08F0, lbl_803E08F4;
-extern f32 lbl_803E08F8, lbl_803E08FC;
-
-void dll_63_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
-
-extern u8 lbl_80314AF0[];
-extern u8 lbl_803DB8D8;
-extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;
-extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8, lbl_803E0CDC;
-extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
-extern f32 lbl_803E0CF8, lbl_803E0CFC;
-
-int dll_79_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
-
-extern u8 lbl_80314CB0[];
-extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
-extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
-extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
-
-void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
-
-extern void vecRotateZXY(void* p, f32* v);
-extern u8 lbl_80311DA8[];
-extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
-extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
-
-void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spawnFlags, int modelId, int* colorArgs);
-
-extern u8 lbl_80312340[];
-extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0, lbl_803E07D4;
-extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
-extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
 
 
-void dll_5E_func03(int sourceObj, int variant, u8* posSource, uint flags);
 
-extern s16 lbl_80314920[8];
-extern f32 lbl_803E0BE8, lbl_803E0BEC, lbl_803E0BF0, lbl_803E0BF4, lbl_803E0BF8, lbl_803E0BFC;
-extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10, lbl_803E0C14;
-extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;
-extern f32 lbl_803E0C30, lbl_803E0C34, lbl_803E0C38, lbl_803E0C3C;
 
-void dll_75_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-extern void* textureIdxToPtr(int idx);
-extern void debugPrintf(char* fmt, ...);
-extern u8 lbl_80311E30[];
-extern u8 lbl_803DB8B0, lbl_803DB8B4;
-extern u32 lbl_803E0730;
-extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;
-extern const f32 lbl_803E0748, lbl_803E074C, lbl_803E0750, lbl_803E0754;
 
-int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, uint spawnFlags, int modelId, s16* countRange);
+
+
+
+
+
+
+
+
+
+
+
