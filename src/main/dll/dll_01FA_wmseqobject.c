@@ -1,4 +1,4 @@
-/* === moved from main/dll/WC/WCpressureSwitch.c [801EFF7C-801F02F0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01FA — wmseqobject / WM_ObjCreator group. TU: 0x801EFF7C–0x801F02F0. */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"

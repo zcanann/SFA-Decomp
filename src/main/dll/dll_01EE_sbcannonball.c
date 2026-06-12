@@ -1,4 +1,4 @@
-/* === moved from main/dll/DB/DBstealerworm.c [801E341C-801E34C0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01EE — sbcannonball / SB_Galleon / SB_Propeller / SB_ShipHead group. TU: 0x801E341C–0x801E34C0. */
 #include "main/game_object.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"

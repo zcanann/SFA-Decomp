@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/dll_166.c [8018ADB4-8018ADF0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0121 — infotext. TU: 0x8018B9F0–0x8018BB00. */
 #include "main/objseq.h"
 
 
