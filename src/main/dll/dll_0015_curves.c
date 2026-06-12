@@ -200,7 +200,8 @@ void curves_countRandomPoints(int obj, uint* curve)
                     {
                         pt = *list;
                         w = pt[0];
-                        if ((w < lbl_803E066C + *(f32*)(obj + 0x1c)) && (*(char*)(pt + 5) != 0xe))
+                        if ((w < lbl_803E066C + *(f32*)(obj + 0x1c)) &&
+                            (*(char*)(pt + 5) != ROMCURVE_POINT_TYPE_WATER))
                         {
                             *pf = pt[0];
                             sum1 = sum1 + pt[1];
@@ -274,7 +275,7 @@ void fn_800E56A4(int obj, f32* state)
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], &hitCount, 0);
     for (pointIndex = 0, point = points; pointIndex < (int)hitCount;)
     {
-        if (((s8)point->type != 0xe) && (point->z > lbl_803E0678) &&
+        if (((s8)point->type != ROMCURVE_POINT_TYPE_WATER) && (point->z > lbl_803E0678) &&
             (point->x <= collision->points[1][1]) && (point->x > collision->points[0][1]))
         {
             collision->traceStart[0][0] = collision->points[1][0];
@@ -526,7 +527,7 @@ void fn_800E5E38(int obj, f32* state)
     window = lbl_803E06A0;
     while (hitIndex >= 0)
     {
-        if ((s8)point[hitIndex].type != 0xe)
+        if ((s8)point[hitIndex].type != ROMCURVE_POINT_TYPE_WATER)
         {
             if ((currentY <= point[hitIndex].x) && (currentY >= (point[hitIndex].x - window)))
             {
@@ -575,7 +576,7 @@ void fn_800E5F1C(int obj, f32* state)
     point = points;
     for (i = 0; i < (int)hitCount; i++)
     {
-        if ((s8)point->type != 0xe)
+        if ((s8)point->type != ROMCURVE_POINT_TYPE_WATER)
         {
             if ((foundBelow == 0) && (point->x < (collision->points[0][1] + lbl_803E06AC)) &&
                 (point->z > lbl_803E0678))
@@ -606,7 +607,7 @@ void fn_800E5F1C(int obj, f32* state)
     point = points;
     for (i = 0; i < (int)hitCount; i++)
     {
-        if (((s8)point->type == 0xe) && (point->z > lbl_803E06B4) &&
+        if (((s8)point->type == ROMCURVE_POINT_TYPE_WATER) && (point->z > lbl_803E06B4) &&
             (point->x < collision->ceilingY[0]) &&
             (point->x > collision->floorY[0]))
         {
@@ -1132,7 +1133,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
     one = lbl_803E068C;
     invStep = one / step;
     collision->contactObj = 0;
-    if (collision->subtype == 1)
+    if (collision->subtype == CURVES_COLLISION_SUBTYPE_OBJECT)
     {
         sCurvesCachedHitObj = 0;
         sCurvesCachedHitCount = 0;
@@ -1319,7 +1320,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
             }
         }
     }
-    else if (collision->subtype == 2)
+    else if (collision->subtype == CURVES_COLLISION_SUBTYPE_POINT)
     {
         curves_preparePointCollisionFrame((int)curveObj, (u32*)state);
         flags = *state;
@@ -1507,7 +1508,8 @@ void dll_15_func06(short* curveObj, int* state)
     f32 radii[4];
 
     collision = (CurvesCollisionState*)state;
-    if ((collision->subtype != 0) && ((*state & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
+    if ((collision->subtype != CURVES_COLLISION_SUBTYPE_NONE) &&
+        ((*state & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((*state & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0))
     {
         if (*(int*)&((GameObject*)curveObj)->anim.parent != 0)
@@ -1685,7 +1687,7 @@ void dll_15_func07(void* arg1, CurvesCollisionState* state)
     if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)
     {
         type = state->subtype;
-        if (type != 1 && type != 2) return;
+        if (type != CURVES_COLLISION_SUBTYPE_OBJECT && type != CURVES_COLLISION_SUBTYPE_POINT) return;
         if ((s32)(flags & 0x00000004) != 0) mask = (u8)(mask | 0x1);
         if ((s32)(flags & 0x01000000) != 0) mask = (u8)(mask | 0x20);
         hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
