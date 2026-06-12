@@ -1,4 +1,4 @@
-/* DLL 0x0164 — cflevelcontrol (CloudRunner Fortress level controller). TU: 0x801A4524–0x801A4DB8. */
+/* DLL 0x0164 - cflevelcontrol (CloudRunner Fortress level controller). TU: 0x801A4524–0x801A4DB8. */
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
@@ -184,20 +184,32 @@ void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
+typedef struct CfTriggerPos
+{
+    int x, y, z;
+} CfTriggerPos;
+
+typedef struct CfLevelControlFlags
+{
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1; /* 0x20: last GameBit 0x974 */
+    u8 b4 : 1; /* 0x10: last GameBit 0x975 */
+    u8 b3 : 1; /* 0x08: pending fn_8017C294 sweep */
+    u8 rest : 3;
+} CfLevelControlFlags;
+
 void cflevelcontrol_update(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
-    int triggerPos[3];
+    CfTriggerPos triggerPos;
     u32 bit974;
-    u32 bit975;
-    u32 old974;
-    u32 bit94e;
+    u8 bit975;
+    int bit94e;
     int cameraMode;
 
-    triggerPos[0] = lbl_802C22E8[0];
-    triggerPos[1] = lbl_802C22E8[1];
-    triggerPos[2] = lbl_802C22E8[2];
+    triggerPos = *(CfTriggerPos*)lbl_802C22E8;
 
     if (((u32)state[0xc] >> 3 & 1) != 0)
     {
@@ -209,7 +221,7 @@ void cflevelcontrol_update(int obj)
         fn_8017C294(ObjList_FindObjectById(0x29f3));
         fn_8017C294(ObjList_FindObjectById(0x29ef));
         fn_8017C294(ObjList_FindObjectById(0x29ee));
-        state[0xc] = (u8)(state[0xc] & ~0x08);
+        ((CfLevelControlFlags*)&state[0xc])->b3 = 0;
     }
 
     if ((*gMapEventInterface)->getMode(0x1d) == 1 &&
@@ -219,12 +231,10 @@ void cflevelcontrol_update(int obj)
     }
 
     bit974 = (u8)GameBit_Get(0x974);
-    bit975 = (u8)GameBit_Get(0x975);
-    old974 = ((u32)state[0xc] >> 5) & 1;
-
-    if (old974 == 0 || (((u32)state[0xc] >> 4) & 1) == 0)
+    bit975 = GameBit_Get(0x975);
+    if (((CfLevelControlFlags*)&state[0xc])->b5 == 0 || ((CfLevelControlFlags*)&state[0xc])->b4 == 0)
     {
-        if (old974 == 0 && (((u32)state[0xc] >> 4) & 1) == 0)
+        if (((CfLevelControlFlags*)&state[0xc])->b5 == 0 && ((CfLevelControlFlags*)&state[0xc])->b4 == 0)
         {
             if (bit974 != 0 || bit975 != 0)
             {
@@ -237,8 +247,8 @@ void cflevelcontrol_update(int obj)
         }
     }
 
-    state[0xc] = (u8)((state[0xc] & ~0x20) | ((bit974 & 1) << 5));
-    state[0xc] = (u8)((state[0xc] & ~0x10) | ((bit975 & 1) << 4));
+    ((CfLevelControlFlags*)&state[0xc])->b5 = bit974;
+    ((CfLevelControlFlags*)&state[0xc])->b4 = bit975;
 
     if (((GameObject*)obj)->unkF4 == 0)
     {
@@ -271,14 +281,11 @@ void cflevelcontrol_update(int obj)
     }
 
     bit94e = GameBit_Get(0x94e);
-    if (bit94e != 0)
+    if (bit94e != 0 && playerIsDisguised(player) == 0)
     {
-        if (playerIsDisguised(player) == 0)
-        {
-            fn_80295CF4((int)Obj_GetPlayerObject(), 0);
-        }
+        fn_80295CF4((int)Obj_GetPlayerObject(), 0);
     }
-    else if (playerIsDisguised(player) == 0)
+    else if (bit94e == 0 && playerIsDisguised(player) == 0)
     {
         fn_80295CF4((int)Obj_GetPlayerObject(), 1);
     }
@@ -286,7 +293,7 @@ void cflevelcontrol_update(int obj)
     if (GameBit_Get(0xd3d) != 0)
     {
         ((void (*)(int*, int, int, int))(*(int*)((u8*)*gMapEventInterface + 0x24)))(
-            triggerPos, 0, getCurMapLayer(), 1);
+            (int*)&triggerPos, 0, getCurMapLayer(), 1);
         GameBit_Set(0xd3d, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, 0x11, 0);
@@ -294,18 +301,22 @@ void cflevelcontrol_update(int obj)
     }
 
     cameraMode = (*gCameraInterface)->getMode();
-    if (cameraMode == 0x47)
+    switch (cameraMode)
     {
+    case 0x47:
         if ((s8)state[0xd] != 0x47)
         {
             GameBit_Set(0xc0, 1);
         }
+        break;
+    default:
+        if ((s8)state[0xd] == 0x47)
+        {
+            GameBit_Set(0x1a8, 1);
+        }
+        break;
     }
-    else if ((s8)state[0xd] == 0x47)
-    {
-        GameBit_Set(0x1a8, 1);
-    }
-    state[0xd] = (s8)(*gCameraInterface)->getMode();
+    *(s8*)&state[0xd] = (s8)(*gCameraInterface)->getMode();
 
     SCGameBitLatch_Update(state + 8, 4, -1, -1, 0x983, 0xb0);
     SCGameBitLatch_Update(state + 8, 8, -1, -1, 0x983, 0x38);
