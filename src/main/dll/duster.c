@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/duster.h"
 #include "main/objanim.h"
@@ -19,7 +20,7 @@ extern u8 objBboxFn_800640cc();
 extern f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,
                                                 f32 drag);
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
-extern int Curve_AdvanceAlongPath(int curve, f32 dt);
+extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 dt);
 extern char lbl_803DBCD8;
 extern void fn_8014D08C(int, int, int, float, int, int);
 extern void fn_80154D0C(int, int, ushort*, float*);
@@ -705,12 +706,12 @@ void fn_8015652C(uint obj, int state)
 {
     f32 zero;
     uint randVal;
-    float* curveState;
+    RomCurveWalker* route;
     int placement;
     f32 moveSpeed;
     ObjHitsPriorityState* hitState;
 
-    curveState = *(float**)state;
+    route = *(RomCurveWalker**)state;
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
@@ -753,10 +754,10 @@ void fn_8015652C(uint obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
-        if (((Curve_AdvanceAlongPath((int)curveState, ((BaddieState*)state)->pathStep) != 0 ||
-                    *(int*)(curveState + 4) != 0) &&
-                (*gRomCurveInterface)->goNextPoint(curveState) != 0) &&
-            (*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, lbl_803E2AE4,
+        if (((Curve_AdvanceAlongPath(route, ((BaddieState*)state)->pathStep) != 0 ||
+                    route->atSegmentEnd != 0) &&
+                (*gRomCurveInterface)->goNextPoint(route) != 0) &&
+            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E2AE4,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
@@ -767,7 +768,7 @@ void fn_8015652C(uint obj, int state)
         }
         else
         {
-            moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, curveState[0x1a], curveState[0x1b], curveState[0x1c],
+            moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, route->posX, route->posY, route->posZ,
                                                              lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
                                                              ((BaddieState*)state)->unk304);
         }

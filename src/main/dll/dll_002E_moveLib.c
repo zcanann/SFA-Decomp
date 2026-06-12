@@ -1,6 +1,7 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/FRONT/POST.h"
@@ -34,7 +35,7 @@ extern f32 lbl_803E1CC8;
 extern f32 lbl_803E1CCC;
 extern s16 getAngle(f32 x, f32 z);
 extern f32 mathCosf(f32 x);
-extern int Curve_AdvanceAlongPath(int curve);
+extern int Curve_AdvanceAlongPath(RomCurveWalker *curve);
 extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern f32 lbl_803E1CB0;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
@@ -456,12 +457,14 @@ void dll_2E_func06(int obj, char* st, int point)
  * curve, snapping to ground and easing the yaw toward the path direction. */
 int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32* d, int* flags)
 {
+    RomCurveWalker* route;
     int moved;
     int hit;
     f32 ground;
     int fl;
     int args[2];
 
+    route = (RomCurveWalker*)curve;
     moved = 1;
     hit = 0;
     ground = lbl_803E1C90;
@@ -476,7 +479,7 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32* d, int* fla
         {
             args[0] = 0x19;
             args[1] = 0x15;
-            (*gRomCurveInterface)->initCurve((void*)curve, (void*)obj, lbl_803E1CB0,
+            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E1CB0,
                                              args, (u8)c);
             *flags |= 8;
             moved = 1;
@@ -485,13 +488,13 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32* d, int* fla
     else
     {
         hit = 0;
-        if (Curve_AdvanceAlongPath(curve) != 0 || *(int*)(curve + 0x10) != 0)
+        if (Curve_AdvanceAlongPath(route) != 0 || route->atSegmentEnd != 0)
         {
-            hit = (*gRomCurveInterface)->goNextPoint((void*)curve);
+            hit = (*gRomCurveInterface)->goNextPoint(route);
         }
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(curve + 0x68);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)(curve + 0x6c);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(curve + 0x70);
+        ((GameObject*)obj)->anim.localPosX = route->posX;
+        ((GameObject*)obj)->anim.localPosY = route->posY;
+        ((GameObject*)obj)->anim.localPosZ = route->posZ;
         if (hit != 0)
         {
             *flags |= 0x10;

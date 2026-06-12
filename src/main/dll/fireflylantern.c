@@ -1,12 +1,13 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fireflyLantern.h"
 #include "main/objhits.h"
 
 
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
+extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 t);
 extern uint randomGetRange(int min, int max);
 extern int Obj_GetPlayerObject(void);
 extern char fn_80296448(int playerObj);
@@ -51,20 +52,20 @@ extern f32 lbl_803E2A08;
 
 void fn_80154870(int obj, int* state)
 {
-    int curve;
+    RomCurveWalker* curve;
     u8 flag;
     f32 dvec[3];
     f32 fval;
 
-    curve = *state;
+    curve = (RomCurveWalker*)*state;
     if (state[0xb7] & 0x80000000U)
     {
         Sfx_PlayFromObject((u32)obj, 0x4c0);
     }
     if (((state[0xb7] & 0x2000U) != 0) &&
-        ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || *(int*)(curve + 0x10) != 0) &&
-            ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0)) &&
-        ((*gRomCurveInterface)->initCurve((void*)*state, (void*)obj, lbl_803E29B0,
+        ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || curve->atSegmentEnd != 0) &&
+            ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
+        ((*gRomCurveInterface)->initCurve(curve, (void*)obj, lbl_803E29B0,
                                           (int*)&lbl_803DBCD0, -1) != 0))
     {
         *(u32*)&state[0xb7] &= ~0x2000LL;
