@@ -1,13 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-
-typedef struct AndrosshandState
-{
-    u8 pad0[0x14 - 0x0];
-    f32 unk14;
-    u8 pad18[0x2C - 0x18];
-} AndrosshandState;
-
+#include "main/obj_placement.h"
+#include "main/objhits.h"
 
 /*
  * Per-object extra state for an Andross hand
