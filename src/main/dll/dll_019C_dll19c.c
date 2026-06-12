@@ -1,4 +1,4 @@
-/* === merged from main/dll/torch1CD.c [801CBA98-801CBD88) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x19C — torch / flame controller objects [801CBA98-801CBD88) */
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/torch1CD.h"

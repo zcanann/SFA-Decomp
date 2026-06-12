@@ -1,4 +1,4 @@
-/* === moved from main/dll/DF/DFlantern.c [801C2914-801C2E68) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0178 — dfshshrine (DarkFlier Sauria shrine lantern object). TU: 0x801C2914–0x801C3618. */
 #include "main/mapEvent.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"

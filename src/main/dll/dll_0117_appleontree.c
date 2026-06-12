@@ -1,4 +1,4 @@
-/* === moved from main/dll/groundAnimator.c [8017D818-8017E1A0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0117 — appleontree / groundAnimator group. TU: 0x8017D818–0x8017E1A0. */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/appleontreestate_struct.h"
 #include "main/dll/groundAnimator.h"

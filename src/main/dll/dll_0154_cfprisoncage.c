@@ -1,10 +1,4 @@
-/*
- * sandwormBoss.c - still a 10-DLL container (0x14A CFPowerBase .. 0x157
- * SpiritDoorSpirit) covering [8019D578-801A0B14); see
- * docs/boundary_audit.md. The 0x148/0x149 head was carved to
- * DR/dll_0148_cfguardian.c + DR/dll_0149_cfwindlift.c (skeleton-copy:
- * their defs here are collapsed to prototypes).
- */
+/* DLL 0x0154 — cfprisoncage. TU: 0x801A0614–0x801A0994. */
 #include "main/dll/cfguardian_state.h"
 #include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/cfprisonunclestate_struct.h"

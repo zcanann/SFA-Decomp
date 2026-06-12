@@ -1,4 +1,4 @@
-/* === moved from main/dll/genprops.c [80171D14-801723DC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00ED — collectible / genprops group. TU: 0x80171D14–0x801723DC. */
 #pragma scheduling off
 #pragma peephole off
 #include "main/game_object.h"

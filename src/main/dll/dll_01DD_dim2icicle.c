@@ -1,4 +1,4 @@
-/* === moved from main/dll/DIM/DIM2snowball.c [801B8798-801B8860) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x1DD — DIM2 icicle / conveyor / crusher platform objects [801B8798-801B8860) */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"

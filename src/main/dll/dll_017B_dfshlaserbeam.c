@@ -1,4 +1,4 @@
-/* === moved from main/dll/dll_19E.c [801C3E3C-801C3EB8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x017B — DFSH_LaserBeam / dfsh_objcreator group. TU: 0x801C3E3C–0x801C3EB8. */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/resource.h"

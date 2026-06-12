@@ -1,4 +1,4 @@
-/* === merged from main/dll/mmshrine/animobj1C0.c [801C5990-801C5ED8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0191 — ecshcreator (EarthWalker shrine object creator). TU: 0x801C6E0C–0x801C70F0. */
 #include "main/game_object.h"
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/objseq.h"

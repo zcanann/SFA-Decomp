@@ -1,4 +1,4 @@
-/* === moved from main/dll/explosion.c [801CA9C0-801CAD80) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x199 — NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
 #include "main/dll/dll_0198_nwshlevcon.h"
 #include "main/dll/dll197state_struct.h"
 #include "main/dll/dll199state_struct.h"

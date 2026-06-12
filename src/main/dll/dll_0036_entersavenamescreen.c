@@ -1,4 +1,4 @@
-/* === merged from main/dll/dll_36.c [8011B5D4-8011B868) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x36 — enter/save name screen controller [8011B5D4-8011B868) */
 #include "main/dll/dll_36.h"
 
 extern f32 timeDelta;

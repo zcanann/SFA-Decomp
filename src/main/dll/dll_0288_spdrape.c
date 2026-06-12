@@ -1,4 +1,4 @@
-/* === moved from main/dll/DR/DRCloudball.c [801E9328-801E9344) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x288 — SP drape object [801E9328-801E9344) */
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/dll/shwgpipe_struct.h"
 

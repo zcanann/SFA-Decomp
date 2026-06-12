@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/CFtoggleswitch.c [8018BC48-8018BC50) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
 
 

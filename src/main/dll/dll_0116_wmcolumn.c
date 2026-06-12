@@ -1,4 +1,4 @@
-/* === moved from main/dll/alphaanim.c [8017CF90-8017D0D4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0116 — wmcolumn / doorlock group. TU: 0x8017CF90–0x8017D0D4. */
 #include "main/dll/alphaanim.h"
 #include "main/dll/appleontreestate_struct.h"
 #include "main/game_object.h"

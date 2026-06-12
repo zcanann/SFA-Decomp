@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/dll_166.c [8018ADB4-8018ADF0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x122 — CC test infot / tricky guard spot / treasure chest objects [8018ADB4-8018ADF0) */
 #include "main/objseq.h"
 
 extern void* Obj_GetPlayerObject(void);

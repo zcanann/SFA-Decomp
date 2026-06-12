@@ -1,4 +1,4 @@
-/* === merged from main/dll/mmshrine/animobj1C0.c [801C5990-801C5ED8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x18F — ECSH shrine animated object controller [801C5990-801C5ED8) */
 #include "main/game_object.h"
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/objseq.h"

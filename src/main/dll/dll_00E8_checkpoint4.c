@@ -1,4 +1,4 @@
-/* === moved from main/dll/xyzanimator.c [8016B230-8016B2E0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00E8 — checkpoint4 (MoonMountain Pass fourth checkpoint object). TU: 0x801719E0–0x80171BAC. */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"

@@ -1,4 +1,4 @@
-/* === moved from main/dll/WC/WCpressureSwitch.c [801EFF7C-801F02F0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01FB — WCLaser render object (WarpZone cannon laser). TU: 0x801F0900–0x801F0AE4. */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"

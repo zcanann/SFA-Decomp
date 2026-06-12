@@ -1,4 +1,4 @@
-/* === moved from main/dll/SH/SHkillermushroom.c [801D3378-801D383C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01AB — bombplantingspot (Sauria bomb planting spot / trigger). TU: 0x801D3FF4–0x801D4198. */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"

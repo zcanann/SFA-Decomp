@@ -1,4 +1,4 @@
-/* === merged from main/dll/dll_138.c [80174A80-801755CC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0xEF — pushable object [80174A80-801755CC) */
 #pragma scheduling off
 #pragma peephole off
 #include "main/audio/sfx_ids.h"

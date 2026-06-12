@@ -1,4 +1,4 @@
-/* === moved from main/dll/pressureSwitch.c [8014F620-8014F9E8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0xE1 — wisp baddie / swarmbaddie / hagabon objects [8014F620-8014F9E8) */
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/swarmbaddiestate_struct.h"
 #include "main/dll/hagabonstate_struct.h"

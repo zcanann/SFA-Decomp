@@ -1,4 +1,4 @@
-/* === merged from main/dll/texScroll.c [8017AC2C-8017ADB4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x010F — mmpbridge (MoonMountain Pass bridge object). TU: 0x8017BB80–0x8017BCF8. */
 #include "main/game_object.h"
 
 

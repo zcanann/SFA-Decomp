@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/CFforcecontrol.c [8018CD64-8018CDAC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x128 — KT torch / campfire objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 

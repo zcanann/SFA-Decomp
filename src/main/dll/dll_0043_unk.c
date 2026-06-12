@@ -1,4 +1,4 @@
-/* === merged from main/dll/CAM/camshipbattle.c [80106F78-801070FC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x43 — camera path/climb control [80106F78-801070FC) */
 #include "main/dll/CAM/camshipbattle.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_path_state.h"

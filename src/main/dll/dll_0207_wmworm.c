@@ -1,4 +1,4 @@
-/* === moved from main/dll/LGT/LGTpointlight.c [801F3C2C-801F3C7C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0207 — wmworm (WarpZone Module worm enemy). TU: 0x801F3C2C–0x801F3F18. */
 #include "main/dll_000A_expgfx.h"
 
 

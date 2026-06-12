@@ -1,4 +1,4 @@
-/* === moved from main/dll/dim_bossgut.c [801D286C-801D2C54) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01A9 — bombplant / enemymushroom group. TU: 0x801D286C–0x801D2C54. */
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

@@ -1,4 +1,4 @@
-/* === moved from main/dll/TREX/TREX_levelcontrol.c [801E4288-801E42F8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01F6 — Flag (decorative flag object). TU: 0x801E5DC4–0x801E5F74. */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"

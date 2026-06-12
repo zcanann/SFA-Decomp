@@ -1,4 +1,4 @@
-/* === moved from main/main.c [801FE118-801FEB30) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x230 — DFP wall bar / floor bar / torch objects [801FE118-801FEB30) */
 #pragma scheduling on
 #pragma peephole on
 #include "main/game_object.h"

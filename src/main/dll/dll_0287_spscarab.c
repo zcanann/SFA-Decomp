@@ -1,4 +1,4 @@
-/* === moved from main/dll/DR/DRpushcart.c [801E8EA4-801E8EE0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x287 — SP scarab / shop item / shopkeeper objects [801E8EA4-801E8EE0) */
 #include "main/effect_interfaces.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"

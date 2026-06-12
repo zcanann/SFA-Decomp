@@ -1,4 +1,4 @@
-/* === moved from main/dll/NW/NWmammoth.c [801D1BFC-801D1E24) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x1A8 — SH killer mushroom (edible mushroom enemy) [801D1BFC-801D1E24) */
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

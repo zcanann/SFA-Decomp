@@ -1,4 +1,4 @@
-/* === moved from main/dll/baddie/chuka.c [80206474-8020652C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x22F — DFP floor bar object [80206474-8020652C) */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"

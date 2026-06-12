@@ -1,4 +1,4 @@
-/* === merged from main/dll/door.c [80208508-802086C4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x235 — DFP target block object [80208508-802086C4) */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/door.h"

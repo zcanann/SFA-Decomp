@@ -1,4 +1,6 @@
-/* === moved from main/dll/DIM/DIM2snowball.c [801B8798-801B8860) (TU re-split, docs/boundary_audit.md) === */
+/* DIM2 mixed-DLL TU: 0x801B9ECC–0x801BA224. Contains the hit-reaction dispatcher
+ * (fn_801B9ECC) and shared helpers for DIM2 objects (icicle, geyser, rolling rock,
+ * conveyor, crusher, snowball, path generator, truth-horn ice). */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"

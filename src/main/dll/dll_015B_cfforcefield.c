@@ -1,4 +1,4 @@
-/* === moved from main/dll/DR/gasventControl.c [801A39B4-801A39D0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x015B — cfforcefield (CloudRunner Fortress force field barrier). TU: 0x801A39B4–0x801A3E9C. */
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/DR/dll_015A_explodable.h"
