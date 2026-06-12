@@ -581,19 +581,15 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         }
         break;
     case 6: /* free-fall to the ground, then settle at the curve home */
-        if (sub->landingPhase == 0)
-        {
-            if (sub->chatterState == 2)
-            {
-                sub->chatterState = 1;
-            }
-        }
-        else
+        if (sub->landingPhase != 0)
         {
             if (sub->landingPhase >= 2)
             {
-                ((GameObject*)obj)->anim.velocityX = lbl_803E4110;
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E4110;
+                {
+                    f32 fz = lbl_803E4110;
+                    ((GameObject*)obj)->anim.velocityX = fz;
+                    ((GameObject*)obj)->anim.velocityZ = fz;
+                }
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)
                     ->anim.localPosY;
                 hitDetectFn_800658a4((int*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
@@ -632,7 +628,13 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             else
             {
                 f32 w = lbl_803E4144 * ((GameObject*)obj)->anim.velocityY;
-                w = (w >= lbl_803E4110) ? w : -w;
+                if (w >= lbl_803E4110)
+                {
+                }
+                else
+                {
+                    w = -w;
+                }
                 *(s16*)obj = (f32)*(s16*)obj + w;
                 sub->moveSpeed = lbl_803E4148;
                 if (GameBit_Get(0x8e9) != 0)
@@ -656,8 +658,11 @@ int waterSpellStone1Fn_8019b4c8(int obj)
                     ->anim.localPosZ;
                 if (sub->bounceLatch != 0)
                 {
-                    ((GameObject*)obj)->anim.velocityX = lbl_803E4150 * -((GameObject*)obj)->anim.velocityX;
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E4150 * -((GameObject*)obj)->anim.velocityZ;
+                {
+                    f32 fb = lbl_803E4150;
+                    ((GameObject*)obj)->anim.velocityX = fb * -((GameObject*)obj)->anim.velocityX;
+                    ((GameObject*)obj)->anim.velocityZ = fb * -((GameObject*)obj)->anim.velocityZ;
+                }
                 }
                 stk.v[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
                 stk.v[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
@@ -669,9 +674,19 @@ int waterSpellStone1Fn_8019b4c8(int obj)
                 ((GameObject*)obj)->anim.velocityX = stk.v[0] + ((GameObject*)obj)->anim.velocityX;
                 ((GameObject*)obj)->anim.velocityY = stk.v[1] + ((GameObject*)obj)->anim.velocityY;
                 ((GameObject*)obj)->anim.velocityZ = stk.v[2] + ((GameObject*)obj)->anim.velocityZ;
-                ((GameObject*)obj)->anim.velocityX = lbl_803E4138 * ((GameObject*)obj)->anim.velocityX;
-                ((GameObject*)obj)->anim.velocityY = lbl_803E4138 * ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E4138 * ((GameObject*)obj)->anim.velocityZ;
+                {
+                    f32 fd = lbl_803E4138;
+                    ((GameObject*)obj)->anim.velocityX = fd * ((GameObject*)obj)->anim.velocityX;
+                    ((GameObject*)obj)->anim.velocityY = fd * ((GameObject*)obj)->anim.velocityY;
+                    ((GameObject*)obj)->anim.velocityZ = fd * ((GameObject*)obj)->anim.velocityZ;
+                }
+            }
+        }
+        else
+        {
+            if (sub->chatterState == 2)
+            {
+                sub->chatterState = 1;
             }
         }
         break;
@@ -896,7 +911,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     {
         sub->flagsA9B &= ~1;
     }
-    fn_8019AE3C((int*)obj, stk.evbuf, &lbl_803DBE20);
+    fn_8019AE3C((int*)obj, (u8*)&stk + 12, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
         objAudioFn_800393f8(obj, (u8*)sub + 0x624, 0xdf, 0x1000, -1, 0);
