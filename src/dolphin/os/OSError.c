@@ -4,8 +4,6 @@
 #include "dolphin/os/__os.h"
 
 int vprintf(const char* format, va_list arg);
-extern volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
-void OSSwitchFPUContext(__OSException exception, OSContext* context);
 
 OSErrorHandler __OSErrorTable[OS_ERROR_MAX];
 

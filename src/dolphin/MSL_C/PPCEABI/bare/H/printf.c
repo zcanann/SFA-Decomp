@@ -8,14 +8,7 @@
 
 extern const double printf_double_zero;
 
-#define TARGET_FLOAT_BITS           64
-#define TARGET_FLOAT_BYTES          (TARGET_FLOAT_BITS / 8)
-#define TARGET_FLOAT_MAX_EXP        LDBL_MAX_EXP
-#define TARGET_FLOAT_MANT_DIG       LDBL_MANT_DIG
 #define TARGET_FLOAT_IMPLICIT_J_BIT 1
-#define TARGET_FLOAT_MANT_BITS                                                 \
-    (TARGET_FLOAT_MANT_DIG - TARGET_FLOAT_IMPLICIT_J_BIT)
-#define TARGET_FLOAT_EXP_BITS (TARGET_FLOAT_BITS - TARGET_FLOAT_MANT_BITS - 1)
 
 enum justification_options {
     left_justification,

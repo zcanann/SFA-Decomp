@@ -29,7 +29,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent * obj, ObjModelInstance * modelInstance);
 extern void fn_80054F74(int obj, float* pos);
 extern ObjLibRegionList** RomList_GetLoadedPages(void);
-extern int* fn_8005B11C();
 extern void debugPrintf(const char* fmt, ...);
 extern void PSMTXConcat(float* a, float* b, float* out);
 extern float PSVECSquareDistance(float* a, float* b);
@@ -85,9 +84,6 @@ extern void* lbl_803DCBD8;
 extern u8* gObjHitsPriorityHitStates;
 extern u8 gObjGroupObjectCount;
 extern int gObjContactCallbackCount;
-extern f64 DOUBLE_803df5c0;
-extern f64 DOUBLE_803df640;
-extern f32 lbl_803DC074;
 extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE968;
@@ -95,8 +91,6 @@ extern f32 OBJLIB_UNIT_SCALE;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803DF5E8;
-extern f32 lbl_803DF5F0;
 extern f32 lbl_803DE970;
 extern f32 lbl_803DE974;
 extern f32 lbl_803DE978;
@@ -111,17 +105,6 @@ extern f32 lbl_803DE9AC;
 extern f32 lbl_803DE9B0;
 extern f32 lbl_803DE9B4;
 extern f32 lbl_803DE9B8;
-extern f32 lbl_803DF5F4;
-extern f32 lbl_803DF5F8;
-extern f32 lbl_803DF5FC;
-extern f32 lbl_803DF618;
-extern f32 lbl_803DF61C;
-extern f32 lbl_803DF620;
-extern f32 lbl_803DF624;
-extern f32 lbl_803DF628;
-extern f32 lbl_803DF630;
-extern f32 lbl_803DF634;
-extern f32 lbl_803DF638;
 
 #define OBJMSG_QUEUE_OFFSET 0xdc
 #define OBJMSG_SEND_INCLUDE_SENDER 0x1
@@ -147,18 +130,13 @@ extern f32 lbl_803DF638;
 #define OBJLINK_CHILD_STATE_OFFSET 0xe5
 #define OBJLINK_FLAGS_OFFSET 0xb0
 #define OBJLINK_FLAGS_MODE_MASK 0x0007
-#define OBJLINK_FLAGS_MODE_CLEAR_MASK 0xfff8
 #define OBJLINK_FLAGS_DEAD 0x0040
 
 #define OBJ_MODEL_INSTANCE_OFFSET 0x50
-#define OBJ_MODEL_INSTANCE_HALFWORD_OFFSET (OBJ_MODEL_INSTANCE_OFFSET / 2)
 #define OBJ_ACTIVE_MODEL_INDEX_OFFSET 0xad
 #define OBJ_POSITION_X_OFFSET 0x0c
 #define OBJ_POSITION_Y_OFFSET 0x10
 #define OBJ_POSITION_Z_OFFSET 0x14
-#define OBJ_WORLD_POSITION_X_OFFSET 0x18
-#define OBJ_WORLD_POSITION_Y_OFFSET 0x1c
-#define OBJ_WORLD_POSITION_Z_OFFSET 0x20
 
 #define OBJ_MODEL_JOINT_COUNT_OFFSET 0xf3
 #define OBJLIB_BLINK_LEFT_JOINT_TAG 5

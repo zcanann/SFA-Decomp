@@ -108,11 +108,6 @@ extern void fn_80297284(void* obj);
 extern void gameTextLoadTaskText(int textId);
 extern void cameraFocusNpc(int param1, u8* obj);
 
-typedef struct SeqByte0B4
-{
-    u8 useAltPos : 1;
-    u8 rest : 7;
-} SeqByte0B4;
 
 extern int lbl_803DB724;
 extern f32 lbl_803DD074;

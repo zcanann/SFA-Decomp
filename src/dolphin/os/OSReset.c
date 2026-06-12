@@ -16,21 +16,6 @@
         (queue)->tail = (info);                              \
     } while(0);
 
-#define DEQUEUE_INFO(info, queue)                           \
-    do {                                                    \
-        OSResetFunctionInfo* __next = (info)->next; \
-        OSResetFunctionInfo* __prev = (info)->prev; \
-        if (__next == 0) {                                  \
-            (queue)->tail = __prev;                         \
-        } else {                                            \
-            __next->prev = __prev;                          \
-        }                                                   \
-        if (__prev == 0) {                                  \
-            (queue)->head = __next;                         \
-        } else {                                            \
-            __prev->next = __next;                          \
-        }                                                   \
-    } while(0);
 
 #define ENQUEUE_INFO_PRIO(info, queue)               \
     do {                                             \
@@ -56,8 +41,6 @@
     } while(0);
 
 static OSResetFunctionQueue ResetFunctionQueue;
-extern u32 bootThisDol_803DEAE8;
-#define bootThisDol bootThisDol_803DEAE8
 
 void OSRegisterResetFunction(OSResetFunctionInfo* info) {
     ASSERTLINE(208, info->func);

@@ -1950,10 +1950,6 @@ typedef struct
     u8 r, g, b, a;
 } GXColor8;
 
-typedef struct
-{
-    int a, b, key, d;
-} DrawQEntry;
 
 extern u8 framesThisStep;
 extern int* Obj_GetActiveModel(int* obj);

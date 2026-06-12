@@ -5,7 +5,6 @@
 extern GXData* gx;
 #define __GXData gx
 
-extern u32 __cvt_fp2unsigned(f64 d);
 
 void GXSetProjection(const Mtx44 mtx, GXProjectionType type) {
     u32 reg;

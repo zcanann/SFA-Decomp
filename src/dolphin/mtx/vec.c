@@ -4,19 +4,12 @@ extern const float lbl_803E7648;  // 0.5f
 extern const float lbl_803E764C;  // 3.0f
 extern const float lbl_803E7650;  // 2.0f
 
-#define R_RET fp1
 #define FP2 fp2
 #define FP3 fp3
 #define FP4 fp4
 #define FP5 fp5
 #define FP6 fp6
 #define FP7 fp7
-#define FP8 fp8
-#define FP9 fp9
-#define FP10 fp10
-#define FP11 fp11
-#define FP12 fp12
-#define FP13 fp13
 
 asm void PSVECAdd(const register Vec *vec1, const register Vec *vec2, register Vec *ret)
 {

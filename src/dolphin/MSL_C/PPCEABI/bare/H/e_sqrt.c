@@ -35,7 +35,6 @@ extern double lbl_803E7BB0;
 extern double lbl_803E7BB8;
 extern double lbl_803E7BC0;
 extern float lbl_803E7BC8;
-extern double lbl_803E7BD0;
 extern float lbl_803E7BD8;
 extern float lbl_803E7BDC;
 extern float lbl_803E7BE0;
@@ -47,10 +46,6 @@ extern float lbl_803E7BF0;
 float fastCastS16ToFloat(s16* p);
 void fastCastFloatToS16(s16* p, float x);
 
-typedef union FloatBits {
-    float f;
-    u32 u;
-} FloatBits;
 
 float powfCoreHighPrecision(float x, float y) {
     register double mantissa;

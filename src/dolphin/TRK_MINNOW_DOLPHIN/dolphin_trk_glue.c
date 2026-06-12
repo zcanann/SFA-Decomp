@@ -12,35 +12,6 @@ typedef struct UARTInlineBuffer {
 
 extern UARTInlineBuffer lbl_803D8888;
 extern u8 lbl_803D99A4[0x110C];
-int ddh_cc_initinterrupts(void);
-int ddh_cc_initialize(void*, __OSInterruptHandler);
-int ddh_cc_shutdown(void);
-int ddh_cc_peek(void);
-int ddh_cc_read(u8*, int);
-int ddh_cc_write(const u8*, int);
-int ddh_cc_open(void);
-int ddh_cc_close(void);
-int ddh_cc_pre_continue(void);
-int ddh_cc_post_stop(void);
-int gdev_cc_initinterrupts(void);
-int gdev_cc_initialize(void*, __OSInterruptHandler);
-int gdev_cc_shutdown(void);
-int gdev_cc_peek(void);
-int gdev_cc_read(u8*, int);
-int gdev_cc_write(const u8*, int);
-int gdev_cc_open(void);
-int gdev_cc_close(void);
-int gdev_cc_pre_continue(void);
-int gdev_cc_post_stop(void);
-int udp_cc_initialize(void);
-int udp_cc_shutdown(void);
-int udp_cc_peek(void);
-int udp_cc_read(u8*, int);
-int udp_cc_write(const u8*, int);
-int udp_cc_open(void);
-int udp_cc_close(void);
-int udp_cc_pre_continue(void);
-int udp_cc_post_stop(void);
 
 extern DBCommTable gDBCommTable;
 

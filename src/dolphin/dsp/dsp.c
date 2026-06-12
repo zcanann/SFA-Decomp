@@ -12,8 +12,6 @@ extern const DSPStrings sDSPStrings;
 #define BUILD_DATE sDSPStrings.buildDate
 #define BUILD_TIME sDSPStrings.buildTime
 
-extern DSPTaskInfo* __DSP_rude_task;
-extern int __DSP_rude_task_pending;
 extern BOOL __DSP_init_flag;
 
 u32 DSPCheckMailToDSP(void) {

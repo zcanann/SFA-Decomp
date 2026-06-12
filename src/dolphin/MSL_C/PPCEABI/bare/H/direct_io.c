@@ -2,11 +2,6 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/buffer_io.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/wchar_io.h"
 
-typedef enum {
-    __load_ok       = 0,
-    __load_error    = 1,
-    __load_eof      = 2
-} __load_result;
 
 
 size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream) {

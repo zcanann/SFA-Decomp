@@ -251,22 +251,8 @@ void GXInitLightColor(GXLightObj* lt_obj, GXColor color) {
 }
 
 #if DEBUG
-#define WRITE_SOME_LIGHT_REG1(val, addr) \
-do {  \
-    u32 xfData = val; \
-    GX_WRITE_U32(val); \
-    VERIF_MTXLIGHT(addr, xfData); \
-} while (0)
 
-#define WRITE_SOME_LIGHT_REG2(val, addr) \
-do {  \
-    f32 xfData = val; \
-    GX_WRITE_F32(val); \
-    VERIF_MTXLIGHT(addr, *(u32*)&xfData); \
-} while (0)
 #else
-#define WRITE_SOME_LIGHT_REG1(val, addr) GX_WRITE_U32(val)
-#define WRITE_SOME_LIGHT_REG2(val, addr) GX_WRITE_F32(val)
 #endif
 
 static inline u32 ConvLightID2Num(GXLightID id) {
@@ -320,7 +306,6 @@ void GXLoadLightObjImm(const GXLightObj* lt_obj, GXLightID light) {
     __GXData->bpSentNot = 1;
 }
 
-#define GXCOLOR_AS_U32(color) (*((u32*)&(color)))
 
 void GXSetChanAmbColor(GXChannelID chan, GXColor amb_color) {
     u32 reg;

@@ -38,16 +38,6 @@ void vfpblock1_free(int obj)
 
 
 extern f64 DOUBLE_803e6d90;
-extern f64 DOUBLE_803e6da8;
-extern f64 DOUBLE_803e6dc8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6D84;
-extern f32 lbl_803E6D98;
-extern f32 lbl_803E6DA0;
-extern f32 lbl_803E6DB0;
-extern f32 lbl_803E6DB4;
-extern f32 lbl_803E6DB8;
-extern f32 lbl_803E6DBC;
 
 /* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
 typedef struct SeqPointState
@@ -1249,25 +1239,15 @@ void dll_224_update(void* param_1)
 #pragma peephole reset
 #pragma scheduling reset
 
-typedef struct
-{
-    s16 showGameBit; /* 0x0 */
-    s16 checkGameBit; /* 0x2 */
-    s8 counter; /* 0x4 */
-    u8 done : 1; /* 0x5 bit 7 */
-    u8 noCheck : 1; /* 0x5 bit 6 */
-} VfpFlamePointData;
 
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 #pragma scheduling off
-int fn_801FD4A8(void* obj, int x);
 #pragma scheduling reset
 
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 #pragma scheduling off
 #pragma peephole off
-void dbegg_setupFromDef(int obj, u8* state);
 #pragma peephole reset
 #pragma scheduling reset
 

@@ -28,7 +28,6 @@ static TRKExceptionStatus gTRKExceptionStatus = { { 0, 0, 0 }, TRUE, 0 };
 
 static TRKStepStatus gTRKStepStatus = { FALSE, DSSTEP_IntoCount, 0, 0 };
 
-typedef void (*RegAccessFunc)(void* srcDestPtr, u128 val);
 
 typedef struct DSCPUType {
 	u8 cpuMajor;

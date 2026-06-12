@@ -1,9 +1,6 @@
 #include "dolphin/exi.h"
 
-#define REG_MAX 5
-#define REG(chan, idx) (__EXIRegs[((chan) * REG_MAX) + (idx)])
 
-#define STATE_IDLE     0
 #define STATE_DMA      1
 #define STATE_IMM      2
 #define STATE_BUSY     3

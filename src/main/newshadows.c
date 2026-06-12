@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
-extern float ABS();
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_8000693c();
@@ -128,7 +127,6 @@ extern f32 lbl_803DDB50;
 extern f32 lbl_803DDC24;
 extern f32 lbl_803DDC28;
 extern f32 lbl_803DDC2C;
-extern f32 lbl_803DF988;
 extern f32 lbl_803DF98C;
 extern f32 lbl_803DF990;
 extern f32 lbl_803DF994;
@@ -165,23 +163,6 @@ extern f32 lbl_803DFA34;
 extern f32 lbl_803DFA38;
 extern f32 lbl_803DFA3C;
 extern f32 lbl_803DFA40;
-extern f32 lbl_803DFA50;
-extern f32 lbl_803DFA54;
-extern f32 lbl_803DFA58;
-extern f32 lbl_803DFA5C;
-extern f32 lbl_803DFA60;
-extern f32 lbl_803DFA6C;
-extern f32 lbl_803DFA70;
-extern f32 lbl_803DFA74;
-extern f32 lbl_803DFA78;
-extern f32 lbl_803DFA7C;
-extern f32 lbl_803DFA84;
-extern f32 lbl_803DFA88;
-extern f32 lbl_803DFA8C;
-extern f32 lbl_803DFA90;
-extern f32 lbl_803DFA94;
-extern f32 lbl_803DFA98;
-extern f32 lbl_803DFA9C;
 
 /*
  * --INFO--
@@ -2254,7 +2235,6 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
 extern int testAndSet_onlyUseHeap3(int);
 extern f32 fn_802943F4(f32);
 extern double floor(double);
-extern f32 Yachuff_803DEDE0[2];
 extern f32 __PADFixBits;
 extern f32 lbl_80391978[];
 extern f32 lbl_803DCFA8, lbl_803DCFAC;
@@ -2989,7 +2969,6 @@ extern f32 lbl_803DB670;
 extern int gRenderModeObj;
 extern f32 lbl_803DCED0, lbl_803DCECC;
 extern int lbl_803DCF84, lbl_803DCF88;
-extern char lbl_8038DF48b[];
 
 void renderShadows(void)
 {

@@ -1,15 +1,7 @@
 extern double lbl_803E7C00;
 extern double lbl_803E7C08;
-extern double lbl_803E7C10;
 extern unsigned int __cvt_fp2unsigned(double x);
 
-typedef union IntDouble {
-    double d;
-    struct {
-        unsigned int hi;
-        unsigned int lo;
-    } words;
-} IntDouble;
 
 double tan(int* out_n, float x)
 {

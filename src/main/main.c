@@ -113,9 +113,7 @@ void dbegg_processMessages(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_224_release_nop(void);
 
-void dll_224_initialise_nop(void);
 
 void VFP_lavapool_free_nop(void)
 {
@@ -171,11 +169,9 @@ int vfplavastar_getObjectTypeId(void) { return 0x0; }
 int vfpspellplace_getExtraSize(void) { return 0x6; }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
 int dbegg_getExtraSize(void);
-int dbegg_getObjectTypeId(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-void dbegg_free(int x);
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -197,11 +193,8 @@ extern void objRenderFn_80041018(void* obj);
 
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-extern int lbl_803DDCC8;
-extern void spellStoneUseFn_801fd270(void* obj);
 #pragma scheduling off
 #pragma peephole off
-void dll_224_update(void* param_1);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -232,18 +225,13 @@ int fn_801FD4A8(void* obj, int x)
 int dbegg_setScale(int obj);
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
-extern f32 lbl_803E61C8;
-extern f32 lbl_803E61D0;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
-extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
-void dbegg_setupFromDef(int obj, u8* state);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-int dbegg_func0B(int obj, f32* v);
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -281,14 +269,12 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 extern f32 lbl_803E61CC;
 #pragma scheduling off
 #pragma peephole off
-void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
 #pragma peephole off
-void dll_224_init(void* obj, void* other);
 
 void vfpflamepoint_init(int* obj, s8* def)
 {
@@ -304,11 +290,8 @@ void vfpflamepoint_init(int* obj, s8* def)
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
-extern f32 lbl_803E6218;
-extern f32 lbl_803E621C;
 
 #pragma scheduling off
-void dbegg_hitDetect(int obj);
 #pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
@@ -332,24 +315,10 @@ extern f32 lbl_803E6194;
 extern f32 lbl_803E6198;
 extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
-extern f32 lbl_803E61E0;
-extern f32 lbl_803E61E4;
-extern f32 lbl_803E61E8;
-extern f32 lbl_803E61EC;
-extern f32 lbl_803E61F0;
-extern f32 lbl_803E61F4;
-extern f32 lbl_803E61F8;
-extern f32 lbl_803E61FC;
-extern f32 lbl_803E6200;
-extern f32 lbl_803E6204;
-extern f32 lbl_803E6208;
 extern void* getTrickyObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* objFindTexture(int obj, int idx, int p3);
 extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
-extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
 
 #pragma scheduling off
 #pragma peephole off
@@ -645,5 +614,4 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag);
 #pragma scheduling reset
 
 #pragma scheduling off
-void fn_801FE774(int cam, f32* vel);
 #pragma scheduling reset

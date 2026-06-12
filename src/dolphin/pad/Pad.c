@@ -487,10 +487,6 @@ u32 PADRead(PADStatus* status) {
     return motor;
 }
 
-typedef struct XY {
-    u8 line;
-    u8 count;
-} XY;
 
 #ifndef VERSION_GCCP01
 void PADSetSamplingRate(u32 msec) {

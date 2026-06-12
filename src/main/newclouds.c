@@ -2,13 +2,6 @@
 #include "main/newclouds.h"
 #include "main/resource.h"
 
-typedef struct ObjSeqBgCmd
-{
-    int object;
-    s16 param;
-    s8 opcode;
-    s8 pad;
-} ObjSeqBgCmd;
 
 typedef struct LightningEffect
 {
@@ -25,416 +18,27 @@ typedef struct LightningEffect
 
 extern void* mmAlloc(int size, int heap, int flags);
 extern void mm_free(void* ptr);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void* Obj_GetPlayerObject(void);
-extern void* getTrickyObject(void);
-extern void* ObjList_FindObjectById(int id);
-extern void** ObjList_GetObjects(void* unused, int* count);
-extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
-extern void objSeq_onMapSetup(void);
-extern void objSeqInitFn_80080078(void* entries, int count);
-extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
-extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
-extern int isGameTimerDisabled(void);
-extern void playerEnvFxFn_80088ad4(int envFxValue);
-extern void renderSunAndMoon(void);
-extern void AudioStream_CancelPrepared(void);
-extern void* Obj_AllocObjectSetup(int size, int objectId);
-extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern void* Obj_GetActiveModel(void* obj);
-extern void ObjModel_SetRenderCallback(void* model, void* callback);
-extern int moonFxCb_80074110(int obj, int* model, int param);
-extern int getCurMapLayer(void);
-extern void modelLightStruct_setDirection(void* model, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDiffuseColor(void* model, int red, int green, int blue, int alpha);
-extern void lightSetColor(int index, int red, int green, int blue);
-extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
-extern void Obj_BuildWorldTransformMatrix(void* obj, f32 mtx[3][4], int flags);
-extern void skyFn_8008a04c(void);
-extern void skyFn_8008a500(void);
 extern void lightningRender(void* state);
 extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
 extern s16* Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
-extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
-extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
-extern void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode);
-extern void ObjSeq_UpdateCurvePosition(u8 * obj, u8 * seq);
-extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flags);
-extern void ObjSeq_ApplyLinkedObjectTransform(u8 * obj, u8 * seqObj, u8 * seq);
-extern void animatedObjFreeAndSavePlayerPos(u8 * obj, u8 * seqObj, u8 * seq);
-extern void objModelClearVecFn_8003aa40(void* obj);
-extern s16* objModelGetVecFn_800395d8(void* obj, int index);
-extern long long OSGetTime(void);
 
-extern s16 lbl_80399398[];
-extern u8 objSeqXrotChanged[];
-extern s16 objSeqXrotValues[];
-extern s8 lbl_8039A45C[];
-extern s8 lbl_8039A4B4[];
-extern s8 lbl_8039A50C[];
-extern ObjSeqBgCmd lbl_8039A5BC[];
-extern u8 lbl_80396918[];
-extern int lbl_8030EDA4[];
-extern u8 lbl_8030ECA8[];
-extern u8 lbl_803DB748;
-extern int lbl_803DB720;
-extern int* gPartfxInterface;
-extern int* gScreenTransitionInterface;
-extern s16 seqGlobal1;
-extern s16 seqGlobal2;
-extern s8 seqGlobal3;
 extern int* gSHthorntailAnimationInterface;
-extern s8 lbl_803DD0BC;
-extern void* lbl_803DD0D4;
-extern u8 lbl_803DD0D8;
-extern u8 lbl_803DD0DA;
-extern int lbl_803DD090;
-extern int lbl_803DD100;
-extern int lbl_803DD104;
-extern int lbl_803DD108;
-extern int lbl_803DD10C;
-extern int lbl_803DD130;
-extern int lbl_803DD134;
-extern int lbl_803DD138;
-extern int lbl_803DD13C;
-extern u8 lbl_803DD140;
-extern u8* lbl_803DD12C;
-extern u8* gSkySunObject;
-extern void* gSkyMoonObject;
-extern void* lbl_803DD150;
-extern int lbl_803DD154;
-extern u8 gSkyOverrideLightColor;
-extern u8 gSkyOverrideLightColorEnabled;
-extern f32 gSkyOverrideLightIntensity;
-extern u8 gSkyOverrideLightDirectionEnabled;
-extern void* lbl_803DD168;
-extern u8 gSkyCurrentLightColor;
-extern u8 gSkyCurrentAmbientColor;
-extern u8 gSkyCurrentTextureColor;
-extern s8 lbl_803DD113;
-extern u8 lbl_803DD114;
-extern s16 lbl_803DD116;
-extern f32 lbl_803DD118;
-extern f32 lbl_803DD11C;
-extern f32 lbl_803DD120;
-extern void* lbl_803DD144;
-extern u16 lbl_803DD0B6;
-extern void* lbl_803DD0B8;
 extern u8 framesThisStep;
-extern f32 gSkyOverrideLightDirection[];
-extern f32 pEXIInputFlag;
-extern f32 EXIInputFlag;
 extern f32 timeDelta;
-extern f32 lbl_803DEFB0;
-extern f32 lbl_803DEFC8;
-extern f32 lbl_803DEFF0;
-extern f32 lbl_803DF024;
-extern f32 lbl_803DF028;
-extern f32 lbl_803DF06C;
-extern f32 init_803DF080;
-extern f32 lbl_803DF088;
-extern f32 lbl_803DF108;
-extern f64 lbl_803DF130;
-extern f32 lbl_803DF118;
-extern f32 lbl_803DF138;
-extern f32 lbl_803DF13C;
-extern f32 lbl_803DF140;
-extern f32 lbl_803DF144;
 extern f32 lbl_803DF1A0;
 extern f32 lbl_803DF1D8;
 extern f32 lbl_803DF1DC;
-extern u8 colorScale;
-extern int lbl_803DB610;
-extern s8 lbl_803DD180;
-extern u8* lbl_803DD184;
-extern u8* lbl_803DD188;
 extern u8 lbl_803DD19B;
 extern u8* lbl_803DD19C;
 extern u8 lbl_803DD1C0;
 extern void PSVECNormalize(void* src, void* dst);
 
-extern void* ObjGroup_GetObjects();
-extern void fn_8005D108();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
-extern void trackIntersect_updateColorBandRange(double param_1, double param_2);
-extern double SeekTwiceBeforeRead();
-extern uint countLeadingZeros();
-
-extern f64 DOUBLE_803dfc38;
-extern f64 DOUBLE_803dfc60;
-extern f64 DOUBLE_803dfcf0;
-extern f64 DOUBLE_803dfd10;
-extern f64 DOUBLE_803dfda8;
-extern f64 DOUBLE_803dfdb0;
-extern f64 DOUBLE_803dfe28;
-extern f64 DOUBLE_803dfe30;
-extern f64 DOUBLE_803dfe98;
-extern f64 DOUBLE_803dfea0;
-extern f64 DOUBLE_803dff28;
-extern f64 DOUBLE_803dff38;
-extern f64 DOUBLE_803dff88;
-extern f64 DOUBLE_803dffe0;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dc370;
-extern f32 FLOAT_803dc390;
-extern f32 FLOAT_803dc3c0;
-extern f32 FLOAT_803dc3c4;
-extern f32 FLOAT_803dc3c8;
-extern f32 FLOAT_803dc3e0;
-extern f32 FLOAT_803dc3f0;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803ddcf4;
-extern f32 FLOAT_803ddd24;
-extern f32 FLOAT_803ddd28;
-extern f32 FLOAT_803ddd2c;
-extern f32 FLOAT_803ddd30;
-extern f32 FLOAT_803ddd44;
-extern f32 FLOAT_803ddd48;
-extern f32 FLOAT_803ddd4c;
-extern f32 FLOAT_803ddd50;
-extern f32 FLOAT_803ddd5c;
-extern f32 FLOAT_803ddd6c;
-extern f32 FLOAT_803ddd70;
-extern f32 FLOAT_803ddd74;
-extern f32 FLOAT_803ddd98;
-extern f32 FLOAT_803ddd9c;
-extern f32 FLOAT_803ddda0;
-extern f32 FLOAT_803ddde0;
-extern f32 FLOAT_803dde10;
-extern f32 FLOAT_803dde14;
-extern f32 FLOAT_803dde2c;
-extern f32 FLOAT_803dde30;
-extern f32 FLOAT_803dde34;
-extern f32 FLOAT_803dde38;
-extern f32 FLOAT_803dde3c;
-extern f32 FLOAT_803dde60;
-extern f32 FLOAT_803dde64;
-extern f32 FLOAT_803dde68;
-extern f32 FLOAT_803dde8c;
-extern f32 FLOAT_803ddedc;
-extern f32 FLOAT_803ddee0;
-extern f32 FLOAT_803dfc30;
-extern f32 FLOAT_803dfc48;
-extern f32 FLOAT_803dfc68;
-extern f32 FLOAT_803dfc70;
-extern f32 FLOAT_803dfc74;
-extern f32 FLOAT_803dfc78;
-extern f32 FLOAT_803dfc7c;
-extern f32 FLOAT_803dfc80;
-extern f32 FLOAT_803dfc84;
-extern f32 FLOAT_803dfc88;
-extern f32 FLOAT_803dfc8c;
-extern f32 FLOAT_803dfc90;
-extern f32 FLOAT_803dfc94;
-extern f32 FLOAT_803dfc98;
-extern f32 FLOAT_803dfc9c;
-extern f32 FLOAT_803dfca0;
-extern f32 FLOAT_803dfca4;
-extern f32 FLOAT_803dfca8;
-extern f32 FLOAT_803dfcac;
-extern f32 FLOAT_803dfcb0;
-extern f32 FLOAT_803dfcb4;
-extern f32 FLOAT_803dfcb8;
-extern f32 FLOAT_803dfcbc;
-extern f32 FLOAT_803dfcc0;
-extern f32 FLOAT_803dfcc4;
-extern f32 FLOAT_803dfcc8;
-extern f32 FLOAT_803dfccc;
-extern f32 FLOAT_803dfcd0;
-extern f32 FLOAT_803dfcd4;
-extern f32 FLOAT_803dfcd8;
-extern f32 FLOAT_803dfcdc;
-extern f32 FLOAT_803dfce0;
-extern f32 FLOAT_803dfce4;
-extern f32 FLOAT_803dfce8;
-extern f32 FLOAT_803dfcec;
-extern f32 FLOAT_803dfcf8;
-extern f32 FLOAT_803dfcfc;
-extern f32 FLOAT_803dfd00;
-extern f32 FLOAT_803dfd04;
-extern f32 FLOAT_803dfd08;
-extern f32 FLOAT_803dfd18;
-extern f32 FLOAT_803dfd1c;
-extern f32 FLOAT_803dfd20;
-extern f32 FLOAT_803dfd24;
-extern f32 FLOAT_803dfd28;
-extern f32 FLOAT_803dfd2c;
-extern f32 FLOAT_803dfd30;
-extern f32 FLOAT_803dfd34;
-extern f32 FLOAT_803dfd38;
-extern f32 FLOAT_803dfd3c;
-extern f32 FLOAT_803dfd40;
-extern f32 FLOAT_803dfd44;
-extern f32 FLOAT_803dfd48;
-extern f32 FLOAT_803dfd4c;
-extern f32 FLOAT_803dfd50;
-extern f32 FLOAT_803dfd54;
-extern f32 FLOAT_803dfd58;
-extern f32 FLOAT_803dfd5c;
-extern f32 FLOAT_803dfd64;
-extern f32 FLOAT_803dfd68;
-extern f32 FLOAT_803dfd6c;
-extern f32 FLOAT_803dfd70;
-extern f32 FLOAT_803dfd74;
-extern f32 FLOAT_803dfd78;
-extern f32 FLOAT_803dfd7c;
-extern f32 FLOAT_803dfd80;
-extern f32 FLOAT_803dfd84;
-extern f32 FLOAT_803dfd88;
-extern f32 FLOAT_803dfd8c;
-extern f32 FLOAT_803dfd90;
-extern f32 FLOAT_803dfd94;
-extern f32 FLOAT_803dfd98;
-extern f32 FLOAT_803dfd9c;
-extern f32 FLOAT_803dfda0;
-extern f32 FLOAT_803dfdb8;
-extern f32 FLOAT_803dfdbc;
-extern f32 FLOAT_803dfdc0;
-extern f32 FLOAT_803dfdc4;
-extern f32 FLOAT_803dfdc8;
-extern f32 FLOAT_803dfdcc;
-extern f32 FLOAT_803dfdd0;
-extern f32 FLOAT_803dfdd4;
-extern f32 FLOAT_803dfdd8;
-extern f32 FLOAT_803dfddc;
-extern f32 FLOAT_803dfde0;
-extern f32 FLOAT_803dfde4;
-extern f32 FLOAT_803dfde8;
-extern f32 FLOAT_803dfdec;
-extern f32 FLOAT_803dfdf0;
-extern f32 FLOAT_803dfdf4;
-extern f32 FLOAT_803dfdf8;
-extern f32 FLOAT_803dfdfc;
-extern f32 FLOAT_803dfe00;
-extern f32 FLOAT_803dfe04;
-extern f32 FLOAT_803dfe08;
-extern f32 FLOAT_803dfe0c;
-extern f32 FLOAT_803dfe10;
-extern f32 FLOAT_803dfe14;
-extern f32 FLOAT_803dfe20;
-extern f32 FLOAT_803dfe24;
-extern f32 FLOAT_803dfe38;
-extern f32 FLOAT_803dfe3c;
-extern f32 FLOAT_803dfe40;
-extern f32 FLOAT_803dfe44;
-extern f32 FLOAT_803dfe48;
-extern f32 FLOAT_803dfe4c;
-extern f32 FLOAT_803dfe50;
-extern f32 FLOAT_803dfe54;
-extern f32 FLOAT_803dfe58;
-extern f32 FLOAT_803dfe5c;
-extern f32 FLOAT_803dfe60;
-extern f32 FLOAT_803dfe64;
-extern f32 FLOAT_803dfe68;
-extern f32 FLOAT_803dfe6c;
-extern f32 FLOAT_803dfe78;
-extern f32 FLOAT_803dfe7c;
-extern f32 FLOAT_803dfe80;
-extern f32 FLOAT_803dfe88;
-extern f32 FLOAT_803dfe8c;
-extern f32 FLOAT_803dfe90;
-extern f32 FLOAT_803dfe94;
-extern f32 FLOAT_803dfea8;
-extern f32 FLOAT_803dfeac;
-extern f32 FLOAT_803dfeb0;
-extern f32 FLOAT_803dfeb4;
-extern f32 FLOAT_803dfeb8;
-extern f32 FLOAT_803dfebc;
-extern f32 FLOAT_803dfec0;
-extern f32 FLOAT_803dfec4;
-extern f32 FLOAT_803dfec8;
-extern f32 FLOAT_803dfecc;
-extern f32 FLOAT_803dfed0;
-extern f32 FLOAT_803dfed4;
-extern f32 FLOAT_803dfed8;
-extern f32 FLOAT_803dfedc;
-extern f32 FLOAT_803dfee0;
-extern f32 FLOAT_803dfee4;
-extern f32 FLOAT_803dfee8;
-extern f32 FLOAT_803dfeec;
-extern f32 FLOAT_803dfef0;
-extern f32 FLOAT_803dfef4;
-extern f32 FLOAT_803dfef8;
-extern f32 FLOAT_803dfefc;
-extern f32 FLOAT_803dff00;
-extern f32 FLOAT_803dff04;
-extern f32 FLOAT_803dff08;
-extern f32 FLOAT_803dff0c;
-extern f32 FLOAT_803dff10;
-extern f32 FLOAT_803dff14;
-extern f32 FLOAT_803dff18;
-extern f32 FLOAT_803dff1c;
-extern f32 FLOAT_803dff20;
-extern f32 FLOAT_803dff24;
-extern f32 FLOAT_803dff30;
-extern f32 FLOAT_803dff34;
-extern f32 FLOAT_803dff40;
-extern f32 FLOAT_803dff44;
-extern f32 FLOAT_803dff48;
-extern f32 FLOAT_803dff4c;
-extern f32 FLOAT_803dff50;
-extern f32 FLOAT_803dff54;
-extern f32 FLOAT_803dff58;
-extern f32 FLOAT_803dff5c;
-extern f32 FLOAT_803dff60;
-extern f32 FLOAT_803dff64;
-extern f32 FLOAT_803dff68;
-extern f32 FLOAT_803dff6c;
-extern f32 FLOAT_803dff70;
-extern f32 FLOAT_803dff74;
-extern f32 FLOAT_803dff78;
-extern f32 FLOAT_803dff7c;
-extern f32 FLOAT_803dff80;
-extern f32 FLOAT_803dff84;
-extern f32 FLOAT_803dff94;
-extern f32 FLOAT_803dff98;
-extern f32 FLOAT_803dff9c;
-extern f32 FLOAT_803dffa0;
-extern f32 FLOAT_803dffa4;
-extern f32 FLOAT_803dffa8;
-extern f32 FLOAT_803dffac;
-extern f32 FLOAT_803dffb0;
-extern f32 FLOAT_803dffb4;
-extern f32 FLOAT_803dffb8;
-extern f32 FLOAT_803dffbc;
-extern f32 FLOAT_803dffc8;
-extern f32 FLOAT_803dffcc;
-extern f32 FLOAT_803dffd0;
-extern f32 FLOAT_803dffd4;
-extern f32 FLOAT_803dffd8;
-extern f32 FLOAT_803dffdc;
-extern f32 FLOAT_803dffe8;
-extern f32 FLOAT_803e0000;
-extern f32 FLOAT_803e0004;
-extern f32 FLOAT_803e0008;
-extern f32 FLOAT_803e000c;
-extern f32 FLOAT_803e0010;
-extern f32 FLOAT_803e0014;
-extern f32 FLOAT_803e0018;
-extern f32 FLOAT_803e001c;
-extern f32 FLOAT_803e0020;
-extern f32 FLOAT_803e0024;
-extern f32 FLOAT_803e0028;
-extern f32 FLOAT_803e002c;
-extern f32 FLOAT_803e0030;
-extern int iRam803dc274;
-extern char s_Could_not_allocate_memory_for_wa_8031042c[];
-extern char s_____Error_non_existant_cloud_id___803101b0[];
-extern char s_____Error_non_existant_cloud_id___803101f0[];
-extern char s_____Error_non_existant_cloud_id___80310230[];
-extern char s_____Error_non_existant_cloud_id___803102f0[];
-extern char s_endObjSequence__max_number_of_ob_8030fa94[];
-extern char s_warning_in_newcloud_dll_no_spare_80310270[];
-extern char s_warning_in_newclouds_dll_no_spar_803102b0[];
 
 
-extern u8 lbl_803DD16C;
-extern void getEnvfxActImmediately(void* obj, void* target, int effectId, int flags);
+
 
 
 void lightningRenderActive(void)
@@ -530,24 +134,7 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
 }
 
 extern void padUpdate(void);
-extern void checkReset(void);
-void skyFn_80088c94(int flags, int mode);
-extern void waitNextFrame(void);
-extern void loadDataFiles(void);
-extern void dvdCheckError(void);
-extern void mmFreeTick(int);
-extern void gameTextRun(void);
-extern void GXFlush_(int, int);
-extern int getLoadedFileFlags(int);
-extern void* objCreateLight(int, int);
-extern void modelLightStruct_setLightKind(void*, int);
-extern void modelLightStruct_setSpecularColor(void*, int, int, int, int);
 extern void* textureLoadAsset(int);
-extern u8 gDvdErrorPauseActive;
-extern f32 lbl_8030F2C8[];
-extern f32 lbl_8030F2D4[];
-void skyFn_80088e54(int mode, f32 brightness);
-void fn_8008BDA8(void);
 
 
 extern void textureFree(void* handle);
@@ -634,14 +221,9 @@ void newclouds_onMapSetup(void)
 }
 
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
-extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
-extern f32 lbl_803DF14C;
-extern f32 lbl_803DF148;
-extern s8 lbl_803DB750;
 
 
-extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int a, int flag);
 
 
 #pragma dont_inline on
@@ -669,75 +251,15 @@ void* lightningCreate(f32* a, f32* b, f32 c, f32 d, int e, int f, int g)
     return p;
 }
 
-typedef struct RomCurveNode
-{
-    u8 pad00[0x08];
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad14[0x07];
-    s8 directionMask;
-    s32 links[4];
-    s8 yaw;
-    s8 pitch;
-    u8 tangentScale;
-} RomCurveNode;
 
-typedef struct RomCurveInterpState
-{
-    s32 fromNodeId;
-    s32 toNodeId;
-    f32 fromTime;
-    f32 segmentTime1;
-    f32 segmentTime2;
-    f32 segmentTime3;
-    f32 segmentTime4;
-    f32 segmentTime5;
-    f32 segmentTime6;
-    f32 segmentTime7;
-    f32 toTime;
-} RomCurveInterpState;
 
-#define ROM_CURVE_NODE_ANGLE(v) ((lbl_803DEFE8 * (f32)((s32)(v) << 8)) / lbl_803DEFEC)
-#define ROM_CURVE_NODE_SCALE(node) (lbl_803DF008 * (f32)(u8)((node)->tangentScale))
 
-extern void** gRomCurveInterface;
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
-extern s16 getAngle(f32 x, f32 z);
-extern void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ,
-                                      int count, void (*evalFn)(f32* values, f32* coefficients));
-extern void Curve_BuildHermiteCoeffs(f32 * values, f32 * coefficients);
-extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
-extern f32 lbl_803DEFE8;
-extern f32 lbl_803DEFEC;
-extern f32 lbl_803DF008;
-extern f32 lbl_803DF000;
-extern f32 lbl_803DF01C;
-extern f32 lbl_803DF020;
 
 
-typedef struct ObjCurveKey
-{
-    f32 value;
-    s8 tangentAndMode;
-    u8 pad05;
-    s16 frame;
-} ObjCurveKey;
 
 
-typedef struct Dll06InterpState
-{
-    u8 pad00[0x24];
-    s32 targetX;
-    s32 targetY;
-    s32 targetZ;
-    u8 pad30[0x2dc];
-    f32 blend;
-    u8 pad310[0x06];
-    s8 active;
-} Dll06InterpState;
 
 
 typedef struct FogColor
@@ -873,9 +395,6 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
 }
 
 extern void* memset(void* dst, int c, int n);
-extern int lbl_803DB754;
-extern f32 lbl_803DF190;
-extern f32 lbl_803DF194;
 
 
 extern u8* saveGameGetEnvState(void);

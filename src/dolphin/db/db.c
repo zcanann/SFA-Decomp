@@ -4,9 +4,6 @@
 extern int DBVerbose;
 extern const char sDBExceptionDestinationMessage[];
 
-extern void __DBExceptionStart();
-extern void __DBExceptionEnd();
-extern void __DBExceptionSetNumber();
 
 void DBInit(void) {
   __DBInterface = (DBInterface*)OSPhysicalToCached(OS_DBINTERFACE_ADDR);

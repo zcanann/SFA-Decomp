@@ -12,8 +12,6 @@ typedef struct PADClampExtents {
 
 extern PADClampExtents lbl_803DC580;
 
-#define PAD_CLAMP_RAD_STICK    56
-#define PAD_CLAMP_RAD_SUBSTICK 44
 
 // prototypes
 void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min);

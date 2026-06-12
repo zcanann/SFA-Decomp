@@ -8,7 +8,6 @@
 
 
 extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj);
-extern undefined4 Obj_TransformWorldPointToLocal();
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj);
 extern uint getAngle(f32 a, f32 b);
 extern undefined4 mtxRotateByVec3s();
@@ -19,31 +18,13 @@ extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
 extern void debugPrintf(char* message, ...);
-extern undefined8 __save_gpr();
-extern undefined8 _savegpr_17();
-extern int _savegpr_19();
-extern undefined8 _savegpr_21();
-extern undefined8 _savegpr_23();
-extern undefined8 _savegpr_24();
-extern undefined8 _savegpr_27();
-extern undefined4 __restore_gpr();
-extern undefined4 _restgpr_17();
-extern undefined4 _restgpr_19();
-extern undefined4 _restgpr_21();
-extern undefined4 _restgpr_23();
-extern undefined4 _restgpr_24();
-extern undefined4 _restgpr_27();
 extern f32 sqrtf(f32 v);
 extern f32 mathCosf(f32 v);
 
 extern ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
-extern undefined4 DAT_80341b9c;
 extern u8* gObjHitsPriorityHitStates;
-extern f64 DOUBLE_803df5a8;
 extern f64 lbl_803DE928;
-extern f64 DOUBLE_803df5c0;
-extern f64 DOUBLE_803df5d0;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803DE960;
@@ -65,27 +46,14 @@ typedef struct ObjHitsVec3
     f32 z;
 } ObjHitsVec3;
 
-extern f32 lbl_803DC074;
-extern f32 lbl_803DC078;
-extern f32 lbl_803DC0B0;
 extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803DF590;
-extern f32 lbl_803DF598;
 extern void Vec3_Normalize();
 extern void Vec3_ScaleAdd();
 extern void Vec3_Cross();
 extern f32 Vec3_Length();
 extern void Vec3_ReflectAgainstNormal();
-extern f32 lbl_803DF59C;
-extern f32 lbl_803DF5A0;
-extern f32 lbl_803DF5B0;
-extern f32 lbl_803DF5B4;
-extern f32 lbl_803DF5B8;
-extern f32 lbl_803DF5D8;
-extern f32 lbl_803DF5DC;
-extern f32 lbl_803DF5E0;
 
 static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
 {

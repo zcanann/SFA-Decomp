@@ -10,7 +10,6 @@ __declspec(section ".sdata") extern u32 lbl_803DC65C;
 extern const float lbl_803E7E50;
 extern const float lbl_803E7E54;
 extern const float lbl_803E7E58;
-extern const double lbl_803E7E60;
 
 u32 lbl_80332C78[] = {
     0xBEC00000, 0xBEBA406C, 0xBEB48C35, 0xBEAEE32E, 0xBEA9452D, 0xBEA3B205, 0xBE9E298F, 0xBE98ABA0,

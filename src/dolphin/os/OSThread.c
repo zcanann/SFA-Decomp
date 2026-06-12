@@ -78,8 +78,6 @@ static volatile u32 RunQueueBits;
 static volatile int RunQueueHint;
 static s32 Reschedule;
 
-#define ALIGN4(val) (((val) + 0x3) & ~0x3)
-#define ALIGN8(val) (((val) + 0x7) & ~0x7)
 
 // prototypes
 static void OSInitMutexQueue(OSMutexQueue* queue);
