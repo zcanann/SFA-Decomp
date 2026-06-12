@@ -182,8 +182,17 @@ main/dll/dll_0021_effect8.c:
 main/dll/dll_0022_effect9.c:
 	.text       start:0x800C11CC end:0x800C291C
 
-main/dll/modelfx.c:
-	.text       start:0x800C291C end:0x800C8008
+main/dll/dll_0023_effect10.c:
+	.text       start:0x800C291C end:0x800C4864
+
+main/dll/dll_0024_effect11.c:
+	.text       start:0x800C4864 end:0x800C56E0
+
+main/dll/dll_0025_effect12.c:
+	.text       start:0x800C56E0 end:0x800C65B4
+
+main/dll/dll_0027_effect14.c:
+	.text       start:0x800C65B4 end:0x800C8008
 
 main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
