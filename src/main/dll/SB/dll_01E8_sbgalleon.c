@@ -556,25 +556,15 @@ int SB_Galleon_modelMtxFn(int* obj)
     return (s8)b;
 }
 
-#pragma optimization_level 1
 int SB_Galleon_func0E(int* obj)
 {
-    register s8* p = (s8*)((int**)obj)[0xb8 / 4];
-    int phase;
-    int wrappedPhase;
-    if (((SBGalleonState*)p)->phase == 1)
+    SBGalleonState* p = (SBGalleonState*)((int**)obj)[0xb8 / 4];
+    if ((s8)*(u8*)&p->phase == 1)
     {
-        phase = ((SBGalleonState*)p)->phaseCounter;
-        if (phase >= 5)
-        {
-            wrappedPhase = phase - 5;
-        }
-        else
-        {
-            wrappedPhase = phase;
-        }
-        return (6 - wrappedPhase) * 0x5a;
+        int wrapped;
+        if ((s8)*(u8*)&p->phaseCounter >= 5) wrapped = (s8)*(u8*)&p->phaseCounter - 5;
+        else wrapped = (s8)*(u8*)&p->phaseCounter;
+        return (6 - wrapped) * 0x5a;
     }
     return 0x640;
 }
-#pragma optimization_level reset
