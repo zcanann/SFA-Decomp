@@ -439,6 +439,7 @@ void setShowWorldMapHud(u8 param)
  * direction toggle in lbl_803DD77F gates the "approaching peak" half of
  * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
  * the active-id sentinel lbl_803DBA5C is dropped to -1. */
+#pragma dont_inline on
 void gameTextFadeOut(void)
 {
     if (lbl_803DD774 == 0) return;
@@ -456,6 +457,7 @@ void gameTextFadeOut(void)
         lbl_803DBA5C = -1;
     }
 }
+#pragma dont_inline reset
 
 /* EN v1.0 0x80129C74  size: 72b  Render-block teardown for the snowworm
  * scene: drops to layer 0, optionally tears the cached effect down, and
@@ -827,6 +829,7 @@ void pauseMenuInit(void)
  *    queue length from gameTextGet(slot_id)->_2) clamp it back one
  *    step and clear the dying byte.
  */
+#pragma dont_inline on
 void npcTalkFn_8012e880(void)
 {
     Obj_GetPlayerObject();
@@ -896,6 +899,7 @@ void npcTalkFn_8012e880(void)
         }
     }
 }
+#pragma dont_inline reset
 
 /* EN v1.0 0x80129DB4  size: 300b  Conditional render setup gated on
  * pauseMenuState. While a pause-menu state is active, runs the layer-1
@@ -1357,6 +1361,7 @@ extern MapEventInterface** gMapEventInterface;
 
 /* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
  * limits, picks the quest-progress hint stream and starts it. */
+#pragma dont_inline on
 void drawWorldMapHud(void)
 {
     u16 raw = lbl_803DD776;
@@ -1488,6 +1493,7 @@ void drawWorldMapHud(void)
         lbl_803DD776 = 0;
     }
 }
+#pragma dont_inline reset
 
 extern void MWTRACE(int boxId);
 extern int sprintf(char* buf, const char* fmt, ...);
@@ -1892,6 +1898,7 @@ typedef struct
 
 /* EN v1.0 0x8012DF68  size: 2328b  C-menu per-frame driver: input gating,
  * item set selection, Y-button assignment, scroll, select/close handling. */
+#pragma dont_inline on
 void cMenuRun(void)
 {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
@@ -2276,6 +2283,7 @@ void cMenuRun(void)
     }
     *cursor = lbl_803DD8B4;
 }
+#pragma dont_inline reset
 
 extern void gameTextSetDrawFunc(void* fn);
 extern void pauseMenuTextDrawFn(void);
