@@ -105,13 +105,6 @@ void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma scheduling off
-#pragma peephole off
-void dbegg_processMessages(int obj);
-#pragma peephole reset
-#pragma scheduling reset
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
 
@@ -170,9 +163,6 @@ int vfpspellplace_getExtraSize(void) { return 0x6; }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
 int dbegg_getExtraSize(void);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* plain forwarder. */
 extern void fn_801FD6B4(int obj);
@@ -191,12 +181,6 @@ void vfplavastar_release(void)
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 extern void objRenderFn_80041018(void* obj);
 
-
-/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct
 {
@@ -226,13 +210,7 @@ int dbegg_setScale(int obj);
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
 #pragma scheduling off
 void vfplavastar_initialise(void)
@@ -267,10 +245,6 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 #pragma scheduling reset
 
 extern f32 lbl_803E61CC;
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
@@ -291,8 +265,6 @@ void vfpflamepoint_init(int* obj, s8* def)
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
 
-#pragma scheduling off
-#pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -603,15 +575,3 @@ void vfpspellplace_init(int obj, s8* def)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
-int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag);
-#pragma opt_loop_invariants reset
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset

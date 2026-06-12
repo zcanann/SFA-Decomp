@@ -9,13 +9,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
 typedef struct PressureswitchPlacement
 {
     u8 pad0[0xC - 0x0];
@@ -246,15 +239,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma dont_inline on
-void fn_801F20D4(int obj);
-#pragma dont_inline reset
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -358,34 +342,9 @@ void pressureswitch_init(int* obj, u8* init)
 void dll_1FF_free_nop(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 timeDelta;
-
-
-
-
-
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -431,10 +390,6 @@ extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 
 
-
-
-
-
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
@@ -459,16 +414,10 @@ extern void GameBit_Set(int slot, int val);
 #pragma opt_strength_reduction off
 
 
-
-
-
 typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
-
-
-
 
 
 typedef struct PswFlags
@@ -665,6 +614,4 @@ void pressureswitch_update(int obj)
     }
 }
 #pragma opt_common_subs reset
-
-
 

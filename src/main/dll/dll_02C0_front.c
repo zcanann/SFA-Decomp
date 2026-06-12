@@ -12,7 +12,6 @@
 #include "stdarg.h"
 
 
-
 typedef struct TitlescreenState
 {
     s16 unk0;
@@ -60,7 +59,6 @@ extern f32 FLOAT_803e3098;
  */
 
 
-
 extern void* Obj_GetPlayerObject(void);
 extern void* gameTextGetBox(int boxId);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -72,11 +70,6 @@ extern f32 mathCosf(f32);
 extern u32 lbl_803DD938;
 extern void* lbl_803DD92C;
 extern void* minimapTexture;
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /*
@@ -269,18 +262,11 @@ extern u8 showCredits;
 /* 4-byte and 8-byte trivial leaves. */
 
 
-
-
-
 u8 shouldShowCredits(void) { return showCredits; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void);
 
-/* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
- * warpstoneUIState. */
-#pragma peephole off
-#pragma peephole reset
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
 void fn_80135814(u32 a, u32 b)
@@ -508,32 +494,6 @@ void titlescreen_init(u8* obj, u8* p)
 
 extern f32 lbl_803E23E8;
 
-/* EN v1.0 0x80139164  size: 252b  Tricky_emitQueuedPathParticles: when b->_54 carries the
- * spawn flag, build a particle descriptor on the stack from a's heading
- * and the delta to b's position, then emit it 20 times via the partfx
- * interface and clear the flag. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
- * float at lbl_803DD968. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
- * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
- * checks bit 0x10. Returns 1 only when the post-OR check passes. */
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
@@ -542,39 +502,6 @@ extern f32 lbl_803E2350;
 extern f32 lbl_803DD9C8;
 extern void PSMTXTrans(void*, f32, f32, f32);
 
-
-
-/* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
- * getScreenResolution, primes the two float counters, clears two state bytes,
- * acquires three sized buffers (605/1/2 bytes) and primes the
- * debugLogEnd cursor to the start of the 0x1100-byte arena. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
- * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
- * record counter at lbl_803DD9E4 has already exceeded 0xFA. */
-#pragma scheduling off
-#pragma scheduling reset
-
-
-/* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
- * (and dispatches the drop anim via objAudioFn_800393f8) only when:
- *   - bit 0x40 of obj->_b8->_58 is clear,
- *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
- *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
 
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
@@ -622,14 +549,6 @@ extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* Obj_GetActiveModel(void* obj);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* Variadic debug logger: append formatted text while the debug arena has room. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
 
@@ -656,18 +575,10 @@ extern void* lbl_803DD960;
 /* lbl_803DD940 declared later as void* */
 extern f32 lbl_803E2408;
 
-/* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
- * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
 
-/* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
- * lbl_803DD960. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 
@@ -706,13 +617,7 @@ extern int getCurUiDll(void);
  * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
  * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
 extern f32 timeDelta;
-#pragma scheduling off
-#pragma scheduling reset
 
-/* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
- * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
  * latch showCredits = 1 and zero five halfword/byte counters. */
@@ -745,13 +650,6 @@ int gameTextFn_80134be8(void)
  * minimapTexture and lbl_803DD92C. */
 void fn_80133934(void);
 
-/* EN v1.0 0x801375A0  size: 40b  Reset debug log/print state: rewind
- * debugLogEnd to the start of the buffer and reload the print x/y
- * coordinates from saved values. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
  * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
@@ -773,41 +671,10 @@ void titlescreen_free(u8* obj)
 /* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
  * the thread at &lbl_803AB118. */
 extern u8 lbl_803AB118[];
-#pragma scheduling off
-#pragma scheduling reset
 
-/* EN v1.0 0x801334E0  size: 60b  Gate: when lbl_803DD944 == 2 (s8 compare)
- * and lbl_803DBBB0 != 0, latch lbl_803DD928 = 5 and return 1; else
- * return 0 without touching the latch. */
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 
-
-/* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
- * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
- * the active flag. While bit 0x40 is set, ramps state[0x830] toward
- * (s8)data[0] / (s8)data[1] with acceleration lbl_803E23E4 and damping
- * lbl_803E23F0, clamps to [0, lbl_803E23E8], and pushes the result to the
- * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DD99C;
 extern u8 lbl_803DD9A0;
@@ -866,7 +733,6 @@ extern void GXSetCullMode(int mode);
 extern void GXBegin(int type, int fmt, int n);
 extern void Camera_RebuildProjectionMatrix(void);
 extern f32 hudMatrix[];
-
 
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
@@ -949,11 +815,6 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out);
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E2354;
 extern f32 lbl_803E2358;
@@ -1356,11 +1217,6 @@ void fn_80134870(int obj, u8* arr)
 #pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
 extern int loadUiDll(int dllId);
@@ -1437,11 +1293,6 @@ void creditsStart_(void)
 extern void CMenu_SetFadeCounter(int v);
 
 
-
-
-
-
-
 #pragma peephole off
 #pragma peephole reset
 
@@ -1452,9 +1303,6 @@ extern void CMenu_SetFadeCounter(int v);
 
 #pragma peephole off
 #pragma peephole reset
-
-
-
 
 
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);

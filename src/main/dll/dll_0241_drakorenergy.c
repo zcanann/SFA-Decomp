@@ -884,20 +884,6 @@ int dbstealerworm_stateHandlerB00(int p1, int p2);
 /* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern f32 timeDelta;
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-
-#pragma dont_inline on
-
-#pragma dont_inline reset
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 void drakorenergy_update(int obj)
 {

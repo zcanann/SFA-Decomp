@@ -9,9 +9,6 @@
 #include "main/objseq.h"
 
 
-
-
-
 typedef struct LightsourceState
 {
     u8 pad0[0x4C - 0x0];
@@ -20,10 +17,6 @@ typedef struct LightsourceState
     u8 unk2F8;
     u8 pad2F9[0x300 - 0x2F9];
 } LightsourceState;
-
-
-
-
 
 
 /* Per-object extra state for the WM laser beam emitter. */
@@ -214,15 +207,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma dont_inline on
-void fn_801F20D4(int obj);
-#pragma dont_inline reset
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -262,40 +246,11 @@ void FUN_801f2b94(short* param_1)
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 extern f32 lbl_803E5D78;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
-
-
-
-
-
-
-
-
 
 
 void lightsource_hitDetect(void)
@@ -312,8 +267,6 @@ extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
-
-
 
 
 void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -345,8 +298,6 @@ extern int GameBit_Get(int id);
 
 
 extern int Obj_GetPlayerObject(void);
-
-
 
 
 extern void ModelLightStruct_free(void* light);
@@ -385,9 +336,6 @@ extern void GameBit_Set(int slot, int val);
 #pragma opt_strength_reduction off
 
 #pragma opt_strength_reduction off
-
-
-
 
 
 typedef struct LightSourceFlagByte
@@ -531,13 +479,8 @@ void lightsource_update(int obj)
 }
 
 
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
 
 
 /* segment pragma-stack balance (re-split): */
@@ -747,5 +690,4 @@ void lightsource_initialise(void)
 void wmworm_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-
 

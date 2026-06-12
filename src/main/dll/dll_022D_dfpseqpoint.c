@@ -862,22 +862,9 @@ void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern void unlockLevel(int a, int b, int c);
 
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-
-#pragma dont_inline on
-
-#pragma dont_inline reset
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {

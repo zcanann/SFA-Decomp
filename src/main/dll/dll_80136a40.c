@@ -32,8 +32,6 @@ typedef struct TrickyImpressState
 } TrickyImpressState;
 
 
-
-
 extern uint ObjGroup_ContainsObject();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
@@ -69,7 +67,6 @@ extern f32 FLOAT_803e3098;
  */
 
 
-
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void GXSetScissor(int x, int y, int w, int h);
@@ -80,11 +77,6 @@ extern u8 lbl_803DD928;
 extern void* minimapTexture;
 extern void* lbl_803DD940;
 extern s8 lbl_803DD944;
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /*
@@ -274,8 +266,6 @@ extern u8 showCredits;
 /* 4-byte and 8-byte trivial leaves. */
 
 
-
-
 void reportAllocFail(void)
 {
 }
@@ -284,10 +274,6 @@ int dll_3F_frameStart_ret_0(void);
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 
-/* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
- * warpstoneUIState. */
-#pragma peephole off
-#pragma peephole reset
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
 
@@ -341,48 +327,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 
 extern f32 lbl_803DD968;
 
-/* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
- * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
- * releasing each non-null entry, then clear the busy byte at
- * lbl_803DD992. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_release(void);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x8013695C  size: 228b  titlescreen_initialise: reset state
- * bytes, load the main texture (asset 0x647 or 0xC5 depending on
- * lbl_803DC968), identity the matrix, then load the 19-entry texture
- * table from the id list at lbl_8031CDE8 into lbl_803A9F98. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_initialise(void);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
- * ready, render via objRenderFn; once the credits flag fires, set the
- * one-shot trigger 0x57 and release the attract-mode movie buffers. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-/* EN v1.0 0x801367A8  size: 252b  titlescreen_init: seed the object's
- * state from its descriptor id (obj->_46), pick the anim move and blend
- * float per id range, and for the attract id install the movie draw
- * callback. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_init(u8* obj, u8* p);
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E23E8;
 
@@ -493,11 +437,6 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
- * float at lbl_803DD968. */
-#pragma scheduling off
-void Credits_initialise(void);
-#pragma scheduling reset
 
 /* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
  * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
@@ -622,12 +561,6 @@ int fn_80138920(u8* obj, int arg1, int arg2)
 
 extern int Obj_AllocObjectSetup(int a, int b);
 
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
 
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
@@ -674,10 +607,6 @@ void fn_80133F70(void* obj)
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern int* Obj_GetActiveModel(void* obj);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Variadic debug logger: append formatted text while the debug arena has room. */
 #pragma scheduling off
@@ -705,27 +634,14 @@ void fn_80137948(char* fmt, ...)
  * pointers are zeroed at the end. */
 void Minimap_release(void);
 
-/* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
- * matrix at lbl_803A9FE4 and derive the three normalized cursor
- * positions from the supplied (a, b) coordinates. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* lbl_803DD940 declared later as void* */
 extern f32 lbl_803E2408;
 
-/* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
- * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
 
-/* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
- * lbl_803DD960. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 
@@ -753,18 +669,7 @@ extern void* lbl_803DD984;
  * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
  * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
 extern f32 timeDelta;
-#pragma scheduling off
-#pragma scheduling reset
 
-/* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
- * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
- * latch showCredits = 1 and zero five halfword/byte counters. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from getCurUiDll is in {2..6} or equals 7, else 0. */
@@ -830,14 +735,6 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
 }
 #pragma scheduling reset
 
-/* EN v1.0 0x801334E0  size: 60b  Gate: when lbl_803DD944 == 2 (s8 compare)
- * and lbl_803DBBB0 != 0, latch lbl_803DD928 = 5 and return 1; else
- * return 0 without touching the latch. */
-#pragma peephole off
-#pragma scheduling off
-u8 fn_801334E0(void);
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
@@ -1115,48 +1012,9 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
 
 extern f32 lbl_803DD99C;
 
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x80135CC8  size: 2784b  titlescreen_update: drive the title
- * screen actor anim state machine, the per-actor footstep/voice sfx flag
- * grid at lbl_803A9F50, the random blink blend, and the one-shot envfx/sky
- * setup. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_update(u8* obj);
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct
 {
@@ -1226,16 +1084,9 @@ void objAnimFreeChildren(int a, int b, void** c)
 extern u16 lbl_803DBC0A;
 
 
-
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
-
-
-
-
-
-
 
 
 #pragma peephole off

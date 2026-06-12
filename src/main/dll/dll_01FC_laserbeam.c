@@ -52,7 +52,6 @@ typedef struct WMGalleonState
 } WMGalleonState;
 
 
-
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
 STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
@@ -70,27 +69,6 @@ STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
 STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 int LaserBeam_getExtraSize(void) { return 0x50; }
@@ -137,14 +115,6 @@ typedef struct LaserBeamPlacement
     s8 unk2FA;
     u8 pad2FB[0x300 - 0x2FB];
 } LaserBeamPlacement;
-
-
-
-
-
-
-
-
 
 
 /* Per-object extra state for the WM laser beam emitter. */
@@ -675,15 +645,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma dont_inline on
-void fn_801F20D4(int obj);
-#pragma dont_inline reset
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -723,37 +684,10 @@ void FUN_801f2b94(short* param_1)
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 extern f32 lbl_803E5D78;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-
-
-
-
-
 
 
 extern void* lbl_803DDC80;
@@ -768,9 +702,6 @@ void lightsource_hitDetect(void);
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 
 /* if (o->_X == K) return A; else return B; */
@@ -789,14 +720,6 @@ void LaserBeam_release(void)
 void dll_1FF_init(s16* a, s8* b);
 
 
-
-
-
-
-
-
-
-
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
@@ -811,8 +734,6 @@ void dll_1FF_init(s16* a, s8* b);
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-
-
 
 
 #pragma opt_strength_reduction off
@@ -873,12 +794,6 @@ typedef struct LightSourceFlagByte
 } LightSourceFlagByte;
 
 
-
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
 

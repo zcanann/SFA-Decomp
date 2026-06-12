@@ -5,15 +5,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
@@ -51,110 +42,16 @@ extern undefined4 ObjLink_AttachChild();
  */
 
 
-/* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 /* 8b "li r3, N; blr" returners. */
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
-
-#pragma peephole reset
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* call(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
-#pragma scheduling off
-#pragma scheduling reset
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int id);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
-#pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -324,8 +221,6 @@ void cclightfoot_free(int* obj, int p2)
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 
-
-
 extern f32 lbl_803E4674;
 extern f32 lbl_803E4678;
 extern f32 lbl_803E467C;
@@ -389,11 +284,6 @@ extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4670;
 
 
-
-
-
-
-
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern undefined4 ObjLink_DetachChild();
@@ -437,10 +327,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma peephole off
 
 #include "main/dll/SC/SCtotemlogpuz.h"
-
-
-
-
 
 
 extern f32 lbl_803E4680;

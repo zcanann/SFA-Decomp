@@ -9,17 +9,6 @@
 #include "main/game_object.h"
 
 
-
-
-
-
-
-
-
-
-
-
-
 /* dim2conveyor_getExtraSize == 0x14. */
 
 
@@ -69,207 +58,16 @@ extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 
 
-/*
- * --INFO--
- *
- * Function: FUN_801b6d24
- * EN v1.0 Address: 0x801B6D24
- * EN v1.0 Size: 404b
- * EN v1.1 Address: 0x801B6F60
- * EN v1.1 Size: 428b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b6f88
- * EN v1.0 Address: 0x801B6F88
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x801B71F4
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b6fa8
- * EN v1.0 Address: 0x801B6FA8
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x801B721C
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b7314
- * EN v1.0 Address: 0x801B7314
- * EN v1.0 Size: 356b
- * EN v1.1 Address: 0x801B7708
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b7fcc
- * EN v1.0 Address: 0x801B7FCC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B8344
- * EN v1.1 Size: 1344b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801b7fd0
- * EN v1.0 Address: 0x801B7FD0
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801B8884
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 8b "li r3, N; blr" returners. */
-
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
-
-
-
-
-/* render-with-fn(lbl) (no visibility check). */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
-
-
 extern void* Obj_GetPlayerObject(void);
-
-/* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
-
 extern u8 lbl_803DBF20;
-
-/* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
- * return 1 if the signed result dropped to or below 0. */
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern void* mmAlloc(int size, int a, int b);
-
-
-
-
-
-
-
-
-
-
-/* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
-
-
-
-
-
 
 
 typedef struct Dll1DFState
@@ -281,14 +79,6 @@ typedef struct Dll1DFState
     u8 pad7[0x24 - 0x7];
     f32 unk24;
 } Dll1DFState;
-
-
-
-
-
-
-
-
 
 
 /*
@@ -380,24 +170,7 @@ void FUN_801b9cc4(int param_1)
 void dll_1DA_release(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* dim2icefloe: per-frame curve-follow update + path-param init. */
-
-
-
 
 
 /* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
@@ -410,11 +183,8 @@ void dll_1DA_release(void);
  * fall, land on contact object, clamp to floor height. */
 
 
-
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
-
-
 
 
 void dll_1DF_free(void)
@@ -441,9 +211,6 @@ int dll_1DF_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B08;
 extern f32 lbl_803E4B98;
-
-
-
 
 
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -548,7 +315,4 @@ void dll_1DF_update(void* obj)
 /* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
 void dll_1DB_init(void* obj, void* p);
-
-
-
 

@@ -984,8 +984,6 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
 
 extern void fn_80202EF0(int obj, int p2);
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 int dbstealerworm_stateHandlerA04(int obj, int param2);
 
@@ -993,14 +991,6 @@ int dbstealerworm_stateHandlerA0E(int obj, int param2);
 
 void fn_80202EF0(int obj, int p2);
 
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-
-#pragma dont_inline on
-
-#pragma dont_inline reset
 
 int dbstealerworm_stateHandlerA02(int obj, int p2);
 
@@ -1016,8 +1006,6 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
 
 int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
 
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
 

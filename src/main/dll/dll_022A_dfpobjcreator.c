@@ -885,13 +885,6 @@ void dfplevelcontrol_setScale(int unused, u8* out);
 
 extern int dbstealerworm_stateHandlerA02();
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
 
 #pragma dont_inline on
 
@@ -939,8 +932,6 @@ void dfpobjcreator_update(int obj)
 
 int dbstealerworm_stateHandlerA02(int obj, int p2);
 
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 #include "main/dll/baddie/chuka.h"
 #include "main/effect_interfaces.h"

@@ -8,11 +8,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
 typedef struct CcgasventcontrolState
 {
     u8 pad0[0x4 - 0x0];
@@ -21,8 +16,6 @@ typedef struct CcgasventcontrolState
     s16 unkC;
     u8 padE[0x10 - 0xE];
 } CcgasventcontrolState;
-
-
 
 
 extern uint GameBit_Get(int eventId);
@@ -185,16 +178,6 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
 void animsharpclaw_hitDetect(void);
 
 
-
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 /* 8b "li r3, N; blr" returners. */
 int ccgasventcontrol_getExtraSize(void) { return 0x10; }
 int ccqueen_getExtraSize(void);
@@ -211,21 +194,9 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-void MoonSeedPlantingSpot_free(int x);
-#pragma scheduling reset
-
-/* call(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void ccgasventcontrol_free(int obj)
@@ -252,11 +223,6 @@ void ccgasventcontrol_init(int obj, u8* p)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-int MoonSeedPlantingSpot_SeqFn(int obj);
-#pragma peephole reset
-#pragma scheduling reset
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
@@ -442,42 +408,3 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 
 extern int getTrickyObject(void);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

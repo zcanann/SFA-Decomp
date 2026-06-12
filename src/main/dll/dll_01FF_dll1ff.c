@@ -8,15 +8,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
-
 /* Per-object extra state for the WM laser beam emitter. */
 
 
@@ -229,15 +220,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma dont_inline on
-void fn_801F20D4(int obj);
-#pragma dont_inline reset
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -277,10 +259,7 @@ void FUN_801f2b94(short* param_1)
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 extern f32 lbl_803E5D78;
-
 
 
 void dll_1FF_free_nop(void)
@@ -300,30 +279,10 @@ void dll_1FF_initialise_nop(void)
 }
 
 
-
-
-
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 
-
-
-
-
-
-
-
-
 extern f32 timeDelta;
-
-
-
-
-
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -332,9 +291,6 @@ int dll_200_getExtraSize_ret_40(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
-
 
 
 /* if (o->_X == K) return A; else return B; */
@@ -363,10 +319,6 @@ extern int GameBit_Get(int id);
 
 
 extern int Obj_GetPlayerObject(void);
-
-
-
-
 
 
 /* dll_1FF_render: when obj->_f8 implies
@@ -415,14 +367,9 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
 
 
-
-
 #pragma opt_strength_reduction off
 
 #pragma opt_strength_reduction off
-
-
-
 
 
 typedef struct LightSourceFlagByte
@@ -547,6 +494,4 @@ void dll_1FF_update(int obj)
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
 

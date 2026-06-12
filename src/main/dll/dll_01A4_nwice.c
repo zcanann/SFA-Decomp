@@ -6,11 +6,6 @@ extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjGroup_RemoveObject();
 
 
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -35,77 +30,6 @@ extern undefined8 ObjGroup_RemoveObject();
  */
 
 
-/*
- * --INFO--
- *
- * Function: FUN_801cf0b4
- * EN v1.0 Address: 0x801CF0B4
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x801CF570
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/*
- * --INFO--
- *
- * Function: nw_tricky_getExtraSize
- * EN v1.0 Address: 0x801CF7B8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-
-/*
- * --INFO--
- *
- * Function: nw_tricky_SeqFn
- * EN v1.0 Address: 0x801CF78C
- * EN v1.0 Size: 44b
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_801cf108
- * EN v1.0 Address: 0x801CF108
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801CF5C4
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-#pragma scheduling off
-#pragma peephole off
-
-/* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-
 #include "main/dll/creator1D6.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -116,8 +40,6 @@ typedef struct NwIcePlacement
     u8 unk1B;
     u8 pad1C[0x20 - 0x1C];
 } NwIcePlacement;
-
-
 
 
 extern int ObjGroup_FindNearestObjectForObject(int group, int* obj, f32* maxDistance);
@@ -135,29 +57,7 @@ typedef struct NwIceState
 } NwIceState;
 
 
-
-
-/*
- * --INFO--
- *
- * Function: nw_tricky_update
- * EN v1.0 Address: 0x801CF7E8
- * EN v1.0 Size: 796b
- * EN v1.1 Address: 0x801CFAC0
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 
 void nw_ice_render(void)

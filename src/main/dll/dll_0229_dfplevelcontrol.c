@@ -928,8 +928,6 @@ extern int dbstealerworm_stateHandlerB06();
 
 void DBstealerwo_setFuncPtrs_80203c78(void);
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
@@ -966,14 +964,6 @@ void dfplevelcontrol_init(int obj, int param2)
 
 extern f32 lbl_803E62F4;
 
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-
-#pragma dont_inline on
-
-#pragma dont_inline reset
 
 void dfplevelcontrol_update(int obj)
 {
@@ -1118,8 +1108,6 @@ void fn_80204098(int obj)
 
 int dbstealerworm_stateHandlerB06(int obj, int p2);
 
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 #include "main/dll/baddie/chuka.h"
 #include "main/effect_interfaces.h"

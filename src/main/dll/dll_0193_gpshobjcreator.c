@@ -8,9 +8,6 @@
 #include "main/screen_transition.h"
 
 
-
-
-
 /*
  * --INFO--
  *
@@ -25,11 +22,6 @@
  * PAL Size: TODO
  */
 extern f32 timeDelta;
-
-
-
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
 
 
 /*
@@ -50,28 +42,15 @@ extern f32 timeDelta;
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 extern void objRenderFn_8003b8f4(f32);
 
 
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-
-
-
-
-
 extern u8 Obj_IsLoadingLocked(void);
-
-
 
 
 #include "main/audio/sfx_ids.h"
@@ -102,10 +81,6 @@ typedef struct GpshObjcreatorObjectDef
 } GpshObjcreatorObjectDef;
 
 
-
-
-
-
 /*
  * --INFO--
  *
@@ -119,10 +94,6 @@ typedef struct GpshObjcreatorObjectDef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
-
-
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -201,10 +172,6 @@ void gpsh_objcreator_update(int* obj)
 void gpsh_scene_free(void);
 
 
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
 int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
@@ -220,8 +187,6 @@ void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-
 
 
 void gpsh_objcreator_init(int* obj, int* def)

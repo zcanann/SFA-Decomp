@@ -7,8 +7,6 @@
 #include "main/dll/bombplant_placement.h"
 
 
-
-
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_DisableObject();
@@ -294,9 +292,6 @@ extern f32 playerMapOffsetZ;
 #include "main/objseq.h"
 
 
-
-
-
 #include "main/dll/bombplant_placement.h"
 
 
@@ -358,26 +353,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-/* Keep the cross-TU bl: these two drift helpers' only callers
- * (bombplantspore_update/init) live in the BombPlantSpore TU
- * (SHrocketmushroom.c). Once they land there, dont_inline stops MWCC
- * auto-inlining them into bombplantspore_update. */
-#pragma dont_inline on
-
-/*
- * --INFO--
- *
- * Function: bombplantspore_updateDrift
- * EN v1.0 Address: 0x801D359C
- * EN v1.0 Size: 672b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline reset
 
 /*
  * --INFO--

@@ -101,71 +101,6 @@ void fn_801C5990(MmShrineAnimObj* obj);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-/*
- * --INFO--
- *
- * Function: FUN_801c5f28
- * EN v1.0 Address: 0x801C5F28
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x801C5F44
- * EN v1.1 Size: 852b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_getExtraSize
- * EN v1.0 Address: 0x801C5F40
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_getObjectTypeId
- * EN v1.0 Address: 0x801C5F48
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_hitDetect
- * EN v1.0 Address: 0x801C60B4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
@@ -204,8 +139,6 @@ extern undefined4 DAT_803dc070;
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern int GameBit_Get(int bit);
 
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
 
 /*
  * --INFO--

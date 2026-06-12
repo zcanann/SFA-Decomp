@@ -1147,10 +1147,6 @@ void vfpplatform_update(int obj)
  */
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_224_release_nop(void)
@@ -1163,15 +1159,9 @@ void dll_224_initialise_nop(void)
 
 /* 8b "li r3, N; blr" returners. */
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* plain forwarder. */
 
-/* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 
@@ -1215,34 +1205,6 @@ void dll_224_update(void* param_1)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
@@ -1262,52 +1224,3 @@ void dll_224_init(void* obj, void* other)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset

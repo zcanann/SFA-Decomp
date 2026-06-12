@@ -1257,20 +1257,6 @@ void dbegg_init(int obj)
 
 void DFP_Torch_free(int obj);
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-
-#pragma dont_inline on
-
-#pragma dont_inline reset
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 void dbegg_update(int obj)
 {

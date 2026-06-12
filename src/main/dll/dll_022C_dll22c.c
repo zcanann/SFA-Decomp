@@ -849,20 +849,6 @@ extern f32 timeDelta;
 
 extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-
-#pragma dont_inline on
-
-#pragma dont_inline reset
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 void fn_80204BF8(int obj)
 {

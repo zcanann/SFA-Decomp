@@ -8,18 +8,11 @@
 #include "main/objseq.h"
 
 
-
 typedef struct WMColrisePlacement
 {
     u8 pad0[0xC - 0x0];
     f32 unkC;
 } WMColrisePlacement;
-
-
-
-
-
-
 
 
 /* Per-object extra state for the WM laser beam emitter. */
@@ -231,15 +224,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma dont_inline on
-void fn_801F20D4(int obj);
-#pragma dont_inline reset
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -279,24 +263,7 @@ void FUN_801f2b94(short* param_1)
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 extern f32 lbl_803E5D78;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void WM_colrise_free(void)
@@ -400,13 +367,6 @@ void WM_colrise_update(int* obj)
 void wmtorch_hitDetect(void);
 
 
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int WM_colrise_getExtraSize(void) { return 0x4; }
 int WM_colrise_getObjectTypeId(void) { return 0x0; }
@@ -415,7 +375,6 @@ int wmtorch_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5DC8;
-
 
 
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -453,12 +412,6 @@ void WM_colrise_init(s16* a, s8* b)
 extern int GameBit_Get(int id);
 
 
-
-
-
-
-
-
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
@@ -475,14 +428,9 @@ extern int GameBit_Get(int id);
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
 
 
-
-
 #pragma opt_strength_reduction off
 
 #pragma opt_strength_reduction off
-
-
-
 
 
 typedef struct LightSourceFlagByte
@@ -491,12 +439,6 @@ typedef struct LightSourceFlagByte
 } LightSourceFlagByte;
 
 
-
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
 

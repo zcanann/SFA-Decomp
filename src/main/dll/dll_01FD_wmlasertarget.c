@@ -8,11 +8,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
 typedef struct WmlasertargetPlacement
 {
     u8 pad0[0xC - 0x0];
@@ -24,8 +19,6 @@ typedef struct WmlasertargetPlacement
     s16 unk20;
     u8 pad22[0x28 - 0x22];
 } WmlasertargetPlacement;
-
-
 
 
 /* Per-object extra state for the WM laser beam emitter. */
@@ -238,15 +231,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma dont_inline on
-void fn_801F20D4(int obj);
-#pragma dont_inline reset
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -286,14 +270,7 @@ void FUN_801f2b94(short* param_1)
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 extern f32 lbl_803E5D78;
-
-
-
-
-
 
 
 void wmlasertarget_free(void)
@@ -356,23 +333,6 @@ void wmlasertarget_update(int* obj)
 void dll_200_free_nop(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int wmlasertarget_getExtraSize(void) { return 0x4; }
 int wmlasertarget_getObjectTypeId(void) { return 0x0; }
@@ -415,10 +375,6 @@ void wmlasertarget_init(char* obj, s8* p)
 extern int Obj_GetPlayerObject(void);
 
 
-
-
-
-
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
@@ -443,21 +399,12 @@ extern void GameBit_Set(int slot, int val);
 #pragma opt_strength_reduction off
 
 
-
-
-
 typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
 
 
-
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
 

@@ -8,15 +8,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
@@ -176,15 +167,6 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
 void animsharpclaw_hitDetect(void);
 
 
-
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 void ccgasvent_render(void)
 {
 }
@@ -194,10 +176,6 @@ int animsharpclaw_getExtraSize(void);
 int ccgasvent_getExtraSize(void) { return 0x1; }
 int ccgasventcontrol_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
-
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
@@ -211,49 +189,7 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-int MoonSeedPlantingSpot_SeqFn(int obj);
-#pragma peephole reset
-#pragma scheduling reset
-
-/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
-#pragma scheduling off
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4610;
 extern f32 lbl_803E4614;
@@ -291,26 +227,3 @@ void ccgasvent_update(int* obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-int MoonSeedPlantingSpot_setScale(int* obj, int arg);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

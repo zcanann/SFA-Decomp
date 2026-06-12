@@ -826,8 +826,6 @@ void dfpobjcreator_init(int obj, s8* def);
 
 extern void fn_80202EF0(int obj, int p2);
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern f32 lbl_803E63E4;
 extern f32 lbl_803E63E8;
@@ -867,14 +865,6 @@ void DFP_Torch_init(int obj, int param2)
 
 void fn_80202EF0(int obj, int p2);
 
-#pragma opt_common_subs off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-
-#pragma dont_inline on
-
-#pragma dont_inline reset
 
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -973,8 +963,6 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void fn_80204098(int obj);
 
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 void DFP_Torch_update(int obj)
 {

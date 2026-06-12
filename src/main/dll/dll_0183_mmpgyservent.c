@@ -12,20 +12,13 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 
 
-
-
 extern void objRenderFn_8003b8f4(f32 v);
 
 
 extern u8 framesThisStep;
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -33,13 +26,6 @@ extern u8 framesThisStep;
 /* Pattern wrappers. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
 
 
 #pragma peephole on
@@ -68,12 +54,6 @@ typedef struct MmpGyserventPlacement
     u8 unk20;
     u8 pad21[0x28 - 0x21];
 } MmpGyserventPlacement;
-
-
-
-
-
-
 
 
 /*
@@ -116,22 +96,6 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
-
-/*
- * --INFO--
- *
- * Function: MMP_levelcontrol_update
- * EN v1.0 Address: 0x801A6778
- * EN v1.0 Size: 972b
- * EN v1.1 Address: 0x801A6AD0
- * EN v1.1 Size: 284b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -252,20 +216,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
 void MMP_levelcontrol_release(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void mmp_gyservent_free(void)
 {
 }
@@ -294,15 +244,7 @@ int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E44D0;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 
-#pragma peephole reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -331,73 +273,6 @@ void mmp_gyservent_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
-
-
-/* mmp_trenchfx_free: expgfx interface freeObject callback. */
-
-#pragma peephole off
-#pragma peephole reset
-
-/* ObjGroup_RemoveObject + vtable[4] tail-call. */
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -413,38 +288,3 @@ void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

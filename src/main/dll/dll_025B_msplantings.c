@@ -8,16 +8,11 @@
 #include "main/objseq.h"
 
 
-
 typedef struct MoonSeedPlantingSpotPlacement
 {
     u8 pad0[0xC - 0x0];
     f32 unkC;
 } MoonSeedPlantingSpotPlacement;
-
-
-
-
 
 
 typedef struct MoonSeedPlantingSpotState
@@ -207,7 +202,6 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
 void animsharpclaw_hitDetect(void);
 
 
-
 void MoonSeedPlantingSpot_hitDetect(void)
 {
 }
@@ -297,9 +291,6 @@ int ccgasvent_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
-
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
@@ -307,20 +298,6 @@ void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 void ccgasvent_free(int x);
 #pragma scheduling reset
 
-/* call(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -335,26 +312,14 @@ int MoonSeedPlantingSpot_SeqFn(int obj)
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
-#pragma scheduling off
-int CCGasVentControl_SeqFn(int obj);
-#pragma scheduling reset
 
 extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int id);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 getXZDistance(f32 * a, f32 * b);
 
-#pragma scheduling off
-#pragma peephole off
-u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int getTrickyObject(void);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
@@ -526,16 +491,6 @@ void MoonSeedPlantingSpot_update(int obj)
 
 extern int Obj_AllocObjectSetup(int size, int type);
 
-#pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -626,13 +581,3 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
 
 extern void objSetSlot(void* obj, int slot);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

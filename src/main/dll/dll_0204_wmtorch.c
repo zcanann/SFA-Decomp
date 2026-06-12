@@ -9,15 +9,6 @@
 #include "main/resource.h"
 
 
-
-
-
-
-
-
-
-
-
 /* Per-object extra state for the WM laser beam emitter. */
 
 
@@ -231,15 +222,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 }
 
 
-#pragma dont_inline on
-void fn_801F20D4(int obj);
-#pragma dont_inline reset
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -279,28 +261,7 @@ void FUN_801f2b94(short* param_1)
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 extern f32 lbl_803E5D78;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -380,16 +341,12 @@ void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 extern void* lbl_803DDC80;
 
 
-
 /* 8b "li r3, N; blr" returners. */
 int wmtorch_getExtraSize(void) { return 0x10; }
 int wmtorch_getObjectTypeId(void) { return 0x1; }
 int lightsource_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 
 /* if (o->_X == K) return A; else return B; */
@@ -400,8 +357,6 @@ int lightsource_getExtraSize(void);
 /* fn_X(lbl); lbl = 0; */
 
 /* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
-
-
 
 
 extern int Obj_GetPlayerObject(void);
@@ -457,14 +412,9 @@ extern void ModelLightStruct_free(void* light);
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
 
 
-
-
 #pragma opt_strength_reduction off
 
 #pragma opt_strength_reduction off
-
-
-
 
 
 typedef struct LightSourceFlagByte
@@ -473,12 +423,6 @@ typedef struct LightSourceFlagByte
 } LightSourceFlagByte;
 
 
-
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
 

@@ -12,11 +12,8 @@
 #include "main/pad.h"
 
 
-
-
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
-
 
 
 /*
@@ -78,7 +75,6 @@ extern f32 lbl_803E188C;
  */
 
 
-
 /*
  * --INFO--
  *
@@ -136,22 +132,6 @@ extern f32 lbl_803E188C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/*
- * --INFO--
- *
- * Function: fn_80109B04
- * EN v1.0 Address: 0x80108D58
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80109DA0
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 /*
@@ -348,12 +328,6 @@ int fn_8010A47C(int curve, int* count, int tag)
 
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeViewfinder_release(void);
-
-
-
-
-
-
 
 
 /* fn_X(lbl); lbl = 0; */

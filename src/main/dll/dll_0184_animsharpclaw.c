@@ -15,8 +15,6 @@ typedef struct AnimsharpclawPlacement
 } AnimsharpclawPlacement;
 
 
-
-
 typedef struct AnimsharpclawState
 {
     u8 pad0[0x24 - 0x0];
@@ -33,10 +31,6 @@ typedef struct AnimsharpclawState
     s32 unk98;
     u8 pad9C[0x140 - 0x9C];
 } AnimsharpclawState;
-
-
-
-
 
 
 extern uint GameBit_Get(int eventId);
@@ -210,13 +204,6 @@ void animsharpclaw_initialise(void)
 void MoonSeedPlantingSpot_hitDetect(void);
 
 
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 /* 8b "li r3, N; blr" returners. */
 int animsharpclaw_getExtraSize(void) { return 0x140; }
 int animsharpclaw_getObjectTypeId(void) { return 0xb; }
@@ -235,13 +222,6 @@ void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* call(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 #pragma scheduling off
@@ -263,39 +243,7 @@ void animsharpclaw_free(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-void ccgasventcontrol_free(int obj);
 
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
-#pragma scheduling off
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
@@ -343,21 +291,6 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 
 extern f32 lbl_803E4610;
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objSetSlot(void* obj, int slot);
 

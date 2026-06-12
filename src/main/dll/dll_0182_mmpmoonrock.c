@@ -21,12 +21,7 @@ extern void objRenderFn_8003b8f4(f32 v);
 extern f32 timeDelta;
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -34,13 +29,6 @@ extern f32 timeDelta;
 /* Pattern wrappers. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
 
 
 #pragma peephole on
@@ -63,7 +51,6 @@ extern f32 timeDelta;
 #include "main/objseq.h"
 
 
-
 typedef struct MmpMoonrockPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -71,10 +58,6 @@ typedef struct MmpMoonrockPlacement
     s16 unk20;
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
-
-
-
-
 
 
 /*
@@ -118,22 +101,6 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
-
-/*
- * --INFO--
- *
- * Function: MMP_levelcontrol_update
- * EN v1.0 Address: 0x801A6778
- * EN v1.0 Size: 972b
- * EN v1.1 Address: 0x801A6AD0
- * EN v1.1 Size: 284b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -254,14 +221,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
 void MMP_levelcontrol_release(void);
 
 
-
-
-
-
-
-
-
-
 void mmp_moonrock_hitDetect(void)
 {
 }
@@ -277,12 +236,6 @@ void mmp_moonrock_initialise(void)
 void mmp_trenchfx_hitDetect(void);
 
 
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
@@ -290,30 +243,6 @@ int mmp_trenchfx_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
-
-#pragma peephole reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
@@ -425,21 +354,6 @@ void fn_801A7B10(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate);
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void saveGame_saveObjectPos(int obj);
 
@@ -498,8 +412,6 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
 /* mmp_trenchfx_free: expgfx interface freeObject callback. */
 void mmp_trenchfx_free(int obj);
 
-#pragma peephole off
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int* gCarryableInterface;
@@ -587,12 +499,6 @@ void fn_801A80F0(int obj, u8 flag)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-void mmp_gyservent_init(int obj);
-
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_801A7D74(int obj, u8 a, u8 b);
 
@@ -815,18 +721,10 @@ void fn_801A7D74(int obj, u8 a, u8 b)
 
 extern char lbl_803AC930[];
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern f32 mathSinf(f32);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);

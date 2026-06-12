@@ -8,7 +8,6 @@
 #include "main/screen_transition.h"
 
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
 
@@ -33,11 +32,6 @@ extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 timeDelta;
 
 
-
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
-
-
 /*
  * --INFO--
  *
@@ -54,10 +48,6 @@ extern f32 timeDelta;
 
 
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 
 void gpsh_shrine_hitDetect(void)
@@ -125,7 +115,6 @@ void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
-
 
 
 extern void fn_80296518(int* player, int a, int b);
@@ -280,9 +269,6 @@ void fn_801C70F0(s16* obj)
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-
-
-
 
 
 typedef struct GpshShrineState
@@ -607,22 +593,7 @@ void gpsh_shrine_initialise(void)
 void gpsh_objcreator_free(void);
 
 
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
 

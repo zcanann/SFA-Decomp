@@ -1,25 +1,6 @@
 #include "main/dll/crate2.h"
 
 
-
-
-/*
- * --INFO--
- *
- * Function: dfpstatue1_updateState
- * EN v1.0 Address: 0x802081F4
- * EN v1.0 Size: 436b
- * EN v1.1 Address: 0x8020831C
- * EN v1.1 Size: 728b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 int dfpstatue1_getExtraSize(void);
 int dfpstatue1_getObjectTypeId(void);
 

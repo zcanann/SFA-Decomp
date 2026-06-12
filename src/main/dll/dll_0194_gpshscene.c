@@ -7,29 +7,6 @@
 #include "main/screen_transition.h"
 
 
-
-
-
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_update
- * EN v1.0 Address: 0x801C60B8
- * EN v1.0 Size: 3360b
- * EN v1.1 Address: 0x801C666C
- * EN v1.1 Size: 3104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
-
-
 /*
  * --INFO--
  *
@@ -48,27 +25,12 @@
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 extern void objRenderFn_8003b8f4(f32);
 
 
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
-
-
 
 
 #include "main/audio/sfx_ids.h"
@@ -78,13 +40,6 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-
-
-
-
-
-
-
 
 
 /*
@@ -102,16 +57,7 @@ extern void objRenderFn_8003b8f4(f32);
  */
 
 
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
 
 
 void gpsh_scene_free(void)

@@ -11,20 +11,12 @@ extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 
 
-
-
 extern void objRenderFn_8003b8f4(f32 v);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -32,13 +24,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 /* Pattern wrappers. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
 
 
 #pragma peephole on
@@ -59,11 +44,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
-
-
-
-
-
 
 
 typedef struct MoonSeedBushPlacement
@@ -118,22 +98,6 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
-
-/*
- * --INFO--
- *
- * Function: MMP_levelcontrol_update
- * EN v1.0 Address: 0x801A6778
- * EN v1.0 Size: 972b
- * EN v1.1 Address: 0x801A6AD0
- * EN v1.1 Size: 284b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,19 +237,6 @@ void MoonSeedBush_initialise(void)
 void mmp_asteroid_re_free(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int MoonSeedBush_getExtraSize(void) { return 0x2; }
 int MoonSeedBush_getObjectTypeId(void) { return 0x0; }
@@ -337,10 +288,6 @@ void MoonSeedBush_update(int obj)
 #pragma scheduling reset
 
 extern int mapGetDirIdx(int);
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -383,28 +330,6 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-void MMP_levelcontrol_init(int obj);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -436,78 +361,3 @@ void MoonSeedBush_init(int obj, int data)
 
 extern void saveGame_saveObjectPos(int obj);
 
-
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
-
-
-/* mmp_trenchfx_free: expgfx interface freeObject callback. */
-
-#pragma peephole off
-#pragma peephole reset
-
-/* ObjGroup_RemoveObject + vtable[4] tail-call. */
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

@@ -5,15 +5,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
@@ -49,106 +40,8 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  */
 
 
-/* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 /* 8b "li r3, N; blr" returners. */
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
-
-#pragma peephole reset
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* call(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
-#pragma scheduling off
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -286,8 +179,6 @@ int cclevcontrol_getExtraSize(void);
 #pragma peephole off
 
 
-
-
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 
@@ -319,7 +210,6 @@ void ccpedstal_init(int* obj, u8* params)
 }
 
 void cclevcontrol_init(int* obj);
-
 
 
 #pragma dont_inline on
@@ -421,12 +311,6 @@ void ccpedstal_updateAltVariant(int obj, u8* state2)
 extern WaterfxInterface** gWaterfxInterface;
 
 
-
-
-
-
-
-
 void ccpedstal_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -454,16 +338,7 @@ extern void* fn_802972A8(void* obj);
 #pragma peephole on
 
 
-
-
 #pragma peephole off
 
 #include "main/dll/SC/SCtotemlogpuz.h"
-
-
-
-
-
-
-
 
