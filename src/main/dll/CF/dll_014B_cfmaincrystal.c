@@ -389,15 +389,15 @@ void fn_8019D9F0(int* obj)
     i = 0;
     do
     {
-        s16 v = sub->pylonTimer[i];
-        if (v != 0 && v < 0x80)
+        idx = sub->pylonTimer[i];
+        if (idx != 0 && idx < 0x80)
         {
             sub->pylonTimer[i] += framesThisStep;
-            if (v == 1 && sub->pylonTimer[i] > 1)
+            if (idx == 1 && sub->pylonTimer[i] > 1)
             {
                 Sfx_PlayFromObject((int)obj, SFXsk_toysq2_c);
             }
-            if (v < 0x1e && sub->pylonTimer[i] >= 0x1e)
+            if (idx < 0x1e && sub->pylonTimer[i] >= 0x1e)
             {
                 Sfx_PlayFromObject((int)obj, SFXsk_trbark1);
             }
