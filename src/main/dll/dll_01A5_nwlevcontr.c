@@ -225,80 +225,17 @@ void nw_levcontrol_update(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int sh_tricky_getExtraSize(void)
-{
-    return 1;
-}
+int sh_tricky_getExtraSize(void);
 
 extern int* getTrickyObject(void);
 
-void sh_tricky_update(int* obj)
-{
-    u8* state;
-    int* tricky;
+void sh_tricky_update(int* obj);
 
-    state = ((GameObject*)obj)->extra;
-    tricky = getTrickyObject();
-    if (tricky == NULL)
-    {
-        return;
-    }
-
-    switch (state[0])
-    {
-    case 0:
-        if (GameBit_Get(0x94) != 0)
-        {
-            GameBit_Set(0x4e4, 0);
-            GameBit_Set(0x4e5, 0);
-            GameBit_Set(0xc11, 1);
-            state[0] = 1;
-        }
-        break;
-    case 1:
-        state[0] = 2;
-        break;
-    case 2:
-        if (((int (*)(int*, int*))(*(int*)(*(int*)(tricky[0x1a]) + 0x38)))(tricky, obj) !=
-            0)
-        {
-            state[0] = 3;
-        }
-        break;
-    case 3:
-        if (GameBit_Get(0xbf) != 0)
-        {
-            GameBit_Set(0x4e4, 1);
-            GameBit_Set(0x4e5, 1);
-            GameBit_Set(0xc11, 0);
-        }
-        break;
-    case 4:
-        break;
-    }
-}
-
-int EdibleMushroom_SeqFn(int* obj)
-{
-    *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x139) = 1;
-    return 0;
-}
+int EdibleMushroom_SeqFn(int* obj);
 
 extern uint GameBit_Get(int id);
 
-void sh_tricky_init(int* obj)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0xbf) != 0)
-    {
-        *state = 4;
-    }
-    else
-    {
-        *state = 0;
-    }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-}
+void sh_tricky_init(int* obj);
 
 extern f32 lbl_803E5280;
 extern void fn_80088870(char* a, char* b, char* c, char* d);

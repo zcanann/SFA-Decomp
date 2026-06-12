@@ -1773,8 +1773,14 @@ main/dll/dll_01A3_nwanimice1.c:
 main/dll/dll_01A4_nwice1.c:
 	.text       start:0x801CFBB4 end:0x801CFD68
 
-main/dll/projball1D8.c:
-	.text       start:0x801CFD68 end:0x801D083C
+main/dll/dll_01A5_nwlevcontr.c:
+	.text       start:0x801CFD68 end:0x801D069C
+
+main/dll/dll_01A6_shtricky.c:
+	.text       start:0x801D069C end:0x801D0828
+
+main/dll/dll_801D0828.c:
+	.text       start:0x801D0828 end:0x801D083C
 
 main/dll/dll_01A7_ediblemushroom.c:
 	.text       start:0x801D083C end:0x801D1BFC
