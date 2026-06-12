@@ -392,8 +392,44 @@ main/dll/dll_009B_dll9bfunc0.c:
 main/dll/dll_009C_dll9cfunc0.c:
 	.text       start:0x800FD2B4 end:0x800FD744
 
-main/dll/pickup.c:
-	.text       start:0x800FD744 end:0x80100550
+main/dll/dll_009D_dll9dfunc0.c:
+	.text       start:0x800FD744 end:0x800FDA98
+
+main/dll/dll_009E_dll9efunc0.c:
+	.text       start:0x800FDA98 end:0x800FDE18
+
+main/dll/dll_009F_dll9ffunc0.c:
+	.text       start:0x800FDE18 end:0x800FE240
+
+main/dll/dll_00A0_dlla0func0.c:
+	.text       start:0x800FE240 end:0x800FE5A8
+
+main/dll/dll_00A1_dlla1func0.c:
+	.text       start:0x800FE5A8 end:0x800FE928
+
+main/dll/dll_00A2_dlla2func0.c:
+	.text       start:0x800FE928 end:0x800FEC74
+
+main/dll/dll_00A4_dummya4.c:
+	.text       start:0x800FEC74 end:0x800FEC84
+
+main/dll/dll_00A5_dlla5func0.c:
+	.text       start:0x800FEC84 end:0x800FF004
+
+main/dll/dll_00A6_dlla6func0.c:
+	.text       start:0x800FF004 end:0x800FF6A0
+
+main/dll/dll_00A7_dlla7func0.c:
+	.text       start:0x800FF6A0 end:0x800FFB44
+
+main/dll/dll_00A8_dlla8func0.c:
+	.text       start:0x800FFB44 end:0x800FFF04
+
+main/dll/dll_00A9_dlla9func0.c:
+	.text       start:0x800FFF04 end:0x801002C0
+
+main/dll/dll_00AA_dllaafunc0.c:
+	.text       start:0x801002C0 end:0x80100550
 
 main/dll/modanimeflash1.c:
 	.text       start:0x80100550 end:0x80100550
