@@ -199,16 +199,16 @@ int fn_80179650(int* obj)
     return r;
 }
 
-void fn_80179678(int* obj)
+void fn_80179678(int obj)
 {
     SidekickBallState* state = ((GameObject*)obj)->extra;
     state->fadeTimer = lbl_803E369C;
     state->ballMode = 0;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     state->unk25B = 0;
 }
 
-void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
+void fn_801796BC(int obj, f32 a, f32 b, f32 c)
 {
     SidekickBallState* state = ((GameObject*)obj)->extra;
     state->ballMode = 3;
@@ -216,15 +216,15 @@ void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
     *(f32*)((char*)obj + 36) = a;
     ((GameObject*)obj)->anim.velocityY = b;
     ((GameObject*)obj)->anim.velocityZ = c;
-    ObjHits_EnableObject((u32)obj);
-    ObjHits_SyncObjectPositionIfDirty((u32)obj);
+    ObjHits_EnableObject(obj);
+    ObjHits_SyncObjectPositionIfDirty(obj);
     state->unk25B = 1;
     state->launchX = ((GameObject*)obj)->anim.localPosX;
     state->launchY = ((GameObject*)obj)->anim.localPosY;
     state->launchZ = ((GameObject*)obj)->anim.localPosZ;
 }
 
-void trickyBallFn_801793b8(int* obj, u8* params)
+void trickyBallFn_801793b8(int obj, u8* params)
 {
     extern void Sfx_PlayFromObject(int obj, int sfxId);
     extern int* Obj_GetPlayerObject(void);
@@ -247,7 +247,7 @@ void trickyBallFn_801793b8(int* obj, u8* params)
         goto end;
     }
 
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
 
     getYButtonItem(&yItem);
@@ -315,7 +315,7 @@ void trickyBallFn_801793b8(int* obj, u8* params)
 end:
     if (params[0x2ca] != 0)
     {
-        ObjMsg_SendToObject(player, 0x100010, obj, 0);
+        ObjMsg_SendToObject(player, 0x100010, (void*)obj, 0);
     }
 }
 
@@ -331,7 +331,7 @@ enum SidekickBallMode
 void sidekickball_update(u8* self)
 {
     extern int ObjTrigger_IsSet(u8 * obj);
-    extern void trickyBallFn_801793b8(u8 * obj, u8 * state);
+    extern void trickyBallFn_801793b8(int obj, u8 *state);
     extern u8* Obj_GetPlayerObject(void);
     SidekickBallState* state;
     u8* player;
@@ -408,7 +408,7 @@ void sidekickball_update(u8* self)
         }
         break;
     case SIDEKICK_BALL_IDLE:
-        trickyBallFn_801793b8(self, (u8*)state);
+        trickyBallFn_801793b8((int)self, (u8*)state);
         break;
     default:
         break;
