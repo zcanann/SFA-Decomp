@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/curve.h"
 
 extern ObjectDescriptor gDIM2IceFloeObjDescriptor;
 extern ObjectDescriptor gDIM2IcicleObjDescriptor;
@@ -86,18 +87,7 @@ void dll_1DF_initialise(void);
  * Offsets recovered from dim2icefloe_update/init derefs; 0x9C is the
  * followed-object link (null-tested as a pointer, stored as int). */
 typedef struct Dim2IceFloeState {
-    u8 pad00[0x10];
-    int curveCursor;
-    u8 pad14[0x68 - 0x14];
-    f32 curveX;
-    f32 curveY;
-    f32 curveZ;
-    u8 pad74[0x80 - 0x74];
-    int curveMode;
-    u8 pad84[0x90 - 0x84];
-    int curveResult;
-    void *evalFn;
-    void *coeffsFn;
+    Curve curve;
     int followedObj;
     int targetId;
     f32 curveStep;

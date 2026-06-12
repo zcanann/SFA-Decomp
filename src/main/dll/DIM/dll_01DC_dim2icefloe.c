@@ -33,7 +33,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern u8 framesThisStep;
-extern void Curve_BuildHermiteCoeffs(void);
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -43,7 +42,6 @@ extern void Curve_BuildHermiteCoeffs(void);
 
 #pragma scheduling on
 #pragma peephole on
-extern void Curve_BuildHermiteCoeffs();
 extern void fn_80296D20(void* player, int obj);
 extern f32 lbl_803E4B34;
 extern f32 lbl_803E4B38;
@@ -106,9 +104,6 @@ typedef struct
 void dim2icefloe_update(int obj)
 {
     extern int Obj_FreeObject(int obj);
-    extern int Curve_AdvanceAlongPath(int curve, f32 t);
-    extern void curvesMove(int curves);
-    extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
     int sub = *(int*)&((GameObject*)obj)->extra;
     if (*(void**)&((Dim2IceFloeState*)sub)->followedObj != NULL && (*(u16*)(((Dim2IceFloeState*)sub)->followedObj + 0xb0) & 0x40) !=
         0)
@@ -133,22 +128,22 @@ void dim2icefloe_update(int obj)
         if ((((Dim2IceFloeState*)sub)->flags & 1) == 0)
         {
             ((Dim2IceFloeState*)sub)->followedObj = ObjList_FindObjectById(((Dim2IceFloeState*)sub)->targetId);
-            ((Dim2IceFloeState*)sub)->curveResult = (*(code*)(**(int**)(((Dim2IceFloeState*)sub)->followedObj + 0x68) + 0x20))(
+            ((Dim2IceFloeState*)sub)->curve.count = (*(code*)(**(int**)(((Dim2IceFloeState*)sub)->followedObj + 0x68) + 0x20))(
                 ((Dim2IceFloeState*)sub)->followedObj, sub + 0x84, sub + 0x88, sub + 0x8c, 0);
-            ((Dim2IceFloeState*)sub)->curveMode = 0;
-            ((Dim2IceFloeState*)sub)->evalFn = (void*)Curve_EvalHermite;
-            ((Dim2IceFloeState*)sub)->coeffsFn = (void*)Curve_BuildHermiteCoeffs;
-            curvesMove(sub);
+            ((Dim2IceFloeState*)sub)->curve.dir = 0;
+            ((Dim2IceFloeState*)sub)->curve.eval = Curve_EvalHermite;
+            ((Dim2IceFloeState*)sub)->curve.coeffFn = Curve_BuildHermiteCoeffs;
+            curvesMove(&((Dim2IceFloeState*)sub)->curve);
             ((Dim2IceFloeState*)sub)->flags |= 1;
         }
-        Curve_AdvanceAlongPath(sub, ((Dim2IceFloeState*)sub)->curveStep);
-        reached = ((Dim2IceFloeState*)sub)->curveCursor >= ((Dim2IceFloeState*)sub)->curveResult - 4;
-        ((GameObject*)obj)->anim.localPosX = ((Dim2IceFloeState*)sub)->curveX;
+        Curve_AdvanceAlongPath(&((Dim2IceFloeState*)sub)->curve, ((Dim2IceFloeState*)sub)->curveStep);
+        reached = ((Dim2IceFloeState*)sub)->curve.idx >= ((Dim2IceFloeState*)sub)->curve.count - 4;
+        ((GameObject*)obj)->anim.localPosX = ((Dim2IceFloeState*)sub)->curve.sample[0];
         if (!((IceFloeFlags*)(sub + 0xb9))->finished)
         {
-            ((GameObject*)obj)->anim.localPosY = lbl_803E4B34 + ((Dim2IceFloeState*)sub)->curveY;
+            ((GameObject*)obj)->anim.localPosY = lbl_803E4B34 + ((Dim2IceFloeState*)sub)->curve.sample[1];
         }
-        ((GameObject*)obj)->anim.localPosZ = ((Dim2IceFloeState*)sub)->curveZ;
+        ((GameObject*)obj)->anim.localPosZ = ((Dim2IceFloeState*)sub)->curve.sample[2];
         if (reached)
         {
             ((IceFloeFlags*)(sub + 0xb9))->finished = 1;
@@ -158,13 +153,13 @@ void dim2icefloe_update(int obj)
         if (((IceFloeFlags*)(sub + 0xb9))->finished)
         {
             ((GameObject*)obj)->anim.localPosY = -(lbl_803E4B38 * timeDelta - ((GameObject*)obj)->anim.localPosY);
-            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curveY)
+            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1])
             {
                 ObjHits_DisableObject(obj);
                 ((GameObject*)obj)->objectFlags |= 0x100;
                 fn_80296D20(Obj_GetPlayerObject(), obj);
             }
-            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curveY - lbl_803E4B3C)
+            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - lbl_803E4B3C)
             {
                 Obj_FreeObject(obj);
             }

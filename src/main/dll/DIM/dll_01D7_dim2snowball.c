@@ -120,10 +120,7 @@ extern undefined4 FUN_800067c0();
 extern f32 lbl_803E4AA0;
 extern f32 lbl_803E4A38;
 extern int ObjList_FindObjectById(int id);
-extern int Curve_AdvanceAlongPath(int* extra, f32 t);
-extern void Curve_BuildHermiteCoeffs(void);
-extern void Curve_EvalHermite(void);
-extern void curvesMove(int* extra);
+extern int Curve_AdvanceAlongPath(Curve* curve, f32 t);
 extern int** ObjList_GetObjects(int* startOut, int* countOut);
 extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
@@ -293,13 +290,13 @@ void dim2snowball_update(int* obj)
     if ((((Dim2SnowballState*)extra)->flagsAC & 1) == 0)
     {
         int* cobj = ((Dim2SnowballState*)extra)->targetObj;
-        ((Dim2SnowballState*)extra)->curveResult =
+        ((Dim2SnowballState*)extra)->curve.count =
             (*(int (**)(int*, void*, void*, void*, void*))(**(int**)((char*)cobj + 0x68) + 0x20))(
                 cobj, (char*)extra + 0x84, (char*)extra + 0x88, (char*)extra + 0x8c, (char*)extra + 0xa8);
-        ((Dim2SnowballState*)extra)->curveMode = 0;
-        ((Dim2SnowballState*)extra)->evalFn = (int)Curve_EvalHermite;
-        ((Dim2SnowballState*)extra)->coeffsFn = (int)Curve_BuildHermiteCoeffs;
-        curvesMove(extra);
+        ((Dim2SnowballState*)extra)->curve.dir = 0;
+        ((Dim2SnowballState*)extra)->curve.eval = Curve_EvalHermite;
+        ((Dim2SnowballState*)extra)->curve.coeffFn = Curve_BuildHermiteCoeffs;
+        curvesMove(&((Dim2SnowballState*)extra)->curve);
         ((Dim2SnowballState*)extra)->flagsAC |= 1;
     }
 
@@ -370,11 +367,11 @@ void dim2snowball_update(int* obj)
     }
     else
     {
-        int done = Curve_AdvanceAlongPath(extra, lbl_803E4AC0);
-        ((GameObject*)obj)->anim.localPosX = ((Dim2SnowballState*)extra)->curveX;
-        ((GameObject*)obj)->anim.localPosY = (f32)(lbl_803E4AC8 + ((Dim2SnowballState*)extra)->curveY);
-        ((GameObject*)obj)->anim.localPosZ = ((Dim2SnowballState*)extra)->curveZ;
-        *(s16*)obj = getAngle(((Dim2SnowballState*)extra)->dirX, ((Dim2SnowballState*)extra)->dirZ);
+        int done = Curve_AdvanceAlongPath(&((Dim2SnowballState*)extra)->curve, lbl_803E4AC0);
+        ((GameObject*)obj)->anim.localPosX = ((Dim2SnowballState*)extra)->curve.sample[0];
+        ((GameObject*)obj)->anim.localPosY = (f32)(lbl_803E4AC8 + ((Dim2SnowballState*)extra)->curve.sample[1]);
+        ((GameObject*)obj)->anim.localPosZ = ((Dim2SnowballState*)extra)->curve.sample[2];
+        *(s16*)obj = getAngle(((Dim2SnowballState*)extra)->curve.tangent[0], ((Dim2SnowballState*)extra)->curve.tangent[2]);
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 800;
         ((GameObject*)obj)->anim.velocityX =
             oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
@@ -386,7 +383,7 @@ void dim2snowball_update(int* obj)
             Obj_FreeObject(obj);
             return;
         }
-        if (*(u8*)((char*)*(int**)&((Dim2SnowballState*)extra)->curveData + (((Dim2SnowballState*)extra)->curveCursor >>
+        if (*(u8*)((char*)*(int**)&((Dim2SnowballState*)extra)->curveData + (((Dim2SnowballState*)extra)->curve.idx >>
             2)) == 32)
         {
             if (GameBit_Get(648) != 0)
