@@ -970,22 +970,16 @@ main/dll/dim_tricky.c:
 	.text       start:0x801CCFA4 end:0x801CD7DC
 
 main/dll/dimtruthhornice.c:
-	.text       start:0x801CD7DC end:0x801CDBEC
+	.text       start:0x801CD7DC end:0x801CDC78
 
 main/dll/ped.c:
-	.text       start:0x801CDBEC end:0x801CE078
+	.text       start:0x801CDC78 end:0x801CE078
 
 main/dll/worldobj.c:
-	.text       start:0x801CE078 end:0x801CEFBC
-
-main/dll/creator1D4.c:
-	.text       start:0x801CEFBC end:0x801CF0AC
-
-main/dll/dim2conveyor.c:
-	.text       start:0x801CF0AC end:0x801CF7E8
+	.text       start:0x801CE078 end:0x801CF78C
 
 main/dll/creator1D6.c:
-	.text       start:0x801CF7E8 end:0x801CFD68
+	.text       start:0x801CF78C end:0x801CFD68
 
 main/dll/projball1D8.c:
 	.text       start:0x801CFD68 end:0x801D083C

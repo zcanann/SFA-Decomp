@@ -213,3 +213,99 @@ void treebird_update(int obj)
         }
     }
 }
+
+/* === moved from main/dll/ped.c [801CDBEC-801CDC78) (TU re-split, docs/boundary_audit.md) === */
+#include "main/mapEvent.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
+#include "main/objseq.h"
+#include "main/dll/ped.h"
+#include "main/dll/dimtruthhornice.h"
+
+extern uint GameBit_Get(int eventId);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void ObjHits_DisableObject(int obj);
+extern void ObjHits_EnableObject(int obj);
+extern void GameBit_Set(int eventId, int value);
+extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
+                                void* scratch, f32 scaleX, f32 scaleZ);
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f32 lbl_803E520C;
+extern f32 lbl_803E5210;
+
+void fn_801CDF94(int obj, int state, int flag);
+
+
+/*
+ * --INFO--
+ *
+ * Function: treebird_init
+ * EN v1.0 Address: 0x801CDBEC
+ * EN v1.0 Size: 304b
+ * EN v1.1 Address: 0x801CDC2C
+ * EN v1.1 Size: 356b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void treebird_init(int obj, int setup)
+{
+    TreeBirdState* state;
+
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = (void*)TreeBird_SeqFn;
+    *(s16*)obj = (s16)((s8) * (u8*)(setup + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1a);
+    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1c);
+    state->triggerId = (s16)(s8) * (u8*)(setup + 0x19);
+    state->gameBit = *(s16*)(setup + 0x1e);
+    if (GameBit_Get((int)state->gameBit) != 0)
+    {
+        state->immediateTrigger = 0x154;
+    }
+    state->searchDelay = 4;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: nw_geyser_init
+ * EN v1.0 Address: 0x801CDE50
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void nw_geyser_init(int obj);
+
+char* fn_801CDE70(int* obj);
+
+extern MapEventInterface** gMapEventInterface;
+
+void nw_geyser_free(int* obj);
+
+void nw_geyser_update(int obj);
+
+extern int objFindTexture(int* obj, int idx, int p3);
+extern f32 lbl_803E5200;
+extern f32 timeDelta;
+
+int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
+
+int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+extern void fn_8003A168(int obj, void* p);
+extern void fn_8003B228(int obj, void* p);
+extern void fn_8003A230(int obj, void* p, f32 f);
+extern void characterDoEyeAnims(int obj, void* p);
+extern u8 lbl_803268B4[];
+extern f32 lbl_803E5214;
+
+void fn_801CDF94(int obj, int state, int flag);

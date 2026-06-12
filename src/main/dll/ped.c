@@ -44,23 +44,7 @@ typedef struct TreeBirdState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void treebird_init(int obj, int setup)
-{
-    TreeBirdState* state;
-
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)TreeBird_SeqFn;
-    *(s16*)obj = (s16)((s8) * (u8*)(setup + 0x18) << 8);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1a);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1c);
-    state->triggerId = (s16)(s8) * (u8*)(setup + 0x19);
-    state->gameBit = *(s16*)(setup + 0x1e);
-    if (GameBit_Get((int)state->gameBit) != 0)
-    {
-        state->immediateTrigger = 0x154;
-    }
-    state->searchDelay = 4;
-}
+void treebird_init(int obj, int setup);
 
 /*
  * --INFO--
