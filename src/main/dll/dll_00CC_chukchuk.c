@@ -231,6 +231,7 @@ FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 para
     int iVar4;
     int local_18;
     int local_14;
+    ObjHitsPriorityState* hitState;
 
     iVar4 = *(int*)&((GameObject*)param_9)->extra;
     if (*(char*)(param_10 + 0x27a) != '\0')
@@ -239,8 +240,9 @@ FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     iVar3 = -1;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairPriority = 10;
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairHitVolume = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->objectPairPriority = 10;
+    hitState->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -280,6 +282,7 @@ FUN_8015e88c(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_15, undefined4 param_16)
 {
     undefined4 uVar1;
+    ObjHitsPriorityState* hitState;
 
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -287,8 +290,9 @@ FUN_8015e88c(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     uVar1 = 0xffffffff;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairPriority = 10;
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairHitVolume = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->objectPairPriority = 10;
+    hitState->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     *(float*)(param_10 + 0x2a0) = lbl_803E3A70;
     if (*(char*)(param_10 + 0x27a) != '\0')
@@ -314,6 +318,7 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
     int iVar5;
     int local_28;
     int local_24[5];
+    ObjHitsPriorityState* hitState;
 
     iVar5 = *(int*)&((GameObject*)param_9)->extra;
     if (*(char*)(param_10 + 0x27a) != '\0')
@@ -322,8 +327,9 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     iVar4 = -1;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairPriority = 10;
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairHitVolume = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->objectPairPriority = 10;
+    hitState->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
