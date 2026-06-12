@@ -243,15 +243,18 @@ void fn_801E1588(int obj, int state)
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
     skyFn_80089710(7, 1, 0);
-    if (fn_8008ED88() > lbl_803E56CC)
+    if (fn_8008ED88() > *(f32*)&lbl_803E56CC)
     {
         lbl_803DDC24 = lbl_803E57A4;
         lbl_803DDC28 = lbl_803E57A4;
     }
-    lbl_803DDC28 = -(lbl_803E57B4 * timeDelta - lbl_803DDC28);
-    if (lbl_803DDC28 < lbl_803E56CC)
     {
-        lbl_803DDC28 = lbl_803E56CC;
+        f32 t = -(lbl_803E57B4 * timeDelta - lbl_803DDC28);
+        lbl_803DDC28 = t;
+        if (t < lbl_803E56CC)
+        {
+            lbl_803DDC28 = lbl_803E56CC;
+        }
     }
     {
         int v0 = lbl_803DC080[0];
@@ -265,7 +268,7 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC080[2];
         lbl_803DDC38[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC084[2] - v2);
     }
-    skyFn_800895e0(7, lbl_803DDC38[0], lbl_803DDC38[1], lbl_803DDC38[2], 0x40, 0x40);
+    skyFn_800895e0(7, *(volatile u8*)&lbl_803DDC38[0], *(volatile u8*)&lbl_803DDC38[1], *(volatile u8*)&lbl_803DDC38[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
         lbl_803DDC34[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC07C[0] - v0);
@@ -278,7 +281,7 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC078[2];
         lbl_803DDC34[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC07C[2] - v2);
     }
-    fn_80089510(7, lbl_803DDC34[0], lbl_803DDC34[1], lbl_803DDC34[2]);
+    fn_80089510(7, *(volatile u8*)&lbl_803DDC34[0], *(volatile u8*)&lbl_803DDC34[1], *(volatile u8*)&lbl_803DDC34[2]);
     {
         int v0 = lbl_803DC088[0];
         lbl_803DDC30[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC08C[0] - v0);
@@ -291,7 +294,7 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC088[2];
         lbl_803DDC30[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC08C[2] - v2);
     }
-    fn_80089578(7, lbl_803DDC30[0], lbl_803DDC30[1], lbl_803DDC30[2]);
+    fn_80089578(7, *(volatile u8*)&lbl_803DDC30[0], *(volatile u8*)&lbl_803DDC30[1], *(volatile u8*)&lbl_803DDC30[2]);
     lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x,
@@ -553,10 +556,11 @@ int SB_Galleon_modelMtxFn(int* obj)
     return (s8)b;
 }
 
+#pragma optimization_level 1
 int SB_Galleon_func0E(int* obj)
 {
     register s8* p = (s8*)((int**)obj)[0xb8 / 4];
-    s8 phase;
+    int phase;
     int wrappedPhase;
     if (((SBGalleonState*)p)->phase == 1)
     {
@@ -573,3 +577,4 @@ int SB_Galleon_func0E(int* obj)
     }
     return 0x640;
 }
+#pragma optimization_level reset
