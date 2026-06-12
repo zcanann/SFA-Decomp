@@ -11,6 +11,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
@@ -112,7 +113,6 @@ extern void *objCreateLight(int v1, int v2);
 extern void modelLightStruct_setLightKind(void *light, int v);
 extern void modelLightStruct_setPosition(void *light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setAffectsAabbLightSelection(void *handle, int v);
-extern int *objFindTexture(int obj, int idx, int p3);
 extern void buttonDisable(int index, u32 flags);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gHighTopStateHandlers[];

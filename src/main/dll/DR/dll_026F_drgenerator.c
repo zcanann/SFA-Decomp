@@ -53,10 +53,10 @@ int drgenerator_eventCallback(int obj, int unused, ObjAnimUpdateState* animUpdat
     {
         if (animUpdate->eventIds[i] == 1)
         {
-            int* t = objFindTexture(obj, 0, 0);
+            ObjTextureRuntimeSlot* t = objFindTexture((void*)obj, 0, 0);
             if (t != 0)
             {
-                *t = 0;
+                t->textureId = 0;
             }
         }
     }
@@ -69,12 +69,12 @@ void drgenerator_init(int obj, char* arg)
     f32 fv;
     if (((GameObject*)obj)->anim.seqId == 0x72e)
     {
-        int* t;
+        ObjTextureRuntimeSlot* t;
         ((GameObject*)obj)->animEventCallback = (void*)drgenerator_eventCallback;
-        t = objFindTexture(obj, 0, 0);
+        t = objFindTexture((void*)obj, 0, 0);
         if (t != 0)
         {
-            *t = 0x100;
+            t->textureId = 0x100;
         }
     }
     ((DrgeneratorState*)p)->unk19A = 2;
@@ -142,11 +142,11 @@ void drgenerator_hitDetect(int obj)
         return;
     }
     {
-        int* tex = objFindTexture(obj, 0, 0);
+        ObjTextureRuntimeSlot* tex = objFindTexture((void*)obj, 0, 0);
         spawnExplosion(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1, 0);
         if (tex != 0)
         {
-            *tex = 0x100;
+            tex->textureId = 0x100;
         }
     }
     ((BitFlags8*)(p + 0x19b))->b0 = 1;

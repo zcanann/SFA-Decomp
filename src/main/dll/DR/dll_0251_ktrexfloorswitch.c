@@ -122,7 +122,7 @@ void ktrexfloorswitch_update(int obj)
 {
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
     int* state = ((GameObject*)obj)->extra;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     int* player;
     int anim;
     int level;
@@ -140,11 +140,11 @@ void ktrexfloorswitch_update(int obj)
     vecB[2] = lbl_802C256C[2];
     ((GameObject*)obj)->unkF8 = ((GameObject*)obj)->unkF4;
     ((GameObject*)obj)->unkF4 = GameBit_Get(((KtrexfloorswitchPlacement*)sub)->unk1C);
-    tex = objFindTexture(obj, 0, 0);
+    tex = objFindTexture((void*)obj, 0, 0);
     anim = 0;
     if (((GameObject*)obj)->unkF4 <= 1)
     {
-        *tex = 0;
+        tex->textureId = 0;
         if (((GameObject*)obj)->unkF4 == 0 && ((GameObject*)obj)->unkF8 != 0)
         {
             ((KtrexfloorswitchState*)state)->unk10 |= 0x4;
@@ -178,7 +178,7 @@ void ktrexfloorswitch_update(int obj)
     {
         if (((GameObject*)obj)->unkF8 == 0)
         {
-            *tex = 0x100;
+            tex->textureId = 0x100;
             ((KtrexfloorswitchState*)state)->unk10 &= ~1;
         }
         else
@@ -385,7 +385,7 @@ void ktrexfloorswitch_update(int obj)
             {
                 ((KtrexfloorswitchState*)state)->unkC = lbl_803E6880;
             }
-            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->unkC + (f32) * tex);
+            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->unkC + (f32)tex->textureId);
             if (scroll > 0x200)
             {
                 scroll = 0x400 - scroll;
@@ -396,11 +396,11 @@ void ktrexfloorswitch_update(int obj)
                 scroll = 0x200 - scroll;
                 ((KtrexfloorswitchState*)state)->unkC = -((KtrexfloorswitchState*)state)->unkC;
             }
-            *tex = scroll;
+            tex->textureId = scroll;
         }
         else
         {
-            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->unkC + (f32) * tex);
+            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->unkC + (f32)tex->textureId);
             if (scroll > 0x200)
             {
                 scroll = 0x400 - scroll;
@@ -411,7 +411,7 @@ void ktrexfloorswitch_update(int obj)
                 scroll = 0x100;
                 ((KtrexfloorswitchState*)state)->unkC = lbl_803E687C;
             }
-            *tex = scroll;
+            tex->textureId = scroll;
         }
         if ((((KtrexfloorswitchState*)state)->unk10 & 0x6) == 0)
         {
@@ -420,9 +420,9 @@ void ktrexfloorswitch_update(int obj)
     }
     else
     {
-        if (*tex != 0)
+        if (tex->textureId != 0)
         {
-            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->unkC + (f32) * tex);
+            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->unkC + (f32)tex->textureId);
             if (scroll > 0x200)
             {
                 scroll = 0x400 - scroll;
@@ -432,7 +432,7 @@ void ktrexfloorswitch_update(int obj)
             {
                 scroll = 0;
             }
-            *tex = scroll;
+            tex->textureId = scroll;
         }
     }
     ((KtrexfloorswitchState*)state)->unk5 = ((KtrexfloorswitchState*)state)->unk4;
