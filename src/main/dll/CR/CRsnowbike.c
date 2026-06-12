@@ -1,3 +1,123 @@
+/* === moved from main/dll/DR/DRearthwalk.c [801DAFA4-801DAFDC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DR/DRearthwalk.h"
+#include "main/obj_placement.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/objanim.h"
+#include "main/objseq.h"
+#include "global.h"
+
+#include "main/dll/DR/shstaff_state.h"
+
+typedef struct ShStaffPlacement
+{
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 pad6[0x7 - 0x6];
+    u8 unk7;
+    u8 pad8[0x18 - 0x8];
+    u8 unk18;
+    u8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} ShStaffPlacement;
+
+
+typedef struct ShBeaconPlacement
+{
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} ShBeaconPlacement;
+
+
+/* sh_beacon_getExtraSize == 0x18. */
+typedef struct ShBeaconState
+{
+    int childObj; /* 0x00: spawned 0x55 flame object */
+    f32 seqTimer; /* 0x04 */
+    f32 fadeTimer; /* 0x08 */
+    f32 burstTimer; /* 0x0c */
+    f32 modeTimer; /* 0x10 */
+    u8 mode; /* 0x14: 0 unlit, 1 lit, 2 igniting */
+    u8 flags15; /* 0x15: bit 7 = looping sfx active (BeaconFlags) */
+    u8 pad16[2];
+} ShBeaconState;
+
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: sh_staff_render
+ * EN v1.0 Address: 0x801D9BDC
+ * EN v1.0 Size: 232b
+ * EN v1.1 Address: 0x801DA010
+ * EN v1.1 Size: 444b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+
+
+/* 8b "li r3, N; blr" returners. */
+int sh_beacon_getExtraSize(void);
+
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+extern void Obj_FreeObject(int obj);
+extern f32 lbl_803E552C;
+extern int lbl_803DDC00;
+
+/* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
+
+/* 48b: free if 0x4000 flag set. */
+
+/* 120b: tick a float timer; on wrap optionally trigger an effect. */
+
+/* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
+
+/* 112b: vtable cleanup then maybe Obj_FreeObject. */
+
+/* 56b: single-call hit-effect poll. */
+void sh_emptytumblew_update(int obj)
+{
+    extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, void* f); /* #57 */
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
+                                              &lbl_803DDC00);
+}
+
+/* TODO stubs to align function set with v1.0 asm. Bodies are large
+ * state-machine and animation logic; filling them is a follow-up task. */
+
+
+
+
+
+
+
+typedef struct
+{
+    u8 looping : 1;
+    u8 rest : 7;
+} BeaconFlags;
+
+/*
+ * --INFO--
+ *
+ * Function: sh_beacon_update
+ * EN v1.0 Address: 0x801DAA58
+ * EN v1.0 Size: 1080b
+ */
+void sh_beacon_update(int obj);
+
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -73,7 +193,6 @@ extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern int FUN_80017a98();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 SH_LevelControl_runBloopEvent();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
@@ -319,19 +438,15 @@ void sc_levelcontrol_initialise(void)
 {
 }
 
-void sc_musictree_free(void)
-{
-}
+void sc_musictree_free(void);
 
-void sc_musictree_hitDetect(void)
-{
-}
+void sc_musictree_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int sc_levelcontrol_getExtraSize(void) { return 0x24; }
 int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
-int sc_musictree_getExtraSize(void) { return 0x50; }
-int sc_musictree_getObjectTypeId(void) { return 0x0; }
+int sc_musictree_getExtraSize(void);
+int sc_musictree_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 u8 sc_levelcontrol_getAnimEventState(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1d); }
@@ -366,29 +481,7 @@ typedef struct SCMusicTreeState
     u8 pad4D[0x50 - 0x4D];
 } SCMusicTreeState;
 
-void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-    SCMusicTreeState* state = ((GameObject*)obj)->extra;
-    int i;
-    if (visible == 0) return;
-    fn_8003B608((int)((ScMusictreePlacement*)def)->unk20, (int)((ScMusictreePlacement*)def)->unk21,
-                (int)((ScMusictreePlacement*)def)->unk22);
-    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
-    if ((state->flags & 0x80) != 0)
-    {
-        for (i = 0; i < 3; i++)
-        {
-            ObjPath_GetPointWorldPosition(obj, i,
-                                          &state->pathPoint[0][0],
-                                          &state->pathPoint[0][1],
-                                          &state->pathPoint[0][2],
-                                          0);
-            state = (SCMusicTreeState*)&((ScLevelControlState*)state)->fog0C;
-        }
-    }
-    ((GameObject*)obj)->unkF8 = 1;
-}
+void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void gameTimerStop(void);
 extern void disableHeavyFog(void);
@@ -563,78 +656,13 @@ extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 
 #pragma dont_inline on
-void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
-{
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
-    SCMusicTreeState* state = (SCMusicTreeState*)p2;
-    int setup;
-
-    if (Obj_IsLoadingLocked() != 0)
-    {
-        setup = Obj_AllocObjectSetup(0x28, 0x210);
-        *(u8*)(setup + 4) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk4;
-        *(u8*)(setup + 6) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk6;
-        *(u8*)(setup + 5) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk5;
-        *(u8*)(setup + 7) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk7 - 10;
-        ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
-        ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
-        ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
-        *(u16*)(setup + 0x1c) = randomGetRange(0x708, 0x1770);
-        *(u16*)(setup + 0x1e) = 1;
-        *(u8*)(setup + 0x20) = 10;
-        *(u8*)(setup + 0x21) = 40;
-        *(u8*)(setup + 0x22) = 50;
-        *(u8*)(setup + 0x23) = 10;
-        *(u8*)(setup + 0x24) = 50;
-        *(s8*)(setup + 0x25) = -50;
-        *(s16*)(setup + 0x26) = -1;
-        *(int*)(setup + 0x18) = 0;
-        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
-    }
-}
+void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx);
 #pragma dont_inline reset
 
 extern f32 lbl_803E5588;
 
 #pragma dont_inline on
-void sc_musictree_handleHitObject(int p1, int p2, int effectType)
-{
-    int id = *(int*)(*(int*)(p1 + 0x4c) + 0x14);
-    SCMusicTreeState* state = (SCMusicTreeState*)p2;
-    (void)effectType;
-
-    switch (id)
-    {
-    case 0x30d9c:
-        Sfx_PlayFromObject(p1, 299);
-        Sfx_PlayFromObject(p1, 298);
-        GameBit_Set(0x7d, 1);
-        break;
-    case 0x30d9d:
-        Sfx_PlayFromObject(p1, 300);
-        Sfx_PlayFromObject(p1, 298);
-        GameBit_Set(0x7e, 1);
-        break;
-    case 0x30d9b:
-        Sfx_PlayFromObject(p1, 0x12d);
-        Sfx_PlayFromObject(p1, 298);
-        GameBit_Set(0x7f, 1);
-        break;
-    case 0x448c2:
-        if ((u32)GameBit_Get(0xc44) != 0)
-            GameBit_Set(0xc41, 1);
-        break;
-    case 0x45178:
-        if ((u32)GameBit_Get(0xc44) != 0)
-            GameBit_Set(0xc43, 1);
-        break;
-    case 0x4517c:
-        if ((u32)GameBit_Get(0xc44) != 0)
-            GameBit_Set(0xc45, 1);
-        break;
-    }
-    state->animSpeed = lbl_803E5588;
-}
+void sc_musictree_handleHitObject(int p1, int p2, int effectType);
 #pragma dont_inline reset
 
 extern void skyFn_80088c94(int a, int b);

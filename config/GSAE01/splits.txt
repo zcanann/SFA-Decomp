@@ -1005,53 +1005,35 @@ main/dll/SH/dll_1E8.c:
 main/dll/SH/SHthorntail.c:
 	.text       start:0x801D5174 end:0x801D58E4
 
-main/dll/SH/SHroot.c:
-	.text       start:0x801D58E4 end:0x801D5ED4
-
-main/dll/SC/SClevelcontrol.c:
-	.text       start:0x801D5ED4 end:0x801D5F58
+main/dll/SC/dll_01AD_shthorntai.c:
+	.text       start:0x801D58E4 end:0x801D6914
 
 main/dll/SC/SCchieflightfoot.c:
-	.text       start:0x801D5F58 end:0x801D6C04
+	.text       start:0x801D6914 end:0x801D6C04
 
 main/dll/SC/SClantern.c:
 	.text       start:0x801D6C04 end:0x801D6D98
 
 main/dll/SC/SCcollectables.c:
-	.text       start:0x801D6D98 end:0x801D7674
-
-main/dll/SC/SCanimobj.c:
-	.text       start:0x801D7674 end:0x801D7C14
-
-main/dll/SC/SCtotemlogpuz.c:
-	.text       start:0x801D7C14 end:0x801D8060
-
-main/dll/SC/SCtotembondpuz.c:
-	.text       start:0x801D8060 end:0x801D80F4
-
-main/dll/brokecannon.c:
-	.text       start:0x801D80F4 end:0x801D8308
-
-main/dll/SP/SPshop.c:
-	.text       start:0x801D8308 end:0x801D87F8
-
-main/dll/SP/SPshopkeeper.c:
-	.text       start:0x801D87F8 end:0x801D8D20
-
-main/dll/SP/SPdrape.c:
-	.text       start:0x801D8D20 end:0x801D8D20
+	.text       start:0x801D6D98 end:0x801D7BA8
 
 main/dll/IM/IMsnowbike.c:
-	.text       start:0x801D8D20 end:0x801D9BDC
+	.text       start:0x801D7BA8 end:0x801D981C
+
+main/dll/SP/SPdrape.c:
+	.text       start:0x801D981C end:0x801D981C
+
+main/dll/IM/dll_01AF_shswaplift.c:
+	.text       start:0x801D981C end:0x801D9B1C
 
 main/dll/DR/DRearthwalk.c:
-	.text       start:0x801D9BDC end:0x801DAFDC
+	.text       start:0x801D9B1C end:0x801DAFA4
 
 main/dll/CR/CRsnowbike.c:
-	.text       start:0x801DAFDC end:0x801DC310
+	.text       start:0x801DAFA4 end:0x801DBFA0
 
 main/dll/DR/DRcloudrunner.c:
-	.text       start:0x801DC310 end:0x801DD1A8
+	.text       start:0x801DBFA0 end:0x801DD1A8
 
 main/dll/SC/dll_01BA_sctotempuzzle.c:
 	.text       start:0x801DD1A8 end:0x801DDA28

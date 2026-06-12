@@ -115,13 +115,13 @@ void warpstone_free(int obj, int mode)
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int a, int b, int c, f32* x, f32* y, f32* z);
 extern int randFn_80080100(int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E54A0;
 
 void warpstone_hitDetect(int obj)
 {
+    extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     f32 pos[3];
     int p[3];
@@ -286,7 +286,6 @@ int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
 extern int getCurUiDll(void);
-extern int playerFn_801d6d58(void);
 extern void AudioStream_CancelPrepared(void);
 extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
@@ -299,6 +298,7 @@ extern f32 timeDelta;
 
 int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 {
+    extern int playerFn_801d6d58(void); /* #57 */
     int i;
     int child;
     u8 command;
@@ -436,3 +436,307 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     SHthorntail_updateDustEffects(obj);
     return 0;
 }
+
+/* === moved from main/dll/SC/SCanimobj.c [801D7674-801D7BA8) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/dll/SC/SCanimobj.h"
+#include "main/dll/SC/SClantern.h"
+#include "main/objanim.h"
+
+typedef struct WarpstoneState
+{
+    u8 pad0[0xC - 0x0];
+    u8 unkC;
+    u8 padD[0xE - 0xD];
+    s16 unkE;
+    s16 unk10;
+    u8 pad12[0x18 - 0x12];
+} WarpstoneState;
+
+
+extern int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj);
+
+extern u32 GameBit_Get(int eventId);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDistance);
+extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
+extern s16* objModelGetVecFn_800395d8(int obj, int index);
+extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void objAnimFn_80038f38(int obj, int* animState);
+extern void characterDoEyeAnims(int obj, void* state);
+extern void ObjHits_EnableObject(int obj);
+
+extern s16 lbl_803DC044;
+extern s16 lbl_803DDBF0;
+extern s16 lbl_803DDBF2;
+extern int lbl_803DC038;
+extern int lbl_803DC03C;
+extern int lbl_803DC040;
+extern int lbl_803DC048;
+extern int lbl_803DC04C;
+extern f32 lbl_803E5460;
+extern f32 lbl_803E546C;
+extern f32 lbl_803E54A4;
+extern f32 lbl_803E54A8;
+extern f32 lbl_803E54AC;
+
+/*
+ * --INFO--
+ *
+ * Function: warpstone_update
+ * EN v1.0 Address: 0x801D7674
+ * EN v1.0 Size: 1164b
+ * EN v1.1 Address: 0x801D76A4
+ * EN v1.1 Size: 36b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+typedef struct WarpstoneFlags
+{
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1;
+    u8 b4 : 1;
+    u8 lo : 4;
+} WarpstoneFlags;
+
+void warpstone_update(int obj)
+{
+    extern void objAudioFn_800393f8(int obj, void* state, int sfxId, int a, int b, int c); /* #57 */
+    int state;
+    int child;
+    int advanceResult;
+    int target;
+    s16* modelVec;
+    s16 yawDelta;
+    int moveId;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    child = *(int*)state;
+    if ((void*)child != NULL)
+    {
+        ObjLink_DetachChild(obj, child);
+        Obj_FreeObject(*(int*)state);
+        *(int*)state = 0;
+    }
+
+    advanceResult = SClantern_advanceAnimEvents(lbl_803E54A4, obj);
+    if (((GameObject*)obj)->anim.currentMove == 0)
+    {
+        if (randFn_80080100(100) != 0)
+        {
+            objAudioFn_800393f8(obj, (void*)(state + 0x14), 0xab, -0x100, -1, 0);
+        }
+        if (randFn_80080100(500) != 0)
+        {
+            objAudioFn_800393f8(obj, (void*)(state + 0x14), 0x417, -0x500, -1, 0);
+        }
+    }
+
+    if (GameBit_Get(0xc7d) != 0)
+    {
+        if (randFn_80080100(lbl_803DC038) != 0)
+        {
+            ((WarpstoneFlags*)(state + 0xd5))->b6 = (((WarpstoneFlags*)(state + 0xd5))->b6 == 0);
+        }
+        if (((WarpstoneFlags*)(state + 0xd5))->b6 == 0)
+        {
+            ((WarpstoneFlags*)(state + 0xd5))->b6 = GameBit_Get(0xa45);
+        }
+    }
+
+    if (((WarpstoneFlags*)(state + 0xd5))->b6 != 0)
+    {
+        target = Obj_GetPlayerObject();
+    }
+    else
+    {
+        target = ObjGroup_FindNearestObject(8, obj, 0);
+    }
+
+    ((GameObject*)obj)->anim.localPosY += (f32)lbl_803DC040;
+    fn_8003ADC4(obj, target, (void*)(state + 0x74), 0x23, 1, lbl_803DC03C);
+    modelVec = objModelGetVecFn_800395d8(obj, 0);
+    ((GameObject*)obj)->anim.localPosY -= (f32)lbl_803DC040;
+
+    if (modelVec != NULL)
+    {
+        modelVec[1] += lbl_803DDBF2;
+        modelVec[0] = 0;
+        modelVec[0] += lbl_803DC044;
+    }
+
+    if (advanceResult != 0)
+    {
+        ((WarpstoneFlags*)(state + 0xd5))->b4 = 0;
+        yawDelta = Obj_GetYawDeltaToObject(obj, target, 0);
+        yawDelta = yawDelta - lbl_803DDBF0;
+        if (ABS((s16)(yawDelta - 0x8000)) > 0x18e3)
+        {
+            if (yawDelta > 0)
+            {
+                if (yawDelta > 0xe38)
+                {
+                    moveId = 0x17;
+                }
+                else
+                {
+                    moveId = 0x16;
+                }
+            }
+            else if (yawDelta < -0xe38)
+            {
+                moveId = 0x19;
+            }
+            else
+            {
+                moveId = 0x18;
+            }
+            if (((GameObject*)obj)->anim.currentMove != moveId)
+            {
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                    (obj, moveId, lbl_803E5460, 0);
+            }
+        }
+        else if (((GameObject*)obj)->anim.currentMove != 0)
+        {
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                (obj, 0, lbl_803E5460, 0);
+            Sfx_StopFromObject(obj, 0x2f1);
+        }
+        else if (randFn_80080100(lbl_803DC048) != 0)
+        {
+            Sfx_PlayFromObject(obj, 0x416);
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                (obj, 0x1b, lbl_803E5460, 0);
+        }
+        else if (randFn_80080100(lbl_803DC04C) != 0)
+        {
+            Sfx_PlayFromObject(obj, 0x2f1);
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                (obj, 0x1a, lbl_803E5460, 0);
+        }
+    }
+
+    objAnimFn_80038f38(obj, (int*)(state + 0x14));
+    characterDoEyeAnims(obj, (void*)(state + 0x44));
+    if (GameBit_Get(0x887) == 0)
+    {
+        ((WarpstoneState*)state)->unkC = 0;
+    }
+    if (((WarpstoneFlags*)(state + 0xd5))->b4 != 0)
+    {
+        return;
+    }
+
+    switch (((GameObject*)obj)->anim.currentMove)
+    {
+    case 0x17:
+    case 0x19:
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
+        {
+            Sfx_PlayFromObject(obj, 0x2f1);
+            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+        }
+        break;
+    case 0x16:
+    case 0x18:
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
+        {
+            Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
+            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+        }
+        break;
+    case 0x1a:
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E54A8)
+        {
+            Sfx_PlayFromObject(obj, 0x417);
+            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+        }
+        break;
+    case 0x1b:
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E54AC)
+        {
+            Sfx_PlayFromObject(obj, 0x2f4);
+            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+        }
+        break;
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: warpstone_release
+ * EN v1.0 Address: 0x801D7BA0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void warpstone_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: warpstone_initialise
+ * EN v1.0 Address: 0x801D7BA4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void warpstone_initialise(void)
+{
+}
+
+void warpstone_init(int obj, u8* setup)
+{
+    int state;
+    s16 setupYaw;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    setupYaw = (s16)(setup[0x1a] << 8);
+    *(s16*)obj = setupYaw;
+    ((GameObject*)obj)->animEventCallback = warpstone_updateMenuAnimObj;
+    ((WarpstoneState*)state)->unkE = 0x15a;
+    ((WarpstoneState*)state)->unk10 = 0x886;
+    ObjHits_EnableObject(obj);
+    if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0)
+    {
+        ((WarpstoneState*)state)->unkC = 1;
+    }
+    else
+    {
+        ((WarpstoneState*)state)->unkC = 0;
+    }
+    GameBit_Set(((WarpstoneState*)state)->unk10, 0);
+    *(int*)state = 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sh_levelcontrol_getExtraSize
+ * EN v1.0 Address: 0x801D7BA8
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int sh_levelcontrol_getExtraSize(void);

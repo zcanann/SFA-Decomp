@@ -1,3 +1,97 @@
+/* === moved from main/dll/IM/IMsnowbike.c [801D9B1C-801D9BDC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
+#include "main/mapEvent.h"
+#include "main/objseq.h"
+#include "main/dll/IM/IMsnowbike.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
+
+typedef struct ShLevelcontrolState
+{
+    u8 pad0[0x5 - 0x0];
+    u8 unk5;
+    u8 pad6[0xC - 0x6];
+    f32 unkC;
+    s16 unk10;
+    s16 unk12;
+    u8 pad14[0x18 - 0x14];
+} ShLevelcontrolState;
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: sh_levelcontrol_update
+ * EN v1.0 Address: 0x801D8D20
+ * EN v1.0 Size: 2452b
+ * EN v1.1 Address: 0x801D90F0
+ * EN v1.1 Size: 544b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sh_levelcontrol_update(int obj);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+
+
+
+
+/* 8b "li r3, N; blr" returners. */
+int sh_staff_getExtraSize(void) { return 0x74; }
+
+
+
+
+
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+
+void sh_staff_free(int* obj, int p2)
+{
+    int* state = ((GameObject*)obj)->extra;
+    char* p;
+    int idx;
+
+    if (p2 != 0) return;
+
+    for (idx = 0; idx < 8; idx += 4)
+    {
+        int* child;
+        p = (char*)state + idx * 5;
+        child = *(int**)(p + 56);
+        if (child != NULL)
+        {
+            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+        }
+        child = *(int**)(p + 60);
+        if (child != NULL)
+        {
+            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+        }
+        child = *(int**)(p + 64);
+        if (child != NULL)
+        {
+            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+        }
+        child = *(int**)(p + 68);
+        if (child != NULL)
+        {
+            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+        }
+        child = *(int**)(p + 72);
+        if (child != NULL)
+        {
+            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+        }
+        p += 20;
+    }
+}
+
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -94,8 +188,6 @@ extern f32 lbl_803E61C0;
  */
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
-extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4,
-                                 undefined4 p5, double scale);
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * dst);
 extern void objSetMtxFn_800412d4(f32 * mtx);
@@ -115,6 +207,7 @@ extern f32 lbl_803E54F8;
 
 void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
+    extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
     ShStaffState* state;
     int player;
     int i;
@@ -362,6 +455,7 @@ extern int lbl_803DDC00;
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
 void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5)
 {
+    extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
     float local[3];
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5518);
     local[0] = lbl_803E551C;
@@ -418,11 +512,7 @@ void sh_beacon_free(int obj, int param_2)
 }
 
 /* 56b: single-call hit-effect poll. */
-void sh_emptytumblew_update(int obj)
-{
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
-                                              &lbl_803DDC00);
-}
+void sh_emptytumblew_update(int obj);
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */

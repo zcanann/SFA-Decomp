@@ -1,3 +1,352 @@
+/* === moved from main/dll/CR/CRsnowbike.c [801DBFA0-801DC310) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/game_object.h"
+#include "main/dll/CR/CRsnowbike.h"
+#include "main/mapEventTypes.h"
+#include "main/screen_transition.h"
+
+#include "global.h"
+
+typedef struct ScMusictreePlacement
+{
+    u8 pad0[0x20 - 0x0];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 pad23[0x28 - 0x23];
+} ScMusictreePlacement;
+
+
+typedef struct ScLevelcontrolProcessAnimEventsState
+{
+    u8 pad0[0x1D - 0x0];
+    s8 unk1D;
+    u8 pad1E[0x20 - 0x1E];
+} ScLevelcontrolProcessAnimEventsState;
+
+
+typedef struct ScMusictreeSpawnAmbientEffectPlacement
+{
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    u8 pad8[0x20 - 0x8];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 pad23[0x28 - 0x23];
+} ScMusictreeSpawnAmbientEffectPlacement;
+
+
+/* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
+typedef struct ScLevelControlState
+{
+    f32 fogNear; /* 0x00: enableHeavyFog base */
+    f32 fog04; /* 0x04 */
+    f32 fog08; /* 0x08 */
+    f32 fog0C; /* 0x0c */
+    f32 timer10; /* 0x10 */
+    f32 fadeTimer; /* 0x14 */
+    u8 pad18[4];
+    u8 musicStep; /* 0x1c: index into the lbl_803DC060 cue table */
+    u8 mode; /* 0x1d: anim-event mode latch */
+    u8 areaCell; /* 0x1e: 0xff until the player enters map 0xe */
+    u8 flags1F; /* 0x1f */
+    u8 musicTrack; /* 0x20 */
+    s8 unk21; /* 0x21 */
+    u8 flags22; /* 0x22: SnowFlags22 overlay (bit 7) */
+    u8 pad23;
+} ScLevelControlState;
+
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: sh_emptytumblew_init
+ * EN v1.0 Address: 0x801DAFDC
+ * EN v1.0 Size: 1440b
+ * EN v1.1 Address: 0x801DB048
+ * EN v1.1 Size: 1080b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+void sh_emptytumblew_init(s16* p1, int p2);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801db580
+ * EN v1.0 Address: 0x801DB580
+ * EN v1.0 Size: 56b
+ * EN v1.1 Address: 0x801DB594
+ * EN v1.1 Size: 56b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: sc_levelcontrol_processAnimEvents
+ * EN v1.0 Address: 0x801DB670
+ * EN v1.0 Size: 324b
+ * EN v1.1 Address: 0x801DB688
+ * EN v1.1 Size: 352b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate);
+
+/*
+ * --INFO--
+ *
+ * Function: sc_levelcontrol_setAnimEventState
+ * EN v1.0 Address: 0x801DB7B4
+ * EN v1.0 Size: 272b
+ * EN v1.1 Address: 0x801DB7E8
+ * EN v1.1 Size: 284b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sc_levelcontrol_setAnimEventState(int obj, undefined value);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801db8c4
+ * EN v1.0 Address: 0x801DB8C4
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: 0x801DB904
+ * EN v1.1 Size: 96b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801db924
+ * EN v1.0 Address: 0x801DB924
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801DB964
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+
+
+
+void sc_musictree_free(void)
+{
+}
+
+void sc_musictree_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int sc_levelcontrol_getExtraSize(void);
+int sc_musictree_getExtraSize(void) { return 0x50; }
+int sc_musictree_getObjectTypeId(void) { return 0x0; }
+
+/* Pattern wrappers. */
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern void objRenderFn_8003b8f4(f32);
+
+
+extern void fn_8003B608(int a, int b, int c);
+extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
+extern f32 lbl_803E558C;
+
+typedef struct SCMusicTreeState
+{
+    int ambientEffect[3];
+    f32 pathPoint[3][3];
+    f32 proximityBurstTimer;
+    f32 animSpeed;
+    f32 scale;
+    f32 proximityCooldown;
+    f32 hitCooldown;
+    int hitCooldownState;
+    u16 hearRadius;
+    s16 previousDistance;
+    u8 flags;
+    u8 pad4D[0x50 - 0x4D];
+} SCMusicTreeState;
+
+void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* def = *(int**)&((GameObject*)obj)->anim.placementData;
+    SCMusicTreeState* state = ((GameObject*)obj)->extra;
+    int i;
+    if (visible == 0) return;
+    fn_8003B608((int)((ScMusictreePlacement*)def)->unk20, (int)((ScMusictreePlacement*)def)->unk21,
+                (int)((ScMusictreePlacement*)def)->unk22);
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
+    if ((state->flags & 0x80) != 0)
+    {
+        for (i = 0; i < 3; i++)
+        {
+            ObjPath_GetPointWorldPosition(obj, i,
+                                          &state->pathPoint[0][0],
+                                          &state->pathPoint[0][1],
+                                          &state->pathPoint[0][2],
+                                          0);
+            state = (SCMusicTreeState*)&((ScLevelControlState*)state)->fog0C;
+        }
+    }
+    ((GameObject*)obj)->unkF8 = 1;
+}
+
+
+
+extern void GameBit_Set(int bit, int val);
+extern void Sfx_PlayFromObject(int a, int b);
+
+
+
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
+
+typedef struct
+{
+    u8 bit7 : 1;
+    u8 lo : 7;
+} SnowFlags22;
+
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+
+#pragma dont_inline on
+void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
+{
+    extern int randomGetRange(int lo, int hi); /* #57 */
+    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    SCMusicTreeState* state = (SCMusicTreeState*)p2;
+    int setup;
+
+    if (Obj_IsLoadingLocked() != 0)
+    {
+        setup = Obj_AllocObjectSetup(0x28, 0x210);
+        *(u8*)(setup + 4) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk4;
+        *(u8*)(setup + 6) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk6;
+        *(u8*)(setup + 5) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk5;
+        *(u8*)(setup + 7) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk7 - 10;
+        ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
+        ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
+        ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
+        *(u16*)(setup + 0x1c) = randomGetRange(0x708, 0x1770);
+        *(u16*)(setup + 0x1e) = 1;
+        *(u8*)(setup + 0x20) = 10;
+        *(u8*)(setup + 0x21) = 40;
+        *(u8*)(setup + 0x22) = 50;
+        *(u8*)(setup + 0x23) = 10;
+        *(u8*)(setup + 0x24) = 50;
+        *(s8*)(setup + 0x25) = -50;
+        *(s16*)(setup + 0x26) = -1;
+        *(int*)(setup + 0x18) = 0;
+        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+    }
+}
+#pragma dont_inline reset
+
+extern f32 lbl_803E5588;
+
+#pragma dont_inline on
+void sc_musictree_handleHitObject(int p1, int p2, int effectType)
+{
+    extern int GameBit_Get(int bit); /* #57 */
+    int id = *(int*)(*(int*)(p1 + 0x4c) + 0x14);
+    SCMusicTreeState* state = (SCMusicTreeState*)p2;
+    (void)effectType;
+
+    switch (id)
+    {
+    case 0x30d9c:
+        Sfx_PlayFromObject(p1, 299);
+        Sfx_PlayFromObject(p1, 298);
+        GameBit_Set(0x7d, 1);
+        break;
+    case 0x30d9d:
+        Sfx_PlayFromObject(p1, 300);
+        Sfx_PlayFromObject(p1, 298);
+        GameBit_Set(0x7e, 1);
+        break;
+    case 0x30d9b:
+        Sfx_PlayFromObject(p1, 0x12d);
+        Sfx_PlayFromObject(p1, 298);
+        GameBit_Set(0x7f, 1);
+        break;
+    case 0x448c2:
+        if ((u32)GameBit_Get(0xc44) != 0)
+            GameBit_Set(0xc41, 1);
+        break;
+    case 0x45178:
+        if ((u32)GameBit_Get(0xc44) != 0)
+            GameBit_Set(0xc43, 1);
+        break;
+    case 0x4517c:
+        if ((u32)GameBit_Get(0xc44) != 0)
+            GameBit_Set(0xc45, 1);
+        break;
+    }
+    state->animSpeed = lbl_803E5588;
+}
+#pragma dont_inline reset
+
+extern u16 lbl_803DC060[4];
+
+/* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
+ * driver: replays the env-fx set on map (re)entry, latches the race
+ * GameBits, runs the two race countdown timers, eases the heavy fog level,
+ * tracks the totem combo code (bits 0x7d..0x7f), and keeps the area music
+ * in sync with the Thorntail animation state. */
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
@@ -27,22 +376,18 @@ typedef struct ScMusictreeState
 } ScMusictreeState;
 
 
-extern u32 GameBit_Get(int id);
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u32 randomGetRange(int min, int max);
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int* type, int* a, int* b, f32* x, f32* y, f32* z);
 extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int* state);
 extern void ObjHits_RecordObjectHit(int target, int src, int a, int b, int c);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int a, int b, int c, int d);
 extern int ObjLink_AttachChild(int parent, int child, int a);
 extern int ObjLink_DetachChild(int parent, int child);
 extern void cmbsrc_setExternalActive(int obj, int active);
 extern void Obj_FreeObject(int obj);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_GetPlayerObject(void);
 extern void objSetSlot(int obj, int slot);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
@@ -50,10 +395,8 @@ extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, 
 extern void vecRotateZXY(int obj, void* vec);
 extern f32 sqrtf(f32 x);
 extern f32 fn_8001461C(void);
-extern void sc_musictree_spawnAmbientEffect(int obj, int inner, u8 frames, int idx);
 extern void sc_musictree_handleHitObject(int obj, int inner, int effectType);
 
-extern void objRenderFn_8003b8f4(f32);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterface;
@@ -66,8 +409,6 @@ extern f32 playerMapOffsetZ;
 extern u8 lbl_803DB411;
 extern int lbl_803DC068;
 extern int lbl_803DDC08;
-extern f32 lbl_803E5588;
-extern f32 lbl_803E558C;
 extern f32 lbl_803E5590;
 extern f32 lbl_803E5594;
 extern f32 lbl_803E5598;
@@ -89,21 +430,6 @@ extern f32 lbl_803E55DC;
 extern f32 lbl_803E55E0;
 extern f64 lbl_803E55E8;
 
-typedef struct SCMusicTreeState
-{
-    int ambientEffect[3];
-    f32 pathPoint[3][3];
-    f32 proximityBurstTimer;
-    f32 animSpeed;
-    f32 scale;
-    f32 proximityCooldown;
-    f32 hitCooldown;
-    int hitCooldownState;
-    u16 hearRadius;
-    s16 previousDistance;
-    u8 flags;
-    u8 pad4D[0x50 - 0x4D];
-} SCMusicTreeState;
 
 typedef struct SCMusicTreeSetup
 {
@@ -127,6 +453,7 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
 void sc_musictree_update(int obj)
 {
+    extern void sc_musictree_spawnAmbientEffect(int obj, int inner, u8 frames, int idx); /* #57 */
     int inner = *(int*)&((GameObject*)obj)->extra;
     f32 stk[7];
     f32 vec[3];
@@ -275,6 +602,7 @@ end:
 
 void sc_musictree_init(int obj, SCMusicTreeSetup* setup)
 {
+    extern u32 randomGetRange(int min, int max); /* #57 */
     SCMusicTreeState* state = ((GameObject*)obj)->extra;
     f32 stk[7];
     f32 ratio;
@@ -333,6 +661,7 @@ typedef struct SCTotemPoleState
 
 int sc_totempole_sortCompletionGameBits(u16* bits, u16 param2)
 {
+    extern u32 GameBit_Get(int id); /* #57 */
     u16 stk[4];
     u8 i, j;
     s32 changed = 0;
@@ -385,6 +714,7 @@ void sc_totempole_hitDetect(void)
 
 void sc_totempole_update(int obj)
 {
+    extern u32 GameBit_Get(int id); /* #57 */
     SCTotemPoleState* state = ((GameObject*)obj)->extra;
     f32 stk[8];
     int played;
@@ -654,6 +984,7 @@ void sc_cloudrunnera_initialise(void)
 
 int fn_801DD170(void)
 {
+    extern u32 GameBit_Get(int id); /* #57 */
     int r;
     if (GameBit_Get(0x639) != 0) { r = 0; }
     else { r = 1; }
