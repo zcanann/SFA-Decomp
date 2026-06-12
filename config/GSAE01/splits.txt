@@ -973,16 +973,16 @@ main/dll/colrise.c:
 	.text       start:0x801C9660 end:0x801C9660
 
 main/dll/cup1C3.c:
-	.text       start:0x801C9660 end:0x801CA5B4
+	.text       start:0x801C9660 end:0x801CA718
 
 main/dll/explosion.c:
-	.text       start:0x801CA5B4 end:0x801CAD80
+	.text       start:0x801CA718 end:0x801CA9C0
 
 main/dll/symbol.c:
-	.text       start:0x801CAD80 end:0x801CAD80
+	.text       start:0x801CA9C0 end:0x801CA9C0
 
 main/dll/dimmagicbridge.c:
-	.text       start:0x801CAD80 end:0x801CBA98
+	.text       start:0x801CA9C0 end:0x801CBA98
 
 main/dll/torch1CD.c:
 	.text       start:0x801CBA98 end:0x801CBD88

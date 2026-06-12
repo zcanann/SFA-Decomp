@@ -25,7 +25,6 @@ extern undefined4 FUN_80006b50();
 extern undefined4 FUN_80006b54();
 extern uint FUN_80006bf8();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern uint FUN_80017a98();
 extern int FUN_80017b00();
@@ -38,7 +37,6 @@ extern double FUN_80293900();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void* a, void* b);
 extern void objUpdateOpacity(int obj);
 
@@ -150,6 +148,7 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
 int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
+    extern int Obj_GetPlayerObject(void);
     f32 maxSpeed;
     f32 spdThresh;
     f32 animDiv;
@@ -339,6 +338,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
  */
 void dbsh_symbol_update(int obj)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
     s16 phase;
     uint puzzleStarted;
     DbshSymbolState* state;
@@ -458,6 +458,8 @@ void dll_197_hitDetect(void)
 
 void dll_197_update(int obj)
 {
+    extern int Obj_GetPlayerObject(void);
+    extern undefined4 GameBit_Set(int eventId, int value);
     Cup197State* state = ((GameObject*)obj)->extra;
     int resourceParams[4];
     u8 callbackData[0x14];
@@ -733,3 +735,233 @@ void dbsh_symbol_init(int* obj)
 
     ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
+
+/* === moved from main/dll/explosion.c [801CA5B4-801CA718) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/explosion_state.h"
+#include "main/dll/explosion.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/objseq.h"
+#include "main/resource.h"
+
+typedef struct Dll197State
+{
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    s16 unk4;
+    u8 pad6[0x8 - 0x6];
+    s16 unk8;
+    s16 unkA;
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 pad11[0x18 - 0x11];
+} Dll197State;
+
+
+extern int ObjHits_GetPriorityHit();
+extern undefined4 FUN_8003b818();
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
+extern f64 DOUBLE_803e5de0;
+extern f32 lbl_803E5DD0;
+extern f32 lbl_803E5DD4;
+extern f32 lbl_803E5DD8;
+extern f32 lbl_803E5DDC;
+
+/*
+ * --INFO--
+ *
+ * Function: dll_197_init
+ * EN v1.0 Address: 0x801CA5B4
+ * EN v1.0 Size: 1148b
+ * EN v1.1 Address: 0x801CA6BC
+ * EN v1.1 Size: 1196b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern f32 lbl_803E513C;
+extern f32 lbl_803E5140;
+extern f32 lbl_803E5144;
+extern f64 lbl_803E5148;
+
+void dll_197_init(int obj, int data)
+{
+    u8* st;
+    void* res;
+    struct
+    {
+        u8 buf[16];
+        f32 f;
+    } stk;
+
+    st = ((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)(((s8) * (u8*)(data + 0x18) & 0x3fu) << 10);
+    if (*(s16*)(data + 0x1a) > 0)
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = (f32) * (s16*)(data + 0x1a) / lbl_803E5140;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5144;
+    }
+    *(u8*)(st + 0xb) = *(u8*)(data + 0x19);
+    ((Dll197State*)st)->unkC = 0;
+    ((Dll197State*)st)->unkF = 0;
+    *(int*)st = *(s16*)(data + 0x1e);
+    stk.f = lbl_803E513C;
+    switch (*(u8*)(st + 0xb))
+    {
+    case 0:
+        ((Dll197State*)st)->unkC = 1;
+        res = Resource_Acquire(0x69, 1);
+        if (*(s16*)(data + 0x1c) == 0)
+        {
+            (*(void (**)(int, int, void*, int, int, int))(*(int*)res + 4))(obj, 0, stk.buf, 0x10004, -1, 0);
+        }
+        break;
+    case 1:
+        ((Dll197State*)st)->unkF = *(s16*)(data + 0x1c);
+        ((Dll197State*)st)->unkD = 0;
+        ((Dll197State*)st)->unk8 = ((Dll197State*)st)->unkF * 0x28 + 0x398;
+        ((Dll197State*)st)->unkE = 0;
+        break;
+    }
+    ((Dll197State*)st)->unk4 = 0;
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801caa30
+ * EN v1.0 Address: 0x801CAA30
+ * EN v1.0 Size: 304b
+ * EN v1.1 Address: 0x801CAB68
+ * EN v1.1 Size: 356b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cacd4
+ * EN v1.0 Address: 0x801CACD4
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801CAE40
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801caeac
+ * EN v1.0 Address: 0x801CAEAC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801CAEF8
+ * EN v1.1 Size: 124b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801caeb0
+ * EN v1.0 Address: 0x801CAEB0
+ * EN v1.0 Size: 1240b
+ * EN v1.1 Address: 0x801CAF74
+ * EN v1.1 Size: 788b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void dll_197_release(void)
+{
+}
+
+void dll_197_initialise(void)
+{
+}
+
+void nwsh_levcon_hitDetect(void);
+
+void nwsh_levcon_release(void);
+
+void nwsh_levcon_initialise(void);
+
+void dll_199_hitDetect(void);
+
+/* 8b "li r3, N; blr" returners. */
+int nwsh_levcon_getExtraSize(void);
+int nwsh_levcon_getObjectTypeId(void);
+int dll_199_getExtraSize(void);
+int dll_199_getObjectTypeId(void);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E5150;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5158;
+
+void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+extern void Music_Trigger(int track, int param);
+
+void nwsh_levcon_free(int obj);
+
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+
+void nwsh_levcon_update(int* obj);
+
+void nwsh_levcon_init(int* obj);
+
+extern ModgfxInterface** gModgfxInterface;
+extern void* gTitleMenuControlInterface;
+
+void dll_199_free(int* obj);
+
+extern void fn_80296518(void* player, int a, int b);
+extern int getButtonsHeld(int pad);
+extern int return0_8005669C(int p);
+extern int lbl_803DB610;
+extern u32 lbl_803DDBD8;
+
+int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);

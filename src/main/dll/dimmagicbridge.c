@@ -1,3 +1,304 @@
+/* === moved from main/dll/explosion.c [801CA9C0-801CAD80) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/explosion_state.h"
+#include "main/dll/explosion.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/objseq.h"
+#include "main/resource.h"
+
+typedef struct Dll197State
+{
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    s16 unk4;
+    u8 pad6[0x8 - 0x6];
+    s16 unk8;
+    s16 unkA;
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 pad11[0x18 - 0x11];
+} Dll197State;
+
+
+extern int ObjHits_GetPriorityHit();
+extern undefined4 FUN_8003b818();
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
+extern f64 DOUBLE_803e5de0;
+extern f32 lbl_803E5DD0;
+extern f32 lbl_803E5DD4;
+extern f32 lbl_803E5DD8;
+extern f32 lbl_803E5DDC;
+
+/*
+ * --INFO--
+ *
+ * Function: dll_197_init
+ * EN v1.0 Address: 0x801CA5B4
+ * EN v1.0 Size: 1148b
+ * EN v1.1 Address: 0x801CA6BC
+ * EN v1.1 Size: 1196b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern f32 lbl_803E513C;
+extern f32 lbl_803E5140;
+extern f32 lbl_803E5144;
+extern f64 lbl_803E5148;
+
+void dll_197_init(int obj, int data);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801caa30
+ * EN v1.0 Address: 0x801CAA30
+ * EN v1.0 Size: 304b
+ * EN v1.1 Address: 0x801CAB68
+ * EN v1.1 Size: 356b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cacd4
+ * EN v1.0 Address: 0x801CACD4
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801CAE40
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801caeac
+ * EN v1.0 Address: 0x801CAEAC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801CAEF8
+ * EN v1.1 Size: 124b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801caeb0
+ * EN v1.0 Address: 0x801CAEB0
+ * EN v1.0 Size: 1240b
+ * EN v1.1 Address: 0x801CAF74
+ * EN v1.1 Size: 788b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void dll_197_release(void);
+
+void dll_197_initialise(void);
+
+void nwsh_levcon_hitDetect(void);
+
+void nwsh_levcon_release(void);
+
+void nwsh_levcon_initialise(void);
+
+void dll_199_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int nwsh_levcon_getExtraSize(void);
+int nwsh_levcon_getObjectTypeId(void);
+int dll_199_getExtraSize(void) { return 0x14; }
+int dll_199_getObjectTypeId(void) { return 0x0; }
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E5150;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5158;
+
+void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E5158);
+}
+
+extern void Music_Trigger(int track, int param);
+extern int GameBit_Set(int eventId, int value);
+
+void nwsh_levcon_free(int obj);
+
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+
+void nwsh_levcon_update(int* obj);
+
+void nwsh_levcon_init(int* obj);
+
+extern ModgfxInterface** gModgfxInterface;
+
+void dll_199_free(int* obj)
+{
+    extern void* gTitleMenuControlInterface;
+    (*gModgfxInterface)->detachSource(obj);
+    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
+    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
+}
+
+extern void fn_80296518(void* player, int a, int b);
+extern int getButtonsHeld(int pad);
+extern int return0_8005669C(int p);
+extern int lbl_803DB610;
+extern u32 lbl_803DDBD8;
+
+int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
+{
+    extern void* gTitleMenuControlInterface;
+    u8* st;
+    int i;
+    u8 eventId;
+
+    st = ((GameObject*)obj)->extra;
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    if (((Dll197State*)st)->unkA != 0)
+    {
+        ((Dll197State*)st)->unk8 += ((Dll197State*)st)->unkA;
+        if (((Dll197State*)st)->unk8 <= 1 && ((Dll197State*)st)->unkA <= 0)
+        {
+            ((Dll197State*)st)->unk8 = 1;
+            ((Dll197State*)st)->unkA = 0;
+        }
+        else if (((Dll197State*)st)->unk8 >= 0x46 && ((Dll197State*)st)->unkA >= 0)
+        {
+            ((Dll197State*)st)->unk8 = 0x46;
+            ((Dll197State*)st)->unkA = 0;
+        }
+        (**(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, ((Dll197State*)st)->unk8 & 0xff);
+    }
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        eventId = animUpdate->eventIds[i];
+        switch (eventId)
+        {
+        case 0xb:
+            ((Dll197State*)st)->unkF = 7;
+            break;
+        case 1:
+            getEnvfxAct(obj, obj, 0xc3, 0);
+            break;
+        case 2:
+            if (lbl_803DB610 == -1)
+            {
+                getEnvfxAct(obj, obj, 0x14, 0);
+            }
+            else
+            {
+                getEnvfxAct(obj, obj, (u16)lbl_803DB610, 0);
+            }
+            break;
+        case 3:
+            ((Dll197State*)st)->unk10 = 1;
+            break;
+        case 4:
+            ((Dll197State*)st)->unkF = 4;
+            ((Dll197State*)st)->unk10 = 2;
+            GameBit_Set(0x129, 1);
+            GameBit_Set(0x1cf, 0);
+            GameBit_Set(0x126, 1);
+            ((Dll197State*)st)->unkA = -3;
+            break;
+        case 5:
+            ((Dll197State*)st)->unk10 = 3;
+            ((Dll197State*)st)->unkA = -3;
+            GameBit_Set(0x129, 1);
+            break;
+        case 6:
+            GameBit_Set(0x1cf, 1);
+            break;
+        case 7:
+            GameBit_Set(0x1cf, 0);
+            ((Dll197State*)st)->unkA = -3;
+            break;
+        case 9:
+            GameBit_Set(0x128, 1);
+            if (lbl_803DDBD8 == 0)
+            {
+                lbl_803DDBD8 = return0_8005669C(1);
+            }
+            break;
+        case 8:
+            GameBit_Set(0x127, 1);
+            break;
+        case 10:
+            ((Dll197State*)st)->unk8 = 100;
+            (**(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
+                3, 0x2d, 0x50, ((Dll197State*)st)->unk8 & 0xff, 0);
+            break;
+        }
+        animUpdate->eventIds[i] = 0;
+    }
+    if (((Dll197State*)st)->unkF != 7)
+    {
+    }
+    else
+    {
+        if ((getButtonsHeld(0) & 0x100) != 0)
+        {
+            (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
+            ((Dll197State*)st)->unkF = 8;
+            ((Dll197State*)st)->unk2 = 0;
+        }
+        else if ((getButtonsHeld(0) & 0x200) != 0)
+        {
+            (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
+            ((Dll197State*)st)->unkF = 7;
+            ((Dll197State*)st)->unk2 = 0;
+        }
+    }
+    return 0;
+}
+
 #include "main/dll/dimmagicbridge_state.h"
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
@@ -54,13 +355,11 @@ typedef struct Dll199State
 
 extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
-extern char* Obj_GetPlayerObject(void);
 extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
 extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
 extern void Obj_FreeObject(char* obj);
 extern f32 Vec_distance(f32 * a, f32 * b);
 
-extern int* gTitleMenuControlInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
 extern MapEventInterface** gMapEventInterface;
@@ -84,6 +383,8 @@ extern f32 lbl_803E5174;
  */
 void dll_199_update(int obj)
 {
+    extern int* gTitleMenuControlInterface;
+    extern char* Obj_GetPlayerObject(void);
     short* state;
     char* player;
     int queue;
@@ -334,6 +635,7 @@ extern void ObjMsg_AllocQueue(int obj, int n);
  */
 void dll_199_init(int obj, int def)
 {
+    extern int* gTitleMenuControlInterface;
     short* state;
     int* res;
     short id;
