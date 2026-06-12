@@ -577,6 +577,7 @@ void ediblemushroom_hitDetect(u8* obj)
 {
     u8* state;
     u8* mapObj;
+    ObjHitsPriorityState* hitState;
     int hitCount;
     f32** hitIter;
     f32** hits;
@@ -585,10 +586,10 @@ void ediblemushroom_hitDetect(u8* obj)
 
     state = ((GameObject*)obj)->extra;
     mapObj = *(u8**)&((GameObject*)obj)->anim.placementData;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
 
     if (((((GameObject*)obj)->objectFlags & 0x1000) == 0) &&
-        (((((EdibleMushroomState*)state)->unk137 & 8) != 0) || (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.
-            hitReactState)->flags & 8) != 0)))
+        (((((EdibleMushroomState*)state)->unk137 & 8) != 0) || ((hitState->flags & 8) != 0)))
     {
         hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ, &hits, 0, 0);
