@@ -73,8 +73,6 @@ main/dll/CF/dll_164.c
 main/dll/CF/dll_165.c
 main/dll/CF/dll_166.c
 main/dll/CF/dll_179.c
-main/dll/CF/dll_17A.c
-main/dll/CF/laser.c
 main/dll/CF/treasureRelated0177.c
 main/dll/CF/windlift.c
 main/dll/collectable.c

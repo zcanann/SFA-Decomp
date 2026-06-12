@@ -329,6 +329,55 @@ proven-irreducible MSL-edge cut remains.
 |---|---|---|---|---|---|---|
 | 0x009 | lbl_8030F7E8 | 80094494-80094F60 | 80093AE0-80094F7C | 800944A0 (dolphin/MSL_C/PPCEABI/bare/H/gamecube.c \| main/dll/cloudaction.c) | n |  |
 
+## CF-lane canonical-naming finish (June 2026)
+
+The five remaining CF multi-DLL containers were carved into per-descriptor
+units (`tools/dll_boundary_resplit.py --carve`, EXACT per-symbol conservation,
+main.dol byte-identical):
+
+| container | -> per-descriptor units |
+|---|---|
+| CFchuckobj.c | dll_012D_lfxemitter (0x12D), dll_0130_areafxemit (0x130), + warppad.c |
+| CFforcecontrol.c | dll_010E_dieduster (0x10E), dll_0123_fuelcell (0x123), dll_0124_deathgas (0x124) |
+| treasureRelated0177.c | dll_0127_dll127 (0x127), dll_0128_kttorch (0x128), dll_0129_campfire (0x129) |
+| CFtoggleswitch.c | dll_011E..dll_0122 (0x11E-0x122) |
+| CFBaby.c | dll_00E7,dll_00EC,dll_0109,dll_010A,dll_0119,dll_011A,dll_011B (7 descriptors) |
+
+Trailing-fragment dispositions (the descriptor TU-end pin leaves post-init
+helper tails as synthetic units):
+- **warppad.c** (`8019042C-80190BD4`, ex-`dll_8019042C.c`): the transporter
+  DLL (0x12C) head — `warpPadFn_8019042c`/`warpPadPlayerStandingOn`, a
+  NO-RETAIL-NAME infrastructure helper TU called by dll_012C_transporter via
+  external `bl` relocs (distinct TU, not inlined). Renamed after its
+  `warp_pad.h` / `warpPad*` stem.
+- **landed_arwing tail** (`80189610-801899B4`): `updateHitReaction`/
+  `updateDamageTexture` are part of the Landed_Arwing DLL (0x11B) — called by
+  `landed_arwing_update`, kept as one TU in retail (distinct global symbols,
+  not inlined). Merged back into `dll_011B_landedarwi.c`.
+
+No-descriptor / vestigial-unit dispositions:
+- **CFPrisonGuard.c** (`801899B4-80189F5C`): a valid no-descriptor TU per the
+  audit (no cut flagged at the `80189F5C` edge), NOT the 0x14E CFPrisonGuard
+  DLL (that is canonical in DR/dll_014E_cfprisonguard.c). It hosts the
+  staffactivated DLL's helper head (`staffactivated_updateLiftHeight`/
+  `spawnMapEventDebris`, called by dll_011C_staffactivated's
+  `staffactivated_update` via an external `bl` — a genuine cross-TU call,
+  not inlined in retail) plus the `cfPrisonGuard_*` player.c gamebit-mirror
+  API. **Kept as its own helper TU** — it is not a DLL (owns no descriptor),
+  so it is outside the `dll_XXXX_<name>.c` namespace; merging into dll_011C
+  would risk inlining its once-called 0x230B helper against the retail
+  evidence of separate TUs. Name retained (matches its `cfPrisonGuard_*`
+  content + `CFPrisonGuard.h`).
+- **dll_15E.c**: deleted (unwired comment-only doc stub; its
+  `windlift->CFcrystal->CFBaby` corridor claim is captured here and
+  superseded by the windlift-complex dissolution, see surgery status above).
+- **CF/dll_17A.c, CF/laser.c**: deleted (stale empty `start==end` placeholder
+  units owning no .text/.data — their ranges are subsumed by
+  dll_012A_cfcrate / dfppowersl respectively; the real 0x17A SpiritPrize lives
+  in dll_017A_spiritprize.c, the real laser DLLs in the WC lane). `laser.h`
+  KEPT (shared header used by main.h + the dfp laser DLLs); the dead
+  `dll_17A.h` removed.
+
 ## Complete cut table (132 descriptors, pre-surgery — historical record)
 
 | dll | descriptor | fn range | TU (proposed) | cutting boundary(ies) | reach | names |
