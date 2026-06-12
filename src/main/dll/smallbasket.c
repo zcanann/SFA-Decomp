@@ -852,10 +852,12 @@ void fn_80157B58(int* obj, u8* state)
 void fn_8015A924(int* obj, u8* state)
 {
     u8* tbl = *(u8**)((char*)lbl_8031FD48 + *(u16*)(state + 0x338) * 8);
+    ObjHitsPriorityState* hitState;
     int i;
 
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
@@ -1066,6 +1068,7 @@ void fn_80159284(int* obj, u8* state)
     u8* t8 = d[*(u8*)(state + 0x33b)].t18;
     u8* t7 = d[*(u8*)(state + 0x33b)].tC;
     BasketSeq16* t6 = d[*(u8*)(state + 0x33b)].t14;
+    ObjHitsPriorityState* hitState;
     f32 cap;
     int i;
     u8* p;
@@ -1150,8 +1153,9 @@ void fn_80159284(int* obj, u8* state)
         }
     }
 
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 0;
+    hitState->hitVolumeId = 0;
     j = 1;
     p = t8 + 0xc;
     n = *(u8*)(t8 + 8);
@@ -1159,11 +1163,9 @@ void fn_80159284(int* obj, u8* state)
     {
         if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
         {
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
-                (s8) * (int*)(t8 + j * 0xc + 4);
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
-                (s8) * (u8*)(t8 + j * 0xc + 9);
-            if (((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
+            hitState->hitVolumePriority = (s8) * (int*)(t8 + j * 0xc + 4);
+            hitState->hitVolumeId = (s8) * (u8*)(t8 + j * 0xc + 9);
+            if (hitState->hitVolumePriority == 0x1f)
             {
                 *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x40;
             }
@@ -1950,6 +1952,7 @@ void fn_80158C2C(s16* obj, u8* state)
     BasketSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
     u8* t4 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl4;
     u8* t18 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl18;
+    ObjHitsPriorityState* hitState;
     f32 cap;
     int count;
     int i;
@@ -2118,8 +2121,9 @@ void fn_80158C2C(s16* obj, u8* state)
         }
     }
 
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 0;
+    hitState->hitVolumeId = 0;
     {
         int j = 1;
         u8* p = t18 + 0xc;
@@ -2128,11 +2132,9 @@ void fn_80158C2C(s16* obj, u8* state)
         {
             if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
             {
-                ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
-                    (s8) * (int*)((char*)t18 + j * 0xc + 4);
-                ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
-                    (s8) * (u8*)((char*)t18 + j * 0xc + 9);
-                if (((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
+                hitState->hitVolumePriority = (s8) * (int*)((char*)t18 + j * 0xc + 4);
+                hitState->hitVolumeId = (s8) * (u8*)((char*)t18 + j * 0xc + 9);
+                if (hitState->hitVolumePriority == 0x1f)
                 {
                     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x40;
                 }
