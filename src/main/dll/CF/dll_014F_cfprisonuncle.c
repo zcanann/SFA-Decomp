@@ -12,7 +12,6 @@
 #include "main/objseq.h"
 
 extern u32 randomGetRange(int min, int max);
-extern int ObjHits_EnableObject();
 extern int ObjMsg_Pop();
 extern int ObjMsg_AllocQueue();
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
@@ -20,9 +19,7 @@ extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
 extern int objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void* player, int n);
@@ -34,7 +31,6 @@ extern u8 framesThisStep;
 extern f32 lbl_803E428C;
 extern int objUpdateOpacity(int sub);
 extern f32 lbl_803E4288;
-
 
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
@@ -54,10 +50,10 @@ void cfprisonuncle_initialise(void)
 {
 }
 
-/* cfprisonuncle_update: while not captured,
- * drain pending messages, re-acquire the keyed target object, then either
- * track/animate toward the player (firing the alert trigger) or, once
- * captured, raise the done flag and notify. */
+/* cfprisonuncle_update: while not captured, drain pending messages,
+ * re-acquire the guard to glance at, then head-track the player and
+ * mutter (running sequence 1 on interaction); once captured, disable
+ * interaction and run the rescue sequence. */
 void cfprisonuncle_update(int* obj)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
@@ -154,11 +150,9 @@ void cfprisonuncle_init(int* obj)
     }
 }
 
-void cfguardian_hitDetect(int* obj);
-
-/* cfprisonuncle_render: render the uncle and/or
- * his held model depending on the rescue gamebits, opacity and visibility;
- * when path-following, snap the held model to the path point first. */
+/* cfprisonuncle_render: render the uncle and/or his held model
+ * depending on the rescue gamebits, opacity and visibility; when
+ * path-following, snap the held model to the path point first. */
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;

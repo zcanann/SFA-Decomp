@@ -44,7 +44,6 @@ typedef struct
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 extern u32 randomGetRange(int min, int max);
-extern int ObjHits_EnableObject();
 extern int ObjMsg_Pop();
 extern int ObjMsg_SendToObjects();
 extern int ObjMsg_SendToObject();
@@ -53,7 +52,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern EffectInterface** gPartfxInterface;
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 framesThisStep;
 extern f32 lbl_803E4210;
@@ -77,13 +75,9 @@ extern f32 lbl_803E4200;
 extern f32 lbl_803E4204;
 extern void Camera_EnableViewYOffset(void);
 
-int babycloudrunner_getExtraSize(void);
-
-#define CFMAINCRYSTAL_PYLON_FRAMES 0x78  /* beam hold time once reported */
-
-#define CFMAINCRYSTAL_CHARGE_START 0x5A  /* charge frames granted by 0x57 */
-
-#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C   /* charge at which the bolt fires */
+#define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */
+#define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
+#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C  /* charge at which the bolt fires */
 
 void cfmaincrystal_hitDetect(void)
 {

@@ -1,3 +1,11 @@
+/*
+ * cfccrate (DLL 0x12A) - the shared "crate" prop handler: one DLL
+ * driving dozens of simple placement types across maps (cogs, warding
+ * stones, rising water, spinning rings, lock symbols, galleon masts,
+ * ice floes, ...). init seeds per-type state from the placement record,
+ * update dispatches per-type motion/SFX on the romlist type id, and the
+ * SeqFn handles the few types with anim-event work.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/screen_transition.h"
 #include "main/game_object.h"
@@ -7,6 +15,7 @@
 #include "main/objseq.h"
 #include "main/dll/CF/dll_179.h"
 #include "main/objanim_internal.h"
+
 typedef struct CfccratePlacement
 {
     u8 pad0[0xC - 0x0];
@@ -15,9 +24,6 @@ typedef struct CfccratePlacement
     s8 unk18;
     u8 pad19[0x20 - 0x19];
 } CfccratePlacement;
-
-
-extern u32 GameBit_Get(int bit);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -57,6 +63,9 @@ extern f32 lbl_803E3E3C;
 extern f32 lbl_803E3E40;
 extern f32 sqrtf(f32);
 
+#define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
+  (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
+
 int cfccrate_getExtraSize(void) { return 0x4c; }
 int cfccrate_getObjectTypeId(void) { return 0x1; }
 
@@ -64,11 +73,6 @@ void cfccrate_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-#define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
-  (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
 
 void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -134,7 +138,6 @@ int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void cfccrate_hitDetect(void)
 {
 }
-
 
 void cfccrate_update(int obj)
 {
@@ -509,11 +512,6 @@ void cfccrate_init(int obj, int aux)
     }
 }
 
-#define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
-    (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
-
-#undef CFTREAS_PARTFX_SPAWN
-
 void cfccrate_release(void)
 {
 }
@@ -521,4 +519,3 @@ void cfccrate_release(void)
 void cfccrate_initialise(void)
 {
 }
-

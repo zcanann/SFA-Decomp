@@ -14,9 +14,6 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
-/* cfprisoncage_SeqFn: drain the object's message
- * queue (re-arming its gamebit on the keyed message), then sync the
- * lit/active state from gamebit 0x44 and notify on completion. */
 typedef struct CfPrisonCageMapData
 {
     ObjPlacement base;
@@ -32,7 +29,7 @@ enum
     CFPRISONCAGE_TYPE_CAGE_2 = 0x128
 };
 
-typedef struct CfprisoncageObjectDef
+typedef struct CfPrisonCageObjectDef
 {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -46,29 +43,26 @@ typedef struct CfprisoncageObjectDef
     u8 pad20[0x22 - 0x20];
     s16 unk22;
     u8 pad24[0x28 - 0x24];
-} CfprisoncageObjectDef;
+} CfPrisonCageObjectDef;
 
 STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
 
-extern int ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
+/* message granting the cage's open bit (sent by the prison guard) */
+#define CFPRISONCAGE_MSG_OPEN 0xA0005
+
 extern int ObjMsg_Pop();
 extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 lbl_803E42B0;
 extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 extern f32 lbl_803E42B4;
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
-u32 fn_801A0174(int* obj);
-void windlift_free(int* obj);
-
-/* message granting the cage's open bit (sent by the prison guard) */
-#define CFPRISONCAGE_MSG_OPEN 0xA0005
-
+/* cfprisoncage_SeqFn: drain the object's message queue (granting the
+ * cage's opened bit on the keyed message), then mirror the dialog bit
+ * into the prompt flags and run sequence 0 once the talk is ready. */
 int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int msg;
@@ -177,7 +171,7 @@ void cfprisoncage_init(int* obj, u8* def)
     ((GameObject*)obj)->animEventCallback = (void*)cfprisoncage_SeqFn;
     if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_CAGE_2)
     {
-        if (GameBit_Get(((CfprisoncageObjectDef*)def)->unk18) != 0)
+        if (GameBit_Get(((CfPrisonCageObjectDef*)def)->unk18) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
         }
@@ -188,7 +182,7 @@ void cfprisoncage_init(int* obj, u8* def)
     }
     else
     {
-        if (GameBit_Get(((CfprisoncageObjectDef*)def)->unk18) != 0)
+        if (GameBit_Get(((CfPrisonCageObjectDef*)def)->unk18) != 0)
         {
             (*gObjectTriggerInterface)->preempt((int)obj, 60);
         }

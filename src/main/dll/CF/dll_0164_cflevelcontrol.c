@@ -1,14 +1,19 @@
-/* DLL 0x0164 - cflevelcontrol (CloudRunner Fortress level controller). TU: 0x801A4524-0x801A4DB8. */
-
-#include "main/dll/DR/dll_015A_explodable.h"
-#include "main/dll/drexplodable_types.h"
+/*
+ * cflevelcontrol (DLL 0x164) - the CloudRunner Fortress level
+ * controller. init clears the fortress bit set on a fresh visit and
+ * arms the one-shot object sweep; update advances the fortress map
+ * event, stings/fanfares the two alarm bits, runs the first-visit and
+ * post-flood environment setups, tracks the disguise and cell-camera
+ * bits, and drives the music latches. The SeqFn handles the level-exit
+ * event (flood the fortress and lock the map).
+ */
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/mapEvent.h"
-#include "main/dll/IM/IMicicle.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 
 typedef struct CflevelcontrolState
@@ -34,10 +39,6 @@ typedef struct CfLevelControlFlags
     u8 b3 : 1; /* 0x08: pending fn_8017C294 sweep */
     u8 rest : 3;
 } CfLevelControlFlags;
-
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
@@ -65,10 +66,9 @@ extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetB
 extern void loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int b);
+extern void objSetSlot(void* obj, int resourceId);
 
-void exploded_free(void);
-int exploded_getExtraSize(void);
-void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void cflevelcontrol_free(int param_1)
 {
@@ -88,16 +88,6 @@ void cflevelcontrol_initialise(void)
 
 void cflevelcontrol_init(u8* obj, u8* params)
 {
-    extern void objSetSlot(void* obj, int resourceId); /* #57 */
-    typedef struct LevelControlFlags
-    {
-        u8 b7 : 1;
-        u8 b6 : 1;
-        u8 b5 : 1;
-        u8 b4 : 1;
-        u8 b3 : 1;
-        u8 rest : 3;
-    } LevelControlFlags;
     u8* sub;
     int i;
 
@@ -106,7 +96,7 @@ void cflevelcontrol_init(u8* obj, u8* params)
     ((CflevelcontrolState*)sub)->unkD = -1;
     storeZeroToFloatParam(sub);
     s16toFloat(sub, 0x1e0);
-    ((LevelControlFlags*)(sub + 0xc))->b6 = 0;
+    ((CfLevelControlFlags*)(sub + 0xc))->b6 = 0;
     ((GameObject*)obj)->animEventCallback = (void*)CFLevelControl_SeqFn;
     GameBit_Set(0x983, *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) != 0x2cef);
     if (GameBit_Get(0x2fe) == 0)
@@ -120,10 +110,10 @@ void cflevelcontrol_init(u8* obj, u8* params)
     (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x11, 0);
     (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x15, 0);
     (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x16, 0);
-    ((LevelControlFlags*)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
-    ((LevelControlFlags*)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
+    ((CfLevelControlFlags*)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
+    ((CfLevelControlFlags*)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
     objSetSlot(obj, 0x51);
-    ((LevelControlFlags*)(sub + 0xc))->b3 = 1;
+    ((CfLevelControlFlags*)(sub + 0xc))->b3 = 1;
 }
 
 int cflevelcontrol_getExtraSize(void) { return 0x10; }

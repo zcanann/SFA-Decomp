@@ -63,8 +63,6 @@ extern f32 lbl_803E4284;
 extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 
-void gcrobotlightbea_free(int* obj);
-
 void cfprisonguard_free(void)
 {
 }
@@ -77,9 +75,9 @@ void cfprisonguard_initialise(void)
 {
 }
 
-/* cfprisonguard_init: set up the guard's
- * substate (update fn cfprisonguard_SeqFn, message queue), seed its header from
- * the spawn params, and apply the alarm-active gating bits. */
+/* cfprisonguard_init: set up the guard's substate (SeqFn callback,
+ * message queue), seed its header from the spawn params, and apply the
+ * alarm-active gating bits. */
 void cfprisonguard_init(int* obj, u8* params)
 {
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
@@ -152,9 +150,9 @@ int cfprisonguard_getExtraSize(void) { return 0x3c; }
 
 int cfprisonguard_getObjectTypeId(void) { return 0x49; }
 
-/* cfprisonguard_render: render the guard
- * model when visible, ramp its alarm timer at sub->_30 each frame, and
- * once it crosses the threshold spawn a one-shot particle. */
+/* cfprisonguard_render: draw the guard when visible, ramp the alarm
+ * timer each frame, and spawn a one-shot particle while it is below
+ * the threshold. */
 void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
@@ -185,10 +183,10 @@ void cfprisonguard_hitDetect(int* obj)
     }
 }
 
-/* cfprisonguard_SeqFn: drive the guard state
- * machine - ramp/reset the alarm on cues, bail when captured or freed, watch
- * the player distance/water impacts and chase or stand down, with idle digging
- * SFX and queued-message drain. */
+/* cfprisonguard_SeqFn: drive the guard state machine - ramp/reset the
+ * alarm on cues, bail when captured or freed, watch player distance and
+ * water impacts to chase or stand down, with idle digging SFX and a
+ * queued-message drain. */
 int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* player;

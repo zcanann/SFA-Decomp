@@ -39,10 +39,6 @@ typedef struct
     int a, b, c, d;
 } GuardianMsg;
 
-/* waterSpellStone1Fn_8019b4c8: cfguardian
- * brain - sixteen-state quest progression for the CloudRunner guardian, with
- * sandworm avoidance, path flights, landing physics, sequenced triggers and
- * idle chatter. */
 typedef struct CfGuardianMapData
 {
     ObjPlacement base;
@@ -54,12 +50,6 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-/* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
- * struct-field form flips MWCC's variable-index/walker addressing, banked).
- * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
- *   s32 target @0; s16 data @4; u8 unk6 @6 (zeroed on add); u8 pad @7.
- * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
- *   s32 message @0; s32 target @4; s32 data @8. */
 extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
 extern int Curve_AdvanceAlongPath(int p1);
@@ -128,9 +118,6 @@ extern f32 lbl_803E4154;
 extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
 extern f32 lbl_803E412C;
-
-int windlift_getExtraSize(void);
-void cfprisoncage_hitDetect(int* obj);
 
 int cfguardian_setScale(int* obj)
 {
@@ -324,7 +311,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* sel;
     GuardianMsg stk;
-    CfGuardianState * sub = ((GameObject*)obj)->extra;
+    CfGuardianState* sub = ((GameObject*)obj)->extra;
     stk = lbl_802C22D8;
     if (((GameObject*)obj)->seqIndex < 0)
     {
@@ -396,7 +383,6 @@ void cfguardian_hitDetect(int* obj)
 }
 
 #pragma dont_inline on
-
 int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
 {
     int* result = NULL;
@@ -432,15 +418,13 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
     }
     return result;
 }
-
 #pragma dont_inline reset
 
-/* fn_8019B1D8: steer the object toward the
- * target: scale its velocity along the normalized delta, blend the yaw by
- * speed over distance, move it and keep the chase move playing. Returns 1
- * when already within the closing threshold. */
+/* fn_8019B1D8: steer the object toward the target: scale its velocity
+ * along the normalized delta, blend the yaw by speed over distance,
+ * move it and keep the chase move playing. Returns 1 when already
+ * within the closing threshold. */
 #pragma dont_inline on
-
 int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
 {
     f32 dist;
@@ -483,10 +467,13 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
     return 0;
 }
-
 #pragma dont_inline reset
 
-/* BANKED at ~94.5: whole-fn saved-quad rotation (T: obj=r28 param-pool,
+/* waterSpellStone1Fn_8019b4c8: the guardian brain - sixteen-state
+ * quest progression with path flights, landing physics, sequenced
+ * triggers and idle chatter.
+ *
+ * BANKED at ~94.5: whole-fn saved-quad rotation (T: obj=r28 param-pool,
    def=r29, player=r30, sub=r31; ours reversed) - #108 cross-class
    interleave. Probe-battery discrimination (#115 method): a standalone
    TU with the real headers REPRODUCES our coloring; unprototyping every

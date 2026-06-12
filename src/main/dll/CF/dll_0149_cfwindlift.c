@@ -115,9 +115,6 @@ extern f32 lbl_803E41B8;
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E41BC;
 
-void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void cfguardian_free(int* obj, int p2);
-
 void windlift_hitDetect(void)
 {
 }
@@ -134,15 +131,11 @@ int windlift_getExtraSize(void) { return 0x178; }
 
 int windlift_getObjectTypeId(void) { return 0x0; }
 
-#pragma peephole off
-
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4190);
 }
-
-#pragma scheduling off
 
 void windlift_free(int* obj)
 {
@@ -154,9 +147,9 @@ void windlift_free(int* obj)
     ObjGroup_RemoveObject(obj, 73);
 }
 
-/* windlift_init: look up the lift's sequence
- * timings, scale its rise height from the def byte, arm it from the
- * gamebits and clear all 14 rider slots. */
+/* windlift_init: look up the lift's sequence timings, scale its rise
+ * height from the def byte, arm it from the gamebits and clear all 14
+ * rider slots. */
 void windlift_init(int* obj, u8* def)
 {
     int i;
@@ -219,12 +212,12 @@ void windlift_init(int* obj, u8* def)
     ObjGroup_AddObject(obj, 0x49);
 }
 
-/* fn_8019C784: per-rider wind lift physics -
- * track the rider while above the lift and in range, send the lift/drop
- * messages on state edges, and integrate the rise speed with ramp-up,
- * oscillation damping and player-mode handoff.
- * per-rider spring model: pull a rider toward the lift column and lift
- * it with the wind; slot->b10 carries the rider's phase bits. */
+/* fn_8019C784: per-rider wind lift physics - track the rider while
+ * above the lift and in range, send the lift/drop messages on state
+ * edges, and integrate the rise speed with ramp-up, oscillation damping
+ * and player-mode handoff. The spring model pulls a rider toward the
+ * lift column and lifts it with the wind; slot->b10 carries the rider's
+ * phase bits. */
 void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
 {
     char* player;
@@ -426,10 +419,9 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     }
 }
 
-/* windlift_update: fade the lift opacity
- * with its gamebit, spin up over the first second, then assign every nearby
- * group-0x16 object (and the player) to a rider slot and run the lift
- * physics on each. */
+/* windlift_update: fade the lift opacity with its gamebit, spin up
+ * over the first second, then assign every nearby group-0x16 object
+ * (and the player) to a rider slot and run the lift physics on each. */
 void windlift_update(int* obj)
 {
     u8* def;
