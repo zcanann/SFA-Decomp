@@ -475,19 +475,16 @@ main/dll/baddie/wispBaddie.c:
 	.text       start:0x801262CC end:0x80128120
 
 main/dll/baddie/baby_snowworm.c:
-	.text       start:0x80128120 end:0x8012EB7C
-
-main/dll/baddie/wall_crawler.c:
-	.text       start:0x8012EB7C end:0x8012FCEC
+	.text       start:0x80128120 end:0x8012FECC
 
 main/dll/baddie/dll_DB.c:
-	.text       start:0x8012FCEC end:0x80130888
-
-main/dll/baddie/dll_DA.c:
-	.text       start:0x80130888 end:0x80130CF0
+	.text       start:0x8012FECC end:0x80130124
 
 main/dll/baddie/TumbleweedBush.c:
-	.text       start:0x80130CF0 end:0x80132024
+	.text       start:0x80130124 end:0x80131540
+
+main/dll/baddie/dll_003E_dummy3e.c:
+	.text       start:0x80131540 end:0x80132024
 
 main/dll/baddie/Tumbleweed.c:
 	.text       start:0x80132024 end:0x8013939C
