@@ -16,11 +16,7 @@
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjLink_AttachChild();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -66,11 +62,8 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 #pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
-int ccqueen_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E45C8;
-extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 
 #pragma peephole reset
@@ -103,8 +96,6 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma scheduling reset
 
-extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int id);
 
 #pragma scheduling off
 #pragma peephole off
@@ -123,8 +114,6 @@ extern void Sfx_PlayFromObject(int obj, int id);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 #pragma scheduling off
 #pragma dont_inline on
@@ -168,15 +157,8 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
-extern undefined4 ObjHits_DisableObject();
-extern int ObjHits_PollPriorityHitWithCooldown();
-extern int ObjTrigger_IsSetById();
-extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8008112c();
-extern undefined4 dll_2E_func03();
-extern void dll_2E_func06(int* obj, void* state, int flags);
 
-extern f32 lbl_803E4660;
 extern f32 lbl_803E530C;
 extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
@@ -197,7 +179,6 @@ extern f32 lbl_803E5360;
  */
 #pragma scheduling off
 #pragma peephole off
-void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /*
  * --INFO--
@@ -290,61 +271,30 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 /* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
-int ccsharpclawpad_getExtraSize(void);
-int ccpedstal_getExtraSize(void);
-int cclevcontrol_getExtraSize(void);
 
 /* render-with-fn(lbl) (no visibility check). */
-extern f32 lbl_803E46CC;
-void cclevcontrol_render(void);
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern void envFxActFn_800887f8(int a);
-extern void Music_Trigger(int a, int b);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern f32 lbl_803E46C8;
 
 
 #pragma scheduling off
 #pragma peephole off
-void ccsharpclawpad_init(int* obj, int* def);
 
-void cclevcontrol_free(void);
 
-void cclightfoot_init(int* obj, int* def);
 
-int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
-void cclightfoot_free(int* obj, int p2);
-
-extern void fn_80088870(void* a, void* b, void* c, void* d);
-extern int getSaveGameLoadStatus(void);
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
-extern void getEnvfxAct(int obj, int target, int id, int p);
-extern int lbl_80323548[];
-extern f32 lbl_803E46D4;
-extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
-extern void ccpedstal_updateAltVariant(int obj, u8* state2);
-extern void fn_8002B6D8(void* obj, int p2, int p3, int p4, int p5, int p6);
-
-void ccpedstal_init(int* obj, u8* params);
-
-void cclevcontrol_init(int* obj);
 
 
-extern f32 lbl_803E4674;
-extern f32 lbl_803E4678;
-extern f32 lbl_803E467C;
+
+
+
 
 #pragma dont_inline on
 #pragma scheduling on
-void fn_801AA878(u8* p1, int* p2, f32 v);
 #pragma dont_inline reset
 
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void gameBitDecrement(int id);
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
@@ -353,10 +303,7 @@ extern void gameBitDecrement(int id);
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
 #pragma scheduling off
-void ccpedstal_updateGameBitGate(int obj, u8* state2);
 
-extern int ObjTrigger_IsSet(int obj);
-extern void gameBitIncrement(int id);
 
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
  * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
@@ -365,35 +312,15 @@ extern void gameBitIncrement(int id);
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-void ccpedstal_updateAltVariant(int obj, u8* state2);
 
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E4670;
 
-extern void dll_2E_func05(int* obj, u8* sub, int a, int b, int c);
-extern void dll_2E_func08(u8* sub, int a, int b);
-extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 
-typedef struct
-{
-    s16 v[3];
-} _S16x3;
 
-extern _S16x3 lbl_803E4650;
-extern _S16x3 lbl_803E4658;
 
-void ccqueen_init(int* obj, u8* init);
 
-extern f32 lbl_803E4664;
-extern f32 lbl_803E4668;
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern void characterDoEyeAnims(int obj, void* p);
 
-void ccqueen_update(int* obj);
 
-int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-void ccpedstal_update(int obj);
 
 extern void* fn_802972A8(void* obj);
 extern int mapGetDirIdx(int a);
@@ -471,67 +398,16 @@ void fn_801AC108(int obj, int param2)
 }
 
 extern f32 lbl_803E46A8;
-extern f32 lbl_803E46AC;
-extern f32 lbl_803E46B0;
-extern f32 lbl_803E46B4;
-extern f32 lbl_803E46B8;
-extern f32 lbl_803E46BC;
-extern f32 lbl_803E46C0;
-extern f32 lbl_803E46C4;
-extern u8 fn_801334E0(void);
-extern void showHelpText(int textId);
-extern int playerIsDisguised(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
 
-typedef struct SharpClawPadParticleArgs
-{
-    u8 pad00[0xc];
-    f32 offset[3];
-} SharpClawPadParticleArgs;
 
 #pragma peephole off
-void ccsharpclawpad_update(int obj);
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 
 
 
-extern f32 lbl_803E46D0;
-extern void gameTextShow(int textId);
-extern int* gSHthorntailAnimationInterface;
 
-void cclevcontrol_update(int obj);
 
-extern f32 lbl_803E4680;
-extern f32 lbl_803E4684;
-extern f32 lbl_803E4688;
-extern f32 lbl_803E468C;
-extern f32 lbl_803E4690;
-extern f32 lbl_803E4694;
-extern f32 lbl_803E4698;
-extern u8 lbl_80323408[];
-extern u8 lbl_803DDB38[8];
-extern int getAngle(f32 dx, f32 dz);
-extern f32 fn_8014C5D0(int obj);
-extern void fn_8014C66C(int obj, int target);
-extern void* fn_80296118(int p);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern int Obj_FreeObject(int o);
-extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-extern int ObjList_FindObjectById(int id);
-extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 
-typedef struct LightfootAnimTable
-{
-    u8 stateFlags[0x10];
-    u8 animIds[0x10];
-    f32 animSpeeds[15];
-} LightfootAnimTable;
 
-void cclightfoot_update(int obj);
