@@ -459,17 +459,14 @@ main/dll/dll_43.c:
 main/dll/dll_47.c:
 	.text       start:0x8011A0DC end:0x8011B5D4
 
-main/dll/dll_36.c:
-	.text       start:0x8011B5D4 end:0x8011B868
-
 main/dll/dll_48.c:
-	.text       start:0x8011B868 end:0x8011B868
+	.text       start:0x8011B5D4 end:0x8011B5D4
 
 main/dll/dll_49.c:
-	.text       start:0x8011B868 end:0x8011B868
+	.text       start:0x8011B5D4 end:0x8011B5D4
 
-main/dll/dll_4A.c:
-	.text       start:0x8011B868 end:0x8011BFC8
+main/dll/dll_0036_entersavenamescreen.c:
+	.text       start:0x8011B5D4 end:0x8011BFC8
 
 main/dll/dll_4B.c:
 	.text       start:0x8011BFC8 end:0x8011BFC8
