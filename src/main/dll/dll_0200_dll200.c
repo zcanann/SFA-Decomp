@@ -7,6 +7,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
@@ -48,8 +49,6 @@ extern uint FUN_80006c00();
 extern undefined4 FUN_8001771c();
 extern u32 randomGetRange(int min, int max);
 extern uint FUN_80017a98();
-extern undefined8 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjMsg_SendToObject();
 extern int FUN_800632f4();
 
@@ -88,12 +87,7 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     int iVar9;
     float fVar10;
     int iVar11;
-    undefined4 in_r7;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
     undefined2* puVar12;
-    undefined8 uVar13;
     int local_18[3];
 
     puVar12 = ((GameObject*)param_9)->extra;
@@ -163,14 +157,14 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     }
     else
     {
-        uVar13 = ObjHits_DisableObject(param_9);
+        ObjHits_DisableObject(param_9);
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
         uVar7 = FUN_80006c00(0);
         if ((uVar7 & 0x100) != 0)
         {
             *(u8*)(puVar12 + 3) = 0;
-            uVar13 = FUN_80006ba8(0, 0x100);
+            FUN_80006ba8(0, 0x100);
         }
         if (((GameObject*)param_9)->unkF8 == 1)
         {
@@ -183,8 +177,7 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
         }
         if (*(char*)(puVar12 + 3) != '\0')
         {
-            ObjMsg_SendToObject(uVar13, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar5, 0x100008,
-                                param_9,CONCAT22(puVar12[1], *puVar12), in_r7, in_r8, in_r9, in_r10);
+            ObjMsg_SendToObject(iVar5, 0x100008, param_9, CONCAT22(puVar12[1], *puVar12));
         }
     }
     return;

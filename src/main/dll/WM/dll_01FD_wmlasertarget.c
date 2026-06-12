@@ -8,6 +8,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/objhits.h"
 
 typedef struct WmLaserTargetPlacement
 {
@@ -34,8 +35,6 @@ typedef struct WmLaserTargetState
 } WmLaserTargetState;
 
 STATIC_ASSERT(sizeof(WmLaserTargetState) == 0x4);
-
-extern int ObjHits_GetPriorityHit();
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern void objRenderFn_8003b8f4(f32);
@@ -69,7 +68,7 @@ void wmlasertarget_update(int* obj)
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
-    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
+    if (ObjHits_GetPriorityHit((int)obj, 0, 0, 0) != 0)
     {
         sub->toggleQueued = 1;
         sub->cooldown = ((WmLaserTargetPlacement*)def)->cooldown;

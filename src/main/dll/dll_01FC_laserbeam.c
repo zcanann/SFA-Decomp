@@ -5,6 +5,7 @@
 #include "main/dll/dll200state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -490,8 +491,6 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
 {
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
     char cVar1;
     float fVar2;
     float fVar3;
@@ -503,12 +502,7 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     int iVar9;
     float fVar10;
     int iVar11;
-    undefined4 in_r7;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
     undefined2* puVar12;
-    undefined8 uVar13;
     int local_18[3];
 
     puVar12 = ((GameObject*)param_9)->extra;
@@ -578,14 +572,14 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     }
     else
     {
-        uVar13 = ObjHits_DisableObject(param_9);
+        ObjHits_DisableObject(param_9);
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
         uVar7 = FUN_80006c00(0);
         if ((uVar7 & 0x100) != 0)
         {
             *(u8*)(puVar12 + 3) = 0;
-            uVar13 = FUN_80006ba8(0, 0x100);
+            FUN_80006ba8(0, 0x100);
         }
         if (((GameObject*)param_9)->unkF8 == 1)
         {
@@ -598,8 +592,7 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
         }
         if (*(char*)(puVar12 + 3) != '\0')
         {
-            ObjMsg_SendToObject(uVar13, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar5, 0x100008,
-                                param_9,CONCAT22(puVar12[1], *puVar12), in_r7, in_r8, in_r9, in_r10);
+            ObjMsg_SendToObject(iVar5, 0x100008, param_9, CONCAT22(puVar12[1], *puVar12));
         }
     }
     return;
