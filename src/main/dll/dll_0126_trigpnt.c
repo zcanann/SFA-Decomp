@@ -65,9 +65,6 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017af0();
 extern int FUN_80017b00();
 extern int ObjGroup_FindNearestObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80040da0();
 extern undefined4 FUN_80041c10();
 extern undefined4 FUN_80042b9c();
@@ -1184,49 +1181,32 @@ void Trigger_init(u8* obj, u8* params)
 
 void cloudprisoncontrol_free(void);
 
-void cloudprisoncontrol_hitDetect(void);
 
-void cloudprisoncontrol_release(void);
 
 /* 8b "li r3, N; blr" returners. */
 int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
 int cloudprisoncontrol_getExtraSize(void);
-int cloudprisoncontrol_getObjectTypeId(void);
 
 /* Pattern wrappers. */
-extern s8 lbl_803DBE08;
-void cloudprisoncontrol_initialise(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4108;
-extern void objRenderFn_8003b8f4(f32);
 
-void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* call(x, N) wrappers. */
-void cloudprisoncontrol_init(int x);
 
-int cfguardian_setScale(int* obj);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
-extern s8 lbl_803DDB08;
-extern s8 lbl_803DDB09;
-extern int lbl_803DDB0C;
 /* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
  * struct-field form flips MWCC's variable-index/walker addressing, banked).
  * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
  *   s32 target @0; s16 data @4; u8 unk6 @6 (zeroed on add); u8 pad @7.
  * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
  *   s32 message @0; s32 target @4; s32 data @8. */
-extern int lbl_803AC7D8[];
-extern int lbl_803AC878[];
 
-void cloudprisoncontrol_update(int obj);
 
-extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 
 
 

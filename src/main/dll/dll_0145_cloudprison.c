@@ -7,46 +7,10 @@
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 
-typedef struct TriggerPlacement
-{
-    u8 pad0[0x38 - 0x0];
-    s16 unk38;
-    u8 pad3A[0x46 - 0x3A];
-    u16 unk46;
-} TriggerPlacement;
 
 
-typedef struct ObjInterpretSeqPlacement
-{
-    u8 pad0[0x2 - 0x0];
-    s8 unk2;
-    u8 pad3[0x4 - 0x3];
-    s16 unk4;
-    u8 unk6;
-    u8 pad7[0x8 - 0x7];
-} ObjInterpretSeqPlacement;
 
 
-typedef struct TriggerState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u32 unk8;
-    u8 padC[0x1C - 0xC];
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    u8 pad34[0x80 - 0x34];
-    s16 unk80;
-    s16 unk82;
-    s16 unk84;
-    s16 unk86;
-    s16 unk88;
-    u8 pad8A[0xAC - 0x8A];
-} TriggerState;
 
 
 extern undefined4 getLActions();
@@ -1088,26 +1052,12 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
 #pragma peephole off
 void Trigger_render(void);
 
-void Trigger_update(void);
 
-void Trigger_release(void);
 
-void Trigger_initialise(void);
 
-extern void Sfx_StopFromObject(void* obj, int sfxId);
-extern void objSetSlot(void* obj, int slot);
-extern int GameBit_Get(int eventId);
-extern f32 lbl_803E40F8;
 
-void Trigger_free(void* obj);
 
-typedef struct
-{
-    u8 bit7 : 1;
-    u8 lo : 7;
-} TriggerFlags8A;
 
-void Trigger_init(u8* obj, u8* params);
 
 void cloudprisoncontrol_free(void)
 {
@@ -1123,7 +1073,6 @@ void cloudprisoncontrol_release(void)
 
 /* 8b "li r3, N; blr" returners. */
 int Trigger_getExtraSize(void);
-int Trigger_getObjectTypeId(void);
 int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
 int cloudprisoncontrol_getObjectTypeId(void) { return 0x0; }
 
@@ -1146,7 +1095,6 @@ void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
 int cfguardian_setScale(int* obj);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
 extern s8 lbl_803DDB08;
@@ -1252,58 +1200,7 @@ extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 
 
 
-extern CloudActionInterface** gCloudActionInterface;
-extern int* gPlayerShadowInterface;
-extern void OSReport(const char* fmt, ...);
-extern int Obj_GetPlayerObject(void);
-extern void fn_80295918(f32 a, int obj, int b);
-extern void setDrawCloudsAndLights(int v);
-extern void gameFlagFn_8005ce6c(int v);
-extern void setDrawLights(int v);
-extern void fn_8006FC00(int v);
-extern void skyFn_80088c94(int a, int b);
-extern void gameFlagFn_8005cd24(int v);
-extern void timeOfDayFn_80055000(void);
-extern void timeOfDayFn_80055038(void);
-extern int getSkyStructField24C(void);
-extern void skyFn_80088e54(f32 a, int b);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
-extern int ObjList_GetObjects(int* first, int* count);
-extern int getTablesBinEntry(int idx);
-extern int getLoadedTexture(int idx);
-extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
-extern void textureFree(int tex);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void GameBit_Set(int bit, int val);
-extern int getCurMapLayer(void);
-extern int getTrickyObject(void);
-extern void mapLoadDataFiles(int map);
-extern void loadModelAndAnimTabs(void);
-extern void mapUnload(int map, int flags);
-extern void lockLevel(int a, int b);
-extern void unlockLevel(int a, int b, int c);
-extern void gameTextFn_80125ba4(int id);
-extern int getArwing(void);
-extern void defragMemory(int v);
-extern void timer_addDuration(int timer, int dur);
-extern void envFxFn_800887cc(void);
-extern void goToNextMapLayer(void);
-extern void goToPrevMapLayer(void);
-extern f32 lbl_803E40D8;
-extern f32 lbl_803E40FC;
-extern f32 lbl_803E4100;
 
-void objInterpretSeq(int obj, int p2, int p3, int p4);
 
-extern int fn_802972A8(void);
-extern int return1_800202BC(void);
-extern int fn_80198B68(int obj, int p2);
-extern void objSeqFn_801992ec(int obj, int target);
-extern void fn_80198DE8(int obj, int target);
-extern void fn_80198A00(int obj, int target);
-extern void objSeqMoveFn_80199188(int obj, int target);
-extern f32 lbl_803E4104;
-extern u8 framesThisStep;
 
-void Trigger_hitDetect(int obj);
