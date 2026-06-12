@@ -89,54 +89,7 @@ extern void setAButtonIcon(int iconId);
  */
 
 #pragma dont_inline on
-void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
-{
-    AreaFxEmitState* state;
-    s16 i;
-    struct
-    {
-        s16 hw[6];
-        f32 vec[3];
-    } args;
-
-    state = obj->state;
-    if (count > 0)
-    {
-        for (i = 0; i < count; i++)
-        {
-            {
-                u16 sx = state->extentX;
-                args.vec[0] = (f32)(s32)
-                randomGetRange(-sx, sx);
-            }
-            {
-                u16 sy = state->extentY;
-                args.vec[1] = (f32)(s32)
-                randomGetRange(-sy, sy);
-            }
-            {
-                u16 sz = state->extentZ;
-                args.vec[2] = (f32)(s32)
-                randomGetRange(-sz, sz);
-            }
-            vecRotateZXY(state->emitAngles, args.vec);
-            {
-                u8 type = state->emitType;
-                if (type == 4 || type == 6)
-                {
-                    args.vec[0] += obj->objAnim.localPosX;
-                    args.vec[1] += obj->objAnim.localPosY;
-                    args.vec[2] += obj->objAnim.localPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
-                }
-                else
-                {
-                    (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
-                }
-            }
-        }
-    }
-}
+void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
 #pragma dont_inline reset
 
 /*
@@ -740,401 +693,27 @@ typedef struct CFEmitterFxArgs
         (args)->pos[2] += (obj)->objAnim.localPosZ;               \
     } while (0)
 
-void areafxemit_emitEffect(AreaFxEmitObject* obj)
-{
-    AreaFxEmitState* state;
-    s16 i;
-    s16 rot[3];
-    u8 type;
-    void* resource;
-    CFEmitterFxArgs args;
+void areafxemit_emitEffect(AreaFxEmitObject* obj);
 
-    state = obj->state;
-    args.scale = lbl_803E3E68;
-    type = state->emitType;
+int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-    if (type == 0)
-    {
-        if (state->emitCount > 0)
-        {
-            for (i = 0; i < state->emitCount; i++)
-            {
-                CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-                CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
-                CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
-            }
-        }
-        else
-        {
-            CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-            CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
-            CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-            CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
-        }
-    }
-    else if (type == 1)
-    {
-        resource = Resource_Acquire((u16)(state->effectId + 0x58), 1);
-        if (state->emitCount > 0)
-        {
-            for (i = 0; i < state->emitCount; i++)
-            {
-                (*(void (**)(AreaFxEmitObject*, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
-            }
-        }
-        else
-        {
-            (*(void (**)(AreaFxEmitObject*, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
-        }
-        Resource_Release(resource);
-    }
-    else if (type == 2)
-    {
-        resource = Resource_Acquire((u16)(state->effectId + 0xab), 1);
-        if (state->emitCount > 0)
-        {
-            for (i = 0; i < state->emitCount; i++)
-            {
-                (*(void (**)(AreaFxEmitObject*, int, int, int, int, int, int))(*(int*)resource + 4))(
-                    obj, 0, 0, 1, -1, state->effectId & 0xff, 0);
-            }
-        }
-        else
-        {
-            (*(void (**)(AreaFxEmitObject*, int, int, int, int, int, int))(*(int*)resource + 4))(
-                obj, 0, 0, 1, -1, state->effectId & 0xff, 0);
-        }
-        Resource_Release(resource);
-    }
-    else if (type == 3)
-    {
-        if (state->emitCount > 0)
-        {
-            for (i = 0; i < state->emitCount; i++)
-            {
-                CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-                CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
-            }
-        }
-        else
-        {
-            CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-            CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
-            CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
-        }
-    }
-    else if (type >= 6)
-    {
-        if (state->emitCount > 0)
-        {
-            for (i = 0; i < state->emitCount; i++)
-            {
-                CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-                vecRotateZXY(state->emitAngles, args.pos);
-                if (state->emitType == 6)
-                {
-                    CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-                    CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
-                }
-                else
-                {
-                    CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
-                }
-            }
-        }
-        else
-        {
-            CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-            vecRotateZXY(state->emitAngles, args.pos);
-            if (state->emitType == 6)
-            {
-                CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
-            }
-            else
-            {
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
-            }
-        }
-    }
-}
+void areafxemit_update(AreaFxEmitObject* obj);
 
-int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    u8 i;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch ((s32)animUpdate->eventIds[i])
-        {
-        case 1:
-            areafxemit_emitEffect(obj);
-            break;
-        }
-    }
-    return 0;
-}
+void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup);
 
-void areafxemit_update(AreaFxEmitObject* obj)
-{
-    AreaFxEmitState* state;
-    ObjAnimComponent* player;
-    f32 xDelta;
-    f32 yDelta;
-    f32 zDelta;
-    f32 yy;
-    f32 distance;
-    f32 radius;
+void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup);
 
-    state = obj->state;
-    player = (ObjAnimComponent*)Obj_GetPlayerObject();
-    if ((player != NULL) &&
-        ((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0)))
-    {
-        switch (state->suppressed)
-        {
-        case 0:
-            if (GameBit_Get(state->stopBit) != 0)
-            {
-                state->suppressed = 1;
-            }
-            if ((state->emitCount >= 0) ||
-                ((state->emitCount < 0) && (obj->emitCooldown <= 0)))
-            {
-                xDelta = obj->objAnim.worldPosX - player->worldPosX;
-                yDelta = obj->objAnim.worldPosY - player->worldPosY;
-                zDelta = obj->objAnim.worldPosZ - player->worldPosZ;
-                if (state->emitCount == 0)
-                {
-                    state->suppressed = 1;
-                }
-                yy = yDelta * yDelta;
-                distance = sqrtf(yy + xDelta * xDelta + zDelta * zDelta);
-                radius = state->triggerRadius;
-                if (distance <= radius || lbl_803E3E6C == radius)
-                {
-                    if ((state->emitType >= 4) &&
-                        ((state->lastDistance > radius && (lbl_803E3E6C != radius))))
-                    {
-                        areafxemit_emitBurst(obj, AREAFXEMIT_APPROACH_BURST_COUNT);
-                    }
-                    areafxemit_emitEffect(obj);
-                }
-                obj->emitCooldown = -state->emitCount;
-                state->lastDistance = distance;
-            }
-            else if ((state->emitCount < 0) && (0 < obj->emitCooldown))
-            {
-                obj->emitCooldown = obj->emitCooldown - (u32)framesThisStep;
-            }
-            break;
-        }
-    }
-}
+int lfxemitter_setScale(void);
 
-void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
-{
-    AreaFxEmitState* state;
-    s16 angle;
+void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-    obj->seqCallback = areafxemit_SeqFn;
-    state = obj->state;
+void lfxemitter_initialise(void);
 
-    state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
-    state->emitType = setup->emitType;
-    state->effectId = setup->effectId;
-    state->emitCount = setup->emitCount;
-    state->enableBit = setup->enableBit;
-    state->stopBit = setup->stopBit;
-    state->suppressed = 0;
-    state->extentX = (u16)(setup->extentX << 2);
-    state->extentZ = (u16)(setup->extentZ << 2);
-    state->extentY = (u16)(setup->extentY << 2);
+int lfxemitter_func0B(LfxEmitterObject* obj);
 
-    angle = (s16)(setup->initialRoll << 8);
-    state->emitAngles[2] = angle;
-    obj->objAnim.rotZ = angle;
-    angle = (s16)(setup->initialPitch << 8);
-    state->emitAngles[1] = angle;
-    obj->objAnim.rotY = angle;
-    angle = (s16)(setup->initialYaw << 8);
-    state->emitAngles[0] = angle;
-    obj->objAnim.rotX = angle;
-    obj->objAnim.rootMotionScale = lbl_803E3E70;
+void fn_8018FF48(undefined2* src, undefined2* dst);
 
-    if (state->emitCount < 1)
-    {
-        obj->emitCooldown = state->emitCount;
-    }
-    else
-    {
-        obj->emitCooldown = 0;
-    }
-
-    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
-    {
-        state->suppressed = 1;
-    }
-}
-
-void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
-{
-    LfxEmitterState* state;
-    int curveFlags;
-
-    state = obj->state;
-    curveFlags = 0x21;
-    obj->objAnim.rootMotionScale = lbl_803E3E80 * obj->objAnim.modelInstance->rootMotionScaleBase;
-
-    state->configIndex = setup->configIndex;
-    state->lifeTimer = setup->lifeTimer;
-    state->unk114 = -2;
-    state->enableBit = setup->enableBit;
-    state->spinRoll = setup->spinRoll;
-    state->spinPitch = setup->spinPitch;
-    state->spinYaw = setup->spinYaw;
-    obj->objAnim.localPosX = setup->initialX;
-    obj->objAnim.localPosY = setup->initialY;
-    obj->objAnim.localPosZ = setup->initialZ;
-
-    if (state->lifeTimer != 0)
-    {
-        state->hasLifeTimer = 1;
-    }
-    else
-    {
-        state->hasLifeTimer = 0;
-    }
-
-    if (setup->followCurve != 0)
-    {
-        state->flags = state->flags | LFXEMITTER_FLAG_FOLLOW_CURVE;
-        state->curveSpeed = (f32)setup->curveSpeed / lbl_803E3E84;
-        (*gRomCurveInterface)->initCurve(state, obj, lbl_803E3E88, &curveFlags, -1);
-    }
-    ObjGroup_AddObject((int)obj, LFXEMITTER_OBJ_GROUP);
-}
-
-int lfxemitter_setScale(void) { return -1; }
-
-void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-
-void lfxemitter_initialise(void)
-{
-    *(s16*)(lbl_803AC7B0 + 14) = 10000;
-}
-
-int lfxemitter_func0B(LfxEmitterObject* obj)
-{
-    LfxEmitterState* state = obj->state;
-    int v = (int)state->config;
-    return (u32)(-v | v) >> 31;
-}
-
-void fn_8018FF48(undefined2* src, undefined2* dst)
-{
-    *dst = *src;
-    dst[1] = src[1];
-    ((s16*)dst)[2] = ((s16*)src)[2];
-    ((s16*)dst)[3] = ((s16*)src)[3];
-    ((s16*)dst)[4] = ((s16*)src)[4];
-    ((s16*)dst)[5] = ((s16*)src)[5];
-    ((s16*)dst)[6] = ((s16*)src)[6];
-    dst[7] = src[7];
-    *(u8*)(dst + 9) = *(u8*)(src + 9);
-    *(u8*)((int)dst + 0x13) = *(u8*)((int)src + 0x13);
-    *(u8*)((int)dst + 0x1b) = *(u8*)((int)src + 0x1b);
-    *(u8*)(dst + 0xe) = *(u8*)(src + 0xe);
-    *(u8*)((int)dst + 0x1d) = *(u8*)((int)src + 0x1d);
-    *(u8*)(dst + 0xf) = *(u8*)(src + 0xf);
-    *(u8*)((int)dst + 0x1f) = *(u8*)((int)src + 0x1f);
-    *(u8*)(dst + 0x10) = *(u8*)(src + 0x10);
-    *(u8*)((int)dst + 0x21) = *(u8*)((int)src + 0x21);
-    *(u8*)(dst + 0x11) = *(u8*)(src + 0x11);
-    *(u8*)((int)dst + 0x15) = *(u8*)((int)src + 0x15);
-    *(u8*)((int)dst + 0x23) = *(u8*)((int)src + 0x23);
-    *(u8*)(dst + 0xb) = *(u8*)(src + 0xb);
-    *(u8*)(dst + 0x12) = *(u8*)(src + 0x12);
-    *(u8*)((int)dst + 0x17) = *(u8*)((int)src + 0x17);
-    *(u8*)((int)dst + 0x25) = *(u8*)((int)src + 0x25);
-    *(u8*)(dst + 0xc) = *(u8*)(src + 0xc);
-    *(u8*)(dst + 0x13) = *(u8*)(src + 0x13);
-    *(u8*)((int)dst + 0x19) = *(u8*)((int)src + 0x19);
-    *(u8*)((int)dst + 0x27) = *(u8*)((int)src + 0x27);
-    *(u8*)(dst + 0xd) = *(u8*)(src + 0xd);
-    *(u8*)(dst + 0x14) = *(u8*)(src + 0x14);
-}
-
-void lfxemitter_update(LfxEmitterObject* obj)
-{
-    LfxEmitterState* state;
-    ObjAnimComponent* player;
-
-    state = obj->state;
-    player = (ObjAnimComponent*)Obj_GetPlayerObject();
-
-    obj->objAnim.rotX += state->spinYaw;
-    obj->objAnim.rotZ += state->spinRoll;
-    obj->objAnim.rotY += state->spinPitch;
-
-    if ((state->flags & LFXEMITTER_FLAG_FOLLOW_CURVE) != 0)
-    {
-        if ((Curve_AdvanceAlongPath((int)state, state->curveSpeed) != 0) ||
-            (state->curveIdx != 0))
-        {
-            (*gRomCurveInterface)->goNextPoint(state);
-        }
-        obj->objAnim.localPosX = state->curveSample[0];
-        obj->objAnim.localPosY = state->curveSample[1];
-        obj->objAnim.localPosZ = state->curveSample[2];
-    }
-    else
-    {
-        obj->objAnim.localPosX = obj->objAnim.velocityX * timeDelta + obj->objAnim.localPosX;
-        obj->objAnim.localPosY = obj->objAnim.velocityY * timeDelta + obj->objAnim.localPosY;
-        obj->objAnim.localPosZ = obj->objAnim.velocityZ * timeDelta + obj->objAnim.localPosZ;
-        if (((state->flags & LFXEMITTER_FLAG_DAMP_Y_VELOCITY) != 0) && (obj->objAnim.velocityY > lbl_803E3E78))
-        {
-            obj->objAnim.velocityY = lbl_803E3E7C * timeDelta + obj->objAnim.velocityY;
-        }
-    }
-
-    if ((player != NULL) &&
-        ((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0)))
-    {
-        if (state->hasLifeTimer != 0)
-        {
-            state->lifeTimer -= framesThisStep;
-            if (state->lifeTimer <= 0)
-            {
-                Obj_FreeObject((int)obj);
-                return;
-            }
-        }
-        if (state->configLoaded == 0)
-        {
-            if ((state != NULL) && (state->configIndex == (*(u16*)(lbl_803AC7B0 + 0xe) - 1)))
-            {
-                state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
-                if (state->config != NULL)
-                {
-                    fn_8018FF48((undefined2*)lbl_803AC7B0, (undefined2*)state->config);
-                }
-            }
-            else
-            {
-                state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
-                getTabEntry(state->config, 0xc, state->configIndex * LFXEMITTER_CONFIG_BYTES, LFXEMITTER_CONFIG_BYTES);
-                if (state->config != NULL)
-                {
-                    fn_8018FF48((undefined2*)state->config, (undefined2*)lbl_803AC7B0);
-                }
-            }
-            state->configLoaded = 1;
-        }
-    }
-}
+void lfxemitter_update(LfxEmitterObject* obj);
 
 void warpPadPlayerStandingOn(int obj)
 {
@@ -1224,21 +803,9 @@ updateTimer:
     }
 }
 
-void areafxemit_free(AreaFxEmitObject* obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
+void areafxemit_free(AreaFxEmitObject* obj);
 
-void lfxemitter_free(LfxEmitterObject* obj)
-{
-    LfxEmitterState* state = obj->state;
-    int* ptr = (int*)state->config;
-    if (ptr != NULL)
-    {
-        mm_free(ptr);
-    }
-    ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
-}
+void lfxemitter_free(LfxEmitterObject* obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1246,32 +813,20 @@ void fxemit_release(void);
 
 void fxemit_initialise(void);
 
-void areafxemit_hitDetect(void)
-{
-}
+void areafxemit_hitDetect(void);
 
-void areafxemit_release(void)
-{
-}
+void areafxemit_release(void);
 
-void areafxemit_initialise(void)
-{
-}
+void areafxemit_initialise(void);
 
-void lfxemitter_render(void)
-{
-}
+void lfxemitter_render(void);
 
-void lfxemitter_hitDetect(void)
-{
-}
+void lfxemitter_hitDetect(void);
 
-void lfxemitter_release(void)
-{
-}
+void lfxemitter_release(void);
 
 /* 8b "li r3, N; blr" returners. */
-int areafxemit_getExtraSize(void) { return 0x20; }
-int areafxemit_getObjectTypeId(void) { return 0x0; }
-int lfxemitter_getExtraSize(void) { return 0x124; }
-int lfxemitter_getObjectTypeId(void) { return 0x0; }
+int areafxemit_getExtraSize(void);
+int areafxemit_getObjectTypeId(void);
+int lfxemitter_getExtraSize(void);
+int lfxemitter_getObjectTypeId(void);

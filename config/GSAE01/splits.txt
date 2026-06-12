@@ -732,8 +732,14 @@ main/dll/CF/dll_012A_cfcrate.c:
 main/dll/CF/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
 
-main/dll/CF/CFchuckobj.c:
-	.text       start:0x8018F148 end:0x80190BD4
+main/dll/CF/dll_0130_areafxemit.c:
+	.text       start:0x8018F148 end:0x8018FF28
+
+main/dll/CF/dll_012D_lfxemitter.c:
+	.text       start:0x8018FF28 end:0x8019042C
+
+main/dll/CF/dll_8019042C.c:
+	.text       start:0x8019042C end:0x80190BD4
 
 main/dll/CF/dll_012C_transporter.c:
 	.text       start:0x80190BD4 end:0x80191A70
