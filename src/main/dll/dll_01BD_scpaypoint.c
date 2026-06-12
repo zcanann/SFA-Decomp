@@ -6,23 +6,10 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-extern undefined4 Sfx_SetObjectSfxVolume();
-extern undefined4 Sfx_PlayFromObject();
-extern undefined4 Sfx_KeepAliveLoopedObjectSound();
-extern uint randomGetRange();
-extern int ObjList_GetObjects();
-extern undefined4 setAButtonIcon();
 extern u8* Obj_GetPlayerObject(void);
 
 
-#define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
-#define PLATFORM1_PEER_SEQ_ID 0x282
-#define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
-#define PLATFORM1_IDLE_PULL_MOVE_ID 0
 
-#define PLATFORM1_LOOP_SFX_ID 0x3af
-#define PLATFORM1_PLAYER_SFX_ID 0x13a
-#define PLATFORM1_PLATFORM_SFX_ID 0x4a3
 
 /*
  * --INFO--
@@ -37,51 +24,19 @@ extern u8* Obj_GetPlayerObject(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u32 getButtonsJustPressedIfNotBusy(int pad);
-extern int isGameTimerDisabled(void);
-extern f64 fn_8001461C(void);
-extern void fn_801DE320(void* dst, int val);
-extern int ObjSeq_takeXrotChanged(int index);
-extern void hudFn_8011f38c(int n);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern int lbl_803DDC10;
-extern int lbl_803DC070;
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern f32 lbl_803E5668;
-extern f32 lbl_803E566C;
-extern f32 lbl_803E5670;
-extern f32 lbl_803E5674;
-extern f32 lbl_803E5678;
-extern f32 lbl_803E567C;
-extern f32 lbl_803E5680;
-extern f32 lbl_803E5684;
-extern f32 lbl_803E5688;
-extern f32 lbl_803E568C;
-extern f32 lbl_803E5690;
-extern f32 lbl_803E5694;
-extern f32 lbl_803E5698;
-extern f32 lbl_803E569C;
-extern f32 lbl_803E56A0;
-extern f32 lbl_803E56A4;
 
 /* EN v1.0 0x801DE430  size: 2596b  platform1_control: tug-of-war rope
  * minigame. Resolves the anchor object, applies sequence events, then per
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
-int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void sc_totemstrength_free(void);
 
-void sc_totemstrength_hitDetect(void);
 
-void sc_totemstrength_release(void);
 
-void sc_totemstrength_initialise(void);
 
 void paymentkiosk_free(void)
 {
@@ -93,13 +48,11 @@ void paymentkiosk_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int sc_totemstrength_getExtraSize(void);
-int sc_totemstrength_getObjectTypeId(void);
 int paymentkiosk_getExtraSize(void) { return 0x3; }
 int paymentkiosk_getObjectTypeId(void) { return 0x1; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
-void sc_totemstrength_render(void);
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void sc_totemstrength_init(int* obj);
@@ -122,7 +75,6 @@ extern KioskTextPair lbl_80327AF0[];
 
 /* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
-void sc_totemstrength_update(u8* obj);
 
 /* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
 u32 PaymentKiosk_testEvent(int obj, int p2, int ev)

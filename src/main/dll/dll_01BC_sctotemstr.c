@@ -389,13 +389,11 @@ void sc_totemstrength_initialise(void)
 
 void paymentkiosk_free(void);
 
-void paymentkiosk_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
 int paymentkiosk_getExtraSize(void);
-int paymentkiosk_getObjectTypeId(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
@@ -418,20 +416,8 @@ void sc_totemstrength_init(int* obj)
 }
 
 extern u32 GameBit_Get(int eventId);
-extern u32 getButtonsJustPressed(int pad);
-extern int playerGetMoney(int player);
-extern void playerAddMoney(int player, int amount);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
-extern void objRenderFn_80041018(int obj);
 
-typedef struct KioskTextPair
-{
-    int approachText;
-    int poorText;
-} KioskTextPair;
 
-extern KioskTextPair lbl_80327AF0[];
 
 /* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
@@ -518,10 +504,8 @@ void sc_totemstrength_update(u8* obj)
 u32 PaymentKiosk_testEvent(int obj, int p2, int ev);
 
 /* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
-int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
-void paymentkiosk_update(int obj);
 
 /* === moved from main/dll/DB/DBrockfall.c [801DF43C-801DF4AC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/paymentkiosk.h"
@@ -533,7 +517,6 @@ void paymentkiosk_update(int obj);
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
 
 
@@ -550,7 +533,6 @@ extern uint GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void paymentkiosk_init(int obj, PaymentKioskMapData* initData);
 
 typedef struct FEseqobjectEffectParams
 {
@@ -627,9 +609,6 @@ static int FEseqobject_findControlObject(void);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void paymentkiosk_release(void);
-
-void paymentkiosk_initialise(void);
 
 
 
@@ -640,7 +619,7 @@ void paymentkiosk_initialise(void);
 
 
 
-void dll_144_free(void);
+
 
 
 
