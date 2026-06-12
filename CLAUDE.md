@@ -2291,6 +2291,28 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       divergence lives in compiler-internal IR state the TU content does
       not determine (the #108 fn-global-state phenomenon, FP edition).
       Bank on sight once the probe confirms invariance; do not re-spell.
+    - ⚠️ RETAIL-ANOMALY CENSUS (the conclusive instrument for this class,
+      CF research program): for cfprisonguard_render's banked digit, a
+      corpus census of the exact 1-use [stfs fX,K(rN); lfs fY,K(rN);
+      lfs const; fcmpo; no further fY use] shape found TARGET emits f1
+      at 311 of 312 sites game-wide - the prisonguard site is the SINGLE
+      f2 in the entire retail binary (its 5 census hits are one site
+      under 5 historical split names), and our toolchain emits f1 at
+      147/147 sites. A construct that no source spelling, pragma, or
+      compiler version reproduces AND that the retail compiler itself
+      emitted exactly once in the whole game is best explained as a
+      non-deterministic retail-compile anomaly (host-state-dependent
+      allocation, cf. the known IDO uninitialized-memory class), i.e.
+      likely permanently unmatchable under deterministic re-compilation.
+      METHOD (reusable): when a banked residual survives exhaustive
+      enumeration, census the shape across build/GSAE01/obj - if target
+      itself is near-unanimous AGAINST its own choice at the banked
+      site, reclassify the residual as retail-anomaly and stop spending
+      on it. Census script pattern in the CF-campaign commits.
+      The same census also explains why the in-repo oracle (lightning)
+      shows f2 legitimately: there the reload web is 2-USE (the arm's
+      compound += CSE-reuses the compare load - fadds f0,f2,f0), a
+      different, fully reproducible shape.
 
 83. **Fresh-slot paradox CRACKED (task #151) — MWCC's conversion-temp pool
     is flushed by STATEMENT-level control-flow joins, NOT by ternary
