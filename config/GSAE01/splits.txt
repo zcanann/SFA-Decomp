@@ -1698,8 +1698,14 @@ main/dll/dll_01E4_magicmaker.c:
 main/dll/dll_01E6_dimbosscrac.c:
 	.text       start:0x801C02B8 end:0x801C04B8
 
-main/dll/DFcradle.c:
-	.text       start:0x801C04B8 end:0x801C0E60
+main/dll/dll_01E7_dimbossfire.c:
+	.text       start:0x801C04B8 end:0x801C0A60
+
+main/dll/dll_0174_ccriverflow.c:
+	.text       start:0x801C0A60 end:0x801C0BF8
+
+main/dll/dll_801C0BF8.c:
+	.text       start:0x801C0BF8 end:0x801C0E60
 
 main/dll/DFpulley.c:
 	.text       start:0x801C0E60 end:0x801C0FD8

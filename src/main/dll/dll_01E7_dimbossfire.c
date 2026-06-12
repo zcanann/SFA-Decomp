@@ -533,10 +533,7 @@ void dimbossfire_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ccriverflow_getExtraSize(void)
-{
-    return 1;
-}
+int ccriverflow_getExtraSize(void);
 
 /*
  * --INFO--
@@ -551,14 +548,7 @@ int ccriverflow_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_free(CCriverflowObject* obj)
-{
-    if (obj->state->active != 0)
-    {
-        ObjGroup_RemoveObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
-    }
-    return;
-}
+void ccriverflow_free(CCriverflowObject* obj);
 
 /*
  * --INFO--
@@ -573,9 +563,7 @@ void ccriverflow_free(CCriverflowObject* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_render(void)
-{
-}
+void ccriverflow_render(void);
 
 /*
  * --INFO--
@@ -590,33 +578,7 @@ void ccriverflow_render(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_update(CCriverflowObject* obj)
-{
-    uint isGameBitSet;
-    CCriverflowMapData* mapData;
-    CCriverflowState* state;
-
-    mapData = obj->mapData;
-    if (mapData->gameBit != -1)
-    {
-        state = obj->state;
-        isGameBitSet = GameBit_Get((int)mapData->gameBit);
-        if (isGameBitSet != 0)
-        {
-            if (state->active != 0)
-            {
-                state->active = 0;
-                ObjGroup_RemoveObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
-            }
-        }
-        else if (state->active == 0)
-        {
-            state->active = 1;
-            ObjGroup_AddObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
-        }
-    }
-    return;
-}
+void ccriverflow_update(CCriverflowObject* obj);
 
 /*
  * --INFO--
@@ -631,27 +593,7 @@ void ccriverflow_update(CCriverflowObject* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
-{
-    if (params->gameBit == -1)
-    {
-        ObjGroup_AddObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
-        obj->state->active = 1;
-    }
-    obj->angle = (u16)params->angleByte << 8;
-    obj->height = obj->model->baseHeight;
-    obj->height = (f32)(u32)
-    params->heightOffset * lbl_803E4DD0 + obj->height;
-    if (obj->height < lbl_803E4DD4)
-    {
-        obj->height = *(f32*)&lbl_803E4DD4;
-    }
-    if (params->speedByte == 0)
-    {
-        params->speedByte = CCRIVERFLOW_DEFAULT_SPEED;
-    }
-    return;
-}
+void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params);
 
 /*
  * --INFO--
@@ -666,54 +608,4 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out)
-{
-    int startX;
-    int startY;
-    int startZ;
-    int endX;
-    int endY;
-    int endZ;
-    int i;
-    short* vertex;
-    float angleRadians;
-    double vertexX;
-
-    startX = (int)(lbl_803E4DE0 * startNode[0]);
-    startY = (int)(lbl_803E4DE0 * startNode[1]);
-    startZ = (int)(lbl_803E4DE0 * startNode[2]);
-    endX = (int)(lbl_803E4DE0 * endNode[0]);
-    endY = (int)(lbl_803E4DE0 * endNode[1]);
-    endZ = (int)(lbl_803E4DE0 * endNode[2]);
-    memcpy(out, templateData, 0x60);
-
-    angleRadians = (lbl_803E4DE4 * (float)(short)angle) / lbl_803E4DE8;
-    vertex = out;
-    for (i = 0; i < 6; i++)
-    {
-        vertexX = (float)(int)*vertex;
-        *vertex = (short)(int)(vertexX * mathCosf(angleRadians));
-        vertex[2] = (short)(int)(-vertexX * mathSinf(angleRadians));
-        vertex += 8;
-    }
-
-    out[0] += startX;
-    out[1] += startY;
-    out[2] += startZ;
-    out[0x18] += endX;
-    out[0x19] += endY;
-    out[0x1a] += endZ;
-    out[8] += startX;
-    out[9] += startY;
-    out[10] += startZ;
-    out[0x20] += endX;
-    out[0x21] += endY;
-    out[0x22] += endZ;
-    out[0x10] += startX;
-    out[0x11] += startY;
-    out[0x12] += startZ;
-    out[0x28] += endX;
-    out[0x29] += endY;
-    out[0x2a] += endZ;
-    return;
-}
+void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out);
