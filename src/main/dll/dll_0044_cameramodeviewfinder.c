@@ -11,30 +11,16 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 
-typedef struct CameraModeStaticPlacement
-{
-    u8 pad0[0x1C - 0x0];
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} CameraModeStaticPlacement;
 
 
-extern u32 getButtonsHeld(int port);
-extern char padGetCX(int port);
 extern char padGetCY(int port);
 extern uint getAngle();
 extern int ObjHits_GetPriorityHit();
-extern void* ObjGroup_GetObjects();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-extern u8 framesThisStep;
 extern ViewfinderState* lbl_803DD548;
-extern CameraModeDebugState* lbl_803DD550;
-extern CameraModeStaticState* lbl_803DD558;
 extern f32 timeDelta;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
@@ -62,19 +48,6 @@ extern f32 lbl_803E1824;
 extern f32 lbl_803E1828;
 extern f32 lbl_803E182C;
 extern f32 lbl_803E1830;
-extern f32 lbl_803E1840;
-extern f32 lbl_803E1844;
-extern f32 lbl_803E1848;
-extern f32 lbl_803E184C;
-extern f32 lbl_803E1850;
-extern f32 lbl_803E1854;
-extern f32 lbl_803E1858;
-extern f32 lbl_803E185C;
-extern f32 lbl_803E1860;
-extern f32 lbl_803E1870;
-extern f32 lbl_803E1878;
-extern f32 lbl_803E1888;
-extern f32 lbl_803E188C;
 
 
 extern char padGetStickX(int port);
@@ -723,7 +696,6 @@ void CameraModeDebug_update(short* camObj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeDebug_init(void);
 
 /*
  * --INFO--
@@ -739,7 +711,6 @@ void CameraModeDebug_init(void);
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2);
 #pragma dont_inline reset
 
 
@@ -756,7 +727,6 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeStatic_update(short* camObj);
 
 /*
  * --INFO--
@@ -771,7 +741,6 @@ void CameraModeStatic_update(short* camObj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeStatic_init(u8* cam, int p2, int* p3);
 
 
 /*
@@ -787,7 +756,6 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
 
 /*
  * --INFO--
@@ -802,7 +770,6 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_8010A47C(int curve, int* count, int tag);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -816,17 +783,10 @@ void CameraModeViewfinder_initialise(void)
 
 void CameraModeDebug_copyToCurrent_nop(void);
 
-void CameraModeDebug_release_nop(void);
 
-void CameraModeDebug_initialise_nop(void);
 
-void CameraModeStatic_copyToCurrent_nop(void);
 
-void CameraModeStatic_release(void);
 
-void CameraModeStatic_initialise(void);
 
 /* fn_X(lbl); lbl = 0; */
-void CameraModeDebug_free(void);
 
-void CameraModeStatic_free(void);

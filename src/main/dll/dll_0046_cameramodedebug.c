@@ -11,57 +11,15 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 
-typedef struct CameraModeStaticPlacement
-{
-    u8 pad0[0x1C - 0x0];
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} CameraModeStaticPlacement;
 
 
 extern u32 getButtonsHeld(int port);
 extern char padGetCX(int port);
 extern char padGetCY(int port);
-extern uint getAngle();
-extern int ObjHits_GetPriorityHit();
-extern void* ObjGroup_GetObjects();
-extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-extern u8 framesThisStep;
-extern ViewfinderState* lbl_803DD548;
 extern CameraModeDebugState* lbl_803DD550;
-extern CameraModeStaticState* lbl_803DD558;
-extern f32 timeDelta;
-extern f32 lbl_803E17C0;
-extern f32 lbl_803E17C4;
-extern f32 lbl_803E17C8;
-extern f32 lbl_803E17CC;
-extern f32 lbl_803E17D0;
-extern f32 lbl_803E17E0;
-extern f32 lbl_803E17E4;
-extern f32 lbl_803E17E8;
-extern f32 lbl_803E17EC;
-extern f32 lbl_803E17F0;
-extern f32 lbl_803E17F4;
-extern f32 lbl_803E17F8;
-extern f32 lbl_803E17FC;
-extern f32 lbl_803E1800;
-extern f32 lbl_803E1804;
-extern f32 lbl_803E1808;
-extern f32 lbl_803E180C;
-extern f32 lbl_803E1810;
-extern f32 lbl_803E1814;
-extern f32 lbl_803E1818;
-extern f32 lbl_803E181C;
-extern f32 lbl_803E1820;
-extern f32 lbl_803E1824;
-extern f32 lbl_803E1828;
-extern f32 lbl_803E182C;
-extern f32 lbl_803E1830;
 extern f32 lbl_803E1840;
 extern f32 lbl_803E1844;
 extern f32 lbl_803E1848;
@@ -72,18 +30,8 @@ extern f32 lbl_803E1858;
 extern f32 lbl_803E185C;
 extern f32 lbl_803E1860;
 extern f32 lbl_803E1870;
-extern f32 lbl_803E1878;
-extern f32 lbl_803E1888;
-extern f32 lbl_803E188C;
 
 
-extern char padGetStickX(int port);
-extern char padGetStickY(int port);
-extern f32 interpolate(f32 v, f32 a, f32 b);
-extern void fn_802961D4(short* obj, int v);
-extern f32 Camera_GetFovY(void);
-extern void viewFinderSetZoom(f32 fov);
-extern void Sfx_StopFromObject(int obj, int sfxId);
 
 /*
  * --INFO--
@@ -98,7 +46,6 @@ extern void Sfx_StopFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void firstPersonDoControls(short* obj);
 
 
 /*
@@ -114,9 +61,7 @@ void firstPersonDoControls(short* obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int fn_802966D4(int obj, int* out);
 
-int firstPersonEnter(u8* cam, s16* p2);
 
 /*
  * --INFO--
@@ -131,7 +76,6 @@ int firstPersonEnter(u8* cam, s16* p2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeViewfinder_copyToCurrent(undefined2* camObj);
 
 /*
  * --INFO--
@@ -146,14 +90,8 @@ void CameraModeViewfinder_copyToCurrent(undefined2* camObj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Rcp_SetViewFinderHudEnabled(int on);
 
-void CameraModeViewfinder_free(int camObj);
 
-extern void buttonDisable(int port, int mask);
-extern void firstPersonZoomOutOnExit(int a, int b);
-extern void fn_80137948(char* fmt, ...);
-extern char sCam5BYDebugFormat;
 
 /*
  * --INFO--
@@ -168,11 +106,7 @@ extern char sCam5BYDebugFormat;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeViewfinder_update(s16* obj);
 
-extern u32 GameBit_Get(int bit);
-extern void* memset(void* dst, int v, int n);
-extern f32 lbl_803E1834;
 
 /*
  * --INFO--
@@ -187,7 +121,6 @@ extern f32 lbl_803E1834;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeViewfinder_init(s16* obj, int mode, int* args);
 
 
 /*
@@ -320,7 +253,6 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeStatic_update(short* camObj);
 
 /*
  * --INFO--
@@ -335,7 +267,6 @@ void CameraModeStatic_update(short* camObj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeStatic_init(u8* cam, int p2, int* p3);
 
 
 /*
@@ -351,7 +282,6 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
 
 /*
  * --INFO--
@@ -366,13 +296,10 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_8010A47C(int curve, int* count, int tag);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void CameraModeViewfinder_release(void);
 
-void CameraModeViewfinder_initialise(void);
 
 void CameraModeDebug_copyToCurrent_nop(void)
 {
@@ -388,9 +315,7 @@ void CameraModeDebug_initialise_nop(void)
 
 void CameraModeStatic_copyToCurrent_nop(void);
 
-void CameraModeStatic_release(void);
 
-void CameraModeStatic_initialise(void);
 
 /* fn_X(lbl); lbl = 0; */
 void CameraModeDebug_free(void)
