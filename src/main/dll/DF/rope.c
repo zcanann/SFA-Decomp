@@ -949,9 +949,7 @@ void dimbosscrackpar_init(s16* obj, s8* def)
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x22] << 8);
 }
 
-void dimbossfire_hitDetect(void)
-{
-}
+void dimbossfire_hitDetect(void);
 
 /*
  * --INFO--
@@ -966,23 +964,9 @@ void dimbossfire_hitDetect(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_free(int obj)
-{
-    int o = obj;
-    int state;
-    void* light;
+void dimbossfire_free(int obj);
 
-    state = *(int*)(o + 0xb8);
-    light = *(void**)(state + 0x10);
-    if (light != 0)
-    {
-        ModelLightStruct_free(light);
-        *(undefined4*)(state + 0x10) = 0;
-    }
-    (*gExpgfxInterface)->freeSource2((u32)o);
-}
-
-void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void) { return 0x0; }
@@ -994,8 +978,8 @@ int magicmaker_getExtraSize(void) { return 0x0; }
 int magicmaker_getObjectTypeId(void) { return 0x0; }
 int dimbosscrackpar_getExtraSize(void) { return 0x0; }
 int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
-int dimbossfire_getExtraSize(void) { return 0x14; }
-int dimbossfire_getObjectTypeId(void) { return 0x0; }
+int dimbossfire_getExtraSize(void);
+int dimbossfire_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

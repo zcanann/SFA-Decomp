@@ -883,10 +883,10 @@ main/dll/mmsh_waterspike.c:
 	.text       start:0x801BEEA0 end:0x801BF048
 
 main/dll/DF/rope.c:
-	.text       start:0x801BF048 end:0x801C053C
+	.text       start:0x801BF048 end:0x801C04B8
 
 main/dll/DF/DFcradle.c:
-	.text       start:0x801C053C end:0x801C0E60
+	.text       start:0x801C04B8 end:0x801C0E60
 
 main/dll/DF/DFpulley.c:
 	.text       start:0x801C0E60 end:0x801C0FD8
@@ -897,44 +897,26 @@ main/dll/DF/DFbarrel.c:
 main/dll/DF/DFbarrelanim.c:
 	.text       start:0x801C1238 end:0x801C1740
 
-main/dll/DF/dll_194.c:
-	.text       start:0x801C1740 end:0x801C1BC8
+main/dll/DF/dll_0175_dfropenode.c:
+	.text       start:0x801C1740 end:0x801C26E0
 
-main/dll/DF/dll_195.c:
-	.text       start:0x801C1BC8 end:0x801C1BF0
+main/dll/DF/dll_0177_dfshdoor2s.c:
+	.text       start:0x801C26E0 end:0x801C2914
 
-main/dll/DF/dll_196.c:
-	.text       start:0x801C1BF0 end:0x801C1EAC
+main/dll/dll_017A_spiritprize.c:
+	.text       start:0x801C2914 end:0x801C3B68
 
-main/dll/DF/DFmole.c:
-	.text       start:0x801C1EAC end:0x801C1F5C
-
-main/dll/DF/DFwhirlpool.c:
-	.text       start:0x801C1F5C end:0x801C2278
-
-main/dll/DF/dll_198.c:
-	.text       start:0x801C2278 end:0x801C2824
-
-main/dll/DF/dll_199.c:
-	.text       start:0x801C2824 end:0x801C282C
-
-main/dll/DF/DFlantern.c:
-	.text       start:0x801C282C end:0x801C2E68
-
-main/dll/dll_19C.c:
-	.text       start:0x801C2E68 end:0x801C3BB0
-
-main/dll/dll_19E.c:
-	.text       start:0x801C3BB0 end:0x801C3EB8
+main/dll/dll_0179_dfshobjcre.c:
+	.text       start:0x801C3B68 end:0x801C3E3C
 
 main/dll/creator19D.c:
-	.text       start:0x801C3EB8 end:0x801C4B10
+	.text       start:0x801C3E3C end:0x801C4B10
 
 main/dll/laser19F.c:
-	.text       start:0x801C4B10 end:0x801C52D8
+	.text       start:0x801C4B10 end:0x801C53A0
 
 main/dll/mmshrine/shrine.c:
-	.text       start:0x801C52D8 end:0x801C5990
+	.text       start:0x801C53A0 end:0x801C5990
 
 main/dll/mmshrine/animobj1C0.c:
 	.text       start:0x801C5990 end:0x801C5ED8

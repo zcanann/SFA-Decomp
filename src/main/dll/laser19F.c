@@ -16,7 +16,6 @@ extern undefined8 FUN_80006b14();
 extern char FUN_80006bd0();
 extern undefined4 FUN_800175cc();
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
 extern int FUN_80017a98();
@@ -24,7 +23,6 @@ extern void fn_8011F6D4(int p);
 extern int fn_801C49B8(int obj);
 extern int Obj_GetPlayerObject(void);
 extern undefined4 FUN_8002fc3c();
-extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_8005398c();
 extern undefined4 FUN_8011eb10();
 extern undefined4 FUN_8011eb1c();
@@ -144,6 +142,7 @@ typedef struct MMSHShrineObject
  */
 int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* seq)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
     u8 command;
     int i;
     int playerObj;
@@ -287,16 +286,12 @@ void mmsh_shrine_hitDetect(void)
 
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int id, int p2);
-extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4,
-                                 undefined4 p5, f32 f);
 extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 extern int mapGetDirIdx(int mapDir);
 extern void unlockLevel(int mapDir, int mode, int flags);
-extern void fn_801C4664(int obj);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern int randomGetRange(int min, int max);
 extern int objGetAnimStateFlags(int obj, u32 mask);
 extern void audioStopByMask(int mask);
 
@@ -309,6 +304,7 @@ extern void audioStopByMask(int mask);
  */
 void mmsh_shrine_free(int obj)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
     int t = *(int*)&((GameObject*)obj)->extra;
     if ((((MmshShrineState*)t)->unk18 & 0x20) != 0)
     {
@@ -342,6 +338,7 @@ void mmsh_shrine_free(int obj)
 void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
                         char visible)
 {
+    extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, f32 f);
     MMSHShrineObject* shrine = (MMSHShrineObject*)obj;
     MMSHShrineRuntime* runtime = shrine->runtime;
 
@@ -374,6 +371,9 @@ void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, un
  */
 void mmsh_shrine_update(int objArg)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
+    extern void fn_801C4664(int obj);
+    extern int randomGetRange(int min, int max);
     MMSHShrineRuntime* runtime;
     MMSHShrineObject* obj;
     int playerObj;
@@ -470,3 +470,193 @@ void mmsh_shrine_update(int objArg)
         break;
     }
 }
+
+/* === moved from main/dll/mmshrine/shrine.c [801C52D8-801C53A0) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/mmshrine/shrine.h"
+#include "main/dll/laser19F.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
+
+typedef struct MmshWaterspikePlacement
+{
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x14 - 0x10];
+    s32 unk14;
+} MmshWaterspikePlacement;
+
+
+typedef struct MmshScalesState
+{
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x14 - 0x10];
+    s32 unk14;
+    u8 pad18[0x24 - 0x18];
+    f32 unk24;
+    s32 unk28;
+    u8 pad2C[0x6A - 0x2C];
+    s16 unk6A;
+    u8 pad6C[0x6E - 0x6C];
+    s16 unk6E;
+    u8 pad70[0x140 - 0x70];
+} MmshScalesState;
+
+
+typedef struct MmshWaterspikeObjectDef
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x24 - 0x1E];
+    u8 unk24;
+    u8 pad25[0x28 - 0x25];
+} MmshWaterspikeObjectDef;
+
+
+extern undefined4 SH_LevelControl_runBloopEvent();
+extern int objCreateLight(int param_1, int param_2);
+extern void Obj_FreeObject(void* obj);
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern int* gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
+extern f64 DOUBLE_803e5bd0;
+extern f64 DOUBLE_803e5c08;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5BD8;
+extern f32 lbl_803E5BE8;
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_init
+ * EN v1.0 Address: 0x801C52D8
+ * EN v1.0 Size: 192b
+ * EN v1.1 Address: 0x801C533C
+ * EN v1.1 Size: 220b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void mmsh_shrine_init(undefined2* obj, int arg2)
+{
+    extern void GameBit_Set(int eventId, int value);
+    int light;
+    int* state;
+
+    state = ((GameObject*)obj)->extra;
+    *obj = 0;
+    ((GameObject*)obj)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
+    *(undefined2*)(state + 7) = 10;
+    *(undefined*)(state + 9) = 0;
+    if (0 < *(short*)(arg2 + 0x1a))
+    {
+        *(short*)(state + 7) = *(short*)(arg2 + 0x1a) >> 8;
+    }
+    GameBit_Set(299, 0);
+    GameBit_Set(0x12d, 0);
+    *(undefined4*)(obj + 0x7a) = 1;
+    if (*(void**)state == NULL)
+    {
+        light = objCreateLight(0, 1);
+        *state = light;
+    }
+    GameBit_Set(0xf07, 1);
+    GameBit_Set(0xefa, 1);
+    return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_scales_free
+ * EN v1.0 Address: 0x801C53B0
+ * EN v1.0 Size: 144b
+ * EN v1.1 Address: 0x801C5418
+ * EN v1.1 Size: 188b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void mmsh_scales_free(int obj, int arg2);
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_scales_update
+ * EN v1.0 Address: 0x801C5474
+ * EN v1.0 Size: 372b
+ */
+extern u8 lbl_803DB411;
+
+void mmsh_scales_update(int objArg);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void mmsh_shrine_release(void)
+{
+}
+
+void mmsh_shrine_initialise(void)
+{
+}
+
+void mmsh_scales_hitDetect(void);
+
+void mmsh_scales_release(void);
+
+void mmsh_scales_initialise(void);
+
+void mmsh_waterspike_free(void);
+
+void mmsh_waterspike_hitDetect(void);
+
+void mmsh_waterspike_release(void);
+
+void mmsh_waterspike_initialise(void);
+
+/* 8b "li r3, N; blr" returners. */
+int mmsh_scales_getExtraSize(void);
+int mmsh_scales_getObjectTypeId(void);
+int mmsh_waterspike_getExtraSize(void);
+int mmsh_waterspike_getObjectTypeId(void);
+void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E4F68;
+
+void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_waterspike_update
+ * EN v1.0 Address: 0x801C57B0
+ * EN v1.0 Size: 380b
+ */
+extern void* ObjList_FindObjectById(int id);
+extern f32 objFn_801948c0(void* obj, int param_2);
+extern void fn_80137948(char* fmt, ...);
+extern char sWaterSpikeInvalidXyzAnimIdWarning[];
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
+extern u8 framesThisStep;
+extern WaterfxInterface** gWaterfxInterface;
+extern f32 lbl_803E4F80;
+extern f32 lbl_803E4F84;
+extern f32 lbl_803E4F88;
+
+void mmsh_waterspike_update(int obj);
+
+void mmsh_waterspike_init(int obj, s16* def);
+
+extern f32 lbl_803E4F78;
+extern u8 Obj_IsLoadingLocked(void);
+extern u8* Obj_AllocObjectSetup(int size, int type);
+extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
+
+void mmsh_scales_init(int* obj, s16* def);

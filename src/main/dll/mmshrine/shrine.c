@@ -71,32 +71,7 @@ extern f32 lbl_803E5BE8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_shrine_init(undefined2* obj, int arg2)
-{
-    int light;
-    int* state;
-
-    state = ((GameObject*)obj)->extra;
-    *obj = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
-    *(undefined2*)(state + 7) = 10;
-    *(undefined*)(state + 9) = 0;
-    if (0 < *(short*)(arg2 + 0x1a))
-    {
-        *(short*)(state + 7) = *(short*)(arg2 + 0x1a) >> 8;
-    }
-    GameBit_Set(299, 0);
-    GameBit_Set(0x12d, 0);
-    *(undefined4*)(obj + 0x7a) = 1;
-    if (*(void**)state == NULL)
-    {
-        light = objCreateLight(0, 1);
-        *state = light;
-    }
-    GameBit_Set(0xf07, 1);
-    GameBit_Set(0xefa, 1);
-    return;
-}
+void mmsh_shrine_init(undefined2* obj, int arg2);
 
 /*
  * --INFO--
@@ -182,13 +157,9 @@ void mmsh_scales_update(int objArg)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void mmsh_shrine_release(void)
-{
-}
+void mmsh_shrine_release(void);
 
-void mmsh_shrine_initialise(void)
-{
-}
+void mmsh_shrine_initialise(void);
 
 void mmsh_scales_hitDetect(void)
 {

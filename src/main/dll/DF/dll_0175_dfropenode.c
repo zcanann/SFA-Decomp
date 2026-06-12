@@ -1,0 +1,977 @@
+#include "main/dll/DF/dll_194.h"
+#include "main/game_object.h"
+#include "main/dll/DF/DFbarrelanim.h"
+#include "main/dll/DF/dfropenode.h"
+
+typedef struct DfropenodeState
+{
+    u8 pad0[0x2C - 0x0];
+    void* unk2C;
+} DfropenodeState;
+
+
+extern f32 sqrtf(f32 x);
+
+extern f64 lbl_803E4DF0;
+extern f32 lbl_803E4DFC;
+extern f32 lbl_803E4E18;
+extern f32 lbl_803E4E1C;
+
+
+static inline f32 DFRope_S32AsFloat(s32 value)
+{
+    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+    return (f32)(*(f64*)&bits - lbl_803E4DF0);
+}
+
+static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
+{
+    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+    return (f32) * (f64*)&bits - (f32)lbl_803E4DF0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_func0E
+ * EN v1.0 Address: 0x801C1740
+ * EN v1.0 Size: 560b
+ * EN v1.1 Address: 0x801C17EC
+ * EN v1.1 Size: 992b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
+                      float* phaseOut, u8* sideOut)
+{
+    DFropenodeExtra* extra;
+    int result;
+    int offset;
+    int i;
+    f32 localZ;
+    f32 localY;
+    f32 localX;
+    f32 best;
+    f32 phase;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+
+    extra = ((GameObject*)obj)->extra;
+    if ((*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18) & 1) == 0)
+    {
+        return 0;
+    }
+    if (extra->linkedObj == NULL)
+    {
+        return 0;
+    }
+    if (worldX < extra->minX || worldX > extra->maxX || worldZ < extra->minZ ||
+        worldZ > extra->maxZ)
+    {
+        return 0;
+    }
+    *distanceOut = lbl_803E4E1C;
+    localX = worldX - ((GameObject*)obj)->anim.localPosX;
+    localY = worldY - ((GameObject*)obj)->anim.localPosY;
+    localZ = worldZ - ((GameObject*)obj)->anim.localPosZ;
+    {
+        i = 0;
+        result = 0;
+        offset = 0;
+        best = lbl_803E4DFC;
+        for (; i < extra->rope->count - 1; i++)
+        {
+            int node;
+
+            x = localX;
+            y = localY;
+            z = localZ;
+            node = (int)extra->rope->nodes + offset;
+            phase = fn_801C1698(*(f32*)(node + 0), *(f32*)(node + 4), *(f32*)(node + 8),
+                                *(f32*)(node + 0x34), *(f32*)(node + 0x38), *(f32*)(node + 0x3c),
+                                &x, &y, &z);
+            if (phase >= best && phase < lbl_803E4E18)
+            {
+                dx = x - localX;
+                dy = y - localY;
+                dz = z - localZ;
+                distance = sqrtf(dx * dx + dy * dy + dz * dz);
+                if (distance < *distanceOut)
+                {
+                    result = i + 1;
+                    *distanceOut = distance;
+                    *phaseOut = (f32)i + phase;
+                }
+            }
+            offset += 0x34;
+        }
+    }
+    if (result != 0)
+    {
+        if (result - 1 <= ((int)extra->rope->count >> 1))
+        {
+            *sideOut = 0;
+        }
+        else
+        {
+            *sideOut = 1;
+        }
+    }
+    return result;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_render2
+ * EN v1.0 Address: 0x801C1970
+ * EN v1.0 Size: 164b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_render2(f32 phase, f32 force, int obj)
+{
+    int extra;
+    s8 idx;
+    f32 fraction;
+    int node;
+
+    extra = *(int*)&((GameObject*)obj)->extra;
+    phase = phase - (f32)(s8)
+    phase;
+    idx = (s8)phase;
+    fraction = phase - (f32)idx;
+    node = **(int**)(extra + 0x2c) + idx * 0x34;
+    *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
+    fraction = lbl_803E4E18 - fraction;
+    node = **(int**)&((DFropenodeExtra*)extra)->rope + idx * 0x34;
+    *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_modelMtxFn
+ * EN v1.0 Address: 0x801C1A14
+ * EN v1.0 Size: 240b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_modelMtxFn(f32 distance, int obj, float* phase)
+{
+    int extra;
+    s32 raw;
+    s8 idx;
+    int node;
+    f32 ph;
+    f32 x0;
+    f32 dx;
+    f32 dz;
+    f32 len;
+
+    extra = *(int*)&((GameObject*)obj)->extra;
+    ph = *phase;
+    raw = (s32)ph;
+    idx = (s8)raw;
+    *phase = ph - (f32)idx;
+    x0 = *((f32*)**(int**)&((DFropenodeExtra*)extra)->rope + idx * 13);
+    node = **(int**)&((DFropenodeExtra*)extra)->rope + idx * 0x34;
+    dx = x0 - *(f32*)(node + 0x34);
+    dz = *(f32*)(node + 8) - *(f32*)(node + 0x3c);
+    len = sqrtf(dx * dx + dz * dz);
+    distance = distance / len;
+    *phase = *phase + distance;
+    *phase = *phase + (f32)(s8)
+    raw;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_func0B
+ * EN v1.0 Address: 0x801C1B04
+ * EN v1.0 Size: 196b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut)
+{
+    DFropenodeExtra* extra;
+    s8 idx;
+    f32 x0;
+    f32 dy;
+    f32 dz;
+    f32 fraction;
+    DFRopeNode* node;
+    int nodes;
+
+    extra = ((GameObject*)obj)->extra;
+    idx = (s8)phase;
+    fraction = phase - (f32)idx;
+    nodes = (int)extra->rope->nodes;
+    node = (DFRopeNode*)(nodes + idx * 0x34);
+    dy = node[1].pos[1] - node->pos[1];
+    dz = node[1].pos[2] - node->pos[2];
+    x0 = *(f32*)(nodes + idx * 0x34);
+    *xOut = (node[1].pos[0] - x0) * fraction + (((GameObject*)obj)->anim.localPosX + x0);
+    *yOut = dy * fraction + (((GameObject*)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
+    *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
+}
+
+/* === merged from main/dll/DF/dll_195.c [801C1BC8-801C1BF0) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling on
+#pragma peephole on
+/*
+ * Manual recovery stub based on claimed split coverage and the surrounding
+ * DF/SC/SH corridor.
+ *
+ * This file is intentionally not wired into the build yet.
+ *
+ * Current EN split:
+ * - main/dll/DF/dll_195.c
+ * - 0x801C1BCC-0x801C1BF4
+ *
+ * Nearby corridor context:
+ * - previous split: main/dll/DF/dll_194.c
+ * - next split: main/dll/DF/dll_196.c
+ */
+
+/*
+ * No function names were promoted here yet.
+ * Start from the current EN split window and the surrounding corridor.
+ */
+
+
+#include "ghidra_import.h"
+
+/* dfropenode_setScale: copy 4 floats from obj->_b8[0x1c..0x28] to *out_dst[0..0xc]. */
+void dfropenode_setScale(int* obj, f32* out)
+{
+    int* p = (int*)obj[0xb8 / 4];
+    out[0] = *(f32*)((char*)p + 0x1c);
+    out[1] = *(f32*)((char*)p + 0x20);
+    out[2] = *(f32*)((char*)p + 0x24);
+    out[3] = *(f32*)((char*)p + 0x28);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* === merged from main/dll/DF/dll_196.c [801C1BF0-801C1EAC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DF/dll_196.h"
+
+extern f32 sqrtf(f32 x);
+
+extern f64 lbl_803E4DF0;
+extern f32 lbl_803E4DFC;
+extern f32 lbl_803E4E20;
+extern f32 lbl_803E4E24;
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_syncRopeToEndpoints
+ * EN v1.0 Address: 0x801C1BF0
+ * EN v1.0 Size: 684b
+ * EN v1.1 Address: 0x801C1C4C
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
+{
+    extern int getAngle(f32 dx, f32 dz);
+    DFropenodeExtra* extra;
+    DFropenodeObject* endObj;
+    DFropenodeObject* baseObj;
+    int i;
+    DFRopeLink* link;
+    int flag;
+    s16 angle;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 length;
+    f32 clampY;
+    f32 temp;
+    f32 margin;
+
+    baseObj = (DFropenodeObject*)(int)obj;
+    flag = baseObj->definition[0x18] & 1;
+    if (flag != 0)
+    {
+        extra = baseObj->extra;
+        endObj = extra->linkedObj;
+    }
+    else
+    {
+        endObj = baseObj;
+        baseObj = baseObj->extra->linkedObj;
+        if (baseObj == NULL)
+        {
+            return 0;
+        }
+        extra = baseObj->extra;
+    }
+
+    if ((extra->rope == NULL) || (endObj == NULL))
+    {
+        return 0;
+    }
+
+    dx = endObj->posX - baseObj->posX;
+    dy = endObj->posY - baseObj->posY;
+    dz = endObj->posZ - baseObj->posZ;
+
+    angle = getAngle(dx, dz);
+    if (angle > 0x8000)
+    {
+        angle = angle - 0xffff;
+    }
+    if (angle < -0x8000)
+    {
+        angle = angle + 0xffff;
+    }
+    extra->angle = angle;
+
+    length = sqrtf(dx * dx + dy * dy + dz * dz);
+    length = length / (f32)(extra->rope->count - 1);
+    link = extra->rope->links;
+    extra->rope->damping = lbl_803E4E20;
+    for (i = 0; i < extra->rope->count - 1; i++, link++)
+    {
+        link->restLength = length;
+    }
+
+    i = extra->rope->count - 1;
+    extra->rope->nodes[i].pos[0] = dx;
+    extra->rope->nodes[i].pos[1] = dy;
+    extra->rope->nodes[i].pos[2] = dz;
+
+    extra->minX = baseObj->posX;
+    extra->minZ = baseObj->posZ;
+    extra->maxX = endObj->posX;
+    extra->maxZ = endObj->posZ;
+    if (extra->minX > extra->maxX)
+    {
+        temp = extra->minX;
+        extra->minX = extra->maxX;
+        extra->maxX = temp;
+    }
+    if (extra->minZ > extra->maxZ)
+    {
+        temp = extra->minZ;
+        extra->minZ = extra->maxZ;
+        extra->maxZ = temp;
+    }
+
+    if (extra->minY != lbl_803E4DFC)
+    {
+        clampY = extra->minY - baseObj->posY;
+        for (i = 0; i < extra->rope->count - 1; i++)
+        {
+            if (extra->rope->nodes[i].pos[1] < clampY)
+            {
+                extra->rope->nodes[i].pos[1] = clampY;
+            }
+        }
+    }
+
+    margin = lbl_803E4E24;
+    extra->minX -= margin;
+    extra->minZ -= margin;
+    extra->maxX += margin;
+    extra->maxZ += margin;
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_getExtraSize
+ * EN v1.0 Address: 0x801C1E9C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfropenode_getExtraSize(void)
+{
+    return 0x34;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_getObjectTypeId
+ * EN v1.0 Address: 0x801C1EA4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfropenode_getObjectTypeId(void)
+{
+    return 0;
+}
+
+/* === merged from main/dll/DF/DFmole.c [801C1EAC-801C1F5C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DF/DFmole.h"
+#include "main/game_object.h"
+#include "main/objlib.h"
+
+extern void mm_free(void* p);
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_free
+ * EN v1.0 Address: 0x801C1EAC
+ * EN v1.0 Size: 176b
+ */
+void dfropenode_free(void* obj)
+{
+    void* node;
+    int** objs;
+    int count;
+    int i;
+
+    node = ((GameObject*)obj)->extra;
+    ObjGroup_RemoveObject((u32)obj, 0x17);
+    if (*(void**)((char*)node + 0x2c) != NULL && *(void**)((char*)node + 0x2c) != NULL)
+    {
+        mm_free(*(void**)((char*)node + 0x2c));
+    }
+    node = *(void**)node;
+    if (node != NULL)
+    {
+        objs = (int**)ObjGroup_GetObjects(0x17, &count);
+        for (i = 0; i < count; i++)
+        {
+            if ((void*)objs[i] == node)
+            {
+                (*(void (***)(void*))*(void**)((char*)node + 0x68))[17](node);
+            }
+        }
+    }
+}
+
+/* === merged from main/dll/DF/DFwhirlpool.c [801C1F5C-801C2278) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DF/DFcradle.h"
+#include "main/game_object.h"
+#include "main/dll/DF/DFwhirlpool.h"
+#include "main/dll/DF/dfropenode.h"
+
+typedef struct DfropenodePlacement
+{
+    u8 pad0[0x18 - 0x0];
+    u8 unk18;
+    u8 pad19[0x1B - 0x19];
+    u8 unk1B;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} DfropenodePlacement;
+
+
+typedef struct DFWhirlpoolRenderState
+{
+    undefined4 objAndParam;
+    u8 red;
+    u8 green;
+    u8 blue;
+} DFWhirlpoolRenderState;
+
+extern u32 GameBit_Get(int eventId);
+extern void Sfx_PlayFromObject(int obj, int soundId);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int soundId);
+extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
+                                       int param_6);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetupFn_800795e8(void);
+extern void textRenderSetupFn_80079804(void);
+extern void getAmbientColor(int param_1, u8* blue, u8* green, u8* red);
+extern void gxBlendFn_80078b4c(void);
+extern void fn_80078740(void);
+extern void selectTexture(void* texture, int param_2);
+extern void setTextColor(undefined4* objAndParam, u8 blue, u8 green, u8 red, int alpha);
+extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
+extern int randomGetRange(int min, int max);
+
+extern u8 framesThisStep;
+extern void* lbl_803DBF48;
+extern u8 lbl_80325E00[];
+extern u8 lbl_80325E60[];
+extern u8 lbl_802C2358[];
+extern f32 lbl_803E4DF8;
+extern f32 lbl_803E4DFC;
+extern f32 lbl_803E4E18;
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_render
+ * EN v1.0 Address: 0x801C1F5C
+ * EN v1.0 Size: 792b
+ * EN v1.1 Address: 0x801C21A4
+ * EN v1.1 Size: 700b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_render(int obj, int param_2, int param_3)
+{
+    ObjAnimComponent* objAnim;
+    DFropenodeExtra* extra;
+    int objDef;
+    int eventId;
+    int fadeAlpha;
+    u32 oldAlpha;
+    DFRopeNode* node;
+    s16 segment;
+    DFWhirlpoolRenderState renderState;
+    s16 matrix[0x30];
+    f32 originalScale;
+
+    renderState.objAndParam = (undefined4)param_2;
+    objAnim = &((GameObject*)obj)->anim;
+    extra = ((GameObject*)obj)->extra;
+    objDef = *(int*)&objAnim->placementData;
+    eventId = ((DfropenodePlacement*)objDef)->unk1C;
+    if ((eventId != 0) && (GameBit_Get(eventId) != 0))
+    {
+        oldAlpha = objAnim->alpha;
+        if (oldAlpha == 0x46)
+        {
+            Sfx_PlayFromObject(obj, 0x476);
+        }
+        fadeAlpha = oldAlpha - framesThisStep;
+        if (fadeAlpha <= 0)
+        {
+            objAnim->alpha = 0;
+            return;
+        }
+        objAnim->alpha = (u8)fadeAlpha;
+    }
+    else
+    {
+        if (objAnim->alpha == 0)
+        {
+            Sfx_PlayFromObject(obj, 0x475);
+        }
+        if (objAnim->alpha < 0x46)
+        {
+            objAnim->alpha += framesThisStep;
+        }
+        else
+        {
+            objAnim->alpha = 0x46;
+        }
+    }
+
+    if (((((DfropenodePlacement*)objDef)->unk18 & 1) != 0) && (*(void**)&extra->linkedObj != NULL) &&
+        (extra->rope != NULL))
+    {
+        originalScale = ((GameObject*)obj)->anim.rootMotionScale;
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4DF8;
+        Camera_LoadModelViewMatrix(0, param_3, obj, lbl_803E4E18, lbl_803E4DFC, 0);
+        ((GameObject*)obj)->anim.rootMotionScale = originalScale;
+        textureSetupFn_800799c0();
+        textRenderSetupFn_800795e8();
+        textRenderSetupFn_80079804();
+        if (((DfropenodePlacement*)objDef)->unk1B == 1)
+        {
+            renderState.red = 0xff;
+            renderState.green = 0xff;
+            renderState.blue = 0xff;
+        }
+        else
+        {
+            objAnim->alpha = 0xff;
+            getAmbientColor(0, &renderState.blue, &renderState.green, &renderState.red);
+            renderState.green = (u8)(renderState.green * 200 >> 8);
+            renderState.red = (u8)(renderState.red * 0xaa >> 8);
+        }
+        {
+            int alpha;
+
+            if (objAnim->alpha > 0x46)
+            {
+                fn_80078740();
+                alpha = 0xff;
+            }
+            else
+            {
+                gxBlendFn_80078b4c();
+                alpha = (objAnim->alpha + objAnim->alpha) >> 1;
+            }
+            selectTexture((&lbl_803DBF48)[((DfropenodePlacement*)objDef)->unk1B], 0);
+            setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
+                         (u8)alpha);
+        }
+        node = extra->rope->nodes;
+        for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
+        {
+            node++;
+            fn_801C0BF8(lbl_80325E00, extra->angle, (node - 1)->pos, node->pos, matrix);
+            drawFn_8005cf8c(matrix, lbl_802C2358, 6);
+        }
+        if (((DfropenodePlacement*)objDef)->unk1B == 1)
+        {
+            Sfx_KeepAliveLoopedObjectSound(obj, 0x480);
+            gxBlendFn_80078b4c();
+            {
+                int alpha;
+
+                alpha = (u8)(objAnim->alpha + randomGetRange(0, objAnim->alpha));
+                setTextColor(&renderState.objAndParam, renderState.blue, renderState.green,
+                             renderState.red, alpha);
+            }
+            node = extra->rope->nodes;
+            for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
+            {
+                node++;
+                fn_801C0BF8(lbl_80325E60, extra->angle, (node - 1)->pos, node->pos, matrix);
+                drawFn_8005cf8c(matrix, lbl_802C2358, 6);
+            }
+        }
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_hitDetect
+ * EN v1.0 Address: 0x801C2274
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801C245C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_hitDetect(void)
+{
+}
+
+/* === moved from main/dll/DF/dll_198.c [801C2278-801C26E0) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DF/DFbarrelanim.h"
+#include "main/game_object.h"
+#include "main/dll/DF/dll_196.h"
+#include "main/dll/DF/dll_198.h"
+
+typedef struct DFSHDoor2SpeciPlacement
+{
+    u8 pad0[0x1B - 0x0];
+    u8 unk1B;
+    u8 pad1C[0x22 - 0x1C];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} DFSHDoor2SpeciPlacement;
+
+
+typedef struct DFDoorSpeciExtra
+{
+    u16 phase;
+    u8 pad02;
+    u8 state;
+    u8 pad04[2];
+} DFDoorSpeciExtra;
+
+extern u32 GameBit_Get(int eventId);
+extern int* objFindTexture(int obj, int a, int b);
+extern void textureFree(void* resource);
+extern void* textureLoadAsset(int assetId);
+extern f32 sqrtf(f32 x);
+extern f32 mathCosf(f32 x);
+extern u8 framesThisStep;
+extern int lbl_803DBF40;
+extern void* lbl_803DBF48;
+extern f32 lbl_803DBF50;
+extern u8 lbl_803DBF58;
+extern f32 lbl_803E4DFC;
+extern f32 lbl_803E4E24;
+extern f32 lbl_803E4E28;
+extern f32 lbl_803E4E30;
+extern f32 lbl_803E4E34;
+extern f32 lbl_803E4E38;
+extern f32 lbl_803E4E3C;
+extern f32 lbl_803E4E40;
+extern f64 lbl_803E4E48;
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_update
+ * EN v1.0 Address: 0x801C2278
+ * EN v1.0 Size: 824b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_update(DFropenodeObject* obj)
+{
+    extern s32 getAngle(f32 dx, f32 dz);
+    extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+    DFropenodeExtra* extra;
+    u8* objDef;
+    DFropenodeObject* linkedObj;
+    DFropenodeObject** objects;
+    int objectCount;
+    int objectIndex;
+    DFropenodeObject* candidateObj;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 length;
+    s16 angle;
+    f32 temp;
+    f32 baseX;
+    f32 baseY;
+    f32 baseZ;
+    f32 linkedX;
+    f32 linkedY;
+    f32 linkedZ;
+    f32 liftedY;
+    f32 normalX;
+    f32 normalY;
+    f32 normalZ;
+    f32 normalLength;
+
+    objDef = obj->definition;
+    extra = obj->extra;
+    if ((objDef[0x18] & 1) == 0)
+    {
+        return;
+    }
+
+    linkedObj = extra->linkedObj;
+    if (linkedObj == NULL)
+    {
+        objects = (DFropenodeObject**)ObjList_GetObjects(&objectIndex, &objectCount);
+        objectIndex = 0;
+        while ((objectIndex < objectCount) && (linkedObj == NULL))
+        {
+            candidateObj = *objects;
+            if ((candidateObj->objType == 0x36) &&
+                ((s32)objDef[0x18] == candidateObj->definition[0x18] - 1))
+            {
+                linkedObj = candidateObj;
+            }
+            objects++;
+            objectIndex++;
+        }
+        if (linkedObj == NULL)
+        {
+            return;
+        }
+
+        linkedObj->extra->linkedObj = obj;
+        extra = obj->extra;
+        extra->linkedObj = linkedObj;
+
+        dx = linkedObj->posX - obj->posX;
+        dy = linkedObj->posY - obj->posY;
+        dz = linkedObj->posZ - obj->posZ;
+        length = sqrtf(dz * dz + (dx * dx + dy * dy));
+        angle = getAngle(dx, dz);
+        if (angle > 0x8000)
+        {
+            angle = (s16)(angle - 0xFFFF);
+        }
+        if (angle < -0x8000)
+        {
+            angle += 0xFFFF;
+        }
+        extra->angle = angle;
+
+        extra->rope =
+            DFRope_Create(0x10, lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length,
+                          (&lbl_803DBF50)[*(u8*)(objDef + 0x1b)]);
+
+        extra->minX = obj->posX;
+        extra->minZ = obj->posZ;
+        extra->maxX = linkedObj->posX;
+        extra->maxZ = linkedObj->posZ;
+        if (extra->minX > extra->maxX)
+        {
+            temp = extra->minX;
+            extra->minX = extra->maxX;
+            extra->maxX = temp;
+        }
+        if (extra->minZ > extra->maxZ)
+        {
+            temp = extra->minZ;
+            extra->minZ = extra->maxZ;
+            extra->maxZ = temp;
+        }
+        extra->minX -= lbl_803E4E24;
+        extra->minZ -= lbl_803E4E24;
+        extra->maxX += lbl_803E4E24;
+        extra->maxZ += lbl_803E4E24;
+
+        baseX = obj->posX;
+        baseY = obj->posY;
+        baseZ = obj->posZ;
+        linkedX = linkedObj->posX;
+        linkedY = linkedObj->posY;
+        linkedZ = linkedObj->posZ;
+        liftedY = lbl_803E4E28 + baseY;
+
+        normalX = liftedY * (baseZ - linkedZ) +
+            (baseY * (linkedZ - baseZ) + (linkedY * (baseZ - baseZ)));
+        normalY = baseZ * (baseX - linkedX) +
+            (baseZ * (linkedX - baseX) + (linkedZ * (baseX - baseX)));
+        normalZ = baseX * (baseY - linkedY) +
+            (baseX * (linkedY - liftedY) + (linkedX * (liftedY - baseY)));
+        normalLength = sqrtf(normalZ * normalZ + (normalX * normalX + normalY * normalY));
+        if (normalLength > lbl_803E4DFC)
+        {
+            normalX /= normalLength;
+            normalY /= normalLength;
+            normalZ /= normalLength;
+        }
+        extra->planeNormalX = normalX;
+        extra->planeNormalY = normalY;
+        extra->planeNormalZ = normalZ;
+        extra->planeDistance = -(baseZ * normalZ + (baseX * normalX + baseY * normalY));
+    }
+
+    DFRope_UpdateSimulation((u8*)extra->rope);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_init
+ * EN v1.0 Address: 0x801C25B0
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_init(DFropenodeObject* obj, u8* objDef)
+{
+    extern void ObjGroup_AddObject(int obj, int group);
+    DFropenodeExtra* extra;
+
+    extra = obj->extra;
+    if ((&lbl_803DBF58)[*(u8*)(objDef + 0x1b)] == 0)
+    {
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x80;
+    }
+    ObjGroup_AddObject((int)obj, 0x17);
+    ((GameObject*)obj)->animEventCallback = dfropenode_syncRopeToEndpoints;
+    extra->rope = NULL;
+    extra->linkedObj = NULL;
+    ((GameObject*)obj)->anim.alpha = 0x46;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_release
+ * EN v1.0 Address: 0x801C2634
+ * EN v1.0 Size: 76b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_release(void)
+{
+    int i;
+
+    for (i = 0; i < 2; i++)
+    {
+        textureFree((&lbl_803DBF48)[i]);
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_initialise
+ * EN v1.0 Address: 0x801C2680
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_initialise(void)
+{
+    int i;
+
+    for (i = 0; i < 2; i++)
+    {
+        (&lbl_803DBF48)[i] = textureLoadAsset((&lbl_803DBF40)[i]);
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: DFSH_Door2Speci_SeqFn
+ * EN v1.0 Address: 0x801C26E0
+ * EN v1.0 Size: 316b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int DFSH_Door2Speci_SeqFn(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_getExtraSize
+ * EN v1.0 Address: 0x801C281C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801C29EC
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfsh_door2speci_getExtraSize(void);

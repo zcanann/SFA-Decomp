@@ -1,3 +1,166 @@
+/* === moved from main/dll/dll_19E.c [801C3E3C-801C3EB8) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/dll/dll_19E.h"
+#include "main/resource.h"
+
+
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern undefined4 FUN_8001759c();
+extern undefined4 FUN_800175b0();
+extern undefined4 FUN_800175d0();
+extern void* FUN_80017624();
+extern uint GameBit_Get(int eventId);
+extern u32 randomGetRange(int min, int max);
+extern int FUN_80017a98();
+extern void* FUN_80017aa4();
+extern undefined4 FUN_80017ac8();
+extern undefined4 FUN_80017ae4();
+extern uint FUN_80017ae8();
+extern undefined4 FUN_80017b00();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_80053754();
+extern int FUN_8005b024();
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int objectId);
+extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
+extern f32 timeDelta;
+
+extern undefined4 DAT_803dc071;
+extern f64 DOUBLE_803e5b38;
+extern f64 DOUBLE_803e5b40;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5B30;
+extern f32 lbl_803E5B34;
+extern f32 lbl_803E5B48;
+extern f32 lbl_803E5B4C;
+
+typedef struct DfshObjCreatorState
+{
+    s16 spawnTimer;
+    s16 spawnTimerStep;
+} DfshObjCreatorState;
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_objcreator_update
+ * EN v1.0 Address: 0x801C3BB0
+ * EN v1.0 Size: 740b
+ * EN v1.1 Address: 0x801C3CC4
+ * EN v1.1 Size: 612b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_objcreator_update(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: DFSH_LaserBeam_init
+ * EN v1.0 Address: 0x801C3E94
+ * EN v1.0 Size: 516b
+ * EN v1.1 Address: 0x801C3F28
+ * EN v1.1 Size: 520b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern ModgfxInterface** gModgfxInterface;
+extern void* lbl_803DDBB8;
+extern void textureFree(void* tex);
+
+void DFSH_LaserBeam_init(int* obj)
+{
+    int* state = ((GameObject*)obj)->extra;
+    (*gModgfxInterface)->detachSource(obj);
+    Resource_Release(lbl_803DDBB8);
+    lbl_803DDBB8 = NULL;
+    if (*(void**)state != NULL)
+    {
+        textureFree(*(void**)state);
+    }
+    *(void**)state = NULL;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c4098
+ * EN v1.0 Address: 0x801C4098
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801C4130
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_objcreator_release
+ * EN v1.0 Address: 0x801C3E34
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void dfsh_objcreator_release(void);
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_objcreator_initialise
+ * EN v1.0 Address: 0x801C3E38
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_objcreator_initialise(void);
+
+void dfsh_objcreator_init(int obj, s8* def);
+
+/* Trivial 4b 0-arg blr leaves. */
+void DFSH_LaserBeam_render(void)
+{
+}
+
+void DFSH_LaserBeam_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
+int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
+
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -14,7 +177,6 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -37,7 +199,6 @@ extern f32 timeDelta;
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
 extern void* lbl_803DDBB8;
-extern undefined4* DAT_803de838;
 extern f64 DOUBLE_803e5b98;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E4EC0;
@@ -189,6 +350,7 @@ typedef struct DFSHLaserBeamObject
  */
 void DFSH_LaserBeam_update(uint param_1)
 {
+    extern int Sfx_PlayFromObject(void* obj, int sfxId);
     DFSHLaserBeamObject* obj;
     DFSHLaserBeamConfig* config;
     DFSHLaserBeamRuntime* runtime;
