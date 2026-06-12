@@ -31,8 +31,7 @@ typedef struct PollenExtra {
 #define POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES 60
 #define POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET 0xc4
 
-void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
-                           undefined4 param_4,undefined4 param_5,char visible);
+void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible);
 void kaldachompspit_hitDetect(void);
 void kaldachompspit_init(int obj);
 void kaldachompspit_release(void);
