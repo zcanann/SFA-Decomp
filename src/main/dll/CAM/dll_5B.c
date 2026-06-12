@@ -2,7 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camdebug_state.h"
-#include "main/dll/CAM/camTalk.h"
+#include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/CAM/viewfinder_state.h"

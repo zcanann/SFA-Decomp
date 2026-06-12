@@ -2,7 +2,7 @@
 #include "main/audio/sfx.h"
 #include "dolphin/os.h"
 #include "main/asset_load.h"
-#include "main/dll/CAM/camcontrol.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/savegame.h"
 #include "main/mm.h"
 #include "main/object_transform.h"

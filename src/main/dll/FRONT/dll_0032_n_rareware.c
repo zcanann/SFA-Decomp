@@ -1,4 +1,4 @@
-#include "main/dll/FRONT/n_rareware.h"
+#include "main/dll/FRONT/dll_0032_n_rareware.h"
 
 extern void* OSGetArenaHi(void);
 extern void GXInitTexObj(void* obj, void* image, u16 width, u16 height, u8 format, u8 wrapS,

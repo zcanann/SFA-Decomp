@@ -1,5 +1,5 @@
 #include "main/dll/dll_B4.h"
-#include "main/dll/CAM/camcontrol.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 
 extern u8* Obj_AllocObjectSetup(int size, int type);
 extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);

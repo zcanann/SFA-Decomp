@@ -1,5 +1,5 @@
 #include "main/dll/dll_8B.h"
-#include "main/dll/CAM/camcontrol.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 
 /*
  * --INFO--

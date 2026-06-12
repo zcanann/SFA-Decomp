@@ -348,7 +348,7 @@ void TitleMenu_frameEnd(void)
 
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
-#include "main/dll/FRONT/n_filemenu.h"
+#include "main/dll/FRONT/dll_0034_n_filemenu.h"
 #include "main/dll/FRONT/dll_39.h"
 
 

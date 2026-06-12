@@ -71,7 +71,7 @@ void CameraModeBike_free(void)
 #pragma peephole reset
 #pragma peephole reset
 
-#include "main/dll/CAM/camTalk.h"
+#include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/cambike_state.h"
 #include "main/dll/CAM/viewfinder_state.h"
