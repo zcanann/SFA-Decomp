@@ -28,7 +28,7 @@ void wmworm_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole on
+#pragma opt_common_subs off
 void wmworm_update(GameObject* obj)
 {
     float fVar1;
@@ -36,16 +36,15 @@ void wmworm_update(GameObject* obj)
     float fVar3;
     GameObject* player;
     WmWormState* state;
-    ObjPlacement* placement;
-    short burstCount;
+    int burstCount;
+    int i;
     f32 dist;
 
-    player = Obj_GetPlayerObject();
     state = obj->extra;
-    placement = (ObjPlacement*)obj->anim.placementData;
+    player = Obj_GetPlayerObject();
     if (player != NULL)
     {
-        dist = Vec_xzDistance(&player->anim.worldPosX, &placement->posX);
+        dist = Vec_xzDistance(&player->anim.worldPosX, &((ObjPlacement*)obj->anim.placementData)->posX);
         if (dist > lbl_803E5E58)
         {
             obj->anim.localPosX = state->homeX;
@@ -59,27 +58,30 @@ void wmworm_update(GameObject* obj)
             fVar3 = player->anim.worldPosZ - obj->anim.localPosZ;
             if ((fVar1 > lbl_803E5E5C) || (fVar1 < lbl_803E5E5C))
             {
-                obj->anim.localPosX = lbl_803E5E60 * fVar1 * timeDelta + obj->anim.localPosX;
+                fVar1 = lbl_803E5E60 * fVar1;
+                obj->anim.localPosX = fVar1 * timeDelta + obj->anim.localPosX;
             }
             if ((fVar2 > lbl_803E5E5C) || (fVar2 < lbl_803E5E5C))
             {
-                obj->anim.localPosY = lbl_803E5E60 * fVar2 * timeDelta + obj->anim.localPosY;
+                fVar2 = lbl_803E5E60 * fVar2;
+                obj->anim.localPosY = fVar2 * timeDelta + obj->anim.localPosY;
             }
             if ((fVar3 > lbl_803E5E5C) || (fVar3 < lbl_803E5E5C))
             {
-                obj->anim.localPosZ = lbl_803E5E60 * fVar3 * timeDelta + obj->anim.localPosZ;
+                fVar3 = lbl_803E5E60 * fVar3;
+                obj->anim.localPosZ = fVar3 * timeDelta + obj->anim.localPosZ;
             }
             burstCount = state->burstCount;
-            if ((-1 < burstCount) || ((-1 >= burstCount && (obj->unkF4 < 1))))
+            if (burstCount >= 0 || (burstCount < 0 && obj->unkF4 <= 0))
             {
                 if (burstCount == 0)
                 {
                     state->unk0C = 1;
                 }
-                obj->anim.rotY += 300;
+                obj->anim.rotX += 300;
                 if (0 < state->burstCount)
                 {
-                    for (burstCount = 0; burstCount < state->burstCount; burstCount = burstCount + 1)
+                    for (i = 0; (s16)i < state->burstCount; i++)
                     {
                         (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
                                                          -1, NULL);
@@ -92,16 +94,16 @@ void wmworm_update(GameObject* obj)
                 }
                 obj->unkF4 = -state->burstCount;
             }
-            else if ((burstCount < 0) && (0 < obj->unkF4))
+            else if (burstCount < 0 && obj->unkF4 > 0)
             {
-                obj->unkF4 = obj->unkF4 - (u32)framesThisStep;
+                obj->unkF4 -= framesThisStep;
             }
         }
     }
     return;
 }
 
-#pragma peephole off
+#pragma opt_common_subs reset
 void wmworm_init(GameObject* obj, WmWormSetup* setup)
 {
     WmWormState* state;
