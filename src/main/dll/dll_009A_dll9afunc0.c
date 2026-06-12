@@ -64,18 +64,7 @@ typedef struct
 } ScreenFxHdr; /* 0x60 */
 
 
-extern u8 lbl_80317BD8[];
 extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E13A0;
-extern f32 lbl_803E13A4;
-extern f32 lbl_803E13A8;
-extern f32 lbl_803E13AC;
-extern f32 lbl_803E13B0;
-extern f32 lbl_803E13B4;
-extern f32 lbl_803E13B8;
-extern f32 lbl_803E13BC;
-extern f32 lbl_803E13C0;
-extern f32 lbl_803E13C4;
 
 typedef struct
 {
@@ -326,18 +315,7 @@ void dll_9B_func03(int a, int b, int p, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u8 lbl_80317E00[];
-extern f32 lbl_803E13C8;
-extern f32 lbl_803E13CC;
-extern f32 lbl_803E13D0;
-extern f32 lbl_803E13D4;
-extern f32 lbl_803E13D8;
-extern f32 lbl_803E13DC;
-extern f32 lbl_803E13E0;
-extern f32 lbl_803E13E4;
-extern f32 lbl_803E13E8;
 
-void dll_9C_func03(int a, int b, int p, uint flags);
 
 
 /* Trivial nops */
@@ -351,8 +329,5 @@ void dll_9A_func00_nop(void)
 
 void dll_9B_func01_nop(void);
 
-void dll_9B_func00_nop(void);
 
-void dll_9C_func01_nop(void);
 
-void dll_9C_func00_nop(void);

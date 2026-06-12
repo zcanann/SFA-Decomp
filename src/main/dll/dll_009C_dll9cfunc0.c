@@ -2,7 +2,6 @@
 #include "main/dll/screens.h"
 
 
-extern u32 randomGetRange(int min, int max);
 
 
 /*
@@ -64,43 +63,11 @@ typedef struct
 } ScreenFxHdr; /* 0x60 */
 
 
-extern u8 lbl_80317BD8[];
 extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E13A0;
-extern f32 lbl_803E13A4;
-extern f32 lbl_803E13A8;
-extern f32 lbl_803E13AC;
-extern f32 lbl_803E13B0;
-extern f32 lbl_803E13B4;
-extern f32 lbl_803E13B8;
-extern f32 lbl_803E13BC;
-extern f32 lbl_803E13C0;
-extern f32 lbl_803E13C4;
 
-typedef struct
-{
-    s16 v[7];
-} ScreenSeq;
 
-extern u8 lbl_802C2180[];
-extern u8 lbl_80317B98[];
-extern u8 lbl_803DB958;
-extern u8 lbl_803DB960;
-extern u8 lbl_803DB964;
-extern f32 lbl_803E1370;
-extern f32 lbl_803E1374;
-extern f32 lbl_803E1378;
-extern f32 lbl_803E137C;
-extern f32 lbl_803E1380;
-extern f32 lbl_803E1384;
-extern f32 lbl_803E1388;
-extern f32 lbl_803E138C;
-extern f32 lbl_803E1390;
-extern f32 lbl_803E1394;
 
-void dll_9A_func03(int a, int b, int p, uint flags);
 
-void dll_9B_func03(int a, int b, int p, uint flags);
 
 /*
  * --INFO--
@@ -290,11 +257,8 @@ void dll_9C_func03(int a, int b, int p, uint flags)
 /* Trivial nops */
 void dll_9A_func01_nop(void);
 
-void dll_9A_func00_nop(void);
 
-void dll_9B_func01_nop(void);
 
-void dll_9B_func00_nop(void);
 
 void dll_9C_func01_nop(void)
 {
