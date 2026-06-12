@@ -210,14 +210,8 @@ main/dll/dll_00BE_projtesla.c:
 main/dll/dll_00BF_projcore1.c:
 	.text       start:0x801009B0 end:0x801009E8
 
-main/dll/dll_83.c:
-	.text       start:0x801009E8 end:0x80100A18
-
-main/dll/dll_84.c:
-	.text       start:0x80100A18 end:0x80100A1C
-
-main/dll/dll_85.c:
-	.text       start:0x80100A1C end:0x80100A20
+main/dll/dll_00C0_projcore2.c:
+	.text       start:0x801009E8 end:0x80100A20
 
 main/dll/modcloudrunner2.c:
 	.text       start:0x80100A20 end:0x80100A50
