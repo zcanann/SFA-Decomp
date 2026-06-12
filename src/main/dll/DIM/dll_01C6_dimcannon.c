@@ -88,7 +88,7 @@ extern void objRenderFn_8003b8f4(f32);
 
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, int param_11)
+                  undefined4 param_9, undefined4 param_10, ObjAnimUpdateState* animUpdate)
 {
     short sVar1;
     short sVar3;
@@ -113,8 +113,8 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
     psVar4 = (short*)FUN_80286838();
     iVar13 = *(int*)(psVar4 + 0x26);
     bVar9 = false;
-    *(undefined*)(param_11 + 0x56) = 0;
-    *(ushort*)(param_11 + 0x6e) = *(ushort*)(param_11 + 0x6e) & 0xf9f7;
+    animUpdate->sequenceEventActive = 0;
+    animUpdate->hitVolumePair &= ~0x608;
     iVar12 = *(int*)(psVar4 + 0x5c);
     if (*(char*)(iVar12 + 0xac) == '\x03')
     {
@@ -270,7 +270,7 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
                     (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
                     *(undefined*)(iVar12 + 0xac) = 5;
                     *(undefined*)(iVar12 + 0xb0) = 0x3c;
-                    *(byte*)(param_11 + 0x90) = *(byte*)(param_11 + 0x90) | 4;
+                    animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
                     *(byte*)((int)psVar4 + 0xaf) = *(byte*)((int)psVar4 + 0xaf) & 0xf7;
                     bVar9 = FUN_800067f0((int)psVar4, 8);
                     if (bVar9)

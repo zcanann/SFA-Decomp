@@ -250,7 +250,7 @@ FUN_8019b650(undefined8 param_1, double param_2, double param_3, double param_4,
 undefined4
 FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , int param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
+             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
     undefined4 uVar1;
@@ -282,13 +282,13 @@ FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             puVar4 = &local_28;
         }
-        iVar2 = FUN_8007f924(param_11);
+        iVar2 = FUN_8007f924((int)animUpdate);
         if ((iVar2 == 0x283) ||
             (iVar2 = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                  , param_11, pfVar3, (short)*puVar4, (short)puVar4[1], param_14, param_15,
+                                  , (int)animUpdate, pfVar3, (short)*puVar4, (short)puVar4[1], param_14, param_15,
                                   param_16), iVar2 == 0))
         {
-            if (*(char*)(param_11 + 0x80) == '\x02')
+            if (animUpdate->triggerCommand == 2)
             {
                 iVar2 = FUN_80017a98();
                 FUN_80294d40(iVar2, 10);
@@ -306,7 +306,7 @@ FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 para
 undefined4
 FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
-             , undefined4 param_10, int param_11, undefined4 param_12, undefined4 param_13,
+             , undefined4 param_10, ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     int iVar1;
@@ -322,7 +322,7 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     {
         if (local_24 == 0x110001)
         {
-            if ((*psVar3 == 0x54) && (0xaf < *(short*)(param_11 + 0x58)))
+            if ((*psVar3 == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
                 ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
                                     0x110001, param_9, 0, param_13, param_14, param_15, param_16);
@@ -337,22 +337,22 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         }
         else if (local_24 == 0x110003)
         {
-            if ((*psVar3 == 0x56) && (0xaf < *(short*)(param_11 + 0x58)))
+            if ((*psVar3 == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
                 ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
                                     0x110003, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
         else if ((((int)local_24 < 0x110003) && (*psVar3 == 0x55)) &&
-            (0xaf < *(short*)(param_11 + 0x58)))
+            (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
                                 0x110002, param_9, 0, param_13, param_14, param_15, param_16);
         }
     }
-    for (iVar1 = 0; iVar1 < (int)(uint) * (byte*)(param_11 + 0x8b); iVar1 = iVar1 + 1)
+    for (iVar1 = 0; iVar1 < (int)(uint)animUpdate->eventCount; iVar1 = iVar1 + 1)
     {
-        if (((*(char*)(param_11 + iVar1 + 0x81) == '\x01') && (uVar2 = FUN_80017690(0x54), uVar2 != 0))
+        if (((animUpdate->eventIds[iVar1] == 1) && (uVar2 = FUN_80017690(0x54), uVar2 != 0))
             && ((uVar2 = FUN_80017690(0x55), uVar2 != 0 && (uVar2 = FUN_80017690(0x56), uVar2 != 0))))
         {
             FUN_80017698(0x4e0, 1);
