@@ -794,6 +794,15 @@ def reconcile_segment(host_text, seg_text):
             if not same:
                 undef_before[h] = name
                 notes.append(f"#undef {name} before segment redefinition")
+        elif kind in ("extern", "proto"):
+            # MWCC GC/2.0 rejects a redundant IDENTICAL file-scope extern/proto
+            # with "illegal name overloading" (not a redecl error #57 can
+            # catch), so drop a segment extern/proto whose normalized text
+            # equals a host extern/proto of the same name. Non-identical
+            # forms stay for the compile-error-driven #57 repair.
+            if same and any(k in ("extern", "proto") for k, t in hk):
+                drop_lines.update(range(h, e + 1))
+                notes.append(f"dropped duplicate {kind} {name}")
         elif kind == "vardef":
             if any(k == "vardef" for k, t in hk):
                 flags.append(f"duplicate variable definition {name}")
