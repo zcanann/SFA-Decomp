@@ -4,6 +4,7 @@
 #include "main/dll/pushable.h"
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/mapEventTypes.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 typedef struct IceblastPlacement
@@ -20,10 +21,6 @@ typedef struct IceblastPlacement
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_SetTargetMask();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
@@ -197,7 +194,7 @@ void iceblast_update(int* obj)
     {
         return;
     }
-    ObjHits_SetHitVolumeSlot(obj, 0x10, ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1, 0);
+    ObjHits_SetHitVolumeSlot((u32)obj, 0x10, ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1, 0);
     state[0] = state[0] - timeDelta;
     if (state[0] <= lbl_803E3604)
     {

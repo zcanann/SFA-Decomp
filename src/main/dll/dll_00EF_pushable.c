@@ -6,6 +6,7 @@
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_00EF_pushable.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int bit);
@@ -34,10 +35,6 @@ extern f32 lbl_803E3594;
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjHits_AddContactObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_AllocQueue();
@@ -603,7 +600,7 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         *(float*)(param_10 + 0xc) = -(fVar1 * *(float*)(param_9 + 0x2c) - pfVar5[2]);
         if (*(char*)(param_10 + 0x11) == '\0')
         {
-            ObjHits_ClearHitVolumes(param_9);
+            ObjHits_ClearHitVolumes((int)param_9);
         }
         else
         {
@@ -742,7 +739,7 @@ void pushable_update(int* obj)
         if (GameBit_Get(0x272) != 0)
         {
             Obj_RemoveFromUpdateList(obj);
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
         break;
@@ -794,7 +791,7 @@ void pushable_init(s16* obj, char* def)
     state->gameBit = ((PushableObjectDef*)def)->gameBit;
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3528, 0);
     ObjMsg_AllocQueue(obj, 4);
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((u32)obj);
     {
         f32 minY = lbl_803E3540;
         for (i = 0; i < *(u16*)((char*)model + 0xe4); i++)
@@ -1148,7 +1145,7 @@ void pushable_hitDetect(int* obj)
                             o = *(u32*)(*(int*)(list + off) + 0x10);
                             if (o != 0)
                             {
-                                ObjHits_AddContactObject(o, obj);
+                                ObjHits_AddContactObject(o, (int)obj);
                             }
                             cnt2++;
                             found = 1;

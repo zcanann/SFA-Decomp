@@ -4,6 +4,7 @@
 #include "main/dll/pushable.h"
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/mapEventTypes.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 typedef struct FlameblastState
@@ -17,8 +18,6 @@ typedef struct FlameblastState
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void Obj_FreeObject(int* obj);
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
@@ -180,7 +179,7 @@ void flameblast_update(int* obj)
         {
             if (((FlameblastState*)state)->unk11 == 0)
             {
-                ObjHits_SetHitVolumeSlot(obj, 0x1a, 1, 0);
+                ObjHits_SetHitVolumeSlot((u32)obj, 0x1a, 1, 0);
             }
         }
     }
@@ -250,7 +249,7 @@ int fn_8017805C(int* obj, f32* state)
     }
     else
     {
-        ObjHits_ClearHitVolumes(obj);
+        ObjHits_ClearHitVolumes((int)obj);
     }
     return 1;
 }
