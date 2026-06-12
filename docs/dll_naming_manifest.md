@@ -920,3 +920,128 @@ manifest's own cited precedent for "address-lane beats name prefix."
 The manifest's lane-dir rule (address-lane ownership) directly conflicts
 with retail-placement homing — resolving that project-wide would re-home
 dozens of units across DR/, DIM/, WC/, etc. by the same census method.
+
+## Appendix: CF/ lane-homing audit — INBOUND pass (re-home INTO CF/)
+
+The inverse of the outbound pass: every single-DLL unit project-wide
+OUTSIDE `src/main/dll/CF/` was censused against all 124 retail romlists,
+and units that retail evidence homes INTO CF/ were moved in.
+
+**Method** (`tools/cf_lane_homing.py --all`, generalizes the outbound CF
+mode): census EVERY single-DLL unit under `main/dll/` — retail def
+name(s), DLL id(s), placement distribution across maps — via the same
+gResourceDescriptors → text-fn → splits.txt unit reverse-map. Units
+mapping to >1 DLL id are multi-DLL CONTAINERS, excluded from re-homing
+(they can't move until carved). The verdict uses the unit's MANIFEST
+CANONICAL primary name (the chosen identity), not the first OBJECTS.bin
+sub-def — this is what distinguishes a genuine CF unit from a generic
+multi-def shared global whose #1 placement map is coincidentally
+CF-family.
+
+**Inbound rule** (faithful mirror of the outbound STAY rule): a non-CF/
+single-DLL unit **MOVES → CF/** iff its manifest-canonical primary name
+is `CF*`-prefixed. (The placement-only criterion — "a CF-family map is
+the single #1 placement map" — is subsumed: every unit it would flag
+that ISN'T also CF*-canonical is a generic multi-def shared global, the
+same class the outbound pass kept OUT of CF, e.g. `enemy`/`collectible`/
+`LargeCrate`/`explodable`. See the "candidates rejected" note below.)
+
+placements column = total / CF-family / other.
+
+| unit | dll id | manifest canonical | placements (tot/CF/other) | top maps | verdict |
+|---|---|---|---|---|---|
+| `DR/dll_0148_cfguardian.c` | 0x148 | CFGuardian | 2 / 2 / 0 | clouddungeon×1, fortress×1 | **MOVE → CF/** |
+| `DR/dll_0149_cfwindlift.c` | 0x149 | CFWindLift (+CFTreasWind) | 33 / 5 / 28 | gpshrine×9, warlock×7, moonpass×5, fortress×4 | **MOVE → CF/** |
+| `DR/dll_014A_cfpowerbase.c` | 0x14A | CFPowerBase | 3 / 3 / 0 | fortress×3 | **MOVE → CF/** |
+| `DR/dll_014B_cfmaincrystal.c` | 0x14B | CFMainCrystal | 2 / 2 / 0 | fortress×2 | **MOVE → CF/** |
+| `DR/dll_014E_cfprisonguard.c` | 0x14E | CFPrisonGuard | 1 / 1 / 0 | clouddungeon×1 | **MOVE → CF/** |
+| `DR/dll_014F_cfprisonuncle.c` | 0x14F | CFPrisonUncle | 1 / 1 / 0 | clouddungeon×1 | **MOVE → CF/** |
+| `DR/dll_0153_cfperch.c` | 0x153 | CFPerch | 1 / 1 / 0 | clouddungeon×1 | **MOVE → CF/** |
+| `DR/dll_0154_cfprisoncage.c` | 0x154 | CFPrisonCage (+CFCageSwitc) | 4 / 4 / 0 | clouddungeon×4 | **MOVE → CF/** |
+
+**Summary: 8 MOVE → CF/.** All eight are CF*-canonical single-DLL units
+mis-homed to `DR/` by drift-era address-lane inheritance (DR/ owns the
+0x148–0x15A address run; the CFWindLift case is the manifest header's
+own cited "address-lane beats name prefix" precedent — which this
+retail-evidence pass overrides). Every one is 100%-CF or CF-majority by
+placement (`CFWindLift`'s 33 placements span Cloud-Runner shrine/quest
+maps; the others place at fortress/clouddungeon only). Pure `git mv` of
+the `.c`; no same-stem headers exist for these eight, and all includes
+are `-I include` root-relative (`main/dll/cfguardian_state.h`,
+`main/dll/DR/sandwormBoss.h`, …) so they stay valid with zero edits —
+byte-neutral.
+
+**Candidates REJECTED (placement #1-map is CF-family but unit is a
+shared global — stay put, exactly as the outbound pass treated
+`decoration11a`):**
+
+| unit | manifest canonical | #defs | #1 map | why not CF |
+|---|---|---|---|---|
+| `dll/dll_00C9_enemy.c` | enemy | 29 | fortress×46 | engine enemy DLL, 350 placements / 24 maps — fortress is coincidental #1 |
+| `dll/dll_00ED_collectible.c` | collectible | 44 | snowmines×20 | engine collectible DLL spanning every lane; CF sub-defs are 6/58 |
+| `dll/dll_00F4_doorf4.c` | doorf4 | 15 | temple×11 | generic door DLL (VFP/DFP/WM/…); CF 1/16 |
+| `dll/dll_0105_largecrate.c` | LargeCrate | 4 | fortress×47 | generic crate, 402 placements everywhere; fortress is coincidental #1 |
+| `DR/dll_015A_explodable.c` | explodable | 13 | dragrock×6 | generic explodable-wall DLL (DIM2/LINKE/CC/NW/SH/DR); CF 6/38 |
+| `DR/dll_014C_babycloudrunner.c` | babycloudrunner | 3 | newicemount×6 | CFCloudBaby sub-def, but #1 map non-CF + an SH sub-def; manifest canon is a generic stem |
+| `DR/dll_0266_kytesmum.c` | KytesMum | 1 | fortress×1 | Cloud-Runner NPC but name NOT CF*-prefixed, N=1; DR/ is a defensible home |
+| `LGT/dll_02A9_lgtpointlight.c` | LGTPointLight | 2 | temple×22 | generic point light, 125 placements / 18 maps; CF_WallTorc sub-def 15/125 |
+| `LGT/dll_02AC_lgtcontrollight.c` | LGTControlLight | 1 | clouddungeon×2 | LGT-named control light (LGT/ correct), N=2 |
+| `ARW/dll_01FE_pressureswitch.c` | PressureSwitch | 4 | mmshrine×3 | generic pressure switch (DFP/WM/ECSH); CFPressureS 2/11 |
+| `BW/dll_0255_snowbike.c` | SnowBike | 7 | cloudrace×4 | CR (Cloud-Runner-RACE) sub-defs but generic SnowBike canon; CR/ is its own lane |
+| `WM/dll_020A_wmgeneralscales.c` | WM_GeneralScales | 1 | cloudrace×1 | WM-named (WM/ correct), N=2 |
+| `dll/dll_0293_suntemple.c` | SunTemple | 4 | wallcity×4 | WCSunTemple sub-defs, #1 map WC (wallcity) |
+
+**Blocked-on-carve (CF-named defs inside multi-DLL CONTAINERS — cannot
+move until the container is carved into per-DLL files):**
+
+| container (dir) | CF-named DLL id(s) | example CF defs |
+|---|---|---|
+| `dll/mmp_asteroid_re.c` (root) | 0x12E, 0x131 | CFLightWall, CFLightPill, CFDungeonLi, CFGCrubble*, CF_DoorLigh (per manifest) |
+| `dll/cfguardian.c` (root) | 0x110, 0x111 | CFPrisonDoo, CFTreasureD, CFMainDoorA, CFBrokenPil, CFPowerLock, CFDoubleSwi |
+| `dll/genprops.c` (root) | 0xC6 | CFAnimCloud, CFPrisonCag, CFPowerDoor, CFPowerCrys, CFAnimBaby, CFMainDoorB, CFBrokenPil |
+| `dll/alphaanim.c` (root) | 0x112 | CFGoldenPer, CFseqobject, CFRaceSeqob, CF_BobbingC, CFLandingPa |
+| `IM/IMicicle.c` (IM) | 0x15B, 0x15D, 0x15F, 0x162, 0x164, 0x166 | CFForceFiel, CFSlideDoor, CFAttractor, CFMagicWall, CFLevelCont, CFbrokenGra |
+| `TREX/TREX_trex.c` (TREX) | 0x1F4, 0x1F5 | CF_Lamp, CF_generals |
+| `dll/cfprisonuncle.c` (root) | 0x118 | (id 0x118, #1 map fortress) |
+
+(`cfguardian.c` / `cfprisonuncle.c` at the dll/ ROOT are the v1.1-named
+donor CONTAINERS hosting many CF defs — distinct from the eight DR/
+single-DLL `dll_014X_*` units moved above.)
+
+### Final `src/main/dll/CF/` listing (after inbound moves)
+
+8 prior residents (`CFPrisonGuard.c`, `dll_0107_unused.c`,
+`dll_0109_unk.c`, `dll_010A_fallladders.c`, `dll_0124_deathgas.c`,
+`dll_0127_dll127.c`, `dll_012A_cfcrate.c`, `warppad.c`) + 8 inbound
+(`dll_0148_cfguardian.c`, `dll_0149_cfwindlift.c`,
+`dll_014A_cfpowerbase.c`, `dll_014B_cfmaincrystal.c`,
+`dll_014E_cfprisonguard.c`, `dll_014F_cfprisonuncle.c`,
+`dll_0153_cfperch.c`, `dll_0154_cfprisoncage.c`) = **16 CF/ residents.**
+
+## Appendix: project-wide lane-mismatch census (homing roadmap)
+
+`tools/cf_lane_homing.py --all` now censuses every single-DLL unit's
+evidenced lane (manifest-canonical name prefix → existing lane dir) vs
+its current dir. Beyond the 8 INBOUND-CF above, **10 units** sit in a
+lane dir contradicting their name-prefix evidence — the roadmap for the
+project-wide homing follow-up (same byte-neutral `git mv` mechanics):
+
+| unit | manifest canonical | current dir | evidenced lane | top map |
+|---|---|---|---|---|
+| `ARW/dll_01FD_wmlasertarget.c` | WM_LaserTarget | ARW | WM | warlock×1 |
+| `ARW/dll_0201_wmcolrise.c` | WM_colrise | ARW | WM | warlock×2 |
+| `ARW/dll_0204_wmtorch.c` | WM_Torch | ARW | WM | (no placements) |
+| `LGT/dll_0207_wmworm.c` | WM_Worm | LGT | WM | (no placements) |
+| `WC/dll_01F9_wmobjcreator.c` | WM_ObjCreator | WC | WM | (no placements) |
+| `IM/dll_01AE_shlevelcontrol.c` | SH_LevelControl | IM | SH | hollow×1 |
+| `IM/dll_01AF_shswaplift.c` | SH_swaplift | IM | SH | hollow×1 |
+| `SC/dll_01AD_shthorntail.c` | SH_thorntail | SC | SH | hollow×56 |
+| `SC/dll_01B0_shswapston.c` | SH_swapston | SC | SH | hollow×1 |
+| `dll/dll_0195_dbshshrine.c` | DBSH_Shrine | (root) | DB | dbshrine×1 |
+
+These are NAME-prefix mismatches (the unit sits in a lane dir whose
+prefix it doesn't carry); a full project-wide pass would also re-evaluate
+the address-lane-vs-placement question for the multi-DLL containers
+(`tools/cf_lane_homing.py --all` lists all 77). This inbound pass moves
+only the 8 CF cases; the table above is the documented roadmap, not yet
+executed.

@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""CF/ lane-homing audit: retail romlist placement census per CF DLL unit.
+"""Lane-homing audit: retail romlist placement census per single-DLL unit.
 
-Re-homes every src/main/dll/CF/ unit from retail TRUTH (not drift-era
-donor-file inheritance). Decompresses every <map>.romlist.zlb from the
-retail ISO, reverse-maps placement records -> def -> handling DLL id ->
-text-fn range -> splits.txt unit, then censuses each unit's placements
-across maps and classifies CF-family (Cloud-Runner-Fortress) vs other.
+Re-homes DLL units from retail TRUTH (not drift-era donor-file
+inheritance). Decompresses every <map>.romlist.zlb from the retail ISO,
+reverse-maps placement records -> def -> handling DLL id -> text-fn
+range -> splits.txt unit, then censuses each unit's placements across
+maps and classifies CF-family (Cloud-Runner-Fortress) vs other.
+
+Modes:
+  (default / --cf)  CF/ residents only (outbound: who leaves CF/).
+  --all             every single-DLL unit project-wide; emits the
+                    inbound-CF set + the full lane-mismatch census.
 
 Offsets (v1.0 USA, GSAE01): see CLAUDE.md "Retail-ISO forensics".
-Usage: python3 tools/cf_lane_homing.py [--csv]
+Usage: python3 tools/cf_lane_homing.py [--csv | --all [--csv]]
 """
 import struct, zlib, re, bisect, os, sys
 from collections import defaultdict, Counter
@@ -27,6 +32,26 @@ CF_MAPS = {"clouddungeon", "cloudjoin", "cloudrace", "cloudrunnermap",
            "cloudtrap", "cloudtreasure", "cfcolumn", "cfdungeonblock",
            "cfgalleon", "cfgangplank", "cfledge", "cfliftplat",
            "cfprisoncage", "cfprisondoor", "fortress"}
+
+# Lane DIRECTORIES that currently exist under src/main/dll/. The evidenced
+# lane for a unit is derived (for the project-wide census) from its
+# canonical retail-name prefix; only prefixes whose lane dir EXISTS are
+# treated as a re-home target, otherwise the unit homes to dll/ root.
+LANE_DIRS = {"ARW", "baddie", "BW", "CAM", "CF", "CR", "DB", "debug",
+             "DF", "DIM", "DR", "FRONT", "IM", "LGT", "MMP", "mmshrine",
+             "NW", "SC", "SH", "SP", "TREX", "VF", "WC", "WM"}
+
+# Retail name-PREFIX -> lane dir. Mirrors the manifest's name-prefix rule
+# (WM_->WM/, DR->DR/, etc.). Longest-prefix wins. Only prefixes whose dir
+# is in LANE_DIRS yield a re-home; CC/KT/MagicCave/DFP have no dir -> root.
+NAME_LANE = [
+    ("CF", "CF"), ("ARW", "ARW"), ("DIM2", "DIM"), ("DIM", "DIM"),
+    ("DRP", "DR"), ("DR", "DR"), ("DB", "DB"), ("DBSH", "DB"),
+    ("WC", "WC"), ("WM", "WM"), ("WG", "WM"), ("NW", "NW"),
+    ("SC", "SC"), ("SH", "SH"), ("VFP", "VF"), ("VF", "VF"),
+    ("IM", "IM"), ("MMP", "MMP"), ("TREX", "TREX"), ("Trex", "TREX"),
+    ("CAM", "CAM"), ("BW", "BW"), ("LGT", "LGT"),
+]
 
 
 def load():
@@ -160,11 +185,34 @@ def load():
             if did is not None:
                 dllid_pl[did][mp] += 1
 
-    return dllid_units, dllid_pl, def_dllid, def_name
+    return dllid_units, dllid_pl, def_dllid, def_name, units
 
 
-def main():
-    dllid_units, dllid_pl, def_dllid, def_name = load()
+def name_lane(name):
+    """Re-home lane from a retail name prefix; None if prefix has no dir."""
+    if not name or name == "-":
+        return None
+    best = None
+    for pfx, lane in NAME_LANE:
+        if name.startswith(pfx) and (best is None or len(pfx) > len(best[0])):
+            best = (pfx, lane)
+    return best[1] if best else None
+
+
+def unit_dir(unit):
+    """Current lane dir of a splits unit name (main/dll/<LANE>/file.c)."""
+    m = re.match(r"main/dll/([A-Za-z]+)/", unit)
+    if m and m.group(1) in LANE_DIRS:
+        return m.group(1)
+    return None
+
+
+def census(dllid_units, dllid_pl, def_dllid, def_name, units):
+    """Per-unit retail name + placement distribution + dll-id count.
+
+    Returns a list of dicts (single-DLL + helper-sliver units) and a
+    separate list of multi-DLL container units (excluded from re-homing).
+    """
     unit_dllids = defaultdict(set)
     for did, us in dllid_units.items():
         for u in us:
@@ -173,26 +221,140 @@ def main():
     for di in sorted(def_dllid):
         order[def_dllid[di]].append(def_name[di])
 
-    csv = "--csv" in sys.argv
-    cf_dir = os.path.join(REPO, "src/main/dll/CF")
-    if csv:
-        print("unit,dll_ids,canonical,total,cf,other,top_noncf")
-    for f in sorted(x for x in os.listdir(cf_dir) if x.endswith(".c")):
-        dids = sorted(unit_dllids.get(f"main/dll/CF/{f}", set()))
+    rows, containers = [], []
+    seen = set()
+    for _lo, _hi, unit in units:
+        if unit in seen or not unit.startswith("main/dll/"):
+            continue
+        seen.add(unit)
+        dids = sorted(unit_dllids.get(unit, set()))
         pl = Counter()
         for did in dids:
             pl += dllid_pl.get(did, Counter())
         total = sum(pl.values())
         cf = sum(pl[m] for m in pl if m in CF_MAPS)
         canon = order[dids[0]][0] if dids and order.get(dids[0]) else "-"
-        top = sorted(((m, c) for m, c in pl.items() if m not in CF_MAPS),
-                     key=lambda x: -x[1])[:4]
-        topnc = " ".join(f"{m}:{c}" for m, c in top)
-        if csv:
-            print(f"{f},{'|'.join('0x%X' % d for d in dids)},{canon},{total},{cf},{total - cf},{topnc}")
+        top = sorted(pl.items(), key=lambda x: (-x[1], x[0]))
+        top1 = top[0][0] if top else "-"
+        topnc = sorted(((m, c) for m, c in pl.items() if m not in CF_MAPS),
+                       key=lambda x: (-x[1], x[0]))[:4]
+        row = dict(unit=unit, dids=dids, canon=canon, total=total, cf=cf,
+                   top1=top1, topnc=topnc, curdir=unit_dir(unit))
+        if len(dids) > 1:
+            containers.append(row)
         else:
-            print(f"{f:36s} dll={','.join('0x%X' % d for d in dids) or '-':9s} "
-                  f"canon={canon:12s} tot={total:3d} CF={cf:2d} other={total - cf:3d}  {topnc}")
+            rows.append(row)
+    return rows, containers
+
+
+def load_manifest_canon():
+    """dll id -> manifest CANONICAL primary name (the chosen identity,
+    which for a multi-def shared DLL is a GENERIC STEM, not the first
+    CF-prefixed sub-def). This is the faithful lane signal: the outbound
+    pass moved generic multi-def DLLs out of CF even when a CF sub-def
+    was present (decoration11a), and kept CF-canonical units (CFCrate)."""
+    path = os.path.join(REPO, "docs/dll_naming_manifest.md")
+    canon = {}
+    # Main Manifest table only: col-3 is an expansion-status token. The
+    # contradictions appendix uses the same id format but a free-text col-3,
+    # so anchor on the status token to avoid mis-parsing it.
+    status = ("COMPLETE", "CONFIRMED", "GUESSED", "RAW", "NO-RETAIL-NAME")
+    for line in open(path):
+        mm = re.match(r"^\| (0x[0-9A-Fa-f]+) \| (.+?) \| (\S+) \| ", line)
+        if mm and mm.group(3) in status:
+            canon[int(mm.group(1), 16)] = mm.group(2).split(" (+")[0].strip()
+    return canon
+
+
+def cf_verdict(row, manifest_canon=None):
+    """Inbound-CF criterion (faithful mirror of the outbound STAY rule):
+    True iff retail evidence homes this single-DLL unit INTO CF/.
+    (a) the unit's MANIFEST CANONICAL primary name is CF*-prefixed
+        (precedence per manifest header), OR
+    (b) a CF-family map is its single #1 placement map AND the unit is
+        not a generic multi-def shared DLL (manifest canon is a CF/CR
+        cloud-runner name).
+    The manifest canonical (a chosen GENERIC STEM for shared multi-def
+    DLLs like enemy/collectible/LargeCrate) is what distinguishes a
+    genuine CF unit from a shared global whose #1 map is coincidentally
+    CF-family."""
+    mc = None
+    if manifest_canon is not None and row["dids"]:
+        mc = manifest_canon.get(row["dids"][0])
+    name = mc if mc else row["canon"]
+    if name and (name.startswith("CF") or name.startswith("cf")):
+        return True, f"CF* canonical name ({name})"
+    return False, ""
+
+
+def main():
+    data = load()
+    dllid_units, dllid_pl, def_dllid, def_name, units = data
+    csv = "--csv" in sys.argv
+
+    if "--all" in sys.argv:
+        rows, containers = census(*data)
+        mcanon = load_manifest_canon()
+        # Inbound-CF: units OUTSIDE CF/ that retail evidence homes into CF/.
+        if csv:
+            print("unit,dll_ids,canonical,manifest_canon,total,cf,other,top1,"
+                  "curdir,evidenced_lane,cf_inbound,verdict,top_maps")
+        for row in sorted(rows, key=lambda r: r["unit"]):
+            cur = row["curdir"]
+            mc = mcanon.get(row["dids"][0]) if row["dids"] else None
+            mcname = mc if mc else row["canon"]
+            is_cf = cf_verdict(row, mcanon)[0]
+            elane = "CF" if is_cf else (name_lane(mcname) or "-")
+            inbound = (cur != "CF" and is_cf)
+            mismatch = (elane != "-" and cur != elane)
+            allmaps = Counter()
+            for did in row["dids"]:
+                allmaps += dllid_pl.get(did, Counter())
+            tops = sorted(allmaps.items(), key=lambda x: (-x[1], x[0]))[:5]
+            topm = " ".join(f"{m}:{c}" for m, c in tops)
+            verdict = ("INBOUND-CF" if inbound else
+                       ("MISMATCH" if mismatch else "ok"))
+            if csv:
+                print(f"{row['unit']},{'|'.join('0x%X'%d for d in row['dids'])},"
+                      f"{row['canon']},{mcname},{row['total']},{row['cf']},"
+                      f"{row['total']-row['cf']},{row['top1']},{cur or '-'},"
+                      f"{elane},{inbound},{verdict},{topm}")
+            else:
+                print(f"{row['unit']:48s} dll={'|'.join('0x%X'%d for d in row['dids']) or '-':7s} "
+                      f"mcanon={mcname:14s} tot={row['total']:3d} CF={row['cf']:2d} "
+                      f"cur={cur or '-':8s} ev={elane:8s} {verdict:11s} {topm}")
+        if not csv:
+            print(f"\n# {len(rows)} single-DLL units, "
+                  f"{len(containers)} multi-DLL containers (excluded)")
+            print("# multi-DLL containers:")
+            for row in sorted(containers, key=lambda r: r["unit"]):
+                cfdids = [d for d in row["dids"]]
+                print(f"#   {row['unit']:46s} dll={'|'.join('0x%X'%d for d in row['dids'])}")
+        return
+
+    # default: CF/ residents only (outbound mode)
+    rows, _ = census(*data)
+    cf_rows = [r for r in rows if r["curdir"] == "CF"]
+    cf_units = {r["unit"] for r in cf_rows}
+    cf_dir = os.path.join(REPO, "src/main/dll/CF")
+    by_unit = {r["unit"]: r for r in cf_rows}
+    if csv:
+        print("unit,dll_ids,canonical,total,cf,other,top_noncf")
+    for f in sorted(x for x in os.listdir(cf_dir) if x.endswith(".c")):
+        unit = f"main/dll/CF/{f}"
+        row = by_unit.get(unit)
+        if row is None:
+            # helper sliver with no descriptor / no placement
+            row = dict(dids=[], canon="-", total=0, cf=0, topnc=[])
+        topnc = " ".join(f"{m}:{c}" for m, c in row["topnc"])
+        d = ','.join('0x%X' % x for x in row["dids"]) or '-'
+        if csv:
+            print(f"{f},{'|'.join('0x%X'%x for x in row['dids'])},{row['canon']},"
+                  f"{row['total']},{row['cf']},{row['total']-row['cf']},{topnc}")
+        else:
+            print(f"{f:36s} dll={d:9s} canon={row['canon']:12s} "
+                  f"tot={row['total']:3d} CF={row['cf']:2d} "
+                  f"other={row['total']-row['cf']:3d}  {topnc}")
 
 
 if __name__ == "__main__":
