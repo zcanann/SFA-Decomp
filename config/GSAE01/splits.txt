@@ -195,14 +195,8 @@ main/dll/dll_00B6_projsquirt1.c:
 main/dll/dll_00B7_projship1.c:
 	.text       start:0x80100898 end:0x801008D0
 
-main/dll/dll_64.c:
-	.text       start:0x801008D0 end:0x80100900
-
-main/dll/dll_75.c:
-	.text       start:0x80100900 end:0x80100904
-
-main/dll/dll_76.c:
-	.text       start:0x80100904 end:0x80100908
+main/dll/dll_00BB_projwallpower.c:
+	.text       start:0x801008D0 end:0x80100908
 
 main/dll/dll_77.c:
 	.text       start:0x80100908 end:0x80100938
