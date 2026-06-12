@@ -36,9 +36,11 @@ void wmworm_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-/* opt_common_subs off is load-bearing: the retail compile reloads
-   anim.localPosX/Y/Z fresh in each chase-axis body instead of CSE-ing
-   the loads from the dx/dy/dz subtracts (A/B'd both ways). */
+/* opt_common_subs off is load-bearing for update ONLY: the retail
+   compile reloads anim.localPosX/Y/Z fresh in each chase-axis body
+   instead of CSE-ing the loads from the dx/dy/dz subtracts, while init
+   NEEDS CSE on (whole-file ocs-off changes it - A/B'd). So this one
+   stays a per-fn pragma rather than unit cflags. */
 #pragma opt_common_subs off
 void wmworm_update(GameObject* obj)
 {

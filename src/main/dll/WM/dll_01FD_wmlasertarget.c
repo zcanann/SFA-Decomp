@@ -116,12 +116,9 @@ void wmlasertarget_init(char* obj, s8* p)
     inner->toggleQueued = 0;
 }
 
-#pragma opt_strength_reduction off
 
 typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset

@@ -307,8 +307,6 @@ u32 jumptable_803214DC[] = {
 
 /* ---- v1.1-drift appleontree content (DLL 0x0117 range) from here
    down - see the header note. ---- */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8017db40(uint param_1, int param_2)
 {
     undefined2 uVar1;

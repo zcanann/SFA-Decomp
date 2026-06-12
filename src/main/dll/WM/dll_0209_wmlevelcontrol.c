@@ -90,8 +90,6 @@ extern f32 lbl_803E5E80;   /* 128.0: light-intensity blend range */
 extern f32 lbl_803E5E84;   /* 100.0: override light intensity */
 extern void objRenderFn_8003b8f4(f32);
 
-#pragma scheduling off
-#pragma peephole off
 void wmlevelcontrol_update(int obj)
 {
     uint mode6;

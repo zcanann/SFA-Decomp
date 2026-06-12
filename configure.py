@@ -268,6 +268,11 @@ cflags_dll_nosched = [
     "-opt", "noschedule",
 ]
 
+cflags_dll_noopt_nostrength = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nostrength",
+]
+
 cflags_dll_nopeep = [
     *cflags_base,
     "-opt", "nopeephole",
@@ -1493,10 +1498,10 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_01FC_laserbeam.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_01FE_pressureswitch.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_01FF_dll1ff.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/WM/dll_01FD_wmlasertarget.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/WM/dll_01FD_wmlasertarget.c", cflags=cflags_dll_noopt_nostrength),
             Object(NonMatching, "main/dll/dll_0200_dll200.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WM/dll_0201_wmcolrise.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/WM/dll_0204_wmtorch.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/WM/dll_0204_wmtorch.c", cflags=cflags_dll_noopt_nostrength),
             Object(NonMatching, "main/dll/dll_0206_lightsource.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WM/dll_0207_wmworm.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WM/dll_0209_wmlevelcontrol.c", cflags=cflags_dll_noopt),

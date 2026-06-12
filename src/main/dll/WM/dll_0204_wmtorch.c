@@ -134,12 +134,9 @@ void wmtorch_free(int obj, int mode)
     (*gExpgfxInterface)->freeSource(obj);
 }
 
-#pragma opt_strength_reduction off
 
 typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset

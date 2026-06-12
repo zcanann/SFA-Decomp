@@ -87,7 +87,6 @@ STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 
-#pragma peephole on
 int wmsun_SeqFn(int p1, int p2, ObjAnimUpdateState* actor)
 {
     actor->hitVolumePair = -1;
@@ -99,7 +98,6 @@ int wmsun_getExtraSize(void) { return 0x10; }
 
 int wmsun_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling on
 void wmsun_hitDetect(void)
 {
 }
@@ -112,7 +110,6 @@ void wmsun_initialise(void)
 {
 }
 
-#pragma scheduling off
 void wmsun_free(int obj)
 {
     WmSunState* state = ((GameObject*)obj)->extra;
@@ -123,7 +120,6 @@ void wmsun_free(int obj)
     state->glareParams = NULL;
 }
 
-#pragma peephole off
 void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     WmSunState* state = ((GameObject*)p1)->extra;
