@@ -44,18 +44,6 @@ typedef struct DllCBState
 } DllCBState;
 
 
-typedef struct GrimbleState
-{
-    u8 pad0[0x38 - 0x0];
-    s32 unk38;
-    u8 pad3C[0x45 - 0x3C];
-    s8 unk45;
-    u8 pad46[0x48 - 0x46];
-    f32 unk48;
-    u8 pad4C[0x58 - 0x4C];
-    s16 unk58;
-    u8 pad5A[0x60 - 0x5A];
-} GrimbleState;
 
 
 extern undefined8 FUN_80003494();
@@ -69,11 +57,9 @@ extern undefined4 FUN_80017ac8();
 extern int FUN_80017b00();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined8 ObjMsg_SendToObjects();
 extern undefined4 ObjMsg_SendToObject();
@@ -81,7 +67,6 @@ extern undefined4 FUN_8003b818();
 extern double FUN_80293900();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern f64 DOUBLE_803e3a58;
@@ -143,7 +128,6 @@ extern f32 lbl_803E3B94;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015E3A0(int obj, int p2);
 
 /*
  * --INFO--
@@ -363,22 +347,14 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
 int fn_8015DC04(int obj, GroundBaddieState* p);
 
 #pragma dont_inline on
-void fn_8015DAE8(void);
 #pragma dont_inline reset
 
-void dll_CA_init(int obj, u8* p, int flags);
 
-int fn_8015E5DC(short* obj, GroundBaddieState* p);
 
-int fn_8015DF20(int obj, GroundBaddieState* p);
 
-int fn_8015E0C8(int obj, GroundBaddieState* p);
 
-int fn_8015E798(int obj, GroundBaddieState* p);
 
-int fn_8015E8BC(int obj, GroundBaddieState* p);
 
-void fn_8015EA48(int obj, GroundBaddieState* state);
 
 /*
  * --INFO--
@@ -646,13 +622,9 @@ void fn_8015ED1C(int p1, int p2, int p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_CE_func0B(int obj, int v);
 
-void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_CE_init(int obj, u8* p, int flags);
 
-void dll_CE_update(int obj, int p2, int p3);
 
 /*
  * --INFO--
@@ -674,7 +646,6 @@ void dll_CE_update(int obj, int p2, int p3);
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void fn_8015FBEC(int obj);
 #pragma dont_inline reset
 
 static inline u8 scarab_isObjectInList(void* o)
@@ -712,13 +683,9 @@ void fn_8015FCCC(int obj);
 #pragma peephole on
 
 
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int getTrickyObject(void);
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
-extern f32 lbl_803E2E54;
-extern f32 lbl_803E2E58;
 
 /*
  * --INFO--
@@ -1411,9 +1378,7 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 /* Trivial 4b 0-arg blr leaves. */
 void dll_CA_release_nop(void);
 
-void dll_CE_hitDetect_nop(void);
 
-void dll_CE_release_nop(void);
 
 void chukchuk_free(void);
 
@@ -1546,7 +1511,6 @@ void dll_CB_update(int* obj)
 
 /* 8b "li r3, N; blr" returners. */
 int dll_CE_getExtraSize_ret_1052(void);
-int dll_CE_getObjectTypeId(void);
 int chukchuk_getExtraSize(void);
 int chukchuk_getObjectTypeId(void);
 int iceball_getExtraSize(void);
@@ -1562,18 +1526,15 @@ s16 dll_CB_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E2E30;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E2E50;
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* plain forwarder. */
-extern void Camera_DisableViewYOffset(void);
 void iceball_free(void);
 
 
-void fn_8015F5B0(short* obj);
 
 void chukchuk_update(short* obj);
 
@@ -1599,12 +1560,10 @@ int fn_8016050C(int p1, u8* obj)
 int grimble_stateHandlerB03(int p1, u8* obj);
 
 /* fn_8015E00C (56B). Two-tier select: <1 -> 3, else if obj[0x346]!=0 -> 6 else 0. */
-int fn_8015E00C(int p1, u8* obj);
 
 /* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
 extern void GameBit_Set(int eventId, int value);
 #pragma scheduling off
-int grimble_stateHandlerB05(int* obj, u8* obj2);
 
 /* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
 extern undefined4* gBaddieControlInterface;
@@ -1682,20 +1641,13 @@ extern u8 framesThisStep;
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
 #pragma peephole off
-int fn_8015DE50(int* obj, GroundBaddieState* state);
 
-int fn_8015DEB4(int* obj, GroundBaddieState* state);
 
-int fn_8015E044(int* obj, GroundBaddieState* state);
 
-extern f32 lbl_803E2DD8;
 extern f32 lbl_803E2E7C;
 extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;
-extern f32 lbl_803E2EB8;
-extern f32 lbl_803E2EE8;
 
-int grimble_stateHandlerA08(int* obj, GroundBaddieState* state);
 
 int fn_8016032C(int* obj, GroundBaddieState* state)
 {
@@ -1727,16 +1679,12 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
 
 int fn_8015E520(int* obj, GroundBaddieState* state);
 
-int grimble_stateHandlerB04(int* obj, GroundBaddieState* state);
 
 extern void* lbl_803AC5D0[];
 extern int fn_801605D4(int* obj, GroundBaddieState* def);
 int fn_80160534(int* obj);
 
-extern void* lbl_803AC5B0[];
-extern void* lbl_803AC598[];
 
-void dll_CE_initialise(void);
 
 extern f32 lbl_803E2E90;
 extern f32 lbl_803E2E94;
@@ -1796,19 +1744,12 @@ int fn_80160534(int* obj)
 #pragma peephole off
 int grimble_stateHandlerB01(int* obj, GroundBaddieState* state);
 
-int grimble_stateHandlerB00(int obj, GroundBaddieState* p);
 
-int grimble_stateHandlerA09(int obj, GroundBaddieState* p);
 
-int grimble_stateHandlerA06(short* obj, GroundBaddieState* p, f32 spd);
 
-int grimble_stateHandlerA07(short* obj, GroundBaddieState* p);
 
-int grimble_stateHandlerA05(short* obj, GroundBaddieState* p);
 
-int grimble_stateHandlerA04(short* obj, GroundBaddieState* p);
 
-int grimble_stateHandlerA03(short* obj, GroundBaddieState* p);
 
 void dll_CB_free(int* obj)
 {
@@ -1867,13 +1808,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
 };
 
 extern f32 sqrtf(f32);
-extern f32 lbl_803E2EB0;
-extern f32 lbl_803E2EB4;
-extern f32 lbl_803E2EBC;
-extern f32 lbl_803E2EC0;
-extern f32 lbl_803E2EC4;
-extern f32 lbl_803E2EC8;
-extern f32 lbl_803E2ECC;
 
 /* scarab_updateProximityGate: scarab AI proximity gate. If no current target, dispatches
  * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means
@@ -1885,4 +1819,3 @@ extern f32 lbl_803E2ECC;
  * depending on the current mode at (*(u8 *)&state->baddie.controlMode) and the latch byte at
  * state->baddie.moveDone. When mode == 1, picks one of two scalars (lbl_803E2EC8 or
  * lbl_803E2ECC) for (*(u8 *)&state->baddie.moveSpeed). Returns 0. */
-int scarab_updateProximityGate(int* obj, GroundBaddieState* state);

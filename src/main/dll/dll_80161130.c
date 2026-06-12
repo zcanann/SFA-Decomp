@@ -7,41 +7,8 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-typedef struct DllCBPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    s8 unk4;
-    s8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    u8 pad14[0x24 - 0x14];
-    s16 unk24;
-    u8 pad26[0x2C - 0x26];
-    s16 unk2C;
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DllCBPlacement;
 
 
-typedef struct DllCBState
-{
-    f32 unk0;
-    f32 unk4;
-    u8 pad8[0x3DC - 0x8];
-    void* unk3DC;
-    s32 unk3E0;
-    u8 pad3E4[0x3F6 - 0x3E4];
-    s16 gameBitId;
-    u8 pad3F8[0x3FE - 0x3F8];
-    u16 unk3FE;
-    u16 unk400;
-    u8 pad402[0x405 - 0x402];
-    s8 unk405;
-    u8 pad406[0x408 - 0x406];
-} DllCBState;
 
 
 typedef struct GrimbleState
@@ -69,19 +36,15 @@ extern undefined4 FUN_80017ac8();
 extern int FUN_80017b00();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined8 ObjMsg_SendToObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_8003b818();
 extern double FUN_80293900();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern f64 DOUBLE_803e3a58;
@@ -143,7 +106,6 @@ extern f32 lbl_803E3B94;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015E3A0(int obj, int p2);
 
 /*
  * --INFO--
@@ -363,22 +325,14 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
 int fn_8015DC04(int obj, GroundBaddieState* p);
 
 #pragma dont_inline on
-void fn_8015DAE8(void);
 #pragma dont_inline reset
 
-void dll_CA_init(int obj, u8* p, int flags);
 
-int fn_8015E5DC(short* obj, GroundBaddieState* p);
 
-int fn_8015DF20(int obj, GroundBaddieState* p);
 
-int fn_8015E0C8(int obj, GroundBaddieState* p);
 
-int fn_8015E798(int obj, GroundBaddieState* p);
 
-int fn_8015E8BC(int obj, GroundBaddieState* p);
 
-void fn_8015EA48(int obj, GroundBaddieState* state);
 
 /*
  * --INFO--
@@ -646,13 +600,9 @@ void fn_8015ED1C(int p1, int p2, int p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_CE_func0B(int obj, int v);
 
-void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_CE_init(int obj, u8* p, int flags);
 
-void dll_CE_update(int obj, int p2, int p3);
 
 /*
  * --INFO--
@@ -674,7 +624,6 @@ void dll_CE_update(int obj, int p2, int p3);
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void fn_8015FBEC(int obj);
 #pragma dont_inline reset
 
 static inline u8 scarab_isObjectInList(void* o)
@@ -712,13 +661,8 @@ void fn_8015FCCC(int obj);
 #pragma peephole on
 
 
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int getTrickyObject(void);
-extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
-extern f32 lbl_803E2E54;
-extern f32 lbl_803E2E58;
 
 /*
  * --INFO--
@@ -737,19 +681,14 @@ extern f32 lbl_803E2E58;
 #pragma peephole off
 void iceball_update(undefined2* param_1, int param_2);
 
-int fn_801601C4(int obj, GroundBaddieState* p);
 
-int fn_8016043C(int obj, GroundBaddieState* p);
 
 #pragma dont_inline on
-void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p);
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p);
 #pragma dont_inline reset
 
-int dll_CB_seqFn(short* obj, int p2, u8* e);
 
 /*
  * --INFO--
@@ -1163,9 +1102,7 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 /* Trivial 4b 0-arg blr leaves. */
 void dll_CA_release_nop(void);
 
-void dll_CE_hitDetect_nop(void);
 
-void dll_CE_release_nop(void);
 
 void chukchuk_free(void);
 
@@ -1175,7 +1112,6 @@ void chukchuk_release(void);
 
 void chukchuk_initialise(void);
 
-extern uint GameBit_Get(int eventId);
 
 /*
  * Per-object extra state for the ChukChuk ice-spitter
@@ -1211,53 +1147,34 @@ void iceball_release(void);
 
 void iceball_initialise(void);
 
-void dll_CB_func0B_nop(void);
 
-void dll_CB_release_nop(void);
 
-extern f32 lbl_803E2EA8;
 
 #pragma scheduling off
 #pragma peephole off
-void dll_CB_init(int* obj, u8* params, int extra);
 
 
-extern int Curve_AdvanceAlongPath(int* p, f32 t);
 extern int getAngle(f32 a, f32 b);
-extern f32 lbl_803E2E98;
 
-void dll_CB_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_CE_getExtraSize_ret_1052(void);
-int dll_CE_getObjectTypeId(void);
 int chukchuk_getExtraSize(void);
 int chukchuk_getObjectTypeId(void);
 int iceball_getExtraSize(void);
 int iceball_getObjectTypeId(void);
-int fn_8016052C(void);
-int dll_CB_getExtraSize_ret_1040(void);
-int dll_CB_getObjectTypeId(void);
 
 /* Pattern wrappers. */
-s16 dll_CE_setScale(int* obj);
-s16 dll_CB_setScale(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E2E30;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E2E50;
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* plain forwarder. */
-extern void Camera_DisableViewYOffset(void);
 void iceball_free(void);
 
 
-void fn_8015F5B0(short* obj);
 
 void chukchuk_update(short* obj);
 
@@ -1273,7 +1190,6 @@ void iceball_init(void* obj);
 
 /* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
 #pragma scheduling on
-int fn_8016050C(int p1, u8* obj);
 
 /* grimble_stateHandlerB03 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
 int grimble_stateHandlerB03(int p1, u8* obj)
@@ -1306,42 +1222,26 @@ extern undefined4* gBaddieControlInterface;
 int fn_801603E8(int* obj, u8* obj2);
 
 /* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
-extern u8 lbl_803AC5E8[];
 extern undefined4* gPlayerInterface;
 #pragma peephole on
-void dll_CB_hitDetect(int* obj);
 
 /* dll_CB_render (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
-extern f32 lbl_803E2E8C;
 #pragma scheduling on
 #pragma peephole off
-void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* fn_801605A8 (44B). Writes float+state fields into obj and copies two halfwords to out. */
-extern f32 lbl_803E2E68;
 #pragma scheduling off
 #pragma peephole on
-int fn_801605A8(short* out, u8* obj);
 
 /* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
-int fn_80160690(short* out, u8* obj);
 
-extern f32 lbl_803E2DC8;
-extern u8 framesThisStep;
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
 #pragma peephole off
-int fn_8015DE50(int* obj, GroundBaddieState* state);
 
-int fn_8015DEB4(int* obj, GroundBaddieState* state);
 
-int fn_8015E044(int* obj, GroundBaddieState* state);
 
-extern f32 lbl_803E2DD8;
-extern f32 lbl_803E2E7C;
-extern f64 lbl_803E2E80;
-extern f32 lbl_803E2E88;
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
 
@@ -1365,7 +1265,6 @@ int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
 
 int fn_8016032C(int* obj, GroundBaddieState* state);
 
-int fn_8015E520(int* obj, GroundBaddieState* state);
 
 int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
 {
@@ -1391,23 +1290,13 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
 }
 
 extern void* lbl_803AC5D0[];
-extern int fn_801605D4(int* obj, GroundBaddieState* def);
-int fn_80160534(int* obj);
 
-extern void* lbl_803AC5B0[];
-extern void* lbl_803AC598[];
 
-void dll_CE_initialise(void);
 
-extern f32 lbl_803E2E90;
-extern f32 lbl_803E2E94;
 
-int fn_801605D4(int* obj, GroundBaddieState* def);
 
-void dll_CB_initialise(void);
 
 #pragma peephole on
-int fn_80160534(int* obj);
 
 #pragma peephole off
 int grimble_stateHandlerB01(int* obj, GroundBaddieState* state)
@@ -1751,7 +1640,6 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
 
 void dll_CB_free(int* obj);
 
-void dll_CE_free(int* obj);
 
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
