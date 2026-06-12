@@ -3,13 +3,8 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E56B0;
-extern f32 lbl_803E56B4;
 
 /*
  * --INFO--
@@ -125,13 +120,9 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole off
 
 
-void FEseqobject_free(void);
 
-void FEseqobject_hitDetect(void);
 
-void FEseqobject_release(void);
 
-void FEseqobject_initialise(void);
 
 void FElevControl_free(void);
 
@@ -165,7 +156,6 @@ void dll_144_initialise(void)
 
 /* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void);
-int FEseqobject_getObjectTypeId(void);
 int FElevControl_getExtraSize(void);
 int FElevControl_getObjectTypeId(void);
 int dll_144_getExtraSize(void) { return 0x0; }
@@ -173,10 +163,8 @@ int dll_144_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E56B8;
 extern f32 lbl_803E56C0;
 
-void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -194,14 +182,12 @@ void FElevControl_init(int x);
  * EN v1.0 Address: 0x801DF8F4
  * EN v1.0 Size: 56b
  */
-void FEseqobject_init(int obj);
 
 /*
  * Function: FEseqobject_update
  * EN v1.0 Address: 0x801DF894
  * EN v1.0 Size: 96b
  */
-void FEseqobject_update(int obj);
 
 /*
  * Function: dll_144_SeqFn

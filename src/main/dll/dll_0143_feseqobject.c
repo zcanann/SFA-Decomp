@@ -236,28 +236,19 @@ void FElevControl_release(void);
 
 void FElevControl_initialise(void);
 
-void dll_144_free(void);
 
-void dll_144_hitDetect(void);
 
-void dll_144_update(void);
 
-void dll_144_release(void);
 
-void dll_144_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
 int FElevControl_getExtraSize(void);
 int FElevControl_getObjectTypeId(void);
-int dll_144_getExtraSize(void);
-int dll_144_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E56B8;
-extern f32 lbl_803E56C0;
 
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -267,7 +258,6 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* call(x, N) wrappers. */
 void FElevControl_init(int x);
@@ -311,7 +301,6 @@ int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * EN v1.0 Address: 0x801DFA08
  * EN v1.0 Size: 24b
  */
-void dll_144_init(int obj);
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

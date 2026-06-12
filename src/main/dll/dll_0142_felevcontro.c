@@ -3,13 +3,8 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E56B0;
-extern f32 lbl_803E56B4;
 
 /*
  * --INFO--
@@ -125,13 +120,9 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole off
 
 
-void FEseqobject_free(void);
 
-void FEseqobject_hitDetect(void);
 
-void FEseqobject_release(void);
 
-void FEseqobject_initialise(void);
 
 void FElevControl_free(void)
 {
@@ -155,28 +146,19 @@ void FElevControl_initialise(void)
 
 void dll_144_free(void);
 
-void dll_144_hitDetect(void);
 
-void dll_144_update(void);
 
-void dll_144_release(void);
 
-void dll_144_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int FEseqobject_getExtraSize(void);
-int FEseqobject_getObjectTypeId(void);
 int FElevControl_getExtraSize(void) { return 0x0; }
 int FElevControl_getObjectTypeId(void) { return 0x0; }
 int dll_144_getExtraSize(void);
-int dll_144_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E56B8;
-extern f32 lbl_803E56C0;
 
-void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -201,21 +183,18 @@ void FEseqobject_init(int obj);
  * EN v1.0 Address: 0x801DF894
  * EN v1.0 Size: 96b
  */
-void FEseqobject_update(int obj);
 
 /*
  * Function: dll_144_SeqFn
  * EN v1.0 Address: 0x801DF9AC
  * EN v1.0 Size: 16b
  */
-int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * Function: dll_144_init
  * EN v1.0 Address: 0x801DFA08
  * EN v1.0 Size: 24b
  */
-void dll_144_init(int obj);
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
