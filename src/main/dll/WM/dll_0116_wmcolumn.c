@@ -29,10 +29,12 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 typedef struct WmColumnPlacement
 {
     u8 pad0[0x18 - 0x0];
-    u8 unk18;
-    u8 unk19;
+    u8 rotXByte;    /* 0x18: rotX in 1/256 turns */
+    u8 modelIndex;  /* 0x19: bank index; also the column's type offset
+                       (its seqId is GPSHpickobj + modelIndex) */
     u8 pad1A[0x1E - 0x1A];
-    s16 unk1E;
+    s16 gameBit;    /* 0x1E: set while this column sits on its scene
+                       spot, -1 = none */
     u8 pad20[0x38 - 0x20];
     u8 unk38;
     u8 unk39;
@@ -41,6 +43,8 @@ typedef struct WmColumnPlacement
     s16 unk3C;
     u8 pad3E[0x40 - 0x3E];
 } WmColumnPlacement;
+
+STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
@@ -63,13 +67,12 @@ extern int Obj_GetPlayerObject(void);
 extern uint playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int param_1);
 
-extern undefined4* gCarryableInterface;
 extern undefined4* DAT_803dd718;
 extern f32 lbl_803DC074;
-extern f32 lbl_803E37B8;
-extern f32 lbl_803E37BC;
-extern f32 lbl_803E37C0;
-extern f32 lbl_803E37C4;
+extern f32 lbl_803E37B8; /* 1.0: render scale */
+extern f32 lbl_803E37BC; /* 10000.0: nearest-object sentinel */
+extern f32 lbl_803E37C0; /* 35.0: scene-spot snap radius */
+extern f32 lbl_803E37C4; /* 60.0: pickup prompt distance */
 extern f32 lbl_803E4460;
 extern f32 lbl_803E446C;
 extern f32 lbl_803E4470;
@@ -89,6 +92,22 @@ typedef int (*GroundAnimatorVisibleFn)(int obj, int visible);
 typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
 typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
 typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int param_3);
+
+/* the carryable/groundAnimator interface vtable (gCarryableInterface) */
+typedef struct CarryableInterface
+{
+    u8 pad00[4];
+    GroundAnimatorInitAnimFn initAnim;      /* 0x04 */
+    GroundAnimatorAnimStateFn getAnimState; /* 0x08: nonzero while held */
+    GroundAnimatorVisibleFn isVisible;      /* 0x0C */
+    GroundAnimatorFreeFn free;              /* 0x10 */
+    u8 pad14[0x24 - 0x14];
+    GroundAnimatorSetVisibleFn setVisible;  /* 0x24 */
+} CarryableInterface;
+
+STATIC_ASSERT(offsetof(CarryableInterface, setVisible) == 0x24);
+
+extern CarryableInterface** gCarryableInterface;
 
 extern void appleontree_init();
 extern void appleontree_update();
@@ -116,13 +135,13 @@ int wm_column_getObjectTypeId(void)
 void wm_column_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 4);
-    (*(GroundAnimatorFreeFn*)(*gCarryableInterface + 0x10))(obj);
+    (*gCarryableInterface)->free(obj);
 }
 
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, f32 scale); /* #57 */
-    if ((*(GroundAnimatorVisibleFn*)(*gCarryableInterface + 0xc))(param_1, visible) != 0)
+    if ((*gCarryableInterface)->isVisible(param_1, visible) != 0)
     {
         objRenderFn_8003b8f4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
     }
@@ -144,7 +163,7 @@ void wm_column_update(int obj)
 
     state = *(int*)&((GameObject*)obj)->extra;
     nearest = lbl_803E37BC;
-    if ((*(GroundAnimatorAnimStateFn*)(*gCarryableInterface + 8))(obj, *(int*)&((GameObject*)obj)->extra) != 0)
+    if ((*gCarryableInterface)->getAnimState(obj, *(int*)&((GameObject*)obj)->extra) != 0)
     {
         if ((((GameObject*)obj)->unkF4 & 2) != 0)
         {
@@ -155,7 +174,7 @@ void wm_column_update(int obj)
                 if (((u32)other != (u32)obj) && (((GameObject*)other)->anim.seqId == 499) &&
                     (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < lbl_803E37C0))
                 {
-                    other = *(s16*)(*(int*)&((GameObject*)objects[i])->anim.placementData + 0x1e);
+                    other = ((WmColumnPlacement*)((GameObject*)objects[i])->anim.placement)->gameBit;
                     if (other != -1)
                     {
                         GameBit_Set(other, 0);
@@ -168,13 +187,13 @@ void wm_column_update(int obj)
         playerFlags = playerGetStateFlag310(playerFlags);
         if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4))
         {
-            (*(GroundAnimatorSetVisibleFn*)(*gCarryableInterface + 0x24))(state, 0);
+            (*gCarryableInterface)->setVisible(state, 0);
             setAButtonIcon(5);
             *(u32*)&((GameObject*)obj)->unkF4 |= 1;
         }
         else
         {
-            (*(GroundAnimatorSetVisibleFn*)(*gCarryableInterface + 0x24))(state, 1);
+            (*gCarryableInterface)->setVisible(state, 1);
         }
         *(u32*)&((GameObject*)obj)->unkF4 &= ~2;
     }
@@ -190,16 +209,16 @@ void wm_column_update(int obj)
                     (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < lbl_803E37C0))
                 {
                     int mapData = *(int*)&((GameObject*)objects[i])->anim.placementData;
-                    if (((GameObject*)obj)->anim.seqId == (s8)((WmColumnPlacement*)mapData)->unk19 + 500)
+                    if (((GameObject*)obj)->anim.seqId == (s8)((WmColumnPlacement*)mapData)->modelIndex + 500)
                     {
-                        if (((WmColumnPlacement*)mapData)->unk1E != -1)
+                        if (((WmColumnPlacement*)mapData)->gameBit != -1)
                         {
-                            GameBit_Set(((WmColumnPlacement*)mapData)->unk1E, 1);
+                            GameBit_Set(((WmColumnPlacement*)mapData)->gameBit, 1);
                         }
                     }
-                    else if (((WmColumnPlacement*)mapData)->unk1E != -1)
+                    else if (((WmColumnPlacement*)mapData)->gameBit != -1)
                     {
-                        GameBit_Set(((WmColumnPlacement*)mapData)->unk1E, 0);
+                        GameBit_Set(((WmColumnPlacement*)mapData)->gameBit, 0);
                     }
                     ((GameObject*)obj)->anim.localPosX = ((GameObject*)objects[i])->anim.localPosX;
                     ((GameObject*)obj)->anim.localPosY = ((GameObject*)objects[i])->anim.localPosY;
@@ -210,12 +229,12 @@ void wm_column_update(int obj)
         playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
         if ((playerFlags & 0x4000) != 0)
         {
-            (*(GroundAnimatorSetVisibleFn*)(*gCarryableInterface + 0x24))(state, 0);
+            (*gCarryableInterface)->setVisible(state, 0);
             *(u32*)&((GameObject*)obj)->unkF4 |= 2;
         }
         else
         {
-            (*(GroundAnimatorSetVisibleFn*)(*gCarryableInterface + 0x24))(state, 1);
+            (*gCarryableInterface)->setVisible(state, 1);
             *(u32*)&((GameObject*)obj)->unkF4 &= ~2;
         }
         *(u32*)&((GameObject*)obj)->unkF4 &= ~1;
@@ -225,15 +244,15 @@ void wm_column_update(int obj)
 void wm_column_init(GameObject* obj, WmColumnPlacement* mapData)
 {
     int state = *(int*)&obj->extra;
-    obj->anim.rotX = (s16)(mapData->unk18 << 8);
+    obj->anim.rotX = (s16)(mapData->rotXByte << 8);
     obj->objectFlags |= 0x2000;
     obj->unkF4 = 0;
-    obj->anim.bankIndex = (s8)mapData->unk19;
+    obj->anim.bankIndex = (s8)mapData->modelIndex;
     if (obj->anim.bankIndex >= obj->anim.modelInstance->modelCount)
     {
         obj->anim.bankIndex = 0;
     }
-    (*(GroundAnimatorInitAnimFn*)(*gCarryableInterface + 4))(obj, state, 0x32);
+    (*gCarryableInterface)->initAnim(obj, state, 0x32);
     ObjGroup_AddObject((int)obj, 4);
 }
 

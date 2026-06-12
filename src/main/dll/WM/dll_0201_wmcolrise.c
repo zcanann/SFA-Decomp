@@ -1,3 +1,20 @@
+/*
+ * wmcolrise (DLL 0x0201) - the rising column platform at Krazoa Palace.
+ * TU: 0x801F2E80-0x801F30DC (WM_colrise_* only).
+ *
+ * While its game bit allows and something stands on a column higher
+ * than RISE_TRIGGER_HEIGHT above it (the rider registry the shared
+ * platform helpers maintain), the column rises 0.25/tick toward
+ * placement height + 120 and plays its rumble; otherwise it sinks
+ * 0.125/tick back to placement height.
+ *
+ * NOTE: FUN_801f1634 / FUN_801f2b94 below are v1.1-drift bodies of the
+ * shared platform rider/eggy helpers (no symbol in this TU's range) -
+ * 7 sibling TUs (laserbeam/pressureswitch/lightsource/wmtorch/
+ * wmlasertarget/dll1ff/dll200) still call the FUN_ names, so they stay
+ * until that family's recovery remaps them. The neighbor-state
+ * typedefs/doc stubs in this file belong to the same pending group.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
@@ -225,12 +242,27 @@ void WM_colrise_initialise(void)
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 timeDelta;
-extern const f32 lbl_803E5DCC;
-extern f32 lbl_803E5DD0;
-extern f32 lbl_803E5DD4;
-extern f32 lbl_803E5DD8;
-extern f32 lbl_803E5DDC;
-extern f32 lbl_803E5DE0;
+extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise (#127 const: hoistable past the timer store) */
+extern f32 lbl_803E5DD0; /* 20.0 */
+extern f32 lbl_803E5DD4; /* 100.0: raised height above placement */
+extern f32 lbl_803E5DD8; /* 0.5: settle speed when overshot */
+extern f32 lbl_803E5DDC; /* 0.25: rise speed */
+extern f32 lbl_803E5DE0; /* 0.125: sink speed */
+
+/* the rider registry hanging off anim+0x58 (engine field not yet
+   named in ObjAnimComponent): the shared platform helpers push the
+   objects standing on this one into riders[]. */
+typedef struct ObjRiderRegistry
+{
+    u8 pad000[0x100];
+    int riders[3]; /* 0x100 */
+    u8 pad10C[3];
+    s8 riderCount; /* 0x10F */
+} ObjRiderRegistry;
+
+STATIC_ASSERT(offsetof(ObjRiderRegistry, riderCount) == 0x10F);
+
+#define OBJ_RIDER_REGISTRY(o) (*(ObjRiderRegistry**)((char*)(o) + 0x58))
 
 void WM_colrise_update(int* obj)
 {
@@ -244,12 +276,14 @@ void WM_colrise_update(int* obj)
     sub = ((GameObject*)obj)->extra;
     sub->raiseTimer -= 1;
     if ((s8)sub->raiseTimer < 0) sub->raiseTimer = 0;
-    if ((s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f) > 0)
+    /* rearm the 60-frame rise window while any rider sits more than
+       3.0 above the column */
+    if ((s8)OBJ_RIDER_REGISTRY(obj)->riderCount > 0)
     {
-        for (i = 0; i < (s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f); i++)
+        for (i = 0; i < (s8)OBJ_RIDER_REGISTRY(obj)->riderCount; i++)
         {
-            int* p = *(int**)((char*)*(int**)((char*)obj + 0x58) + 0x100 + i * 4);
-            if (*(f32*)((char*)p + 0x10) - ((GameObject*)obj)->anim.localPosY > lbl_803E5DCC)
+            GameObject* rider = (GameObject*)OBJ_RIDER_REGISTRY(obj)->riders[i];
+            if (rider->anim.localPosY - ((GameObject*)obj)->anim.localPosY > lbl_803E5DCC)
             {
                 sub->raiseTimer = 0x3c;
             }
@@ -304,12 +338,12 @@ void WM_colrise_update(int* obj)
 
 void wmtorch_hitDetect(void);
 
-int WM_colrise_getExtraSize(void) { return 0x4; }
+int WM_colrise_getExtraSize(void) { return sizeof(WMColriseState); }
 int WM_colrise_getObjectTypeId(void) { return 0x0; }
 int wmtorch_getExtraSize(void);
 
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5DC8;
+extern f32 lbl_803E5DC8; /* 1.0: render scale */
 
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
