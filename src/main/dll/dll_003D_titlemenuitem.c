@@ -344,18 +344,13 @@ void TitleMenuItem_update(TitleMenuItem* item)
 int Dummy3E_func05_ret_1(void);
 
 /* EN v1.0 0x80132010  size: 4b   Empty no-op. */
-void Dummy3E_func04_nop(void);
 
 /* EN v1.0 0x80132014  size: 8b   Trivial 0-returner. */
-int Dummy3E_func03_ret_0(void);
 
 /* EN v1.0 0x8013201C  size: 4b   Empty no-op. */
-void Dummy3E_release(void);
 
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
-void Dummy3E_initialise(void);
 
-extern u8 linkTextures[0x30];
 extern s16 lbl_8031C2A8[6];
 extern void mm_free(void);
 
