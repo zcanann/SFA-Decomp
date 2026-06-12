@@ -678,7 +678,7 @@ int dll_1CE_getExtraSize(void) { return 0xc; }
 int dll_1CE_getObjectTypeId(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void) { return 0x68; }
 int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
-int dim_levelcontrol_getExtraSize(void) { return 0x10; }
+int dim_levelcontrol_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E49D0;
@@ -705,11 +705,7 @@ void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A18);
 }
 
-void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A20);
-}
+void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* conditional init/free pair. */
 extern void* lbl_803DDB78;
@@ -834,12 +830,7 @@ int explosion_getObjectTypeId(int obj)
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern void timeOfDayFn_80055000(void);
 
-void dim_levelcontrol_free(int p1)
-{
-    Music_Trigger(0xa1, 0);
-    Music_Trigger(0xed, 0);
-    timeOfDayFn_80055000();
-}
+void dim_levelcontrol_free(int p1);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */

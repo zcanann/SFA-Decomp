@@ -848,13 +848,13 @@ main/dll/DIM/DIM2conveyor.c:
 	.text       start:0x801B3768 end:0x801B3DE4
 
 main/dll/DIM/DIM2flameburst.c:
-	.text       start:0x801B3DE4 end:0x801B6464
+	.text       start:0x801B3DE4 end:0x801B63F4
 
 main/dll/DIM/DIM2snowball.c:
-	.text       start:0x801B6464 end:0x801B8860
+	.text       start:0x801B63F4 end:0x801B8798
 
 main/dll/DIM/DIM2projrock.c:
-	.text       start:0x801B8860 end:0x801BA224
+	.text       start:0x801B8798 end:0x801BA224
 
 main/dll/DIM/DIM2lift.c:
 	.text       start:0x801BA224 end:0x801BB598
