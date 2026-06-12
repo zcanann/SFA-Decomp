@@ -1,22 +1,32 @@
-/* DLL 0x0207 - wmworm (WarpZone Module worm enemy). TU: 0x801F3C2C-0x801F3F18. */
+/*
+ * wmworm (DLL 0x0207) - the worm enemy at Krazoa Palace (map 'warlock',
+ * Dinosaur Planet's Warlock Mountain - hence the WM dll prefix).
+ * TU: 0x801F3C2C-0x801F3F18.
+ *
+ * While the player is within WMWORM_CHASE_RANGE (in the XZ plane of the
+ * placement) the worm drifts toward the player at 1% of the offset per
+ * time unit and spins; once per approach it emits a burst of
+ * state->burstCount particle effects, then cools down for that many
+ * frames in obj->unkF4 before it may fire again. Out of range it snaps
+ * back to its recorded home position.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/WM/dll_0207_wmworm.h"
 
-extern undefined4 FUN_8001753c();
 extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern EffectInterface** gPartfxInterface;
-extern byte framesThisStep;
-extern f32 lbl_803E5E58;
-extern f32 lbl_803E5E5C;
-extern f32 lbl_803E5E60;
+extern u8 framesThisStep;
+extern f32 lbl_803E5E58; /* 440.0: chase range */
+extern f32 lbl_803E5E5C; /* 0.0 */
+extern f32 lbl_803E5E60; /* 0.01: chase speed factor */
 extern f32 timeDelta;
 
 void wmworm_hitDetect(void)
 {
 }
 
-int wmworm_getExtraSize(void) { return 0x1c; }
+int wmworm_getExtraSize(void) { return sizeof(WmWormState); }
 int wmworm_getObjectTypeId(void) { return 0x0; }
 
 void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
@@ -26,12 +36,15 @@ void wmworm_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
+/* opt_common_subs off is load-bearing: the retail compile reloads
+   anim.localPosX/Y/Z fresh in each chase-axis body instead of CSE-ing
+   the loads from the dx/dy/dz subtracts (A/B'd both ways). */
 #pragma opt_common_subs off
 void wmworm_update(GameObject* obj)
 {
-    float fVar1;
-    float fVar2;
-    float fVar3;
+    float dx;
+    float dy;
+    float dz;
     GameObject* player;
     WmWormState* state;
     int burstCount;
@@ -51,23 +64,26 @@ void wmworm_update(GameObject* obj)
         }
         else
         {
-            fVar1 = player->anim.worldPosX - obj->anim.localPosX;
-            fVar2 = player->anim.worldPosY - obj->anim.localPosY;
-            fVar3 = player->anim.worldPosZ - obj->anim.localPosZ;
-            if ((fVar1 > lbl_803E5E5C) || (fVar1 < lbl_803E5E5C))
+            dx = player->anim.worldPosX - obj->anim.localPosX;
+            dy = player->anim.worldPosY - obj->anim.localPosY;
+            dz = player->anim.worldPosZ - obj->anim.localPosZ;
+            /* "axis offset != 0" spelled as two strict compares; the
+               self-reassign split keeps the scale product in the dN
+               register (recipe #85). */
+            if ((dx > lbl_803E5E5C) || (dx < lbl_803E5E5C))
             {
-                fVar1 = lbl_803E5E60 * fVar1;
-                obj->anim.localPosX = fVar1 * timeDelta + obj->anim.localPosX;
+                dx = lbl_803E5E60 * dx;
+                obj->anim.localPosX = dx * timeDelta + obj->anim.localPosX;
             }
-            if ((fVar2 > lbl_803E5E5C) || (fVar2 < lbl_803E5E5C))
+            if ((dy > lbl_803E5E5C) || (dy < lbl_803E5E5C))
             {
-                fVar2 = lbl_803E5E60 * fVar2;
-                obj->anim.localPosY = fVar2 * timeDelta + obj->anim.localPosY;
+                dy = lbl_803E5E60 * dy;
+                obj->anim.localPosY = dy * timeDelta + obj->anim.localPosY;
             }
-            if ((fVar3 > lbl_803E5E5C) || (fVar3 < lbl_803E5E5C))
+            if ((dz > lbl_803E5E5C) || (dz < lbl_803E5E5C))
             {
-                fVar3 = lbl_803E5E60 * fVar3;
-                obj->anim.localPosZ = fVar3 * timeDelta + obj->anim.localPosZ;
+                dz = lbl_803E5E60 * dz;
+                obj->anim.localPosZ = dz * timeDelta + obj->anim.localPosZ;
             }
             burstCount = state->burstCount;
             if (burstCount >= 0 || (burstCount < 0 && obj->unkF4 <= 0))
@@ -90,6 +106,8 @@ void wmworm_update(GameObject* obj)
                     (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
                                                      -1, NULL);
                 }
+                /* cooldown: burstCount frames before the next burst
+                   (negated; the guard above re-fires at <= 0) */
                 obj->unkF4 = -state->burstCount;
             }
             else if (burstCount < 0 && obj->unkF4 > 0)
