@@ -10,7 +10,7 @@ typedef struct LinkTexture
     u8 pad7;
 } LinkTexture;
 
-typedef struct LinkMenuItem
+typedef struct LinkMenuItemDA
 {
     u16 textId;
     u16 boxId;
@@ -30,7 +30,7 @@ typedef struct LinkMenuItem
     s8 slots[25];
     s8 timer;
     u8 pad39[3];
-} LinkMenuItem;
+} LinkMenuItemDA;
 
 extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
 extern void gameTextFn_80016810(int textId, int arg1, int arg2);
@@ -41,7 +41,7 @@ extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
 extern void MWTRACE(int boxId);
 
 extern LinkTexture linkTextures[6];
-extern LinkMenuItem lbl_803A9458[40];
+extern LinkMenuItemDA lbl_803A9458[40];
 extern void* saveFileSelect_saveSlots;
 extern s16 lbl_803DD8FA;
 extern s16 lbl_803DD8FC;
@@ -77,8 +77,8 @@ extern f64 lbl_803E21E0;
  */
 void Link_render(void)
 {
-    LinkMenuItem* item;
-    LinkMenuItem* drawItem;
+    LinkMenuItemDA* item;
+    LinkMenuItemDA* drawItem;
     int i;
     int slotIndex;
     int textureIndex;

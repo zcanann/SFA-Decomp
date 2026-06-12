@@ -184,7 +184,7 @@ extern f32 lbl_803E1E3C;
 extern s16 yButtonState;
 extern int airMeter;
 
-typedef struct LinkMenuItem
+typedef struct LinkMenuItemDB
 {
     u16 field00;
     u16 itemId;
@@ -209,9 +209,9 @@ typedef struct LinkMenuItem
     s8 slots[25];
     s8 field38;
     u8 pad39[3];
-} LinkMenuItem;
+} LinkMenuItemDB;
 
-extern LinkMenuItem lbl_803A9458[40];
+extern LinkMenuItemDB lbl_803A9458[40];
 
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
@@ -407,7 +407,7 @@ extern void OSReport(const char* fmt, ...);
 extern char lbl_8031C234[];
 #pragma scheduling off
 #pragma peephole off
-void linkInitTextures(LinkMenuItem* item)
+void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
     int i;
@@ -453,8 +453,8 @@ extern u8 lbl_803DD911;
 #pragma peephole off
 void linkDrawFn_801302c0(void)
 {
-    LinkMenuItem* sel;
-    LinkMenuItem* p;
+    LinkMenuItemDB* sel;
+    LinkMenuItemDB* p;
     void* tex;
     int selLeft;
     int selRight;
@@ -536,7 +536,7 @@ void linkDrawFn_801302c0(void)
 #pragma peephole off
 void linkDrawFn_80130484(void)
 {
-    LinkMenuItem* p;
+    LinkMenuItemDB* p;
     void* tex;
     int minX;
     int maxX;
@@ -606,13 +606,13 @@ void Link_func0F(void)
 #pragma scheduling off
 void Link_copy(u8* srcArg)
 {
-    LinkMenuItem* dst;
-    LinkMenuItem* src;
+    LinkMenuItemDB* dst;
+    LinkMenuItemDB* src;
     int i;
 
     i = 0;
     dst = lbl_803A9458;
-    src = (LinkMenuItem*)srcArg;
+    src = (LinkMenuItemDB*)srcArg;
     for (; i < (s8)lbl_803DD911; i++)
     {
         dst->field16 = src->field16;
@@ -642,10 +642,10 @@ void Link_copy(u8* srcArg)
 #pragma peephole off
 void Link_func0B(u8* srcArg)
 {
-    LinkMenuItem* src;
+    LinkMenuItemDB* src;
     int i;
 
-    src = (LinkMenuItem*)srcArg;
+    src = (LinkMenuItemDB*)srcArg;
     for (i = 0; i < (s8)lbl_803DD911; i++)
     {
         lbl_803A9458[i].field00 = src[i].field00;
