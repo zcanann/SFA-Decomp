@@ -1,15 +1,6 @@
 /* === moved from main/dll/DR/DRearthwalk.c [801DAFA4-801DAFDC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DR/DRearthwalk.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/objseq.h"
-#include "global.h"
 
-#include "main/dll/DR/shstaff_state.h"
 
 typedef struct ShStaffPlacement
 {

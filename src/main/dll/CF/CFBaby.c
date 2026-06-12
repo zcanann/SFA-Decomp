@@ -1,13 +1,8 @@
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 

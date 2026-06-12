@@ -1,19 +1,13 @@
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objanim_update.h"
-#include "main/objseq.h"
-#include "main/dll/baddie_state.h"
-#include "global.h"
 
 /* DR_CloudRunner_getExtraSize == 0xbc8; BaddieState head + family tail. */
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 
 #include "main/audio/sfx_ids.h"
-#include "main/objanim_internal.h"
 
 typedef struct DRCloudRunnerPlacement
 {

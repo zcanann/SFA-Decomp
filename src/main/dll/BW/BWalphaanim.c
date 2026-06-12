@@ -1,8 +1,5 @@
 #include "main/dll/BW/BWalphaanim.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/dll/curves.h"
-#include "main/dll/path_control_interface.h"
 
 
 extern undefined4 FUN_8000680c();

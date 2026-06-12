@@ -1,6 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 
 typedef union VFPLevelControlLatch
 {

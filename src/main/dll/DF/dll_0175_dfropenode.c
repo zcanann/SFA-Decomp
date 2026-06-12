@@ -1,4 +1,3 @@
-#include "main/dll/DF/dll_194.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dfropenode.h"
@@ -261,7 +260,6 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
  */
 
 
-#include "ghidra_import.h"
 
 /* dfropenode_setScale: copy 4 floats from obj->_b8[0x1c..0x28] to *out_dst[0..0xc]. */
 void dfropenode_setScale(int* obj, f32* out)
@@ -276,7 +274,6 @@ void dfropenode_setScale(int* obj, f32* out)
 #pragma peephole reset
 
 /* === merged from main/dll/DF/dll_196.c [801C1BF0-801C1EAC) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DF/dll_196.h"
 
 
 extern f32 lbl_803E4E20;
@@ -439,7 +436,6 @@ int dfropenode_getObjectTypeId(void)
 }
 
 /* === merged from main/dll/DF/DFmole.c [801C1EAC-801C1F5C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DF/DFmole.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
@@ -482,7 +478,6 @@ void dfropenode_free(void* obj)
 /* === merged from main/dll/DF/DFwhirlpool.c [801C1F5C-801C2278) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DF/DFcradle.h"
 #include "main/game_object.h"
-#include "main/dll/DF/DFwhirlpool.h"
 #include "main/dll/DF/dfropenode.h"
 
 typedef struct DfropenodePlacement
@@ -680,7 +675,6 @@ void dfropenode_hitDetect(void)
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/game_object.h"
 #include "main/dll/DF/dll_196.h"
-#include "main/dll/DF/dll_198.h"
 
 typedef struct DFSHDoor2SpeciPlacement
 {

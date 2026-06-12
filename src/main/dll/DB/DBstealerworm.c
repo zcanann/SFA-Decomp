@@ -1,11 +1,7 @@
-#include "ghidra_import.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/dll/DB/DBstealerworm.h"
@@ -34,7 +30,6 @@ typedef struct SBShipHeadState
 } SBShipHeadState;
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
-#include "main/objhits_types.h"
 
 extern undefined4 getLActions();
 extern uint GameBit_Get(int eventId);

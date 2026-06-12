@@ -6,12 +6,7 @@
  * gasventControl.c; this file is the former cannontargetControl.c minus
  * the gunpowderbarrel fns (dll 0x158, now dll_0158_gunpowderbarrel.c).
  */
-#include "main/dll/DR/cannontargetControl.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/DR/gasvent.h"
-#include "main/dll/DR/gunpowderbarrel_state.h"
-#include "main/objhits_types.h"
 
 typedef struct GunpowderbarrelPlacement
 {

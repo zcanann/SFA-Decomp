@@ -1,14 +1,7 @@
 /* === moved from main/dll/CAM/camdrakor.c [8010D33C-8010D36C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CAM/camdrakor.h"
-#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
-#include "main/dll/CAM/camcombat_state.h"
-#include "main/dll/CAM/camshipbattle_state.h"
-#include "main/game_object.h"
 #include "main/mm.h"
-#include "main/object_transform.h"
-#include "main/pad.h"
 
 
 
@@ -108,7 +101,6 @@ void CameraModeClimb_free(void)
     lbl_803DD578 = 0;
 }
 
-#include "main/dll/CAM/dll_62.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/object_transform.h"
@@ -256,11 +248,9 @@ void CameraModeClimb_update(short* camObj)
 }
 
 /* === moved from main/dll/CAM/camDebug.c [8010D810-8010DAD4) (TU re-split, docs/boundary_audit.md) === */
-#include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
-#include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"

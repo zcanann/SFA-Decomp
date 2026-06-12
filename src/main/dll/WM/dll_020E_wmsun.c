@@ -36,8 +36,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
 

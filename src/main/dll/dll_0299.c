@@ -1,7 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 
 int dll_299_getExtraSize_ret_2(void) { return 0x2; }
 

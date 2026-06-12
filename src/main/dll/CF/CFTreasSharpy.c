@@ -1,9 +1,5 @@
 #include "main/dll/CF/CFTreasSharpy.h"
-#include "main/dll/CF/dll_179.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/resource.h"
 
 extern undefined4 FUN_80017a78();
@@ -510,14 +506,11 @@ void fxemit_update(FxEmitObject* obj)
 }
 
 /* === moved from main/dll/CF/CFchuckobj.c [8018EFE0-8018F148) (TU re-split, docs/boundary_audit.md) === */
-#include "main/asset_load.h"
 #include "main/dll/CF/CFchuckobj.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
-#include "main/dll/CF/warp_pad.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 

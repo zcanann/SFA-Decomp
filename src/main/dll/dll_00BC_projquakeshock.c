@@ -32,7 +32,6 @@ int projquakeshock_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_78.c [80100938-8010093C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_78.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projquakeshock_release(void)
 }
 
 /* === merged from main/dll/dll_79.c [8010093C-80100940) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_79.h"
 
 /*
  * --INFO--

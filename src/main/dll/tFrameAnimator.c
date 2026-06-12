@@ -1,10 +1,6 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
 #include "main/dll/tframeanimator_state.h"
-#include "main/objanim_internal.h"
-#include "main/objlib.h"
-#include "main/objanim_update.h"
 
 typedef struct LevelnameState
 {

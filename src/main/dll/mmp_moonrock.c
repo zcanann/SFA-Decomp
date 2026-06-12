@@ -1,7 +1,5 @@
 #include "main/map_block.h"
-#include "main/game_object.h"
 #include "main/dll/mmp_moonrock.h"
-#include "global.h"
 
 typedef struct WaveanimatorState
 {

@@ -1,14 +1,7 @@
 /* === moved from main/dll/CAM/dll_5F.c [8010BF08-8010C0D8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CAM/dll_5F.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camcannon_state.h"
 #include "main/dll/CAM/camcombat_state.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/game_object.h"
 #include "main/mm.h"
-#include "main/object_transform.h"
-#include "main/pad.h"
 
 
 

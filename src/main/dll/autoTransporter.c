@@ -2,7 +2,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-#include "global.h"
 
 /*
  * Per-object extra state for the doorf4 auto door
@@ -32,7 +31,6 @@ STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
  * (sidekickball_getExtraSize == 0x2CC). Only locally-evidenced
  * fields are named.
  */
-#include "main/dll/sidekickball_state.h"
 
 typedef struct Doorf4State
 {

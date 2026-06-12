@@ -1,10 +1,5 @@
 /* === moved from main/dll/CF/CFforcecontrol.c [8018CD64-8018CDAC) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
-#include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
 
 
@@ -281,11 +276,9 @@ extern f32 lbl_803E3D48;
 void deathseq_update(int* obj);
 
 #include "main/dll/CF/treasureRelated0177.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/screen_transition.h"
 
 typedef struct KtTorchPlacement

@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dim2prisonmammothPlacement
 {

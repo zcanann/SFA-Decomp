@@ -91,7 +91,6 @@ void EnterSaveNameScreen_frameEnd(void)
 {
 }
 
-#include "main/dll/dll_4A.h"
 
 #define ENTER_SAVE_NAME_CHAR_COUNT 40
 #define ENTER_SAVE_NAME_DELETE_INDEX 38

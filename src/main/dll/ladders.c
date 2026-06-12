@@ -1,7 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/ladders.h"
-#include "main/objanim.h"
 
 typedef struct TumbleweedbushState
 {

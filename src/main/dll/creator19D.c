@@ -1,9 +1,6 @@
 /* === moved from main/dll/dll_19E.c [801C3E3C-801C3EB8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/dll_19E.h"
 #include "main/resource.h"
 
 
@@ -162,7 +159,6 @@ int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/creator19D.h"
-#include "main/objanim.h"
 #include "main/resource.h"
 
 extern undefined4 FUN_8000680c();

@@ -1,12 +1,6 @@
 /* === moved from main/dll/dim2conveyor.c [801CF78C-801CF7E8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/creator1D4.h"
-#include "main/game_object.h"
-#include "main/game_ui_interface.h"
 #include "main/dll/dim2conveyor.h"
-#include "main/dll/ped.h"
 #include "main/gameplay_runtime.h"
-#include "main/objHitReact.h"
-#include "main/objanim.h"
 
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjGroup_RemoveObject();

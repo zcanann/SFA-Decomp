@@ -1,10 +1,8 @@
-#include "main/dll/explosion_state.h"
 #include "main/dll/explosion.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dll197State
 {

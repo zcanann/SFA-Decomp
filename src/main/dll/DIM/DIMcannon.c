@@ -1,16 +1,8 @@
 /* === moved from main/dll/DIM/DIMboulder.c [801AE0EC-801AE100) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-#include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
-#include "main/dll/DIM/DIMboulder.h"
-#include "main/resource.h"
 
 typedef struct CrrockfallPlacement
 {
@@ -407,7 +399,6 @@ extern f32 lbl_803E4720;
 #pragma scheduling reset
 #pragma scheduling reset
 
-#include "main/dll/DIM/dimcannon_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -415,10 +406,8 @@ extern f32 lbl_803E4720;
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
-#include "main/dll/DIM/dimlogfire.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
-#include "global.h"
 
 typedef struct Lavaball1bePlacement
 {

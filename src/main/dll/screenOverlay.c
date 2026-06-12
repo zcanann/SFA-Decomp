@@ -1,11 +1,7 @@
 /* === moved from main/dll/tFrameAnimator.c [8017A350-8017A38C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/tframeanimator_state.h"
-#include "main/objanim_internal.h"
 #include "main/objlib.h"
-#include "main/objanim_update.h"
 
 typedef struct LevelnameState
 {
@@ -118,12 +114,10 @@ ObjectDescriptor gAreaObjDescriptor = {
     area_getExtraSize,
 };
 
-#include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
 #include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 typedef struct ProjectileSwitchPlacement
 {
@@ -543,7 +537,6 @@ void InvisibleHitSwitch_update(int obj)
 }
 
 /* === merged from main/dll/cloudprisoncontrol.c [8017AB20-8017AC2C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/cloudprisoncontrol.h"
 #include "main/game_object.h"
 
 

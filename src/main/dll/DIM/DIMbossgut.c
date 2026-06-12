@@ -1,6 +1,5 @@
 #include "main/dll/DIM/DIMbossgut.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 
 extern void objSetSlot(void* obj, int resourceId);
 extern void objRenderFn_8003b8f4(int obj, undefined4 param_2, undefined4 param_3,

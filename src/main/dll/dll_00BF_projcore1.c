@@ -32,7 +32,6 @@ int projcore1_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_81.c [801009E0-801009E4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_81.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projcore1_release(void)
 }
 
 /* === merged from main/dll/dll_82.c [801009E4-801009E8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_82.h"
 
 /*
  * --INFO--

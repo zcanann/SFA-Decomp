@@ -1,6 +1,4 @@
 #include "main/dll/FRONT/dll_3B.h"
-#include "main/dll/FRONT/dll_39.h"
-#include "main/screen_transition.h"
 #include "dolphin/os.h"
 #include "dolphin/thp/THPAudio.h"
 

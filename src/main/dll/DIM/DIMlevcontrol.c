@@ -1,13 +1,10 @@
 #include "main/dll/DIM/dimcannon_state.h"
-#include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/objanim.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/objseq.h"
-#include "main/objhits_types.h"
 #include "main/resource.h"
 
 extern bool FUN_800067f0();
@@ -368,7 +365,6 @@ int dimlavasmash_getExtraSize(void) { return 0x3; }
 int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 
 /* if (o->_X == K) return A; else return B; */
-#include "global.h"
 
 typedef struct DimlavasmashPlacement
 {
@@ -1007,10 +1003,8 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 }
 
 /* === moved from main/dll/DIM/DIM2conveyor.c [801B3658-801B3768) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DIM/DIM2conveyor.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct DimbridgecogmaiObjectDef

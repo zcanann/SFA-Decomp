@@ -1,10 +1,6 @@
 /* === moved from main/dll/DIM/DIMlogfire.c [801AA558-801AA560) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/obj_placement.h"
-#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
-#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
@@ -332,13 +328,10 @@ void animsharpclaw_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
-#include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objanim.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"

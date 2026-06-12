@@ -1,9 +1,5 @@
-#include "main/dll/SH/SHroot.h"
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/effect_interfaces.h"
-#include "main/objHitReact.h"
-#include "main/objanim_internal.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
 extern void Sfx_PlayFromObject(SHthorntailObject* obj, u16 volumeId);

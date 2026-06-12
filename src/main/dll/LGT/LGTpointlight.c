@@ -1,17 +1,10 @@
 /* === merged from main/dll/ARW/dll_801F33B4.c [801F33B4-801F37CC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/dll/LGT/LGTpointlight.h"
 #include "main/objHitReact.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
-#include "main/resource.h"
-#include "global.h"
 
 typedef struct LaserBeamPlacement
 {

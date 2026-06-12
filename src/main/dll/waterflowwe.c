@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/obj_placement.h"
 
 #define WATERFLOWWE_FOLIAGE_GROUP 0x14
 #define WATERFLOWWE_OBJECT_CURRENT_GROUP 0x50

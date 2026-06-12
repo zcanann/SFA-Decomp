@@ -32,7 +32,6 @@ int projwallpower_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_75.c [80100900-80100904) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_75.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projwallpower_release(void)
 }
 
 /* === merged from main/dll/dll_76.c [80100904-80100908) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_76.h"
 
 /*
  * --INFO--

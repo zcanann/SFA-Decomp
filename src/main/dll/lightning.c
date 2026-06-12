@@ -1,16 +1,8 @@
 /* === moved from main/dll/texframeanimator.c [80173224-801732A4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/texframeanimator.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
-#include "main/game_object.h"
-#include "main/dll/collectible_state.h"
-#include "main/dll/gfxEmit.h"
-#include "main/dll/path_control_interface.h"
-#include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();

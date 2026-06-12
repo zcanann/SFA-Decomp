@@ -1,9 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 #include "main/dll/ped.h"
-#include "main/dll/dimtruthhornice.h"
 
 extern uint GameBit_Get(int eventId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);

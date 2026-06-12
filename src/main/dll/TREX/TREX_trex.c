@@ -1,10 +1,6 @@
 /* === moved from main/dll/TREX/TREX_levelcontrol.c [801E4288-801E42F8) (TU re-split, docs/boundary_audit.md) === */
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/game_object.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
-#include "main/objhits_types.h"
 
 typedef struct SBShipGunPlacement
 {
@@ -162,8 +158,6 @@ void SB_CannonBall_init(int* obj);
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/objanim_internal.h"
-#include "main/objanim_update.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"

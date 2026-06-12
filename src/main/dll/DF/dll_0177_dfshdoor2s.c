@@ -1,7 +1,4 @@
-#include "main/dll/DF/DFbarrelanim.h"
 #include "main/game_object.h"
-#include "main/dll/DF/dll_196.h"
-#include "main/dll/DF/dll_198.h"
 
 typedef struct DFSHDoor2SpeciPlacement
 {
@@ -181,7 +178,6 @@ int dfsh_door2speci_getExtraSize(void)
 /* === merged from main/dll/DF/dll_199.c [801C2824-801C282C) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-#include "main/dll/DF/dll_199.h"
 
 /*
  * --INFO--
@@ -204,12 +200,8 @@ int dfsh_door2speci_getObjectTypeId(void)
 #pragma peephole reset
 
 /* === moved from main/dll/DF/DFlantern.c [801C282C-801C2914) (TU re-split, docs/boundary_audit.md) === */
-#include "main/mapEvent.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/dll/DF/DFlantern.h"
 #include "main/dll/DF/dll_198.h"
-#include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);

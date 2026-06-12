@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 #define DREARTHCAL_SETUP_YAW 0x18
 #define DREARTHCAL_OBJECT_FLAGS_B0 0xb0

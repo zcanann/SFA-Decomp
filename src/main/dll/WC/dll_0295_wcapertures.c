@@ -1,7 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/obj_placement.h"
 
 #define WCAPERTURES_EXTRA_SIZE 8
 #define WCAPERTURES_RENDER_TYPE_BASE 0x400

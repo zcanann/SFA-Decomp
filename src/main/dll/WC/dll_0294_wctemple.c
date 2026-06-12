@@ -1,7 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/objseq.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
 #define WCTEMPLE_SETUP_TYPE_OFFSET 0x18

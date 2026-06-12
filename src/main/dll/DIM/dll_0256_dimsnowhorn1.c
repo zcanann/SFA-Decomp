@@ -1,8 +1,5 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objhits_types.h"
-#include "main/objseq.h"
 #include "main/dll/baddie_state.h"
 
 /*
@@ -44,7 +41,6 @@ typedef struct DIMSnowHorn1State
 STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
 STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
-#include "main/mapEventTypes.h"
 
 void DIMSnowHorn1_func23(void)
 {

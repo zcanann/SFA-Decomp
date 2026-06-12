@@ -1,12 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
-#include "global.h"
 
 #define ARW_SQUADRON_STATE_WAITING 0
 #define ARW_SQUADRON_STATE_ACTIVE 1

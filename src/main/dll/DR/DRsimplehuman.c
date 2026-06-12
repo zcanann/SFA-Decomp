@@ -1,7 +1,5 @@
 /* === moved from main/dll/DR/DRCloudball.c [801E9328-801E9344) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DR/DRCloudball.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 typedef struct SpscarabPlacement
 {

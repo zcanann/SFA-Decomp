@@ -3,7 +3,6 @@
 #pragma peephole on
 #include "main/dll/DR/gasventControl.h"
 #include "main/obj_placement.h"
-#include "main/game_object.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
@@ -101,7 +100,6 @@ void cfforcefield_hitDetect(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-#include "global.h"
 
 typedef struct ExplodablePlacement
 {

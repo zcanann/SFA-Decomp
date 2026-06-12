@@ -1,11 +1,8 @@
 /* === moved from main/dll/explosion.c [801CA9C0-801CAD80) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/explosion_state.h"
 #include "main/dll/explosion.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dll197State
 {
@@ -294,8 +291,6 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#include "main/dll/dimmagicbridge_state.h"
-#include "ghidra_import.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

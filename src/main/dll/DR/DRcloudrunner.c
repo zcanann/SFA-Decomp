@@ -1,12 +1,7 @@
 /* === moved from main/dll/CR/CRsnowbike.c [801DBFA0-801DC310) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/dll/CR/CRsnowbike.h"
-#include "main/mapEventTypes.h"
-#include "main/screen_transition.h"
 
-#include "global.h"
 
 typedef struct ScMusictreePlacement
 {
@@ -344,10 +339,8 @@ extern u16 lbl_803DC060[4];
 #pragma peephole reset
 
 #include "main/dll/DR/cloudrunner_state.h"
-#include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/objanim_internal.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
 

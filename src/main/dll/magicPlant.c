@@ -5,7 +5,6 @@
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/objhits_types.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();

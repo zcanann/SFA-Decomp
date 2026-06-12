@@ -1,6 +1,5 @@
 #include "main/game_object.h"
 #include "main/dll/modelfx.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 
 extern u32 randomGetRange(int min, int max);

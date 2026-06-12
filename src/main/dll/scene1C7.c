@@ -1,5 +1,4 @@
 #include "main/dll/scene1C7.h"
-#include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
 
 #define DBSH_SHRINE_STATE_WAITING 0
@@ -172,9 +171,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
 }
 
 /* === merged from main/dll/creator1C6.c [801C8EBC-801C91B0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/mapEvent.h"
 #include "main/game_object.h"
-#include "main/dll/creator1C6.h"
 
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
@@ -405,7 +402,6 @@ void dbsh_shrine_hitDetect(void)
 
 /* === merged from main/dll/flybaddie.c [801C9544-801C9660) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
-#include "main/dll/flybaddie.h"
 #include "main/dll/creator1C6.h"
 
 #define DBSH_SHRINE_GB_FIRST_RISE 0x15f

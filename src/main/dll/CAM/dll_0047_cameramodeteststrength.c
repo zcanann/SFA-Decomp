@@ -1,7 +1,6 @@
 /* === merged from main/dll/CAM/camcannon.c [8010AEA8-8010B424) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CAM/camcannon.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
 #include "main/dll/CAM/camcannon_state.h"
 
 
@@ -203,7 +202,6 @@ void CameraModeTestStrength_free(void)
     lbl_803DD560 = 0;
 }
 
-#include "main/dll/CAM/dll_5F.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcannon_state.h"

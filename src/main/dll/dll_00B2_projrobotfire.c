@@ -32,7 +32,6 @@ int projrobotfire_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_6E.c [80100858-8010085C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_6E.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projrobotfire_release(void)
 }
 
 /* === merged from main/dll/dll_6F.c [8010085C-80100860) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_6F.h"
 
 /*
  * --INFO--

@@ -3,7 +3,6 @@
  *   python3 tools/function_objdump.py --diff main/main/dll/baddie/skeetla <symbol>
  */
 #include "main/dll/objfsa_romcurve.h"
-#include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -12,7 +11,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/skeetla.h"
 #include "main/objfx.h"
-#include "main/objhits_types.h"
 
 
 extern f32 lbl_803E23DC;

@@ -1,10 +1,7 @@
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -737,11 +734,8 @@ void dbsh_symbol_init(int* obj)
 }
 
 /* === moved from main/dll/explosion.c [801CA5B4-801CA718) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/explosion_state.h"
-#include "main/dll/explosion.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 

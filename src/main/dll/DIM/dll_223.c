@@ -1,7 +1,6 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/effect_interfaces.h"
-#include "main/objanim.h"
 #include "main/objfx.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);

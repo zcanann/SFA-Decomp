@@ -1,10 +1,7 @@
-#include "ghidra_import.h"
-#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
-#include "main/mm.h"
 #include "main/object_transform.h"
 
 extern s16 getAngle(f32 dx, f32 dz);

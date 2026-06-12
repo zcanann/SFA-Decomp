@@ -32,7 +32,6 @@ int projdfp1r_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_8A.c [80100A88-80100A8C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_8A.h"
 
 /*
  * --INFO--
@@ -52,8 +51,6 @@ void projdfp1r_release(void)
 }
 
 /* === moved from main/dll/dll_8B.c [80100A8C-80100A90) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_8B.h"
-#include "main/dll/CAM/camcontrol.h"
 
 /*
  * --INFO--

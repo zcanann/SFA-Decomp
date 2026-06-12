@@ -3,7 +3,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
-#include "main/objanim.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
 
@@ -1151,21 +1150,16 @@ void Checkpoint_func06(int* obj, int* state, int filter);
 #pragma peephole reset
 
 /* === moved from main/dll/objfsa.c [800D8F90-800D9DCC) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/objfsa_romcurve.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/objfsa.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
-#include "main/dll/curve_walker.h"
 
-#include "main/dll/rom_curve_segment_projection.h"
 
 extern int mathFn_800dbff0(float* point);
 

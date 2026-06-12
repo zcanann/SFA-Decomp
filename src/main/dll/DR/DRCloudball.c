@@ -1,11 +1,5 @@
 /* === moved from main/dll/DR/DRpushcart.c [801E8EA4-801E8EE0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objanim_internal.h"
-#include "main/dll/DR/DRpushcart.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 

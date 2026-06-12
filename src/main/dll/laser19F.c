@@ -1,7 +1,6 @@
 #include "main/dll/laser19F.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
 typedef struct MmshShrineState
@@ -471,11 +470,9 @@ void mmsh_shrine_update(int objArg)
 }
 
 /* === moved from main/dll/mmshrine/shrine.c [801C52D8-801C53A0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/mmshrine/shrine.h"
 #include "main/dll/laser19F.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objlib.h"
 #include "main/objseq.h"
 
 typedef struct MmshWaterspikePlacement

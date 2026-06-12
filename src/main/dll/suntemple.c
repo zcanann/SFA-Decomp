@@ -1,9 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/obj_placement.h"
-#include "main/objseq.h"
-#include "main/objanim_internal.h"
 
 #define SUNTEMPLE_STATE_SIZE 2
 

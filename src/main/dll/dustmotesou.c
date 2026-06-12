@@ -1,6 +1,4 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/dll/dustmotesou.h"
 
 int dustmotesou_getExtraSize(void) { return 0; }

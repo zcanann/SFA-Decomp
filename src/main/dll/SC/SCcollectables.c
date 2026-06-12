@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
-#include "main/objanim.h"
 #include "main/objanim_update.h"
 #include "main/objfx.h"
 
@@ -438,9 +437,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 
 /* === moved from main/dll/SC/SCanimobj.c [801D7674-801D7BA8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SC/SClantern.h"
 #include "main/objanim.h"
 

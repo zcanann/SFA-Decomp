@@ -1,11 +1,8 @@
 #include "main/dll/objfsa_romcurve.h"
-#include "main/dll/baddie_state.h"
 #include "main/dll/objfsa.h"
-#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 
 extern void OSReport(const char* fmt, ...);
 
@@ -4273,12 +4270,9 @@ void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 /* === moved from main/dll/curves.c [800E1B24-800E5434) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "dolphin/os.h"
-#include "main/camera_interface.h"
 #include "main/dll/curves.h"
 #include "main/game_ui_interface.h"
 #include "main/objlib.h"
-#include <string.h>
 #include "main/game_object.h"
 
 

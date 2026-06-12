@@ -8,11 +8,8 @@
 #include "main/dll/baddie/skeetla.h"
 #include "main/dll/path_control_interface.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
-#include "main/objhits_types.h"
 
 
 #define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
@@ -28,7 +25,6 @@
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
 
-#include "main/dll/tricky_state.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {

@@ -1,7 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
 
 extern f32 lbl_803E60A8;

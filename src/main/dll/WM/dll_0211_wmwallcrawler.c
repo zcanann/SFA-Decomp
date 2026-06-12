@@ -17,11 +17,8 @@
  * game bits 0x2AA-0x2AF are set.
  */
 #include "main/dll/WM/wm_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
 #include "main/obj_placement.h"
 
 typedef struct WmwallcrawlerState

@@ -1,14 +1,6 @@
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/dll/cfperch_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfperch.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
-#include "main/objfx.h"
-#include "main/objhits_types.h"
-#include "main/resource.h"
 
 typedef struct SmallbasketObjectDef
 {

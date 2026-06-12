@@ -138,9 +138,6 @@ void n_rareware_frameEnd(void)
 }
 
 #include "main/dll/FRONT/dll_39.h"
-#include "main/dll/FRONT/dll_44.h"
-#include "main/dll/FRONT/picmenu.h"
-#include "main/camera_interface.h"
 #include "main/screen_transition.h"
 
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);

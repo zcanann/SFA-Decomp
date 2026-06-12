@@ -2,9 +2,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 #include "main/objlib.h"
-#include "main/objhits_types.h"
 
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);

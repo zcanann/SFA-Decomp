@@ -1,9 +1,5 @@
-#include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/objseq.h"
-#include "main/dll/IM/IMsnowbike.h"
-#include "main/dll/SC/SCtotemlogpuz.h"
 
 typedef struct ShLevelcontrolState
 {

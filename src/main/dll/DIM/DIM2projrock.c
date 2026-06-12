@@ -1,14 +1,7 @@
 /* === moved from main/dll/DIM/DIM2snowball.c [801B8798-801B8860) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
-#include "main/asset_load.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/dll/DIM/DIM2snowball.h"
-#include "main/objanim_internal.h"
-#include "global.h"
 
 typedef struct Dll1D6Placement
 {
@@ -553,13 +546,11 @@ extern f32 lbl_803E4AD0;
 #pragma peephole reset
 #pragma peephole reset
 
-#include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 typedef struct Dim2lavacontrolPlacement
 {

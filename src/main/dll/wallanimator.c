@@ -1,11 +1,7 @@
-#include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 
 extern undefined4 FUN_80006824();
@@ -550,12 +546,10 @@ void kaldachompspit_burst(int obj)
 #pragma peephole reset
 
 /* === moved from main/dll/xyzanimator.c [80169CC4-80169EF4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/MMP/MMP_asteroid.h"
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/objhits_types.h"
 #include "main/game_object.h"
 

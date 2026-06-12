@@ -3,16 +3,8 @@
 #pragma peephole on
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/explosion_state.h"
-#include "ghidra_import.h"
 #include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2flameburst.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dimwooddoor2Placement
 {
@@ -533,7 +525,6 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
-#include "global.h"
 
 typedef struct Dll1D6Placement
 {

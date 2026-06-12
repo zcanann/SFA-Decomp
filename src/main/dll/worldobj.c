@@ -1,11 +1,8 @@
-#include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/worldobj.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -710,7 +707,6 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 /* === merged from main/dll/creator1D4.c [801CEFBC-801CF0AC) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/dll/creator1D4.h"
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
 
@@ -779,7 +775,6 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 #include "main/dll/dim2conveyor.h"
 #include "main/dll/ped.h"
 #include "main/gameplay_runtime.h"
-#include "main/objHitReact.h"
 #include "main/objanim.h"
 
 extern undefined4 ObjGroup_AddObject();

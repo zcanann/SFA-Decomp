@@ -1,11 +1,7 @@
-#include "ghidra_import.h"
 #include "main/game_object.h"
-#include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mediumbasket.h"
 #include "main/effect_interfaces.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
 
 typedef struct MediumbasketUpdateDropStateState
 {
@@ -2592,7 +2588,6 @@ return0:
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"

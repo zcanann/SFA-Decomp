@@ -9,12 +9,7 @@
  * LAST in this file so MWCC cannot inline it into wmlevelcontrol_update
  * (it was an extern call before the re-split).
  */
-#include "main/dll/LGT/LGTprojectedlight.h"
 #include "main/dll/LGT/LGTdirectionallight.h"
-#include "main/mapEvent.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 typedef struct WmlevelcontrolState

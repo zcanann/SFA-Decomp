@@ -1,7 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
 
 int dll_21B_getExtraSize_ret_4(void) { return 0x4; }

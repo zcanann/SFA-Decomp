@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 #define DRAKORMISSILE_EXTRA_SIZE 0x38
 #define DRAKORMISSILE_OBJECT_TYPE_ID 0x2

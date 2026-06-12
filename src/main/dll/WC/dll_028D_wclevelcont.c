@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 
 void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
 {

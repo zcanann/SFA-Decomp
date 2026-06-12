@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/SH/SHspore.h"
 #include "main/mapEvent.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
 
 extern undefined4 FUN_8000680c();

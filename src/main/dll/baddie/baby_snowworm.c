@@ -32,7 +32,6 @@
 #include "main/camera_interface.h"
 #include "main/dll/baddie/baby_snowworm.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 #include "main/screen_transition.h"
 
 
@@ -3993,7 +3992,6 @@ void fn_8012C000(void)
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/camera_interface.h"
-#include "main/dll/baddie/wall_crawler.h"
 
 extern undefined4 FUN_80006948();
 extern int FUN_80006c54();
@@ -5057,7 +5055,6 @@ void GameUI_update(void)
 /* === moved from main/dll/baddie/dll_DB.c [8012FCEC-8012FECC) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-#include "main/dll/baddie/dll_DB.h"
 
 
 

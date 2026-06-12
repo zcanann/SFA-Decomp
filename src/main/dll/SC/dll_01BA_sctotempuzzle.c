@@ -10,7 +10,6 @@
  * sc_totembond_spawnGameBitOrbs (evidence both DLLs shared one original
  * TU).
  */
-#include "main/dll/SC/sctotempuzzle.h"
 #include "main/objlib.h"
 
 #define SC_TOTEMPUZZLE_OBJECT_TYPE 0x3c1
@@ -203,10 +202,6 @@ void sc_totempuzzle_hitDetect(void)
  * 0x1BA between hitDetect and update; real edge = initialise end). */
 #include "main/dll/SC/sctotembond.h"
 #include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/camera_interface.h"
-#include "main/game_ui_interface.h"
-#include "main/mapEventTypes.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"

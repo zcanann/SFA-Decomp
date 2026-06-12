@@ -701,11 +701,8 @@ void TitleMenu_setSelection(int selection)
 }
 
 /* === moved from main/dll/FRONT/dll_3B.c [80116F84-8011730C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/FRONT/dll_3B.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/screen_transition.h"
-#include "dolphin/os.h"
-#include "dolphin/thp/THPAudio.h"
 
 extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
 extern void audioStopByMask(int mask);

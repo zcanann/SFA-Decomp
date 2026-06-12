@@ -1,5 +1,4 @@
 #include "main/engine_shared.h"
-#include "main/expgfx.h"
 #include "main/expgfx_internal.h"
 #include "main/texture.h"
 

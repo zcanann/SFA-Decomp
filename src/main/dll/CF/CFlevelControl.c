@@ -1,10 +1,5 @@
 /* === moved from main/dll/CF/treasureRelated0177.c [8018D6E8-8018D728) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CF/treasureRelated0177.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/screen_transition.h"
 
 typedef struct KtTorchPlacement
@@ -162,7 +157,6 @@ void cfccrate_free(int obj)
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 /* === merged from main/dll/CF/dll_179.c [8018D728-8018D8DC) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CF/dll_179.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/effect_interfaces.h"
@@ -242,7 +236,6 @@ void cfccrate_hitDetect(void)
 #include "main/dll/CF/CFlevelControl.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
 
 typedef struct CfccratePlacement
@@ -494,7 +487,6 @@ void cfccrate_update(int obj)
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
-#include "main/resource.h"
 
 extern undefined4 FUN_80017a78();
 extern undefined4 FUN_800305f8();

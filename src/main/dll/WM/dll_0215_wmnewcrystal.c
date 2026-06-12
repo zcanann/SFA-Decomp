@@ -16,11 +16,8 @@
  * bursts.
  */
 #include "main/dll/WM/wm_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/objanim_update.h"
-#include "main/object_descriptor.h"
 
 #define WMNEWCRYSTAL_GAMEBIT_ACTIVE 0xd27
 #define WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX 0xe49

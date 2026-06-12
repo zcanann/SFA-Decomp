@@ -1,5 +1,4 @@
 /* === merged from main/dll/texScroll.c [8017AC2C-8017ADB4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/texScroll.h"
 #include "main/game_object.h"
 
 extern undefined8 ObjGroup_RemoveObject();
@@ -145,7 +144,6 @@ void pressureswitchfb_free(int obj)
 #include "main/game_object.h"
 #include "main/dll/cfguardian.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct MmpBridgePlacement
@@ -1278,7 +1276,6 @@ void doorlock_update(int obj)
 
 /* === moved from main/dll/alphaanim.c [8017C178-8017C294) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/alphaanim.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"

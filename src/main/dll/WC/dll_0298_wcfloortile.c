@@ -1,10 +1,8 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 
 #include "main/audio/sfx_ids.h"
-#include "main/objhits_types.h"
 
 /* wcfloortile_getExtraSize == 0x8. */
 typedef struct WcFloorTileState

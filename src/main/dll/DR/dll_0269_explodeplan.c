@@ -1,6 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
 

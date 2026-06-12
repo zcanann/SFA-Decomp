@@ -1,7 +1,5 @@
 /* === merged from main/dll/mmshrine/animobj1C0.c [801C5990-801C5ED8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/mmshrine/animobj1C0.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
@@ -345,7 +343,6 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 #pragma peephole reset
 
 /* === merged from main/dll/mmshrine/torch1C1.c [801C5ED8-801C60B8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/mmshrine/torch1C1.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
@@ -530,7 +527,6 @@ void ecsh_shrine_free(int* obj)
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
-#include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
 #include "main/dll/mmshrine/torch1C1.h"
 #include "main/objseq.h"

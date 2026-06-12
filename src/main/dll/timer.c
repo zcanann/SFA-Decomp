@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
 
 #define TIMER_MODE_GLOBAL 1
 #define TIMER_MODE_EFFECT 2

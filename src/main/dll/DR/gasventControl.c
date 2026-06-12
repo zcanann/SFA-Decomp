@@ -250,7 +250,6 @@ void cfforcefield_render(void);
 void cfforcefield_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-#include "global.h"
 
 typedef struct ExplodablePlacement
 {

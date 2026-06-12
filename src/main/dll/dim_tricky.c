@@ -1,16 +1,8 @@
 /* === moved from main/dll/shrine1CE.c [801CCFA4-801CCFB4) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/shrine1CE.h"
-#include "main/dll/torch1CD.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dll19CPlacement
 {
@@ -231,7 +223,6 @@ extern f64 lbl_803E51C0;
 #pragma peephole reset
 
 /* === merged from main/dll/creator1CF.c [801CCFB4-801CD258) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/creator1CF.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"

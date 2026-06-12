@@ -1,12 +1,9 @@
 #include "main/dll/NW/NWsfx.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/SH/SHthorntail_internal.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
@@ -625,7 +622,6 @@ void ediblemushroom_hitDetect(u8* obj)
 
 /* === merged from main/dll/NW/dll_1DB.c [801D16EC-801D1978) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
-#include "main/dll/NW/dll_1DB.h"
 #include "main/game_object.h"
 
 typedef struct EdiblemushroomPlacement
@@ -771,7 +767,6 @@ end:
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/objanim_internal.h"
 
 #include "main/dll/NW/ediblemushroom_state.h"
 

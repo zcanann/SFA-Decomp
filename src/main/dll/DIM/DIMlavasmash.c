@@ -1,16 +1,10 @@
 /* === moved from main/dll/DIM/DIMcannon.c [801B0670-801B0924) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DIM/dimcannon_state.h"
 #include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
-#include "global.h"
 
 typedef struct Lavaball1bePlacement
 {
@@ -1033,7 +1027,6 @@ void dimsnowball_update(int obj)
 #pragma peephole reset
 
 /* === moved from main/dll/DIM/dimsnowball_init.c [801B1354-801B13E8) (TU re-split, docs/boundary_audit.md) === */
-#include "ghidra_import.h"
 
 
 typedef struct DimSnowballState

@@ -1,8 +1,6 @@
 /* === moved from main/dll/alphaanim.c [8017CF90-8017D0D4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/alphaanim.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 
@@ -278,10 +276,8 @@ int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
-#include "main/objanim_update.h"
 #include "main/objseq.h"
 
 typedef struct Dll115Placement

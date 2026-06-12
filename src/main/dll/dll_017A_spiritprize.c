@@ -3,8 +3,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
-#include "main/dll/DF/dll_198.h"
-#include "main/objanim.h"
 
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
@@ -367,10 +365,8 @@ void dfsh_shrine_free(int obj)
     GameBit_Set(0xcbb, 1);
 }
 
-#include "main/dll/dll_19C.h"
 #include "main/dll/DF/DFlantern.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"

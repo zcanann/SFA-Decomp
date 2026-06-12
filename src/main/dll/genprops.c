@@ -1,11 +1,6 @@
 /* === moved from main/dll/xyzanimator.c [8016B230-8016B2E0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/MMP/MMP_asteroid.h"
-#include "ghidra_import.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/objhits_types.h"
 #include "main/game_object.h"
 
 typedef struct PollenfragmentState
@@ -406,12 +401,10 @@ int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
-#include "main/dll/path_control_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/camera_interface.h"
 #include "main/mapEvent.h"
-#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"

@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
 

@@ -2,8 +2,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 #define DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT 0x20000
 

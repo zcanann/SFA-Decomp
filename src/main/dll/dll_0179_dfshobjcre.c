@@ -1,8 +1,4 @@
 /* === moved from main/dll/dll_19C.c [801C3B68-801C3BB0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_19C.h"
-#include "main/dll/DF/DFlantern.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -281,7 +277,6 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/dll_19E.h"
 #include "main/resource.h"
 
 

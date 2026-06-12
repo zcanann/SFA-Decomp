@@ -1,10 +1,6 @@
 /* === moved from main/dll/WC/WClaser.c [801F0AE4-801F0B50) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/WC/WClaser.h"
-#include "main/dll/WC/WCpressureSwitch.h"
 #include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
@@ -157,16 +153,9 @@ void LaserBeam_hitDetect(void)
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/dll/ARW/ARWarwingattachment.h"
-#include "main/objHitReact.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-#include "global.h"
 
 typedef struct LaserBeamPlacement
 {

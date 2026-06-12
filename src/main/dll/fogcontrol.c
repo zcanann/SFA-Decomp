@@ -1,9 +1,7 @@
 /* === moved from main/dll/autoTransporter.c [801793A4-801797A4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/autoTransporter.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-#include "global.h"
 
 /*
  * Per-object extra state for the doorf4 auto door
@@ -349,7 +347,6 @@ extern f32 lbl_803E3674;
 
 
 /* === merged from main/dll/sidekickball.c [801797A4-80179A2C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/sidekickball.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 
@@ -686,13 +683,9 @@ u8 trickyBallMove(u8* obj)
 }
 
 /* === moved from main/dll/tFrameAnimator.c [80179EB0-8017A00C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tframeanimator_state.h"
-#include "main/objanim_internal.h"
-#include "main/objlib.h"
-#include "main/objanim_update.h"
 
 typedef struct LevelnameState
 {

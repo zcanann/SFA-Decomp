@@ -4,21 +4,9 @@
  * 0x80186B94 across windlift.c | CFcrystal.c (both drift mislabels).
  */
 #include "main/dll/CF/CFcrystal.h"
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
-#include "main/camera_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-#include "main/objhits_types.h"
 #include "main/dll/CF/windlift.h"
-#include "main/dll/CF/lanternfirefly_state.h"
-#include "main/resource.h"
-#include "global.h"
 
 typedef struct PortalspelldoorPlacement
 {

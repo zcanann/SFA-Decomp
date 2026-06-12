@@ -32,7 +32,6 @@ int projenergise2_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_6B.c [80100820-80100824) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_6B.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projenergise2_release(void)
 }
 
 /* === merged from main/dll/dll_6C.c [80100824-80100828) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_6C.h"
 
 /*
  * --INFO--

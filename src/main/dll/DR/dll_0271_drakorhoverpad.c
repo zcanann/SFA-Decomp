@@ -18,7 +18,6 @@ void drakorhoverpad_func15(void)
 {
 }
 
-#include "global.h"
 
 typedef struct DrakorhoverpadUpdateMainPlacement
 {

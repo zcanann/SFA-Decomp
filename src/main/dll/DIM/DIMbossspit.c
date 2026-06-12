@@ -1,6 +1,5 @@
 #include "main/dll/DIM/DIMbossspit.h"
 #include "main/game_object.h"
-#include "main/objhits_types.h"
 
 extern f32 timeDelta;
 extern f32 lbl_803DDB98;

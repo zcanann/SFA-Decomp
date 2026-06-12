@@ -1,14 +1,7 @@
 /* === moved from main/dll/DR/hightop.c [8019AE3C-8019B1D8) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/dll/DR/hightop.h"
-#include "main/camera_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim.h"
-#include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 
 typedef struct TriggerPlacement
@@ -287,18 +280,13 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
  * Skeleton-copy carve: non-owned defs collapsed to prototypes in place.
  */
 #include "main/dll/cfguardian_state.h"
-#include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
 
 extern undefined4 getLActions();
@@ -1095,7 +1083,6 @@ typedef struct SpiritDoorSpiritState
     u8 active; /* gamebit not yet set: render + group 0x4e membership */
 } SpiritDoorSpiritState;
 
-#include "main/dll/DR/gunpowderbarrel_state.h"
 
 typedef struct WindliftPlacement
 {

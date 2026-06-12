@@ -10,7 +10,6 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/SC/sctotembond.h"
-#include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 

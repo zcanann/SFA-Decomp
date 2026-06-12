@@ -1,10 +1,4 @@
 /* === moved from main/dll/CF/CFtoggleswitch.c [8018BC48-8018BC50) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CF/CFtoggleswitch.h"
-#include "main/camera_interface.h"
-#include "main/dll/cannon.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct TrickyguardspotPlacement
@@ -230,10 +224,8 @@ typedef struct MagicCaveTopFxArgs
 
 void magiccavetop_update(int* obj);
 
-#include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"

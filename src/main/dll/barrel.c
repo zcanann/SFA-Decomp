@@ -1,13 +1,9 @@
-#include "ghidra_import.h"
 #include "main/game_object.h"
-#include "main/dll/baddie_state.h"
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
 
 typedef struct GrimblePlacement
 {
@@ -1052,7 +1048,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 #pragma peephole off
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/dll/ladders.h"
 #include "main/objanim.h"
 
 typedef struct TumbleweedbushState

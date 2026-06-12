@@ -1,4 +1,3 @@
-#include "global.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/obj_placement.h"
 

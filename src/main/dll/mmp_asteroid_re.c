@@ -1,6 +1,4 @@
 #include "main/dll/mmp_asteroid_re.h"
-#include "main/dll/CF/CFwalltorch.h"
-#include "main/dll/CF/warp_pad.h"
 #include "main/game_object.h"
 
 typedef struct CfDoorlightObjectDef

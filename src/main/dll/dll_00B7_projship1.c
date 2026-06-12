@@ -32,7 +32,6 @@ int projship1_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_73.c [801008C8-801008CC) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_73.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projship1_release(void)
 }
 
 /* === merged from main/dll/dll_74.c [801008CC-801008D0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_74.h"
 
 /*
  * --INFO--

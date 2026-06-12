@@ -1,11 +1,8 @@
 /* === moved from main/dll/MMP/mmp_barrel.c [80194408-8019443C) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-#include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
-#include "main/game_object.h"
-#include "global.h"
 
 typedef struct WaveanimatorObjectDef
 {
@@ -396,7 +393,6 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
 #pragma peephole reset
 #pragma peephole reset
 
-#include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/mmp_levelcontrol.h"

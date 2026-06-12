@@ -14,9 +14,6 @@
  * counter bits 0x13D/0x5D6 increment, the model hides, sparkles
  * briefly and frees itself 180 frames later.
  */
-#include "global.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/audio/sfx_ids.h"

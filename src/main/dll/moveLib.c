@@ -1,11 +1,9 @@
-#include "main/objanim.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/moveLib.h"
 
-#include "main/dll/dll19_state.h"
 
 
 extern undefined4 FUN_80003494();
@@ -908,7 +906,6 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
 #pragma peephole reset
 
 /* === merged from main/dll/projLib.c [80115094-80115650) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/projLib.h"
 
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
@@ -1178,7 +1175,6 @@ void FUN_801150ac(void)
 /* === merged from main/dll/FRONT/POST.c [80115650-801159E4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/FRONT/POST.h"
 #include "main/objanim.h"
-#include "main/objlib.h"
 
 extern f32 lbl_803E1CE0;
 

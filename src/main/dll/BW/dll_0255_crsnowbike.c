@@ -1,9 +1,7 @@
 /* === merged from main/dll/DR/DRcradle.c [801EC7A0-801ECEC4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DR/DRcradle.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objhits_types.h"
 
 typedef struct SnowBikeMountState
 {
@@ -504,7 +502,6 @@ s32 SnowBike_func14(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x
 s32 SnowBike_getType(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x421); }
 
 /* === merged from main/dll/DR/DRpulley.c [801ECEC4-801ECF94) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DR/DRpulley.h"
 #include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
@@ -538,7 +535,6 @@ void SnowBike_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, und
 }
 
 /* === merged from main/dll/DR/DRhalolight.c [801ECF94-801ED428) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DR/DRhalolight.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 #include "main/dll/BW/BWalphaanim.h"

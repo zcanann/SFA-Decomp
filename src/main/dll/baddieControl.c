@@ -1,12 +1,7 @@
 /* === moved from main/dll/CAM/camDebug.c [8010DB7C-8010DD58) (TU re-split, docs/boundary_audit.md) === */
-#include "ghidra_import.h"
-#include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camclimb_state.h"
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
-#include "main/object_transform.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
@@ -55,7 +50,6 @@ void CameraModeNpcSpeak_free(void)
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/dll/CAM/camperv_state.h"
 #include "main/dll/CAM/camworldmap_state.h"
-#include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
@@ -3613,7 +3607,6 @@ void CameraModeNpcSpeak_update(u8* obj)
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/moveLib.h"
 
 #include "main/dll/dll19_state.h"
 

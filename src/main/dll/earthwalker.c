@@ -1,8 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 int earthwalker_getExtraSize(void) { return 0x660; }
 

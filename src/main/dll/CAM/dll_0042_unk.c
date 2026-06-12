@@ -171,9 +171,7 @@ void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut,
 
 /* === merged from main/dll/CAM/camslide.c [801049B0-8010509C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CAM/camslide.h"
-#include "main/game_object.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 
 
@@ -492,7 +490,6 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 }
 
 /* === merged from main/dll/CAM/firstperson.c [8010509C-80105810) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CAM/firstperson.h"
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
 
@@ -771,7 +768,6 @@ void CameraModeNormal_free(CameraObject* camera)
 }
 
 /* === merged from main/dll/CAM/camstatic.c [80105810-80105E7C) (TU re-split, docs/boundary_audit.md) === */
-#include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/attention.h"
@@ -1016,11 +1012,9 @@ void camstatic_update(CameraObject* camera)
                                    (u32)camera->anim.parent);
 }
 
-#include "main/dll/CAM/pathcam.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
-#include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"

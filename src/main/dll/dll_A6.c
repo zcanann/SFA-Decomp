@@ -1,6 +1,5 @@
 #include "main/dll/dll_A6.h"
 #include "main/game_object.h"
-#include "main/dll/CAM/camcontrol.h"
 
 extern f32 lbl_803E1628;
 extern f32 lbl_803E162C;

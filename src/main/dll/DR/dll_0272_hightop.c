@@ -1,7 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
-#include "main/objseq.h"
 
 typedef struct HightopPlacement
 {

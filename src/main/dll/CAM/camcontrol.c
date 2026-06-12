@@ -6,7 +6,6 @@
 #include "main/dll/savegame.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
-#include "main/objanim_internal.h"
 #include "main/objlib.h"
 #include "main/pad.h"
 #include "main/voxmaps.h"

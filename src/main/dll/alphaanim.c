@@ -1,7 +1,5 @@
 #include "main/dll/alphaanim.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 

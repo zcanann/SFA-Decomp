@@ -1,17 +1,11 @@
 /* === moved from main/dll/mmshrine/shrine1C2.c [801C70F0-801C7724) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
-#include "main/game_ui_interface.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
-#include "main/dll/mmshrine/torch1C1.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 #include "main/screen_transition.h"
 
-#include "main/dll/mmshrine/ecsh_shrine_state.h"
 
 
 extern undefined4 FUN_80006824();
@@ -333,8 +327,6 @@ void fn_801C70F0(s16* obj)
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/creator1C4.h"
 #include "main/mapEventTypes.h"

@@ -1,11 +1,7 @@
 #include "main/dll/objfsa_romcurve.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
-#include "global.h"
 #include "main/audio/sfx_ids.h"
-#include "main/mapEvent.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 typedef struct KTRexWork
 {

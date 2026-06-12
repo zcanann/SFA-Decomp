@@ -1,6 +1,4 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
 
 int vortex_getExtraSize(void) { return 0x28; }

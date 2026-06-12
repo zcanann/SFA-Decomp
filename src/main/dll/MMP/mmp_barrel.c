@@ -1,10 +1,7 @@
 /* === moved from main/dll/mmp_moonrock.c [80192394-801923C4) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/map_block.h"
-#include "main/game_object.h"
 #include "main/dll/mmp_moonrock.h"
-#include "global.h"
 
 typedef struct WaveanimatorState
 {

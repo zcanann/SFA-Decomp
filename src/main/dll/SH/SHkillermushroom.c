@@ -1,11 +1,7 @@
 /* === moved from main/dll/dim_bossgut.c [801D286C-801D2C54) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/objfx.h"
-#include "main/dll/dim_bossgut.h"
 #include "main/dll/ediblemushroom.h"
 
 #include "main/dll/bombplant_placement.h"

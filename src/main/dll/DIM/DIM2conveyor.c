@@ -1,7 +1,5 @@
 #include "main/dll/DIM/DIM2conveyor.h"
-#include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct DimbridgecogmaiObjectDef

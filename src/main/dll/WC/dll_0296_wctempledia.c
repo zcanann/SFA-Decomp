@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
 
 #define WCTEMPLE_DIA_EXTRA_SIZE 0x14
 #define WCTEMPLE_DIA_STAGE_COUNT 3

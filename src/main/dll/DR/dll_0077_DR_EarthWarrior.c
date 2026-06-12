@@ -1,12 +1,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objanim_update.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
-#include "main/objseq.h"
 #include "main/dll/baddie_state.h"
-#include "global.h"
 
 typedef struct DREarthWarriorPlacement
 {

@@ -1,10 +1,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/dll/baddie_state.h"
 #include "main/dll/cf_doorlight_state.h"
 #include "main/dll/cf_doorlight.h"
 #include "main/dll/wallanimator.h"
-#include "main/objanim.h"
 
 typedef struct KaldachomPlacement
 {

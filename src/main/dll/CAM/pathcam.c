@@ -1,10 +1,6 @@
 #include "main/dll/CAM/pathcam.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
-#include "main/game_object.h"
-#include "main/mm.h"
 #include "main/object_transform.h"
 #include "string.h"
 

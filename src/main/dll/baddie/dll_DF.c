@@ -2,7 +2,6 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 
 
 extern char fn_8004B394();

@@ -3,8 +3,6 @@
 #include "main/game_object.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 

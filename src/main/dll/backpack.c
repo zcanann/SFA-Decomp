@@ -1,16 +1,10 @@
-#include "main/audio/sfx.h"
-#include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
 #include "main/dll/landedArwing.h"
-#include "main/dll/path_control_interface.h"
-#include "main/objanim.h"
 #include "main/objlib.h"
-#include "main/objhits_types.h"
 
 typedef struct LandedArwingTriggerLaunchTargetState
 {

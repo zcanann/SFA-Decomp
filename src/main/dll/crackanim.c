@@ -1,12 +1,8 @@
 /* === moved from main/dll/groundAnimator.c [8017D818-8017E1A0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/groundanimator_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/objanim_update.h"
 #include "main/objseq.h"
 
 typedef struct Dll115Placement

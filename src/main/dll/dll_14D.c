@@ -1,9 +1,7 @@
 /* === moved from main/dll/babycloudrunner.c [8017EF6C-8017EFF0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/babycloudrunner.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
-#include "main/objseq.h"
 
 extern void objRenderFn_80041018(void);
 
@@ -92,8 +90,6 @@ void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #include "main/dll/dll_14D.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct Dll14DState

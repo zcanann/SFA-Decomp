@@ -1,9 +1,7 @@
 #include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFPrisonGuard.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();

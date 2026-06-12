@@ -1,11 +1,5 @@
 /* === moved from main/dll/CF/dll_166.c [8018ADB4-8018ADF0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CF/dll_166.h"
-#include "main/dll/CF/dll_165.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/objhits.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
@@ -124,7 +118,6 @@ void treasurechest_init(int* obj);
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct TrickyguardspotPlacement

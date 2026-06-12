@@ -32,7 +32,6 @@ int projsunshock_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_7B.c [80100970-80100974) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_7B.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projsunshock_release(void)
 }
 
 /* === merged from main/dll/dll_7C.c [80100974-80100978) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_7C.h"
 
 /*
  * --INFO--

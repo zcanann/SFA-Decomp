@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fall_ladders.h"
-#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();

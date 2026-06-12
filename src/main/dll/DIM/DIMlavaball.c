@@ -1,10 +1,6 @@
 /* === moved from main/dll/IM/IMspacecraft.c [801A6638-801A6778) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/audio/sfx_ids.h"
-#include "main/camera_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
 
@@ -153,16 +149,12 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavaball.h"
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
-#include "main/objhits_types.h"
 
 typedef struct MmpGyserventPlacement
 {

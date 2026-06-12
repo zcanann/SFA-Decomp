@@ -215,11 +215,8 @@ void treebird_update(int obj)
 }
 
 /* === moved from main/dll/ped.c [801CDBEC-801CDC78) (TU re-split, docs/boundary_audit.md) === */
-#include "main/mapEvent.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
-#include "main/dll/ped.h"
 #include "main/dll/dimtruthhornice.h"
 
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);

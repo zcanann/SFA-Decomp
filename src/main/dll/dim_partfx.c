@@ -1,5 +1,4 @@
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/dll/dim_partfx.h"
 
@@ -6393,14 +6392,9 @@ void Checkpoint_onGameLoop(void)
 /* === moved from main/dll/df_partfx.c [800D6660-800D7568) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-#include "main/dll/df_partfx.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
-#include "main/objanim.h"
-#include "main/resource.h"
-#include "main/screen_transition.h"
 
 
 

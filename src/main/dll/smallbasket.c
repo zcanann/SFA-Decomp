@@ -1,13 +1,10 @@
-#include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/objanim.h"
 #include "main/dll/smallbasket.h"
-#include "main/objhits_types.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();

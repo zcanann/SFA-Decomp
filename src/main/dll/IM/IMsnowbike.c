@@ -1,10 +1,6 @@
 /* === moved from main/dll/SC/SCanimobj.c [801D7BA8-801D7C14) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SC/SClantern.h"
-#include "main/objanim.h"
 
 typedef struct WarpstoneState
 {
@@ -262,7 +258,6 @@ end:
 }
 
 /* === merged from main/dll/SC/SCtotembondpuz.c [801D8060-801D80F4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/SC/SCtotembondpuz.h"
 
 
 /*
@@ -282,9 +277,7 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
 }
 
 /* === merged from main/dll/brokecannon.c [801D80F4-801D8308) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/brokecannon.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
-#include "main/dll/SH/SHthorntail_internal.h"
 
 
 /*
@@ -362,10 +355,8 @@ void SH_LevelControl_setMusic(short* obj)
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
-#include "main/mapEvent.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-#include "main/dll/SP/SPshop.h"
 
 
 extern undefined4 FUN_800067c0();

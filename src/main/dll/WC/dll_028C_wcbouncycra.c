@@ -1,7 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 #define WCBLOCK_GRID_OBJECT_OFFSET 0x268
 #define WCBLOCK_CELL_X_OFFSET 0x27e

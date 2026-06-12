@@ -1,9 +1,7 @@
 /* === merged from main/dll/CAM/camshipbattle.c [80106F78-801070FC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CAM/camshipbattle.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
-#include "main/game_object.h"
 #include "main/pad.h"
 
 extern undefined4 FUN_80017814();
@@ -107,7 +105,6 @@ void CameraModeStaffAnim_copyToCurrent_nop(void)
 }
 
 /* === merged from main/dll/CAM/camclimb.c [801070FC-8010747C) (TU re-split, docs/boundary_audit.md) === */
-#include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
@@ -243,7 +240,6 @@ void camclimb_update(CameraObject* cam)
 #include "main/game_object.h"
 #include "main/dll/CAM/cambike_state.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
-#include "main/dll/CAM/dll_59.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 

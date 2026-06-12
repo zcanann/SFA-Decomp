@@ -1,9 +1,4 @@
 /* === moved from main/dll/crackanim.c [8017EC10-8017EC94) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/crackanim_state.h"
-#include "main/dll/baddie_state.h"
 #include "main/dll/crackanim.h"
 
 typedef struct AppleontreeObjectDef

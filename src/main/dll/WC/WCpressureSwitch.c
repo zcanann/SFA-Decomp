@@ -1,11 +1,5 @@
 /* === moved from main/dll/WC/WClevcontrol.c [801EF360-801EF3A8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/dll/WC/WClevcontrol.h"
-#include "main/resource.h"
 
 typedef struct SBCloudRunnerState
 {
@@ -334,10 +328,7 @@ void SB_CloudRunner_update(int obj);
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objlib.h"
 #include "main/resource.h"
-#include "global.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
 typedef struct WmObjCreatorState

@@ -12,9 +12,7 @@
  * DLLs (0x143) and the palace sun (0x21D).
  */
 #include "main/dll/WM/wm_shared.h"
-#include "main/object_descriptor.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
 

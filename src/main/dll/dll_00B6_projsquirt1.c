@@ -32,7 +32,6 @@ int projsquirt1_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_71.c [80100890-80100894) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_71.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projsquirt1_release(void)
 }
 
 /* === merged from main/dll/dll_AF.c [80100894-80100898) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_AF.h"
 
 /*
  * --INFO--

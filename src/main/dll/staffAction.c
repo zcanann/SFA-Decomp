@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/staffAction.h"
-#include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);

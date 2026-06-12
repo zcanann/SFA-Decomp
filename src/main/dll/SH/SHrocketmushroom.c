@@ -1,12 +1,7 @@
 /* === moved from main/dll/SH/SHkillermushroom.c [801D3378-801D383C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/dim_bossgut.h"
 #include "main/dll/SH/SHkillermushroom.h"
-#include "main/objanim.h"
-#include "main/objfx.h"
 #include "main/objseq.h"
 
 typedef struct BombplantsporeStartDriftBurstPlacement
@@ -27,7 +22,6 @@ typedef struct BombplantsporeUpdateDriftPlacement
 } BombplantsporeUpdateDriftPlacement;
 
 
-#include "main/dll/bombplant_placement.h"
 
 
 extern undefined4 FUN_80006824();

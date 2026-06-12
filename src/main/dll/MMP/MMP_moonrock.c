@@ -1,13 +1,6 @@
 /* === moved from main/dll/MMP/MMP_asteroid.c [801978A0-801978A8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/map_block.h"
-#include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/MMP_asteroid.h"
-#include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/dll/path_control_interface.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 typedef struct TexframeanimatorPlacement
 {

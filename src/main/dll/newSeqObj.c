@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/newSeqObj.h"
-#include "main/objanim.h"
 
 
 extern int GameBit_Set(int bit, int value);

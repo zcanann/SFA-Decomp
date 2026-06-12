@@ -1,10 +1,5 @@
 /* === moved from main/dll/IM/IMsnowbike.c [801D9B1C-801D9BDC) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objseq.h"
-#include "main/dll/IM/IMsnowbike.h"
-#include "main/dll/SC/SCtotemlogpuz.h"
 
 typedef struct ShLevelcontrolState
 {
@@ -93,13 +88,10 @@ void sh_staff_free(int* obj, int p2)
 
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
-#include "global.h"
 
 #include "main/dll/DR/shstaff_state.h"
 

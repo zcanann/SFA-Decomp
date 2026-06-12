@@ -297,7 +297,6 @@ void DIMbosstonsil_free(void* obj)
 }
 
 /* === merged from main/dll/vfp_lavastar.c [801BE8F8-801BEC70) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/DIM/DIMbossspit.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

@@ -1,8 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/obj_placement.h"
 
 #define WCTREXSTATU_CALLBACK_TRIGGER 1
 

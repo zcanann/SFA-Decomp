@@ -32,7 +32,6 @@ int projtesla_doUnsupported(void)
 }
 
 /* === merged from main/dll/dll_7E.c [801009A8-801009AC) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_7E.h"
 
 /*
  * --INFO--
@@ -52,7 +51,6 @@ void projtesla_release(void)
 }
 
 /* === merged from main/dll/dll_7F.c [801009AC-801009B0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/dll_7F.h"
 
 /*
  * --INFO--

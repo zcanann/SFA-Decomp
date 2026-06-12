@@ -1,5 +1,4 @@
 #include "main/dll/DR/DRlaserturret.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 

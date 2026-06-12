@@ -1,20 +1,11 @@
 /* === moved from main/dll/genprops.c [80171D14-801723DC) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/dll/path_control_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/camera_interface.h"
-#include "main/mapEvent.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct SideloadPlacement
 {
@@ -2732,7 +2723,6 @@ void fn_801723DC(int obj)
 /* === moved from main/dll/texframeanimator.c [80172F14-80173224) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/dll/texframeanimator.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"

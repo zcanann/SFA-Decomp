@@ -1,5 +1,4 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/cmbsrc.h"
 
 int cmbsrc_getExtraSize(void) { return 0x28; }

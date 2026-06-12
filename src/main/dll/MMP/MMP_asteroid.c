@@ -1,8 +1,6 @@
 /* === moved from main/dll/MMP/mmp_levelcontrol.c [801948C0-80195008) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/MMP/mmp_levelcontrol.h"
 
 typedef struct WallanimatorPlacement
 {
@@ -462,14 +460,12 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole reset
 
 #include "main/map_block.h"
-#include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 typedef struct TexframeanimatorPlacement
 {

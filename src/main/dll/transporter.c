@@ -4,7 +4,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
-#include "main/dll/dll_138.h"
 #include "main/dll/pushable.h"
 
 
@@ -550,14 +549,10 @@ int pushable_func0B(int obj, int other)
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
 #include "main/dll/transporter.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct IceblastPlacement

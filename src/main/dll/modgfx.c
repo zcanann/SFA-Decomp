@@ -1,9 +1,7 @@
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
-#include "main/objanim_internal.h"
 #include "main/resource.h"
 
 typedef struct ModgfxEffectSlot

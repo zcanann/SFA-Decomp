@@ -5,7 +5,6 @@
  * FireFlyLantern_spawnFireFly is placed LAST so it cannot be auto-inlined
  * into init (extern bl before the re-split).
  */
-#include "main/objanim_internal.h"
 #include "main/dll/CF/CFcrystal.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

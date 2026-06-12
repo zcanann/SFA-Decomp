@@ -1,8 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/andross.h"
-#include "main/mapEventTypes.h"
 
 typedef struct AndrossUpdateModelAlphaState
 {

@@ -7,15 +7,10 @@
  * it held only the middle of the barrel DLL), and the head of
  * cannontargetControl.c (801A1A60-801A27B8).
  */
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DR/gasvent.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 typedef struct GunpowderbarrelTriggerExplosionPlacement
 {

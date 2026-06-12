@@ -351,7 +351,6 @@ void SHthorntail_free(SHthorntailObject* obj)
 }
 
 /* === merged from main/dll/SC/SClevelcontrol.c [801D5ED4-801D5F58) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/SC/SClevelcontrol.h"
 
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int param_6);
 extern void objRenderFn_8003b8f4(f32 scale);
@@ -391,10 +390,7 @@ void SHthorntail_render(SHthorntailObject* obj)
 }
 
 #include "main/dll/SH/SHroot.h"
-#include "main/dll/SC/SCchieflightfoot.h"
 #include "main/effect_interfaces.h"
-#include "main/objHitReact.h"
-#include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 

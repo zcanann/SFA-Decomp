@@ -1,13 +1,7 @@
 /* === moved from main/dll/creator1C4.c [801C835C-801C83D0) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/creator1C4.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -193,7 +187,6 @@ void gpsh_scene_init(int* obj, int* def);
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
 
 typedef struct EcshCupState

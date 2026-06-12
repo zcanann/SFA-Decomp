@@ -273,8 +273,6 @@ void Link_func0B(u8* srcArg)
 #pragma peephole reset
 
 /* === merged from main/dll/baddie/dll_DA.c [80130888-80130CF0) (TU re-split, docs/boundary_audit.md) === */
-#include "ghidra_import.h"
-#include "main/dll/baddie/dll_DA.h"
 
 
 typedef struct LinkTexture
@@ -507,7 +505,6 @@ void Link_render(void)
     MWTRACE(0xff);
 }
 
-#include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/TumbleweedBush.h"
 
 typedef struct TitleMenuItem

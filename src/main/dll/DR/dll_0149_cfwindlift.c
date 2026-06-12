@@ -7,18 +7,10 @@
  * Skeleton-copy carve: non-owned defs collapsed to prototypes in place.
  */
 #include "main/dll/cfguardian_state.h"
-#include "ghidra_import.h"
-#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
 
 extern undefined4 getLActions();
@@ -744,7 +736,6 @@ typedef struct SpiritDoorSpiritState
     u8 active; /* gamebit not yet set: render + group 0x4e membership */
 } SpiritDoorSpiritState;
 
-#include "main/dll/DR/gunpowderbarrel_state.h"
 
 typedef struct WindliftPlacement
 {

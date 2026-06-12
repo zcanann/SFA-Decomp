@@ -5,7 +5,6 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
-#include "main/dll/tricky_state.h"
 #include "main/objseq.h"
 
 

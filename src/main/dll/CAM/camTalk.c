@@ -1,13 +1,6 @@
 /* === moved from main/dll/CAM/dll_59.c [80107AEC-80107B4C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/audio/sfx_ids.h"
-#include "main/audio/sfx.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
 #include "main/dll/CAM/cambike_state.h"
-#include "main/dll/CAM/camcontrol_path_state.h"
-#include "main/dll/CAM/dll_59.h"
 #include "main/mm.h"
-#include "main/object_transform.h"
 
 extern int getAngle(f32 dx, f32 dz);
 extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
@@ -80,7 +73,6 @@ void CameraModeBike_free(void)
 
 #include "main/dll/CAM/camTalk.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
 #include "main/dll/CAM/cambike_state.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/game_object.h"

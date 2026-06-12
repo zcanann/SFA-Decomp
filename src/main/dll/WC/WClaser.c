@@ -4,9 +4,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/objlib.h"
 #include "main/resource.h"
-#include "global.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
 typedef struct WmObjCreatorState
@@ -241,7 +239,6 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/objseq.h"

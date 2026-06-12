@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/cntcounter_state.h"
-#include "main/obj_placement.h"
 
 typedef struct CntCounterSetup
 {

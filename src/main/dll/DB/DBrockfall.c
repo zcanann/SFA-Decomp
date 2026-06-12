@@ -1,10 +1,6 @@
-#include "main/dll/paymentkiosk.h"
 #include "main/dll/DB/DBrockfall.h"
-#include "main/dll/VF/platform1.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 extern uint FUN_80006c00();

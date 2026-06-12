@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"

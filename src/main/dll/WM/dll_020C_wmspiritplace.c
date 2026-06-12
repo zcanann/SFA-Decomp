@@ -14,11 +14,8 @@
  * anim.resetHitboxFlags (objanim_internal.h).
  */
 #include "main/dll/WM/wm_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/objanim_update.h"
-#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
 typedef struct WmSpiritPlaceState

@@ -140,7 +140,6 @@ void dll_19B_free(int* obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#include "ghidra_import.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"

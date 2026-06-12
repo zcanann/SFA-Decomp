@@ -1,10 +1,7 @@
 /* === moved from main/dll/CF/dll_165.c [8018A8BC-8018AA60) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/dll_165.h"
-#include "main/dll/CF/dll_163.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
 #include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
@@ -158,7 +155,6 @@ void treasurechest_hitDetect(int obj)
     }
 }
 
-#include "main/dll/CF/dll_166.h"
 #include "main/dll/CF/dll_165.h"
 #include "main/game_object.h"
 #include "main/objanim.h"

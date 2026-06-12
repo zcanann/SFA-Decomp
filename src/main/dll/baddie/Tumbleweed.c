@@ -1,4 +1,3 @@
-#include "main/objanim.h"
 #include "main/texture.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"

@@ -1,8 +1,5 @@
 /* === moved from main/dll/LGT/LGTpointlight.c [801F3C2C-801F3C7C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/LGT/LGTpointlight.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/game_object.h"
 
 
 extern void* objCreateLight(void* obj, int);
@@ -65,7 +62,6 @@ void wmworm_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/LGT/LGTdirectionallight.h"

@@ -4,9 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/seqObj11D.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
-#include "main/objhits_types.h"
 
 
 extern undefined4 FUN_80006824();

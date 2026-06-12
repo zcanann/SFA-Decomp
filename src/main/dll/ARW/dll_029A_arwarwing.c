@@ -1,10 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "global.h"
 #include "main/audio/sfx_ids.h"
-#include "main/mapEventTypes.h"
 
 #include "main/dll/ARW/arwing_state.h"
 

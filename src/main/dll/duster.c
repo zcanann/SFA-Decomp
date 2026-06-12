@@ -3,8 +3,6 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/duster.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
 
 #pragma dont_inline on
 

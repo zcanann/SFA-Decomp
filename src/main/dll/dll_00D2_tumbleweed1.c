@@ -3,7 +3,6 @@
 #pragma peephole on
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/dll/waterfallControl.h"
 
 
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
@@ -323,19 +322,14 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling reset
 #pragma peephole reset
 
-#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
-#include "main/dll/baddie_state.h"
 #include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
-#include "main/dll/landedArwing.h"
 #include "main/dll/path_control_interface.h"
-#include "main/objanim.h"
 #include "main/objlib.h"
-#include "main/objhits_types.h"
 
 typedef struct LandedArwingTriggerLaunchTargetState
 {

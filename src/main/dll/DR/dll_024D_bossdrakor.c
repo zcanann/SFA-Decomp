@@ -1,8 +1,6 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 
 /*
  * Function: bossdrakor_release
@@ -22,7 +20,6 @@ void bossdrakor_initialise(void)
 {
 }
 
-#include "global.h"
 
 typedef struct BossdrakorPlacement
 {

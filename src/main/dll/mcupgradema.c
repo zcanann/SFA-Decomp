@@ -2,8 +2,6 @@
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
 #include "main/dll/mcstaffeffe_state.h"
-#include "main/objanim_update.h"
-#include "main/objseq.h"
 
 int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

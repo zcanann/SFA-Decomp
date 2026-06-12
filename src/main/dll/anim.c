@@ -2,14 +2,9 @@
 #pragma scheduling on
 #pragma peephole on
 #include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/anim_internal.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 #include "main/main.h"
 #include "main/objlib.h"
-#include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
@@ -578,18 +573,14 @@ void fn_801FE774(int cam, f32* vel)
 #pragma scheduling reset
 #pragma peephole reset
 
-#include "ghidra_import.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
 #include "main/dll/baddie_state.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/objfx.h"
 #include "main/resource.h"
@@ -6306,7 +6297,6 @@ void dbegg_update(int obj)
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/baddie/chukachuck.h"
 
 extern u8 gChukaModeTable[9];
 extern f32 lbl_803E63F8;
