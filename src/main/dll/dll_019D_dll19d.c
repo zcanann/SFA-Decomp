@@ -13,6 +13,7 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"
 #include "main/dll/torch1CD.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -45,10 +46,8 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 extern f32 lbl_803E51B0;
-extern void ObjHits_ClearHitVolumes(int obj);
 extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
-extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E51B8;
 
