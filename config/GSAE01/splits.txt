@@ -1430,8 +1430,26 @@ main/dll/dll_01D7_dim2snowbal.c:
 main/dll/dll_01D8_dim2pathgen.c:
 	.text       start:0x801B837C end:0x801B8798
 
-main/dll/DIM2projrock.c:
-	.text       start:0x801B8798 end:0x801BA224
+main/dll/dll_01DA_dll1da.c:
+	.text       start:0x801B8798 end:0x801B8B70
+
+main/dll/dll_01DB_dll1db.c:
+	.text       start:0x801B8B70 end:0x801B8F7C
+
+main/dll/dll_01DC_dim2icefloe.c:
+	.text       start:0x801B8F7C end:0x801B93FC
+
+main/dll/dll_01DD_dim2icicle.c:
+	.text       start:0x801B93FC end:0x801B9810
+
+main/dll/dll_01DE_dim2lavacon.c:
+	.text       start:0x801B9810 end:0x801B9CB4
+
+main/dll/dll_01DF_dll1df.c:
+	.text       start:0x801B9CB4 end:0x801B9ECC
+
+main/dll/dll_801B9ECC.c:
+	.text       start:0x801B9ECC end:0x801BA224
 
 main/dll/DIM2lift.c:
 	.text       start:0x801BA224 end:0x801BB598
