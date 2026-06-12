@@ -120,22 +120,22 @@ void drgenerator_hitDetect(int obj)
 {
     char* p = ((GameObject*)obj)->extra;
     int q = *(int*)&((GameObject*)obj)->anim.placementData;
-    f32 a18;
-    f32 a14;
-    f32 a10;
-    int ac;
-    int a8;
+    f32 hitPosZ;
+    f32 hitPosY;
+    f32 hitPosX;
+    uint hitVolume;
     void* found;
     if (((BitFlags8*)(p + 0x19b))->b0 || ((BitFlags8*)(p + 0x19b))->b3)
     {
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition(obj, &a8, 0, &ac, &a10, &a14, &a18) != 5)
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, &hitVolume, &hitPosX, &hitPosY,
+                                           &hitPosZ) != 5)
     {
         return;
     }
-    p[0x19a] = p[0x19a] - ac;
-    Obj_SpawnHitLightAndFade(obj, &a10, lbl_803E6B5C);
+    p[0x19a] = p[0x19a] - hitVolume;
+    Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E6B5C);
     fn_8009A8C8(obj, lbl_803E6B60);
     if (p[0x19a] > 0)
     {

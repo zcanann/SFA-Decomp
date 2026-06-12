@@ -75,7 +75,7 @@ typedef struct DrLaserCannonState
 {
     int beamObject;
     u8 pad04[DR_LASERCANNON_STATE_LAST_HIT_OBJECT - 0x04];
-    int* lastHitObject;
+    int lastHitObject;
     f32 muzzleX;
     f32 muzzleY;
     f32 muzzleZ;
@@ -374,32 +374,34 @@ void drlasercannon_hitDetect(int obj)
 {
     DrLaserCannonState* state = ((GameObject*)obj)->extra;
     DrLaserCannonSetup* setup = (DrLaserCannonSetup*)((GameObject*)obj)->anim.placementData;
-    f32 a18;
-    f32 a14;
-    f32 a10;
-    int ac;
-    int* a8;
+    f32 hitPosZ;
+    f32 hitPosY;
+    f32 hitPosX;
+    uint hitVolume;
+    int hitObject;
     int hit;
     int* tricky;
     if (state->flags.b0 || state->flags.b3)
     {
         return;
     }
-    hit = ObjHits_GetPriorityHitWithPosition(obj, &a8, 0, &ac, &a10, &a14, &a18);
+    hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, 0, &hitVolume, &hitPosX,
+                                             &hitPosY, &hitPosZ);
     if (state->flags.b6 != 0)
     {
-        if (hit != 0 && *(s16*)((char*)a8 + 0x46) != state->hitExcludeType &&
-            (void*)state->warningObject != NULL)
+        if (hit != 0 && *(s16 *)(hitObject + 0x46) != state->hitExcludeType &&
+            (void *)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
         }
     }
     else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
-        state->lastHitObject != a8 && *(s16*)((char*)a8 + 0x46) != state->hitExcludeType)
+             state->lastHitObject != hitObject &&
+             *(s16 *)(hitObject + 0x46) != state->hitExcludeType)
     {
-        state->lastHitObject = a8;
-        state->health = state->health - ac;
-        Obj_SpawnHitLightAndFade(obj, &a10, lbl_803E68F0);
+        state->lastHitObject = hitObject;
+        state->health = state->health - hitVolume;
+        Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E68F0);
         fn_8009A8C8(obj, lbl_803E68F4);
         Sfx_PlayFromObject(obj, 0x3cc);
         if (state->health <= 0)
@@ -422,7 +424,7 @@ void drlasercannon_hitDetect(int obj)
     }
     else
     {
-        state->lastHitObject = a8;
+        state->lastHitObject = hitObject;
     }
 }
 
