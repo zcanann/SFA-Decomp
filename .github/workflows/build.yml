@@ -52,6 +52,14 @@ jobs:
     # Build the project
     - name: Build
       run: |
+        # Drop cached build artifacts that a restored cache can leave stale
+        # across a structural (splits.txt) change: the dtk-generated
+        # config.json is untracked, so git-restore-mtime does not reset its
+        # mtime and ninja can skip regenerating it from a newer splits.txt,
+        # leaving stale unit paths that fail the report step. Removing it (and
+        # any stale per-unit .o under renamed/relocated paths) forces a fresh
+        # split from the current splits.txt.
+        rm -f build/${{ matrix.version }}/config.json
         python configure.py --map --version ${{ matrix.version }} \
             --binutils /binutils --compilers /compilers
         ninja all_source progress build/${{ matrix.version }}/report.json
