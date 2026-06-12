@@ -34,12 +34,12 @@ extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void Sfx_StopObjectChannel();
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(f32 dx, f32 dz);
 extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
 extern void vecRotateZXY(void* a, void* b);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern f32 lbl_803E588C;
+extern const f32 lbl_803E588C;
 extern f32 lbl_803E5890;
 extern f32 lbl_803E5894;
 extern f32 lbl_803E5898;
@@ -58,18 +58,18 @@ void SB_ShipGun_free(int param_1)
 
 void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void* o30 = *(void**)&((GameObject*)obj)->anim.parent;
-    s8* p = ((GameObject*)obj)->extra;
+    void* o30;
+    s8* p;
     s32 v;
+    p = ((GameObject*)obj)->extra;
+    o30 = *(void**)&((GameObject*)obj)->anim.parent;
     if (o30 != NULL)
     {
         if (((GameObject*)o30)->anim.seqId == 0x139) return;
     }
     v = visible;
-    if (v != 0 && p[0xc] != 0 && ((u8*)p)[0xd] != 0)
-    {
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
-    }
+    if (v == 0 || p[0xc] == 0 || ((u8*)p)[0xd] == 0) return;
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
 }
 
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
@@ -106,7 +106,7 @@ void SB_ShipGun_update(int obj)
     extern u16* Obj_SetupObject(void* setup, int p2, int p3, int p4, int p5);
     extern void* Obj_AllocObjectSetup(int size, int objType);
     extern int Sfx_PlayFromObject();
-    extern void spawnExplosion(double scale, int obj, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+    extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     extern u8* Obj_GetPlayerObject(void);
     extern undefined4 ObjPath_GetPointWorldPosition();
     char phase;
@@ -119,14 +119,21 @@ void SB_ShipGun_update(int obj)
     uint randDelay;
     u16* spawned;
     int placement;
-    float aimZv[3];
-    float aimY;
-    float aimX;
-    float aimZ;
-    ushort rotArgs[4];
-    float offsetZ;
-    float offsetY;
-    float offsetX;
+    struct
+    {
+        s16 rot[3];
+        u16 mode;
+        f32 a;
+        f32 b;
+        f32 c;
+        f32 d;
+    } stk;
+    struct
+    {
+        f32 x;
+        f32 y;
+        f32 z;
+    } offset;
     float posX;
     float posY;
     float posZ;
@@ -251,21 +258,21 @@ void SB_ShipGun_update(int obj)
                 {
                     *(short*)((int)state + 6) = -8000;
                 }
-                *(ushort*)(state + 2) = *(short*)(state + 2) - (ushort)framesThisStep;
+                *(s16*)(state + 2) -= framesThisStep;
                 if ((*(short*)(state + 2) < 0) && (Obj_IsLoadingLocked() != 0))
                 {
                     Obj_GetWorldPosition(obj, &posX, &posY, &posZ);
-                    aimX = lbl_803E588C;
-                    aimY = lbl_803E588C;
-                    aimZv[0] = lbl_803E588C;
-                    aimZ = lbl_803E5888;
-                    rotArgs[0] = *(ushort*)(state + 1);
-                    rotArgs[1] = 0;
-                    rotArgs[2] = 0;
-                    offsetX = lbl_803E5890;
-                    offsetY = lbl_803E5894;
-                    offsetZ = lbl_803E588C;
-                    vecRotateZXY(rotArgs, &offsetX);
+                    stk.b = lbl_803E588C;
+                    stk.c = lbl_803E588C;
+                    stk.d = lbl_803E588C;
+                    stk.a = lbl_803E5888;
+                    stk.rot[0] = *(s16*)(state + 1);
+                    stk.rot[1] = 0;
+                    stk.rot[2] = 0;
+                    offset.x = lbl_803E5890;
+                    offset.y = lbl_803E5894;
+                    offset.z = lbl_803E588C;
+                    vecRotateZXY(stk.rot, &offset.x);
                     placement = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,
                                                        SB_CANNONBALL_ALIAS_OBJECT_TYPE);
                     ((SBShipGunPlacement*)placement)->unk8 = posX;
@@ -280,8 +287,8 @@ void SB_ShipGun_update(int obj)
                     fdx = ((SBShipGunPlacement*)placement)->unk18 - ((GameObject*)obj)->anim.worldPosX;
                     fdy = ((SBShipGunPlacement*)placement)->unk1C - (((GameObject*)obj)->anim.worldPosY - lbl_803E5898);
                     fdz = ((SBShipGunPlacement*)placement)->unk20 - ((GameObject*)obj)->anim.worldPosZ;
-                    dist = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
-                    posX = lbl_803E589C / dist;
+                    posX = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
+                    posX = lbl_803E589C / posX;
                     *(float*)(spawned + 0x12) = fdx * posX;
                     *(float*)(spawned + 0x14) = fdy * posX;
                     *(float*)(spawned + 0x16) = fdz * posX;
@@ -289,7 +296,7 @@ void SB_ShipGun_update(int obj)
                     *(float*)(spawned + 6) = fa * *(float*)(spawned + 0x12) + *(float*)(spawned + 6);
                     *(float*)(spawned + 8) = fa * *(float*)(spawned + 0x14) + *(float*)(spawned + 8);
                     *(float*)(spawned + 10) = fa * *(float*)(spawned + 0x16) + *(float*)(spawned + 10);
-                    *spawned = getAngle(*(float*)(spawned + 0x12), *(float*)(spawned + 0x16));
+                    *(s16*)spawned = getAngle(*(float*)(spawned + 0x12), *(float*)(spawned + 0x16));
                     *(undefined4*)(spawned + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
                     *(int*)(spawned + 0x7c) = *state;
                     Camera_EnableViewYOffset();
@@ -301,12 +308,12 @@ void SB_ShipGun_update(int obj)
                         if (ref2 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
                         {
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                            *(short*)(state + 2) = (short)randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
+                            *(short*)(state + 2) = randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
                         }
                         else
                         {
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                            *(short*)(state + 2) = (short)randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
+                            *(short*)(state + 2) = randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
                         }
                         *(undefined*)((int)state + 0xe) = 0;
                     }
@@ -325,7 +332,7 @@ void SB_ShipGun_update(int obj)
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
             if (*(char*)(state + 3) == '\0')
             {
-                spawnExplosion((double)lbl_803E5890, obj, 1, 1, 1, 0, 1, 1, 0);
+                spawnExplosion(obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
                 *(undefined*)((int)state + 10) = 4;
             }
             else
@@ -335,16 +342,16 @@ void SB_ShipGun_update(int obj)
             break;
         case 4:
             {
-                aimZ = lbl_803E58A8;
-                rotArgs[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-                ObjPath_GetPointWorldPosition(obj, 0, &aimX, &aimY, aimZv, 0);
-                aimX = aimX - ((GameObject*)obj)->anim.worldPosX;
-                aimY = aimY - ((GameObject*)obj)->anim.worldPosY;
-                aimZv[0] = aimZv[0] - ((GameObject*)obj)->anim.worldPosZ;
+                stk.a = lbl_803E58A8;
+                stk.mode = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+                ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
+                stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
+                stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
+                stk.d = stk.d - ((GameObject*)obj)->anim.worldPosZ;
                 for (placement = 0; placement < (int)(uint)framesThisStep; placement = placement + 1)
                 {
                     (*gPartfxInterface)->spawnObject(
-                        (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, rotArgs,
+                        (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, stk.rot,
                         SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
                 }
             }
@@ -368,16 +375,16 @@ void SB_ShipGun_update(int obj)
                     *(undefined2*)(state + 2) = 0;
                 }
             }
-            aimZ = lbl_803E58A8;
-            rotArgs[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-            ObjPath_GetPointWorldPosition(obj, 0, &aimX, &aimY, aimZv, 0);
-            aimX = aimX - ((GameObject*)obj)->anim.worldPosX;
-            aimY = aimY - ((GameObject*)obj)->anim.worldPosY;
-            aimZv[0] = aimZv[0] - ((GameObject*)obj)->anim.worldPosZ;
+            stk.a = lbl_803E58A8;
+            stk.mode = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+            ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
+            stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
+            stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
+            stk.d = stk.d - ((GameObject*)obj)->anim.worldPosZ;
             for (placement = 0; placement < (int)(uint)framesThisStep; placement = placement + 1)
             {
                 (*gPartfxInterface)->spawnObject(
-                    (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, rotArgs,
+                    (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, stk.rot,
                     SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
             }
             break;
@@ -385,13 +392,13 @@ void SB_ShipGun_update(int obj)
         if (*(char*)(state + 3) == '\0')
         {
             dist = Vec_distance((float*)(player + 0x18), (float*)(obj + 0x18));
-            if (lbl_803E58AC <= dist)
+            if (dist < lbl_803E58AC)
             {
-                Sfx_StopObjectChannel(obj, SB_SHIPGUN_RANGE_FAR_ANIM);
+                Sfx_PlayFromObject(obj, SB_SHIPGUN_RANGE_NEAR_ANIM);
             }
             else
             {
-                Sfx_PlayFromObject(obj, SB_SHIPGUN_RANGE_NEAR_ANIM);
+                Sfx_StopObjectChannel(obj, SB_SHIPGUN_RANGE_FAR_ANIM);
             }
         }
     }
