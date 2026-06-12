@@ -341,11 +341,9 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
  * quest progression with path flights, landing physics, sequenced
  * triggers and idle chatter. */
 
-/* keep-or-negate: the inlined return-join keeps target's bne;b and the
-   volatile read stops the result substituting into its consumer. */
 static inline f32 cfguardianAbs(f32 x)
 {
-    if (x >= *(volatile f32*)&lbl_803E4110)
+    if (x >= lbl_803E4110)
     {
         return x;
     }
