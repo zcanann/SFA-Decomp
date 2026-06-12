@@ -40,9 +40,9 @@ extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
 extern void skyFn_80089710(int flags, u32 enabled, int startComplete);
 extern f32 fn_8008ED88(void);
-extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-extern void fn_80089510(int flags, u8 red, u8 green, u8 blue);
-extern void fn_80089578(int flags, u8 red, u8 green, u8 blue);
+extern void skyFn_800895e0(int flags, int red, int green, int blue, int m1, int m2);
+extern void fn_80089510(int flags, int red, int green, int blue);
+extern void fn_80089578(int flags, int red, int green, int blue);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
@@ -254,17 +254,14 @@ void wmlevelcontrol_hitDetect(void)
 
 /* Defined LAST so it cannot be auto-inlined into wmlevelcontrol_update
  * above (extern bl before the re-split; the retail unit keeps the bl). */
-#pragma peephole on
 void fn_801F3F18(int obj)
 {
     LightVecSet L;
+    f32 lightX;
     LightVec3* vecs;
     u8* fromColor;
     u8* toColor;
     u8* outColor;
-    u32 red;
-    u32 green;
-    u32 blue;
 
     vecs = (LightVec3*)lbl_802C24B8;
     L.fog = vecs[1];
@@ -297,63 +294,50 @@ void fn_801F3F18(int obj)
         skyFn_80089710(1, 1, 1);
     }
 
-    if (fn_8008ED88() > lbl_803E5E70)
+    if (fn_8008ED88() > 0.0f)
     {
         lbl_803DDC88 = lbl_803E5E74;
         lbl_803DDC8C = lbl_803E5E74;
     }
     lbl_803DDC8C = -(lbl_803E5E78 * timeDelta - lbl_803DDC8C);
-    if (lbl_803DDC8C < lbl_803E5E70)
+    if (lbl_803DDC8C < 0.0f)
     {
-        lbl_803DDC8C = lbl_803E5E70;
+        lbl_803DDC8C = 0.0f;
     }
 
     fromColor = &lbl_803DC118;
     toColor = &lbl_803DC11C;
-    outColor = &lbl_803DDC9C;
-    red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                     (f32)(s32)fromColor[0]);
-    outColor[0] = red;
-    green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                       (f32)(s32)fromColor[1]);
-    outColor[1] = green;
-    blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                      (f32)(s32)fromColor[2]);
-    outColor[2] = blue;
-    skyFn_800895e0(1, outColor[0], outColor[1], outColor[2], 0x40, 0x40);
+    (&lbl_803DDC9C)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                  (f32)(s32)fromColor[0];
+    (&lbl_803DDC9C)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1];
+    (&lbl_803DDC9C)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                  (f32)(s32)fromColor[2];
+    skyFn_800895e0(1, *(volatile u8*)&lbl_803DDC9C, ((volatile u8*)&lbl_803DDC9C)[1], ((volatile u8*)&lbl_803DDC9C)[2], 0x40, 0x40);
 
     fromColor = &lbl_803DC110;
     toColor = &lbl_803DC114;
-    outColor = &lbl_803DDC98;
-    red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                     (f32)(s32)fromColor[0]);
-    outColor[0] = red;
-    green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                       (f32)(s32)fromColor[1]);
-    outColor[1] = green;
-    blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                      (f32)(s32)fromColor[2]);
-    outColor[2] = blue;
-    fn_80089510(1, outColor[0], outColor[1], outColor[2]);
+    (&lbl_803DDC98)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                  (f32)(s32)fromColor[0];
+    (&lbl_803DDC98)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1];
+    (&lbl_803DDC98)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                  (f32)(s32)fromColor[2];
+    fn_80089510(1, *(volatile u8*)&lbl_803DDC98, ((volatile u8*)&lbl_803DDC98)[1], ((volatile u8*)&lbl_803DDC98)[2]);
 
     fromColor = &lbl_803DC120;
     toColor = &lbl_803DC124;
-    outColor = &lbl_803DDC94;
-    red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                     (f32)(s32)fromColor[0]);
-    outColor[0] = red;
-    green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                       (f32)(s32)fromColor[1]);
-    outColor[1] = green;
-    blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                      (f32)(s32)fromColor[2]);
-    outColor[2] = blue;
-    fn_80089578(1, outColor[0], outColor[1], outColor[2]);
+    (&lbl_803DDC94)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                  (f32)(s32)fromColor[0];
+    (&lbl_803DDC94)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1];
+    (&lbl_803DDC94)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                  (f32)(s32)fromColor[2];
+    fn_80089578(1, *(volatile u8*)&lbl_803DDC94, ((volatile u8*)&lbl_803DDC94)[1], ((volatile u8*)&lbl_803DDC94)[2]);
 
-    red = (u32)(s32)(lbl_803DDC8C * lbl_803E5E80 + lbl_803E5E7C);
-    lbl_803DDC90 = red;
+    lbl_803DDC90 = lbl_803DDC8C * lbl_803E5E80 + lbl_803E5E7C;
     skySetOverrideLightDirectionEnabled(1);
-    skySetOverrideLightDirection(lbl_803DDC8C * (L.light.x - L.color.x) + L.color.x,
+    skySetOverrideLightDirection(lbl_803DDC8C * (L.light.x - (lightX = L.color.x)) + lightX,
                                  lbl_803DDC8C * (L.light.y - L.color.y) + L.color.y,
                                  lbl_803DDC8C * (L.light.z - L.color.z) + L.color.z,
                                  lbl_803E5E84);
