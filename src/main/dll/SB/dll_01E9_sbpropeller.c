@@ -31,7 +31,7 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, 
 extern int Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p);
-extern void spawnExplosion(f32 s, int obj, int a, int b, int c, int d, int e, int f, int g);
+extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E5810;
 extern f32 lbl_803E5814;
 extern f32 lbl_803E5818;
@@ -48,8 +48,10 @@ void SB_Propeller_update(int obj)
     int camA;
     int camB;
     int camC;
+    int pf4;
     int i;
-    int hit;
+    int j;
+    u32 hit;
     f32* pf;
     struct
     {
@@ -72,13 +74,13 @@ void SB_Propeller_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, 0x2c6);
     }
     camC = DBprotection_getCameraState(*(int*)&((GameObject*)obj)->anim.parent);
-    if ((camC < 2) && (((SBPropellerState*)pf)->health < 1))
+    if ((camC < 2) && (((SBPropellerState*)pf)->health <= 0))
     {
         ((SBPropellerState*)pf)->smokeTimer = ((SBPropellerState*)pf)->smokeTimer - timeDelta;
         if (((SBPropellerState*)pf)->smokeTimer <= lbl_803E5814)
         {
-            f32 spd = lbl_803E5810;
-            for (i = randomGetRange(10, 0x19); i != 0; i--)
+            f32 spd;
+            for (i = randomGetRange(10, 0x19), spd = lbl_803E5810; i != 0; i--)
             {
                 stk.b = ((GameObject*)obj)->anim.worldPosX;
                 stk.c = ((GameObject*)obj)->anim.worldPosY;
@@ -97,15 +99,16 @@ void SB_Propeller_update(int obj)
             stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
             stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
             stk.d = stk.d - ((GameObject*)obj)->anim.worldPosZ;
-            for (i = 0; i < framesThisStep; i++)
+            for (j = 0; j < framesThisStep; j++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7aa, stk.pad, 2, -1, NULL);
             }
         }
     }
-    if (*(int*)&((GameObject*)obj)->anim.parent != 0)
+    if (*(void**)&((GameObject*)obj)->anim.parent != NULL)
     {
-        if ((((GameObject*)obj)->anim.seqId != 0x69c) && (*(int*)(*(int*)&((GameObject*)obj)->anim.parent + 0xf4) < 4))
+        pf4 = *(int*)(*(int*)&((GameObject*)obj)->anim.parent + 0xf4);
+        if ((((GameObject*)obj)->anim.seqId != 0x69c) && (pf4 < 4))
         {
             ((SBPropellerState*)pf)->spinBlend = (f32)((SBPropellerState*)pf)->spinRate / lbl_803E581C;
             if (((SBPropellerState*)pf)->spinBlend < lbl_803E5814)
@@ -127,7 +130,7 @@ void SB_Propeller_update(int obj)
                     && ((hit != 0 && (hit != Obj_GetPlayerObject()))))
                 && ((*(s16*)(hit + 0x46) != 0x69c
                     && ((*(s16*)(hit + 0x46) != 0x9a
-                        && ((((GameObject*)obj)->unkF4 = 0x14, *(int*)&((GameObject*)obj)->anim.parent != 0)))))))
+                        && ((((GameObject*)obj)->unkF4 = 0x14, *(void**)&((GameObject*)obj)->anim.parent != NULL)))))))
             && ((camA == 2 || (camA == 5)))) && (((GameObject*)obj)->anim.seqId == 0x69c))
         {
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
@@ -139,24 +142,23 @@ void SB_Propeller_update(int obj)
                 (**(void (**)(int))(**(int**)(*(int*)&((GameObject*)obj)->anim.parent + 0x68) + 0x20))(
                     *(int*)&((GameObject*)obj)->anim.parent);
                 ObjHits_DisableObject(obj);
-                *(u16*)&((GameObject*)obj)->anim.flags = *(u16*)&((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
-                spawnExplosion(lbl_803E5824, obj, 1, 1, 1, 0, 1, 1, 0);
+                *(s16*)&((GameObject*)obj)->anim.flags = *(s16*)&((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+                spawnExplosion(obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);
                 Sfx_PlayFromObject(obj, 0x2c8);
             }
         }
         if (((GameObject*)obj)->unkF4 == 0)
         {
-            ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
-            hitState->hitVolumePriority = 6;
-            hitState->hitVolumeId = 1;
-            hitState->objectHitMask = 0x10;
-            hitState->skeletonHitMask = 0x10;
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 6;
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0x10;
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = 0x10;
         }
         else
         {
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 0;
         }
-        ((GameObject*)obj)->anim.rotZ = (int)-((f32)((SBPropellerState*)pf)->spinRate * timeDelta - (
+        ((GameObject*)obj)->anim.rotZ = -((f32)((SBPropellerState*)pf)->spinRate * timeDelta - (
             f32)((GameObject*)obj)->anim.rotZ);
     }
 }
