@@ -7,6 +7,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
 
 typedef struct GunpowderbarrelTriggerExplosionPlacement
 {
@@ -50,16 +52,6 @@ typedef struct GunpowderbarrelUpdatePhysicsState
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern void ObjHits_ClearSourceMask(int obj, int sourceMask);
-extern void ObjHits_SetSourceMask(int obj, u8 sourceMask);
-extern undefined4 ObjHits_ClearFlags();
-extern undefined4 ObjHits_SetFlags();
-extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
@@ -91,7 +83,6 @@ extern void timer_clearManualFlags();
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern int fn_80062D60(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
-extern void ObjHits_AddContactObject(int* contact, int* obj);
 extern void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer);
 extern void fn_801A0F58(int* obj, s16 a, s16 b);
 extern f32 timeDelta;
@@ -105,9 +96,6 @@ extern f32 lbl_803E4318;
 extern f32 lbl_803E431C;
 extern f32 lbl_803E4320;
 extern f32 lbl_803DBE88;
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_RefreshObjectState();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjLink_AttachChild();
@@ -413,13 +401,13 @@ typedef struct
 void gunpowderbarrel_triggerExplosion(int* obj)
 {
     u8* sub;
-    void* hitObj;
+    int hitObj;
     int count;
     u8* tricky;
     int* timer;
 
     sub = ((GameObject*)obj)->extra;
-    if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0 ||
+    if (ObjHits_GetPriorityHit((int)obj, &hitObj, 0, 0) != 0 ||
         ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (sub[0x49] & 2) != 0))
     {
         sub[0x16] += 1;
@@ -466,11 +454,11 @@ void gunpowderbarrel_triggerExplosion(int* obj)
                 ((GameObject*)obj)->anim.localPosZ = z;
             }
         }
-        ObjHits_ClearFlags(obj, 0x80);
+        ObjHits_ClearFlags((int)obj, 0x80);
         ObjHits_SetSourceMask((int)obj, 1);
-        ObjHitbox_SetCapsuleBounds(obj, 0x14, -5, 0x14);
-        ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+        ObjHitbox_SetCapsuleBounds((int)obj, 0x14, -5, 0x14);
+        ObjHits_EnableObject((int)obj);
+        ObjHits_SetHitVolumeSlot((int)obj, 5, 4, 0);
         Sfx_PlayFromObject(obj, SFXsk_bapt11_c);
         ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion(obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
@@ -619,7 +607,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
         if (contact != 0)
         {
             u32 flags;
-            ObjHits_AddContactObject(contact, obj);
+            ObjHits_AddContactObject((int)contact, (int)obj);
             flags = ((ObjAnimComponent*)contact)->modelInstance->flags;
             if ((flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(flags & 0x8000))
             {
