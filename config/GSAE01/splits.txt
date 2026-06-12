@@ -717,8 +717,14 @@ main/dll/CF/dll_011D_treasurechest.c:
 main/dll/CF/CFtoggleswitch.c:
 	.text       start:0x8018ADB4 end:0x8018BC48
 
-main/dll/CF/CFforcecontrol.c:
-	.text       start:0x8018BC48 end:0x8018CD64
+main/dll/CF/dll_0124_deathgas.c:
+	.text       start:0x8018BC48 end:0x8018C000
+
+main/dll/CF/dll_0123_fuelcell.c:
+	.text       start:0x8018C000 end:0x8018C7D8
+
+main/dll/CF/dll_010E_dieduster.c:
+	.text       start:0x8018C7D8 end:0x8018CD64
 
 main/dll/CF/treasureRelated0177.c:
 	.text       start:0x8018CD64 end:0x8018D6E8
