@@ -1,124 +1,43 @@
-/* DLL 0x162 - CFMagicWall [801A39B4-801A39D0) */
-#include "main/dll/DR/dll_015A_explodable.h"
-#include "main/dll/drexplodable_types.h"
+/*
+ * cfmagicwall (DLL 0x162) - magic wall at CF (CloudRunner Fortress).
+ * While the placement's game bit is set, fades the wall by viewing
+ * angle and distance: invisible from behind (|yaw delta| > 1/4 turn),
+ * otherwise alpha ramps from 0 up to full over the placement's range
+ * using the nearer of player distance and camera distance.
+ */
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-
-/* segment pragma-stack balance (re-split): */
-
-#include "main/audio/sfx_ids.h"
-#include "main/camera_interface.h"
-#include "main/mapEvent.h"
-#include "main/dll/IM/IMicicle.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-
-typedef struct CfmagicwallPlacement
+typedef struct CfMagicWallMapData
 {
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-    s16 unk20;
+    ObjPlacement base;
+    s8 rotXByte;   /* 0x18: rotX in 1/256 turns */
+    u8 pad19;
+    s16 fadeRange; /* 0x1A: distance over which alpha ramps */
+    u8 pad1C[4];
+    s16 visibleEvent; /* 0x20: game bit enabling the fade logic */
     u8 pad22[0x28 - 0x22];
-} CfmagicwallPlacement;
+} CfMagicWallMapData;
 
-extern undefined8 FUN_80017698();
-extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80044404();
+STATIC_ASSERT(offsetof(CfMagicWallMapData, fadeRange) == 0x1A);
+STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
-
+extern int Obj_GetYawDeltaToObject();
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E43D8;
-extern f32 lbl_803E43DC;
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void* a, void* b);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
-extern int ObjList_FindObjectById(int objectId);
+extern f32 lbl_803E43D8;
+extern f32 lbl_803E43DC;
 
-void FUN_801a4520(int param_1)
-{
-    int iVar1;
+int cfmagicwall_getExtraSize(void) { return 0x0; }
 
-    if (((GameObject*)param_1)->unkF4 == 0)
-    {
-        iVar1 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if ((*(short*)(iVar1 + 0x1c) != 0) && (**(byte**)&((GameObject*)param_1)->extra >> 5 != 0))
-        {
-            (*gObjectTriggerInterface)->preempt(param_1, *(s16*)(iVar1 + 0x1c));
-        }
-        iVar1 = (int)*(char*)(iVar1 + 0x1e);
-        if (iVar1 != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence(iVar1, (void*)param_1, -1);
-        }
-        ((GameObject*)param_1)->unkF4 = 1;
-    }
-    return;
-}
-
-void FUN_801a45cc(short* param_1, int param_2)
-{
-}
-
-void cflevelcontrol_free(int param_1);
-
-undefined4
-FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             undefined4 param_9, undefined4 param_10, int param_11)
-{
-    undefined4 uVar1;
-    int iVar2;
-    undefined8 uVar3;
-
-    for (iVar2 = 0; iVar2 < (int)(uint) * (byte*)(param_11 + 0x8b); iVar2 = iVar2 + 1)
-    {
-        if (*(char*)(param_11 + iVar2 + 0x81) == '\x01')
-        {
-            FUN_80017698(0xdcb, 1);
-            uVar3 = FUN_80017698(0x4a3, 0);
-            FUN_80041ff8(uVar3, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x2b);
-            FUN_80042b9c(0, 0, 1);
-            uVar1 = FUN_80044404(0x2b);
-            FUN_80042bec(uVar1, 0);
-        }
-    }
-    return 0;
-}
-
-void cfforcefield_release(void);
+int cfmagicwall_getObjectTypeId(void) { return 0x0; }
 
 void cfmagicwall_free(void)
 {
 }
-
-void cfmagicwall_hitDetect(void)
-{
-}
-
-void cfmagicwall_release(void)
-{
-}
-
-void cfmagicwall_initialise(void)
-{
-}
-
-void cflevelcontrol_hitDetect(void);
-
-int cfmagicwall_getExtraSize(void) { return 0x0; }
-int cfmagicwall_getObjectTypeId(void) { return 0x0; }
-int cflevelcontrol_getExtraSize(void);
 
 void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -126,7 +45,9 @@ void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E43D8);
 }
 
-void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void cfmagicwall_hitDetect(void)
+{
+}
 
 void cfmagicwall_update(int obj)
 {
@@ -134,7 +55,7 @@ void cfmagicwall_update(int obj)
     int player = (int)Obj_GetPlayerObject();
     u8 alpha = 0xff;
 
-    if (GameBit_Get(((CfmagicwallPlacement*)data)->unk20) != 0)
+    if (GameBit_Get(((CfMagicWallMapData*)data)->visibleEvent) != 0)
     {
         int yaw = (s16)Obj_GetYawDeltaToObject(obj, player, NULL);
 
@@ -150,7 +71,7 @@ void cfmagicwall_update(int obj)
             f32 playerDistance;
             f32 range;
             f32 fadeDistance;
-            range = (f32)(s32)((CfmagicwallPlacement*)data)->unk1A;
+            range = (f32)(s32)((CfMagicWallMapData*)data)->fadeRange;
             playerDistance = Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)(player + 0x18));
             fadeDistance = Camera_DistanceToCurrentViewPosition(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
@@ -184,33 +105,10 @@ void cfmagicwall_init(s16* dst, void* src)
     *dst = t;
 }
 
-int attractor_setScale(int* obj);
+void cfmagicwall_release(void)
+{
+}
 
-/* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
- * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
- * (state[0] bits 5..7) through the door's open/close machine. Returns 1
- * while in the static states (0/1) and 0 while in transition (2/3). */
-
-/* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
- * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
- * bits 5..7 are set, preempt the event. Then if (s8)data->_1e is not -1,
- * run that sequence with obj, -1.
- * Finally latch obj->_f4 = 1. */
-
-/* exploded_init: store the map object tag, scale the model using the map
- * byte, then enable physics if any initial velocity/acceleration is present. */
-
-/* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
- * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
- * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-
-/* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
- * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
- * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
- * obj->_b8->_0. */
-
-/* Exploded debris setup: seed object angles, linear velocity, angular velocity,
- * ground clearance, and the randomized lifetime countdown. */
-
-/* Exploded debris physics step: integrate local velocity and spin, bounce from
- * the stored floor height, and return nonzero once the shard comes to rest. */
+void cfmagicwall_initialise(void)
+{
+}
