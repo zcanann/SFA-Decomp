@@ -1,5 +1,5 @@
 /*
- * sandwormBoss.c — 10-DLL container (DLL 0x14A CFPowerBase .. 0x157
+ * sandwormBoss.c - 10-DLL container (DLL 0x14A CFPowerBase .. 0x157
  * SpiritDoorSpirit), TU [8019D578-801A0B14). DLLs 0x148 and 0x149 are
  * defined in dll_0148_cfguardian.c and dll_0149_cfwindlift.c; their
  * definitions here are collapsed to forward prototypes.
@@ -639,6 +639,12 @@ void cfprisonguard_init(int* obj, u8* params)
     ((Bit80*)&sub->flags39)->top = 1;
 }
 
+typedef struct CfPrisonGuardFlags39
+{
+    u8 pulse : 1; /* 0x80: cleared every update */
+    u8 rest : 7;
+} CfPrisonGuardFlags39;
+
 void cfprisonguard_update(int* obj)
 {
     CfPrisonGuardState* sub;
@@ -652,7 +658,7 @@ void cfprisonguard_update(int* obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (((u32)sub->flags39 >> 7) & 1u)
     {
-        sub->flags39 = (u8)(sub->flags39 & ~0x80);
+        ((CfPrisonGuardFlags39*)&sub->flags39)->pulse = 0;
     }
     if (GameBit_Get(((CfprisonguardPlacement*)def)->unk1E) != 0)
     {
@@ -674,10 +680,12 @@ void cfprisonguard_update(int* obj)
     {
         if (sub->guardState != 4)
         {
-            if (dist >= (f32)(s32)((CfprisonguardPlacement*)def)->unk1A)
+            if (dist < (f32)(s32)((CfprisonguardPlacement*)def)->unk1A)
             {
-                if (waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) == 0)
-                    return;
+            }
+            else if (waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) == 0)
+            {
+                return;
             }
         }
         if (objGetAnimState80A(player) != 0x40)
