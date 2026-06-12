@@ -37,7 +37,6 @@ extern undefined4 FUN_80017784();
 extern undefined4 FUN_80017790();
 extern uint FUN_8001779c();
 extern int FUN_80017830();
-extern undefined4 ObjHits_AddContactObject();
 extern void* ObjGroup_GetObjects();
 extern int coordsToMapCell();
 extern int newshadows_getSmallShadowTexture(void);
@@ -3484,7 +3483,7 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
             Obj_TransformLocalVectorByWorldMatrix((int)pp[0x17], fp, fp);
             if (contactSrc != NULL)
             {
-                ObjHits_AddContactObject(pp[0x17], contactSrc);
+                ObjHits_AddContactObject((int)pp[0x17], (int)contactSrc);
             }
         }
         pp += 1;
