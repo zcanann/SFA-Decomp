@@ -1369,8 +1369,8 @@ void cloudprisoncontrol_update(int obj)
     }
 }
 
-extern int findRomCurvePointNearObject(int obj, int sel, int p3, int p4);
-extern int fn_8019B1D8(int obj, void* buf, f32 t, int p4);
+extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
+extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
 extern int Curve_AdvanceAlongPath(int p1);
 extern int hitDetectFn_800658a4(f32 x, f32 y, f32 z, int obj, f32* out, int p6);
 extern s16 getAngle(f32 a, f32 b);
@@ -1407,12 +1407,12 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     if (((GameObject*)obj)->unkF4 == 0)
     {
         sel = p3;
-        pt = findRomCurvePointNearObject(obj, sel, 0, 2);
+        pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
         tgt.x = *(f32*)(pt + 8);
         tgt.y = *(f32*)(pt + 0xc);
         tgt.z = *(f32*)(pt + 0x10);
         tgt.angle = *(s8*)(pt + 0x2c) << 8;
-        if (fn_8019B1D8(obj, &tgt.angle, t, p4) != 0)
+        if (fn_8019B1D8((int*)obj, (int*)&tgt.angle, t, p4) != 0)
         {
             cmd[0] = 0x19;
             cmd[1] = 0x15;
