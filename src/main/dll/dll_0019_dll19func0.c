@@ -7,14 +7,8 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern float mathCosf(float x);
-extern void Rcp_DisableBlurFilter(void);
 
-extern CameraModeNpcSpeakState* lbl_803DD584;
 
-extern f32 lbl_803E19D0;
-extern f32 lbl_803E19D4;
-extern f32 lbl_803E19D8;
-extern f32 lbl_803E19DC;
 
 
 
@@ -27,9 +21,7 @@ extern f32 lbl_803E19DC;
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
-void CameraModeNpcSpeak_copyToCurrent_nop(void);
 
-void CameraModeNpcSpeak_free(void);
 
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
@@ -53,35 +45,6 @@ void CameraModeNpcSpeak_free(void);
 #include "main/dll/dll19_state.h"
 
 
-typedef struct CameraArwingWork
-{
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    u8 pad18[0x24 - 0x18];
-    f32 xScale;
-    f32 yScale;
-    f32 unk2C;
-    u8 pad30[0x38 - 0x30];
-    f32 unk38;
-    f32 unk3C;
-    f32 unk40;
-    f32 yawScale;
-    f32 pitchScale;
-    f32 rollScale;
-    f32 rollRate;
-    s16 inputYaw;
-    s16 inputPitch;
-    s16 inputRoll;
-    u8 unk5A;
-    u8 unk5B;
-    u8 pad5C[0x5E - 0x5C];
-    u8 unk5E;
-    u8 pad5F[0x60 - 0x5F];
-} CameraArwingWork;
 
 
 typedef struct Dll19Placement
@@ -113,12 +76,6 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern uint Obj_GetYawDeltaToObject();
-extern u8* getSaveFileStruct();
-extern int camcontrol_traceMove(void* a, void* b, void* c, void* d, int e, int f, int g, f32 h);
-extern undefined4 camcontrol_traceFromTarget();
-extern undefined4 camcontrol_getTargetPosition();
-extern void Movie_SetVolumeFade();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
@@ -128,7 +85,6 @@ extern undefined4 FUN_80294964();
 extern undefined4 DAT_802c2910;
 extern undefined4 DAT_802c2914;
 extern undefined4 DAT_802c2918;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern float* DAT_803de1fc;
@@ -663,27 +619,16 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
 #pragma peephole off
 void CameraModeNpcSpeak_release(void);
 
-void CameraModeNpcSpeak_initialise(void);
 
-void CameraModeWorldMap_release(void);
 
-void CameraModeWorldMap_initialise(void);
 
-void dll_4F_func06_nop(void);
 
-void dll_4F_release_nop(void);
 
-void dll_4F_initialise_nop(void);
 
-void CameraModeCrawl_release(void);
 
-void CameraModeCrawl_initialise(void);
 
-void CameraModeCannon_copyToCurrent_nop(void);
 
-void CameraModeCannon_release(void);
 
-void CameraModeCannon_initialise(void);
 
 void CameraModeForceBehind_func06_nop(void)
 {
@@ -695,7 +640,6 @@ void CameraModeForceBehind_func05_nop(void)
 
 void CameraModeForceBehind_release(void);
 
-void CameraModeForceBehind_initialise(void);
 
 void fn_801101E4(void)
 {
@@ -703,13 +647,9 @@ void fn_801101E4(void)
 
 void CameraModeCloudRunner_release(void);
 
-void CameraModeCloudRunner_initialise(void);
 
-void dll_54_func06_nop(void);
 
-void dll_54_release_nop(void);
 
-void dll_54_initialise_nop(void);
 
 void fn_80110C80(void)
 {
@@ -717,7 +657,6 @@ void fn_80110C80(void)
 
 void CameraModePerv_release(void);
 
-void CameraModePerv_initialise(void);
 
 void fn_80110EC0(void)
 {
@@ -725,107 +664,39 @@ void fn_80110EC0(void)
 
 void CameraModeArwing_release(void);
 
-void CameraModeArwing_initialise(void);
 
-void CameraModeTitle_release(void);
 
-void CameraModeTitle_initialise(void);
 
-void CameraModeForceBehind_copyToCurrent(void);
 
-void CameraModeForceBehind_free(void);
 
-void CameraModeCloudRunner_copyToCurrent(void);
 
-void CameraModePerv_copyToCurrent(void);
 
-void CameraModeArwing_free(void);
 
 extern void* memset(void* dst, int val, u32 n);
-extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
-extern f32 lbl_803E1A88;
-extern CameraMode4FState* lbl_803DD590;
-extern CameraModeCrawlState* lbl_803DD598;
 
-void CameraModeTitle_loadVolumes(void);
 
-void dll_4F_init(void);
 
-extern f32 Curve_EvalHermite(f32* pts, int mode, f32 t);
 extern f32 mathCosf(f32);
 extern f32 mathSinf(f32);
 extern f32 timeDelta;
-extern f32 lbl_803E1A8C;
-extern f32 lbl_803E1A90;
-extern f32 lbl_803E1A94;
-extern f32 lbl_803E1A98;
-extern f32 lbl_803E1A9C;
-extern f32 lbl_803E1AA0;
-extern f32 lbl_803E1AA4;
-extern f32 lbl_803E1AA8;
-extern f32 lbl_803E1AAC;
-extern f32 lbl_803E1AB0;
-extern f32 lbl_803E1AB4;
 
-void dll_4F_update(int* obj);
 
-void CameraModeCrawl_init(void);
 
-extern CameraModeCannonState* lbl_803DD5A0;
-extern CameraModePervState* lbl_803DD5C8;
-extern f32 lbl_803E1B98;
-extern f32 lbl_803E1B9C;
-extern CameraModeWorldMapState* lbl_803DD588;
 
-void CameraModePerv_init(int* obj);
 
-void CameraModeCannon_init(int* p1, int unused, int* p3);
 
-extern f32 lbl_803E1A40;
-extern f32 lbl_803E1A28;
-extern f32 lbl_803E1A80;
 
-void CameraModeWorldMap_init(int* obj);
 
-void CameraModeWorldMap_copyToCurrent(int* p1, int kind);
 
-extern f32 lbl_803A43C0[];
 
-void CameraModeArwing_copyToCurrent(void* p1, u32 kind);
 
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern f32 lbl_803E1BA4;
-extern f32 lbl_803E1BC0;
-extern f32 lbl_803E1BC4;
-extern f32 lbl_803E1BC8;
-extern f32 lbl_803E1BCC;
-extern f32 lbl_803E1BD0;
-extern f32 lbl_803E1BD4;
-extern f32 lbl_803E1BD8;
-extern f32 lbl_803E1BDC;
 #pragma opt_common_subs off
-void CameraModeArwing_init(int* obj, int mode, int unused);
 #pragma opt_common_subs reset
 
-typedef struct CameraModeTitlePose
-{
-    f32 x, y, z;
-    u16 yaw, pitch, roll;
-} CameraModeTitlePose;
 
-extern CameraModeTitlePose lbl_80319FB8[];
-extern u8 lbl_803DD5D2;
-extern u8 lbl_803DD5D1;
-extern u8 lbl_803DD5D0;
-extern f32 lbl_803E1BE0;
-extern f32 titleScreenCamProgress;
 
-void CameraModeTitle_init(CameraObject* camera);
 
-extern CameraMode54State* lbl_803DD5C0;
-extern f32 lbl_803E1B5C;
 
-void dll_54_init(int* p1, int unused, int* p3);
 
 int dll_19_func1B(int p)
 {
@@ -893,25 +764,15 @@ void dll_19_func12(int* p1, int* p2, u8 flag)
 
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-void CameraModeCloudRunner_init(int* p1, int p2, f32* p3);
 
-extern f32 lbl_803E1BE4;
-extern void Movie_SetVolumeFade(int p1, int p2);
-extern void Music_Trigger(int id, int mode);
 
-void CameraModeTitle_moveCam(u8 newCam);
 
 /* misc 8b leaves */
-f32 titleScreenGetCamProgress(void);
 
 /* fn_X(lbl); lbl = 0; */
-void CameraModeWorldMap_free(void);
 
-void dll_4F_func05(void);
 
-void CameraModeCrawl_free(void);
 
-void CameraModeCannon_free(void);
 
 void fn_801101E8(void)
 {
@@ -922,9 +783,7 @@ void fn_801101E8(void)
 
 void CameraModeCloudRunner_free(void);
 
-void dll_54_func05(void);
 
-void CameraModePerv_free(void);
 
 void dll_19_func11(void)
 {
@@ -1088,30 +947,13 @@ void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p
 #pragma dont_inline reset
 
 extern f32 lbl_803E1B78;
-extern f32 lbl_803E1B7C;
-extern f32 lbl_803E1B80;
-extern f32 lbl_803E1B84;
-extern f32 lbl_803E1B88;
 
 /* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
-void CameraModePerv_update(u8* obj);
 
-extern f32 lbl_803E1B00;
-extern f32 lbl_803E1B04;
-extern f32 lbl_803E1B08;
-extern f32 lbl_803E1B1C;
-extern f32 lbl_803DB9C8;
-extern f32 lbl_803DD5AC;
-extern f32 lbl_803DD5B0;
 
-extern f32 lbl_803DD5A8;
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern void fn_8029697C(int state, s16* a, s16* b);
-extern f32 lbl_803E1B18;
 
 
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
-void CameraModeForceBehind_init(u8* obj, int p2, f32* p3);
 
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
@@ -1214,10 +1056,8 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
 }
 
 extern f32 lbl_803E1AC0;
-extern f32 lbl_803E1AC4;
 
 /* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
-void CameraModeCrawl_copyToCurrent(void* param1, int param2);
 
 /* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
 int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8)
@@ -1271,14 +1111,8 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
 }
 
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
-extern f32 lbl_803E1AE0;
-extern f32 lbl_803E1AE4;
-extern f32 lbl_803E1AE8;
-extern f32 lbl_803E1AEC;
-extern f32 lbl_803E1AF0;
 
 /* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
-void CameraModeCannon_update(u8* obj);
 
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
@@ -1814,140 +1648,34 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
 }
 
 extern f32 lbl_803E1AD0;
-extern f32 lbl_803E1AD4;
-extern f32 lbl_803E1AD8;
-extern f32 lbl_803E1ADC;
 
 /* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
-void CameraModeCrawl_update(u8* obj);
 
-extern int fn_802972A8(int state);
-extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803E1B20;
-extern f32 lbl_803E1B24;
-extern f32 lbl_803E1B28;
-extern f32 lbl_803E1B2C;
-extern f32 lbl_803E1B30;
-extern f32 lbl_803E1B34;
-extern f32 lbl_803DB9D0;
-extern int lbl_803DB9D4;
 
 /* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
-void CameraModeCloudRunner_update(u8* obj);
 
 
 /* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
-void CameraModeForceBehind_update(u8* obj);
 
-extern int ObjList_GetObjects(int* idx, int* count);
-extern f32 lbl_803E1B40;
-extern f32 lbl_803E1B44;
-extern f32 lbl_803E1B48;
-extern f32 lbl_803E1B4C;
-extern f32 lbl_803E1B50;
-extern f32 lbl_803E1B54;
-extern f32 lbl_803E1B58;
-extern f32 lbl_803E1B60;
-extern f32 lbl_803E1B64;
-extern f32 lbl_803E1B68;
 
 /* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
-void dll_54_update(u8* obj);
 
-extern int getFocusedNpc(void);
-extern int randomGetRange(int lo, int hi);
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
-extern f32 lbl_803E19E8;
-extern f32 lbl_803E19EC;
-extern f32 lbl_803E19F0;
-extern f32 lbl_803E19F4;
-extern f32 lbl_803E19F8;
-extern f32 lbl_803E19FC;
-extern f32 lbl_803E1A00;
-extern f32 lbl_803E1A04;
-extern f32 lbl_803E1A08;
-extern f32 lbl_803E1A0C;
-extern f32 lbl_803E1A10;
-extern f32 lbl_803E1A14;
-extern f32 lbl_803E1A18;
-extern f32 lbl_803E1A1C;
-extern f32 lbl_803E1A20;
-extern f32 lbl_803DB9C0;
-extern f32 lbl_803DB9A8;
-extern f32 lbl_803DB9AC;
-extern f32 lbl_803DB9B0;
-extern f32 lbl_803DB9B4;
-extern f32 lbl_803DB9B8;
-extern int lbl_803DB9BC;
-extern f32 lbl_803DD580;
 
-typedef struct CameraModeNpcSpeakInitParams
-{
-    f32 anchorX;
-    f32 anchorY;
-    f32 anchorZ;
-    u8 mode;
-} CameraModeNpcSpeakInitParams;
 
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3);
 
-extern CameraModeTitlePose lbl_803A4420;
-extern f32 lbl_803E1BE8;
-extern f32 lbl_803E1BEC;
-extern f32 lbl_803E1BF0;
-extern f32 lbl_803E1BF4;
-extern f32 lbl_803E1BF8;
-extern f32 lbl_803E1BFC;
-extern f32 lbl_803E1C00;
 
 /* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
-void CameraModeTitle_update(CameraObject* camera);
 
-extern int arwarwing_isDead(int state);
-extern int arwarwing_isExplodingOrWarping(int state);
-extern f32 lbl_803E1BA0;
-extern f32 lbl_803E1BA8;
-extern f32 lbl_803E1BAC;
-extern f32 lbl_803E1BB0;
 
 /* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-void CameraModeArwing_update(u8* obj);
 
-extern int ObjList_FindObjectById(int id);
-extern int getButtonsHeld(int pad);
-extern int getButtonsJustPressed(int pad);
-extern int padGetCX(int pad);
-extern int padGetCY(int pad);
-extern int isWidescreen(void);
-extern void fn_8012DDB8(int mode);
-extern f32 lbl_80319DF8[];
-extern f32 lbl_803E1A2C;
-extern f32 lbl_803E1A30;
-extern f32 lbl_803E1A34;
-extern f32 lbl_803E1A38;
-extern f32 lbl_803E1A3C;
-extern f32 lbl_803E1A44;
-extern f32 lbl_803E1A48;
-extern f32 lbl_803E1A4C;
-extern f32 lbl_803E1A50;
-extern f32 lbl_803E1A54;
-extern f32 lbl_803E1A58;
-extern f32 lbl_803E1A5C;
-extern f32 lbl_803E1A60;
-extern f32 lbl_803E1A64;
-extern f32 lbl_803E1A68;
-extern f32 lbl_803E1A6C;
 
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-void CameraModeWorldMap_update(u8* obj);
 
-extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-extern f32 lbl_803DB9C4;
 
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-void CameraModeNpcSpeak_update(u8* obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
