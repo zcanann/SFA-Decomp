@@ -809,7 +809,7 @@ void fn_80171E5C(int* obj)
         itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
         break;
     }
-    ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     ((GameObject*)obj)->unkF4 = 1;
 }
 

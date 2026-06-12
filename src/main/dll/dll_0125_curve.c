@@ -1131,8 +1131,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
         FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
     }
 LAB_801725bc:
-    *(undefined4*)&((GameObject*)param_9)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)param_9)->anim.
-        modelInstance + 4);
+    ((GameObject*)param_9)->anim.rootMotionScale = ((GameObject*)param_9)->anim.modelInstance->rootMotionScaleBase;
     ((GameObject*)param_9)->unkF4 = 1;
     return;
 }

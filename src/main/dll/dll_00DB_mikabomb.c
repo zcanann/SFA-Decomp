@@ -1820,9 +1820,8 @@ void mikabomb_update(int* obj)
                 Sfx_PlayFromObject(obj, SFXen_weetinklp22);
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)st[2])[1])(obj, rnd, 0, 2, -1, &localB);
-                ObjHitbox_SetSphereRadius(obj,
-                                          (s32)(lbl_803E31A4 * (f32)(u32) * (u8*)((char*)*(int**)&((GameObject*)obj)->
-                                              anim.modelInstance + 0x62)));
+                ObjHitbox_SetSphereRadius(
+                    obj, (s32)(lbl_803E31A4 * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(lbl_803E31A8, lbl_803E31AC, lbl_803E31B0);
                 ((GameObject*)obj)->anim.alpha = 0xfe;
                 Obj_FreeObject((int*)*st);
@@ -1841,9 +1840,8 @@ void mikabomb_update(int* obj)
                 Sfx_PlayFromObject(obj, SFXen_weetinklp22);
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)st[2])[1])(obj, rnd, 0, 2, -1, &localA);
-                ObjHitbox_SetSphereRadius(obj,
-                                          (s32)(lbl_803E31A4 * (f32)(u32) * (u8*)((char*)*(int**)&((GameObject*)obj)->
-                                              anim.modelInstance + 0x62)));
+                ObjHitbox_SetSphereRadius(
+                    obj, (s32)(lbl_803E31A4 * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(lbl_803E31A8, lbl_803E31AC, lbl_803E31B0);
                 ((GameObject*)obj)->anim.alpha = 0xfe;
                 Obj_FreeObject((int*)*st);

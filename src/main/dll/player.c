@@ -13598,7 +13598,7 @@ void fn_802B4ED8(int obj, int p2, int mode)
         {
             int p = inner->unk7F0;
             (*(void (*)(int, f32))(*(int*)((char*)*(int*)*(int*)((char*)p + 0x68) + 0x50)))(
-                p, *(f32*)((char*)*(int*)&((GameObject*)obj)->anim.modelInstance + 4));
+                p, ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase);
         }
     }
     if ((*(u32*)((char*)inner + 0x360) & 0x8000000) != 0)
