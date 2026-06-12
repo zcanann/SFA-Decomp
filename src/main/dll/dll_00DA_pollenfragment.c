@@ -3,14 +3,10 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 
 extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined8 ObjHits_EnableObject();
-extern void ObjHits_SetTargetMask(int obj, u8 mask);
-extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern uint FUN_8007f6c8();
@@ -148,13 +144,13 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     uint uVar1;
     int iVar2;
     int iVar3;
-    undefined4 auStack_18[4];
+    int hitObject;
 
     iVar3 = *(int*)&((GameObject*)param_9)->extra;
     uVar1 = FUN_8007f6c8((float*)(iVar3 + 0x20));
     if (uVar1 == 0)
     {
-        iVar2 = ObjHits_GetPriorityHit(param_9, auStack_18, (int*)0x0, (uint*)0x0);
+        iVar2 = ObjHits_GetPriorityHit(param_9, &hitObject, (int*)0x0, (uint*)0x0);
         if ((iVar2 == 0xe) || (iVar2 == 0xf))
         {
             if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
@@ -163,12 +159,12 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
                              param_9, 0, 1, 0, 1, 0, 1, 0);
                 FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
             }
-            ObjHits_DisableObject(param_9);
+            ObjHits_DisableObject((u32)param_9);
             FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
         }
         if ((*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->contactFlags != 0)
         {
-            ObjHits_DisableObject(param_9);
+            ObjHits_DisableObject((u32)param_9);
             *(float*)&((XyzAnimatorState*)iVar3)->unk8 = lbl_803E3DF8;
             if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
             {
@@ -378,7 +374,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-void pollen_init(int* obj);
+void pollen_init(int obj);
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -394,26 +390,26 @@ void pollen_update(int obj);
 void pollenfragment_hitDetect(int obj)
 {
     u8* extra;
-    int hit;
-    u8 buf[16];
+    int hitType;
+    int hitObject;
 
     extra = *(u8**)&((GameObject*)obj)->extra;
     if (fn_80080150((int)(extra + 0x20)) == 0)
     {
-        hit = ObjHits_GetPriorityHit(obj, buf, 0, 0);
-        if (hit == 0xe || hit == 0xf)
+        hitType = ObjHits_GetPriorityHit(obj, &hitObject, 0, 0);
+        if (hitType == 0xe || hitType == 0xf)
         {
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
                 spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             s16toFloat(extra + 0x20, 0x78);
         }
         if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             *(f32*)(extra + 8) = lbl_803E3160;
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
@@ -553,13 +549,13 @@ void pollenfragment_update(int obj)
     Sfx_KeepAliveLoopedObjectSound(obj, (u16)(((PollenFragmentExtra*)extra)->def)->loopSfx);
     objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
-    ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
-    ObjHits_EnableObject(obj);
+    ObjHits_SetHitVolumeSlot((u32)obj, 0x16, 1, 0);
+    ObjHits_EnableObject((u32)obj);
     hit = (void*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (hit != NULL && *(s16*)((u8*)hit + 0x46) != ((GameObject*)obj)->anim.seqId && hit != *(void**)extra)
     {
         *(f32*)(extra + 8) = lbl_803E3160;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
         {
             spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);

@@ -4,12 +4,11 @@
 #include "main/dll/wallanimator.h"
 #include "ghidra_import.h"
 #include "main/dll/xyzanimator.h"
-#include "main/objhits_types.h"
+#include "main/objhits.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800175cc();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
 extern void queueGlowRender(void* light);
@@ -166,8 +165,6 @@ void kaldachompspit_update(int obj)
     extern int getTrickyObject(void); /* #57 */
     extern int Obj_GetPlayerObject(void); /* #57 */
     extern int objMove(int obj, f32 vx, f32 vy, f32 vz); /* #57 */
-    extern void ObjHits_EnableObject(int obj); /* #57 */
-    extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra); /* #57 */
     ObjAnimComponent* objAnim;
     u32* state;
     f32 vx;
@@ -210,17 +207,17 @@ void kaldachompspit_update(int obj)
         objMove(obj, vx, vy, vz);
         if (((GameObject*)obj)->anim.seqId == 0x869)
         {
-            ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+            ObjHits_SetHitVolumeSlot((u32)obj, 0x1f, 1, 0);
             ((GameObject*)obj)->anim.rotX += 0x100;
             ((GameObject*)obj)->anim.rotY += 0x800;
         }
         else
         {
-            ObjHits_SetHitVolumeSlot(obj, 0xa, 1, 0);
+            ObjHits_SetHitVolumeSlot((u32)obj, 0xa, 1, 0);
             ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
             ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
         if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
         {
             if (((GameObject*)obj)->unkF4 < 0x17c)
@@ -315,7 +312,7 @@ void kaldachompspit_init(int obj)
 
     extra = *(int**)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->unkF4 = 400;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject(obj, 0x278);
     ((GameObject*)obj)->objectFlags |= 0x2000;

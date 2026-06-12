@@ -3,14 +3,11 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 
 extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined8 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
 extern uint FUN_8007f6c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8008112c();
@@ -104,13 +101,13 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     uint uVar1;
     int iVar2;
     int iVar3;
-    undefined4 auStack_18[4];
+    int hitObject;
 
     iVar3 = *(int*)&((GameObject*)param_9)->extra;
     uVar1 = FUN_8007f6c8((float*)(iVar3 + 0x20));
     if (uVar1 == 0)
     {
-        iVar2 = ObjHits_GetPriorityHit(param_9, auStack_18, (int*)0x0, (uint*)0x0);
+        iVar2 = ObjHits_GetPriorityHit(param_9, &hitObject, (int*)0x0, (uint*)0x0);
         if ((iVar2 == 0xe) || (iVar2 == 0xf))
         {
             if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
@@ -119,12 +116,12 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
                              param_9, 0, 1, 0, 1, 0, 1, 0);
                 FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
             }
-            ObjHits_DisableObject(param_9);
+            ObjHits_DisableObject((u32)param_9);
             FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
         }
         if ((*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->contactFlags != 0)
         {
-            ObjHits_DisableObject(param_9);
+            ObjHits_DisableObject((u32)param_9);
             *(float*)&((XyzAnimatorState*)iVar3)->unk8 = lbl_803E3DF8;
             if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
             {
@@ -184,7 +181,7 @@ void pollen_hitDetect(int obj)
         ((GameObject*)obj)->anim.velocityY = fz;
         ((GameObject*)obj)->anim.velocityZ = fz;
         ((GameObject*)obj)->anim.alpha = 0;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
     }
 }
 
@@ -343,7 +340,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-void pollen_init(int* obj)
+void pollen_init(int obj)
 {
     s16* state = ((GameObject*)obj)->extra;
     state[0] = (s16)randomGetRange(-0x8000, 0x7fff);
@@ -355,7 +352,7 @@ void pollen_init(int* obj)
     *(s16*)((char*)state + 0x10) = 0;
     *(s16*)((char*)state + 0x12) = 0;
     ((GameObject*)obj)->anim.alpha = 0xff;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
     {
         int* p = *(int**)&((GameObject*)obj)->anim.modelState;
         if (p != NULL)
@@ -389,9 +386,9 @@ void pollen_update(int obj)
         }
         objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
-        ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
+        ObjHits_SetHitVolumeSlot((u32)obj, 0x16, 1, 0);
         ObjHitbox_SetSphereRadius(obj, 7);
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
         if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)
                 Obj_GetPlayerObject() ||
@@ -403,7 +400,7 @@ void pollen_update(int obj)
             Sfx_PlayFromObject(obj, 0xb6);
             ((GameObject*)obj)->anim.alpha = 0;
             extra->fragmentSpawnTimer = 0x3c;
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
         }
         if (((GameObject*)obj)->anim.alpha == 0xff)
         {
