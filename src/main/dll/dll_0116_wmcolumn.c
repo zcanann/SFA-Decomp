@@ -170,28 +170,21 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 
 
-void dll_115_hitDetect_nop(void)
-{
-}
+void dll_115_hitDetect_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_115_getExtraSize_ret_2(void) { return 0x2; }
-int dll_115_getObjectTypeId(void) { return 0x0; }
+int dll_115_getExtraSize_ret_2(void);
+int dll_115_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E37B0;
 
 
 
-void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(f32); /* #57 */
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E37B0);
-}
+void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void dll_115_free(int x);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
@@ -209,38 +202,7 @@ void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 
 
 
-int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
-{
-    int v;
-    u8* state = ((GameObject*)obj)->extra;
-    s16* def = *(s16**)&((GameObject*)obj)->anim.placementData;
-    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
-    animUpdate->sequenceEventActive = 0;
-    if (((GameObject*)obj)->seqIndex == -1)
-    {
-        return 0;
-    }
-    {
-        v = state[0];
-        if (v >= 10 || v < 8)
-        {
-            int n = v + 1;
-            if (n < 8)
-            {
-                s16 newId = (def + n)[0x14];
-                if (newId != -1 && newId != (def + v)[0x14])
-                {
-                    if (GameBit_Get(newId) != 0)
-                    {
-                        (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
-                    }
-                }
-            }
-        }
-    }
-    state[1] = (u8)(state[1] | 1);
-    return 0;
-}
+int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 
 #include "main/dll/groundanimator_state.h"
 #include "main/audio/sfx_ids.h"
@@ -353,66 +315,7 @@ typedef struct
     u8 id40;
 } Dll115MapRow;
 
-void dll_115_update(int obj)
-{
-    u8* state;
-    u8* mapData;
-    int step;
-    int eventId;
-
-    state = ((GameObject*)obj)->extra;
-    mapData = (u8*)((GameObject*)obj)->anim.placementData;
-    if ((state[1] & 1) != 0)
-    {
-        eventId = ((Dll115MapRow*)(mapData + state[0] * 2))->ev18;
-        if (eventId != -1)
-        {
-            GameBit_Set(eventId, 1);
-        }
-        state[1] = (u8)(state[1] & ~1);
-        state[0]++;
-    }
-    switch (state[0])
-    {
-    case 9:
-        (*gObjectTriggerInterface)->preempt(obj, ((Dll115Placement*)mapData)->unk3C);
-        (*gObjectTriggerInterface)->runSequence(((Dll115Placement*)mapData)->unk3A, (void*)obj,
-                                                ((Dll115Placement*)mapData)->unk3B);
-        break;
-    case 8:
-    case 10:
-        break;
-    default:
-        eventId = ((Dll115MapRow*)(mapData + state[0] * 2))->ev28;
-        if (eventId == -1)
-        {
-            state[0] = 8;
-        }
-        else if ((u32)GameBit_Get(eventId) != 0)
-        {
-            s8 id = (s8)((Dll115MapRow*)(mapData + state[0]))->id40;
-            if (id != -1)
-            {
-                (*gObjectTriggerInterface)->runSequence(id, (void*)obj, -1);
-            }
-        }
-        break;
-    }
-    {
-        short* p;
-        step = state[0] - 1;
-        p = (short*)mapData + step;
-        while (step >= 0)
-        {
-            eventId = p[12];
-            if (eventId == -1) break;
-            if ((u32)GameBit_Get(eventId) != 0) break;
-            state[0]--;
-            p--;
-            step--;
-        }
-    }
-}
+void dll_115_update(int obj);
 
 /*
  * --INFO--
@@ -427,40 +330,7 @@ void dll_115_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_init(short* obj, int mapData)
-{
-    short* p;
-    u8* state;
-    int step;
-
-    state = ((GameObject*)obj)->extra;
-    *obj = (s16)(*(u8*)(mapData + 0x38) << 8);
-    ((GameObject*)obj)->animEventCallback = dll_115_seqFn;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
-    ObjGroup_AddObject((int)obj, 0xf);
-    step = 0;
-    p = (short*)mapData;
-    do
-    {
-        if (p[12] == -1) break;
-        if ((u32)GameBit_Get(p[12]) == 0) break;
-        p++;
-        step++;
-    }
-    while (step < 8);
-    if ((step < 8) && (*(s16*)(mapData + 0x18 + step * 2) == -1))
-    {
-        state[0] = 8;
-    }
-    else
-    {
-        state[0] = step;
-    }
-    if ((state[0] == 8) && ((*(u8*)(mapData + 0x39) & 0x10) != 0))
-    {
-        state[0] = 9;
-    }
-}
+void dll_115_init(short* obj, int mapData);
 
 /*
  * --INFO--
@@ -475,9 +345,7 @@ void dll_115_init(short* obj, int mapData)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_release_nop(void)
-{
-}
+void dll_115_release_nop(void);
 
 /*
  * --INFO--
@@ -492,9 +360,7 @@ void dll_115_release_nop(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_initialise_nop(void)
-{
-}
+void dll_115_initialise_nop(void);
 
 /*
  * --INFO--
