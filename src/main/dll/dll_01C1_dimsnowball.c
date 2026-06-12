@@ -77,12 +77,7 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 static inline int* DIMcannon_GetActiveModel(void* obj);
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 
-extern EffectInterface** gPartfxInterface;
 
 extern void imicepillar_free(void);
 extern int imicepillar_getObjectTypeId(void);
@@ -272,11 +267,8 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 
 
 /* 8b "li r3, N; blr" returners. */
-int dimlogfire_getExtraSize(void);
-int dimlogfire_getObjectTypeId(void);
 
 /* Pattern wrappers. */
-extern u32 lbl_803DDB48;
 
 /* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
 
@@ -305,9 +297,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 /* chained byte mask. */
 
-int fn_801B0784(int obj, int delta);
-
-extern void Music_Trigger(int id, int p2);
 
 
 
@@ -318,7 +307,7 @@ extern void Music_Trigger(int id, int p2);
 
 
 
-extern f32 timeDelta;
+
 
 
 
@@ -330,25 +319,17 @@ extern u8 framesThisStep;
 
 
 
-extern void ModelLightStruct_free(void* light);
 
 
 
 
 
 
-void dimlogfire_free(int* obj, int mode);
 
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
-int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-extern void queueGlowRender(int* obj);
-extern f32 lbl_803E4820;
 
-void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-extern int modelLightStruct_getActiveState(int* p);
 
 
 
@@ -388,23 +369,8 @@ extern int modelLightStruct_getActiveState(int* p);
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/objanim_internal.h"
 
-typedef struct DimlogfirePlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    u8 pad20[0x68 - 0x20];
-    void* unk68;
-    u8 pad6C[0x70 - 0x6C];
-} DimlogfirePlacement;
 
 
-typedef struct DimlogfireObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 strengthInit;
-    s16 unk1E;
-} DimlogfireObjectDef;
 
 
 typedef struct DimsnowballState
@@ -415,25 +381,10 @@ typedef struct DimsnowballState
 } DimsnowballState;
 
 
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
-extern undefined4 ObjGroup_AddObject();
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 
 extern f32 oneOverTimeDelta;
 extern s16 lbl_803DBEE8;
 extern s16 gDimSnowballCoords[];
-extern f32 lbl_803E4824;
-extern f32 lbl_803E4828;
-extern f32 lbl_803E482C;
-extern f32 lbl_803E4830;
-extern f32 lbl_803E4834;
-extern f32 lbl_803E4838;
-extern f32 lbl_803E483C;
 extern f32 lbl_803E484C;
 extern f32 lbl_803E4850;
 extern f32 lbl_803E4854;
@@ -451,7 +402,6 @@ extern f32 lbl_803E4854;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimlogfire_update(int obj);
 
 /*
  * --INFO--
@@ -485,7 +435,6 @@ void dimlogfire_update(int obj);
  */
 #pragma scheduling off
 #pragma peephole off
-void dimlogfire_init(int obj, int def);
 
 /*
  * --INFO--

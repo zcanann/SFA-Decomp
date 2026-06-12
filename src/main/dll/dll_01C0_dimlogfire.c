@@ -328,7 +328,6 @@ extern f32 timeDelta;
 
 
 
-extern u8 framesThisStep;
 
 
 
@@ -489,12 +488,6 @@ typedef struct DimlogfireObjectDef
 } DimlogfireObjectDef;
 
 
-typedef struct DimsnowballState
-{
-    u8 pad0[0xC - 0x0];
-    s8 unkC;
-    u8 padD[0x10 - 0xD];
-} DimsnowballState;
 
 
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -506,9 +499,6 @@ extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 
-extern f32 oneOverTimeDelta;
-extern s16 lbl_803DBEE8;
-extern s16 gDimSnowballCoords[];
 extern f32 lbl_803E4824;
 extern f32 lbl_803E4828;
 extern f32 lbl_803E482C;
@@ -516,9 +506,6 @@ extern f32 lbl_803E4830;
 extern f32 lbl_803E4834;
 extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
-extern f32 lbl_803E484C;
-extern f32 lbl_803E4850;
-extern f32 lbl_803E4854;
 
 /*
  * --INFO--
@@ -755,7 +742,6 @@ int dimsnowball_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimsnowball_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -770,16 +756,11 @@ int dimsnowball_getObjectTypeId(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimsnowball_free(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4848;
 
-void dimsnowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dimsnowball_hitDetect(int* obj);
 
-void dimsnowball_update(int obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -790,34 +771,9 @@ void dimsnowball_update(int obj);
 /* === moved from main/dll/DIM/dimsnowball_init.c [801B1354-801B13E8) (TU re-split, docs/boundary_audit.md) === */
 
 
-typedef struct DimSnowballState
-{
-    void* target;
-    int targetId;
-} DimSnowballState;
 
-typedef struct DimSnowballObject
-{
-    u8 unk0[0x54];
-    u8* handle54;
-    u8 unk58[0xc];
-    u8* handle64;
-    u8 unk68[0x48];
-    u16 flags;
-    u8 unkB2[6];
-    DimSnowballState* state;
-} DimSnowballObject;
 
-typedef struct DimSnowballDef
-{
-    u8 unk0[0x14];
-    int targetId;
-} DimSnowballDef;
 
-void dimsnowball_init(DimSnowballObject* param_1, DimSnowballDef* def);
 
-void dimsnowball_release(void);
 
-void dimsnowball_initialise(void);
 
-int dimsnowball1c2_getExtraSize(void);
