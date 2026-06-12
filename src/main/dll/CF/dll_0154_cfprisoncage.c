@@ -568,9 +568,11 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     while (ObjMsg_Pop(obj, &msg, &v, &w) != 0)
     {
-        if (msg == 0xa0005)
+        switch (msg)
         {
+        case 0xA0005:
             GameBit_Set(*(s16*)(sub + 0x18), 1);
+            break;
         }
     }
     if (GameBit_Get(0x44) != 0)
