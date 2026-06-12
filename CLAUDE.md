@@ -3492,7 +3492,22 @@ sweep; tools/rotmap.py):**
   disjoint same-class web (timer flag+v share r28; WM_ObjCreator's three
   per-arm setup/spawned webs share r29); target SPREADS onto fresh regs
   (r27/r30/r31 per arm) even when the source already has block-scope
-  per-arm decls. No source form found that stops the reuse.
+  per-arm decls. ⚠️ **CRACKED for the switch-arm case (WM_ObjCreator_update
+  98.18→99.96): the spread comes from FN-SCOPE call-result locals.**
+  Declare the per-arm `int setup; int spawned; int n;` at FUNCTION scope
+  BEFORE the head copies (placement/state) — live-range splitting then
+  re-creates per-arm webs that inherit target's spread (r30/r31, reusing
+  the head webs' regs on arms where those are path-dead) AND drops the
+  head copies one rank (placement r31→r30, state r30→r29 = target). Arms
+  whose web sinks to the BOTTOM (r27) instead were true BLOCK-scope locals
+  — mix per arm by reading target's per-arm reg (WM_ObjCreator: case 1
+  block-scope→r27, cases 5/2/6 fn-scope→r30, 8/7→r31; arms with no call
+  between alloc and uses keep r3-direct, no local form matters). A
+  same-variable merge of an arm flag INTO the fn-scope var regresses
+  (affinity coalesces all its webs to the bottom) — keep distinct
+  variables. Residual there: one 6-instr s8-flag web (C r27 vs T r29 =
+  state's dead-on-path reg) resisted decl position ×6, scope, int+(s8)
+  retype, register kw, split init — within-class order, still open.
 - **Exhausted levers on the standalone-reproducing timer probe (~35
   variants — do NOT re-run these on this class)**: decl-order perms,
   block-scope flag/v, v-as-ternary/x-copy/hoisted-def, #77 void*+cast-copy
