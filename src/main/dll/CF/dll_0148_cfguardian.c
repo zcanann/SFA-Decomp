@@ -473,17 +473,16 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
  * quest progression with path flights, landing physics, sequenced
  * triggers and idle chatter.
  *
- * BANKED at ~94.5: whole-fn saved-quad rotation (T: obj=r28 param-pool,
-   def=r29, player=r30, sub=r31; ours reversed) - #108 cross-class
-   interleave. Probe-battery discrimination (#115 method): a standalone
-   TU with the real headers REPRODUCES our coloring; unprototyping every
-   obj-taking callee (cast nodes removed) and int-typing the interface
-   dispatches are both inert -> the rotation is fn-text-bound, not
-   decl-bound. Also inert: int<->int* param retypes, per-fn O2
-   (byte-identical to O4 here), 6 decl permutations, #36 cast drops.
-   Dose census: four identical signed %2 sites in BOTH compiles. Needs
-   a census-changing lever that keeps the instruction stream (#108 open
-   research direction). */
+ * BANKED at 99.31: the old saved-quad rotation fell to the #36 burst
+   rule (19 no-op (int)obj casts dropped at once sank obj to r28) +
+   decl reorder. Remaining residuals, all probed: the case-6 velocity
+   stk.v trio perm f3/f2/f4 with in-place products + 2 add-side reloads
+   (#82 expression-temp class; compound/product-local/k-respellings
+   inert), found/questState volatile homings (target mr r4,r3 / lbz r4
+   = named-web homes; named-local, fn-scope, and embedded-def movers
+   all copy-propped), the |w| site's beq vs target bne;b (front-end
+   fold, see #63 fold caveat), and content-matched jumptable/bias
+   relocs. */
 int waterSpellStone1Fn_8019b4c8(int obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */

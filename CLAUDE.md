@@ -814,6 +814,22 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     function's only residual is a 1-bit saved-reg permutation and a param is
     passed many times with casts, try dropping the casts. Pair with decl-order
     #16. (dc221d25d task #121.)
+    **BURST RULE — #36 scales to WHOLE-QUAD rotations, but only when ALL the
+    no-op casts drop AT ONCE (the #74 burst lesson applied to casts).**
+    cfguardian waterSpellStone1Fn had been BANKED as a "fn-text-bound #108
+    rotation" ("#36 cast drops tried — inert") with all four saved webs
+    exactly reversed (T obj=r28/def=r29/player=r30/sub=r31, ours the mirror).
+    The real cause: 19 Ghidra-noise `(int)obj` casts on an ALREADY-`int`
+    param (textual no-ops, but each is an IR cast node) pinning obj at r31;
+    dropping all 19 sank obj to target's r28 in one move, and the remaining
+    trio then followed plain decl order (descending from the next-free reg —
+    reorder decls to land it). A PARTIAL drop shows nothing, which is how the
+    earlier "inert" verdict happened. DIAGNOSTIC that found it: per-use-class
+    deletion probes — replace each class of obj uses (`(int)obj` args,
+    `(int*)obj` args, derefs, bare args) with a constant in a probe and watch
+    the prologue coloring; the class whose deletion sinks the web is the
+    inflator (94.50→99.31, commits 6a3047575/42eeee68a). Resolves the #82
+    GUARDIAN COUNTER-RESULT open lead — no pairwise census needed.
 
 37. **`(u16)` on the WHOLE OR-expression for single-`clrlwi` combine.** When
     OR-ing several byte/halfword values and storing as halfword, writing
@@ -1257,17 +1273,38 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     sh_queenearthwalker_processAnimEvents 98.21→100 byte-exact.
 
 63. **Ternary `x = (cond) ? x : -x;` reproduces the `bne then; b end; then:
-    fneg` empty-then layout; `if (!(x>=K)) x = -x;` and `if (x>=K){}else{}`
-    both materialize the bool (mfcr) instead.** When target shows the odd
+    fneg` empty-then layout; `if (!(x>=K)) x = -x;` materializes the bool
+    (mfcr) instead.** When target shows the odd
     `fcmpo; cror eq,gt,eq; bne L1; b L2; L1: fneg; L2:` shape for a
     conditional negate, the C is the ternary keep-or-negate assignment, NOT
-    an if-statement. BUT for a conditional RETURN with the same cror+bne
-    shape, `if (!(f >= K)) return;` works directly (no mfcr) — the
-    materialization only bites in an assignment context. Both instances were
-    real Ghidra import condition-INVERSIONS on fn_80151DB8 (the import
+    a negated-condition if-statement. BUT for a conditional RETURN with the
+    same cror+bne shape, `if (!(f >= K)) return;` works directly (no mfcr) —
+    the materialization only bites in an assignment context. Both instances
+    were real Ghidra import condition-INVERSIONS on fn_80151DB8 (the import
     negated/returned on the opposite branch) — whenever target's branch
     sense differs from the import's, suspect inverted logic (drift section)
     before a codegen cap. fn_80151DB8 98.16→100.
+    **SINGLE-USE FOLD CAVEAT + the empty-ELSE escape (cfguardian w-site).**
+    The #63 ternary only keeps its own-statement shape when its result
+    survives as a statement boundary; a SINGLE-USE result gets
+    forward-substituted into the consuming expression — the ternary then
+    evaluates at its L2R operand slot (e.g. AFTER a conversion that is the
+    left operand) and the join goes through a fresh temp with an `fmr` in
+    the keep-arm. No spelling rescues the substituted form (probed: #85
+    self-reassign chains, fresh result var, intervening named-conversion
+    statement, embedded def in the condition, (f64) sandwiches, fn-scope
+    decl, opt_propagation/lifetimes/dead_assignments off — MWCC re-folds
+    through all of them). The working escape is the empty-then if/else
+    `if (x >= K) { } else { x = -x; }` (or its goto twin), which — contra
+    this recipe's earlier claim — does NOT mfcr: it emits `fcmpo; cror;
+    beq Ldone; fneg x,x` with the IN-PLACE fneg at the statement's true
+    position, because the conditional def gives the use two reaching defs
+    and substitution is barred. Residual vs target's ternary shape: the
+    front end folds `bne;b` to one `beq` (1 instr) — far cheaper than the
+    substituted form's transposed conversion blob (+fmr). Score the two
+    forms per site; the ternary stays right when the result is stored or
+    multi-use (the fn_80151DB8/d-site cases), the empty-else wins when the
+    sole consumer is a larger expression.
 
 64. **`int` local + `(u32)` cast in the test for a direct saved-reg `lbz` +
     `cmplwi`.** A `u8 vr = p->byteField; if (vr != 0)` local that lives across
@@ -2267,6 +2304,25 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       dim_bossgut fn_801D29E4 (sx/scale pair, launders x3 + named-const
       x2 inert). Recognize: named FP temp in f0 in TARGET with your
       compile putting the expr temp there instead.
+      ⚠️ 4th member PARTIALLY CRACKED — BLOCK→FN-SCOPE PROMOTION of the
+      OTHER locals is the missing lever (cfwindlift fn_8019C784 → 100,
+      unit 100.0, byte-exact 395/395). The named multi-def `scale`
+      (symbol init + conditional `* lbl` redef + one use) sat at f3 where
+      target has f0, inert under decl order, init launders, register kw,
+      (f64) sandwich, comma-embed, web-split, scope moves of scale
+      ITSELF, and the whole pragma battery. The flip: promote BOTH
+      if/else arms' block locals (the gb==0 arm's lim/t/d AND the gb arm's
+      v/thr) to fn scope, declared BEFORE the f32 group — EACH ARM'S SET
+      ALONE IS INERT, both together send scale to f0 and the temps to
+      target's f1-f3. Deletion probes proved scale is always colored
+      after temps as a named web regardless of single/multi-def — the
+      promotion changes the surrounding web census, not scale's class.
+      Finishers that rode along: #107 FP un-naming of the arm local `c`
+      into `factor` (coalesces the fsubs result into factor's f3) and a
+      #81 store-side launder on the final clamp. On the next 4th-member
+      fn, battery scope promotions of the arm-local SETS (incl. the
+      both-arms-at-once combination) before banking. Retry candidates:
+      mtxRotateByVec3s, Vec3_Normalize, fn_801D29E4.
     - Sub-class-2 EXTENSION: when the swapped pair is two named f32 locals
       init'd from DIFFERENT symbols (`f1 = lblA; ... f0 = lblB;` store-burst)
       and the decl-order swap is INERT, the #81 launder on ONE init
@@ -2291,6 +2347,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       divergence lives in compiler-internal IR state the TU content does
       not determine (the #108 fn-global-state phenomenon, FP edition).
       Bank on sight once the probe confirms invariance; do not re-spell.
+      Re-confirmed post-#119: the recycling lever (named const var reused
+      for the reload), double-embed `(a = field) < (lim = lbl)`,
+      single-embed, and reload-via-t forms are all invariant at f1 too —
+      the anomaly verdict stands.
     - ⚠️ RETAIL-ANOMALY CENSUS (the conclusive instrument for this class,
       CF research program): for cfprisonguard_render's banked digit, a
       corpus census of the exact 1-use [stfs fX,K(rN); lfs fY,K(rN);
@@ -2314,12 +2374,11 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       in BOTH corpora (T 846:76, ours 817:86) - target's cfguardian
       layout is the COMMON case and our compile is the ~10% deviant, so
       that rotation is SYSTEMATIC and in-principle source-reachable
-      (unlike the render anomaly). Next lever: prologue-anchored
-      pairwise census (the v1 12-line window falsely flags fns whose
-      window catches a call-result mr), then diff the C of agree-above
-      fns (spellstone_update, dimlavasmash_SeqFn, FireFlyLantern_init,
-      wmworm_update...) against cfguardian's to isolate the
-      obj-pusher construct.
+      (unlike the render anomaly). ⚠️ RESOLVED — the census read was
+      right: the obj-pusher construct was the import's 19 no-op
+      `(int)obj` casts at call args (#36 burst rule; waterSpellStone1Fn
+      94.50→99.31). When OUR compile is the census deviant, hunt for an
+      import-only IR construct (cast noise) before any allocator theory.
       The same census also explains why the in-repo oracle (lightning)
       shows f2 legitimately: there the reload web is 2-USE (the arm's
       compound += CSE-reuses the compare load - fadds f0,f2,f0), a
@@ -4082,7 +4141,20 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     web construction SPLITS disjoint def-use chains regardless of naming —
     recycling a dead variable is byte-identical unless the dying value's
     web actually CONNECTS to the new def (liveness overlap at the
-    allocation decision, per the wmsun guard). Diagnostic order: when a single-use local's
+    allocation decision, per the wmsun guard).
+    ⚠️ THE CAVEAT IS TOO BROAD — same-variable affinity CAN pin fully
+    DISJOINT webs (cfmaincrystal fn_8019D9F0 → 100, unit 100.0). The tail
+    pylon loop's counter/value pair colored r27/r28 with a fresh `s16 v`
+    local; target keeps the reused `i` at its first-loop r29 AND puts the
+    value in `idx`'s old r27 — BOTH webs disjoint from their earlier
+    lives, no liveness overlap, yet reusing the two variables (`i` for
+    the counter, `idx` for the loaded temp) landed both regs exactly,
+    zero instruction change. So when a TAIL/secondary loop's webs sit in
+    registers that earlier loop variables owned, try the recycle even
+    when liveness clearly does NOT connect — it is cheap and sometimes
+    the whole fix. (The GC/2.0 affinity tiebreak evidently survives the
+    live-range split in some web-pressure states; the wmsun negative and
+    the prisonguard re-test show it is not universal — A/B per fn.) Diagnostic order: when a single-use local's
     statement keeps folding into its consumer against target, FIRST check
     whether target's result reg was home to a dead earlier variable --
     cheaper than #94's phi tricks and plausibly the original source (tight
