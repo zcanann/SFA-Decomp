@@ -1,0 +1,656 @@
+#include "main/dll/DIM/dimcannon_state.h"
+#include "main/camera_interface.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/DIM/DIMlevcontrol.h"
+#include "main/objseq.h"
+#include "main/resource.h"
+
+extern bool FUN_800067f0();
+extern undefined4 FUN_8000680c();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_800068c4();
+extern undefined4 FUN_80006ba8();
+extern char FUN_80006bd0();
+extern uint FUN_80006bf8();
+extern uint FUN_80006c00();
+extern uint FUN_80006c10();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern int FUN_80017a98();
+extern undefined4 FUN_8002fc3c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjPath_GetPointWorldPosition();
+extern int FUN_8003964c();
+extern undefined4 FUN_8011e800();
+extern undefined4 FUN_8011e844();
+extern undefined4 FUN_8011e868();
+extern undefined4 FUN_801b2640();
+extern undefined4 FUN_80286838();
+extern undefined4 FUN_80286884();
+extern int FUN_80294d38();
+extern undefined4 FUN_80294d40();
+
+extern undefined4 DAT_803dc070;
+extern undefined4 DAT_803dcb68;
+extern undefined4 DAT_803dcb6a;
+extern undefined4 DAT_803dcb6c;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern undefined4* DAT_803dd6e8;
+extern f64 DOUBLE_803e5578;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DCB5C;
+extern f32 lbl_803DCB60;
+extern f32 lbl_803DCB64;
+extern f32 lbl_803DCB70;
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801b2550
+ * EN v1.0 Address: 0x801B2550
+ * EN v1.0 Size: 1672b
+ * EN v1.1 Address: 0x801B2B04
+ * EN v1.1 Size: 1560b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  undefined4 param_9, undefined4 param_10, int param_11)
+{
+    short sVar1;
+    short sVar3;
+    int iVar2;
+    short* psVar4;
+    int iVar5;
+    uint uVar6;
+    char cVar7;
+    bool bVar8;
+    bool bVar9;
+    int iVar10;
+    int iVar11;
+    int iVar12;
+    int iVar13;
+    double dVar14;
+    double dVar15;
+    short* local_38[2];
+    undefined4 local_30;
+    uint uStack_2c;
+    undefined8 local_28;
+
+    psVar4 = (short*)FUN_80286838();
+    iVar13 = *(int*)(psVar4 + 0x26);
+    bVar9 = false;
+    *(undefined*)(param_11 + 0x56) = 0;
+    *(ushort*)(param_11 + 0x6e) = *(ushort*)(param_11 + 0x6e) & 0xf9f7;
+    iVar12 = *(int*)(psVar4 + 0x5c);
+    if (*(char*)(iVar12 + 0xac) == '\x03')
+    {
+        iVar13 = FUN_80017a98();
+        FUN_8011e868(0x16);
+        FUN_8011e844(0x17);
+        FUN_8011e800(1);
+        iVar5 = (*gCameraInterface)->getMode();
+        if ((iVar5 != 0x51) && (iVar5 != 0x4c))
+        {
+            local_38[0] = psVar4;
+            (*gCameraInterface)->setMode(0x51, 1, 0, 4, local_38, 0x32, 0xff);
+        }
+        if (iVar5 == 0x51)
+        {
+            iVar5 = FUN_8003964c((int)psVar4, 0);
+            if (*(char*)(iVar12 + 0xb0) < '\x01')
+            {
+                uVar6 = GameBit_Get(0xdb);
+                if (uVar6 == 0)
+                {
+                    (**(code**)(*DAT_803dd6e8 + 0x38))(0x4b9, 0x14, 0x8c, 1);
+                    GameBit_Set(0xdb, 1);
+                }
+                cVar7 = FUN_80006bd0(0);
+                uStack_2c = (int)cVar7 ^ 0x80000000;
+                local_30 = 0x43300000;
+                iVar11 = (int)
+                (-lbl_803DCB70 *
+                    (f32)(s32)
+                uStack_2c
+                )
+                ;
+                local_28 = (double)(longlong)iVar11;
+                if (iVar11 == 0)
+                {
+                    if (*(int*)(iVar12 + 0xa8) != 0)
+                    {
+                        FUN_80006824((uint)psVar4, SFXfoot_dinostep);
+                    }
+                }
+                else
+                {
+                    sVar1 = *(short*)(iVar5 + 2);
+                    sVar3 = sVar1;
+                    if (sVar1 < 0)
+                    {
+                        sVar3 = -sVar1;
+                    }
+                    if ((int)DAT_803dcb6a - (int)DAT_803dcb6c < (int)sVar3)
+                    {
+                        if (iVar11 < 0)
+                        {
+                            iVar10 = -1;
+                        }
+                        else if (iVar11 < 1)
+                        {
+                            iVar10 = 0;
+                        }
+                        else
+                        {
+                            iVar10 = 1;
+                        }
+                        if (sVar1 < 0)
+                        {
+                            iVar2 = -1;
+                        }
+                        else if (sVar1 < 1)
+                        {
+                            iVar2 = 0;
+                        }
+                        else
+                        {
+                            iVar2 = 1;
+                        }
+                        if (iVar2 == iVar10)
+                        {
+                            iVar11 = (iVar11 * ((int)DAT_803dcb6a - (int)sVar3)) / (int)DAT_803dcb6c;
+                        }
+                    }
+                    *(short*)(iVar5 + 2) = *(short*)(iVar5 + 2) + (short)iVar11;
+                    FUN_800068c4((uint)psVar4, 0x1ff);
+                }
+                *(int*)(iVar12 + 0xa8) = iVar11;
+                if (0 < *(short*)(iVar12 + 0xa4))
+                {
+                    *(ushort*)(iVar12 + 0xa4) = *(short*)(iVar12 + 0xa4) - (ushort)DAT_803dc070;
+                }
+                if (0 < *(short*)(iVar12 + 0xa6))
+                {
+                    *(ushort*)(iVar12 + 0xa6) = *(short*)(iVar12 + 0xa6) - (ushort)DAT_803dc070;
+                }
+                uVar6 = FUN_80006c10(0);
+                if (((uVar6 & 0x100) == 0) || (0 < *(short*)(iVar12 + 0xa4)))
+                {
+                    FUN_8000680c((int)psVar4, 2);
+                }
+                else
+                {
+                    FUN_80006ba8(0, 0x100);
+                    iVar5 = FUN_80294d38(iVar13);
+                    if (iVar5 < 1)
+                    {
+                        FUN_80006824((uint)psVar4, 0x40c);
+                    }
+                    else
+                    {
+                        *(byte*)(iVar12 + 0xae) = *(char*)(iVar12 + 0xae) + DAT_803dc070;
+                        bVar8 = FUN_800067f0((int)psVar4, 2);
+                        if (!bVar8)
+                        {
+                            FUN_80006824((uint)psVar4, SFXfoot_water_roll);
+                            FUN_80006824((uint)psVar4, SFXthorntail_annoyed1);
+                        }
+                    }
+                }
+                if (DAT_803dcb68 < *(byte*)(iVar12 + 0xae))
+                {
+                    *(byte*)(iVar12 + 0xae) = DAT_803dcb68;
+                }
+                (**(code**)(*DAT_803dd6e8 + 0x5c))(*(undefined*)(iVar12 + 0xae));
+                local_28 = (double)CONCAT44(0x43300000, (uint) * (byte*)(iVar12 + 0xae));
+                dVar15 = (double)(float)(local_28 - DOUBLE_803e5578);
+                dVar14 = (double)lbl_803DCB64;
+                *(float*)(iVar12 + 0x98) = (float)(dVar15 * dVar14 + (double)lbl_803DCB60);
+                uVar6 = FUN_80006bf8(0);
+                if (((((uVar6 & 0x100) != 0) || (*(byte*)(iVar12 + 0xae) == DAT_803dcb68)) &&
+                    (*(short*)(iVar12 + 0xa4) < 1)) && (iVar5 = FUN_80294d38(iVar13), 0 < iVar5))
+                {
+                    FUN_80006ba8(0, 0x100);
+                    dVar14 = (double)FUN_80294d40(iVar13, -1);
+                    *(undefined*)(iVar12 + 0xad) = 1;
+                    *(undefined*)(iVar12 + 0xae) = 0;
+                }
+                FUN_801b2640(dVar14, dVar15, param_3, param_4, param_5, param_6, param_7, param_8);
+                if (((*(char*)(psVar4 + 0x56) == '\x13') && (*(char*)(iVar12 + 0xb2) == '\0')) &&
+                    ((uVar6 = GameBit_Get(0xc17), uVar6 != 0 && (uVar6 = GameBit_Get(0xa21), uVar6 != 0))))
+                {
+                    *(undefined*)(iVar12 + 0xb2) = 1;
+                    *(undefined*)(iVar12 + 0xb1) = 1;
+                }
+                if ((*(char*)(iVar12 + 0xb1) != '\0') &&
+                    (*(byte*)(iVar12 + 0xb1) = *(char*)(iVar12 + 0xb1) + DAT_803dc070,
+                        0x3c < *(byte*)(iVar12 + 0xb1)))
+                {
+                    bVar9 = true;
+                }
+                if ((bVar9) || (uVar6 = FUN_80006c00(0), (uVar6 & 0x200) != 0))
+                {
+                    FUN_80006ba8(0, 0x200);
+                    FUN_8011e800(0);
+                    (**(code**)(*DAT_803dd6e8 + 0x60))();
+                    (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+                    *(undefined*)(iVar12 + 0xac) = 5;
+                    *(undefined*)(iVar12 + 0xb0) = 0x3c;
+                    *(byte*)(param_11 + 0x90) = *(byte*)(param_11 + 0x90) | 4;
+                    *(byte*)((int)psVar4 + 0xaf) = *(byte*)((int)psVar4 + 0xaf) & 0xf7;
+                    bVar9 = FUN_800067f0((int)psVar4, 8);
+                    if (bVar9)
+                    {
+                        FUN_800067f0((int)psVar4, 0);
+                    }
+                    FUN_8000680c((int)psVar4, 2);
+                }
+                FUN_8002fc3c((double)lbl_803DCB5C, (double)lbl_803DC074);
+            }
+            else
+            {
+                *(byte*)(iVar12 + 0xb0) = *(char*)(iVar12 + 0xb0) - DAT_803dc070;
+                if (*(char*)(iVar12 + 0xb0) < '\x01')
+                {
+                    (**(code**)(*DAT_803dd6e8 + 0x58))(DAT_803dcb68, 0x5d5);
+                }
+            }
+        }
+    }
+    else
+    {
+        psVar4[3] = psVar4[3] & 0xbfff;
+        iVar5 = FUN_8003964c((int)psVar4, 0);
+        *(short*)(iVar5 + 2) = *psVar4 - (short)((int)*(char*)(iVar13 + 0x28) << 8);
+        *psVar4 = (short)((int)*(char*)(iVar13 + 0x28) << 8);
+        *(undefined*)(iVar12 + 0xac) = 4;
+    }
+    FUN_80286884();
+    return;
+}
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void dimcannon_hitDetect(void);
+
+void dimcannon_release(void);
+
+void dimcannon_initialise(void);
+
+extern void objRenderFn_8003b8f4(f32 x);
+extern f32 lbl_803E48E8;
+extern f32 lbl_803E48F8;
+
+void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+
+void dimlavasmash_free(void)
+{
+}
+
+void dimlavasmash_hitDetect(void)
+{
+}
+
+void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8* state = ((GameObject*)obj)->extra;
+    if (state[2] == 2 && visible != 0)
+    {
+        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48F8);
+    }
+}
+
+void dimlavasmash_update(int* obj)
+{
+    extern ObjectTriggerInterface** gObjectTriggerInterface;
+    u8* sub;
+    int* p;
+    sub = ((GameObject*)obj)->extra;
+    if (sub[2] == 1)
+    {
+        p = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags & ~1);
+    }
+    else if (((GameObject*)obj)->unkF4 == 0)
+    {
+        if ((s8)sub[0] != -1)
+        {
+            (*gObjectTriggerInterface)->runSequence((s8)sub[0], obj, -1);
+        }
+        ((GameObject*)obj)->unkF4 = 1;
+    }
+}
+
+/* 8b "li r3, N; blr" returners. */
+int dimlavasmash_getExtraSize(void) { return 0x3; }
+int dimlavasmash_getObjectTypeId(void) { return 0x0; }
+
+/* if (o->_X == K) return A; else return B; */
+
+typedef struct DimlavasmashPlacement
+{
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} DimlavasmashPlacement;
+
+
+typedef struct DimcannonPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    u8 pad20[0x26 - 0x20];
+    s16 unk26;
+    s8 unk28;
+    u8 pad29[0x30 - 0x29];
+} DimcannonPlacement;
+
+
+typedef struct DimcannonState
+{
+    u8 pad0[0x7 - 0x0];
+    u8 unk7;
+    u8 pad8[0x9 - 0x8];
+    s8 unk9;
+    s8 unkA;
+    s8 unkB;
+    u8 padC[0x10 - 0xC];
+} DimcannonState;
+
+
+typedef struct DimlavasmashState
+{
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    u8 state;
+    u8 pad3[0x7 - 0x3];
+    u8 unk7;
+    u8 pad8[0x9 - 0x8];
+    s8 unk9;
+    s8 unkA;
+    s8 unkB;
+    u8 padC[0x10 - 0xC];
+} DimlavasmashState;
+
+
+/* dimcannon extra block (0xb4); the head is the per-cannonball column
+ * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
+STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
+
+int dimcannon_getExtraSize(int* obj);
+
+int dimcannon_getObjectTypeId(int* obj);
+
+extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern int mapBlockFn_800606ec(int arg1, int idx);
+extern int mapBlockFn_80060678(void);
+extern int fn_8006070C(int arg1, int idx);
+extern int Shader_getLayer(int layer, int idx);
+
+#pragma dont_inline on
+/* Toggle collision/render surface flags for matching block polys and layers. */
+void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
+{
+    int i;
+    int* block;
+    int* layer;
+    int got;
+    for (i = 0; i < (int)*(u16*)((char*)arg1 + 0x9a); i++)
+    {
+        block = (int*)mapBlockFn_800606ec(arg1, i);
+        got = mapBlockFn_80060678();
+        if (arg3 == got)
+        {
+            if (arg2 != 0)
+            {
+                *(u32*)(block + 0x10 / 4) &= ~2LL;
+                *(u32*)(block + 0x10 / 4) &= ~1LL;
+            }
+            else
+            {
+                block[0x10 / 4] = block[0x10 / 4] | 2;
+                block[0x10 / 4] = block[0x10 / 4] | 1;
+            }
+        }
+    }
+    for (i = 0; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
+    {
+        layer = (int*)fn_8006070C(arg1, i);
+        if (arg3 == (int)*(u8*)((char*)Shader_getLayer((int)layer, 0) + 5))
+        {
+            if (arg2 != 0)
+            {
+                *(u32*)(layer + 0x3c / 4) &= ~2LL;
+            }
+            else
+            {
+                layer[0x3c / 4] = layer[0x3c / 4] | 2;
+            }
+        }
+    }
+}
+#pragma dont_inline reset
+
+int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    extern int mapGetBlock(void);
+    int* def;
+    int hit;
+    int block;
+    int* state;
+    state = ((GameObject*)obj)->extra;
+    def = *(int**)&((GameObject*)obj)->anim.placementData;
+    if (((DimlavasmashState*)state)->state == 0)
+    {
+        if (GameBit_Get(((DimlavasmashPlacement*)def)->unk20) != 0)
+        {
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+            if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
+            {
+                if (*(s16*)((char*)hit + 0x46) == 397)
+                {
+                    ((DimlavasmashState*)state)->state = 2;
+                    Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
+                    objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
+                                        ((GameObject*)obj)->anim.localPosY,
+                                        ((GameObject*)obj)->anim.localPosZ);
+                    block = mapGetBlock();
+                    if ((void*)block != NULL)
+                    {
+                        dimlavasmash_setBlockSurfaceFlags(block, 1, ((DimlavasmashState*)state)->unk1);
+                        dimlavasmash_setBlockSurfaceFlags(block, 0, ((DimlavasmashState*)state)->unk1 + 1);
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        if (animUpdate->triggerCommand == 1)
+        {
+            GameBit_Set(((DimlavasmashPlacement*)def)->unk1E, 1);
+            ((DimlavasmashState*)state)->state = 1;
+        }
+    }
+    return ((DimlavasmashState*)state)->state == 0;
+}
+
+extern void* lbl_803DDB50;
+
+void dimcannon_free(int* obj);
+
+extern void ObjMsg_AllocQueue(int* obj, int n);
+extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
+extern f32 lbl_803E48B8;
+
+/* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
+ * sub-variant, else seeds the 10-slot trail particle array, installs the
+ * sequence fn, acquires its model resource and applies map flags. */
+void dimcannon_init(int* obj, int* arg);
+
+extern void DIMwooddoor_updateFallingDebris(int* obj);
+extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
+extern void DIMwooddoor_spawnShard(int* obj, int p2);
+extern f32 getXZDistance(f32 * a, f32 * b);
+extern void* fn_802972A8(void* player);
+extern void buttonDisable(int chan, int mask);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern int lbl_803DBF10;
+extern int lbl_803DBF0C;
+extern f32 lbl_803E48EC;
+extern f32 lbl_803E48F0;
+extern f32 lbl_803DBEF4;
+
+/* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
+ * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
+void dimcannon_update(int* obj);
+
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern void hudFn_8011f38c(int v);
+extern s16* objModelGetVecFn_800395d8(int* obj, int p2);
+extern s8 padGetStickX(int chan);
+extern int fn_80296A14(void* player);
+extern void playerAddRemoveMagic(void* player, int amount);
+extern u32 getButtonsJustPressed(int chan);
+extern u32 getButtonsHeld(int chan);
+extern u32 getButtonsJustPressedIfNotBusy(int chan);
+extern int Sfx_IsPlayingFromObjectChannel(int* obj, int channel);
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
+
+extern u8 lbl_803DBF00;
+extern s16 lbl_803DBF02;
+extern s16 lbl_803DBF04;
+extern f32 lbl_803DBF08;
+extern f32 lbl_803DBEF8;
+extern f32 lbl_803DBEFC;
+
+/* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
+ * turret with the stick, charges with A, fires on release/full charge, and
+ * exits on B or after the post-completion delay. */
+int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
+
+/* === moved from main/dll/DIM/DIM2conveyor.c [801B3658-801B3768) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DIM/DIMlevcontrol.h"
+#include "main/game_object.h"
+#include "main/objseq.h"
+
+
+
+typedef struct DimlavasmashObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DimlavasmashObjectDef;
+
+
+
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: dimlavasmash_init
+ * EN v1.0 Address: 0x801B3658
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801B367C
+ * EN v1.1 Size: 636b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+void dimlavasmash_init(s16* obj, s8* def)
+{
+    extern int* mapGetBlock(int idx);
+    extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
+    ObjAnimComponent* objAnim;
+    int* block;
+    char* inner;
+
+    objAnim = (ObjAnimComponent*)obj;
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
+    ((GameObject*)obj)->animEventCallback = (void*)dimlavasmash_SeqFn;
+    inner = ((GameObject*)obj)->extra;
+    *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->unk1A;
+    *(s8*)(inner + 0) = (s8)((DimlavasmashObjectDef*)def)->unk1C;
+    *(u8*)(inner + 2) = (u8)GameBit_Get(((DimlavasmashObjectDef*)def)->unk1E);
+    if (*(u8*)(inner + 2) == 1)
+    {
+        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                                ((GameObject*)obj)->anim.localPosZ));
+        if (block != NULL)
+        {
+            dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8*)(inner + 1));
+            dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8*)(inner + 1) + 1);
+        }
+    }
+    objAnim->bankIndex = def[0x19];
+    {
+        s16* p = *(s16**)&((GameObject*)obj)->anim.hitReactState;
+        p[0x30] = (s16)(p[0x30] & ~1);
+    }
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+}
+
+/* Trivial 4b 0-arg blr leaves. */
+void dimlavasmash_release(void)
+{
+}
+
+void dimlavasmash_initialise(void)
+{
+}
+
+
+
+
+
+
+extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
+
+
+extern unsigned long GameBit_Set(int eventId, int value);
+
+
+/* 8b "li r3, N; blr" returners. */
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern void objRenderFn_8003b8f4(f32);
+
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+
+
+
+
+
+
+
+
+
+
+

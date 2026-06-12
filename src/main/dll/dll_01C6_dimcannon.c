@@ -319,47 +319,17 @@ void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void dimlavasmash_free(void)
-{
-}
+void dimlavasmash_free(void);
 
-void dimlavasmash_hitDetect(void)
-{
-}
+void dimlavasmash_hitDetect(void);
 
-void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    if (state[2] == 2 && visible != 0)
-    {
-        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48F8);
-    }
-}
+void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dimlavasmash_update(int* obj)
-{
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
-    u8* sub;
-    int* p;
-    sub = ((GameObject*)obj)->extra;
-    if (sub[2] == 1)
-    {
-        p = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags & ~1);
-    }
-    else if (((GameObject*)obj)->unkF4 == 0)
-    {
-        if ((s8)sub[0] != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence((s8)sub[0], obj, -1);
-        }
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-}
+void dimlavasmash_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int dimlavasmash_getExtraSize(void) { return 0x3; }
-int dimlavasmash_getObjectTypeId(void) { return 0x0; }
+int dimlavasmash_getExtraSize(void);
+int dimlavasmash_getObjectTypeId(void);
 
 /* if (o->_X == K) return A; else return B; */
 
@@ -438,91 +408,10 @@ extern int Shader_getLayer(int layer, int idx);
 
 #pragma dont_inline on
 /* Toggle collision/render surface flags for matching block polys and layers. */
-void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
-{
-    int i;
-    int* block;
-    int* layer;
-    int got;
-    for (i = 0; i < (int)*(u16*)((char*)arg1 + 0x9a); i++)
-    {
-        block = (int*)mapBlockFn_800606ec(arg1, i);
-        got = mapBlockFn_80060678();
-        if (arg3 == got)
-        {
-            if (arg2 != 0)
-            {
-                *(u32*)(block + 0x10 / 4) &= ~2LL;
-                *(u32*)(block + 0x10 / 4) &= ~1LL;
-            }
-            else
-            {
-                block[0x10 / 4] = block[0x10 / 4] | 2;
-                block[0x10 / 4] = block[0x10 / 4] | 1;
-            }
-        }
-    }
-    for (i = 0; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
-    {
-        layer = (int*)fn_8006070C(arg1, i);
-        if (arg3 == (int)*(u8*)((char*)Shader_getLayer((int)layer, 0) + 5))
-        {
-            if (arg2 != 0)
-            {
-                *(u32*)(layer + 0x3c / 4) &= ~2LL;
-            }
-            else
-            {
-                layer[0x3c / 4] = layer[0x3c / 4] | 2;
-            }
-        }
-    }
-}
+void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3);
 #pragma dont_inline reset
 
-int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    extern int mapGetBlock(void);
-    int* def;
-    int hit;
-    int block;
-    int* state;
-    state = ((GameObject*)obj)->extra;
-    def = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (((DimlavasmashState*)state)->state == 0)
-    {
-        if (GameBit_Get(((DimlavasmashPlacement*)def)->unk20) != 0)
-        {
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
-            if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
-            {
-                if (*(s16*)((char*)hit + 0x46) == 397)
-                {
-                    ((DimlavasmashState*)state)->state = 2;
-                    Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
-                    objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
-                                        ((GameObject*)obj)->anim.localPosY,
-                                        ((GameObject*)obj)->anim.localPosZ);
-                    block = mapGetBlock();
-                    if ((void*)block != NULL)
-                    {
-                        dimlavasmash_setBlockSurfaceFlags(block, 1, ((DimlavasmashState*)state)->unk1);
-                        dimlavasmash_setBlockSurfaceFlags(block, 0, ((DimlavasmashState*)state)->unk1 + 1);
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        if (animUpdate->triggerCommand == 1)
-        {
-            GameBit_Set(((DimlavasmashPlacement*)def)->unk1E, 1);
-            ((DimlavasmashState*)state)->state = 1;
-        }
-    }
-    return ((DimlavasmashState*)state)->state == 0;
-}
+int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern void* lbl_803DDB50;
 
@@ -1035,47 +924,12 @@ typedef struct DimlavasmashObjectDef
  * PAL Size: TODO
  */
 
-void dimlavasmash_init(s16* obj, s8* def)
-{
-    extern int* mapGetBlock(int idx);
-    extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
-    ObjAnimComponent* objAnim;
-    int* block;
-    char* inner;
-
-    objAnim = (ObjAnimComponent*)obj;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)dimlavasmash_SeqFn;
-    inner = ((GameObject*)obj)->extra;
-    *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->unk1A;
-    *(s8*)(inner + 0) = (s8)((DimlavasmashObjectDef*)def)->unk1C;
-    *(u8*)(inner + 2) = (u8)GameBit_Get(((DimlavasmashObjectDef*)def)->unk1E);
-    if (*(u8*)(inner + 2) == 1)
-    {
-        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                                ((GameObject*)obj)->anim.localPosZ));
-        if (block != NULL)
-        {
-            dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8*)(inner + 1));
-            dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8*)(inner + 1) + 1);
-        }
-    }
-    objAnim->bankIndex = def[0x19];
-    {
-        s16* p = *(s16**)&((GameObject*)obj)->anim.hitReactState;
-        p[0x30] = (s16)(p[0x30] & ~1);
-    }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-}
+void dimlavasmash_init(s16* obj, s8* def);
 
 /* Trivial 4b 0-arg blr leaves. */
-void dimlavasmash_release(void)
-{
-}
+void dimlavasmash_release(void);
 
-void dimlavasmash_initialise(void)
-{
-}
+void dimlavasmash_initialise(void);
 
 
 

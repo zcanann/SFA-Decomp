@@ -1594,8 +1594,11 @@ main/dll/dll_801B1D84.c:
 main/dll/DIMwooddoor.c:
 	.text       start:0x801B1FF4 end:0x801B2550
 
-main/dll/DIMlevcontrol.c:
-	.text       start:0x801B2550 end:0x801B3768
+main/dll/dll_01C6_dimcannon.c:
+	.text       start:0x801B2550 end:0x801B3344
+
+main/dll/dll_01C7_dimlavasmas.c:
+	.text       start:0x801B3344 end:0x801B3768
 
 main/dll/dim2conveyor.c:
 	.text       start:0x801B3768 end:0x801B3DE4
