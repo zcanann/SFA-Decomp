@@ -1,3 +1,185 @@
+/* === moved from main/dll/WC/WClaser.c [801F0AE4-801F0B50) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/WC/WClaser.h"
+#include "main/dll/WC/WCpressureSwitch.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim.h"
+#include "main/obj_placement.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
+#include "main/screen_transition.h"
+
+extern int Obj_GetPlayerObject(void);
+extern void objSetSlot(int* obj, int slot);
+extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
+extern void objRenderFn_8003b8f4(f32 scale);
+extern void fn_80065574(int a, int* obj, int b);
+extern void fn_80296BBC(int player);
+extern void buttonDisable(int controller, int mask);
+extern void textureFree(void* resource);
+
+extern MapEventInterface** gMapEventInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern ModgfxInterface** gModgfxInterface;
+
+extern f32 timeDelta;
+extern u8 lbl_803DDC78;
+extern f32 lbl_803E5CEC;
+extern f32 lbl_803E5CF0;
+extern f32 lbl_803E5CF4;
+extern f32 lbl_803E5CF8;
+extern f32 lbl_803E5D00;
+extern f32 lbl_803E5D04;
+extern f32 lbl_803E5D08;
+
+#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
+#define OBJ_S8(obj, offset) (*(s8 *)((u8 *)(obj) + (offset)))
+#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
+#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
+#define OBJ_F32(obj, offset) (*(f32 *)((u8 *)(obj) + (offset)))
+#define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
+
+#define MAP_EVENT_TEST(mapId, eventId) \
+    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
+#define MAP_EVENT_SET(mapId, eventId, value) \
+    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
+    (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+#define SCREEN_TRANSITION_START(kind, value) \
+    (*gScreenTransitionInterface)->step((kind), (value))
+
+typedef struct Dll1FBSetup
+{
+    ObjPlacement base;
+    s8 yawByte;
+    s8 baseMove;
+    s16 triggerMode;
+    s16 objectParam;
+} Dll1FBSetup;
+
+typedef struct WMGalleonSetup
+{
+    ObjPlacement base;
+    s8 yawByte;
+} WMGalleonSetup;
+
+typedef struct WMSeqObjectSetup
+{
+    ObjPlacement base;
+    s8 yawByte;
+    s8 setupType;
+} WMSeqObjectSetup;
+
+typedef struct WMGalleonState
+{
+    f32 savedX;
+    f32 savedY;
+    f32 savedZ;
+    u8 mapEventsLatched;
+    u8 pad0D;
+    s16 savedYaw;
+} WMGalleonState;
+
+typedef struct Dll1FBState
+{
+    u8 pad00[4];
+    s16 baseMove;
+    s16 triggerMode;
+    u8 pad08;
+    u8 hideModel;
+    u8 pad0A[2];
+} Dll1FBState;
+
+STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
+STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
+STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
+STATIC_ASSERT(offsetof(Dll1FBState, hideModel) == 0x09);
+STATIC_ASSERT(sizeof(WMGalleonState) == 0x10);
+STATIC_ASSERT(offsetof(WMGalleonState, savedX) == 0x00);
+STATIC_ASSERT(offsetof(WMGalleonState, savedY) == 0x04);
+STATIC_ASSERT(offsetof(WMGalleonState, savedZ) == 0x08);
+STATIC_ASSERT(offsetof(WMGalleonState, mapEventsLatched) == 0x0C);
+STATIC_ASSERT(offsetof(WMGalleonState, savedYaw) == 0x0E);
+STATIC_ASSERT(offsetof(Dll1FBSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(Dll1FBSetup, baseMove) == 0x19);
+STATIC_ASSERT(offsetof(Dll1FBSetup, triggerMode) == 0x1a);
+STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
+STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
+
+void WM_Galleon_update(int* obj);
+
+void WM_Galleon_init(int* obj, WMGalleonSetup* setup);
+
+void WM_Galleon_release(void);
+
+void WM_Galleon_initialise(void);
+
+int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+int WM_seqobject_getExtraSize(void);
+int WM_seqobject_getObjectTypeId(void);
+
+void WM_seqobject_free(void);
+
+void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void WM_seqobject_hitDetect(void);
+
+void WM_seqobject_update(int* obj);
+
+void WM_seqobject_init(int* obj, s8* def);
+
+void WM_seqobject_release(void);
+
+void WM_seqobject_initialise(void);
+
+int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
+
+int dll_1FB_getExtraSize_ret_12(void);
+int dll_1FB_getObjectTypeId(void);
+
+void dll_1FB_free_nop(void);
+
+void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+
+void dll_1FB_hitDetect_nop(void);
+
+void dll_1FB_update(int* obj);
+
+void dll_1FB_init(int* obj, u8* def);
+
+void dll_1FB_release_nop(void);
+
+void dll_1FB_initialise_nop(void);
+
+int LaserBeam_getExtraSize(void) { return 0x50; }
+int LaserBeam_getObjectTypeId(void) { return 0; }
+
+void LaserBeam_init(int* obj)
+{
+    void** state;
+
+    state = (void**)OBJ_PTR(obj, 0xb8);
+    (*gModgfxInterface)->detachSource(obj);
+    if (state[0] != 0)
+    {
+        textureFree(state[0]);
+        state[0] = 0;
+    }
+}
+
+void LaserBeam_render(void)
+{
+}
+
+void LaserBeam_hitDetect(void)
+{
+}
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -208,11 +390,8 @@ extern uint FUN_80006c00();
 extern undefined4 FUN_8001771c();
 extern u32 randomGetRange(int min, int max);
 extern uint FUN_80017a98();
-extern undefined8 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjMsg_SendToObject();
-extern undefined8 ObjMsg_AllocQueue();
 extern int FUN_800632f4();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -239,9 +418,10 @@ extern f32 lbl_803E6A80;
  */
 void LaserBeam_update(int obj2)
 {
+    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern uint GameBit_Get(int eventId); /* #57 */
     extern void*Obj_GetPlayerObject(void);
     extern uint GameBit_Get(int id);
-    extern void GameBit_Set(int slot, int val);
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern int objGetAnimState80A(void* obj);
@@ -579,6 +759,8 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
 {
+    extern undefined4 ObjHits_EnableObject(); /* #57 */
+    extern undefined8 ObjHits_DisableObject(); /* #57 */
     char cVar1;
     float fVar2;
     float fVar3;
@@ -882,7 +1064,6 @@ void dll_1FF_init(s16* a, s8* b);
 
 void WM_colrise_init(s16* a, s8* b);
 
-extern int GameBit_Get(int id);
 
 void wmlasertarget_init(char* obj, s8* p);
 
@@ -924,7 +1105,6 @@ void dll_200_init(int* obj, int* arg);
 
 extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
-extern void GameBit_Set(int slot, int val);
 
 int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
@@ -939,6 +1119,7 @@ extern f32 lbl_803E5D10;
 
 void LaserBeam_free(s16* obj, char* arg)
 {
+    extern undefined8 ObjMsg_AllocQueue(); /* #57 */
     LaserBeamState* b;
 
     b = ((GameObject*)obj)->extra;

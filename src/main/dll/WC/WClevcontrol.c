@@ -235,13 +235,9 @@ void SB_CloudRunner_initialise(void)
 {
 }
 
-void WM_ObjCreator_free(void)
-{
-}
+void WM_ObjCreator_free(void);
 
-void WM_ObjCreator_hitDetect(void)
-{
-}
+void WM_ObjCreator_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801EEDAC(void) { return 0x0; }
@@ -252,18 +248,14 @@ int fn_801EEE2C(void) { return 0x0; }
 int fn_801EEE34(void) { return 0x0; }
 int SB_CloudRunner_getExtraSize(void) { return 0x84; }
 int SB_CloudRunner_getObjectTypeId(void) { return 0x43; }
-int WM_ObjCreator_getExtraSize(void) { return 0x8; }
-int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
+int WM_ObjCreator_getExtraSize(void);
+int WM_ObjCreator_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5CC8;
 extern void objRenderFn_8003b8f4(f32);
 
-void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5CC8);
-}
+void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 lbl_803E5C70;
 
