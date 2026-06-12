@@ -27,8 +27,6 @@ typedef struct SBShipHeadState
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-extern u32 randomGetRange(int min, int max);
-extern int ObjHits_GetPriorityHit();
 
 extern EffectInterface** gPartfxInterface;
 
@@ -45,7 +43,6 @@ extern EffectInterface** gPartfxInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int ObjList_GetObjects(int* start, int* end);
 extern f32 timeDelta;
 
 
@@ -79,7 +76,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u8 framesThisStep;
 
 
@@ -124,10 +120,6 @@ extern u8 framesThisStep;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Sfx_StopObjectChannel(int obj, int ch);
-extern u8 Obj_IsLoadingLocked(void);
-extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
-extern f32 sqrtf(f32);
 
 
 
@@ -142,10 +134,8 @@ extern f32 sqrtf(f32);
 
 
 /* 8b "li r3, N; blr" returners. */
-int SB_ShipGun_getExtraSize(void);
 
 /* sda21 accessors. */
-extern u32 gSbGalleon;
 
 /* Pattern wrappers. */
 
@@ -161,12 +151,10 @@ extern void objRenderFn_8003b8f4(f32);
 /* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
 
 /* SB_ShipGun_free: expgfx interface freeObject callback. */
-void SB_ShipGun_free(int param_1);
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
 
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
-extern f32 lbl_803E57FC;
 
 
 
@@ -197,9 +185,7 @@ extern f32 lbl_803E57FC;
 
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
-extern f32 lbl_803E5888;
 
-void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
 
@@ -212,30 +198,8 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"
 
-typedef struct SBShipGunPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    u8 pad24[0x28 - 0x24];
-} SBShipGunPlacement;
 
 
-typedef struct SBShipGunState
-{
-    u8 pad0[0x3 - 0x0];
-    s8 unk3;
-    u8 pad4[0xC - 0x4];
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 padF[0x10 - 0xF];
-} SBShipGunState;
 
 
 typedef struct SBCannonBallState
@@ -271,25 +235,7 @@ extern void ModelLightStruct_free(void* effect);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int ObjList_GetObjects(int* outIndex, int* outCount);
-extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void Sfx_StopObjectChannel();
-extern s16 getAngle(f32 dx, f32 dz);
-extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
-extern void vecRotateZXY(void* a, void* b);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern f32 lbl_803E588C;
-extern f32 lbl_803E5890;
-extern f32 lbl_803E5894;
-extern f32 lbl_803E5898;
-extern f32 lbl_803E589C;
-extern f32 lbl_803E58A0;
-extern f32 lbl_803E58A4;
-extern f32 lbl_803E58A8;
-extern f32 lbl_803E58AC;
 
-void SB_ShipGun_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */

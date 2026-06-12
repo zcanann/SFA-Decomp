@@ -46,7 +46,6 @@ extern EffectInterface** gPartfxInterface;
  * PAL Size: TODO
  */
 extern int ObjList_GetObjects(int* start, int* end);
-extern f32 timeDelta;
 
 
 /*
@@ -255,24 +254,8 @@ typedef struct SBShipGunState
 } SBShipGunState;
 
 
-typedef struct SBCannonBallState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 velocityY;
-    f32 velocityZ;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    s16 unk18;
-    s8 flags;
-    u8 pad1B[0x1C - 0x1B];
-    f32 impactCooldown;
-    void* modelLight;
-    u8 pad24[0x28 - 0x24];
-} SBCannonBallState;
 
 
-extern void ModelLightStruct_free(void* effect);
 
 
 /*
@@ -608,7 +591,6 @@ void SB_ShipGun_update(int obj)
 /* Trivial 4b 0-arg blr leaves. */
 void SB_CannonBall_release(void);
 
-void SB_CannonBall_initialise(void);
 
 void SB_ShipGun_init(int obj)
 {
@@ -622,39 +604,16 @@ void SB_ShipGun_init(int obj)
 
 /* 8b "li r3, N; blr" returners. */
 int SB_CannonBall_getExtraSize(void);
-int SB_CannonBall_getObjectTypeId(void);
 
-void SB_CannonBall_free(int obj);
 
-int SB_FireBall_getExtraSize(void);
 
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E58B0;
 
-void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern f32 lbl_803E58BC;
-extern f64 lbl_803E58C0;
-extern void Obj_FreeObject(int* obj);
-extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, int d);
 
-void SB_CannonBall_update(int* obj);
 
-extern f32 lbl_803E58B4;
-extern f32 lbl_803E58B8;
 
-void SB_CannonBall_hitDetect(int* obj);
 
-extern u8* objCreateLight(int* obj, int v);
-extern void modelLightStruct_setLightKind(u8* p, int v);
-extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
-extern void lightSetFieldBC_8001db14(u8* p, int v);
-extern void modelLightStruct_setDistanceAttenuation(u8* p, f32 a, f32 b);
-extern f32 lbl_803E58C8;
-extern f32 lbl_803E58CC;
-extern f32 lbl_803E58D0;
 
-void SB_CannonBall_init(int* obj);
