@@ -1,4 +1,4 @@
-/* === moved from main/dll/dim2conveyor.c [801CF78C-801CF7E8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01A4 — NW ice objects [801CF78C-801CF7E8) */
 #include "main/dll/dim2conveyor.h"
 #include "main/gameplay_runtime.h"
 

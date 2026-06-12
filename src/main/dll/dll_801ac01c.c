@@ -1,4 +1,4 @@
-/* === moved from main/dll/DIM/DIMlogfire.c [801AA558-801AA560) (TU re-split, docs/boundary_audit.md) === */
+/* DLL — DIM log-fire objects [801AA558-801AA560) */
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"

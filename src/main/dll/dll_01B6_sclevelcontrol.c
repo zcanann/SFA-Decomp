@@ -1,4 +1,4 @@
-/* === moved from main/dll/DR/DRearthwalk.c [801DAFA4-801DAFDC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01B6 — SC level-control objects [801DAFA4-801DAFDC) */
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"

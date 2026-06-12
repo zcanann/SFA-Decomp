@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/CFtoggleswitch.c [8018BC48-8018BC50) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0124 — death-gas objects [8018BC48-8018BC50) */
 #include "main/objseq.h"
 
 

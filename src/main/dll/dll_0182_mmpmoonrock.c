@@ -1,4 +1,4 @@
-/* === moved from main/dll/IM/IMspacecraft.c [801A6638-801A6778) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0182 — MMP moon-rock objects [801A6638-801A6778) */
 #pragma scheduling off
 #pragma peephole off
 #include "main/objseq.h"

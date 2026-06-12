@@ -1,4 +1,4 @@
-/* === moved from main/dll/IM/IMsnowbike.c [801D9B1C-801D9BDC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01B2 — SH staff-haze / level-control objects [801D9B1C-801D9BDC) */
 #include "main/game_object.h"
 #include "main/dll/beaconflags_types.h"
 

@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/CFforcecontrol.c [8018CD64-8018CDAC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0129 — campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 

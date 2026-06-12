@@ -1,4 +1,4 @@
-/* === moved from main/dll/babycloudrunner.c [8017EF6C-8017EFF0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00FD — baby CloudRunner objects [8017EF6C-8017EFF0) */
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"

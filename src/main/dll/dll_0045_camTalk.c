@@ -1,4 +1,4 @@
-/* === moved from main/dll/CAM/dll_59.c [80107AEC-80107B4C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0045 — camera talk / NPC-speak mode [80107AEC-80107B4C) */
 #include "main/dll/CAM/cambike_state.h"
 #include "main/mm.h"
 

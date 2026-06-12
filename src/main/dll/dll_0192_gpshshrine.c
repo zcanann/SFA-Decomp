@@ -1,4 +1,4 @@
-/* === moved from main/dll/mmshrine/shrine1C2.c [801C70F0-801C7724) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0192 — GPS-H shrine objects [801C70F0-801C7724) */
 #include "main/obj_placement.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"

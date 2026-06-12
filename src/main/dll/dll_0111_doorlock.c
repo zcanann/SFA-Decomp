@@ -1,4 +1,4 @@
-/* === merged from main/dll/texScroll.c [8017AC2C-8017ADB4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0111 — door-lock objects [8017AC2C-8017ADB4) */
 #include "main/game_object.h"
 #include "main/dll/doorlockstate_struct.h"
 

@@ -1,4 +1,4 @@
-/* === merged from main/dll/CAM/attention.c [801046F4-801049B0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0042 — attention / camera-control objects [801046F4-801049B0) */
 #include "main/dll/CAM/attention.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/object_transform.h"

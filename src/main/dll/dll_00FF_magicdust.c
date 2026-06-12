@@ -1,4 +1,4 @@
-/* === moved from main/dll/texframeanimator.c [80173224-801732A4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00FF — magic-dust / collectible objects [80173224-801732A4) */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/magicduststate_struct.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
