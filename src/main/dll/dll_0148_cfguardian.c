@@ -2,6 +2,13 @@
 #pragma scheduling off
 #pragma peephole off
 #include "main/game_object.h"
+#include "main/dll/wormspitbyte_struct.h"
+#include "main/dll/cfprisonunclestate_struct.h"
+#include "main/dll/babycloudrunnerflags_struct.h"
+#include "main/dll/gcrobotlightbeastate_struct.h"
+#include "main/dll/cfprisonguardstate_struct.h"
+#include "main/dll/cfpowerbasestate_struct.h"
+#include "main/dll/cfmaincrystalstate_types.h"
 #include "main/dll/rom_curve_interface.h"
 
 
@@ -653,11 +660,7 @@ void babycloudrunner_init_OLD_v1_1(int obj);
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 
-typedef struct BabyCloudrunnerFlags
-{
-    u8 resetLatch : 1;
-    u8 flags : 7;
-} BabyCloudrunnerFlags;
+
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -903,89 +906,35 @@ extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 
 
 
-typedef struct
-{
-    f32 f0, f4, f8, fc, f10, f14;
-    u8 b18, b19, b1a, b1b;
-} CrystalBeam;
+
 
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
-typedef struct CfMainCrystalState
-{
-    f32 pylonX[3]; /* per-pylon beam source position */
-    f32 crystalX;
-    f32 pylonY[3];
-    f32 crystalY;
-    f32 pylonZ[3];
-    f32 crystalZ;
-    s16 pylonTimer[3]; /* 0x30: 0 unseen; ramps to 0x78 once reported */
-    s16 crystalKnown; /* 0x36 */
-    CrystalBeam beams[10]; /* 0x38 */
-    s16 charge; /* 0x150: convergence charge frames */
-    f32 humVolume; /* 0x154 */
-    int unk158;
-    u8 chime[4]; /* 0x15c: per-beam chime timers */
-} CfMainCrystalState;
+
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 /* Per-object extra state for the CloudRunner power base
  * (cfpowerbase_getExtraSize == 0x6). */
-typedef struct CfPowerBaseState
-{
-    s16 typeBit; /* gamebit 0x54..0x56, from params+0x1e */
-    s16 litBit; /* gamebit 0x51..0x53 gating the lit state */
-    s8 typeIndex; /* 0/1/2 trigger argument */
-    u8 pad5;
-} CfPowerBaseState;
+
 
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
 /* Per-object extra state for the CloudRunner prison guard
  * (cfprisonguard_getExtraSize == 0x3c). */
-typedef struct CfPrisonGuardState
-{
-    u8 pad00[0x30];
-    f32 alarmRamp; /* particle ramp advanced while above threshold */
-    s16 stateTimer;
-    s8 capturedLatch; /* last GameBit 0x50 value */
-    s8 guardState; /* 0 idle .. 7 forced-chase */
-    u8 flags; /* 1 spawn-pulse pending, 2 freed-check, 4 alarm raised */
-    u8 flags39; /* 0x80 cleared every update */
-    u8 pad3A[2];
-} CfPrisonGuardState;
+
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 /* Per-object extra state for the CloudRunner prison uncle
  * (cfprisonuncle_getExtraSize == 0xa8). */
-typedef struct CfPrisonUncleState
-{
-    int target; /* keyed type-0x3d object */
-    u8 lookBlock[0x30]; /* fn_8003ADC4 head-track block */
-    u8 audioBlock[0x30]; /* objAudioFn block */
-    int unk64;
-    int unk68;
-    u8 pad6C[4];
-    s16 unk70;
-    u8 pad72;
-    s8 captured; /* GameBit 0x4d latch */
-    s8 kicked; /* fn_8019FC84 one-shot */
-    u8 pad75[0x33];
-} CfPrisonUncleState;
+
 
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
-typedef struct GcRobotLightBeaState
-{
-    void* light; /* modelLightStruct point light */
-    int unk4;
-    u8 hitFlags; /* 0x80 = player caught in the beam */
-    u8 pad9[3];
-} GcRobotLightBeaState;
+
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
@@ -1281,12 +1230,7 @@ extern void fn_8019D9F0(int* obj);
 
 
 
-typedef struct
-{
-    u8 _p0 : 1;
-    u8 spitLatch : 1;
-    u8 _p1 : 6;
-} WormSpitByte;
+
 
 /* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
  * from the vertical speed, clamp the playback rate, latch the spit SFX

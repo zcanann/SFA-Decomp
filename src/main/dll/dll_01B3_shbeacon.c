@@ -1,5 +1,6 @@
 /* === moved from main/dll/IM/IMsnowbike.c [801D9B1C-801D9BDC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
+#include "main/dll/beaconflags_types.h"
 
 
 
@@ -56,17 +57,7 @@ typedef struct ShBeaconPlacement
 
 
 /* sh_beacon_getExtraSize == 0x18. */
-typedef struct ShBeaconState
-{
-    int childObj; /* 0x00: spawned 0x55 flame object */
-    f32 seqTimer; /* 0x04 */
-    f32 fadeTimer; /* 0x08 */
-    f32 burstTimer; /* 0x0c */
-    f32 modeTimer; /* 0x10 */
-    u8 mode; /* 0x14: 0 unlit, 1 lit, 2 igniting */
-    u8 flags15; /* 0x15: bit 7 = looping sfx active (BeaconFlags) */
-    u8 pad16[2];
-} ShBeaconState;
+
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
@@ -202,11 +193,7 @@ extern f32 lbl_803E5538;
 extern f32 lbl_803E553C;
 extern int lbl_803DDBF8;
 
-typedef struct
-{
-    u8 looping : 1;
-    u8 rest : 7;
-} BeaconFlags;
+
 
 /*
  * --INFO--

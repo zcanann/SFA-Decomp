@@ -2,6 +2,14 @@
 #pragma scheduling on
 #pragma peephole on
 #include "main/effect_interfaces.h"
+#include "main/dll/linklevcontrolstate_struct.h"
+#include "main/dll/lavaball1bfstate_struct.h"
+#include "main/dll/imspacethrusterstate_struct.h"
+#include "main/dll/lavaball1bestate_struct.h"
+#include "main/dll/imanimspacecraftstate_struct.h"
+#include "main/dll/dll16cstate_struct.h"
+#include "main/dll/magiclightstate_struct.h"
+#include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
 
 
@@ -29,19 +37,7 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
  * Per-object extra state for the magiclight proximity light
  * (magiclight_getExtraSize == 0x14 for non-0x172 types).
  */
-typedef struct MagicLightState
-{
-    f32 triggerRadius; /* preset by subtype */
-    s16 lifetime; /* rand(200,600) at init */
-    s16 enterAction; /* L-action when the player enters the radius */
-    s16 leaveAction; /* L-action when the player leaves radius + hysteresis */
-    u8 pad0A;
-    s8 inRange; /* hysteresis latch */
-    s8 subtype; /* params+0x1A */
-    u8 pad0D[3];
-    s16 unk10; /* 301 at init */
-    u8 pad12[2];
-} MagicLightState;
+
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
@@ -49,21 +45,7 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
  */
-typedef struct Dll16CState
-{
-    void* linkedObj; /* group-10 object matched by type (364/367) */
-    f32 unk04; /* set on anim event 2 */
-    f32 snapX; /* path point snapshot taken on anim event 2 */
-    f32 snapY;
-    f32 snapZ;
-    f32 pathPointX; /* path point 1 world position, refreshed in render */
-    f32 pathPointY;
-    f32 pathPointZ;
-    u8 opacity; /* distance fade; 0xFF when unlinked */
-    s8 subObjIndex; /* lbl_802C2308 id selector; -1 = clear (anim event 3) */
-    s8 subObjIndexApplied;
-    u8 pad23;
-} Dll16CState;
+
 
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
@@ -71,25 +53,9 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-typedef struct CrRockfallCfgEntry
-{
-    f32 unk00;
-    s32 landSfx; /* 0 = none */
-    f32 restOffsetY; /* scaled by obj scale, added to floorY at rest */
-} CrRockfallCfgEntry;
 
-typedef struct CrRockfallState
-{
-    CrRockfallCfgEntry* cfg; /* lbl_803236B8 entry 0, or entry 1 for type 0x600 */
-    f32 floorY; /* probed landing height */
-    f32 startY; /* obj Y at init; fade fraction reference */
-    u8 mode; /* 0 armed, 1 falling, 2 resting, 3 shattered */
-    u8 fallStarted;
-    u8 floorFound;
-    u8 pad0F;
-    s16 fallDelay; /* params+0x1E; counts down while the player is in range */
-    u8 pad12[2];
-} CrRockfallState;
+
+
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -337,67 +303,27 @@ typedef struct Lavaball1bePlacement
 
 
 /* imanimspacecraft_getExtraSize == 0x4. */
-typedef struct ImAnimSpacecraftState
-{
-    s16 blinkTimer; /* 0x00 */
-    u8 maskBits; /* 0x02: per-event toggle bits (bit4..6 = group) */
-    u8 flags; /* 0x03: 2 = blink phase, 4/8 = SeqFn toggles */
-} ImAnimSpacecraftState;
+
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 /* imspacethruster_getExtraSize == 0xc. */
-typedef struct ImSpaceThrusterState
-{
-    u8 kind; /* 0x00: thruster slot from def+0x19 */
-    u8 phase; /* 0x01 */
-    s16 blendTimer; /* 0x02 */
-    void* bufA; /* 0x04: mmAlloc'd getTabEntry rows */
-    void* bufB; /* 0x08 */
-} ImSpaceThrusterState;
+
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 
 /* link_levcontrol_getExtraSize == 0x10. */
-typedef struct LinkLevControlState
-{
-    s8 areaCell; /* 0x00 */
-    u8 pad01[3];
-    int unk04; /* 0x04: init -1 */
-    int musicTrack; /* 0x08 */
-    int latch; /* 0x0c: SCGameBitLatch block */
-} LinkLevControlState;
+
 
 STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 
 /* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
-typedef struct Lavaball1beState
-{
-    char* targetObj; /* 0x00: ObjList_FindObjectById(linkedId) */
-    u8* light; /* 0x04 */
-    f32 floorY; /* 0x08: spawn height; falling below it re-arms */
-    int linkedId; /* 0x0c */
-    u8 flags; /* 0x10: 8 = ticked, 0x10 = dormant, 0x20 = whistle sfx */
-    u8 explodeCooldown; /* 0x11 */
-    u8 pad12[2];
-} Lavaball1beState;
+
 
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 /* lavaball1bf_getExtraSize == 0x1c (launcher). */
-typedef struct Lavaball1bfState
-{
-    u8 pad00[8];
-    int* spawnedObj; /* 0x08: the 0x18d cannon object */
-    f32 fireTimer; /* 0x0c */
-    f32 firePeriod; /* 0x10 */
-    s16 gateA; /* 0x14 */
-    s16 pending; /* 0x16 */
-    u8 gateB; /* 0x18 */
-    u8 pad19;
-    u8 gbState; /* 0x1a */
-    u8 soloLatch; /* 0x1b */
-} Lavaball1bfState;
+
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 

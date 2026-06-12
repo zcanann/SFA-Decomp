@@ -2,6 +2,15 @@
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/dll/dimwooddoor2state_struct.h"
+#include "main/dll/fbwgpipe_struct.h"
+#include "main/dll/dll1cestate_struct.h"
+#include "main/dll/explosionpartfxsource_struct.h"
+#include "main/dll/dim2pathgeneratorstate_struct.h"
+#include "main/dll/dim2snowballstate_struct.h"
+#include "main/dll/truthhornicestate_struct.h"
+#include "main/dll/dim2conveyorstate_struct.h"
+#include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
@@ -19,13 +28,7 @@
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
  */
-typedef struct DimWoodDoor2State
-{
-    u8 burnState; /* 3 intact; 0 burned (gamebit rung) */
-    u8 pad01[3];
-    f32 animSpeed;
-    f32 riseSpeed; /* added to obj Z, decays back to rest */
-} DimWoodDoor2State;
+
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -33,14 +36,7 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
  * Per-object extra state for the dll_1CE hatch door
  * (dll_1CE_getExtraSize == 0xC).
  */
-typedef struct Dll1CEState
-{
-    f32 openProgress; /* clamped lid coast */
-    f32 openVelocity;
-    u8 opened; /* 1 once triggered */
-    u8 igniteCountdown; /* 1 at init; gamebit + spawn at 0 */
-    u8 pad0A[2];
-} Dll1CEState;
+
 
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
@@ -52,27 +48,7 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
-typedef struct ExplosionPartfxSource
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 flags;
-    f32 rootMotionScale;
-    f32 localPosX;
-    f32 localPosY;
-    f32 localPosZ;
-    f32 worldPosX;
-    f32 worldPosY;
-    f32 worldPosZ;
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
-    void* parent;
-    u8 pad34[2];
-    u8 alpha;
-    u8 pad37;
-} ExplosionPartfxSource;
+
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -256,15 +232,7 @@ extern f32 timeDelta;
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
 
-typedef union
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} FbWGPipe;
+
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
@@ -326,92 +294,28 @@ typedef struct DimtruthhorniceObjectDef
 
 
 /* dim2conveyor_getExtraSize == 0x14. */
-typedef struct Dim2ConveyorState
-{
-    f32 scrollX; /* 0x00: per-area conveyor scroll vector */
-    f32 scrollY; /* 0x04 */
-    u8 pad08[4];
-    f32 swapTimer; /* 0x0c: 0x49b23 direction-swap countdown */
-    int musicHold; /* 0x10: frames left keeping music track 0xdf alive */
-} Dim2ConveyorState;
+
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 /* dll_1D6_getExtraSize == 0x20 (crusher platform). */
-typedef struct Dll1D6State
-{
-    void* bufA; /* 0x00: mmAlloc'd 40B getTabEntry rows */
-    void* bufB; /* 0x04 */
-    f32 hitRangeSqA; /* 0x08 */
-    f32 hitRangeSqB; /* 0x0c */
-    f32 bobPhase; /* 0x10 */
-    f32 bobRate; /* 0x14 */
-    s16 upTimer; /* 0x18 */
-    s16 downTimer; /* 0x1a */
-    s8 dizzyTimer; /* 0x1c */
-    u8 flags1D; /* 0x1d: 1 = raised, 2 = armed, 4 = bobbing */
-    u8 hitRow; /* 0x1e */
-    u8 slot; /* 0x1f: index into the lbl_803DBF20 slot table */
-} Dll1D6State;
+
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
 /* dimtruthhornice_getExtraSize == 0x8. */
-typedef struct TruthHornIceState
-{
-    s16 gameBit; /* 0x00 */
-    s8 hitsLeft; /* 0x02 */
-    s8 phase; /* 0x03 */
-    f32 timer; /* 0x04 */
-} TruthHornIceState;
+
 
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 /* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
-typedef struct Dim2SnowballState
-{
-    u8 pad00[0x10];
-    int curveCursor; /* 0x10 */
-    u8 pad14[0x54];
-    f32 curveX; /* 0x68 */
-    f32 curveY; /* 0x6c */
-    f32 curveZ; /* 0x70 */
-    f32 dirX; /* 0x74 */
-    u8 pad78[4];
-    f32 dirZ; /* 0x7c */
-    int curveMode; /* 0x80 */
-    u8 pad84[0xc]; /* 0x84..0x8f: vcall outparams (address-used) */
-    int curveResult; /* 0x90 */
-    int evalFn; /* 0x94 */
-    int coeffsFn; /* 0x98 */
-    int* targetObj; /* 0x9c */
-    int targetId; /* 0xa0 */
-    f32 floorY; /* 0xa4 */
-    int* curveData; /* 0xa8 (also address-used as a vcall outparam) */
-    u8 flagsAC; /* 0xac */
-    u8 padAD[3];
-} Dim2SnowballState;
+
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
-typedef struct Dim2PathGeneratorState
-{
-    f32 originX; /* 0x000 */
-    f32 originY; /* 0x004 */
-    f32 originZ; /* 0x008 */
-    f32 curveA[200]; /* 0x00c */
-    f32 curveB[200]; /* 0x32c */
-    f32 curveC[200]; /* 0x64c */
-    f32 curveD[12]; /* 0x96c */
-    u8 pad99C[2];
-    s16 spawnTimer; /* 0x99e */
-    s16 spawnPeriod; /* 0x9a0 */
-    s16 spawnTypes[2]; /* 0x9a2: object ids, alternated via the toggle bit */
-    u8 curveValid; /* 0x9a6 */
-    u8 flags; /* 0x9a7: 1 = toggle, 2 = curve built, 4 = enabled */
-} Dim2PathGeneratorState;
+
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 

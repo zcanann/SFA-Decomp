@@ -1,4 +1,5 @@
 #include "main/dll/objfsa_romcurve.h"
+#include "main/dll/savedata_struct.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_ui_interface.h"
@@ -6491,24 +6492,7 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct SaveData
-{
-    u8 pad00[2];
-    u8 subtitlesEnabled;
-    u8 gameUiSetting;
-    u8 cameraSetting;
-    u8 pad05;
-    u8 widescreenEnabled;
-    u8 pad07;
-    u8 rumbleEnabled;
-    u8 soundMode;
-    u8 musicVolume;
-    u8 sfxVolume;
-    u8 speechVolume;
-    u8 pad0D[3];
-    u32 registeredDebugOptions;
-    u32 enabledDebugOptions;
-} SaveData;
+
 
 extern SaveData saveData;
 

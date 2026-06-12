@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/bonespawndata_struct.h"
+#include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -2125,15 +2127,7 @@ extern f32 lbl_803DFCE0;
 
 
 
-typedef struct FxNode9
-{
-    s16 x, y, z;
-    s16 pad6;
-    f32 f8;
-    f32 fc;
-    f32 f10;
-    f32 f14;
-} FxNode9;
+
 
 extern FxNode9 lbl_8039C398;
 
@@ -2263,17 +2257,7 @@ extern void* Obj_GetActiveModel(void);
 extern void* ObjModel_GetJointMatrix(void* model, int joint);
 extern void PSMTXMultVec(void* m, void* src, void* dst);
 
-typedef struct BoneSpawnData
-{
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} BoneSpawnData;
+
 
 #pragma scheduling off
 void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8 prob, short* src)

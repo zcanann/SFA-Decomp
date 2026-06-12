@@ -1,5 +1,6 @@
 /* === moved from main/dll/CAM/camDebug.c [8010DB7C-8010DD58) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/dll/cameramodetitlepose_struct.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 
@@ -691,11 +692,7 @@ extern f32 timeDelta;
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-typedef struct CameraModeTitlePose
-{
-    f32 x, y, z;
-    u16 yaw, pitch, roll;
-} CameraModeTitlePose;
+
 
 
 

@@ -1,5 +1,8 @@
 /* === moved from main/dll/WC/WClaser.c [801F0AE4-801F0B50) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/WC/WClaser.h"
+#include "main/dll/dll1fbstate_struct.h"
+#include "main/dll/laserbeamstate_struct.h"
+#include "main/dll/dll200state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
@@ -48,15 +51,7 @@ typedef struct WMGalleonState
     s16 savedYaw;
 } WMGalleonState;
 
-typedef struct Dll1FBState
-{
-    u8 pad00[4];
-    s16 baseMove;
-    s16 triggerMode;
-    u8 pad08;
-    u8 hideModel;
-    u8 pad0A[2];
-} Dll1FBState;
+
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
@@ -153,36 +148,7 @@ typedef struct LaserBeamPlacement
 
 
 /* Per-object extra state for the WM laser beam emitter. */
-typedef struct LaserBeamState
-{
-    int texture;
-    f32 unk04; /* 0x04: cur/prev pair A (reset each update) */
-    f32 unk08;
 
-    f32 beamX; /* 0x0c: beam base position */
-    f32 beamX2; /* 0x10 */
-    f32 beamZ; /* 0x14 */
-    f32 beamZ2; /* 0x18 */
-    f32 sweepPhase; /* 0x1c */
-    u8 pad20[4];
-    u8 unk24;
-    u8 unk25;
-    u8 unk26;
-    s8 unk27;
-    s16 unk28;
-    s16 sweepYaw; /* 0x2a */
-    s16 fireTimer; /* 0x2c */
-    s16 unk2E;
-    s16 firePeriod; /* 0x30 */
-    s16 emitterSlot; /* 0x32: modgfx handle head */
-    u8 pad34[0xc];
-    f32 targetX; /* 0x40 */
-    u8 pad44[4];
-    f32 targetZ; /* 0x48 */
-    u8 unk4C;
-    u8 active; /* 0x4d */
-    u8 beamKind; /* 0x4e: 30/1/other texture pick */
-} LaserBeamState;
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
@@ -217,25 +183,7 @@ STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 /* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
 
 /* dll_200_getExtraSize == 0x28 (kid attachment actor). */
-typedef struct Dll200State
-{
-    f32 homeX;
-    f32 homeY;
-    f32 homeZ;
-    f32 animSpeed; /* 0x0c */
-    f32 hitReactVec; /* 0x10: head of the f32 pair ObjHitReact_Update fills */
-    f32 unk14;
-    s16 unk18;
-    u8 pad1A[2];
-    u32 unk1C;
-    s16 modeTimer; /* 0x20 */
-    u8 mode; /* 0x22: 1-5 wander, 12 turn, 13 play */
-    u8 prevMode; /* 0x23 */
-    u8 latch24; /* 0x24: GameBit 0xd0 latch */
-    u8 mode25; /* 0x25: trigger pick */
-    u8 defNoLow; /* 0x26 */
-    s8 counter27; /* 0x27: hug/talk counter */
-} Dll200State;
+
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 

@@ -1,4 +1,10 @@
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/dll/dll1ceplacement_struct.h"
+#include "main/dll/fnexplosionreleasev11unusedstate_struct.h"
+#include "main/dll/dimwooddoor2state_struct.h"
+#include "main/dll/fbwgpipe_struct.h"
+#include "main/dll/dll1cestate_struct.h"
+#include "main/dll/explosionpartfxsource_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -10,45 +16,19 @@
 
 
 
-typedef struct Dll1CEPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 posX;
-    f32 posYOffset;
-    f32 posZ;
-    u8 pad14[0x1A - 0x14];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 gameBitId;
-} Dll1CEPlacement;
 
 
 
 
-typedef struct FnExplosionReleaseV11UnusedState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    u8 padC[0x10 - 0xC];
-} FnExplosionReleaseV11UnusedState;
+
+
 
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
  */
-typedef struct DimWoodDoor2State
-{
-    u8 burnState; /* 3 intact; 0 burned (gamebit rung) */
-    u8 pad01[3];
-    f32 animSpeed;
-    f32 riseSpeed; /* added to obj Z, decays back to rest */
-} DimWoodDoor2State;
+
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -56,14 +36,7 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
  * Per-object extra state for the dll_1CE hatch door
  * (dll_1CE_getExtraSize == 0xC).
  */
-typedef struct Dll1CEState
-{
-    f32 openProgress; /* clamped lid coast */
-    f32 openVelocity;
-    u8 opened; /* 1 once triggered */
-    u8 igniteCountdown; /* 1 at init; gamebit + spawn at 0 */
-    u8 pad0A[2];
-} Dll1CEState;
+
 
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
@@ -75,27 +48,7 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
-typedef struct ExplosionPartfxSource
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 flags;
-    f32 rootMotionScale;
-    f32 localPosX;
-    f32 localPosY;
-    f32 localPosZ;
-    f32 worldPosX;
-    f32 worldPosY;
-    f32 worldPosZ;
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
-    void* parent;
-    u8 pad34[2];
-    u8 alpha;
-    u8 pad37;
-} ExplosionPartfxSource;
+
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -682,15 +635,7 @@ void dll_1CE_update(int* obj)
     }
 }
 
-typedef union
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} FbWGPipe;
+
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 

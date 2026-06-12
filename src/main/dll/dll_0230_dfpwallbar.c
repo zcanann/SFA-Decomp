@@ -2,6 +2,15 @@
 #pragma scheduling on
 #pragma peephole on
 #include "main/game_object.h"
+#include "main/dll/dll22cstate_struct.h"
+#include "main/dll/dfpobjcreatorstate_struct.h"
+#include "main/dll/dbholecontrol1state_struct.h"
+#include "main/dll/dfptorchstate_struct.h"
+#include "main/dll/dbeggstate_struct.h"
+#include "main/dll/drakorenergystate_struct.h"
+#include "main/dll/dbstealerwormcontrol_struct.h"
+#include "main/dll/blastflags4_types.h"
+#include "main/dll/dfp_types.h"
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
 #include "main/objlib.h"
@@ -176,150 +185,44 @@ extern int Obj_SetActiveModelIndex(int obj, int idx);
  * (extraSize 0x460 = GroundBaddieState 0x410 + a 0x50 private tail;
  * the control record itself is memset(0x50) in dbstealerworm_init).
  */
-typedef struct DbStealerwormControl
-{
-    int cfg; /* entry in the lbl_80329514 table (stride 8 ints) */
-    f32 unk04;
-    f32 unk08;
-    f32 countdown; /* countdown; init randomGetRange(10, 300) */
-    f32 unk10;
-    u8 flags14; /* bits 1/2 */
-    u8 flags15; /* bits 1/4 */
-    u8 unk16[2];
-    int linkedObj; /* ObjMsg target object */
-    s16 unk1C;
-    u8 unk1E[2];
-    int unk20; /* cursor into the cfg route list (12-byte entries) */
-    int msgStack; /* Stack_* handle; 3-word messages */
-    int unk28;
-    int unk2C;
-    int unk30; /* ObjGroup id */
-    u8 unk34;
-    u8 unk35[3];
-    f32 unk38;
-    int unk3C;
-    u8 unk40[4];
-    u8 flags44; /* bits 0x10/0x20 */
-    u8 unk45[3];
-    f32 randomTimer48; /* RandomTimer_UpdateRangeTrigger slots */
-    f32 randomTimer4C;
-} DbStealerwormControl;
+
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
 /* dfplevelcontrol extra block (extraSize 0xC). */
-typedef struct DfpLevelControlState
-{
-    s16 timer; /* counts down by timeDelta; set 300 on gamebit 1509 */
-    s16 mode; /* 1..2, from def+0x1A */
-    u8 unk04[2];
-    u8 sfxLatch; /* gamebit-1589 one-shot latch */
-    u8 flags07; /* DfpFlags7 bitfield overlay */
-    u8 unk08[4];
-} DfpLevelControlState;
+
 
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 /* dfpobjcreator extra block (extraSize 0x1C). */
-typedef struct DfpObjCreatorState
-{
-    int spawnedObj;
-    u8 unk04[8];
-    s16 gameBit; /* 0x0C: spawn gate */
-    s16 spawnPeriod; /* 0x0E */
-    s16 spawnTimer; /* 0x10 */
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-    u8 unk18[4];
-} DfpObjCreatorState;
+
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
 /* DFP_Torch extra block (extraSize 0x10). */
-typedef struct DfpTorchState
-{
-    int gameBit; /* lit-state gamebit, -1 = none (def+0x1E) */
-    s16 flickerTimer; /* 0x04 */
-    s16 litTimer; /* 0x06: 0x7D0 countdown while lit */
-    u8 visibleLatch; /* 0x08 */
-    u8 mode; /* 0x09: def+0x19 */
-    u8 lit; /* 0x0A */
-    u8 sfxPending; /* 0x0B */
-    u8 prevLit; /* 0x0C */
-    u8 colorIdx; /* 0x0D: def+0x1C */
-    u8 unk0E[2];
-} DfpTorchState;
+
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
 /* dll_22C (raising platform) extra block (extraSize 0x10). */
-typedef struct Dll22CState
-{
-    f32 raiseHeight; /* def+0x1A */
-    s16 mode; /* 0x04 */
-    s16 gameBit; /* 0x06: def+0x20 */
-    s16 gameBit2; /* 0x08: def+0x1E */
-    s16 pauseTimer; /* 0x0A: 100 between moves */
-    u8 unk0C; /* def+0x1C */
-    u8 sfxLatch; /* 0x0D */
-    u8 unk0E[2];
-} Dll22CState;
+
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
 /* dbegg extra block: rom-curve walker + egg mode machine. */
-typedef struct DbEggState
-{
-    f32 waterOffset; /* float-height offset above water */
-    u8 curveWalker[0x10]; /* 0x004: rom-curve walker record (state+4 to gRomCurveInterface) */
-    int unk14;
-    u8 unk18[0x6C - 0x18];
-    f32 curvePosX; /* 0x06C: walker sample position */
-    f32 curvePosY;
-    f32 curvePosZ;
-    u8 unk78[0x118 - 0x78];
-    u8 mode; /* 0x118 */
-    u8 flags119; /* bits 1/2/4/8/0x10 */
-    u8 unk11A[2];
-    s16 msg11C; /* 0x11C: 3-word message payload sent via ObjMsg */
-    s16 msg11E;
-    f32 msg120;
-} DbEggState;
+
 
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
 /* dfpseqpoint extra block (extraSize 0x10). */
-typedef struct DfpSeqPointState
-{
-    f32 triggerRadius; /* def+0x1A */
-    s16 gameBitGate; /* 0x04: def+0x1E */
-    s16 gameBitDone; /* 0x06: def+0x20 */
-    s16 triggerId; /* 0x08: def+0x1C */
-    u8 unk0A[3];
-    u8 doneLatch; /* 0x0D */
-    u8 triggerMode; /* 0x0E: def+0x19 */
-    u8 flags0F; /* DfpFlags7-style bit 0x80 */
-} DfpSeqPointState;
 
-typedef struct DfpFlags7
-{
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 rest : 5;
-} DfpFlags7;
+
+
 
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 /* drakorenergy extra block (extraSize 0xC). */
-typedef struct DrakorEnergyState
-{
-    f32 startY; /* spawn height; bounce threshold in mode 1 */
-    int phase; /* += framesThisStep * 0x500; drives glow color/bob */
-    u8 mode; /* 0x08: 0 idle, 1 falling, 2 bobbing, 3 chasing, 4 collected, 5 reset */
-    u8 unk09[3];
-} DrakorEnergyState;
+
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
@@ -366,22 +269,12 @@ typedef struct ChukaPlacement
 
 
 /* GCRobotBlast extra block (extraSize 0x8). */
-typedef struct GCRobotBlastState
-{
-    int mode; /* def+0x19 */
-    u8 flags04; /* bit 0x80 = blast fired (BlastFlags4 overlay) */
-    u8 unk05[3];
-} GCRobotBlastState;
+
 
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 /* dbholecontrol1 extra block (extraSize 0xC). */
-typedef struct DbHoleControl1State
-{
-    int gameBitA; /* def+0x1A */
-    int gameBitB; /* def+0x1C */
-    u8 unk08[4];
-} DbHoleControl1State;
+
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 

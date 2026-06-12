@@ -1,4 +1,5 @@
 #include "main/effect_interfaces.h"
+#include "main/dll/staffflags_struct.h"
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
@@ -265,14 +266,7 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
 STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
 STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
-typedef struct
-{
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 b5 : 1;
-    u8 b4 : 1;
-    u8 rest : 4;
-} StaffFlags;
+
 
 /*
  * --INFO--

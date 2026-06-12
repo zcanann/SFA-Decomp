@@ -1,5 +1,6 @@
 /* === moved from main/dll/CR/CRsnowbike.c [801DBFA0-801DC310) (TU re-split, docs/boundary_audit.md) === */
 #include "main/obj_placement.h"
+#include "main/dll/scmusictreesetup_struct.h"
 #include "main/game_object.h"
 
 
@@ -177,17 +178,7 @@
 
 
 
-typedef struct SCMusicTreeSetup
-{
-    ObjPlacement base;
-    u8 rotXByte;
-    u8 rotZByte;
-    u8 yawByte;
-    u8 hearRadiusHalf;
-    f32 scale;
-    u8 pad20[0x23 - 0x20];
-    u8 flags;
-} SCMusicTreeSetup;
+
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);

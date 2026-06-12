@@ -1,5 +1,6 @@
 /* === moved from main/dll/DIM/dimsnowball_init.c [801B13E8-801B13F0) (TU re-split, docs/boundary_audit.md) === */
 #include "ghidra_import.h"
+#include "main/dll/dimicewallstate_struct.h"
 
 
 
@@ -34,13 +35,7 @@ typedef struct DimicewallPlacement
 
 
 
-typedef struct DimicewallState
-{
-    u8 pad0[0x1 - 0x0];
-    u8 unk1;
-    s16 unk2;
-    u8 pad4[0x8 - 0x4];
-} DimicewallState;
+
 
 
 

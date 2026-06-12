@@ -1,4 +1,5 @@
 #include "main/texture.h"
+#include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
@@ -1269,15 +1270,7 @@ extern void OSSetErrorHandler(int kind, void* handler);
 #pragma scheduling reset
 
 
-typedef union
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} PPCWGPipe;
+
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 

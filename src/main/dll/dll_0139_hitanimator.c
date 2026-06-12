@@ -2,6 +2,9 @@
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/mmp_moonrock.h"
+#include "main/dll/waveanimatorstate_struct.h"
+#include "main/dll/alphaanimatorstate_struct.h"
+#include "main/dll/visanimatorstate_struct.h"
 
 
 
@@ -48,42 +51,12 @@ extern void* mapGetBlock(int idx);
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
  * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
  * globals). */
-typedef struct WaveAnimatorState
-{
-    int originX; /* 0x00 */
-    int originY; /* 0x04 */
-    int spanX; /* 0x08 */
-    int spanY; /* 0x0c */
-    f32 ampX; /* 0x10 */
-    f32 ampY; /* 0x14 */
-    int unk18; /* 0x18 */
-    int period; /* 0x1c */
-    int gridN; /* 0x20 */
-    f32 minHeight; /* 0x24 */
-    f32 maxHeight; /* 0x28 */
-    f32 scaleA; /* 0x2c */
-    f32 scaleB; /* 0x30 */
-    u8 flags; /* 0x34: 1 = scale pending, 2 = func0B latch */
-    u8 pad35[7];
-} WaveAnimatorState;
+
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
 /* alphaanimator_getExtraSize == 0x1c. */
-typedef struct AlphaAnimatorState
-{
-    int vertCount; /* 0x00 */
-    f32 fadeA; /* 0x04 */
-    f32 fadeB; /* 0x08 */
-    f32 fadeMax; /* 0x0c */
-    void* buf; /* 0x10: mode-3 per-vertex alpha buffer */
-    s16 alphaLevel; /* 0x14 */
-    u8 active; /* 0x16 */
-    u8 gateVal; /* 0x17 */
-    u8 doneCount; /* 0x18 */
-    u8 prevGate; /* 0x19 */
-    u8 pad1A[2];
-} AlphaAnimatorState;
+
 
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
@@ -91,14 +64,7 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 /* visanimator_getExtraSize == 0x5. */
-typedef struct VisAnimatorState
-{
-    u8 flags; /* 0x00: 1 = refresh pending */
-    s8 visBit; /* 0x01 */
-    u8 gateNow; /* 0x02 */
-    u8 gatePrev; /* 0x03 */
-    u8 gateMask; /* 0x04 */
-} VisAnimatorState;
+
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 

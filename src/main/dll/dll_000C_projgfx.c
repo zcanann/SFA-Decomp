@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -1817,15 +1818,7 @@ extern f32 lbl_803DFCE0;
 
 
 
-typedef struct FxNode9
-{
-    s16 x, y, z;
-    s16 pad6;
-    f32 f8;
-    f32 fc;
-    f32 f10;
-    f32 f14;
-} FxNode9;
+
 
 extern FxNode9 lbl_8039C398;
 

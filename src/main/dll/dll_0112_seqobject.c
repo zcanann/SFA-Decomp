@@ -1,4 +1,8 @@
 #include "main/dll/alphaanim.h"
+#include "main/dll/seqobjectstate_struct.h"
+#include "main/dll/seqobj2state_struct.h"
+#include "main/dll/immultiseqstate_struct.h"
+#include "main/dll/doorlockstate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
@@ -14,28 +18,13 @@ extern undefined4 FUN_800723a0();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-typedef struct DoorLockState
-{
-    u8 unlocked;
-} DoorLockState;
 
-typedef struct SeqObjectState
-{
-    u8 flags;
-    s8 triggerBitState;
-    u8 pad02;
-} SeqObjectState;
 
-typedef struct SeqObj2State
-{
-    u8 flags;
-} SeqObj2State;
 
-typedef struct IMMultiSeqState
-{
-    u8 step;
-    u8 flags;
-} IMMultiSeqState;
+
+
+
+
 
 STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);

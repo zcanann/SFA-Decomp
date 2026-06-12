@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/dbshsymbol_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
@@ -52,30 +53,13 @@ extern f32 lbl_803E5100;
 extern f32 lbl_803E5104;
 extern f32 lbl_803E5108;
 
-typedef struct DbshSymbolFlags
-{
-    u8 finished : 1;
-    u8 active : 1;
-} DbshSymbolFlags;
+
 
 /*
  * Per-object extra state for the DBSH spin-symbol minigame
  * (dbsh_symbol_getExtraSize == 0x24).
  */
-typedef struct DbshSymbolState
-{
-    void* partnerObj; /* nearest objType-0x20F symbol, spun in mirror */
-    f32 spinSpeed;
-    f32 sfxTimerB; /* object creak sfx 0x4A3 */
-    f32 sfxTimerA; /* player grunt sfx 0x13A */
-    int spinProgress; /* 0..0x7EF4 = fully turned */
-    int prevSpinProgress;
-    int triggerHandle;
-    u8 pad1C[2];
-    s16 phase; /* update: 0 hide, 1 scuff, 2 arm trigger, 3 resolve */
-    DbshSymbolFlags flags;
-    u8 pad21[3];
-} DbshSymbolState;
+
 
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);

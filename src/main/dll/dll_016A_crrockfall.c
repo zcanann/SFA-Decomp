@@ -1,4 +1,9 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/blob10_struct.h"
+#include "main/dll/crrockfallplacement_struct.h"
+#include "main/dll/dll16cstate_struct.h"
+#include "main/dll/magiclightstate_struct.h"
+#include "main/dll/crrockfall_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -6,14 +11,7 @@
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/resource.h"
 
-typedef struct CrrockfallPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    u8 unk1A;
-    u8 unk1B;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} CrrockfallPlacement;
+
 
 
 /*
@@ -39,19 +37,7 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
  * Per-object extra state for the magiclight proximity light
  * (magiclight_getExtraSize == 0x14 for non-0x172 types).
  */
-typedef struct MagicLightState
-{
-    f32 triggerRadius; /* preset by subtype */
-    s16 lifetime; /* rand(200,600) at init */
-    s16 enterAction; /* L-action when the player enters the radius */
-    s16 leaveAction; /* L-action when the player leaves radius + hysteresis */
-    u8 pad0A;
-    s8 inRange; /* hysteresis latch */
-    s8 subtype; /* params+0x1A */
-    u8 pad0D[3];
-    s16 unk10; /* 301 at init */
-    u8 pad12[2];
-} MagicLightState;
+
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
@@ -59,21 +45,7 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
  */
-typedef struct Dll16CState
-{
-    void* linkedObj; /* group-10 object matched by type (364/367) */
-    f32 unk04; /* set on anim event 2 */
-    f32 snapX; /* path point snapshot taken on anim event 2 */
-    f32 snapY;
-    f32 snapZ;
-    f32 pathPointX; /* path point 1 world position, refreshed in render */
-    f32 pathPointY;
-    f32 pathPointZ;
-    u8 opacity; /* distance fade; 0xFF when unlinked */
-    s8 subObjIndex; /* lbl_802C2308 id selector; -1 = clear (anim event 3) */
-    s8 subObjIndexApplied;
-    u8 pad23;
-} Dll16CState;
+
 
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
@@ -81,25 +53,9 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-typedef struct CrRockfallCfgEntry
-{
-    f32 unk00;
-    s32 landSfx; /* 0 = none */
-    f32 restOffsetY; /* scaled by obj scale, added to floorY at rest */
-} CrRockfallCfgEntry;
 
-typedef struct CrRockfallState
-{
-    CrRockfallCfgEntry* cfg; /* lbl_803236B8 entry 0, or entry 1 for type 0x600 */
-    f32 floorY; /* probed landing height */
-    f32 startY; /* obj Y at init; fade fraction reference */
-    u8 mode; /* 0 armed, 1 falling, 2 resting, 3 shattered */
-    u8 fallStarted;
-    u8 floorFound;
-    u8 pad0F;
-    s16 fallDelay; /* params+0x1E; counts down while the player is in range */
-    u8 pad12[2];
-} CrRockfallState;
+
+
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -563,10 +519,7 @@ extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern f32 lbl_803E4748;
 extern u8 lbl_802C2308[];
 
-typedef struct
-{
-    s16 v[5];
-} Blob10;
+
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */

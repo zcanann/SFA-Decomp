@@ -2,6 +2,7 @@
 #pragma scheduling off
 #pragma peephole off
 #include "main/game_object.h"
+#include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
 #include "main/dll/path_control_interface.h"
 #include "main/effect_interfaces.h"
@@ -968,15 +969,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void staff_hitDetectGeometry(int* obj);
 
-typedef union
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} GenPropsWGPipe;
+
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 
