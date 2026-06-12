@@ -1083,7 +1083,7 @@ config.libs = [
             Object(NonMatching, "main/dll/n_pausemenu.c"),
             Object(NonMatching, "main/dll/dll_3e.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_40.c"),
-            Object(NonMatching, "main/dll/dll_44.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/attractmovie.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/picmenu.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/frontend_control.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_43.c", cflags=cflags_dll_noopt),

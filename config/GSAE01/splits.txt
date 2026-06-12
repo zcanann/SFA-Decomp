@@ -815,7 +815,7 @@ main/dll/dll_3e.c:
 main/dll/dll_40.c:
 	.text       start:0x80118C88 end:0x80118C88
 
-main/dll/dll_44.c:
+main/dll/attractmovie.c:
 	.text       start:0x80118C88 end:0x80119000
 
 main/dll/picmenu.c:
