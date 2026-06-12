@@ -982,6 +982,7 @@ void ktrex_init(int obj, char* arg)
 void ktrex_updateAttackEffects(int obj)
 {
     int i;
+    ObjHitsPriorityState* hitState;
     f32 mag;
     mag = lbl_803E6818 - ((KTRexRuntime*)gKTRexRuntime)->unk2C0 / lbl_803E6824;
     if (mag < lbl_803E67B8)
@@ -1176,7 +1177,8 @@ void ktrex_updateAttackEffects(int obj)
                                          0x200001, -1, (char*)gKTRexState + 0x16c);
     }
     ((KTRexArenaState*)gKTRexState)->phaseFlags &= 0x1800LL;
-    if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject())
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    if (hitState->lastHitObject == (int)Obj_GetPlayerObject())
     {
         Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXbaddie_haga_talk1);
     }
@@ -1185,7 +1187,7 @@ void ktrex_updateAttackEffects(int obj)
 void ktrex_updateContactEffects(int obj, void* runtime)
 {
     int hitA;
-    int hitC;
+    uint hitC;
     int hitType;
     int msg[4];
     int hit;
@@ -1214,7 +1216,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
             ((KTRexRuntime*)gKTRexRuntime)->unk3EC = -((KTRexRuntime*)gKTRexRuntime)->unk3EC;
         }
     }
-    hit = ObjHits_GetPriorityHit(obj, &hitA, (int)&hitType, (int)&hitC);
+    hit = ObjHits_GetPriorityHit(obj, &hitA, &hitType, &hitC);
     if (hit == 0)
     {
         return;
