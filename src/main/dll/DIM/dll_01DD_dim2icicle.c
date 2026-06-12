@@ -129,6 +129,7 @@ void dim2icicle_update(int obj)
 {
     extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* out, int a, int b);
     extern void Sfx_PlayFromObject(int obj, int sfxId);
+    ObjHitsPriorityState* hitState;
     int sub;
     int state;
     state = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -142,7 +143,8 @@ void dim2icicle_update(int obj)
         }
         ((Dim2IcicleState*)sub)->unk4 = (s16)randomGetRange(0x320, 0x4b0);
         ((Dim2IcicleState*)sub)->mode = 3;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
         Sfx_PlayFromObject(obj, SFXmv_cflap2_c);
         break;
     case 3:
