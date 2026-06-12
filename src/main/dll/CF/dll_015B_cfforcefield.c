@@ -1,38 +1,73 @@
-/* DLL 0x015B — cfforcefield (CloudRunner Fortress force field barrier). TU: 0x801A39B4–0x801A3E9C. */
-#include "main/dll/DR/dll_015A_explodable.h"
-#include "main/dll/drexplodable_types.h"
-#include "main/obj_placement.h"
-#include "main/audio/sfx_ids.h"
-#include "main/camera_interface.h"
-#include "main/mapEvent.h"
-#include "main/dll/IM/IMicicle.h"
-#include "main/effect_interfaces.h"
+/*
+ * cfforcefield (DLL 0x15B) - force-field barrier at CF (CloudRunner
+ * Fortress). While the placement's active game bit is set, sprays a
+ * ring of particle bursts around the barrier each tick (three spawns
+ * per ring step, ring radius scaled by the remaining collapse time).
+ * When the collapse game bit is granted, a 60-frame timer spins the
+ * field down (rotY ramp + shrinking ring) and then disables it; the
+ * field re-arms if the collapse bit is cleared again.
+ */
 #include "main/game_object.h"
-#include "main/objseq.h"
+#include "main/obj_placement.h"
+#include "main/effect_interfaces.h"
+
+typedef struct CfForceFieldFlags
+{
+    u8 disabled : 1; /* 0x80: field collapsed; skip update work */
+    u8 rest : 7;
+} CfForceFieldFlags;
+
+typedef struct CfForceFieldState
+{
+    CfForceFieldFlags flags; /* 0x00 */
+    u8 pad01[3];
+    f32 timer;               /* 0x04: collapse countdown, seconds */
+} CfForceFieldState;
+
+typedef struct CfForceFieldMapData
+{
+    ObjPlacement base;
+    s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
+    s8 style;          /* 0x19: emitter style index (mod 3) */
+    s16 unk1A;
+    u8 pad1C[2];
+    s16 activeEvent;   /* 0x1E: game bit keeping the field running */
+    s16 collapseEvent; /* 0x20: game bit triggering the collapse */
+    u8 pad22[0x28 - 0x22];
+} CfForceFieldMapData;
+
+/* per-style emitter tuning record in lbl_80322ED8 (3 entries) */
+typedef struct CfForceFieldEmitter
+{
+    int effectId;
+    int pad04;
+    int angleStep;
+    int pad0c;
+    int pad10;
+    f32 waveScale;
+} CfForceFieldEmitter;
+
+STATIC_ASSERT(offsetof(CfForceFieldState, timer) == 0x04);
+STATIC_ASSERT(sizeof(CfForceFieldState) == 0x08);
+STATIC_ASSERT(offsetof(CfForceFieldMapData, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(CfForceFieldMapData, activeEvent) == 0x1E);
+STATIC_ASSERT(offsetof(CfForceFieldMapData, collapseEvent) == 0x20);
+STATIC_ASSERT(sizeof(CfForceFieldMapData) == 0x28);
+STATIC_ASSERT(offsetof(CfForceFieldEmitter, angleStep) == 0x08);
+STATIC_ASSERT(offsetof(CfForceFieldEmitter, waveScale) == 0x14);
+STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 
 extern u32 randomGetRange(int min, int max);
-
-#pragma scheduling on
-#pragma peephole on
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-extern void Obj_FreeObject(int obj);
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80044404();
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32* mtx, int flags);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * src, f32 * dst);
+extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 extern f32 mathCosf(f32 angle);
 extern f32 mathSinf(f32 angle);
 extern int fn_80080150(void* timer);
 extern void s16toFloat(void* p, int duration);
 extern int timerCountDown(void* timer);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void storeZeroToFloatParam(void* p);
 extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DBE90;
@@ -43,12 +78,10 @@ extern f32 lbl_803E4390;
 extern f32 lbl_803E4394;
 extern f32 lbl_803E4398;
 extern f32 lbl_803E439C;
-extern f32 lbl_803E43A0;
-extern f32 lbl_803E43A4;
-extern f32 lbl_803E43A8;
-extern f32 lbl_803E43AC;
-extern void storeZeroToFloatParam(void* p);
-extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
+
+int cfforcefield_getExtraSize(void) { return sizeof(CfForceFieldState); }
+
+int cfforcefield_getObjectTypeId(void) { return 0x0; }
 
 void cfforcefield_free(void)
 {
@@ -62,45 +95,14 @@ void cfforcefield_hitDetect(void)
 {
 }
 
-int cfforcefield_getExtraSize(void) { return 0x8; }
-int cfforcefield_getObjectTypeId(void) { return 0x0; }
-
-/* segment pragma-stack balance (re-split): */
-
-typedef struct CfforcefieldPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} CfforcefieldPlacement;
-
-#pragma scheduling off
-#pragma peephole off
 void cfforcefield_update(u8* obj)
 {
-    typedef struct ForceFieldEmitter
-    {
-        int effectId;
-        int pad04;
-        int angleStep;
-        int pad0c;
-        int pad10;
-        f32 waveScale;
-    } ForceFieldEmitter;
-    typedef struct ForceFieldFlags
-    {
-        u8 disabled : 1;
-        u8 rest : 7;
-    } ForceFieldFlags;
     f32* wavePtr;
     int* stepPtr;
-    ForceFieldEmitter* emitter;
+    CfForceFieldEmitter* emitter;
     int angle;
-    u8* data;
-    u8* state;
+    CfForceFieldMapData* data;
+    CfForceFieldState* state;
     int style;
     f32 val;
     int isZero;
@@ -110,19 +112,19 @@ void cfforcefield_update(u8* obj)
     f32 world[6];
     f32 local[3];
 
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
+    data = (CfForceFieldMapData*)((GameObject*)obj)->anim.placement;
     state = ((GameObject*)obj)->extra;
     z = lbl_803E4390;
     ((GameObject*)obj)->anim.velocityZ = z;
     ((GameObject*)obj)->anim.velocityY = z;
     ((GameObject*)obj)->anim.velocityX = z;
 
-    if (GameBit_Get(((CfforcefieldPlacement*)data)->unk1E) != 0)
+    if (GameBit_Get(data->activeEvent) != 0)
     {
-        if (!((ForceFieldFlags*)state)->disabled)
+        if (!state->flags.disabled)
         {
-            style = (s8)data[0x19] % 3;
-            val = *(f32*)(state + 4);
+            style = data->style % 3;
+            val = state->timer;
             isZero = (val != lbl_803E4390);
             isZero = !isZero;
             if (isZero)
@@ -136,11 +138,10 @@ void cfforcefield_update(u8* obj)
 
             {
                 Obj_BuildWorldTransformMatrix(obj, (f32*)mtx, 0);
-                ((GameObject*)obj)->anim.rotZ = (s16)(
-                    lbl_803E439C * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotZ);
+                ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803E439C * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotZ);
 
                 angle = -0x7fff;
-                emitter = (ForceFieldEmitter*)((u8*)lbl_80322ED8 + style * 0x18);
+                emitter = (CfForceFieldEmitter*)((u8*)lbl_80322ED8 + style * 0x18);
                 wavePtr = &emitter->waveScale;
                 stepPtr = &emitter->angleStep;
                 for (; angle < 0x7fff; angle += *stepPtr)
@@ -164,21 +165,20 @@ void cfforcefield_update(u8* obj)
                 }
             }
 
-            if (fn_80080150(state + 4) != 0)
+            if (fn_80080150(&state->timer) != 0)
             {
-                ((GameObject*)obj)->anim.rotY = (s16)(
-                    (f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotY);
-                if (timerCountDown(state + 4) != 0)
+                ((GameObject*)obj)->anim.rotY = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotY);
+                if (timerCountDown(&state->timer) != 0)
                 {
-                    ((ForceFieldFlags*)state)->disabled = 1;
+                    state->flags.disabled = 1;
                     ((GameObject*)obj)->anim.rotY = 0;
                 }
             }
-            else if (GameBit_Get(((CfforcefieldPlacement*)data)->unk20) != 0)
+            else if (GameBit_Get(data->collapseEvent) != 0)
             {
-                s16toFloat(state + 4, 0x3c);
+                s16toFloat(&state->timer, 0x3c);
                 Sfx_PlayFromObject((int)obj, 0x366);
-                if (*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) != 0x47f5e)
+                if (((CfForceFieldMapData*)((GameObject*)obj)->anim.placement)->base.mapId != 0x47f5e)
                 {
                     Sfx_PlayFromObject((int)obj, 0x409);
                 }
@@ -186,60 +186,21 @@ void cfforcefield_update(u8* obj)
         }
         else
         {
-            ((ForceFieldFlags*)state)->disabled = (u8)GameBit_Get(((CfforcefieldPlacement*)data)->unk20);
+            state->flags.disabled = (u8)GameBit_Get(data->collapseEvent);
         }
     }
 }
 
-void FUN_801a4520(int param_1)
+void cfforcefield_init(GameObject* obj, CfForceFieldMapData* data)
 {
-    int iVar1;
-
-    if (((GameObject*)param_1)->unkF4 == 0)
+    register CfForceFieldState* state = obj->extra;
     {
-        iVar1 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if ((*(short*)(iVar1 + 0x1c) != 0) && (**(byte**)&((GameObject*)param_1)->extra >> 5 != 0))
-        {
-            (*gObjectTriggerInterface)->preempt(param_1, *(s16*)(iVar1 + 0x1c));
-        }
-        iVar1 = (int)*(char*)(iVar1 + 0x1e);
-        if (iVar1 != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence(iVar1, (void*)param_1, -1);
-        }
-        ((GameObject*)param_1)->unkF4 = 1;
+        s8 v = data->rotXByte;
+        s16 t = v << 8;
+        obj->anim.rotX = t;
     }
-    return;
-}
-
-void FUN_801a45cc(short* param_1, int param_2)
-{
-}
-
-void cflevelcontrol_free(int param_1);
-
-undefined4
-FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             undefined4 param_9, undefined4 param_10, int param_11)
-{
-    undefined4 uVar1;
-    int iVar2;
-    undefined8 uVar3;
-
-    for (iVar2 = 0; iVar2 < (int)(uint) * (byte*)(param_11 + 0x8b); iVar2 = iVar2 + 1)
-    {
-        if (*(char*)(param_11 + iVar2 + 0x81) == '\x01')
-        {
-            FUN_80017698(0xdcb, 1);
-            uVar3 = FUN_80017698(0x4a3, 0);
-            FUN_80041ff8(uVar3, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x2b);
-            FUN_80042b9c(0, 0, 1);
-            uVar1 = FUN_80044404(0x2b);
-            FUN_80042bec(uVar1, 0);
-        }
-    }
-    return 0;
+    state->flags.disabled = (u8)GameBit_Get(data->collapseEvent);
+    storeZeroToFloatParam(&state->timer);
 }
 
 void cfforcefield_release(void)
@@ -249,51 +210,3 @@ void cfforcefield_release(void)
 void cfforcefield_initialise(void)
 {
 }
-
-void slidingdoor_free(void);
-
-/* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
- * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
- * (state[0] bits 5..7) through the door's open/close machine. Returns 1
- * while in the static states (0/1) and 0 while in transition (2/3). */
-
-/* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
- * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
- * bits 5..7 are set, preempt the event. Then if (s8)data->_1e is not -1,
- * run that sequence with obj, -1.
- * Finally latch obj->_f4 = 1. */
-
-/* exploded_init: store the map object tag, scale the model using the map
- * byte, then enable physics if any initial velocity/acceleration is present. */
-
-/* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
- * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
- * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-
-/* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
- * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
- * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
- * obj->_b8->_0. */
-
-void cfforcefield_init(s16* obj, void* data)
-{
-    typedef struct ForceFieldInitFlags
-    {
-        u8 disabled : 1;
-        u8 rest : 7;
-    } ForceFieldInitFlags;
-    register u8* flagPtr = (u8*)((int**)obj)[0xb8 / 4];
-    {
-        s8 v = *((s8*)data + 0x18);
-        s16 t = v << 8;
-        *obj = t;
-    }
-    ((ForceFieldInitFlags*)flagPtr)->disabled = (u8)GameBit_Get(*(s16*)((char*)data + 0x20));
-    storeZeroToFloatParam(flagPtr + 4);
-}
-
-/* Exploded debris setup: seed object angles, linear velocity, angular velocity,
- * ground clearance, and the randomized lifetime countdown. */
-
-/* Exploded debris physics step: integrate local velocity and spin, bounce from
- * the stored floor height, and return nonzero once the shard comes to rest. */
