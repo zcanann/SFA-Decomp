@@ -1,0 +1,358 @@
+#include "main/effect_interfaces.h"
+#include "main/dll/screens.h"
+
+
+extern u32 randomGetRange(int min, int max);
+
+
+/*
+ * --INFO--
+ *
+ * Function: dll_9A_func03
+ * EN v1.0 Address: 0x800FC5B8
+ * EN v1.0 Size: 2428b
+ * EN v1.1 Address: 0x800FC854
+ * EN v1.1 Size: 2436b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+/* dll_9A_func03 rewritten below (after shared screen-fx typedefs). */
+
+/*
+ * --INFO--
+ *
+ * Function: dll_9B_func03
+ * EN v1.0 Address: 0x800FCF3C
+ * EN v1.0 Size: 880b
+ * EN v1.1 Address: 0x800FD1D8
+ * EN v1.1 Size: 888b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+typedef struct
+{
+    u32 flags;
+    f32 x;
+    f32 y;
+    f32 z;
+    u8* tex;
+    u16 id;
+    u8 state;
+} ScreenFxPart; /* 0x18 */
+
+typedef struct
+{
+    ScreenFxPart* parts; /* 0x00 */
+    int target; /* 0x04 */
+    u8 pad0[0x18]; /* 0x08 */
+    f32 ax, ay, az; /* 0x20 */
+    f32 bx, by, bz; /* 0x2c */
+    f32 r; /* 0x38 */
+    u32 c7; /* 0x3c */
+    u32 c2; /* 0x40 */
+    s16 b; /* 0x44 */
+    s16 anim[7]; /* 0x46 */
+    u32 flags; /* 0x54 */
+    u8 v0, v1, v2, v3; /* 0x58 */
+    u8 pad1; /* 0x5c */
+    s8 count; /* 0x5d */
+    u8 pad2[2]; /* 0x5e */
+} ScreenFxHdr; /* 0x60 */
+
+
+extern u8 lbl_80317BD8[];
+extern ModgfxInterface** gModgfxInterface;
+extern f32 lbl_803E13A0;
+extern f32 lbl_803E13A4;
+extern f32 lbl_803E13A8;
+extern f32 lbl_803E13AC;
+extern f32 lbl_803E13B0;
+extern f32 lbl_803E13B4;
+extern f32 lbl_803E13B8;
+extern f32 lbl_803E13BC;
+extern f32 lbl_803E13C0;
+extern f32 lbl_803E13C4;
+
+typedef struct
+{
+    s16 v[7];
+} ScreenSeq;
+
+extern u8 lbl_802C2180[];
+extern u8 lbl_80317B98[];
+extern u8 lbl_803DB958;
+extern u8 lbl_803DB960;
+extern u8 lbl_803DB964;
+extern f32 lbl_803E1370;
+extern f32 lbl_803E1374;
+extern f32 lbl_803E1378;
+extern f32 lbl_803E137C;
+extern f32 lbl_803E1380;
+extern f32 lbl_803E1384;
+extern f32 lbl_803E1388;
+extern f32 lbl_803E138C;
+extern f32 lbl_803E1390;
+extern f32 lbl_803E1394;
+
+void dll_9A_func03(int a, int b, int p, uint flags)
+{
+    ScreenSeq seq;
+    ScreenFxPart parts[32];
+    ScreenFxHdr hdr;
+    ScreenFxPart* cur;
+    ScreenFxPart* pp;
+    f32 rz;
+    f32 ry;
+
+    seq = *(ScreenSeq*)lbl_802C2180;
+    seq.v[1] += randomGetRange(0, 0x14);
+    seq.v[2] += randomGetRange(-0x14, 0x14);
+    seq.v[3] += randomGetRange(-0x14, 0x14);
+    seq.v[4] += randomGetRange(-0x14, 0x14);
+    pp = parts;
+    cur = pp;
+    if (b == 0)
+    {
+        cur->state = 0;
+        cur->id = 3;
+        cur->tex = &lbl_803DB964;
+        cur->flags = 8;
+        cur->x = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
+        cur->y = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
+        cur->z = (f32)(s32)(randomGetRange(0, 0x1e) + 0xe1);
+        cur++;
+    }
+    else if (b == 1)
+    {
+        cur->state = 0;
+        cur->id = 3;
+        cur->tex = &lbl_803DB964;
+        cur->flags = 8;
+        cur->x = (f32)(s32)(randomGetRange(0, 0x1e) + 0xe1);
+        cur->y = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
+        cur->z = (f32)(s32)(randomGetRange(0, 0x41) + 0x78);
+        cur++;
+    }
+    rz = (f32)(s32)
+    randomGetRange(-0x36b0, 0x36b0);
+    ry = (f32)(s32)
+    randomGetRange(-0x2ee0, 0x2ee0);
+    cur[0].state = 0;
+    cur[0].id = 0;
+    cur[0].tex = 0;
+    cur[0].flags = 0x80;
+    cur[0].x = lbl_803E1370;
+    cur[0].y = ry;
+    cur[0].z = rz;
+    cur[1].state = 0;
+    cur[1].id = 3;
+    cur[1].tex = &lbl_803DB964;
+    cur[1].flags = 4;
+    cur[1].x = lbl_803E1370;
+    cur[1].y = lbl_803E1370;
+    cur[1].z = lbl_803E1370;
+    cur[2].state = 0;
+    cur[2].id = 3;
+    cur[2].tex = &lbl_803DB964;
+    cur[2].flags = 2;
+    cur[2].x = lbl_803E1374;
+    cur[2].y = lbl_803E137C * (f32)(s32)
+    randomGetRange(0, 0x32) + lbl_803E1378;
+    cur[2].z = lbl_803E137C * (f32)(s32)
+    randomGetRange(4, 6) + lbl_803E1380;
+    cur[3].state = 1;
+    cur[3].id = 1;
+    cur[3].tex = &lbl_803DB960;
+    cur[3].flags = 4;
+    cur[3].x = lbl_803E1384;
+    cur[3].y = lbl_803E1370;
+    cur[3].z = lbl_803E1370;
+    cur[4].state = 1;
+    cur[4].id = 0;
+    cur[4].tex = &lbl_803DB960;
+    cur[4].flags = 0x4000;
+    cur[4].x = lbl_803E1388;
+    cur[4].y = lbl_803E1370;
+    cur[4].z = lbl_803E1370;
+    cur[5].state = 1;
+    cur[5].id = 3;
+    cur[5].tex = &lbl_803DB964;
+    cur[5].flags = 2;
+    cur[5].x = lbl_803E138C;
+    cur[5].y = lbl_803E1390;
+    cur[5].z = lbl_803E1390;
+    cur[6].state = 1;
+    cur[6].id = 0;
+    cur[6].tex = 0;
+    cur[6].flags = 0x80;
+    cur[6].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[6].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[6].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[7].state = 2;
+    cur[7].id = 0;
+    cur[7].tex = 0;
+    cur[7].flags = 0x80;
+    cur[7].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[7].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[7].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[8].state = 2;
+    cur[8].id = 0;
+    cur[8].tex = &lbl_803DB960;
+    cur[8].flags = 0x4000;
+    cur[8].x = lbl_803E1388;
+    cur[8].y = lbl_803E1370;
+    cur[8].z = lbl_803E1370;
+    cur[9].state = 3;
+    cur[9].id = 0;
+    cur[9].tex = 0;
+    cur[9].flags = 0x80;
+    cur[9].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[9].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[9].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[10].state = 3;
+    cur[10].id = 0;
+    cur[10].tex = &lbl_803DB960;
+    cur[10].flags = 0x4000;
+    cur[10].x = lbl_803E1388;
+    cur[10].y = lbl_803E1370;
+    cur[10].z = lbl_803E1370;
+    cur[11].state = 4;
+    cur[11].id = 0;
+    cur[11].tex = 0;
+    cur[11].flags = 0x80;
+    cur[11].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[11].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[11].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[12].state = 4;
+    cur[12].id = 0;
+    cur[12].tex = &lbl_803DB960;
+    cur[12].flags = 0x4000;
+    cur[12].x = lbl_803E1388;
+    cur[12].y = lbl_803E1370;
+    cur[12].z = lbl_803E1370;
+    cur[13].state = 4;
+    cur[13].id = 1;
+    cur[13].tex = &lbl_803DB960;
+    cur[13].flags = 4;
+    cur[13].x = lbl_803E1370;
+    cur[13].y = lbl_803E1370;
+    cur[13].z = lbl_803E1370;
+
+    hdr.v0 = 0;
+    hdr.target = a;
+    hdr.b = (s16)b;
+    hdr.bx = lbl_803E1370;
+    if (b == 0)
+    {
+        hdr.by = lbl_803E1370;
+    }
+    else if (b == 1)
+    {
+        hdr.by = lbl_803E1394;
+    }
+    hdr.bz = lbl_803E1370;
+    hdr.ax = lbl_803E1370;
+    hdr.ay = lbl_803E1370;
+    hdr.az = lbl_803E1370;
+    hdr.r = lbl_803E1390;
+    hdr.c2 = 1;
+    hdr.c7 = 0;
+    hdr.v1 = 3;
+    hdr.v2 = 0;
+    hdr.v3 = 0;
+    hdr.count = (s8)(((u8*)(cur + 14) - (u8*)pp) / 0x18);
+    hdr.anim[0] = seq.v[0];
+    hdr.anim[1] = seq.v[1];
+    hdr.anim[2] = seq.v[2];
+    hdr.anim[3] = seq.v[3];
+    hdr.anim[4] = seq.v[4];
+    hdr.anim[5] = seq.v[5];
+    hdr.anim[6] = seq.v[6];
+    hdr.parts = parts;
+    hdr.flags = 0x4000400;
+    hdr.flags |= flags;
+    if ((hdr.flags & 1) != 0)
+    {
+        if ((void*)hdr.target != NULL && (void*)p != NULL)
+        {
+            hdr.bx = hdr.bx + (*(f32*)(hdr.target + 0x18) + *(f32*)(p + 0xc));
+            hdr.by = hdr.by + (*(f32*)(hdr.target + 0x1c) + *(f32*)(p + 0x10));
+            hdr.bz = hdr.bz + (*(f32*)(hdr.target + 0x20) + *(f32*)(p + 0x14));
+        }
+        else if ((void*)hdr.target != NULL)
+        {
+            hdr.bx = hdr.bx + *(f32*)(hdr.target + 0x18);
+            hdr.by = hdr.by + *(f32*)(hdr.target + 0x1c);
+            hdr.bz = hdr.bz + *(f32*)(hdr.target + 0x20);
+        }
+        else if ((void*)p != NULL)
+        {
+            hdr.bx = hdr.bx + *(f32*)(p + 0xc);
+            hdr.by = hdr.by + *(f32*)(p + 0x10);
+            hdr.bz = hdr.bz + *(f32*)(p + 0x14);
+        }
+    }
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958, 0x31, 0);
+}
+
+void dll_9B_func03(int a, int b, int p, uint flags);
+
+/*
+ * --INFO--
+ *
+ * Function: dll_9C_func03
+ * EN v1.0 Address: 0x800FD2B4
+ * EN v1.0 Size: 1160b
+ * EN v1.1 Address: 0x800FD550
+ * EN v1.1 Size: 1160b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern u8 lbl_80317E00[];
+extern f32 lbl_803E13C8;
+extern f32 lbl_803E13CC;
+extern f32 lbl_803E13D0;
+extern f32 lbl_803E13D4;
+extern f32 lbl_803E13D8;
+extern f32 lbl_803E13DC;
+extern f32 lbl_803E13E0;
+extern f32 lbl_803E13E4;
+extern f32 lbl_803E13E8;
+
+void dll_9C_func03(int a, int b, int p, uint flags);
+
+
+/* Trivial nops */
+void dll_9A_func01_nop(void)
+{
+}
+
+void dll_9A_func00_nop(void)
+{
+}
+
+void dll_9B_func01_nop(void);
+
+void dll_9B_func00_nop(void);
+
+void dll_9C_func01_nop(void);
+
+void dll_9C_func00_nop(void);

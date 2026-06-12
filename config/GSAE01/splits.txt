@@ -168,8 +168,14 @@ main/dll/foodbag.c:
 main/dll/savegame.c:
 	.text       start:0x800FA5D8 end:0x800FC5B8
 
-main/dll/screens.c:
-	.text       start:0x800FC5B8 end:0x800FD744
+main/dll/dll_009A_dll9afunc0.c:
+	.text       start:0x800FC5B8 end:0x800FCF3C
+
+main/dll/dll_009B_dll9bfunc0.c:
+	.text       start:0x800FCF3C end:0x800FD2B4
+
+main/dll/dll_009C_dll9cfunc0.c:
+	.text       start:0x800FD2B4 end:0x800FD744
 
 main/dll/pickup.c:
 	.text       start:0x800FD744 end:0x80100550
