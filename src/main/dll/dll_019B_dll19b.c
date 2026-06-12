@@ -485,48 +485,30 @@ void dll_19B_initialise(void)
 {
 }
 
-void dll_19C_free(void)
-{
-}
+void dll_19C_free(void);
 
-void dll_19C_hitDetect(void)
-{
-}
+void dll_19C_hitDetect(void);
 
-void dll_19C_release(void)
-{
-}
+void dll_19C_release(void);
 
-void dll_19C_initialise(void)
-{
-}
+void dll_19C_initialise(void);
 
-void dll_19D_render(void)
-{
-}
+void dll_19D_render(void);
 
-void dll_19D_release(void)
-{
-}
+void dll_19D_release(void);
 
-void dll_19D_initialise(void)
-{
-}
+void dll_19D_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_19C_getExtraSize(void) { return 0x8; }
-int dll_19C_getObjectTypeId(void) { return 0x0; }
-int dll_19D_getExtraSize(void) { return 0x38; }
-int dll_19D_getObjectTypeId(void) { return 0x0; }
+int dll_19C_getExtraSize(void);
+int dll_19C_getObjectTypeId(void);
+int dll_19D_getExtraSize(void);
+int dll_19D_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
 #pragma peephole off
-void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0);
-}
+void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
@@ -539,57 +521,7 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E51B4;
 
 #pragma peephole off
-void dll_19C_update(int* obj)
-{
-    extern uint GameBit_Get(int);
-    u8* def;
-    u8* sub;
-    void* res;
-    void* setup;
-
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    sub = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->unkF8 != 0)
-    {
-        if (GameBit_Get(0x1d4) != 0)
-        {
-            ((GameObject*)obj)->unkF8 = 0;
-        }
-    }
-    if (((GameObject*)obj)->unkF8 == 0)
-    {
-        if (GameBit_Get(0x1d3) != 0)
-        {
-            res = Resource_Acquire(0x82, 1);
-            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
-            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
-            Sfx_PlayFromObject(0, SFXsc_gemrun1022);
-            Resource_Release(res);
-            ((Dll19CState*)sub)->unk6 = 1;
-            ((GameObject*)obj)->unkF8 = 1;
-        }
-    }
-    if (((Dll19CState*)sub)->unk6 != 0)
-    {
-        ((Dll19CState*)sub)->unk4 = (s16)(((Dll19CState*)sub)->unk4 - ((Dll19CState*)sub)->unk6 * framesThisStep);
-    }
-    if (((Dll19CState*)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0)
-    {
-        setup = Obj_AllocObjectSetup(0x18, 0x248);
-        ((ObjPlacement*)setup)->posX = ((Dll19CPlacement*)def)->posX;
-        ((ObjPlacement*)setup)->posY = lbl_803E51B4 + ((Dll19CPlacement*)def)->unkC;
-        ((ObjPlacement*)setup)->posZ = ((Dll19CPlacement*)def)->posZ;
-        *(s16*)setup = 0x248;
-        ((ObjPlacement*)setup)->mapId = -1;
-        *(u8*)((char*)setup + 4) = def[4];
-        *(u8*)((char*)setup + 5) = def[5];
-        *(u8*)((char*)setup + 6) = def[6];
-        *(u8*)((char*)setup + 7) = def[7];
-        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject*)obj)->anim.parent);
-        ((Dll19CState*)sub)->unk4 = 0x64;
-        ((Dll19CState*)sub)->unk6 = 0;
-    }
-}
+void dll_19C_update(int* obj);
 #pragma peephole reset
 
 #pragma peephole off
@@ -645,18 +577,7 @@ void dll_19B_init(u8* obj, u8* params)
  * EN v1.0 Size: 64b
  */
 #pragma peephole off
-void dll_19C_init(int obj, u8* initData)
-{
-    register int self = obj;
-    register int state = *(int*)&((GameObject*)self)->extra;
-    *(short*)self = (short)((int)(signed char)initData[0x1e] << 8);
-    ((GameObject*)self)->unkF8 = 0;
-    ((Dll19CState*)state)->unk4 = 0x64;
-    ((Dll19CState*)state)->unk6 = 0;
-    *(int*)state = 0;
-    *(u8*)(self + 0x37) = 0xff;
-    ((GameObject*)self)->anim.alpha = 0xff;
-}
+void dll_19C_init(int obj, u8* initData);
 #pragma peephole reset
 
 /*
@@ -665,17 +586,7 @@ void dll_19C_init(int obj, u8* initData)
  * EN v1.0 Size: 132b
  */
 #pragma peephole off
-void dll_19D_free(int obj)
-{
-    register int self = obj;
-    register int state = *(int*)&((GameObject*)self)->extra;
-    if ((((Dll19DState*)state)->unk36 & 2) == 0)
-    {
-        getLActions(self, self, 1, 0, 0, 0);
-        ((Dll19DState*)state)->unk36 = (u8)((u32)((Dll19DState*)state)->unk36 | 0x2);
-    }
-    (*gExpgfxInterface)->freeSource2((u32)self);
-}
+void dll_19D_free(int obj);
 #pragma peephole reset
 
 extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
@@ -686,35 +597,7 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
  * EN v1.0 Size: 208b
  */
 #pragma peephole off
-void dll_19D_init(int obj)
-{
-    register int self = obj;
-    register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
-    int slot;
-
-    if ((int)(signed char)*(u8*)(state2 + 0x19) != 0)
-    {
-        slot = 3;
-    }
-    else
-    {
-        slot = 1;
-    }
-    ObjHits_SetHitVolumeSlot(self, 0xe, slot, 0);
-
-    if ((int)(signed char)((Dll19DPlacement*)state2)->unk19 == 1)
-    {
-        getLActions(self, self, 0x203, 0, 0, 0);
-    }
-    else if ((int)(signed char)((Dll19DPlacement*)state2)->unk19 == 2)
-    {
-        getLActions(self, self, 0x204, 0, 0, 0);
-    }
-    else
-    {
-        getLActions(self, self, 0x201, 0, 0, 0);
-    }
-}
+void dll_19D_init(int obj);
 #pragma peephole reset
 
 extern EffectInterface** gPartfxInterface;
@@ -726,30 +609,7 @@ extern f32 lbl_803E51B8;
  * EN v1.0 Size: 276b
  */
 #pragma peephole off
-void dll_19D_hitDetect(int obj)
-{
-    register int self = obj;
-    register int state = *(int*)&((GameObject*)self)->extra;
-    int state2 = *(int*)&((GameObject*)self)->anim.placementData;
-    float vec[6];
-    int linkObj;
-    void* linkSubObj;
-
-    vec[3] = lbl_803E51B8;
-    vec[4] = lbl_803E51B8;
-    vec[5] = lbl_803E51B8;
-    vec[2] = (float)(int)(s8)((Dll19DPlacement*)state2)->unk19;
-
-    linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
-    linkSubObj = *(void**)&((ObjHitsPriorityState*)linkObj)->lastHitObject;
-    if (linkSubObj == 0) return;
-    if (*(short*)((u8*)linkSubObj + 0x46) == 0x248) return;
-
-    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-    ((Dll19DState*)state)->unk32 = 0x32;
-}
+void dll_19D_hitDetect(int obj);
 #pragma peephole reset
 
 /*
@@ -758,92 +618,5 @@ void dll_19D_hitDetect(int obj)
  * EN v1.0 Size: 904b
  */
 #pragma peephole off
-void dll_19D_update(int obj)
-{
-    register int self = obj;
-    register int state = *(int*)(self + 0xb8);
-    int def = *(int*)(self + 0x4c);
-    int linkObj;
-    float vec[6];
-    int lifetime;
-    s16 timer;
-    u32 frames;
-    f32 zero;
-
-    vec[3] = lbl_803E51B8;
-    vec[4] = lbl_803E51B8;
-    vec[5] = lbl_803E51B8;
-    vec[2] = (float)(int)(s8) * (u8*)(def + 0x19);
-
-    if ((*(u8*)(state + 0x36) & 1) == 0)
-    {
-        *(f32*)(state + 0x8) = *(f32*)(self + 0xc);
-        *(f32*)(state + 0xc) = *(f32*)(self + 0x10);
-        *(f32*)(state + 0x10) = *(f32*)(self + 0x14);
-        *(u8*)(state + 0x36) = (u8)((u32) * (u8*)(state + 0x36) | 1);
-    }
-
-    linkObj = *(int*)(self + 0x54);
-    if (*(s8*)(linkObj + 0xad) != 0)
-    {
-        Sfx_PlayFromObject(self, SFXsc_mpick1_b);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-        *(s16*)(state + 0x32) = 0x32;
-    }
-
-    if (*(s16*)(state + 0x32) != 0)
-    {
-        if ((*(u8*)(state + 0x36) & 2) == 0)
-        {
-            getLActions(self, self, 1, 0, 0, 0);
-            *(u8*)(state + 0x36) = (u8)((u32) * (u8*)(state + 0x36) | 2);
-        }
-        zero = lbl_803E51B8;
-        *(f32*)(self + 0x24) = zero;
-        *(f32*)(self + 0x28) = zero;
-        *(f32*)(self + 0x2c) = zero;
-        ObjHits_ClearHitVolumes(self);
-        *(s16*)(state + 0x32) -= 1;
-        if (*(s16*)(state + 0x32) <= 0)
-        {
-            Obj_FreeObject(self);
-        }
-    }
-    else
-    {
-        *(f32*)(self + 0x80) = *(f32*)(self + 0xc);
-        *(f32*)(self + 0x84) = *(f32*)(self + 0x10);
-        *(f32*)(self + 0x88) = *(f32*)(self + 0x14);
-
-        *(s16*)(self + 0x0) = (s16)(*(s16*)(self + 0x0) + *(s16*)(state + 0x2e) * (u16)framesThisStep);
-        *(s16*)(self + 0x4) = (s16)(*(s16*)(self + 0x4) + *(s16*)(state + 0x2c) * (u16)framesThisStep);
-        (*gPartfxInterface)->spawnObject((void*)self, 0x29d, vec, 4, -1, NULL);
-
-        if ((*(s16*)(state + 0x30) -= framesThisStep) <= 0)
-        {
-            (*gPartfxInterface)->spawnObject((void*)self, 0x29e, vec, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)self, 0x29f, vec, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)self, 0x2a1, vec, 4, -1, NULL);
-            *(s16*)(state + 0x30) = 0x32;
-        }
-
-        *(f32*)(state + 0x8) = *(f32*)(self + 0x24) * timeDelta + *(f32*)(state + 0x8);
-        *(f32*)(state + 0xc) = *(f32*)(self + 0x28) * timeDelta + *(f32*)(state + 0xc);
-        *(f32*)(state + 0x10) = *(f32*)(self + 0x2c) * timeDelta + *(f32*)(state + 0x10);
-        *(u16*)(state + 0x34) = *(u16*)(state + 0x34) + (u16)framesThisStep * 0x5dc;
-        *(f32*)(self + 0xc) = *(f32*)(state + 0x8);
-        *(f32*)(self + 0x10) = *(f32*)(state + 0xc);
-        *(f32*)(self + 0x14) = *(f32*)(state + 0x10);
-
-        frames = framesThisStep;
-        lifetime = *(int*)(self + 0xf4);
-        *(int*)(self + 0xf4) = lifetime - frames;
-        if ((int)(lifetime - frames) < 0)
-        {
-            Obj_FreeObject(self);
-        }
-    }
-}
+void dll_19D_update(int obj);
 #pragma peephole reset

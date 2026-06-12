@@ -1735,8 +1735,14 @@ main/dll/symbol.c:
 main/dll/dimmagicbridge.c:
 	.text       start:0x801CA9C0 end:0x801CBA98
 
-main/dll/shrine1CE.c:
-	.text       start:0x801CBA98 end:0x801CCFA4
+main/dll/dll_019B_dll19b.c:
+	.text       start:0x801CBA98 end:0x801CC72C
+
+main/dll/dll_019C_dll19c.c:
+	.text       start:0x801CC72C end:0x801CC998
+
+main/dll/dll_019D_dll19d.c:
+	.text       start:0x801CC998 end:0x801CCFA4
 
 main/dll/dll_019E_dim_tricky.c:
 	.text       start:0x801CCFA4 end:0x801CD7DC
