@@ -984,7 +984,6 @@ config.libs = [
             Object(NonMatching, "main/dll/grenade.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/collectable.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/sidekickToy.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/projswitch.c"),
             Object(NonMatching, "main/dll/pressureSwitch.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/seqObj.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/newSeqObj.c", cflags=cflags_dll_noopt),

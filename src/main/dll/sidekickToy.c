@@ -58,7 +58,6 @@ extern undefined4 FUN_80247fb0();
 extern ulonglong FUN_8028682c();
 extern undefined4 FUN_80286878();
 extern undefined4 FUN_80292754();
-extern double FUN_80293900();
 
 extern undefined4 DAT_8031e840;
 extern undefined4 DAT_8031e860;
@@ -662,6 +661,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
  */
 void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* param_4)
 {
+    extern double FUN_80293900();
     ushort uVar1;
     ushort* puVar2;
     uint uVar3;
@@ -986,7 +986,6 @@ int enemy_getObjectTypeId(void) { return 0x14b; }
 void fn_8014C66C(int* obj, int x) { *(int*)((char*)((int**)obj)[0xb8 / 4] + 0x29c) = x; }
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E2598;
 
 
@@ -1000,6 +999,7 @@ void fn_8014C5C0(int* obj)
 
 void fn_8014C63C(int* obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     int* state = ((GameObject*)obj)->extra;
     *(void**)((char*)state + 668) = Obj_GetPlayerObject();
 }
@@ -1216,7 +1216,6 @@ f32 sidekickToy_accelerateTowardTarget3D(int obj, f32 tx, f32 ty, f32 tz, f32 ac
 }
 
 extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
-extern u8 lbl_803DBC58;
 extern f32 lbl_803E25DC;
 
 /* sidekickToy_updateCurveTargetLatch: pre-curve probe + state-bit gate. If state's 0x2000 bit is
@@ -1226,6 +1225,7 @@ extern f32 lbl_803E25DC;
  * the 0x2000 bit based on the u8 result. */
 void sidekickToy_updateCurveTargetLatch(int obj)
 {
+    extern u8 lbl_803DBC58;
     u8* state = ((GameObject*)obj)->extra;
     u8* data = *(u8**)state;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0)
@@ -1257,7 +1257,6 @@ typedef struct
     s16 dist;
 } TrickyTargetRec;
 
-extern f32 vec3f_distanceSquared(void* a, void* b);
 extern int getAngle(f32 x, f32 z);
 extern uint lbl_8031DBF0[];
 extern uint lbl_8031DC10[];
@@ -1275,6 +1274,7 @@ extern uint lbl_8031DC10[];
  */
 int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
 {
+    extern f32 vec3f_distanceSquared(void* a, void* b);
     int i;
     int n;
     int state;
@@ -1415,15 +1415,16 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     return n;
 }
 
-extern int* getTrickyObject(void);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void fn_80026C30(int* obj, int flag);
-extern void baddieInstantiateWeapon(int* node, int* sub);
-extern void fn_8014BC98(int* node, int* sub);
-extern void fn_8014B878(int* node, int* sub);
 
 int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern void fn_8014B878(int* node, int* sub);
+    extern void fn_8014BC98(int* node, int* sub);
+    extern void baddieInstantiateWeapon(int* node, int* sub);
+    extern void* Obj_GetPlayerObject(void);
+    extern int* getTrickyObject(void);
     char* sub = *(char**)&((GameObject*)node)->extra;
     s8* n29 = *(s8**)&((GameObject*)node)->anim.placementData;
     int i;
@@ -1510,6 +1511,9 @@ extern f32 lbl_803E25D8;
 
 void fn_8014B878(int* arg1, int* sub)
 {
+    extern void fn_8014B878(int* node, int* sub);
+    extern void* Obj_GetPlayerObject(void);
+    extern int* getTrickyObject(void);
     int* player;
     int* tricky;
     int* target;
@@ -1797,6 +1801,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
 
 void fn_8014BC98(int* node, int* sub)
 {
+    extern void fn_8014BC98(int* node, int* sub);
     int* target = *(int**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL)
     {
@@ -1865,4 +1870,916 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
     if (dt > lbl_803E256C) dt = lbl_803E256C;
     newVal = (s16)(*(s16*)(int)node + (s32)((f32)(s16)delta * dt));
     *(s16*)node = newVal;
+}
+
+/* === merged from main/dll/projswitch.c [8014D164-8014E1DC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/enemy_state.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/dll/projswitch.h"
+#include "main/mapEventTypes.h"
+#include "main/objseq.h"
+#include "main/objhits_types.h"
+#include "main/resource.h"
+
+typedef struct EnemyPlacement
+{
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x28 - 0x1C];
+    s8 unk28;
+    u8 pad29[0x2A - 0x29];
+    s8 unk2A;
+    u8 pad2B[0x2C - 0x2B];
+    s16 unk2C;
+    s8 unk2E;
+    u8 pad2F[0x34 - 0x2F];
+    u16 unk34;
+    u8 pad36[0x38 - 0x36];
+} EnemyPlacement;
+
+
+extern uint FUN_80017730();
+extern undefined4 FUN_800305f8();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
+extern uint ObjGroup_ContainsObject();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern undefined8 ObjLink_DetachChild();
+extern undefined4 fn_80154C24();
+extern void rachnopInit(undefined4 param_1, int param_2);
+extern void baddieInit_80156188(undefined4 param_1, int param_2);
+extern void wbInit(undefined4 param_1, int param_2);
+
+extern f64 DOUBLE_803e3218;
+extern f64 DOUBLE_803e3278;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DC078;
+extern f32 lbl_803E31FC;
+extern f32 lbl_803E3200;
+extern f32 lbl_803E3204;
+extern f32 lbl_803E3208;
+extern f32 lbl_803E324C;
+extern f32 lbl_803E3284;
+extern f32 lbl_803E3288;
+extern f32 lbl_803E328C;
+
+/*
+ * --INFO--
+ *
+ * Function: enemy_free
+ * EN v1.0 Address: 0x8014D164
+ * EN v1.0 Size: 620b
+ * EN v1.1 Address: 0x8014D194
+ * EN v1.1 Size: 608b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, uint param_5,
+                  char param_6)
+{
+    extern undefined4 FUN_80293900();
+    uint uVar1;
+    double dVar2;
+    double dVar3;
+    double dVar4;
+    undefined8 local_50;
+    undefined8 local_48;
+
+    dVar4 = (double)(lbl_803DC074 /
+        (float)((double)CONCAT44(0x43300000, param_5 & 0xffff) - DOUBLE_803e3278));
+    if ((double)lbl_803E3200 < dVar4)
+    {
+        dVar4 = (double)lbl_803E3200;
+    }
+    uVar1 = FUN_80017730();
+    local_50 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - (uint) * param_3 ^ 0x80000000);
+    dVar2 = (double)(float)(local_50 - DOUBLE_803e3218);
+    if ((double)lbl_803E324C < dVar2)
+    {
+        dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);
+    }
+    if (dVar2 < (double)lbl_803E328C)
+    {
+        dVar2 = (double)(float)((double)lbl_803E3288 + dVar2);
+    }
+    dVar3 = (double)(float)(dVar2 * dVar4);
+    *param_3 = *param_3 + (short)(int)(dVar2 * dVar4);
+    if (param_1 != (double)lbl_803E31FC)
+    {
+        if (param_6 == '\0')
+        {
+            param_3[2] = (ushort)(int)(lbl_803DC078 * (float)(dVar3 * param_1));
+            if ((short)param_3[2] < 0x2001)
+            {
+                if ((short)param_3[2] < -0x2000)
+                {
+                    param_3[2] = 0xe000;
+                }
+            }
+            else
+            {
+                param_3[2] = 0x2000;
+            }
+        }
+        else
+        {
+            param_3[2] = param_3[2] + (short)(int)(param_1 * (double)(float)(dVar3 * dVar4));
+        }
+    }
+    if ((double)lbl_803E31FC != param_2)
+    {
+        FUN_80293900((double)(*(float*)(param_4 + 0x2c0) * *(float*)(param_4 + 0x2c0) +
+            *(float*)(param_4 + 0x2b8) * *(float*)(param_4 + 0x2b8)));
+        uVar1 = FUN_80017730();
+        local_48 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - (uint)param_3[1] ^ 0x80000000);
+        dVar2 = (double)(float)(local_48 - DOUBLE_803e3218);
+        if ((double)lbl_803E324C < dVar2)
+        {
+            dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);
+        }
+        if (dVar2 < (double)lbl_803E328C)
+        {
+            dVar2 = (double)(float)((double)lbl_803E3288 + dVar2);
+        }
+        param_3[1] = param_3[1] + (short)(int)(dVar2 * dVar4);
+    }
+    return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014d3d0
+ * EN v1.0 Address: 0x8014D3D0
+ * EN v1.0 Size: 248b
+ * EN v1.1 Address: 0x8014D3F4
+ * EN v1.1 Size: 272b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_4)
+{
+    float fVar1;
+    short sVar2;
+    int iVar3;
+
+    iVar3 = FUN_80017730();
+    sVar2 = (short)iVar3 - *param_1;
+    if (0x8000 < sVar2)
+    {
+        sVar2 = sVar2 + 1;
+    }
+    if (sVar2 < -0x8000)
+    {
+        sVar2 = sVar2 + -1;
+    }
+    fVar1 = lbl_803DC074 / (float)((double)CONCAT44(0x43300000, param_3 & 0xffff) - DOUBLE_803e3278);
+    if (lbl_803E3200 < fVar1)
+    {
+        fVar1 = lbl_803E3200;
+    }
+    *param_1 = *param_1 +
+        (short)(int)((float)((double)CONCAT44(0x43300000,
+                                              (int)(short)(sVar2 + param_4) ^ 0x80000000) -
+            DOUBLE_803e3218) * fVar1);
+    return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014d4c8
+ * EN v1.0 Address: 0x8014D4C8
+ * EN v1.0 Size: 212b
+ * EN v1.1 Address: 0x8014D504
+ * EN v1.1 Size: 128b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5
+                  , undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
+                  uint param_11, uint param_12, undefined4 param_13, undefined4 param_14,
+                  undefined4 param_15, undefined4 param_16)
+{
+    if ((double)lbl_803E31FC == param_1)
+    {
+        *(float*)(param_10 + 0x308) = lbl_803E3208;
+    }
+    else
+    {
+        param_2 = (double)lbl_803E3200;
+        *(float*)(param_10 + 0x308) =
+            (float)(param_2 / (double)(float)((double)lbl_803E3204 * param_1));
+    }
+    *(char*)(param_10 + 0x323) = (char)param_13;
+    FUN_800305f8((double)lbl_803E31FC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                 param_9, param_11 & 0xff, param_12, param_12, param_13, param_14, param_15, param_16);
+    if (*(int*)(param_9 + 0x54) != 0)
+    {
+        (*(ObjHitsPriorityState**)(param_9 + 0x54))->suppressOutgoingHits = 0;
+    }
+    return;
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: enemy_init
+ * EN v1.0 Address: 0x8014D9E4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8014D984
+ * EN v1.1 Size: 1268b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/* conditional init/free pair. */
+extern void* lbl_803DDA50;
+
+void enemy_release(void)
+{
+    if (lbl_803DDA50 != NULL)
+    {
+        Resource_Release(lbl_803DDA50);
+        lbl_803DDA50 = NULL;
+    }
+}
+
+void enemy_initialise(void) { if (lbl_803DDA50 == NULL) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
+
+extern f32 lbl_803E256C;
+extern f32 lbl_803E25F8;
+extern f32 lbl_803E25FC;
+extern void objRenderFn_8003b8f4(f32 f);
+extern int objCreateLight(int a, int b);
+extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
+
+#pragma scheduling off
+#pragma peephole off
+void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* state = ((GameObject*)obj)->extra;
+    if (visible != 0)
+    {
+        if (((GameObject*)obj)->unkF4 == 0)
+        {
+            ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
+            {
+                u32 flags = *(u32*)&((EnemyState*)state)->unk2E8;
+                if ((flags & 3) != 0)
+                {
+                    if ((flags & 1) != 0)
+                    {
+                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1;
+                        *(u32*)&((EnemyState*)state)->unk2E8 = *(u32*)&((EnemyState*)state)->unk2E8 | 2;
+                    }
+                    if (*(void**)&((EnemyState*)state)->modelLight == NULL)
+                    {
+                        ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
+                    }
+                    objParticleFn_80099d84(obj, lbl_803E256C, 3, ((EnemyState*)state)->particleScale,
+                                           ((EnemyState*)state)->modelLight);
+                }
+            }
+            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 4) != 0)
+            {
+                if (*(void**)&((EnemyState*)state)->modelLight == NULL)
+                {
+                    ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
+                }
+                objParticleFn_80099d84(obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
+                                       ((EnemyState*)state)->modelLight);
+            }
+            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 0x40) != 0)
+            {
+                Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
+                objParticleFn_80099d84(obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
+            }
+            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 0x80) != 0)
+            {
+                Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
+                objParticleFn_80099d84(obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
+            }
+            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 0x100) != 0)
+            {
+                objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
+            }
+        }
+    }
+}
+
+extern int modelLightStruct_getActiveState(int light);
+extern void ModelLightStruct_free(int light);
+extern void fn_80026C54(int p);
+
+void enemy_hitDetect(int obj)
+{
+    u8* state = ((GameObject*)obj)->extra;
+
+    if (*(void**)&((EnemyState*)state)->modelLight != NULL && modelLightStruct_getActiveState(
+        ((EnemyState*)state)->modelLight) == 0)
+    {
+        ModelLightStruct_free(((EnemyState*)state)->modelLight);
+        ((EnemyState*)state)->modelLight = 0;
+    }
+    ((EnemyState*)state)->lastHitObject = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
+        lastHitObject;
+    if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+    {
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+    }
+    if (((GameObject*)obj)->childObjs[0] != NULL && *(void**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54) != NULL
+        && (*(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject != 0)
+    {
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+    }
+    if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
+    {
+        fn_80026C54(((EnemyState*)state)->tailSimHandle);
+    }
+}
+
+extern void fn_80026C88(int p);
+extern void mm_free(int p);
+extern void smallbasket_stopLoopSfx(int obj, u8* state);
+extern void Obj_FreeObject(int obj);
+
+void enemy_free(int obj, int flag)
+{
+    u8* child;
+    int i;
+    u8* state;
+    int n;
+
+    state = ((GameObject*)obj)->extra;
+
+    if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
+    {
+        fn_80026C88(((EnemyState*)state)->tailSimHandle);
+    }
+    if (*(void**)&((EnemyState*)state)->modelLight != NULL)
+    {
+        ModelLightStruct_free(((EnemyState*)state)->modelLight);
+        ((EnemyState*)state)->modelLight = 0;
+    }
+    if (*(void**)state != NULL)
+    {
+        mm_free(*(int*)state);
+        *(int*)state = 0;
+    }
+    switch (((GameObject*)obj)->anim.seqId)
+    {
+    case 0x7c8:
+        smallbasket_stopLoopSfx(obj, state);
+        break;
+    case 0x851:
+        if ((int)ObjGroup_ContainsObject(obj, 0x50) != 0)
+        {
+            ObjGroup_RemoveObject(obj, 0x50);
+        }
+        break;
+    }
+    n = ((GameObject*)obj)->childCount;
+    for (i = 0; i < n; i++)
+    {
+        child = ((GameObject*)obj)->childObjs[0];
+        if (child != NULL)
+        {
+            ObjLink_DetachChild(obj, child);
+            if (flag == 0 || (*(u16*)(child + 0xb0) & 0x10) == 0)
+            {
+                Obj_FreeObject((int)child);
+            }
+        }
+    }
+    (*gExpgfxInterface)->freeSource(obj);
+    ObjGroup_RemoveObject(obj, 3);
+}
+
+extern uint GameBit_Get(int bit);
+extern int getCurUiDll(void);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern int isInBounds(f32 x, f32 z);
+extern int objIsFrozen(int obj);
+extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
+extern void hudFn_8011f38c(int a);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
+extern f32 lbl_803E2574;
+extern f32 lbl_803E2600;
+
+
+void enemy_update(int obj)
+{
+    extern void objAnimFn_8014a9f0(int obj, u8* state);
+    extern void fn_8014B878(int obj, u8* state);
+    extern void fn_8014BC98(int obj, u8* state);
+    extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+    extern void baddieInstantiateWeapon(int obj, u8* state);
+    extern u8* Obj_GetPlayerObject(void);
+    extern u8* getTrickyObject(void);
+    u8* player;
+    u8* state;
+    u8* setup;
+    u8* tricky;
+    u32 flags;
+    u8* s2;
+    f32 fz;
+
+    state = ((GameObject*)obj)->extra;
+    setup = *(u8**)&((GameObject*)obj)->anim.placementData;
+    tricky = getTrickyObject();
+    if (getCurUiDll() == 4)
+    {
+        return;
+    }
+    if ((((EnemyState*)state)->flags2E4 & 0x8000006) != 0)
+    {
+        if (objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                ((GameObject*)obj)->anim.localPosZ) == -1)
+        {
+            return;
+        }
+    }
+    else
+    {
+        if (isInBounds(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0)
+        {
+            return;
+        }
+    }
+    if (objIsFrozen(obj) != 0)
+    {
+        baddie_updateWhileFrozen(obj, state, 1);
+        return;
+    }
+    if (((EnemyState*)state)->trackedObj == NULL)
+    {
+        ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
+    }
+    else if ((*(u16*)(*(int*)&((EnemyState*)state)->trackedObj + 0xb0) & 0x40) != 0)
+    {
+        ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
+    }
+    ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
+    baddieInstantiateWeapon(obj, state);
+    flags = ((EnemyState*)state)->controlFlags;
+    if ((flags & 1) != 0 && (flags & 2) == 0)
+    {
+        if (((EnemyPlacement*)setup)->unk2E == -1)
+        {
+            return;
+        }
+        if (setup != NULL && (setup[0x2b] & 8) != 0)
+        {
+            ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
+            ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
+            ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
+        }
+        (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->unk2E, (void*)obj, -1);
+        ((EnemyState*)state)->controlFlags |= 2;
+        *(int*)&((EnemyState*)state)->controlFlags = *(int*)&((EnemyState*)state)->controlFlags & -2;
+        return;
+    }
+    if (((GameObject*)obj)->unkF4 != 0)
+    {
+        if (((EnemyPlacement*)setup)->unk1A != -1)
+        {
+            if (GameBit_Get(((EnemyPlacement*)setup)->unk1A) == 0)
+            {
+                return;
+            }
+            if ((((EnemyState*)state)->controlFlags & 0x800) != 0)
+            {
+                return;
+            }
+            if ((((EnemyState*)state)->controlFlags & 0x1000) == 0)
+            {
+                return;
+            }
+            player = Obj_GetPlayerObject();
+            if (((EnemyPlacement*)setup)->unk18 != -1)
+            {
+                if (GameBit_Get(((EnemyPlacement*)setup)->unk18) != 0)
+                {
+                    return;
+                }
+            }
+            if (player != NULL)
+            {
+                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                {
+                    enemy_init(obj, setup, 0);
+                    ((EnemyState*)state)->controlFlags |= 0x1000;
+                    ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+        else if (((EnemyPlacement*)setup)->unk18 != -1)
+        {
+            if (GameBit_Get(((EnemyPlacement*)setup)->unk18) != 0)
+            {
+                return;
+            }
+            if ((((EnemyState*)state)->controlFlags & 0x800) != 0)
+            {
+                return;
+            }
+            player = Obj_GetPlayerObject();
+            if (player != NULL)
+            {
+                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                {
+                    enemy_init(obj, setup, 0);
+                    ((EnemyState*)state)->controlFlags |= 0x1000;
+                    *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xFFFFFFFF)
+            {
+                return;
+            }
+            if (((EnemyPlacement*)setup)->unk2C == 0)
+            {
+                return;
+            }
+            if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)setup)->mapId) != 0)
+            {
+                if ((((EnemyState*)state)->controlFlags & 0x800) == 0)
+                {
+                    player = Obj_GetPlayerObject();
+                    if (player != NULL)
+                    {
+                        if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                        {
+                            enemy_init(obj, setup, 0);
+                            ((EnemyState*)state)->controlFlags |= 0x1000;
+                            *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
+    if ((((EnemyState*)state)->controlFlags & 0x8000) != 0)
+    {
+        hudFn_8011f38c(0);
+        (*gPathControlInterface)->attachObject((void*)obj, state + 4);
+        ((EnemyState*)state)->controlFlags &= ~0x8003;
+        if ((((EnemyState*)state)->flags2E4 & 0x20000) != 0)
+        {
+            s2 = *(u8**)&((GameObject*)obj)->anim.placementData;
+            ((GameObject*)obj)->anim.localPosX = ((EnemyPlacement*)s2)->unk8;
+            ((GameObject*)obj)->anim.localPosY = ((EnemyPlacement*)s2)->unkC;
+            ((GameObject*)obj)->anim.localPosZ = ((EnemyPlacement*)s2)->unk10;
+            ((GameObject*)obj)->anim.rotZ = 0;
+            ((GameObject*)obj)->anim.rotY = 0;
+            *(s16*)obj = ((EnemyPlacement*)s2)->unk2A << 8;
+            fz = lbl_803E2574;
+            ((GameObject*)obj)->anim.velocityX = fz;
+            ((GameObject*)obj)->anim.velocityY = fz;
+            ((GameObject*)obj)->anim.velocityZ = fz;
+        }
+    }
+    if ((((EnemyState*)state)->flags2E4 & 0x80000) != 0)
+    {
+        if (tricky != NULL && GameBit_Get(0x9e) != 0)
+        {
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+        }
+        else
+        {
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+        }
+        if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+        {
+            (**(void (**)(u8*, int, int, int))(*(int*)(*(int*)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
+        }
+    }
+    baddie_updateWhileFrozen(obj, state, 0);
+    if ((((EnemyState*)state)->controlFlags & 0x1800) == 0)
+    {
+        fn_8014BC98(obj, state);
+        fn_8014B878(obj, state);
+    }
+    objAnimFn_8014a9f0(obj, state);
+}
+
+extern void fn_80151954(int obj, u8* state);
+extern void fn_801522E0(int obj, u8* state);
+extern void fn_80152A94(int obj, u8* state);
+extern void fn_80152EC0(int obj, u8* state);
+extern void fn_801534D8(int obj, u8* state);
+extern void fn_80153C90(int obj, u8* state);
+extern void fn_801542AC(int obj, u8* state);
+extern void mutatedEbaInit(int obj, u8* state);
+extern void mediumbasket_initWhirlpoolState(int obj, u8* state);
+extern void smallbasket_initVariantState(int obj, u8* state);
+extern void smallbasket_initScaledVariantState(int obj, u8* state);
+extern void fn_8014FF58(int obj, u8* state);
+extern void smallbasket_initModelVariantState(int obj, u8* state);
+extern void smallbasket_initTailModelState(int obj, u8* state);
+extern void* memset(void* p, int c, int n);
+extern f32 lbl_803DBC60;
+extern f32 lbl_803DBC64;
+extern f32 lbl_803DBC68;
+extern u8 lbl_8031DBD8[];
+extern u8 lbl_8031DBE4[];
+extern f32 lbl_803E257C;
+extern f32 lbl_803E25B0;
+
+void enemy_init(int obj, u8* setup, int flag)
+{
+    extern f32 lbl_803DBC58;
+    extern void enemy_animEventCallback();
+    u8* state = ((GameObject*)obj)->extra;
+    f32 fz;
+
+    ((GameObject*)obj)->unkF4 = 0;
+    if (flag == 0)
+    {
+        if (*(s16*)(setup + 0x1a) != -1)
+        {
+            if (*(s16*)(setup + 0x18) != -1)
+            {
+                if (GameBit_Get(*(s16*)(setup + 0x18)) == 0)
+                {
+                    ((GameObject*)obj)->unkF4 = GameBit_Get(*(s16*)(setup + 0x1a)) == 0;
+                }
+            }
+            else
+            {
+                ((GameObject*)obj)->unkF4 = GameBit_Get(*(s16*)(setup + 0x1a)) == 0;
+            }
+        }
+        if (*(u32*)&((ObjPlacement*)setup)->mapId != 0xFFFFFFFF)
+        {
+            if (((GameObject*)obj)->unkF4 == 0)
+            {
+                if (*(s16*)(setup + 0x18) != -1)
+                {
+                    ((GameObject*)obj)->unkF4 = GameBit_Get(*(s16*)(setup + 0x18));
+                }
+                if (((GameObject*)obj)->unkF4 == 0)
+                {
+                    if (*(s16*)(setup + 0x2c) != 0)
+                    {
+                        if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)setup)->mapId) == 0)
+                        {
+                            ((GameObject*)obj)->unkF4 = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (((GameObject*)obj)->unkF4 != 0)
+    {
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ((GameObject*)obj)->anim.alpha = 0;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        ((GameObject*)obj)->anim.alpha = 255;
+    }
+    ((EnemyState*)state)->unk2FC = (f32)setup[0x2f] / lbl_803E257C;
+    ((EnemyState*)state)->unk2A8 = (f32)(u32)(setup[0x29] << 3);
+    *(int*)&((EnemyState*)state)->controlFlags = 0;
+    ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
+    *(s16*)obj = *(s8*)(setup + 0x2a) << 8;
+    ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
+    ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
+    ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    if (flag == 0)
+    {
+        *(int*)&((EnemyState*)state)->flags2E4 = 0;
+        ((EnemyState*)state)->unk2E8 = 0;
+        state[0x2f1] = 0;
+        state[0x2f2] = 0;
+        ((EnemyState*)state)->unk2EC = 0;
+        state[0x2f5] = 0;
+        fz = lbl_803E2574;
+        ((EnemyState*)state)->unk300 = fz;
+        ((EnemyState*)state)->unk304 = fz;
+        ((EnemyState*)state)->unk308 = fz;
+        ((EnemyState*)state)->particleScale = fz;
+        state[0x323] = 0;
+        ((EnemyState*)state)->unk310 = fz;
+        ((EnemyState*)state)->unk2F8 = 0;
+        state[0x33a] = 0;
+        state[0x33b] = 0;
+        ((EnemyState*)state)->phaseAngle = 0;
+        state[0x33c] = 0;
+        state[0x33d] = 0;
+        ((EnemyState*)state)->unk324 = fz;
+        ((EnemyState*)state)->unk328 = fz;
+        ((EnemyState*)state)->unk32C = fz;
+        ((EnemyState*)state)->unk330 = fz;
+        ((EnemyState*)state)->intervalTimer = fz;
+        ((EnemyState*)state)->unk2B4 = -1;
+        ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
+        ((GameObject*)obj)->objectFlags |= *(s8*)(setup + 0x28) & 7;
+        ((EnemyState*)state)->unk2B0 = setup[0x32];
+        ((GameObject*)obj)->animEventCallback = (void*)enemy_animEventCallback;
+        switch (((GameObject*)obj)->anim.seqId)
+        {
+        case 17:
+        case 314:
+        case 1463:
+        case 1464:
+        case 1465:
+        case 1505:
+        case 1958:
+            fn_80151954(obj, state);
+            break;
+        case 216:
+        case 641:
+            fn_801522E0(obj, state);
+            break;
+        case 1555:
+            fn_80152A94(obj, state);
+            break;
+        case 1602:
+            fn_80152EC0(obj, state);
+            break;
+        case 1022:
+        case 1990:
+            fn_801534D8(obj, state);
+            break;
+        case 1419:
+            fn_80153C90(obj, state);
+            break;
+        case 873:
+            fn_801542AC(obj, state);
+            break;
+        case 593:
+            fn_80154C24(obj, state);
+            break;
+        case 605:
+            rachnopInit(obj, (int)state);
+            break;
+        case 1111:
+            baddieInit_80156188(obj, (int)state);
+            break;
+        case 1239:
+            wbInit(obj, (int)state);
+            break;
+        case 1112:
+            mutatedEbaInit(obj, state);
+            break;
+        case 2129:
+            mediumbasket_initWhirlpoolState(obj, state);
+            break;
+        case 2114:
+        case 2123:
+            smallbasket_initVariantState(obj, state);
+            break;
+        case 1196:
+            smallbasket_initScaledVariantState(obj, state);
+            break;
+        case 1063:
+            fn_8014FF58(obj, state);
+            break;
+        case 1698:
+        case 1699:
+        case 1700:
+        case 1701:
+            smallbasket_initModelVariantState(obj, state);
+            break;
+        case 1992:
+            smallbasket_initTailModelState(obj, state);
+            break;
+        default:
+            fn_8014FF58(obj, state);
+            break;
+        }
+        ((EnemyState*)state)->unk2B2 = *(u16*)&((EnemyState*)state)->unk2B0;
+        if (*(u16*)(setup + 0x34) != 0)
+        {
+            *(int*)&((EnemyState*)state)->flags2E4 = *(int*)&((EnemyState*)state)->flags2E4 & -39;
+        }
+        ObjGroup_AddObject(obj, 3);
+        state[0x2f0] = 7;
+        state[0x2ef] = 2;
+        if (*(void**)state == NULL)
+        {
+            *(int*)state = (int)mmAlloc(264, 26, 0);
+        }
+        if (*(void**)state != NULL)
+        {
+            memset(*(void**)state, 0, 264);
+        }
+        if ((*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, ((EnemyState*)state)->unk2AC,
+                                             (int*)&lbl_803DBC58, -1) == 0)
+        {
+            ((EnemyState*)state)->controlFlags |= 0x2000;
+        }
+        (*gPathControlInterface)->init(state + 4, 0, 422, 1);
+        if ((((EnemyState*)state)->flags2E4 & 8) != 0)
+        {
+            (*gPathControlInterface)->setLocalPointCollision(state + 4, 1, lbl_8031DBE4,
+                                                             &lbl_803DBC64, 4);
+        }
+        if ((((EnemyState*)state)->flags2E4 & 4) != 0)
+        {
+            (*gPathControlInterface)->setup(state + 4, 1, lbl_8031DBD8, &lbl_803DBC60, &lbl_803DBC68);
+        }
+        (*gPathControlInterface)->attachObject((void*)obj, state + 4);
+        if ((((EnemyState*)state)->flags2E4 & 0xc) != 0)
+        {
+            state[0x25f] = 1;
+        }
+        if ((((EnemyState*)state)->flags2E4 & 0x8000022) != 0 || *(u16*)(setup + 0x34) != 0
+            || ((GameObject*)obj)->anim.seqId == 1022 || ((GameObject*)obj)->anim.seqId == 1990)
+        {
+            ((EnemyState*)state)->unk4 |= 0x40000;
+        }
+        else
+        {
+            ((EnemyState*)state)->unk4 &= ~0x40000;
+        }
+        if ((((EnemyState*)state)->flags2E4 & 4) == 0 && (((EnemyState*)state)->flags2E4 & 8) != 0)
+        {
+            ((EnemyState*)state)->unk4 &= ~0x3800;
+        }
+        if (((GameObject*)obj)->unkF4 != 0)
+        {
+            ((EnemyState*)state)->controlFlags |= 0x1000;
+            ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
+            ObjHits_DisableObject(obj);
+        }
+        else if ((((EnemyState*)state)->flags2E4 & 1) != 0)
+        {
+            ObjHits_EnableObject(obj);
+        }
+    }
+    ((EnemyState*)state)->unk2D8 = lbl_803E2574;
+    if (lbl_803E25B0 < ((EnemyState*)state)->unk2A8)
+    {
+        ((EnemyState*)state)->unk2A8 = lbl_803E25B0;
+    }
+    if (lbl_803E25B0 < ((EnemyState*)state)->unk2AC)
+    {
+        ((EnemyState*)state)->unk2AC = lbl_803E25B0;
+    }
 }

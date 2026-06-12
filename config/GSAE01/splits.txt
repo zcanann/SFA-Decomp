@@ -563,10 +563,7 @@ main/dll/collectable.c:
 	.text       start:0x80144E40 end:0x8014A9F0
 
 main/dll/sidekickToy.c:
-	.text       start:0x8014A9F0 end:0x8014D164
-
-main/dll/projswitch.c:
-	.text       start:0x8014D164 end:0x8014E1DC
+	.text       start:0x8014A9F0 end:0x8014E1DC
 
 main/dll/pressureSwitch.c:
 	.text       start:0x8014E1DC end:0x8014F9E8
