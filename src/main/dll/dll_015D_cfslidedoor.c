@@ -4,8 +4,6 @@
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/obj_placement.h"
 
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjGroup_AddObject();
 
 
 /*
@@ -56,11 +54,8 @@ extern undefined4 ObjGroup_AddObject();
 
 
 
-void cfforcefield_free(void);
 
-void cfforcefield_render(void);
 
-void cfforcefield_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -127,10 +122,7 @@ typedef struct DrExplodableState
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
-int cfforcefield_getExtraSize(void);
-int cfforcefield_getObjectTypeId(void);
 
-extern void Obj_FreeObject(int obj);
 #pragma scheduling off
 #pragma peephole off
 
@@ -143,7 +135,6 @@ extern void Obj_FreeObject(int obj);
 
 
 
-extern void Model_GetVertexPosition(int model, int i, f32* out);
 
 
 
@@ -161,35 +152,10 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct CfmagicwallPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} CfmagicwallPlacement;
 
 
-typedef struct CfforcefieldPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} CfforcefieldPlacement;
 
 
-typedef struct CflevelcontrolState
-{
-    u8 pad0[0x8 - 0x0];
-    s32 unk8;
-    u8 padC[0xD - 0xC];
-    s8 unkD;
-    u8 padE[0x10 - 0xE];
-} CflevelcontrolState;
 
 
 typedef struct SlidingdoorPlacement
@@ -206,8 +172,6 @@ typedef struct SlidingdoorPlacement
 
 
 extern undefined8 FUN_80017698();
-extern undefined8 ObjGroup_RemoveObject();
-extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
@@ -216,28 +180,6 @@ extern undefined4 FUN_80044404();
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void Obj_BuildWorldTransformMatrix(void* obj, f32* mtx, int flags);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * src, f32 * dst);
-extern f32 mathCosf(f32 angle);
-extern f32 mathSinf(f32 angle);
-extern int fn_80080150(void* timer);
-extern void s16toFloat(void* p, int duration);
-extern int timerCountDown(void* timer);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern EffectInterface** gPartfxInterface;
-extern f32 timeDelta;
-extern f32 lbl_803DBE90;
-extern int lbl_803DBE94;
-extern int lbl_803DBE98;
-extern int lbl_80322ED8[];
-extern f32 lbl_803E4390;
-extern f32 lbl_803E4394;
-extern f32 lbl_803E4398;
-extern f32 lbl_803E439C;
-extern f32 lbl_803E43A0;
-extern f32 lbl_803E43A4;
-extern f32 lbl_803E43A8;
-extern f32 lbl_803E43AC;
 
 /*
  * --INFO--
@@ -252,7 +194,6 @@ extern f32 lbl_803E43AC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cfforcefield_update(u8* obj);
 
 
 /*
@@ -364,7 +305,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 /* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void);
 
-void cfforcefield_initialise(void);
 
 void slidingdoor_free(void)
 {
@@ -384,64 +324,33 @@ void slidingdoor_initialise(void)
 
 void attractor_hitDetect(void);
 
-void attractor_update(void);
 
-void attractor_release(void);
 
-void attractor_initialise(void);
 
-void cfmagicwall_free(void);
 
-void cfmagicwall_hitDetect(void);
 
-void cfmagicwall_release(void);
 
-void cfmagicwall_initialise(void);
 
-void cflevelcontrol_hitDetect(void);
 
-void cflevelcontrol_release(void);
 
-void cflevelcontrol_initialise(void);
 
-extern void storeZeroToFloatParam(void* p);
-extern s16 lbl_80323008[];
 
-void cflevelcontrol_init(u8* obj, u8* params);
 
-void exploded_free(void);
 
-void exploded_hitDetect(void);
 
-void exploded_release(void);
 
-void exploded_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int slidingdoor_getExtraSize(void) { return 0x1; }
 int slidingdoor_getObjectTypeId(void) { return 0x0; }
 int attractor_getExtraSize(void);
-int attractor_getObjectTypeId(void);
-int cfmagicwall_getExtraSize(void);
-int cfmagicwall_getObjectTypeId(void);
-int cflevelcontrol_getExtraSize(void);
-int cflevelcontrol_getObjectTypeId(void);
-int exploded_getExtraSize(void);
 
 /* Pattern wrappers. */
-u8 exploded_setScale(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E43BC;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E43D0;
-extern f32 lbl_803E43D8;
-extern f32 lbl_803E43DC;
 extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
-extern f32 lbl_803E43E8;
-extern f32 lbl_803E43F4;
 
 void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -451,56 +360,28 @@ void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void cfmagicwall_update(int obj);
 
-extern int ObjList_FindObjectById(int objectId);
-extern void fn_8017C294(int obj);
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
-extern void skyFn_80088e54(int mode, f32 brightness);
-extern void unlockLevel(int a, int b, int c);
-extern int playerIsDisguised(int player);
-extern void fn_80295CF4(int player, int mode);
-extern int getCurMapLayer(void);
-extern int lbl_802C22E8[];
-extern f32 lbl_803E43EC;
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int latchBit, int musicId);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit,
-                                          int clearIfClearBit, int latchBit, int musicId);
 
-void cflevelcontrol_update(int obj);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void attractor_free(int x);
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 exploded_getObjectTypeId(ExplodedObject* obj);
 
 /* byte-to-short shift8 pattern. */
-void cfmagicwall_init(s16* dst, void* src);
 
 /* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
-int attractor_setScale(int* obj);
 
 /* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
-void attractor_init(s16* obj, void* data);
 
-extern u8 framesThisStep;
 
-void exploded_update(int* obj);
 
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
-extern f32 lbl_803E4428;
 extern void* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern int atan2i(int y, int x);
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
@@ -638,7 +519,6 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra);
 /* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
  * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
  * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-void attractor_func0B(u8* obj, void** out);
 
 /* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
@@ -667,33 +547,16 @@ void slidingdoor_init(u8* obj, u8* data)
 }
 
 extern void loadMapAndParent(int mapId);
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int dirIdx, int b);
 
-int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
-void cfforcefield_init(s16* obj, void* data);
-
-extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
-extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
-extern f32 lbl_803E43F0;
-extern f32 lbl_803E4400;
-extern f32 lbl_803E4404;
-extern f32 lbl_803E4408;
-extern f32 lbl_803E4418;
-extern f32 lbl_803E441C;
-extern f32 lbl_803E4420;
-extern f32 lbl_803E4424;
 
 
-void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, int computeModelCenter, ExplodedObjectState* state);
+
 
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */
-void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, ExplodedObjectMapData* data);
 
 /* Exploded debris physics step: integrate local velocity and spin, bounce from
  * the stored floor height, and return nonzero once the shard comes to rest. */
-int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state);
