@@ -96,14 +96,16 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
 {
     uint uVar1;
     int* piVar2;
+    ObjHitsPriorityState* hitState;
     int local_18[2];
     undefined4 local_10;
     uint uStack_c;
 
     piVar2 = ((GameObject*)param_9)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
     ((GameObject*)param_9)->anim.alpha = 0;
     *(undefined4*)(param_9 + 0xf4) = 0xdc;
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags &= ~1;
+    hitState->flags &= ~1;
     if (*piVar2 != 0)
     {
         FUN_800175cc((double)lbl_803E3D78, *piVar2, '\0');
@@ -174,6 +176,7 @@ void kaldachompspit_update(int obj)
     f32 vz;
     s16 v;
     f32 t;
+    ObjHitsPriorityState* hitState;
 
     objAnim = &((GameObject*)obj)->anim;
     state = ((GameObject*)obj)->extra;
@@ -218,23 +221,21 @@ void kaldachompspit_update(int obj)
             ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
         ObjHits_EnableObject((u32)obj);
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        if (hitState->lastHitObject != 0)
         {
             if (((GameObject*)obj)->unkF4 < 0x17c)
             {
                 kaldachompspit_burst(obj);
                 return;
             }
-            if (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
-                    Obj_GetPlayerObject()) ||
-                ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
-                    getTrickyObject()))
+            if ((hitState->lastHitObject == Obj_GetPlayerObject()) || (hitState->lastHitObject == getTrickyObject()))
             {
                 kaldachompspit_burst(obj);
                 return;
             }
         }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+        if (hitState->contactFlags != 0)
         {
             kaldachompspit_burst(obj);
         }
@@ -278,12 +279,14 @@ void kaldachompspit_burst(int obj)
     extern void Sfx_PlayFromObject(int obj, u32 sfxId); /* #57 */
     int i;
     u32* state;
+    ObjHitsPriorityState* hitState;
     u8 rnd;
 
     state = ((GameObject*)obj)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     ((GameObject*)obj)->anim.alpha = 0;
     ((GameObject*)obj)->unkF4 = 0xdc;
-    (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+    hitState->flags &= ~1;
     if (*state != 0)
     {
         modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
