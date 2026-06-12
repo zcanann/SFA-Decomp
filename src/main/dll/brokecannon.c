@@ -13,6 +13,7 @@ extern void Music_Trigger(int trackId, int restart);
  * EN v1.0 Address: 0x801D80F4
  * EN v1.0 Size: 532b
  */
+#pragma dont_inline on
 void SH_LevelControl_setMusic(short* obj)
 {
     if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(0) != 0)
@@ -70,3 +71,4 @@ void SH_LevelControl_setMusic(short* obj)
         SCGameBitLatch_Update((SCGameBitLatchState*)obj, 0x10, -1, -1, 0xbfe, 0xc3);
     }
 }
+#pragma dont_inline reset

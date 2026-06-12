@@ -562,6 +562,7 @@ extern int Obj_AllocObjectSetup(int a, int b);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 
+#pragma dont_inline on
 void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -591,9 +592,11 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
         state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
 }
+#pragma dont_inline reset
 
 extern f32 lbl_803E5588;
 
+#pragma dont_inline on
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {
     int id = *(int*)(*(int*)(p1 + 0x4c) + 0x14);
@@ -632,6 +635,7 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
     }
     state->animSpeed = lbl_803E5588;
 }
+#pragma dont_inline reset
 
 extern void skyFn_80088c94(int a, int b);
 extern void envFxActFn_800887f8(int arg);

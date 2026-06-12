@@ -46,6 +46,7 @@ extern MapEventInterface** gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void SH_LevelControl_runBloopEvent(int obj, int state)
 {
     int player;
@@ -180,6 +181,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         (*gMapEventInterface)->triggerEvent(0, 0, 1, 0);
     }
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--

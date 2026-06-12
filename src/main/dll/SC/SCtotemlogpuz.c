@@ -47,6 +47,7 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
  * EN v1.0 Address: 0x801D7C94
  * EN v1.0 Size: 576b
  */
+#pragma dont_inline on
 void mapUnloadFn_801d7c94(void* obj, void* p2)
 {
     SCTotemLogPuzzleObject* puzzleObj;
@@ -86,6 +87,7 @@ void mapUnloadFn_801d7c94(void* obj, void* p2)
 dec:
     runtime->eventCountdown--;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
