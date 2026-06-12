@@ -1722,8 +1722,11 @@ main/dll/dll_0175_dfropenode.c:
 main/dll/dll_0177_dfshdoor2speci.c:
 	.text       start:0x801C26E0 end:0x801C2914
 
+main/dll/dll_0178_dfshshrine.c:
+	.text       start:0x801C2914 end:0x801C3618
+
 main/dll/dll_017A_spiritprize.c:
-	.text       start:0x801C2914 end:0x801C3B68
+	.text       start:0x801C3618 end:0x801C3B68
 
 main/dll/dll_0179_dfshobjcreator.c:
 	.text       start:0x801C3B68 end:0x801C3E3C

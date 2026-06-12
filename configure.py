@@ -1376,6 +1376,7 @@ config.libs = [
             Object(NonMatching, "main/dll/DFbarrelanim.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0175_dfropenode.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0177_dfshdoor2speci.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_0178_dfshshrine.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_017A_spiritprize.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0179_dfshobjcreator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_017B_dfshlaserbeam.c", cflags=cflags_dll_noopt),
