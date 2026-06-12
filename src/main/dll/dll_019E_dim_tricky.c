@@ -1,4 +1,4 @@
-/* === moved from main/dll/shrine1CE.c [801CCFA4-801CCFB4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x19E - DIM Tricky [801CCFA4-801CCFB4) */
 #pragma scheduling on
 #pragma peephole on
 #include "main/effect_interfaces.h"

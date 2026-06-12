@@ -1,10 +1,7 @@
 /*
- * CFWindLift (DLL 0x149) - the real wind lift (defs CFWindLift +
- * CFTreasWind). Re-split (descriptor forensics, docs/boundary_audit.md):
- * TU = 0x8019C784..0x8019D578 (helper fn_8019C784 + windlift_*), carved
- * from sandwormBoss.c. (The old CF/windlift.c never held this DLL - see
- * the dll_0106..dll_010D re-split.)
- * Skeleton-copy carve: non-owned defs collapsed to prototypes in place.
+ * DLL 0x149 - CFWindLift (defs CFWindLift + CFTreasWind).
+ * TU = 0x8019C784..0x8019D578 (helper fn_8019C784 + windlift_*).
+ * Non-owned sibling definitions are collapsed to prototypes in place.
  */
 #include "main/dll/cfguardian_state.h"
 #include "main/dll/wormspitbyte_struct.h"

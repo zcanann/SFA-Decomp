@@ -1,4 +1,4 @@
-/* === moved from main/dll/mmp_moonrock.c [80192394-801923C4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x137 - AlphaAnimator [80192394-801923C4) */
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/mmp_moonrock.h"

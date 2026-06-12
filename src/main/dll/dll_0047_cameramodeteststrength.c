@@ -1,4 +1,4 @@
-/* === merged from main/dll/CAM/camcannon.c [8010AEA8-8010B424) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x47 - CameraModeTestStrength [8010AEA8-8010B424) */
 #include "main/dll/CAM/camcannon.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcannon_state.h"

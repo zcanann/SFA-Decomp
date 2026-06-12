@@ -1,4 +1,4 @@
-/* === moved from main/dll/DF/rope.c [801C04B8-801C053C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x1E7 - DIMBossFire [801C04B8-801C053C) */
 #include "main/dll_000A_expgfx.h"
 
 

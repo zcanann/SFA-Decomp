@@ -1,4 +1,4 @@
-/* === moved from main/dll/MMP/mmp_levelcontrol.c [801948C0-80195008) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x13E - DIMBossIceSmash [801948C0-80195008) */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 

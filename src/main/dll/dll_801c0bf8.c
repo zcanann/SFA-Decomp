@@ -1,4 +1,4 @@
-/* === moved from main/dll/DF/rope.c [801C04B8-801C053C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x801C0BF8 - DIM level control [801C0BF8-...) */
 #include "main/dll_000A_expgfx.h"
 
 

@@ -1,4 +1,4 @@
-/* === merged from main/proximitymine.c [8021122C-802113F8) (TU re-split, docs/boundary_audit.md) === */
+/* proximitymine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
 #include "main/objlib.h"
 

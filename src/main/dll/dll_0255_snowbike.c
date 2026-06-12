@@ -1,4 +1,4 @@
-/* === merged from main/dll/DR/DRcradle.c [801EC7A0-801ECEC4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x255 - SnowBike [801EC7A0-801ECEC4) */
 #include "main/dll/path_control_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"

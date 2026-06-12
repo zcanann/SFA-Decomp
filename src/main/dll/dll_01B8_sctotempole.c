@@ -1,4 +1,4 @@
-/* === moved from main/dll/CR/CRsnowbike.c [801DBFA0-801DC310) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x1B8 - SCTotemPole [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/game_object.h"

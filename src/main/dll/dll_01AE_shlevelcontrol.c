@@ -1,4 +1,4 @@
-/* === moved from main/dll/SC/SCanimobj.c [801D7BA8-801D7C14) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x1AE - SHLevelControl [801D7BA8-801D7C14) */
 #include "main/game_ui_interface.h"
 #include "main/dll/SC/SClantern.h"
 

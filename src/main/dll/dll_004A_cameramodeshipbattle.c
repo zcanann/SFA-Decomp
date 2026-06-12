@@ -1,4 +1,4 @@
-/* === moved from main/dll/CAM/dll_5F.c [8010BF08-8010C0D8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x4A - CameraModeShipBattle [8010BF08-8010C0D8) */
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/mm.h"

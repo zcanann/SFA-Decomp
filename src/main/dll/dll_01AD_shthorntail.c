@@ -1,4 +1,4 @@
-/* === merged from main/dll/SH/SHroot.c [801D58E4-801D5ED4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 
