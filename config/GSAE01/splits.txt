@@ -626,8 +626,14 @@ main/dll/genprops.c:
 main/dll/dll_00ED_collectible.c:
 	.text       start:0x80171D14 end:0x80173224
 
-main/dll/lightning.c:
-	.text       start:0x80173224 end:0x80174A80
+main/dll/dll_00FF_magicdustsm.c:
+	.text       start:0x80173224 end:0x80173F80
+
+main/dll/dll_00EE_effectbox.c:
+	.text       start:0x80173F80 end:0x80174438
+
+main/dll/dll_80174438.c:
+	.text       start:0x80174438 end:0x80174A80
 
 main/dll/dll_00EF_pushable.c:
 	.text       start:0x80174A80 end:0x80176FC4

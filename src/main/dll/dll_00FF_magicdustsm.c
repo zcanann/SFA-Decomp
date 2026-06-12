@@ -589,93 +589,30 @@ extern void fn_8002B758(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void effectbox_free(void)
-{
-    fn_8002B758();
-}
+void effectbox_free(void);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void effectbox_hitDetect(void)
-{
-}
+void effectbox_hitDetect(void);
 
-void effectbox_release(void)
-{
-}
+void effectbox_release(void);
 
-void effectbox_initialise(void)
-{
-}
+void effectbox_initialise(void);
 
 extern void fn_8002B860(int obj);
 
-void effectbox_init(int obj, int* def)
-{
-    s16 bit;
-    u32 v;
-    if (((GameObject*)obj)->unkF4 == 0)
-    {
-        fn_8002B860(obj);
-    }
-    ((GameObject*)obj)->unkF4 = 1;
-    bit = *(s16*)((char*)def + 0x20);
-    if (bit > -1)
-    {
-        ((GameObject*)obj)->unkF8 = (int)bit;
-    }
-    else
-    {
-        ((GameObject*)obj)->unkF8 = -1;
-    }
-    v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
-}
+void effectbox_init(int obj, int* def);
 
 /* 8b "li r3, N; blr" returners. */
-int effectbox_getExtraSize(void) { return 0x0; }
-int effectbox_getObjectTypeId(void) { return 0x0; }
+int effectbox_getExtraSize(void);
+int effectbox_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3508;
 
-void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3508);
-}
+void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void fn_80174588(int obj, PushableState* p2)
-{
-    extern int*objFindTexture(int, int, int);
-    int data = *(int*)&((GameObject*)obj)->anim.placementData;
-
-    switch (*(int*)(data + 0x14))
-    {
-    case 0x49B2C:
-        p2->requiredHitId = 10;
-        break;
-    case 0x49B5D:
-        p2->requiredHitId = 11;
-        ((ObjAnimComponent*)obj)->bankIndex = 1;
-        break;
-    case 0x49B5E:
-        p2->requiredHitId = 12;
-        ((ObjAnimComponent*)obj)->bankIndex = 1;
-        break;
-    }
-
-    if (GameBit_Get(*(s16*)(data + 0x18)) != 0)
-    {
-        int* tex;
-        p2->flags = (u16)(p2->flags | 0x80);
-        tex = objFindTexture(obj, 0, 0);
-        if (tex != NULL)
-        {
-            *tex = 256;
-        }
-    }
-}
+void fn_80174588(int obj, PushableState* p2);
 
 extern void* getTrickyObject(void);
 extern void fn_80295918(f32 amount, int obj, int p3);
@@ -712,104 +649,7 @@ extern f32 lbl_803E3528;
  * EN v1.0 Address: 0x80173FE4
  * EN v1.0 Size: 980b
  */
-void effectbox_update(int obj)
-{
-    int def;
-    int count;
-    int single;
-    int* list;
-    int i;
-    int other;
-    f32 sinY;
-    f32 cosY;
-    f32 sinX;
-    f32 cosX;
-    f32 extX;
-    f32 extYNeg;
-    f32 extZ;
-    f32 negExtX;
-    f32 negExtZ;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32 proj;
-    int gb;
-
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    gb = ((GameObject*)obj)->unkF8;
-    if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != GameBit_Get(gb)))
-    {
-        sinY = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
-        cosY = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
-        sinX = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
-        cosX = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
-        extX = (f32)((EffectboxPlacement*)def)->extentX;
-        extYNeg = (f32) - (((EffectboxPlacement*)def)->extentY << 1);
-        extZ = (f32)((EffectboxPlacement*)def)->extentZ;
-        switch (((EffectboxPlacement*)def)->targetMode)
-        {
-        case 1:
-            single = (int)Obj_GetPlayerObject();
-            if (single == 0)
-            {
-                return;
-            }
-            list = &single;
-            count = 1;
-            break;
-        case 0:
-            single = (int)getTrickyObject();
-            if (single == 0)
-            {
-                return;
-            }
-            list = &single;
-            count = 1;
-            break;
-        case 2:
-            list = (int*)ObjGroup_GetObjects(5, &count);
-            if (list == NULL)
-            {
-                return;
-            }
-            break;
-        }
-        negExtX = -extX;
-        negExtZ = -extZ;
-        for (i = 0; i < count; i++)
-        {
-            other = *list;
-            dx = *(f32*)(other + 0xc) - ((GameObject*)obj)->anim.localPosX;
-            dy = *(f32*)(other + 0x10) - ((GameObject*)obj)->anim.localPosY;
-            dz = *(f32*)(other + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-            proj = dx * sinY + dz * cosY;
-            if ((proj > negExtX) && (proj < extX))
-            {
-                proj = (-dx) * cosY + dz * sinY;
-                proj = (-dy) * cosX + proj * sinX;
-                if ((proj > negExtZ) && (proj < extZ))
-                {
-                    proj = dy * sinX + proj * cosX;
-                    if ((proj >= lbl_803E3514) && (proj < extYNeg))
-                    {
-                        switch (((EffectboxPlacement*)def)->targetMode)
-                        {
-                        case 1:
-                            break;
-                        case 0:
-                            fn_80295918((f32)((EffectboxPlacement*)def)->unk1D, other, 1);
-                            break;
-                        case 2:
-                            (*(code*)(*(int*)(*(int*)(other + 0x68)) + 0x28))(other, ((EffectboxPlacement*)def)->unk1D);
-                            break;
-                        }
-                    }
-                }
-            }
-            list++;
-        }
-    }
-}
+void effectbox_update(int obj);
 
 /*
  * --INFO--
@@ -818,41 +658,7 @@ void effectbox_update(int obj)
  * EN v1.0 Address: 0x80174438
  * EN v1.0 Size: 336b
  */
-int fn_80174438(int obj, PushableState* state)
-{
-    int def;
-    void* player;
-
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    player = Obj_GetPlayerObject();
-    if (((state->flags & 0x80) != 0) || (fn_80295A04(player, 10) != 0))
-    {
-        Sfx_StopObjectChannel(obj, 8);
-        return 0;
-    }
-    Sfx_PlayFromObject(obj, 0x66);
-    state->flags |= 2;
-    if ((state->flags & 4) == 0)
-    {
-        fn_80174BFC(obj, state);
-    }
-    if (((GameObject*)obj)->anim.localPosX <= lbl_803E352C + ((ObjPlacement*)def)->posX)
-    {
-        GameBit_Set(state->gameBit, 1);
-        state->flags |= 0x80;
-        ((GameObject*)obj)->anim.localPosX = (f32)(((ObjPlacement*)def)->posX - lbl_803E3530);
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-        ((GameObject*)obj)->anim.localPosZ = (f32)(lbl_803E3538 + ((ObjPlacement*)def)->posZ);
-        Sfx_PlayFromObject(obj, 0x68);
-    }
-    if (GameBit_Get(0xa1a) != 0)
-    {
-        ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
-    }
-    return 0;
-}
+int fn_80174438(int obj, PushableState* state);
 
 /*
  * --INFO--
@@ -861,134 +667,4 @@ int fn_80174438(int obj, PushableState* state)
  * EN v1.0 Address: 0x80174668
  * EN v1.0 Size: 1048b
  */
-int fn_80174668(int obj, PushableState* state)
-{
-    u8 flag;
-    int* tex;
-    void* effectResource;
-    f32 dy;
-    f32 dx;
-    f32 cur;
-    f32 bound;
-    f32 p1;
-    f32 p2;
-    f32 dist[2];
-
-    flag = 0;
-    dist[0] = lbl_803E3540;
-    fn_80175428(obj, 0);
-    if (GameBit_Get(state->gameBit) != 0)
-    {
-        cur = ((GameObject*)obj)->anim.rootMotionScale;
-        bound = lbl_803E3544;
-        if (cur > bound)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = -(lbl_803E3548 * timeDelta - ((GameObject*)obj)->anim.
-                rootMotionScale);
-            if (((GameObject*)obj)->anim.rootMotionScale <= bound)
-            {
-                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3528;
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E354C;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-            }
-        }
-        return 1;
-    }
-    if (state->nearestObj == NULL)
-    {
-        state->nearestObj = (void*)ObjGroup_FindNearestObject(0x11, obj, dist);
-    }
-    if (state->nearestObj == NULL)
-    {
-        return 0;
-    }
-    if (state->eyeOpenAmount < lbl_803E3550)
-    {
-        state->eyeOpenAmount = *(f32 *)&lbl_803E3550;
-    }
-    dy = *(f32*)((int)state->nearestObj + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-    if (dy < lbl_803E3528)
-    {
-        dy = dy * lbl_803E3554;
-    }
-    cur = state->unk_F0;
-    if (cur < lbl_803E3558 + dy)
-    {
-        return 0;
-    }
-    dx = *(f32*)((int)state->nearestObj + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    if (dx < lbl_803E3528)
-    {
-        dx = dx * lbl_803E3554;
-    }
-    if (dx > lbl_803E355C)
-    {
-        return 0;
-    }
-    if ((cur >= lbl_803E3558 + dy) && (cur <= lbl_803E3560 + dy))
-    {
-        flag = 1;
-        GameBit_Set(0x1c9, 1);
-    }
-    tex = (int*)objFindTexture(obj, 0, 0);
-    state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
-    if (state->blinkPhase >= state->blinkInterval)
-    {
-        state->blinkStep = state->blinkStep * lbl_803E3554;
-    }
-    else if (state->blinkPhase < lbl_803E3528)
-    {
-        state->blinkInterval = lbl_803E3564 * (f32)(int)
-        randomGetRange(0x19, 0x4b);
-        state->blinkStep = state->blinkInterval / (f32)(int)
-        randomGetRange(0x28, 0x46);
-        state->blinkPhase = lbl_803E3528;
-    }
-    if (tex != NULL)
-    {
-        state->eyeOpenAmount = state->eyeOpenAmount + state->eyeOpenSpeed;
-        if (state->eyeOpenAmount >= lbl_803E3568)
-        {
-            GameBit_Set(state->gameBit, 1);
-            if (flag)
-            {
-                GameBit_Set(0x1c9, 0);
-            }
-            effectResource = Resource_Acquire(0x5b, 1);
-            (*(code*)(*(int*)(*(int*)effectResource + 4)))(obj, 0x14, 0, 2, -1, 0);
-            (*(code*)(*(int*)(*(int*)effectResource + 4)))(obj, 0x14, 0, 2, -1, 0);
-            Resource_Release(effectResource);
-            Sfx_PlayFromObject(obj, 0x65);
-        }
-        else
-        {
-            state->eyePosX = state->eyePosX + state->eyeDriftSpeedX;
-            if (state->eyePosX > lbl_803E356C)
-            {
-                state->eyePosX = lbl_803E356C;
-            }
-            else if (state->eyePosX < lbl_803E3528)
-            {
-                state->eyePosX = lbl_803E356C;
-            }
-            state->eyePosY = state->eyePosY + state->eyeDriftSpeedY;
-            if (state->eyePosY > lbl_803E356C)
-            {
-                state->eyePosY = lbl_803E356C;
-            }
-            else if (state->eyePosY < lbl_803E3528)
-            {
-                state->eyePosY = lbl_803E356C;
-            }
-            p1 = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
-            p2 = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
-            *(u8*)((char*)tex + 0xc) = (u8)(int)
-            state->eyeOpenAmount;
-            *(u8*)((char*)tex + 0xd) = (u8)(int)
-            p1;
-            *(u8*)((char*)tex + 0xe) = (u8)(int)
-            p2;
-        }
-    }
-    return 0;
-}
+int fn_80174668(int obj, PushableState* state);
