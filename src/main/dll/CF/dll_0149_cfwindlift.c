@@ -1,7 +1,9 @@
 /*
- * DLL 0x149 - CFWindLift (defs CFWindLift + CFTreasWind).
- * TU = 0x8019C784..0x8019D578 (helper fn_8019C784 + windlift_*).
- * Non-owned sibling definitions are collapsed to prototypes in place.
+ * cfwindlift (DLL 0x149, defs CFWindLift + CFTreasWind) - wind lifts
+ * at CF. update ramps the lift alpha from its game bit, runs the rise
+ * sequence with a squared ramp-in, and tracks up to 14 rider slots
+ * (riders get pulled by fn_8019C784's per-slot spring model).
+ * TU = 0x8019C784..0x8019D578.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

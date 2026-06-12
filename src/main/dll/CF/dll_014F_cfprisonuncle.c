@@ -1,8 +1,8 @@
 /*
- * DLL 0x14F - CFPrisonUncle; 10-DLL container spanning 0x14A CFPowerBase
- * through 0x157 SpiritDoorSpirit [8019D578-801A0B14). DLLs 0x148/0x149
- * are owned by dll_0148_cfguardian.c / dll_0149_cfwindlift.c; their
- * definitions here are collapsed to prototypes.
+ * cfprisonuncle (DLL 0x14F) - the imprisoned CloudRunner elder at CF.
+ * update head-tracks the player, mutters ambient barks, runs sequence
+ * 1 on interaction and sequence 0 once GameBit 0x4D marks the rescue.
+ * Carved from the sandwormBoss 10-DLL container.
  */
 #include "main/dll/cfprisonunclestate_struct.h"
 #include "main/effect_interfaces.h"

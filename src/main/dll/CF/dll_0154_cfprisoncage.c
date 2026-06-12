@@ -1,4 +1,10 @@
-/* DLL 0x0154 - cfprisoncage. TU: 0x801A0614-0x801A0994. */
+/*
+ * cfprisoncage (DLL 0x154) - CloudRunner prison cage at CF. The SeqFn
+ * locks interaction once the placement's done bit is set, grants that
+ * bit when the 0xA0005 unlock message arrives, mirrors GameBit 0x44
+ * into the prompt bits and runs sequence 0 when the caged dialog event
+ * is ready. Carved from the sandwormBoss 10-DLL container.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"

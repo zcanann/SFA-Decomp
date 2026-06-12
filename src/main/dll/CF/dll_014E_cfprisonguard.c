@@ -1,8 +1,9 @@
 /*
- * sandwormBoss.c - 10-DLL container (DLL 0x14A CFPowerBase .. 0x157
- * SpiritDoorSpirit), TU [8019D578-801A0B14). DLLs 0x148 and 0x149 are
- * defined in dll_0148_cfguardian.c and dll_0149_cfwindlift.c; their
- * definitions here are collapsed to forward prototypes.
+ * cfprisonguard (DLL 0x14E) - SharpClaw prison guard at CF. update
+ * gates the guard on its placement event, walks him between his post
+ * and the alarm, and frees the prisoners when the player is caught;
+ * render ramps the alarm particle. Carved from the sandwormBoss
+ * 10-DLL container.
  */
 #include "main/dll/bit80_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"

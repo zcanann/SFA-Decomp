@@ -1,3 +1,12 @@
+/*
+ * cfguardian (DLL 0x148) - the CloudRunner Fortress guardian. The big
+ * waterSpellStone1Fn drives the quest state machine (chatter, curve
+ * flight between rom-curve points, the six fire spirits and the water
+ * spell stone hand-off); helpers steer along rom curves (fn_8019B1D8)
+ * and play per-event sfx (fn_8019AE3C). Carved from the front of the
+ * sandwormBoss container; the 0x148 TU truly starts in DR/hightop.c
+ * (documented cut in docs/boundary_audit.md).
+ */
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 

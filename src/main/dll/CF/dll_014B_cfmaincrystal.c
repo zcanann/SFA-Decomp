@@ -1,4 +1,10 @@
-/* DLL 0x014B - cfmaincrystal. TU: 0x8019D9F0-0x8019E3F4. */
+/*
+ * cfmaincrystal (DLL 0x14B) - the CloudRunner Fortress main crystal.
+ * Collects pylon beam reports (0x110001..3 messages) and the crystal
+ * position (0x110004), draws up to ten beams between charged pylons
+ * and the crystal, charges up once all three pylons are lit and fires
+ * the convergence beam. Carved from the sandwormBoss container.
+ */
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
