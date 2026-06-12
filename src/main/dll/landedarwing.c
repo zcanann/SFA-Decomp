@@ -82,10 +82,9 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
     }
 
     ObjHits_SetHitVolumeSlot(objLocal, LANDED_ARWING_OBJECT_PAIR_PRIORITY, LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME, -1);
-    (*(ObjHitsPriorityState**)&((GameObject*)objLocal)->anim.hitReactState)->objectPairPriority =
-        LANDED_ARWING_OBJECT_PAIR_PRIORITY;
-    (*(ObjHitsPriorityState**)&((GameObject*)objLocal)->anim.hitReactState)->objectPairHitVolume =
-        LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
+    hitState = (ObjHitsPriorityState *)((GameObject *)objLocal)->anim.hitReactState;
+    hitState->objectPairPriority = LANDED_ARWING_OBJECT_PAIR_PRIORITY;
+    hitState->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
     ObjHits_RegisterActiveHitVolumeObject(objLocal);
 
     (*gPathControlInterface)->advance((void*)objLocal, (void*)(stateWord + 4), timeDelta);
