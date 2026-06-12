@@ -1105,10 +1105,152 @@ extern f32 lbl_803E3BC4;
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state);
+void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
+{
+    int i;
+    CFLandedArwingState* otherState;
+    int def;
+    int setup;
+    int other;
+    f32 range;
+    f32 yOffset;
+    ObjAnimEventList events;
+
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    if (!((LandedArwingHitFlagBits*)&state->hitFlags)->damaged ||
+        (((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled && state->hitStarted == 0u))
+    {
+        return;
+    }
+    if (state->hitStarted != 0)
+    {
+        ((GameObject*)obj)->anim.rotY = 0;
+        ((GameObject*)obj)->anim.rotZ = 0;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
+        {
+            if (((LandedArwingUpdateHitReactionPlacement*)def)->unk24 > 0)
+            {
+                GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->unk24, 1);
+            }
+
+            switch (*(u8*)(def + 0x1e))
+            {
+            case 0:
+                if (Obj_IsLoadingLocked() != 0)
+                {
+                    i = 0;
+                    yOffset = lbl_803E3BB8;
+                    while (i < *(u8*)(def + 0x1f))
+                    {
+                        setup = Obj_AllocObjectSetup(0x24, 0x259);
+                        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
+                        ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
+                        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+                        *(u8*)(setup + 4) = 1;
+                        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                        *(int*)&((GameObject*)obj)->anim.parent);
+                        i++;
+                    }
+                }
+                break;
+            case 1:
+                range = lbl_803E3BC0;
+                other = ObjGroup_FindNearestObject(0x41, obj, &range);
+                if ((void*)other != NULL)
+                {
+                    otherState = ((GameObject*)other)->extra;
+                    if (*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22) > 0)
+                    {
+                        GameBit_Set(*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22), 1);
+                    }
+                    ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
+                }
+                break;
+            case 2:
+                break;
+            }
+            state->hitStarted = 0;
+            ((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone = 1;
+        }
+        ((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled = 1;
+        state->path8Fx = lbl_803E3BC4;
+    }
+    else
+    {
+        if (*(u8*)(def + 0x1e) == 2)
+        {
+            ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(-200, 200);
+            ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(-200, 200);
+        }
+        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                                  state->hitCooldown);
+    }
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
+                                                                  &events);
+}
 
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
-void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state);
+void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
+{
+    int def;
+    int* texture;
+    u32 bit;
+    LandedArwingHitFlagBits* flags;
+
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    flags = (LandedArwingHitFlagBits*)&state->hitFlags;
+    if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk24 != -1)
+    {
+        bit = GameBit_Get(((LandedArwingUpdateDamageTexturePlacement*)def)->unk24);
+        flags->gameBit24Set = bit;
+        bit = flags->gameBit24Set;
+        if (bit != 0 && *(u8*)(def + 0x1c) == 5)
+        {
+            flags->impactHandled = 1;
+        }
+        else if (bit == 0)
+        {
+            flags->impactHandled = 0;
+        }
+    }
+
+    if (flags->damaged == 0)
+    {
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk22 != -1 && GameBit_Get(
+            ((LandedArwingUpdateDamageTexturePlacement*)def)->unk22) != 0)
+        {
+            flags->damaged = 1;
+        }
+    }
+    else
+    {
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk22 != -1 && GameBit_Get(
+            ((LandedArwingUpdateDamageTexturePlacement*)def)->unk22) == 0)
+        {
+            flags->damaged = 0;
+        }
+    }
+
+    texture = objFindTexture(obj, 0, 0);
+    if (texture != NULL)
+    {
+        if (flags->damaged != 0)
+        {
+            if (flags->gameBit24Set != 0)
+            {
+                *texture = 0x200;
+            }
+            else
+            {
+                *texture = 0x100;
+            }
+        }
+        else
+        {
+            *texture = 0;
+        }
+    }
+}
 
 void dll_109_init(int obj, u8* p);
 

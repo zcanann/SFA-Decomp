@@ -721,10 +721,7 @@ main/dll/CF/dll_011A_drdebrisgir.c:
 	.text       start:0x80188584 end:0x801889C8
 
 main/dll/CF/dll_011B_landedarwi.c:
-	.text       start:0x801889C8 end:0x80189610
-
-main/dll/CF/dll_80189610.c:
-	.text       start:0x80189610 end:0x801899B4
+	.text       start:0x801889C8 end:0x801899B4
 
 main/dll/CF/CFPrisonGuard.c:
 	.text       start:0x801899B4 end:0x80189F5C

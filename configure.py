@@ -1029,7 +1029,6 @@ config.libs = [
             Object(NonMatching, "main/dll/CF/dll_00EC_infopoint.c"),
             Object(NonMatching, "main/dll/CF/dll_011A_drdebrisgir.c"),
             Object(NonMatching, "main/dll/CF/dll_011B_landedarwi.c"),
-            Object(NonMatching, "main/dll/CF/dll_80189610.c"),
             Object(NonMatching, "main/dll/CF/CFPrisonGuard.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_011C_staffactivated.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_011D_treasurechest.c", cflags=cflags_dll_noopt),
