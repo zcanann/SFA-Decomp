@@ -3872,8 +3872,11 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
     Lj: <consume r0>` — a 2-arm if/else (`w = x-K` / `w = x`) whose identity
     else-arm survives as a real `mr` — is UNPRODUCIBLE at O4: the front-end
     if-converts EVERY spelling to the in-place conditional `blt; addi rX,rX,-K`
-    (~25 probes: named/self-assign/embedded-in-consumer ternaries, split vars,
-    goto diamond, switch-on-bool, #114 (int)(long) sandwiches, w5 srawi forms).
+    (~27 probes: named/self-assign/embedded-in-consumer ternaries, split vars,
+    goto diamond, switch-on-bool, #114 (int)(long) sandwiches, w5 srawi forms,
+    AND the #92 static-inline two-return helper — it inlines but the value
+    join still coalesces: #92's join-edge crack applies to BRANCH folds, not
+    value-coalesce if-conversion).
     The per-fn O1 wrap keeps the else arm.** O1 sub-tells for this shape: type
     the value local `int` with NO cast when the field is already s8 (the (s8)
     cast at O1 routes `extsb r0,r0; mr rX,r0`; the cast-free s8-field load
