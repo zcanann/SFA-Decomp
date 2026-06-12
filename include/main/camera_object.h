@@ -43,29 +43,36 @@ typedef struct CameraObject {
     u8 padC8[0xE4 - 0xC8];
     u8 unkE4;
     u8 padE5[0xF4 - 0xE5];
-    f32 unkF4;
+    f32 blendProgress;
     u8 padF8[0x11C - 0xF8];
     void *targetObj; /* GameObject*: current focus/track target */
     u8 pad120[4];
-    void *secondaryTargetObj;
+    void *currentTarget;
     u8 pad128[4];
     f32 unk12C;
     f32 unk130;
     u8 pad134[0x13B - 0x134];
-    u8 unk13B;
-    u8 unk13C;
+    s8 letterboxTargetOffset;
+    s8 letterboxStep;
     u8 pad13D;
     u8 unk13E;
     u8 pad13F[2];
-    u8 unk141;
-    u8 unk142;
-    u8 pad143[0x148 - 0x143];
+    u8 targetFlags;
+    u8 cameraCollisionActive;
+    u8 smoothingFlags;
+    u8 pad144[0x148 - 0x144];
     int unk148;
 } CameraObject;
 
 STATIC_ASSERT(offsetof(CameraObject, fov) == 0xB4);
 STATIC_ASSERT(offsetof(CameraObject, probePosX) == 0xB8);
+STATIC_ASSERT(offsetof(CameraObject, blendProgress) == 0xF4);
 STATIC_ASSERT(offsetof(CameraObject, targetObj) == 0x11C);
+STATIC_ASSERT(offsetof(CameraObject, currentTarget) == 0x124);
+STATIC_ASSERT(offsetof(CameraObject, letterboxTargetOffset) == 0x13B);
+STATIC_ASSERT(offsetof(CameraObject, targetFlags) == 0x141);
+STATIC_ASSERT(offsetof(CameraObject, cameraCollisionActive) == 0x142);
+STATIC_ASSERT(offsetof(CameraObject, smoothingFlags) == 0x143);
 STATIC_ASSERT(offsetof(CameraObject, unk148) == 0x148);
 
 #endif /* MAIN_CAMERA_OBJECT_H_ */

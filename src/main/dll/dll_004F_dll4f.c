@@ -244,7 +244,7 @@ void dll_4F_update(int* obj)
     camera->anim.rotY = (s16)(0x11c6 - (s32)(lbl_803E1AA4 * (lbl_803E1AAC * fz)));
     camera->anim.rotX = (s16)(a + 0x1ffe);
     camera->anim.rotZ = 0;
-    camera->unk13B = 0;
+    camera->letterboxTargetOffset = 0;
     camera->fov = lbl_803E1AB0;
     lbl_803DD590->blendProgress = lbl_803E1AB4 * timeDelta + lbl_803DD590->blendProgress;
     if (lbl_803DD590->blendProgress > *(f32*)&lbl_803E1A8C)

@@ -88,20 +88,20 @@ camcontrol_traceMove(float* startPos, float* targetPos, float* endPosOut, u8* tr
 }
 #pragma dont_inline reset
 
-undefined camcontrol_traceFromTarget(float* fromPos, int channel, float* outPos)
+undefined camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos)
 {
     float targetPos[3];
     undefined traceRec[111];
 
-    if (*(short*)(channel + 0x44) == 1)
+    if (target->anim.classId == 1)
     {
-        cameraGetPrevPos2(channel, &targetPos[0], &targetPos[1], &targetPos[2]);
+        cameraGetPrevPos2((int)target, &targetPos[0], &targetPos[1], &targetPos[2]);
     }
     else
     {
-        targetPos[0] = *(float*)(channel + 0x18);
-        targetPos[1] = *(float*)(channel + 0x1c) + cameraMtxVar57->targetHeight;
-        targetPos[2] = *(float*)(channel + 0x20);
+        targetPos[0] = target->anim.worldPosX;
+        targetPos[1] = target->anim.worldPosY + cameraMtxVar57->targetHeight;
+        targetPos[2] = target->anim.worldPosZ;
     }
     camcontrol_traceMove(targetPos, fromPos, outPos, traceRec, 3, '\x01', '\x01', (double)lbl_803E1688);
     return traceRec[110];
@@ -174,7 +174,7 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
     return box[110];
 }
 
-void camcontrol_updateTargetAction(int camState, int targetObj)
+void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
 {
     short classId;
     int buttons;
@@ -183,33 +183,33 @@ void camcontrol_updateTargetAction(int camState, int targetObj)
     CamcontrolAction44Payload local_24;
     longlong convHeight;
 
-    if (*(void**)(targetObj + 0xc0) == NULL)
+    if (target->pendingParentObj == NULL)
     {
         buttons = getButtonsJustPressed(0);
-        if (*(void**)(camState + 0x124) != NULL)
+        if (camera->currentTarget != NULL)
         {
-            classId = *(short*)(*(int*)(camState + 0x124) + 0x44);
-            if (((classId == 0x1c) || (classId == 0x2a)) && (*(short*)(targetObj + 0x44) == 1))
+            classId = ((GameObject*)camera->currentTarget)->anim.classId;
+            if (((classId == 0x1c) || (classId == 0x2a)) && (target->anim.classId == 1))
             {
-                cond = objFn_80296700(targetObj);
-                if ((cond != 0) && (cond = fn_80295C0C(targetObj), cond != 0))
+                cond = objFn_80296700((int)target);
+                if ((cond != 0) && (cond = fn_80295C0C((int)target), cond != 0))
                 {
                     goto action_49;
                 }
             }
         }
-        if ((*(byte*)(camState + 0x141) & 2) != 0)
+        if ((camera->targetFlags & 2) != 0)
         {
             goto action_49;
         }
         goto check_action_44;
     action_49:
         cameraSetInterpMode(1);
-        (*gCameraInterface)->setMode(0x49, 1, 0, 4, (void*)(camState + 0x124), 0x3c, 0xff);
+        (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
         goto done;
     check_action_44:
-        if ((((buttons & 0x10) != 0) && (*(short*)(targetObj + 0x44) == 1)) &&
-            (cond = objFn_802962b4(targetObj), cond != 0))
+        if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
+            (cond = objFn_802962b4((int)target), cond != 0))
         {
             local_24.distance = cameraMtxVar57->minDistance;
             local_24.yOffset = cameraMtxVar57->lowerHeightOffset;
@@ -223,7 +223,7 @@ void camcontrol_updateTargetAction(int camState, int targetObj)
         {
             cond = getCurSeqNo();
             if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & 0x40) != 0)) &&
-                ((*(short*)(camState + 6) & 4) == 0))
+                ((camera->anim.flags & 4) == 0))
             {
                 local_28.action = 5;
                 local_28.enabled = 1;
@@ -646,7 +646,7 @@ void camcontrol_updateModeSettings(int camera)
             blend * (cameraMtxVar57->targetSlideLeftAmount -
                 cameraMtxVar57->savedSlideLeftAmount) +
             cameraMtxVar57->savedSlideLeftAmount;
-        *(float*)(camera + 0xb4) =
+        ((CameraObject*)camera)->fov =
             blend * (cameraMtxVar57->fov - cameraMtxVar57->savedFov) + cameraMtxVar57->savedFov;
     }
     return;

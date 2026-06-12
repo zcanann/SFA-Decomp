@@ -101,7 +101,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_
         *(s8*)(cameraAddr + 0x84) = -1;
         *(s8*)(cameraAddr + 0x88) = (s8)param_3;
         res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
-        camera->unk142 = res;
+        camera->cameraCollisionActive = res;
         pos[0] = camera->anim.worldPosX;
         pos[1] = camera->anim.worldPosY;
         pos[2] = camera->anim.worldPosZ;
@@ -768,7 +768,7 @@ void camstatic_update(CameraObject* camera)
     if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0)
     {
         gCamcontrolModeSettings->targetActionFlags = *(u8*)((int)camera + 0xa2);
-        if (((camera->unk142 != 0) ||
+        if (((camera->cameraCollisionActive != 0) ||
                 ((gCamcontrolModeSettings->targetActionFlags == 1 &&
                     (*(f32*)((u8*)camera + 0x38) >= lbl_803E16AC)))) &&
             (gCamcontrolModeSettings->clampFlags.b7 == 0))
@@ -805,7 +805,7 @@ void camstatic_update(CameraObject* camera)
     }
     if (gCamcontrolModeSettings->clampFlags.b7 != 0)
     {
-        if ((gCamcontrolModeSettings->targetActionFlags == 1) || (camera->unk142 != 0))
+        if ((gCamcontrolModeSettings->targetActionFlags == 1) || (camera->cameraCollisionActive != 0))
         {
             gCamcontrolModeSettings->wallAvoidanceTimer += 1;
         }
@@ -1036,7 +1036,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             }
             gCamcontrolModeSettings->transitionTimer = (s16) * (s8*)(data + 1);
             gCamcontrolModeSettings->transitionDuration = (s16) * (s8*)(data + 1);
-            cam->unk13B = data[7];
+            cam->letterboxTargetOffset = data[7];
         }
         else
         {

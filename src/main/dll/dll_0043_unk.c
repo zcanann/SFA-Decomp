@@ -52,7 +52,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
     if (*(u32*)&target->pendingParentObj == 0)
     {
         buttons = getButtonsJustPressed(0);
-        targetObj = (GameObject*)camera->secondaryTargetObj;
+        targetObj = (GameObject*)camera->currentTarget;
         if (targetObj != NULL)
         {
             sVar1 = targetObj->anim.classId;
@@ -75,10 +75,10 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
             }
         }
     checkOverrideFlag:
-        if ((camera->unk141 & 2) != 0)
+        if ((camera->targetFlags & 2) != 0)
         {
         sendFollowAction:
-            (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->secondaryTargetObj, 0x3c, 0xff);
+            (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
             goto done;
         }
         if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
@@ -162,7 +162,7 @@ void camclimb_update(CameraObject* cam)
         (*(code*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3,
                                                          &gCamcontrolPathState->curveMin,
                                                          &gCamcontrolPathState->curveMax);
-        if ((cam->anim.currentMove != 0) || (cam->unk142 != 0))
+        if ((cam->anim.currentMove != 0) || (cam->cameraCollisionActive != 0))
         {
             gCamcontrolPathState->initialiseCurve[4] = gCamcontrolPathState->initialiseCurve[4] + timeDelta;
         }

@@ -166,11 +166,11 @@ int firstPersonEnter(u8* cam, s16* p2)
     ((CameraObject*)cam)->anim.worldPosZ = lbl_803DD548->camPosZ;
     ((CameraObject*)cam)->anim.rotY = 0;
     flag = 0;
-    if (((CameraObject*)cam)->unkF4 <= lbl_803E17C4)
+    if (((CameraObject*)cam)->blendProgress <= lbl_803E17C4)
     {
         flag = 1;
     }
-    conv = (int)(lbl_803E1814 * ((CameraObject*)cam)->unkF4);
+    conv = (int)(lbl_803E1814 * ((CameraObject*)cam)->blendProgress);
     state = ((CameraObject*)cam)->anim.targetObj;
     if (conv < 1)
     {

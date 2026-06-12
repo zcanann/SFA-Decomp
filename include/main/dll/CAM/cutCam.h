@@ -2,6 +2,8 @@
 #define MAIN_DLL_CAM_CUTCAM_H_
 
 #include "ghidra_import.h"
+#include "main/camera_object.h"
+#include "main/game_object.h"
 
 typedef struct CamcontrolAction43Payload {
   s16 action;
@@ -18,9 +20,9 @@ typedef struct CamcontrolAction44Payload {
 int
 camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
                      char param_6,u8 param_7,u8 param_8,float param_1);
-undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3);
+undefined camcontrol_traceFromTarget(float *fromPos,GameObject *target,float *outPos);
 undefined camcontrol_getTargetPosition(int param_1,void *param_2,void *param_3,void *param_4);
-void camcontrol_updateTargetAction(int param_1,int param_2);
+void camcontrol_updateTargetAction(CameraObject *camera,GameObject *target);
 int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle);
 void camMoveFn_80104040(int cam, short *tgt);
 void camcontrol_updateModeSettings(int camera);
