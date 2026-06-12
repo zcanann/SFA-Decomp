@@ -227,8 +227,14 @@ main/dll/dll_0004_dummy04.c:
 main/dll/dll_000F_unk.c:
 	.text       start:0x800D8020 end:0x800D9DCC
 
-main/dll/objfsa.c:
-	.text       start:0x800D9DCC end:0x800E5434
+main/dll/dll_0010_uicontroller.c:
+	.text       start:0x800D9DCC end:0x800D9EB4
+
+main/dll/dll_0012_unk.c:
+	.text       start:0x800D9EB4 end:0x800D9EE8
+
+main/dll/dll_0014_unk.c:
+	.text       start:0x800D9EE8 end:0x800E5434
 
 main/dll/dll_0015_curves.c:
 	.text       start:0x800E5434 end:0x800E8100
