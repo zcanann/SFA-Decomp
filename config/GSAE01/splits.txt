@@ -726,10 +726,7 @@ main/dll/blasted.c:
 	.text       start:0x801833E4 end:0x801833E4
 
 main/dll/explodable.c:
-	.text       start:0x801833E4 end:0x80184180
-
-main/dll/cfforcefield.c:
-	.text       start:0x80184180 end:0x801843C0
+	.text       start:0x801833E4 end:0x801843C0
 
 main/dll/CF/dll_0106_scarab.c:
 	.text       start:0x801843C0 end:0x80185868

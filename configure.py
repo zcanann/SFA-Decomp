@@ -1033,7 +1033,6 @@ config.libs = [
             Object(NonMatching, "main/dll/cfperch.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/blasted.c"),
             Object(NonMatching, "main/dll/explodable.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/cfforcefield.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_0106_scarab.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_0107_unused.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_0108_endobject.c", cflags=cflags_dll_noopt),
