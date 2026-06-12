@@ -1,3 +1,553 @@
+/* === merged from main/dll/dll_138.c [80174A80-801755CC) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling off
+#pragma peephole off
+#include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
+#include "main/game_object.h"
+#include "main/dll/dll_138.h"
+#include "main/dll/pushable.h"
+
+
+extern undefined4 FUN_80003494();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int bit);
+extern uint FUN_80017730();
+extern undefined4 FUN_80017754();
+extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_80017778();
+extern int FUN_80017a98();
+extern int FUN_80039520();
+extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
+extern int FUN_800620e8();
+extern undefined4 FUN_800e8630();
+extern undefined8 FUN_80286820();
+extern undefined4 FUN_8028686c();
+extern double FUN_80293900();
+extern undefined4 FUN_80293f90();
+extern undefined4 FUN_80294964();
+extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
+extern f32 sqrtf(f32 x);
+
+extern f64 DOUBLE_803e4210;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E41C0;
+extern f32 lbl_803E41EC;
+extern f32 lbl_803E41F0;
+extern f32 lbl_803E41FC;
+extern f32 lbl_803E4204;
+extern f32 lbl_803E4220;
+extern f32 lbl_803E4230;
+extern f32 lbl_803E3528;
+extern f32 lbl_803E3588;
+extern f32 lbl_803E3598;
+extern f32 timeDelta;
+extern f32 lbl_803E3564;
+extern f32 lbl_803E356C;
+extern f32 lbl_803E3580;
+extern f32 lbl_803E3584;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80174A80
+ * EN v1.0 Address: 0x80174ED4
+ * EN v1.0 Size: 376b
+ * EN v1.1 Address: 0x80174F2C
+ * EN v1.1 Size: 380b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_80174A80(int obj, PushableState* ext)
+{
+    extern void GameBit_Set(int bit, int value); /* #57 */
+    int def;
+    u8* tex;
+    f32 f;
+    f32 v;
+    f32 lim;
+
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    ext->eyeOpenSpeed = lbl_803E3580;
+    f = lbl_803E3584;
+    ext->eyeDriftSpeedX = f;
+    ext->eyeDriftSpeedY = f;
+    ext->blinkInterval = lbl_803E3564 * (f32)(int)
+    randomGetRange(0x19, 0x4b);
+    ext->blinkStep = ext->blinkInterval / (f32)(int)
+    randomGetRange(0x28, 0x46);
+    f = lbl_803E3528;
+    ext->blinkPhase = f;
+    ext->gameBit = *(short*)(def + 0x18);
+    ext->gameBit2 = *(short*)(def + 0x1a);
+    ext->unk_F0 = f;
+    ext->nearestObj = NULL;
+    GameBit_Set(ext->gameBit, 0);
+    tex = (u8*)objFindTexture(obj, 0, 0);
+
+    ext->eyePosX = ext->eyePosX + ext->eyeDriftSpeedX;
+    v = ext->eyePosX;
+    lim = lbl_803E356C;
+    if (v > lim)
+    {
+        ext->eyePosX = lim;
+    }
+    else if (v < lbl_803E3528)
+    {
+        ext->eyePosX = lim;
+    }
+
+    ext->eyePosY = ext->eyePosY + ext->eyeDriftSpeedY;
+    v = ext->eyePosY;
+    lim = lbl_803E356C;
+    if (v > lim)
+    {
+        ext->eyePosY = lim;
+    }
+    else if (v < lbl_803E3528)
+    {
+        ext->eyePosY = lim;
+    }
+
+    tex[0xc] = 10;
+    tex[0xd] = 10;
+    tex[0xe] = 10;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80174BFC
+ * EN v1.0 Address: 0x80174BFC
+ * EN v1.0 Size: 1296b
+ */
+typedef struct Dll138PoseCopy
+{
+    s16 rot[3];
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} Dll138PoseCopy;
+
+typedef struct Dll138HitInfo
+{
+    u8 pad0[0x1c];
+    f32 angleX;
+    u8 pad1[4];
+    f32 angleZ;
+    u8 pad2[0x29];
+    s8 id;
+    u8 pad3[2];
+} Dll138HitInfo;
+
+extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern int getAngle(f32 a, f32 b);
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
+extern void memcpy(void* dst, void* src, int n);
+extern f32 lbl_803E358C;
+extern f32 lbl_803E3590;
+extern f32 lbl_803E3594;
+
+void fn_80174BFC(int obj, int ext)
+{
+    extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, u8 p9, int p10); /* #57 */
+    extern void setMatrixFromObjectPos(float* outMtx, short* inObj); /* #57 */
+    extern int Sfx_PlayFromObject(int a, int b); /* #57 */
+    extern int Obj_GetPlayerObject(); /* #57 */
+    extern void saveGame_saveObjectPos(int obj); /* #57 */
+    extern void GameBit_Set(int bit, int value); /* #57 */
+    int def;
+    int i;
+    s8 bits;
+    f32* velBase;
+    int iter;
+    f32 scale;
+    f32 savedX;
+    f32 savedY;
+    f32 savedZ;
+    Dll138PoseCopy pose;
+    f32 mtx[16];
+    f32 points[21];
+    Dll138HitInfo hit;
+
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    velBase = (f32*)((PushableState*)ext)->probeLocal;
+    Obj_GetPlayerObject();
+    savedX = ((GameObject*)obj)->anim.localPosX;
+    savedY = ((GameObject*)obj)->anim.localPosY;
+    savedZ = ((GameObject*)obj)->anim.localPosZ;
+    bits = 0xf;
+    iter = 0;
+    scale = lbl_803E3588;
+    while (bits != 0)
+    {
+        bits = 0xf;
+        iter = iter + 1;
+        if (iter > 4)
+        {
+            ((GameObject*)obj)->anim.localPosX = savedX;
+            ((GameObject*)obj)->anim.localPosY = savedY;
+            ((GameObject*)obj)->anim.localPosZ = savedZ;
+            break;
+        }
+        i = 0;
+        for (; i < ((PushableState*)ext)->pointCount; i++)
+        {
+            pose.rot[0] = ((GameObject*)obj)->anim.rotX;
+            pose.rot[1] = ((GameObject*)obj)->anim.rotY;
+            pose.rot[2] = ((GameObject*)obj)->anim.rotZ;
+            pose.scale = scale;
+            pose.x = ((GameObject*)obj)->anim.localPosX;
+            pose.y = ((GameObject*)obj)->anim.localPosY;
+            pose.z = ((GameObject*)obj)->anim.localPosZ;
+            setMatrixFromObjectPos(mtx, (short*)&pose);
+            Matrix_TransformPoint(mtx, velBase[i * 3], velBase[i * 3 + 1], velBase[i * 3 + 2],
+                                  &points[i * 3], &points[i * 3 + 1], &points[i * 3 + 2]);
+            if ((1 << i & 0xf) != 0)
+            {
+                if (objBboxFn_800640cc((f32*)(ext + i * 12 + 0x78), &points[i * 3], lbl_803E358C, 1, &hit, obj,
+                                       8, 0xd, (u8)(i + 3), 10) == 0)
+                {
+                    bits = (s8)(bits & ~(1 << i));
+                }
+                else
+                {
+                    int angle;
+                    int delta;
+                    if (hit.id != -1 && (((PushableState*)ext)->flags & 1) == 0)
+                    {
+                        int gamebit;
+                        ((PushableState*)ext)->flags |= 1;
+                        gamebit = *(s16*)(def + 0x18);
+                        if (gamebit > -1)
+                        {
+                            switch (((GameObject*)obj)->anim.seqId)
+                            {
+                            case 0x411:
+                            case 0x21e:
+                                break;
+                            case 0x7df:
+                                ((PushableState*)ext)->flags &= ~1;
+                                if (hit.id == ((PushableState*)ext)->requiredHitId)
+                                {
+                                    int* tex = objFindTexture(obj, 0, 0);
+                                    if (tex != NULL)
+                                    {
+                                        *tex = 0x100;
+                                    }
+                                    GameBit_Set(*(s16*)(def + 0x18), 1);
+                                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                                    ((PushableState*)ext)->flags |= 0x80;
+                                }
+                                break;
+                            case 0x1cb:
+                                if (hit.id == 1)
+                                {
+                                    GameBit_Set(gamebit, 1);
+                                    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                                    ((PushableState*)ext)->flags |= 0x80;
+                                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                                    saveGame_saveObjectPos(obj);
+                                }
+                                break;
+                            default:
+                                {
+                                    s8 t = *(s8*)(def + 0x23);
+                                    if (t > -1 && t == hit.id)
+                                    {
+                                        GameBit_Set(gamebit, 1);
+                                        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    mathSinf(lbl_803E3590 * (f32)((PushableState*)ext)->yaw / lbl_803E3594);
+                    mathCosf(lbl_803E3590 * (f32)((PushableState*)ext)->yaw / lbl_803E3594);
+                    angle = getAngle(hit.angleX, hit.angleZ);
+                    delta = ((PushableState*)ext)->yaw - (angle & 0xffff);
+                    if (delta > 0x8000)
+                    {
+                        delta -= 0xffff;
+                    }
+                    if (delta < -0x8000)
+                    {
+                        delta += 0xffff;
+                    }
+                    delta = delta / 0xb6;
+                    if (delta > -0x1e && delta < 0x1e)
+                    {
+                        ((PushableState*)ext)->flags |= 0x100;
+                        ((PushableState*)ext)->pushAmountX = lbl_803E3528;
+                    }
+                    else if (delta > 0x96 || delta < -0x96)
+                    {
+                        ((PushableState*)ext)->flags |= 0x200;
+                        ((PushableState*)ext)->pushAmountX = lbl_803E3528;
+                    }
+                    else if (delta > 0x3c && delta < 0x78)
+                    {
+                        ((PushableState*)ext)->flags |= 0x800;
+                        ((PushableState*)ext)->pushAmountZ = lbl_803E3528;
+                    }
+                    else if (delta < -0x3c && delta > -0x78)
+                    {
+                        ((PushableState*)ext)->flags |= 0x400;
+                        ((PushableState*)ext)->pushAmountZ = lbl_803E3528;
+                    }
+                    memcpy((void*)(ext + i * 12 + 0x78), &points[i * 3], 0xc);
+                    mtx[12] = points[i * 3];
+                    mtx[13] = points[i * 3 + 1];
+                    mtx[14] = points[i * 3 + 2];
+                    Matrix_TransformPoint(mtx, -velBase[i * 3], -velBase[i * 3 + 1],
+                                          -velBase[i * 3 + 2], (f32*)(obj + 0xc),
+                                          (f32*)(obj + 0x10), (f32*)(obj + 0x14));
+                }
+            }
+        }
+    }
+    memcpy(((PushableState*)ext)->cornerWorld, points, ((PushableState*)ext)->pointCount * 0xc);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8017510C
+ * EN v1.0 Address: 0x80175468
+ * EN v1.0 Size: 744b
+ * EN v1.1 Address: 0x801755B8
+ * EN v1.1 Size: 796b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 fn_8017510C(short* obj, short* refObj, int attach)
+{
+    extern int Obj_GetPlayerObject(); /* #57 */
+    extern void GameBit_Set(int bit, int value); /* #57 */
+    uint bitVal;
+    int player;
+    PushableState* state;
+    f32 dx;
+    f32 dz;
+    f32 len;
+    f32 k;
+
+    state = *(PushableState**)(obj + 0x5c);
+    state->savePosDelay = 0x3c;
+    if (obj[0x5a] != -1)
+    {
+        (*gCameraInterface)->setTargetReticleOverride((int)obj);
+    }
+    *(short*)(attach + 0x70) = -1;
+    if (*(char*)(attach + 0x56) != '\0')
+    {
+        if (*(char*)(attach + 0x56) != '\x02')
+        {
+            *(float*)(attach + 0x4c) = lbl_803E3588;
+            *(float*)(attach + 0x40) = *(float*)(obj + 6) - *(float*)(refObj + 6);
+            *(float*)(attach + 0x44) = *(float*)(obj + 8) - *(float*)(refObj + 8);
+            *(float*)(attach + 0x48) = *(float*)(obj + 10) - *(float*)(refObj + 10);
+            *(short*)(attach + 0x50) = *obj - (u16) * refObj;
+            if (0x8000 < *(short*)(attach + 0x50))
+            {
+                *(short*)(attach + 0x50) = *(short*)(attach + 0x50) - 0xffff;
+            }
+            if (*(short*)(attach + 0x50) < -0x8000)
+            {
+                *(short*)(attach + 0x50) = *(short*)(attach + 0x50) + 0xffff;
+            }
+            *(short*)(attach + 0x52) = obj[1] - (u16)refObj[1];
+            if (0x8000 < *(short*)(attach + 0x52))
+            {
+                *(short*)(attach + 0x52) = *(short*)(attach + 0x52) - 0xffff;
+            }
+            if (*(short*)(attach + 0x52) < -0x8000)
+            {
+                *(short*)(attach + 0x52) = *(short*)(attach + 0x52) + 0xffff;
+            }
+            *(short*)(attach + 0x54) = (u16)refObj[2] - (u16)obj[2];
+            if (0x8000 < *(short*)(attach + 0x54))
+            {
+                *(short*)(attach + 0x54) = *(short*)(attach + 0x54) - 0xffff;
+            }
+            if (*(short*)(attach + 0x54) < -0x8000)
+            {
+                *(short*)(attach + 0x54) = *(short*)(attach + 0x54) + 0xffff;
+            }
+            *(undefined*)(attach + 0x56) = 2;
+        }
+        *(float*)(attach + 0x4c) =
+            -(*(float*)(attach + 0x24) * timeDelta - *(float*)(attach + 0x4c));
+        if (*(float*)(attach + 0x4c) <= lbl_803E3528)
+        {
+            *(undefined*)(attach + 0x56) = 0;
+        }
+    }
+    if (*(int*)(obj + 0x7c) == 0)
+    {
+        *(int*)(obj + 0x7c) = 2;
+    }
+    if ((obj[0x23] == 0x21e) || (obj[0x23] == 0x411))
+    {
+        *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) | 8;
+        if (('\0' < *(char*)(*(int*)(obj + 0x2c) + 0x10f)) &&
+            ((*(short*)(*(int*)(*(int*)(obj + 0x2c) + 0x100) + 0x44) == 0x24 &&
+                (bitVal = GameBit_Get(0x103), bitVal == 0))))
+        {
+            GameBit_Set(0x103, 1);
+            *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) & ~8;
+            player = Obj_GetPlayerObject();
+            dx = *(float*)(obj + 6) - *(float*)(player + 0xc);
+            dz = *(float*)(obj + 10) - *(float*)(player + 0x14);
+            len = sqrtf(dx * dx + dz * dz);
+            if (len != lbl_803E3528)
+            {
+                dx = dx / len;
+                dz = dz / len;
+            }
+            k = lbl_803E3598;
+            state->unk_C0 = k * dx;
+            state->unk_C4 = lbl_803E3528;
+            state->unk_C8 = k * dz;
+            return 4;
+        }
+    }
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80175428
+ * EN v1.0 Address: 0x80175428
+ * EN v1.0 Size: 248b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_80175428(int obj)
+{
+    extern void Obj_FreeObject(int obj); /* #57 */
+    PushableState* state;
+    int msgSender;
+    int msg;
+    int msgParam;
+
+    state = ((GameObject*)obj)->extra;
+    msgParam = 0;
+    while (ObjMsg_Pop(obj, &msg, &msgSender, &msgParam) != 0)
+    {
+        switch (msg)
+        {
+        case 0xf0003:
+            state->msgSenderObj = msgSender;
+            break;
+        case 0xe:
+            if ((((GameObject*)obj)->anim.seqId != 0x21e) && (((GameObject*)obj)->anim.seqId != 0x411))
+            {
+                Obj_FreeObject(obj);
+            }
+            break;
+        case 0x40001:
+            if (((GameObject*)obj)->anim.seqId == 0x21e)
+            {
+                state->unk_F0 = *(float*)msgParam;
+            }
+            if (((GameObject*)obj)->anim.seqId == 0x411)
+            {
+                state->unk_F0 = *(float*)msgParam;
+            }
+            break;
+        }
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: pushable_render2
+ * EN v1.0 Address: 0x80175520
+ * EN v1.0 Size: 16b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int pushable_render2(int obj)
+{
+    return (*(PushableState**)&((GameObject*)obj)->extra)->flags & 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: pushable_modelMtxFn
+ * EN v1.0 Address: 0x80175530
+ * EN v1.0 Size: 28b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void pushable_modelMtxFn(int obj, int modelNo)
+{
+    int extra = *(int*)&((GameObject*)obj)->extra;
+    uint flags = *(uint*)(extra + 0xa8);
+
+    *(uint*)(extra + 0xa8) = flags | (1 << modelNo);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: pushable_func0B
+ * EN v1.0 Address: 0x8017554C
+ * EN v1.0 Size: 128b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+typedef struct Dll138Vec3
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} Dll138Vec3;
+
+int pushable_func0B(int obj, int other)
+{
+    int state;
+    f32 delta[3];
+    f32* d;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    d = delta;
+    d[0] = *(f32*)(other + 0xc) - ((GameObject*)obj)->anim.localPosX;
+    d[1] = *(f32*)(other + 0x10) - ((GameObject*)obj)->anim.localPosY;
+    d[2] = *(f32*)(other + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
+        *(f32*)(state + 0xc);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -140,15 +690,12 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_AddContactObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern void Obj_FreeObject(int* obj);
 extern undefined4 ObjMsg_AllocQueue();
 extern int ObjList_ContainsObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-extern int fn_80174A80();
-extern undefined4 fn_80174BFC();
 extern undefined4 fn_8017510C();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -318,36 +865,20 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void invhit_hitDetect(void)
-{
-}
+void invhit_hitDetect(void);
 
-void invhit_release(void)
-{
-}
+void invhit_release(void);
 
-void invhit_initialise(void)
-{
-}
+void invhit_initialise(void);
 
-void iceblast_free(void)
-{
-}
+void iceblast_free(void);
 
-void iceblast_hitDetect(void)
-{
-}
+void iceblast_hitDetect(void);
 
-void iceblast_release(void)
-{
-}
+void iceblast_release(void);
 
-void iceblast_initialise(void)
-{
-}
+void iceblast_initialise(void);
 
-extern unsigned long GameBit_Set(int eventId, int value);
-extern int saveGame_saveObjectPos(int* obj);
 extern int lbl_803DDAB8;
 extern int lbl_803AC6E0[];
 
@@ -355,6 +886,8 @@ extern int lbl_803AC6E0[];
 #pragma peephole off
 void pushable_free(int* obj)
 {
+    extern int saveGame_saveObjectPos(int* obj); /* #57 */
+    extern unsigned long GameBit_Set(int eventId, int value); /* #57 */
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     PushableState* sub = ((GameObject*)obj)->extra;
     s16 type = ((GameObject*)obj)->anim.seqId;
@@ -389,13 +922,13 @@ void pushable_free(int* obj)
 /* 8b "li r3, N; blr" returners. */
 int pushable_getExtraSize(void) { return 0x148; }
 int pushable_getObjectTypeId(void) { return 0x48; }
-int WarpPoint_getExtraSize(void) { return 0x10; }
-int WarpPoint_getObjectTypeId(void) { return 0x1; }
-int invhit_getExtraSize(void) { return 0xc; }
-int invhit_getObjectTypeId(void) { return 0x0; }
-int iceblast_getExtraSize(void) { return 0x4; }
-int iceblast_getObjectTypeId(void) { return 0x0; }
-int flameblast_getExtraSize(void) { return 0x14; }
+int WarpPoint_getExtraSize(void);
+int WarpPoint_getObjectTypeId(void);
+int invhit_getExtraSize(void);
+int invhit_getObjectTypeId(void);
+int iceblast_getExtraSize(void);
+int iceblast_getObjectTypeId(void);
+int flameblast_getExtraSize(void);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern f32 lbl_803E3618;
@@ -403,212 +936,49 @@ extern f32 lbl_803E3620;
 extern f32 lbl_803E3628;
 extern f32 lbl_803E362C;
 #pragma peephole on
-void flameblast_render(int* obj)
-{
-    f32 vec[3];
-    f32 f = lbl_803E362C * *(f32*)((GameObject*)obj)->extra + lbl_803E3628;
-    vec[0] = lbl_803E3618;
-    vec[1] = lbl_803E3620;
-    vec[2] = lbl_803E3618;
-    fn_80098B18((int)obj, f, 2, 0, 0, (int)vec);
-}
+void flameblast_render(int* obj);
 
 /* 16b chained patterns. */
-void objSetAnimSpeedTo1(int* obj)
-{
-    u8 v = 0x1;
-    *((u8*)((int**)obj)[0xb8 / 4] + 0x10) = v;
-}
+void objSetAnimSpeedTo1(int* obj);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 lbl_803E3600;
-void invhit_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
-void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
+void invhit_render(int* obj, int a, int b, int c, int d);
+void iceblast_render(int* obj, int a, int b, int c, int d);
 
 #pragma peephole off
-void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    int* p = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (visible == 0) return;
-    if (*(s8*)((char*)p + 0x1d) == 1) return;
-}
+void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 
-void invhit_free(int obj)
-{
-    char* inner = ((GameObject*)obj)->extra;
-    switch (((InvhitState*)inner)->unk8)
-    {
-    case 4:
-        (*gExpgfxInterface)->freeSource2((u32)obj);
-        break;
-    }
-}
+void invhit_free(int obj);
 
 #pragma peephole on
-void iceblast_init(int obj, s16* p)
-{
-    *(f32*)((GameObject*)obj)->extra = (f32) * (s16*)((char*)p + 0x1a);
-    ObjHits_SetTargetMask(obj, 1);
-}
+void iceblast_init(int obj, s16* p);
 
 extern void warpToMap(int mapId, int flag);
 
 #pragma peephole off
-int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int* p = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (*(s8*)((char*)p + 0x1d) != 2)
-    {
-        if (animUpdate->triggerCommand == 1)
-        {
-            int v = (s8) * (u8*)((char*)p + 0x1a);
-            if (v > -1)
-            {
-                warpToMap(v, 1);
-                animUpdate->triggerCommand = 0;
-            }
-        }
-    }
-    return 0;
-}
+int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern f32 timeDelta;
 extern f32 lbl_803E3630;
 extern f32 lbl_803E3634;
 extern int fn_8017805C(int* obj, f32* state);
 
-void flameblast_update(int* obj)
-{
-    f32* state = ((GameObject*)obj)->extra;
-    state[0] = state[0] + timeDelta;
-    if (state[0] > lbl_803E3630)
-    {
-        state[0] = state[0] - lbl_803E3630;
-        if (fn_8017805C(obj, state) == 0)
-        {
-            return;
-        }
-    }
-    else
-    {
-        if (state[0] > lbl_803E3634)
-        {
-            if (((FlameblastState*)state)->unk11 == 0)
-            {
-                ObjHits_SetHitVolumeSlot(obj, 0x1a, 1, 0);
-            }
-        }
-    }
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * state[0] + state[1];
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * state[0] + state[2];
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * state[0] + state[3];
-}
+void flameblast_update(int* obj);
 
 extern f32 lbl_803E3604;
 extern f32 lbl_803E3608;
 extern f32 lbl_803E360C;
-extern void* Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void* in, void* out);
 extern f32 lbl_803E3638;
 
-void flameblast_init(int* obj, u8* def)
-{
-    f32* state = ((GameObject*)obj)->extra;
-    fn_8017805C(obj, state);
-    state[0] = lbl_803E3638 * (f32)(s32) * (s16*)((char*)def + 0x1a);
-    ((FlameblastState*)state)->unk11 = 2;
-}
+void flameblast_init(int* obj, u8* def);
 
-void WarpPoint_init(int* obj, u8* def)
-{
-    s16* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)WarpPoint_SeqFn;
-    *(s16*)obj = (s16)((u32)def[0x18] << 8);
-    state[0] = 0x1e;
-    ((WarpPointState*)state)->unk8 = (f32)((s32) * (s8*)((char*)def + 0x1e) << 2);
-    state[1] = ((WarpPointObjectDef*)def)->unk20;
-    state[2] = (s16)(s32) * (s8*)((char*)def + 0x1b);
-    if (*(s8*)((char*)def + 0x1c) != 0)
-    {
-        ((WarpPointState*)state)->unkC = 0;
-    }
-    else
-    {
-        ((WarpPointState*)state)->unkC = 1;
-    }
-    if (*(s8*)((char*)def + 0x1d) == 2)
-    {
-        state[0] = 0;
-    }
-    if (((ObjPlacement*)def)->mapId == 0x4B675 || ((ObjPlacement*)def)->mapId == 0x46882)
-    {
-        *(u8*)((char*)def + 0x1f) = 1;
-    }
-    else
-    {
-        *(u8*)((char*)def + 0x1f) = 0;
-    }
-}
+void WarpPoint_init(int* obj, u8* def);
 
-void iceblast_update(int* obj)
-{
-    int* path;
-    int* def;
-    f32* state;
-    int* player;
-    struct
-    {
-        s16 dir[3];
-        s16 pad;
-        f32 pos[4];
-    } vec;
-    player = (int*)Obj_GetPlayerObject();
-    state = ((GameObject*)obj)->extra;
-    def = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (player != NULL && (path = ((GameObject*)player)->childObjs[0]) != NULL)
-    {
-        ((GameObject*)obj)->anim.rotZ = *(s16*)((char*)path + 4);
-        ((GameObject*)obj)->anim.rotY = *(s16*)((char*)path + 2);
-        *(s16*)obj = *(s16*)path;
-    }
-    else
-    {
-        return;
-    }
-    ObjHits_SetHitVolumeSlot(obj, 0x10, ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1, 0);
-    state[0] = state[0] - timeDelta;
-    if (state[0] <= lbl_803E3604)
-    {
-        f32 zero;
-        state[0] = state[0] + lbl_803E3608;
-        zero = lbl_803E3604;
-        ((f32*)obj)[9] = zero;
-        ((f32*)obj)[11] = zero;
-        ((f32*)obj)[10] = lbl_803E360C;
-        vec.pos[1] = zero;
-        vec.pos[2] = zero;
-        vec.pos[3] = zero;
-        vec.pos[0] = lbl_803E3600;
-        vec.dir[2] = *(s16*)((char*)path + 4);
-        vec.dir[1] = *(s16*)((char*)path + 2);
-        vec.dir[0] = *(s16*)path;
-        vecRotateZXY(&vec, (f32*)((char*)obj + 0x24));
-        ObjPath_GetPointWorldPosition((int)path, 0, &((GameObject*)obj)->anim.localPosX,
-                                      &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ, 0);
-        ObjHits_EnableObject((u32)obj);
-    }
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
-        localPosX;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
-        localPosY;
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
-        localPosZ;
-}
+void iceblast_update(int* obj);
 
 extern s16* getTrickyObject(void);
 extern int fn_80138F90(void);
@@ -617,60 +987,7 @@ extern f32 lbl_803E361C;
 extern f32 lbl_803E3624;
 
 #pragma opt_common_subs off
-int fn_8017805C(int* obj, f32* state)
-{
-    s16* tricky;
-    f32* pf;
-    f32 k;
-    struct
-    {
-        s16 dir[3];
-        s16 pad;
-        f32 pos[4];
-    } vec;
-
-    tricky = getTrickyObject();
-    if (*(u8*)((char*)state + 0x10) != 0 || tricky == NULL)
-    {
-        Obj_FreeObject(obj);
-        return 0;
-    }
-    {
-        f32 f = lbl_803E3618;
-        ((GameObject*)obj)->anim.velocityX = f;
-        ((GameObject*)obj)->anim.velocityY = f;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E361C;
-        vec.pos[1] = f;
-        vec.pos[2] = f;
-        vec.pos[3] = f;
-        vec.pos[0] = lbl_803E3620;
-    }
-    vec.dir[2] = tricky[2];
-    vec.dir[1] = tricky[1];
-    vec.dir[0] = tricky[0] + fn_80138F90();
-    vecRotateZXY(&vec, &((GameObject*)obj)->anim.velocityX);
-    if ((((GameObject*)tricky)->objectFlags & 0x800) != 0)
-    {
-        pf = trickyGetQueuedPathParticlePos(tricky);
-    }
-    else
-    {
-        pf = &((GameObject*)tricky)->anim.localPosX;
-    }
-    k = lbl_803E3624;
-    state[1] = -(k * ((GameObject*)obj)->anim.velocityX - pf[0]);
-    state[2] = -(k * ((GameObject*)obj)->anim.velocityY - pf[1]);
-    state[3] = -(k * ((GameObject*)obj)->anim.velocityZ - pf[2]);
-    if (*(u8*)((char*)state + 0x11) != 0)
-    {
-        *(u8*)((char*)state + 0x11) -= 1;
-    }
-    else
-    {
-        ObjHits_ClearHitVolumes(obj);
-    }
-    return 1;
-}
+int fn_8017805C(int* obj, f32* state);
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
@@ -681,95 +998,7 @@ typedef struct InvHitState
     u8 mode;
 } InvHitState;
 
-void invhit_init(int* obj, u8* def)
-{
-    InvHitState* state = ((GameObject*)obj)->extra;
-    char* sub;
-
-    state->mode = def[0x1a];
-    sub = *(char**)&((GameObject*)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags & ~1;
-    switch (state->mode)
-    {
-    case 0:
-        ((GameObject*)obj)->unkF8 = def[0x18];
-        break;
-    case 6:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = 0x23;
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
-        sub[0x6e] = 0xb;
-        sub[0x6f] = 1;
-        sub[0xae] = 0;
-        sub[0xaf] = 0;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case 3:
-        ((GameObject*)obj)->unkF8 = def[0x18];
-        ((GameObject*)obj)->unkF4 = 0;
-        break;
-    case 5:
-        ((GameObject*)obj)->unkF8 = def[0x18];
-        ((GameObject*)obj)->unkF4 = 0;
-        break;
-    case 7:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
-        sub[0xae] = 0;
-        sub[0x6e] = 0xa;
-        sub[0x6f] = 0;
-        sub[0xaf] = 0;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case 1:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
-        sub[0xae] = 0;
-        sub[0x6e] = 0xb;
-        sub[0x6f] = 1;
-        sub[0xaf] = 0;
-        sub[0x6e] = 0x11;
-        sub[0x6f] = 1;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case 2:
-        ((ObjHitsPriorityState*)sub)->shapeFlags = def[0x19];
-        ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 1;
-        sub[0xae] = 0;
-        sub[0xaf] = 0;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case 4:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = 0xa;
-        ((ObjHitsPriorityState*)sub)->flags = 3;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        ((GameObject*)obj)->unkF8 = 0x78;
-        {
-            char* anchorObj = *(char**)&((InvhitObjectDef*)def)->unk1C;
-            if (anchorObj != NULL)
-            {
-                state->anchorX = ((GameObject*)anchorObj)->anim.localPosX;
-                state->anchorZ = *(f32*)(*(char**)&((InvhitObjectDef*)def)->unk1C + 0x14);
-            }
-        }
-        break;
-    }
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x6000;
-}
+void invhit_init(int* obj, u8* def);
 #pragma opt_common_subs reset
 
 extern int playerIsDisguised(void* player);
@@ -778,7 +1007,6 @@ extern int fn_80295A04(void* player, int a);
 extern void pushable_savePos(int* obj);
 extern int fn_80174668(int* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void Obj_RemoveFromUpdateList(int* obj);
 extern f32 lbl_803E3528;
 extern f64 lbl_803E3530;
@@ -786,6 +1014,10 @@ extern f64 lbl_803E3538;
 
 void pushable_update(int* obj)
 {
+    extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern int saveGame_saveObjectPos(int* obj); /* #57 */
+    extern unsigned long GameBit_Set(int eventId, int value); /* #57 */
     PushableState* state;
     u8* def;
     void* player;
@@ -881,154 +1113,7 @@ extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
 
-void invhit_update(int* obj)
-{
-    InvHitState* state;
-    int i;
-
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    switch (state->mode)
-    {
-    case 0:
-        {
-            char* victim = (char*)Obj_GetPlayerObject();
-            while (victim != NULL)
-            {
-                f32 dx = ((GameObject*)obj)->anim.localPosX - ((PushableState*)victim)->cullDistance;
-                f32 dy = ((GameObject*)obj)->anim.localPosY - ((PushableState*)victim)->scale;
-                f32 dz = ((GameObject*)obj)->anim.localPosZ - ((PushableState*)victim)->timer_0x14;
-                f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
-                if (dist < (f32)((GameObject*)obj)->unkF8)
-                {
-                    u8* victimHits = *(u8**)&((GameObject*)victim)->anim.hitReactState;
-                    victimHits[0x71] += 1;
-                    ((ObjHitsPriorityState*)victimHits)->flags = ((ObjHitsPriorityState*)victimHits)->flags & ~1;
-                    (*(u8**)&((GameObject*)obj)->anim.hitReactState)[0x71] += 1;
-                }
-                if (((GameObject*)victim)->anim.classId == 1)
-                {
-                    victim = (char*)getTrickyObject();
-                }
-                else
-                {
-                    victim = NULL;
-                }
-            }
-            break;
-        }
-    case 3:
-        if (Obj_GetPlayerObject() != NULL)
-        {
-            lbl_803AC780[0] = ((GameObject*)obj)->anim.worldPosX;
-            lbl_803AC780[1] = ((GameObject*)obj)->anim.worldPosY;
-            lbl_803AC780[2] = ((GameObject*)obj)->anim.worldPosZ;
-        }
-        break;
-    case 5:
-        {
-            void* pl = Obj_GetPlayerObject();
-            u32 v = fn_80296118();
-            if (pl != NULL && v != 0)
-            {
-                lbl_803AC780[0] = ((GameObject*)obj)->anim.worldPosX;
-                lbl_803AC780[1] = ((GameObject*)obj)->anim.worldPosY;
-                lbl_803AC780[2] = ((GameObject*)obj)->anim.worldPosZ;
-            }
-            break;
-        }
-    case 1:
-        ObjList_ContainsObject(((GameObject*)obj)->unkF4);
-        break;
-    case 7:
-        {
-            char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
-            char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
-            char* ownerHitSlot = ownerHitState;
-
-            i = 0;
-            for (; i < *(s8*)(ownerHitState + 0x71); i++)
-            {
-                if (*(int**)(ownerHitSlot + 0x7c) == obj)
-                {
-                    *(s16*)(hitState + 0x60) = *(s16*)(hitState + 0x60) & ~1;
-                    Obj_FreeObject(obj);
-                }
-                ownerHitSlot += 4;
-            }
-            break;
-        }
-    case 4:
-        {
-            char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
-            char* targetObj;
-            f32** hits[2];
-            f32 reach;
-            f32 dx2;
-            f32 dz2;
-            s8 cnt;
-            f32 thr;
-
-            ((GameObject*)obj)->unkF8 -= framesThisStep;
-            if (*(void**)&((ObjHitsPriorityState*)hitState)->lastHitObject != NULL)
-            {
-                ((ObjHitsPriorityState*)hitState)->flags = 0;
-            }
-            targetObj = *(char**)&((GameObject*)obj)->unkF4;
-            if (targetObj != NULL)
-            {
-                f32 dx;
-                f32 dz;
-                f32 k;
-                f32 qt;
-                f32 d;
-
-                if (ObjList_ContainsObject(targetObj) == 0) break;
-                dx = ((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-                dz = ((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-                k = lbl_803E35EC;
-                qt = dx / k;
-                ((GameObject*)obj)->anim.localPosX = qt * timeDelta + ((GameObject*)obj)->anim.localPosX;
-                qt = dz / k;
-                ((GameObject*)obj)->anim.localPosZ = qt * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-                dx = ((GameObject*)targetObj)->anim.localPosX - state->anchorX;
-                dz = ((GameObject*)targetObj)->anim.localPosZ - state->anchorZ;
-                reach = lbl_803E35F0 + sqrtf(dx * dx + dz * dz);
-                dx2 = ((GameObject*)obj)->anim.localPosX - state->anchorX;
-                dz2 = ((GameObject*)obj)->anim.localPosZ - state->anchorZ;
-                d = sqrtf(dx2 * dx2 + dz2 * dz2);
-                if (d > reach)
-                {
-                    f32 r = reach / d;
-                    dx2 = dx2 * r;
-                    dz2 = dz2 * r;
-                    ((GameObject*)obj)->anim.localPosX = state->anchorX + dx2;
-                    ((GameObject*)obj)->anim.localPosZ = state->anchorZ + dz2;
-                }
-                (*gPartfxInterface)->spawnObject(obj, 0x25, NULL, 0, -1,
-                                                 NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1,
-                                                 NULL);
-            }
-            cnt = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                       ((GameObject*)obj)->anim.localPosZ, hits, 0, 0);
-            thr = lbl_803E35F4;
-            for (i = 0; i < cnt; i++)
-            {
-                f32 h = *hits[0][i];
-                f32 oy = ((GameObject*)obj)->anim.localPosY;
-                if (h < thr + oy && h > oy - thr)
-                {
-                    ((GameObject*)obj)->anim.localPosY = h;
-                    i = cnt;
-                }
-            }
-            break;
-        }
-    }
-}
+void invhit_update(int* obj);
 
 extern int getCurMapLayer(void);
 extern MapEventInterface** gMapEventInterface;
@@ -1038,151 +1123,7 @@ extern u8 lbl_803DCDE0;
 extern f32 lbl_803E35D8;
 extern f32 lbl_803E35DC;
 
-void WarpPoint_update(int* obj)
-{
-    char* def;
-    s16* state;
-    char* player;
-    f32 dist;
-
-    def = *(char**)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
-    player = (char*)Obj_GetPlayerObject();
-    if (player == NULL)
-    {
-        return;
-    }
-    *state -= framesThisStep;
-    if (*state < 0)
-    {
-        *state = 0;
-    }
-    if (*(u8*)(def + 0x1f) != 0 && ((WarpPointState*)state)->unkD == 0 && lbl_803DCEB8 > -1 &&
-        lbl_803DCEB8 == *(s8*)(def + 0x19))
-    {
-        (*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16*)player,
-                                            0, getCurMapLayer());
-        ((WarpPointState*)state)->unkD = 1;
-    }
-    switch (*(s8*)(def + 0x1d))
-    {
-    case 0:
-        if (lbl_803DCEB8 > -1 || GameBit_Get(0xd53) != 0)
-        {
-            f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-            f32 dy = ((PushableState*)player)->scale - ((GameObject*)obj)->anim.localPosY;
-            f32 dz = ((PushableState*)player)->timer_0x14 - ((GameObject*)obj)->anim.localPosZ;
-            dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (((WarpPointState*)state)->unkC == 0 && *(s8*)(def + 0x1c) != 0 &&
-                dist < ((WarpPointState*)state)->unk8 &&
-                *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
-            {
-                if (((GameObject*)obj)->anim.seqId == 0x27e)
-                {
-                    GameBit_Set(0xd53, 1);
-                    (*gMapEventInterface)->triggerEvent(
-                        (int)(player + 0xc), *(s16*)player, 0, getCurMapLayer());
-                }
-                (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-                GameBit_Set(0xd53, 0);
-                lbl_803DCDE0 = 2;
-                ((WarpPointState*)state)->unkC = 1;
-            }
-        }
-        if (*(s8*)(def + 0x1a) > -1)
-        {
-            f32 d2 = Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18));
-            if (d2 < ((WarpPointState*)state)->unk8)
-            {
-                warpToMap(*(s8*)(def + 0x1a), 1);
-            }
-        }
-        break;
-    case 1:
-        {
-            f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-            f32 dy = ((PushableState*)player)->scale - ((GameObject*)obj)->anim.localPosY;
-            f32 dz = ((PushableState*)player)->timer_0x14 - ((GameObject*)obj)->anim.localPosZ;
-            dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (lbl_803DCEB8 > -1 && *(s8*)(def + 0x1c) != 0 && dist < lbl_803E35D8 &&
-                *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
-            {
-                (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-                lbl_803DCDE0 = 2;
-            }
-            if (*state == 0 && dist < (f32) * (s8*)(def + 0x1e) && *(s8*)(def + 0x1a) > -1 &&
-                *(s8*)(def + 0x1a) > -1)
-            {
-                (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-            }
-            break;
-        }
-    case 2:
-        if (lbl_803E35DC != (dist = ((WarpPointState*)state)->unk8))
-        {
-            f32 dx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-            f32 dy = ((PushableState*)player)->probeLocal[0].y - ((GameObject*)obj)->anim.worldPosY;
-            f32 dz = ((PushableState*)player)->probeLocal[0].z - ((GameObject*)obj)->anim.worldPosZ;
-            dist = sqrtf(dx * dx + dy * dy + dz * dz);
-        }
-        if (GameBit_Get(state[1]) != 0 && ((WarpPointState*)state)->unkC == 0 &&
-            *(s8*)(def + 0x1c) != 0 && dist <= ((WarpPointState*)state)->unk8 &&
-            *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
-        {
-            (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-            ((WarpPointState*)state)->unkC = 1;
-        }
-        else
-        {
-            if (((WarpPointState*)state)->unkC == 1 && GameBit_Get(state[1]) != 0 && *state == 0 &&
-                dist <= ((WarpPointState*)state)->unk8 && *(s8*)(def + 0x1a) > -1)
-            {
-                GameBit_Set(state[1], 0);
-                warpToMap(*(s8*)(def + 0x1a), 0);
-            }
-        }
-        break;
-    case 3:
-        {
-            f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-            f32 dy = ((PushableState*)player)->scale - ((GameObject*)obj)->anim.localPosY;
-            f32 dz = ((PushableState*)player)->timer_0x14 - ((GameObject*)obj)->anim.localPosZ;
-            dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (GameBit_Get(state[1]) != 0 && ((WarpPointState*)state)->unkC == 0 &&
-                *(s8*)(def + 0x1c) != 0 && dist < ((WarpPointState*)state)->unk8 &&
-                *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
-            {
-                GameBit_Set(state[1], 0);
-                (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-                ((WarpPointState*)state)->unkC = 1;
-            }
-            break;
-        }
-    case 4:
-        if (lbl_803E35DC != (dist = ((WarpPointState*)state)->unk8))
-        {
-            f32 dx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-            f32 dy = ((PushableState*)player)->probeLocal[0].y - ((GameObject*)obj)->anim.worldPosY;
-            f32 dz = ((PushableState*)player)->probeLocal[0].z - ((GameObject*)obj)->anim.worldPosZ;
-            dist = sqrtf(dx * dx + dy * dy + dz * dz);
-        }
-        if (lbl_803DCEB8 > -1 && ((WarpPointState*)state)->unkC == 0 && *(s8*)(def + 0x1c) != 0 &&
-            dist < ((WarpPointState*)state)->unk8 &&
-            *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
-        {
-            (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-            lbl_803DCDE0 = 2;
-            ((WarpPointState*)state)->unkC = 1;
-        }
-        if (GameBit_Get(state[1]) != 0 && *state == 0 && dist <= ((WarpPointState*)state)->unk8 &&
-            *(s8*)(def + 0x1a) > -1)
-        {
-            GameBit_Set(state[1], 0);
-            warpToMap(*(s8*)(def + 0x1a), 1);
-        }
-        break;
-    }
-}
+void WarpPoint_update(int* obj);
 
 extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
@@ -1200,6 +1141,7 @@ extern f32 lbl_803E3588;
 
 void pushable_init(s16* obj, char* def)
 {
+    extern int fn_80174A80(); /* #57 */
     PushableState* state;
     int* model;
     int* entry;
@@ -1406,7 +1348,6 @@ void pushable_init(s16* obj, char* def)
 
 extern int lbl_802C2270[];
 extern int fn_802969F0(void);
-extern void setMatrixFromObjectPos(f32* mtx, void* vec);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern void Obj_BuildTransformMatrices(int* obj);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
@@ -1437,6 +1378,9 @@ typedef struct
 
 void pushable_hitDetect(int* obj)
 {
+    extern void setMatrixFromObjectPos(f32* mtx, void* vec); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern undefined4 fn_80174BFC(); /* #57 */
     PushableState* state;
     f32* w;
     f32* wp;
@@ -1655,7 +1599,6 @@ void pushable_hitDetect(int* obj)
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, int c);
-extern int objBboxFn_800640cc(f32* start, f32* end, f32 radius, int a, int b, int* obj, int c, int d, int e, int f);
 extern f32 lbl_803E3590;
 extern f32 lbl_803E3594;
 extern f32 lbl_803E359C;
@@ -1675,6 +1618,12 @@ typedef struct
 
 int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
+    extern int objBboxFn_800640cc(f32* start, f32* end, f32 radius, int a, int b, int* obj, int c, int d, int e, int f); /* #57 */
+    extern void setMatrixFromObjectPos(f32* mtx, void* vec); /* #57 */
+    extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern unsigned long GameBit_Set(int eventId, int value); /* #57 */
+    extern undefined4 fn_80174BFC(); /* #57 */
     SetScaleParams* pp;
     PushableState* state;
     char ret;

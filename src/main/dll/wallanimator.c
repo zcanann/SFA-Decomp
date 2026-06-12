@@ -15,7 +15,6 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
-extern void objRenderFn_8003b8f4(double scale);
 extern void queueGlowRender(void* light);
 
 extern EffectInterface** gPartfxInterface;
@@ -147,6 +146,7 @@ void kaldachompme_free(void)
 void kaldachompme_render(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                          undefined4 param_5, s8 renderFlag)
 {
+    extern void objRenderFn_8003b8f4(double scale); /* #57 */
     s32 v = renderFlag;
     if (v != 0)
     {
@@ -356,6 +356,7 @@ void kaldachompspit_free(int* obj)
 
 void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
+    extern void objRenderFn_8003b8f4(double scale); /* #57 */
     u8* light = **(u8***)&((GameObject*)obj)->extra;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
     {
@@ -369,17 +370,11 @@ void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible
 
 extern void modelLightStruct_setEnabled(int light, int onoff, f32 intensity);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void Sfx_PlayFromObject(int obj, u32 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 vol, f32 scale);
 extern int Obj_FreeObject(int obj);
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
-extern void ObjHits_EnableObject(int obj);
 extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
-extern int Obj_GetPlayerObject(void);
-extern int getTrickyObject(void);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
 extern f64 lbl_803E30E8;
 extern f32 lbl_803E30F0;
@@ -398,6 +393,11 @@ void kaldachompspit_burst(int obj);
  */
 void kaldachompspit_update(int obj)
 {
+    extern int getTrickyObject(void); /* #57 */
+    extern int Obj_GetPlayerObject(void); /* #57 */
+    extern int objMove(int obj, f32 vx, f32 vy, f32 vz); /* #57 */
+    extern void ObjHits_EnableObject(int obj); /* #57 */
+    extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra); /* #57 */
     ObjAnimComponent* objAnim;
     u32* state;
     f32 vx;
@@ -515,6 +515,7 @@ void kaldachompspit_update(int obj)
  */
 void kaldachompspit_burst(int obj)
 {
+    extern void Sfx_PlayFromObject(int obj, u32 sfxId); /* #57 */
     int i;
     u32* state;
     u8 rnd;
@@ -541,3 +542,481 @@ void kaldachompspit_burst(int obj)
         Sfx_PlayFromObject(obj, 0x279);
     }
 }
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+
+/* === moved from main/dll/xyzanimator.c [80169CC4-80169EF4) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/MMP/MMP_asteroid.h"
+#include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/xyzanimator.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/objhits_types.h"
+#include "main/game_object.h"
+
+typedef struct PollenfragmentState
+{
+    u8 pad0[0x4 - 0x0];
+    s16 unk4;
+    s16 unk6;
+    u8 pad8[0x10 - 0x8];
+    s16 unk10;
+    s16 unk12;
+    u8 pad14[0x28 - 0x14];
+} PollenfragmentState;
+
+
+extern undefined4 FUN_800067e8();
+extern u32 randomGetRange(int min, int max);
+extern undefined4 ObjHitbox_SetSphereRadius();
+extern undefined4 ObjHits_DisableObject();
+extern void ObjHits_SetTargetMask(int obj, u8 mask);
+extern int ObjHits_GetPriorityHit();
+extern int ObjGroup_FindNearestObject();
+extern undefined4 ObjPath_GetPointWorldPosition();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_8005fe14();
+extern uint FUN_8007f6c8();
+extern undefined4 FUN_8007f718();
+extern undefined4 FUN_8008112c();
+extern int FUN_8028683c();
+extern undefined4 FUN_80286888();
+extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
+extern void s16toFloat(void* timer, int duration);
+
+typedef struct
+{
+    s16 unk00; /* 0x00 */
+    s16 loopSfx; /* 0x02 */
+    s16 explodeSfx; /* 0x04 */
+    s16 unk06; /* 0x06 */
+    s16 burstFx; /* 0x08 */
+    s16 auraFx; /* 0x0A */
+    s16 unk0C; /* 0x0C */
+    s16 unk0E; /* 0x0E */
+    s16 targetGroup; /* 0x10 */
+    u8 noVertical : 1; /* 0x12 bit 7 */
+    u8 timed : 1; /* 0x12 bit 6 */
+    u8 smoothTurn : 1; /* 0x12 bit 5 */
+    u8 usePath : 1; /* 0x12 bit 4 */
+} PollenFragmentDef;
+
+/* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
+typedef struct PollenFragmentExtra
+{
+    u8 unk00[0xC];
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    u8 unk18[4];
+    PollenFragmentDef* def; /* 0x1C */
+} PollenFragmentExtra;
+
+
+extern void storeZeroToFloatParam(void* timer);
+
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E3DF4;
+extern f32 lbl_803E3DF8;
+extern f32 lbl_803E3198;
+extern f32 lbl_803E319C;
+
+/*
+ * --INFO--
+ *
+ * Function: kaldachompspit_render
+ * EN v1.0 Address: 0x8016984C
+ * EN v1.0 Size: 152b
+ * EN v1.1 Address: 0x80169CF8
+ * EN v1.1 Size: 156b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/*
+ * --INFO--
+ *
+ * Function: kaldachompspit_init
+ * EN v1.0 Address: 0x80169CC4
+ * EN v1.0 Size: 552b
+ * EN v1.1 Address: 0x8016A170
+ * EN v1.1 Size: 560b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void* objCreateLight(int obj, int kind);
+extern void modelLightStruct_setLightKind(int light, int value);
+extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
+extern void lightSetField4D(int light, int v);
+extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
+extern f32 lbl_803E30E0;
+extern f32 lbl_803E30F8;
+extern f32 lbl_803E3108;
+extern f32 lbl_803E310C;
+
+void kaldachompspit_init(int obj)
+{
+    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
+    int* extra;
+
+    extra = *(int**)&((GameObject*)obj)->extra;
+    ((GameObject*)obj)->unkF4 = 400;
+    ObjHits_DisableObject(obj);
+    ((GameObject*)obj)->anim.alpha = 0xff;
+    Sfx_PlayFromObject(obj, 0x278);
+    ((GameObject*)obj)->objectFlags |= 0x2000;
+    if (*(void**)extra == NULL)
+    {
+        *extra = (int)objCreateLight(obj, 1);
+        if (*(void**)extra != NULL)
+        {
+            modelLightStruct_setLightKind(*extra, 2);
+        }
+    }
+    if (*(void**)extra != NULL)
+    {
+        f32 k = lbl_803E30F8;
+        modelLightStruct_setPosition(*extra, k, k, k);
+        if (((GameObject*)obj)->anim.seqId == 0x869)
+        {
+            modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
+            modelLightStruct_setSpecularColor(*extra, 0xff, 0xc0, 0, 0xff);
+            modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f,
+                                       lbl_803E3108 * (lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale));
+            modelLightStruct_setDiffuseTargetColor(*extra, 0xff, 0xd2, 0, 0xff);
+        }
+        else
+        {
+            modelLightStruct_setDiffuseColor(*extra, 0, 0xff, 0, 0xff);
+            modelLightStruct_setSpecularColor(*extra, 0, 0xff, 0, 0xff);
+            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28,
+                                       lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
+            modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
+        }
+        {
+            int a = (int)(lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
+            modelLightStruct_setDistanceAttenuation(*extra, (f32)a, (f32)(a + 0x28));
+        }
+        lightSetField4D(*extra, 1);
+        modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);
+        modelLightStruct_startColorFade(*extra, 1, 3);
+    }
+}
+
+
+#pragma dont_inline on
+void fn_8016A660(int obj);
+#pragma dont_inline reset
+
+
+/*
+ * --INFO--
+ *
+ * Function: pollenfragment_init
+ * EN v1.0 Address: 0x8016B0A4
+ * EN v1.0 Size: 208b
+ * EN v1.1 Address: 0x8016ACA4
+ * EN v1.1 Size: 248b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void pollenfragment_init(int obj, int config);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8016b228
+ * EN v1.0 Address: 0x8016B228
+ * EN v1.0 Size: 512b
+ * EN v1.1 Address: 0x8016AE70
+ * EN v1.1 Size: 332b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void kaldachompspit_release(void)
+{
+}
+
+void kaldachompspit_initialise(void)
+{
+}
+
+void pinponspike_render(void);
+
+void pinponspike_hitDetect(void);
+
+void pinponspike_release(void);
+
+void pinponspike_initialise(void);
+
+void pollen_release(void);
+
+void pollen_initialise(void);
+
+void pollenfragment_release(void);
+
+void pollenfragment_initialise(void);
+
+void mikabomb_hitDetect(void);
+
+extern ModgfxInterface** gModgfxInterface;
+extern f32 lbl_803E313C;
+
+void pinponspike_free(int obj);
+
+void pollen_free(int obj);
+
+void pinponspike_init(int obj);
+
+void pollen_hitDetect(int obj);
+
+void pollenfragment_free(int obj);
+
+void mikabomb_free(int obj, int mode);
+
+/* 8b "li r3, N; blr" returners. */
+int pinponspike_getExtraSize(void);
+int pinponspike_getObjectTypeId(void);
+int pollen_getExtraSize(void);
+int pollen_getObjectTypeId(void);
+int pollenfragment_getExtraSize(void);
+int pollenfragment_getObjectTypeId(void);
+int mikabomb_getExtraSize(void);
+int mikabomb_getObjectTypeId(void);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E3138;
+extern f32 lbl_803E31C0;
+
+void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+extern int kaldachompspit_getObjectTypeId(void);
+extern int kaldachompspit_getExtraSize(void);
+
+ObjectDescriptor gKaldaChompSpitObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)kaldachompspit_initialise,
+    (ObjectDescriptorCallback)kaldachompspit_release,
+    0,
+    (ObjectDescriptorCallback)kaldachompspit_init,
+    (ObjectDescriptorCallback)kaldachompspit_update,
+    (ObjectDescriptorCallback)kaldachompspit_hitDetect,
+    (ObjectDescriptorCallback)kaldachompspit_render,
+    (ObjectDescriptorCallback)kaldachompspit_free,
+    (ObjectDescriptorCallback)kaldachompspit_getObjectTypeId,
+    kaldachompspit_getExtraSize,
+};
+
+ObjectDescriptor gPinPonSpikeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pinponspike_initialise,
+    (ObjectDescriptorCallback)pinponspike_release,
+    0,
+    (ObjectDescriptorCallback)pinponspike_init,
+    (ObjectDescriptorCallback)pinponspike_update,
+    (ObjectDescriptorCallback)pinponspike_hitDetect,
+    (ObjectDescriptorCallback)pinponspike_render,
+    (ObjectDescriptorCallback)pinponspike_free,
+    (ObjectDescriptorCallback)pinponspike_getObjectTypeId,
+    pinponspike_getExtraSize,
+};
+
+ObjectDescriptor gPollenObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pollen_initialise,
+    (ObjectDescriptorCallback)pollen_release,
+    0,
+    (ObjectDescriptorCallback)pollen_init,
+    (ObjectDescriptorCallback)pollen_update,
+    (ObjectDescriptorCallback)pollen_hitDetect,
+    (ObjectDescriptorCallback)pollen_render,
+    (ObjectDescriptorCallback)pollen_free,
+    (ObjectDescriptorCallback)pollen_getObjectTypeId,
+    pollen_getExtraSize,
+};
+
+PollenFragmentConfig lbl_80320538 = {
+    0x0000,
+    0x049F,
+    0x00B9,
+    0x04BA,
+    0x04BA,
+    -1,
+    0.2f,
+    0x0000,
+    0xC000,
+};
+
+PollenFragmentConfig lbl_8032054C = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    0x068F,
+    0.4f,
+    0x0026,
+    0x7000,
+};
+
+PollenFragmentConfig lbl_80320560 = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    0x068F,
+    0.4f,
+    0x0026,
+    0x2000,
+};
+
+PollenFragmentConfig lbl_80320574 = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    -1,
+    0.2f,
+    0x0000,
+    0x2000,
+};
+
+PollenFragmentConfig lbl_80320588 = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    0x068F,
+    0.4f,
+    0x0026,
+    0x3000,
+};
+
+PollenFragmentConfig* lbl_8032059C[] = {
+    &lbl_80320538,
+    &lbl_8032054C,
+    &lbl_80320560,
+    &lbl_80320574,
+    &lbl_80320588,
+};
+
+extern int fn_80080150(int p);
+extern f32 lbl_803E3158;
+
+void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
+
+ObjectDescriptor gPollenFragmentObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pollenfragment_initialise,
+    (ObjectDescriptorCallback)pollenfragment_release,
+    0,
+    (ObjectDescriptorCallback)pollenfragment_init,
+    (ObjectDescriptorCallback)pollenfragment_update,
+    (ObjectDescriptorCallback)pollenfragment_hitDetect,
+    (ObjectDescriptorCallback)pollenfragment_render,
+    (ObjectDescriptorCallback)pollenfragment_free,
+    (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
+    pollenfragment_getExtraSize,
+};
+
+extern f32 lbl_803E3148;
+
+void pollen_init(int* obj);
+
+/* ==== v1.0 recovered functions (drift additions) ==== */
+
+
+typedef struct
+{
+    f32 x, y, z;
+} XyzVec;
+
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803DBD48;
+extern f32 lbl_803DBD4C;
+extern f32 lbl_803E3110;
+extern f32 lbl_803E3114;
+extern f32 lbl_803E3118;
+extern f32 lbl_803E311C;
+extern f32 lbl_803E3120;
+extern f32 lbl_803E3124;
+extern f32 lbl_803E3128;
+extern f32 lbl_803E312C;
+extern f32 lbl_803E3140;
+extern f32 lbl_803E315C;
+extern f32 lbl_803E3160;
+extern f32 lbl_803E3164;
+extern f32 lbl_803E3168;
+extern f32 lbl_803E316C;
+extern f32 lbl_803E3170;
+extern f32 lbl_803E3174;
+extern f32 lbl_803E3178;
+extern f32 lbl_803E317C;
+extern f32 lbl_803E3180;
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 a, f32 b);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern int getCurSeqNo(void);
+extern int timerCountDown(int timer);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void* vel, int rate, f32 a, f32 b);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void PSVECSubtract(void* a, void* b, void* out);
+extern f32 PSVECMag(void* v);
+extern void PSVECNormalize(void* src, void* dst);
+extern void PSVECScale(void* src, void* dst, f32 scale);
+extern void PSVECAdd(void* a, void* b, void* out);
+
+int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag);
+
+void pinponspike_update(int obj);
+
+void pollen_update(int obj);
+
+void pollenfragment_hitDetect(int obj);
+
+void pollenfragment_update(int obj);

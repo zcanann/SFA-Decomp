@@ -1,3 +1,119 @@
+/* === moved from main/dll/texframeanimator.c [80173224-801732A4) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/texframeanimator.h"
+#include "main/obj_placement.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
+ * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
+ * verified). File rename parked as a repo-owner proposal. */
+#include "main/game_object.h"
+#include "main/dll/collectible_state.h"
+#include "main/dll/gfxEmit.h"
+#include "main/dll/path_control_interface.h"
+#include "main/objanim_internal.h"
+
+extern uint GameBit_Get(int eventId);
+extern int FUN_80017a98();
+extern undefined4 FUN_80017ac8();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
+extern undefined4 ObjLink_DetachChild();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_800810f4();
+extern undefined4 FUN_80081118();
+extern undefined4 FUN_801713ac();
+extern uint countLeadingZeros();
+
+extern undefined4 DAT_803218a8;
+extern undefined4 DAT_803dc070;
+extern undefined4 DAT_803e40d8;
+extern undefined4 DAT_803e40dc;
+extern f64 DOUBLE_803e40e0;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E40E8;
+extern f32 lbl_803E40EC;
+extern f32 lbl_803E40F0;
+extern f32 lbl_803E40F4;
+extern f32 lbl_803E412C;
+extern f32 lbl_803E4130;
+extern f32 lbl_803E4134;
+extern f32 lbl_803E4138;
+extern u8 lbl_80320C58[];
+extern u32 lbl_803E3440;
+extern u8 lbl_803E3444;
+extern f32 lbl_803E345C;
+extern f32 lbl_803E3494;
+extern f32 lbl_803E3498;
+extern f32 lbl_803E349C;
+extern f32 lbl_803E34A0;
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_init
+ * EN v1.0 Address: 0x80172F14
+ * EN v1.0 Size: 1104b
+ * EN v1.1 Address: 0x801730D0
+ * EN v1.1 Size: 752b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void collectible_init(int obj, int setup);
+
+
+void magicdust_free(int param_1)
+{
+    if (*(uint*)(param_1 + 0xc4) != 0)
+    {
+        ObjLink_DetachChild(*(int*)(param_1 + 0xc4), param_1);
+    }
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
+    return;
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_release
+ * EN v1.0 Address: 0x8017321C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80173378
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void collectible_release(void);
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_initialise
+ * EN v1.0 Address: 0x80173220
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8017337C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void collectible_initialise(void);
+
+/* 8b "li r3, N; blr" returners. */
+int magicdust_getExtraSize(void) { return 0x288; }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E34B0;
+extern void objRenderFn_8003b8f4(f32);
+void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -66,7 +182,6 @@ extern f32 lbl_803E34E0;
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 extern void* ObjGroup_GetObjects();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
@@ -145,6 +260,7 @@ STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
  */
 void magicdust_update(int obj)
 {
+    extern undefined4 ObjHits_DisableObject(); /* #57 */
     float fval;
     short sVar2;
     byte byteVal;
@@ -393,6 +509,7 @@ LAB_80173f80:
  */
 void magicdust_init(int obj, int placement)
 {
+    extern undefined4 ObjHits_DisableObject(); /* #57 */
     short mode;
     float chaseTime;
     uint randVal;

@@ -618,31 +618,28 @@ main/dll/campfire.c:
 	.data       start:0x80320418 end:0x80320458
 
 main/dll/wallanimator.c:
-	.text       start:0x80169360 end:0x80169CC4
+	.text       start:0x80169360 end:0x80169EF4
 	.data       start:0x80320458 end:0x80320490
 
 main/dll/xyzanimator.c:
-	.text       start:0x80169CC4 end:0x8016B2E0
+	.text       start:0x80169EF4 end:0x8016B230
 	.data       start:0x80320490 end:0x803205E8
 
 main/dll/genprops.c:
-	.text       start:0x8016B2E0 end:0x801723DC
+	.text       start:0x8016B230 end:0x80171D14
 	.data       start:0x803205E8 end:0x80320BB0
 
 main/dll/gfxEmit.c:
-	.text       start:0x801723DC end:0x80172F14
-
-main/dll/texframeanimator.c:
-	.text       start:0x80172F14 end:0x801732A4
+	.text       start:0x80171D14 end:0x80173224
 
 main/dll/lightning.c:
-	.text       start:0x801732A4 end:0x80174A80
-
-main/dll/dll_138.c:
-	.text       start:0x80174A80 end:0x801755CC
+	.text       start:0x80173224 end:0x80174A80
 
 main/dll/transporter.c:
-	.text       start:0x801755CC end:0x80178338
+	.text       start:0x80174A80 end:0x80176FC4
+
+main/dll/dll_00F3_flameblast.c:
+	.text       start:0x80176FC4 end:0x80178338
 
 main/dll/autoTransporter.c:
 	.text       start:0x80178338 end:0x801793A4

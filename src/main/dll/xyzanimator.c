@@ -121,53 +121,7 @@ extern f32 lbl_803E30F8;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-void kaldachompspit_init(int obj)
-{
-    int* extra;
-
-    extra = *(int**)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->unkF4 = 400;
-    ObjHits_DisableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0xff;
-    Sfx_PlayFromObject(obj, 0x278);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-    if (*(void**)extra == NULL)
-    {
-        *extra = (int)objCreateLight(obj, 1);
-        if (*(void**)extra != NULL)
-        {
-            modelLightStruct_setLightKind(*extra, 2);
-        }
-    }
-    if (*(void**)extra != NULL)
-    {
-        f32 k = lbl_803E30F8;
-        modelLightStruct_setPosition(*extra, k, k, k);
-        if (((GameObject*)obj)->anim.seqId == 0x869)
-        {
-            modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
-            modelLightStruct_setSpecularColor(*extra, 0xff, 0xc0, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f,
-                                       lbl_803E3108 * (lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale));
-            modelLightStruct_setDiffuseTargetColor(*extra, 0xff, 0xd2, 0, 0xff);
-        }
-        else
-        {
-            modelLightStruct_setDiffuseColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setSpecularColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28,
-                                       lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
-            modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
-        }
-        {
-            int a = (int)(lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
-            modelLightStruct_setDistanceAttenuation(*extra, (f32)a, (f32)(a + 0x28));
-        }
-        lightSetField4D(*extra, 1);
-        modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);
-        modelLightStruct_startColorFade(*extra, 1, 3);
-    }
-}
+void kaldachompspit_init(int obj);
 
 
 #pragma dont_inline on
@@ -352,13 +306,9 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void kaldachompspit_release(void)
-{
-}
+void kaldachompspit_release(void);
 
-void kaldachompspit_initialise(void)
-{
-}
+void kaldachompspit_initialise(void);
 
 void pinponspike_render(void)
 {
@@ -392,9 +342,7 @@ void pollenfragment_initialise(void)
 {
 }
 
-void mikabomb_hitDetect(void)
-{
-}
+void mikabomb_hitDetect(void);
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E313C;
@@ -450,16 +398,7 @@ void pollenfragment_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void mikabomb_free(int obj, int mode)
-{
-    void** inner = ((GameObject*)obj)->extra;
-    if (inner[0] != NULL && mode == 0)
-    {
-        Obj_FreeObject(inner[0]);
-        inner[0] = NULL;
-    }
-    (*gModgfxInterface)->detachSource((void*)obj);
-}
+void mikabomb_free(int obj, int mode);
 
 /* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void) { return 0x0; }
@@ -468,8 +407,8 @@ int pollen_getExtraSize(void) { return 0x14; }
 int pollen_getObjectTypeId(void) { return 0x0; }
 int pollenfragment_getExtraSize(void) { return 0x28; }
 int pollenfragment_getObjectTypeId(void) { return 0x0; }
-int mikabomb_getExtraSize(void) { return 0x10; }
-int mikabomb_getObjectTypeId(void) { return 0x0; }
+int mikabomb_getExtraSize(void);
+int mikabomb_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3138;
@@ -482,11 +421,7 @@ void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3138);
 }
 
-void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E31C0);
-}
+void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
