@@ -471,14 +471,19 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
 
 /* cfguardian_updateMain: the guardian brain - sixteen-state
  * quest progression with path flights, landing physics, sequenced
- * triggers and idle chatter.
- *
- * BANKED at 99.88 (5 ndiff regions): 4 content-matched relocs
-   (jumptable + conversion-bias @NNN-vs-shared, #70-neutral) and the
-   |w| site's beq vs target's bne;b - the #63 keep-or-negate ternary
-   forward-substitutes when single-use and every unfold spelling
-   (if/goto forms, k-recycle, #92 static-inline two-return helper)
-   either folds to the single beq or re-substitutes. 1 instruction. */
+ * triggers and idle chatter. */
+
+/* keep-or-negate: the inlined return-join keeps target's bne;b and the
+   volatile read stops the result substituting into its consumer. */
+static inline f32 cfguardianAbs(f32 x)
+{
+    if (x >= *(volatile f32*)&lbl_803E4110)
+    {
+        return x;
+    }
+    return -x;
+}
+
 int cfguardian_updateMain(int obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
@@ -622,14 +627,7 @@ int cfguardian_updateMain(int obj)
             }
             else
             {
-                f32 w = lbl_803E4144 * ((GameObject*)obj)->anim.velocityY;
-                if (w >= lbl_803E4110)
-                {
-                }
-                else
-                {
-                    w = -w;
-                }
+                f32 w = cfguardianAbs(lbl_803E4144 * ((GameObject*)obj)->anim.velocityY);
                 *(s16*)obj = (f32)*(s16*)obj + w;
                 sub->moveSpeed = lbl_803E4148;
                 if (GameBit_Get(0x8e9) != 0)
