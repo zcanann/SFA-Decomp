@@ -1193,8 +1193,29 @@ main/dll/WC/WCdial.c:
 main/dll/WC/WClaser.c:
 	.text       start:0x801F02F0 end:0x801F0B50
 
-main/dll/ARW/ARWarwingattachment.c:
-	.text       start:0x801F0B50 end:0x801F37CC
+main/dll/ARW/dll_801F0B50.c:
+	.text       start:0x801F0B50 end:0x801F160C
+
+main/dll/ARW/dll_01FE_cfpressures.c:
+	.text       start:0x801F160C end:0x801F1BC8
+
+main/dll/ARW/dll_01FF_dll1ff.c:
+	.text       start:0x801F1BC8 end:0x801F1F1C
+
+main/dll/ARW/dll_01FD_wmlasertar.c:
+	.text       start:0x801F1F1C end:0x801F20D4
+
+main/dll/ARW/dll_0200_dll200.c:
+	.text       start:0x801F20D4 end:0x801F2E80
+
+main/dll/ARW/dll_0201_wmcolrise.c:
+	.text       start:0x801F2E80 end:0x801F30DC
+
+main/dll/ARW/dll_0204_wmtorch.c:
+	.text       start:0x801F30DC end:0x801F33B4
+
+main/dll/ARW/dll_801F33B4.c:
+	.text       start:0x801F33B4 end:0x801F37CC
 
 main/dll/LGT/LGTpointlight.c:
 	.text       start:0x801F37CC end:0x801F3C7C
