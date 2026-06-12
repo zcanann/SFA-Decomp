@@ -221,8 +221,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -237,6 +235,8 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -308,8 +308,6 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_hitDetect(void);
@@ -340,10 +338,6 @@ void kaldachompspit_update(int obj);
  */
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"

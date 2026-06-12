@@ -116,8 +116,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -132,8 +130,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -148,8 +144,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -164,8 +158,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -180,12 +172,8 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
@@ -450,18 +438,6 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  */
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/alphaanim.h"
 #include "main/game_object.h"

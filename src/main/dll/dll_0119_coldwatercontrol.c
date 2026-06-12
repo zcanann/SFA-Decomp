@@ -63,8 +63,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -394,8 +392,6 @@ int infopoint_getExtraSize(void);
 extern f32 timeDelta;
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
-#pragma scheduling off
-#pragma peephole off
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
@@ -408,8 +404,6 @@ extern f32 timeDelta;
 
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling on
-#pragma peephole on
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
@@ -466,7 +460,6 @@ void coldwatercontrol_init(int obj)
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
-#pragma scheduling off
 void landed_arwing_free(int obj);
 
 /* landed_arwing_render: visible-guarded render with extra call. */
@@ -495,16 +488,10 @@ void landed_arwing_free(int obj);
 
 
 #pragma dont_inline on
-#pragma peephole on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
-#pragma scheduling on
 
-#pragma scheduling off
-#pragma peephole off
 
 
 

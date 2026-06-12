@@ -48,8 +48,6 @@ extern f32 lbl_803E38A8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -65,8 +63,6 @@ extern f32 lbl_803E38A8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void MagicPlant_update(int obj);
 
 /*
@@ -82,8 +78,6 @@ void MagicPlant_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -99,8 +93,6 @@ void MagicPlant_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -116,8 +108,6 @@ void MagicPlant_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -133,8 +123,6 @@ void MagicPlant_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -150,8 +138,6 @@ void MagicPlant_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -167,8 +153,6 @@ void MagicPlant_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -184,8 +168,6 @@ void MagicPlant_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -212,8 +194,6 @@ STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
-#pragma scheduling off
-#pragma peephole off
 
 /* gCameraInterface: vtable pointer used for state-machine dispatches. */
 

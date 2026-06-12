@@ -107,8 +107,6 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -123,12 +121,8 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -144,8 +138,6 @@ extern f32 lbl_803E3B94;
  * PAL Size: TODO
  */
 undefined4
-#pragma scheduling on
-#pragma peephole on
 FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
              , int param_10)
@@ -188,8 +180,6 @@ FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015E210(int* obj, GroundBaddieState* state);
 
 /*
@@ -205,8 +195,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -343,8 +331,6 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015DC04(int obj, GroundBaddieState* p);
 
 #pragma dont_inline on
@@ -371,8 +357,6 @@ int fn_8015DC04(int obj, GroundBaddieState* p);
  * PAL Size: TODO
  */
 undefined4
-#pragma scheduling on
-#pragma peephole on
 FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -542,8 +526,6 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015EB6C(int obj, int p2, int p3);
 
 /*
@@ -560,8 +542,6 @@ void fn_8015EB6C(int obj, int p2, int p3);
  * PAL Size: TODO
  */
 undefined4
-#pragma scheduling on
-#pragma peephole on
 FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -606,8 +586,6 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015ED1C(int p1, int p2, int p3);
 
 /*
@@ -640,15 +618,13 @@ void fn_8015ED1C(int p1, int p2, int p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline reset
 
+#pragma scheduling off
+#pragma peephole off
 static inline u8 scarab_isObjectInList(void* o)
 {
     extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
@@ -680,8 +656,6 @@ void fn_8015FCCC(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 extern int Obj_GetPlayerObject(void);
@@ -701,8 +675,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void iceball_update(undefined2* param_1, int param_2);
 
 int fn_801601C4(int obj, GroundBaddieState* p)
@@ -980,8 +952,6 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -997,6 +967,8 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8016043c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -1400,11 +1372,7 @@ extern uint GameBit_Get(int eventId);
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-#pragma scheduling off
-#pragma peephole off
 void chukchuk_init(u8* obj, u8* params);
-#pragma scheduling on
-#pragma peephole on
 void iceball_hitDetect(void);
 
 void iceball_release(void);
@@ -1526,13 +1494,9 @@ void iceball_free(void);
 void chukchuk_update(short* obj);
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
-#pragma scheduling on
-#pragma peephole on
 void chukchuk_setScale(int obj, int v);
 
 /* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
-#pragma scheduling off
-#pragma peephole off
 void iceball_init(void* obj);
 
 /* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
@@ -1550,11 +1514,11 @@ int grimble_stateHandlerB03(int p1, u8* obj);
 
 /* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
 extern void GameBit_Set(int eventId, int value);
-#pragma scheduling off
 
 /* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
 extern undefined4* gBaddieControlInterface;
 
+#pragma scheduling off
 int fn_801603E8(int* obj, u8* obj2)
 {
     GroundBaddieState* x = ((GameObject*)obj)->extra;
@@ -1627,7 +1591,6 @@ extern u8 framesThisStep;
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
-#pragma peephole off
 
 
 
@@ -1636,6 +1599,7 @@ extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;
 
 
+#pragma peephole off
 int fn_8016032C(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
@@ -1728,7 +1692,6 @@ int fn_80160534(int* obj)
     return 0;
 }
 
-#pragma peephole off
 int grimble_stateHandlerB01(int* obj, GroundBaddieState* state);
 
 
@@ -1738,6 +1701,7 @@ int grimble_stateHandlerB01(int* obj, GroundBaddieState* state);
 
 
 
+#pragma peephole off
 void dll_CB_free(int* obj)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;

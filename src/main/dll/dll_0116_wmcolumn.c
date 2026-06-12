@@ -887,8 +887,6 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
 extern f32 Vec_xzDistance(float* a, float* b);
-#pragma scheduling off
-#pragma peephole off
 void appleontree_handleCollectableHit(int obj);
 
 
@@ -905,8 +903,6 @@ void appleontree_handleCollectableHit(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -1134,8 +1130,6 @@ undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void appleontree_setScale(void);
 
 /* 8b "li r3, N; blr" returners. */

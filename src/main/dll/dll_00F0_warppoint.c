@@ -235,20 +235,18 @@ void invhit_hitDetect(void);
 
 extern unsigned long GameBit_Set(int eventId, int value);
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 int invhit_getExtraSize(void);
 
-#pragma peephole on
 
 /* 16b chained patterns. */
 
 /* render-with-fn(lbl) (no visibility check). */
 
+#pragma scheduling off
 #pragma peephole off
 void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -259,11 +257,9 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void invhit_free(int obj);
 
-#pragma peephole on
 
 extern void warpToMap(int mapId, int flag);
 
-#pragma peephole off
 int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* p = *(int**)&((GameObject*)obj)->anim.placementData;

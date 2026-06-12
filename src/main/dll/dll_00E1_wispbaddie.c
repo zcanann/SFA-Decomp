@@ -58,8 +58,6 @@ extern f32 lbl_803DC074;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -75,8 +73,6 @@ extern f32 lbl_803DC074;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -92,8 +88,6 @@ extern f32 lbl_803DC074;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -109,8 +103,6 @@ extern f32 lbl_803DC074;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -126,13 +118,9 @@ extern f32 lbl_803DC074;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void hagabon_release(void);
 
 void hagabon_initialise(void);
@@ -350,18 +338,6 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
 };
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -570,8 +546,6 @@ void wispbaddie_init(int obj, int setup, int initialised)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -587,8 +561,6 @@ void wispbaddie_init(int obj, int setup, int initialised)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -604,8 +576,6 @@ void wispbaddie_init(int obj, int setup, int initialised)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -621,8 +591,6 @@ void wispbaddie_init(int obj, int setup, int initialised)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void FUN_8014fef8(undefined4 param_1, int param_2, undefined4 param_3, int param_4)
 {
     if (param_4 == 0x10)

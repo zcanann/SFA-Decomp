@@ -222,8 +222,6 @@ void invhit_hitDetect(void);
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int flameblast_getExtraSize(void) { return 0x14; }
@@ -233,7 +231,7 @@ extern f32 lbl_803E3618;
 extern f32 lbl_803E3620;
 extern f32 lbl_803E3628;
 extern f32 lbl_803E362C;
-#pragma peephole on
+#pragma scheduling off
 void flameblast_render(int* obj)
 {
     f32 vec[3];
@@ -254,19 +252,17 @@ void objSetAnimSpeedTo1(int* obj)
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
 
-#pragma peephole off
 
 
-#pragma peephole on
 
 
-#pragma peephole off
 
 extern f32 timeDelta;
 extern f32 lbl_803E3630;
 extern f32 lbl_803E3634;
 extern int fn_8017805C(int* obj, f32* state);
 
+#pragma peephole off
 void flameblast_update(int* obj)
 {
     f32* state = ((GameObject*)obj)->extra;

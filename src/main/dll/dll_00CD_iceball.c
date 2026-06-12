@@ -75,8 +75,6 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -91,12 +89,8 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -112,8 +106,6 @@ extern f32 lbl_803E3B94;
  * PAL Size: TODO
  */
 undefined4
-#pragma scheduling on
-#pragma peephole on
 FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
              , int param_10)
@@ -156,8 +148,6 @@ FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015E210(int* obj, GroundBaddieState* state);
 
 /*
@@ -173,8 +163,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -311,8 +299,6 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015DC04(int obj, GroundBaddieState* p);
 
 #pragma dont_inline on
@@ -339,8 +325,6 @@ int fn_8015DC04(int obj, GroundBaddieState* p);
  * PAL Size: TODO
  */
 undefined4
-#pragma scheduling on
-#pragma peephole on
 FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -510,8 +494,6 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015EB6C(int obj, int p2, int p3);
 
 /*
@@ -528,8 +510,6 @@ void fn_8015EB6C(int obj, int p2, int p3);
  * PAL Size: TODO
  */
 undefined4
-#pragma scheduling on
-#pragma peephole on
 FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -574,8 +554,6 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015ED1C(int p1, int p2, int p3);
 
 /*
@@ -608,8 +586,6 @@ void fn_8015ED1C(int p1, int p2, int p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 #pragma dont_inline on
@@ -732,8 +708,6 @@ void fn_8015FCCC(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -757,8 +731,6 @@ extern f32 lbl_803E2E58;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void iceball_update(undefined2* param_1, int param_2)
 {
     int p;
@@ -825,8 +797,6 @@ int fn_801601C4(int obj, GroundBaddieState* p);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -842,6 +812,8 @@ int fn_801601C4(int obj, GroundBaddieState* p);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8016043c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -1244,11 +1216,7 @@ void chukchuk_initialise(void);
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-#pragma scheduling off
-#pragma peephole off
 void chukchuk_init(u8* obj, u8* params);
-#pragma scheduling on
-#pragma peephole on
 void iceball_hitDetect(void)
 {
 }
@@ -1265,8 +1233,6 @@ void dll_CB_func0B_nop(void);
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -1286,6 +1252,8 @@ extern f32 lbl_803E2E50;
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
+#pragma scheduling off
+#pragma peephole off
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -1302,13 +1270,9 @@ void fn_8015F5B0(short* obj);
 void chukchuk_update(short* obj);
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
-#pragma scheduling on
-#pragma peephole on
 void chukchuk_setScale(int obj, int v);
 
 /* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
-#pragma scheduling off
-#pragma peephole off
 void iceball_init(void* obj)
 {
     char* p = (char*)obj;
@@ -1318,7 +1282,6 @@ void iceball_init(void* obj)
 }
 
 /* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
-#pragma scheduling on
 int fn_8016050C(int p1, u8* obj);
 
 /* grimble_stateHandlerB03 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
@@ -1326,28 +1289,21 @@ int fn_8016050C(int p1, u8* obj);
 /* fn_8015E00C (56B). Two-tier select: <1 -> 3, else if obj[0x346]!=0 -> 6 else 0. */
 
 /* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
-#pragma scheduling off
 
 /* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
 
 
 /* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
-#pragma peephole on
 
 /* dll_CB_render (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
-#pragma scheduling on
-#pragma peephole off
 
 /* fn_801605A8 (44B). Writes float+state fields into obj and copies two halfwords to out. */
-#pragma scheduling off
-#pragma peephole on
 
 /* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
 
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
-#pragma peephole off
 
 
 
@@ -1362,9 +1318,7 @@ int fn_8016050C(int p1, u8* obj);
 
 
 
-#pragma peephole on
 
-#pragma peephole off
 
 
 

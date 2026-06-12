@@ -588,8 +588,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -604,8 +602,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -620,8 +616,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -636,6 +630,8 @@ void objAnimFn_8014a9f0(short* obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* param_4)
 {
     extern double FUN_80293900();
@@ -2093,8 +2089,6 @@ extern int objCreateLight(int a, int b);
 extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 
-#pragma scheduling off
-#pragma peephole off
 void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int* state = ((GameObject*)obj)->extra;

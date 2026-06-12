@@ -556,8 +556,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -572,8 +570,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -588,8 +584,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -618,8 +612,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -634,8 +626,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -650,8 +640,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -666,8 +654,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -682,8 +668,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -698,8 +682,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -714,8 +696,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];

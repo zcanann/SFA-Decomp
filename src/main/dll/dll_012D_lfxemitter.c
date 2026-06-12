@@ -47,8 +47,6 @@ extern f32 lbl_803E3E88;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -64,8 +62,6 @@ extern f32 lbl_803E3E88;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -81,8 +77,6 @@ extern f32 lbl_803E3E88;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -98,6 +92,8 @@ extern f32 lbl_803E3E88;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018f650(void)
 {
     byte bVar1;
@@ -339,8 +335,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -356,8 +350,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -373,8 +365,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -390,8 +380,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -407,8 +395,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -424,8 +410,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -441,8 +425,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void warpPadFn_8019042c(int obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
@@ -450,6 +432,8 @@ extern u8 lbl_803AC7B0[];
 extern void mm_free(void* p);
 
 
+#pragma scheduling off
+#pragma peephole off
 void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 {
     LfxEmitterState* state;

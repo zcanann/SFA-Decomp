@@ -140,8 +140,6 @@ void FireFlyLantern_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void FireFlyLantern_init(int obj, int def)
 {
     void* player;

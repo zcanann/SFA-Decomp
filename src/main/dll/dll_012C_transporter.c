@@ -475,8 +475,6 @@ void transporter_init(int obj, u8* params)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -491,8 +489,6 @@ void transporter_init(int obj, u8* params)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /* Trivial 4b 0-arg blr leaves. */
 

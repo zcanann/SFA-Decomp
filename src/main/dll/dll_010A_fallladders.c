@@ -71,8 +71,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -427,8 +425,6 @@ extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
-#pragma scheduling off
-#pragma peephole off
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
@@ -441,8 +437,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling on
-#pragma peephole on
 void Fall_Ladders_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -450,14 +444,10 @@ void Fall_Ladders_free(int obj)
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
 void coldwatercontrol_init(int obj);
 
 /* landed_arwing_free: free child object + detach link. */
-#pragma scheduling off
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
@@ -485,16 +475,10 @@ void coldwatercontrol_init(int obj);
 
 
 #pragma dont_inline on
-#pragma peephole on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
-#pragma scheduling on
 
-#pragma scheduling off
-#pragma peephole off
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E3B50;
@@ -502,6 +486,8 @@ extern f32 lbl_803E3B54;
 extern f32 lbl_803E3B58;
 extern f32 lbl_803E3B5C;
 
+#pragma scheduling off
+#pragma peephole off
 void Fall_Ladders_update(int obj)
 {
     int def;

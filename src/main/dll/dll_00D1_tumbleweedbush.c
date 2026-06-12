@@ -48,8 +48,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -65,6 +63,8 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -87,8 +87,6 @@ void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -104,16 +102,14 @@ void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void cannonclaw_release(void);
 
 
+#pragma scheduling off
+#pragma peephole off
 void tumbleweedbush_free(void)
 {
 }

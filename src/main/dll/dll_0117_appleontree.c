@@ -302,8 +302,6 @@ void appleontree_func0B(int obj, float* pos)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -329,8 +327,6 @@ extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E37C8;
 extern f32 lbl_803E37EC;
 extern f32 lbl_803E37F0;
-#pragma scheduling off
-#pragma peephole off
 void appleontree_handleCollectableHit(int obj)
 {
     extern void playerAddHealth(int player, u16 amount); /* #57 */
@@ -387,8 +383,6 @@ void appleontree_handleCollectableHit(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -421,8 +415,6 @@ void appleontree_handleCollectableHit(int obj)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void appleontree_setScale(void)
 {
 }
@@ -795,14 +787,6 @@ int fn_8017DF34(int p, int state, f32 y)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"

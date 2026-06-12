@@ -95,8 +95,6 @@ void FUN_80178338(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -112,8 +110,6 @@ void FUN_80178338(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */

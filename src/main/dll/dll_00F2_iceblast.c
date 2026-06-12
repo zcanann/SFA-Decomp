@@ -240,15 +240,12 @@ void iceblast_initialise(void)
 
 extern unsigned long GameBit_Set(int eventId, int value);
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int iceblast_getExtraSize(void) { return 0x4; }
 int iceblast_getObjectTypeId(void) { return 0x0; }
 int flameblast_getExtraSize(void);
 
-#pragma peephole on
 
 /* 16b chained patterns. */
 
@@ -257,11 +254,10 @@ extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale
 extern f32 lbl_803E3600;
 void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
 
-#pragma peephole off
 void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 
 
-#pragma peephole on
+#pragma scheduling off
 void iceblast_init(int obj, s16* p)
 {
     *(f32*)((GameObject*)obj)->extra = (f32) * (s16*)((char*)p + 0x1a);
@@ -270,7 +266,6 @@ void iceblast_init(int obj, s16* p)
 
 extern void warpToMap(int mapId, int flag);
 
-#pragma peephole off
 
 extern f32 timeDelta;
 
@@ -283,6 +278,7 @@ extern void vecRotateZXY(void* in, void* out);
 
 
 
+#pragma peephole off
 void iceblast_update(int* obj)
 {
     int* path;

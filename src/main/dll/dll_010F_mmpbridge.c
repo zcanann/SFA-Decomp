@@ -98,8 +98,6 @@ extern u32 GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -114,8 +112,6 @@ extern u32 GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -130,8 +126,6 @@ extern u32 GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -146,8 +140,6 @@ extern u32 GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -162,12 +154,8 @@ extern u32 GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void mmp_bridge_free(void)
 {
 }
@@ -270,18 +258,6 @@ extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
  */
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/alphaanim.h"
 #include "main/game_object.h"

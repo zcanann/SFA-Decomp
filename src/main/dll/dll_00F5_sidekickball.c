@@ -93,8 +93,6 @@ extern f32 lbl_803E431C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80178338(undefined4 param_1);
 
 /*
@@ -110,8 +108,6 @@ void FUN_80178338(undefined4 param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -126,12 +122,8 @@ void FUN_80178338(undefined4 param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int sidekickball_getExtraSize(void) { return 0x2cc; }

@@ -71,8 +71,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -503,17 +501,11 @@ extern void objRenderFn_8003b8f4(f32);
 
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling on
-#pragma peephole on
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
 
 /* landed_arwing_free: free child object + detach link. */
-#pragma scheduling off
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
@@ -548,14 +540,12 @@ void dll_109_init(int obj, u8* p)
 }
 
 #pragma dont_inline on
-#pragma peephole on
 void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut);
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma scheduling on
+#pragma peephole on
 void dll_109_free(int obj)
 {
     (*(void (*)(int))(*(int*)(*gCarryableInterface + 0x10)))(obj);

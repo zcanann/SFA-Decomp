@@ -1,6 +1,4 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
-#pragma scheduling on
-#pragma peephole on
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 
@@ -29,7 +27,7 @@ extern f32 lbl_803E2F9C;
  * EN v1.0 Address: 0x80163BBC
  * EN v1.0 Size: 976b
  */
-#pragma scheduling off
+#pragma peephole on
 void tumbleweed_updateRollingMotion(short* obj, int state)
 {
     extern u32 randomGetRange(int min, int max); /* #57 */
@@ -314,11 +312,7 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     extern void objRenderFn_8003b8f4(f32); /* #57 */
     if ((s32)visible >= 1) objRenderFn_8003b8f4(lbl_803E2F80);
 }
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"

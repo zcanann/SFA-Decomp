@@ -64,8 +64,6 @@ extern f32 Vec_distance(void* a, void* b);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -82,8 +80,6 @@ extern f32 Vec_distance(void* a, void* b);
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_80185868(int obj, f32 arg)
 {
     extern void* lbl_803DDAD0;

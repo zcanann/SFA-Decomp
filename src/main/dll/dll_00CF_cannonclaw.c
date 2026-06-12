@@ -48,8 +48,6 @@ extern void* gGrimbleStateHandlersA[11];
 extern void* gGrimbleStateHandlersB[6];
 int grimble_animEventCallback(void);
 
-#pragma scheduling off
-#pragma peephole off
 int grimble_stateHandlerA02(int obj, char* state, f32 arg);
 
 int grimble_stateHandlerA01(int obj, char* state, f32 arg);
@@ -76,8 +74,6 @@ void grimble_init(int obj, int p2, int p3);
  * PAL Size: TODO
  */
 undefined4
-#pragma scheduling on
-#pragma peephole on
 FUN_801620c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -516,11 +512,11 @@ void grimble_initialise(void);
 
 extern f32 lbl_803E2F30;
 
-#pragma peephole off
 void grimble_free(int obj);
 
 void grimble_hitDetect(int obj);
 
+#pragma peephole off
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
@@ -550,15 +546,7 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 };
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
@@ -618,8 +606,6 @@ void cannonclaw_update(u8* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -648,8 +634,6 @@ void cannonclaw_update(u8* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -664,12 +648,8 @@ void cannonclaw_update(u8* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void cannonclaw_release(void)
 {
 }
@@ -740,5 +720,3 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     },
     0,
 };
-#pragma scheduling reset
-#pragma peephole reset

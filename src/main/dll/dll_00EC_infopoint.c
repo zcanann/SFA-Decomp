@@ -70,8 +70,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -414,14 +412,14 @@ int decoration11a_getExtraSize(void);
 
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
-#pragma scheduling off
-#pragma peephole off
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B70;
 
 
+#pragma scheduling off
+#pragma peephole off
 void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -436,17 +434,11 @@ void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling on
-#pragma peephole on
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
 
 /* landed_arwing_free: free child object + detach link. */
-#pragma scheduling off
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
@@ -484,10 +476,8 @@ void landed_arwing_init(int obj, int param);
 
 
 #pragma dont_inline on
-#pragma peephole on
 #pragma dont_inline reset
 
-#pragma peephole off
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     s16* inner = ((GameObject*)obj)->extra;
@@ -506,13 +496,9 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma scheduling on
 void dll_109_free(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 
 
 

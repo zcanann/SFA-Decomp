@@ -60,8 +60,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -397,8 +395,6 @@ int landed_arwing_getExtraSize(void);
 
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
-#pragma scheduling off
-#pragma peephole off
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
@@ -406,6 +402,8 @@ extern f32 lbl_803E3B78;
 
 
 
+#pragma scheduling off
+#pragma peephole off
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -419,17 +417,11 @@ void flammablevine_free(int x);
 
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling on
-#pragma peephole on
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
 
 /* landed_arwing_free: free child object + detach link. */
-#pragma scheduling off
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
@@ -473,14 +465,9 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 }
 #pragma dont_inline reset
 
-#pragma peephole off
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-#pragma peephole reset
 
-#pragma scheduling on
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -495,6 +482,7 @@ extern void Model_GetVertexPosition(int* model, int idx, f32* out);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern f32 PSVECMag(f32 * v);
 
+#pragma peephole off
 void decoration11a_hitDetect(int obj)
 {
     s16 modelId;

@@ -237,15 +237,12 @@ void iceblast_free(void);
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int invhit_getExtraSize(void) { return 0xc; }
 int invhit_getObjectTypeId(void) { return 0x0; }
 int iceblast_getExtraSize(void);
 
-#pragma peephole on
 
 /* 16b chained patterns. */
 
@@ -255,8 +252,9 @@ extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale
 void invhit_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
 void iceblast_render(int* obj, int a, int b, int c, int d);
 
-#pragma peephole off
 
+#pragma scheduling off
+#pragma peephole off
 void invhit_free(int obj)
 {
     char* inner = ((GameObject*)obj)->extra;
@@ -268,11 +266,9 @@ void invhit_free(int obj)
     }
 }
 
-#pragma peephole on
 void iceblast_init(int obj, s16* p);
 
 
-#pragma peephole off
 
 extern f32 timeDelta;
 
