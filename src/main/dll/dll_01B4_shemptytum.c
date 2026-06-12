@@ -123,7 +123,6 @@ extern undefined8 FUN_80017698();
 extern int FUN_80017a98();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 lbl_803E61E8;
 
 /*
@@ -336,59 +335,26 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
 #pragma peephole off
 void sc_levelcontrol_hitDetect(void);
 
-void sc_levelcontrol_release(void);
 
-void sc_levelcontrol_initialise(void);
 
 
 
 /* 8b "li r3, N; blr" returners. */
-int sc_levelcontrol_getExtraSize(void);
-int sc_levelcontrol_getObjectTypeId(void);
 
 /* Pattern wrappers. */
-u8 sc_levelcontrol_getAnimEventState(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5554;
-extern void objRenderFn_8003b8f4(f32);
-
-void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void fn_8003B608(int a, int b, int c);
 
 
 
-extern void gameTimerStop(void);
-extern void disableHeavyFog(void);
-extern void Music_Trigger(int track, int param);
 
-void sc_levelcontrol_free(int obj);
 
-extern void GameBit_Set(int bit, int val);
-extern int GameBit_Get(int bit);
-extern void gameTimerInit(int a, int b);
-extern void timerSetToCountUp(void);
-extern int isGameTimerDisabled(void);
-extern u8* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int a, int b);
-extern f32 lbl_803E5550;
 
-int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-void sc_levelcontrol_applyAnimEventState(int obj, u8 scale);
+
+
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
-extern int mapGetDirIdx(int idx);
-extern void unlockLevel(int a, int b, int c);
-extern int getSaveGameLoadStatus(void);
-extern f32 lbl_803E5580;
-extern f32 lbl_803E5564;
-extern f32 lbl_803E5568;
-extern f32 lbl_803E5570;
-extern f32 lbl_803E5574;
-extern f32 lbl_803E5578;
-extern f32 lbl_803E557C;
 
 typedef struct
 {
@@ -396,38 +362,19 @@ typedef struct
     u8 lo : 7;
 } SnowFlags22;
 
-void sc_levelcontrol_init(int obj);
-
-extern u8 Obj_IsLoadingLocked(void);
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void skyFn_80088c94(int a, int b);
-extern void envFxActFn_800887f8(int arg);
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
-extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
-extern int coordsToMapCell(f32 x, f32 z);
-extern void gameTextShow(int id);
-extern void skyFn_80088e54(int mode, f32 brightness);
-extern void warpToMap(int mapId, int flag);
-extern void timeListFn_8012df14(void);
-extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern int* gSHthorntailAnimationInterface;
+
+#pragma dont_inline on
+#pragma dont_inline reset
+
 extern u16 lbl_803DC060[4];
-extern f32 timeDelta;
-extern const f32 lbl_803E5558;
-extern f32 lbl_803E555C;
-extern f32 lbl_803E5560;
-extern f32 lbl_803E556C;
 
 /* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
  * driver: replays the env-fx set on map (re)entry, latches the race
  * GameBits, runs the two race countdown timers, eases the heavy fog level,
  * tracks the totem combo code (bits 0x7d..0x7f), and keeps the area music
  * in sync with the Thorntail animation state. */
-void sc_levelcontrol_update(int obj);

@@ -30,7 +30,6 @@
 
 /* 8b "li r3, N; blr" returners. */
 
-extern int lbl_803DDC00;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
 
@@ -43,7 +42,6 @@ extern int lbl_803DDC00;
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
 
 /* 56b: single-call hit-effect poll. */
-void sh_emptytumblew_update(int obj);
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
@@ -116,7 +114,6 @@ extern undefined4 FUN_80006b54();
 extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern int FUN_80017a98();
-extern undefined4 ObjHitbox_SetCapsuleBounds();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 lbl_803E61E8;
@@ -134,11 +131,7 @@ extern f32 lbl_803E61E8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E5540;
-extern f32 lbl_803E5544;
-extern f32 lbl_803E5548;
 
-void sh_emptytumblew_init(s16* p1, int p2);
 
 
 /*
