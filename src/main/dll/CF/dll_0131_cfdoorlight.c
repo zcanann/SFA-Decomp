@@ -13,6 +13,14 @@ extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* objFindTexture(void* obj, int target, int param_3);
 
+typedef struct CfDoorLightFlags
+{
+    u8 unk80 : 1;
+    u8 done : 1;   /* 0x40: done event granted; frame parked at maxFrame */
+    u8 active : 1; /* 0x20: texture animation running */
+    u8 rest : 5;
+} CfDoorLightFlags;
+
 typedef struct CfDoorLightState
 {
     s32 textureId;
@@ -21,7 +29,7 @@ typedef struct CfDoorLightState
     s32 maxFrame;
     s32 resetFrame;
     s32 currentFrame;
-    u8 flags;
+    CfDoorLightFlags flags;
     u8 pad15[0x18 - 0x15];
 } CfDoorLightState;
 
@@ -74,13 +82,12 @@ void cf_doorlight_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     def = *(CfDoorLightDef**)&((GameObject*)obj)->anim.placementData;
-    if ((((state->flags >> 5) & 1) == 0) && (GameBit_Get(def->triggerEvent) != 0) &&
-        (((state->flags >> 6) & 1) == 0))
+    if (state->flags.active == 0 && GameBit_Get(def->triggerEvent) != 0 && state->flags.done == 0)
     {
-        state->flags = (state->flags & ~0x20) | 0x20;
+        state->flags.active = 1;
         state->currentFrame = 0;
     }
-    if (((state->flags >> 5) & 1) != 0)
+    if (state->flags.active != 0)
     {
         textureFrame = objFindTexture((void*)obj, state->textureId, 0);
         if (textureFrame != 0)
@@ -92,16 +99,16 @@ void cf_doorlight_update(int obj)
             }
             else if (state->currentFrame > state->maxFrame)
             {
-                if (def->doneEvent == -1)
+                if (def->doneEvent != -1)
                 {
-                    state->currentFrame = state->resetFrame;
+                    GameBit_Set(def->doneEvent, 1);
+                    state->flags.active = 0;
+                    state->flags.done = 1;
+                    state->currentFrame = state->maxFrame;
                 }
                 else
                 {
-                    GameBit_Set(def->doneEvent, 1);
-                    state->flags = state->flags & ~0x20;
-                    state->flags = (state->flags & ~0x40) | 0x40;
-                    state->currentFrame = state->maxFrame;
+                    state->currentFrame = state->resetFrame;
                 }
             }
             *textureFrame = state->currentFrame;
@@ -112,19 +119,15 @@ void cf_doorlight_update(int obj)
 void cf_doorlight_init(int* obj, s8* def)
 {
     register CfDoorLightState* state = ((GameObject*)obj)->extra;
-    u32 b;
     state->textureId = 0;
     *(s16*)obj = (s16)((s32)def[0x19] << 9);
     state->maxFrame = (int)((CfDoorlightObjectDef*)def)->unk1A << 8;
     state->frameStep = (u8)((CfDoorlightObjectDef*)def)->frameStep;
     state->resetFrame = (int)def[0x18] << 8;
-    b = (u32)(u8)
-    GameBit_Get(((CfDoorLightDef*)def)->doneEvent);
-    state->flags = (u8)((state->flags & ~0x40) | ((b & 1) << 6));
-    if (((u32)state->flags >> 6) & 1)
+    if (state->flags.done = (u8)GameBit_Get(((CfDoorLightDef*)def)->doneEvent))
     {
         state->currentFrame = state->maxFrame;
-        state->flags |= 0x20;
+        state->flags.active = 1;
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->objectFlags |= 0x4000;
