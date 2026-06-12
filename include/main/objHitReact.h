@@ -76,8 +76,8 @@ extern ObjAnimComponent **gObjHitReactResetObjects;
 
 typedef struct ObjHitReactState {
   int activeHit;
-  s16 activeEntryBytes;
-  s16 entryByteCapacity;
+  s16 activeEntryByteCount;
+  s16 entryBufferByteCapacity;
   ObjHitReactEntry *entries;
   u8 pad0C[0x58 - 0x0C];
   s16 resetFrameCount;
@@ -117,8 +117,8 @@ STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, entryByteCount) == 0x04);
 
 STATIC_ASSERT(sizeof(ObjHitReactState) == 0xB0);
 STATIC_ASSERT(offsetof(ObjHitReactState, activeHit) == 0x00);
-STATIC_ASSERT(offsetof(ObjHitReactState, activeEntryBytes) == 0x04);
-STATIC_ASSERT(offsetof(ObjHitReactState, entryByteCapacity) == 0x06);
+STATIC_ASSERT(offsetof(ObjHitReactState, activeEntryByteCount) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitReactState, entryBufferByteCapacity) == 0x06);
 STATIC_ASSERT(offsetof(ObjHitReactState, entries) == 0x08);
 STATIC_ASSERT(offsetof(ObjHitReactState, resetFrameCount) == 0x58);
 STATIC_ASSERT(offsetof(ObjHitReactState, flags) == 0x60);

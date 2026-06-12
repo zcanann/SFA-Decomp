@@ -27,6 +27,7 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
     ObjHitReactEffectPos effectPos;
     ObjHitReactEffectColorArgs effectColorArgs;
     int hitSphereIndex;
+    int reactionEntryIndex;
 
     objAnim = (ObjAnimComponent*)obj;
     effectColorArgs = gObjHitReactEffectColorArgs;
@@ -53,13 +54,13 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
         effectPos.y = 0;
         effectPos.x = 0;
         animDef = bank->animDef;
-        hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
-        if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK))
+        reactionEntryIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
+        if (reactionEntryIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK))
         {
-            OSReport(sObjHitReactSphereOverflowString, hitSphereIndex);
-            hitSphereIndex = 0;
+            OSReport(sObjHitReactSphereOverflowString, reactionEntryIndex);
+            reactionEntryIndex = 0;
         }
-        reactionEntry = &reactionEntryTable[hitSphereIndex];
+        reactionEntry = &reactionEntryTable[reactionEntryIndex];
         if (hitType != OBJHITREACT_COLLISION_SKIP_REACTION)
         {
             if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
@@ -171,7 +172,7 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
     ObjHitReactMoveEntry* moveEntryTable;
 
     moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
-    hitState->activeEntryBytes = 0;
+    hitState->activeEntryByteCount = 0;
     if (moveEntryTable != (ObjHitReactMoveEntry*)0x0)
     {
         moveEntryShortOffset = 0;
@@ -181,19 +182,19 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
             {
                 moveEntry = (ObjHitReactMoveEntry*)((s16*)moveEntryTable + moveEntryShortOffset);
                 entryByteOffset = moveEntry->firstEntryByteOffset;
-                hitState->activeEntryBytes = moveEntry->entryByteCount;
-                if (hitState->activeEntryBytes > hitState->entryByteCapacity)
+                hitState->activeEntryByteCount = moveEntry->entryByteCount;
+                if (hitState->activeEntryByteCount > hitState->entryBufferByteCapacity)
                 {
-                    hitState->activeEntryBytes = hitState->entryByteCapacity;
+                    hitState->activeEntryByteCount = hitState->entryBufferByteCapacity;
                 }
                 if (async == 0)
                 {
                     getTabEntry(hitState->entries, OBJHITREACT_ENTRY_TAB_FILE_ID, (int)entryByteOffset,
-                                (int)hitState->activeEntryBytes);
+                                (int)hitState->activeEntryByteCount);
                     return;
                 }
                 fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID, hitState->entries,
-                                       (int)entryByteOffset, (int)hitState->activeEntryBytes);
+                                       (int)entryByteOffset, (int)hitState->activeEntryByteCount);
                 return;
             }
             moveEntry++;
@@ -213,10 +214,10 @@ u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitS
     {
         return entryArena;
     }
-    hitState->entryByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
+    hitState->entryBufferByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
     entries = (ObjHitReactEntry*)roundUpTo8(entryArena);
     hitState->entries = entries;
-    entryArena = (u32)entries + hitState->entryByteCapacity;
+    entryArena = (u32)entries + hitState->entryBufferByteCapacity;
     hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
     if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0)
     {
