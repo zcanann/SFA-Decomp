@@ -1,4 +1,4 @@
-#include "main/dll/baddie/dll_DB.h"
+#include "main/dll/baddie/dll_003B_menu.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);

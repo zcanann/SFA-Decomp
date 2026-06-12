@@ -1,7 +1,7 @@
 /* === moved from main/dll/baddie/dll_DB.c [80130124-80130888) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-#include "main/dll/baddie/dll_DB.h"
+#include "main/dll/baddie/dll_003B_menu.h"
 
 extern u32 randomGetRange(int min, int max);
 
@@ -505,7 +505,7 @@ void Link_render(void)
     MWTRACE(0xff);
 }
 
-#include "main/dll/baddie/TumbleweedBush.h"
+#include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
 typedef struct TitleMenuItem
 {

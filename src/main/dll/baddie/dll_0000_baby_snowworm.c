@@ -30,7 +30,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
-#include "main/dll/baddie/baby_snowworm.h"
+#include "main/dll/baddie/dll_0000_baby_snowworm.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 

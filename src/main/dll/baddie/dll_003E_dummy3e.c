@@ -1,5 +1,5 @@
 #include "main/audio/sfx_ids.h"
-#include "main/dll/baddie/TumbleweedBush.h"
+#include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
 typedef struct TitleMenuItem
 {

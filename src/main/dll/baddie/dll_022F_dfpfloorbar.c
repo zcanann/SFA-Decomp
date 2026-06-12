@@ -1,7 +1,7 @@
 /* === moved from main/dll/baddie/chuka.c [80206474-8020652C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/baddie/chukachuck.h"
+#include "main/dll/baddie/dll_022F_dfpfloorbar.h"
 
 
 /*
@@ -128,7 +128,7 @@ void dfpfloorbar_hitDetect(int* obj)
 #include "main/mapEvent.h"
 #include "main/objlib.h"
 #include "main/dll/baddie/chuka.h"
-#include "main/dll/baddie/chukachuck.h"
+#include "main/dll/baddie/dll_022F_dfpfloorbar.h"
 
 typedef struct DfpfloorbarPlacement
 {
