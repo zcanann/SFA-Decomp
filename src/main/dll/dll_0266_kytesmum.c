@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/obj_placement.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
@@ -298,6 +299,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
     int* player = Obj_GetPlayerObject();
     int* tricky = getTrickyObject();
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
+    ObjHitsPriorityState* hitState;
     if (objGetAnimState80A(player) == 0x40)
     {
         return 1;
@@ -307,8 +309,9 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
         if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
         {
             buttonDisable(0, 0x100);
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 4;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->hitVolumePriority = 0xb;
+            hitState->hitVolumeId = 4;
             (*gObjectTriggerInterface)
                 ->runSequence(randomGetRange(0, 1), (void*)obj, -1);
         }
@@ -330,8 +333,9 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
     }
     if (((GameObject*)obj)->anim.currentMove == 9)
     {
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 4;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->hitVolumePriority = 0xb;
+        hitState->hitVolumeId = 4;
         ObjHits_SetHitVolumeSlot(obj, 0xb, 4, 7);
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }
