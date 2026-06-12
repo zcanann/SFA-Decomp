@@ -12,7 +12,6 @@
 #include "main/pad.h"
 
 
-
 extern u32 getButtonsHeld(int port);
 extern char padGetCX(int port);
 extern char padGetCY(int port);
@@ -30,7 +29,6 @@ extern f32 lbl_803E1858;
 extern f32 lbl_803E185C;
 extern f32 lbl_803E1860;
 extern f32 lbl_803E1870;
-
 
 
 /*
@@ -90,7 +88,6 @@ extern f32 lbl_803E1870;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -222,23 +219,6 @@ void CameraModeDebug_init(void)
     return;
 }
 
-/*
- * --INFO--
- *
- * Function: fn_80109B04
- * EN v1.0 Address: 0x80108D58
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80109DA0
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2);
-#pragma dont_inline reset
-
 
 /*
  * --INFO--
@@ -314,7 +294,6 @@ void CameraModeDebug_initialise_nop(void)
 }
 
 void CameraModeStatic_copyToCurrent_nop(void);
-
 
 
 /* fn_X(lbl); lbl = 0; */

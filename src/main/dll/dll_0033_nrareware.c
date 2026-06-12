@@ -2,7 +2,6 @@
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 
 
-
 extern int lbl_803DD5F8;
 extern f32 lbl_803DD600;
 extern f32 lbl_803DD604;
@@ -218,22 +217,6 @@ void n_rareware_initialise(void)
     lbl_803DD608 = 0;
 }
 
-/*
- * --INFO--
- *
- * Function: n_attractmode_releaseMovieBuffers
- * EN v1.0 Address: 0x8011611C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x801163B8
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-
-#pragma dont_inline reset
 
 /*
  * --INFO--

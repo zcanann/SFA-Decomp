@@ -13,24 +13,6 @@ extern undefined4 DAT_803de3fe;
 extern undefined4 DAT_803de413;
 extern undefined4 DAT_803de445;
 
-/*
- * --INFO--
- *
- * Function: textureFreeFn_8012fcec
- * EN v1.0 Address: 0x8012FCEC
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x8012FD0C
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -127,7 +109,6 @@ extern s8 lbl_803DD8E8;
 extern int getScreenResolution(void);
 
 
-
 s32 Menu_func0B(void) { return lbl_803DD8F0; }
 #pragma peephole off
 void Menu_func0A(int v) { lbl_803DD8E8 = (s8)v; }
@@ -153,16 +134,7 @@ void Menu_release(void)
 }
 
 void titleScreenFn_80130464(u8 v);
-#pragma peephole off
-#pragma peephole reset
 
-/* Stubs added to align function set with v1.0 asm. Source had many Ghidra
- * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
- * asm symbol set is fully present so future hunters can fill bodies. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* y, s8* x);
 extern int getButtonsJustPressed(int pad);
@@ -264,29 +236,4 @@ void Menu_initialise(void)
     lbl_803DD8F5 = 0;
     lbl_803DD8E8 = 0;
 }
-#pragma scheduling off
-u16 fn_80130124(void);
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

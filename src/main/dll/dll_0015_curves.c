@@ -174,22 +174,6 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x,
 /*
  * --INFO--
  *
- * Function: RomCurve_func11
- * EN v1.0 Address: 0x800E2590
- * EN v1.0 Size: 1528b
- * EN v1.1 Address: 0x800E2B94
- * EN v1.1 Size: 1612b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma fp_contract off
-#pragma fp_contract reset
-
-/*
- * --INFO--
- *
  * Function: RomCurve_getRandomLinkedOfTypes
  * EN v1.0 Address: 0x800E2F5C
  * EN v1.0 Size: 572b
@@ -228,7 +212,6 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*

@@ -9,15 +9,10 @@
 #include "main/resource.h"
 
 
-
-
-
 /* per-channel vertex-scale blend record (state+0x30, stride 0x18, 2 channels) */
 
 
 /* per-channel vertex-alpha blend record (state+0xAC, stride 8, 2 channels) */
-
-
 
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
@@ -41,11 +36,6 @@ static inline int* Modgfx_GetActiveModel(void* obj)
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 #define PARTFX_STAGE_COUNT 7
-
-
-
-
-
 
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
@@ -1590,23 +1580,6 @@ void projgfx_onMapSetup(void);
 void projgfx_initialise(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void Effect4_func03_nop(void)
 {
 }
@@ -1622,48 +1595,14 @@ void Effect4_initialise(void)
 void Effect5_func03_nop(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int projgfx_getObjectTypeId(void);
 
-/* sda21 accessors. */
-#pragma scheduling off
-#pragma peephole off
 
-
-
-
-
-
-
-#pragma peephole reset
-#pragma scheduling reset
-
-/* OSReport(literal) wrapper. */
-#pragma scheduling off
 void projgfx_release_doUnsupported(void);
-#pragma scheduling reset
 
-/* OSReport-stub returns. */
-
-
-#pragma scheduling off
 int projgfx_rayhit_doUnsupported(void);
-
 int projgfx_setzscale_doUnsupported(void);
-#pragma scheduling reset
 
 /* Pattern wrappers. */
 int projgfx_func04_ret_m1(void);
@@ -1693,103 +1632,19 @@ static u8 sProjgfxStringPad1[] = {0, 0, 0};
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
-/* Small stub recoveries (drifted unit, add-as-new). */
-
-
-#pragma scheduling off
-
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-
-
-
-
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
-
-/* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
-
-
-
-#pragma scheduling reset
 #pragma peephole reset
-
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma scheduling off
-
-#pragma scheduling reset
-
-
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* EN v1.0 0x800A09C4  size: 240b  modgfx_stepS16VectorLerp: integer-vector lerp setup.
- * On mode 1, snap or step-interpolate the rotation offset triple
- * toward the rounded params, then advance it by the per-step delta. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* EN v1.0 0x800A113C  size: 276b  dll_0B_func0E: flag every active effect
- * whose owner object has the 0x800 state bit by setting its byte _13e. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern f32 mathSinf(f32);
 
-/* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
- * the 20 cached particle resource slots. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* EN v1.0 0x800AF41C  size: 560b  partfx_release: clear the 20-slot
- * effect-id table and free all 20 cached particle resources. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DF720;
 
-#pragma scheduling off
-#pragma scheduling reset
 
 extern f32 lbl_803DB7D8;
 extern f32 lbl_803DB7DC;
@@ -1850,13 +1705,6 @@ void Effect5_func05(void);
  */
 
 
-
-
-
-
-
-
-
 extern FxNode9 lbl_8039C398;
 
 #define FILL9() do {                            \
@@ -1907,7 +1755,6 @@ extern f32 lbl_803DF884;
 extern void vecRotateZXY(void* obj, f32* vec);
 
 
-
 #undef FILL338
 
 extern FxNode9 lbl_8039C368;
@@ -1925,9 +1772,6 @@ extern f32 lbl_803DFCEC;
   } while (0)
 
 #undef FILL368
-
-
-
 
 
 extern FxNode9 lbl_8039C350;
@@ -3096,65 +2940,3 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma scheduling off
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

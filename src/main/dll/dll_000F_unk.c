@@ -25,12 +25,6 @@ extern undefined4 DAT_803de0af;
 extern int getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -80,9 +74,6 @@ extern f32 screenTransitionAlpha;
 
 /* Pattern wrappers. */
 
-/* sda21 writers. */
-#pragma peephole off
-#pragma peephole reset
 
 /* fcmp-eq-to-bool. */
 
@@ -333,18 +324,6 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-void Checkpoint_initialise(void);
-#pragma scheduling reset
-
-/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 void player_updateParticles(int* p1, int p2, int p3, int count, int mode)

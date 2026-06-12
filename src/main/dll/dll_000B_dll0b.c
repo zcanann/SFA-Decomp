@@ -50,14 +50,10 @@ typedef struct ModgfxEffectSlot
 } ModgfxEffectSlot;
 
 
-
-
 /* per-channel vertex-scale blend record (state+0x30, stride 0x18, 2 channels) */
 
 
 /* per-channel vertex-alpha blend record (state+0xAC, stride 8, 2 channels) */
-
-
 
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
@@ -82,11 +78,6 @@ static inline int* Modgfx_GetActiveModel(void* obj)
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 #define PARTFX_ACTIVE_EFFECT_COUNT 0x32
 #define PARTFX_STAGE_COUNT 7
-
-
-
-
-
 
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
@@ -1634,41 +1625,6 @@ void projgfx_onMapSetup(void);
 void projgfx_initialise(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int projgfx_getObjectTypeId(void);
 
@@ -1733,18 +1689,7 @@ void dll_0B_func10(void)
 
 /* OSReport(literal) wrapper. */
 extern void OSReport(const char* fmt, ...);
-#pragma scheduling off
-void projgfx_release_doUnsupported(void);
-#pragma scheduling reset
 
-/* OSReport-stub returns. */
-
-
-#pragma scheduling off
-int projgfx_rayhit_doUnsupported(void);
-
-int projgfx_setzscale_doUnsupported(void);
-#pragma scheduling reset
 
 /* Pattern wrappers. */
 int projgfx_func04_ret_m1(void);
@@ -1795,14 +1740,6 @@ void dll_0B_release(void)
 }
 #pragma scheduling reset
 
-#pragma peephole off
-void playerShadow_setMode(u8 v);
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
@@ -2101,11 +2038,6 @@ void fn_800A0478(ModgfxState* state)
 #pragma scheduling reset
 
 
-#pragma peephole off
-#pragma scheduling off
-void partfx_initialise(void);
-#pragma peephole reset
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
@@ -2231,31 +2163,14 @@ void dll_0B_func0E(void)
 extern void*gPartfxResourceModule00;
 
 
-/* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
- * the 20 cached particle resource slots. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* EN v1.0 0x800AF41C  size: 560b  partfx_release: clear the 20-slot
- * effect-id table and free all 20 cached particle resources. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 extern f32 lbl_803DD284;
 
-#pragma scheduling off
-#pragma scheduling reset
 
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
 #pragma scheduling off
 #pragma peephole off
-
 
 
 /*
@@ -2265,12 +2180,6 @@ extern f32 lbl_803DFCE0;
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-
-
-
-
-
-
 
 
 extern FxNode9 lbl_8039C398;
@@ -2323,7 +2232,6 @@ extern f32 lbl_803DF884;
 extern void vecRotateZXY(void* obj, f32* vec);
 
 
-
 #undef FILL338
 
 extern FxNode9 lbl_8039C368;
@@ -2343,8 +2251,6 @@ extern f32 lbl_803DFCEC;
 #undef FILL368
 
 
-
-
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
@@ -2361,7 +2267,6 @@ extern f32 lbl_803DF9D4;
   } while (0)
 
 #undef FILL350
-
 
 
 /* ===== (1) extern declarations needed by Effect1_func04 ===== */
@@ -2411,17 +2316,9 @@ void dll_0B_onMapSetup(void)
 extern void* Obj_GetActiveModel(void);
 
 
-
-#pragma scheduling off
-#pragma scheduling reset
-
 extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

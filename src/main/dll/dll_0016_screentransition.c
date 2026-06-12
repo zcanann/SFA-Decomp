@@ -9,26 +9,6 @@
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern undefined4 DAT_803de0af;
 
-/*
- * --INFO--
- *
- * Function: Checkpoint_func07
- * EN v1.0 Address: 0x800D6660
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x800D6844
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -146,38 +126,6 @@ void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

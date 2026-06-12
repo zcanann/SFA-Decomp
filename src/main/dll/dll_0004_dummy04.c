@@ -8,26 +8,6 @@
 
 extern undefined4 DAT_803de0af;
 
-/*
- * --INFO--
- *
- * Function: Checkpoint_func07
- * EN v1.0 Address: 0x800D6660
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x800D6844
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -187,99 +167,11 @@ int Dummy04_func03_ret_m1(void) { return -0x1; }
 
 /* sda21 writers. */
 extern u8 screenTransitionPause;
-#pragma peephole off
-#pragma peephole reset
 
 /* fcmp-eq-to-bool. */
 
 /* multi-store leaf (single float broadcast). */
 
-/* Checkpoint table initialiser. */
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-/* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"

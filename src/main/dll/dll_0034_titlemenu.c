@@ -822,5 +822,3 @@ void TitleMenu_initialise(void)
     gAttractMovieIdleFrameCount = 0;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset

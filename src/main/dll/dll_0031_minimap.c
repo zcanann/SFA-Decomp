@@ -12,9 +12,6 @@
 #include "stdarg.h"
 
 
-
-
-
 extern int ObjGroup_FindNearestObject();
 extern undefined8 FUN_80053754();
 extern undefined4 FUN_80246dcc();
@@ -792,18 +789,9 @@ extern u8 warpstoneUIState;
 /* 4-byte and 8-byte trivial leaves. */
 
 
-
-
-
-
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void) { return (u16)lbl_803DD938; }
 
-/* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
- * warpstoneUIState. */
-#pragma peephole off
-void WarpstoneUI_setState(int val);
-#pragma peephole reset
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
 
@@ -852,77 +840,7 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 };
 
 
-/* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
- * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
- * releasing each non-null entry, then clear the busy byte at
- * lbl_803DD992. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_release(void);
-#pragma peephole reset
-#pragma scheduling reset
-
 extern u8 lbl_803A9FE4[0x34];
-
-/* EN v1.0 0x8013695C  size: 228b  titlescreen_initialise: reset state
- * bytes, load the main texture (asset 0x647 or 0xC5 depending on
- * lbl_803DC968), identity the matrix, then load the 19-entry texture
- * table from the id list at lbl_8031CDE8 into lbl_803A9F98. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_initialise(void);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
- * ready, render via objRenderFn; once the credits flag fires, set the
- * one-shot trigger 0x57 and release the attract-mode movie buffers. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-/* EN v1.0 0x801367A8  size: 252b  titlescreen_init: seed the object's
- * state from its descriptor id (obj->_46), pick the anim move and blend
- * float per id range, and for the attract id install the movie draw
- * callback. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_init(u8* obj, u8* p);
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x80139164  size: 252b  Tricky_emitQueuedPathParticles: when b->_54 carries the
- * spawn flag, build a particle descriptor on the stack from a's heading
- * and the delta to b's position, then emit it 20 times via the partfx
- * interface and clear the flag. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
- * float at lbl_803DD968. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
- * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
- * checks bit 0x10. Returns 1 only when the post-OR check passes. */
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 
 extern void* lbl_803DBBC8[2];
@@ -930,29 +848,6 @@ extern void Obj_FreeObject(void*);
 
 extern void* debugLogEnd;
 
-/* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
- * getScreenResolution, primes the two float counters, clears two state bytes,
- * acquires three sized buffers (605/1/2 bytes) and primes the
- * debugLogEnd cursor to the start of the 0x1100-byte arena. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
- * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
- * record counter at lbl_803DD9E4 has already exceeded 0xFA. */
-#pragma scheduling off
-#pragma scheduling reset
-
-
-/* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
- * (and dispatches the drop anim via objAudioFn_800393f8) only when:
- *   - bit 0x40 of obj->_b8->_58 is clear,
- *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
- *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int obj, int b, int c, int d, int e);
@@ -1084,10 +979,6 @@ void fn_80133718(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* Variadic debug logger: append formatted text while the debug arena has room. */
-#pragma scheduling off
-void debugPrintf(char* fmt, ...);
-#pragma scheduling reset
 
 /* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
 
@@ -1117,12 +1008,6 @@ void Minimap_release(void)
     lbl_803DD940 = NULL;
 }
 
-/* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
- * matrix at lbl_803A9FE4 and derive the three normalized cursor
- * positions from the supplied (a, b) coordinates. */
-#pragma scheduling off
-void titleScreenPositionElements(f32 a, f32 b);
-#pragma scheduling reset
 
 extern void* lbl_803DD960;
 /* lbl_803DD940 declared later as void* */
@@ -1141,10 +1026,6 @@ void Minimap_initialise(void)
  * via textureFree. */
 void dll_3F_release(void);
 
-/* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
- * lbl_803DD960. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 
@@ -1165,18 +1046,7 @@ void dll_3F_release(void);
  * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
  * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
 extern f32 timeDelta;
-#pragma scheduling off
-#pragma scheduling reset
 
-/* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
- * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
- * latch showCredits = 1 and zero five halfword/byte counters. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from getCurUiDll is in {2..6} or equals 7, else 0. */
@@ -1198,10 +1068,6 @@ void fn_80133934(void)
  * debugLogEnd to the start of the buffer and reload the print x/y
  * coordinates from saved values. */
 extern u32 lbl_803DDA00;
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
  * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
@@ -1212,10 +1078,6 @@ extern u32 lbl_803DDA00;
 
 void titlescreen_free(u8* obj);
 
-/* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
- * the thread at &lbl_803AB118. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* EN v1.0 0x801334E0  size: 60b  Gate: when lbl_803DD944 == 2 (s8 compare)
  * and lbl_803DBBB0 != 0, latch lbl_803DD928 = 5 and return 1; else
@@ -1238,93 +1100,17 @@ u8 fn_801334E0(void)
 #pragma peephole reset
 
 extern void OSSetErrorHandler(int kind, void* handler);
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-/* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
- * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
- * the active flag. While bit 0x40 is set, ramps state[0x830] toward
- * (s8)data[0] / (s8)data[1] with acceleration lbl_803E23E4 and damping
- * lbl_803E23F0, clamps to [0, lbl_803E23E8], and pushes the result to the
- * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole reset
-#pragma scheduling reset
-
-
 
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_StopFromObject(int obj, int id);
 
-/* EN v1.0 0x80135CC8  size: 2784b  titlescreen_update: drive the title
- * screen actor anim state machine, the per-actor footstep/voice sfx flag
- * grid at lbl_803A9F50, the random blink blend, and the one-shot envfx/sky
- * setup. */
-#pragma scheduling off
-#pragma peephole off
-void titlescreen_update(u8* obj);
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-
-
-
-
-
-
 
 
 #pragma peephole off
@@ -1377,9 +1163,6 @@ extern u8 enableDebugText;
 
 #pragma peephole off
 #pragma peephole reset
-
-
-
 
 
 extern int getButtonsHeld(int p);

@@ -12,7 +12,6 @@
 #include "main/pad.h"
 
 
-
 extern char padGetCY(int port);
 extern uint getAngle();
 extern int ObjHits_GetPriorityHit();
@@ -697,22 +696,6 @@ void CameraModeDebug_update(short* camObj);
  * PAL Size: TODO
  */
 
-/*
- * --INFO--
- *
- * Function: fn_80109B04
- * EN v1.0 Address: 0x80108D58
- * EN v1.0 Size: 292b
- * EN v1.1 Address: 0x80109DA0
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
-
 
 /*
  * --INFO--
@@ -782,10 +765,6 @@ void CameraModeViewfinder_initialise(void)
 }
 
 void CameraModeDebug_copyToCurrent_nop(void);
-
-
-
-
 
 
 /* fn_X(lbl); lbl = 0; */
