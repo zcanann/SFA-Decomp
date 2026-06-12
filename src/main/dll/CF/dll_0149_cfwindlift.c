@@ -59,7 +59,7 @@ extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E4190;
-extern f32 lbl_803E416C;
+extern const f32 lbl_803E416C;
 extern f32 fn_80296214(void* p);
 extern void Music_Trigger(int a, int b);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
@@ -67,7 +67,7 @@ extern u8 lbl_80322A48[];
 extern u8 lbl_80322A68[];
 extern f32 lbl_803E41C8;
 extern f32 lbl_803E41CC;
-extern f32 lbl_803E4168;
+extern const f32 lbl_803E4168;
 extern f32 lbl_803E42E0;
 extern f32 Vec_xzDistance(void* a, void* b);
 extern void fn_80296220(int* rider, f32 v);
@@ -568,17 +568,16 @@ void windlift_init(int* obj, u8* def)
         }
     }
     {
-        f32 v2 = lbl_803E416C;
-        f32 v1 = lbl_803E4168;
+        WindLiftSub* p = sub;
         for (i = 0; i < 14; i++)
         {
-            sub->slots[i].b10 = 0;
-            sub->slots[i].b10 &= ~0xf1;
-            sub->slots[i].f4 = v1;
-            sub->slots[i].fc = v2;
-            sub->slots[i].f8 = v2;
-            sub->slots[i].i0 = 0;
-            sub->slots[i].b11 = 0;
+            p->slots[i].b10 = 0;
+            p->slots[i].b10 &= ~0xf1;
+            p->slots[i].f4 = lbl_803E4168;
+            p->slots[i].fc = lbl_803E416C;
+            p->slots[i].f8 = lbl_803E416C;
+            p->slots[i].i0 = 0;
+            p->slots[i].b11 = 0;
         }
     }
     ObjGroup_AddObject(obj, 0x49);
@@ -798,7 +797,6 @@ void windlift_update(int* obj)
     u8* def;
     WindLiftSub* sub = ((GameObject*)obj)->extra;
     int level;
-    int gb2;
     char* player;
     f32 pull;
     int idx;
@@ -806,6 +804,7 @@ void windlift_update(int* obj)
     int found;
     int count;
     int** objs;
+    int gb2;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (sub->active)
     {
