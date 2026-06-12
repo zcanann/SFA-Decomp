@@ -5,27 +5,11 @@
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
 
 
-extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern f32 mathSinf(f32 x);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 timeDelta;
 extern f64 DOUBLE_803e5c08;
-extern f32 lbl_803E4F90;
-extern f32 lbl_803E4F94;
-extern f32 lbl_803E4F98;
-extern f32 lbl_803E4F9C;
-extern f32 lbl_803E4FA0;
-extern f32 lbl_803E4FA4;
-extern f32 lbl_803E4FA8;
-extern f32 lbl_803E4FAC;
-extern f32 lbl_803E4FB0;
-extern f32 lbl_803E4FB4;
-extern f32 lbl_803E4FB8;
-extern f32 lbl_803E4FC8;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;
 
@@ -49,27 +33,7 @@ typedef struct MmShrineAnimObj
     u8* state;
 } MmShrineAnimObj;
 
-typedef struct MmShrineAnimState
-{
-    int light;
-    u8 pad04[0x24];
-    s16 orbitA;
-    s16 orbitB;
-    s16 orbitC;
-    u8 pad2E[0x2];
-    u8 hasTorchSignal;
-} MmShrineAnimState;
 
-typedef struct MmShrineAnimEvents
-{
-    u8 pad00[0x56];
-    u8 eventStatus;
-    u8 pad57[0x19];
-    s16 eventModel;
-    u8 pad72[0xF];
-    u8 events[10];
-    u8 eventCount;
-} MmShrineAnimEvents;
 
 /*
  * --INFO--
@@ -151,23 +115,13 @@ void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefi
 #pragma peephole off
 void fn_801C5990(MmShrineAnimObj* obj);
 
-int fn_801C5CE4(void* objArg, int unused, void* eventListArg);
 
 
-void ecsh_shrine_modelMtxFn(int* p1, u8* p2);
-
-void ecsh_shrine_func0E(u8 v);
-
-extern s16 lbl_80326238[];
-
-typedef struct EcshRenderPair
-{
-    f32 a;
-    f32 b;
-} EcshRenderPair;
 
 
-void ecsh_shrine_render2(u8 idx, f32 a, f32 b);
+
+
+
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -179,14 +133,10 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern undefined4 FUN_800067c0();
-extern undefined8 ObjGroup_RemoveObject();
 
 
 
-void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2);
 
-void ecsh_shrine_setScale(s16* out);
 
 /*
  * --INFO--
@@ -220,7 +170,6 @@ void ecsh_shrine_setScale(s16* out);
  */
 #pragma scheduling off
 #pragma peephole off
-int ecsh_shrine_getExtraSize(void);
 
 /*
  * --INFO--
@@ -235,7 +184,6 @@ int ecsh_shrine_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ecsh_shrine_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -250,14 +198,9 @@ int ecsh_shrine_getObjectTypeId(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ecsh_shrine_hitDetect(void);
 
-extern void Music_Trigger(int trackId, int restart);
-extern void ModelLightStruct_free(void* p);
 
-void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void ecsh_shrine_free(int* obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -284,9 +227,6 @@ extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017830();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
 
 extern undefined4 DAT_803dc070;
 
@@ -303,46 +243,12 @@ extern undefined4 DAT_803dc070;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void skyFn_80088c94(int a, int b);
-extern void getEnvfxAct(s16* obj, int* target, int id, int p);
-extern int objIsCurModelNotZero(int* player);
-extern void fn_80295CF4(int* player, int a);
-extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
-extern void audioStopByMask(int mask);
-extern int objGetAnimStateFlags(int* player, int flags);
-extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern void Music_Trigger(int id, int restart);
 extern int GameBit_Get(int bit);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern int lbl_803E8470;
-extern f32 lbl_803E4FCC;
-extern f32 lbl_803E4FD0;
-extern f32 lbl_803E4FD4;
-extern f32 lbl_803E4FD8;
-extern f32 lbl_803E4FDC;
-extern f32 lbl_803E4FE0;
-extern f32 lbl_803E4FE4;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
 
-typedef struct EcshPuzzleState
-{
-    f32 f[12]; /* 0x00 */
-    s16 cur[6]; /* 0x30 */
-    s16 next[7]; /* 0x3c */
-} EcshPuzzleState;
 
-typedef struct EcshIntPair
-{
-    int a;
-    int b;
-} EcshIntPair;
 
 #pragma opt_strength_reduction off
-void ecsh_shrine_update(s16* obj);
 #pragma opt_strength_reduction reset
 
 
@@ -437,7 +343,6 @@ void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8
 /* Trivial 4b 0-arg blr leaves. */
 void ecsh_shrine_release(void);
 
-void ecsh_shrine_initialise(void);
 
 void ecsh_creator_free(void)
 {
@@ -462,7 +367,6 @@ int ecsh_creator_getExtraSize(void) { return 0xa; }
 int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 int gpsh_shrine_getExtraSize(void);
 
-extern void ModelLightStruct_free(void* light);
 
 
 
@@ -491,11 +395,9 @@ void ecsh_creator_init(s16* obj, s8* def)
 }
 
 extern int objCreateLight(int a, int b);
-extern int lbl_803DDBC0;
 
 
 
-void ecsh_shrine_init(s16* obj, s8* def);
 
 extern u8* mmAlloc(int size, int tag, int p);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
@@ -565,5 +467,4 @@ void ecsh_creator_update(s16* obj)
 }
 
 extern f32 lbl_803E5000;
-extern f32 mathSinf(f32 angle);
 

@@ -1081,29 +1081,19 @@ void ecsh_shrine_initialise(void)
 
 void ecsh_creator_free(void);
 
-void ecsh_creator_hitDetect(void);
 
-void ecsh_creator_release(void);
 
-void ecsh_creator_initialise(void);
 
-void gpsh_shrine_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int ecsh_creator_getExtraSize(void);
-int ecsh_creator_getObjectTypeId(void);
-int gpsh_shrine_getExtraSize(void);
 
 extern void ModelLightStruct_free(void* light);
 
 
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4FF8;
 
-void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void ecsh_creator_init(s16* obj, s8* def);
 
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
@@ -1151,12 +1141,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
 }
 
 extern u8* mmAlloc(int size, int tag, int p);
-extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
-extern u8 Obj_IsLoadingLocked(void);
-extern u8 framesThisStep;
 
-void ecsh_creator_update(s16* obj);
 
-extern f32 lbl_803E5000;
 extern f32 mathSinf(f32 angle);
 
