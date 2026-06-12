@@ -21,7 +21,7 @@ extern int lbl_803DDC68;
 extern f32 lbl_803E5CCC;
 extern f32 lbl_803E5CD0;
 extern f32 lbl_803E5CD4;
-extern f32 lbl_803E5CD8;
+extern const f32 lbl_803E5CD8;
 extern f32 lbl_803E5CDC;
 
 void WM_ObjCreator_free(void)
@@ -96,9 +96,13 @@ void WM_ObjCreator_update(int obj)
 {
     extern undefined8 GameBit_Set(int eventId, int value); /* #57 */
     extern void* ObjGroup_GetObjects(); /* #57 */
+    int setup;
+    int spawned;
+    int n;
     WmObjCreatorPlacement* placement;
     WmObjCreatorState* state;
     int count;
+    s8 ok;
     struct
     {
         s16 dir[3];
@@ -114,11 +118,11 @@ void WM_ObjCreator_update(int obj)
         {
         case 0:
             {
-                s8 ok = 0;
+                int* objs;
+                int k;
+                ok = 0;
                 if (((GameObject*)obj)->unkF8 == 0)
                 {
-                    int* objs;
-                    int k;
                     ok = 1;
                     if (GameBit_Get(0x78) != 0)
                     {
@@ -138,8 +142,7 @@ void WM_ObjCreator_update(int obj)
                 }
                 if (ok)
                 {
-                    int setup = Obj_AllocObjectSetup(0x24, 0x139);
-                    int spawned;
+                    setup = Obj_AllocObjectSetup(0x24, 0x139);
                     ((ObjPlacement*)setup)->posX = placement->base.posX;
                     ((ObjPlacement*)setup)->posY = placement->base.posY;
                     ((ObjPlacement*)setup)->posZ = placement->base.posZ;
@@ -165,7 +168,6 @@ void WM_ObjCreator_update(int obj)
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 int setup = Obj_AllocObjectSetup(0x28, 0x263);
-                int spawned;
                 *(u8*)(setup + 4) = 0x20;
                 *(u8*)(setup + 5) = 2;
                 *(u8*)(setup + 7) = 0xff;
@@ -192,8 +194,7 @@ void WM_ObjCreator_update(int obj)
             if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                int setup = Obj_AllocObjectSetup(0x24, 0x275);
-                int spawned;
+                setup = Obj_AllocObjectSetup(0x24, 0x275);
                 *(s8*)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
                 randomGetRange(-100, 100);
@@ -215,8 +216,7 @@ void WM_ObjCreator_update(int obj)
             if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                int setup = Obj_AllocObjectSetup(0x38, 0x4ac);
-                int spawned;
+                setup = Obj_AllocObjectSetup(0x38, 0x4ac);
                 GameBit_Set(state->gameBit, 0);
                 *(s8*)(setup + 0x2a) = randomGetRange(-0x7f, 0x7e);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
@@ -237,8 +237,7 @@ void WM_ObjCreator_update(int obj)
             if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                int setup = Obj_AllocObjectSetup(0x28, 0x263);
-                int spawned;
+                setup = Obj_AllocObjectSetup(0x28, 0x263);
                 *(u8*)(setup + 4) = 4;
                 *(u8*)(setup + 5) = 2;
                 ((ObjPlacement*)setup)->posX = placement->base.posX;
@@ -264,11 +263,10 @@ void WM_ObjCreator_update(int obj)
         case 4:
             if (GameBit_Get(state->gameBit) != 0 || state->gameBit == -1)
             {
-                int n = 2;
+                n = 2;
                 do
                 {
                     int setup;
-                    int spawned;
                     n -= 1;
                     setup = Obj_AllocObjectSetup(0x28, 0x263);
                     *(u8*)(setup + 4) = 0x20;
@@ -293,7 +291,6 @@ void WM_ObjCreator_update(int obj)
                         randomGetRange(-0x23, 0x23);
                         ((GameObject*)spawned)->anim.velocityZ = lbl_803E5CD4 * (f32)(int)
                         randomGetRange(-0x23, 0x23);
-                        vec.pos[2] = lbl_803E5CD8;
                         ((GameObject*)spawned)->anim.velocityY = lbl_803E5CD8;
                         vec.pos[0] = lbl_803E5CC8;
                         vec.dir[0] = 0;
@@ -301,6 +298,7 @@ void WM_ObjCreator_update(int obj)
                         vec.dir[2] = 0;
                         vec.pos[1] = ((GameObject*)spawned)->anim.velocityX;
                         vec.pos[3] = ((GameObject*)spawned)->anim.velocityZ;
+                        vec.pos[2] = lbl_803E5CD8;
                         (*gPartfxInterface)->spawnObject((void*)spawned, 0x1a7, &vec,
                                                          0x10000, -1, NULL);
                     }
@@ -313,7 +311,7 @@ void WM_ObjCreator_update(int obj)
             if ((GameBit_Get(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                int setup = Obj_AllocObjectSetup(0x28, 0x263);
+                setup = Obj_AllocObjectSetup(0x28, 0x263);
                 *(u8*)(setup + 4) = 4;
                 *(u8*)(setup + 5) = 2;
                 ((ObjPlacement*)setup)->posX = placement->base.posX + (f32)(int)
@@ -335,8 +333,7 @@ void WM_ObjCreator_update(int obj)
         case 6:
             if (GameBit_Get(state->gameBit) != 0 || state->gameBit == -1)
             {
-                int setup = Obj_AllocObjectSetup(0x24, 700);
-                int n;
+                setup = Obj_AllocObjectSetup(0x24, 700);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
                 randomGetRange(-0x104, 0x104);
                 ((ObjPlacement*)setup)->posY = lbl_803E5CDC + ((GameObject*)obj)->anim.localPosY;
@@ -349,23 +346,19 @@ void WM_ObjCreator_update(int obj)
                 *(s8*)(setup + 0x18) = *(s16*)obj >> 8;
                 Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
+                for (n = randomGetRange(2, 5); n != 0; n -= 1)
                 {
-                    f32 size = lbl_803E5CC8;
-                    f32 yoff = lbl_803E5CDC;
-                    for (n = randomGetRange(2, 5); n != 0; n -= 1)
-                    {
-                        vec.pos[0] = size;
-                        vec.dir[0] = 0;
-                        vec.dir[1] = 0;
-                        vec.dir[2] = 0;
-                        vec.pos[1] = (f32)(int)
-                        randomGetRange(-200, 200);
-                        vec.pos[3] = (f32)(int)
-                        randomGetRange(-0x14, 0x14);
-                        vec.pos[2] = yoff;
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x1a6, &vec, 0x10002, -1,
-                                                         NULL);
-                    }
+                    vec.pos[0] = 1.0f;
+                    vec.dir[0] = 0;
+                    vec.dir[1] = 0;
+                    vec.dir[2] = 0;
+                    vec.pos[1] = (f32)(int)
+                    randomGetRange(-200, 200);
+                    vec.pos[3] = (f32)(int)
+                    randomGetRange(-0x14, 0x14);
+                    vec.pos[2] = 200.0f;
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x1a6, &vec, 0x10002, -1,
+                                                     NULL);
                 }
                 GameBit_Set(state->gameBit, 0);
             }
