@@ -2,63 +2,15 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 
-typedef struct SBShipGunPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    u8 pad24[0x28 - 0x24];
-} SBShipGunPlacement;
 
 
-typedef struct SBShipGunState
-{
-    u8 pad0[0x3 - 0x0];
-    s8 unk3;
-    u8 pad4[0xC - 0x4];
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 padF[0x10 - 0xF];
-} SBShipGunState;
 
 
-typedef struct SBCannonBallState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 velocityY;
-    f32 velocityZ;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    s16 unk18;
-    s8 flags;
-    u8 pad1B[0x1C - 0x1B];
-    f32 impactCooldown;
-    void* modelLight;
-    u8 pad24[0x28 - 0x24];
-} SBCannonBallState;
 
 
 extern u32 randomGetRange(int min, int max);
-extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjPath_GetPointWorldPosition();
 
-extern f32 lbl_803E6520;
-extern f32 lbl_803E6524;
-extern f32 lbl_803E6528;
-extern f32 lbl_803E652C;
-extern f32 lbl_803E6530;
-extern f32 lbl_803E6534;
-extern f32 lbl_803E6538;
-extern f32 lbl_803E653C;
-extern f32 lbl_803E6540;
-extern f32 lbl_803E6544;
 
 /*
  * --INFO--
@@ -73,45 +25,19 @@ extern f32 lbl_803E6544;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void spawnExplosion(double scale, int obj, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void Sfx_StopObjectChannel();
 extern s16 getAngle(f32 dx, f32 dz);
-extern f32 sqrtf(f32);
-extern u8 Obj_IsLoadingLocked(void);
-extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
-extern void vecRotateZXY(void* a, void* b);
-extern void* Obj_AllocObjectSetup(int size, int objType);
-extern u16* Obj_SetupObject(void* setup, int p2, int p3, int p4, int p5);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern u8 framesThisStep;
 extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E5888;
-extern f32 lbl_803E588C;
-extern f32 lbl_803E5890;
-extern f32 lbl_803E5894;
-extern f32 lbl_803E5898;
-extern f32 lbl_803E589C;
-extern f32 lbl_803E58A0;
-extern f32 lbl_803E58A4;
-extern f32 lbl_803E58A8;
-extern f32 lbl_803E58AC;
 
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void SB_CannonBall_release(void);
 
-void SB_CannonBall_initialise(void);
 
-void SB_ShipGun_init(int obj);
 
 /* 8b "li r3, N; blr" returners. */
-int SB_CannonBall_getExtraSize(void);
-int SB_CannonBall_getObjectTypeId(void);
 
-void SB_CannonBall_free(int obj);
 
 int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
 int SB_FireBall_getObjectTypeId(void) { return 0x0; }
@@ -126,7 +52,6 @@ extern f32 lbl_803E58B0;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E58D8;
 
-void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -135,21 +60,11 @@ void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 extern f32 timeDelta;
-extern f32 lbl_803E58BC;
-extern f64 lbl_803E58C0;
 
-void SB_CannonBall_update(int* obj);
 
-extern f32 lbl_803E58B4;
-extern f32 lbl_803E58B8;
 
-void SB_CannonBall_hitDetect(int* obj);
 
-extern f32 lbl_803E58C8;
-extern f32 lbl_803E58CC;
-extern f32 lbl_803E58D0;
 
-void SB_CannonBall_init(int* obj);
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
@@ -310,57 +225,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern f64 DOUBLE_803e6558;
-extern f64 DOUBLE_803e65a0;
-extern f64 DOUBLE_803e65d8;
-extern f64 DOUBLE_803e6600;
-extern f64 DOUBLE_803e6628;
-extern f64 DOUBLE_803e6638;
-extern f64 DOUBLE_803e6650;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DE8D0;
-extern f32 lbl_803E654C;
-extern f32 lbl_803E6550;
-extern f32 lbl_803E6554;
-extern f32 lbl_803E6560;
-extern f32 lbl_803E6564;
-extern f32 lbl_803E6568;
-extern f32 lbl_803E6574;
-extern f32 lbl_803E6578;
-extern f32 lbl_803E6584;
-extern f32 lbl_803E6588;
-extern f32 lbl_803E658C;
-extern f32 lbl_803E6590;
-extern f32 lbl_803E6594;
-extern f32 lbl_803E6598;
-extern f32 lbl_803E659C;
-extern f32 lbl_803E65A8;
-extern f32 lbl_803E65AC;
-extern f32 lbl_803E65B0;
-extern f32 lbl_803E65B4;
-extern f32 lbl_803E65C0;
-extern f32 lbl_803E65C4;
-extern f32 lbl_803E65C8;
-extern f32 lbl_803E65CC;
-extern f32 lbl_803E65D0;
-extern f32 lbl_803E65D4;
-extern f32 lbl_803E65E0;
-extern f32 lbl_803E65E4;
-extern f32 lbl_803E65E8;
-extern f32 lbl_803E65F0;
-extern f32 lbl_803E65F4;
-extern f32 lbl_803E65F8;
-extern f32 lbl_803E6608;
-extern f32 lbl_803E660C;
-extern f32 lbl_803E6614;
-extern f32 lbl_803E6618;
-extern f32 lbl_803E661C;
-extern f32 lbl_803E6620;
-extern f32 lbl_803E6624;
-extern f32 lbl_803E6630;
-extern f32 lbl_803E6634;
-extern f32 lbl_803E6644;
-extern f32 lbl_803E6648;
 
 /*
  * --INFO--
@@ -700,7 +564,6 @@ extern f32 lbl_803E59AC;
 extern f32 lbl_803E59B0;
 extern f32 lbl_803E5958;
 extern f32 lbl_803E595C;
-extern f64 lbl_803E5968;
 extern f32 lbl_803E5970;
 extern f32 lbl_803E5974;
 extern f32 lbl_803E5960;
@@ -860,7 +723,6 @@ extern f32 lbl_803E5980;
 extern f32 lbl_803E5984;
 extern f32 lbl_803E5988;
 extern f32 lbl_803E598C;
-extern f64 lbl_803E5990;
 
 int Lamp_SeqFn(int obj, int unused, int state)
 {
@@ -1130,8 +992,6 @@ extern f32 lbl_803E58F8;
 extern f32 lbl_803E58FC;
 extern f32 lbl_803E5900;
 extern f32 lbl_803E5904;
-extern f64 lbl_803E5908;
-extern f32 lbl_803E58E8_; // dummy to avoid duplicate
 extern f32 lbl_803E58DC;
 extern f32 lbl_803E58E0;
 

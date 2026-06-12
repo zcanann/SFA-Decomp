@@ -2,11 +2,6 @@
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dfropenode.h"
 
-typedef struct DfropenodeState
-{
-    u8 pad0[0x2C - 0x0];
-    void* unk2C;
-} DfropenodeState;
 
 
 extern f32 sqrtf(f32 x);
@@ -676,38 +671,15 @@ void dfropenode_hitDetect(void)
 #include "main/game_object.h"
 #include "main/dll/DF/dll_196.h"
 
-typedef struct DFSHDoor2SpeciPlacement
-{
-    u8 pad0[0x1B - 0x0];
-    u8 unk1B;
-    u8 pad1C[0x22 - 0x1C];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} DFSHDoor2SpeciPlacement;
 
 
-typedef struct DFDoorSpeciExtra
-{
-    u16 phase;
-    u8 pad02;
-    u8 state;
-    u8 pad04[2];
-} DFDoorSpeciExtra;
 
-extern int* objFindTexture(int obj, int a, int b);
 extern void textureFree(void* resource);
 extern void* textureLoadAsset(int assetId);
-extern f32 mathCosf(f32 x);
 extern int lbl_803DBF40;
 extern f32 lbl_803DBF50;
 extern u8 lbl_803DBF58;
 extern f32 lbl_803E4E28;
-extern f32 lbl_803E4E30;
-extern f32 lbl_803E4E34;
-extern f32 lbl_803E4E38;
-extern f32 lbl_803E4E3C;
-extern f32 lbl_803E4E40;
-extern f64 lbl_803E4E48;
 
 /*
  * --INFO--

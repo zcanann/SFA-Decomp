@@ -24,72 +24,24 @@ typedef struct BombplantsporeUpdateDriftPlacement
 
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
 extern void ModelLightStruct_free(void* light);
-extern double FUN_80017714();
 extern int randomGetRange(int min, int max);
-extern undefined4 FUN_80017a28();
-extern byte FUN_80017a34();
-extern undefined4 FUN_80017a3c();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_RefreshObjectState();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80081120();
-extern undefined4 FUN_8008112c();
-extern undefined4 FUN_8013651c();
 extern u32 GameBit_Get(int eventId);
-extern void fn_801D2B70(void* obj, void* stateEntry, void* state);
 extern void* Obj_GetPlayerObject(void);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void Sfx_PlayFromObject(void* obj, int sndId);
-extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId);
-extern void Obj_StartModelFadeIn(void* obj, int duration);
-extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d, int e);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-extern f32 lbl_803E5358;
-extern f32 lbl_803E535C;
-extern f64 lbl_803E5360;
-extern f32 lbl_803E5368;
-extern f32 lbl_803E536C;
-extern f32 lbl_803E537C;
-extern f32 lbl_803E5380;
 
-extern u8 lbl_80326D20[];
 extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
-extern undefined4 DAT_80327960;
-extern undefined4 DAT_80327964;
-extern undefined4 DAT_80327968;
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern f64 DOUBLE_803e5ff8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803e5ff0;
-extern f32 FLOAT_803e5ff4;
-extern f32 FLOAT_803e6000;
-extern f32 FLOAT_803e6004;
-extern f32 FLOAT_803e6010;
-extern f32 FLOAT_803e6014;
 extern f32 lbl_803E5390;
 extern f32 lbl_803E5394;
 extern f32 lbl_803E5398;
 extern f32 lbl_803E539C;
-extern f64 lbl_803E53A0;
 extern f32 lbl_803E53A8;
 extern f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
@@ -315,7 +267,6 @@ void bombplant_init(void* obj, void* param, int flag);
  * EN v1.0 Address: 0x801D2C54
  * EN v1.0 Size: 1508b
  */
-void bombplant_update(void* obj);
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"

@@ -18,35 +18,8 @@ typedef struct SmallbasketState
 
 
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017730();
-extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
-extern uint FUN_80294d50();
-extern uint FUN_80294d58();
 
-extern undefined4 DAT_803ad3f0;
-extern undefined4 DAT_803ad3f4;
-extern undefined4 DAT_803ad3f8;
-extern f64 DOUBLE_803e4600;
-extern f32 lbl_803E45C8;
-extern f32 lbl_803E45D0;
-extern f32 lbl_803E45D4;
-extern f32 lbl_803E45D8;
-extern f32 lbl_803E45DC;
-extern f32 lbl_803E45E0;
-extern f32 lbl_803E45E4;
-extern f32 lbl_803E45E8;
-extern f32 lbl_803E45EC;
-extern f32 lbl_803E45F0;
-extern f32 lbl_803E45F4;
-extern f32 lbl_803E45F8;
-extern f32 lbl_803E45FC;
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int fn_80296AE8(u8 * obj);
@@ -728,62 +701,15 @@ typedef struct SmallbasketObjectDef
 } SmallbasketObjectDef;
 
 
-#define SMALLBASKET_LINKED_ID_BASE 0x40000
-#define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
-#define SMALLBASKET_ROB_WAVE_ID_65D0 0x65d0
-#define SMALLBASKET_ROB_WAVE_ID_65D2 0x65d2
-#define SMALLBASKET_ROB_WAVE_ID_65D5 0x65d5
-#define SMALLBASKET_ROB_WAVE_ID_65D6 0x65d6
-#define SMALLBASKET_ROB_WAVE_ID_65D7 0x65d7
-#define GAMEBIT_SFX_MUTE 0xa71
 
-extern undefined8 FUN_80006824();
-extern uint FUN_80006ba0();
-extern undefined4 FUN_80006ba8();
-extern uint FUN_80006c00();
-extern double FUN_80017708();
-extern undefined4 FUN_8001771c();
-extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80081120();
-extern undefined4 FUN_8011e868();
-extern undefined4 FUN_80181b50();
-extern uint FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern uint FUN_80294bec();
-extern byte FUN_80294c20();
-extern uint FUN_80294ce8();
-extern uint FUN_80294cf0();
-extern uint FUN_80294db4();
 
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803de740;
-extern f64 DOUBLE_803e4638;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E460C;
-extern f32 lbl_803E4610;
-extern f32 lbl_803E4614;
-extern f32 lbl_803E4618;
-extern f32 lbl_803E461C;
-extern f32 lbl_803E4620;
-extern f32 lbl_803E4624;
-extern f32 lbl_803E4628;
-extern f32 lbl_803E462C;
-extern f32 lbl_803E4630;
 
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern int GameBit_Get(int id);
 extern void Sfx_PlayFromObject(int obj, int sfx);
-extern f32 lbl_803E39AC;
-extern f64 lbl_803E39B0;
-extern f32 lbl_803E39B8;
-extern f32 lbl_803E39BC;
-extern f32 lbl_803E39C0;
-extern f32 lbl_803E39C4;
-extern f64 lbl_803E39C8;
 
-f32 fn_80183204(int obj);
 
 extern void ObjGroup_AddObject(int obj, int group);
 
@@ -869,7 +795,6 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int* gSHthorntailAnimationInterface;
 extern f32 lbl_803E3934;
-extern f64 lbl_803E3968;
 extern f32 lbl_803E3978;
 extern f32 lbl_803E397C;
 extern f32 lbl_803E3980;
@@ -879,7 +804,6 @@ extern f32 lbl_803E398C;
 extern f32 lbl_803E3990;
 extern f32 lbl_803E3994;
 extern f32 lbl_803E3998;
-extern f64 lbl_803E39A0;
 
 typedef struct
 {

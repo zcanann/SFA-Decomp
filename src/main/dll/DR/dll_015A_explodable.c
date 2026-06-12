@@ -19,19 +19,11 @@ extern undefined4 FUN_8007f6e4();
 extern undefined4* DAT_803dd740;
 extern f64 DOUBLE_803e4f98;
 extern f64 DOUBLE_803e4ff8;
-extern f64 DOUBLE_803e5020;
 extern f32 lbl_803E4F58;
 extern f32 lbl_803E4FE8;
 extern f32 lbl_803E4FEC;
 extern f32 lbl_803E4FF0;
 extern f32 lbl_803E4FF4;
-extern f32 lbl_803E5000;
-extern f32 lbl_803E5004;
-extern f32 lbl_803E5008;
-extern f32 lbl_803E500C;
-extern f32 lbl_803E5010;
-extern f32 lbl_803E5014;
-extern f32 lbl_803E5018;
 
 /*
  * --INFO--
@@ -245,9 +237,7 @@ void explodable_render(void)
 
 void cfforcefield_free(void);
 
-void cfforcefield_render(void);
 
-void cfforcefield_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -273,26 +263,8 @@ typedef struct ExplodablePlacement
 } ExplodablePlacement;
 
 
-typedef struct BlastedState
-{
-    u8 pad0[0x10 - 0x0];
-    u8 unk10;
-    u8 unk11;
-    u8 pad12[0x6E4 - 0x12];
-    u8 unk6E4;
-    u8 pad6E5[0x6E8 - 0x6E5];
-} BlastedState;
 
 
-typedef struct FnBlastedInitV11UnusedState
-{
-    u8 pad0[0x2C - 0x0];
-    f32 unk2C;
-    f32 unk30;
-    u8 pad34[0x38 - 0x34];
-    f32 unk38;
-    u8 pad3C[0x40 - 0x3C];
-} FnBlastedInitV11UnusedState;
 
 
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
@@ -354,7 +326,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 int explodable_getExtraSize(void) { return 0x6e8; }
 int cfforcefield_getExtraSize(void);
-int cfforcefield_getObjectTypeId(void);
 
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off
@@ -383,8 +354,6 @@ void explodable_free(int obj, int flag)
 }
 
 extern void objSetSlot(int* obj, int slot);
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern int fn_801A27B8(int* obj, int v);
 
 
 extern void fn_801A2E80(int obj, int def, int p3, int state);

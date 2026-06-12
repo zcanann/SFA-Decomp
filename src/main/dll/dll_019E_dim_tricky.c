@@ -4,106 +4,19 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-typedef struct Dll19CPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 posX;
-    f32 unkC;
-    f32 posZ;
-    u8 pad14[0x19 - 0x14];
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} Dll19CPlacement;
 
 
-typedef struct Dll19DPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} Dll19DPlacement;
 
 
-typedef struct Dll19DState
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x2C - 0x14];
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    u16 unk34;
-    u8 unk36;
-    u8 pad37[0x38 - 0x37];
-} Dll19DState;
 
 
-typedef struct Dll19CState
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x2C - 0x14];
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    u16 unk34;
-    u8 unk36;
-    u8 pad37[0x38 - 0x37];
-} Dll19CState;
 
 
-typedef struct Dll19BState
-{
-    u8 pad0[0x12 - 0x0];
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 pad15[0x16 - 0x15];
-    u8 unk16;
-    u8 pad17[0x18 - 0x17];
-} Dll19BState;
 
 
 #pragma peephole off
 #pragma scheduling off
-extern undefined4 getLActions();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_8001771c();
-extern uint FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80135814();
-extern int FUN_80286834();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80294d68();
 
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f0;
-extern f64 DOUBLE_803e5e40;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5E24;
-extern f32 lbl_803E5E28;
-extern f32 lbl_803E5E2C;
-extern f32 lbl_803E5E30;
-extern f32 lbl_803E5E34;
-extern f32 lbl_803E5E38;
-extern f32 lbl_803E5E4C;
 
 /*
  * --INFO--
@@ -118,22 +31,7 @@ extern f32 lbl_803E5E4C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
-extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern void fn_80296B78(int obj, int a);
-extern void fn_80137948(char* fmt, ...);
-extern char sShrineTimeFormat[];
-extern void* gTitleMenuControlInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E518C;
-extern f32 lbl_803E5190;
-extern f32 lbl_803E5194;
-extern f32 lbl_803E5198;
-extern f32 lbl_803E519C;
-extern f32 lbl_803E51A0;
-extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
@@ -158,12 +56,6 @@ extern f32 lbl_803E51B0;
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-extern void ObjHits_ClearHitVolumes(int obj);
-extern void Obj_FreeObject(int obj);
-extern f32 lbl_803E51B4;
 
 #pragma peephole off
 #pragma peephole reset
@@ -187,7 +79,6 @@ extern f32 lbl_803E51B4;
 #pragma peephole off
 #pragma peephole reset
 
-extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 
 /*
  * Function: dll_19D_init
@@ -198,8 +89,6 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
 #pragma peephole reset
 
 extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E51B8;
-extern f64 lbl_803E51C0;
 
 /*
  * Function: dll_19D_hitDetect
@@ -390,7 +279,6 @@ extern undefined4 lbl_802C23D8[4];
 extern f32 lbl_803E51E0;
 extern f32 lbl_803E51E4;
 extern f32 lbl_803E51E8;
-extern f64 lbl_803E51F0;
 
 typedef struct Dll19EState
 {

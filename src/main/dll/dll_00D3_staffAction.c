@@ -39,10 +39,7 @@ extern undefined4 DAT_803dc070;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f64 DOUBLE_803e3cb0;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
@@ -1402,7 +1399,6 @@ extern double lbl_803E3040;
 extern f32 lbl_803E3034;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;
-extern f32 lbl_803E3058;
 
 extern void LandedArwing_UpdateRetreatChase(void);
 extern void LandedArwing_UpdateBounceFade(void);
@@ -1673,16 +1669,6 @@ void skeetlawall_initialise(void);
 int skeetlawall_getExtraSize(void);
 int skeetlawall_getObjectTypeId(void);
 
-typedef struct SkeetlaWallState
-{
-    u8 negXExtent;
-    u8 posXExtent;
-    u8 posZExtent;
-    u8 negZExtent;
-    u8 posYExtent;
-    u8 negYExtent;
-    u8 shapeFlag;
-} SkeetlaWallState;
 
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 

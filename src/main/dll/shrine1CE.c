@@ -222,34 +222,8 @@ typedef struct Dll19BState
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 getLActions();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_8001771c();
-extern uint FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80135814();
-extern int FUN_80286834();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80294d68();
 
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f0;
-extern f64 DOUBLE_803e5e40;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5E24;
-extern f32 lbl_803E5E28;
-extern f32 lbl_803E5E2C;
-extern f32 lbl_803E5E30;
-extern f32 lbl_803E5E34;
-extern f32 lbl_803E5E38;
-extern f32 lbl_803E5E4C;
 
 /*
  * --INFO--
@@ -745,7 +719,6 @@ void dll_19D_init(int obj)
 
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E51B8;
-extern f64 lbl_803E51C0;
 
 /*
  * Function: dll_19D_hitDetect

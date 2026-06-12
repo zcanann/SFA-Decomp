@@ -4,37 +4,6 @@
 
 extern u32 randomGetRange(int min, int max);
 
-extern f64 DOUBLE_803e2018;
-extern f64 DOUBLE_803e2070;
-extern f32 lbl_803E1FF0;
-extern f32 lbl_803E1FF4;
-extern f32 lbl_803E1FF8;
-extern f32 lbl_803E1FFC;
-extern f32 lbl_803E2000;
-extern f32 lbl_803E2004;
-extern f32 lbl_803E2008;
-extern f32 lbl_803E200C;
-extern f32 lbl_803E2010;
-extern f32 lbl_803E2014;
-extern f32 lbl_803E2020;
-extern f32 lbl_803E2024;
-extern f32 lbl_803E2028;
-extern f32 lbl_803E202C;
-extern f32 lbl_803E2030;
-extern f32 lbl_803E2034;
-extern f32 lbl_803E2038;
-extern f32 lbl_803E203C;
-extern f32 lbl_803E2040;
-extern f32 lbl_803E2044;
-extern f32 lbl_803E2048;
-extern f32 lbl_803E204C;
-extern f32 lbl_803E2050;
-extern f32 lbl_803E2054;
-extern f32 lbl_803E2058;
-extern f32 lbl_803E205C;
-extern f32 lbl_803E2060;
-extern f32 lbl_803E2064;
-extern f32 lbl_803E2068;
 
 /*
  * --INFO--
@@ -94,11 +63,6 @@ typedef struct
     u8 pad2[2]; /* 0x5e */
 } ScreenFxHdr; /* 0x60 */
 
-typedef struct
-{
-    u8 pad[0x1f8];
-    s16 anims[21];
-} ScreenAnimTable;
 
 extern u8 lbl_80317BD8[];
 extern ModgfxInterface** gModgfxInterface;

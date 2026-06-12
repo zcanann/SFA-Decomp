@@ -5,67 +5,13 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-typedef struct GpshObjcreatorState
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 pad5[0x8 - 0x5];
-} GpshObjcreatorState;
 
 
-typedef struct GpshObjcreatorObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-} GpshObjcreatorObjectDef;
 
 
-typedef struct GpshShrineState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    u8 padC[0x12 - 0xC];
-    u8 unk12;
-    u8 pad13[0x14 - 0x13];
-    u8 unk14;
-    u8 pad15[0x18 - 0x15];
-} GpshShrineState;
 
 
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_80006770();
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_80006824();
-extern byte FUN_80006b44();
-extern undefined4 FUN_80006b4c();
-extern undefined4 FUN_80006b50();
-extern undefined4 FUN_80006b54();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_80042b9c();
-extern int FUN_80044404();
-extern undefined8 FUN_80080f28();
-extern undefined4 FUN_801c70c4();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern undefined4 FUN_801d8480();
-extern undefined4 FUN_80286834();
-extern undefined4 FUN_80286880();
-extern uint FUN_80294cd0();
 
-extern f64 DOUBLE_803e5cc8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5CD4;
-extern f32 lbl_803E5CD8;
-extern void* objCreateLight(int obj, int kind);
 
 /*
  * --INFO--
@@ -80,42 +26,10 @@ extern void* objCreateLight(int obj, int kind);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
-    u8 b08 : 1;
-    u8 b04 : 1;
-    u8 b02 : 1;
-    u8 b01 : 1;
-} GpshShrineFlags;
 
 extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int bit);
-extern int GameBit_Set(int bit, int val);
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern void skyFn_80088c94(int a, int b);
-extern int getEnvfxAct(int obj, int player, int id, int p);
-extern void fn_801C70F0(int obj);
-extern int mapGetDirIdx(int a);
-extern int unlockLevel(int a, int b, int c);
-extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
-extern void gameTimerInit(int a, int b);
-extern void timerSetToCountUp(void);
-extern void gameTimerStop(void);
-extern int isGameTimerDisabled(void);
-extern int Obj_FreeObject(int obj);
-extern int objGetAnimStateFlags(int obj, int flag);
-extern void audioStopByMask(int mask);
-extern int Music_Trigger(int id, int value);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 timeDelta;
-extern f32 lbl_803E503C;
-extern f32 lbl_803E5040;
 
 
 
@@ -127,26 +41,12 @@ extern f32 lbl_803E5040;
 
 
 
-extern u8 Obj_IsLoadingLocked(void);
-extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-extern f32 lbl_803E504C;
-extern f32 lbl_803E5050;
-extern f32 lbl_803E5054;
-extern s16 lbl_803263B8[];
 
 
-void gpsh_scene_free(void);
 
-void gpsh_scene_hitDetect(void);
 
-void gpsh_scene_update(void);
 
-void gpsh_scene_release(void);
 
-void gpsh_scene_initialise(void);
 
 void ecsh_cup_hitDetect(void)
 {
@@ -154,18 +54,15 @@ void ecsh_cup_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int gpsh_scene_getExtraSize(void);
-int gpsh_scene_getObjectTypeId(void);
 int ecsh_cup_getExtraSize(void) { return 0x30; }
 int ecsh_cup_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5058;
 extern f32 lbl_803E5060;
 
 
-void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -208,23 +105,11 @@ typedef struct EcshCupState
 } EcshCupState;
 
 
-extern undefined4 FUN_800067e8();
-extern void* FUN_80017624();
-extern undefined4 FUN_8001771c();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_FindNearestObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800810ec();
-extern undefined4 FUN_801c7390();
 
-extern undefined4 DAT_802c2b38;
-extern undefined4 DAT_802c2b3c;
-extern undefined4 DAT_802c2b40;
 
 extern f32 lbl_803E5064;
 extern f32 lbl_803E5068;
@@ -236,8 +121,6 @@ extern f32 lbl_803E507C;
 extern f32 lbl_803E5080;
 extern f32 lbl_803E5084;
 extern f32 lbl_803E5088;
-extern f64 lbl_803E5090;
-extern f64 lbl_803E5098;
 extern undefined4 lbl_803DDBC8;
 
 /*
@@ -549,7 +432,6 @@ extern f32 lbl_803E50BC;
 extern f32 lbl_803E50C0;
 extern f32 lbl_803E50C4;
 extern f32 lbl_803E50C8;
-extern f64 lbl_803E50D0;
 
 /*
  * --INFO--

@@ -7,613 +7,42 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-typedef struct SideloadPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    u8 unk18;
-    u8 pad19[0x1A - 0x19];
-    u8 unk1A;
-    u8 pad1B[0x3C - 0x1B];
-    s16 unk3C;
-    u8 pad3E[0x48 - 0x3E];
-    void* unk48;
-    u8 pad4C[0x50 - 0x4C];
-    f32 unk50;
-    u8 pad54[0x70 - 0x54];
-    u8 unk70;
-    u8 pad71[0x98 - 0x71];
-    f32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xB8 - 0xB2];
-    f32 unkB8;
-    f32 unkBC;
-    f32 unkC0;
-    u8 padC4[0x2B1 - 0xC4];
-    s8 unk2B1;
-    u8 pad2B2[0x2B8 - 0x2B2];
-} SideloadPlacement;
 
 
-typedef struct StaticCameraState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    u8 unk18;
-    u8 pad19[0x1A - 0x19];
-    u8 unk1A;
-    u8 pad1B[0x3C - 0x1B];
-    s16 unk3C;
-    u8 pad3E[0x48 - 0x3E];
-    void* unk48;
-    u8 pad4C[0x50 - 0x4C];
-    f32 unk50;
-    u8 pad54[0x70 - 0x54];
-    u8 unk70;
-    u8 pad71[0x98 - 0x71];
-    f32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xB8 - 0xB2];
-    f32 unkB8;
-    f32 unkBC;
-    f32 unkC0;
-    u8 padC4[0x2B1 - 0xC4];
-    s8 unk2B1;
-    u8 pad2B2[0x2B8 - 0x2B2];
-} StaticCameraState;
 
 
-typedef struct FireballPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x2C - 0x22];
-    s16 unk2C;
-    u8 pad2E[0x30 - 0x2E];
-} FireballPlacement;
 
 
-typedef struct AnimatedobjPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x2C - 0x22];
-    s16 unk2C;
-    u8 pad2E[0x30 - 0x2E];
-} AnimatedobjPlacement;
 
 
-typedef struct Dim2roofrubPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x2C - 0x22];
-    s16 unk2C;
-    u8 pad2E[0x30 - 0x2E];
-} Dim2roofrubPlacement;
 
 
-typedef struct DllF7Placement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x2C - 0x22];
-    s16 unk2C;
-    u8 pad2E[0x30 - 0x2E];
-} DllF7Placement;
 
 
-typedef struct BaddieinterestpPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x2C - 0x22];
-    s16 unk2C;
-    u8 pad2E[0x30 - 0x2E];
-} BaddieinterestpPlacement;
 
 
-typedef struct MikabombState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u8 unk8;
-    s8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 padD[0x18 - 0xD];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x70 - 0x54];
-    u8 unk70;
-    u8 pad71[0xAA - 0x71];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xB8 - 0xB2];
-} MikabombState;
 
 
-typedef struct StaffDoGrowShrinkAnimState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u8 unk8;
-    s8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 padD[0x18 - 0xD];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x70 - 0x54];
-    u8 unk70;
-    u8 pad71[0xAA - 0x71];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xB8 - 0xB2];
-} StaffDoGrowShrinkAnimState;
 
 
-typedef struct Dim2roofrubState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u8 unk8;
-    s8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 padD[0x18 - 0xD];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    s32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x6A - 0x54];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 unk70;
-    u8 pad71[0x94 - 0x71];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0x114 - 0xB2];
-    s16 unk114;
-    s16 unk116;
-    u8 pad118[0x140 - 0x118];
-} Dim2roofrubState;
 
 
-typedef struct AnimatedobjState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u8 unk8;
-    s8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 padD[0x18 - 0xD];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    s32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x6A - 0x54];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 unk70;
-    u8 pad71[0x94 - 0x71];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xE8 - 0xB2];
-    s32 unkE8;
-    u8 padEC[0x114 - 0xEC];
-    s16 unk114;
-    s16 unk116;
-    u8 pad118[0x140 - 0x118];
-} AnimatedobjState;
 
 
-typedef struct FlamethrowerspeState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    u8 pad14[0x18 - 0x14];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    s32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x6A - 0x54];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 unk70;
-    u8 pad71[0x94 - 0x71];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xE8 - 0xB2];
-    s32 unkE8;
-    u8 padEC[0x114 - 0xEC];
-    s16 unk114;
-    s16 unk116;
-} FlamethrowerspeState;
 
 
-typedef struct ShieldState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    u8 pad14[0x18 - 0x14];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    s32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x5C - 0x54];
-    u8 unk5C;
-    u8 unk5D;
-    u8 unk5E;
-    u8 unk5F;
-    u8 pad60[0x6A - 0x60];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 unk70;
-    u8 pad71[0x94 - 0x71];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xE8 - 0xB2];
-    s32 unkE8;
-    u8 padEC[0x114 - 0xEC];
-    s16 unk114;
-    s16 unk116;
-} ShieldState;
 
 
-typedef struct FireballState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    u8 pad14[0x18 - 0x14];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 posX;
-    s32 posY;
-    f32 posZ;
-    f32 flightDuration;
-    f32 elapsedTime;
-    f32 fadeoutTimer;
-    f32 startupDelay;
-    s16 unk40;
-    s16 unk42;
-    u8 pad44[0x46 - 0x44];
-    u16 spiralPhase;
-    u8 pad48[0x50 - 0x48];
-    f32 unk50;
-    u8 pad54[0x5C - 0x54];
-    u8 unk5C;
-    u8 unk5D;
-    u8 unk5E;
-    u8 unk5F;
-    u8 pad60[0x6A - 0x60];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 stateFlags;
-    u8 colorIndex;
-    u8 pad72[0x94 - 0x72];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xE8 - 0xB2];
-    s32 unkE8;
-    u8 padEC[0x114 - 0xEC];
-    s16 unk114;
-    s16 unk116;
-} FireballState;
 
 
-extern undefined4 FUN_80006810();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175bc();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175d8();
-extern undefined4 FUN_800175ec();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern int FUN_80017a54();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern undefined8 FUN_8002fc3c();
-extern undefined4 ObjHits_SetTargetMask();
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjLink_AttachChild();
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
-extern undefined4 FUN_8003b818();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081118();
-extern undefined8 FUN_800e842c();
-extern undefined4 PSVECDotProduct();
-extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern undefined4 fcos16Precise();
-extern undefined4 FUN_80294c48();
-extern undefined4 FUN_80294c60();
-extern int FUN_80294cf8();
-extern int FUN_80294d10();
-extern undefined4 FUN_80294d60();
-extern undefined4 FUN_80294d6c();
 
-extern undefined4 DAT_80321678;
-extern int DAT_80321688;
-extern undefined4 DAT_80321698;
-extern int DAT_803216a8;
-extern undefined4 DAT_803ad324;
-extern undefined4 DAT_803ad328;
-extern undefined4 DAT_803ad32c;
-extern undefined4 DAT_803ad330;
-extern undefined4 DAT_803ad334;
-extern undefined4 DAT_803ad338;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
-extern void** gTitleMenuControlInterfaceCopy;
-extern f64 DOUBLE_803e3e28;
-extern f64 DOUBLE_803e3e50;
-extern f64 DOUBLE_803e3e88;
-extern f64 DOUBLE_803e3eb0;
-extern f64 DOUBLE_803e3ed0;
-extern f64 DOUBLE_803e3f18;
-extern f64 DOUBLE_803e3fb0;
-extern f64 DOUBLE_803e4030;
-extern f64 DOUBLE_803e4068;
-extern f64 DOUBLE_803e4078;
-extern f64 DOUBLE_803e40d0;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DC9C8;
-extern f32 lbl_803DC9D0;
-extern f32 lbl_803DC9D4;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E3E30;
-extern f32 lbl_803E3E34;
-extern f32 lbl_803E3E3C;
-extern f32 lbl_803E3E40;
-extern f32 lbl_803E3E44;
-extern f32 lbl_803E3E48;
-extern f32 lbl_803E3E5C;
-extern f32 lbl_803E3E60;
-extern f32 lbl_803E3E64;
-extern f32 lbl_803E3E68;
-extern f32 lbl_803E3E6C;
-extern f32 lbl_803E3E70;
-extern f32 lbl_803E3E74;
-extern f32 lbl_803E3E78;
-extern f32 lbl_803E3E7C;
-extern f32 lbl_803E3E94;
-extern f32 lbl_803E3E98;
-extern f32 lbl_803E3E9C;
-extern f32 lbl_803E3EA0;
-extern f32 lbl_803E3EA4;
-extern f32 lbl_803E3EA8;
-extern f32 lbl_803E3EBC;
-extern f32 lbl_803E3EC0;
-extern f32 lbl_803E3EC4;
-extern f32 lbl_803E3EC8;
-extern f32 lbl_803E3ED8;
-extern f32 lbl_803E3EDC;
-extern f32 lbl_803E3EE0;
-extern f32 lbl_803E3EE4;
-extern f32 lbl_803E3EE8;
-extern f32 lbl_803E3EEC;
-extern f32 lbl_803E3EF0;
-extern f32 lbl_803E3EF4;
-extern f32 lbl_803E3EF8;
-extern f32 lbl_803E3EFC;
-extern f32 lbl_803E3F00;
-extern f32 lbl_803E3F04;
-extern f32 lbl_803E3F08;
-extern f32 lbl_803E3F0C;
-extern f32 lbl_803E3F10;
-extern f32 lbl_803E3F14;
-extern f32 lbl_803E3F20;
-extern f32 lbl_803E3F24;
-extern f32 lbl_803E3F28;
-extern f32 lbl_803E3F2C;
-extern f32 lbl_803E3F30;
-extern f32 lbl_803E3F34;
-extern f32 lbl_803E3F38;
-extern f32 lbl_803E3F3C;
-extern f32 lbl_803E3F40;
-extern f32 lbl_803E3F44;
-extern f32 lbl_803E3F48;
-extern f32 lbl_803E3F4C;
-extern f32 lbl_803E3F50;
-extern f32 lbl_803E3F54;
-extern f32 lbl_803E3F58;
-extern f32 lbl_803E3F5C;
-extern f32 lbl_803E3F60;
-extern f32 lbl_803E3F64;
-extern f32 lbl_803E3F68;
-extern f32 lbl_803E3F6C;
-extern f32 lbl_803E3F70;
-extern f32 lbl_803E3F74;
-extern f32 lbl_803E3F78;
-extern f32 lbl_803E3F7C;
-extern f32 lbl_803E3F80;
-extern f32 lbl_803E3F84;
-extern f32 lbl_803E3F88;
-extern f32 lbl_803E3F8C;
-extern f32 lbl_803E3F90;
-extern f32 lbl_803E3F94;
-extern f32 lbl_803E3F98;
-extern f32 lbl_803E3FA4;
-extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FB8;
-extern f32 lbl_803E3FBC;
-extern f32 lbl_803E3FC0;
-extern f32 lbl_803E3FC4;
-extern f32 lbl_803E3FC8;
-extern f32 lbl_803E3FCC;
-extern f32 lbl_803E3FD8;
-extern f32 lbl_803E3FE8;
-extern f32 lbl_803E3FF0;
-extern f32 lbl_803E3FF4;
-extern f32 lbl_803E3FF8;
-extern f32 lbl_803E3FFC;
-extern f32 lbl_803E4000;
-extern f32 lbl_803E4004;
-extern f32 lbl_803E4010;
-extern f32 lbl_803E4014;
-extern f32 lbl_803E4018;
-extern f32 lbl_803E4024;
-extern f32 lbl_803E4028;
-extern f32 lbl_803E402C;
-extern f32 lbl_803E4038;
-extern f32 lbl_803E4040;
-extern f32 lbl_803E4044;
-extern f32 lbl_803E4048;
-extern f32 lbl_803E404C;
-extern f32 lbl_803E4050;
-extern f32 lbl_803E4054;
-extern f32 lbl_803E4058;
-extern f32 lbl_803E405C;
-extern f32 lbl_803E4060;
-extern f32 lbl_803E4064;
-extern f32 lbl_803E4070;
-extern f32 lbl_803E4074;
-extern f32 lbl_803E4080;
-extern f32 lbl_803E4084;
-extern f32 lbl_803E4098;
-extern f32 lbl_803E409C;
-extern f32 lbl_803E40A0;
-extern f32 lbl_803E40A4;
-extern f32 lbl_803E40A8;
-extern f32 lbl_803E40AC;
-extern f32 lbl_803E40B0;
-extern f32 lbl_803E40B8;
-extern f32 lbl_803E40BC;
-extern f32 lbl_803E40C0;
-extern f32 lbl_803E40C4;
-extern f32 lbl_803E40C8;
-extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
-extern void* PTR_DAT_803211ec;
 
 
 /*
@@ -701,7 +130,6 @@ extern void* PTR_DAT_803211ec;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
 
 /*
@@ -732,7 +160,6 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E3420;
 
 
 /*
@@ -749,11 +176,8 @@ extern f32 lbl_803E3420;
  * PAL Size: TODO
  */
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* getTrickyObject(void);
 extern u32 GameBit_Get(int eventId);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
 /*
  * --INFO--
@@ -770,18 +194,11 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
  */
 
 
-extern f32 lbl_803E31D8;
-extern f32 lbl_803E31DC;
-extern f32 lbl_803E31E0;
-extern f32 lbl_803E31E4;
 
 void mikabombshadow_update(int* obj);
 
-extern f32 lbl_803E33F4;
-extern f32 lbl_803E33F8;
 
 
-void siderepel_init(int obj, int param_2);
 
 
 /*
@@ -849,8 +266,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-extern void ModelLightStruct_free(void* p);
-extern int Sfx_StopFromObject(int obj, int sfxId);
 
 void shield_free(int obj);
 
@@ -865,7 +280,6 @@ void shield_free(int obj);
 
 
 
-void setuppoint_init(void);
 
 /* 8b "li r3, N; blr" returners. */
 int animatedobj_getExtraSize(void);
@@ -880,16 +294,12 @@ int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-extern void* lbl_803DDAB0;
-extern void* lbl_803DDAB4;
 
 void dll_F7_free(int obj);
 
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 void dim2roofrub_free(int* obj);
 
-int siderepel_getExtraSize(void);
 
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
@@ -936,9 +346,6 @@ extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 void staffFn_80170380(int* obj, int cmd);
-extern int* Obj_GetActiveModel(int obj);
-extern void postRenderSetAlphaBlendState(void);
-extern void ObjModel_SetPostRenderCallback(int* model, void* callback);
 
 void shield_init(int* obj, void* initData);
 
@@ -1328,53 +735,24 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-typedef struct StaffState
-{
-    u8 pad00[0x54];
-    f32 geometryPointAX;
-    u8 pad58[4];
-    f32 geometryPointAY;
-    u8 pad60[4];
-    f32 geometryPointAZ;
-    u8 pad68[4];
-    f32 geometryPointBX;
-    u8 pad70[4];
-    f32 geometryPointBY;
-    u8 pad78[4];
-    f32 geometryPointBZ;
-    u8 pad80[8];
-    s16 hitReactValue;
-    u8 pad8A[0x28];
-    s16 fieldB2;
-    u8 padB4[5];
-    s8 fieldB9;
-} StaffState;
 
 /* Pattern wrappers. */
 s16 staff_getHitReactValue(int* obj);
-u8 fn_8016F16C(int* obj);
 u8 collectible_func0F(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e); }
 
 /* 16b chained patterns. */
 s32 staff_func16(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E31E8;
-extern f32 lbl_803E3220;
-extern f32 lbl_803E33F0;
-extern f32 lbl_803E31F8;
 
 
 
 
 
 /* render-with-fn(lbl) (no visibility check). */
-extern f32 lbl_803E3388;
 void flamethrowerspe_render(void);
-void fn_801719F8(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void siderepel_free(int x);
 
 /* misc 8b leaves */
 int collectible_setScale(int* obj) { return ((GameObject*)obj)->unkF4; }
@@ -1384,12 +762,9 @@ void objSetAnimField48to0(int* obj);
 
 void flamethrowerspe_func0B(int* obj);
 
-extern void quakeSpellFn_8016cee8(int* obj, int* x);
-void playerRenderQuakeSpell(int* obj);
 
 /* state-byte setters / leaf writers. */
 #pragma dont_inline on
-void staffSetGlow(int* obj, u8 a, u8 b);
 #pragma dont_inline reset
 
 
@@ -1457,7 +832,6 @@ int collectible_modelMtxFn(int* obj)
 }
 
 extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
-extern int getHudHiddenFrameCount(void);
 
 void staff_modelMtxFn(int* obj, int p4, int p5);
 
@@ -1465,21 +839,12 @@ void staff_modelMtxFn(int* obj, int p4, int p5);
 
 
 
-extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern u8 framesThisStep;
 
 
 
 
-int* fn_801702D4(int* obj, f32 fv);
 
-extern void mm_free(int* p);
-extern f32 lbl_803E31FC;
-extern f32 lbl_803E3200;
-extern f32 lbl_803E3204;
-extern f32 lbl_803E3208;
-extern f32 lbl_803E320C;
-extern f32 lbl_803E3210;
 extern f32 timeDelta;
 
 void gcbaddieshield_update(int* obj);
@@ -1488,19 +853,7 @@ void staff_free(int* obj);
 
 void fireball_free(int* obj);
 
-typedef struct DofState
-{
-    u8 enabled : 1;
-    u8  : 7;
-    u8 field1;
-    u8 field2;
-} DofState;
 
-extern void Rcp_DisableBlurFilter(void);
-extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
-extern int textureFree(int tex);
-extern void* lbl_803DDAA0;
-extern void* lbl_803DDAA8[2];
 
 void depthoffieldpoint_init(int* obj);
 
@@ -1508,329 +861,110 @@ void depthoffieldpoint_update(int* obj);
 
 void staff_release(void);
 
-extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
 
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-extern void storeZeroToFloatParam(f32 * p);
-extern f32 lbl_803E33A0;
-extern f32 lbl_803DBD60;
-extern f32 lbl_803E338C;
 
 void flamethrowerspe_init(int* obj, int* params);
 
-extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
-extern void clearCurSeqNo(void);
 
 void animatedobj_free(int* obj, int seqFlag);
 
-extern int mmAlloc(int size, int a, int b);
-extern f32 lbl_803E3328;
-extern u8 lbl_803AC6B8[];
 
 void staff_init(int* obj);
 
-extern void fn_8003B5E0(int a, int b, int c, int d);
-extern f32 lbl_803E3400;
-extern f32 lbl_803E3404;
 
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-extern f32 lbl_803E32B4;
-extern f32 lbl_803E3320;
-extern f32 lbl_803E3288;
-extern f32 lbl_803E3324;
 
-void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2);
 
 
 void dll_F7_init(int* obj, int* params);
 
 
-extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-extern f32 lbl_803E3330;
 
 
-extern int cmbsrc_getColorIndex(int* p);
-extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
-extern void projectileParticleFxFn_80099660(int* obj, f32 v, int kind);
-extern f32 lbl_803E3354;
-extern f32 lbl_803E3358;
 
 void fireball_hitDetect(int* obj);
 
-extern void objSetSlot(int* obj, int slot);
-extern f32 lbl_803E3270;
 
 void dim2roofrub_init(int* obj, int* params);
 
-extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
-extern f32 lbl_803E3228;
 
 void animatedobj_init(int* obj, int* params);
 
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void s16toFloat(f32* out, s16 v);
-extern void vecRotateZXY(int* obj, f32* p);
-extern void firepipe_releaseEffectObject(int* obj);
-extern int timerCountDown(f32 * p);
-extern f32 lbl_803E3390;
-extern f32 lbl_803E3394;
-extern f32 lbl_803DBD68;
-extern f32 lbl_803DBD6C;
-extern int lbl_803DBD64;
 
 void flamethrowerspe_update(int* obj);
 
-extern u32 lbl_803E31A0;
-extern f32 lbl_803E31A4;
-extern f32 lbl_803E31A8;
-extern f32 lbl_803E31AC;
-extern f32 lbl_803E31B0;
-extern f32 lbl_803E31C4;
-extern f32 lbl_803E31C8;
-extern f32 lbl_803E31CC;
-extern f32 lbl_803E31D0;
-extern f32 lbl_803E31D4;
-extern void CameraShake_Start(f32 a, f32 b, f32 c);
-extern int loadObjectAtObject(int* obj, void* params);
 
 
 void mikabomb_init(int* obj);
 
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void GameBit_Set(int eventId, int value);
-extern int* gSHthorntailAnimationInterface;
-extern void fn_801504BC(int* obj, int kind);
-extern f32 lbl_803E3224;
 
 #pragma opt_loop_invariants off
 void baddieinterestp_update(int* obj);
 #pragma opt_loop_invariants reset
 
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern f32 lbl_803E322C;
 
 #pragma opt_loop_invariants off
 void animatedobj_update(int* obj);
 #pragma opt_loop_invariants reset
 
-extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void objRenderModel(int* obj);
-extern void objSetMtxFn_800412d4(f32 * m);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E3230;
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-typedef struct Dim2FxRow
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 w;
-    u8 b1;
-    u8 b2;
-    u8 pad[2];
-} Dim2FxRow;
 
-typedef struct Dim2FxVec
-{
-    u8 pad[8];
-    f32 fade;
-    f32 x;
-    f32 y;
-    f32 z;
-} Dim2FxVec;
 
-extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
-extern void objfx_spawnLightPulse(int* obj, f32 scale, int a, int b, int c, f32 v, void* params);
-extern f32 lbl_803E3240;
-extern f32 lbl_803E3244;
-extern f32 lbl_803E3248;
-extern f32 lbl_803E324C;
-extern f32 lbl_803E3250;
-extern f32 lbl_803E3254;
-extern f32 lbl_803E3258;
-extern f32 lbl_803E325C;
-extern f32 lbl_803E3260;
-extern f32 lbl_803E3264;
-extern f32 lbl_803E3268;
-extern f32 lbl_803E326C;
-extern f32 lbl_803E3274;
-extern f32 lbl_803E3278;
-extern f32 lbl_803E327C;
 
-void dim2roofrub_spawnEffects(int* obj);
 
 void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
-typedef struct Dim2PartVec
-{
-    u8 pad[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
-} Dim2PartVec;
 
 void dim2roofrub_update(int* obj);
 
-extern int objCreateLight(int* obj, int arg);
-extern void lightSetField4D(int light, int v);
-extern void lightSetFieldBC_8001db14(int light, int v);
-extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern f32 lbl_803E3378;
-extern f32 lbl_803E337C;
-extern f32 lbl_803E3380;
 
 void fireball_init(int* obj);
 
-extern f32 Vec3_Length(f32 * v);
-extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 mathSinf(f32 v);
 extern f32 mathCosf(f32 x);
-extern void fn_8016F260(int* obj, int* state, int* other);
-extern f32 lbl_803E3334;
-extern f32 lbl_803E3338;
-extern f32 lbl_803E333C;
-extern f32 lbl_803E335C;
-extern f32 lbl_803E3360;
-extern f32 lbl_803E3364;
-extern f32 lbl_803E3368;
-extern f32 lbl_803E336C;
 
 void fireball_update(int* obj);
 
-extern u8 lbl_803DBD58[8];
-extern void queueGlowRender(int light);
-extern f32 lbl_803E3350;
 
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
-extern f32 lbl_803E3340;
 
-void fn_8016F260(int* obj, int* state, int* other);
 
-extern f32 fcos16(u16 angle);
-extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
-extern f32 lbl_803E33A8;
-extern f32 lbl_803E33AC;
-extern f32 lbl_803E33C4;
-extern f32 lbl_803E33E8;
-extern f32 lbl_803E33EC;
 
 void shield_update(int* obj);
 
-typedef struct DllF7Vec
-{
-    u8 b[16];
-} DllF7Vec;
 
-extern DllF7Vec lbl_802C2260;
 
 /* dll_F7 (bouncing prop) object extra-state */
-typedef struct DllF7State
-{
-    f32 bounceOffset;
-    f32 bounceVelocity;
-    u8 byte8;
-    s8 byte9;
-    s8 hitsRemaining;
-    s8 byteB;
-} DllF7State;
 
-extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E3408;
-extern f32 lbl_803E340C;
-extern f32 lbl_803E3410;
-extern f32 lbl_803E3414;
-extern f32 lbl_803E3418;
 
 void dll_F7_update(int* obj);
 
-extern s16 lbl_803DBD50[4];
-extern s16* lbl_803DDAA4;
-extern void* textureLoad(int id, int flag);
 
 void staff_initialise(void);
 
-typedef struct ShieldFxVec
-{
-    u8 pad[8];
-    f32 a;
-    f32 v[3];
-} ShieldFxVec;
 
-extern s16 lbl_803DBD70[4];
-extern s16 lbl_803DBD78[4];
-extern s16 lbl_803DBD80[4];
-extern s16 lbl_803DBD88[4];
-extern f32 lbl_803E33D8;
-extern f32 lbl_803E33DC;
 
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-extern void quakeSpellTextureFn_8007366c(int param);
-extern f32* Camera_GetViewMatrix(void);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXLoadTexMtxImm(f32* m, int id, int type);
-extern void GXDrawTorus(f32 rc, u8 numc, u8 numt);
-extern void* memcpy(void* dst, const void* src, unsigned int n);
-extern f32 lbl_803E3300;
 
-void quakeSpellTextureFn_8016dbf4(void);
 
-extern f32 lbl_803E32A8;
-extern f32 lbl_803E3290;
-extern f32 lbl_803E32F4;
-extern f32 lbl_803E32F8;
-extern f32 lbl_803E32FC;
-extern f32 lbl_803E32D0;
 
-typedef struct QuakePartVec
-{
-    u16 h0, h1, h2;
-    f32 scale;
-    f32 x, y, z;
-} QuakePartVec;
 
-void superQuakeFn_8016d9fc(f32* pos);
 
-typedef struct SwipeColorTable
-{
-    u32 w[16];
-} SwipeColorTable;
 
 /* per-swipe trail record (stride 0x18, 3 records) */
-typedef struct SwipeRecord
-{
-    u8* vertexData;
-    u8 pad04[0xc - 0x4];
-    u16 startIndex;
-    u16 endIndex;
-    u8 pad10[2];
-    s16 vertexCount;
-    u8 flags;
-    u8 pad15[0x18 - 0x15];
-} SwipeRecord;
 
-extern SwipeColorTable lbl_802C2220;
-void staffDrawSwipe(int* obj, int* swipe);
 
 void staff_hitDetectGeometry(int* obj);
 
@@ -1852,30 +986,9 @@ static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
 
 static inline void swipeTexCoord2f32(const f32 s, const f32 t);
 
-extern void selectTexture(void* tex, int x);
-extern void textureSetupFn_800799c0(void);
-extern void geomDrawFn_800796f0(void);
-extern void textRenderSetupFn_80079804(void);
-extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-extern void GXSetCullMode(int a);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int a, int b);
-extern void GXSetCurrentMtx(int a);
-extern void GXBegin(int type, int fmt, int n);
-extern f32 lbl_803E3294;
 
 #pragma opt_common_subs off
 
-extern int objGetAnimState80A(int obj);
-extern f32 lbl_803E330C;
-extern f32 lbl_803E3310;
-extern f32 lbl_803E332C;
-extern f32 lbl_803E32E0;
-extern f32 lbl_803E32E4;
-extern f32 lbl_803E32E8;
-extern f32 lbl_803E32EC;
-extern f32 lbl_803E32F0;
 
 void staff_update(int* obj);
 
@@ -2056,59 +1169,13 @@ void fn_80172144(int* obj)
 }
 
 extern f32 fastFloorf(f32 v);
-extern f32 Curve_EvalBSpline(f32* a, f32 t, f32* out);
-extern f32 lbl_803E3304;
-extern f32 lbl_803E3308;
-extern f32 lbl_803E32A4;
-extern f32 lbl_803E32AC;
 
 void staff_setupSwipe(int p1, int p2, int p3, int p4);
 
-extern int* fn_802966CC(int* player);
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
-extern f32 lbl_803E33B0;
-extern f32 lbl_803E33B4;
-extern f32 lbl_803E33B8;
-extern f32 lbl_803E33BC;
-extern f32 lbl_803E33C0;
-extern f32 lbl_803E33C8;
-extern f32 lbl_803E33CC;
 
 
-extern int objFn_80296700(int* obj);
-extern void objfx_spawnArcedBurst(int* obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
-extern void fn_802961A4(int* obj, int* type, f32* power);
-extern void fn_802960F4(int objc4, u8** out);
-extern f32 lbl_803E328C;
-extern f32 lbl_803E3298;
-extern f32 lbl_803E329C;
-extern f32 lbl_803E32A0;
-extern f32 lbl_803E32B0;
-extern f32 lbl_803E32B8;
-extern f32 lbl_803E32BC;
-extern f32 lbl_803E32C0;
-extern f32 lbl_803E32C4;
-extern f32 lbl_803E32C8;
-extern f32 lbl_803E32CC;
-extern f32 lbl_803E32D4;
-extern f32 lbl_803E32D8;
-extern f32 lbl_803E32DC;
 
-typedef struct QuakeFxParams
-{
-    u16 id;
-    u16 a;
-    u16 b;
-    s16 count;
-    f32 f0;
-    f32 f1;
-    f32 f2;
-    f32 f3;
-} QuakeFxParams;
 
-void quakeSpellFn_8016cee8(int* obj, int* obj2);
 #pragma scheduling reset
 #pragma peephole reset
 /* segment pragma-stack balance (re-split): */
@@ -2124,37 +1191,19 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2);
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
-extern undefined4 FUN_80017710();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
 extern undefined4 ObjMsg_SendToObject();
 extern int ObjTrigger_IsSet();
-extern undefined4 FUN_8003b56c();
-extern undefined4 FUN_800810f4();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern uint FUN_80294c78();
-extern int FUN_80294dbc();
-extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc070;
-extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;
-extern f32 lbl_803E40F0;
 extern f32 lbl_803E40F4;
 extern f32 lbl_803E40F8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
 extern f32 lbl_803E4104;
-extern f32 lbl_803E4110;
-extern f32 lbl_803E4114;
-extern f32 lbl_803E4118;
-extern f32 lbl_803E411C;
-extern f32 lbl_803E4124;
-extern f32 lbl_803E4128;
 
 /*
  * --INFO--
@@ -2739,13 +1788,6 @@ extern uint GameBit_Get(int eventId);
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
 
-extern undefined4 DAT_803218a8;
-extern undefined4 DAT_803e40d8;
-extern undefined4 DAT_803e40dc;
-extern f32 lbl_803E412C;
-extern f32 lbl_803E4130;
-extern f32 lbl_803E4134;
-extern f32 lbl_803E4138;
 extern u8 lbl_80320C58[];
 extern u32 lbl_803E3440;
 extern u8 lbl_803E3444;

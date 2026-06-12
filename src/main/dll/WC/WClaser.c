@@ -49,28 +49,14 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
-extern void* FUN_80017aa4();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
 
-extern undefined4 DAT_803dc070;
 extern u32 lbl_803DC0F0;
 extern u8 framesThisStep;
 extern s8 lbl_803DDC70;
-extern undefined4 DAT_803de8e8;
 extern int* gScreensInterface;
 extern undefined4* lbl_803DCA94;
 extern void* lbl_803DDC74;
-extern f64 DOUBLE_803e6978;
 extern f32 lbl_803E5CE8;
-extern f32 lbl_803E6960;
-extern f32 lbl_803E6964;
-extern f32 lbl_803E6968;
-extern f32 lbl_803E696C;
-extern f32 lbl_803E6970;
-extern f32 lbl_803E6974;
 
 
 #define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
@@ -106,24 +92,11 @@ extern f32 lbl_803E6974;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern EffectInterface** gPartfxInterface;
-extern int lbl_803DDC68;
-extern f32 lbl_803E5CC8;
-extern f32 lbl_803E5CCC;
-extern f32 lbl_803E5CD0;
-extern f32 lbl_803E5CD4;
-extern f32 lbl_803E5CD8;
-extern f32 lbl_803E5CDC;
 
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void WM_ObjCreator_release(void);
 
-void WM_ObjCreator_initialise(void);
 
 void WM_Galleon_hitDetect(void)
 {
@@ -250,11 +223,9 @@ extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80065574(int a, int* obj, int b);
 extern void fn_80296BBC(int player);
 extern void buttonDisable(int controller, int mask);
-extern void textureFree(void* resource);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern ModgfxInterface** gModgfxInterface;
 
 extern f32 timeDelta;
 extern u8 lbl_803DDC78;
@@ -267,7 +238,6 @@ extern f32 lbl_803E5D04;
 extern f32 lbl_803E5D08;
 
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
-#define OBJ_S8(obj, offset) (*(s8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
 #define OBJ_F32(obj, offset) (*(f32 *)((u8 *)(obj) + (offset)))

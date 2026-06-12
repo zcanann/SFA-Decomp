@@ -8,7 +8,6 @@
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern f32 mathSinf(f32 x);
 
@@ -29,9 +28,6 @@ extern f32 lbl_803E4FB8;
 extern f32 lbl_803E4FC8;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;
-extern f32 lbl_803E5C18;
-extern f32 lbl_803E5C1C;
-extern f32 lbl_803E5C20;
 
 typedef struct MmShrineAnimObj
 {
@@ -347,33 +343,8 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 #include "main/objseq.h"
 
 extern undefined4 FUN_800067c0();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_80017620();
-extern undefined4 FUN_80017710();
-extern uint FUN_80017730();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8008111c();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294ccc();
 
-extern f64 DOUBLE_803e5c58;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5C28;
-extern f32 lbl_803E5C2C;
-extern f32 lbl_803E5C30;
-extern f32 lbl_803E5C34;
-extern f32 lbl_803E5C40;
-extern f32 lbl_803E5C44;
-extern f32 lbl_803E5C48;
-extern f32 lbl_803E5C4C;
-extern f32 lbl_803E5C50;
-extern f32 lbl_803E5C60;
 
 
 void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
@@ -1130,11 +1101,8 @@ void gpsh_shrine_hitDetect(void);
 int ecsh_creator_getExtraSize(void) { return 0xa; }
 int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 int gpsh_shrine_getExtraSize(void);
-int gpsh_shrine_getObjectTypeId(void);
 
 extern void ModelLightStruct_free(void* light);
-extern void gameTimerStop(void);
-extern f32 lbl_803E5038;
 
 
 
@@ -1165,11 +1133,6 @@ void ecsh_creator_init(s16* obj, s8* def)
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
 
-typedef struct EcshShrineByte15
-{
-    u8 flag : 1;
-    u8 rest : 7;
-} EcshShrineByte15;
 
 
 void ecsh_shrine_init(s16* obj, s8* def)
@@ -1280,16 +1243,5 @@ void ecsh_creator_update(s16* obj)
 }
 
 extern f32 lbl_803E5000;
-extern f32 lbl_803E5004;
-extern f32 lbl_803E5008;
-extern f32 lbl_803E500C;
-extern f32 lbl_803E5010;
-extern f32 lbl_803E5014;
-extern f32 lbl_803E5018;
-extern f32 lbl_803E501C;
-extern f32 lbl_803E5020;
-extern f32 lbl_803E5024;
-extern f32 lbl_803E5028;
 extern f32 mathSinf(f32 angle);
 
-void fn_801C70F0(s16* obj);

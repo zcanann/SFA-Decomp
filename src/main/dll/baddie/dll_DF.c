@@ -4,40 +4,7 @@
 #include "main/game_object.h"
 
 
-extern char fn_8004B394();
-extern void fn_8013AD50();
-extern undefined4 trickyFn_8013d8f0();
-extern undefined4 SUB41();
-extern uint countLeadingZeros();
 
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e306c;
-extern f32 FLOAT_803e3070;
-extern f32 FLOAT_803e3078;
-extern f32 FLOAT_803e307c;
-extern f32 FLOAT_803e3088;
-extern f32 FLOAT_803e30ac;
-extern f32 FLOAT_803e30b0;
-extern f32 FLOAT_803e30d0;
-extern f32 FLOAT_803e30d8;
-extern f32 FLOAT_803e30f8;
-extern f32 FLOAT_803e30fc;
-extern f32 FLOAT_803e3114;
-extern f32 FLOAT_803e3118;
-extern f32 FLOAT_803e311c;
-extern f32 FLOAT_803e3120;
-extern f32 FLOAT_803e3124;
-extern f32 FLOAT_803e3128;
-extern f32 FLOAT_803e312c;
-extern f32 FLOAT_803e3130;
-extern f32 FLOAT_803e3134;
-extern f32 FLOAT_803e3138;
-extern f32 FLOAT_803e313c;
-extern f32 FLOAT_803e3140;
-extern f32 FLOAT_803e3144;
-extern f32 FLOAT_803e3148;
-extern f32 FLOAT_803e314c;
-extern f32 FLOAT_803e3150;
 
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;

@@ -1,18 +1,9 @@
 #include "main/dll/crate2.h"
 
-extern undefined8 FUN_80006824();
-extern byte FUN_80006b44();
-extern undefined4 FUN_80006b4c();
-extern undefined8 FUN_80006b50();
-extern undefined4 FUN_80006b54();
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined8 FUN_80017ac8();
 extern undefined4 sfxplayer_updateState(int obj, undefined4 param_2, int hitState);
-extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
 
 extern f32 timeDelta;
 

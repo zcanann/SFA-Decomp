@@ -14,7 +14,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 
-extern undefined4 getLActions();
 extern undefined8 FUN_80006824();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
@@ -25,23 +24,15 @@ extern int FUN_80017a98();
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined8 ObjMsg_SendToObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
-extern undefined4 ObjLink_DetachChild();
-extern int ObjTrigger_IsSet();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
 extern undefined4 objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
@@ -49,7 +40,6 @@ extern undefined4 FUN_8006f7a0();
 extern int FUN_8007f924();
 extern undefined4 FUN_800e8630();
 extern int FUN_801149b8();
-extern undefined4 dll_2E_func03();
 extern int FUN_8020a468();
 extern undefined8 FUN_8028683c();
 extern undefined8 FUN_80286840();
@@ -63,11 +53,9 @@ extern undefined4 DAT_802c2a5c;
 extern undefined4 DAT_802c2a60;
 extern undefined4 DAT_802c2a64;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e4db0;
 extern f32 lbl_803DC074;
 extern f32 gBoneParticleEffectInterface;
-extern f32 gCarryableInterface;
 extern f32 lbl_803E4228;
 extern f32 lbl_803E4DA8;
 extern f32 lbl_803E4DBC;
@@ -762,24 +750,8 @@ void FUN_8019f1dc(void)
 /* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
-void cfguardian_initialise(void);
 
-typedef struct
-{
-    int a;
-    int b;
-    s16 c;
-} GuardianVec;
 
-extern GuardianVec lbl_802C22C0;
-extern GuardianVec lbl_802C22CC;
-extern u8 lbl_8032284C[];
-extern f32 lbl_803E4110;
-extern void dll_2E_func0A(int a, int* obj);
-extern void dll_2E_func05(int* obj, u8* sub, int c, int d, int e);
-extern void dll_2E_func08(u8* sub, int b, int c);
-extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
-extern void objSeqInitFn_80080078(u8* p, int n);
 
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
@@ -787,21 +759,11 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
 #pragma scheduling off
 #pragma peephole off
-void cfguardian_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
-typedef struct
-{
-    int a, b, c, d;
-} GuardianMsg;
 
-extern GuardianMsg lbl_802C22D8;
-extern int dll_2E_func07(int* obj, ObjAnimUpdateState* animUpdate, u8* sub, int x, int y);
-extern int animatedObjGetSeqId(int* p);
-extern void saveGame_saveObjectPos(int obj);
 extern void* Obj_GetPlayerObject(void);
-extern void playerAddRemoveMagic(void* player, int n);
 
 /* EN v1.0 0x8019C3A0  size: 252b  cfguardian_SeqFn: guardian message handler.
  * Persists position on a negative cue, otherwise picks the active/idle
@@ -935,17 +897,11 @@ int babycloudrunner_func0B(void* p)
 #pragma scheduling reset
 void windlift_hitDetect(void);
 
-void windlift_release(void);
 
-void windlift_initialise(void);
 
-void cfpowerbase_free(void);
 
-void cfpowerbase_hitDetect(void);
 
-void cfpowerbase_release(void);
 
-void cfpowerbase_initialise(void);
 
 typedef struct
 {
@@ -1034,169 +990,28 @@ typedef struct GcRobotLightBeaState
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 /* spiritdoorspirit_getExtraSize == 0x1. */
-typedef struct SpiritDoorSpiritState
-{
-    u8 active; /* gamebit not yet set: render + group 0x4e membership */
-} SpiritDoorSpiritState;
 
 
-typedef struct WindliftPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x22 - 0x1C];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} WindliftPlacement;
 
 
-typedef struct CfprisoncagePlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    u8 pad1A[0x20 - 0x1A];
-} CfprisoncagePlacement;
 
 
-typedef struct GunpowderbarrelLaunchAtTargetPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-} GunpowderbarrelLaunchAtTargetPlacement;
 
 
-typedef struct SpiritdoorspiritPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} SpiritdoorspiritPlacement;
 
 
-typedef struct CfguardianState
-{
-    u8 pad0[0x68C - 0x0];
-    void* unk68C;
-    u8 pad690[0xA9C - 0x690];
-} CfguardianState;
 
 
-typedef struct BabycloudrunnerObjectDef
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} BabycloudrunnerObjectDef;
 
 
-typedef struct CfmaincrystalObjectDef
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} CfmaincrystalObjectDef;
 
 
-typedef struct CfprisoncageObjectDef
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} CfprisoncageObjectDef;
 
 
-typedef struct WindliftObjectDef
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    s16 delay;
-    s16 seqId;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} WindliftObjectDef;
 
 
-typedef struct CfprisonguardPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} CfprisonguardPlacement;
 
 
-typedef struct BabycloudrunnerPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} BabycloudrunnerPlacement;
 
 
 /* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
@@ -1204,7 +1019,6 @@ typedef struct BabycloudrunnerPlacement
  * and gamebit, then gate the active/lit state bits on those gamebits. */
 #pragma scheduling off
 #pragma peephole off
-void cfpowerbase_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1214,14 +1028,10 @@ void cfpowerbase_init(int* obj, u8* params);
  * powered and its UI condition clears, mark it done and notify. */
 #pragma scheduling off
 #pragma peephole off
-void cfpowerbase_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void cfmaincrystal_hitDetect(void);
 
-void cfmaincrystal_release(void);
 
-void cfmaincrystal_initialise(void);
 
 void babycloudrunner_hitDetect(void)
 {
@@ -1237,47 +1047,27 @@ void babycloudrunner_initialise(void)
 
 void cfprisonguard_free(void);
 
-void cfprisonguard_release(void);
 
-void cfprisonguard_initialise(void);
 
-typedef struct
-{
-    u8 top : 1;
-    u8 rest : 7;
-} Bit80;
 
 /* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
  * substate (update fn cfprisonguard_SeqFn, message queue), seed its header from
  * the spawn params, and apply the alarm-active gating bits. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonguard_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E4268;
-extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
-extern int objGetAnimState80A(void* obj);
 
 #pragma scheduling off
 #pragma peephole off
-void cfprisonguard_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void cfprisonuncle_free(void);
 
-void cfprisonuncle_hitDetect(void);
 
-void cfprisonuncle_release(void);
 
-void cfprisonuncle_initialise(void);
 
-extern int objModelGetVecFn_800395d8(int obj, int idx);
 extern void objAudioFn_80039270(int obj, void* p, int id);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern u8 framesThisStep;
-extern f32 lbl_803E428C;
 
 /* EN v1.0 0x8019FEDC  size: 536b  cfprisonuncle_update: while not captured,
  * drain pending messages, re-acquire the keyed target object, then either
@@ -1285,124 +1075,64 @@ extern f32 lbl_803E428C;
  * captured, raise the done flag and notify. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonuncle_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void gcrobotlightbea_render(void);
 
-void gcrobotlightbea_release(void);
 
-void gcrobotlightbea_initialise(void);
 
-extern f32 lbl_803E4298;
 
 /* EN v1.0 0x801A01E8  size: 296b  gcrobotlightbea_hitDetect: clear the hit
  * flag, then re-set it only if the priority hit is the (undisguised) player
  * and lands inside the beacon's bounding box. */
 #pragma scheduling off
 #pragma peephole off
-void gcrobotlightbea_hitDetect(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void cfperch_render(void);
 
-void cfperch_hitDetect(void);
 
-void cfperch_release(void);
 
-void cfperch_initialise(void);
 
-void cfprisoncage_free(void);
 
-void cfprisoncage_release(void);
 
-void cfprisoncage_initialise(void);
 
 #pragma scheduling off
 #pragma peephole off
-void cfprisoncage_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void spiritdoorspirit_hitDetect(void);
 
-void spiritdoorspirit_release(void);
 
-void spiritdoorspirit_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int cfguardian_getExtraSize(void);
-int cfguardian_getObjectTypeId(void);
-int windlift_getExtraSize(void);
-int windlift_getObjectTypeId(void);
-int cfpowerbase_getExtraSize(void);
-int cfpowerbase_getObjectTypeId(void);
-int cfmaincrystal_getExtraSize(void);
-int cfmaincrystal_getObjectTypeId(void);
 int babycloudrunner_getExtraSize(void) { return 0x248; }
 int cfprisonguard_getExtraSize(void);
-int cfprisonguard_getObjectTypeId(void);
-int cfprisonuncle_getExtraSize(void);
-int cfprisonuncle_getObjectTypeId(void);
-int gcrobotlightbea_getExtraSize(void);
-int gcrobotlightbea_getObjectTypeId(void);
-int cfperch_getExtraSize(void);
-int cfperch_getObjectTypeId(void);
-int cfprisoncage_getExtraSize(void);
-int spiritdoorspirit_getExtraSize(void);
-int spiritdoorspirit_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4190;
-extern f32 lbl_803E41D0;
-extern f32 lbl_803E4210;
-extern f32 lbl_803E42B0;
 #pragma peephole off
-void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
-extern f32 lbl_803E4280;
-extern f32 lbl_803E4260;
-extern f32 lbl_803E4264;
-extern f32 lbl_803E4284;
-extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
 
 /* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
  * model when visible, ramp its alarm timer at sub->_30 each frame, and
  * once it crosses the threshold spawn a one-shot particle. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-void spiritdoorspirit_free(int x);
 #pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-int cfprisoncage_getObjectTypeId(int* obj);
 #pragma peephole reset
 
 /* chained byte bit-extract. */
-u32 fn_801A0174(int* obj);
 
-typedef struct
-{
-    u8 playerHeld : 1;
-    u8 _pad0 : 1;
-    u8 held : 1;
-    u8 _pad1 : 5;
-} GpbHeldByte;
 
-extern f32 lbl_803E42C0;
 
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
@@ -1415,21 +1145,10 @@ int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma scheduling reset
 
 /* plain forwarder. */
-extern int waterSpellStone1Fn_8019b4c8();
-void cfguardian_update(void);
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern f32 lbl_803E42B8;
-extern f32 lbl_803E4130;
-extern f32 lbl_803E416C;
-extern void modelLightStruct_freeSlot(int* p);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-extern void dll_2E_func06(int* a, int* b, int c);
-extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
-extern f32 fn_80296214(void* p);
 /* ObjMsg_AllocQueue already declared as undefined */
-extern void Music_Trigger(int a, int b);
-extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1438,10 +1157,7 @@ int babycloudrunner_getObjectTypeId(void) { return 0; }
 
 void spiritdoorspirit_init(int* obj);
 
-extern f32 lbl_803DBE78;
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
-void spiritdoorspirit_update(int* obj);
 
 int babycloudrunner_setScale(int* obj)
 {
@@ -1451,9 +1167,7 @@ int babycloudrunner_setScale(int* obj)
 
 void cfperch_init(int* obj);
 
-void cfmaincrystal_free(int* obj);
 
-void cfperch_free(int* obj);
 
 void babycloudrunner_free(int* obj)
 {
@@ -1463,61 +1177,31 @@ void babycloudrunner_free(int* obj)
 
 void gcrobotlightbea_init(int* obj);
 
-extern f32 lbl_803E42A0;
-extern f32 lbl_803E42A4;
-extern f32 lbl_80322C38[];
-extern f32 lbl_803DBE58;
-extern f32 lbl_803DBE5C;
-extern void* modelLightStruct_createPointLight(int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
-extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
-extern void Obj_TransformLocalVectorByWorldMatrix(int* obj, void* out, void* in);
-extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
-extern f32 PSVECDistance(void* a, void* b);
-extern void PSVECScale(void* in, void* out, f32 scale);
-extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
-extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
-
-void gcrobotlightbea_update(int* obj);
-
-void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void cfprisonguard_hitDetect(int* obj);
-
-void gcrobotlightbea_free(int* obj);
-
-void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void cfprisoncage_hitDetect(int* obj);
-
-extern f32 lbl_803E42B4;
-
-void cfprisoncage_init(int* obj, u8* def);
-
-void windlift_free(int* obj);
-
-void cfguardian_free(int* obj, int p2);
 
 
-void cfprisonuncle_init(int* obj);
+
+
+
+
+
+
+
+
+
+
 
 #pragma peephole reset
 #pragma scheduling reset
 
 /* copy 3 floats within same struct */
-void cfguardian_hitDetect(int* obj);
 
 #pragma scheduling off
 #pragma dont_inline on
-int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 #pragma dont_inline reset
 #pragma scheduling reset
 
-extern void fn_8019D9F0(int* obj);
-extern int* lbl_803DDB10;
 #pragma peephole off
 #pragma scheduling off
-void cfmaincrystal_update(int* obj);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -1528,25 +1212,14 @@ void cfmaincrystal_update(int* obj);
 
 #pragma scheduling off
 #pragma peephole off
-void cfperch_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void cfmaincrystal_init(int* obj, u8* def);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
-extern int barrelgener_getLinkId(int barrel);
-extern f32 lbl_803E42C4;
-extern f32 lbl_803E42C8;
-extern f32 lbl_803E42CC;
-extern f32 lbl_803E42D0;
-extern f32 lbl_803E42D4;
-extern f32 lbl_803E42D8;
-extern f32 lbl_803E42DC;
 
 
 extern f32 lbl_803E4230;
@@ -1617,22 +1290,16 @@ int fn_8019E3F4(int* obj)
 #pragma dont_inline reset
 
 extern int objUpdateOpacity(int sub);
-extern f32 lbl_803E4288;
 
 /* EN v1.0 0x8019FCF4  size: 484b  cfprisonuncle_render: render the uncle and/or
  * his held model depending on the rescue gamebits, opacity and visibility;
  * when path-following, snap the held model to the path point first. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 sqrtf(f32 x);
-extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32 lbl_803E4124;
-extern f32 lbl_803E4128;
 
 /* EN v1.0 0x8019B1D8  size: 544b  fn_8019B1D8: steer the object toward the
  * target: scale its velocity along the normalized delta, blend the yaw by
@@ -1641,61 +1308,21 @@ extern f32 lbl_803E4128;
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
-extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern u8 lbl_80322A48[];
-extern u8 lbl_80322A68[];
-extern f32 lbl_803E41C8;
-extern f32 lbl_803E41CC;
-extern f32 lbl_803E4168;
 
-typedef struct
-{
-    int i0;
-    f32 f4;
-    f32 f8;
-    f32 fc;
-    u8 b10;
-    u8 b11;
-    u8 pad12[2];
-    int link14;
-} WindLiftSlot;
 
-typedef struct
-{
-    int duration;
-    int seqId;
-    int delay;
-    int gamebit;
-    int pad10;
-    int timer;
-    WindLiftSlot slots[14];
-    int pad168;
-    int pad16c;
-    f32 liftHeight;
-    u8 musicOn : 1;
-    u8 active : 1;
-    u8 _f2 : 6;
-} WindLiftSub;
 
 /* EN v1.0 0x8019D2AC  size: 708b  windlift_init: look up the lift's sequence
  * timings, scale its rise height from the def byte, arm it from the
  * gamebits and clear all 14 rider slots. */
 #pragma scheduling off
 #pragma peephole off
-void windlift_init(int* obj, u8* def);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E42E0;
-extern f32 lbl_803E42E4;
-extern const f32 lbl_803E42E8;
-extern f32 lbl_803E42EC;
-extern f32 lbl_803E42F0;
 
 
 extern void* getTrickyObject(void);
@@ -1828,26 +1455,6 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 Vec_xzDistance(void* a, void* b);
-extern void fn_80296220(int* rider, f32 v);
-extern f32 lbl_803E4170;
-extern f32 lbl_803E4174;
-extern f32 lbl_803E4178;
-extern f32 lbl_803E417C;
-extern f32 lbl_803E4180;
-extern f32 lbl_803E4184;
-extern f32 lbl_803E4188;
-extern f32 lbl_803E418C;
-extern f32 lbl_803E4194;
-extern f32 lbl_803E4198;
-extern f32 lbl_803E419C;
-extern f32 lbl_803E41A0;
-extern f32 lbl_803E41A4;
-extern f32 lbl_803E41A8;
-extern f32 lbl_803E41AC;
-extern f32 lbl_803E41B0;
-extern f32 lbl_803E41B4;
-extern f32 lbl_803E41B8;
 
 /* EN v1.0 0x8019C784  size: 1396b  fn_8019C784: per-rider wind lift physics -
  * track the rider while above the lift and in range, send the lift/drop
@@ -1855,12 +1462,9 @@ extern f32 lbl_803E41B8;
  * oscillation damping and player-mode handoff. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E41BC;
 
 /* EN v1.0 0x8019CD98  size: 1300b  windlift_update: fade the lift opacity
  * with its gamebit, spin up over the first second, then assign every nearby
@@ -1868,7 +1472,6 @@ extern f32 lbl_803E41BC;
  * physics on each. */
 #pragma scheduling off
 #pragma peephole off
-void windlift_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2124,30 +1727,8 @@ void babycloudrunner_update(int* obj)
 #pragma scheduling reset
 
 extern void getEnvfxAct(int a, int b, int c, int d);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
-extern void Sfx_SetObjectChannelVolume(int obj, int ch, int max, f32 vol);
-extern void PSVECNormalize(f32 * out, f32 * in);
-extern f32 lbl_803E41D8;
-extern f32 lbl_803E41DC;
-extern f32 lbl_803E41E0;
-extern f32 lbl_803E41E4;
-extern f32 lbl_803E41E8;
-extern f32 lbl_803E41EC;
-extern f32 lbl_803E41F0;
-extern f32 lbl_803E41F4;
-extern f32 lbl_803E41F8;
-extern f32 lbl_803E41FC;
-extern f32 lbl_803E4200;
-extern f32 lbl_803E4204;
 
-extern void Camera_EnableViewYOffset(void);
 
-typedef struct
-{
-    s16 a, b, c, d;
-    u8 pad[4];
-    f32 x, y, z;
-} PartPayload;
 
 /* EN v1.0 0x8019D9F0  size: 2112b  fn_8019D9F0: main crystal beam update -
  * collect the three pylon positions from messages, re-request missing ones,
@@ -2155,33 +1736,9 @@ typedef struct
  * ramp the convergence charge, hum volume and per-beam chime timers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8019D9F0(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd);
-extern void fn_8019AE3C(int* obj, void* evbuf, void* p);
-extern int fn_80296A14(int p);
-extern void dll_2E_func04(void* sub);
-extern void dll_2E_func0C(int a, void* p);
-extern void buttonDisable(int a, int b);
-extern void characterDoEyeAnims(int* obj, void* p);
-extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p);
-extern int lbl_80322954[];
-extern u8 lbl_803DBE20;
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E4134;
-extern f32 lbl_803E4138;
-extern f32 lbl_803E413C;
-extern f32 lbl_803E4140;
-extern f32 lbl_803E4144;
-extern f32 lbl_803E4148;
-extern f32 lbl_803E414C;
-extern f32 lbl_803E4150;
-extern f32 lbl_803E4154;
-extern f32 lbl_803E4158;
-extern f32 lbl_803E415C;
-extern f32 lbl_803E412C;
 
 /* EN v1.0 0x8019B4C8  size: 3800b  waterSpellStone1Fn_8019b4c8: cfguardian
  * brain - sixteen-state quest progression for the CloudRunner guardian, with
@@ -2189,6 +1746,5 @@ extern f32 lbl_803E412C;
  * idle chatter. */
 #pragma scheduling off
 #pragma peephole off
-int waterSpellStone1Fn_8019b4c8(int* obj);
 #pragma peephole reset
 #pragma scheduling reset

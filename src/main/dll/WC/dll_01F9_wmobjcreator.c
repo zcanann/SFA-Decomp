@@ -1,49 +1,11 @@
 /* === moved from main/dll/WC/WClevcontrol.c [801EF360-801EF3A8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
 
-typedef struct SBCloudRunnerState
-{
-    u8 pad0[0x10 - 0x0];
-    s32 unk10;
-    u8 pad14[0x2C - 0x14];
-    s16 unk2C;
-    s16 rotZ;
-    u8 pad30[0x4C - 0x30];
-    f32 unk4C;
-    f32 unk50;
-    f32 unk54;
-    u8 pad58[0x64 - 0x58];
-    u8 unk64;
-    u8 pad65[0x6E - 0x65];
-    u8 unk6E;
-    u8 pad6F[0x84 - 0x6F];
-} SBCloudRunnerState;
 
 
 extern uint GameBit_Get(int eventId);
-extern void WCPushBlock_SpawnFromPath(s16 * path, u8 * state);
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4* DAT_803dd6e4;
 extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e6938;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E6908;
-extern f32 lbl_803E690C;
-extern f32 lbl_803E6924;
-extern f32 lbl_803E6928;
-extern f32 lbl_803E692C;
-extern f32 lbl_803E6930;
-extern f32 lbl_803E6940;
-extern f32 lbl_803E6944;
-extern f32 lbl_803E6948;
-extern f32 lbl_803E694C;
-extern f32 lbl_803E6950;
-extern f32 lbl_803E6954;
-extern f32 lbl_803E6958;
 
 /*
  * --INFO--
@@ -167,17 +129,11 @@ extern f32 lbl_803E6958;
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801EED7C(void);
 
-void fn_801EEDA8(void);
 
-void fn_801EEDD4(void);
 
-void SB_CloudRunner_hitDetect(void);
 
-void SB_CloudRunner_release(void);
 
-void SB_CloudRunner_initialise(void);
 
 void WM_ObjCreator_free(void)
 {
@@ -189,13 +145,6 @@ void WM_ObjCreator_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801EEDAC(void);
-int fn_801EEDD8(void);
-int fn_801EEDFC(void);
-int fn_801EEE04(void);
-int fn_801EEE2C(void);
-int fn_801EEE34(void);
-int SB_CloudRunner_getExtraSize(void);
-int SB_CloudRunner_getObjectTypeId(void);
 int WM_ObjCreator_getExtraSize(void) { return 0x8; }
 int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
@@ -211,100 +160,40 @@ void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 extern f32 lbl_803E5C70;
 
-f32 fn_801EEDB4(int unused, f32* p);
 
 /* copy 3 floats from struct to out args */
-void fn_801EEDE0(int* src, f32* out_x, f32* out_y, f32* out_z);
 
 /* virtual call through obj[0xb8][0x10] context, vtable double-deref at +0x68 */
-void shipBattleFn_801eed24(void* obj);
 
 /* copy 3 floats from obj->b8 [0x4c..0x54] to out args */
-void fn_801EED5C(int* obj, f32* x, f32* y, f32* z);
 
-extern void objSetMtxFn_800412d4();
 
-void fn_801EED80(void* obj);
 
-void fn_801EEDC0(int p1, f32* out, int* outInt);
 
-void fn_801EEE0C(int* obj, f32* x, f32* y, f32* z);
 
 /* Path-follow steering update for the cloudrunner block (target 0x801EE668;
  * Ghidra split this body as FUN_801eeafc). */
-extern u32 getButtonsHeld(int pad);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 framesThisStep;
-extern f32 timeDelta;
-extern f32 lbl_803E5C98;
-extern f32 lbl_803E5CA8;
-extern f32 lbl_803E5CAC;
-extern f32 lbl_803E5CB0;
-extern f32 lbl_803E5CB4;
 
-typedef struct
-{
-    u8 held : 1;
-} WCButtonFlag;
 
-typedef struct
-{
-    u8 pad[0x1b];
-    s8 sfxFlag;
-} WCAnimEvents;
 
-void fn_801EE668(s16* obj, u8* state);
 
 /* SB_CloudRunner_HandlePriorityHit: when the laser hits an object whose
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
  * play SFX, gate further damage on a GameBit, then if the hit type is 154
  * emit 3 partfx of effect 168 followed by a 10-shot burst of effect 169. */
-extern int objGetFlagsE5_2(int obj);
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-extern void doRumble(f32 val);
-extern f32 lbl_803E5CB8;
-extern f32 lbl_803E5C74;
-
-struct WCPartfxArgs
-{
-    s16 v[3];
-    s16 _pad;
-    f32 scale;
-};
-
-void SB_CloudRunner_HandlePriorityHit(int obj, u8* state);
-
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
-extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
-
-void SB_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-
-extern int Obj_GetPlayerObject(void);
-extern void SB_CloudRunner_onSeqFree(void);
-extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
-extern void fn_80295918(int player, int p2, f32 p3);
 
 
-extern void textureFree(void* tex);
 
-void SB_CloudRunner_free(int* obj);
 
-extern void* textureLoadAsset(int id);
 
-void SB_CloudRunner_init(int* obj);
 
-extern void setAButtonIcon(int idx);
-extern int padGetStickX(int controller);
-extern int padGetStickY(int controller);
-extern f32 lbl_803E5CA0;
-extern f32 lbl_803E5CBC;
-extern f32 lbl_803E5CC0;
-extern void WCPushBlock_UpdateRideTilt(int obj, int state);
-extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
-void SB_CloudRunner_update(int obj);
+
+
+
+
+
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -371,49 +260,10 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 
 extern u32 randomGetRange(int min, int max);
-extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
-extern void* FUN_80017aa4();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-
-extern undefined4 DAT_803dc070;
-extern u32 lbl_803DC0F0;
-extern s8 lbl_803DDC70;
-extern undefined4 DAT_803de8e8;
-extern int* gScreensInterface;
-extern undefined4* lbl_803DCA94;
-extern void* lbl_803DDC74;
-extern f64 DOUBLE_803e6978;
-extern f32 lbl_803E5CE8;
-extern f32 lbl_803E6960;
-extern f32 lbl_803E6964;
-extern f32 lbl_803E6968;
-extern f32 lbl_803E696C;
-extern f32 lbl_803E6970;
-extern f32 lbl_803E6974;
 
 
-#define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
-#define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1
-#define WM_GALLEON_COMMAND_OPENED 1
-#define WM_GALLEON_COMMAND_CLEAR_LACTIONS 2
-#define WM_GALLEON_COMMAND_SCREEN_FADE 3
-#define WM_GALLEON_COMMAND_ACTION_12 4
-#define WM_GALLEON_COMMAND_ACTION_13 5
-#define WM_GALLEON_COMMAND_CLEAR_MAP_EVENTS 6
-#define WM_GALLEON_COMMAND_SHOW_MODEL 7
-#define WM_GALLEON_COMMAND_HIDE_MODEL 8
-#define WM_GALLEON_COMMAND_ACTION_11 9
-#define WM_GALLEON_ACTION_OPENED 10
-#define WM_GALLEON_ACTION_11 11
-#define WM_GALLEON_ACTION_12 12
-#define WM_GALLEON_ACTION_13 13
 
-#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
-#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
-#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
+
 
 /*
  * --INFO--
@@ -735,8 +585,6 @@ void WM_Galleon_hitDetect(void);
 
 
 /* 8b "li r3, N; blr" returners. */
-int WM_Galleon_getExtraSize(void);
-int WM_Galleon_getObjectTypeId(void);
 
 void WM_ObjCreator_init(int* obj, s8* def)
 {

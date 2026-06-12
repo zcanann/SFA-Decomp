@@ -3,44 +3,11 @@
 
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
-extern void fn_802967E0(void* obj, int enabled);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-typedef struct ChestHitParams
-{
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
-} ChestHitParams;
 
-typedef struct ChestFlags
-{
-    u8 open : 1;
-    u8 trigger : 1;
-} ChestFlags;
 
-typedef struct ChestHitBlock
-{
-    ChestHitParams params;
-    u16 a;
-    u16 b;
-    u16 c;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z[1];
-} ChestHitBlock;
 
-extern ChestHitParams lbl_802C22B0;
-extern void* lbl_803DDAE0;
-extern int lbl_803DDAE4;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E3C20;
-extern f32 lbl_803E3C28;
-extern f32 lbl_803E3C2C;
 
 /*
  * --INFO--
@@ -97,11 +64,8 @@ extern f32 lbl_803E3C2C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int magiccavebottom_getExtraSize(void);
 
-void magiccavebottom_free(int obj);
 
-void treasurechest_init(int* obj);
 
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/camera_interface.h"
@@ -110,13 +74,6 @@ void treasurechest_init(int* obj);
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-typedef struct TrickyguardspotPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-} TrickyguardspotPlacement;
 
 
 typedef struct MagiccavetopPlacement
@@ -155,33 +112,7 @@ typedef struct MagiccavetopState
 } MagiccavetopState;
 
 
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjGroup_FindNearestObject();
-extern int ObjTrigger_IsSet();
 
-extern f64 DOUBLE_803e4908;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803e48b8;
-extern f32 FLOAT_803e48c0;
-extern f32 FLOAT_803e48c4;
-extern f32 FLOAT_803e48c8;
-extern f32 FLOAT_803e48cc;
-extern f32 FLOAT_803e48d0;
-extern f32 FLOAT_803e48d4;
-extern f32 FLOAT_803e48d8;
-extern f32 FLOAT_803e48dc;
-extern f32 FLOAT_803e48e0;
-extern f32 FLOAT_803e48e4;
-extern f32 FLOAT_803e48e8;
-extern f32 FLOAT_803e48ec;
-extern f32 FLOAT_803e48f0;
-extern f32 FLOAT_803e48f4;
-extern f32 FLOAT_803e48f8;
-extern f32 FLOAT_803e48fc;
-extern f32 FLOAT_803e4900;
-extern f32 FLOAT_803e4904;
 
 
 /*
@@ -238,45 +169,22 @@ extern f32 FLOAT_803e4904;
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void trickyguardspot_render(void);
 
-extern int* getTrickyObject(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern void objRenderFn_80041018(int obj);
-extern u8 framesThisStep;
 
-#define TRICKY_GUARD_SPOT_VTABLE(tricky) \
-    (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
 
-void trickyguardspot_update(TrickyGuardSpotObject* obj);
 
 /* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void) { return 0xc; }
 int trickyguardspot_getExtraSize(void);
-int infotext_getExtraSize(void);
-int cctestinfot_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void trickyguardspot_free(TrickyGuardSpotObject* obj);
 
-extern void ObjGroup_AddObject(int obj, int g);
-extern void objSetHintTextIdx(int obj, int idx);
 
-void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def);
 
-void infotext_init(int obj, s8* def);
 
-void cctestinfot_init(int obj, s8* def);
 
-extern int playerIsDisguised(void);
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern u8 fn_801334E0(void);
-extern void showHelpText(s16 id);
 extern f32 timeDelta;
-extern f32 lbl_803E3C88;
-extern f32 lbl_803E3C8C;
 
-void cctestinfot_update(int* obj);
 
 extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
@@ -339,16 +247,10 @@ void magiccavetop_free(int* obj)
 }
 
 extern void envFxActFn_800887f8(int a);
-extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
 
-void magiccavebottom_update(int* obj);
 
-extern f32 lbl_803E3C80;
-extern f32 lbl_803E3C84;
 
-void infotext_update(int obj);
 
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern int loadMapAndParent(int mapId);
@@ -374,7 +276,6 @@ extern f32 lbl_803E3C5C;
 extern f32 lbl_803E3C60;
 extern f32 lbl_803E3C64;
 extern f32 lbl_803E3C68;
-extern f32 lbl_803E3C6C;
 
 typedef struct MagicCaveTopFxArgs
 {

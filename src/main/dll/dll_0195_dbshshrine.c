@@ -4,13 +4,11 @@
 #define DBSH_SHRINE_STATE_WAITING 0
 #define DBSH_SHRINE_STATE_RISING 1
 #define DBSH_SHRINE_STATE_ACTIVE 2
-#define DBSH_SHRINE_STATE_DONE 3
 #define DBSH_SHRINE_STATE_CLOSING 4
 #define DBSH_SHRINE_STATE_RESET 5
 
 #define DBSH_SHRINE_OBJ_FLAG_ACTIVE 0x4000
 #define DBSH_SHRINE_MAP_FLAG_TRIGGERED 0x1
-#define DBSH_SHRINE_LATCH_STARTED 0x80
 
 #define DBSH_SHRINE_GB_APPROACH 0xdd3
 #define DBSH_SHRINE_GB_FIRST_RISE 0x15f
@@ -44,7 +42,6 @@ extern void audioStopByMask(int mask);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
-extern f64 lbl_803E50D0;
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
@@ -174,13 +171,6 @@ void dbsh_shrine_update(DbshShrineObject* obj)
 #include "main/game_object.h"
 
 extern undefined4 FUN_80017710();
-extern uint FUN_80017730();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjGroup_FindNearestObject();
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ModelLightStruct_free(int light);
 extern void gameTimerStop(void);
@@ -192,25 +182,8 @@ extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
 extern void objRenderFn_8003b8f4(double scale, int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void fn_80296518(int obj, int param_2, int param_3);
-extern undefined4 FUN_80293f90();
 
-extern undefined4 DAT_803de848;
-extern f64 DOUBLE_803e5d28;
-extern f64 DOUBLE_803e5d68;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E50D8;
-extern f32 lbl_803E5CFC;
-extern f32 lbl_803E5D00;
-extern f32 lbl_803E5D1C;
-extern f32 lbl_803E5D38;
-extern f32 lbl_803E5D3C;
-extern f32 lbl_803E5D40;
-extern f32 lbl_803E5D44;
-extern f32 lbl_803E5D50;
-extern f32 lbl_803E5D54;
-extern f32 lbl_803E5D58;
-extern f32 lbl_803E5D5C;
-extern f32 lbl_803E5D60;
 
 /*
  * --INFO--

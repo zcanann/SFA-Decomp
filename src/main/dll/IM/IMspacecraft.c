@@ -40,10 +40,6 @@ extern void CameraShake_Start(int obj, f32 a, f32 b, f32 c);
 extern void doRumble(f32 v);
 
 extern void objRenderFn_8003b8f4(f32 v);
-extern void Music_Trigger(int id, int p2);
-extern int getSaveGameLoadStatus(void);
-extern int getEnvfxAct(int obj, int player, int id, int p);
-extern void MMP_levelcontrol_update(int obj);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
@@ -73,7 +69,6 @@ extern f32 lbl_803E4478;
 extern f32 lbl_803E447C;
 extern f32 lbl_803E4480;
 extern f32 lbl_803E4484;
-extern f32 lbl_803E4494;
 extern f32 lbl_803E4498;
 extern f32 lbl_803E449C;
 extern f32 lbl_803E44A0;
@@ -83,11 +78,7 @@ extern f32 lbl_803E44AC;
 extern f32 lbl_803E44B0;
 extern f32 lbl_803E44B4;
 extern f32 lbl_803E44B8;
-extern f32 lbl_803E44C0;
-extern f32 lbl_803E44C4;
 
-extern f32 lbl_803DDB28;
-extern int lbl_803DDB2C;
 
 /* Trivial 4b 0-arg blr leaves. */
 void SpiritDoorLock_hitDetect(void)

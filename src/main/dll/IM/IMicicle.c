@@ -5,35 +5,8 @@
 #include "main/obj_placement.h"
 
 extern u32 randomGetRange(int min, int max);
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_AllocQueue();
-extern int FUN_8005af70();
-extern int FUN_8005b398();
-extern uint FUN_80060058();
-extern int FUN_800600c4();
-extern int FUN_800600e4();
-extern undefined4 FUN_8007f6e4();
 
-extern undefined4* DAT_803dd740;
-extern f64 DOUBLE_803e4f98;
-extern f64 DOUBLE_803e4ff8;
-extern f64 DOUBLE_803e5020;
-extern f32 lbl_803E4F58;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
-extern f32 lbl_803E4FF4;
-extern f32 lbl_803E5000;
-extern f32 lbl_803E5004;
-extern f32 lbl_803E5008;
-extern f32 lbl_803E500C;
-extern f32 lbl_803E5010;
-extern f32 lbl_803E5014;
-extern f32 lbl_803E5018;
 
 /*
  * --INFO--
@@ -48,7 +21,6 @@ extern f32 lbl_803E5018;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_blasted_init_v11_unused(int param_1, int param_2);
 
 /*
  * --INFO--
@@ -78,14 +50,11 @@ void fn_blasted_init_v11_unused(int param_1, int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined2 param_10, int param_11, undefined param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 
 /* Trivial 4b 0-arg blr leaves. */
 
 
-void explodable_render(void);
 
 void cfforcefield_free(void)
 {
@@ -101,48 +70,10 @@ void cfforcefield_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 
-typedef struct ExplodablePlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    u8 pad26[0x2C - 0x26];
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    u8 pad32[0x38 - 0x32];
-    u16 unk38;
-    u8 pad3A[0x3E - 0x3A];
-    s16 unk3E;
-    s16 activateGameBit;
-    u8 pad42[0x48 - 0x42];
-} ExplodablePlacement;
 
 
-typedef struct BlastedState
-{
-    u8 pad0[0x10 - 0x0];
-    u8 unk10;
-    u8 unk11;
-    u8 pad12[0x6E4 - 0x12];
-    u8 unk6E4;
-    u8 pad6E5[0x6E8 - 0x6E5];
-} BlastedState;
 
 
-typedef struct FnBlastedInitV11UnusedState
-{
-    u8 pad0[0x2C - 0x0];
-    f32 unk2C;
-    f32 unk30;
-    u8 pad34[0x38 - 0x34];
-    f32 unk38;
-    u8 pad3C[0x40 - 0x3C];
-} FnBlastedInitV11UnusedState;
 
 
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
@@ -202,64 +133,26 @@ typedef struct DrExplodableState
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
-int explodable_getExtraSize(void);
 int cfforcefield_getExtraSize(void) { return 0x8; }
 int cfforcefield_getObjectTypeId(void) { return 0x0; }
 
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off
 #pragma peephole off
-void explodable_free(int obj, int flag);
-
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern int fn_801A27B8(int* obj, int v);
 
 
-extern void fn_801A2E80(int obj, int def, int p3, int state);
 
-void explodable_update(int obj);
 
-typedef struct
-{
-    int key;
-    int objType;
-    int sfx;
-    u8 mode;
-    u8 flags;
-    u8 pad[2];
-} GasVentTableEntry;
 
-extern GasVentTableEntry lbl_80322DA0[];
-extern f32 lbl_803E435C;
 
-void explodable_init(int obj, int setup);
 
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern f32 lbl_803E4350;
-extern f32 lbl_803E4354;
-extern f32 lbl_803E4358;
 
-int fn_801A2BDC(int p1, int p2, int p3, int p4);
 
-extern void fn_801A30C0(int obj, int slot, int def);
+
 extern void Model_GetVertexPosition(int model, int i, f32* out);
-extern f32 lbl_803E4368;
-extern f32 lbl_803E436C;
 
-void fn_801A2E80(int obj, int def, int p3, int state);
 
-extern void vecRotateZXY(s16 * rot, f32 * vec);
-extern f32 sqrtf(f32 x);
-extern void normalize(f32 * x, f32 * y, f32 * z);
-extern f32 lbl_803E4370;
-extern f32 lbl_803E4374;
-extern f32 lbl_803E4378;
-extern f32 lbl_803E437C;
-extern f32 lbl_803E4380;
 
-void fn_801A30C0(int obj, int slot, int def);
 #pragma scheduling reset
 #pragma peephole reset
 /* segment pragma-stack balance (re-split): */
@@ -325,33 +218,8 @@ extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern uint countLeadingZeros();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e5048;
-extern f64 DOUBLE_803e5060;
-extern f64 DOUBLE_803e5078;
-extern f64 DOUBLE_803e5090;
-extern f64 DOUBLE_803e50a8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DCAF8;
-extern f32 lbl_803E5028;
-extern f32 lbl_803E502C;
-extern f32 lbl_803E5030;
-extern f32 lbl_803E5034;
-extern f32 lbl_803E5038;
-extern f32 lbl_803E5040;
-extern f32 lbl_803E5050;
-extern f32 lbl_803E5058;
-extern f32 lbl_803E5074;
-extern f32 lbl_803E5080;
-extern f32 lbl_803E5084;
-extern f32 lbl_803E5088;
-extern f32 lbl_803E508C;
-extern f32 lbl_803E5098;
-extern f32 lbl_803E509C;
-extern f32 lbl_803E50A0;
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32* mtx, int flags);
@@ -1374,7 +1242,6 @@ extern f32 lbl_803E43F0;
 extern f32 lbl_803E4400;
 extern f32 lbl_803E4404;
 extern f32 lbl_803E4408;
-extern f64 lbl_803E4410;
 extern f32 lbl_803E4418;
 extern f32 lbl_803E441C;
 extern f32 lbl_803E4420;

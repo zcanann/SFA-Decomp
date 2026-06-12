@@ -13,22 +13,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-typedef struct PortalspelldoorPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-} PortalspelldoorPlacement;
 
 
-typedef struct LanternFireFlyPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 stateId;
-    s16 timer;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} LanternFireFlyPlacement;
 
 
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
@@ -104,18 +90,12 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined8 ObjHits_MarkObjectPositionDirty();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 Obj_GetYawDeltaToObject();
 
 
 extern f32 timeDelta;
@@ -141,13 +121,6 @@ extern f32 lbl_803E3A38;
 extern f32 lbl_803E3A3C;
 extern f32 lbl_803E3A40;
 extern f32 lbl_803DBDD0;
-extern f32 lbl_803E3AA0;
-extern f32 lbl_803E3AA4;
-extern f32 lbl_803E3AA8;
-extern f32 lbl_803E3AB8;
-extern f32 lbl_803E3ABC;
-extern f32 lbl_803E3AC0;
-extern f32 lbl_803E3AC4;
 extern f32 lbl_803DBDC4;
 extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
@@ -160,9 +133,7 @@ extern void Sfx_KeepAliveLoopedObjectSoundLimited(int obj, int sfx, int limit);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern u32 randomGetRange(int min, int max);
-extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
-extern int gameBitIncrement(int eventId);
 extern f32 Vec_distance(void* a, void* b);
 extern void playerAddMoney(int player, u8 b);
 extern int objHitboxFn_801843c0(int obj);
@@ -721,40 +692,12 @@ void scarab_init(int* obj, u8* def)
 /* [0x801845FC..0x80184930) - formerly CFguardian.c. */
 
 extern undefined4 FUN_80006b14();
-extern int FUN_80017730();
-extern undefined4 FUN_80017748();
 extern int Obj_GetActiveModel(int obj);
-extern byte FUN_80063a68();
-extern undefined4 FUN_80063a74();
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objfx_spawnDirectionalBurst(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                                         f32 alpha, int flags, int unused);
-extern void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
-                                          float* radii, int pointCount);
-extern undefined4 FUN_80183c74();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
 
-extern undefined4 DAT_802c2a00;
-extern undefined4 DAT_802c2a04;
-extern undefined4 DAT_802c2a08;
-extern undefined4 DAT_802c2a0c;
-extern undefined4 DAT_802c2a10;
-extern undefined4 DAT_802c2a14;
-extern undefined4 DAT_803ad400;
-extern undefined4 DAT_803ad404;
-extern undefined4 DAT_803ad408;
-extern undefined4 DAT_803ad40c;
-extern undefined4 DAT_803de748;
 extern u8 lbl_803DBDBC;
-extern f64 DOUBLE_803e4660;
-extern f32 FLOAT_803e4644;
-extern f32 FLOAT_803e4680;
-extern f32 FLOAT_803e468c;
-extern f32 FLOAT_803e4690;
-extern f32 FLOAT_803e4694;
-extern f32 FLOAT_803e4698;
 extern f32 lbl_803E3A04;
 
 typedef struct GuardianAngleParams

@@ -1,20 +1,6 @@
 /* === moved from main/dll/crackanim.c [8017EC10-8017EC94) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/dll_0117_appleontree.h"
 
-typedef struct AppleontreeObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    u32 unk18;
-    u16 duration;
-    u16 elapsed;
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 unk23;
-    u8 unk24;
-    s8 unk25;
-    s16 unk26;
-} AppleontreeObjectDef;
 
 
 
@@ -292,5 +278,4 @@ void dll_FC_initialise_nop(void)
 int dll_14D_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3850;
 

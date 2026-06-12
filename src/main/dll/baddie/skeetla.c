@@ -1312,15 +1312,6 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
 #include "ghidra_import.h"
 #include "main/dll/baddie/skeetla.h"
 
-typedef struct TrickyApplyObjectAvoidanceToStepPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    u16 unk18;
-    u16 unk1A;
-    u8 pad1C[0x84 - 0x1C];
-    u16 unk84;
-    u16 unk86;
-} TrickyApplyObjectAvoidanceToStepPlacement;
 
 
 extern undefined4 FUN_80006824();

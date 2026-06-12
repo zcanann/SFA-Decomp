@@ -1,16 +1,6 @@
 /* === moved from main/dll/IM/IMsnowbike.c [801D9B1C-801D9BDC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 
-typedef struct ShLevelcontrolState
-{
-    u8 pad0[0x5 - 0x0];
-    u8 unk5;
-    u8 pad6[0xC - 0x6];
-    f32 unkC;
-    s16 unk10;
-    s16 unk12;
-    u8 pad14[0x18 - 0x14];
-} ShLevelcontrolState;
 
 
 
@@ -143,26 +133,6 @@ extern undefined4 ObjPath_GetPointLocalMtx();
 extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 
-extern f64 DOUBLE_803e6198;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6168;
-extern f32 lbl_803E616C;
-extern f32 lbl_803E6170;
-extern f32 lbl_803E6174;
-extern f32 lbl_803E6178;
-extern f32 lbl_803E617C;
-extern f32 lbl_803E6180;
-extern f32 lbl_803E6184;
-extern f32 lbl_803E6188;
-extern f32 lbl_803E618C;
-extern f32 lbl_803E6190;
-extern f32 lbl_803E61A0;
-extern f32 lbl_803E61A4;
-extern f32 lbl_803E61A8;
-extern f32 lbl_803E61AC;
-extern f32 lbl_803E61B4;
-extern f32 lbl_803E61B8;
-extern f32 lbl_803E61C0;
 
 /*
  * --INFO--
@@ -441,7 +411,6 @@ extern f32 lbl_803E551C;
 extern f32 lbl_803E5520;
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
-extern int lbl_803DDC00;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
 void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5)

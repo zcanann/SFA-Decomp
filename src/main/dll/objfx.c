@@ -4,7 +4,6 @@
 
 extern f32 lbl_8030F9D8[];
 extern s16 lbl_803DB788[4];
-extern f64 lbl_803DF360;
 extern f32 fcos16(u16 angle);
 
 void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)

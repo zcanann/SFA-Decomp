@@ -5355,40 +5355,6 @@ int fn_8029AF9C(int obj, int state)
     return 0;
 }
 
-typedef struct
-{
-    s16 f00;
-    s16 moveIdx;
-    u8 pad04[0x10];
-    u8 f14;
-    u8 f15[7];
-    f32 f1c;
-    f32 f20;
-    f32 f24;
-    f32 f28;
-    f32 f2c;
-    f32 f30[3];
-    f32 f3c[3];
-    f32 f48;
-    f32 f4c;
-    f32 f50;
-    f32 f54;
-    u8 pad58[4];
-    u8 f5c;
-    s8 f5d[3];
-    u8 f60[8];
-    f32 f68;
-    u8 f6c;
-    u8 pad6d[0x1b];
-    u8 f88;
-    u8 pad89[3];
-    f32 f8c;
-    u8 f90;
-    u8 pad91[0xf];
-    f32 fa0;
-    f32 fa4;
-    u8 pada8[8];
-} PMSlot;
 
 extern f32 lbl_803E7FB8;
 
@@ -6289,7 +6255,6 @@ typedef struct
 
 extern int lbl_803DE484;
 extern int lbl_803E7E78;
-extern int lbl_803E7E7C;
 extern f32 lbl_803E7FDC;
 extern f32 lbl_803E7FE0;
 extern f32 lbl_803E7FE4;
@@ -7164,11 +7129,6 @@ typedef struct
     int a[6];
 } UiMsgBlock;
 
-typedef struct
-{
-    u8 pad[0x8b9];
-    u8 bits[7];
-} InnerBits;
 
 void playerUpdate(int obj)
 {
@@ -7466,7 +7426,6 @@ void playerUpdate(int obj)
 }
 
 extern f32 Curve_EvalCatmullRom(int curve, f32 t, int mode);
-extern f64 lbl_803E7EC0;
 
 void fn_802B0EA4(int obj, int inner, int state)
 {
@@ -7755,13 +7714,6 @@ void fn_802B0EA4(int obj, int inner, int state)
     *(u32*)((char*)inner + 0x360) &= ~0x1800000LL;
 }
 
-typedef struct
-{
-    u8 pad[0x170];
-    f32 off;
-    u8 pad2[12];
-    f32 def;
-} IdleEntry;
 
 extern s16 lbl_803DC6CC[4];
 extern f32 lbl_803E8084;

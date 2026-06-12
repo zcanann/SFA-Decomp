@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
 
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
@@ -18,7 +17,6 @@ extern f32 Vec_xzDistance(void* a, void* b);
 extern f32 mathSinf(f32 angle);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
-extern f32 lbl_803E4E38;
 extern f32 timeDelta;
 extern f32 lbl_803E4E50;
 extern f32 lbl_803E4E54;
@@ -382,31 +380,13 @@ typedef struct SpiritPrizePlacement
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 SH_LevelControl_runBloopEvent();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e5b18;
-extern f64 DOUBLE_803e5b28;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5AE8;
-extern f32 lbl_803E5AEC;
-extern f32 lbl_803E5AF0;
-extern f32 lbl_803E5AF4;
-extern f32 lbl_803E5B00;
-extern f32 lbl_803E5B04;
-extern f32 lbl_803E5B08;
-extern f32 lbl_803E5B0C;
-extern f32 lbl_803E5B10;
-extern f32 lbl_803E5B20;
-extern f32 lbl_803E5B24;
-extern f32 lbl_803E5B30;
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
-extern f64 lbl_803E4E80;
-extern f64 lbl_803E4E90;
 extern u16 lbl_80325F88[];
 extern void skyFn_80088c94(int skyId, int enable);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
@@ -426,8 +406,6 @@ extern void audioStopByMask(int mask);
 extern f32 lbl_803E4E8C;
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E9C;
-extern f64 lbl_803E4EA0;
-extern f64 lbl_803E4EA8;
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Obj_FreeObject(int obj);
 extern int coordsToMapCell(f32 x, f32 z);
@@ -911,18 +889,14 @@ void SpiritPrize_init(int* obj, u8* init)
 
 void dfsh_objcreator_free(void);
 
-void dfsh_objcreator_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int SpiritPrize_getExtraSize(void) { return 0x14c; }
 int SpiritPrize_getObjectTypeId(void) { return 0x8; }
 int dfsh_objcreator_getExtraSize(void);
-int dfsh_objcreator_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4EB8;
 
-void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {

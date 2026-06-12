@@ -5,41 +5,11 @@
  * verified). File rename parked as a repo-owner proposal. */
 
 extern uint GameBit_Get(int eventId);
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 ObjLink_DetachChild();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800810f4();
-extern undefined4 FUN_80081118();
-extern undefined4 FUN_801713ac();
-extern uint countLeadingZeros();
 
-extern undefined4 DAT_803218a8;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803e40d8;
-extern undefined4 DAT_803e40dc;
-extern f64 DOUBLE_803e40e0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E40E8;
-extern f32 lbl_803E40EC;
-extern f32 lbl_803E40F0;
-extern f32 lbl_803E40F4;
-extern f32 lbl_803E412C;
-extern f32 lbl_803E4130;
-extern f32 lbl_803E4134;
-extern f32 lbl_803E4138;
-extern u8 lbl_80320C58[];
-extern u32 lbl_803E3440;
-extern u8 lbl_803E3444;
-extern f32 lbl_803E345C;
-extern f32 lbl_803E3494;
-extern f32 lbl_803E3498;
-extern f32 lbl_803E349C;
-extern f32 lbl_803E34A0;
 
 /*
  * --INFO--
@@ -176,31 +146,6 @@ extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern void objMove(f32 a, f32 b, f32 c, int obj);
 
-extern f64 DOUBLE_803e4198;
-extern f64 DOUBLE_803e41b0;
-extern f64 DOUBLE_803e41b8;
-extern f64 DOUBLE_803e41c8;
-extern f64 DOUBLE_803e41d0;
-extern f32 lbl_803E4148;
-extern f32 lbl_803E414C;
-extern f32 lbl_803E4150;
-extern f32 lbl_803E4154;
-extern f32 lbl_803E4158;
-extern f32 lbl_803E415C;
-extern f32 lbl_803E4160;
-extern f32 lbl_803E4164;
-extern f32 lbl_803E4168;
-extern f32 lbl_803E416C;
-extern f32 lbl_803E4170;
-extern f32 lbl_803E4174;
-extern f32 lbl_803E4178;
-extern f32 lbl_803E417C;
-extern f32 lbl_803E4188;
-extern f32 lbl_803E418C;
-extern f32 lbl_803E4190;
-extern f32 lbl_803E4194;
-extern f32 lbl_803E41AC;
-extern f32 lbl_803E41C4;
 
 /* magicdust extra block (collectible sparkle state; tail of the pickup record). */
 typedef struct MagicDustState

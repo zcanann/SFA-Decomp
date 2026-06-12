@@ -524,7 +524,6 @@ extern f32 lbl_803DB858;
 extern f32 lbl_803DB85C;
 extern f32 lbl_803E01B8;
 extern f32 lbl_803E01BC;
-extern f32 lbl_803E01C0;
 extern f32 lbl_803E01C8;
 extern s32 lbl_803DD3D0;
 extern s32 lbl_803DD3D4;
@@ -769,11 +768,6 @@ extern f32 lbl_803E04E0;
 extern f32 lbl_803E04E4;
 extern f32 mathCosf(f32 x);
 
-typedef struct CheckpointPair
-{
-    u8 pad[0x20];
-    s32 keys[2];
-} CheckpointPair;
 
 /* Build particle quad positions from a checkpoint pair. */
 #pragma dont_inline off
@@ -6730,11 +6724,6 @@ void Checkpoint_remove(int* obj)
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-struct PartDesc
-{
-    s16 ang[3];
-    f32 sc[4];
-};
 #pragma scheduling off
 #pragma peephole off
 
@@ -6748,13 +6737,6 @@ struct PartDesc
 #pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-typedef struct
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} HudColor;
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset

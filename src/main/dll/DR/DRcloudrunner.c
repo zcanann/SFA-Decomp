@@ -13,12 +13,6 @@ typedef struct ScMusictreePlacement
 } ScMusictreePlacement;
 
 
-typedef struct ScLevelcontrolProcessAnimEventsState
-{
-    u8 pad0[0x1D - 0x0];
-    s8 unk1D;
-    u8 pad1E[0x20 - 0x1E];
-} ScLevelcontrolProcessAnimEventsState;
 
 
 typedef struct ScMusictreeSpawnAmbientEffectPlacement
@@ -410,13 +404,11 @@ extern f32 lbl_803E55B4;
 extern f32 lbl_803E55B8;
 extern f32 lbl_803E55BC;
 extern f32 lbl_803E55C0;
-extern f64 lbl_803E55C8;
 extern f32 lbl_803E55D0;
 extern f32 lbl_803E55D4;
 extern f32 lbl_803E55D8;
 extern f32 lbl_803E55DC;
 extern f32 lbl_803E55E0;
-extern f64 lbl_803E55E8;
 
 
 typedef struct SCMusicTreeSetup

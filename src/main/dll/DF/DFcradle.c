@@ -1,118 +1,32 @@
 /* === moved from main/dll/DF/rope.c [801C04B8-801C053C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
 
-typedef struct DimbosscrackparPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-} DimbosscrackparPlacement;
 
 
-typedef struct MagicmakerPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-} MagicmakerPlacement;
 
 
-typedef struct DIMbossspitUpdateBurstState
-{
-    u8 pad0[0x4 - 0x0];
-    s32 light;
-    u8 pad8[0x3DC - 0x8];
-    s32 unk3DC;
-    u8 pad3E0[0x400 - 0x3E0];
-    u16 unk400;
-    u8 pad402[0x40C - 0x402];
-    s32 unk40C;
-} DIMbossspitUpdateBurstState;
 
 
-typedef struct Dimbossgut2State
-{
-    u8 pad0[0x4 - 0x0];
-    s32 unk4;
-    u8 pad8[0x3DC - 0x8];
-    s32 unk3DC;
-    u8 pad3E0[0x400 - 0x3E0];
-    u16 unk400;
-    u8 pad402[0x40C - 0x402];
-    s32 unk40C;
-    u8 pad410[0x42C - 0x410];
-} Dimbossgut2State;
 
 
-typedef struct DIMbossspitState
-{
-    s16 unk0;
-    s16 unk2;
-    s32 light;
-    u8 pad8[0x3DC - 0x8];
-    s32 unk3DC;
-    u8 pad3E0[0x400 - 0x3E0];
-    u16 unk400;
-    u8 pad402[0x40C - 0x402];
-    s32 unk40C;
-} DIMbossspitState;
 
 
 extern void ModelLightStruct_free(void* light);
-extern void Obj_FreeObject(int obj);
-extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern int ObjMsg_Pop();
 extern void objRenderFn_8003b8f4(f32 scale);
-extern void queueGlowRender(void* light);
 
-extern undefined4* gBaddieControlInterface;
-extern f32 lbl_803E4CF0;
-extern f32 lbl_803E4D44;
 
-extern u8 framesThisStep;
 extern f32 timeDelta;
 extern EffectInterface** gPartfxInterface;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int obj, int id);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern void doRumble(f32 v);
 extern void modelLightStruct_setEnabled(int light, int v, f32 f);
-extern f32 lbl_803E4D38;
-extern f32 lbl_803E4D3C;
-extern f32 lbl_803E4D40;
-extern f32 lbl_803E4D48;
-extern f32 lbl_803E4D4C;
-extern f32 lbl_803E4D50;
-extern f32 lbl_803E4D60;
-extern f32 lbl_803E4D64;
-extern f32 lbl_803E4D68;
-extern const f32 lbl_803E4D6C;
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern f32 lbl_803E4CD0;
-extern f32 lbl_803E4CD4;
-extern f32 lbl_803E4CD8;
-extern f32 lbl_803E4CDC;
-extern f32 lbl_803E4CE0;
-extern f32 lbl_803E4CE4;
-extern f32 lbl_803E4CE8;
-extern f32 lbl_803E4CEC;
-extern f32 lbl_803E4D20;
-extern int Curve_AdvanceAlongPath(int a, f32 f);
-extern int getAngle(f32 dx, f32 dy);
 extern int Obj_GetPlayerObject(void);
-extern f32 lbl_803E4D10;
-extern f32 lbl_803E4D14;
-extern f32 lbl_803E4D18;
-extern f32 lbl_803E4D1C;
 
 /*
  * --INFO--
@@ -183,19 +97,10 @@ extern f32 lbl_803E4D1C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
-extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
-extern f32 lbl_803E4D24;
-extern f32 lbl_803E4D28;
-extern f32 lbl_803E4D2C;
-extern f32 lbl_803E4D30;
-extern f32 lbl_803E4D04;
 
-void dimbossgut2_init(int obj, int def, int p3);
 
 /*
  * --INFO--
@@ -266,50 +171,24 @@ void dimbossgut2_init(int obj, int def, int p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
-extern void lightSetField4D(int light, int v);
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
-extern int Obj_GetActiveModel(int obj);
-extern void ObjModel_SetPostRenderCallback(int model, void* cb);
-extern void postRenderSetAlphaBlendState(void);
-extern f32 lbl_803E4D70;
-extern f32 lbl_803E4D74;
-extern f32 lbl_803E4D78;
-extern f32 lbl_803E4D7C;
-extern f32 lbl_803E4D80;
 
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dimbossgut2_func11(void);
 
-void dimbossgut2_hitDetect(void);
 
-void dimbossgut2_release(void);
 
-void dimbossgut2_initialise(void);
 
-void DIMbossspit_hitDetect(void);
 
-void DIMbossspit_release(void);
 
-void DIMbossspit_initialise(void);
 
-void magicmaker_free(void);
 
-void magicmaker_hitDetect(void);
 
-void magicmaker_init(void);
 
-void magicmaker_release(void);
 
-void magicmaker_initialise(void);
 
-void dimbosscrackpar_hitDetect(void);
 
-void dimbosscrackpar_release(void);
 
-void dimbosscrackpar_initialise(void);
 
 /*
  * --INFO--
@@ -324,27 +203,13 @@ void dimbosscrackpar_initialise(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u8 Obj_IsLoadingLocked(void);
-extern char* Obj_AllocObjectSetup(int size, int typeId);
-extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
-extern void hitDetectFn_80097070(char* obj, f32 f, int a, int b, int c, int d);
-extern u16 lbl_80325CE8[];
-extern f32 lbl_803E4D8C;
-extern f32 lbl_803E4D88;
 
-void magicmaker_update(int obj);
 
-extern f32 lbl_803E4D98;
 
-int dimbosscrackpar_SeqFn(int* obj);
 
-void dimbosscrackpar_update(int* obj);
 
-void dimbosscrackpar_free(int* obj);
 
-void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dimbosscrackpar_init(s16* obj, s8* def);
 
 void dimbossfire_hitDetect(void)
 {
@@ -383,14 +248,6 @@ void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if
 
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void);
-int dimbossgut2_getExtraSize(void);
-int dimbossgut2_getObjectTypeId(void);
-int DIMbossspit_getExtraSize(void);
-int DIMbossspit_getObjectTypeId(void);
-int magicmaker_getExtraSize(void);
-int magicmaker_getObjectTypeId(void);
-int dimbosscrackpar_getExtraSize(void);
-int dimbosscrackpar_getObjectTypeId(void);
 int dimbossfire_getExtraSize(void) { return 0x14; }
 int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
@@ -423,25 +280,11 @@ extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern uint GameBit_Get(int eventId);
 extern f32 Vec_distance(float* posA, float* posB);
-extern void* FUN_80017aa4();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjGroup_RemoveObject(int obj, int groupId);
 extern undefined4 ObjGroup_AddObject(int obj, int groupId);
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800810ec();
 
-extern undefined4 DAT_80326928;
-extern undefined4 DAT_8032692a;
-extern undefined4 DAT_8032692c;
-extern undefined4 DAT_8032692e;
-extern undefined4 DAT_80326930;
-extern undefined4 DAT_80326932;
 extern f32 lbl_80325D68[];
-extern f64 DOUBLE_803e5a28;
-extern f64 lbl_803E4DC8;
-extern f32 lbl_803E5A24;
 extern f32 lbl_803E4DA0;
 extern f32 lbl_803E4DA4;
 extern f32 lbl_803E4DA8;
@@ -453,11 +296,9 @@ extern f32 lbl_803E4DBC;
 extern f32 lbl_803E4DC0;
 extern f32 lbl_803E4DD0;
 extern f32 lbl_803E4DD4;
-extern f64 lbl_803E4DD8;
 extern f32 lbl_803E4DE0;
 extern f32 lbl_803E4DE4;
 extern f32 lbl_803E4DE8;
-extern f64 lbl_803E4DF0;
 
 
 /*

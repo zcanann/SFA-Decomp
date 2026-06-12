@@ -5,36 +5,8 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct Dll115Placement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 unk18;
-    s8 unk19;
-    u8 pad1A[0x38 - 0x1A];
-    u8 unk38;
-    u8 unk39;
-    u8 unk3A;
-    u8 unk3B;
-    s16 unk3C;
-    u8 pad3E[0x40 - 0x3E];
-} Dll115Placement;
 
 
-typedef struct WmColumnPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 unk18;
-    u8 unk19;
-    u8 pad1A[0x1E - 0x1A];
-    s16 unk1E;
-    u8 pad20[0x38 - 0x20];
-    u8 unk38;
-    u8 unk39;
-    u8 unk3A;
-    u8 unk3B;
-    s16 unk3C;
-    u8 pad3E[0x40 - 0x3E];
-} WmColumnPlacement;
 
 
 extern u32 randomGetRange(int min, int max);
@@ -45,11 +17,6 @@ extern f32 Vec_distance(float* posA, float* posB);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-typedef void (*GroundAnimatorFreeFn)(int obj);
-typedef int (*GroundAnimatorVisibleFn)(int obj, int visible);
-typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
-typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
-typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int param_3);
 
 /*
  * --INFO--
@@ -64,15 +31,6 @@ typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    s16 pad0[12];
-    s16 ev18;
-    s16 pad1a[7];
-    s16 ev28;
-    u8 pad2a[0x16];
-    u8 id40;
-} Dll115MapRow;
 
 
 /*
@@ -909,7 +867,6 @@ extern int* objFindTexture(int obj, int textureId, int modelIdx);
 
 extern undefined4* gSHthorntailAnimationInterface;
 extern EffectInterface** gPartfxInterface;
-extern f64 lbl_803E3820;
 extern f32 lbl_803E3828;
 extern f32 lbl_803E382C;
 extern f32 lbl_803E3830;
@@ -1332,7 +1289,6 @@ int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3848;
 
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -1342,7 +1298,6 @@ extern void dll_FC_init(int obj, int objDef);
 extern void dll_FC_update(int obj);
 extern void dll_FC_hitDetect(int* obj);
 
-extern void objRenderFn_80041018(int* obj);
 
 void dll_FC_hitDetect(int* obj);
 

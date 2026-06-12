@@ -21,15 +21,8 @@ typedef struct Dll197State
 } Dll197State;
 
 
-extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_8003b818();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e5de0;
-extern f32 lbl_803E5DD0;
-extern f32 lbl_803E5DD4;
-extern f32 lbl_803E5DD8;
-extern f32 lbl_803E5DDC;
 
 /*
  * --INFO--
@@ -44,10 +37,6 @@ extern f32 lbl_803E5DDC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E513C;
-extern f32 lbl_803E5140;
-extern f32 lbl_803E5144;
-extern f64 lbl_803E5148;
 
 
 
@@ -81,7 +70,6 @@ extern f64 lbl_803E5148;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 
 /*
@@ -123,11 +111,8 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
 #pragma peephole off
 
 
-void nwsh_levcon_hitDetect(void);
 
-void nwsh_levcon_release(void);
 
-void nwsh_levcon_initialise(void);
 
 void dll_199_hitDetect(void)
 {
@@ -135,7 +120,6 @@ void dll_199_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void);
-int nwsh_levcon_getObjectTypeId(void);
 int dll_199_getExtraSize(void) { return 0x14; }
 int dll_199_getObjectTypeId(void) { return 0x0; }
 
@@ -144,7 +128,6 @@ extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
 
-void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -155,16 +138,10 @@ void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 extern void Music_Trigger(int track, int param);
 extern int GameBit_Set(int eventId, int value);
 
-void nwsh_levcon_free(int obj);
 
-extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int a, int b, int c);
-extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 
-void nwsh_levcon_update(int* obj);
 
-void nwsh_levcon_init(int* obj);
 
 extern ModgfxInterface** gModgfxInterface;
 
@@ -311,14 +288,6 @@ typedef struct Dll19APlacement
 } Dll19APlacement;
 
 
-typedef struct Dll19AState
-{
-    u8 pad0[0x7 - 0x0];
-    u8 unk7;
-    u8 unk8;
-    u8 unk9;
-    u8 padA[0x10 - 0xA];
-} Dll19AState;
 
 
 typedef struct Dll199ObjectDef

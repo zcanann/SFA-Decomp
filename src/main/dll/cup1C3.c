@@ -9,35 +9,14 @@
 
 #define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006818();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
-extern void* FUN_800069a8();
-extern int FUN_80006a64();
-extern undefined8 FUN_80006a68();
-extern byte FUN_80006b44();
-extern undefined4 FUN_80006b4c();
-extern undefined4 FUN_80006b50();
-extern undefined4 FUN_80006b54();
-extern uint FUN_80006bf8();
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern uint FUN_80017a98();
-extern int FUN_80017b00();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern undefined4 FUN_8003b818();
-extern uint FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern f32 Vec_distance(void* a, void* b);
 extern void objUpdateOpacity(int obj);
 
-extern undefined4 DAT_803dc070;
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
@@ -47,25 +26,6 @@ extern int lbl_802C23C8[];
 extern s8 lbl_803DDBD0;
 extern f32 lbl_803E5138;
 extern f32 lbl_803E513C;
-extern f64 DOUBLE_803e5da8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5D78;
-extern f32 lbl_803E5D7C;
-extern f32 lbl_803E5D80;
-extern f32 lbl_803E5D84;
-extern f32 lbl_803E5D88;
-extern f32 lbl_803E5D8C;
-extern f32 lbl_803E5D90;
-extern f32 lbl_803E5D94;
-extern f32 lbl_803E5D98;
-extern f32 lbl_803E5D9C;
-extern f32 lbl_803E5DA0;
-extern f32 lbl_803E5DB8;
-extern f32 lbl_803E5DBC;
-extern f32 lbl_803E5DC0;
-extern f32 lbl_803E5DC4;
-extern f32 lbl_803E5DC8;
-extern f32 lbl_803E5DCC;
 
 typedef struct Cup197State
 {
@@ -758,11 +718,6 @@ typedef struct Dll197State
 
 extern int ObjHits_GetPriorityHit();
 
-extern f64 DOUBLE_803e5de0;
-extern f32 lbl_803E5DD0;
-extern f32 lbl_803E5DD4;
-extern f32 lbl_803E5DD8;
-extern f32 lbl_803E5DDC;
 
 /*
  * --INFO--
@@ -779,7 +734,6 @@ extern f32 lbl_803E5DDC;
  */
 extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
-extern f64 lbl_803E5148;
 
 void dll_197_init(int obj, int data)
 {
@@ -907,44 +861,21 @@ void dll_197_initialise(void)
 
 void nwsh_levcon_hitDetect(void);
 
-void nwsh_levcon_release(void);
 
-void nwsh_levcon_initialise(void);
 
 
 /* 8b "li r3, N; blr" returners. */
-int nwsh_levcon_getExtraSize(void);
-int nwsh_levcon_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5150;
-extern f32 lbl_803E5158;
-
-void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
-extern void Music_Trigger(int track, int param);
-
-void nwsh_levcon_free(int obj);
-
-extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int a, int b, int c);
-extern void skyFn_80088c94(int a, int b);
-extern void getEnvfxAct(int a, int b, int c, int d);
-
-void nwsh_levcon_update(int* obj);
-
-void nwsh_levcon_init(int* obj);
-
-extern void* gTitleMenuControlInterface;
-
-void dll_199_free(int* obj);
-
-extern void fn_80296518(void* player, int a, int b);
-extern int getButtonsHeld(int pad);
-extern int return0_8005669C(int p);
-extern int lbl_803DB610;
-extern u32 lbl_803DDBD8;
 
 
-int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
+
+
+
+
+
+
+
+

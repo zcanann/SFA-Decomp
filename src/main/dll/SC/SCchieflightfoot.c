@@ -2,45 +2,11 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-extern void Sfx_PlayFromObject(SHthorntailObject* obj, u16 volumeId);
-extern f32 getXZDistance(f32 * posA, f32 * posB);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern int randomGetRange(int min, int max);
-extern undefined4 Obj_GetActiveModel();
 extern undefined4 Obj_GetPlayerObject();
-extern undefined4 modelInitBones();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjTrigger_IsSet();
-extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int param_6);
-extern void characterDoEyeAnims(int obj, int collisionShapeState);
-extern void fn_8003B228(int obj, int collisionShapeState);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
-extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
-                                f32 scaleY);
-extern undefined4 dll_2E_func05();
-extern undefined4 dll_2E_func08();
-extern void dll_2E_func03(SHthorntailObject * obj, SHthorntailRuntime * runtime);
-extern undefined4 FUN_80286888();
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 
-extern SHthorntailDataTables gSHthorntailDataTables;
-extern u8 gSHthorntailPathHeaders[0x30];
-extern u8 gSHthorntailPathData[0x4AC];
-extern undefined4 lbl_803E5410;
 extern EffectInterface** gPartfxInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern SHthorntailPathControlInterface** gPathControlInterface;
 extern f32 timeDelta;
-extern f64 lbl_803E5428;
-extern f64 lbl_803E5440;
-extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
-extern f32 lbl_803E5448;
-extern f32 lbl_803E544C;
-extern f32 lbl_803E5450;
-extern f32 lbl_803E5454;
-extern f32 lbl_803E5458;
-extern f32 lbl_803E545C;
 extern f32 lbl_803E5460;
 extern f32 lbl_803E5464;
 extern f32 lbl_803E5468;
@@ -52,30 +18,9 @@ extern f32 lbl_803E547C;
 extern f32 lbl_803E5480;
 extern f32 lbl_803E5484;
 extern f32 lbl_803E5488;
-extern f64 lbl_803E5490;
 
-#define gSHthorntailPathControlInterface gPathControlInterface
 
-#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET 0x0A0
-#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET 0x294
-#define SHTHORNTAIL_STATE_MOVE_IDS_OFFSET 0x488
-#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET 0x4AC
-#define SHTHORNTAIL_STATE_FLAGS_OFFSET 0x4F0
-#define SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET 0x504
-#define SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET 0x528
 
-#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(tables) \
-  ((ObjHitReactEntry *)((tables) + SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET))
-#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(tables) \
-  ((ObjHitReactEntry *)((tables) + SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET))
-#define SHTHORNTAIL_STATE_MOVE_IDS(tables) ((s16 *)((tables) + SHTHORNTAIL_STATE_MOVE_IDS_OFFSET))
-#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES(tables) \
-  ((f32 *)((tables) + SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET))
-#define SHTHORNTAIL_STATE_FLAGS(tables) ((u8 *)((tables) + SHTHORNTAIL_STATE_FLAGS_OFFSET))
-#define SHTHORNTAIL_STATE_TRIGGER0_SFX(tables) \
-  ((u16 *)((tables) + SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET))
-#define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables) \
-  ((u8 *)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
 
 typedef struct SHthorntailDustEffectParams
 {
@@ -87,11 +32,6 @@ typedef struct SHthorntailDustEffectParams
     Vec position;
 } SHthorntailDustEffectParams;
 
-typedef struct SHthorntailTailSwingEffectScratch
-{
-    undefined particleParams[12];
-    Vec position;
-} SHthorntailTailSwingEffectScratch;
 
 /*
  * --INFO--

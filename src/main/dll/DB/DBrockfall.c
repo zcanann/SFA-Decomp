@@ -3,27 +3,10 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern uint FUN_80006c00();
-extern undefined4 FUN_80006c88();
-extern undefined8 FUN_80017484();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern int FUN_80017a98();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern undefined4 FUN_80080eec();
-extern undefined4 FUN_8011e800();
-extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern int FUN_80294d20();
-extern undefined4 FUN_80294d28();
-extern uint countLeadingZeros();
 
-extern undefined4 DAT_80328730;
-extern undefined4 DAT_80328734;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4 DAT_803de890;
-extern f32 lbl_803E6310;
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E56B0;
 extern f32 lbl_803E56B4;

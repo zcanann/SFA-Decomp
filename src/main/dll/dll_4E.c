@@ -27,27 +27,12 @@
 #define OPTIONS_SUBMENU_LANGUAGE 3
 
 
-extern undefined4 FUN_80006768();
-extern undefined4 FUN_8000676c();
-extern undefined4 FUN_80006810();
-extern undefined4 FUN_80006824();
 extern void audioSetSoundMode(u8 mode, u8 enabled);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveFileStruct_resetVolumes(void);
 
-extern undefined4 DAT_803a9430;
-extern undefined4 DAT_803a9434;
-extern undefined4 DAT_803a9438;
-extern undefined4 DAT_803a943c;
-extern undefined4 DAT_803a9444;
-extern undefined4* DAT_803dd6f0;
-extern undefined4* DAT_803dd724;
-extern undefined4 DAT_803de37c;
-extern undefined4 DAT_803de384;
-extern undefined4 DAT_803de385;
-extern undefined4 DAT_803de388;
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int* gTitleMenuControlInterface;

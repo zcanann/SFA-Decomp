@@ -1,7 +1,6 @@
 #include "main/dll/baddie/dll_003B_menu.h"
 
 extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
 extern int FUN_801244a4();
 extern undefined4 FUN_8012dca8();
 extern undefined8 FUN_8012e050();
@@ -27,12 +26,6 @@ extern undefined4 DAT_803de445;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u8 lbl_803A87F0[];
-extern void gameUiResetMenuState(void);
-extern void* lbl_803DD7C8;
-extern s16 gTrickyHudCachedIconIndex;
-extern void* gTrickyHudCachedIconTexture;
-extern void textureFree(void* p);
 
 #pragma scheduling off
 #pragma peephole off
@@ -126,68 +119,15 @@ FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 para
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 extern u8 pauseDisabled;
-extern u8 pauseMenuFrameCounter;
-extern s16 cMenuFadeCounter;
 extern s8 lbl_803DD8F0;
 extern s16 lbl_803DD8F2;
 extern s8 lbl_803DD8F4;
 extern s8 lbl_803DD8F5;
 extern s8 lbl_803DD8E8;
-extern u8 linkFlag_803dd8f8;
-extern u8 linkIsRotated;
-extern s16 linkItemOpacity;
-extern s16 linkCount_803dd90e;
-extern s8 linkSelected;
-extern u8 linkTextures[0x30];
 extern int getScreenResolution(void);
-extern void* textureLoadAsset(int id);
-extern void* hudTextures[];
-extern s16 gHudTextureIds[];
-extern u8 lbl_803A9398[];
-extern s8 lbl_803DD896;
-extern s16 lbl_803DD894;
-extern s16 lbl_803DD8C2;
-extern u8 lbl_803DD8B8;
-extern int lbl_803DD744;
-extern int lbl_803DD740;
-extern void* lbl_803DD8C4;
-extern int lbl_803DD82C;
-extern int lbl_803DD828;
-extern f32 lbl_803E1E3C;
-extern s16 yButtonState;
-extern int airMeter;
-
-typedef struct LinkMenuItemDB
-{
-    u16 field00;
-    u16 itemId;
-    s16 field04;
-    s16 field06;
-    u8 pad8[4];
-    s16 field0C;
-    u8 padE[2];
-
-    union
-    {
-        int textureAssetId;
-        void* texture;
-    };
-
-    u16 field14;
-    u16 field16;
-    u8 pad18[2];
-    u8 field1A;
-    u8 pad1B[3];
-    s8 state;
-    s8 slots[25];
-    s8 field38;
-    u8 pad39[3];
-} LinkMenuItemDB;
 
 
-void Pause_SetDisabled(u8 v);
-void Pause_ResetMenuFrameCounter(void);
-void CMenu_SetFadeCounter(s16 v);
+
 s32 Menu_func0B(void) { return lbl_803DD8F0; }
 #pragma peephole off
 void Menu_func0A(int v) { lbl_803DD8E8 = (s8)v; }
@@ -213,23 +153,14 @@ void Menu_release(void)
 }
 
 void titleScreenFn_80130464(u8 v);
-void setLinkNotRotated(void);
-void setLinkIsRotated(void);
-u8 Link_func0C(void);
-void Link_func0A(int idx, int v);
-s32 Link_func09(int idx);
-void Link_setOpacity(u8 v);
 #pragma peephole off
-void Link_setSelected(int v);
 #pragma peephole reset
-s32 Link_getSelected(void);
 
 /* Stubs added to align function set with v1.0 asm. Source had many Ghidra
  * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
  * asm symbol set is fully present so future hunters can fill bodies. */
 #pragma scheduling off
 #pragma peephole off
-void GameUI_initialise(void);
 #pragma peephole reset
 #pragma scheduling reset
 extern int getHudHiddenFrameCount(void);
@@ -336,37 +267,26 @@ void Menu_initialise(void)
 #pragma scheduling off
 u16 fn_80130124(void);
 #pragma scheduling reset
-extern void OSReport(const char* fmt, ...);
-extern char lbl_8031C234[];
 #pragma scheduling off
 #pragma peephole off
-void linkInitTextures(LinkMenuItemDB* item);
-#pragma peephole reset
-#pragma scheduling reset
-extern int getCurLanguage(void);
-extern u8 lbl_802C8680[];
-extern u8 lbl_803DD911;
-#pragma scheduling off
-#pragma peephole off
-void linkDrawFn_801302c0(void);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
-void linkDrawFn_80130484(void);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
-void Link_func0F(void);
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-void Link_copy(u8* srcArg);
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
-void Link_func0B(u8* srcArg);
 #pragma peephole reset
 #pragma scheduling reset

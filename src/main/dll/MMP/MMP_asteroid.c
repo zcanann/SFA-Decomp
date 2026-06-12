@@ -2,47 +2,17 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-typedef struct WallanimatorPlacement
-{
-    u8 pad0[0x1C - 0x0];
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} WallanimatorPlacement;
 
 
-typedef struct WallanimatorState
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 pad5[0x8 - 0x5];
-} WallanimatorState;
 
 
-typedef struct XyzanimatorState
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 pad5[0x8 - 0x5];
-} XyzanimatorState;
 
 
-extern undefined4 FUN_80006824();
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017748();
-extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a90();
-extern int getTrickyObject(void);
-extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern void objRenderFn_80041018(int obj);
-extern int FUN_8005af70();
-extern int FUN_8005b398();
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
 extern void* fn_8006070C(int* obj, int idx);
@@ -50,40 +20,10 @@ extern void mm_free(void* ptr);
 extern void DCStoreRange(void* addr, u32 nBytes);
 extern int return0_80060B90(void);
 extern void* Shader_getLayer(void* shader, int idx);
-extern uint FUN_80060058();
-extern undefined4 FUN_800600b4();
-extern undefined4 FUN_800600c4();
-extern int FUN_800600d4();
-extern undefined4 FUN_80193a50();
-extern undefined8 FUN_80286830();
-extern undefined8 FUN_80286838();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286884();
 
 extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e4c88;
-extern f32 lbl_803E4C68;
-extern f32 lbl_803E4C6C;
-extern f32 lbl_803E4C70;
-extern f32 lbl_803E4C74;
-extern f32 lbl_803E4C78;
-extern f32 lbl_803E4C7C;
-extern f32 lbl_803E4C80;
-extern f32 lbl_803E4C94;
-extern f32 lbl_803E4C98;
-extern f32 lbl_803E3FFC;
 extern f32 lbl_803E4000;
 extern f32 lbl_803E4008;
-extern f64 lbl_803E4010;
-extern f32 lbl_803E3FD0;
-extern f32 lbl_803E3FD4;
-extern f32 lbl_803E3FD8;
-extern f32 lbl_803E3FDC;
-extern f32 lbl_803E3FE0;
-extern f32 lbl_803E3FE4;
-extern f32 lbl_803E3FE8;
-extern f32 lbl_803E3FEC;
-extern f64 lbl_803E3FF0;
 
 /*
  * --INFO--
@@ -575,44 +515,7 @@ typedef struct ExplodeanimatorPlacement
 } ExplodeanimatorPlacement;
 
 
-extern undefined4 FUN_800068c4();
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern undefined4 FUN_80017ac8();
-extern int FUN_800480a0();
-extern int fn_80056800();
-extern undefined4 FUN_80055ee8();
-extern int FUN_800600e4();
-extern undefined4 FUN_8006069c();
-extern undefined4 FUN_80135814();
-extern undefined4 FUN_80242114();
-extern undefined8 FUN_8028682c();
-extern uint FUN_8028683c();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
 
-extern undefined4 DAT_80322fb8;
-extern undefined4 DAT_803dc070;
-extern undefined4 gNewCloudsInterface;
-extern undefined4 DAT_803de780;
-extern f64 DOUBLE_803e4ca8;
-extern f64 DOUBLE_803e4cc0;
-extern f64 DOUBLE_803e4cd8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E4CA0;
-extern f32 lbl_803E4CB0;
-extern f32 lbl_803E4CB8;
-extern f32 lbl_803E4CC8;
-extern f32 lbl_803E4CCC;
-extern f32 lbl_803E4CD0;
-extern f32 lbl_803E4CD4;
-extern f32 lbl_803E4CE0;
-extern f32 lbl_803E4CE4;
-extern f32 lbl_803E4CE8;
-extern f32 lbl_803E4CEC;
-extern f32 lbl_803E4CF0;
-extern f32 lbl_803E4CF4;
 
 /*
  * --INFO--

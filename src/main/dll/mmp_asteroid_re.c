@@ -12,15 +12,11 @@ typedef struct CfDoorlightObjectDef
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern undefined4 FUN_800400b0();
-extern void warpPadFn_8019042c(int obj);
-extern void warpPadPlayerStandingOn(int obj);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
 extern void* objFindTexture(void* obj, int target, int param_3);
 
-extern undefined4 DAT_803ddb38;
 
 typedef struct CfDoorLightState
 {

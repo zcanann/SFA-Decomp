@@ -4,27 +4,10 @@
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175a0();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175d0();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017680();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern double FUN_80017708();
 extern int randomGetRange(int min, int max);
-extern undefined4 FUN_80017a6c();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjMsg_AllocQueue();
 extern int ObjTrigger_IsSetById();
-extern undefined4 FUN_8003b1a4();
-extern undefined4 FUN_8003b280();
-extern undefined4 FUN_8003b444();
-extern undefined4 FUN_800400b0();
 extern void* Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 * a, f32 * b);
 extern int fn_8003B500(void* obj, void* p2, f32 f1);
@@ -39,16 +22,7 @@ extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);
 extern int RandomTimer_UpdateRangeTrigger(f32* state, f32 min, f32 max);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
-extern short FUN_8011e824();
-extern int FUN_8012efc4();
-extern uint FUN_80294cc4();
 
-extern undefined4 DAT_803279d8;
-extern undefined4 DAT_803dcc28;
-extern undefined4 DAT_803dcc38;
-extern undefined4 DAT_803dcc40;
-extern undefined4 DAT_803dcc44;
-extern undefined4 DAT_803dcc54;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u8 lbl_803DBFC8;
 extern u8 lbl_803DBFCC;
@@ -61,7 +35,6 @@ extern u8 lbl_803DBFE4;
 extern u8 lbl_803DBFE8;
 extern u8 lbl_803DBFEC;
 extern f32 timeDelta;
-extern f64 DOUBLE_803e6038;
 extern s16 lbl_80326E18[];
 extern f32 lbl_80326E24[];
 extern f32 lbl_803E53F8;
@@ -69,13 +42,6 @@ extern f32 lbl_803E53FC;
 extern f32 lbl_803E5400;
 extern f32 lbl_803E5404;
 extern f32 lbl_803E5408;
-extern f32 lbl_803E6020;
-extern f32 lbl_803E6024;
-extern f32 lbl_803E6028;
-extern f32 lbl_803E6088;
-extern f32 lbl_803E608C;
-extern f32 lbl_803E6094;
-extern f32 lbl_803E6098;
 
 /*
  * --INFO--

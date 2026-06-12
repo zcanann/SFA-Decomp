@@ -7,7 +7,6 @@
 
 
 extern undefined4 FUN_80003494();
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
 extern int ObjGroup_FindNearestObjectToPoint();
 extern void* FUN_80039518();
@@ -401,10 +400,8 @@ void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefine
 #pragma peephole off
 void dll_19_func04_nop(void);
 
-void dll_19_func03_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_19_func09_ret_0(void);
 int dll_2E_func0F_ret_0(void) { return 0x0; }
 
 /* 12b chained getters. */
@@ -525,13 +522,9 @@ int dll_2E_func0C(int idx, char* out)
 }
 
 extern f32 timeDelta;
-extern f32 lbl_803E1C78;
-extern f32 lbl_803E1C2C;
-extern f32 lbl_803E1C7C;
 
 /* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
  * current target and turns the yaw by the buffered turn rate. */
-void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed);
 
 extern f32 lbl_803E1C90;
 
@@ -614,22 +607,11 @@ extern s16 getAngle(f32 x, f32 z);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
-void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist);
 
-extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern u8 voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b);
-extern int objBboxFn_800640cc(void* pos, f32* world, f32 rad, int a, void* out, int obj, int b,
-                              int c, int d, int e);
-extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern const f32 lbl_803E1C68;
-extern const f32 lbl_803E1C80;
-extern const f32 lbl_803E1C84;
-extern f32 lbl_803E1C48;
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */
-u8 dll_19_func08(int obj, char* st, f32 dist);
 
 extern int Curve_AdvanceAlongPath(int curve);
 extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
@@ -786,11 +768,9 @@ int dll_2E_func07(int obj, char* state, char* st, s16 a, s16 b)
 
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ,
                                            u32 obj);
-extern f32 lbl_803E1C40;
 
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */
-f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st);
 
 extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -915,7 +895,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
 
-extern f64 lbl_803E1C98;
 extern f32 lbl_803E1CA4;
 extern f32 lbl_803E1CD0;
 extern f32 lbl_803E1CD4;

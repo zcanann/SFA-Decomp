@@ -55,7 +55,6 @@ extern f32 lbl_803E6B8C;
 extern f32 lbl_803E6B90;
 extern f32 lbl_803E6B94;
 extern f32 lbl_803E6B98;
-extern f64 lbl_803E6BA0;
 extern f32 lbl_803E6BA8;
 
 typedef struct

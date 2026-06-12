@@ -89,7 +89,6 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern undefined4 ccqueen_render();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -102,24 +101,9 @@ extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern f64 DOUBLE_803e5250;
-extern f64 DOUBLE_803e5268;
-extern f64 DOUBLE_803e5280;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
-extern f32 lbl_803E5260;
-extern f32 lbl_803E5270;
-extern f32 lbl_803E5274;
-extern f32 lbl_803E5288;
-extern f32 lbl_803E528C;
-extern f32 lbl_803E5290;
-extern f32 lbl_803E5294;
-extern f32 lbl_803E5298;
-extern f32 lbl_803E529C;
-extern f32 lbl_803E52A0;
-extern f32 lbl_803E52A8;
-extern f32 lbl_803E52AC;
 
 /*
  * --INFO--
@@ -630,7 +614,6 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 extern int getTrickyObject(void);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern f32 lbl_803E45DC;
-extern f64 lbl_803E45E8;
 extern f32 lbl_803E45F0;
 extern f32 lbl_803E45F4;
 extern f32 lbl_803E45F8;

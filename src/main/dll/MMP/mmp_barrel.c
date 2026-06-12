@@ -19,55 +19,21 @@ extern uint GameBit_Get(int eventId);
 
 
 extern void* mapGetBlock(int idx);
-extern int* getTablesBinEntry(int id);
-extern void* getLoadedTexture(int id);
-extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
-                                    int unusedXStep, int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
-extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int unusedXStep,
-                                   int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
-
-typedef struct TexScrollMapBlock
-{
-    u8 pad00[0xA2];
-    u8 layerCount;
-} TexScrollMapBlock;
-
-typedef struct TexScrollMapLayer
-{
-    u8 pad00[0x24];
-    void* texture;
-    u8 pad28[2];
-    u8 scrollSlot;
-    u8 pad2B[0x41 - 0x2B];
-    u8 materialCount;
-} TexScrollMapLayer;
-
-void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state);
-
-void texscroll2_free(void);
-
-void texscroll2_hitDetect(void);
-
-void texscroll2_release(void);
-
-void texscroll2_initialise(void);
 
 
 
-void texscroll_free(void);
 
-void texscroll_hitDetect(void);
 
-void texscroll_update(void);
 
-void texscroll_release(void);
 
-void texscroll_initialise(void);
 
-int texscroll2_getExtraSize(void);
-int texscroll2_getObjectTypeId(void);
-int texscroll_getExtraSize(void);
-int texscroll_getObjectTypeId(void);
+
+
+
+
+
+
+
 
 void waveanimator_modelMtxFn(int obj, int a, int b, int c)
 {
@@ -84,11 +50,8 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c)
 
 extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3F38;
 
-void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -205,83 +168,20 @@ typedef struct VisAnimatorState
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern undefined4 FUN_80006824();
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern int FUN_80017a90();
-extern undefined4 FUN_80017a98();
 extern int FUN_80017af0();
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern int FUN_800480a0();
 extern int FUN_8005337c();
 extern undefined4 FUN_80056418();
 extern int FUN_80056448();
 extern int FUN_8005af70();
 extern int FUN_8005b398();
-extern undefined4 FUN_8005ff38();
-extern undefined4 FUN_8005ff90();
-extern uint FUN_80060058();
-extern int FUN_80060064();
-extern undefined4 FUN_800600b4();
-extern int FUN_800600c4();
 extern int FUN_800600e4();
-extern undefined4 FUN_800631d4();
-extern int FUN_80063298();
-extern undefined4 FUN_801a8ae8();
-extern undefined4 FUN_801a8b20();
-extern undefined4 FUN_80242178();
-extern uint FUN_80286810();
-extern undefined8 FUN_8028681c();
-extern undefined8 FUN_80286820();
 extern undefined8 FUN_8028682c();
-extern uint FUN_80286840();
-extern undefined4 TRKNubMainLoop();
-extern undefined4 FUN_80286868();
-extern undefined4 FUN_8028686c();
 extern undefined4 FUN_80286878();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_802924c4();
-extern undefined4 FUN_80293f90();
 
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de768;
-extern undefined4 DAT_803de76c;
-extern undefined4 DAT_803de770;
-extern undefined4 DAT_803de774;
-extern f64 DOUBLE_803e4c00;
-extern f64 DOUBLE_803e4c20;
-extern f64 DOUBLE_803e4c28;
-extern f64 DOUBLE_803e4c38;
-extern f64 DOUBLE_803e4c60;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E4BDC;
-extern f32 lbl_803E4BE8;
-extern f32 lbl_803E4BEC;
-extern f32 lbl_803E4BF0;
-extern f32 lbl_803E4BF4;
-extern f32 lbl_803E4BF8;
-extern f32 lbl_803E4BFC;
-extern f32 lbl_803E4C08;
-extern f32 lbl_803E4C10;
-extern f32 lbl_803E4C14;
-extern f32 lbl_803E4C18;
-extern f32 lbl_803E4C1C;
-extern f32 lbl_803E4C30;
-extern f32 lbl_803E4C40;
-extern f32 lbl_803E4C44;
-extern f32 lbl_803E4C48;
-extern f32 lbl_803E4C4C;
-extern f32 lbl_803E4C50;
-extern f32 lbl_803E4C54;
-extern f32 lbl_803E4C58;
-extern f32 lbl_803E4C5C;
 
 /*
  * --INFO--

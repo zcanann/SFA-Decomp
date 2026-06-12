@@ -26,7 +26,6 @@ extern f32 lbl_803E5AF0;
 extern f32 lbl_803E5AF4;
 extern f32 lbl_803E5AF8;
 extern f32 lbl_803E5AFC;
-extern f64 lbl_803E5B00;
 extern f32 lbl_803E5B08;
 extern f32 lbl_803E5B0C;
 extern f32 lbl_803E5B10;

@@ -18,19 +18,6 @@ typedef struct IceblastPlacement
 } IceblastPlacement;
 
 
-typedef struct PushablePlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s8 unk1C;
-    s8 unk1D;
-    s8 unk1E;
-    u8 unk1F;
-    u8 pad20[0x23 - 0x20];
-    s8 unk23;
-    u8 pad24[0x28 - 0x24];
-} PushablePlacement;
 
 
 typedef struct InvhitState
@@ -70,39 +57,8 @@ typedef struct WarpPointObjectDef
 } WarpPointObjectDef;
 
 
-typedef struct PushableObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 gameBit;
-    s16 unk1A;
-    void* unk1C;
-    s16 unk20;
-    u8 unk22;
-    u8 unk23;
-    u8 pad24[0x28 - 0x24];
-} PushableObjectDef;
 
 
-typedef struct WarpPointPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    void* unk1C;
-    s16 unk20;
-    u8 unk22;
-    u8 unk23;
-    u8 pad24[0x48 - 0x24];
-    f32 unk48;
-    u8 pad4C[0x50 - 0x4C];
-    f32 unk50;
-    u8 pad54[0x114 - 0x54];
-    f32 unk114;
-    f32 unk118;
-    u8 pad11C[0x128 - 0x11C];
-    f32 unk128;
-    f32 unk12C;
-} WarpPointPlacement;
 
 
 typedef struct WarpPointState
@@ -125,27 +81,18 @@ static inline int* Transporter_GetActiveModel(void* obj)
 }
 
 extern undefined4 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
 extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjHits_AddContactObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern void Obj_FreeObject(int* obj);
-extern undefined4 ObjMsg_AllocQueue();
 extern int ObjList_ContainsObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-extern int fn_80174A80();
-extern undefined4 fn_80174BFC();
-extern undefined4 fn_8017510C();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E42B0;
@@ -343,13 +290,9 @@ void iceblast_initialise(void)
 }
 
 extern unsigned long GameBit_Set(int eventId, int value);
-extern int saveGame_saveObjectPos(int* obj);
-extern int lbl_803DDAB8;
-extern int lbl_803AC6E0[];
 
 #pragma scheduling off
 #pragma peephole off
-void pushable_free(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
 int WarpPoint_getExtraSize(void) { return 0x10; }
@@ -737,17 +680,7 @@ void invhit_init(int* obj, u8* def)
 
 extern int playerIsDisguised(void* player);
 extern u32 GameBit_Get(int eventId);
-extern int fn_80295A04(void* player, int a);
-extern void pushable_savePos(int* obj);
-extern int fn_80174668(int* obj, PushableState* state);
-extern void fn_80174438(int* obj, PushableState* state);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern void Obj_RemoveFromUpdateList(int* obj);
-extern f32 lbl_803E3528;
-extern f64 lbl_803E3530;
-extern f64 lbl_803E3538;
 
-void pushable_update(int* obj);
 
 extern f32 sqrtf(f32 x);
 extern u32 fn_80296118(void);
@@ -1062,75 +995,14 @@ void WarpPoint_update(int* obj)
 }
 
 extern void objSetSlot(s16* obj, int slot);
-extern int modelFileHeaderGetCullDistance(int hdr);
-extern void Model_GetVertexPosition(int* model, int idx, f32* out);
-extern void debugPrintf(char* fmt, ...);
-extern char sPushPullObjectHitpointOverflow[];
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern int arrayIndexOf(int* array, int count, int value);
-extern void fn_8007FE04(int* array, int* count, int value);
-extern f32 lbl_803E358C;
-extern f32 lbl_803E35CC;
-extern f32 lbl_803E3558;
-extern f32 lbl_803E3540;
-extern f32 lbl_803E3588;
-
-void pushable_init(s16* obj, char* def);
 
 
-extern int lbl_802C2270[];
-extern int fn_802969F0(void);
-extern void setMatrixFromObjectPos(f32* mtx, void* vec);
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void Obj_BuildTransformMatrices(int* obj);
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
-extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);
-extern void hitDetectFn_800691c0(int* obj, int* bounds, int a, int b);
-extern f32 lbl_803E35A8;
-extern f32 lbl_803E35AC;
-extern f32 lbl_803E35B0;
-extern f32 lbl_803E35B4;
-extern f32 lbl_803E35B8;
-extern f32 lbl_803E35BC;
-extern f32 lbl_803E35C0;
-extern f32 lbl_803E35C4;
-extern f32 lbl_803E35C8;
-
-typedef struct
-{
-    int a, b, c, d;
-} PushableBox16;
-
-typedef struct
-{
-    u8 pad[0x24];
-    f32 vx;
-    u8 pad2[4];
-    f32 vz;
-} PushableObjPos;
 
 
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, int c);
-extern int objBboxFn_800640cc(f32* start, f32* end, f32 radius, int a, int b, int* obj, int c, int d, int e, int f);
-extern f32 lbl_803E3590;
-extern f32 lbl_803E3594;
-extern f32 lbl_803E359C;
-extern f32 lbl_803E35A0;
-extern f32 lbl_803E35A4;
-
-typedef struct
-{
-    f32 r[4];
-    s8 b10;
-    u8 pad1[3];
-    u8 b14;
-    u8 pad2[0x17];
-    s16 h2c;
-    s16 pad3;
-} SetScaleParams;
 
 
-extern void fn_8003B5E0(int a, int b, int c, int d);
+
+
+
+
 

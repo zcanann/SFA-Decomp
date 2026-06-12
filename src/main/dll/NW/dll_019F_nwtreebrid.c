@@ -220,18 +220,8 @@ void treebird_update(int obj)
 #include "main/dll/dll_019F_nwtreebrid.h"
 
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void ObjHits_DisableObject(int obj);
-extern void ObjHits_EnableObject(int obj);
-extern void GameBit_Set(int eventId, int value);
-extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
-                                void* scratch, f32 scaleX, f32 scaleZ);
 
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5210;
 
-void fn_801CDF94(int obj, int state, int flag);
 
 
 /*
@@ -282,19 +272,9 @@ void treebird_init(int obj, int setup)
 char* fn_801CDE70(int* obj);
 
 
-void nw_geyser_free(int* obj);
-
-
-extern int objFindTexture(int* obj, int idx, int p3);
-extern f32 lbl_803E5200;
-extern f32 timeDelta;
 
 
 
-extern void fn_8003A168(int obj, void* p);
-extern void fn_8003B228(int obj, void* p);
-extern void fn_8003A230(int obj, void* p, f32 f);
-extern void characterDoEyeAnims(int obj, void* p);
-extern u8 lbl_803268B4[];
-extern f32 lbl_803E5214;
+
+
 

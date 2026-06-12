@@ -19,27 +19,7 @@ extern void debugPrintf(char* message, ...);
 extern undefined8 FUN_80286830();
 
 extern ExpgfxBounds gExpgfxBoundsTemplates[];
-extern s16 gExpgfxPoolSlotTypeIds[];
-extern u8 gExpgfxPoolFrameFlags[];
-extern undefined2 DAT_803105a8;
 extern ExpgfxBounds gExpgfxPoolBounds[];
-extern u8 gExpgfxPoolSourceModes[];
-extern u32 gExpgfxPoolSourceIds[];
-extern u8 gExpgfxPoolBoundsTemplateIds[];
-extern s8 gExpgfxPoolActiveCounts[];
-extern u32 gExpgfxPoolActiveMasks[];
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dd430;
-extern undefined4* DAT_803dd718;
-extern undefined4 DAT_803dded4;
-extern undefined4 DAT_803dded8;
-extern undefined4 DAT_803ddee8;
-extern undefined4 DAT_803ddeea;
-extern undefined2* DAT_803ddeec;
-extern undefined4 DAT_803ddef0;
-extern undefined4 DAT_803ddef4;
-extern undefined4 DAT_803ddef8;
-extern undefined4 DAT_cc008000;
 extern EffectInterface** gPartfxInterface;
 extern u8 lbl_803DD253;
 extern volatile f32 timeDelta;
@@ -51,12 +31,6 @@ extern volatile f32 lbl_803DF35C;
 extern volatile f32 lbl_803DF384;
 extern volatile f32 lbl_803DF418;
 extern f32 lbl_803DF358;
-extern f64 DOUBLE_803dffe0;
-extern f64 DOUBLE_803dfff8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DC3F0;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f64 lbl_803DF378;
@@ -65,47 +39,6 @@ extern f32 gExpgfxYVelocityFastStep;
 extern f32 gExpgfxYVelocitySlowStep;
 extern f32 gExpgfxYVelocityNegativeLimit;
 extern f32 gExpgfxSlotMotionStep;
-extern f32 lbl_803DDEDC;
-extern f32 lbl_803DDEE0;
-extern f32 lbl_803DDEE4;
-extern f32 lbl_803DFFD0;
-extern f32 lbl_803DFFD4;
-extern f32 lbl_803DFFD8;
-extern f32 lbl_803DFFDC;
-extern f32 lbl_803E0004;
-extern f32 lbl_803E000C;
-extern f32 lbl_803E0010;
-extern f32 lbl_803E0030;
-extern f32 lbl_803E0034;
-extern f32 lbl_803E0038;
-extern f32 lbl_803E003C;
-extern f32 lbl_803E0040;
-extern f32 lbl_803E0044;
-extern f32 lbl_803E0048;
-extern f32 lbl_803E004C;
-extern f32 lbl_803E0050;
-extern f32 lbl_803E0054;
-extern f32 lbl_803E0058;
-extern f32 lbl_803E005C;
-extern f32 lbl_803E0060;
-extern f32 lbl_803E0064;
-extern f32 lbl_803E0068;
-extern f32 lbl_803E006C;
-extern f32 lbl_803E0070;
-extern f32 lbl_803E0074;
-extern f32 lbl_803E0078;
-extern f32 lbl_803E007C;
-extern f32 lbl_803E0080;
-extern f32 lbl_803E0084;
-extern f32 lbl_803E0088;
-extern f32 lbl_803E008C;
-extern f32 lbl_803E0090;
-extern f32 lbl_803E0094;
-extern f32 lbl_803E0098;
-extern f32 lbl_803E009C;
-extern f32 lbl_803E00A0;
-extern f32 lbl_803E00A4;
-extern f32 lbl_803E00A8;
 
 ObjectDescriptor14 expgfx_funcs = {
     0,
@@ -128,7 +61,6 @@ ObjectDescriptor14 expgfx_funcs = {
     (ObjectDescriptorCallback)expgfx_updateSourceFrameFlags,
 };
 
-#define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
 
 static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex)
 {

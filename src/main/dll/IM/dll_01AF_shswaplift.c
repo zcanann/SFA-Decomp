@@ -1,42 +1,13 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct ShLevelcontrolState
-{
-    u8 pad0[0x5 - 0x0];
-    u8 unk5;
-    u8 pad6[0xC - 0x6];
-    f32 unkC;
-    s16 unk10;
-    s16 unk12;
-    u8 pad14[0x18 - 0x14];
-} ShLevelcontrolState;
 
 
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int Obj_GetPlayerObject(void);
-extern void buttonDisable(int a, int b);
-extern void padClearAnalogInputY(int a);
-extern void padClearAnalogInputX(int a);
-extern void gameTextShow(int a);
-extern void fn_80088870(void* a, void* b, void* c, void* d);
-extern void envFxActFn_800887f8(int a);
-extern void skyFn_80088e54(int a, f32 b);
-extern void getEnvfxAct(int a, int b, int c, int d);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern void SH_LevelControl_setMusic(uint * param_1);
-extern void SH_LevelControl_runBloopEvent(int param_1, uint* param_2);
-extern void SH_LevelControl_doThornTailEvents(int param_1, uint* param_2);
-extern void SH_LevelControl_doEarlyScenes(int param_1, uint* param_2);
 extern void objRenderFn_8003b8f4(f32);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 lbl_803E54B4;
 extern f32 lbl_803E54C8;
-extern f32 timeDelta;
-extern u8 lbl_80327618[0x104];
 
 /*
  * --INFO--
@@ -77,13 +48,7 @@ int sh_staff_getExtraSize(void);
 
 extern s32 lbl_803DC058[2];
 extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void Music_Trigger(int track, int param);
-extern int getSaveGameLoadStatus(void);
-extern void timeOfDayFn_80055000(void);
-extern f32 lbl_803E54C0;
-extern s16 lbl_80327618_ids[];
 
-void sh_levelcontrol_init(int obj);
 
 void warpstonelift_init(int obj, s8* def)
 {

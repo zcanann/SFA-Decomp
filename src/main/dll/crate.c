@@ -1,9 +1,6 @@
 #include "main/game_object.h"
 #include "main/dll/crate.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b4c();
-extern undefined4 FUN_80017ac8();
 extern void GameBit_Set(int eventId, int value);
 
 #define SFXPLAYER_EVENT_ACTIVATE 1

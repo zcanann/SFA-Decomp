@@ -772,57 +772,21 @@ end:
 
 
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017688();
-extern double FUN_80017714();
-extern undefined4 FUN_8001771c();
-extern undefined4 FUN_80017a28();
-extern byte FUN_80017a34();
-extern undefined4 FUN_80017a3c();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern void ObjHits_EnableObject(int obj);
-extern void ObjHits_RefreshObjectState(int obj);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
-extern int FUN_800620e8();
-extern int FUN_800632f4();
-extern undefined4 FUN_80081118();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
 
-extern undefined4* DAT_803dd71c;
-extern f64 DOUBLE_803e5f58;
-extern f32 FLOAT_803e5f20;
-extern f32 FLOAT_803e5f2c;
-extern f32 FLOAT_803e5f38;
-extern f32 FLOAT_803e5f40;
-extern f32 FLOAT_803e5f78;
-extern f32 FLOAT_803e5f7c;
-extern f32 FLOAT_803e5f80;
-extern f32 FLOAT_803e5f84;
-extern f32 FLOAT_803e5f88;
-extern f32 FLOAT_803e5f8c;
 
 extern u32 GameBit_Get(int bit);
 extern f32 Vec_distance(int a, int b);
 
-extern f64 lbl_803E52C0;
 extern f32 lbl_803E52E0;
 extern f32 lbl_803E52E4;
 extern f32 lbl_803E52E8;
 extern f32 lbl_803E52EC;
 extern f32 lbl_803E52F0;
 extern f32 lbl_803E52F4;
-extern f32 lbl_803E52F8;
-extern f32 lbl_803E52FC;
-extern f32 lbl_803E5300;
-extern f32 lbl_803E5304;
-extern f64 lbl_803E5308;
 
 /*
  * --INFO--
@@ -963,10 +927,7 @@ void ediblemushroom_init(int obj, int aux)
 
 
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
-extern f32 lbl_803E5310;
 
-void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible);
 
 /*
  * --INFO--

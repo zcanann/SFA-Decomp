@@ -4,78 +4,15 @@
 
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern int ObjTrigger_IsSetById();
-extern int ObjTrigger_IsSet();
-extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 objAudioFn_8006ef38();
 
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern void fn_8003A168(int obj, void* p);
-extern void characterDoEyeAnims(int obj, void* p);
-extern int cMenuGetSelectedItem(void);
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void fn_801CDF94(int obj, void* state, int flag);
-extern void fn_801CEE0C(int obj, void* state, void* objDef);
-extern void fn_801CED2C(int obj, void* state, void* objDef);
-extern void fn_801CEA14(int obj, void* state, void* objDef);
-extern void fn_801CE2BC(int obj, void* state, void* objDef);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 
-extern u8 lbl_803267C0[];
-extern u8 lbl_803267E8[];
-extern u8 lbl_80326818[];
-extern ObjHitReactEntry DAT_80327400;
-extern ObjHitReactEntry DAT_80327414;
-extern undefined4 DAT_80327468;
-extern undefined4 DAT_80327498;
-extern undefined4 DAT_803274f4;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern NwMammothPathControlInterface** gPathControlInterface;
 extern f32 timeDelta;
-extern f32 lbl_803DC074;
-extern u32 lbl_803E5208;
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5210;
-extern f32 lbl_803E524C;
-extern f32 lbl_803E5254;
-extern f32 lbl_803E5258;
-extern f32 lbl_803E5EA4;
-extern f32 lbl_803E5EA8;
 
-#define gNwMammothNormalHitReactEntry DAT_80327400
-#define gNwMammothHeavyHitReactEntry DAT_80327414
-#define gNwMammothStateMoveIds DAT_80327468
-#define gNwMammothStateMoveStepScales DAT_80327498
-#define gNwMammothStateFlags DAT_803274f4
 
-#define NW_MAMMOTH_STATE_FLAGS(table) ((u8 *)((table) + 0xf4))
-#define NW_MAMMOTH_MOVE_IDS(table) ((s16 *)((table) + 0x68))
-#define NW_MAMMOTH_MOVE_STEP_SCALES(table) ((f32 *)((table) + 0x98))
-#define NW_MAMMOTH_HIT_REACT_ENTRIES(table) ((ObjHitReactEntry *)(table))
-#define NW_MAMMOTH_HEAVY_HIT_REACT_ENTRIES(table) \
-  ((ObjHitReactEntry *)((table) + sizeof(ObjHitReactEntry)))
-#define NW_MAMMOTH_HIT_REACT_STEP_SCALE(state) ((f32 *)((state) + 0x50))
-#define NW_MAMMOTH_HIT_REACT_STATE(state) ((state)[0x3d4])
 
-enum NwMammothStateFlag
-{
-    NW_MAMMOTH_STATE_FLAG_PATH_CONTROL = 0x01,
-    NW_MAMMOTH_STATE_FLAG_HEAVY_HIT_REACT = 0x02,
-    NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH = 0x04,
-    NW_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT = 0x08,
-    NW_MAMMOTH_STATE_FLAG_MENU_ACTION = 0x10,
-    NW_MAMMOTH_STATE_FLAG_SOLID = 0x20,
-};
 
-enum NwMammothRuntimeFlag
-{
-    NW_MAMMOTH_RUNTIME_PATH_CONTROL = 0x01,
-    NW_MAMMOTH_RUNTIME_ANIM_ENDED = 0x02,
-    NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH = 0x04,
-    NW_MAMMOTH_RUNTIME_MENU_LOCK = 0x10,
-    NW_MAMMOTH_RUNTIME_RESET_PATH = 0x20,
-    NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
-};
 
 /*
  * --INFO--
@@ -205,22 +142,12 @@ typedef struct NwTrickyState
 } NwTrickyState;
 
 
-extern undefined4 FUN_8000680c();
-extern int FUN_80017a90();
 extern int ObjGroup_FindNearestObjectForObject(int group, int* obj, f32* maxDistance);
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void ObjHits_DisableObject(int* obj);
 extern void ObjHits_EnableObject(int* obj);
 extern void fn_80296D20(int playerObj, int* obj);
-extern undefined4 FUN_801ce244();
 
-extern undefined4 DAT_80327428;
-extern undefined4 DAT_80327458;
-extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803e5ea0;
-extern f32 lbl_803E5EE4;
-extern f32 lbl_803E5EEC;
-extern f32 lbl_803E5EF0;
 extern f32 lbl_803E5270;
 extern f32 lbl_803E5274;
 

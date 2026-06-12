@@ -1,50 +1,13 @@
 /* === moved from main/dll/DR/DRCloudball.c [801E9328-801E9344) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DR/dll_0287_spscarab.h"
 
-typedef struct SpscarabPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    s8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} SpscarabPlacement;
 
 
-typedef struct SpscarabState
-{
-    f32 unk0;
-    f32 unk4;
-    s32 unk8;
-    s16 sfxId;
-    s16 mode;
-    s16 unk10;
-    u8 pad12[0x18 - 0x12];
-} SpscarabState;
 
 
-extern f32 sqrtf(f32 x);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern int Obj_GetActiveModel(int obj);
-extern s16 getAngle(f32 dx, f32 dz);
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
-extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
-extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
 
 extern f32 timeDelta;
-extern u16 lbl_803E5A70;
-extern u8 lbl_803E5A72;
-extern f32 lbl_803E5A74;
-extern f32 lbl_803E5A78;
-extern f32 lbl_803E5A7C;
-extern f32 lbl_803E5A80;
-extern f32 lbl_803E5A84;
-extern f32 lbl_803E5A88;
-extern f32 lbl_803E5A8C;
-extern f32 lbl_803E5A90;
-extern f32 lbl_803E5A94;
-extern f64 lbl_803E5A98; /* int->float magic 0x4330000000000000 */
 
 extern void spscarab_hitDetect(void);
 extern void spscarab_render(void);
@@ -190,24 +153,7 @@ typedef struct SpdrapeState
 } SpdrapeState;
 
 
-extern undefined4 ObjGroup_AddObject();
 
-extern f64 DOUBLE_803e6730;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E670C;
-extern f32 lbl_803E6710;
-extern f32 lbl_803E6718;
-extern f32 lbl_803E671C;
-extern f32 lbl_803E6720;
-extern f32 lbl_803E672C;
-extern f32 lbl_803E6738;
-extern f32 lbl_803E673C;
-extern f32 lbl_803E6740;
-extern f32 lbl_803E6744;
-extern f32 lbl_803E6748;
-extern f32 lbl_803E674C;
-extern f32 lbl_803E6750;
-extern f32 lbl_803E6754;
 
 /*
  * --INFO--

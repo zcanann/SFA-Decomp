@@ -2,41 +2,11 @@
 #include "main/dll/DR/DRearthwalk.h"
 
 
-typedef struct ShStaffPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 pad6[0x7 - 0x6];
-    u8 unk7;
-    u8 pad8[0x18 - 0x8];
-    u8 unk18;
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} ShStaffPlacement;
 
 
-typedef struct ShBeaconPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} ShBeaconPlacement;
 
 
 /* sh_beacon_getExtraSize == 0x18. */
-typedef struct ShBeaconState
-{
-    int childObj; /* 0x00: spawned 0x55 flame object */
-    f32 seqTimer; /* 0x04 */
-    f32 fadeTimer; /* 0x08 */
-    f32 burstTimer; /* 0x0c */
-    f32 modeTimer; /* 0x10 */
-    u8 mode; /* 0x14: 0 unlit, 1 lit, 2 igniting */
-    u8 flags15; /* 0x15: bit 7 = looping sfx active (BeaconFlags) */
-    u8 pad16[2];
-} ShBeaconState;
 
 
 
@@ -59,11 +29,7 @@ typedef struct ShBeaconState
 
 
 /* 8b "li r3, N; blr" returners. */
-int sh_beacon_getExtraSize(void);
 
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern void Obj_FreeObject(int obj);
-extern f32 lbl_803E552C;
 extern int lbl_803DDC00;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
@@ -93,11 +59,6 @@ void sh_emptytumblew_update(int obj)
 
 
 
-typedef struct
-{
-    u8 looping : 1;
-    u8 rest : 7;
-} BeaconFlags;
 
 /*
  * --INFO--
@@ -106,7 +67,6 @@ typedef struct
  * EN v1.0 Address: 0x801DAA58
  * EN v1.0 Size: 1080b
  */
-void sh_beacon_update(int obj);
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -117,14 +77,6 @@ void sh_beacon_update(int obj);
 
 #include "global.h"
 
-typedef struct ScMusictreePlacement
-{
-    u8 pad0[0x20 - 0x0];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 pad23[0x28 - 0x23];
-} ScMusictreePlacement;
 
 
 typedef struct ScLevelcontrolProcessAnimEventsState
@@ -135,19 +87,6 @@ typedef struct ScLevelcontrolProcessAnimEventsState
 } ScLevelcontrolProcessAnimEventsState;
 
 
-typedef struct ScMusictreeSpawnAmbientEffectPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    u8 pad8[0x20 - 0x8];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 pad23[0x28 - 0x23];
-} ScMusictreeSpawnAmbientEffectPlacement;
 
 
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
@@ -183,29 +122,9 @@ extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern int FUN_80017a98();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 SH_LevelControl_runBloopEvent();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E61C0;
-extern f32 lbl_803E61C8;
-extern f32 lbl_803E61CC;
-extern f32 lbl_803E61D0;
-extern f32 lbl_803E61D8;
-extern f32 lbl_803E61DC;
-extern f32 lbl_803E61E0;
 extern f32 lbl_803E61E8;
-extern f32 lbl_803E61EC;
-extern f32 lbl_803E61F0;
-extern f32 lbl_803E61F4;
-extern f32 lbl_803E61F8;
-extern f32 lbl_803E61FC;
-extern f32 lbl_803E6200;
-extern f32 lbl_803E6204;
-extern f32 lbl_803E6208;
-extern f32 lbl_803E620C;
-extern f32 lbl_803E6210;
-extern f32 lbl_803E6214;
 
 /*
  * --INFO--
@@ -447,24 +366,7 @@ void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 extern void fn_8003B608(int a, int b, int c);
-extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
-extern f32 lbl_803E558C;
 
-typedef struct SCMusicTreeState
-{
-    int ambientEffect[3];
-    f32 pathPoint[3][3];
-    f32 proximityBurstTimer;
-    f32 animSpeed;
-    f32 scale;
-    f32 proximityCooldown;
-    f32 hitCooldown;
-    int hitCooldownState;
-    u16 hearRadius;
-    s16 previousDistance;
-    u8 flags;
-    u8 pad4D[0x50 - 0x4D];
-} SCMusicTreeState;
 
 
 extern void gameTimerStop(void);
@@ -635,14 +537,10 @@ void sc_levelcontrol_init(int obj)
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int randomGetRange(int lo, int hi);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E5588;
 
 #pragma dont_inline on
 #pragma dont_inline reset

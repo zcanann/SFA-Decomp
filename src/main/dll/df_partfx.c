@@ -10,47 +10,6 @@
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de0af;
-extern f64 DOUBLE_803e1178;
-extern f64 DOUBLE_803e11a0;
-extern f64 DOUBLE_803e11d0;
-extern f64 DOUBLE_803e1218;
-extern f32 lbl_803DC074;
-extern f32 Enabled;
-extern f32 BarnacleEnabled;
-extern f32 lbl_803DE0A8;
-extern f32 lbl_803E1168;
-extern f32 lbl_803E1184;
-extern f32 lbl_803E118C;
-extern f32 lbl_803E1190;
-extern f32 lbl_803E1194;
-extern f32 lbl_803E1198;
-extern f32 lbl_803E119C;
-extern f32 lbl_803E11A8;
-extern f32 lbl_803E11AC;
-extern f32 lbl_803E11B0;
-extern f32 lbl_803E11B4;
-extern f32 lbl_803E11B8;
-extern f32 lbl_803E11C0;
-extern f32 lbl_803E11C4;
-extern f32 lbl_803E11C8;
-extern f32 lbl_803E11D8;
-extern f32 lbl_803E11DC;
-extern f32 lbl_803E11E0;
-extern f32 lbl_803E11E4;
-extern f32 lbl_803E11E8;
-extern f32 lbl_803E11F0;
-extern f32 lbl_803E11F4;
-extern f32 lbl_803E11F8;
-extern f32 lbl_803E11FC;
-extern f32 lbl_803E1200;
-extern f32 lbl_803E1204;
-extern f32 lbl_803E1208;
-extern f32 lbl_803E120C;
-extern f32 lbl_803E1210;
-extern f32 lbl_803E1214;
-extern f32 lbl_803E1220;
-extern f32 lbl_803E122C;
-extern f32 lbl_803E1230;
 
 /*
  * --INFO--
@@ -65,17 +24,8 @@ extern f32 lbl_803E1230;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int* Checkpoint_find(int id, int* slot);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
-extern f32 lbl_803E04D8;
-extern f32 lbl_803E04DC;
-extern f32 lbl_803E04E8;
-extern f32 lbl_803E0504;
-extern f32 lbl_803E050C;
-extern f32 lbl_803E0510;
-extern f32 lbl_803E0514;
-extern f32 lbl_803E0518;
 
 #pragma scheduling off
 #pragma peephole off
@@ -238,7 +188,6 @@ u8 screenTransition_func07(void) { return lbl_803DD42D; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD410;
-void Checkpoint_reset(void);
 
 /* 12b 3-insn patterns. */
 extern u32 lbl_803DD43C;
@@ -282,8 +231,6 @@ void player_clearXZvel(int* obj, int* state)
 
 /* Checkpoint table initialiser. */
 extern u32 lbl_8039CA98[];
-extern void* lbl_803DD41C;
-extern void* lbl_803DD418;
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern f32 lbl_803E0588;
 extern f32 lbl_803E0564;
@@ -566,17 +513,10 @@ void Checkpoint_initialise(void);
 #pragma scheduling reset
 
 /* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
-typedef struct CheckpointSlot
-{
-    u32 key;
-    void* entry;
-} CheckpointSlot;
 
-extern CheckpointSlot lbl_8039C458[];
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void Checkpoint_Add(int* entry);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -1126,14 +1066,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 }
 
 extern f64 lbl_803E0520;
-extern f32 lbl_803E051C;
-extern f32 lbl_803E0528;
-extern f32 lbl_803E052C;
-extern f32 lbl_803E0530;
-extern f32 lbl_803E0534;
-extern f32 lbl_803E0538;
 
-void Checkpoint_func06(int* obj, int* state, int filter);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -1161,56 +1094,14 @@ void Checkpoint_func06(int* obj, int* state, int filter);
  * deref-cleanup wave; curves.h re-exports it). */
 
 
-extern int mathFn_800dbff0(float* point);
 
 
-extern f32 lbl_803E05F0;
-extern int lbl_803DD464;
-extern int lbl_803DD468;
 
-#define OBJFSA_PATCHGROUP_PATCH_COUNT 4
-#define OBJFSA_PATCHGROUP_STRIDE 0x28
-#define OBJFSA_PATCHGROUP_PATCHES_OFFSET 0x3024
-#define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48
-#define OBJFSA_WALKGROUP_COUNT 0xB5
 
-typedef struct ObjfsaPatchPlane
-{
-    s16 normalX;
-    s16 normalZ;
-} ObjfsaPatchPlane;
 
-typedef struct ObjfsaPatch
-{
-    ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
-    f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
-    s16 maxY;
-    s16 minY;
-    u16 groupId;
-    s16 exit0X;
-    s16 exit0Z;
-    s16 exit1X;
-    s16 exit1Z;
-    u8 pad2E[2];
-} ObjfsaPatch;
 
-typedef struct ObjfsaWalkGroup
-{
-    ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
-    f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
-    s16 maxY;
-    s16 minY;
-    u8 patchIndices[OBJFSA_PATCHGROUP_PATCH_COUNT];
-} ObjfsaWalkGroup;
 
-typedef struct ObjfsaWalkGroupPatchInfo
-{
-    u8 walkGroupIndex;
-    u8 patchMask;
-    u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
-} ObjfsaWalkGroupPatchInfo;
 
-extern ObjfsaWalkGroup lbl_8039FAE8[];
 
 
 
@@ -1426,7 +1317,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4, byte param_5);
 
 
 /*
@@ -1485,7 +1375,6 @@ undefined2 FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefin
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, undefined4 param_10, uint param_11);
 
 
 /*
@@ -1501,7 +1390,6 @@ undefined4 FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, uint param_10, undefined4 param_11, int param_12, int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 
 /*
@@ -1517,7 +1405,6 @@ undefined4 FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800ddf84(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 /*
  * --INFO--
@@ -1532,7 +1419,6 @@ undefined4 FUN_800ddf84(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9);
 
 /*
  * --INFO--
@@ -1547,7 +1433,6 @@ undefined4 FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800de998(double param_1, undefined8 param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, int param_10, undefined4 param_11, int param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 /*
  * --INFO--
@@ -1624,7 +1509,6 @@ undefined4 FUN_800de998(double param_1, undefined8 param_2, double param_3, unde
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGroupIndex);
 
 /*
  * --INFO--
@@ -1639,7 +1523,6 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGro
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint isPointWithinPatchGroup(float* point, uint patchGroupIndex, int groupId);
 
 /*
  * --INFO--
@@ -1654,7 +1537,6 @@ uint isPointWithinPatchGroup(float* point, uint patchGroupIndex, int groupId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u16 getPatchGroup(float* point, int patchGroupIndex, undefined4 param_3, undefined4 param_4, u8 startPatchIndex);
 
 /*
  * --INFO--
@@ -1670,7 +1552,6 @@ u16 getPatchGroup(float* point, int patchGroupIndex, undefined4 param_3, undefin
  * PAL Size: TODO
  */
 #pragma peephole on
-uint isInWalkGroupOrPatch(float* point);
 
 /*
  * --INFO--
@@ -1686,7 +1567,6 @@ uint isInWalkGroupOrPatch(float* point);
  * PAL Size: TODO
  */
 #pragma peephole off
-int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patchInfo);
 
 /*
  * --INFO--
@@ -1701,7 +1581,6 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u16 Objfsa_GetPatchGroupIdAtPoint(float* point);
 
 /*
  * --INFO--
@@ -1716,30 +1595,7 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#define WALKGROUP_TRY_RETURN(idx)                                                  \
-    if (Objfsa_IsWalkGroupActive(idx)) {                                           \
-        g = &lbl_8039FAE8[idx];                                                    \
-        y = point[1];                                                              \
-        if (y < (f32)g->maxY && y > (f32)g->minY) {                                \
-            z = point[2];                                                          \
-            x = point[0];                                                          \
-            i = 0;                                                                 \
-            j = i;                                                                 \
-            for (; i < 4; i++, j += 2) {                                           \
-                if (g->planeOffsets[i] +                                           \
-                        (x * (f32)((s16 *)g)[j] + z * (f32)((s16 *)g)[j + 1]) >    \
-                    0.0f) {                                                        \
-                    break;                                                         \
-                }                                                                  \
-            }                                                                      \
-            if (i == 4) {                                                          \
-                lbl_803DD464 = (idx);                                              \
-                return (idx);                                                      \
-            }                                                                      \
-        }                                                                          \
-    }
 
-int mathFn_800dbff0(float* point);
 
 /*
  * --INFO--
@@ -2149,56 +2005,12 @@ void player_updateVel(char* p, char* obj, int unused)
 
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 extern f32 lbl_803E0610;
-extern f32 lbl_803E0614;
-extern f32 lbl_803E0618;
 
 void RomCurve_setA4(void* a, void* b);
 
 
 
-#define ROMCURVE_ADD_LINK(off, mask, wantSet)                                     \
-    neighborId = *(s32 *)(curve + (off));                                         \
-    if (neighborId > -1 && (((*(s8 *)(curve + 0x1b) & (mask)) != 0) == (wantSet)) && \
-        neighborId != -1) {                                                       \
-        candidateIds[candidateCount++] = neighborId;                              \
-    }
 
-#define ROMCURVE_REFRESH_CONTROL(secondOff)                                       \
-    *(f32 *)(stateBytes + 0xb8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x8);    \
-    *(f32 *)(stateBytes + 0xbc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x8); \
-    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
-        mathSinf(lbl_803E0614 *                                                \
-                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / \
-                    lbl_803E0618);                                                \
-    *(f32 *)(stateBytes + 0xc0) = lbl_803E0610 * t;                               \
-    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
-        mathSinf(lbl_803E0614 *                                                \
-                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
-                    lbl_803E0618);                                                \
-    *(f32 *)(stateBytes + 0xc4) = lbl_803E0610 * t;                               \
-    *(f32 *)(stateBytes + 0xd8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0xc);    \
-    *(f32 *)(stateBytes + 0xdc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0xc); \
-    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
-        mathSinf(lbl_803E0614 *                                                \
-                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2d) << 8) / \
-                    lbl_803E0618);                                                \
-    *(f32 *)(stateBytes + 0xe0) = lbl_803E0610 * t;                               \
-    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
-        mathSinf(lbl_803E0614 *                                                \
-                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2d) << 8) / \
-                    lbl_803E0618);                                                \
-    *(f32 *)(stateBytes + 0xe4) = lbl_803E0610 * t;                               \
-    *(f32 *)(stateBytes + 0xf8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x10);   \
-    *(f32 *)(stateBytes + 0xfc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x10); \
-    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
-        mathCosf(lbl_803E0614 *                                                        \
-            (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618); \
-    *(f32 *)(stateBytes + 0x100) = lbl_803E0610 * t;                              \
-    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
-        mathCosf(lbl_803E0614 *                                                        \
-            (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
-            lbl_803E0618);                                                        \
-    *(f32 *)(stateBytes + 0x104) = lbl_803E0610 * t
 
 
 
@@ -2222,7 +2034,6 @@ void RomCurve_setA4(void* a, void* b);
 
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma peephole on
-void RomCurve_stepClamped(float* state, f32 dt);
 
 
 
@@ -2235,40 +2046,12 @@ void RomCurve_stepClamped(float* state, f32 dt);
 
 
 
-extern f32 lbl_803E05FC;
 
 
-#define OBJFSA_CORNER(BASE, OFF, POSOFF)                                        \
-    (f32)((f32)*(s8 *)(OFF) * scale + *(f32 *)((BASE) + (POSOFF)))
 
-#define OBJFSA_SET_PLANE(P, K, XA, ZA)                                          \
-    len = sqrtf(dxn * dxn + dzn * dzn);                                         \
-    if (len != lbl_803E05F0) {                                                  \
-        dxn = dxn / len;                                                        \
-        dzn = dzn / len;                                                        \
-    }                                                                           \
-    (P).planes[K].normalX = (s16)(lbl_803E05FC * dxn);                          \
-    (P).planes[K].normalZ = (s16)(lbl_803E05FC * dzn);                          \
-    (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) +                 \
-                            (f32)(P).planes[K].normalZ * (ZA))
 
-#define OBJFSA_WG(GRP) ((ObjfsaWalkGroup *)((char *)patchBase + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
 
-#define OBJFSA_EXIT_INSIDE(GRP, XF, ZF)                                         \
-    ez = (f32)(ZF);                                                             \
-    ex = (f32)(XF);                                                             \
-    j2 = 0;                                                                     \
-    for (e = 0; e < 4; e++) {                                                   \
-        if (lbl_803E05F0 <                                                      \
-            OBJFSA_WG(GRP)->planeOffsets[e] +                                   \
-                ex * (f32)((s16 *)OBJFSA_WG(GRP))[j2 & 0xff] +                  \
-                ez * (f32)((s16 *)OBJFSA_WG(GRP))[(j2 & 0xff) + 1]) {           \
-            break;                                                              \
-        }                                                                       \
-        j2 += 2;                                                                \
-    }
 
-#define OBJFSA_NEWPATCH (patchBase[lbl_803DD468])
 
 
 
@@ -2312,7 +2095,6 @@ void walkPath_writeU16LE(u32 v, u8* dst);
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 #pragma scheduling on
-void fn_800D9EE8(float* p);
 
 
 #pragma scheduling off

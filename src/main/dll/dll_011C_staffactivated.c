@@ -8,15 +8,12 @@ extern f32 lbl_803E3BBC;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern f64 lbl_803E3BD0;
 extern f32 lbl_803E3BF0;
 extern f32 lbl_803E3BF4;
 extern f32 lbl_803E3BF8;
 extern f32 lbl_803E3BFC;
 
 #define STAFFACTIVATED_STATE_FLAGS 0x1d
-#define STAFFACTIVATED_FLAG_ACTIVE 0x80
-#define STAFFACTIVATED_FLAG_LOCKED 0x40
 
 #define STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER 0x04
 #define STAFFACTIVATED_OBJ_FLAG_LOCKED 0x08
@@ -26,7 +23,6 @@ extern f32 lbl_803E3BFC;
 #define STAFFACTIVATED_MODE_LIFT 2
 #define STAFFACTIVATED_MODE_HIT_REACTION 3
 #define STAFFACTIVATED_MODE_DAMAGE_FIRST 4
-#define STAFFACTIVATED_MODE_DEFAULT 6
 
 #define STAFFACTIVATED_TRIGGER_GAMEBIT 0xd2a
 #define STAFFACTIVATED_ENABLE_GAMEBIT 0x957
@@ -251,7 +247,6 @@ void staffactivated_update(int obj)
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
-extern void ObjHits_DisableObject(int obj);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern f32 mathSinf(f32 angle);
@@ -453,8 +448,5 @@ void staffactivated_init(int obj, int setup)
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3C20;
 
-extern void* lbl_803DDAE0;
 
-extern f32 lbl_803E3C24;
-extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
 

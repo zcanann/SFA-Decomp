@@ -972,7 +972,6 @@ int magicmaker_getObjectTypeId(void) { return 0x0; }
 int dimbosscrackpar_getExtraSize(void) { return 0x0; }
 int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
 int dimbossfire_getExtraSize(void);
-int dimbossfire_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

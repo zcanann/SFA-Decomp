@@ -6,14 +6,7 @@
 extern f32 sqrtf(f32 x);
 extern void* mmAlloc(int size, int heap, int flags);
 
-extern undefined4 FUN_80247e94();
-extern undefined4 FUN_80247eb8();
-extern undefined4 FUN_80247edc();
-extern double SeekTwiceBeforeRead();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
 
-extern f64 DOUBLE_803e4df0;
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E00;
@@ -23,9 +16,6 @@ extern f32 lbl_803E4E0C;
 extern f32 lbl_803E4E10;
 extern f32 lbl_803E4E14;
 extern f32 lbl_803E4E18;
-extern f64 DOUBLE_803e5a88;
-extern f32 lbl_803E5A90;
-extern f32 lbl_803E5A94;
 
 /*
  * --INFO--

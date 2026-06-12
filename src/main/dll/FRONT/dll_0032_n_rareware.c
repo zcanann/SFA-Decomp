@@ -33,19 +33,10 @@ extern u8 lbl_803DD5E8;
 extern uint lbl_803DD5EC;
 extern s8 lbl_803DD5F0;
 extern f32 lbl_803DD5F4;
-extern int lbl_803DD5F8;
-extern u8 lbl_803DD5FC;
-extern f32 lbl_803DD600;
-extern f32 lbl_803DD604;
-extern u8 lbl_803DD608;
-extern u8 lbl_803DD609;
-extern f64 lbl_803E1CE8;
 extern f32 lbl_803E1CF0;
 extern f32 lbl_803E1CF4;
 extern f32 lbl_803E1CF8;
 extern f32 lbl_803E1D00;
-extern f32 lbl_803E1D08;
-extern f32 lbl_803E1D0C;
 
 typedef struct LoadingScreenTexture
 {

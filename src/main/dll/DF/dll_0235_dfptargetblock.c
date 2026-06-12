@@ -4,21 +4,11 @@
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
 
-extern undefined4 FUN_80006b4c();
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(int obj, float param_2);
-extern undefined4 sfxplayer_updateState();
 
-extern undefined4 DAT_803add98;
-extern undefined4 DAT_803add9c;
-extern undefined4 DAT_803adda0;
-extern undefined4 DAT_803adda4;
-extern undefined4 DAT_803adda8;
-extern undefined4 DAT_803addac;
-extern undefined4 DAT_803addb0;
-extern undefined4 DAT_803addb4;
 extern f32 lbl_803E6488;
 extern f32 lbl_803E648C;
 extern f32 lbl_803E6490;

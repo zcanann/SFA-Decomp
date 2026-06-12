@@ -27,26 +27,10 @@ typedef struct SBShipHeadState
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-extern undefined4 getLActions();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 FUN_8003b818();
 
-extern undefined4 DAT_803dc070;
 extern EffectInterface** gPartfxInterface;
-extern undefined4 DAT_803de8c0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E64A8;
-extern f32 lbl_803E64C8;
-extern f32 lbl_803E64CC;
-extern f32 lbl_803E64D0;
-extern f32 lbl_803E64D4;
 
 /*
  * --INFO--
@@ -61,17 +45,7 @@ extern f32 lbl_803E64D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void DBprotection_storeHomePosition(int obj);
 extern int ObjList_GetObjects(int* start, int* end);
-extern void Music_Trigger(s32 snd, s32 mode);
-extern f32 lbl_803E56CC;
-extern void Sfx_StopFromObject(int obj, int sfxId);
-extern u32 fn_801E2570(void);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
-extern f32 lbl_803E57F4;
-extern f32 lbl_803E57F8;
-extern f32 lbl_803E5790;
 extern f32 timeDelta;
 
 
@@ -88,42 +62,7 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    f32 x, y, z;
-} SkyVec3;
 
-extern void setDrawLights(int mode);
-extern void skySetOverrideLightColorEnabled(int on);
-extern void skySetOverrideLightColor(int r, int g, int b);
-extern void skyFn_80089710(int a, int b, int c);
-extern f32 fn_8008ED88(void);
-extern void skyFn_800895e0(int idx, int r, int g, int b, int a, int b2);
-extern void fn_80089510(int idx, int r, int g, int b);
-extern void fn_80089578(int idx, int r, int g, int b);
-extern void skySetOverrideLightDirectionEnabled(int on);
-extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 w);
-extern void skyFn_800894a8(int idx, f32 x, f32 y, f32 z);
-extern int* Obj_GetActiveModel(int obj);
-extern int ObjModel_GetRenderOp(int model, int idx);
-extern f32 lbl_802C23F8[12];
-extern u8 lbl_803DC078[4];
-extern u8 lbl_803DC07C[4];
-extern u8 lbl_803DC080[4];
-extern u8 lbl_803DC084[4];
-extern u8 lbl_803DC088[4];
-extern u8 lbl_803DC08C[4];
-extern f32 lbl_803DDC24;
-extern f32 lbl_803DDC28;
-extern u8 lbl_803DDC2D;
-extern u8 lbl_803DDC30[3];
-extern u8 lbl_803DDC34[3];
-extern u8 lbl_803DDC38[3];
-extern f32 lbl_803E57A4;
-extern f32 lbl_803E57B4;
-extern f32 lbl_803E57E0;
-extern f32 lbl_803E57F0;
-extern f32 lbl_803E5724;
 
 
 
@@ -140,16 +79,8 @@ extern f32 lbl_803E5724;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u8 framesThisStep;
-extern f32 lbl_803E5810;
-extern f32 lbl_803E5814;
-extern f32 lbl_803E5818;
-extern f32 lbl_803E581C;
-extern f32 lbl_803E5820;
-extern f32 lbl_803E5824;
 
 
 /*
@@ -193,21 +124,9 @@ extern f32 lbl_803E5824;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u32 getSbGalleon(void);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
-extern u8 lbl_803DC090;
-extern int lbl_803DDC48;
-extern f32 lbl_803E5834;
-extern f32 lbl_803E5840;
-extern f32 lbl_803E5844;
-extern f32 lbl_803E5848;
-extern f32 lbl_803E584C;
-extern f32 lbl_803E5850;
-extern f32 lbl_803E5854;
-extern f32 lbl_803E5858;
-extern f32 lbl_803E585C;
 extern f32 sqrtf(f32);
 
 
@@ -220,21 +139,13 @@ extern f32 sqrtf(f32);
 
 
 
-extern f32 lbl_803E586C;
-extern f32 lbl_803E5870;
-extern f32 lbl_803E5874;
-extern f32 lbl_803E5878;
 
-void SB_ShipMast_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
 /* sda21 accessors. */
 extern u32 gSbGalleon;
-extern u32 lbl_803DDC40;
-u32 getSbGalleon(void);
-u32 fn_801E2570(void);
 
 /* Pattern wrappers. */
 
@@ -242,7 +153,6 @@ u32 fn_801E2570(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5868;
 
 
 
@@ -260,12 +170,6 @@ void SB_ShipGun_free(int param_1)
 
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 extern f32 lbl_803E57FC;
-extern f32 lbl_803E5800;
-extern f32 lbl_803E5804;
-extern f32 lbl_803E5808;
-extern f32 lbl_803E5738;
-extern f32 lbl_803E56F0;
-extern f32 lbl_803E56C8;
 
 
 
@@ -277,12 +181,6 @@ extern f32 lbl_803E56C8;
  * EN v1.0 Address: 0x801E21AC
  * EN v1.0 Size: 568b
  */
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int idx, int p2);
-extern void fn_801DFA28(int obj);
-extern void DBprotection_updateShield(int obj);
-extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 
 /*
@@ -292,22 +190,13 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * EN v1.0 Address: 0x801E23E4
  * EN v1.0 Size: 388b
  */
-extern void objSetSlot(void* obj, int slot);
-extern void* textureLoadAsset(int id);
-extern int lbl_803DDC18;
-extern int lbl_803DDC1C;
-extern f32 lbl_803E580C;
 
 
 
 /* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
-extern void textureFree(void* tex);
 
 
 /* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
-extern void ObjMsg_AllocQueue(int obj, int n);
-extern f32 lbl_803E5830;
-extern f32 lbl_803E5838;
 
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
@@ -385,16 +274,6 @@ typedef struct SBCannonBallState
 
 extern void ModelLightStruct_free(void* effect);
 
-extern f32 lbl_803E6520;
-extern f32 lbl_803E6524;
-extern f32 lbl_803E6528;
-extern f32 lbl_803E652C;
-extern f32 lbl_803E6530;
-extern f32 lbl_803E6534;
-extern f32 lbl_803E6538;
-extern f32 lbl_803E653C;
-extern f32 lbl_803E6540;
-extern f32 lbl_803E6544;
 
 /*
  * --INFO--
@@ -763,13 +642,10 @@ void SB_CannonBall_free(int obj)
 }
 
 int SB_FireBall_getExtraSize(void);
-int SB_FireBall_getObjectTypeId(void);
 
-void SB_FireBall_free(int obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E58B0;
-extern f32 lbl_803E58D8;
 
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

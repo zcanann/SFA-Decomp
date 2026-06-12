@@ -38,15 +38,12 @@ extern undefined4 DAT_803dcb6a;
 extern undefined4 DAT_803dcb6c;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
-extern f64 DOUBLE_803e5558;
 extern f64 DOUBLE_803e5578;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DCB5C;
 extern f32 lbl_803DCB60;
 extern f32 lbl_803DCB64;
 extern f32 lbl_803DCB70;
-extern f32 lbl_803E5584;
-extern f32 lbl_803E5588;
 
 /*
  * --INFO--
@@ -1007,14 +1004,6 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct DimbridgecogmaiObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    u8 pad1A[0x1C - 0x1A];
-    u8 unk1C;
-    u8 pad1D[0x20 - 0x1D];
-} DimbridgecogmaiObjectDef;
 
 
 typedef struct DimlavasmashObjectDef
@@ -1027,26 +1016,10 @@ typedef struct DimlavasmashObjectDef
 } DimlavasmashObjectDef;
 
 
-typedef struct DimbridgecogmaiPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} DimbridgecogmaiPlacement;
 
 
-typedef struct DimdismountpointState
-{
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-} DimdismountpointState;
 
 
-extern undefined4 ObjGroup_AddObject();
 
 /*
  * --INFO--
@@ -1110,33 +1083,22 @@ void dimlavasmash_initialise(void)
 
 
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-extern void objRenderFn_80041018(int obj);
-extern f32 lbl_803E4910;
 
 
-extern f32 lbl_803E4908;
-extern f32 lbl_803E4914;
-extern f32 lbl_803E4918;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 extern unsigned long GameBit_Set(int eventId, int value);
 
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4900;
 extern void objRenderFn_8003b8f4(f32);
 
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
-void dimbridgecogmai_release(void);
-
-int dimdismountpoint_getObjectTypeId(void);
 
 
-extern f32 lbl_803E490C;
+
 
 
 

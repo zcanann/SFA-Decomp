@@ -18,28 +18,15 @@ typedef struct DFDoorSpeciExtra
     u8 pad04[2];
 } DFDoorSpeciExtra;
 
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern void ObjGroup_AddObject(int obj, int group);
 extern u32 GameBit_Get(int eventId);
 extern int* objFindTexture(int obj, int a, int b);
-extern void textureFree(void* resource);
-extern void* textureLoadAsset(int assetId);
-extern f32 sqrtf(f32 x);
 extern f32 mathCosf(f32 x);
 extern u8 framesThisStep;
-extern int lbl_803DBF40;
-extern void* lbl_803DBF48;
-extern f32 lbl_803DBF50;
-extern u8 lbl_803DBF58;
-extern f32 lbl_803E4DFC;
-extern f32 lbl_803E4E24;
-extern f32 lbl_803E4E28;
 extern f32 lbl_803E4E30;
 extern f32 lbl_803E4E34;
 extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
-extern f64 lbl_803E4E48;
 
 /*
  * --INFO--
@@ -206,42 +193,8 @@ int dfsh_door2speci_getObjectTypeId(void)
 extern uint GameBit_Get(int eventId);
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
-extern void ModelLightStruct_free(void* light);
-extern void gameTimerStop(void);
-extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int mapDir, int mode, int flags);
-extern void Music_Trigger(int trackId, int mode);
-extern void GameBit_Set(int bit, int value);
-extern u8* Obj_GetPlayerObject(void);
-extern void fn_80296518(void* obj, int arg, int enable);
-extern f32 Vec_xzDistance(void* a, void* b);
-extern f32 mathSinf(f32 angle);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
-extern f32 timeDelta;
-extern f32 lbl_803E4E50;
-extern f32 lbl_803E4E54;
-extern f32 lbl_803E4E58;
-extern f32 lbl_803E4E5C;
-extern f32 lbl_803E4E60;
-extern f32 lbl_803E4E64;
-extern f32 lbl_803E4E68;
-extern f32 lbl_803E4E6C;
-extern f32 lbl_803E4E70;
-extern f32 lbl_803E4E74;
-extern f32 lbl_803E4E78;
-extern f32 lbl_803E4E88;
 
-typedef struct DFlanternShrineState
-{
-    void* light;
-    u8 pad04[0x14 - 0x04];
-    s16 orbitA;
-    s16 orbitB;
-    s16 orbitC;
-    u8 pad1a[0x1c - 0x1a];
-    u8 flags;
-} DFlanternShrineState;
 
 /*
  * --INFO--
@@ -422,11 +375,6 @@ void dfsh_door2speci_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct LanternFlagBits
-{
-    u8 on : 1;
-    u8 rest : 7;
-} LanternFlagBits;
 
 
 /*

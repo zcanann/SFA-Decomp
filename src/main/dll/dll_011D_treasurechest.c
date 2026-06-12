@@ -6,20 +6,7 @@
 
 extern uint GameBit_Get(int eventId);
 extern void ObjHits_DisableObject(int obj);
-extern void ObjGroup_AddObject(int obj, int group);
-extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
 
-extern f32 lbl_803E3BBC;
-extern f32 lbl_803E3BF4;
-extern f32 lbl_803E3BF8;
-extern f32 lbl_803E3C08;
-extern f32 lbl_803E3C0C;
-extern f32 lbl_803E3C10;
-extern f32 lbl_803E3C14;
-extern f32 lbl_803E3C18;
-extern f64 lbl_803E3BD0;
 
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
@@ -166,7 +153,6 @@ extern void* Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
 extern void fn_802967E0(void* obj, int enabled);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern void Music_Trigger(s32 triggerId, s32 mode);
 
 typedef struct ChestHitParams
 {

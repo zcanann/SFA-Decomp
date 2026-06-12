@@ -39,21 +39,11 @@ extern undefined4* DAT_803dd6e4;
 extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e6938;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
 extern f32 lbl_803E6908;
-extern f32 lbl_803E690C;
 extern f32 lbl_803E6924;
 extern f32 lbl_803E6928;
 extern f32 lbl_803E692C;
 extern f32 lbl_803E6930;
-extern f32 lbl_803E6940;
-extern f32 lbl_803E6944;
-extern f32 lbl_803E6948;
-extern f32 lbl_803E694C;
-extern f32 lbl_803E6950;
-extern f32 lbl_803E6954;
-extern f32 lbl_803E6958;
 
 /*
  * --INFO--
@@ -235,7 +225,6 @@ void SB_CloudRunner_initialise(void)
 
 void WM_ObjCreator_free(void);
 
-void WM_ObjCreator_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801EEDAC(void) { return 0x0; }
@@ -247,13 +236,10 @@ int fn_801EEE34(void) { return 0x0; }
 int SB_CloudRunner_getExtraSize(void) { return 0x84; }
 int SB_CloudRunner_getObjectTypeId(void) { return 0x43; }
 int WM_ObjCreator_getExtraSize(void);
-int WM_ObjCreator_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5CC8;
 extern void objRenderFn_8003b8f4(f32);
 
-void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 lbl_803E5C70;
 
@@ -453,7 +439,6 @@ extern int ObjHits_GetPriorityHitWithPosition(int obj, int* outHit, int* p3, int
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void doRumble(f32 val);
-extern void GameBit_Set(int id, int v);
 extern f32 lbl_803E5CB8;
 extern f32 lbl_803E5C74;
 
@@ -623,7 +608,6 @@ void SB_CloudRunner_init(int* obj)
 extern void setAButtonIcon(int idx);
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
-extern f32 lbl_803E5CA0;
 extern f32 lbl_803E5CBC;
 extern f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);

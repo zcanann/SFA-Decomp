@@ -4,32 +4,10 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-typedef struct Dll197State
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    s16 unk4;
-    u8 pad6[0x8 - 0x6];
-    s16 unk8;
-    s16 unkA;
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 pad11[0x18 - 0x11];
-} Dll197State;
 
 
-extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8003b818();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e5de0;
-extern f32 lbl_803E5DD0;
-extern f32 lbl_803E5DD4;
-extern f32 lbl_803E5DD8;
-extern f32 lbl_803E5DDC;
 
 /*
  * --INFO--
@@ -44,10 +22,6 @@ extern f32 lbl_803E5DDC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E513C;
-extern f32 lbl_803E5140;
-extern f32 lbl_803E5144;
-extern f64 lbl_803E5148;
 
 
 
@@ -150,7 +124,6 @@ int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5158;
 
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -199,16 +172,10 @@ void nwsh_levcon_init(int* obj)
 }
 
 extern ModgfxInterface** gModgfxInterface;
-extern void* gTitleMenuControlInterface;
 
-void dll_199_free(int* obj);
 
 extern void* Obj_GetPlayerObject(void);
 extern void fn_80296518(void* player, int a, int b);
-extern int getButtonsHeld(int pad);
-extern int return0_8005669C(int p);
-extern int lbl_803DB610;
-extern u32 lbl_803DDBD8;
 
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

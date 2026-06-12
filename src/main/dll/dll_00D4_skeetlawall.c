@@ -2,56 +2,16 @@
 #include "main/objseq.h"
 #include "main/object_descriptor.h"
 
-typedef struct DllD3Placement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x2E - 0x14];
-    u8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DllD3Placement;
 
 
-extern u32 randomGetRange(int min, int max);
-extern void* Obj_GetPlayerObject(void);
-extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
-extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
-extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
 extern void objRenderFn_8003b8f4(f32);
-extern void ObjHits_DisableObject(int obj);
-extern f32 sqrtf(f32);
-extern void* memset(void* dst, int val, u32 size);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern int* gBaddieControlInterface;
-extern int* gPlayerInterface;
 
-extern int lbl_803202E8[];
-extern int lbl_80320360[];
-extern int lbl_803AC638[];
-extern void* gLandedArwingStateHandlers[];
-extern void* gLandedArwingDefaultStateHandler;
 
-extern f32 timeDelta;
-extern double lbl_803E3040;
-extern f32 lbl_803E3030;
-extern f32 lbl_803E3034;
-extern f32 lbl_803E3038;
-extern f32 lbl_803E3048;
 extern f32 lbl_803E3058;
-extern f32 lbl_803E2FDC;
-extern f32 lbl_803E2FF4;
 
-extern void fn_801659B8(void);
-extern void LandedArwing_UpdateRetreatChase(void);
-extern void LandedArwing_UpdateBounceFade(void);
-extern void LandedArwing_TriggerLaunchTarget(void);
-extern void LandedArwing_ReturnZero(void);
 
 extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
-extern void fn_80167550(int* obj);
 
 /*
  * --INFO--
@@ -60,7 +20,6 @@ extern void fn_80167550(int* obj);
  * EN v1.0 Address: 0x80166F2C
  * EN v1.0 Size: 1228b
  */
-void dll_D3_update(int* obj);
 
 /*
  * --INFO--
@@ -69,13 +28,10 @@ void dll_D3_update(int* obj);
  * EN v1.0 Address: 0x801673F8
  * EN v1.0 Size: 344b
  */
-void dll_D3_init(int obj, int def, int flag);
 
-void dll_D3_initialise(void);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_D3_release_nop(void);
 
 void skeetlawall_free(void)
 {
@@ -158,7 +114,6 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     0,
 };
 
-void fn_80167550(int* obj);
 
 void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte)
 {

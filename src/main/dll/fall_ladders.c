@@ -5,23 +5,12 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fall_ladders.h"
 
-extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
-extern int FUN_80006a10();
-extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017778();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
-extern double FUN_80293900();
 
-extern undefined4 DAT_803dc930;
-extern undefined4* DAT_803dd718;
-extern undefined4* DAT_803dd71c;
-extern f64 DOUBLE_803e35d0;
-extern f64 DOUBLE_803e35f8;
-extern f64 DOUBLE_803e3640;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E358C;
 extern f32 lbl_803E35A4;
@@ -34,25 +23,11 @@ extern f32 lbl_803E35D8;
 extern f32 lbl_803E35DC;
 extern f32 lbl_803E35E0;
 extern f32 lbl_803E35E4;
-extern f32 lbl_803E35E8;
-extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E3600;
 extern f32 lbl_803E3604;
 extern f32 lbl_803E3608;
 extern f32 lbl_803E360C;
-extern f32 lbl_803E3610;
-extern f32 lbl_803E3614;
-extern f32 lbl_803E3618;
-extern f32 lbl_803E361C;
-extern f32 lbl_803E3620;
-extern f32 lbl_803E3624;
-extern f32 lbl_803E3628;
-extern f32 lbl_803E362C;
-extern f32 lbl_803E3630;
-extern f32 lbl_803E3634;
-extern f32 lbl_803E3638;
-extern f32 lbl_803E363C;
 
 /*
  * --INFO--
@@ -117,7 +92,6 @@ extern f32 lbl_803E2998;
 extern f32 lbl_803E299C;
 extern f32 lbl_803E29A0;
 extern f32 lbl_803E29A4;
-extern f64 lbl_803E29A8;
 extern f32 lbl_803E29B0;
 extern f32 lbl_803E29B4;
 extern f32 lbl_803E29B8;
@@ -127,7 +101,6 @@ extern f32 lbl_803E29C4;
 extern f64 lbl_803E29C8;
 extern f32 lbl_803E29D0;
 extern f32 lbl_803E29D4;
-extern f64 lbl_803E29D8;
 
 #pragma scheduling off
 #pragma peephole off

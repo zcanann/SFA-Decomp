@@ -11,31 +11,13 @@ typedef struct MmshShrineState
 } MmshShrineState;
 
 
-extern undefined8 FUN_80006b14();
-extern char FUN_80006bd0();
-extern undefined4 FUN_800175cc();
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
-extern undefined4 FUN_80017710();
-extern uint FUN_80017730();
-extern int FUN_80017a98();
 extern void fn_8011F6D4(int p);
 extern int fn_801C49B8(int obj);
 extern int Obj_GetPlayerObject(void);
-extern undefined4 FUN_8002fc3c();
-extern int FUN_8005398c();
-extern undefined4 FUN_8011eb10();
-extern undefined4 FUN_8011eb1c();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294ccc();
 extern void fn_80296518(int obj, int arg, int enable);
 
-extern void* DAT_803de838;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e5bd0;
-extern f64 lbl_803E4F38;
-extern f32 lbl_803DC074;
 extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;
@@ -43,25 +25,6 @@ extern f32 lbl_803E4F54;
 extern f32 lbl_803E4F58;
 extern f32 lbl_803E4F5C;
 extern f32 lbl_803E4F60;
-extern f32 lbl_803E5B58;
-extern f32 lbl_803E5BA0;
-extern f32 lbl_803E5BA4;
-extern f32 lbl_803E5BA8;
-extern f32 lbl_803E5BAC;
-extern f32 lbl_803E5BB8;
-extern f32 lbl_803E5BBC;
-extern f32 lbl_803E5BC0;
-extern f32 lbl_803E5BC4;
-extern f32 lbl_803E5BC8;
-extern f32 lbl_803E5BD8;
-extern f32 lbl_803E5BDC;
-extern f32 lbl_803E5BE0;
-extern f32 lbl_803E5BE4;
-extern f32 lbl_803E5BE8;
-extern f32 lbl_803E5BEC;
-extern f32 lbl_803E5BF0;
-extern f32 lbl_803E5BF4;
-extern f32 lbl_803E5BF8;
 
 #define MMSH_SHRINE_FLAG_LIT 0x4000
 #define MMSH_SHRINE_LOAD_MAP_DIR 0x20
@@ -475,50 +438,14 @@ void mmsh_shrine_update(int objArg)
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct MmshWaterspikePlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x14 - 0x10];
-    s32 unk14;
-} MmshWaterspikePlacement;
 
 
-typedef struct MmshScalesState
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x14 - 0x10];
-    s32 unk14;
-    u8 pad18[0x24 - 0x18];
-    f32 unk24;
-    s32 unk28;
-    u8 pad2C[0x6A - 0x2C];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 pad70[0x140 - 0x70];
-} MmshScalesState;
 
 
-typedef struct MmshWaterspikeObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x24 - 0x1E];
-    u8 unk24;
-    u8 pad25[0x28 - 0x25];
-} MmshWaterspikeObjectDef;
 
 
-extern undefined4 SH_LevelControl_runBloopEvent();
 extern int objCreateLight(int param_1, int param_2);
-extern void Obj_FreeObject(void* obj);
 
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern f64 DOUBLE_803e5c08;
 
 /*
  * --INFO--
@@ -598,29 +525,16 @@ void mmsh_shrine_initialise(void)
 
 void mmsh_scales_hitDetect(void);
 
-void mmsh_scales_release(void);
 
-void mmsh_scales_initialise(void);
 
-void mmsh_waterspike_free(void);
 
-void mmsh_waterspike_hitDetect(void);
 
-void mmsh_waterspike_release(void);
 
-void mmsh_waterspike_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int mmsh_scales_getExtraSize(void);
-int mmsh_scales_getObjectTypeId(void);
-int mmsh_waterspike_getExtraSize(void);
-int mmsh_waterspike_getObjectTypeId(void);
-void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4F68;
 
-void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /*
  * --INFO--
@@ -629,24 +543,7 @@ void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
  * EN v1.0 Address: 0x801C57B0
  * EN v1.0 Size: 380b
  */
-extern void* ObjList_FindObjectById(int id);
-extern f32 objFn_801948c0(void* obj, int param_2);
-extern void fn_80137948(char* fmt, ...);
-extern char sWaterSpikeInvalidXyzAnimIdWarning[];
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
-extern u8 framesThisStep;
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E4F80;
-extern f32 lbl_803E4F84;
-extern f32 lbl_803E4F88;
 
-void mmsh_waterspike_update(int obj);
 
-void mmsh_waterspike_init(int obj, s16* def);
 
-extern f32 lbl_803E4F78;
-extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int type);
-extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 
-void mmsh_scales_init(int* obj, s16* def);

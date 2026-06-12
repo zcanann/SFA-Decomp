@@ -46,12 +46,6 @@ struct WCTileIface
 #define WCTILE_GAMEBIT_B_HIDE 0x813
 #define WCTILE_GAMEBIT_B_FADE 0x809
 
-#define WCTILE_IFACE(state) (*(WCTileIface **)(*(int *)(WCTILE_CONTROLLER(state) + 0x68)))
-#define WCTILE_CONTROLLER(state) (*(int *)((u8 *)(state) + WCTILE_STATE_CONTROLLER))
-#define WCTILE_TILE_X(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_TILE_X))
-#define WCTILE_TILE_Y(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_TILE_Y))
-#define WCTILE_TARGET_TILE(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_TARGET_TILE))
-#define WCTILE_MODE(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_MODE))
 
 typedef struct WCTileState
 {

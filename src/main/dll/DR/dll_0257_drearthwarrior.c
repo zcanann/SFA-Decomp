@@ -199,7 +199,6 @@ typedef struct
     f32 m[4][4];
 } EWColorTbl;
 
-extern f32 lbl_803E8310;
 extern f32 lbl_803E8314;
 extern f32 lbl_803E8318;
 extern f32 lbl_803E831C;
@@ -228,7 +227,6 @@ extern f32 lbl_803E8384;
 extern f32 lbl_803E8388;
 extern f32 lbl_803E838C;
 extern f32 lbl_803E8394;
-extern f32 lbl_803E82F0;
 extern f32 GXIndTexMtxScale1024;
 extern f32 oneOverTimeDelta;
 extern int lbl_803E82D8;

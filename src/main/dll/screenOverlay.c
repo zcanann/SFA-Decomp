@@ -3,25 +3,10 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-typedef struct LevelnameState
-{
-    u8 pad0[0x8 - 0x0];
-    s32 unk8;
-    u8 padC[0xE - 0xC];
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
-    u8 pad14[0x18 - 0x14];
-} LevelnameState;
 
 
-extern void* memset(void* dest, int value, u32 size);
-extern int* Obj_GetPlayerObject(void);
 extern void GameBit_Set(int gameBit, int value);
-extern int* gameTextGet(int textId);
 
-extern u8 lbl_80320F30[];
-extern f32 lbl_803E369C;
 
 
 /*
@@ -58,24 +43,13 @@ void area_release(void);
 void area_initialise(void);
 
 /* Trivial 4b 0-arg blr leaves. */
-void levelname_free(void);
 
-void levelname_render(void);
 
-void levelname_hitDetect(void);
 
-void levelname_release(void);
 
-void levelname_initialise(void);
 
 extern u8 framesThisStep;
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern f32 mathSinf(f32 v);
-extern f32 lbl_803E36E0;
-extern f32 lbl_803E36E4;
-extern f32 lbl_803E36E8;
 
-void levelname_update(int* obj);
 
 
 void ProjectileSwitch_free(void)
@@ -84,7 +58,6 @@ void ProjectileSwitch_free(void)
 
 /* 8b "li r3, N; blr" returners. */
 int levelname_getExtraSize(void);
-int levelname_getObjectTypeId(void);
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
 int ProjectileSwitch_getObjectTypeId(int* obj)
@@ -185,16 +158,12 @@ extern u8 lbl_80321008[];
 extern f32 lbl_803E3700;
 extern f32 lbl_803E3704;
 extern f32 lbl_803E3708;
-extern f64 lbl_803E3710;
 extern f32 lbl_803E3718;
-extern f64 lbl_803E3720;
 extern f32 lbl_803E3728;
 extern f32 lbl_803E3730;
 extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
 extern f32 lbl_803E373C;
-extern f64 lbl_803E3740;
-extern f64 lbl_803E3748;
 
 
 /*

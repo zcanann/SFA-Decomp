@@ -85,32 +85,11 @@ extern undefined8 ObjGroup_RemoveObject();
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern void dll_2E_func06();
-extern uint countLeadingZeros();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern undefined4* gBoneParticleEffectInterface;
-extern f64 DOUBLE_803e6698;
-extern f64 DOUBLE_803e66f0;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E59D8;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E6670;
-extern f32 lbl_803E6674;
-extern f32 lbl_803E6688;
-extern f32 lbl_803E66B8;
-extern f32 lbl_803E66BC;
-extern f32 lbl_803E66C0;
-extern f32 lbl_803E66C8;
-extern f32 lbl_803E66CC;
-extern f32 lbl_803E66D0;
-extern f32 lbl_803E66D4;
-extern f32 lbl_803E66D8;
-extern f32 lbl_803E66DC;
-extern f32 lbl_803E66E0;
-extern f32 lbl_803E66E4;
-extern f32 lbl_803E66E8;
-extern f32 lbl_803E66F8;
-extern void** gTitleMenuControlInterfaceCopy;
 
 /*
  * --INFO--
@@ -489,7 +468,6 @@ void shopitem_initialise(void)
 
 void spscarab_render(void);
 
-void spscarab_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int shopkeeper_getExtraSize(void) { return 0x9d8; }
@@ -497,10 +475,7 @@ int shopkeeper_getObjectTypeId(void) { return 0x0; }
 int shopitem_getExtraSize(void) { return 0xec; }
 int shopitem_getObjectTypeId(void) { return 0x0; }
 int spscarab_getExtraSize(void);
-int spscarab_getObjectTypeId(void);
 
-extern void Sfx_RemoveLoopedObjectSound(int x, int y);
-void spscarab_free(int x);
 
 extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);
@@ -590,17 +565,6 @@ extern void dll_2E_func03(int, int);
 extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
 extern int* gPlayerInterface;
 
-typedef struct
-{
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 bit20 : 1;
-    u8 bit10 : 1;
-    u8 bit08 : 1;
-    u8 bit04 : 1;
-    u8 bit02 : 1;
-    u8 bit01 : 1;
-} BitsAt9D4;
 
 void shopkeeper_update(int obj)
 {

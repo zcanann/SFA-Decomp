@@ -25,43 +25,7 @@ typedef struct TitleMenuItem
     } extra;
 } TitleMenuItem;
 
-typedef struct LinkTextureSlot
-{
-    void* texture;
-    s16 assetId;
-    u8 width;
-    u8 pad7;
-} LinkTextureSlot;
 
-typedef struct LinkMenuItem
-{
-    u16 textId;
-    u16 boxId;
-    s16 field04;
-    s16 field06;
-    s16 field08;
-    s16 x;
-    s16 y;
-    u8 pad0E[2];
-
-    union
-    {
-        int textureAssetId;
-        void* texture;
-    };
-
-    u16 field14;
-    u16 flags;
-    u8 pad18[2];
-    s8 upLink;
-    s8 downLink;
-    s8 leftLink;
-    s8 rightLink;
-    s8 state;
-    s8 slots[25];
-    s8 timer;
-    u8 pad39[3];
-} LinkMenuItem;
 
 #define TITLE_MENU_FLAG_ENABLED        0x01
 #define TITLE_MENU_FLAG_WRAP           0x02
@@ -72,100 +36,10 @@ typedef struct LinkMenuItem
 #define TITLE_MENU_FLAG_VOLUME_PREVIEW 0x40
 #define TITLE_MENU_FLAG_MUSIC_PREVIEW  0x80
 
-#define LINK_FLAG_DISABLE_NAV_TO 0x1000
-#define LINK_FLAG_NO_ACCEPT      0x0020
-#define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
 
-extern undefined8 FUN_80003494();
-extern undefined4 FUN_800067b0();
-extern undefined4 FUN_80006818();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
-extern undefined8 FUN_80006b9c();
-extern undefined4 FUN_80006ba8();
-extern undefined4 FUN_80006bac();
-extern undefined4 FUN_80006bb0();
-extern undefined4 FUN_80006bb4();
-extern undefined4 FUN_80006c6c();
-extern undefined4 FUN_80017460();
-extern undefined4 FUN_80017480();
-extern undefined4 FUN_80017484();
-extern undefined4 FUN_8001750c();
-extern undefined4 FUN_80017510();
-extern uint GameBit_Get(int eventId);
-extern int FUN_800176d0();
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern undefined4 FUN_80053754();
-extern int FUN_8005398c();
-extern undefined4 FUN_800709e8();
-extern undefined8 FUN_800723a0();
-extern undefined8 FUN_80130434();
-extern undefined4 FUN_80130588();
-extern undefined4 FUN_8013074c();
-extern undefined8 FUN_80286824();
-extern undefined2 FUN_8028683c();
-extern undefined2 FUN_80286840();
-extern undefined4 FUN_80286870();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern int getHudHiddenFrameCount(void);
-extern void padGetAnalogInput(int pad, s8* x, s8* y);
-extern void padClearAnalogInputY(int pad);
-extern void padClearAnalogInputX(int pad);
 extern u32 getButtonsJustPressed(int pad);
-extern void buttonDisable(int pad, int mask);
-extern void linkDrawFn_801302c0(void);
-extern void linkDrawFn_80130484(void);
-extern u8 framesThisStep;
-extern u8 linkIsRotated;
-extern u8 linkFlag_803dd8f8;
-extern s16 linkCount_803dd90e;
-extern s8 lbl_803DD910;
-extern s8 lbl_803DD911;
-extern s8 linkSelected;
-extern s8 lbl_803DD913;
-extern LinkMenuItem lbl_803A9458[40];
 
-extern undefined4 DAT_8031cdf8;
-extern undefined4 DAT_8031ce04;
-extern short DAT_8031cef8;
-extern undefined2 DAT_803aa0b8;
-extern undefined4 DAT_803aa0bc;
-extern undefined4 DAT_803aa0c2;
-extern undefined4 DAT_803aa0cc;
-extern undefined4 DAT_803aa0ce;
-extern undefined4 DAT_803aa0d2;
-extern undefined4 DAT_803aa0d3;
-extern undefined4 DAT_803aa0d4;
-extern undefined4 DAT_803aa0d5;
-extern undefined4 DAT_803aa0d6;
-extern int DAT_803aaa18;
-extern undefined4 DAT_803aaa1c;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de578;
-extern undefined4 DAT_803de579;
-extern undefined4 DAT_803de57a;
-extern undefined4 DAT_803de57c;
-extern undefined4 DAT_803de57e;
-extern undefined4 DAT_803de580;
-extern undefined4 DAT_803de582;
-extern undefined4 DAT_803de584;
-extern undefined4* DAT_803de588;
-extern undefined4 DAT_803de58c;
-extern undefined4 DAT_803de58e;
-extern undefined4 DAT_803de590;
-extern undefined4 DAT_803de591;
-extern undefined4 DAT_803de592;
-extern undefined4 DAT_803de593;
-extern undefined4 DAT_803de598;
-extern undefined4 DAT_803de5a0;
-extern f64 DOUBLE_803e2e78;
-extern f32 FLOAT_803de59c;
-extern f32 FLOAT_803e2e80;
-extern f32 FLOAT_803e2e84;
-extern f32 FLOAT_803e2e88;
 
 /*
  * --INFO--
@@ -490,7 +364,6 @@ void Dummy3E_initialise(void)
 extern u8 linkTextures[0x30];
 extern s16 lbl_8031C2A8[6];
 extern void mm_free(void);
-extern void fn_8001BDD4(int);
 
 /* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
@@ -526,21 +399,7 @@ void TitleMenuItem_initialise(void)
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void* textureLoadAsset(int id);
 extern void textureFree(void* p);
-extern void fn_8001BE2C(int mode);
 extern void* mmAlloc(int size, int heap, int flags);
-extern void* memcpy(void* dst, const void* src, int size);
-extern void OSReport(const char* fmt, ...);
-extern void padFn_80014b18(int value);
-extern s16 linkItemOpacity;
-extern s16 lbl_803DD8FA;
-extern s16 lbl_803DD8FC;
-extern s16 lbl_803DD8FE;
-extern s16 lbl_803DD900;
-extern s16 lbl_803DD902;
-extern s16 lbl_803DD904;
-extern const char* lbl_803DD908;
-extern char lbl_8031C1A8[];
-extern void linkInitTextures(LinkMenuItem* item);
 
 
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
@@ -646,9 +505,7 @@ void fn_80131F0C(void)
 
 void Link_release(void);
 
-void Link_initialise(void);
 
-void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2, int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue);
 
 void TitleMenuItem_release(void)
 {

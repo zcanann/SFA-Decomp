@@ -2,27 +2,11 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
-extern undefined4 FUN_80017a78();
-extern undefined4 FUN_800305f8();
 
 extern u32 GameBit_Get(int bit);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern u32 randomGetRange(int min, int max);
 
-extern undefined4 gCameraInterface;
-extern f64 DOUBLE_803e4ac0;
-extern f32 FLOAT_803e4a70;
-extern f32 FLOAT_803e4a84;
-extern f32 FLOAT_803e4a8c;
-extern f32 FLOAT_803e4a94;
-extern f32 FLOAT_803e4ac8;
-extern f32 FLOAT_803e4acc;
-extern f32 FLOAT_803e4ad0;
-extern f32 FLOAT_803e4ad4;
-extern f32 FLOAT_803e4ad8;
-extern f32 FLOAT_803e4ae0;
 
-extern void* lbl_803DBDE8;
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
@@ -30,16 +14,6 @@ extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
 extern void fn_80137948(char* fmt, ...);
 
-extern f32 lbl_803E3DD8;
-extern f32 lbl_803E3DEC;
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DFC;
-extern f64 lbl_803E3E28;
-extern f32 lbl_803E3E30;
-extern f32 lbl_803E3E34;
-extern f32 lbl_803E3E38;
-extern f32 lbl_803E3E3C;
-extern f32 lbl_803E3E40;
 
 /*
  * --INFO--
@@ -514,67 +488,13 @@ void fxemit_update(FxEmitObject* obj)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct WarpPadPlayerStandingOnPlacement
-{
-    u8 pad0[0x20 - 0x0];
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} WarpPadPlayerStandingOnPlacement;
 
 
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017748();
-extern void vecRotateZXY(s16 * in, f32 * out);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern void Obj_FreeObject(int obj);
-extern int ObjTrigger_IsSet();
-extern f32 Vec_xzDistance(f32 * posA, f32 * posB);
-extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
-extern int Curve_AdvanceAlongPath(int curve, f32 progress);
-extern void* mmAlloc(int size, int heap, int flags);
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32 value);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern u8 lbl_803DCDE0;
-extern s16 lbl_803DCEB8;
-extern f64 DOUBLE_803e4af8;
-extern f32 FLOAT_803e4b00;
 extern f32 lbl_803E3E50;
-extern f32 lbl_803E3E68;
-extern f32 lbl_803E3E6C;
-extern f32 lbl_803E3E70;
-extern f32 lbl_803E3E78;
-extern f32 lbl_803E3E7C;
-extern f32 lbl_803E3E80;
-extern f32 lbl_803E3E84;
-extern f32 lbl_803E3E88;
-extern f32 lbl_803E3E98;
-extern f32 lbl_803E3E9C;
-extern f32 lbl_803E3EA0;
-extern f32 lbl_803E3EA4;
-extern f32 lbl_803E3EA8;
-extern f32 lbl_803E3EAC;
-extern f32 lbl_803E3EB0;
-extern f32 lbl_803E3EB4;
-extern f32 lbl_803E3EB8;
-extern f32 lbl_803E3EBC;
-extern f32 lbl_803E3EC0;
-extern f32 lbl_803E3EC4;
-extern f32 lbl_803E3EC8;
-extern f32 lbl_803E3ECC;
-extern f32 lbl_803E3ED0;
-extern f32 lbl_803E3EE0;
 
-extern void setAButtonIcon(int iconId);
 
 /*
  * --INFO--
@@ -818,52 +738,14 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
-extern void mm_free(void* p);
 
 
-typedef struct CFEmitterFxArgs
-{
-    u32 unk0;
-    u32 unk4;
-    f32 scale;
-    f32 pos[3];
-} CFEmitterFxArgs;
-
-#define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)               \
-    do {                                                      \
-        u16 range;                                            \
-        range = (state)->extentX;                      \
-        (pos)[0] = (f32)(s32)randomGetRange(-range, range);   \
-        range = (state)->extentY;                      \
-        (pos)[1] = (f32)(s32)randomGetRange(-range, range);   \
-        range = (state)->extentZ;                      \
-        (pos)[2] = (f32)(s32)randomGetRange(-range, range);   \
-    } while (0)
-
-#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6) \
-    (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (flags), (modelId), \
-        (void *)(arg6))
-
-#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args)            \
-    do {                                                          \
-        rot[0] = (state)->emitAngles[0];                         \
-        rot[1] = (state)->emitAngles[1];                         \
-        rot[2] = (state)->emitAngles[2];                         \
-        if ((obj)->objAnim.parent != NULL) {                      \
-            rot[2] += ((ObjAnimComponent *)(obj)->objAnim.parent)->rotZ; \
-        }                                                         \
-        vecRotateZXY(rot, (args)->pos);                        \
-    } while (0)
-
-#define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                 \
-    do {                                                          \
-        (args)->pos[0] += (obj)->objAnim.localPosX;               \
-        (args)->pos[1] += (obj)->objAnim.localPosY;               \
-        (args)->pos[2] += (obj)->objAnim.localPosZ;               \
-    } while (0)
 
 
-int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+
+
+
+
 
 
 

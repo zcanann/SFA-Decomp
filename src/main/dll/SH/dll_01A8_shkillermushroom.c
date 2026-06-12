@@ -5,63 +5,19 @@
 
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017688();
 extern undefined4 GameBit_Set(int eventId, int value);
-extern double FUN_80017714();
-extern undefined4 FUN_8001771c();
-extern undefined4 FUN_80017a28();
-extern byte FUN_80017a34();
-extern undefined4 FUN_80017a3c();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern void ObjHits_EnableObject(int obj);
-extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_800620e8();
-extern int FUN_800632f4();
-extern undefined4 FUN_80081118();
-extern undefined4 edibleMushroomFn_801d083c();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
 
-extern undefined4* DAT_803dd71c;
-extern f64 DOUBLE_803e5f58;
-extern f32 FLOAT_803e5f20;
-extern f32 FLOAT_803e5f2c;
-extern f32 FLOAT_803e5f38;
-extern f32 FLOAT_803e5f40;
-extern f32 FLOAT_803e5f78;
-extern f32 FLOAT_803e5f7c;
-extern f32 FLOAT_803e5f80;
-extern f32 FLOAT_803e5f84;
-extern f32 FLOAT_803e5f88;
-extern f32 FLOAT_803e5f8c;
 
 extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int bit);
 
-extern f32 lbl_803E5288;
-extern f32 lbl_803E52A0;
-extern f32 lbl_803E52A8;
-extern f64 lbl_803E52C0;
-extern f32 lbl_803E52E0;
-extern f32 lbl_803E52E4;
-extern f32 lbl_803E52E8;
-extern f32 lbl_803E52EC;
-extern f32 lbl_803E52F0;
-extern f32 lbl_803E52F4;
 extern f32 lbl_803E52F8;
 extern f32 lbl_803E52FC;
 extern f32 lbl_803E5300;
 extern f32 lbl_803E5304;
-extern f64 lbl_803E5308;
 
 /*
  * --INFO--
@@ -209,36 +165,10 @@ typedef struct EnemymushroomPlacement
 } EnemymushroomPlacement;
 
 
-extern undefined4 FUN_800068c4();
-extern undefined4 FUN_80017a30();
-extern undefined4 FUN_80017a68();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80081120();
-extern double FUN_80294c4c();
-extern byte FUN_80294ca8();
-extern int FUN_80294cb0();
 
-extern undefined4 DAT_803dc070;
-extern f64 DOUBLE_803e5fa0;
-extern f64 DOUBLE_803e5fe0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E5F90;
-extern f32 lbl_803E5F94;
-extern f32 lbl_803E5FB0;
-extern f32 lbl_803E5FB4;
-extern f32 lbl_803E5FB8;
-extern f32 lbl_803E5FBC;
-extern f32 lbl_803E5FC0;
-extern f32 lbl_803E5FC4;
-extern f32 lbl_803E5FC8;
-extern f32 lbl_803E5FCC;
-extern f32 lbl_803E5FD0;
-extern f32 lbl_803E5FD4;
-extern f32 lbl_803E5FD8;
 
 /*
 
@@ -334,15 +264,8 @@ void enemymushroom_initialise(void)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5370;
-void bombplant_render(void);
 
-extern void* getTrickyObject(void);
-extern void trickyImpress(void* trickyObj);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void fn_801D29E4(int* obj, int* p2);
-extern f32 lbl_803E5378;
 
-void fn_801D2B70(int* obj, int unused, int* p3);
 
 extern f32 lbl_803E5350;
 
@@ -376,28 +299,13 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
-extern void setMatrixFromObjectPos(void* mtx, void* build);
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
-extern f32 lbl_803E536C;
-extern f32 lbl_803E5374;
 
-typedef struct
-{
-    s16 pos[3];
-    f32 w;
-    f32 v[3];
-} MushSpawnBuild;
 
 /* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-void fn_801D29E4(int* obj, int* p2);
 
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E5358;
-extern f32 lbl_803E535C;
 
 /* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps

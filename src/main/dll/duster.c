@@ -9,7 +9,6 @@
 extern int Sfx_PlayFromObject(u32 obj, int sfxId);
 extern int getAngle(f32 dx, f32 dz);
 extern uint randomGetRange();
-extern undefined4 fn_80017A88();
 extern void* Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern uint Obj_IsLoadingLocked();
@@ -32,20 +31,14 @@ extern undefined4 PSVECNormalize();
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern undefined4 PSVECCrossProduct();
 extern void fn_80293018(int angle, float* outSin, float* outCos);
-extern double fn_80293900();
 extern uint fn_80295CBC();
 
 extern undefined4 lbl_8031F2F8;
 extern u8 lbl_8031F318[];
 extern undefined4* gSHthorntailAnimationInterface;
-extern f64 DOUBLE_803e36a8;
-extern f64 DOUBLE_803e36b0;
-extern f64 DOUBLE_803e3700;
-extern f64 DOUBLE_803e3738;
 extern f32 timeDelta;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
-extern f32 lbl_803E2A08;
 extern f32 lbl_803E2A20;
 extern f32 lbl_803E2A24;
 extern f32 lbl_803E2A28;

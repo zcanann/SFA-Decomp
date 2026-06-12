@@ -10,40 +10,15 @@ extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern int ViewFrustum_IsSphereVisible(Vec* pos, f32 radius);
 extern void fn_8014C66C(SHthorntailObject * obj, SHthorntailObject * other);
 extern void OSReport(const char* msg, ...);
-extern uint FUN_80017758();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjGroup_FindNearestObject();
-extern int ObjTrigger_IsSet();
-extern undefined4 FUN_8003b1a4();
-extern undefined4 FUN_8003b280();
-extern undefined4 FUN_8003b444();
 
-extern undefined4 DAT_80327a58;
 extern u32 gSHthorntailDataTables[][4];
 extern char sSHthorntailAngleYawDebug[];
-extern undefined4 DAT_80327a64;
-extern undefined4 DAT_803dcc30;
-extern undefined4 DAT_803dcc34;
-extern undefined4 DAT_803dcc3c;
-extern undefined4 DAT_803dcc48;
-extern undefined4 DAT_803dcc4c;
-extern undefined4 DAT_803dcc50;
-extern undefined4 DAT_803dcc54;
 extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ;
 extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
 extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
-extern f64 lbl_803E5428;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6090;
-extern f32 lbl_803E609C;
-extern f32 lbl_803E60A0;
-extern f32 lbl_803E60B0;
-extern f32 lbl_803E60B4;
-extern f32 lbl_803E60B8;
 
 #define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES 0x10
 

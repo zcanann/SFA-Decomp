@@ -31,51 +31,7 @@ extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
 extern undefined4 DAT_803de6d0;
-extern f64 DOUBLE_803e32d8;
-extern f64 DOUBLE_803e32e0;
-extern f64 DOUBLE_803e3340;
-extern f32 lbl_803DC074;
 extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E32A0;
-extern f32 lbl_803E32A4;
-extern f32 lbl_803E32A8;
-extern f32 lbl_803E32AC;
-extern f32 lbl_803E32B0;
-extern f32 lbl_803E32BC;
-extern f32 lbl_803E32C0;
-extern f32 lbl_803E32C4;
-extern f32 lbl_803E32C8;
-extern f32 lbl_803E32CC;
-extern f32 lbl_803E32D0;
-extern f32 lbl_803E32D4;
-extern f32 lbl_803E32E8;
-extern f32 lbl_803E32EC;
-extern f32 lbl_803E32F0;
-extern f32 lbl_803E32F4;
-extern f32 lbl_803E32FC;
-extern f32 lbl_803E3300;
-extern f32 lbl_803E3304;
-extern f32 lbl_803E3308;
-extern f32 lbl_803E330C;
-extern f32 lbl_803E3310;
-extern f32 lbl_803E3314;
-extern f32 lbl_803E3318;
-extern f32 lbl_803E331C;
-extern f32 lbl_803E3320;
-extern f32 lbl_803E3324;
-extern f32 lbl_803E3328;
-extern f32 lbl_803E332C;
-extern f32 lbl_803E3330;
-extern f32 lbl_803E3334;
-extern f32 lbl_803E3348;
-extern f32 lbl_803E334C;
-extern f32 lbl_803E3350;
-extern f32 lbl_803E3354;
-extern f32 lbl_803E3358;
-extern f32 lbl_803E335C;
-extern f32 lbl_803E3360;
-extern f32 lbl_803E3364;
 
 /*
  * --INFO--
@@ -255,8 +211,6 @@ extern f32 lbl_803E2638;
 extern f32 lbl_803E263C;
 extern f32 lbl_803E2650;
 extern f32 lbl_803E2654;
-extern f64 lbl_803E2640; /* int->float magic */
-extern f64 lbl_803E2648; /* int->float magic */
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 extern f32 lbl_803E2660;
@@ -277,7 +231,6 @@ extern f32 lbl_803E2698;
 extern f32 lbl_803E269C;
 extern f32 lbl_803E26A0;
 extern f32 lbl_803E26A4;
-extern f64 lbl_803E26A8; /* int->float magic */
 extern f32 lbl_803E26B0;
 extern f32 lbl_803E26B4;
 extern f32 lbl_803E26B8;
@@ -286,27 +239,12 @@ extern f32 lbl_803E26C0;
 extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
-extern f32 lbl_803E26D0;
-extern f32 lbl_803E26D4;
-extern f32 lbl_803E26D8;
-extern f32 lbl_803E26DC;
-extern f32 lbl_803E26E0;
-extern f32 lbl_803E26E4;
-extern f32 lbl_803E26E8;
-extern f32 lbl_803E26EC;
-extern f32 lbl_803E26F0;
-extern f32 lbl_803E26F4;
-extern f32 lbl_803E26F8;
-extern f32 lbl_803E26FC;
-extern f64 lbl_803E2700;
 extern int lbl_803DBC78;
-extern int lbl_803DBC80;
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
 extern EffectInterface** gPartfxInterface;
 extern int lbl_803DBC70;
 extern int lbl_803DDA60;
-extern int lbl_803DDA68;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -327,7 +265,6 @@ typedef union PressureSwitchIntToDouble
 
 #define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
 #define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
-#define SWARMBADDIE_FLAG_RETURN_TO_PATH 0x04
 
 typedef struct SwarmBaddieState
 {
@@ -626,7 +563,6 @@ int hagabon_getObjectTypeId(void) { return 0xb; }
 int swarmbaddie_getExtraSize(void) { return 0x24; }
 int swarmbaddie_getObjectTypeId(void) { return 0x9; }
 int wispbaddie_getExtraSize(void);
-int wispbaddie_getObjectTypeId(void);
 
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

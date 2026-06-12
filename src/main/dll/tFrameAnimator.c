@@ -14,14 +14,11 @@ typedef struct LevelnameState
 } LevelnameState;
 
 
-extern void* memset(void* dest, int value, u32 size);
 extern int* Obj_GetPlayerObject(void);
 extern void GameBit_Set(int gameBit, int value);
 extern u32 GameBit_Get(int gameBit);
 extern int* gameTextGet(int textId);
 
-extern u8 lbl_80320F30[];
-extern f32 lbl_803E369C;
 
 
 /*
@@ -190,7 +187,6 @@ int levelname_getExtraSize(void) { return 0x18; }
 int levelname_getObjectTypeId(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void);
 
-int ProjectileSwitch_getObjectTypeId(int* obj);
 
 int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

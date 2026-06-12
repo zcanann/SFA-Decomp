@@ -12,14 +12,6 @@ typedef struct DimbridgecogmaiObjectDef
 } DimbridgecogmaiObjectDef;
 
 
-typedef struct DimlavasmashObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} DimlavasmashObjectDef;
 
 
 typedef struct DimbridgecogmaiPlacement
@@ -59,15 +51,10 @@ extern undefined4 ObjGroup_AddObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern int* mapGetBlock(int idx);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dimlavasmash_release(void);
 
-void dimlavasmash_initialise(void);
 
 void dimbridgecogmai_hitDetect(void)
 {

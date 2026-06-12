@@ -7,63 +7,13 @@
 #include "main/dll/bombplant_placement.h"
 
 
-typedef struct EnemymushroomPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    u16 unk18;
-    u8 pad1A[0x1C - 0x1A];
-    s16 unk1C;
-    u8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-} EnemymushroomPlacement;
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_8001771c();
-extern undefined4 FUN_80017a30();
-extern byte FUN_80017a34();
-extern undefined4 FUN_80017a3c();
-extern undefined4 FUN_80017a68();
-extern int FUN_80017a98();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80081120();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern double FUN_80294c4c();
-extern byte FUN_80294ca8();
-extern int FUN_80294cb0();
 
-extern undefined4 DAT_803dc070;
-extern f64 DOUBLE_803e5fa0;
-extern f64 DOUBLE_803e5fe0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E5F90;
-extern f32 lbl_803E5F94;
-extern f32 lbl_803E5FB0;
-extern f32 lbl_803E5FB4;
-extern f32 lbl_803E5FB8;
-extern f32 lbl_803E5FBC;
-extern f32 lbl_803E5FC0;
-extern f32 lbl_803E5FC4;
-extern f32 lbl_803E5FC8;
-extern f32 lbl_803E5FCC;
-extern f32 lbl_803E5FD0;
-extern f32 lbl_803E5FD4;
-extern f32 lbl_803E5FD8;
 
 /*
 
@@ -209,13 +159,10 @@ void fn_801D2B70(int* obj, int unused, int* p3)
 }
 
 extern void ObjGroup_AddObject(int* obj, int group);
-extern f32 lbl_803E52FC;
-extern f32 lbl_803E5350;
 
 /* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
  * block, clamps the spin period, offsets the spawn height, flags the model,
  * optionally resets to spawn, and registers in object group 3. */
-void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag);
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
@@ -328,38 +275,10 @@ int bombplant_SeqFn(int* obj)
 }
 
 extern int objIsFrozen(int* obj);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern int EmissionController_IsLingering(u8 * player);
-extern int fn_80296448(u8 * player);
-extern f32 fn_8029610C(u8 * player);
-extern void objFn_8002b67c(int* obj);
-extern void Obj_ResetModelColorState(int* obj);
-extern f32 sqrtf(f32 x);
-extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern s16 lbl_80326C78[];
-extern f32 lbl_80326C90[];
-extern f32 lbl_803E52F8;
-extern f32 lbl_803E5314;
-extern f32 lbl_803E5318;
-extern f32 lbl_803E531C;
-extern f32 lbl_803E5320;
-extern f32 lbl_803E5324;
-extern f32 lbl_803E5328;
-extern f32 lbl_803E532C;
-extern f32 lbl_803E5330;
-extern f32 lbl_803E5334;
-extern f32 lbl_803E5338;
-extern f32 lbl_803E533C;
-extern f32 lbl_803E5340;
 
-typedef struct
-{
-    f32 unk[3];
-    f32 x, y, z;
-} MushHitInfo;
 
 /* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
  * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
@@ -374,46 +293,22 @@ typedef struct
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-typedef struct BombplantsporeStartDriftBurstPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} BombplantsporeStartDriftBurstPlacement;
 
 
-typedef struct BombplantsporeUpdateDriftPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} BombplantsporeUpdateDriftPlacement;
 
 
 #include "main/dll/bombplant_placement.h"
 
 
-extern void ModelLightStruct_free(void* light);
-extern double FUN_80017714();
-extern undefined4 FUN_80017a28();
-extern int FUN_80017a90();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8008112c();
-extern undefined4 FUN_8013651c();
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d, int e);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 
-extern f64 lbl_803E5360;
 extern f32 lbl_803E5368;
 extern f32 lbl_803E537C;
 extern f32 lbl_803E5380;
@@ -421,28 +316,6 @@ extern f32 lbl_803E5380;
 extern u8 lbl_80326D20[];
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-extern undefined4 DAT_80327960;
-extern undefined4 DAT_80327964;
-extern undefined4 DAT_80327968;
-extern f64 DOUBLE_803e5ff8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803e5ff0;
-extern f32 FLOAT_803e5ff4;
-extern f32 FLOAT_803e6000;
-extern f32 FLOAT_803e6004;
-extern f32 FLOAT_803e6010;
-extern f32 FLOAT_803e6014;
-extern f32 lbl_803E5390;
-extern f32 lbl_803E5394;
-extern f32 lbl_803E5398;
-extern f32 lbl_803E539C;
-extern f64 lbl_803E53A0;
-extern f32 lbl_803E53A8;
-extern f32 lbl_803E53AC;
-extern f32 lbl_803E53B0;
-extern f32 lbl_803E53B4;
 
 /*
  * --INFO--

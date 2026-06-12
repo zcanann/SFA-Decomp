@@ -10,26 +10,11 @@ typedef struct TumbleweedbushState
 } TumbleweedbushState;
 
 
-extern uint GameBit_Get(int eventId);
 extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_DisableObject();
 extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 FUN_8003b818();
 
-extern f64 DOUBLE_803e3ba8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E3B50;
-extern f32 lbl_803E3B54;
-extern f32 lbl_803E3BC0;
-extern f32 lbl_803E3BCC;
-extern f32 lbl_803E3BD0;
-extern f32 lbl_803E3BD8;
-extern f32 lbl_803E3BE0;
-extern f32 lbl_803E3BE4;
-extern f32 lbl_803E3BE8;
-extern f32 lbl_803E3BEC;
-extern f32 lbl_803E3BF0;
 
 /*
  * --INFO--
@@ -46,11 +31,7 @@ extern f32 lbl_803E3BF0;
  */
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
-extern void getTrickyObject(void);
-extern void* ObjList_FindObjectById(int id);
 extern f32 timeDelta;
-extern f32 lbl_803E2F34;
-extern f32 lbl_803E2F38;
 
 
 
@@ -132,7 +113,6 @@ void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_
 #pragma peephole off
 void cannonclaw_release(void);
 
-void cannonclaw_initialise(void);
 
 void tumbleweedbush_free(void)
 {

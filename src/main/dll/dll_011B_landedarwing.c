@@ -6,71 +6,16 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
-typedef struct InfopointPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-} InfopointPlacement;
 
 
-typedef struct Dll109State
-{
-    u8 pad0[0xA - 0x0];
-    u8 unkA;
-    u8 padB[0x10 - 0xB];
-} Dll109State;
 
 
-typedef struct InfopointObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    u16 unk18;
-    u8 pad1A[0x1B - 0x1A];
-    u8 unk1B;
-    s16 unk1C;
-    u8 unk1E;
-    u8 unk1F;
-} InfopointObjectDef;
 
 
-typedef struct FallLaddersObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    u16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} FallLaddersObjectDef;
 
 
-typedef struct FlammablevineObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    u16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} FlammablevineObjectDef;
 
 
-typedef struct FlammablevinePlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    u16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} FlammablevinePlacement;
 
 
 typedef struct LandedArwingPlacement
@@ -116,49 +61,16 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
 } LandedArwingUpdateDamageTexturePlacement;
 
 
-typedef struct ColdwatercontrolState
-{
-    u8 pad0[0x8 - 0x0];
-    u8 unk8;
-    u8 unk9;
-    u8 padA[0x10 - 0xA];
-} ColdwatercontrolState;
 
 
-typedef struct InfopointState
-{
-    u8 pad0[0x8 - 0x0];
-    u8 unk8;
-    u8 unk9;
-    u8 padA[0x20 - 0xA];
-} InfopointState;
 
 
-typedef struct FlammablevineState
-{
-    u8 pad0[0x8 - 0x0];
-    u8 unk8;
-    u8 unk9;
-    u8 padA[0x14 - 0xA];
-} FlammablevineState;
 
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined8 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjHits_RecordObjectHit();
-extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance);
-extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
@@ -175,7 +87,6 @@ extern undefined4 FUN_80053c98();
 extern void* Obj_GetPlayerObject(void);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
 extern f32 FLOAT_803e4830;
 extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
@@ -212,7 +123,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void infopoint_hitDetect(void);
 
 
 /*
@@ -505,135 +415,53 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
 /* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
 
-void flammablevine_initialise(void);
 
-void dll_109_hitDetect_nop(void);
 
-void dll_109_release_nop(void);
 
-void dll_109_initialise_nop(void);
 
-void Fall_Ladders_render(void);
 
-void Fall_Ladders_hitDetect(void);
 
-void Fall_Ladders_release(void);
 
-void Fall_Ladders_initialise(void);
 
-void infopoint_free(void);
 
-void infopoint_release(void);
 
-void infopoint_initialise(void);
 
-void decoration11a_free(void);
 
-void decoration11a_update(void);
 
 /* 8b "li r3, N; blr" returners. */
-int flammablevine_getExtraSize(void);
-int flammablevine_getObjectTypeId(void);
-int dll_109_getExtraSize_ret_16(void);
-int dll_109_getObjectTypeId(void);
-int Fall_Ladders_SeqFn(void);
-int Fall_Ladders_getExtraSize(void);
-int Fall_Ladders_getObjectTypeId(void);
-int coldwatercontrol_getExtraSize(void);
-int infopoint_getExtraSize(void);
-int infopoint_getObjectTypeId(void);
-int decoration11a_getExtraSize(void);
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 
-typedef struct FallLaddersState
-{
-    f32 restYOffset;
-    s16 lowerGameBit;
-    s16 upperGameBit;
-    u8 motionState;
-    u8 playStartSound;
-    s16 delay;
-} FallLaddersState;
 
-typedef struct CarryableBreakRespawnState
-{
-    u8 pad0[0xa];
-    u8 state;
-    u8 padB;
-    f32 timer;
-} CarryableBreakRespawnState;
 
-extern int* gCarryableInterface;
 extern f32 timeDelta;
-extern f32 lbl_803E3B44;
-extern f32 lbl_803E3B48;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
 #pragma scheduling off
 #pragma peephole off
-void carryable_break_respawn_update(int obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3AF8;
-extern f32 lbl_803E3AFC;
-extern f32 lbl_803E3B00;
-extern f32 lbl_803E3B04;
-extern f32 lbl_803E3B08;
-extern f32 lbl_803E3B0C;
-extern f32 lbl_803E3B10;
-extern f32 lbl_803E3B14;
-extern f32 lbl_803E3B18;
-extern f32 lbl_803E3B1C;
-extern f32 lbl_803E3B20;
-extern f32 lbl_803E3B24;
-extern f32 lbl_803E3B28;
-extern f32 lbl_803E3B2C;
-extern f32 lbl_803E3B30;
-extern f32 lbl_803E3B34;
 extern void objRenderFn_8003b8f4(f32);
-extern void Obj_RemoveFromUpdateList(int obj);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
-extern int cMenuGetSelectedItem(void);
-extern void* getTrickyObject(void);
-extern f32 lbl_803E3B70;
-extern f32 lbl_803E3B78;
 
-void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void flammablevine_free(int x);
 
-void flammablevine_hitDetect(int obj);
 
-void flammablevine_init(int obj, int def);
 
-void flammablevine_update(int obj);
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
 #pragma scheduling on
 #pragma peephole on
-void Fall_Ladders_free(int obj);
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-extern f32 lbl_803E3B68;
-extern f32 lbl_803E3B6C;
-extern int fn_80295C40(int obj);
 #pragma scheduling off
 #pragma peephole off
-void coldwatercontrol_update(int obj);
 
 #pragma scheduling on
-void coldwatercontrol_init(int obj);
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
@@ -1256,46 +1084,20 @@ void dll_109_init(int obj, u8* p);
 
 #pragma dont_inline on
 #pragma peephole on
-void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut);
 #pragma dont_inline reset
 
 #pragma peephole off
-int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 
 #pragma scheduling on
-void dll_109_free(int obj);
 
-extern f32 lbl_803E3B40;
 #pragma scheduling off
 #pragma peephole off
-void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E3B50;
-extern f32 lbl_803E3B54;
-extern f32 lbl_803E3B58;
-extern f32 lbl_803E3B5C;
 
-void Fall_Ladders_update(int obj);
 
-void Fall_Ladders_init(int* obj, s8* def);
 
-extern int textureLoadAsset(int id);
-extern int* gameTextGet(int id);
-extern int lbl_803219A0[];
-extern int lbl_80321990[];
 
-void infopoint_init(int* obj, u8* def);
 
-extern f32 lbl_803E3B7C;
-extern f32 lbl_803E3B88;
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
-extern void Model_GetVertexPosition(int* model, int idx, f32* out);
-extern void PSVECScale(f32* dst, f32* src, f32 s);
-extern f32 PSVECMag(f32 * v);
 
-void decoration11a_hitDetect(int obj);
 
-void decoration11a_init(int* obj, u8* def);

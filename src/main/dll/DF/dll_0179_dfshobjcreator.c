@@ -3,86 +3,13 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-typedef struct SpiritPrizePlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 unk18;
-    u8 pad1A[0x20 - 0x1A];
-} SpiritPrizePlacement;
 
 
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 SH_LevelControl_runBloopEvent();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e5b18;
-extern f64 DOUBLE_803e5b28;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5AE8;
-extern f32 lbl_803E5AEC;
-extern f32 lbl_803E5AF0;
-extern f32 lbl_803E5AF4;
-extern f32 lbl_803E5B00;
-extern f32 lbl_803E5B04;
-extern f32 lbl_803E5B08;
-extern f32 lbl_803E5B0C;
-extern f32 lbl_803E5B10;
-extern f32 lbl_803E5B20;
-extern f32 lbl_803E5B24;
-extern f32 lbl_803E5B30;
-extern f32 lbl_803E4E88;
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
-extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern f32 timeDelta;
-extern u8 lbl_803DBF60;
-extern f64 lbl_803E4E80;
-extern f64 lbl_803E4E90;
-extern u16 lbl_80325F88[];
-extern int Obj_GetPlayerObject(void);
-extern void skyFn_80088c94(int skyId, int enable);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
-extern void playerAddRemoveMagic(int player, int amount);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
-                                          int value);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void GameBit_Set(int bit, int value);
-extern void Music_Trigger(int musicId, int mode);
-extern void gameTimerInit(int timerId, int value);
-extern void timerSetToCountUp(void);
-extern void gameTimerStop(void);
-extern int isGameTimerDisabled(void);
-extern int ObjList_FindObjectById(int objId);
-extern void fn_8014C5C0(int obj);
-extern int objGetAnimStateFlags(int obj, int flag);
-extern void audioStopByMask(int mask);
-extern f32 lbl_803E4E8C;
-extern u8 lbl_803DB411;
-extern f32 lbl_803E4E9C;
-extern f64 lbl_803E4EA0;
-extern f64 lbl_803E4EA8;
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern void Obj_FreeObject(int obj);
-extern int coordsToMapCell(f32 x, f32 z);
 
-typedef struct DfshShrineState
-{
-    void* light;
-    f32 rewardTimer;
-    f32 idleChimeTimer;
-    u8 musicLatch[4];
-    s16 startDelayFrames;
-    s16 transitionTimer;
-    u8 pad14[0x1A - 0x14];
-    u8 mode;
-    u8 rewardIndex;
-    u8 flags;
-    u8 pad1D[0x20 - 0x1D];
-} DfshShrineState;
 
 typedef struct DfshShrinePlacement
 {
@@ -111,13 +38,7 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Size: TODO
  */
 
-#define DFSH_REWARD_BIT(idx) (base[(idx)])
-#define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
-#define DFSH_REQUIRED_BIT(idx) (base[20 + (idx)])
-#define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)base + 0x3c))[(idx)])
 
-#define DFSH_SHRINE_FLAG_SUCCESS 0x40
-#define DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE 0x80
 
 
 /*
@@ -174,68 +95,19 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dfsh_shrine_hitDetect(void);
-
-void dfsh_shrine_release(void);
-
-void dfsh_shrine_initialise(void);
-
-extern int mapGetDirIdx(int id);
-extern void unlockLevel(int idx, int a, int b);
-extern void* objCreateLight(int* obj, int v);
-
-typedef struct DfshShrineFlags
-{
-    u8 openedBySequence : 1;
-    u8 unused1 : 1;
-    u8 unused2 : 1;
-    u8 unused3 : 1;
-    u8 unused4 : 1;
-    u8 unused5 : 1;
-    u8 unused6 : 1;
-    u8 unused7 : 1;
-} DfshShrineFlags;
-
-void dfsh_shrine_init(int* obj, DfshShrinePlacement* init);
-
-void SpiritPrize_hitDetect(void);
-
-void SpiritPrize_release(void);
-
-void SpiritPrize_initialise(void);
-
-extern void ModelLightStruct_free(void* light);
-
-typedef struct SpiritPrizeState
-{
-    u8 pad00[0x24];
-    f32 spawnScale;
-    s32 triggerHandle;
-    u8 pad2C[0x57 - 0x2C];
-    u8 prizeId;
-    u8 pad58[0x6A - 0x58];
-    s16 mapParam1A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 targetObjectId;
-    u8 pad70[0x81 - 0x70];
-    u8 queuedActions[0x8B - 0x81];
-    u8 queuedActionCount;
-    u8 pad8C[0x140 - 0x8C];
-    void* light;
-    u8 useDetachedLight;
-    u8 pad145[0x148 - 0x145];
-    f32 sfxTimer;
-} SpiritPrizeState;
 
 
-extern void modelLightStruct_setLightKind(void* light, int v);
-extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
-extern f32 lbl_803E4E98;
-extern f32 lbl_803E4EB0;
-extern f32 lbl_803E4EB4;
 
-void SpiritPrize_init(int* obj, u8* init);
+
+
+
+
+
+
+
+
+
+
 
 void dfsh_objcreator_free(void)
 {
@@ -247,7 +119,6 @@ void dfsh_objcreator_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int SpiritPrize_getExtraSize(void);
-int SpiritPrize_getObjectTypeId(void);
 int dfsh_objcreator_getExtraSize(void) { return 0x4; }
 int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
@@ -280,33 +151,10 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 #include "main/resource.h"
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175d0();
-extern void* FUN_80017624();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80017b00();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80053754();
-extern int FUN_8005b024();
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int objectId);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 
-extern undefined4 DAT_803dc071;
-extern void* DAT_803de838;
-extern f64 DOUBLE_803e5b38;
-extern f64 DOUBLE_803e5b40;
-extern f32 lbl_803E5B34;
-extern f32 lbl_803E5B48;
-extern f32 lbl_803E5B4C;
 
 typedef struct DfshObjCreatorState
 {
@@ -410,8 +258,6 @@ void dfsh_objcreator_update(int obj)
  * PAL Size: TODO
  */
 extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDBB8;
-extern void textureFree(void* tex);
 
 
 /*

@@ -26,15 +26,6 @@ typedef struct
     u32 extra; /* 0xc */
 } SeqRow16;
 
-typedef struct
-{
-    f32 speed; /* 0x0 */
-    u32 flags; /* 0x4 */
-    u8 anim; /* 0x8 */
-    u8 next; /* 0x9 */
-    u8 alt; /* 0xa */
-    u8 padB; /* 0xb */
-} SeqRow12;
 
 extern f32 timeDelta;
 extern f32 lbl_803E2740;
@@ -42,7 +33,6 @@ extern f32 lbl_803E274C;
 extern f32 lbl_803E2768;
 extern f32 lbl_803E276C;
 extern f32 lbl_803E27A0;
-extern f64 lbl_803E2770;
 
 extern u8 lbl_8031F16C[];
 
@@ -318,10 +308,8 @@ extern int Curve_AdvanceAlongPath(u8* curve, f32 t);
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern u32 randomGetRange(int min, int max);
-extern f32 lbl_803E2744;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
-extern f64 lbl_803E2758;
 extern f32 lbl_803E2778;
 extern f32 lbl_803E277C;
 extern f32 lbl_803E2780;

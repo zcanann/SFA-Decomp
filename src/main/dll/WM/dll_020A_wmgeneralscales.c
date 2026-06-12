@@ -13,12 +13,6 @@
 #pragma scheduling off
 #pragma peephole off
 
-typedef struct WmgeneralscalesState
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    s32 unk4;
-} WmgeneralscalesState;
 
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern u8 Obj_IsLoadingLocked(void);

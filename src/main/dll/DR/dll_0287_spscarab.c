@@ -3,20 +3,8 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-typedef struct ShopitemState
-{
-    u8 pad0[0x88 - 0x0];
-    s16 unk88;
-    u8 pad8A[0xEC - 0x8A];
-} ShopitemState;
 
 
-typedef struct ShopitemPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} ShopitemPlacement;
 
 
 /* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
@@ -75,39 +63,7 @@ STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjGroup_FindNearestObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
-extern void dll_2E_func06();
-extern uint countLeadingZeros();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern undefined4* gBoneParticleEffectInterface;
-extern f64 DOUBLE_803e6698;
-extern f64 DOUBLE_803e66f0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E59D8;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E6670;
-extern f32 lbl_803E6674;
-extern f32 lbl_803E6688;
-extern f32 lbl_803E66B8;
-extern f32 lbl_803E66BC;
-extern f32 lbl_803E66C0;
-extern f32 lbl_803E66C8;
-extern f32 lbl_803E66CC;
-extern f32 lbl_803E66D0;
-extern f32 lbl_803E66D4;
-extern f32 lbl_803E66D8;
-extern f32 lbl_803E66DC;
-extern f32 lbl_803E66E0;
-extern f32 lbl_803E66E4;
-extern f32 lbl_803E66E8;
-extern f32 lbl_803E66F8;
-extern void** gTitleMenuControlInterfaceCopy;
 
 /*
  * --INFO--
@@ -162,7 +118,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801E7DC8(int p1, int p2, int count);
 
 /*
  * --INFO--
@@ -300,19 +255,13 @@ extern void Stack_Free();
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801E86F4(int obj, int p2, ObjSeqState* seq);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void shopkeeper_hitDetect(void);
 
-void shopkeeper_release(void);
 
-void shopitem_hitDetect(void);
 
-void shopitem_release(void);
 
-void shopitem_initialise(void);
 
 void spscarab_render(void)
 {
@@ -324,9 +273,6 @@ void spscarab_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int shopkeeper_getExtraSize(void);
-int shopkeeper_getObjectTypeId(void);
-int shopitem_getExtraSize(void);
-int shopitem_getObjectTypeId(void);
 int spscarab_getExtraSize(void) { return 0x14; }
 int spscarab_getObjectTypeId(void) { return 0x0; }
 
@@ -334,72 +280,21 @@ extern void Sfx_RemoveLoopedObjectSound(int x, int y);
 void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
 
 extern f32 lbl_803E5A30;
-extern void fn_801E83B0(int obj, int, int, int, int);
 
-void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void shopitem_free(int obj);
 
-extern void* lbl_803AD068[8];
-extern void* lbl_803DDC58;
-extern void DRlaserturret_startLinkedTarget(int);
-extern void DRlaserturret_updateTracking(int);
-extern void DRlaserturret_updateIdle(int);
-extern void TREX_Lazerwall_updateTimedChallenge(int);
-extern void TREX_Lazerwall_waitForStartBit(int);
-extern void TREX_Lazerwall_popQueuedState(int);
-extern void fn_801E66EC(int);
-extern void fn_801E66E4(int);
-extern void fn_801E66DC(int);
 
-extern void GXSetBlendMode(int type, int src, int dst, int op);
-extern void gxSetZMode_(u32 a, int b, u32 c);
-extern void gxSetPeControl_ZCompLoc_(u32 a);
-extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 
-void fn_801E832C(int obj);
 
-void shopkeeper_initialise(void);
 
-extern void hudFn_8011f38c(int);
-extern f32 lbl_803E5A20;
 extern f32 timeDelta;
-extern f32 lbl_803E59DC;
 extern void gameTextShow(int);
-extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32* out);
-extern int playerGetMoney(void* player);
 extern void characterDoEyeAnims(int obj, int p2);
-extern void dll_2E_func03(int, int);
-extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
-extern int* gPlayerInterface;
 
-typedef struct
-{
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 bit20 : 1;
-    u8 bit10 : 1;
-    u8 bit08 : 1;
-    u8 bit04 : 1;
-    u8 bit02 : 1;
-    u8 bit01 : 1;
-} BitsAt9D4;
 
-void shopkeeper_update(int obj);
 
-extern f32 lbl_803E59F0;
-extern f32 lbl_803E5A28;
-extern void* allocModelStruct_800139e8(int, int);
-extern void dll_2E_func05(int, int, int, int, int);
-extern int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
-extern void ObjModel_SetPostRenderCallback(void*, void*);
-extern void ObjGroup_AddObject(int, int);
-extern void fn_801F4C28(int, int);
-extern EffectInterface** gPartfxInterface;
 
-void shopitem_init(int obj, int data);
 
-void shopkeeper_init(int obj);
 
 typedef struct
 {
@@ -409,71 +304,18 @@ typedef struct
 } PushcartState97;
 
 
-void fn_801E8660(int obj);
 
-extern f32 lbl_803E5A60;
-extern f32 lbl_803E5A64;
-extern f32 lbl_803E5A68;
-extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
-extern void forceAButtonIcon(int icon);
-extern void showHelpText(int textId);
-extern void buttonDisable(int a, int b);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern void objRenderFn_80041018(int obj);
-extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 
-void shopitem_update(int obj);
 
-extern void DRlaserturret_startTimedChallenge(int);
-extern void DRlaserturret_handlePromptChoice(int);
-extern void setAButtonIcon(int icon);
-extern void setBButtonIcon(int icon);
-extern void warpToMap(int mapId, int flag);
-extern int getCurUiDll(void);
-extern int* getDLL16(void);
-extern void playerAddMoney(void* player, int amount);
-extern void* objFindTexture(int obj, int target, int p3);
-extern int dll_2E_func07(int obj, u8* data, int p3, int p4, int p5);
 
-int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
 
 extern f32 sqrtf(f32 x);
-extern f32 lbl_803E5A24;
 
-f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
 
-extern f32 lbl_803E5A34;
-extern f32 lbl_803E5A38;
-extern f32 lbl_803E5A3C;
-extern f32 lbl_803E5A40;
-extern f32 lbl_803E5A44;
-extern f32 lbl_803E5A48;
-extern f32 lbl_803E5A4C;
-extern f32 lbl_803E5A50;
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
-extern int ObjModel_GetRenderOp(int model, int idx);
-extern void lightningRender(void);
-extern int getHudHiddenFrameCount(void);
-extern void mm_free_(int p);
-extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
 
-typedef struct ShopSparkleSpawn
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    int owner;
-    u8 pad[0x28];
-} ShopSparkleSpawn;
 
-typedef struct PushcartStateE8
-{
-    u8 flag_80 : 1;
-    u8 flag_40 : 1;
-    u8 _rest : 6;
-} PushcartStateE8;
 
-void fn_801E83B0(int obj, int p2, int p3, int p4, int p5);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -548,7 +390,6 @@ extern f32 lbl_803E5A88;
 extern f32 lbl_803E5A8C;
 extern f32 lbl_803E5A90;
 extern f32 lbl_803E5A94;
-extern f64 lbl_803E5A98; /* int->float magic 0x4330000000000000 */
 
 
 /*

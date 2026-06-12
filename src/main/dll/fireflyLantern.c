@@ -30,7 +30,6 @@ extern f32 lbl_803E2990;
 extern f32 lbl_803E2994;
 extern f32 lbl_803E29A0;
 extern f32 lbl_803E29A4;
-extern f64 lbl_803E29A8;
 extern f32 lbl_803E29B0;
 extern f32 lbl_803E29B4;
 extern f32 lbl_803E29BC;
@@ -39,7 +38,6 @@ extern f32 lbl_803E29C4;
 extern f64 lbl_803E29C8;
 extern f32 lbl_803E29D0;
 extern f32 lbl_803E29D4;
-extern f64 lbl_803E29D8;
 extern f32 lbl_803E29E0;
 extern f32 lbl_803E29E4;
 extern f32 lbl_803E29E8;
@@ -50,8 +48,6 @@ extern f32 lbl_803E29F8;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
 extern f32 lbl_803E2A08;
-extern f64 lbl_803E2A10;
-extern f64 lbl_803E2A18;
 
 void fn_80154870(int obj, int* state)
 {

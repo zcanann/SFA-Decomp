@@ -55,7 +55,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern EffectInterface** gPartfxInterface;
 extern u8 gTrickyCurveBurstCounter;
 extern f32 timeDelta;
-extern f64 lbl_803E6440;
 extern f32 lbl_803E6448;
 
 #define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \

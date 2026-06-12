@@ -1221,7 +1221,6 @@ int cfguardian_setScale(int* obj);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-void fn_8019AE3C(int p1, int p2, s16* p3);
 
 extern s8 lbl_803DDB08;
 extern s8 lbl_803DDB09;
@@ -1323,23 +1322,8 @@ void cloudprisoncontrol_update(int obj)
 }
 
 extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
-extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
-extern int Curve_AdvanceAlongPath(int p1);
-extern int hitDetectFn_800658a4(f32 x, f32 y, f32 z, int obj, f32* out, int p6);
-extern s16 getAngle(f32 a, f32 b);
-extern f32 lbl_803E4110;
-extern f32 lbl_803E4120;
 
-typedef struct
-{
-    s16 angle;
-    s16 pad[5];
-    f32 x;
-    f32 y;
-    f32 z;
-} RomCurveTarget;
 
-int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4);
 
 extern CloudActionInterface** gCloudActionInterface;
 extern int* gPlayerShadowInterface;

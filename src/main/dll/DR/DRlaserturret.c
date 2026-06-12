@@ -15,7 +15,6 @@ extern uint GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_DisableObject(void*);
 extern void ObjHits_EnableObject(void*);
 extern int ObjTrigger_IsSet(void*);
 extern void* objFindTexture(void* obj, int idx, int flags);

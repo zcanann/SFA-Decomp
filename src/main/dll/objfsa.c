@@ -72,7 +72,6 @@ extern char sObjfsaIsPointWithinPatchGroupError[];
 
 #define OBJFSA_PATCHGROUP_PATCH_COUNT 4
 #define OBJFSA_PATCHGROUP_STRIDE 0x28
-#define OBJFSA_PATCHGROUP_PATCHES_OFFSET 0x3024
 #define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48
 #define OBJFSA_WALKGROUP_COUNT 0xB5
 
@@ -204,20 +203,7 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
  * PAL Size: TODO
  */
 extern u8 lbl_803DD440;
-extern f32 lbl_803E0570;
 
-typedef struct PlayerMoveBuf
-{
-    f32 a;
-    f32 b;
-    f32 c;
-    u8 padC[2];
-    s16 angleDelta;
-    u8 pad10[2];
-    u8 flag;
-    s8 ids[8];
-    s8 count;
-} PlayerMoveBuf;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2365,7 +2351,6 @@ int mathFn_800dbff0(float* point)
 #pragma peephole on
 void player_release(void);
 
-void player_initialise(void);
 
 void UIController_release(void)
 {
@@ -2420,7 +2405,6 @@ int dll_12_func06_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u32 playerOverride;
-void player_setOverride(u32 x);
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD458;
@@ -2428,7 +2412,6 @@ void dll_12_func09(void) { lbl_803DD458 = 0x3; }
 
 /* player_init: memset constructor */
 extern void* memset(void* dst, int val, u32 n);
-extern f32 lbl_803E05BC;
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F4;
@@ -2489,29 +2472,9 @@ int fn_800D9F38(void* a, void* b)
 
 /* player_updateVel */
 extern f32 lbl_803E05A4;
-extern f32 lbl_803E05A8;
-extern u8 lbl_803DD434;
-extern u8 lbl_803DD44E;
-extern u8 lbl_803DD44F;
-extern f32 timeDelta;
-extern u8 lbl_803DD450;
-extern f64 lbl_803E0598;
-extern f32 lbl_803E0588;
-extern f32 lbl_803E05B4;
-extern f32 lbl_803E05C0;
-extern f32 lbl_803E05C4;
-extern f32 lbl_803DD444;
-extern f32 lbl_803DD448;
 extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
-extern void fn_800D8414(char* pos, char* state);
-extern void player_applyVelocityStep(char* pos, char* state, f32 dt);
-extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
-void playerRunStateMachine(char* pos, char* state, float dt, int stateFns);
 
-void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns);
 
 void player_updateVel(char* p, char* obj, int unused);
 
@@ -4285,24 +4248,7 @@ extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
 extern f32 lbl_803E0664;
 
-typedef struct CurvesHitScratch
-{
-    u8 unk0[0x40];
-    f32 scale;
-    u8 unk44[0x10];
-    u8 type;
-    u8 unk55[0x13];
-} CurvesHitScratch;
 
-typedef struct CurvesTransformScratch
-{
-    s16 angles[3];
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} CurvesTransformScratch;
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve);
 
@@ -6662,19 +6608,8 @@ void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut)
 void* getSaveFileStruct(void);
 
 /* getLastSavedGameTexts: return (u8*)&gSaveGameData + 0x558. Array form forces lis/addi. */
-extern u8 gSaveGameData[];
-void* getLastSavedGameTexts(void);
 
-#define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
-#define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
 
-typedef struct CurvesSaveGameObjectPosition
-{
-    u32 objectId;
-    f32 x;
-    f32 y;
-    f32 z;
-} CurvesSaveGameObjectPosition;
 
 
 /* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
@@ -6689,7 +6624,6 @@ void* RomCurve_getCurves(int* outCount)
 int isCheatUnlocked(u8 idx);
 
 /* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
-void saveFileStruct_unlockCheat(u8 idx);
 
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */

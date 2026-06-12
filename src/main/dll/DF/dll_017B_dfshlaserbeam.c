@@ -4,43 +4,11 @@
 #include "main/resource.h"
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175d0();
-extern void* FUN_80017624();
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80017b00();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80053754();
-extern int FUN_8005b024();
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int objectId);
-extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 extern f32 timeDelta;
 
-extern undefined4 DAT_803dc071;
-extern f64 DOUBLE_803e5b38;
-extern f64 DOUBLE_803e5b40;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5B30;
-extern f32 lbl_803E5B34;
-extern f32 lbl_803E5B48;
-extern f32 lbl_803E5B4C;
 
-typedef struct DfshObjCreatorState
-{
-    s16 spawnTimer;
-    s16 spawnTimerStep;
-} DfshObjCreatorState;
 
 /*
  * --INFO--
@@ -162,7 +130,6 @@ int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
 #include "main/resource.h"
 
 extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006814();
 extern undefined4 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* Obj_GetPlayerObject(void);
@@ -179,14 +146,9 @@ extern void* textureLoadAsset(int id);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern int objGetAnimState80A(void* obj);
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern int FUN_80294d6c();
 
-extern undefined4 DAT_803dc070;
 extern u8 framesThisStep;
 extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e5b98;
 extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;
@@ -214,24 +176,10 @@ extern f32 lbl_803E4F24;
 extern f32 lbl_803E4F28;
 extern f32 lbl_803E4F2C;
 extern f32 lbl_803E4F30;
-extern f64 lbl_803E4F38;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F44;
 extern f32 lbl_803E4F48;
 extern f32 lbl_803E4F4C;
-extern f32 lbl_803E5B58;
-extern f32 lbl_803E5B5C;
-extern f32 lbl_803E5B60;
-extern f32 lbl_803E5B64;
-extern f32 lbl_803E5B68;
-extern f32 lbl_803E5B6C;
-extern f32 lbl_803E5B78;
-extern f32 lbl_803E5B7C;
-extern f32 lbl_803E5B80;
-extern f32 lbl_803E5B84;
-extern f32 lbl_803E5B88;
-extern f32 lbl_803E5B8C;
-extern f32 lbl_803E5B90;
 
 typedef struct DFSHLaserBeamConfig
 {

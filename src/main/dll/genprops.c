@@ -3,68 +3,19 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-typedef struct PollenfragmentState
-{
-    u8 pad0[0x4 - 0x0];
-    s16 unk4;
-    s16 unk6;
-    u8 pad8[0x10 - 0x8];
-    s16 unk10;
-    s16 unk12;
-    u8 pad14[0x28 - 0x14];
-} PollenfragmentState;
 
 
-extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8005fe14();
-extern uint FUN_8007f6c8();
-extern undefined4 FUN_8007f718();
-extern undefined4 FUN_8008112c();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 
-typedef struct
-{
-    s16 unk00; /* 0x00 */
-    s16 loopSfx; /* 0x02 */
-    s16 explodeSfx; /* 0x04 */
-    s16 unk06; /* 0x06 */
-    s16 burstFx; /* 0x08 */
-    s16 auraFx; /* 0x0A */
-    s16 unk0C; /* 0x0C */
-    s16 unk0E; /* 0x0E */
-    s16 targetGroup; /* 0x10 */
-    u8 noVertical : 1; /* 0x12 bit 7 */
-    u8 timed : 1; /* 0x12 bit 6 */
-    u8 smoothTurn : 1; /* 0x12 bit 5 */
-    u8 usePath : 1; /* 0x12 bit 4 */
-} PollenFragmentDef;
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-typedef struct PollenFragmentExtra
-{
-    u8 unk00[0xC];
-    f32 velX;
-    f32 velY;
-    f32 velZ;
-    u8 unk18[4];
-    PollenFragmentDef* def; /* 0x1C */
-} PollenFragmentExtra;
 
 
 
 extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DF8;
-extern f32 lbl_803E3198;
-extern f32 lbl_803E319C;
 
 /*
  * --INFO--
@@ -98,20 +49,14 @@ extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern f32 lbl_803E30E0;
-extern f32 lbl_803E30F8;
-extern f32 lbl_803E3108;
-extern f32 lbl_803E310C;
 
 
 
 #pragma dont_inline on
-void fn_8016A660(int obj);
 #pragma dont_inline reset
 
 
@@ -161,7 +106,6 @@ void mikabomb_hitDetect(void)
 }
 
 extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E313C;
 
 
 
@@ -319,8 +263,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-extern int fn_80080150(int p);
-extern f32 lbl_803E3158;
 
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
@@ -340,57 +282,19 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern f32 lbl_803E3148;
 
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
 
-typedef struct
-{
-    f32 x, y, z;
-} XyzVec;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 lbl_803DBD48;
-extern f32 lbl_803DBD4C;
-extern f32 lbl_803E3110;
-extern f32 lbl_803E3114;
-extern f32 lbl_803E3118;
-extern f32 lbl_803E311C;
-extern f32 lbl_803E3120;
-extern f32 lbl_803E3124;
-extern f32 lbl_803E3128;
-extern f32 lbl_803E312C;
-extern f32 lbl_803E3140;
-extern f32 lbl_803E315C;
-extern f32 lbl_803E3160;
-extern f32 lbl_803E3164;
-extern f32 lbl_803E3168;
-extern f32 lbl_803E316C;
-extern f32 lbl_803E3170;
-extern f32 lbl_803E3174;
-extern f32 lbl_803E3178;
-extern f32 lbl_803E317C;
-extern f32 lbl_803E3180;
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern int getCurSeqNo(void);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void* vel, int rate, f32 a, f32 b);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern void PSVECSubtract(void* a, void* b, void* out);
-extern f32 PSVECMag(void* v);
-extern void PSVECNormalize(void* src, void* dst);
-extern void PSVECScale(void* src, void* dst, f32 scale);
-extern void PSVECAdd(void* a, void* b, void* out);
 
-int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag);
 
 
 
@@ -840,13 +744,11 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_80081118();
 extern undefined8 FUN_800e842c();
-extern undefined4 PSVECDotProduct();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 extern undefined4 fcos16Precise();
@@ -869,64 +771,9 @@ extern undefined4 DAT_803ad334;
 extern undefined4 DAT_803ad338;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void** gTitleMenuControlInterfaceCopy;
-extern f64 DOUBLE_803e3e28;
-extern f64 DOUBLE_803e3e50;
 extern f64 DOUBLE_803e3e88;
-extern f64 DOUBLE_803e3eb0;
-extern f64 DOUBLE_803e3ed0;
-extern f64 DOUBLE_803e3f18;
-extern f64 DOUBLE_803e3fb0;
-extern f64 DOUBLE_803e4030;
 extern f64 DOUBLE_803e4068;
-extern f64 DOUBLE_803e4078;
-extern f64 DOUBLE_803e40d0;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DC9C8;
-extern f32 lbl_803DC9D0;
-extern f32 lbl_803DC9D4;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E3E30;
-extern f32 lbl_803E3E34;
-extern f32 lbl_803E3E3C;
-extern f32 lbl_803E3E40;
-extern f32 lbl_803E3E44;
-extern f32 lbl_803E3E48;
-extern f32 lbl_803E3E5C;
-extern f32 lbl_803E3E60;
-extern f32 lbl_803E3E64;
-extern f32 lbl_803E3E68;
-extern f32 lbl_803E3E6C;
-extern f32 lbl_803E3E70;
-extern f32 lbl_803E3E74;
-extern f32 lbl_803E3E78;
-extern f32 lbl_803E3E7C;
-extern f32 lbl_803E3E94;
-extern f32 lbl_803E3E98;
-extern f32 lbl_803E3E9C;
-extern f32 lbl_803E3EA0;
-extern f32 lbl_803E3EA4;
-extern f32 lbl_803E3EA8;
-extern f32 lbl_803E3EBC;
-extern f32 lbl_803E3EC0;
-extern f32 lbl_803E3EC4;
-extern f32 lbl_803E3EC8;
-extern f32 lbl_803E3ED8;
-extern f32 lbl_803E3EDC;
-extern f32 lbl_803E3EE0;
-extern f32 lbl_803E3EE4;
-extern f32 lbl_803E3EE8;
-extern f32 lbl_803E3EEC;
-extern f32 lbl_803E3EF0;
-extern f32 lbl_803E3EF4;
-extern f32 lbl_803E3EF8;
-extern f32 lbl_803E3EFC;
-extern f32 lbl_803E3F00;
-extern f32 lbl_803E3F04;
-extern f32 lbl_803E3F08;
-extern f32 lbl_803E3F0C;
-extern f32 lbl_803E3F10;
-extern f32 lbl_803E3F14;
 extern f32 lbl_803E3F20;
 extern f32 lbl_803E3F24;
 extern f32 lbl_803E3F28;
@@ -955,32 +802,9 @@ extern f32 lbl_803E3F80;
 extern f32 lbl_803E3F84;
 extern f32 lbl_803E3F88;
 extern f32 lbl_803E3F8C;
-extern f32 lbl_803E3F90;
-extern f32 lbl_803E3F94;
-extern f32 lbl_803E3F98;
 extern f32 lbl_803E3FA4;
 extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FB8;
-extern f32 lbl_803E3FBC;
-extern f32 lbl_803E3FC0;
 extern f32 lbl_803E3FC4;
-extern f32 lbl_803E3FC8;
-extern f32 lbl_803E3FCC;
-extern f32 lbl_803E3FD8;
-extern f32 lbl_803E3FE8;
-extern f32 lbl_803E3FF0;
-extern f32 lbl_803E3FF4;
-extern f32 lbl_803E3FF8;
-extern f32 lbl_803E3FFC;
-extern f32 lbl_803E4000;
-extern f32 lbl_803E4004;
-extern f32 lbl_803E4010;
-extern f32 lbl_803E4014;
-extern f32 lbl_803E4018;
-extern f32 lbl_803E4024;
-extern f32 lbl_803E4028;
-extern f32 lbl_803E402C;
-extern f32 lbl_803E4038;
 extern f32 lbl_803E4040;
 extern f32 lbl_803E4044;
 extern f32 lbl_803E4048;
@@ -991,17 +815,6 @@ extern f32 lbl_803E4058;
 extern f32 lbl_803E405C;
 extern f32 lbl_803E4060;
 extern f32 lbl_803E4064;
-extern f32 lbl_803E4070;
-extern f32 lbl_803E4074;
-extern f32 lbl_803E4080;
-extern f32 lbl_803E4084;
-extern f32 lbl_803E4098;
-extern f32 lbl_803E409C;
-extern f32 lbl_803E40A0;
-extern f32 lbl_803E40A4;
-extern f32 lbl_803E40A8;
-extern f32 lbl_803E40AC;
-extern f32 lbl_803E40B0;
 extern f32 lbl_803E40B8;
 extern f32 lbl_803E40BC;
 extern f32 lbl_803E40C0;
@@ -1009,7 +822,6 @@ extern f32 lbl_803E40C4;
 extern f32 lbl_803E40C8;
 extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
-extern void* PTR_DAT_803211ec;
 
 
 /*
@@ -2916,15 +2728,10 @@ void staff_setHitReactValue(int* obj, s32 v)
 
 void collectible_func0E(int* obj, u32 v);
 
-void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3);
 
-extern void saveGame_saveObjectPos(int obj);
 
-void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3);
 
-void collectible_func0B(int* obj, int flag);
 
-int collectible_modelMtxFn(int* obj);
 
 extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
 extern int getHudHiddenFrameCount(void);
@@ -5494,21 +5301,9 @@ void staff_update(int* obj)
 }
 
 extern void playerAddHealth(void* player, int amount);
-extern void gameBitIncrement(int eventId);
-extern void saveGame_unsaveObjectPos(int* obj);
-extern void itemPickupDoParticleFx(int* obj, f32 f, int a, int b);
-extern f32 lbl_803E3450;
-extern f32 lbl_803E3454;
 
-void fn_80171E5C(int* obj);
 
-extern f32 lbl_803E345C;
-extern f32 lbl_803E3460;
-extern f32 lbl_803E3464;
-extern f32 lbl_803E3468;
-extern f32 lbl_803E346C;
 
-void fn_80172144(int* obj);
 
 extern f32 fastFloorf(f32 v);
 extern f32 Curve_EvalBSpline(f32* a, f32 t, f32* out);

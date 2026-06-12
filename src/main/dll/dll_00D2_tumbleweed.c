@@ -13,13 +13,11 @@ extern f32 lbl_803E2F5C;
 extern f32 lbl_803E2F60;
 extern f32 lbl_803E2F64;
 extern f32 lbl_803E2F68;
-extern f64 lbl_803E2F70;
 extern f32 lbl_803E2F78;
 extern f32 lbl_803E2F7C;
 extern f32 lbl_803E2F80;
 extern f32 lbl_803E2F84;
 extern f32 lbl_803E2F88;
-extern f64 lbl_803E2F90;
 extern f32 lbl_803E2F98;
 extern f32 lbl_803E2F9C;
 
@@ -331,21 +329,10 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #include "main/dll/path_control_interface.h"
 #include "main/objlib.h"
 
-typedef struct LandedArwingTriggerLaunchTargetState
-{
-    u8 pad0[0x3F0 - 0x0];
-    s16 unk3F0;
-    s16 unk3F2;
-    u8 pad3F4[0x405 - 0x3F4];
-    u8 unk405;
-    u8 pad406[0x408 - 0x406];
-} LandedArwingTriggerLaunchTargetState;
 
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
-extern void* gBaddieControlInterface;
-extern void* gPlayerInterface;
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E2FC8;
 extern f32 lbl_803E2FCC;
@@ -360,13 +347,8 @@ extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 getXZDistance(f32 * p1, f32 * p2);
 extern void gameBitIncrement(int eventId);
 extern void fn_80163990(int obj, int aux);
-extern void fn_80165B3C(int obj, int state);
-extern void landedarwing_moveSurfaceCrawler(int obj, int state);
-extern void fn_80166444(int obj, int state);
-extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
 extern void* gSHthorntailAnimationInterface;
-extern u8 framesThisStep;
 extern f32 lbl_803E2FA0;
 extern f32 lbl_803E2FA4;
 extern f32 lbl_803E2FA8;
@@ -376,17 +358,6 @@ extern f32 lbl_803E2FB8;
 extern f32 lbl_803E2FBC;
 extern f32 lbl_803E2FC0;
 extern f32 lbl_803E2FC4;
-extern f32 lbl_803E2FD8;
-extern f32 lbl_803E2FDC;
-extern f32 lbl_803E2FE0;
-extern f32 lbl_803E2FE4;
-extern f32 lbl_803E2FE8;
-extern f32 lbl_803E2FEC;
-extern f32 lbl_803E2FF0;
-extern f32 lbl_803E2FF4;
-extern f32 lbl_803E2FF8;
-extern f32 lbl_803E2FFC;
-extern f32 lbl_803E3000;
 
 extern f32 sqrtf(f32 x);
 

@@ -14,7 +14,6 @@ extern f32 timeDelta;
 
 extern f32 lbl_803E5AE8; /* 0.0f  */
 extern f32 lbl_803E5AEC; /* 1.0f  */
-extern f64 lbl_803E5B00; /* int->float magic */
 extern f32 lbl_803E5B08; /* 70.0f */
 extern f32 lbl_803E5B10; /* 40.0f */
 extern f32 lbl_803E5B68; /* 180.0f */

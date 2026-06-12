@@ -42,20 +42,11 @@ typedef struct MmshWaterspikeObjectDef
 
 
 extern u32 randomGetRange(int min, int max);
-extern void fn_801C4664(void* obj);
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern int objCreateLight(int param_1, int param_2);
-extern void GameBit_Set(int eventId, int value);
 extern void Obj_FreeObject(void* obj);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern f64 DOUBLE_803e5bd0;
-extern f64 DOUBLE_803e5c08;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5BD8;
-extern f32 lbl_803E5BE8;
 
 /*
  * --INFO--
@@ -157,7 +148,6 @@ void mmsh_scales_update(int objArg)
 /* Trivial 4b 0-arg blr leaves. */
 void mmsh_shrine_release(void);
 
-void mmsh_shrine_initialise(void);
 
 void mmsh_scales_hitDetect(void)
 {

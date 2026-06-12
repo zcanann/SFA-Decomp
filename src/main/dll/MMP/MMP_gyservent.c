@@ -28,8 +28,6 @@ extern void OSReport(const char* fmt, ...);
 extern void objInterpretSeq(void* obj, int param_2, int triggerState, int distanceSquared);
 
 extern char lbl_8032253C[];
-extern f64 lbl_803E40D0;
-extern f64 DOUBLE_803E40F0;
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40DC;
 extern f32 lbl_803E40E0;

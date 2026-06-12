@@ -2,15 +2,6 @@
 #include "main/game_ui_interface.h"
 #include "main/dll/SC/SClantern.h"
 
-typedef struct WarpstoneState
-{
-    u8 pad0[0xC - 0x0];
-    u8 unkC;
-    u8 padD[0xE - 0xD];
-    s16 unkE;
-    s16 unk10;
-    u8 pad12[0x18 - 0x12];
-} WarpstoneState;
 
 
 
@@ -29,14 +20,6 @@ typedef struct WarpstoneState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct WarpstoneFlags
-{
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 b5 : 1;
-    u8 b4 : 1;
-    u8 lo : 4;
-} WarpstoneFlags;
 
 
 /*
@@ -360,9 +343,7 @@ void SH_LevelControl_setMusic(short* obj)
 
 
 extern undefined4 FUN_800067c0();
-extern undefined8 FUN_80286834();
 extern undefined8 FUN_80286838();
-extern undefined4 FUN_80286880();
 extern undefined4 FUN_80286884();
 extern uint countLeadingZeros();
 
@@ -372,7 +353,6 @@ extern char sSPShopNumBloopsFormat[];
 extern f32 lbl_803E54B0;
 extern f32 lbl_803E54B4;
 extern f32 timeDelta;
-extern f64 lbl_803E54B8;
 
 extern void fn_80137948(char* fmt, ...);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -848,9 +828,7 @@ extern void envFxActFn_800887f8(int a);
 extern void skyFn_80088e54(int a, f32 b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern void objRenderFn_8003b8f4(f32);
 
-extern f32 lbl_803E54C8;
 
 /*
  * --INFO--
@@ -1186,19 +1164,11 @@ void sh_levelcontrol_update(int obj)
 /* Trivial 4b 0-arg blr leaves. */
 void warpstonelift_free(void);
 
-void warpstonelift_hitDetect(void);
 
-void warpstonelift_release(void);
 
-void warpstonelift_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int warpstonelift_getExtraSize(void);
-int warpstonelift_getObjectTypeId(void);
-int sh_staff_getExtraSize(void);
 
-extern s32 lbl_803DC058[2];
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E54C0;
@@ -1262,14 +1232,7 @@ void sh_levelcontrol_init(int obj)
 
 void warpstonelift_init(int obj, s8* def);
 
-extern void getYButtonItem(s16 * out);
-extern int cMenuGetSelectedItem(void);
-extern int ObjTrigger_IsSetById(int obj, int id);
-extern int ObjTrigger_IsSet(int obj);
 
-void warpstonelift_update(u8* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void sh_staff_free(int* obj, int p2);

@@ -151,11 +151,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E640C;
 extern f32 lbl_803E6410;
 extern f32 lbl_803E6414;
-extern f32 lbl_803E6418;
-extern f32 lbl_803E641C;
-extern f32 lbl_803E6420;
-extern f32 lbl_803E6424;
-extern f32 lbl_803E6428;
 extern f32 lbl_803E642C;
 
 /*

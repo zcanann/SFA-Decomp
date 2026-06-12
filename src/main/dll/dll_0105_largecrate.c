@@ -38,10 +38,8 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
 
 extern f32 lbl_803E39A8;
 extern f32 lbl_803E39AC;
-extern f64 lbl_803E39B0;
 extern f32 lbl_803E39B8;
 extern f32 lbl_803E39C0;
-extern f64 lbl_803E39C8;
 extern f32 lbl_803E39D0;
 extern f32 lbl_803E39D4;
 extern f32 lbl_803E39D8;
@@ -570,15 +568,8 @@ int LargeCrate_SeqFn(int* obj)
 
 
 extern uint GameBit_Get(int eventId);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
-                                            int pointCount);
-extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
-extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount,
-                               void* outHits, int flags);
 
-extern f32 lbl_803AC7A0[4];
 extern f32 lbl_803E39E8;
-extern f32 lbl_803E39F4;
 
 typedef union LargeCrateVariantRemap
 {

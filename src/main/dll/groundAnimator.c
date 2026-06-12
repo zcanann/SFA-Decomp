@@ -9,42 +9,13 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-typedef struct DoorLockState
-{
-    u8 unlocked;
-} DoorLockState;
-
-typedef struct SeqObjectState
-{
-    u8 flags;
-    s8 triggerBitState;
-    u8 pad02;
-} SeqObjectState;
-
-typedef struct SeqObj2State
-{
-    u8 flags;
-} SeqObj2State;
-
-typedef struct IMMultiSeqState
-{
-    u8 step;
-    u8 flags;
-} IMMultiSeqState;
 
 
-#define SEQOBJECT_STATE_OPEN 0x01
-#define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
-#define SEQOBJECT_STATE_SEQUENCE_DONE 0x04
 
-#define SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR 0x01
-#define SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE 0x02
-#define SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE 0x04
-#define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE 0x08
-#define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
-#define SEQOBJECT_FLAG_UNUSED_20 0x20
 
-#define IMMULTISEQ_LATCH_ADVANCE_BIT 0x01
+
+
+
 
 /*
  * --INFO--
@@ -88,7 +59,6 @@ typedef struct IMMultiSeqState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10 , ObjAnimUpdateState* animUpdate, undefined4 param_12, int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 /*
  * --INFO--
@@ -1111,13 +1081,6 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
 extern f32 Vec_xzDistance(float* a, float* b);
-extern void playerAddHealth(int player, u16 amount);
-extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Obj_FreeObject(int obj);
-extern f32 lbl_803E37C8;
-extern f32 lbl_803E37EC;
-extern f32 lbl_803E37F0;
 #pragma scheduling off
 #pragma peephole off
 void appleontree_handleCollectableHit(int obj);
@@ -1380,23 +1343,6 @@ void appleontree_free(int* obj);
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
 /* v1.0 ground-animator drop physics (drift twins of FUN_8017db40/FUN_8017e15c/FUN_8017e3c0). */
-extern f32 timeDelta;
-extern f32 sqrtf(f32);
-extern int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E37D4;
-extern f32 lbl_803E37D8;
-extern f32 lbl_803E37DC;
-extern f32 lbl_803E37E0;
-extern f32 lbl_803E37E4;
-extern f32 lbl_803E37E8;
-extern f32 lbl_803E37F4;
-extern f32 lbl_803E37F8;
-extern f32 lbl_803E37FC;
-extern f32 lbl_803E3800;
 
-void fn_8017D854(int obj, int msg);
 
-int fn_8017DCD4(int p, int state, f32 y);
 
-int fn_8017DF34(int p, int state, f32 y);

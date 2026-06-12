@@ -251,7 +251,6 @@ typedef struct
 } LightVecSet;
 
 extern f32 lbl_802C24B8[];
-extern f32 lbl_803DC074;
 extern u8 lbl_803DC110;
 extern u8 lbl_803DC114;
 extern u8 lbl_803DC118;

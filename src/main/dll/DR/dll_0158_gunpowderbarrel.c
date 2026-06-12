@@ -80,16 +80,8 @@ extern uint FUN_80286838();
 extern undefined4 FUN_80286884();
 
 extern undefined4* DAT_803dd740;
-extern f64 DOUBLE_803e4f90;
-extern f64 DOUBLE_803e4f98;
 extern f32 lbl_803E4F58;
 extern f32 lbl_803E4F5C;
-extern f32 lbl_803E4F74;
-extern f32 lbl_803E4F78;
-extern f32 lbl_803E4F7C;
-extern f32 lbl_803E4F80;
-extern f32 lbl_803E4F84;
-extern f32 lbl_803E4F88;
 extern f32 lbl_803E4FA0;
 
 /*

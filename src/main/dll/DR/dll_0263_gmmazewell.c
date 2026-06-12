@@ -52,11 +52,6 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateSta
     return 0;
 }
 
-typedef struct
-{
-    s16 unlockBits[28];
-    s32 itemIds[9];
-} MazewellTable;
 
 void gmmazewell_update(void* obj)
 {

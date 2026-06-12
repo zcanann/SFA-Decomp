@@ -40,16 +40,6 @@ typedef struct Doorf4State
 } Doorf4State;
 
 
-extern undefined4 FUN_80006728();
-extern bool FUN_800067f8();
-extern undefined4 FUN_80006810();
-extern undefined4 FUN_80006824();
-extern void* FUN_800069a8();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern int FUN_80017a98();
-extern int FUN_80017b00();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Peek();
@@ -57,35 +47,11 @@ extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToNearbyObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80081110();
-extern int FUN_801778e0();
-extern uint FUN_80286830();
-extern undefined4 FUN_8028687c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern uint countLeadingZeros();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e42d8;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B8;
-extern f32 lbl_803E42C8;
-extern f32 lbl_803E42CC;
-extern f32 lbl_803E42D0;
-extern f32 lbl_803E42E0;
-extern f32 lbl_803E42EC;
-extern f32 lbl_803E42F0;
-extern f32 lbl_803E42F4;
-extern f32 lbl_803E42F8;
-extern f32 lbl_803E42FC;
-extern f32 lbl_803E4300;
-extern f32 lbl_803E4304;
-extern f32 lbl_803E4308;
-extern f32 lbl_803E430C;
-extern f32 lbl_803E431C;
 
 /*
  * --INFO--
@@ -201,35 +167,15 @@ void doorf4_free(int obj)
 extern f32 lbl_803E36A0;
 
 
-extern f32 lbl_803E369C;
-extern void ObjHits_DisableObject(int* obj);
-extern void ObjHits_EnableObject(int* obj);
-extern void ObjHits_SyncObjectPositionIfDirty(int* obj);
 
-void fn_8017962C(int* obj);
 
-int fn_80179650(int* obj);
 
-void fn_80179678(int* obj);
 
-void fn_801796BC(int* obj, f32 a, f32 b, f32 c);
 
 extern int* Obj_GetPlayerObject(void);
-extern void getYButtonItem(s16 * out);
-extern u32 getButtonsJustPressed(int controller);
-extern int fn_80295BF0(int* player);
-extern int fn_8029669C(int* player);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void vecRotateZXY(void* inParams, f32* outVec);
 /* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); -- already declared */
-extern f32 lbl_803E3688;
-extern f32 lbl_803E368C;
-extern f32 lbl_803E3690;
-extern f32 lbl_803E3694;
-extern f32 lbl_803E3698;
-extern f32 lbl_803E36A4;
 
-void trickyBallFn_801793b8(int* obj, u8* params);
 
 extern u32 GameBit_Get(int eventId);
 

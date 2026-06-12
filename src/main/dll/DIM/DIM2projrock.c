@@ -3,79 +3,16 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-typedef struct Dll1D6Placement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 upTimer;
-    s16 downTimer;
-    u8 pad1E[0x20 - 0x1E];
-} Dll1D6Placement;
 
 
-typedef struct DimtruthhorniceObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 hitsLeft;
-    s16 unk1C;
-    s16 gameBit;
-} DimtruthhorniceObjectDef;
 
 
-typedef struct Dim2snowballObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 targetId;
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} Dim2snowballObjectDef;
 
 
-typedef struct Dll1CFObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} Dll1CFObjectDef;
 
 
-typedef struct Dim2pathgeneratorObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 spawnPeriod;
-    s16 unk1A;
-    s16 unk1C;
-    u16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} Dim2pathgeneratorObjectDef;
 
 
-typedef struct Dim2pathgeneratorPlacement
-{
-    u8 pad0[0x3 - 0x0];
-    u8 unk3;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    u8 pad8[0x14 - 0x8];
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    u16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} Dim2pathgeneratorPlacement;
 
 
 /* dim2conveyor_getExtraSize == 0x14. */
@@ -170,48 +107,12 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-extern undefined4 FUN_800067c0();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_RecordObjectHit();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern uint countLeadingZeros();
 
 extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e56e8;
-extern f64 DOUBLE_803e5708;
-extern f64 DOUBLE_803e5730;
-extern f64 DOUBLE_803e5760;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DC078;
-extern f32 lbl_803E56BC;
-extern f32 lbl_803E56C0;
-extern f32 lbl_803E56D8;
-extern f32 lbl_803E56DC;
-extern f32 lbl_803E56E0;
-extern f32 lbl_803E56E4;
-extern f32 lbl_803E56F4;
-extern f32 lbl_803E56F8;
-extern f32 lbl_803E56FC;
-extern f32 lbl_803E5710;
-extern f32 lbl_803E5714;
-extern f32 lbl_803E5718;
-extern f32 lbl_803E571C;
-extern f32 lbl_803E5720;
-extern f32 lbl_803E5724;
-extern f32 lbl_803E5728;
-extern f32 lbl_803E573C;
-extern f32 lbl_803E5740;
-extern f32 lbl_803E5744;
-extern f32 lbl_803E5748;
-extern f32 lbl_803E574C;
-extern f32 lbl_803E5754;
-extern f32 lbl_803E5758;
-extern f32 lbl_803E5768;
 
 /*
  * --INFO--
@@ -226,29 +127,10 @@ extern f32 lbl_803E5768;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct DimLevelControlState
-{
-    f32 timer;
-    int latch;
-    u8 saveState;
-    u8 unk9;
-    s16 musicTrack;
-    u8 unkC;
-    u8 unkD;
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 b5 : 1;
-    u8 b4 : 1;
-    u8 b3 : 1;
-} DimLevelControlState;
 
 extern void getEnvfxActImmediately(int a, int b, int id, int d);
 extern void getEnvfxAct(int a, int b, int id, int d);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
 extern void Music_Trigger(int id, int value);
-extern int* gSHthorntailAnimationInterface;
-extern f32 lbl_803E4A24;
 extern f32 timeDelta;
 
 
@@ -316,7 +198,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4);
 
 
 /*
@@ -373,15 +254,10 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 
 
 
-void dim2pathgenerator_free(void);
 
-void dim2pathgenerator_render(void);
 
-void dim2pathgenerator_hitDetect(void);
 
-void dim2pathgenerator_release(void);
 
-void dim2pathgenerator_initialise(void);
 
 void dll_1DA_free(void)
 {
@@ -389,8 +265,6 @@ void dll_1DA_free(void)
 
 /* 8b "li r3, N; blr" returners. */
 int dimtruthhornice_getExtraSize(void);
-int dim2pathgenerator_getExtraSize(void);
-int dim2pathgenerator_getObjectTypeId(void);
 int dll_1DA_getExtraSize(void) { return 0x8; }
 int dll_1DA_getObjectTypeId(void) { return 0x0; }
 
@@ -399,9 +273,6 @@ int dll_1DA_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A30;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4A58;
-extern f32 lbl_803E4A78;
-extern f32 lbl_803E4AA0;
 extern f32 lbl_803E4AD8;
 
 
@@ -447,89 +318,35 @@ void dll_1DA_hitDetect(int obj)
 }
 
 extern int ObjList_FindObjectById(int id);
-extern void mm_free(void* p);
 extern u8 lbl_803DBF20;
-extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
-int fn_801B6D40(int* obj, int v);
-
-u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4);
-
-void dll_1D6_free(int* obj);
-
-void dim2pathgenerator_init(int* obj, int* def);
-
-void dimtruthhornice_init(int* obj, int* def);
 
 
-void dll_1CF_init(int* obj, int* def);
 
-extern f32 lbl_803E4A28;
+
+
+
+
 extern int getSaveGameLoadStatus(void);
-extern void unlockLevel(int a, int b, int c);
-
-void dim_levelcontrol_init(int obj);
 
 
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
-extern f32 lbl_803E4A5C;
-extern f32 lbl_803E4A60;
-extern f32 lbl_803E4A64;
-extern f32 lbl_803E4A68;
-extern f32 lbl_803E4A6C;
+
 
 
 
 extern void* mmAlloc(int size, int a, int b);
-extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
-extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
-extern s16 lbl_803DBF18;
-extern f32 lbl_803E4A88;
 
-void dll_1D6_init(int* obj, u8* params);
 
-extern f32 lbl_803E4A40;
-extern f32 lbl_803E4A44;
-extern f32 lbl_803E4A48;
-extern f32 lbl_803E4A4C;
 
-void dimtruthhornice_update(int* obj);
 
-extern int Obj_AllocObjectSetup(int kind, int id);
-extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-extern u8 Obj_IsLoadingLocked(void);
 extern u8 framesThisStep;
 
-void dim2pathgenerator_update(int* obj);
 
-extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803E4A7C;
-extern f32 lbl_803E4A80;
-extern f32 lbl_803E4A84;
-extern f32 lbl_803E4A8C;
-extern f32 lbl_803E4A90;
 
-void dll_1D6_update(int* obj);
 
 extern void Curve_BuildHermiteCoeffs(void);
-extern int** ObjList_GetObjects(int* startOut, int* countOut);
-extern int getAngle(f32 a, f32 b);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E4AA4;
-extern f32 lbl_803E4AA8;
-extern f32 lbl_803E4AAC;
-extern f32 lbl_803E4AB0;
-extern f32 lbl_803E4AB4;
-extern f32 lbl_803E4AB8;
-extern f32 lbl_803E4ABC;
-extern f32 lbl_803E4AC0;
-extern f64 lbl_803E4AC8;
-extern f32 lbl_803E4AD0;
 
 
 /* segment pragma-stack balance (re-split): */
@@ -641,46 +458,6 @@ typedef struct Dll1DBState
 extern undefined4 ObjHits_AddContactObject();
 extern int ObjHits_GetPriorityHit();
 
-extern f64 DOUBLE_803e57c0;
-extern f64 DOUBLE_803e57d8;
-extern f64 DOUBLE_803e57f8;
-extern f64 DOUBLE_803e5820;
-extern f32 lbl_803E5770;
-extern f32 lbl_803E5774;
-extern f32 lbl_803E5778;
-extern f32 lbl_803E577C;
-extern f32 lbl_803E5780;
-extern f32 lbl_803E5784;
-extern f32 lbl_803E5788;
-extern f32 lbl_803E5790;
-extern f32 lbl_803E5794;
-extern f32 lbl_803E5798;
-extern f32 lbl_803E579C;
-extern f32 lbl_803E57A4;
-extern f32 lbl_803E57A8;
-extern f32 lbl_803E57AC;
-extern f32 lbl_803E57B0;
-extern f32 lbl_803E57B4;
-extern f32 lbl_803E57B8;
-extern f32 lbl_803E57BC;
-extern f32 lbl_803E57CC;
-extern f32 lbl_803E57D0;
-extern f32 lbl_803E57D4;
-extern f32 lbl_803E57E0;
-extern f32 lbl_803E57E4;
-extern f32 lbl_803E57E8;
-extern f32 lbl_803E57EC;
-extern f32 lbl_803E57F0;
-extern f32 lbl_803E5804;
-extern f32 lbl_803E5808;
-extern f32 lbl_803E580C;
-extern f32 lbl_803E5810;
-extern f32 lbl_803E5814;
-extern f32 lbl_803E5818;
-extern f32 lbl_803E5828;
-extern f32 lbl_803E5834;
-extern f32 lbl_803E5838;
-extern f32 lbl_803E583C;
 
 /*
  * --INFO--

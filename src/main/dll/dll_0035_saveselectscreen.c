@@ -59,16 +59,7 @@ void saveSelectGoToChapterSelect(void);
 void saveSelectGoToChooseSlot(int arg);
 extern undefined8 n_attractmode_releaseMovieBuffers();
 extern undefined4 saveSelectSetSlot();
-extern undefined8 creditsStart();
-extern uint countLeadingZeros();
 
-extern f64 DOUBLE_803e29f8;
-extern f32 lbl_803E29E4;
-extern f32 lbl_803E29E8;
-extern f32 lbl_803E29EC;
-extern f32 lbl_803E29F0;
-extern f32 lbl_803E29F4;
-extern char s__savegame_save_d_bin_8031b4b4[];
 extern void mm_free(void* p);
 extern void* lbl_803A8658[10];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;

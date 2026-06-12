@@ -6,26 +6,7 @@
 extern void objRenderFn_80041018(void);
 
 
-typedef struct BabyCloudRunnerPlacement
-{
-    ObjPlacement base;
-    s16 gateGameBit;
-    s16 rememberedGameBit;
-    u8 targetGroup;
-    u8 triggerIdMin;
-    u8 triggerIdMax;
-    u8 flags;
-    u8 pad20[0x24 - 0x20];
-} BabyCloudRunnerPlacement;
 
-typedef struct BabyCloudRunnerState
-{
-    u8 mode;
-    u8 triggerId;
-    u8 rememberedGameBitValue;
-    u8 pad03;
-    GameObject* target;
-} BabyCloudRunnerState;
 
 
 
@@ -102,8 +83,6 @@ typedef struct Dll14DState
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern s16 getAngle(f32 dx, f32 dz);
@@ -113,10 +92,8 @@ extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E3854;
-extern f32 lbl_803E44E4;
 extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;
-extern f64 lbl_803E3860;
 extern f32 lbl_803E3870;
 extern f32 lbl_803E3874;
 extern f32 lbl_803E3878;

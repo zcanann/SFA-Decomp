@@ -2,12 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/dll_02BC_andross.h"
 
-typedef struct AndrossUpdateModelAlphaState
-{
-    u8 pad0[0x68 - 0x0];
-    f32 unk68;
-    u8 pad6C[0x70 - 0x6C];
-} AndrossUpdateModelAlphaState;
 
 
 int andross_getExtraSize(void) { return 0xec; }

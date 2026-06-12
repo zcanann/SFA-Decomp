@@ -4,54 +4,10 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 
-typedef struct WaveanimatorObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 originX;
-    s16 originY;
-    s8 spanX;
-    s8 spanY;
-    s16 modelVariant;
-    s8 unk20;
-    s8 period;
-    s8 gridN;
-    u8 pad23[0x25 - 0x23];
-    u8 unk25;
-    u8 radius;
-    u8 yOffset;
-} WaveanimatorObjectDef;
 
 
-typedef struct GroundanimatorPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 pad23[0x25 - 0x23];
-    u8 unk25;
-    u8 pad26[0x28 - 0x26];
-} GroundanimatorPlacement;
 
 
-typedef struct AlphaanimatorPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s8 unk1C;
-    s8 unk1D;
-    u8 active;
-    u8 unk1F;
-    u8 unk20;
-    u8 pad21[0x22 - 0x21];
-    u16 fadeMax;
-    u16 sfxId;
-    u8 pad26[0x28 - 0x26];
-} AlphaanimatorPlacement;
 
 
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
@@ -111,83 +67,12 @@ typedef struct VisAnimatorState
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern int FUN_80017a90();
-extern undefined4 FUN_80017a98();
-extern int FUN_80017af0();
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern int FUN_800480a0();
-extern int FUN_8005337c();
-extern undefined4 FUN_80056418();
-extern int FUN_80056448();
-extern int FUN_8005af70();
-extern int FUN_8005b398();
-extern undefined4 FUN_8005ff38();
-extern undefined4 FUN_8005ff90();
-extern uint FUN_80060058();
-extern int FUN_80060064();
-extern undefined4 FUN_800600b4();
-extern int FUN_800600e4();
-extern undefined4 FUN_800631d4();
-extern int FUN_80063298();
-extern undefined4 FUN_801a8ae8();
-extern undefined4 FUN_801a8b20();
-extern undefined4 FUN_80242178();
-extern uint FUN_80286810();
-extern undefined8 FUN_8028681c();
-extern undefined8 FUN_80286820();
-extern undefined8 FUN_8028682c();
-extern uint FUN_80286840();
-extern undefined4 TRKNubMainLoop();
-extern undefined4 FUN_80286868();
-extern undefined4 FUN_8028686c();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_802924c4();
-extern undefined4 FUN_80293f90();
 
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de768;
-extern undefined4 DAT_803de76c;
-extern undefined4 DAT_803de770;
-extern undefined4 DAT_803de774;
-extern f64 DOUBLE_803e4c00;
-extern f64 DOUBLE_803e4c20;
-extern f64 DOUBLE_803e4c28;
-extern f64 DOUBLE_803e4c38;
-extern f64 DOUBLE_803e4c60;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E4BDC;
-extern f32 lbl_803E4BE8;
-extern f32 lbl_803E4BEC;
-extern f32 lbl_803E4BF0;
-extern f32 lbl_803E4BF4;
-extern f32 lbl_803E4BF8;
-extern f32 lbl_803E4BFC;
-extern f32 lbl_803E4C08;
-extern f32 lbl_803E4C10;
-extern f32 lbl_803E4C14;
-extern f32 lbl_803E4C18;
-extern f32 lbl_803E4C1C;
-extern f32 lbl_803E4C30;
-extern f32 lbl_803E4C40;
-extern f32 lbl_803E4C44;
-extern f32 lbl_803E4C48;
-extern f32 lbl_803E4C4C;
-extern f32 lbl_803E4C50;
-extern f32 lbl_803E4C54;
-extern f32 lbl_803E4C58;
-extern f32 lbl_803E4C5C;
 
 /*
  * --INFO--
@@ -238,19 +123,12 @@ extern void mm_free(void* p);
 
 
 
-void visanimator_free(void);
 
-void visanimator_render(void);
 
-void visanimator_hitDetect(void);
 
-void visanimator_release(void);
 
-void visanimator_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int visanimator_getExtraSize(void);
-int visanimator_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 
@@ -259,10 +137,7 @@ int visanimator_getObjectTypeId(void);
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3F70;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3F78;
-extern f32 lbl_803E3FC4;
 #pragma peephole off
 
 
@@ -278,24 +153,6 @@ extern f32 lbl_803E3F98;
 #pragma scheduling off
 #pragma scheduling reset
 
-extern int objPosToMapBlockIdx(double x, double y, double z);
-extern void fn_801923F8(int* cfg);
-extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
-                                   HitAnimatorPlacement* desc);
-extern int fn_80065640(void);
-extern void fn_80065574(int a, int b, int c);
-extern u8 lbl_803DDAE8;
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-extern f32 lbl_803E3FB8;
 #pragma peephole off
 #pragma scheduling off
 #pragma scheduling reset
@@ -308,77 +165,44 @@ extern f32 lbl_803E3FB8;
 
 #pragma peephole off
 #pragma scheduling off
-void visanimator_init(int* obj, int* desc);
-
-void visanimator_update(int* obj);
 #pragma scheduling reset
 #pragma peephole reset
 
-extern void* lbl_803DDAEC;
-extern void* lbl_803DDAF0;
-extern void* lbl_803DDAF4;
 #pragma peephole off
 #pragma scheduling off
 #pragma scheduling reset
 #pragma peephole reset
-extern u8 lbl_803DDAF8;
-extern u8 framesThisStep;
+
+#pragma peephole off
+#pragma scheduling off
+
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+#pragma scheduling reset
+#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 
-extern void fn_800605F0(void* cell, void* out);
-extern void fn_8006058C(void* cell, void* in);
 #pragma scheduling off
 #pragma peephole off
 
-extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FAC;
-extern f32 lbl_803E3FB0;
-extern f32 lbl_803E3FB4;
-extern f32 lbl_803E3FBC;
-extern f32 timeDelta;
-extern void fn_801A80F0(int* e, int arg);
 #pragma scheduling off
 #pragma peephole off
 
-extern float fastFloorf(float x);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E3FC0;
-#pragma scheduling off
-#pragma peephole off
-void fn_801932C8(int* obj, GroundAnimatorState* p2, int* p3);
-
-extern int* Obj_GetPlayerObject(void);
-extern int fn_80060688(void* block, int v);
-extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
-extern void DCStoreRangeNoSync(void* addr, int len);
-extern void* mmAlloc(int size, int align, int tag);
-extern u16 lbl_803DBDF0[];
 #pragma scheduling off
 #pragma peephole off
 
-extern f32 lbl_803E3F7C;
-extern f32 lbl_803E3F80;
-extern f32 lbl_803E3F84;
+#pragma scheduling off
+#pragma peephole off
 
 
-extern f32 lbl_803E3F40;
-extern f32 lbl_803E3F44;
-extern f32 lbl_803E3F48;
-extern f32 lbl_803E3F4C;
-extern f32 lbl_803E3F50;
-extern f32 lbl_803E3F54;
-extern f32 lbl_803E3F58;
-extern f32 lbl_803E3F5C;
-extern f32 lbl_803E3F60;
-extern f32 lbl_803E3F64;
-extern f32 mathSinf(f32);
-
-void fn_801923F8(int* cfgArg);
 
 
-void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate, HitAnimatorPlacement* desc);
+
+
 #pragma scheduling reset
 #pragma peephole reset
 /* segment pragma-stack balance (re-split): */
@@ -413,42 +237,15 @@ typedef struct WallanimatorState
 } WallanimatorState;
 
 
-typedef struct XyzanimatorState
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 pad5[0x8 - 0x5];
-} XyzanimatorState;
 
 
-extern undefined4 FUN_80017748();
 extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
-extern void* fn_800606FC(int* obj, int idx);
 extern void mm_free(void* ptr);
-extern void DCStoreRange(void* addr, u32 nBytes);
-extern int return0_80060B90(void);
-extern int FUN_800600d4();
-extern undefined8 FUN_80286830();
-extern undefined8 FUN_80286838();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286884();
 
 extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e4c88;
-extern f32 lbl_803E4C68;
-extern f32 lbl_803E4C6C;
-extern f32 lbl_803E4C70;
-extern f32 lbl_803E4C74;
-extern f32 lbl_803E4C78;
-extern f32 lbl_803E4C7C;
-extern f32 lbl_803E4C80;
-extern f32 lbl_803E4C94;
 extern f32 lbl_803E4C98;
 extern f32 lbl_803E3FFC;
-extern f32 lbl_803E4000;
-extern f32 lbl_803E4008;
-extern f64 lbl_803E4010;
 extern f32 lbl_803E3FD0;
 extern f32 lbl_803E3FD4;
 extern f32 lbl_803E3FD8;
@@ -457,7 +254,6 @@ extern f32 lbl_803E3FE0;
 extern f32 lbl_803E3FE4;
 extern f32 lbl_803E3FE8;
 extern f32 lbl_803E3FEC;
-extern f64 lbl_803E3FF0;
 
 /*
  * --INFO--
@@ -649,31 +445,8 @@ double FUN_80194a70(int param_1, byte param_2)
 #pragma peephole on
 
 
-typedef struct MapBlockHdr
-{
-    u16 start;
-    u16 pad1[2];
-    s16 posA;
-    s16 posB;
-} MapBlockHdr;
 
-typedef struct VertexS16
-{
-    s16 x;
-    s16 y;
-    s16 z;
-} VertexS16;
 
-typedef struct EdgeVerts
-{
-    u8 pad[6];
-    s16 a;
-    s16 b;
-    s16 c;
-    s16 d;
-    s16 e;
-    s16 f;
-} EdgeVerts;
 
 #pragma scheduling off
 #pragma peephole off
@@ -714,7 +487,6 @@ int wallanimator_getExtraSize(void)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FF8;
-extern f32 lbl_803E4004;
 
 void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

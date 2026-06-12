@@ -680,7 +680,6 @@ extern f32 lbl_803E49D0;
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
 extern f32 lbl_803E4A18;
-extern f32 lbl_803E4A20;
 
 void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -823,7 +822,6 @@ int explosion_getObjectTypeId(int obj)
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 extern void Music_Trigger(s32 triggerId, s32 mode);
-extern void timeOfDayFn_80055000(void);
 
 void dim_levelcontrol_free(int p1);
 

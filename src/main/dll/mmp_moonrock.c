@@ -1,16 +1,6 @@
 #include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
 
-typedef struct WaveanimatorState
-{
-    u8 pad0[0x34 - 0x0];
-    u8 unk34;
-    u8 pad35[0x36 - 0x35];
-    u8 unk36;
-    u8 unk37;
-    u8 unk38;
-    u8 pad39[0x40 - 0x39];
-} WaveanimatorState;
 
 
 extern uint GameBit_Get(int eventId);
@@ -43,15 +33,6 @@ typedef struct TexScrollMapBlock
     u8 layerCount;
 } TexScrollMapBlock;
 
-typedef struct TexScrollMapLayer
-{
-    u8 pad00[0x24];
-    void* texture;
-    u8 pad28[2];
-    u8 scrollSlot;
-    u8 pad2B[0x41 - 0x2B];
-    u8 materialCount;
-} TexScrollMapLayer;
 
 void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
 {

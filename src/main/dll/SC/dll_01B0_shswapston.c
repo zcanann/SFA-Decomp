@@ -13,50 +13,15 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 } WarpstoneUpdateMenuAnimObjState;
 
 
-extern undefined4 FUN_80006820();
-extern undefined4 FUN_80006824();
-extern undefined8 FUN_80006bb4();
-extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern uint getButtonsJustPressed(int controller);
-extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined8 FUN_80043030();
-extern undefined4 FUN_80044404();
 extern int playerHasKrazoaSpirit();
 extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
-extern undefined4 FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_80294cd0();
 
-extern undefined DAT_803adca8;
-extern undefined4 DAT_803adcb6;
-extern undefined4 DAT_803adcba;
-extern undefined4 DAT_803adcc3;
 extern int lbl_803DC050;
 extern int lbl_803DDBF4;
-extern undefined4 DAT_803dccb8;
-extern undefined4 DAT_803de874;
-extern f64 DOUBLE_803e6128;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E60F8;
-extern f32 lbl_803E60FC;
-extern f32 lbl_803E6100;
-extern f32 lbl_803E6104;
-extern f32 lbl_803E6108;
-extern f32 lbl_803E610C;
-extern f32 lbl_803E6110;
-extern f32 lbl_803E6114;
-extern f32 lbl_803E6118;
-extern f32 lbl_803E611C;
-extern f32 lbl_803E6120;
-extern f32 lbl_803E6130;
 
 /*
  * --INFO--

@@ -19,15 +19,6 @@ extern f32 lbl_803E5210;
 
 void fn_801CDF94(int obj, int state, int flag);
 
-typedef struct TreeBirdState
-{
-    s16 gameBit;
-    s16 triggerId;
-    s16 immediateTrigger;
-    u8 triggerLatched;
-    u8 searchDelay;
-    void* targetObj;
-} TreeBirdState;
 
 /*
  * --INFO--

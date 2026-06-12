@@ -119,8 +119,6 @@ extern char lbl_803DBB98;
 extern int lbl_803E1E04;
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E64;
-extern double lbl_803E1E78;
-extern double lbl_803E1E88;
 extern f32 lbl_803E1E94;
 extern f32 lbl_803E1E80;
 extern f32 lbl_803E1EC8;

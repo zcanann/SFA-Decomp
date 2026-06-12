@@ -4,23 +4,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-extern undefined8 FUN_80006724();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_80041ff8();
-extern undefined8 FUN_800427c8();
-extern undefined8 FUN_80042800();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern int FUN_80044404();
-extern undefined4 FUN_80053b3c();
-extern undefined8 FUN_80053c98();
-extern undefined8 FUN_8005d17c();
-extern undefined4 FUN_80080f28();
-extern undefined8 FUN_80080f3c();
-extern uint FUN_80286840();
-extern undefined4 FUN_8028688c();
 
-extern f32 FLOAT_803e4b30;
 
 /*
  * --INFO--
@@ -379,47 +363,12 @@ void transporter_render(void)
 #include "main/dll/CF/warp_pad.h"
 #include "main/game_object.h"
 
-typedef struct CfDoorlightObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 frameStep;
-    u8 pad1E[0x20 - 0x1E];
-} CfDoorlightObjectDef;
 
 
-extern undefined4 FUN_800400b0();
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
-extern void* objFindTexture(void* obj, int target, int param_3);
 
-extern undefined4 DAT_803ddb38;
 
-typedef struct CfDoorLightState
-{
-    s32 textureId;
-    u8 frameStep;
-    u8 pad05[0x8 - 0x5];
-    s32 maxFrame;
-    s32 resetFrame;
-    s32 currentFrame;
-    u8 flags;
-    u8 pad15[0x18 - 0x15];
-} CfDoorLightState;
 
-typedef struct CfDoorLightDef
-{
-    u8 pad00[0x1e];
-    s16 doneEvent;
-    s16 triggerEvent;
-} CfDoorLightDef;
 
-typedef struct BarrelPadParticleArgs
-{
-    u8 pad00[0xc];
-    f32 offset[3];
-} BarrelPadParticleArgs;
 
 /*
  * --INFO--
@@ -576,22 +525,9 @@ void transporter_init(int obj, u8* params)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3F00;
-extern f32 lbl_803E3F04;
-extern f32 lbl_803E3F08;
-extern f32 lbl_803E3F0C;
-extern f32 lbl_803E3F10;
-extern f32 lbl_803E3F14;
-extern f32 lbl_803E3F18;
-extern f32 lbl_803E3F1C;
-extern f32 lbl_803E3F20;
-extern f32 lbl_803E3F24;
 
 
 
-extern f32 lbl_803E3EEC;
-extern f32 lbl_803E3EF0;
 
 
 

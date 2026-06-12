@@ -14,67 +14,17 @@
 #include "main/screen_transition.h"
 
 
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_800067e8();
-extern undefined4 FUN_80006824();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80039520();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081120();
-extern undefined4 FUN_8011eb10();
-extern undefined4 FUN_80286830();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4 DAT_80328658;
-extern undefined4 DAT_803286b0;
-extern f64 DOUBLE_803e62a8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803e6288;
-extern f32 FLOAT_803e628c;
-extern f32 FLOAT_803e6290;
-extern f32 FLOAT_803e6294;
-extern f32 FLOAT_803e6298;
-extern f32 FLOAT_803e629c;
-extern f32 FLOAT_803e62a0;
-extern f32 FLOAT_803e62b4;
-extern f32 FLOAT_803e62b8;
-extern f32 FLOAT_803e62bc;
-extern f32 FLOAT_803e62c0;
-extern f32 FLOAT_803e62c4;
-extern f32 FLOAT_803e62c8;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 timeDelta;
-extern f32 lbl_803E55F0;
-extern f32 lbl_803E55F4;
-extern f64 lbl_803E5610;
-extern f32 lbl_803E5618;
-extern f32 lbl_803E561C;
-extern f32 lbl_803E5620;
-extern f32 lbl_803E5624;
-extern f32 lbl_803E5628;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
 extern u8* Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
 extern void ObjHits_DisableObject(ScTotemBondObject * obj);
 extern void ObjHits_EnableObject(ScTotemBondObject * obj);
-extern u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject * obj, ScTotemPuzzleState * state);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 mathSinf(f32 angle);
@@ -83,8 +33,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
-extern f32 lbl_803E5640;
-extern f32 lbl_803E5644;
 extern f32 lbl_803E5638;
 extern f32 lbl_803E563C;
 extern f32 lbl_803E5654;
@@ -94,20 +42,9 @@ extern f32 lbl_803E5660;
 extern void hudFn_8011f38c(int visible);
 extern void fn_80296124(int player, void* pos, void* obj, int arg);
 
-#define SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
 
-#define SC_TOTEMPUZZLE_STATE_FLAGS_OFFSET 0x12
-#define SC_TOTEMPUZZLE_STATE_STEP_OFFSET 0x10
-#define SC_TOTEMPUZZLE_STATE_READY_FLAG 0x2
-#define SC_TOTEMPUZZLE_STATE_REVERSED_FLAG 0x1
-#define SC_TOTEMPUZZLE_FORWARD_STEP 4
-#define SC_TOTEMPUZZLE_REVERSE_STEP 3
-#define SC_TOTEMPUZZLE_SOLVED_COUNT 5
 
-#define SC_TOTEMPUZZLE_WRONG_SFX_ID 0x487
-#define SC_TOTEMPUZZLE_COMPLETE_SFX_ID 0x7e
-#define SC_TOTEMPUZZLE_PROGRESS_SFX_ID 0x409
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
 #define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b

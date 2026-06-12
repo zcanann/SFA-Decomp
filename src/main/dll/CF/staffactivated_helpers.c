@@ -3,21 +3,9 @@
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/mapEventTypes.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b94();
-extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305c4();
-extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
-extern undefined4 FUN_80039520();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void doRumble(f32 strength);
 extern int Obj_GetPlayerObject(void);
@@ -30,15 +18,6 @@ extern f32 sqrtf(f32 value);
 extern void vecRotateZXY(void* rotation, void* vec);
 extern u16 getAngle(f32 x, f32 z);
 
-extern f64 DOUBLE_803e4868;
-extern f64 lbl_803E3BD0;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e4850;
-extern f32 FLOAT_803e4854;
-extern f32 FLOAT_803e4858;
-extern f32 FLOAT_803e485c;
-extern f32 FLOAT_803e4860;
-extern f32 FLOAT_803e4864;
 extern f32 timeDelta;
 extern const f32 lbl_803E3BBC;
 extern const f32 lbl_803E3BC4;
@@ -47,11 +26,8 @@ extern f32 lbl_803E3BCC;
 extern f32 lbl_803E3BD8;
 extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
-extern f64 lbl_803E3BE8;
 extern s16 lbl_803DBDE0[4];
 
-#define STAFFACTIVATED_ACTIVE 0x80
-#define STAFFACTIVATED_LOCKED 0x40
 
 /*
  * --INFO--

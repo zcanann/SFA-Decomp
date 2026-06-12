@@ -53,7 +53,6 @@ extern void textureFree(void* p);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8);
 
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
@@ -320,7 +319,6 @@ extern s16 lbl_803DD8FE;
 extern s16 lbl_803DD900;
 extern s16 lbl_803DD902;
 extern s16 lbl_803DD904;
-extern f64 lbl_803E21E0;
 
 #define LINK_FLAG_DRAW_SLOTS       0x0004
 #define LINK_FLAG_DRAW_BLACK_SHADOW 0x0100
@@ -569,50 +567,13 @@ typedef struct LinkMenuItem
     u8 pad39[3];
 } LinkMenuItem;
 
-#define TITLE_MENU_FLAG_ENABLED        0x01
-#define TITLE_MENU_FLAG_WRAP           0x02
-#define TITLE_MENU_FLAG_MOVED_LEFT     0x04
-#define TITLE_MENU_FLAG_MOVED_RIGHT    0x08
-#define TITLE_MENU_FLAG_CHANGED        0x10
-#define TITLE_MENU_FLAG_A_TOGGLE       0x20
-#define TITLE_MENU_FLAG_VOLUME_PREVIEW 0x40
-#define TITLE_MENU_FLAG_MUSIC_PREVIEW  0x80
 
 #define LINK_FLAG_DISABLE_NAV_TO 0x1000
 #define LINK_FLAG_NO_ACCEPT      0x0020
 #define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
 
-extern undefined8 FUN_80003494();
-extern undefined4 FUN_800067b0();
-extern undefined4 FUN_80006818();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
-extern undefined8 FUN_80006b9c();
-extern undefined4 FUN_80006ba8();
-extern undefined4 FUN_80006bac();
-extern undefined4 FUN_80006bb0();
-extern undefined4 FUN_80006bb4();
-extern undefined4 FUN_80006c6c();
-extern undefined4 FUN_80017460();
-extern undefined4 FUN_80017480();
-extern undefined4 FUN_80017484();
-extern undefined4 FUN_8001750c();
-extern undefined4 FUN_80017510();
 extern uint GameBit_Get(int eventId);
-extern int FUN_800176d0();
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern undefined4 FUN_80053754();
-extern int FUN_8005398c();
-extern undefined4 FUN_800709e8();
-extern undefined8 FUN_800723a0();
-extern undefined8 FUN_80286824();
-extern undefined2 FUN_8028683c();
-extern undefined2 FUN_80286840();
-extern undefined4 FUN_80286870();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int pad);
@@ -625,44 +586,6 @@ extern u8 framesThisStep;
 extern s8 lbl_803DD910;
 extern s8 lbl_803DD913;
 
-extern undefined4 DAT_8031cdf8;
-extern undefined4 DAT_8031ce04;
-extern short DAT_8031cef8;
-extern undefined2 DAT_803aa0b8;
-extern undefined4 DAT_803aa0bc;
-extern undefined4 DAT_803aa0c2;
-extern undefined4 DAT_803aa0cc;
-extern undefined4 DAT_803aa0ce;
-extern undefined4 DAT_803aa0d2;
-extern undefined4 DAT_803aa0d3;
-extern undefined4 DAT_803aa0d4;
-extern undefined4 DAT_803aa0d5;
-extern undefined4 DAT_803aa0d6;
-extern int DAT_803aaa18;
-extern undefined4 DAT_803aaa1c;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de578;
-extern undefined4 DAT_803de579;
-extern undefined4 DAT_803de57a;
-extern undefined4 DAT_803de57c;
-extern undefined4 DAT_803de57e;
-extern undefined4 DAT_803de580;
-extern undefined4 DAT_803de582;
-extern undefined4 DAT_803de584;
-extern undefined4* DAT_803de588;
-extern undefined4 DAT_803de58c;
-extern undefined4 DAT_803de58e;
-extern undefined4 DAT_803de590;
-extern undefined4 DAT_803de591;
-extern undefined4 DAT_803de592;
-extern undefined4 DAT_803de593;
-extern undefined4 DAT_803de598;
-extern undefined4 DAT_803de5a0;
-extern f64 DOUBLE_803e2e78;
-extern f32 FLOAT_803de59c;
-extern f32 FLOAT_803e2e80;
-extern f32 FLOAT_803e2e84;
-extern f32 FLOAT_803e2e88;
 
 /*
  * --INFO--
@@ -827,71 +750,39 @@ int TitleMenuItem_isChanged(TitleMenuItem* item);
  * Logic-only ? target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
  * strips the redundant extsh before sth (same family as GameUI_func0F /
  * CMenu_SetShouldClose). */
-void TitleMenuItem_setVal(TitleMenuItem* item, int val);
 
 /* EN v1.0 0x80131590  size: 8b   Getter for item->value. */
-s16 TitleMenuItem_getVal(TitleMenuItem* item);
 
-extern s16 lbl_803DD918;
-extern f32 lbl_803DD91C;
-extern s8 lbl_803DD920;
-extern void* lbl_803A9DB8[6];
-extern f32 lbl_803E21F0;
-extern f32 lbl_803E21F4;
-extern f32 lbl_803E21F8;
-extern s8 padGetStickX(int port);
-extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
-extern void Music_PlayTrackByIndex(int index);
-extern void* gameTextGetPhrase(int textId, int variant);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextSetWindowStrPos(int windowId, int x, int y);
-extern void gameTextAppendStr(void* str, int windowId);
 
 /* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
-void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag);
 
 /* EN v1.0 0x8013160C  size: 12b  Read enabled bit from item->flags. */
-int TitleMenuItem_isEnabled(TitleMenuItem* item);
 
 /* EN v1.0 0x80131618  size: 808b  Render title menu item. */
-void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha);
 
 /* EN v1.0 0x80131940  size: 948b  Update title menu item input state. */
-void TitleMenuItem_update(TitleMenuItem* item);
 
 /* EN v1.0 0x80132008  size: 8b   Trivial 1-returner. */
-int Dummy3E_func05_ret_1(void);
 
 /* EN v1.0 0x80132010  size: 4b   Empty no-op. */
-void Dummy3E_func04_nop(void);
 
 /* EN v1.0 0x80132014  size: 8b   Trivial 0-returner. */
-int Dummy3E_func03_ret_0(void);
 
 /* EN v1.0 0x8013201C  size: 4b   Empty no-op. */
-void Dummy3E_release(void);
 
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
-void Dummy3E_initialise(void);
 
-extern s16 lbl_8031C2A8[6];
-extern void mm_free(void);
 extern void fn_8001BDD4(int);
 
 /* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
-void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag);
 
 /* EN v1.0 0x80131CF4  size: 32b  Wrapper for mm_free. */
-void TitleMenuItem_free(void);
 
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
-void TitleMenuItem_initialise(void);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void fn_8001BE2C(int mode);
-extern void* mmAlloc(int size, int heap, int flags);
 extern void* memcpy(void* dst, const void* src, int size);
 extern void padFn_80014b18(int value);
 extern const char* lbl_803DD908;
@@ -899,15 +790,11 @@ extern char lbl_8031C1A8[];
 
 
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
-TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue, s16 maxValue, s16 value);
 
 /* EN v1.0 0x80131DBC  size: 164b  Create simple title menu item. */
-TitleMenuItem* TitleMenuItem_create(s16 x, s16 y, s16 minValue, s16 maxValue, s16 value);
 
 /* EN v1.0 0x80131E60  size: 172b  Create text-backed title menu item. */
-TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxValue, s16 value, int textId);
 
-void fn_80131F0C(void);
 
 void Link_release(void)
 {

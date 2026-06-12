@@ -8,20 +8,9 @@
 
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017830();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
 
-extern undefined4 DAT_803dc070;
 
 /*
  * --INFO--
@@ -37,41 +26,12 @@ extern undefined4 DAT_803dc070;
  * PAL Size: TODO
  */
 extern void skyFn_80088c94(int a, int b);
-extern void fn_801C5990(s16 * obj);
-extern int objIsCurModelNotZero(int* player);
-extern void fn_80295CF4(int* player, int a);
 extern void audioStopByMask(int mask);
-extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern u8 lbl_80326208[];
-extern int lbl_803E8470;
 extern f32 timeDelta;
-extern f32 lbl_803E4FA8;
-extern f32 lbl_803E4FB0;
-extern f32 lbl_803E4FCC;
-extern f32 lbl_803E4FD0;
-extern f32 lbl_803E4FD4;
-extern f32 lbl_803E4FD8;
-extern f32 lbl_803E4FDC;
-extern f32 lbl_803E4FE0;
-extern f32 lbl_803E4FE4;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
 
-typedef struct EcshPuzzleState
-{
-    f32 f[12]; /* 0x00 */
-    s16 cur[6]; /* 0x30 */
-    s16 next[7]; /* 0x3c */
-} EcshPuzzleState;
 
-typedef struct EcshIntPair
-{
-    int a;
-    int b;
-} EcshIntPair;
 
 #pragma opt_strength_reduction off
 #pragma opt_strength_reduction reset
@@ -95,13 +55,9 @@ typedef struct EcshIntPair
 /* Trivial 4b 0-arg blr leaves. */
 
 
-void ecsh_creator_free(void);
 
-void ecsh_creator_hitDetect(void);
 
-void ecsh_creator_release(void);
 
-void ecsh_creator_initialise(void);
 
 void gpsh_shrine_hitDetect(void)
 {
@@ -109,7 +65,6 @@ void gpsh_shrine_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int ecsh_creator_getExtraSize(void);
-int ecsh_creator_getObjectTypeId(void);
 int gpsh_shrine_getExtraSize(void) { return 0x18; }
 int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
@@ -170,14 +125,9 @@ void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
 
-void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void ecsh_creator_init(s16* obj, s8* def);
 
 extern void fn_80296518(int* player, int a, int b);
-extern int fn_801C5CE4(void* objArg, int unused, void* eventListArg);
-extern int lbl_803DDBC0;
-extern s16* lbl_803DDBC4;
 
 typedef struct EcshShrineByte15
 {
@@ -241,9 +191,7 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 extern u8* mmAlloc(int size, int tag, int p);
 extern u8 Obj_IsLoadingLocked(void);
-extern u8 framesThisStep;
 
-void ecsh_creator_update(s16* obj);
 
 extern int getAngle(f32 dx, f32 dz);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -366,30 +314,8 @@ typedef struct GpshShrineState
 } GpshShrineState;
 
 
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_80006770();
-extern undefined4 FUN_800067c0();
-extern byte FUN_80006b44();
-extern undefined4 FUN_80006b4c();
-extern undefined4 FUN_80006b50();
-extern undefined4 FUN_80006b54();
-extern undefined4 FUN_80017698();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
 extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_80042b9c();
-extern int FUN_80044404();
-extern undefined8 FUN_80080f28();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern undefined4 FUN_801d8480();
-extern undefined4 FUN_80286834();
-extern undefined4 FUN_80286880();
-extern uint FUN_80294cd0();
 
-extern f64 DOUBLE_803e5cc8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5CD4;
-extern f32 lbl_803E5CD8;
 
 /*
  * --INFO--
@@ -802,12 +728,10 @@ int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
 int gpsh_scene_getExtraSize(void) { return 0x0; }
 int gpsh_scene_getObjectTypeId(void) { return 0x0; }
 int ecsh_cup_getExtraSize(void);
-int ecsh_cup_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
 extern f32 lbl_803E5058;
-extern f32 lbl_803E5060;
 
 void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -823,7 +747,6 @@ void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void ecsh_cup_free(int* obj);
 
 void gpsh_scene_init(int* obj, int* def)
 {

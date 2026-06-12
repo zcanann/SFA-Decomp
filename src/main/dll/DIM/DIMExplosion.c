@@ -1,37 +1,12 @@
 /* === moved from main/dll/DIM/dimsnowball_init.c [801B13E8-801B13F0) (TU re-split, docs/boundary_audit.md) === */
 #include "ghidra_import.h"
 
-extern u8* ObjList_FindObjectById(int objectId);
 
-typedef struct DimSnowballState
-{
-    void* target;
-    int targetId;
-} DimSnowballState;
 
-typedef struct DimSnowballObject
-{
-    u8 unk0[0x54];
-    u8* handle54;
-    u8 unk58[0xc];
-    u8* handle64;
-    u8 unk68[0x48];
-    u16 flags;
-    u8 unkB2[6];
-    DimSnowballState* state;
-} DimSnowballObject;
 
-typedef struct DimSnowballDef
-{
-    u8 unk0[0x14];
-    int targetId;
-} DimSnowballDef;
 
-void dimsnowball_init(DimSnowballObject* param_1, DimSnowballDef* def);
 
-void dimsnowball_release(void);
 
-void dimsnowball_initialise(void);
 
 int dimsnowball1c2_getExtraSize(void)
 {
@@ -106,12 +81,6 @@ typedef struct DimicewallState
 } DimicewallState;
 
 
-typedef struct DimbarrierState
-{
-    u8 pad0[0x1 - 0x0];
-    u8 unk1;
-    s16 unk2;
-} DimbarrierState;
 
 
 typedef struct DIMwooddoorUpdateFallingDebrisState
@@ -131,43 +100,11 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
 } DIMwooddoorUpdateFallingDebrisState;
 
 
-extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int FUN_80017af8();
 extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState* hitState, int stateIndex);
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern uint FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293900();
-extern int FUN_80294dbc();
 
-extern undefined4 DAT_80324800;
-extern undefined4 DAT_80324802;
-extern undefined4 DAT_80324804;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dcb50;
-extern f64 DOUBLE_803e54f0;
-extern f64 DOUBLE_803e5500;
-extern f64 DOUBLE_803e5508;
-extern f64 DOUBLE_803e5528;
-extern f32 lbl_803DC078;
-extern f32 lbl_803E54E4;
-extern f32 lbl_803E54E8;
-extern f32 lbl_803E54EC;
-extern f32 lbl_803E54FC;
-extern f32 lbl_803E5510;
-extern f32 lbl_803E5518;
-extern f32 lbl_803E551C;
-extern f32 lbl_803E5520;
 
 /* Trivial 4b 0-arg blr leaves. */
 void dimsnowball1c2_free(void)

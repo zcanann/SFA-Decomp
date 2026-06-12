@@ -2,50 +2,13 @@
 #include "dolphin/os.h"
 #include "dolphin/thp/THPAudio.h"
 
-extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
-extern void audioStopByMask(int mask);
-extern void audioFn_8000b694(int arg);
-extern int getUiDllFn_80014930(void);
-extern void gameTimerStop(void);
-extern void gameTextLoadDir(int dirId);
-extern void setDrawLights(int arg);
-extern void setIsOvercast(int arg);
-extern void saveFn_8007d960(int);
-extern void envFxActFn_800887f8(int arg);
-extern void Movie_SetVolumeFade(int volume, int fadeFrames);
-extern void setLinkIsRotated(void);
-extern void titleScreenPositionElements(f32 x, f32 y);
-extern void titleScreenFn_801368a4(u8 arg);
 extern void* PopReadedBuffer(void);
 extern void PushReadedBuffer2(void* arg);
 
-extern TitleMenuTextEntry sNAttractModeStringBlock[1];
-extern TitleMenuTextEntry lbl_8031A214[4];
 extern OSMessageQueue lbl_803A4460;
 extern OSMessageQueue lbl_803A4480;
 extern OSThread lbl_803A54A0;
-extern u8* lbl_803DD498;
-extern u8 lbl_803DB424;
-extern s32 gAttractMovieState;
-extern u8 gTitleMenuSelection;
-extern u8 gTitleMenuSelectionFade;
-extern u8 gAttractMoviePreparePending;
-extern u8 gAttractMovieAutoplayEnabled;
-extern s32 gTitleMenuInputCooldown;
-extern u8 gAttractMovieReplayCountdown;
-extern u8 gAttractMovieRetraceCountdown;
-extern u8 gTitleMenuReadyForInput;
-extern u8 gAttractMoviePlaybackEnabled;
-extern s8 gTitleMenuNextDllId;
-extern s8 gTitleMenuLoadDelay;
-extern u8 gTitleMenuPanelOpen;
-extern u8 gAttractMovieLoopCompleted;
-extern s32 gAttractMovieIdleFrameCount;
 extern s32 gAttractMovieAudioThreadActive;
-extern TitleMenuControl* gScreenTransitionInterface;
-extern TitleMenuControl* gTitleMenuLinkInterface;
-extern f32 lbl_803E1D10;
-extern f32 lbl_803E1D18;
 
 /*
  * --INFO--

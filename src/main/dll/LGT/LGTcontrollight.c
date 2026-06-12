@@ -11,7 +11,6 @@ extern f32 lbl_803E5EBC;
 extern f32 lbl_803E5EC0;
 extern f32 lbl_803E5EC4;
 extern f32 lbl_803E5EC8;
-extern f64 lbl_803E5ED0;
 
 extern void FireFlyFn_801f4f88(int* obj);
 

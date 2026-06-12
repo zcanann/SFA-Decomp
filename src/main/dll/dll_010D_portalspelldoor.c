@@ -13,15 +13,6 @@ typedef struct PortalspelldoorPlacement
 } PortalspelldoorPlacement;
 
 
-typedef struct LanternFireFlyPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 stateId;
-    s16 timer;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} LanternFireFlyPlacement;
 
 
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
@@ -97,75 +88,11 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined8 ObjHits_MarkObjectPositionDirty();
-extern undefined8 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 Obj_GetYawDeltaToObject();
 
 
-extern f32 timeDelta;
 extern u8 framesThisStep;
-extern u32 lbl_803E39F0;
-extern f32 lbl_803E39F4;
-extern f32 lbl_803E39F8;
-extern f32 lbl_803E39FC;
-extern f32 lbl_803E3A00;
-extern f32 lbl_803E3A08;
-extern f32 lbl_803E3A0C;
-extern f32 lbl_803E3A10;
-extern f32 lbl_803E3A14;
-extern f32 lbl_803E3A18;
-extern f32 lbl_803E3A1C;
-extern f32 lbl_803E3A20;
-extern f32 lbl_803E3A24;
-extern f32 lbl_803E3A28;
-extern f32 lbl_803E3A2C;
-extern f32 lbl_803E3A30;
-extern f32 lbl_803E3A34;
-extern f32 lbl_803E3A38;
-extern f32 lbl_803E3A3C;
-extern f32 lbl_803E3A40;
-extern f32 lbl_803DBDD0;
-extern f32 lbl_803E3AA0;
-extern f32 lbl_803E3AA4;
-extern f32 lbl_803E3AA8;
-extern f32 lbl_803E3AB8;
-extern f32 lbl_803E3ABC;
-extern f32 lbl_803E3AC0;
-extern f32 lbl_803E3AC4;
-extern f32 lbl_803DBDC4;
-extern f32 lbl_803DBDC8;
-extern f32 lbl_803DBDCC;
-extern u32 lbl_802C2298[3];
-extern u32 lbl_802C22A4[3];
 
 extern int Obj_GetPlayerObject(void);
-extern void Obj_FreeObject(int obj);
-extern void Sfx_KeepAliveLoopedObjectSoundLimited(int obj, int sfx, int limit);
-extern f32 sqrtf(f32 x);
-extern s16 getAngle(f32 dx, f32 dz);
-extern u32 randomGetRange(int min, int max);
-extern void objHitDetectFn_80062e84(int obj, int a, int b);
-extern void vecRotateZXY(void* rotation, f32* outVec);
-extern int gameBitIncrement(int eventId);
-extern f32 Vec_distance(void* a, void* b);
-extern void playerAddMoney(int player, u8 b);
-extern int objHitboxFn_801843c0(int obj);
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, void* p5, int obj, int p7, int p8, int p9, int p10);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
-extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
-extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);
-extern int hitDetectFn_80067958(int obj, void* p2, void* p3, int p4, void* p5, int p6);
-extern int fn_801845FC(int obj, int p2, int p3, void* p4);
 /*
  * --INFO--
  *

@@ -17,7 +17,6 @@ extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject * obj);
 extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
-extern f64 lbl_803E5428;
 extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
 extern f32 lbl_803E5448;
 extern SHthorntailDataTables gSHthorntailDataTables;
@@ -403,7 +402,6 @@ extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 extern undefined4 dll_2E_func05();
 extern undefined4 dll_2E_func08();
 extern void dll_2E_func03(SHthorntailObject * obj, SHthorntailRuntime * runtime);
-extern undefined4 FUN_80286888();
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
@@ -413,24 +411,11 @@ extern undefined4 lbl_803E5410;
 extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern SHthorntailPathControlInterface** gPathControlInterface;
-extern f64 lbl_803E5440;
 extern f32 lbl_803E544C;
 extern f32 lbl_803E5450;
 extern f32 lbl_803E5454;
 extern f32 lbl_803E5458;
 extern f32 lbl_803E545C;
-extern f32 lbl_803E5460;
-extern f32 lbl_803E5464;
-extern f32 lbl_803E5468;
-extern f32 lbl_803E546C;
-extern f32 lbl_803E5470;
-extern f32 lbl_803E5474;
-extern f32 lbl_803E5478;
-extern f32 lbl_803E547C;
-extern f32 lbl_803E5480;
-extern f32 lbl_803E5484;
-extern f32 lbl_803E5488;
-extern f64 lbl_803E5490;
 
 #define gSHthorntailPathControlInterface gPathControlInterface
 
@@ -455,15 +440,6 @@ extern f64 lbl_803E5490;
 #define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables) \
   ((u8 *)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
 
-typedef struct SHthorntailDustEffectParams
-{
-    undefined2 flags;
-    undefined2 count;
-    undefined2 effectType;
-    undefined2 radius;
-    f32 scale;
-    Vec position;
-} SHthorntailDustEffectParams;
 
 typedef struct SHthorntailTailSwingEffectScratch
 {

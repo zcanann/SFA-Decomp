@@ -6,69 +6,13 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-typedef struct Dimwooddoor2Placement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-} Dimwooddoor2Placement;
 
 
-typedef struct ExplosionDebris
-{
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    u16 unk28;
-    u16 unk2A;
-    u8 unk2C;
-    u8 unk2D;
-    u8 unk2E;
-    u8 unk2F;
-} ExplosionDebris;
-
-typedef struct Dll1CEPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 posX;
-    f32 posYOffset;
-    f32 posZ;
-    u8 pad14[0x1A - 0x14];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 gameBitId;
-} Dll1CEPlacement;
 
 
-typedef struct DimmagicbridgeFlameSeqFnState
-{
-    u8 pad0[0x51 - 0x0];
-    u8 unk51;
-    u8 pad52[0x60 - 0x52];
-    u16 unk60;
-    u8 pad62[0x64 - 0x62];
-    s16 unk64;
-    u8 pad66[0x68 - 0x66];
-} DimmagicbridgeFlameSeqFnState;
 
 
-typedef struct FnExplosionReleaseV11UnusedState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    u8 padC[0x10 - 0xC];
-} FnExplosionReleaseV11UnusedState;
+
 
 
 /*
@@ -150,42 +94,11 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 
-extern undefined4 FUN_800067e8();
-extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017924();
-extern uint FUN_80017944();
-extern int FUN_80017a54();
 extern EffectInterface** gPartfxInterface;
-extern undefined4 FUN_8002fc3c();
-extern int FUN_80039520();
-extern undefined4 FUN_80242114();
-extern undefined8 FUN_80286834();
-extern uint FUN_8028683c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_802924b4();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
 
-extern undefined4 DAT_803dc070;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e56a8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DE7EC;
-extern f32 lbl_803DE7F0;
-extern f32 lbl_803E55C4;
-extern f32 lbl_803E55C8;
-extern f32 lbl_803E55D0;
-extern f32 lbl_803E55D8;
-extern f32 lbl_803E566C;
-extern f32 lbl_803E5670;
-extern f32 lbl_803E5674;
-extern f32 lbl_803E5678;
-extern f32 lbl_803E567C;
-extern f32 lbl_803E569C;
 
 /*
  * --INFO--
@@ -230,15 +143,12 @@ extern f32 lbl_803E569C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void textureFree(int tex);
-extern int lbl_803AC960[4];
 
 #pragma scheduling off
 #pragma peephole off
 
 #pragma scheduling on
 #pragma peephole on
-void fn_explosion_release_v11_unused(uint param_1);
 
 
 /*
@@ -283,9 +193,6 @@ void fn_explosion_release_v11_unused(uint param_1);
 
 
 
-extern int Obj_GetActiveModel(int obj);
-extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
-extern void fn_80065574(int a, int b, int c);
 
 #pragma scheduling off
 #pragma peephole off
@@ -295,8 +202,6 @@ int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E49D0;
-extern f32 lbl_803E49E8;
-extern f32 lbl_803E4A18;
 extern f32 lbl_803E4A20;
 
 
@@ -316,12 +221,8 @@ extern void* lbl_803DDB78;
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern f32 lbl_803E49D4;
-extern f32 lbl_803E49F0;
 extern void* Obj_GetPlayerObject(void);
 extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
-extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
-extern int EmissionController_IsLingering(void* player);
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -335,7 +236,6 @@ extern int EmissionController_IsLingering(void* player);
 
 
 /* explosion_free: model-light release if present. */
-extern void ModelLightStruct_free(void*);
 #pragma scheduling on
 #pragma peephole on
 
@@ -366,26 +266,17 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
 #pragma peephole off
 
 extern f32 timeDelta;
-extern f32 lbl_803E49D8;
-extern f32 lbl_803E49DC;
-extern f32 lbl_803E49E0;
-extern f32 lbl_803E49E4;
 
 /* EN v1.0 0x801B5804  size: 380b  dimwooddoor2_update: advance the door's
  * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
  * alpha, otherwise scan the nearby objects and, if a key object is present,
  * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
 
-extern f32 lbl_803E49EC;
-extern f32 lbl_803E49F4;
-extern f32 lbl_803E49F8;
-extern f32 lbl_803E49FC;
 
 /* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic - coast
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
-void dll_1CE_update(int* obj);
 
 typedef union
 {
@@ -399,97 +290,9 @@ typedef union
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-typedef struct
-{
-    int v[4];
-} FbTexTbl;
 
-extern f32 lbl_803E492C;
-extern f32 lbl_803E4930;
-extern f32 lbl_803E4934;
-extern f32 lbl_803E4938;
-extern f32 lbl_803E493C;
-extern f32 lbl_803E4940;
-extern f32 lbl_803E4950;
-extern f32 lbl_803E4954;
-extern f32 lbl_803E4958;
-extern f32 lbl_803E495C;
-extern f32 lbl_803E4960;
-extern f64 lbl_803E4968;
-extern f32 lbl_803E4970;
-extern f32 lbl_803E4974;
-extern f64 lbl_803E4978;
-extern f64 lbl_803E4980;
-extern f32 lbl_803E4988;
-extern f32 lbl_803E4998;
-extern f32 lbl_803E499C;
-extern f32 lbl_803E49A0;
-extern f32 lbl_803E49A4;
-extern f32 lbl_803E49A8;
-extern f32 lbl_803E49AC;
-extern f32 lbl_803E49B0;
-extern f32 lbl_803E49B4;
-extern f32 lbl_803E49B8;
-extern f32 lbl_803E49BC;
-extern f32 lbl_803E49C0;
-extern f32 lbl_803E49C4;
-extern f32 lbl_803E49C8;
-extern f32 lbl_803E49CC;
-extern int lbl_803E4928;
-extern int lbl_803E8468;
-extern u8 lbl_803DDB58;
-extern f32 lbl_803DDB5C;
-extern f32 lbl_803DDB60;
-extern f32 lbl_803DDB64;
-extern f32 lbl_803DDB68;
-extern f32 lbl_803DDB6C;
-extern f32 lbl_803DDB70;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
-extern f32 lbl_80325528[];
-extern FbTexTbl lbl_802C2328;
-extern f32 lbl_803E4A00;
-extern f32 lbl_803E4A04;
-extern f32 lbl_803E4A08;
-extern f32 lbl_803E4A0C;
-extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 
-extern f32 expf(f32 x);
-extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-extern void Sfx_PlayFromObjectLimited(int obj, int id, int n);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCurrentMtx(int id);
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXBegin(int prim, int fmt, int n);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXMultVecSR(f32 * m, f32 * in, f32 * out);
-extern f32* Camera_GetViewMatrix(void);
-extern f32* Camera_GetInverseViewRotationMatrix(void);
-extern int fn_8000FA70(void);
-extern int fn_8000FA90(void);
-extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* m, int p3);
-extern void renderResetFn_8003fc60(void);
-extern int textureLoadAsset(int id);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern int hitDetectFn_800658a4(int obj, int out, int p3, f32 x, f32 y, f32 z);
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(int h, int v);
-extern void modelLightStruct_setPosition(int h, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setAffectsAabbLightSelection(int h, int v);
-extern void modelLightStruct_setEnabled(int h, int n, f32 v);
-extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
-extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-extern void DCStoreRange(void* p, int n);
-extern void* memcpy(void* dst, const void* src, unsigned long n);
-
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
 
 
 
@@ -497,7 +300,7 @@ void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
 
 
 
-void dimmagicbridge_updateVertexWave(int obj, u8* sub);
+
 #pragma scheduling reset
 #pragma peephole reset
 /* segment pragma-stack balance (re-split): */
@@ -702,38 +505,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_RecordObjectHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern uint countLeadingZeros();
 
-extern f64 DOUBLE_803e56e8;
-extern f64 DOUBLE_803e5708;
-extern f64 DOUBLE_803e5730;
-extern f64 DOUBLE_803e5760;
-extern f32 lbl_803DC078;
-extern f32 lbl_803E56BC;
-extern f32 lbl_803E56C0;
-extern f32 lbl_803E56D8;
-extern f32 lbl_803E56DC;
-extern f32 lbl_803E56E0;
-extern f32 lbl_803E56E4;
-extern f32 lbl_803E56F4;
-extern f32 lbl_803E56F8;
-extern f32 lbl_803E56FC;
-extern f32 lbl_803E5710;
-extern f32 lbl_803E5714;
-extern f32 lbl_803E5718;
-extern f32 lbl_803E571C;
-extern f32 lbl_803E5720;
-extern f32 lbl_803E5724;
-extern f32 lbl_803E5728;
-extern f32 lbl_803E573C;
-extern f32 lbl_803E5740;
-extern f32 lbl_803E5744;
-extern f32 lbl_803E5748;
-extern f32 lbl_803E574C;
-extern f32 lbl_803E5754;
-extern f32 lbl_803E5758;
-extern f32 lbl_803E5768;
 
 /*
  * --INFO--
@@ -1178,7 +950,6 @@ extern f32 lbl_803E4A30;
 extern f32 lbl_803E4A58;
 extern f32 lbl_803E4A78;
 extern f32 lbl_803E4AA0;
-extern f32 lbl_803E4AD8;
 
 void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -1263,8 +1034,6 @@ void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
 }
 
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
-extern float Vec_distance(float* a, float* b);
-extern f32 lbl_803E4ADC;
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 
@@ -1573,8 +1342,6 @@ void dll_1D6_init(int* obj, u8* params)
 
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
-extern f32 lbl_803E4A48;
-extern f32 lbl_803E4A4C;
 
 void dimtruthhornice_update(int* obj)
 {

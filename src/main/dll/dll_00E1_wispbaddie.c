@@ -4,76 +4,15 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-typedef struct HagabonPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    u8 pad18[0x19 - 0x18];
-    s8 unk19;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} HagabonPlacement;
 
 
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
-extern undefined4 DAT_803de6d0;
-extern f64 DOUBLE_803e32d8;
-extern f64 DOUBLE_803e32e0;
-extern f64 DOUBLE_803e3340;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E32A0;
-extern f32 lbl_803E32A4;
-extern f32 lbl_803E32A8;
-extern f32 lbl_803E32AC;
-extern f32 lbl_803E32B0;
-extern f32 lbl_803E32BC;
-extern f32 lbl_803E32C0;
-extern f32 lbl_803E32C4;
-extern f32 lbl_803E32C8;
-extern f32 lbl_803E32CC;
-extern f32 lbl_803E32D0;
-extern f32 lbl_803E32D4;
-extern f32 lbl_803E32E8;
-extern f32 lbl_803E32EC;
-extern f32 lbl_803E32F0;
-extern f32 lbl_803E32F4;
-extern f32 lbl_803E32FC;
-extern f32 lbl_803E3300;
-extern f32 lbl_803E3304;
-extern f32 lbl_803E3308;
-extern f32 lbl_803E330C;
-extern f32 lbl_803E3310;
-extern f32 lbl_803E3314;
-extern f32 lbl_803E3318;
-extern f32 lbl_803E331C;
-extern f32 lbl_803E3320;
-extern f32 lbl_803E3324;
-extern f32 lbl_803E3328;
-extern f32 lbl_803E332C;
-extern f32 lbl_803E3330;
-extern f32 lbl_803E3334;
-extern f32 lbl_803E3348;
-extern f32 lbl_803E334C;
-extern f32 lbl_803E3350;
-extern f32 lbl_803E3354;
-extern f32 lbl_803E3358;
-extern f32 lbl_803E335C;
-extern f32 lbl_803E3360;
-extern f32 lbl_803E3364;
 
 /*
  * --INFO--
@@ -207,58 +146,7 @@ void wispbaddie_hitDetect(void)
 }
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopFromObject(int obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void mm_free(void* p);
-extern void objRenderFn_8003b8f4(f32);
-extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
-extern f32 lbl_803E2608;
-extern f32 lbl_803E260C;
-extern f32 lbl_803E2610;
-extern f32 lbl_803E2614;
-extern f32 lbl_803E2618;
-extern f32 lbl_803E261C;
-extern f32 lbl_803E2620;
-extern f32 lbl_803E2624;
-extern f32 lbl_803E2628;
-extern f32 lbl_803E262C;
-extern f32 lbl_803E2630;
-extern f32 lbl_803E2634;
-extern f32 lbl_803E2638;
-extern f32 lbl_803E263C;
-extern f32 lbl_803E2650;
-extern f32 lbl_803E2654;
-extern f64 lbl_803E2640; /* int->float magic */
-extern f64 lbl_803E2648; /* int->float magic */
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
-extern f32 lbl_803E2660;
-extern f32 lbl_803E2664;
-extern f32 lbl_803E2668;
-extern f32 lbl_803E266C;
-extern f32 lbl_803E2670;
-extern f32 lbl_803E2674;
-extern f32 lbl_803E2678;
-extern f32 lbl_803E267C;
-extern f32 lbl_803E2680;
-extern f32 lbl_803E2684;
-extern f32 lbl_803E2688;
-extern f32 lbl_803E268C;
-extern f32 lbl_803E2690;
-extern f32 lbl_803E2694;
-extern f32 lbl_803E2698;
-extern f32 lbl_803E269C;
-extern f32 lbl_803E26A0;
-extern f32 lbl_803E26A4;
-extern f64 lbl_803E26A8; /* int->float magic */
-extern f32 lbl_803E26B0;
-extern f32 lbl_803E26B4;
-extern f32 lbl_803E26B8;
-extern f32 lbl_803E26BC;
-extern f32 lbl_803E26C0;
-extern f32 lbl_803E26C4;
-extern f32 lbl_803E26C8;
-extern f32 lbl_803E26CC;
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
 extern f32 lbl_803E26D8;
@@ -271,35 +159,19 @@ extern f32 lbl_803E26F0;
 extern f32 lbl_803E26F4;
 extern f32 lbl_803E26F8;
 extern f32 lbl_803E26FC;
-extern f64 lbl_803E2700;
-extern int lbl_803DBC78;
 extern int lbl_803DBC80;
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
 extern EffectInterface** gPartfxInterface;
-extern int lbl_803DBC70;
-extern int lbl_803DDA60;
 extern int lbl_803DDA68;
 extern f32 timeDelta;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-extern int getAngle(f32 dx, f32 dz);
-extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
-typedef union PressureSwitchIntToDouble
-{
-    u64 bits;
-    f64 value;
-} PressureSwitchIntToDouble;
 
-#define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
-#define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
-#define SWARMBADDIE_FLAG_RETURN_TO_PATH 0x04
 
 typedef struct SwarmBaddieState
 {
@@ -339,7 +211,6 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
-void fn_8014E1DC(int obj, HagabonState* state);
 
 void hagabon_hitDetect(int obj);
 
@@ -546,31 +417,6 @@ extern undefined4 FUN_8028688c();
 extern undefined4 DAT_8031e980;
 extern undefined4 DAT_8031feac;
 extern undefined4 DAT_8031fead;
-extern f64 DOUBLE_803e3398;
-extern f64 DOUBLE_803e33f0;
-extern f32 lbl_803E3368;
-extern f32 lbl_803E336C;
-extern f32 lbl_803E3370;
-extern f32 lbl_803E337C;
-extern f32 lbl_803E3380;
-extern f32 lbl_803E3384;
-extern f32 lbl_803E3388;
-extern f32 lbl_803E338C;
-extern f32 lbl_803E3390;
-extern f32 lbl_803E3394;
-extern f32 lbl_803E33A0;
-extern f32 lbl_803E33A4;
-extern f32 lbl_803E33A8;
-extern f32 lbl_803E33AC;
-extern f32 lbl_803E33B0;
-extern f32 lbl_803E33B4;
-extern f32 lbl_803E33B8;
-extern f32 lbl_803E33C0;
-extern f32 lbl_803E33C4;
-extern f32 lbl_803E33C8;
-extern f32 lbl_803E33CC;
-extern f32 lbl_803E33D0;
-extern f32 lbl_803E33D4;
 extern f32 lbl_803E33D8;
 extern f32 lbl_803E33DC;
 extern f32 lbl_803E33E0;

@@ -9,7 +9,6 @@
 
 extern uint GameBit_Get(int eventId);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
-extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void mtxRotateByVec3s(float* outMtx, short* angles);
 extern void Matrix_TransformPoint(float* mtx, double x, double y, double z, float* ox, float* oy, float* oz);
@@ -18,7 +17,6 @@ extern u8 framesThisStep;
 extern f32 lbl_803E0668;
 extern f32 lbl_803E066C;
 extern f32 lbl_803E068C;
-extern u32 randomGetRange(int min, int max);
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,
                               int p7, int p8, int p9, int p10);
 extern void fn_80063368(short* obj);
@@ -27,29 +25,11 @@ extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int
                                 void* hitResults, int arg6);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern f32 PSVECMag(f32 * v);
-extern double SeekTwiceBeforeRead();
-extern undefined4 TRKNubMainLoop();
 extern f32 sqrtf(f32 x);
-extern uint countLeadingZeros();
 
 /* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
-extern f64 DOUBLE_803e12a8;
-extern f64 DOUBLE_803e12f0;
-extern f64 DOUBLE_803e1318;
-extern f32 gFloatNegOne;
-extern f32 lbl_803E1290;
-extern f32 gFloatOne;
-extern f32 gFloatZero;
-extern f32 gFloatHalf;
-extern f32 lbl_803E0644;
-extern f32 lbl_803E12B0;
-extern f32 lbl_803E12B4;
-extern f32 lbl_803E12B8;
-extern f32 lbl_803E065C;
-extern f32 lbl_803E0660;
-extern f32 lbl_803E0664;
 extern f32 lbl_803E0678;
 extern f32 lbl_803E067C;
 extern f32 lbl_803E0680;
@@ -64,27 +44,6 @@ extern f32 lbl_803E06B0;
 extern f32 lbl_803E06B4;
 extern f32 lbl_803E06B8;
 extern f32 lbl_803E06BC;
-extern f32 lbl_803E12C4;
-extern f32 lbl_803E12D8;
-extern f32 lbl_803E12DC;
-extern f32 lbl_803E12E4;
-extern f32 lbl_803E12E8;
-extern f32 lbl_803E12EC;
-extern f32 lbl_803E12F8;
-extern f32 lbl_803E12FC;
-extern f32 lbl_803E1300;
-extern f32 lbl_803E1304;
-extern f32 lbl_803E1308;
-extern f32 lbl_803E130C;
-extern f32 lbl_803E1320;
-extern f32 lbl_803E1324;
-extern f32 lbl_803E1328;
-extern f32 lbl_803E132C;
-extern f32 lbl_803E1330;
-extern f32 lbl_803E1334;
-extern f32 lbl_803E1338;
-extern f32 lbl_803E133C;
-extern f32 lbl_803E1340;
 
 typedef struct CurvesHitScratch
 {
@@ -166,7 +125,6 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset, float* outVerticalOffset, float* outPhase);
 
 
 /*
@@ -210,7 +168,6 @@ undefined4 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curve
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#define SQ(v) ((v) * (v))
 
 
 /*
@@ -271,9 +228,7 @@ undefined4 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curve
  * PAL Size: TODO
  */
 
-int curves_isNotPoint(RomCurveDef* curve);
 
-int curves_isPoint(RomCurveDef* curve);
 
 /*
  * --INFO--
@@ -316,13 +271,7 @@ int curves_isPoint(RomCurveDef* curve);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E0610;
-extern f32 lbl_803E0614;
-extern f32 lbl_803E0618;
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
 
-#define ROMCURVE_PLACEMENT_ANGLE(v) ((lbl_803E0614 * (f32)((s32)(v) << 8)) / lbl_803E0618)
 
 static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 {

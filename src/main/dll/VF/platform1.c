@@ -9,39 +9,11 @@
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
 extern undefined4 Sfx_KeepAliveLoopedObjectSound();
-extern double FUN_80006b34();
-extern byte FUN_80006b44();
-extern uint FUN_80006bf8();
 extern uint randomGetRange();
 extern int ObjList_GetObjects();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_80080eec();
-extern undefined4 FUN_8011e800();
 extern undefined4 setAButtonIcon();
-extern uint FUN_80286840();
-extern undefined4 FUN_8028688c();
 extern u8* Obj_GetPlayerObject(void);
 
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de890;
-extern f64 DOUBLE_803e6340;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6300;
-extern f32 lbl_803E6304;
-extern f32 lbl_803E6308;
-extern f32 lbl_803E630C;
-extern f32 lbl_803E6310;
-extern f32 lbl_803E6314;
-extern f32 lbl_803E6318;
-extern f32 lbl_803E631C;
-extern f32 lbl_803E6320;
-extern f32 lbl_803E6324;
-extern f32 lbl_803E6328;
-extern f32 lbl_803E632C;
-extern f32 lbl_803E6330;
-extern f32 lbl_803E6334;
-extern f32 lbl_803E6338;
-extern f32 lbl_803E633C;
 
 #define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
 #define PLATFORM1_PEER_SEQ_ID 0x282
@@ -675,22 +647,8 @@ void paymentkiosk_update(int obj)
 #include "main/objseq.h"
 
 extern uint FUN_80006c00();
-extern undefined4 FUN_80006c88();
-extern undefined8 FUN_80017484();
 extern uint GameBit_Get(int eventId);
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern int FUN_80294d20();
-extern undefined4 FUN_80294d28();
-extern uint countLeadingZeros();
 
-extern undefined4 DAT_80328730;
-extern undefined4 DAT_80328734;
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E56B0;
-extern f32 lbl_803E56B4;
 
 /*
  * --INFO--
@@ -816,25 +774,16 @@ void paymentkiosk_initialise(void)
 
 void dll_144_free(void);
 
-void dll_144_hitDetect(void);
 
-void dll_144_update(void);
 
-void dll_144_release(void);
 
-void dll_144_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_144_getExtraSize(void);
-int dll_144_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E56B8;
-extern f32 lbl_803E56C0;
 
 
 
-void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* call(x, N) wrappers. */
 

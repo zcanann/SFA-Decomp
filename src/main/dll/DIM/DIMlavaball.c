@@ -7,22 +7,11 @@
 /* SDK / engine externs */
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int p3);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 
-extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
-extern void modelLightStruct_freeSlot(void* p);
-extern void modelLightStruct_setDistanceAttenuation(void* p, f32 a, f32 b);
-extern f32 Curve_AdvanceAlongPath(void* state, f32 t);
-extern s16 getAngle(f32 dx, f32 dz);
 
-extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern int ObjHits_GetPriorityHit(int obj, int* outHitObj, int* outB, u32* outC);
-extern int* objFindTexture(int obj, int a, int b);
-extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern void Obj_FreeObject(int obj);
 
 extern void doRumble(f32 v);
 
@@ -36,40 +25,7 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern int lbl_802C22F8[4];
-extern s16 lbl_803DBED0;
-extern s32 lbl_803DBED4;
-extern s32 lbl_803DBED8;
-extern s16 lbl_803DDB20;
 
-extern f32 lbl_803E4430;
-extern f32 lbl_803E4440;
-extern f32 lbl_803E4444;
-extern f32 lbl_803E4448;
-extern f32 lbl_803E444C;
-extern f32 lbl_803E4450;
-extern f32 lbl_803E4454;
-extern f32 lbl_803E4458;
-extern int lbl_803E4460;
-extern int lbl_803E4464;
-extern f32 lbl_803E4468;
-extern f32 lbl_803E446C;
-extern f32 lbl_803E4470;
-extern f32 lbl_803E4474;
-extern f32 lbl_803E4478;
-extern f32 lbl_803E447C;
-extern f32 lbl_803E4480;
-extern f32 lbl_803E4484;
-extern f32 lbl_803E4494;
-extern f32 lbl_803E4498;
-extern f32 lbl_803E449C;
-extern f32 lbl_803E44A0;
-extern f32 lbl_803E44A4;
-extern f32 lbl_803E44A8;
-extern f32 lbl_803E44AC;
-extern f32 lbl_803E44B0;
-extern f32 lbl_803E44B4;
-extern f32 lbl_803E44B8;
 extern f32 lbl_803E44C0;
 extern f32 lbl_803E44C4;
 
@@ -174,13 +130,6 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 
-typedef struct MMPLevelcontrolState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    u8 padC[0x10 - 0xC];
-} MMPLevelcontrolState;
 
 
 typedef struct MoonSeedBushPlacement
@@ -252,63 +201,9 @@ extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8005d0ac();
-extern undefined4 SH_LevelControl_runBloopEvent();
 
 extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e5120;
-extern f64 DOUBLE_803e5178;
-extern f64 DOUBLE_803e5188;
-extern f64 DOUBLE_803e51d8;
-extern f64 DOUBLE_803e5240;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DE7A8;
-extern f32 lbl_803E5100;
-extern f32 lbl_803E5114;
-extern f32 lbl_803E5150;
-extern f32 lbl_803E5158;
-extern f32 lbl_803E5160;
-extern f32 lbl_803E5168;
-extern f32 lbl_803E516C;
-extern f32 lbl_803E5170;
 extern f32 lbl_803E5180;
-extern f32 lbl_803E5190;
-extern f32 lbl_803E5194;
-extern f32 lbl_803E5198;
-extern f32 lbl_803E519C;
-extern f32 lbl_803E51A0;
-extern f32 lbl_803E51A4;
-extern f32 lbl_803E51A8;
-extern f32 lbl_803E51AC;
-extern f32 lbl_803E51B0;
-extern f32 lbl_803E51B4;
-extern f32 lbl_803E51BC;
-extern f32 lbl_803E51C0;
-extern f32 lbl_803E51C4;
-extern f32 lbl_803E51C8;
-extern f32 lbl_803E51CC;
-extern f32 lbl_803E51D0;
-extern f32 lbl_803E51D4;
-extern f32 lbl_803E51E0;
-extern f32 lbl_803E51E4;
-extern f32 lbl_803E51E8;
-extern f32 lbl_803E51EC;
-extern f32 lbl_803E51F0;
-extern f32 lbl_803E51F4;
-extern f32 lbl_803E51F8;
-extern f32 lbl_803E51FC;
-extern f32 lbl_803E5200;
-extern f32 lbl_803E5204;
-extern f32 lbl_803E5208;
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5210;
-extern f32 lbl_803E5214;
-extern f32 lbl_803E5218;
-extern f32 lbl_803E521C;
-extern f32 lbl_803E5220;
-extern f32 lbl_803E5224;
-extern f32 lbl_803E5228;
-extern f32 lbl_803E522C;
-extern f32 lbl_803E5238;
 
 extern void gameTextShow(int textId);
 extern void envFxActFn_800887f8(int value);

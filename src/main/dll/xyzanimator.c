@@ -4,16 +4,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
-typedef struct PollenfragmentState
-{
-    u8 pad0[0x4 - 0x0];
-    s16 unk4;
-    s16 unk6;
-    u8 pad8[0x10 - 0x8];
-    s16 unk10;
-    s16 unk12;
-    u8 pad14[0x28 - 0x14];
-} PollenfragmentState;
 
 
 extern undefined4 FUN_800067e8();
@@ -26,13 +16,9 @@ extern void ObjHits_SetTargetMask(int obj, u8 mask);
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8005fe14();
 extern uint FUN_8007f6c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8008112c();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void s16toFloat(void* timer, int duration);
 
@@ -102,21 +88,6 @@ extern f32 lbl_803E319C;
  * PAL Size: TODO
  */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void* objCreateLight(int obj, int kind);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void lightSetField4D(int light, int v);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern f32 lbl_803E30E0;
-extern f32 lbl_803E30F8;
-extern f32 lbl_803E3108;
-extern f32 lbl_803E310C;
 
 
 
@@ -338,7 +309,6 @@ void pollenfragment_initialise(void)
 
 void mikabomb_hitDetect(void);
 
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E313C;
 
 void pinponspike_free(int obj)
@@ -402,12 +372,10 @@ int pollen_getObjectTypeId(void) { return 0x0; }
 int pollenfragment_getExtraSize(void) { return 0x28; }
 int pollenfragment_getObjectTypeId(void) { return 0x0; }
 int mikabomb_getExtraSize(void);
-int mikabomb_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3138;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E31C0;
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

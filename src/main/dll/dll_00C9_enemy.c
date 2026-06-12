@@ -23,20 +23,6 @@ typedef struct BaddieAfterUpdateBonesCbState
 } BaddieAfterUpdateBonesCbState;
 
 
-typedef struct SidekickToyUpdateCurveTargetLatchState
-{
-    u8 pad0[0x2B0 - 0x0];
-    s16 unk2B0;
-    u16 unk2B2;
-    u8 pad2B4[0x2D8 - 0x2B4];
-    f32 unk2D8;
-    u8 pad2DC[0x2F2 - 0x2DC];
-    u8 unk2F2;
-    u8 unk2F3;
-    u8 unk2F4;
-    u8 pad2F5[0x36C - 0x2F5];
-    s32 unk36C;
-} SidekickToyUpdateCurveTargetLatchState;
 
 
 extern undefined4 ABS();

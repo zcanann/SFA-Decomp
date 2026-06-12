@@ -7,36 +7,12 @@
 #include "main/dll/pushable.h"
 
 
-extern undefined4 FUN_80003494();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017698();
 extern uint GameBit_Get(int bit);
-extern uint FUN_80017730();
-extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017778();
-extern int FUN_80017a98();
-extern int FUN_80039520();
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
-extern int FUN_800620e8();
-extern undefined4 FUN_800e8630();
-extern undefined8 FUN_80286820();
-extern undefined4 FUN_8028686c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
 extern f32 sqrtf(f32 x);
 
-extern f64 DOUBLE_803e4210;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E41C0;
-extern f32 lbl_803E41EC;
-extern f32 lbl_803E41F0;
-extern f32 lbl_803E41FC;
-extern f32 lbl_803E4204;
-extern f32 lbl_803E4220;
-extern f32 lbl_803E4230;
 extern f32 lbl_803E3528;
 extern f32 lbl_803E3588;
 extern f32 lbl_803E3598;
@@ -523,12 +499,6 @@ void pushable_modelMtxFn(int obj, int modelNo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct Dll138Vec3
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} Dll138Vec3;
 
 int pushable_func0B(int obj, int other)
 {
@@ -555,16 +525,6 @@ int pushable_func0B(int obj, int other)
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/objseq.h"
 
-typedef struct IceblastPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    s8 unk19;
-    s16 unk1A;
-    s8 unk1C;
-    s8 unk1D;
-    s8 unk1E;
-    u8 unk1F;
-} IceblastPlacement;
 
 
 typedef struct PushablePlacement
@@ -582,41 +542,12 @@ typedef struct PushablePlacement
 } PushablePlacement;
 
 
-typedef struct InvhitState
-{
-    u8 pad0[0x8 - 0x0];
-    u8 unk8;
-    u8 pad9[0xC - 0x9];
-} InvhitState;
 
 
-typedef struct FlameblastState
-{
-    u8 pad0[0x10 - 0x0];
-    u8 unk10;
-    u8 unk11;
-    u8 pad12[0x14 - 0x12];
-} FlameblastState;
 
 
-typedef struct InvhitObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    void* unk1C;
-} InvhitObjectDef;
 
 
-typedef struct WarpPointObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    void* unk1C;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} WarpPointObjectDef;
 
 
 typedef struct PushableObjectDef
@@ -632,39 +563,8 @@ typedef struct PushableObjectDef
 } PushableObjectDef;
 
 
-typedef struct WarpPointPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    void* unk1C;
-    s16 unk20;
-    u8 unk22;
-    u8 unk23;
-    u8 pad24[0x48 - 0x24];
-    f32 unk48;
-    u8 pad4C[0x50 - 0x4C];
-    f32 unk50;
-    u8 pad54[0x114 - 0x54];
-    f32 unk114;
-    f32 unk118;
-    u8 pad11C[0x128 - 0x11C];
-    f32 unk128;
-    f32 unk12C;
-} WarpPointPlacement;
 
 
-typedef struct WarpPointState
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    u8 unkC;
-    u8 unkD;
-    u8 padE[0x10 - 0xE];
-    u8 unk10;
-    u8 unk11;
-    u8 pad12[0x18 - 0x12];
-} WarpPointState;
 
 
 static inline int* Transporter_GetActiveModel(void* obj)
@@ -676,17 +576,13 @@ static inline int* Transporter_GetActiveModel(void* obj)
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_AddContactObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern int ObjList_ContainsObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
@@ -911,70 +807,33 @@ int pushable_getExtraSize(void) { return 0x148; }
 int pushable_getObjectTypeId(void) { return 0x48; }
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern f32 lbl_803E3618;
-extern f32 lbl_803E3620;
-extern f32 lbl_803E3628;
-extern f32 lbl_803E362C;
 #pragma peephole on
-void flameblast_render(int* obj);
 
 /* 16b chained patterns. */
-void objSetAnimSpeedTo1(int* obj);
 
 /* render-with-fn(lbl) (no visibility check). */
-extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
-extern f32 lbl_803E3600;
 
 #pragma peephole off
-void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 
-void invhit_free(int obj);
 
 #pragma peephole on
-void iceblast_init(int obj, s16* p);
 
-extern void warpToMap(int mapId, int flag);
 
 #pragma peephole off
 
-extern f32 lbl_803E3630;
-extern f32 lbl_803E3634;
-extern int fn_8017805C(int* obj, f32* state);
 
-void flameblast_update(int* obj);
 
-extern f32 lbl_803E3604;
-extern f32 lbl_803E3608;
-extern f32 lbl_803E360C;
-extern void vecRotateZXY(void* in, void* out);
-extern f32 lbl_803E3638;
 
-void flameblast_init(int* obj, u8* def);
 
-void WarpPoint_init(int* obj, u8* def);
 
-void iceblast_update(int* obj);
 
-extern s16* getTrickyObject(void);
-extern int fn_80138F90(void);
-extern f32* trickyGetQueuedPathParticlePos(s16 * tricky);
-extern f32 lbl_803E361C;
-extern f32 lbl_803E3624;
 
 #pragma opt_common_subs off
-int fn_8017805C(int* obj, f32* state);
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
-typedef struct InvHitState
-{
-    f32 anchorX;
-    f32 anchorZ;
-    u8 mode;
-} InvHitState;
 
-void invhit_init(int* obj, u8* def);
 #pragma opt_common_subs reset
 
 extern int playerIsDisguised(void* player);
@@ -1079,23 +938,10 @@ void pushable_update(int* obj)
 }
 
 extern u32 fn_80296118(void);
-extern f32 lbl_803AC780[];
-extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-extern f32 lbl_803E35EC;
-extern f32 lbl_803E35F0;
-extern f32 lbl_803E35F4;
 
 
-extern int getCurMapLayer(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern s16 lbl_803DCEB8;
-extern u8 lbl_803DCDE0;
-extern f32 lbl_803E35D8;
-extern f32 lbl_803E35DC;
 
-void WarpPoint_update(int* obj);
 
 extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);

@@ -3694,19 +3694,7 @@ extern f64 lbl_803E2118;
 extern f32 lbl_803E2120;
 extern f64 lbl_803E2128;
 
-typedef struct
-{
-    u8 _0[0x358];
-    s16 texId; /* hud+0x358, indexed by id*2 */
-} CMenuHudIdx2;
 
-typedef struct
-{
-    u8 _0[0x1c0];
-    int texSecondary; /* hud+0x1c0, indexed by id*4 */
-    u8 _1c4[0x1e4];
-    int texPrimary; /* hud+0x3a8, indexed by id*4 */
-} CMenuHudIdx4;
 
 /* EN v1.0 0x80128A7C  size: 1012b  Draws one pause-menu grid cell with its
  * motion trail: each trail step (count, stepping by 4) redraws the cell's
@@ -5146,32 +5134,6 @@ extern int lbl_803DD744;
 extern int lbl_803DD740;
 extern int airMeter;
 
-typedef struct LinkMenuItemDB
-{
-    u16 field00;
-    u16 itemId;
-    s16 field04;
-    s16 field06;
-    u8 pad8[4];
-    s16 field0C;
-    u8 padE[2];
-
-    union
-    {
-        int textureAssetId;
-        void* texture;
-    };
-
-    u16 field14;
-    u16 field16;
-    u8 pad18[2];
-    u8 field1A;
-    u8 pad1B[3];
-    s8 state;
-    s8 slots[25];
-    s8 field38;
-    u8 pad39[3];
-} LinkMenuItemDB;
 
 
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }

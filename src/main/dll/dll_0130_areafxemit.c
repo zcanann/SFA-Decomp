@@ -7,72 +7,27 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct WarpPadPlayerStandingOnPlacement
-{
-    u8 pad0[0x20 - 0x0];
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} WarpPadPlayerStandingOnPlacement;
 
 
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
 extern void vecRotateZXY(s16 * in, f32 * out);
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern void Obj_FreeObject(int obj);
-extern int ObjTrigger_IsSet();
-extern f32 Vec_xzDistance(f32 * posA, f32 * posB);
-extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
 extern int Obj_GetPlayerObject(void);
-extern int Curve_AdvanceAlongPath(int curve, f32 progress);
-extern void* mmAlloc(int size, int heap, int flags);
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32 value);
 
 extern EffectInterface** gPartfxInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern u8 lbl_803DCDE0;
-extern s16 lbl_803DCEB8;
 extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f64 DOUBLE_803e4af8;
 extern f32 FLOAT_803e4b00;
-extern f32 lbl_803E3E50;
 extern f32 lbl_803E3E68;
 extern f32 lbl_803E3E6C;
 extern f32 lbl_803E3E70;
-extern f32 lbl_803E3E78;
-extern f32 lbl_803E3E7C;
-extern f32 lbl_803E3E80;
-extern f32 lbl_803E3E84;
-extern f32 lbl_803E3E88;
-extern f32 lbl_803E3E98;
-extern f32 lbl_803E3E9C;
-extern f32 lbl_803E3EA0;
-extern f32 lbl_803E3EA4;
-extern f32 lbl_803E3EA8;
-extern f32 lbl_803E3EAC;
-extern f32 lbl_803E3EB0;
-extern f32 lbl_803E3EB4;
-extern f32 lbl_803E3EB8;
-extern f32 lbl_803E3EBC;
-extern f32 lbl_803E3EC0;
-extern f32 lbl_803E3EC4;
-extern f32 lbl_803E3EC8;
-extern f32 lbl_803E3ECC;
-extern f32 lbl_803E3ED0;
-extern f32 lbl_803E3EE0;
 
-extern void setAButtonIcon(int iconId);
 
 /*
  * --INFO--
@@ -551,8 +506,6 @@ void FUN_8018f650(void)
 void warpPadFn_8019042c(int obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern u8 lbl_803AC7B0[];
-extern void mm_free(void* p);
 
 
 typedef struct CFEmitterFxArgs
@@ -836,19 +789,14 @@ void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
 
 void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup);
 
-int lfxemitter_setScale(void);
 
 void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void lfxemitter_initialise(void);
 
-int lfxemitter_func0B(LfxEmitterObject* obj);
 
-void fn_8018FF48(undefined2* src, undefined2* dst);
 
-void lfxemitter_update(LfxEmitterObject* obj);
 
-void warpPadPlayerStandingOn(int obj);
 
 void areafxemit_free(AreaFxEmitObject* obj)
 {
@@ -859,9 +807,7 @@ void lfxemitter_free(LfxEmitterObject* obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fxemit_release(void);
 
-void fxemit_initialise(void);
 
 void areafxemit_hitDetect(void)
 {
@@ -877,12 +823,9 @@ void areafxemit_initialise(void)
 
 void lfxemitter_render(void);
 
-void lfxemitter_hitDetect(void);
 
-void lfxemitter_release(void);
 
 /* 8b "li r3, N; blr" returners. */
 int areafxemit_getExtraSize(void) { return 0x20; }
 int areafxemit_getObjectTypeId(void) { return 0x0; }
 int lfxemitter_getExtraSize(void);
-int lfxemitter_getObjectTypeId(void);

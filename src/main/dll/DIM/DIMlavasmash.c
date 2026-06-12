@@ -6,24 +6,8 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/objseq.h"
 
-typedef struct Lavaball1bePlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x20 - 0x19];
-} Lavaball1bePlacement;
 
 
-typedef struct Lavaball1bfPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1E - 0x19];
-    s16 unk1E;
-    u8 pad20[0x24 - 0x20];
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} Lavaball1bfPlacement;
 
 
 /* imanimspacecraft_getExtraSize == 0x4. */
@@ -96,17 +80,8 @@ static inline int* DIMcannon_GetActiveModel(void* obj);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80057690();
-extern undefined4 FUN_801adca0();
-extern undefined8 FUN_80286830();
-extern undefined4 FUN_8028687c();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
 
 extern void imicepillar_free(void);
@@ -128,7 +103,6 @@ extern int imicepillar_getExtraSize(void);
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
 /*
  * --INFO--
@@ -310,8 +284,6 @@ extern u32 lbl_803DDB48;
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
 
-extern f32 lbl_803E4784;
-extern char lbl_803AC948[];
 
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
@@ -321,12 +293,7 @@ extern char lbl_803AC948[];
 /* lavaball1bf "request" hook: set pending if gated, return success. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4768;
-extern f32 lbl_803E4780;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4788;
-extern f32 lbl_803E47B8;
-extern f32 lbl_803E4810;
 
 
 
@@ -346,73 +313,30 @@ int fn_801B0784(int obj, int delta)
 }
 
 extern void Music_Trigger(int id, int p2);
-extern int getSaveGameLoadStatus(void);
-extern int coordsToMapCell(f32 x, f32 z);
 
 
 
-extern void* gSHthorntailAnimationInterface;
-extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
-
-
-extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
-extern void envFxActFn_800887f8(int id);
-extern void getEnvfxAct(int a, int b, int c, int d);
-extern u8 lbl_803239F0[];
-
-
-extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
-extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
-extern s16 lbl_80323818[], lbl_80323824[];
 
 
 
-extern u8 lbl_803238D8[];
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern void fn_80138908(int* tricky, int mode);
+
+
+
+
 extern f32 timeDelta;
-extern f32 lbl_803E47C8;
-
-typedef struct
-{
-    int flags;
-    s8 cnt : 2;
-    u8 stage : 3;
-    u8 low : 3;
-    u8 flag5 : 1;
-    u8 pad5 : 7;
-    u8 pad6[2];
-    f32 timer;
-    s16 music;
-} LinkbLevState;
 
 
 
-extern f32 lbl_803E47C0;
+
 extern u8 framesThisStep;
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
-extern f32 lbl_803E47C4;
 
-typedef struct
-{
-    int* ringA;
-    int* ringB;
-    u8 visible;
-} RingGenState;
 
 
 
 
 
 extern void ModelLightStruct_free(void* light);
-extern void mm_free(void* p);
 
-extern f32 lbl_803E4814;
 
 
 
@@ -507,31 +431,14 @@ void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 extern int modelLightStruct_getActiveState(int* p);
-extern f32 lbl_803E47F0;
-
-
-extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void modelLightStruct_updateGlowAlpha(int p);
-extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
-extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
-extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
-extern u8 lbl_802C2318[];
-extern void vecRotateZXY(void* in, void* out);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-
-typedef struct
-{
-    f32 x, y, z;
-} LavaVec;
 
 
 
-extern int* objFindTexture(int* obj, int a, int b);
-extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 
 
-extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
+
+
+
 
 
 
@@ -599,11 +506,8 @@ extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 
-extern f64 DOUBLE_803e54b0;
-extern f64 DOUBLE_803e54d8;
 extern f32 oneOverTimeDelta;
 extern s16 lbl_803DBEE8;
-extern f32 lbl_803DC074;
 extern s16 gDimSnowballCoords[];
 extern f32 lbl_803E4824;
 extern f32 lbl_803E4828;
@@ -612,20 +516,9 @@ extern f32 lbl_803E4830;
 extern f32 lbl_803E4834;
 extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
-extern f64 lbl_803E4840;
 extern f32 lbl_803E484C;
 extern f32 lbl_803E4850;
 extern f32 lbl_803E4854;
-extern f64 lbl_803E4858;
-extern f32 lbl_803E54AC;
-extern f32 lbl_803E54B8;
-extern f32 lbl_803E54BC;
-extern f32 lbl_803E54C0;
-extern f32 lbl_803E54C4;
-extern f32 lbl_803E54C8;
-extern f32 lbl_803E54CC;
-extern f32 lbl_803E54D0;
-extern f32 lbl_803E54D4;
 
 /*
  * --INFO--

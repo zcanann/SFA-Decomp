@@ -6,7 +6,6 @@ extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern uint objGetAnimStateFlags(int obj, u32 mask);
-extern undefined4 FUN_8028683c();
 extern undefined4 Obj_GetPlayerObject();
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
