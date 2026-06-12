@@ -267,13 +267,21 @@ void invhit_release(void);
 
 void invhit_initialise(void);
 
-void iceblast_free(void);
+void iceblast_free(void)
+{
+}
 
-void iceblast_hitDetect(void);
+void iceblast_hitDetect(void)
+{
+}
 
-void iceblast_release(void);
+void iceblast_release(void)
+{
+}
 
-void iceblast_initialise(void);
+void iceblast_initialise(void)
+{
+}
 
 extern unsigned long GameBit_Set(int eventId, int value);
 
@@ -285,9 +293,9 @@ int WarpPoint_getExtraSize(void);
 int WarpPoint_getObjectTypeId(void);
 int invhit_getExtraSize(void);
 int invhit_getObjectTypeId(void);
-int iceblast_getExtraSize(void);
-int iceblast_getObjectTypeId(void);
-int flameblast_getExtraSize(void) { return 0x14; }
+int iceblast_getExtraSize(void) { return 0x4; }
+int iceblast_getObjectTypeId(void) { return 0x0; }
+int flameblast_getExtraSize(void);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern f32 lbl_803E3618;
@@ -295,29 +303,17 @@ extern f32 lbl_803E3620;
 extern f32 lbl_803E3628;
 extern f32 lbl_803E362C;
 #pragma peephole on
-void flameblast_render(int* obj)
-{
-    f32 vec[3];
-    f32 f = lbl_803E362C * *(f32*)((GameObject*)obj)->extra + lbl_803E3628;
-    vec[0] = lbl_803E3618;
-    vec[1] = lbl_803E3620;
-    vec[2] = lbl_803E3618;
-    fn_80098B18((int)obj, f, 2, 0, 0, (int)vec);
-}
+void flameblast_render(int* obj);
 
 /* 16b chained patterns. */
-void objSetAnimSpeedTo1(int* obj)
-{
-    u8 v = 0x1;
-    *((u8*)((int**)obj)[0xb8 / 4] + 0x10) = v;
-}
+void objSetAnimSpeedTo1(int* obj);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 lbl_803E3600;
 void invhit_render(int* obj, int a, int b, int c, int d);
-void iceblast_render(int* obj, int a, int b, int c, int d);
+void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
 
 #pragma peephole off
 void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
@@ -325,7 +321,11 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 void invhit_free(int obj);
 
 #pragma peephole on
-void iceblast_init(int obj, s16* p);
+void iceblast_init(int obj, s16* p)
+{
+    *(f32*)((GameObject*)obj)->extra = (f32) * (s16*)((char*)p + 0x1a);
+    ObjHits_SetTargetMask(obj, 1);
+}
 
 extern void warpToMap(int mapId, int flag);
 
@@ -337,32 +337,7 @@ extern f32 lbl_803E3630;
 extern f32 lbl_803E3634;
 extern int fn_8017805C(int* obj, f32* state);
 
-void flameblast_update(int* obj)
-{
-    f32* state = ((GameObject*)obj)->extra;
-    state[0] = state[0] + timeDelta;
-    if (state[0] > lbl_803E3630)
-    {
-        state[0] = state[0] - lbl_803E3630;
-        if (fn_8017805C(obj, state) == 0)
-        {
-            return;
-        }
-    }
-    else
-    {
-        if (state[0] > lbl_803E3634)
-        {
-            if (((FlameblastState*)state)->unk11 == 0)
-            {
-                ObjHits_SetHitVolumeSlot(obj, 0x1a, 1, 0);
-            }
-        }
-    }
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * state[0] + state[1];
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * state[0] + state[2];
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * state[0] + state[3];
-}
+void flameblast_update(int* obj);
 
 extern f32 lbl_803E3604;
 extern f32 lbl_803E3608;
@@ -371,17 +346,67 @@ extern void* Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void* in, void* out);
 extern f32 lbl_803E3638;
 
-void flameblast_init(int* obj, u8* def)
-{
-    f32* state = ((GameObject*)obj)->extra;
-    fn_8017805C(obj, state);
-    state[0] = lbl_803E3638 * (f32)(s32) * (s16*)((char*)def + 0x1a);
-    ((FlameblastState*)state)->unk11 = 2;
-}
+void flameblast_init(int* obj, u8* def);
 
 void WarpPoint_init(int* obj, u8* def);
 
-void iceblast_update(int* obj);
+void iceblast_update(int* obj)
+{
+    int* path;
+    int* def;
+    f32* state;
+    int* player;
+    struct
+    {
+        s16 dir[3];
+        s16 pad;
+        f32 pos[4];
+    } vec;
+    player = (int*)Obj_GetPlayerObject();
+    state = ((GameObject*)obj)->extra;
+    def = *(int**)&((GameObject*)obj)->anim.placementData;
+    if (player != NULL && (path = ((GameObject*)player)->childObjs[0]) != NULL)
+    {
+        ((GameObject*)obj)->anim.rotZ = *(s16*)((char*)path + 4);
+        ((GameObject*)obj)->anim.rotY = *(s16*)((char*)path + 2);
+        *(s16*)obj = *(s16*)path;
+    }
+    else
+    {
+        return;
+    }
+    ObjHits_SetHitVolumeSlot(obj, 0x10, ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1, 0);
+    state[0] = state[0] - timeDelta;
+    if (state[0] <= lbl_803E3604)
+    {
+        f32 zero;
+        state[0] = state[0] + lbl_803E3608;
+        zero = lbl_803E3604;
+        ((f32*)obj)[9] = zero;
+        ((f32*)obj)[11] = zero;
+        ((f32*)obj)[10] = lbl_803E360C;
+        vec.pos[1] = zero;
+        vec.pos[2] = zero;
+        vec.pos[3] = zero;
+        vec.pos[0] = lbl_803E3600;
+        vec.dir[2] = *(s16*)((char*)path + 4);
+        vec.dir[1] = *(s16*)((char*)path + 2);
+        vec.dir[0] = *(s16*)path;
+        vecRotateZXY(&vec, (f32*)((char*)obj + 0x24));
+        ObjPath_GetPointWorldPosition((int)path, 0, &((GameObject*)obj)->anim.localPosX,
+                                      &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ, 0);
+        ObjHits_EnableObject((u32)obj);
+    }
+    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
+    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
+    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
+        localPosX;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
+        localPosY;
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
+        localPosZ;
+}
 
 extern s16* getTrickyObject(void);
 extern int fn_80138F90(void);
@@ -390,60 +415,7 @@ extern f32 lbl_803E361C;
 extern f32 lbl_803E3624;
 
 #pragma opt_common_subs off
-int fn_8017805C(int* obj, f32* state)
-{
-    s16* tricky;
-    f32* pf;
-    f32 k;
-    struct
-    {
-        s16 dir[3];
-        s16 pad;
-        f32 pos[4];
-    } vec;
-
-    tricky = getTrickyObject();
-    if (*(u8*)((char*)state + 0x10) != 0 || tricky == NULL)
-    {
-        Obj_FreeObject(obj);
-        return 0;
-    }
-    {
-        f32 f = lbl_803E3618;
-        ((GameObject*)obj)->anim.velocityX = f;
-        ((GameObject*)obj)->anim.velocityY = f;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E361C;
-        vec.pos[1] = f;
-        vec.pos[2] = f;
-        vec.pos[3] = f;
-        vec.pos[0] = lbl_803E3620;
-    }
-    vec.dir[2] = tricky[2];
-    vec.dir[1] = tricky[1];
-    vec.dir[0] = tricky[0] + fn_80138F90();
-    vecRotateZXY(&vec, &((GameObject*)obj)->anim.velocityX);
-    if ((((GameObject*)tricky)->objectFlags & 0x800) != 0)
-    {
-        pf = trickyGetQueuedPathParticlePos(tricky);
-    }
-    else
-    {
-        pf = &((GameObject*)tricky)->anim.localPosX;
-    }
-    k = lbl_803E3624;
-    state[1] = -(k * ((GameObject*)obj)->anim.velocityX - pf[0]);
-    state[2] = -(k * ((GameObject*)obj)->anim.velocityY - pf[1]);
-    state[3] = -(k * ((GameObject*)obj)->anim.velocityZ - pf[2]);
-    if (*(u8*)((char*)state + 0x11) != 0)
-    {
-        *(u8*)((char*)state + 0x11) -= 1;
-    }
-    else
-    {
-        ObjHits_ClearHitVolumes(obj);
-    }
-    return 1;
-}
+int fn_8017805C(int* obj, f32* state);
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off

@@ -1098,8 +1098,17 @@ main/dll/dll_80174438.c:
 main/dll/dll_00EF_pushable.c:
 	.text       start:0x80174A80 end:0x80176FC4
 
+main/dll/dll_00F0_mmpwarppoi.c:
+	.text       start:0x80176FC4 end:0x8017779C
+
+main/dll/dll_00F1_invhit.c:
+	.text       start:0x8017779C end:0x80177E28
+
+main/dll/dll_00F2_iceblast.c:
+	.text       start:0x80177E28 end:0x8017804C
+
 main/dll/dll_00F3_flameblast.c:
-	.text       start:0x80176FC4 end:0x80178338
+	.text       start:0x8017804C end:0x80178338
 
 main/dll/dll_00F4_doorf4.c:
 	.text       start:0x80178338 end:0x801793A4
