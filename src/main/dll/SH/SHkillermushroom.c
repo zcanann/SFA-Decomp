@@ -163,6 +163,11 @@ void bombplantspore_free(void* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+/* Keep the cross-TU bl: these two drift helpers' only callers
+ * (bombplantspore_update/init) live in the BombPlantSpore TU
+ * (SHrocketmushroom.c). Once they land there, dont_inline stops MWCC
+ * auto-inlining them into bombplantspore_update. */
+#pragma dont_inline on
 void bombplantspore_startDriftBurst(void* obj, void* state)
 {
     s16 baseAngle;
@@ -301,6 +306,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         ((BombPlantSporeState*)state)->unk278 *
         mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2a8) / lbl_803E539C);
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
