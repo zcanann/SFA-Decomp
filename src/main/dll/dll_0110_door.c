@@ -12,6 +12,7 @@ extern undefined8 ObjGroup_RemoveObject();
 #include "main/objseq.h"
 #include "main/dll/alphaanim.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 
 typedef struct DoorObjectDef
 {
@@ -45,7 +46,6 @@ extern undefined4 ObjHits_DisableObject();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-extern int* objFindTexture(int* obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
@@ -160,7 +160,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int def;
     int opened;
     int closeReady;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     int ret;
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -169,22 +169,22 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         ObjHits_DisableObject(obj);
     }
-    if (*(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x59) != 0)
+    if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
     {
         if ((*(u8*)(state + 6) & 1) != 0)
         {
-            tex = (int*)objFindTexture((int*)obj, 0, 0);
+            tex = objFindTexture((int*)obj, 0, 0);
             if (tex != NULL)
             {
-                *tex = 0x100;
+                tex->textureId = 0x100;
             }
         }
         if ((*(u8*)(state + 6) & 2) != 0)
         {
-            tex = (int*)objFindTexture((int*)obj, 1, 0);
+            tex = objFindTexture((int*)obj, 1, 0);
             if (tex != NULL)
             {
-                *tex = 0x100;
+                tex->textureId = 0x100;
             }
         }
     }

@@ -8,6 +8,7 @@
 #include "main/objseq.h"
 #include "main/dll/alphaanim.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 
@@ -43,7 +44,6 @@ extern int fn_80295C5C(void* player);
 extern void* getTrickyObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern EffectInterface** gPartfxInterface;
-extern int* objFindTexture(int* obj, int a, int b);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
 extern f32 lbl_803E3760;
@@ -175,7 +175,7 @@ void pressureswitchfb_update(int obj)
     int isTarget;
     uint ju;
     int base;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     f32 target;
     f32 cur;
     int slots2;
@@ -312,10 +312,10 @@ void pressureswitchfb_update(int obj)
                     GameBit_Set(((PressureswitchfbPlacement*)def)->unk1A, 1);
                     if ((((SwitchFlags*)(state + 0x84))->active) != 0)
                     {
-                        tex = (int*)objFindTexture((int*)obj, 0, 0);
+                        tex = objFindTexture((int*)obj, 0, 0);
                         if (tex != NULL)
                         {
-                            *tex = 0x100;
+                            tex->textureId = 0x100;
                         }
                         ((SwitchFlags*)(state + 0x84))->latched = 1;
                     }
@@ -329,10 +329,10 @@ void pressureswitchfb_update(int obj)
                         GameBit_Set(((PressureswitchfbPlacement*)def)->unk1A, 1);
                         if ((((SwitchFlags*)(state + 0x84))->active) != 0)
                         {
-                            tex = (int*)objFindTexture((int*)obj, 0, 0);
+                            tex = objFindTexture((int*)obj, 0, 0);
                             if (tex != NULL)
                             {
-                                *tex = 0x100;
+                                tex->textureId = 0x100;
                             }
                             ((SwitchFlags*)(state + 0x84))->latched = 1;
                         }
@@ -380,10 +380,10 @@ void pressureswitchfb_update(int obj)
             {
                 if (GameBit_Get(((PressureswitchfbPlacement*)def)->unk1A) == 0)
                 {
-                    tex = (int*)objFindTexture((int*)obj, 0, 0);
+                    tex = objFindTexture((int*)obj, 0, 0);
                     if (tex != NULL)
                     {
-                        *tex = 0;
+                        tex->textureId = 0;
                     }
                     ((SwitchFlags*)(state + 0x84))->latched = 0;
                     ((SwitchFlags*)(state + 0x84))->released = 1;
@@ -451,7 +451,7 @@ void pressureswitchfb_init(u8* obj, u8* params)
 {
     ObjAnimComponent* objAnim;
     u8* sub;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     f32 defaultOffset;
     PressureSwitchFbFlags* flags;
 
@@ -501,7 +501,7 @@ void pressureswitchfb_init(u8* obj, u8* params)
             tex = objFindTexture((int*)obj, 0, 0);
             if (tex != NULL)
             {
-                *tex = 0x100;
+                tex->textureId = 0x100;
             }
         }
     }

@@ -10,6 +10,7 @@
 #include "main/objseq.h"
 #include "main/dll/alphaanim.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 
 typedef struct MmpBridgePlacement
 {
@@ -28,7 +29,6 @@ extern undefined4 ObjHits_EnableObject();
 
 extern f32 timeDelta;
 
-extern int* objFindTexture(int* obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
 
 extern f32 lbl_803E3778;
@@ -66,10 +66,10 @@ int doorlock_getExtraSize(void);
 void mmp_bridge_init(int* obj)
 {
     int* state = *(int**)&((GameObject*)obj)->anim.placementData;
-    int* tex = objFindTexture(obj, 0, 0);
+    ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
     if (tex != NULL)
     {
-        *(s16*)((char*)tex + 8) = 0x800;
+        tex->offsetS = 0x800;
     }
     *(s16*)obj = (s16)(((MmpBridgePlacement*)state)->unk18 << 8);
     ((GameObject*)obj)->objectFlags |= 0x6000;
@@ -82,7 +82,7 @@ void mmp_bridge_init(int* obj)
 
 void mmp_bridge_update(int* obj)
 {
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     int frame;
 
     if (GameBit_Get(*(s16*)((char*)obj[0x4c / 4] + 0x1e)) != 0)
@@ -90,14 +90,14 @@ void mmp_bridge_update(int* obj)
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
-            frame = *(s16*)((char*)tex + 8) + ((int)timeDelta << 3);
-            *(s16*)((char*)tex + 8) = (s16)frame;
-            frame = *(s16*)((char*)tex + 8) + ((int)timeDelta << 3);
+            frame = tex->offsetS + ((int)timeDelta << 3);
+            tex->offsetS = (s16)frame;
+            frame = tex->offsetS + ((int)timeDelta << 3);
             if (frame >= 0x131f)
             {
-                *(s16*)((char*)tex + 8) = 0x131f;
+                tex->offsetS = 0x131f;
             }
-            fn_80137948(lbl_803DBD90, (int)*(s16*)((char*)tex + 8));
+            fn_80137948(lbl_803DBD90, (int)tex->offsetS);
         }
         ObjHits_EnableObject((int)obj);
     }
