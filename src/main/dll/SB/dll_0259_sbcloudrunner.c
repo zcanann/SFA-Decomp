@@ -238,22 +238,22 @@ void fn_801EE668(s16* obj, u8* state)
     d = yaw - (u16)((GameObject*)obj)->anim.rotY;
     if (d > 0x8000)
     {
-        d -= 0xFFFF;
+        d = (d - 0x10000) + 1;
     }
     if (d < -0x8000)
     {
-        d += 0xFFFF;
+        d = (d + 0x10000) - 1;
     }
     ((GameObject*)obj)->anim.rotY = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32) * (s16*)(int)(obj + 1);
 
     d = pitch - (u16) * (s16*)(state + 0x2e);
     if (d > 0x8000)
     {
-        d -= 0xFFFF;
+        d = (d - 0x10000) + 1;
     }
     if (d < -0x8000)
     {
-        d += 0xFFFF;
+        d = (d + 0x10000) - 1;
     }
     *(s16*)(state + 0x2e) = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32) * (s16*)(int)(state + 0x2e);
 
