@@ -200,14 +200,16 @@ void SB_ShipGun_update(int obj)
     f32 fdy;
     f32 fdz;
     f32 dist;
+    ObjHitsPriorityState* hitState;
     int i;
 
     player = Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     placement = (int)((GameObject*)obj)->anim.placementData;
     if (((GameObject*)((GameObject*)obj)->anim.parent)->anim.seqId == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE)
     {
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        hitState->flags &= ~1;
         *(u8*)((int)state + 0xd) = 0;
     }
     else
@@ -257,11 +259,11 @@ void SB_ShipGun_update(int obj)
                     *(u16*)(state + 2) = 0;
                 }
             }
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            hitState->flags &= ~1;
             break;
         case SB_SHIPGUN_PHASE_ACTIVE:
             {
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+                hitState->flags |= 1;
                 placement = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon);
                 if ((placement == 0) &&
                     (hit = ObjHits_GetPriorityHit(obj, 0, 0, 0), hit != 0))
@@ -388,7 +390,7 @@ void SB_ShipGun_update(int obj)
             }
             break;
         case SB_SHIPGUN_PHASE_DEATH_TRIGGER:
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            hitState->flags &= ~1;
             if (*(char*)(state + 3) == '\0')
             {
                 spawnExplosion(obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
@@ -416,7 +418,7 @@ void SB_ShipGun_update(int obj)
             }
             break;
         case SB_SHIPGUN_PHASE_SMOLDERING:
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            hitState->flags &= ~1;
             if (((void*)galleon != NULL) &&
                 (galleon = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon), galleon == 0))
             {

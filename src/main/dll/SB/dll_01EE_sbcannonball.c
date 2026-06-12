@@ -99,6 +99,7 @@ void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SB_CannonBall_update(GameObject* obj)
 {
     SBCannonBallState* state = obj->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if ((state->flags & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
@@ -150,16 +151,15 @@ void SB_CannonBall_update(GameObject* obj)
     }
     if (state->lifetimeFrames > SB_CANNONBALL_HITBOX_ENABLE_DELAY)
     {
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority =
-            SB_CANNONBALL_HITBOX_TYPE;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        hitState->hitVolumePriority = SB_CANNONBALL_HITBOX_TYPE;
+        hitState->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
+        hitState->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        hitState->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        hitState->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
     else
     {
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        hitState->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
     state->lifetimeFrames += framesThisStep;
 }
