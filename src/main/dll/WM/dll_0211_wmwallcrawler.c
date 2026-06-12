@@ -278,6 +278,7 @@ void wmwallcrawler_update(int obj)
     s8 mode;
     f32** list;
     f32** list2;
+    ObjHitsPriorityState* hitState;
     f32 best;
     f32 d;
     f32 dy;
@@ -616,10 +617,10 @@ void wmwallcrawler_update(int obj)
                                 {
                                     ObjAnim_SetCurrentMove(obj, 2, lbl_803E5FB0, 0);
                                 }
+                                hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
                                 if (dist < lbl_803E5FF8 ||
                                     ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
-                                        (*(s16*)&(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-                                            flags & 8) != 0 &&
+                                        (hitState->flags & 8) != 0 &&
                                         dist < lbl_803E5FFC))
                                 {
                                     lbl_803DDCB8 += 1;
