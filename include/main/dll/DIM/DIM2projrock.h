@@ -87,32 +87,33 @@ void dll_1DF_initialise(void);
  * followed-object link (null-tested as a pointer, stored as int). */
 typedef struct Dim2IceFloeState {
     u8 pad00[0x10];
-    int unk10;
+    int curveCursor;
     u8 pad14[0x68 - 0x14];
-    f32 unk68;
-    f32 unk6C;
-    f32 unk70;
+    f32 curveX;
+    f32 curveY;
+    f32 curveZ;
     u8 pad74[0x80 - 0x74];
-    int unk80;
+    int curveMode;
     u8 pad84[0x90 - 0x84];
-    int unk90;
-    void *unk94;
-    void *unk98;
-    int unk9C;
-    int objectId;
-    f32 unkA4;
-    f32 unkA8;
-    f32 unkAC;
-    f32 unkB0;
-    s16 unkB4;
-    u8 unkB6;
+    int curveResult;
+    void *evalFn;
+    void *coeffsFn;
+    int followedObj;
+    int targetId;
+    f32 curveStep;
+    f32 yawJitter;
+    f32 bobRate;
+    f32 bobBase;
+    s16 bobPhase;
+    u8 flags;
     u8 padB7;
-    u8 unkB8;
-    u8 padB9[3];
+    u8 paused;
+    u8 finishedFlags;
+    u8 padBA[2];
 } Dim2IceFloeState;
 
 STATIC_ASSERT(sizeof(Dim2IceFloeState) == 0xBC);
-STATIC_ASSERT(offsetof(Dim2IceFloeState, unk9C) == 0x9C);
+STATIC_ASSERT(offsetof(Dim2IceFloeState, followedObj) == 0x9C);
 
 
 /* dim2icicle extra state (dim2icicle_getExtraSize == 0xC). */
