@@ -132,16 +132,13 @@ void cfmagicwall_update(int obj)
 {
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
     int player = (int)Obj_GetPlayerObject();
-    int alpha = 0xff;
+    u8 alpha = 0xff;
 
     if (GameBit_Get(((CfmagicwallPlacement*)data)->unk20) != 0)
     {
         int yaw = (s16)Obj_GetYawDeltaToObject(obj, player, NULL);
 
-        if (yaw < 0)
-        {
-            yaw = -yaw;
-        }
+        yaw = (yaw >= 0) ? yaw : -yaw;
 
         if (yaw > 0x4000)
         {
@@ -172,7 +169,7 @@ void cfmagicwall_update(int obj)
 
             if (fadeDistance < range)
             {
-                alpha = (s32)(lbl_803E43DC * (fadeDistance / range));
+                alpha = lbl_803E43DC * (fadeDistance / range);
             }
 
             ((GameObject*)obj)->anim.alpha = alpha;
