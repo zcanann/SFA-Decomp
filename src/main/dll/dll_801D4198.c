@@ -4,48 +4,16 @@
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objseq.h"
 
-typedef struct BombplantsporeStartDriftBurstPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} BombplantsporeStartDriftBurstPlacement;
-
-
-typedef struct BombplantsporeUpdateDriftPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} BombplantsporeUpdateDriftPlacement;
 
 
 
 
-extern void ModelLightStruct_free(void* light);
-extern int randomGetRange(int min, int max);
-extern u32 GameBit_Get(int eventId);
+
+
 extern void* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(void* obj, int sndId);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 
 
-extern EffectInterface** gPartfxInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern f32 lbl_803E5390;
-extern f32 lbl_803E5394;
-extern f32 lbl_803E5398;
-extern f32 lbl_803E539C;
-extern f32 lbl_803E53A8;
-extern f32 lbl_803E53AC;
-extern f32 lbl_803E53B0;
-extern f32 lbl_803E53B4;
 
 /*
  * --INFO--
@@ -60,7 +28,6 @@ extern f32 lbl_803E53B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int bombplantspore_getExtraSize(void);
 
 /*
  * --INFO--
@@ -75,7 +42,6 @@ int bombplantspore_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplantspore_free(void* obj);
 
 /*
  * --INFO--
@@ -95,7 +61,6 @@ void bombplantspore_free(void* obj);
  * (SHrocketmushroom.c). Once they land there, dont_inline stops MWCC
  * auto-inlining them into bombplantspore_update. */
 #pragma dont_inline on
-void bombplantspore_startDriftBurst(void* obj, void* state);
 
 /*
  * --INFO--
@@ -110,7 +75,6 @@ void bombplantspore_startDriftBurst(void* obj, void* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplantspore_updateDrift(void* obj, void* state);
 #pragma dont_inline reset
 
 /*
@@ -120,7 +84,6 @@ void bombplantspore_updateDrift(void* obj, void* state);
  * EN v1.0 Address: 0x801D3238
  * EN v1.0 Size: 320b
  */
-void bombplant_init(void* obj, void* param, int flag);
 
 /*
  * --INFO--
@@ -140,68 +103,17 @@ void bombplant_init(void* obj, void* param, int flag);
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 
-extern uint GameBit_Get(int bit);
-extern int gameBitDecrement(int bit);
-extern int gameBitIncrement(int bit);
-extern void Sfx_PlayFromObject(void* obj, int id);
-extern void* ObjHits_GetPriorityHit(void* obj, void* pos, int p3, int p4);
-extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
-extern int ObjTrigger_IsSetById(void* obj, int triggerId);
-extern void objRenderFn_80041018(void* obj);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
-extern void Obj_FreeObject(void* obj);
-extern void objMove(f32 x, f32 y, f32 z, void* obj);
 extern int fn_8003B500(void* obj, void* p2, f32 f1);
 extern int fn_8003B228(void* obj, void* p2);
 extern int characterDoEyeAnims(void* obj, void* p2);
-extern void* objCreateLight(void* obj, int arg);
-extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
-extern void modelLightStruct_setLightKind(void* light, int value);
-extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(void* light, int value);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 min, f32 max);
-extern void ObjMsg_AllocQueue(void* obj, int count);
-extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
-                                        int flags, f32 f8val, f32 mult);
 
-extern u8 lbl_80326D98[];
-extern u8 lbl_803DBFC0;
-extern f32 lbl_803E5388;
-extern f32 lbl_803E538C;
-extern f32 lbl_803E53B8;
-extern f32 lbl_803E53BC;
-extern f32 lbl_803E53C0;
-extern f32 lbl_803E53C4;
-extern f32 lbl_803E53C8;
-extern f64 lbl_803E53D0;
-extern f64 lbl_803E53D8;
-extern f32 lbl_803E53E0;
-extern f32 lbl_803E53E4;
-extern f32 lbl_803E53E8;
-extern f32 lbl_803E53EC;
 extern f32 lbl_803E53F8;
-extern f32 lbl_803E53F0;
-extern f32 lbl_803E53F4;
 
-#define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
-#define BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER 0x196
-#define BOMBPLANTSPORE_MSG_DETONATE 0x7000b
-#define BOMBPLANTSPORE_MSG_HIT_PLAYER 0x7000a
-#define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE 0x18e
-#define BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK 0x40
-#define BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE 0x80
-#define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
-#define BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG 0x08
-#define BOMBPLANTINGSPOT_READY_FLAG 0x10
 
-void bombplantspore_update(void* obj);
 
-void bombplantspore_init(void* obj, void* param2);
 
-void bombplantingspot_update(void* obj);
 
-void bombplantingspot_init(void* obj, BombPlantingSpotMapData* mapData);
 
 int sh_queenearthwalker_processAnimEvents(void* obj, void* unused, ObjAnimUpdateState* animUpdate)
 {

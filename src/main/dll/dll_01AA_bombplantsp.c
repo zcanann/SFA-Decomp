@@ -26,7 +26,6 @@ typedef struct BombplantsporeUpdateDriftPlacement
 
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int min, int max);
-extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sndId);
 extern f32 mathSinf(f32 x);
@@ -34,7 +33,6 @@ extern f32 mathCosf(f32 x);
 
 
 extern EffectInterface** gPartfxInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -278,20 +276,12 @@ void bombplant_init(void* obj, void* param, int flag);
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 
-extern uint GameBit_Get(int bit);
-extern int gameBitDecrement(int bit);
 extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(void* obj, int id);
 extern void* ObjHits_GetPriorityHit(void* obj, void* pos, int p3, int p4);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
-extern int ObjTrigger_IsSetById(void* obj, int triggerId);
-extern void objRenderFn_80041018(void* obj);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Obj_FreeObject(void* obj);
 extern void objMove(f32 x, f32 y, f32 z, void* obj);
-extern int fn_8003B500(void* obj, void* p2, f32 f1);
-extern int fn_8003B228(void* obj, void* p2);
-extern int characterDoEyeAnims(void* obj, void* p2);
 extern void* objCreateLight(void* obj, int arg);
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void modelLightStruct_setLightKind(void* light, int value);
@@ -318,20 +308,16 @@ extern f32 lbl_803E53E0;
 extern f32 lbl_803E53E4;
 extern f32 lbl_803E53E8;
 extern f32 lbl_803E53EC;
-extern f32 lbl_803E53F8;
 extern f32 lbl_803E53F0;
 extern f32 lbl_803E53F4;
 
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
-#define BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER 0x196
 #define BOMBPLANTSPORE_MSG_DETONATE 0x7000b
 #define BOMBPLANTSPORE_MSG_HIT_PLAYER 0x7000a
 #define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE 0x18e
 #define BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK 0x40
 #define BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE 0x80
 #define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
-#define BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG 0x08
-#define BOMBPLANTINGSPOT_READY_FLAG 0x10
 
 void bombplantspore_update(void* obj)
 {
@@ -551,6 +537,4 @@ void bombplantspore_init(void* obj, void* param2)
 
 void bombplantingspot_update(void* obj);
 
-void bombplantingspot_init(void* obj, BombPlantingSpotMapData* mapData);
 
-int sh_queenearthwalker_processAnimEvents(void* obj, void* unused, ObjAnimUpdateState* animUpdate);
