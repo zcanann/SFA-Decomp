@@ -160,10 +160,10 @@ void SB_ShipGun_update(int obj)
             ref = ObjList_GetObjects(&listStart, &listCount);
             for (i = listStart; i < listCount; i = i + 1)
             {
-                ref2 = *(int*)(ref + i * 4);
-                if (*(short*)(ref2 + 0x46) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
+                hitKind = *(int*)(ref + i * 4);
+                if (*(short*)(hitKind + 0x46) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
                 {
-                    *state = ref2;
+                    *state = hitKind;
                     i = listCount;
                 }
             }
