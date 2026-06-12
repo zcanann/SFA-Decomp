@@ -119,103 +119,6 @@ extern f32 lbl_803E41B8;
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E41BC;
 
-void windlift_hitDetect(void)
-{
-}
-
-void windlift_release(void)
-{
-}
-
-void windlift_initialise(void)
-{
-}
-
-int windlift_getExtraSize(void) { return 0x178; }
-
-int windlift_getObjectTypeId(void) { return 0x0; }
-
-void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4190);
-}
-
-void windlift_free(int* obj)
-{
-    void* p = Obj_GetPlayerObject();
-    if (p == NULL || fn_80296214(p) == lbl_803E416C)
-    {
-        Music_Trigger(189, 0);
-    }
-    ObjGroup_RemoveObject(obj, 73);
-}
-
-/* windlift_init: look up the lift's sequence timings, scale its rise
- * height from the def byte, arm it from the gamebits and clear all 14
- * rider slots. */
-void windlift_init(int* obj, u8* def)
-{
-    int i;
-    WindLiftSub* sub = ((GameObject*)obj)->extra;
-    sub->seqId = ((WindliftObjectDef*)def)->seqId;
-    sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
-    sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
-    if (sub->gamebit == 0)
-    {
-        sub->gamebit = -1;
-    }
-    if (sub->duration == 0)
-    {
-        sub->duration = 100;
-    }
-    sub->delay = ((WindliftObjectDef*)def)->delay;
-    sub->timer = 0;
-    if (((WindliftObjectDef*)def)->heightByte != 0)
-    {
-        sub->liftHeight = lbl_803E41C8 * (f32)((WindliftObjectDef*)def)->heightByte;
-    }
-    else
-    {
-        sub->liftHeight = lbl_803E41CC;
-    }
-    ((GameObject*)obj)->anim.rootMotionScale =
-        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / lbl_803E41CC;
-    /* skip the rise-in ramp after the convergence cutscene (0x57)
-       or for long lifts */
-    if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa)
-    {
-        sub->timer = 0x3c;
-    }
-    sub->active = 1;
-    if (sub->gamebit != -1)
-    {
-        if (GameBit_Get(sub->gamebit) != 0)
-        {
-            sub->timer = 0x3c;
-        }
-        else
-        {
-            sub->active = 0;
-            ((GameObject*)obj)->anim.alpha = 0;
-        }
-    }
-    {
-        WindLiftSub* p = sub;
-        for (i = 0; i < 14; i++)
-        {
-            p->slots[i].b10 = 0;
-            p->slots[i].b10 &= ~0xf1;
-            p->slots[i].f4 = lbl_803E4168;
-            p->slots[i].fc = lbl_803E416C;
-            p->slots[i].f8 = lbl_803E416C;
-            p->slots[i].i0 = 0;
-            p->slots[i].b11 = 0;
-        }
-    }
-    ObjGroup_AddObject(obj, 0x49);
-}
-
 /* fn_8019C784: per-rider wind lift physics - track the rider while
  * above the lift and in range, send the lift/drop messages on state
  * edges, and integrate the rise speed with ramp-up, oscillation damping
@@ -425,6 +328,30 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     }
 }
 
+int windlift_getExtraSize(void) { return 0x178; }
+
+int windlift_getObjectTypeId(void) { return 0x0; }
+
+void windlift_free(int* obj)
+{
+    void* p = Obj_GetPlayerObject();
+    if (p == NULL || fn_80296214(p) == lbl_803E416C)
+    {
+        Music_Trigger(189, 0);
+    }
+    ObjGroup_RemoveObject(obj, 73);
+}
+
+void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4190);
+}
+
+void windlift_hitDetect(void)
+{
+}
+
 /* windlift_update: fade the lift opacity with its gamebit, spin up
  * over the first second, then assign every nearby group-0x16 object
  * (and the player) to a rider slot and run the lift physics on each. */
@@ -576,4 +503,77 @@ void windlift_update(int* obj)
             }
         }
     }
+}
+
+/* windlift_init: look up the lift's sequence timings, scale its rise
+ * height from the def byte, arm it from the gamebits and clear all 14
+ * rider slots. */
+void windlift_init(int* obj, u8* def)
+{
+    int i;
+    WindLiftSub* sub = ((GameObject*)obj)->extra;
+    sub->seqId = ((WindliftObjectDef*)def)->seqId;
+    sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
+    sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
+    if (sub->gamebit == 0)
+    {
+        sub->gamebit = -1;
+    }
+    if (sub->duration == 0)
+    {
+        sub->duration = 100;
+    }
+    sub->delay = ((WindliftObjectDef*)def)->delay;
+    sub->timer = 0;
+    if (((WindliftObjectDef*)def)->heightByte != 0)
+    {
+        sub->liftHeight = lbl_803E41C8 * (f32)((WindliftObjectDef*)def)->heightByte;
+    }
+    else
+    {
+        sub->liftHeight = lbl_803E41CC;
+    }
+    ((GameObject*)obj)->anim.rootMotionScale =
+        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / lbl_803E41CC;
+    /* skip the rise-in ramp after the convergence cutscene (0x57)
+       or for long lifts */
+    if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa)
+    {
+        sub->timer = 0x3c;
+    }
+    sub->active = 1;
+    if (sub->gamebit != -1)
+    {
+        if (GameBit_Get(sub->gamebit) != 0)
+        {
+            sub->timer = 0x3c;
+        }
+        else
+        {
+            sub->active = 0;
+            ((GameObject*)obj)->anim.alpha = 0;
+        }
+    }
+    {
+        WindLiftSub* p = sub;
+        for (i = 0; i < 14; i++)
+        {
+            p->slots[i].b10 = 0;
+            p->slots[i].b10 &= ~0xf1;
+            p->slots[i].f4 = lbl_803E4168;
+            p->slots[i].fc = lbl_803E416C;
+            p->slots[i].f8 = lbl_803E416C;
+            p->slots[i].i0 = 0;
+            p->slots[i].b11 = 0;
+        }
+    }
+    ObjGroup_AddObject(obj, 0x49);
+}
+
+void windlift_release(void)
+{
+}
+
+void windlift_initialise(void)
+{
 }

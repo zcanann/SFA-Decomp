@@ -1412,18 +1412,22 @@ main/dll/CF/dll_0148_cfguardian.c:
 
 main/dll/CF/dll_0149_cfwindlift.c:
 	.text       start:0x8019C784 end:0x8019D578
+	.sdata2     start:0x803E41C0 end:0x803E41C8
 
 main/dll/CF/dll_014A_cfpowerbase.c:
 	.text       start:0x8019D578 end:0x8019D9F0
 
 main/dll/CF/dll_014B_cfmaincrystal.c:
 	.text       start:0x8019D9F0 end:0x8019E3F4
+	.sdata2     start:0x803E4208 end:0x803E4210
 
 main/dll/dll_014C_babycloudrunner.c:
 	.text       start:0x8019E3F4 end:0x8019F540
 
 main/dll/CF/dll_014E_cfprisonguard.c:
 	.text       start:0x8019F540 end:0x8019FC84
+	.data       start:0x80322BE0 end:0x80322C00
+	.sdata2     start:0x803E4270 end:0x803E4280
 
 main/dll/CF/dll_014F_cfprisonuncle.c:
 	.text       start:0x8019FC84 end:0x801A0174

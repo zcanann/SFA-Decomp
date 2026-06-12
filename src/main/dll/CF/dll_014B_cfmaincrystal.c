@@ -13,6 +13,10 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
+#define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */
+#define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
+#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C  /* charge at which the bolt fires */
+
 /* beam-report protocol shared with cfpowerbase (dll_014A): probe each
    pylon group (class 0xDA) with its message; the crystal itself answers
    position probes (class 0xDC) with CFMAINCRYSTAL_MSG_CRYSTAL. */
@@ -76,82 +80,6 @@ extern f32 lbl_803E41FC;
 extern f32 lbl_803E4200;
 extern f32 lbl_803E4204;
 extern void Camera_EnableViewYOffset(void);
-
-#define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */
-#define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
-#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C  /* charge at which the bolt fires */
-
-void cfmaincrystal_hitDetect(void)
-{
-}
-
-void cfmaincrystal_release(void)
-{
-}
-
-void cfmaincrystal_initialise(void)
-{
-}
-
-int cfmaincrystal_getExtraSize(void) { return 0x160; }
-
-int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
-
-void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4210);
-}
-
-void cfmaincrystal_free(int* obj)
-{
-    (*gExpgfxInterface)->freeSource((u32)obj);
-}
-
-void cfmaincrystal_update(int* obj)
-{
-    uint payload;
-    uint msgType;
-    uint srcObjId;
-    s8 t;
-    t = ((s8*)((GameObject*)obj)->anim.placement)[0x19];
-    switch (t)
-    {
-    case 0:
-        fn_8019D9F0(obj);
-        break;
-    case 1:
-        payload = 0;
-        while (ObjMsg_Pop(obj, &msgType, &srcObjId, &payload) != 0)
-        {
-            switch (msgType)
-            {
-            case CFMAINCRYSTAL_MSG_CRYSTAL:
-                ObjMsg_SendToObject((void*)srcObjId, CFMAINCRYSTAL_MSG_CRYSTAL, obj, 0);
-                break;
-            }
-        }
-        lbl_803DDB10 = obj;
-        *(s16*)obj = (s16)(*(s16*)obj + (s32)framesThisStep * 0xb6);
-        break;
-    }
-}
-
-void cfmaincrystal_init(int* obj, u8* def)
-{
-    CfMainCrystalState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
-    if (*(s8*)((char*)def + 0x19) == 0)
-    {
-        state->chime[0] = 0x28;
-        state->chime[1] = 0;
-        state->chime[2] = 0;
-        state->chime[3] = 0x46;
-        ((ObjAnimComponent*)obj)->bankIndex = 1;
-        state->unk158 = 0;
-    }
-    ObjMsg_AllocQueue(obj, 2);
-}
 
 /* fn_8019D9F0: main crystal beam update -
  * collect the three pylon positions from messages, re-request missing ones,
@@ -407,4 +335,76 @@ void fn_8019D9F0(int* obj)
     while (i < 3);
     /* idle spin */
     *(s16*)obj += framesThisStep * 0x2a;
+}
+
+int cfmaincrystal_getExtraSize(void) { return 0x160; }
+
+int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
+
+void cfmaincrystal_free(int* obj)
+{
+    (*gExpgfxInterface)->freeSource((u32)obj);
+}
+
+void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4210);
+}
+
+void cfmaincrystal_hitDetect(void)
+{
+}
+
+void cfmaincrystal_update(int* obj)
+{
+    uint payload;
+    uint msgType;
+    uint srcObjId;
+    s8 t;
+    t = ((s8*)((GameObject*)obj)->anim.placement)[0x19];
+    switch (t)
+    {
+    case 0:
+        fn_8019D9F0(obj);
+        break;
+    case 1:
+        payload = 0;
+        while (ObjMsg_Pop(obj, &msgType, &srcObjId, &payload) != 0)
+        {
+            switch (msgType)
+            {
+            case CFMAINCRYSTAL_MSG_CRYSTAL:
+                ObjMsg_SendToObject((void*)srcObjId, CFMAINCRYSTAL_MSG_CRYSTAL, obj, 0);
+                break;
+            }
+        }
+        lbl_803DDB10 = obj;
+        *(s16*)obj = (s16)(*(s16*)obj + (s32)framesThisStep * 0xb6);
+        break;
+    }
+}
+
+void cfmaincrystal_init(int* obj, u8* def)
+{
+    CfMainCrystalState* state = ((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
+    if (*(s8*)((char*)def + 0x19) == 0)
+    {
+        state->chime[0] = 0x28;
+        state->chime[1] = 0;
+        state->chime[2] = 0;
+        state->chime[3] = 0x46;
+        ((ObjAnimComponent*)obj)->bankIndex = 1;
+        state->unk158 = 0;
+    }
+    ObjMsg_AllocQueue(obj, 2);
+}
+
+void cfmaincrystal_release(void)
+{
+}
+
+void cfmaincrystal_initialise(void)
+{
 }

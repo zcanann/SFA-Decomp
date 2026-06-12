@@ -170,7 +170,7 @@ config.compilers_tag = "20251118"
 config.dtk_tag = "v1.8.0"
 config.objdiff_tag = "v3.5.1"
 config.sjiswrap_tag = "v1.2.2"
-config.wibo_tag = "1.0.0"
+config.wibo_tag = "1.1.0"
 
 # Project
 config.config_path = Path("config") / config.version / "config.yml"
@@ -1283,11 +1283,11 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0126_trigger.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0145_cloudprisoncontrol.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_0148_cfguardian.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/CF/dll_0149_cfwindlift.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/CF/dll_0149_cfwindlift.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014A_cfpowerbase.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/CF/dll_014B_cfmaincrystal.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014B_cfmaincrystal.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_014C_babycloudrunner.c"),
-            Object(NonMatching, "main/dll/CF/dll_014E_cfprisonguard.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014E_cfprisonguard.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014F_cfprisonuncle.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0150_gcrobotlightbea.c"),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_0153_cfperch.c", cflags=cflags_dll_noopt),

@@ -63,127 +63,6 @@ extern f32 lbl_803E4284;
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 
-void cfprisonguard_free(void)
-{
-}
-
-void cfprisonguard_release(void)
-{
-}
-
-void cfprisonguard_initialise(void)
-{
-}
-
-/* cfprisonguard_init: set up the guard's substate (SeqFn callback,
- * message queue), seed its header from the spawn params, and apply the
- * alarm-active gating bits. */
-void cfprisonguard_init(int* obj, u8* params)
-{
-    CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
-    sub->flags = 1;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)cfprisonguard_SeqFn;
-    ObjMsg_AllocQueue(obj, 4);
-    sub->capturedLatch = 1;
-    /* 0x4D: the old CloudRunner's cage is already open */
-    if (GameBit_Get(0x4d) != 0)
-    {
-        sub->flags = (u8)(sub->flags | 4);
-    }
-    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
-    ((Bit80*)&sub->flags39)->top = 1;
-}
-
-void cfprisonguard_update(int* obj)
-{
-    CfPrisonGuardState* sub;
-    int* player;
-    u8* def;
-    int bit44;
-    f32 dist;
-
-    sub = ((GameObject*)obj)->extra;
-    player = (int*)Obj_GetPlayerObject();
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((u32)sub->flags39 >> 7) & 1u)
-    {
-        ((CfPrisonGuardFlags39*)&sub->flags39)->pulse = 0;
-    }
-    if (GameBit_Get(((CfPrisonGuardMapData*)def)->disableEvent) != 0)
-    {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
-        ObjHits_DisableObject(obj);
-        Obj_RemoveFromUpdateList(obj);
-        return;
-    }
-    /* 0x44: the free-the-prisoner event - once set, the guard no
-       longer chases (it also arms the cage switch, see cfprisoncage) */
-    bit44 = GameBit_Get(0x44);
-    dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
-    if (sub->flags == 1)
-    {
-        waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268);
-        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        sub->flags = 2;
-    }
-    if (bit44 == 0)
-    {
-        if (sub->guardState != 4)
-        {
-            if (dist < (f32)(s32)((CfPrisonGuardMapData*)def)->watchRadius)
-            {
-            }
-            else if (waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) == 0)
-            {
-                return;
-            }
-        }
-        if (objGetAnimState80A(player) != 0x40)
-        {
-            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-        }
-    }
-}
-
-int cfprisonguard_getExtraSize(void) { return 0x3c; }
-
-int cfprisonguard_getObjectTypeId(void) { return 0x49; }
-
-/* cfprisonguard_render: draw the guard when visible, ramp the alarm
- * timer each frame, and spawn a one-shot particle while it is below
- * the threshold. */
-void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
-    if (visible != 0)
-    {
-        objRenderFn_8003b8f4(lbl_803E4280);
-    }
-    if (visible != 0)
-    {
-        f32 t = sub->alarmRamp;
-        if (t > lbl_803E4260)
-        {
-            sub->alarmRamp = lbl_803E4264 * (f32)(u32)framesThisStep + t;
-            if (sub->alarmRamp < lbl_803E4284)
-            {
-                objParticleFn_80099d84((int)obj, lbl_803E4280, 3, sub->alarmRamp, 0);
-            }
-        }
-    }
-}
-
-void cfprisonguard_hitDetect(int* obj)
-{
-    CfPrisonGuardState* state = ((GameObject*)obj)->extra;
-    if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19)
-    {
-        state->guardState = 7;
-    }
-}
-
 /* cfprisonguard_SeqFn: drive the guard state machine - ramp/reset the
  * alarm on cues, bail when captured or freed, watch player distance and
  * water impacts to chase or stand down, with idle digging SFX and a
@@ -329,4 +208,125 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->triggerCommand = 0;
     }
     return 0;
+}
+
+int cfprisonguard_getExtraSize(void) { return 0x3c; }
+
+int cfprisonguard_getObjectTypeId(void) { return 0x49; }
+
+void cfprisonguard_free(void)
+{
+}
+
+/* cfprisonguard_render: draw the guard when visible, ramp the alarm
+ * timer each frame, and spawn a one-shot particle while it is below
+ * the threshold. */
+void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
+    if (visible != 0)
+    {
+        objRenderFn_8003b8f4(lbl_803E4280);
+    }
+    if (visible != 0)
+    {
+        f32 t = sub->alarmRamp;
+        if (t > lbl_803E4260)
+        {
+            sub->alarmRamp = lbl_803E4264 * (f32)(u32)framesThisStep + t;
+            if (sub->alarmRamp < lbl_803E4284)
+            {
+                objParticleFn_80099d84((int)obj, lbl_803E4280, 3, sub->alarmRamp, 0);
+            }
+        }
+    }
+}
+
+void cfprisonguard_hitDetect(int* obj)
+{
+    CfPrisonGuardState* state = ((GameObject*)obj)->extra;
+    if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19)
+    {
+        state->guardState = 7;
+    }
+}
+
+void cfprisonguard_update(int* obj)
+{
+    CfPrisonGuardState* sub;
+    int* player;
+    u8* def;
+    int bit44;
+    f32 dist;
+
+    sub = ((GameObject*)obj)->extra;
+    player = (int*)Obj_GetPlayerObject();
+    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    if (((u32)sub->flags39 >> 7) & 1u)
+    {
+        ((CfPrisonGuardFlags39*)&sub->flags39)->pulse = 0;
+    }
+    if (GameBit_Get(((CfPrisonGuardMapData*)def)->disableEvent) != 0)
+    {
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
+        ObjHits_DisableObject(obj);
+        Obj_RemoveFromUpdateList(obj);
+        return;
+    }
+    /* 0x44: the free-the-prisoner event - once set, the guard no
+       longer chases (it also arms the cage switch, see cfprisoncage) */
+    bit44 = GameBit_Get(0x44);
+    dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
+    if (sub->flags == 1)
+    {
+        waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
+        sub->flags = 2;
+    }
+    if (bit44 == 0)
+    {
+        if (sub->guardState != 4)
+        {
+            if (dist < (f32)(s32)((CfPrisonGuardMapData*)def)->watchRadius)
+            {
+            }
+            else if (waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) == 0)
+            {
+                return;
+            }
+        }
+        if (objGetAnimState80A(player) != 0x40)
+        {
+            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
+        }
+    }
+}
+
+/* cfprisonguard_init: set up the guard's substate (SeqFn callback,
+ * message queue), seed its header from the spawn params, and apply the
+ * alarm-active gating bits. */
+void cfprisonguard_init(int* obj, u8* params)
+{
+    CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
+    sub->flags = 1;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->animEventCallback = (void*)cfprisonguard_SeqFn;
+    ObjMsg_AllocQueue(obj, 4);
+    sub->capturedLatch = 1;
+    /* 0x4D: the old CloudRunner's cage is already open */
+    if (GameBit_Get(0x4d) != 0)
+    {
+        sub->flags = (u8)(sub->flags | 4);
+    }
+    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+    ((Bit80*)&sub->flags39)->top = 1;
+}
+
+void cfprisonguard_release(void)
+{
+}
+
+void cfprisonguard_initialise(void)
+{
 }

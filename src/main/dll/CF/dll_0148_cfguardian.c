@@ -119,11 +119,6 @@ extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
 extern f32 lbl_803E412C;
 
-int cfguardian_setScale(int* obj)
-{
-    return (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa9b) & 0x2) == 0;
-}
-
 int fn_8019AE3C(int p1, int p2, s16* p3)
 {
     extern void Sfx_PlayFromObject(int, u16); /* #57/#115 */
@@ -169,6 +164,11 @@ int fn_8019AE3C(int p1, int p2, s16* p3)
         Sfx_PlayFromObject(p1, (u16)p3[2]);
     }
     return v;
+}
+
+int cfguardian_setScale(int* obj)
+{
+    return (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa9b) & 0x2) == 0;
 }
 
 int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
@@ -250,176 +250,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     return ret;
 }
 
-void cfguardian_release(void)
-{
-}
-
-void cfguardian_initialise(void)
-{
-}
-
-void cfguardian_init(int* obj, u8* params)
-{
-    CfGuardianState* sub;
-    GuardianVec stk1;
-    GuardianVec stk2;
-
-    sub = ((GameObject*)obj)->extra;
-    stk1 = lbl_802C22C0;
-    stk2 = lbl_802C22CC;
-    if (sub == NULL) return;
-    ObjMsg_AllocQueue(obj, 4);
-    sub->questState = (u8)GameBit_Get(0x4b);
-    ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->animEventCallback = (void*)cfguardian_SeqFn;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    sub->landingPhase = 0;
-    sub->moveSpeed = lbl_803E4110;
-    sub->unkA90 = 6;
-    sub->flagsA9B = 0;
-    sub->flags611 = (u8)(sub->flags611 | 0x28);
-    sub->chatterState = 1;
-    sub->chatterAlt = 0;
-    sub->chatterPick = 0;
-    if (GameBit_Get(0x57) != 0)
-    {
-        sub->questState = 4;
-        if ((s8)params[0x19] == 0)
-        {
-            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
-            Obj_RemoveFromUpdateList(obj);
-        }
-    }
-    else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0)
-    {
-        sub->questState = 4;
-        dll_2E_func0A(8, obj);
-    }
-    ObjHits_EnableObject(obj);
-    dll_2E_func05(obj, (u8*)sub, -0x2000, 0x2800, 4);
-    dll_2E_func08((u8*)sub, 0x12c, 0x64);
-    dll_2E_func09((u8*)sub, &stk2, &stk1, 4);
-    objSeqInitFn_80080078(lbl_8032284C, 0xf);
-    sub->flags611 = (u8)(sub->flags611 | 0x2);
-}
-
-/* cfguardian_SeqFn: guardian message handler.
- * Persists position on a negative cue, otherwise picks the active/idle
- * heading pair and routes a move request; on the magic-grant message it
- * tops the player back up. Returns 1 if the move was consumed. */
-int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int* sel;
-    GuardianMsg stk;
-    CfGuardianState* sub = ((GameObject*)obj)->extra;
-    stk = lbl_802C22D8;
-    if (((GameObject*)obj)->seqIndex < 0)
-    {
-        saveGame_saveObjectPos((int)obj);
-        return 0;
-    }
-    if (sub->questState != 6)
-    {
-        sel = &stk.a;
-    }
-    else
-    {
-        sel = &stk.c;
-    }
-    if (animatedObjGetSeqId((int*)animUpdate) != 0x283)
-    {
-        if (dll_2E_func07(obj, animUpdate, (u8*)sub, (s16)sel[0], (s16)sel[1]) != 0)
-        {
-            return 1;
-        }
-    }
-    if (animUpdate->triggerCommand == 2)
-    {
-        playerAddRemoveMagic(Obj_GetPlayerObject(), 0xa);
-    }
-    return 0;
-}
-
-int cfguardian_getExtraSize(void) { return 0xa9c; }
-
-int cfguardian_getObjectTypeId(void) { return 0x41; }
-
-void cfguardian_update(void) { cfguardian_updateMain(); }
-
-void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int* sub = ((GameObject*)obj)->extra;
-    if ((s32)visible != 0)
-    {
-        objRenderFn_8003b8f4(lbl_803E4130);
-        dll_2E_func06(obj, sub, 0);
-    }
-}
-
-void cfguardian_free(int* obj, int p2)
-{
-    char* extra = ((GameObject*)obj)->extra;
-    if (p2 == 0)
-    {
-        char* state;
-        int i;
-        for (i = 0, state = extra; i < 6; i++)
-        {
-            int* sub = (int*)((CfGuardianState*)state)->linkedObjs[0];
-            if (sub != NULL)
-            {
-                Obj_FreeObject(sub);
-            }
-            state += 4;
-        }
-    }
-}
-
-void cfguardian_hitDetect(int* obj)
-{
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-}
-
-#pragma dont_inline on
-int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
-{
-    int* result = NULL;
-    int local[2];
-    int found;
-
-    if (p4 == 1)
-    {
-        local[0] = 0;
-        local[1] = 0;
-    }
-    else
-    {
-        local[0] = 25;
-        local[1] = 21;
-    }
-
-    found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-        ((GameObject*)obj)->anim.localPosX,
-        ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ,
-        local, 2, p2);
-
-    if (found > -1)
-    {
-        result = (int*)(*gRomCurveInterface)->getById(found);
-        if (outVec != NULL)
-        {
-            *(f32*)((char*)outVec + 0) = *(f32*)((char*)result + 8);
-            *(f32*)((char*)outVec + 4) = *(f32*)((char*)result + 12);
-            *(f32*)((char*)outVec + 8) = *(f32*)((char*)result + 16);
-        }
-    }
-    return result;
-}
-#pragma dont_inline reset
-
 /* fn_8019B1D8: steer the object toward the target: scale its velocity
  * along the normalized delta, blend the yaw by speed over distance,
  * move it and keep the chase move playing. Returns 1 when already
@@ -466,6 +296,44 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     }
     ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
     return 0;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
+{
+    int* result = NULL;
+    int local[2];
+    int found;
+
+    if (p4 == 1)
+    {
+        local[0] = 0;
+        local[1] = 0;
+    }
+    else
+    {
+        local[0] = 25;
+        local[1] = 21;
+    }
+
+    found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+        ((GameObject*)obj)->anim.localPosX,
+        ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosZ,
+        local, 2, p2);
+
+    if (found > -1)
+    {
+        result = (int*)(*gRomCurveInterface)->getById(found);
+        if (outVec != NULL)
+        {
+            *(f32*)((char*)outVec + 0) = *(f32*)((char*)result + 8);
+            *(f32*)((char*)outVec + 4) = *(f32*)((char*)result + 12);
+            *(f32*)((char*)outVec + 8) = *(f32*)((char*)result + 16);
+        }
+    }
+    return result;
 }
 #pragma dont_inline reset
 
@@ -937,4 +805,136 @@ int cfguardian_updateMain(int obj)
         GameBit_Set(0x4b, sub->questState);
     }
     return 0;
+}
+
+/* cfguardian_SeqFn: guardian message handler.
+ * Persists position on a negative cue, otherwise picks the active/idle
+ * heading pair and routes a move request; on the magic-grant message it
+ * tops the player back up. Returns 1 if the move was consumed. */
+int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    int* sel;
+    GuardianMsg stk;
+    CfGuardianState* sub = ((GameObject*)obj)->extra;
+    stk = lbl_802C22D8;
+    if (((GameObject*)obj)->seqIndex < 0)
+    {
+        saveGame_saveObjectPos((int)obj);
+        return 0;
+    }
+    if (sub->questState != 6)
+    {
+        sel = &stk.a;
+    }
+    else
+    {
+        sel = &stk.c;
+    }
+    if (animatedObjGetSeqId((int*)animUpdate) != 0x283)
+    {
+        if (dll_2E_func07(obj, animUpdate, (u8*)sub, (s16)sel[0], (s16)sel[1]) != 0)
+        {
+            return 1;
+        }
+    }
+    if (animUpdate->triggerCommand == 2)
+    {
+        playerAddRemoveMagic(Obj_GetPlayerObject(), 0xa);
+    }
+    return 0;
+}
+
+int cfguardian_getExtraSize(void) { return 0xa9c; }
+
+int cfguardian_getObjectTypeId(void) { return 0x41; }
+
+void cfguardian_free(int* obj, int p2)
+{
+    char* extra = ((GameObject*)obj)->extra;
+    if (p2 == 0)
+    {
+        char* state;
+        int i;
+        for (i = 0, state = extra; i < 6; i++)
+        {
+            int* sub = (int*)((CfGuardianState*)state)->linkedObjs[0];
+            if (sub != NULL)
+            {
+                Obj_FreeObject(sub);
+            }
+            state += 4;
+        }
+    }
+}
+
+void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* sub = ((GameObject*)obj)->extra;
+    if ((s32)visible != 0)
+    {
+        objRenderFn_8003b8f4(lbl_803E4130);
+        dll_2E_func06(obj, sub, 0);
+    }
+}
+
+void cfguardian_hitDetect(int* obj)
+{
+    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
+    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
+    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+}
+
+void cfguardian_update(int obj) { cfguardian_updateMain(obj); }
+
+void cfguardian_init(int* obj, u8* params)
+{
+    CfGuardianState* sub;
+    GuardianVec stk1;
+    GuardianVec stk2;
+
+    sub = ((GameObject*)obj)->extra;
+    stk1 = lbl_802C22C0;
+    stk2 = lbl_802C22CC;
+    if (sub == NULL) return;
+    ObjMsg_AllocQueue(obj, 4);
+    sub->questState = (u8)GameBit_Get(0x4b);
+    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->animEventCallback = (void*)cfguardian_SeqFn;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    sub->landingPhase = 0;
+    sub->moveSpeed = lbl_803E4110;
+    sub->unkA90 = 6;
+    sub->flagsA9B = 0;
+    sub->flags611 = (u8)(sub->flags611 | 0x28);
+    sub->chatterState = 1;
+    sub->chatterAlt = 0;
+    sub->chatterPick = 0;
+    if (GameBit_Get(0x57) != 0)
+    {
+        sub->questState = 4;
+        if ((s8)params[0x19] == 0)
+        {
+            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
+            Obj_RemoveFromUpdateList(obj);
+        }
+    }
+    else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0)
+    {
+        sub->questState = 4;
+        dll_2E_func0A(8, obj);
+    }
+    ObjHits_EnableObject(obj);
+    dll_2E_func05(obj, (u8*)sub, -0x2000, 0x2800, 4);
+    dll_2E_func08((u8*)sub, 0x12c, 0x64);
+    dll_2E_func09((u8*)sub, &stk2, &stk1, 4);
+    objSeqInitFn_80080078(lbl_8032284C, 0xf);
+    sub->flags611 = (u8)(sub->flags611 | 0x2);
+}
+
+void cfguardian_release(void)
+{
+}
+
+void cfguardian_initialise(void)
+{
 }
