@@ -19,7 +19,7 @@ catch for the spellstone-in-prisonuncle content-drift class.
 | metric | count |
 |---|---|
 | dll-hosting units audited | 806 |
-| actionable (non-OK) | 141 |
+| actionable (non-OK) | 95 |
 | verdict CANONICAL-OK | 622 |
 | verdict CONTAINER | 0 |
 | verdict MISLABELED | 4 |
@@ -33,7 +33,7 @@ catch for the spellstone-in-prisonuncle content-drift class.
 | CARVE | 0 | tool-ready container dissolution (`dll_boundary_resplit.py --carve`) |
 | CARVE-HARD | 0 | container with a known blocker (interleave / irreducible) |
 | FORENSIC | 19 | fn-prefix anomaly / appendix mislabel — human-grade content read |
-| RENAME-ONLY | 122 | clean filename↔content stem rename (no carve) |
+| RENAME-ONLY | 76 | clean filename↔content stem rename (no carve) |
 
 > **CARVE-HARD = 0**: the June-2026 `dll_boundary_resplit.py` campaign
 > (boundary_audit.md) TU-aligned every cutting boundary, so no resident
@@ -49,7 +49,7 @@ catch for the spellstone-in-prisonuncle content-drift class.
 |---|---|---|
 | MISLABELED | FORENSIC | 1 |
 | MISLABELED | RENAME-ONLY | 3 |
-| HELPER-TU | RENAME-ONLY | 119 |
+| HELPER-TU | RENAME-ONLY | 73 |
 | ENGINE-HOST | FORENSIC | 18 |
 
 ## Worst 10 files by content-anomaly fn count
@@ -86,141 +86,95 @@ address. `[lo-hi)` is the splits.txt `.text` range (the partition unit).
 | 4 | `main/dll/dll_0032_titlescreeninit.c` | 801159E4-80115F20 | MISLABELED | RENAME-ONLY | 0x032 | main/dll/dll_0032_n_rareware.c |
 | 5 | `main/dll/dll_80161130.c` | 80161130-80161F0C | HELPER-TU | RENAME-ONLY | — anom:grimble,scarab | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | 6 | `main/dll/dll_80136A40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | — anom:tricky,debug,report,trickyfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 7 | `main/dll/cutCam.c` | 80103524-801046F4 | HELPER-TU | RENAME-ONLY | — anom:camcontrol,camerafn,cammovefn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 8 | `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | — anom:audio,pop,push,attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 9 | `main/dll/dll_BB.c` | 80101980-8010210C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 10 | `main/dll/maybeTemplate.c` | 80121C4C-801242DC | HELPER-TU | RENAME-ONLY | — anom:hud,pause,minimapfn,trickybitfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 11 | `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | — anom:thp,prepare,play | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 12 | `main/dll/dll_223.c` | 801BDCF8-801BE19C | HELPER-TU | RENAME-ONLY | — anom:di | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 13 | `main/dll/DFbarrelanim.c` | 801C1238-801C1740 | HELPER-TU | RENAME-ONLY | — anom:dfropenode | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 14 | `main/dll/balloonBaddie.c` | 801242DC-80125424 | HELPER-TU | RENAME-ONLY | — anom:modelfn,cmenurenderfn,hud,cmenurotatefn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 15 | `main/dll/dll_44.c` | 80118C88-80119000 | HELPER-TU | RENAME-ONLY | — anom:attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 16 | `main/dll/dll_4E.c` | 8011BFC8-8011C5CC | HELPER-TU | RENAME-ONLY | — anom:options | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 17 | `main/dll/MMP_gyservent.c` | 80198FA4-801993B0 | HELPER-TU | RENAME-ONLY | — anom:objfn,objseqmovefn,objseqfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 18 | `main/dll/dll_1E7.c` | 801D4CD0-801D5174 | HELPER-TU | RENAME-ONLY | — anom:s | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 19 | `main/dll/dll_8B.c` | 80100A90-80100AA4 | HELPER-TU | RENAME-ONLY | — anom:camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 20 | `main/dll/dll_B6.c` | 801010B4-80101690 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 21 | `main/dll/dll_B8.c` | 801018A8-80101980 | HELPER-TU | RENAME-ONLY | — anom:first,camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 22 | `main/dll/dll_BC.c` | 8010210C-8010224C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 23 | `main/dll/camshipbattle5C.c` | 8010A590-8010AEA8 | HELPER-TU | RENAME-ONLY | — anom:pathcam | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 24 | `main/dll/swarmBaddie.c` | 80125424-801262CC | HELPER-TU | RENAME-ONLY | — anom:gametextfn,pause | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 25 | `main/dll/wispBaddie.c` | 801262CC-80128120 | HELPER-TU | RENAME-ONLY | — anom:pause,pausemenudrawstatus | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 26 | `main/dll/dll_DF.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | — anom:trickyfn,tricky | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 27 | `main/dll/animobjD2.c` | 8013E0D0-8013F100 | HELPER-TU | RENAME-ONLY | — anom:tricky | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 28 | `main/dll/DIM2lift.c` | 801BA224-801BB598 | HELPER-TU | RENAME-ONLY | — anom:dim2icicle | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 29 | `main/dll/dll_A6.c` | 80100AA4-80100C90 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 30 | `main/dll/dll_B3.c` | 80100DCC-80100FA0 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 31 | `main/dll/dll_B4.c` | 80100FA0-801010B4 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 32 | `main/dll/dll_B7.c` | 80101690-801018A8 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 33 | `main/dll/dll_43.c` | 80119FAC-8011A0DC | HELPER-TU | RENAME-ONLY | — anom:save | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 34 | `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | — anom:language | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 35 | `main/dll/MMP_cratercritter.c` | 8013D8F0-8013DB3C | HELPER-TU | RENAME-ONLY | — anom:trickyfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 36 | `main/dll/MMP_critterspit.c` | 8013DB3C-8013DC88 | HELPER-TU | RENAME-ONLY | — anom:trickyfoodfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 37 | `main/dll/dll_801B1D84.c` | 801B1D84-801B1FF4 | HELPER-TU | RENAME-ONLY | — anom:di | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 38 | `main/dll/DIM2icicle.c` | 801BB598-801BCB34 | HELPER-TU | RENAME-ONLY | — anom:warpdarkicemines | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 39 | `main/dll/dll_801D0828.c` | 801D0828-801D083C | HELPER-TU | RENAME-ONLY | — anom:edible | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 40 | `main/dll/dll_801D4198.c` | 801D4198-801D4364 | HELPER-TU | RENAME-ONLY | — anom:sh | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 41 | `main/dll/SClantern.c` | 801D6C04-801D6D98 | HELPER-TU | RENAME-ONLY | — anom:playerfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 42 | `main/dll/DRhightop.c` | 801EAE4C-801EC1AC | HELPER-TU | RENAME-ONLY | — anom:snow | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 43 | `main/dll/BWalphaanim.c` | 801EE088-801EE0C0 | HELPER-TU | RENAME-ONLY | — anom:sb | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 44 | `main/dll/dll_8C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 45 | `main/dll/dll_8D.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 46 | `main/dll/dll_8F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 47 | `main/dll/dll_90.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 48 | `main/dll/dll_92.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 49 | `main/dll/dll_93.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 50 | `main/dll/dll_95.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 51 | `main/dll/dll_96.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 52 | `main/dll/dll_98.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 53 | `main/dll/dll_99.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 54 | `main/dll/dll_9B.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 55 | `main/dll/dll_9C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 56 | `main/dll/dll_9E.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 57 | `main/dll/dll_9F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 58 | `main/dll/dll_A1.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 59 | `main/dll/dll_A2.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 60 | `main/dll/dll_A4.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 61 | `main/dll/dll_A5.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 62 | `main/dll/dll_A7.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 63 | `main/dll/dll_A8.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 64 | `main/dll/dll_AA.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 65 | `main/dll/dll_AB.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 66 | `main/dll/dll_AD.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 67 | `main/dll/dll_AE.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 68 | `main/dll/dll_B1.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 69 | `main/dll/dll_B2.c` | 80100C90-80100DCC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 70 | `main/dll/dll_BD.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 71 | `main/dll/dll_BF.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 72 | `main/dll/dll_C4.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 73 | `main/dll/dll_53.c` | 80106654-80106654 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 74 | `main/dll/dll_8010A104.c` | 8010A104-8010A590 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 75 | `main/dll/dll_60.c` | 8010BF08-8010BF08 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 76 | `main/dll/dll_40.c` | 80118C88-80118C88 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 77 | `main/dll/dll_48.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 78 | `main/dll/dll_49.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 79 | `main/dll/dll_4B.c` | 8011BFC8-8011BFC8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 80 | `main/dll/dll_8011D918.c` | 8011D918-8011D9B0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 81 | `main/dll/dll_D3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 82 | `main/dll/weaponE6.c` | 8013F100-8013FFB8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 83 | `main/dll/newSeqObj.c` | 801504F8-801511E8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 84 | `main/dll/seqObj11D.c` | 801511E8-80152040 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 85 | `main/dll/seqObj11E.c` | 80152040-80152EC0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 86 | `main/dll/magicPlant.c` | 80152EC0-801540A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 87 | `main/dll/fireflyLantern.c` | 80154870-8015536C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 88 | `main/dll/landedArwing.c` | 8016558C-801659B8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 89 | `main/dll/dll_80174438.c` | 80174438-80174A80 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 90 | `main/dll/dll_147.c` | 8017AC2C-8017AC2C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 91 | `main/dll/dll_801814D0.c` | 801814D0-801816F8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 92 | `main/dll/holoPoint.c` | 80191F2C-80191F2C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 93 | `main/dll/dll_80198A00.c` | 80198A00-80198FA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 94 | `main/dll/dll_801AC01C.c` | 801AC01C-801AC248 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 95 | `main/dll/DIMwooddoor.c` | 801B1FF4-801B2550 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 96 | `main/dll/dll_801B9ECC.c` | 801B9ECC-801BA224 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 97 | `main/dll/DIMbossspit.c` | 801BE19C-801BE44C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 98 | `main/dll/dll_801C0BF8.c` | 801C0BF8-801C0E60 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 99 | `main/dll/DFpulley.c` | 801C0E60-801C0FD8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 100 | `main/dll/DFbarrel.c` | 801C0FD8-801C1238 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 101 | `main/dll/dll_1DC.c` | 801D1BFC-801D1BFC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 102 | `main/dll/SHthorntail.c` | 801D5174-801D58E4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 103 | `main/dll/dll_1E8.c` | 801D5174-801D5174 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 104 | `main/dll/SCchieflightfoot.c` | 801D6914-801D6C04 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 105 | `main/dll/SPdrape.c` | 801D981C-801D981C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 106 | `main/dll/dll_801DD170.c` | 801DD170-801DD1A8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 107 | `main/dll/DBbullet.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 108 | `main/dll/DBlightgo.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 109 | `main/dll/DBpointmum.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 110 | `main/dll/DBprotection.c` | 801DFA28-801E1588 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 111 | `main/dll/DBwaterflow.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 112 | `main/dll/DBdustgeezer.c` | 801E1588-801E1588 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 113 | `main/dll/dll_801E66DC.c` | 801E66DC-801E67BC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 114 | `main/dll/TREX_Lazerwall.c` | 801E67BC-801E6B10 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 115 | `main/dll/DRlaserturret.c` | 801E6B10-801E76A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 116 | `main/dll/dll_801E991C.c` | 801E991C-801E9C00 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 117 | `main/dll/DRcloudcage.c` | 801E9C00-801EA854 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 118 | `main/dll/DRshackle.c` | 801EA854-801EAE4C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 119 | `main/dll/DRpickup.c` | 801EC1AC-801EC7A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 120 | `main/dll/WCpushblock.c` | 801EE0C0-801EE668 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 121 | `main/dll/WCbeacon.c` | 801EF360-801EF360 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 122 | `main/dll/WCdial.c` | 801EFF7C-801EFF7C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 123 | `main/dll/LGTcontrollight.c` | 801F4C04-801F4ECC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 124 | `main/light.c` | 801FB9AC-801FD4A8 | ENGINE-HOST | FORENSIC | 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 anom:spellstoneusefn | engine/SDK host of DLL(s) 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 |
-| 125 | `main/main.c` | 801FD4A8-801FE118 | ENGINE-HOST | FORENSIC | 0x225,0x226,0x227,0x228 anom:return1 | engine/SDK host of DLL(s) 0x225,0x226,0x227,0x228 |
-| 126 | `main/sky.c` | 80088758-8008EE18 | ENGINE-HOST | FORENSIC | 0x005,0x006 anom:envfxfn,getskycolorfn,envfxactfn,playerenvfxfn | engine/SDK host of DLL(s) 0x005,0x006 |
-| 127 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | 0x007 anom:snow,lightning,cloud,mm | engine/SDK host of DLL(s) 0x007 |
-| 128 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | 0x002 anom:rom,animated,seq | engine/SDK host of DLL(s) 0x002 |
-| 129 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | 0x23B anom:dfppowersl | engine/SDK host of DLL(s) 0x23B |
-| 130 | `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
-| 131 | `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | 0x239 | engine/SDK host of DLL(s) 0x239 |
-| 132 | `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | 0x23A | engine/SDK host of DLL(s) 0x23A |
-| 133 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | 0x23C | engine/SDK host of DLL(s) 0x23C |
-| 134 | `main/worldasteroids.c` | 8020C278-8020C5EC | ENGINE-HOST | FORENSIC | 0x1D4 | engine/SDK host of DLL(s) 0x1D4 |
-| 135 | `main/worldplanet.c` | 8020C964-8020D9E4 | ENGINE-HOST | FORENSIC | 0x1D2 | engine/SDK host of DLL(s) 0x1D2 |
-| 136 | `main/worldobj.c` | 8020D9E4-8020F214 | ENGINE-HOST | FORENSIC | 0x1D3 | engine/SDK host of DLL(s) 0x1D3 |
-| 137 | `main/snowclaw.c` | 8020F214-802106C0 | ENGINE-HOST | FORENSIC | 0x25C | engine/SDK host of DLL(s) 0x25C |
-| 138 | `main/crcloudrace.c` | 802106C0-80210BE8 | ENGINE-HOST | FORENSIC | 0x25D | engine/SDK host of DLL(s) 0x25D |
-| 139 | `main/spellstone.c` | 80210BF0-80210E8C | ENGINE-HOST | FORENSIC | 0x25E | engine/SDK host of DLL(s) 0x25E |
-| 140 | `main/crfueltank.c` | 80210E8C-802110F8 | ENGINE-HOST | FORENSIC | 0x25F | engine/SDK host of DLL(s) 0x25F |
-| 141 | `main/proximitymine_update.c` | 8021122C-80211C24 | ENGINE-HOST | FORENSIC | 0x260 | engine/SDK host of DLL(s) 0x260 |
+| 7 | `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | — anom:audio,pop,push,attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 8 | `main/dll/dll_BB.c` | 80101980-8010210C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 9 | `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | — anom:thp,prepare,play | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 10 | `main/dll/dll_223.c` | 801BDCF8-801BE19C | HELPER-TU | RENAME-ONLY | — anom:di | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 11 | `main/dll/dll_44.c` | 80118C88-80119000 | HELPER-TU | RENAME-ONLY | — anom:attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 12 | `main/dll/dll_4E.c` | 8011BFC8-8011C5CC | HELPER-TU | RENAME-ONLY | — anom:options | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 13 | `main/dll/dll_1E7.c` | 801D4CD0-801D5174 | HELPER-TU | RENAME-ONLY | — anom:s | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 14 | `main/dll/dll_8B.c` | 80100A90-80100AA4 | HELPER-TU | RENAME-ONLY | — anom:camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 15 | `main/dll/dll_B6.c` | 801010B4-80101690 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 16 | `main/dll/dll_B8.c` | 801018A8-80101980 | HELPER-TU | RENAME-ONLY | — anom:first,camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 17 | `main/dll/dll_BC.c` | 8010210C-8010224C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 18 | `main/dll/dll_DF.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | — anom:trickyfn,tricky | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 19 | `main/dll/dll_A6.c` | 80100AA4-80100C90 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 20 | `main/dll/dll_B3.c` | 80100DCC-80100FA0 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 21 | `main/dll/dll_B4.c` | 80100FA0-801010B4 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 22 | `main/dll/dll_B7.c` | 80101690-801018A8 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 23 | `main/dll/dll_43.c` | 80119FAC-8011A0DC | HELPER-TU | RENAME-ONLY | — anom:save | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 24 | `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | — anom:language | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 25 | `main/dll/dll_801B1D84.c` | 801B1D84-801B1FF4 | HELPER-TU | RENAME-ONLY | — anom:di | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 26 | `main/dll/dll_801D0828.c` | 801D0828-801D083C | HELPER-TU | RENAME-ONLY | — anom:edible | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 27 | `main/dll/dll_801D4198.c` | 801D4198-801D4364 | HELPER-TU | RENAME-ONLY | — anom:sh | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 28 | `main/dll/dll_8C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 29 | `main/dll/dll_8D.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 30 | `main/dll/dll_8F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 31 | `main/dll/dll_90.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 32 | `main/dll/dll_92.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 33 | `main/dll/dll_93.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 34 | `main/dll/dll_95.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 35 | `main/dll/dll_96.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 36 | `main/dll/dll_98.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 37 | `main/dll/dll_99.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 38 | `main/dll/dll_9B.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 39 | `main/dll/dll_9C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 40 | `main/dll/dll_9E.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 41 | `main/dll/dll_9F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 42 | `main/dll/dll_A1.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 43 | `main/dll/dll_A2.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 44 | `main/dll/dll_A4.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 45 | `main/dll/dll_A5.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 46 | `main/dll/dll_A7.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 47 | `main/dll/dll_A8.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 48 | `main/dll/dll_AA.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 49 | `main/dll/dll_AB.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 50 | `main/dll/dll_AD.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 51 | `main/dll/dll_AE.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 52 | `main/dll/dll_B1.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 53 | `main/dll/dll_B2.c` | 80100C90-80100DCC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 54 | `main/dll/dll_BD.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 55 | `main/dll/dll_BF.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 56 | `main/dll/dll_C4.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 57 | `main/dll/dll_53.c` | 80106654-80106654 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 58 | `main/dll/dll_8010A104.c` | 8010A104-8010A590 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 59 | `main/dll/dll_60.c` | 8010BF08-8010BF08 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 60 | `main/dll/dll_40.c` | 80118C88-80118C88 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 61 | `main/dll/dll_48.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 62 | `main/dll/dll_49.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 63 | `main/dll/dll_4B.c` | 8011BFC8-8011BFC8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 64 | `main/dll/dll_8011D918.c` | 8011D918-8011D9B0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 65 | `main/dll/dll_D3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 66 | `main/dll/dll_80174438.c` | 80174438-80174A80 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 67 | `main/dll/dll_147.c` | 8017AC2C-8017AC2C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 68 | `main/dll/dll_801814D0.c` | 801814D0-801816F8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 69 | `main/dll/dll_80198A00.c` | 80198A00-80198FA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 70 | `main/dll/dll_801AC01C.c` | 801AC01C-801AC248 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 71 | `main/dll/dll_801B9ECC.c` | 801B9ECC-801BA224 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 72 | `main/dll/dll_801C0BF8.c` | 801C0BF8-801C0E60 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 73 | `main/dll/dll_1DC.c` | 801D1BFC-801D1BFC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 74 | `main/dll/dll_1E8.c` | 801D5174-801D5174 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 75 | `main/dll/dll_801DD170.c` | 801DD170-801DD1A8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 76 | `main/dll/dll_801E66DC.c` | 801E66DC-801E67BC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 77 | `main/dll/dll_801E991C.c` | 801E991C-801E9C00 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 78 | `main/light.c` | 801FB9AC-801FD4A8 | ENGINE-HOST | FORENSIC | 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 anom:spellstoneusefn | engine/SDK host of DLL(s) 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 |
+| 79 | `main/main.c` | 801FD4A8-801FE118 | ENGINE-HOST | FORENSIC | 0x225,0x226,0x227,0x228 anom:return1 | engine/SDK host of DLL(s) 0x225,0x226,0x227,0x228 |
+| 80 | `main/sky.c` | 80088758-8008EE18 | ENGINE-HOST | FORENSIC | 0x005,0x006 anom:envfxfn,getskycolorfn,envfxactfn,playerenvfxfn | engine/SDK host of DLL(s) 0x005,0x006 |
+| 81 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | 0x007 anom:snow,lightning,cloud,mm | engine/SDK host of DLL(s) 0x007 |
+| 82 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | 0x002 anom:rom,animated,seq | engine/SDK host of DLL(s) 0x002 |
+| 83 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | 0x23B anom:dfppowersl | engine/SDK host of DLL(s) 0x23B |
+| 84 | `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
+| 85 | `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | 0x239 | engine/SDK host of DLL(s) 0x239 |
+| 86 | `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | 0x23A | engine/SDK host of DLL(s) 0x23A |
+| 87 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | 0x23C | engine/SDK host of DLL(s) 0x23C |
+| 88 | `main/worldasteroids.c` | 8020C278-8020C5EC | ENGINE-HOST | FORENSIC | 0x1D4 | engine/SDK host of DLL(s) 0x1D4 |
+| 89 | `main/worldplanet.c` | 8020C964-8020D9E4 | ENGINE-HOST | FORENSIC | 0x1D2 | engine/SDK host of DLL(s) 0x1D2 |
+| 90 | `main/worldobj.c` | 8020D9E4-8020F214 | ENGINE-HOST | FORENSIC | 0x1D3 | engine/SDK host of DLL(s) 0x1D3 |
+| 91 | `main/snowclaw.c` | 8020F214-802106C0 | ENGINE-HOST | FORENSIC | 0x25C | engine/SDK host of DLL(s) 0x25C |
+| 92 | `main/crcloudrace.c` | 802106C0-80210BE8 | ENGINE-HOST | FORENSIC | 0x25D | engine/SDK host of DLL(s) 0x25D |
+| 93 | `main/spellstone.c` | 80210BF0-80210E8C | ENGINE-HOST | FORENSIC | 0x25E | engine/SDK host of DLL(s) 0x25E |
+| 94 | `main/crfueltank.c` | 80210E8C-802110F8 | ENGINE-HOST | FORENSIC | 0x25F | engine/SDK host of DLL(s) 0x25F |
+| 95 | `main/proximitymine_update.c` | 8021122C-80211C24 | ENGINE-HOST | FORENSIC | 0x260 | engine/SDK host of DLL(s) 0x260 |
 
 ## Partition plan (concurrent execution batches)
 
@@ -231,7 +185,7 @@ files without colliding — assign one batch per worktree, land
 address-edge-first within a batch (the resplit tool's linear-link-order
 rule). Batches are independent; run them in any order or all at once.
 
-Batches: 18. Region-disjoint: NO OVERLAP — verified (each batch owns a contiguous address interval; no item's footprint straddles a batch boundary).
+Batches: 12. Region-disjoint: NO OVERLAP — verified (each batch owns a contiguous address interval; no item's footprint straddles a batch boundary).
 
 | batch | items | footprint span | effort mix |
 |---|---|---|---|
@@ -240,19 +194,13 @@ Batches: 18. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | B03 | 8 | 80100AA4-80100C90 | RENAME-ONLY×8 |
 | B04 | 8 | 80100C90-80100DCC | RENAME-ONLY×8 |
 | B05 | 8 | 80100DCC-8010224C | RENAME-ONLY×8 |
-| B06 | 8 | 8010224C-80115F20 | RENAME-ONLY×8 |
-| B07 | 8 | 8011611C-8011B5D4 | RENAME-ONLY×8 |
-| B08 | 8 | 8011BFC8-80128120 | RENAME-ONLY×8 |
-| B09 | 8 | 80128120-8013F100 | FORENSIC×1,RENAME-ONLY×7 |
-| B10 | 8 | 8013F100-801659B8 | RENAME-ONLY×8 |
-| B11 | 8 | 80174438-801B1FF4 | RENAME-ONLY×8 |
-| B12 | 8 | 801B1FF4-801C0FD8 | RENAME-ONLY×8 |
-| B13 | 8 | 801C0FD8-801D58E4 | RENAME-ONLY×8 |
-| B14 | 8 | 801D6914-801DFA28 | RENAME-ONLY×8 |
-| B15 | 8 | 801DFA28-801EAE4C | RENAME-ONLY×8 |
-| B16 | 8 | 801EAE4C-801FD4A8 | FORENSIC×1,RENAME-ONLY×7 |
-| B17 | 8 | 801FD4A8-8020F214 | FORENSIC×8 |
-| B18 | 5 | 8020F214-80211C24 | FORENSIC×5 |
+| B06 | 8 | 8010224C-801175A4 | RENAME-ONLY×8 |
+| B07 | 8 | 8011846C-8011C5CC | RENAME-ONLY×8 |
+| B08 | 8 | 8011C5CC-80161F0C | FORENSIC×1,RENAME-ONLY×7 |
+| B09 | 8 | 80174438-801BE19C | RENAME-ONLY×8 |
+| B10 | 8 | 801C0BF8-801E67BC | RENAME-ONLY×8 |
+| B11 | 8 | 801E991C-8020C5EC | FORENSIC×7,RENAME-ONLY×1 |
+| B12 | 7 | 8020C964-80211C24 | FORENSIC×7 |
 
 ### Batch B01 — `80080DE8-80100AA4` (8 items)
 
@@ -319,166 +267,90 @@ Batches: 18. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/dll_BC.c` | 8010210C-8010224C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_BD.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B06 — `8010224C-80115F20` (8 items)
+### Batch B06 — `8010224C-801175A4` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
 | `main/dll/dll_BF.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_C4.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/cutCam.c` | 80103524-801046F4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_53.c` | 80106654-80106654 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_8010A104.c` | 8010A104-8010A590 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/camshipbattle5C.c` | 8010A590-8010AEA8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_60.c` | 8010BF08-8010BF08 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_0032_titlescreeninit.c` | 801159E4-80115F20 | MISLABELED | RENAME-ONLY | main/dll/dll_0032_n_rareware.c |
+| `main/dll/dll_0034_titlemenu.c` | 8011611C-8011730C | MISLABELED | RENAME-ONLY | main/dll/dll_0034_n_filemenu.c |
+| `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B07 — `8011611C-8011B5D4` (8 items)
+### Batch B07 — `8011846C-8011C5CC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/dll_0034_titlemenu.c` | 8011611C-8011730C | MISLABELED | RENAME-ONLY | main/dll/dll_0034_n_filemenu.c |
-| `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_40.c` | 80118C88-80118C88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_44.c` | 80118C88-80119000 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_43.c` | 80119FAC-8011A0DC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_48.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_49.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-
-### Batch B08 — `8011BFC8-80128120` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
 | `main/dll/dll_4B.c` | 8011BFC8-8011BFC8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_4E.c` | 8011BFC8-8011C5CC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_8011D918.c` | 8011D918-8011D9B0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/maybeTemplate.c` | 80121C4C-801242DC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/balloonBaddie.c` | 801242DC-80125424 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/swarmBaddie.c` | 80125424-801262CC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/wispBaddie.c` | 801262CC-80128120 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B09 — `80128120-8013F100` (8 items)
+### Batch B08 — `8011C5CC-80161F0C` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_8011D918.c` | 8011D918-8011D9B0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_0000_baby_snowworm.c` | 80128120-8012FECC | MISLABELED | FORENSIC | dll_0000_gameui.c |
 | `main/dll/dll_003C_tumbleweedbush.c` | 80130124-80131540 | MISLABELED | RENAME-ONLY | main/dll/dll_003C_TumbleweedBush.c |
 | `main/dll/dll_80136A40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_DF.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/MMP_cratercritter.c` | 8013D8F0-8013DB3C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/MMP_critterspit.c` | 8013DB3C-8013DC88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/animobjD2.c` | 8013E0D0-8013F100 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_D3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-
-### Batch B10 — `8013F100-801659B8` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
-| `main/dll/weaponE6.c` | 8013F100-8013FFB8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/newSeqObj.c` | 801504F8-801511E8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/seqObj11D.c` | 801511E8-80152040 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/seqObj11E.c` | 80152040-80152EC0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/magicPlant.c` | 80152EC0-801540A0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/fireflyLantern.c` | 80154870-8015536C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_80161130.c` | 80161130-80161F0C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/landedArwing.c` | 8016558C-801659B8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B11 — `80174438-801B1FF4` (8 items)
+### Batch B09 — `80174438-801BE19C` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
 | `main/dll/dll_80174438.c` | 80174438-80174A80 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_147.c` | 8017AC2C-8017AC2C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801814D0.c` | 801814D0-801816F8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/holoPoint.c` | 80191F2C-80191F2C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_80198A00.c` | 80198A00-80198FA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/MMP_gyservent.c` | 80198FA4-801993B0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801AC01C.c` | 801AC01C-801AC248 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801B1D84.c` | 801B1D84-801B1FF4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-
-### Batch B12 — `801B1FF4-801C0FD8` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
-| `main/dll/DIMwooddoor.c` | 801B1FF4-801B2550 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801B9ECC.c` | 801B9ECC-801BA224 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DIM2lift.c` | 801BA224-801BB598 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DIM2icicle.c` | 801BB598-801BCB34 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_223.c` | 801BDCF8-801BE19C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DIMbossspit.c` | 801BE19C-801BE44C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_801C0BF8.c` | 801C0BF8-801C0E60 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DFpulley.c` | 801C0E60-801C0FD8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B13 — `801C0FD8-801D58E4` (8 items)
+### Batch B10 — `801C0BF8-801E67BC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/DFbarrel.c` | 801C0FD8-801C1238 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DFbarrelanim.c` | 801C1238-801C1740 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_801C0BF8.c` | 801C0BF8-801C0E60 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801D0828.c` | 801D0828-801D083C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_1DC.c` | 801D1BFC-801D1BFC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801D4198.c` | 801D4198-801D4364 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_1E7.c` | 801D4CD0-801D5174 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_1E8.c` | 801D5174-801D5174 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/SHthorntail.c` | 801D5174-801D58E4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-
-### Batch B14 — `801D6914-801DFA28` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
-| `main/dll/SCchieflightfoot.c` | 801D6914-801D6C04 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/SClantern.c` | 801D6C04-801D6D98 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/SPdrape.c` | 801D981C-801D981C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801DD170.c` | 801DD170-801DD1A8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DBbullet.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DBlightgo.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DBpointmum.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DBwaterflow.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-
-### Batch B15 — `801DFA28-801EAE4C` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
-| `main/dll/DBprotection.c` | 801DFA28-801E1588 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DBdustgeezer.c` | 801E1588-801E1588 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_801E66DC.c` | 801E66DC-801E67BC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/TREX_Lazerwall.c` | 801E67BC-801E6B10 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DRlaserturret.c` | 801E6B10-801E76A0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+
+### Batch B11 — `801E991C-8020C5EC` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
 | `main/dll/dll_801E991C.c` | 801E991C-801E9C00 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DRcloudcage.c` | 801E9C00-801EA854 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DRshackle.c` | 801EA854-801EAE4C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-
-### Batch B16 — `801EAE4C-801FD4A8` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
-| `main/dll/DRhightop.c` | 801EAE4C-801EC1AC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DRpickup.c` | 801EC1AC-801EC7A0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/BWalphaanim.c` | 801EE088-801EE0C0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/WCpushblock.c` | 801EE0C0-801EE668 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/WCbeacon.c` | 801EF360-801EF360 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/WCdial.c` | 801EFF7C-801EFF7C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/LGTcontrollight.c` | 801F4C04-801F4ECC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/light.c` | 801FB9AC-801FD4A8 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 |
-
-### Batch B17 — `801FD4A8-8020F214` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
 | `main/main.c` | 801FD4A8-801FE118 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x225,0x226,0x227,0x228 |
 | `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x239 |
 | `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x23A |
 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x23B |
 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x23C |
 | `main/worldasteroids.c` | 8020C278-8020C5EC | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D4 |
-| `main/worldplanet.c` | 8020C964-8020D9E4 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D2 |
-| `main/worldobj.c` | 8020D9E4-8020F214 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D3 |
 
-### Batch B18 — `8020F214-80211C24` (5 items)
+### Batch B12 — `8020C964-80211C24` (7 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/worldplanet.c` | 8020C964-8020D9E4 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D2 |
+| `main/worldobj.c` | 8020D9E4-8020F214 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D3 |
 | `main/snowclaw.c` | 8020F214-802106C0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x25C |
 | `main/crcloudrace.c` | 802106C0-80210BE8 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x25D |
 | `main/spellstone.c` | 80210BF0-80210E8C | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x25E |
