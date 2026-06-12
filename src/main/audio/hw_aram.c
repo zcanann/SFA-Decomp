@@ -1,6 +1,5 @@
 #include "main/audio/hw_aram.h"
 
-extern undefined4 DAT_803defc4;
 extern u32 lbl_803BD150[];
 extern f32 lbl_803E78E8;
 extern u32 __cvt_fp2unsigned(double value);

@@ -7,7 +7,6 @@ extern f32 fsin16Approx(u16 angle);
 extern f32 fcos16Approx(u16 angle);
 
 extern f32 lbl_803E65D0;
-extern f64 lbl_803E65D8;
 extern f32 lbl_803E65E0;
 extern f32 lbl_803E65E4;
 extern f32 lbl_803E65E8;

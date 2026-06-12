@@ -237,7 +237,6 @@ extern u32 getButtonsJustPressed(int controller);
 extern EffectInterface** gPartfxInterface;
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E65F8_pad;
 extern f32 lbl_803DDD00;
 extern s16 lbl_803DDD0C;
 extern int lbl_803DDD10;
@@ -264,7 +263,6 @@ extern f32 lbl_803E6624;
 extern f32 lbl_803E6628;
 extern f32 lbl_803E662C;
 extern f32 lbl_803E6630;
-extern f32 lbl_803E6618_2;
 
 void worldplanet_update(int obj)
 {

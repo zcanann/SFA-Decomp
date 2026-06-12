@@ -37,12 +37,6 @@ typedef struct
     u8 b; // 0x3
 } SynthChanPatch; // size 0x4
 
-typedef struct
-{
-    u16 tag; // 0x0
-    u16 unk2; // 0x2
-    u16 unk4; // 0x4
-} SynthVarTag; // size 0x6
 
 typedef struct
 {

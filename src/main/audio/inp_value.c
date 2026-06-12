@@ -2,9 +2,7 @@
 #include "main/audio/inp_midi.h"
 
 extern int varGet(int state, int useExCtrl, u32 index);
-extern u64 __shr2u(u32 hi, u32 lo, u32 shift);
 extern u32 synthRealTimeHi;
-extern u32 synthRealTimeLo;
 
 /*
  * Evaluate a controller expression list and cache its 14-bit result.

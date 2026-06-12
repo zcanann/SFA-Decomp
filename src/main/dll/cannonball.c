@@ -32,7 +32,6 @@ extern void trickyMove(int obj, void* moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
 extern f32 timeDelta;
-extern f64 lbl_803E2460;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23F4;

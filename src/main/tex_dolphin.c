@@ -4,16 +4,6 @@
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 
-typedef union
-{
-    f64 d;
-
-    struct
-    {
-        uint hi;
-        uint lo;
-    } words;
-} SfaIntDouble;
 
 extern void modelLightStruct_getDiffuseColor(void* light, u8* a, u8* b, u8* c, u8* d);
 extern f32 modelLightStruct_getRadius(void* light);
@@ -51,7 +41,6 @@ extern void objGetColor();
 extern uint AttractMovie_DrawTextureCallback();
 extern u8 isHeavyFogEnabled();
 
-extern f64 lbl_803DEBC0;
 extern f32 lbl_803DEBC8;
 extern f32 lbl_803DEBCC;
 extern f32 displayOffsetH_803DEBFC;
@@ -89,7 +78,6 @@ extern int lbl_80382008[5];
 extern FrustumPlane gViewFrustumPlanes[5];
 extern int lbl_803E8444;
 extern int lbl_803E8448;
-extern undefined4 jumptable_8030E844;
 
 /*
  * --INFO--

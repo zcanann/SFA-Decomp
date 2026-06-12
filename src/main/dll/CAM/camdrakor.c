@@ -156,20 +156,9 @@ void CameraModeCombat_free(int obj)
 
 
 extern void* FUN_800069a8();
-extern undefined4 FUN_80017814();
-extern undefined4 FUN_80017830();
-extern undefined4 FUN_80053bb0();
 extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
                                  int b, int c);
-extern uint FUN_801ef1a4();
-extern undefined4 FUN_80247e94();
-extern undefined4 FUN_80247eb8();
-extern undefined4 FUN_80247edc();
-extern undefined4 FUN_80247ef8();
-extern double SeekTwiceBeforeRead();
 extern undefined4 Camera_GetCurrentViewSlot();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293130();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -179,10 +168,7 @@ extern undefined4 cameraGetPrevPos2();
 
 extern s32 lbl_803DD56C;
 extern CameraModeShipBattleState* lbl_803DD570;
-extern CameraModeClimbState* lbl_803DD578;
 extern f64 lbl_803E1918;
-extern f64 lbl_803E1938;
-extern f64 lbl_803E1988;
 extern f32 lbl_803E18CC;
 extern f32 lbl_803E18D0;
 extern f32 lbl_803E18D4;

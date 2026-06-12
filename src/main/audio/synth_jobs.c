@@ -2,13 +2,6 @@
 #include "main/audio/synth_job.h"
 #include "main/audio/synth_jobs.h"
 
-extern undefined4 FUN_802420b0();
-extern undefined4 FUN_80283d78();
-extern undefined4 hwSaveSample();
-extern undefined4 FUN_80283e00();
-extern undefined4 aramQueueCallback();
-extern uint aramInit();
-extern undefined4 FUN_80284228();
 
 extern void sndBegin(void);
 extern void sndEnd(void);
@@ -20,15 +13,6 @@ extern SynthJob synthJobTable[];
 extern u32 synthFlags;
 extern u16 dataKeymapNum;
 
-extern undefined4 DAT_803bddb0;
-extern undefined4 DAT_803bdfc0;
-extern undefined4 DAT_803deee8;
-extern undefined4 DAT_803def00;
-extern undefined4 DAT_803def01;
-extern f64 DOUBLE_803e8478;
-extern f32 FLOAT_803e8470;
-extern f32 FLOAT_803e8480;
-extern f64 lbl_803E77E0;
 extern f32 lbl_803E77D8;
 
 /*

@@ -241,52 +241,15 @@ typedef struct DoorlockPlacement
 } DoorlockPlacement;
 
 
-typedef struct DoorState
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1E - 0x19];
-    s16 unk1E;
-} DoorState;
 
 
-extern bool FUN_800067f8();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006810();
-extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_8001771c();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjGroup_AddObject();
-extern int FUN_80039520();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80135814();
-extern undefined4 FUN_8017b130();
-extern uint FUN_80286830();
-extern uint FUN_8028683c();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286888();
-extern int FUN_80294c0c();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e4408;
-extern f64 DOUBLE_803e4428;
 extern f32 timeDelta;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E43F0;
-extern f32 lbl_803E43F4;
-extern f32 lbl_803E43F8;
-extern f32 lbl_803E43FC;
-extern f32 lbl_803E4400;
-extern f32 lbl_803E4410;
-extern f32 lbl_803E4418;
-extern f32 lbl_803E441C;
-extern f32 lbl_803E4420;
 
 /*
  * --INFO--
@@ -1289,37 +1252,12 @@ typedef struct DoorLockState
     u8 unlocked;
 } DoorLockState;
 
-typedef struct SeqObjectState
-{
-    u8 flags;
-    s8 triggerBitState;
-    u8 pad02;
-} SeqObjectState;
-
-typedef struct SeqObj2State
-{
-    u8 flags;
-} SeqObj2State;
-
-typedef struct IMMultiSeqState
-{
-    u8 step;
-    u8 flags;
-} IMMultiSeqState;
 
 
-#define SEQOBJECT_STATE_OPEN 0x01
-#define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
-#define SEQOBJECT_STATE_SEQUENCE_DONE 0x04
 
-#define SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR 0x01
-#define SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE 0x02
-#define SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE 0x04
-#define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE 0x08
-#define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
-#define SEQOBJECT_FLAG_UNUSED_20 0x20
 
-#define IMMULTISEQ_LATCH_ADVANCE_BIT 0x01
+
+
 
 /*
  * --INFO--

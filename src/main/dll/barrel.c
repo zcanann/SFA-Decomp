@@ -1050,30 +1050,11 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 #include "main/game_object.h"
 #include "main/objanim.h"
 
-typedef struct TumbleweedbushState
-{
-    u8 pad0[0x8 - 0x0];
-    u16 unk8;
-    u8 padA[0x54 - 0xA];
-} TumbleweedbushState;
 
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_DisableObject();
-extern int ObjHits_PollPriorityHitWithCooldown();
-extern undefined4 FUN_8003b818();
 
-extern f32 lbl_803DC074;
-extern f32 lbl_803E3BC0;
-extern f32 lbl_803E3BCC;
-extern f32 lbl_803E3BD0;
-extern f32 lbl_803E3BD8;
-extern f32 lbl_803E3BE0;
-extern f32 lbl_803E3BE4;
-extern f32 lbl_803E3BE8;
-extern f32 lbl_803E3BEC;
-extern f32 lbl_803E3BF0;
 
 /*
  * --INFO--
@@ -1199,13 +1180,6 @@ void tumbleweedbush_release(void);
 
 void tumbleweedbush_initialise(void);
 
-extern f32 lbl_803E2F48;
-extern f32 lbl_803E2F4C;
-extern f32 lbl_803E2F50;
-extern f32 lbl_803E2F54;
-extern u8 lbl_803201E8[];
-extern void vecRotateZXY(void* obj, void* p);
-extern void* memcpy(void* dst, const void* src, int n);
 
 void tumbleweedbush_init(u8* obj, u8* params, int param3);
 
@@ -1213,33 +1187,13 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3);
 int tumbleweedbush_getExtraSize(void);
 int tumbleweedbush_getObjectTypeId(void);
 
-extern u8 lbl_803DDA80;
-extern void* gSHthorntailAnimationInterface;
-extern void objfx_spawnHitEmitterAtPos(int* p, int a, int b, int c, int d);
-extern s8 fn_801631C8(int* obj);
 
-typedef struct TumbleweedBushState
-{
-    f32 scale;
-    u8 pad04[4];
-    u16 triggerRadius;
-    u8 pad0A[2];
-    void* pieceObjects[4];
-    f32 pieceOffsets[3][3];
-    u8 pad40[0x4c - 0x40];
-    u8 variant;
-    u8 pad4D[3];
-    u8 pieceCount;
-    u8 pad51[3];
-} TumbleweedBushState;
 
 void tumbleweedbush_update(int* obj);
 
 /* 16b chained patterns. */
-void fn_80163980(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E2F44;
 
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -1256,7 +1210,6 @@ void cannonclaw_init(s16* dst, void* src)
  * the supplied position vector). Returns NULL if no match. */
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern f32 lbl_803E2F58;
 
 void* tumbleweedbush_findNearestActive(f32* p_pos);
 
@@ -1265,21 +1218,9 @@ void* tumbleweedbush_findNearestActive(f32* p_pos);
 void tumbleweedbush_setScale(u8* obj, void* match);
 
 
-extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(int* obj, int a, s8 b, int c, void* d);
-extern int** ObjList_GetObjects(int* idx, int* count);
-extern f32 lbl_803E2F40;
 
-s8 fn_801631C8(int* obj);
 
-extern int fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
-extern f32 lbl_803E2F5C;
-extern f32 lbl_803E2F60;
-extern f32 lbl_803E2F64;
-extern f32 lbl_803E2F68;
 
-void fn_80163990(int* piece, u8* state);
 
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {

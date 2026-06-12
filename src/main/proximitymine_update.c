@@ -362,7 +362,6 @@ extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
 
 extern s32 lbl_803DC230;
 extern f32 lbl_803E6774;
-extern f64 lbl_803E6790;
 extern f32 lbl_803E6798;
 extern f32 lbl_803E679C;
 

@@ -247,14 +247,10 @@ extern void memset(void* ptr, int value, int size);
 extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
                                        f32 height, s16 angleRange, s16 angleLimit,
                                        int* outPointCount);
-extern int Camera_GetCurrentViewSlot();
-extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 
-extern CameraModeBikeState* lbl_803DD540;
-extern f64 lbl_803E1750;
 extern f32 lbl_803E1744;
 extern f32 lbl_803E1760;
 extern f32 lbl_803E1764;

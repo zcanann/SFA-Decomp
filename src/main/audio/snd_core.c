@@ -1,26 +1,8 @@
 #include "main/audio/snd_core.h"
 
-extern int FUN_80271b50();
-extern undefined4 FUN_80272224();
-extern uint FUN_80272ec4();
-extern uint DAT_803cd570;
-extern undefined4 DAT_803defd0;
-extern int* DAT_803defd4;
-extern undefined4 DAT_803defea;
-extern undefined4 DAT_803defeb;
-extern undefined4 DAT_803defec;
-extern undefined4 DAT_803defed;
-extern f32 FLOAT_803e8518;
-extern f32 FLOAT_803e853c;
-extern f32 FLOAT_803e8554;
-extern f32 FLOAT_803e8558;
-extern f32 FLOAT_803e855c;
 extern u8 lbl_803BD150[];
 extern u8 lbl_803D3CA0[];
 extern u8 gSynthInitialized;
-extern f32 lbl_803E78C8;
-extern f64 lbl_803E78D0;
-extern f64 lbl_803E78D8;
 
 extern void hwExit(void);
 extern void IFFifoAlloc(void);

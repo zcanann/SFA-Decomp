@@ -3,16 +3,12 @@
 #include "main/objseq.h"
 
 
-extern undefined4 FUN_80006ba8();
 extern uint GameBit_Get(int eventId);
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern int ObjTrigger_IsSetById();
-extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 
@@ -544,13 +540,11 @@ int seqobj2_getObjectTypeId(void) { return 0x0; }
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_getObjectTypeId(void) { return 0x0; }
 int dll_115_getExtraSize_ret_2(void);
-int dll_115_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E37A0;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E37A8;
-extern f32 lbl_803E37B0;
 
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

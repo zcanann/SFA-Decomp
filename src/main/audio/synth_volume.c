@@ -28,7 +28,6 @@ extern f32 lbl_803E77D4;
 #define SYNTH_FADE_TYPE_ACTION_3 3
 #define SYNTH_FADE_ACTION_DISABLED 4
 #define SYNTH_INVALID_LINK_ID 0xffffffff
-#define SYNTH_VOICE_SLOT_SIZE 0x404
 
 typedef struct SynthFade
 {

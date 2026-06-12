@@ -35,7 +35,6 @@ extern u8 lbl_803DE36D;
 extern u8 lbl_803DE36A;
 extern SndSpatialListener* s3dListenerRoot;
 extern f32 lbl_803E7880;
-extern f64 lbl_803E7888;
 extern f32 lbl_803E7890;
 extern f64 lbl_803E7898;
 extern f32 lbl_803E78A0;
@@ -67,9 +66,6 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 #define S3D_CTRL_14BIT_LIMIT 0x3fff
 #define S3D_GROUP_KEY_STEREO_LIMIT 0x80000000
 #define S3D_INVALID_FX_HANDLE 0xffffffff
-#define S3D_MIX_GROUPS ((S3DMixGroup *)(lbl_803CC8C0 + 0x50))
-#define S3D_ACTIVE_NODES ((S3DActiveNode *)(lbl_803CC8C0 + 0x450))
-#define S3D_SORTED_NODES ((S3DSortedNode *)(lbl_803CC8C0 + 0xb50))
 
 #define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 

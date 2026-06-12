@@ -1,13 +1,8 @@
 #include "main/audio/hw_samplemem.h"
 
-extern undefined4 DAT_803dd280;
-extern undefined4 DAT_803dd288;
-extern undefined4 DAT_803defc4;
-extern undefined4 DAT_803deff0;
 extern u32 dspHRTFOn;
 extern u8* dspVoice;
 extern void*(*gSalMallocHook)(u32 size);
-extern void (*gSalFreeHook)(void* ptr);
 
 /*
  * --INFO--

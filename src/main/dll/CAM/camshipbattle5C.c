@@ -1,19 +1,7 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/rom_curve_interface.h"
 
-extern undefined4 FUN_80135810();
-extern undefined8 FUN_8028680c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286858();
-extern undefined4 FUN_8028688c();
 
-extern undefined4* DAT_803dd71c;
-extern f64 DOUBLE_803e2520;
-extern f32 lbl_803E2508;
-extern f32 lbl_803E2510;
-extern f32 lbl_803E2514;
-extern f32 lbl_803E2518;
-extern char sPathcamErrorNeedAtLeastTwoControlPoints[];
 
 /*
  * --INFO--

@@ -20,21 +20,7 @@ extern CameraModeClimbState* lbl_803DD578;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    f32 pad0;
-    f32 pad4;
-    f32 pad8;
-    f32 x;
-    f32 y;
-    f32 z;
-} CombatPathPoint;
 
-typedef struct
-{
-    u8 b80 : 1;
-    u8 rest : 7;
-} CombatCamFlags;
 
 
 
@@ -113,8 +99,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
 extern u8 framesThisStep;
-extern f64 lbl_803E1990;
-extern f64 lbl_803E1998;
 extern f32 timeDelta;
 extern f32 lbl_803E19A0;
 extern f32 lbl_803E19A4;

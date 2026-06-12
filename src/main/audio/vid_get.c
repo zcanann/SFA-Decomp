@@ -1,11 +1,7 @@
 #include "main/audio/vid_get.h"
 
-extern undefined4 FUN_80271a90();
 
 extern u32* vidRoot;
-extern undefined4 DAT_803def58;
-extern undefined4 DAT_803def60;
-extern undefined4 DAT_803def64;
 
 /*
  * --INFO--

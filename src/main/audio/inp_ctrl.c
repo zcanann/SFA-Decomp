@@ -43,7 +43,6 @@ extern u32 lbl_803D3CA0[];
 extern u32 lbl_8032FFE0[];
 extern u32 lbl_8032FFF0[];
 
-#define MIDI_DIRTY_AUX_BANK_STRIDE 0x10
 
 /*
  * Cached aux A input getter for a studio/channel/slot.

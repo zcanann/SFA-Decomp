@@ -12,11 +12,6 @@ typedef struct SynthDelayedNode
 
 typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
 
-typedef struct SynthDelayStorageLocal
-{
-    u32 studioChannelScales[9][0x10];
-    SynthDelayedNode* bucketHeads[0x20][3];
-} SynthDelayStorageLocal;
 
 #define SYNTH_FADE_COUNT 0x20
 #define SYNTH_FADE_TABLE_OFFSET 0x5d4
@@ -44,7 +39,6 @@ typedef struct SynthFade
     u8 pad[2];
 } SynthFade;
 
-extern SynthDelayStorageLocal gSynthDelayStorage;
 extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
 extern void synthQueueHandle(u32 handle);

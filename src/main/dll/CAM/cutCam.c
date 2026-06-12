@@ -16,7 +16,6 @@ extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints,
                                             float* radii, int pointCount);
 extern int getCurSeqNo();
 extern void cameraSetInterpMode(u8);
-extern undefined4 camcontrol_applyState();
 extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);
 extern int objFn_802962b4(int);
@@ -28,30 +27,12 @@ extern int getAngle(f32 dx, f32 dy);
 
 extern u8 lbl_803DD528;
 extern u8 framesThisStep;
-extern f64 DOUBLE_803e2318;
-extern f64 lbl_803E1698;
 extern f32 lbl_803E1688;
 extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;
 extern f32 lbl_803E1694;
 extern f32 lbl_803E16A4;
 extern f32 lbl_803E16AC;
-extern f32 lbl_803DE1A4;
-extern f32 lbl_803E2304;
-extern f32 lbl_803E2308;
-extern f32 lbl_803E2314;
-extern f32 lbl_803E2320;
-extern f32 lbl_803E2324;
-extern f32 lbl_803E2328;
-extern f32 lbl_803E232C;
-extern f32 lbl_803E2330;
-extern f32 lbl_803E2334;
-extern f32 lbl_803E2338;
-extern f32 lbl_803E233C;
-extern f32 lbl_803E2340;
-extern f32 lbl_803E2344;
-extern f32 lbl_803E2348;
-extern f32 lbl_803E234C;
 
 /*
  * --INFO--

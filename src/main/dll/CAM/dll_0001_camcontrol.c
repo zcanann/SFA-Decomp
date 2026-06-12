@@ -11,10 +11,7 @@
 #include "main/voxmaps.h"
 #include "string.h"
 
-extern undefined4 FUN_80017640();
-extern undefined8 FUN_800723a0();
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
-extern undefined4 FUN_800e8794();
 extern int camcontrol_findBestTarget(CamcontrolCameraState * cameraState, ObjAnimComponent * target);
 extern void camcontrol_updateMoveAverage(CamcontrolCameraState * cameraState, ObjAnimComponent * target);
 extern void camcontrol_applyState(CamcontrolCameraState * cameraState);
@@ -26,12 +23,9 @@ extern f32 fn_8014C5D0(int obj);
 extern f32 fn_80183204(int obj);
 extern f32 sqrtf(f32 x);
 
-extern void* gCamcontrolHandlers[20];
 extern u8 gCamcontrolStateStorage[];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
-extern short* gCamcontrolState;
 extern f32 timeDelta;
-extern f64 lbl_803E1650;
 extern f32 gCamcontrolSavedFocusWorldZ;
 extern f32 gCamcontrolSavedFocusWorldY;
 extern f32 gCamcontrolSavedFocusWorldX;
@@ -48,7 +42,6 @@ extern f32 lbl_803E1674;
 extern f32 lbl_803E1678;
 extern f32 lbl_803E167C;
 extern f32 lbl_803E1680;
-extern f32 lbl_803E2300;
 extern f32 lbl_803E1684;
 extern u16 lbl_803DB992;
 extern s8 lbl_803DD4CB;

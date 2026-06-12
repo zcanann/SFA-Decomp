@@ -771,39 +771,12 @@ clamp:
 
 
 extern undefined4 FUN_8000680c();
-extern char FUN_80006bc8();
-extern char FUN_80006bd0();
-extern uint FUN_80006bf8();
-extern uint FUN_80006c00();
-extern uint FUN_80006c10();
 extern uint GameBit_Get(int eventId);
-extern uint FUN_80017730();
-extern undefined4 FUN_8001774c();
-extern undefined4 FUN_80017778();
-extern undefined4 FUN_80017a10();
-extern undefined4 FUN_80017a80();
-extern int FUN_80053c14();
-extern undefined4 FUN_80053c20();
-extern undefined4 FUN_8011e844();
-extern undefined4 FUN_8011e868();
-extern uint FUN_801eb0c0();
 extern undefined4 fn_801EAE4C();
 extern undefined4 fn_801EB0D4();
 extern undefined4 fn_801EB634();
 extern void fn_801EC1AC(int obj, int state);
-extern undefined4 FUN_80247e94();
-extern undefined4 FUN_80247edc();
-extern undefined4 FUN_80293130();
 
-extern f64 DOUBLE_803e6798;
-extern f64 DOUBLE_803e68b8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6780;
-extern f32 lbl_803E6784;
-extern f32 lbl_803E6804;
-extern f32 lbl_803E6808;
-extern f32 lbl_803E6838;
-extern f32 lbl_803E68B0;
 
 extern void textureFree(u32);
 extern u32 textureLoadAsset(int);

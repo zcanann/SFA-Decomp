@@ -11,7 +11,6 @@ extern void macInit(void);
 extern void vidInit(void);
 extern void voiceInitPriorityTables(void);
 extern void voiceInitRegistrationTables(void);
-extern void hwSetMesgCallback(void (*callback)(void));
 extern void synthHWMessageHandler(void);
 
 extern u8 lbl_803BCD90[];

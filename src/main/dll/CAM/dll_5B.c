@@ -21,50 +21,20 @@ typedef struct CameraModeStaticPlacement
 } CameraModeStaticPlacement;
 
 
-extern undefined4 FUN_800033a8();
-extern undefined4 FUN_80006810();
-extern undefined4 FUN_80006824();
-extern double FUN_800069f8();
-extern int FUN_80006a10();
-extern undefined4 FUN_80006a1c();
-extern undefined4 FUN_80006a30();
-extern undefined4 FUN_80006ba8();
-extern char FUN_80006bb8();
-extern char FUN_80006bc0();
-extern char FUN_80006bc8();
-extern char FUN_80006bd0();
-extern uint FUN_80006c00();
-extern uint FUN_80006c10();
 extern u32 getButtonsHeld(int port);
 extern char padGetCX(int port);
 extern char padGetCY(int port);
-extern double FUN_800176f4();
 extern uint getAngle();
-extern undefined4 FUN_80017814();
-extern undefined4 FUN_80017830();
-extern int FUN_80017a98();
 extern int ObjHits_GetPriorityHit();
 extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_80053bf0();
-extern undefined4 FUN_800810d8();
-extern undefined4 camcontrol_applyState();
-extern double fn_8010AEA8();
-extern undefined4 FUN_80135814();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern undefined4 FUN_80294c64();
-extern undefined4 FUN_80294d00();
 
 extern u8 framesThisStep;
 extern ViewfinderState* lbl_803DD548;
 extern CameraModeDebugState* lbl_803DD550;
 extern CameraModeStaticState* lbl_803DD558;
-extern f64 lbl_803E17D8;
-extern f64 lbl_803E1838;
-extern f64 lbl_803E1880;
 extern f32 timeDelta;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
@@ -587,7 +557,6 @@ void CameraModeViewfinder_update(s16* obj)
 extern u32 GameBit_Get(int bit);
 extern void* memset(void* dst, int v, int n);
 extern f32 lbl_803E1834;
-extern f64 lbl_803E1838x;
 
 /*
  * --INFO--

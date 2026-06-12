@@ -5,24 +5,11 @@
 #include "string.h"
 
 
-extern int getAngle(f32 dx, f32 dz);
-extern undefined4 camcontrol_getTargetPosition();
 
-extern f64 DOUBLE_803e1698;
-extern f64 DOUBLE_803e16f8;
-extern f32 lbl_803E16D0;
-extern f32 lbl_803E16D4;
-extern f32 lbl_803E16DC;
-extern f32 lbl_803E16F0;
-extern f32 lbl_803E1710;
-extern f32 lbl_803E1714;
-extern f32 lbl_803E1734;
-extern f32 lbl_803E1738;
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
 extern f32 lbl_803E1748;
 
-#define gCamcontrolModeSettings cameraMtxVar57
 /*
  * --INFO--
  *

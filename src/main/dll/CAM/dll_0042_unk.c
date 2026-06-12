@@ -495,27 +495,10 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 
 
 extern undefined4 FUN_800068f4();
-extern double FUN_800176f4();
 extern undefined4 camcontrol_getTargetPosition();
-extern double SeekTwiceBeforeRead();
-extern double FUN_80293900();
 
-extern f64 DOUBLE_803e1698;
-extern f64 DOUBLE_803e16f8;
 extern f32 lbl_803E1710;
 extern f32 lbl_803E1714;
-extern f64 DOUBLE_803e2318;
-extern f64 DOUBLE_803e2378;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E2314;
-extern f32 lbl_803E2324;
-extern f32 lbl_803E232C;
-extern f32 lbl_803E2380;
-extern f32 lbl_803E2384;
-extern f32 lbl_803E2388;
-extern f32 lbl_803E238C;
-extern f32 lbl_803E2390;
-extern f32 lbl_803E2394;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
@@ -785,8 +768,6 @@ extern int EmissionController_IsLingering(int obj);
 extern void fn_8029656C(int obj, float* out);
 extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
 
-extern f64 lbl_803E1698;
-extern f64 lbl_803E16F8;
 extern f32 lbl_803DD52C;
 extern f32 lbl_803E1718;
 extern f32 lbl_803E171C;
@@ -1024,9 +1005,6 @@ void camstatic_update(CameraObject* camera)
 
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
-extern f32 lbl_803E1740;
-extern f32 lbl_803E1744;
-extern f32 lbl_803E1748;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 /*

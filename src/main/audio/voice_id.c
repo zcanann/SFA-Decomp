@@ -4,8 +4,6 @@
 extern u8 vidListNodes[];
 
 #define voicePriorityLinks (vidListNodes + 0x8c0)
-#define voicePriorityGroupHeads (vidListNodes + 0x9c0)
-#define voicePrioritySortLinks (vidListNodes + 0xac0)
 
 extern u32 vidCurrentId;
 extern void* vidRoot;
@@ -14,18 +12,7 @@ extern u16 voicePrioSortRootListRoot;
 extern McmdVoiceState* synthVoice;
 extern void voiceUnregister(int state);
 
-typedef struct VoicePriorityLink
-{
-    u8 prev;
-    u8 next;
-    u16 active;
-} VoicePriorityLink;
 
-typedef struct VoicePrioritySortLink
-{
-    u16 next;
-    u16 prev;
-} VoicePrioritySortLink;
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.

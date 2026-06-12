@@ -116,12 +116,9 @@ extern DATA_TAB dataKeymapTable[256];
 extern MAC_MAINTAB dataMacroBucketTable[512];
 
 #define dataSmpSDirs (((SynthDataTables *)dataSmpSDirTable)->sdir)
-#define dataCurveTab (((SynthDataTables *)dataSmpSDirTable)->curve)
-#define dataKeymapTab (((SynthDataTables *)dataSmpSDirTable)->keymap)
 #define dataLayerTab (((SynthDataTables *)dataSmpSDirTable)->layer)
 #define dataMacMainTab (((SynthDataTables *)dataSmpSDirTable)->macMain)
 #define dataMacSubTabmem (((SynthDataTables *)dataSmpSDirTable)->macSub)
-#define dataFXGroups (((SynthDataTables *)dataSmpSDirTable)->fxGroup)
 #define dataGetSampleSearchKey (((SynthDataTables *)dataSmpSDirTable)->getSampleKey)
 #define dataGetLayerSearchKey (((SynthDataTables *)dataSmpSDirTable)->getLayerKey)
 #define dataGetFXSearchKey (((SynthDataTables *)dataSmpSDirTable)->getFXKey)
@@ -147,7 +144,6 @@ extern LAYER_TAB* dataGetLayer_result;
 
 extern void sndBegin(void);
 extern void sndEnd(void);
-extern void* sndBSearch(void* key, void* base, s32 num, s32 size, s32 (*cmp)(void*, void*));
 extern void hwSaveSample(SAMPLE_HEADER** header, void** addr);
 extern void hwRemoveSample(SAMPLE_HEADER* header, void* addr);
 extern void hwGetStreamPlayBuffer(u32 smpBase, u32 smpLength);

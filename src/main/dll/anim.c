@@ -23,7 +23,6 @@ extern void GameBit_Set(int eventId, int value);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
 
 #pragma scheduling off
@@ -146,18 +145,9 @@ void dll_224_update(void* param_1);
 #pragma peephole reset
 #pragma scheduling reset
 
-typedef struct
-{
-    s16 showGameBit; /* 0x0 */
-    s16 checkGameBit; /* 0x2 */
-    s8 counter; /* 0x4 */
-    u8 done : 1; /* 0x5 bit 7 */
-    u8 noCheck : 1; /* 0x5 bit 6 */
-} VfpFlamePointData;
 
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 #pragma scheduling off
-int fn_801FD4A8(void* obj, int x);
 #pragma scheduling reset
 
 int dbegg_setScale(int obj)
@@ -785,22 +775,6 @@ typedef struct DrakorenergyPlacement
 } DrakorenergyPlacement;
 
 
-typedef struct DbstealerwormState
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    s32 unk18;
-    u8 pad1C[0xC8 - 0x1C];
-    s32 unkC8;
-    u8 padCC[0x280 - 0xCC];
-    f32 unk280;
-    f32 unk284;
-    u8 pad288[0x40C - 0x288];
-    s32 unk40C;
-    u8 pad410[0x460 - 0x410];
-} DbstealerwormState;
 
 
 typedef struct DfpobjcreatorObjectDef
@@ -973,119 +947,31 @@ extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjMsg_SendToObject();
 extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_8003b818();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern double SeekTwiceBeforeRead();
 extern double FUN_80293900();
-extern undefined4 SUB42();
 
 extern undefined4 DAT_8032a290;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e6ea8;
 extern f64 DOUBLE_803e6f78;
 extern f64 DOUBLE_803e7000;
-extern f64 DOUBLE_803e7048;
-extern f64 DOUBLE_803e7058;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DC078;
-extern f32 lbl_803DCDC8;
-extern f32 lbl_803DCDCC;
-extern f32 lbl_803DCDD0;
-extern f32 lbl_803DCDD4;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E6E60;
-extern f32 lbl_803E6E64;
-extern f32 lbl_803E6E7C;
-extern f32 lbl_803E6E84;
-extern f32 lbl_803E6E98;
-extern f32 lbl_803E6EB8;
-extern f32 lbl_803E6EBC;
-extern f32 lbl_803E6EC0;
-extern f32 lbl_803E6EC4;
-extern f32 lbl_803E6EC8;
-extern f32 lbl_803E6ECC;
-extern f32 lbl_803E6ED0;
-extern f32 lbl_803E6ED4;
-extern f32 lbl_803E6ED8;
-extern f32 lbl_803E6EDC;
-extern f32 lbl_803E6EE0;
-extern f32 lbl_803E6EE4;
-extern f32 lbl_803E6EE8;
-extern f32 lbl_803E6EEC;
-extern f32 lbl_803E6EF0;
-extern f32 lbl_803E6EF4;
-extern f32 lbl_803E6EF8;
-extern f32 lbl_803E6EFC;
-extern f32 lbl_803E6F00;
-extern f32 lbl_803E6F08;
-extern f32 lbl_803E6F0C;
-extern f32 lbl_803E6F14;
-extern f32 lbl_803E6F18;
-extern f32 lbl_803E6F1C;
-extern f32 lbl_803E6F20;
-extern f32 lbl_803E6F2C;
-extern f32 lbl_803E6F38;
 extern f32 lbl_803E6F40;
-extern f32 lbl_803E6F44;
-extern f32 lbl_803E6F48;
-extern f32 lbl_803E6F4C;
 extern f32 lbl_803E6F50;
-extern f32 lbl_803E6F58;
-extern f32 lbl_803E6F5C;
 extern f32 lbl_803E6F60;
-extern f32 lbl_803E6F64;
-extern f32 lbl_803E6F68;
-extern f32 lbl_803E6F6C;
-extern f32 lbl_803E6F70;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
 extern f32 lbl_803E6F88;
 extern f32 lbl_803E6F8C;
 extern f32 lbl_803E6F90;
 extern f32 lbl_803E6F94;
-extern f32 lbl_803E6F98;
-extern f32 lbl_803E6F9C;
-extern f32 lbl_803E6FA0;
-extern f32 lbl_803E6FA4;
-extern f32 lbl_803E6FA8;
-extern f32 lbl_803E6FAC;
-extern f32 lbl_803E6FB0;
-extern f32 lbl_803E6FB4;
-extern f32 lbl_803E6FB8;
-extern f32 lbl_803E6FBC;
-extern f32 lbl_803E6FC0;
-extern f32 lbl_803E6FC4;
-extern f32 lbl_803E6FC8;
-extern f32 lbl_803E6FCC;
-extern f32 lbl_803E6FD0;
-extern f32 lbl_803E6FD4;
 extern f32 lbl_803E6FD8;
 extern f32 lbl_803E6FDC;
 extern f32 lbl_803E6FE0;
 extern f32 lbl_803E6FE4;
-extern f32 lbl_803E6FE8;
-extern f32 lbl_803E6FEC;
-extern f32 lbl_803E6FF0;
-extern f32 lbl_803E6FF4;
 extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
-extern f32 lbl_803E7014;
-extern f32 lbl_803E7018;
-extern f32 lbl_803E701C;
-extern f32 lbl_803E7020;
-extern f32 lbl_803E7034;
-extern f32 lbl_803E7038;
-extern f32 lbl_803E703C;
-extern f32 lbl_803E7040;
-extern f32 lbl_803E7060;
-extern f32 lbl_803E7064;
-extern f32 lbl_803E7068;
-extern f32 lbl_803E706C;
-extern f32 lbl_803E7070;
-extern f32 lbl_803E7074;
-extern f32 lbl_803E7078;
 
 
 int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

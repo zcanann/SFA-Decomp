@@ -14,8 +14,6 @@ extern f32 lbl_803E7828;
 extern f32 lbl_803E7830;
 extern f32 lbl_803E7834;
 extern f32 lbl_803E7838;
-extern f64 lbl_803E7820;
-extern f64 lbl_803E7840;
 
 /*
  * Mark all entries of the MIDI voice-id table and direct voice-id table

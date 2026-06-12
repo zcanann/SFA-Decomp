@@ -3,28 +3,11 @@
 #include "main/mm.h"
 
 extern int getAngle(f32 dx, f32 dz);
-extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
-                                       f32 height, s16 angleRange, s16 angleLimit,
-                                       int* outPointCount);
-extern int Camera_GetCurrentViewSlot();
-extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 
 extern CameraModeBikeState* lbl_803DD540;
-extern f64 lbl_803E1750;
-extern f32 lbl_803E1740;
-extern f32 lbl_803E1744;
-extern f32 lbl_803E1758;
-extern f32 lbl_803E175C;
-extern f32 lbl_803E1760;
-extern f32 lbl_803E1764;
-extern f32 lbl_803E1768;
-extern f32 lbl_803E176C;
-extern f32 lbl_803E1770;
-extern f32 lbl_803E1774;
-extern f32 lbl_803E1778;
 
 #pragma scheduling on
 #pragma peephole on
@@ -80,23 +63,16 @@ void CameraModeBike_free(void)
 #include "main/object_transform.h"
 
 extern undefined4 FUN_80006a1c();
-extern undefined4 FUN_80006a30();
-extern int FUN_80017730();
 extern void vecRotateZXY(void* param_1, void* outVec);
 extern undefined4 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(void* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern undefined4 FUN_80017814();
-extern undefined4 FUN_80017830();
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
-extern double FUN_80293900();
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
 extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
 
 extern ViewfinderState* lbl_803DD548;
-extern f64 lbl_803E17B8;
-extern f64 DOUBLE_803e2458;
 extern f32 timeDelta;
 extern f32 lbl_803E1780;
 extern f32 lbl_803E1784;
@@ -117,12 +93,6 @@ extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;
 extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
-extern f64 lbl_803E17D8;
-extern f32 lbl_803E2440;
-extern f32 lbl_803E2444;
-extern f32 lbl_803E2448;
-extern f32 lbl_803E244C;
-extern f32 lbl_803E2450;
 
 /* FUN_80107b4c removed: in v1.0 this address is the start of CameraModeBike_update. */
 

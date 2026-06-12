@@ -70,7 +70,6 @@ extern void synthRecycleVoiceCallbacks(void* song);
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
-extern f64 lbl_803E7790;
 
 extern double __fabs(double);
 #define fabs __fabs

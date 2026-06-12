@@ -6,11 +6,9 @@
 
 extern f32 Curve_EvalLinear(f32 param_1, float* param_2, float* param_3);
 extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
-extern undefined4 FUN_80017814();
 extern f32 sqrtf(f32 x);
 
 extern CamCannonState* lbl_803DD560;
-extern f64 lbl_803E18A0;
 extern f32 timeDelta;
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
@@ -216,16 +214,11 @@ void CameraModeTestStrength_free(void)
 extern undefined4 FUN_800033a8();
 extern f32 Curve_EvalCatmullRom(f32* samples, f32 t, f32* out);
 extern f32 Curve_EvalBSpline(f32* samples, f32 t, f32* out);
-extern int FUN_80017730();
-extern undefined4 FUN_80017830();
 extern void fn_8010A104(int* nextNodeId, int* prevNodeId, f32 x, f32 y, f32 z, int tag);
 extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32* pitch, f32* yaw, f32* roll, f32* fov);
 extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
 extern int getAngle(f32 a, f32 b);
-extern undefined4 FUN_8010b218();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32);
 extern void* memset(void* p, int c, int n);
 extern u8 framesThisStep;
@@ -568,11 +561,6 @@ void CameraModeTestStrength_initialise(void)
 
 void CameraModeCombat_copyToCurrent_nop(void);
 
-extern CameraModeCombatState* lbl_803DD568;
-extern f32 lbl_803E18C0;
-extern f32 lbl_803E18C4;
-extern f32 lbl_803E18C8;
-extern void Rcp_DisableBlurFilter(void);
 
 /*
  * --INFO--
@@ -581,15 +569,7 @@ extern void Rcp_DisableBlurFilter(void);
  * EN v1.0 Address: 0x8010BF08
  * EN v1.0 Size: 348b
  */
-typedef struct
-{
-    u8 pad[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
-} CamPathEntry;
 
-void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFloatPtr);
 
 /*
  * --INFO--
@@ -598,9 +578,4 @@ void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFlo
  * EN v1.0 Address: 0x8010C068
  * EN v1.0 Size: 112b
  */
-typedef struct
-{
-    u8 flag80 : 1;
-} CamByte143;
 
-void CameraModeCombat_free(int obj);

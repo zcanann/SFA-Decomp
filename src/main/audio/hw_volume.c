@@ -8,7 +8,6 @@ extern u8* dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];
 
-extern f32 lbl_803E78E0;
 extern f32 lbl_803E78E4;
 
 /*

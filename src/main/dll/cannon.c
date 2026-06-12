@@ -89,58 +89,13 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
     }
 
 
-extern bool FUN_800067f0();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern double FUN_80017708();
-extern int FUN_80017730();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
 extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_80039468();
-extern int FUN_800da5f0();
-extern int FUN_800db47c();
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern f32 getXZDistance(float* a, float* b);
-extern undefined4 FUN_80139910();
-extern int FUN_80139a48();
-extern undefined4 FUN_80139a4c();
 extern int trickyFn_8013b368(void* p1, f32 f, void* p2);
-extern void trickyFn_8013d8f0(u8 * arg1, u8 * arg2);
-extern undefined4 FUN_80146fa0();
-extern undefined4 FUN_801778d0();
-extern undefined8 FUN_80286838();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
 int trickyGuardFindBaddieTarget(TrickyRuntime * state);
 
-extern undefined4* DAT_803dd71c;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E306C;
-extern f32 lbl_803E3074;
-extern f32 lbl_803E307C;
-extern f32 lbl_803E3084;
-extern f32 lbl_803E30A0;
-extern f32 lbl_803E30A4;
-extern f32 lbl_803E30A8;
-extern f32 lbl_803E30B0;
-extern f32 lbl_803E30CC;
-extern f32 lbl_803E30D0;
-extern f32 lbl_803E30D4;
-extern f32 lbl_803E310C;
-extern f32 lbl_803E3118;
-extern f32 lbl_803E313C;
-extern f32 lbl_803E3154;
-extern f32 lbl_803E3160;
-extern f32 lbl_803E3168;
-extern f32 lbl_803E3188;
-extern f32 lbl_803E3194;
 
 /* FUN_8013ffb8 removed: in v1.0 this address is the start of trickyGuard. */
 
@@ -182,7 +137,6 @@ extern f32 lbl_803E2440;
 extern f32 lbl_803E2444;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
-extern f64 lbl_803E2460;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
 extern f32 lbl_803E24D0;

@@ -1,7 +1,5 @@
 #include "ghidra_import.h"
 
-extern undefined4 FUN_80281a34();
-extern uint FUN_80282fe4();
 extern u8* dspVoice;
 extern u8 salTimeOffset;
 

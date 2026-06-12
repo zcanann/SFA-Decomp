@@ -6,50 +6,12 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 
-typedef struct LaserBeamPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    u8 pad20[0x4C - 0x20];
-    u8 unk4C;
-    u8 pad4D[0x2F8 - 0x4D];
-    u8 unk2F8;
-    u8 unk2F9;
-    s8 unk2FA;
-    u8 pad2FB[0x300 - 0x2FB];
-} LaserBeamPlacement;
 
 
-typedef struct WMColrisePlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-} WMColrisePlacement;
 
 
-typedef struct LightsourceState
-{
-    u8 pad0[0x4C - 0x0];
-    u8 unk4C;
-    u8 pad4D[0x2F8 - 0x4D];
-    u8 unk2F8;
-    u8 pad2F9[0x300 - 0x2F9];
-} LightsourceState;
 
 
-typedef struct WmlasertargetPlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x1A - 0x10];
-    s16 cooldown;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} WmlasertargetPlacement;
 
 
 typedef struct PressureswitchPlacement
@@ -116,31 +78,10 @@ typedef struct PressureSwitchState
 } PressureSwitchState;
 
 /* wmlasertarget_getExtraSize == 0x4. */
-typedef struct WmLaserTargetState
-{
-    s16 cooldown;
-    u8 toggleQueued;
-    u8 pad3;
-} WmLaserTargetState;
 
 /* WM_colrise_getExtraSize == 0x4. */
-typedef struct WMColriseState
-{
-    s16 gameBit;
-    u8 raiseTimer;
-    u8 pad3;
-} WMColriseState;
 
 /* wmtorch_getExtraSize == 0x10. */
-typedef struct WmTorchState
-{
-    void* linkedObj;
-    f32 unk04;
-    u8 pad08[2];
-    s16 unk0A;
-    u8 torchType; /* params[0x19]: 0 / 0x7f / other */
-    u8 pad0D[3];
-} WmTorchState;
 
 /* lightsource_getExtraSize == 0x1c. */
 typedef struct LightSourceState
@@ -163,15 +104,6 @@ typedef struct LightSourceState
 STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 /* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
-typedef struct Dll1FFState
-{
-    s16 msgLo;
-    s16 msgHi;
-    u8 pad4;
-    s8 grabPhase; /* 0 free, 1 held, 2 releasing */
-    u8 sendFlag; /* 0x6 */
-    u8 pad7;
-} Dll1FFState;
 
 /* dll_200_getExtraSize == 0x28 (kid attachment actor). */
 typedef struct Dll200State
@@ -201,17 +133,12 @@ extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006ba8();
 extern uint FUN_80006c00();
 extern undefined4 FUN_8001771c();
-extern u32 randomGetRange(int min, int max);
 extern uint FUN_80017a98();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjMsg_SendToObject();
-extern undefined8 ObjMsg_AllocQueue();
 extern int FUN_800632f4();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6A1C;
 extern f32 lbl_803E6A20;
@@ -370,7 +297,6 @@ void fn_801F20D4(int obj);
 
 
 #pragma dont_inline on
-void fn_801F27E4(int obj);
 #pragma dont_inline reset
 
 
@@ -476,88 +402,45 @@ void pressureswitch_init(int* obj, u8* init)
 
 void dll_1FF_free_nop(void);
 
-void dll_1FF_hitDetect_nop(void);
-
-void dll_1FF_release_nop(void);
-
-void dll_1FF_initialise_nop(void);
 
 
 
 
 
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 
-void dll_200_free_nop(void);
 
-void dll_200_hitDetect_nop(void);
 
-void dll_200_release_nop(void);
 
-void dll_200_initialise_nop(void);
 
-void WM_colrise_free(void);
 
-void WM_colrise_hitDetect(void);
 
-void WM_colrise_release(void);
 
-void WM_colrise_initialise(void);
+
+
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 timeDelta;
-extern f32 lbl_803E5DCC;
-extern f32 lbl_803E5DD0;
-extern f32 lbl_803E5DD4;
-extern f32 lbl_803E5DD8;
-extern f32 lbl_803E5DDC;
-extern f32 lbl_803E5DE0;
 
-void WM_colrise_update(int* obj);
 
-void wmtorch_hitDetect(void);
 
-void wmtorch_release(void);
 
-void wmtorch_initialise(void);
 
-extern f32 lbl_803E5DEC;
-extern f32 lbl_803E5DF0;
-extern f32 lbl_803E5DF4;
-extern f32 lbl_803E5DF8;
 
-void wmtorch_init(u8* obj, u8* params);
 
-void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 
-extern void* lbl_803DDC80;
 
-void LaserBeam_initialise(void);
 
-void lightsource_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int pressureswitch_getExtraSize(void) { return 0x8; }
 int pressureswitch_getObjectTypeId(void) { return 0x0; }
 int dll_1FF_getExtraSize_ret_8(void);
-int dll_200_getExtraSize_ret_40(void);
-int dll_200_getObjectTypeId(void);
-int WM_colrise_getExtraSize(void);
-int WM_colrise_getObjectTypeId(void);
-int wmtorch_getExtraSize(void);
-int wmtorch_getObjectTypeId(void);
-int lightsource_getExtraSize(void);
-int lightsource_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5D90;
-extern f32 lbl_803E5DC8;
-extern f32 lbl_803E5E08;
-extern void queueGlowRender(void* light);
 
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -570,7 +453,6 @@ void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 /* if (o->_X == K) return A; else return B; */
-int dll_1FF_getObjectTypeId(int* obj);
 
 /* init pattern: short=-1; byte=0; return 0; */
 int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -585,90 +467,54 @@ int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void LaserBeam_release(void);
 
 /* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
-void dll_1FF_init(s16* a, s8* b);
 
-void WM_colrise_init(s16* a, s8* b);
 
 extern int GameBit_Get(int id);
 
 
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
-extern f32 lbl_803E5DE8;
 
-void wmtorch_update(int obj);
 
-extern void Obj_FreeObject(void* o);
 
-void wmtorch_free(int obj, int mode);
 
-extern void ModelLightStruct_free(void* light);
 
-void lightsource_free(int obj);
 
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-extern f32 lbl_803E5D80;
 
-void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 
 /* dll_200_render: when visible != 0 and
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
-extern f32 lbl_803E5DC0;
 
-void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 
 /* dll_200_init: write a function pointer
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-extern f32 lbl_803E5D98;
 
-void dll_200_init(int* obj, int* arg);
 
-extern void playerAddRemoveMagic(int player, int amount);
-extern void fn_80296474(int player, int a, int b);
 extern void GameBit_Set(int slot, int val);
 
-int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
 
 #pragma opt_strength_reduction off
 
-extern int textureLoadAsset(int id);
-extern f32 lbl_803E5D10;
 
-void LaserBeam_free(s16* obj, char* arg);
 
-extern ObjHitReactEntry lbl_80328898[];
-void fn_801F2290(int obj);
 
-void dll_200_update(int obj);
 
 typedef struct LightSourceFlagByte
 {
     u8 looped : 1;
 } LightSourceFlagByte;
 
-void lightsource_update(int obj);
 
-typedef struct Dll1FFSlot
-{
-    int obj;
-} Dll1FFSlot;
 
-typedef struct Dll1FFSlots
-{
-    u8 pad[0x100];
-    Dll1FFSlot slots[3];
-    u8 pad2[3];
-    u8 count;
-} Dll1FFSlots;
 
-void dll_1FF_update(int obj);
 
 typedef struct PswFlags
 {
@@ -865,19 +711,5 @@ void pressureswitch_update(int obj)
 }
 #pragma opt_common_subs reset
 
-typedef struct IntVec3
-{
-    int a;
-    int b;
-    int c;
-} IntVec3;
 
-typedef struct ArwAttachTarget
-{
-    f32 x;
-    f32 y;
-    f32 moveId;
-    f32 altMoveId;
-    f32 speed;
-} ArwAttachTarget;
 

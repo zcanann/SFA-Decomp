@@ -2,47 +2,12 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/screen_transition.h"
 
-typedef struct KtTorchPlacement
-{
-    u8 pad0[0x1B - 0x0];
-    u8 unk1B;
-    u8 pad1C[0x20 - 0x1C];
-} KtTorchPlacement;
 
 
-extern void ModelLightStruct_free(void* effect);
 extern u32 GameBit_Get(int bit);
-extern undefined4 ObjHits_ClearHitVolumes();
-extern void queueGlowRender(void* effect);
-extern void* SUB42();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern u8 framesThisStep;
-extern f64 DOUBLE_803e4a08;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e49b0;
-extern f32 FLOAT_803e49b4;
-extern f32 FLOAT_803e49b8;
-extern f32 FLOAT_803e49bc;
-extern f32 FLOAT_803e49c0;
-extern f32 FLOAT_803e49c4;
-extern f32 FLOAT_803e49d0;
-extern f32 FLOAT_803e49dc;
-extern f32 FLOAT_803e49e0;
-extern f32 FLOAT_803e49f0;
-extern f32 FLOAT_803e49fc;
-extern f32 FLOAT_803e4a00;
-extern f32 FLOAT_803e4a10;
-extern f32 FLOAT_803e4a14;
-extern f32 FLOAT_803e4a18;
 extern f32 timeDelta;
-extern f32 lbl_803E3D64;
-extern f32 lbl_803E3D68;
-extern f64 lbl_803E3D70;
-extern f32 lbl_803E3D78;
-extern f32 lbl_803E3DB0;
-extern f32 lbl_803E3DB4;
-extern f64 lbl_803E3DB8;
 
 /*
  * --INFO--
@@ -75,20 +40,9 @@ extern f64 lbl_803E3DB8;
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_127_release_nop(void);
 
-void dll_127_initialise_nop(void);
 
-extern int* gSHthorntailAnimationInterface;
-extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
-extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
-extern f32 lbl_803E3D7C;
-extern f32 lbl_803E3D80;
-extern f32 lbl_803E3D84;
 
-typedef int (*ThorntailQueryFn)(u8*);
 
 /*
  * --INFO--
@@ -97,24 +51,7 @@ typedef int (*ThorntailQueryFn)(u8*);
  * EN v1.0 Address: 0x8018CFA4
  * EN v1.0 Size: 556b
  */
-void campfire_update(int obj);
 
-extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(int h, int v);
-extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(int h, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 min, f32 max);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
-extern f32 lbl_803E3D88;
-extern f32 lbl_803E3D8C;
-extern f32 lbl_803E3D90;
-extern f32 lbl_803E3D94;
-extern f32 lbl_803E3D98;
 
 /*
  * --INFO--
@@ -123,11 +60,7 @@ extern f32 lbl_803E3D98;
  * EN v1.0 Address: 0x8018D1D0
  * EN v1.0 Size: 732b
  */
-void campfire_init(int obj, int p2);
 
-extern f32 lbl_803E3DC0;
-extern f32 lbl_803E3DC4;
-extern f32 lbl_803E3DC8;
 
 /*
  * --INFO--
@@ -136,7 +69,6 @@ extern f32 lbl_803E3DC8;
  * EN v1.0 Address: 0x8018D584
  * EN v1.0 Size: 348b
  */
-void kt_torch_init(int obj, int p2);
 
 
 
@@ -273,7 +205,6 @@ extern f32 lbl_803E3E10;
 extern f32 lbl_803E3E14;
 extern f64 lbl_803E3E18;
 extern f32 lbl_803E3E20;
-extern f64 lbl_803E3E28;
 
 /*
  * --INFO--
@@ -489,28 +420,11 @@ void cfccrate_update(int obj)
 #include "main/objanim_internal.h"
 
 extern undefined4 FUN_80017a78();
-extern undefined4 FUN_800305f8();
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 
-extern undefined4 gCameraInterface;
-extern f64 DOUBLE_803e4ac0;
-extern f32 FLOAT_803e4a70;
-extern f32 FLOAT_803e4a84;
-extern f32 FLOAT_803e4a8c;
-extern f32 FLOAT_803e4a94;
-extern f32 FLOAT_803e4ac8;
-extern f32 FLOAT_803e4acc;
-extern f32 FLOAT_803e4ad0;
-extern f32 FLOAT_803e4ad4;
-extern f32 FLOAT_803e4ad8;
-extern f32 FLOAT_803e4ae0;
 
 extern void* lbl_803DBDE8;
-extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E3E48;
-extern char sCFTreasSharpyDebugFormat[];
-extern void fn_80137948(char* fmt, ...);
 
 extern f32 lbl_803E3E30;
 extern f32 lbl_803E3E34;
@@ -700,16 +614,6 @@ void cfccrate_init(int obj, int aux)
     }
 }
 
-typedef struct CFTreasSharpyFxSpawnArgs
-{
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} CFTreasSharpyFxSpawnArgs;
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
     (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
@@ -798,5 +702,4 @@ void cfccrate_initialise(void)
 void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 sqrtf(f32);
-extern f32 lbl_803E3E4C;
 
