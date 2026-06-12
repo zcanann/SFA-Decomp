@@ -1108,6 +1108,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0000_baby_snowworm.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_003B_menu.c"),
             Object(NonMatching, "main/dll/dll_003C_TumbleweedBush.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_003D_titlemenuitem.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_003E_dummy3e.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0031_minimap.c"),
             Object(NonMatching, "main/dll/dll_003F_dll3f.c"),
