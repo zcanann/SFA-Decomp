@@ -1567,8 +1567,11 @@ main/dll/dll_01BE_dimlavaball.c:
 main/dll/dll_01BF_dimlavaball.c:
 	.text       start:0x801B02BC end:0x801B0670
 
-main/dll/DIMlavasmash.c:
-	.text       start:0x801B0670 end:0x801B13E8
+main/dll/dll_01C0_dimlogfire.c:
+	.text       start:0x801B0670 end:0x801B0DD4
+
+main/dll/dll_01C1_dimsnowball.c:
+	.text       start:0x801B0DD4 end:0x801B13E8
 
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B13E8 end:0x801B13E8
