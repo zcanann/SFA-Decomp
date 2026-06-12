@@ -89,6 +89,7 @@ void arwarwingbo_initialise(void)
 void arwarwingbo_update(int obj)
 {
     ArwingBombState* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int arwing = getArwing();
     f32 zero = lbl_803E7044;
 
@@ -116,7 +117,7 @@ void arwarwingbo_update(int obj)
             state->explosionTimer = lbl_803E7040;
             state->control.fuseTimer = lbl_803E7044;
             ((GameObject*)obj)->anim.alpha = 0;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~0x200;
+            hitState->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
@@ -129,8 +130,8 @@ void arwarwingbo_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)obj, 0x79e, NULL, 1, -1,
                                          (void*)(obj + 0x24));
         ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 ||
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 ||
+        if (hitState->lastHitObject != 0 ||
+            hitState->contactFlags != 0 ||
             (getButtonsJustPressed(0) & 0x200))
         {
             state = ((GameObject*)obj)->extra;
@@ -139,7 +140,7 @@ void arwarwingbo_update(int obj)
             state->explosionTimer = lbl_803E7040;
             state->control.fuseTimer = lbl_803E7044;
             ((GameObject*)obj)->anim.alpha = 0;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~0x200;
+            hitState->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
