@@ -40,7 +40,7 @@ extern u8 lbl_803DD608;
 extern s8 lbl_803DD609;
 extern u8 lbl_803DD60A;
 extern u8 gTitleMenuSelectionFade;
-extern int gAttractMovieState;
+extern s32 gAttractMovieState;
 extern u8 gTitleMenuSelection;
 extern u8 gAttractMoviePreparePending;
 extern void* gAttractMovieScratchBuffer;
