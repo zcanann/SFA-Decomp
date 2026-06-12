@@ -1266,9 +1266,32 @@ main/dll/DIMsnowball.c:
 main/dll/DIMboulder.c:
 	.text       start:0x801AC248 end:0x801AE0EC
 
-main/dll/DIMcannon.c:
-	.text       start:0x801AE0EC end:0x801B0670
-	.data       start:0x80323778 end:0x803237B0
+main/dll/dll_016D_imicepillar.c:
+	.text       start:0x801AE0EC end:0x801AE144
+
+main/dll/dll_016E_imanimspace.c:
+	.text       start:0x801AE144 end:0x801AE508
+
+main/dll/dll_016F_imspacethru.c:
+	.text       start:0x801AE508 end:0x801AE984
+
+main/dll/dll_0170_imspacering.c:
+	.text       start:0x801AE984 end:0x801AEAE4
+
+main/dll/dll_0171_imspacering.c:
+	.text       start:0x801AEAE4 end:0x801AEE2C
+
+main/dll/dll_0172_linkblevco.c:
+	.text       start:0x801AEE2C end:0x801AF568
+
+main/dll/dll_0173_linklevcon.c:
+	.text       start:0x801AF568 end:0x801AF9E4
+
+main/dll/dll_01BE_dimlavaball.c:
+	.text       start:0x801AF9E4 end:0x801B02BC
+
+main/dll/dll_01BF_dimlavaball.c:
+	.text       start:0x801B02BC end:0x801B0670
 
 main/dll/DIMlavasmash.c:
 	.text       start:0x801B0670 end:0x801B13E8
