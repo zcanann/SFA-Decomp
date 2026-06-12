@@ -209,7 +209,7 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b)
     {
-        if (Curve_AdvanceAlongPath(routePtr, a) != 0 || route->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(route, a) != 0 || route->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(route) != 0)
                 result = -1;
@@ -253,7 +253,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b)
     {
-        if (Curve_AdvanceAlongPath(routePtr, a) != 0 || route->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(route, a) != 0 || route->atSegmentEnd != 0)
         {
             if (((u8 (*)(RomCurveWalker*, int))(*gRomCurveInterface)->slot9C)(route, *pickIdx) != 0)
                 result = -1;

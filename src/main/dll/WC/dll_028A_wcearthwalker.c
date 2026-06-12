@@ -414,7 +414,7 @@ int fn_80223AFC(int obj, int ai)
         state->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
     }
-    if (Curve_AdvanceAlongPath((int)route, lbl_803E6D08) != 0 || route->atSegmentEnd != 0)
+    if (Curve_AdvanceAlongPath(route, lbl_803E6D08) != 0 || route->atSegmentEnd != 0)
     {
         (*gRomCurveInterface)->goNextPoint(route);
     }

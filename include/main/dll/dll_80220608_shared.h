@@ -19,6 +19,7 @@
 #include "main/objtexture.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 #include "main/dll/cnthitobjec_state.h"
@@ -1122,7 +1123,7 @@ extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 
 
 extern int *gPlayerInterface;
-extern int Curve_AdvanceAlongPath(int curve, f32 val);
+extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 val);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 oneOverTimeDelta;
 extern f32 Vec_xzDistance(int a, int b);
