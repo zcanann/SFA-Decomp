@@ -1893,8 +1893,11 @@ main/dll/dll_01B2_shstaffhaz.c:
 main/dll/dll_01B3_shbeacon.c:
 	.text       start:0x801DA954 end:0x801DAFA4
 
-main/dll/CRsnowbike.c:
-	.text       start:0x801DAFA4 end:0x801DBFA0
+main/dll/dll_01B4_shemptytum.c:
+	.text       start:0x801DAFA4 end:0x801DB098
+
+main/dll/dll_01B6_sclevelcon.c:
+	.text       start:0x801DB098 end:0x801DBFA0
 
 main/dll/dll_01B7_scmusictre.c:
 	.text       start:0x801DBFA0 end:0x801DC8D4

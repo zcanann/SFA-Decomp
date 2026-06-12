@@ -43,12 +43,7 @@ extern int lbl_803DDC00;
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
 
 /* 56b: single-call hit-effect poll. */
-void sh_emptytumblew_update(int obj)
-{
-    extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, void* f); /* #57 */
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
-                                              &lbl_803DDC00);
-}
+void sh_emptytumblew_update(int obj);
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
@@ -143,18 +138,7 @@ extern f32 lbl_803E5540;
 extern f32 lbl_803E5544;
 extern f32 lbl_803E5548;
 
-void sh_emptytumblew_init(s16* p1, int p2)
-{
-    f32 fv;
-
-    *(s16*)((char*)p1 + 4) = (*(u8*)(p2 + 0x18) - 0x7f) * 0x80;
-    *(s16*)((char*)p1 + 2) = (*(u8*)(p2 + 0x19) - 0x7f) * 0x80;
-    *(s16*)((char*)p1 + 0) = *(u8*)(p2 + 0x1a) << 8;
-    *(f32*)((char*)p1 + 8) = *(f32*)(p2 + 0x1c);
-    fv = *(f32*)((char*)p1 + 8);
-    ObjHitbox_SetCapsuleBounds(p1, (int)(lbl_803E5540 * fv), (int)(lbl_803E5544 * fv), (int)(lbl_803E5548 * fv));
-    *(u16*)((char*)p1 + 0xb0) |= 0x4000;
-}
+void sh_emptytumblew_init(s16* p1, int p2);
 
 
 /*

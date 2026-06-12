@@ -1,0 +1,433 @@
+/* === moved from main/dll/DR/DRearthwalk.c [801DAFA4-801DAFDC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DR/DRearthwalk.h"
+
+
+
+
+
+
+/* sh_beacon_getExtraSize == 0x18. */
+
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: sh_staff_render
+ * EN v1.0 Address: 0x801D9BDC
+ * EN v1.0 Size: 232b
+ * EN v1.1 Address: 0x801DA010
+ * EN v1.1 Size: 444b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+
+/* 8b "li r3, N; blr" returners. */
+
+extern int lbl_803DDC00;
+
+/* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
+
+/* 48b: free if 0x4000 flag set. */
+
+/* 120b: tick a float timer; on wrap optionally trigger an effect. */
+
+/* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
+
+/* 112b: vtable cleanup then maybe Obj_FreeObject. */
+
+/* 56b: single-call hit-effect poll. */
+void sh_emptytumblew_update(int obj)
+{
+    extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, void* f); /* #57 */
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
+                                              &lbl_803DDC00);
+}
+
+/* TODO stubs to align function set with v1.0 asm. Bodies are large
+ * state-machine and animation logic; filling them is a follow-up task. */
+
+
+
+
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: sh_beacon_update
+ * EN v1.0 Address: 0x801DAA58
+ * EN v1.0 Size: 1080b
+ */
+
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/game_object.h"
+#include "main/dll/CR/CRsnowbike.h"
+#include "main/mapEventTypes.h"
+#include "main/screen_transition.h"
+
+#include "global.h"
+
+
+
+typedef struct ScLevelcontrolProcessAnimEventsState
+{
+    u8 pad0[0x1D - 0x0];
+    s8 unk1D;
+    u8 pad1E[0x20 - 0x1E];
+} ScLevelcontrolProcessAnimEventsState;
+
+
+
+
+/* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
+typedef struct ScLevelControlState
+{
+    f32 fogNear; /* 0x00: enableHeavyFog base */
+    f32 fog04; /* 0x04 */
+    f32 fog08; /* 0x08 */
+    f32 fog0C; /* 0x0c */
+    f32 timer10; /* 0x10 */
+    f32 fadeTimer; /* 0x14 */
+    u8 pad18[4];
+    u8 musicStep; /* 0x1c: index into the lbl_803DC060 cue table */
+    u8 mode; /* 0x1d: anim-event mode latch */
+    u8 areaCell; /* 0x1e: 0xff until the player enters map 0xe */
+    u8 flags1F; /* 0x1f */
+    u8 musicTrack; /* 0x20 */
+    s8 unk21; /* 0x21 */
+    u8 flags22; /* 0x22: SnowFlags22 overlay (bit 7) */
+    u8 pad23;
+} ScLevelControlState;
+
+STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
+
+
+extern undefined4 FUN_800067c0();
+extern undefined4 FUN_80006824();
+extern byte FUN_80006b44();
+extern undefined4 FUN_80006b4c();
+extern undefined4 FUN_80006b50();
+extern undefined4 FUN_80006b54();
+extern uint FUN_80017690();
+extern undefined8 FUN_80017698();
+extern int FUN_80017a98();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
+
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern f32 lbl_803E61E8;
+
+/*
+ * --INFO--
+ *
+ * Function: sh_emptytumblew_init
+ * EN v1.0 Address: 0x801DAFDC
+ * EN v1.0 Size: 1440b
+ * EN v1.1 Address: 0x801DB048
+ * EN v1.1 Size: 1080b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern f32 lbl_803E5540;
+extern f32 lbl_803E5544;
+extern f32 lbl_803E5548;
+
+void sh_emptytumblew_init(s16* p1, int p2)
+{
+    f32 fv;
+
+    *(s16*)((char*)p1 + 4) = (*(u8*)(p2 + 0x18) - 0x7f) * 0x80;
+    *(s16*)((char*)p1 + 2) = (*(u8*)(p2 + 0x19) - 0x7f) * 0x80;
+    *(s16*)((char*)p1 + 0) = *(u8*)(p2 + 0x1a) << 8;
+    *(f32*)((char*)p1 + 8) = *(f32*)(p2 + 0x1c);
+    fv = *(f32*)((char*)p1 + 8);
+    ObjHitbox_SetCapsuleBounds(p1, (int)(lbl_803E5540 * fv), (int)(lbl_803E5544 * fv), (int)(lbl_803E5548 * fv));
+    *(u16*)((char*)p1 + 0xb0) |= 0x4000;
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801db580
+ * EN v1.0 Address: 0x801DB580
+ * EN v1.0 Size: 56b
+ * EN v1.1 Address: 0x801DB594
+ * EN v1.1 Size: 56b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: sc_levelcontrol_processAnimEvents
+ * EN v1.0 Address: 0x801DB670
+ * EN v1.0 Size: 324b
+ * EN v1.1 Address: 0x801DB688
+ * EN v1.1 Size: 352b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
+{
+    byte bval;
+    byte eventId;
+    uint bitVal;
+    int i;
+    int state;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
+    {
+        eventId = animUpdate->eventIds[i];
+        if (eventId == 2)
+        {
+            sc_levelcontrol_setAnimEventState(obj, 5);
+        }
+        else if (eventId < 2)
+        {
+            if (eventId != 0)
+            {
+                sc_levelcontrol_setAnimEventState(obj, 7);
+            }
+        }
+        else if (eventId < 4)
+        {
+            ((ScLevelControlState*)state)->flags1F = ((ScLevelControlState*)state)->flags1F | 2;
+        }
+    }
+    ((ScLevelControlState*)state)->flags1F = ((ScLevelControlState*)state)->flags1F | 1;
+    FUN_80017698(0x60f, 0);
+    i = *(int*)&((GameObject*)obj)->extra;
+    FUN_80017a98();
+    if (((ScLevelcontrolProcessAnimEventsState*)i)->unk1D == '\x05')
+    {
+        FUN_80017698(0x60f, 1);
+        bval = FUN_80006b44();
+        if (bval != 0)
+        {
+            bitVal = FUN_80017690(0x7a);
+            if (bitVal != 0)
+            {
+                FUN_80017698(0x85, 1);
+            }
+            ((ScLevelControlState*)i)->timer10 = lbl_803E61E8;
+            ((ScLevelControlState*)i)->mode = 0;
+            FUN_80006824(0, SFXsp_skeep_mumb1);
+            FUN_800067c0((int*)0xef, 0);
+        }
+    }
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sc_levelcontrol_setAnimEventState
+ * EN v1.0 Address: 0x801DB7B4
+ * EN v1.0 Size: 272b
+ * EN v1.1 Address: 0x801DB7E8
+ * EN v1.1 Size: 284b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sc_levelcontrol_setAnimEventState(int obj, undefined value)
+{
+    char mode;
+    int state;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    ((ScLevelControlState*)state)->mode = value;
+    mode = *(char*)&((ScLevelControlState*)state)->mode;
+    if (mode == '\x02')
+    {
+        ((ScLevelControlState*)state)->mode = 0;
+    }
+    else if (mode == '\x05')
+    {
+        FUN_80017698(0x2b8, 1);
+        FUN_80017698(0x4bd, 0);
+        FUN_80017698(0x85, 0);
+        FUN_80006b54(0x1d, 0x96);
+        FUN_800067c0((int*)0xef, 1);
+        FUN_80006b50();
+    }
+    else if (mode == '\x03')
+    {
+        FUN_80006b54(0x1d, 0x3c);
+        ((ScLevelControlState*)state)->mode = 0;
+        FUN_800067c0((int*)0xc7, 1);
+        FUN_80006b50();
+    }
+    else if (mode == '\x06')
+    {
+        FUN_800067c0((int*)0xef, 0);
+        ((ScLevelControlState*)state)->mode = 0;
+        ((ScLevelControlState*)state)->fadeTimer = lbl_803E61E8;
+        FUN_80006b4c();
+    }
+    else if (mode == '\x04')
+    {
+        ((ScLevelControlState*)state)->mode = 0;
+        FUN_800067c0((int*)0xc7, 0);
+        FUN_80006b4c();
+    }
+    return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801db8c4
+ * EN v1.0 Address: 0x801DB8C4
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: 0x801DB904
+ * EN v1.1 Size: 96b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801db924
+ * EN v1.0 Address: 0x801DB924
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801DB964
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void sc_levelcontrol_hitDetect(void);
+
+void sc_levelcontrol_release(void);
+
+void sc_levelcontrol_initialise(void);
+
+
+
+/* 8b "li r3, N; blr" returners. */
+int sc_levelcontrol_getExtraSize(void);
+int sc_levelcontrol_getObjectTypeId(void);
+
+/* Pattern wrappers. */
+u8 sc_levelcontrol_getAnimEventState(int* obj);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E5554;
+extern void objRenderFn_8003b8f4(f32);
+
+void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+extern void fn_8003B608(int a, int b, int c);
+
+
+
+extern void gameTimerStop(void);
+extern void disableHeavyFog(void);
+extern void Music_Trigger(int track, int param);
+
+void sc_levelcontrol_free(int obj);
+
+extern void GameBit_Set(int bit, int val);
+extern int GameBit_Get(int bit);
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern int isGameTimerDisabled(void);
+extern u8* Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int a, int b);
+extern f32 lbl_803E5550;
+
+int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+void sc_levelcontrol_applyAnimEventState(int obj, u8 scale);
+
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
+extern int mapGetDirIdx(int idx);
+extern void unlockLevel(int a, int b, int c);
+extern int getSaveGameLoadStatus(void);
+extern f32 lbl_803E5580;
+extern f32 lbl_803E5564;
+extern f32 lbl_803E5568;
+extern f32 lbl_803E5570;
+extern f32 lbl_803E5574;
+extern f32 lbl_803E5578;
+extern f32 lbl_803E557C;
+
+typedef struct
+{
+    u8 bit7 : 1;
+    u8 lo : 7;
+} SnowFlags22;
+
+void sc_levelcontrol_init(int obj);
+
+extern u8 Obj_IsLoadingLocked(void);
+
+#pragma dont_inline on
+#pragma dont_inline reset
+
+
+#pragma dont_inline on
+#pragma dont_inline reset
+
+extern void skyFn_80088c94(int a, int b);
+extern void envFxActFn_800887f8(int arg);
+extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
+extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void gameTextShow(int id);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern void warpToMap(int mapId, int flag);
+extern void timeListFn_8012df14(void);
+extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
+extern int* gSHthorntailAnimationInterface;
+extern u16 lbl_803DC060[4];
+extern f32 timeDelta;
+extern const f32 lbl_803E5558;
+extern f32 lbl_803E555C;
+extern f32 lbl_803E5560;
+extern f32 lbl_803E556C;
+
+/* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
+ * driver: replays the env-fx set on map (re)entry, latches the race
+ * GameBits, runs the two race countdown timers, eases the heavy fog level,
+ * tracks the totem combo code (bits 0x7d..0x7f), and keeps the area music
+ * in sync with the Thorntail animation state. */
+void sc_levelcontrol_update(int obj);
