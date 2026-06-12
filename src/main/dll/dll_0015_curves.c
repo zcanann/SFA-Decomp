@@ -243,9 +243,8 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     }
 }
 
-void fn_800E56A4(int obj, f32* state)
+void fn_800E56A4(int obj, CurvesCollisionState* collision)
 {
-    CurvesCollisionState* collision;
     RomCurvePoint* point;
     RomCurvePoint* points;
     u32 hitCount;
@@ -255,7 +254,6 @@ void fn_800E56A4(int obj, f32* state)
     f32 startX;
     f32 startZ;
 
-    collision = (CurvesCollisionState*)state;
     startX = collision->points[1][0];
     startZ = collision->points[1][2];
     if ((s32)(collision->flags & 0x100000) == 0)
@@ -320,9 +318,9 @@ void fn_800E56A4(int obj, f32* state)
     }
 }
 
-void fn_800E58FC(int obj, f32* state)
+void fn_800E58FC(int obj, CurvesCollisionState* collision)
 {
-    CurvesCollisionState* collision;
+    f32* state;
     CurvesTransformScratch transform;
     f32 localX[4];
     f32 localY[4];
@@ -344,7 +342,7 @@ void fn_800E58FC(int obj, f32* state)
     f32* outX;
     s16 angle;
 
-    collision = (CurvesCollisionState*)state;
+    state = (f32*)collision;
     collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
     collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
     collision->surfaceNormalZ = collision->segmentHitPlanes[0][2];
@@ -504,16 +502,14 @@ void fn_800E5CBC(short* obj, int state)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_800E5E38(int obj, f32* state)
+void fn_800E5E38(int obj, CurvesCollisionState* collision)
 {
-    CurvesCollisionState* collision;
     u32 hitCount;
     int hitIndex;
     f32 currentY;
     f32 window;
     RomCurvePoint* point;
 
-    collision = (CurvesCollisionState*)state;
     point = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], &hitCount, 0);
     hitIndex = hitCount - 1;
     currentY = ((GameObject*)obj)->anim.worldPosY;
@@ -538,9 +534,8 @@ void fn_800E5E38(int obj, f32* state)
 }
 #pragma dont_inline reset
 
-void fn_800E5F1C(int obj, f32* state)
+void fn_800E5F1C(int obj, CurvesCollisionState* collision)
 {
-    CurvesCollisionState* collision;
     u32 hitCount;
     int i;
     s8 foundBelow;
@@ -551,7 +546,6 @@ void fn_800E5F1C(int obj, f32* state)
     f32 zero;
     f32 one;
 
-    collision = (CurvesCollisionState*)state;
     topSentinel = lbl_803E06A4;
     floorSentinel = lbl_803E06A8;
     zero = lbl_803E0668;
@@ -622,10 +616,10 @@ void fn_800E5F1C(int obj, f32* state)
     collision->resultFloorGap = collision->floorGap[0];
 }
 
-void curves_updateLocalPointCollision(int obj, f32* state)
+void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
 {
     u8 pointCount;
-    CurvesCollisionState* collision;
+    f32* state;
     u32 flags;
     f32* point;
     f32* localPoint;
@@ -644,7 +638,7 @@ void curves_updateLocalPointCollision(int obj, f32* state)
     CurvesTransformScratch transform;
     f32 matrix[16];
 
-    collision = (CurvesCollisionState*)state;
+    state = (f32*)collision;
     pointCount = collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK;
     radiusOffset = 0;
     collision->localPointHitMask = (u8)radiusOffset;
@@ -1163,7 +1157,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
                                       &collision->localPointWorld[i][2]);
                 byteOff = byteOff + 0xc;
             }
-            curves_updateLocalPointCollision((int)curveObj, (f32*)state);
+            curves_updateLocalPointCollision((int)curveObj, collision);
             if (*(void**)(curveObj + 0x18) != NULL)
             {
                 if ((*(void**)(*(int*)(curveObj + 0x18) + 0x58) != NULL) &&
@@ -1237,7 +1231,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
                 curves_countRandomPoints((int)curveObj, collision);
                 break;
             case 1:
-                fn_800E56A4((int)curveObj, (f32*)state);
+                fn_800E56A4((int)curveObj, collision);
                 break;
             case 4:
                 collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
@@ -1251,12 +1245,12 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
                 }
                 break;
             default:
-                fn_800E58FC((int)curveObj, (f32*)state);
+                fn_800E58FC((int)curveObj, collision);
                 break;
             }
             if ((*state & 0x100) != 0)
             {
-                fn_800E5E38((int)curveObj, (f32*)state);
+                fn_800E5E38((int)curveObj, collision);
             }
             if ((*state & 0x80) != 0)
             {
@@ -1264,7 +1258,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
             }
             if ((*state & 1) != 0)
             {
-                fn_800E5F1C((int)curveObj, (f32*)state);
+                fn_800E5F1C((int)curveObj, collision);
             }
             memcpy(collision->traceStart, collision->points,
                    ((int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
@@ -1386,7 +1380,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
                    ((int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
             if ((*state & 1) != 0)
             {
-                fn_800E5F1C((int)curveObj, (f32*)state);
+                fn_800E5F1C((int)curveObj, collision);
             }
         }
     }
