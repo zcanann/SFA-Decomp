@@ -1,5 +1,6 @@
 #include "main/dll/creator1D4.h"
 #include "main/game_object.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/dim2conveyor.h"
 #include "main/dll/ped.h"
 #include "main/gameplay_runtime.h"
@@ -33,7 +34,6 @@ extern ObjHitReactEntry DAT_80327414;
 extern undefined4 DAT_80327468;
 extern undefined4 DAT_80327498;
 extern undefined4 DAT_803274f4;
-extern NwMammothGameUiInterface** gGameUIInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern NwMammothPathControlInterface** gPathControlInterface;
 extern f32 timeDelta;
@@ -297,7 +297,7 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
             state->stateIndex = 0xc;
             if (state->uiMessageCount >= 3)
             {
-                (*gGameUIInterface)->showMessage(NW_MAMMOTH_UI_MESSAGE_ID, NW_MAMMOTH_UI_MESSAGE_TEXT_ID);
+                ((NwMammothGameUiInterface*)*gGameUIInterface)->showMessage(NW_MAMMOTH_UI_MESSAGE_ID, NW_MAMMOTH_UI_MESSAGE_TEXT_ID);
                 state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
                 state->stateIndex = 0x11;
             }
