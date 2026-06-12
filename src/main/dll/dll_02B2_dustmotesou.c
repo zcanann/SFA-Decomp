@@ -1,5 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/dll/dustmotesou.h"
+#include "main/dll/dll_02B2_dustmotesou.h"
 
 int dustmotesou_getExtraSize(void) { return 0; }
 
