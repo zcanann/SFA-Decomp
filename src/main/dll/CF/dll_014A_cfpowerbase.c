@@ -723,12 +723,14 @@ int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        if (animUpdate->eventIds[i] == 1)
+        switch (animUpdate->eventIds[i])
         {
+        case 1:
             if (GameBit_Get(84) != 0 && GameBit_Get(85) != 0 && GameBit_Get(86) != 0)
             {
                 GameBit_Set(1248, 1);
             }
+            break;
         }
     }
     return 0;
