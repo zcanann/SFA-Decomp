@@ -54,9 +54,10 @@ void wcfloortile_hitDetect(void)
 void wcfloortile_init(int obj)
 {
     WcFloorTileState* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
 
     *(s16*)obj = -0x4000;
-    (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
+    hitState->flags |= 0x1800;
     state->flags |= 2;
 }
 
