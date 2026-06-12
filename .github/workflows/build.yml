@@ -60,6 +60,14 @@ jobs:
         # any stale per-unit .o under renamed/relocated paths) forces a fresh
         # split from the current splits.txt.
         rm -f build/${{ matrix.version }}/config.json
+        # A restored cache can also carry per-unit .o files for sources that
+        # were since renamed (esp. case-only renames like DFpulley.c ->
+        # dfpulley.c): the old-name .o lingers with a fresh cache mtime while
+        # the report expects the new-name .o, and ninja may not rebuild it,
+        # so the report step fails to open the new path. Drop every built
+        # src .o whose source .c no longer exists, forcing a clean recompile
+        # at the current name.
+        python tools/ci_drop_orphan_objects.py build/${{ matrix.version }}/src
         python configure.py --map --version ${{ matrix.version }} \
             --binutils /binutils --compilers /compilers
         ninja all_source progress build/${{ matrix.version }}/report.json
