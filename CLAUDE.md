@@ -556,6 +556,13 @@ subtrahend IS the fix (shrine1CE → 100 by dropping the wrap + this cast).
     for `s8`); the compound form folds load+add+store and drops the extra
     extension. Took fn_802B7B0C 96.5% → 100%. Clean C, no asm. (Same family as
     the caller-side extsb/extsh table below.)
+    **u8 LOOP-COUNTER edition: `i++` vs `i = i + 1` on a `u8 i` counter pick
+    the MASK position.** `i = i + 1` masks at the def (`addi r0,rX,1; clrlwi
+    rX,r0,24`); `i++` keeps the home raw and defers the mask to the use
+    (`addi rX,rX,1` ... `clrlwi rN,rX,24` at the compare) — target's usual
+    shape for `for (u8 i = 0; i < framesThisStep; i++)` spawn loops. Two
+    SB-lane confirmations (SB_ShipHead_render, SB_Galleon_hitDetect →
+    byte-exact).
 
 21. **Invert `if(c){A}else{B}` → `if(!c){B}else{A}` to flip MWCC's then/else
     block layout.** When the dispatch matches but the then- and else-blocks are
@@ -2667,6 +2674,13 @@ case in the tree's interior. Writing `case 0x60a: break;` reproduced target's
 cases emits `cmpwi last+1` instead; a lone case spelled as the dead VALUE
 itself (0x60b) emits cmpwi 1547 + a surviving beq (+1 instr). Read the dead
 compare's immediate and subtract 1 for the real case value.
+⚠️ **The K-1 reading is NOT universal — A/B both K-1 and K.** On
+SB_ShipHead_update's {0x130001(empty), 0x130002, 0x130003} set the dead
+`cmpwi 0x130001; b` came from `case 0x130001: break;` (the immediate ITSELF);
+the K-1 reading (case 0x130000) emitted a base-reg `cmpw` + surviving beq
+instead (the lis-only value needs no addi, changing the shape). When the dead
+compare's immediate is reachable without an addi from the tree's lis base,
+try the immediate itself first.
 
 90. **#81 launder kills the pre-call HOIST of a doubled float arg while
     keeping the `fmr` CSE.** When a call passes the same named f32 extern in
@@ -2905,6 +2919,15 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     case arms — the f0 web crosses the bctr); volatile-launder on a compare
     read (`*(volatile s16 *)&x > 5`) reproduces a fresh reload WITHOUT the
     loop shape (use only when the hoisted-li/compound-home tells are absent).
+    **Volatile-launder also cracks JUST-STORED-GLOBAL CALL ARGS (galleon
+    fn_801E1588 97.2→100): when the fn computes+stores a global byte triple
+    (`lbl_X[0..2] = fexpr;` stb ×3) then immediately passes the bytes to a
+    call, ours STORE-FORWARDS the computed ints (clrlwi ×3 into the arg regs)
+    while target re-reads the globals fresh (`lbz` ×3, reusing the store
+    block's base reg). Spell the args `*(volatile u8*)&lbl_X[i]` — fresh lbz,
+    base reg reused, byte-exact ×3 sites. The scalar-extern respelling
+    (#47 `(&sym)[i]`) is NOT the fix here — it regresses the store isel
+    (addi-on-base + re-materialized base). Keep the sized-array decls.
 
 97. **Conversion-CSE divergence: a LIFTED `f32 x = (f32)intGlobal;` local
     CSEs the int->f32 conversion across its uses; target RE-CONVERTS per
@@ -3413,6 +3436,17 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     cast-local, second-def add/remove) vs wrong POSITION within its
     class (bank the partial — the within-class POSITION axis is the open
     one below, and #115 later opened a first source-side lever on it).
+    **FIRST-DEF SPLIT is the cleanest class-mover (SB_ShipHead_update
+    97.4→100, whole 5-web rotation collapsed in one edit): when a
+    multi-def variable's FIRST def is a call result consumed immediately
+    (`state = getCameraState(...); if (state == 2)...` — the test runs on
+    r3, no saved materialization, so the split is INSTRUCTION-FREE), split
+    that def into its own variable (`camState`). The surviving variable
+    becomes a single-def copy and re-ranks with the copy pool; the
+    remaining webs then followed plain decl order exactly (decl order
+    player,mode,galleon,hs,state → r31..r27 = target). Decl-reorder alone
+    was inert until the class move. Recognize: a rotation where ONE
+    multi-def var's first def is a branch-consumed call result.**
     **CROSS-CLASS INTERLEAVE — characterized as an IR-internal residual,
     OPEN for a fresh lever (task #12 round 3, ~75-probe battery; minimal
     repro harness in the commit). The phenomenology below is hard-won
@@ -3833,6 +3867,20 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
     redundant clrlwi-before-stb) + decl order in target's creation-order
     coloring landed it exactly. Same tells: small call-free loop fn,
     li;mr in target where all C gives li;li.
+    **#110 EXTENDS to VALUE-DIAMOND else-arm copies (SB_Galleon_func0E
+    87.4→95.9): target `cmpwi; blt Lmr; addi r0,rX,-K; b Lj; Lmr: mr r0,rX;
+    Lj: <consume r0>` — a 2-arm if/else (`w = x-K` / `w = x`) whose identity
+    else-arm survives as a real `mr` — is UNPRODUCIBLE at O4: the front-end
+    if-converts EVERY spelling to the in-place conditional `blt; addi rX,rX,-K`
+    (~25 probes: named/self-assign/embedded-in-consumer ternaries, split vars,
+    goto diamond, switch-on-bool, #114 (int)(long) sandwiches, w5 srawi forms).
+    The per-fn O1 wrap keeps the else arm.** O1 sub-tells for this shape: type
+    the value local `int` with NO cast when the field is already s8 (the (s8)
+    cast at O1 routes `extsb r0,r0; mr rX,r0`; the cast-free s8-field load
+    gives `lbz rX; extsb rX,rX` — 1 digit off target's `lbz r0; extsb rX,r0`,
+    open); the O1 tail emits `b <shared blr>` where O4/target duplicate the
+    inline `blr` (peephole-on would fold it but also fuses the extsb compares —
+    net worse here, A/B). Banked residuals: the lbz dest digit + the tail b.
 
 111. **Member-address reassociation cap CRACKED (the audio memmove NAMED
     cap) — MWCC's address-sum association is keyed on the constant's
@@ -4360,6 +4408,16 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     numbering). Decl-only change, A/B per unit —
     `const` on a symbol other fns WRITE would be wrong; check writers
     first.
+    **SB-lane confirmations (4 units): the CSE'd value can sit in f1 — the
+    FLOAT-ARG register — so later calls passing the same constant need NO
+    reload at any call site** (SB_ShipMast_update: one lfs feeds 3 stfs AND
+    two ObjAnim_SetCurrentMove f1 args → 100). More wins: sbminifire 0.8
+    (velocityX + rootMotionScale), sbcloudrunner ×3 consts, sbgalleon 56CC.
+    **CAVEAT — the const can CSE-OVERSHOOT a SIBLING fn in the same TU**
+    (galleon fn_801E1588: target reloads 56CC at one compare, the const made
+    ours hoist it): fix per-site with the #81 launder `*(f32 *)&lbl_X` at the
+    reference target reloads — don't revert the const. Always re-ndiff every
+    <100 fn in the TU after adding a const.
 Field-tested across the object DLL near-100 tier (src/main/dll/{baddie,DIM,DR,CF,
 WC,ARW,MMP,WM,DB,SH,...}). RELIABLE here — reach for these first:
 #12 bitfield single-bit clear (rlwimi-from-bitfield, e.g. `((Flags *)&f)->b80 = 0`);
