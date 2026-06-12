@@ -992,15 +992,15 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
     extern f32 lbl_803E256C;
     extern f32 lbl_803E2570;
     extern f32 lbl_803E2574;
-    void* sub;
+    ObjHitsPriorityState* hitState;
 
     *(f32*)(p2 + 0x308) = lbl_803E256C / (lbl_803E2570 * mult);
     *(u8*)(p2 + 0x323) = c;
     ObjAnim_SetCurrentMove(obj, (u8)a, lbl_803E2574, b);
-    sub = ((GameObject*)obj)->anim.hitReactState;
-    if (sub != NULL)
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    if (hitState != NULL)
     {
-        ((ObjHitsPriorityState*)sub)->suppressOutgoingHits = 0;
+        hitState->suppressOutgoingHits = 0;
     }
 }
 
@@ -1913,6 +1913,8 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
                   uint param_11, uint param_12, undefined4 param_13, undefined4 param_14,
                   undefined4 param_15, undefined4 param_16)
 {
+    ObjHitsPriorityState* hitState;
+
     if ((double)lbl_803E31FC == param_1)
     {
         *(float*)(param_10 + 0x308) = lbl_803E3208;
@@ -1926,9 +1928,10 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
     *(char*)(param_10 + 0x323) = (char)param_13;
     FUN_800305f8((double)lbl_803E31FC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                  param_9, param_11 & 0xff, param_12, param_12, param_13, param_14, param_15, param_16);
-    if (*(int*)(param_9 + 0x54) != 0)
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    if (hitState != NULL)
     {
-        (*(ObjHitsPriorityState**)(param_9 + 0x54))->suppressOutgoingHits = 0;
+        hitState->suppressOutgoingHits = 0;
     }
     return;
 }
@@ -1999,6 +2002,8 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void enemy_hitDetect(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState;
+    ObjHitsPriorityState* childHitState;
 
     if (*(void**)&((EnemyState*)state)->modelLight != NULL && modelLightStruct_getActiveState(
         ((EnemyState*)state)->modelLight) == 0)
@@ -2006,16 +2011,17 @@ void enemy_hitDetect(int obj)
         ModelLightStruct_free(((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
-    ((EnemyState*)state)->lastHitObject = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-        lastHitObject;
-    if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    ((EnemyState*)state)->lastHitObject = hitState->lastHitObject;
+    if (hitState->lastHitObject != 0)
     {
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+        hitState->suppressOutgoingHits = 1;
     }
     if (((GameObject*)obj)->childObjs[0] != NULL && *(void**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54) != NULL
-        && (*(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject != 0)
+        && (childHitState = *(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject
+            != 0)
     {
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+        hitState->suppressOutgoingHits = 1;
     }
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {
