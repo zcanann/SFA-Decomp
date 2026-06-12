@@ -307,5 +307,9 @@ int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hi
 int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
 int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *outHitVolume);
+int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,int *outHitObject,
+                                        float *outHitPos);
+int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR,uint colorG,
+                                              uint colorB,uint sfxId,float *cooldown);
 
 #endif /* MAIN_OBJHITS_H_ */
