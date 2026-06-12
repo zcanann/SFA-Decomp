@@ -12,7 +12,7 @@ Usage:
 Discord search returns hits with N messages before/after for thread context.
 Scratch search returns scratch metadata + source preview + asm preview.
 
-Fetch the scratch corpus with `tools/decompme_fetch.py` first.
+Searches the static scratch-corpus snapshot (reference_projects/decompme_scratches.jsonl).
 """
 import argparse
 import csv
@@ -161,7 +161,7 @@ def main():
     if not args.skip_scratches:
         scratches = load_scratches()
         if not scratches:
-            print(f"WARN: no scratches at {SCRATCH_JSONL}; run tools/decompme_fetch.py", file=sys.stderr)
+            print(f"WARN: no scratch corpus at {SCRATCH_JSONL} (static snapshot, not regenerable)", file=sys.stderr)
         else:
             field = "asm" if args.asm else "code" if args.code else "all"
             search_scratches(scratches, needles, field, args.max)

@@ -5417,21 +5417,26 @@ banking; the corpus-walk script pattern is in the CF-campaign commits.
 ### Matching-help corpus (Discord export + decomp.me scratches)
 
 A year of decomp.me's matching-help Discord channel (`reference_projects/Discord_chat_*.csv`,
-5000 messages, 989 unique scratch links) plus the fetched scratch payloads
-(`reference_projects/decompme_scratches.jsonl`, gitignored — regenerate via
-`tools/decompme_fetch.py --resume`) form a searchable corpus of real-world
-matching attempts: someone posts a scratch with their stuck C, others
-respond with the recipe that fixes it. Useful when a residual's symptoms
-match something others have already solved (FP register coloring, fmadds
-fusion, peephole behavior, rlwinm vs andi, fp_contract surprises, etc.).
+5000 messages, 989 unique scratch links) plus the already-fetched scratch
+payloads (`reference_projects/decompme_scratches.jsonl`, gitignored) form a
+searchable corpus of real-world matching attempts: someone posts a scratch
+with their stuck C, others respond with the recipe that fixes it. Useful when
+a residual's symptoms match something others have already solved (FP register
+coloring, fmadds fusion, peephole behavior, rlwinm vs andi, fp_contract
+surprises, etc.). There is NO working scripted network path to decomp.me —
+treat the JSONL as a static snapshot, and use the prep tool below for
+outbound scratches (manual paste).
 
-- `python3 tools/decompme_fetch.py [--resume] [--limit N] [--delay SEC]` —
-  bulk-fetches scratches into JSONL. Uses playwright (headless chromium) to
-  bypass decomp.me's Cloudflare bot challenge: one initial page-load acquires
-  CF cookies for the session, then API calls succeed directly. ~80min for the
-  full 989 at default delay=2s. Resumable; skips slugs already present.
-  Per-scratch payload: name, compiler, platform, source_code, context (decls),
-  target asm, current (compiled-C) asm, score/max_score.
+- `python3 tools/decompme_prep.py <symbol> [--unit <substr>] [--out DIR]` —
+  prep PASTE-READY decomp.me scratch inputs for one function, no network:
+  target.s (dtk asm slice, comments stripped, @sda21/.L_ labels kept),
+  context.c (the unit's decompctx output, ninja-built if missing), source.c
+  (best-effort fn slice), fields.txt (platform gc_wii + the decomp.me
+  compiler id mapped from the unit's mwcc version + verbatim build.ninja
+  flags). NOTE the version map: GC/2.0 = `mwcc_242_81` — objdiff.json's
+  scratch presets say mwcc_247_92, which is GC/2.5; trust the tool. CAVEAT:
+  the .ctx embeds the WHOLE TU including the target fn — strip the fn's own
+  definition from the context before pasting or the scratch double-defines.
 - `python3 tools/discord_search.py <keyword>...` — unified AND-search across
   both Discord messages AND the fetched scratch corpus. Examples:
   - `discord_search.py "rlwinm" "switch"` — Discord threads + scratches mentioning both
