@@ -4,6 +4,9 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/duster.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
+#include "main/objhits_types.h"
 
 #pragma dont_inline on
 
@@ -12,9 +15,6 @@ extern uint randomGetRange();
 extern void* Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern uint Obj_IsLoadingLocked();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern void ObjHits_DisableObject(int);
-extern void ObjHits_EnableObject(int);
 extern void fn_80292E20(uint, float*, float*);
 extern u8 objBboxFn_800640cc();
 extern f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,

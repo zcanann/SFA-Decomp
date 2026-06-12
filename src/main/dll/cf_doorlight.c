@@ -5,6 +5,8 @@
 #include "main/dll/cf_doorlight_state.h"
 #include "main/dll/cf_doorlight.h"
 #include "main/dll/wallanimator.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
 
 typedef struct KaldachomPlacement
 {
@@ -13,7 +15,6 @@ typedef struct KaldachomPlacement
 } KaldachomPlacement;
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 
 extern void** gPlayerInterface;
 
@@ -205,7 +206,6 @@ int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
 
 int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
 {
-    extern void ObjHits_DisableObject(int);
     extern void Obj_FreeObject(int);
     extern f32 lbl_803E3078;
     extern f32 lbl_803E307C;

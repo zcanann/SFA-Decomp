@@ -12,28 +12,10 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 extern char sObjMsgOverflowInObjectWarning[];
 
 void ObjHitbox_SetStateIndex(int obj,int hitState,int stateIndex);
-void ObjHits_SetTargetMask(int obj,u8 targetMask);
 void ObjHitbox_SetSphereRadius(int obj,s16 radius);
 void ObjHitbox_SetCapsuleBounds(int obj,s16 radius,s16 verticalMin,s16 verticalMax);
-void ObjHits_ClearHitVolumes(int obj);
 void ObjHits_SetHitVolumeMasks(int obj,int hitVolume,int hitType,int sourceMask);
-void ObjHits_SetHitVolumeSlot(u32 obj,int hitVolume,int hitType,int sourceSlot);
-void ObjHits_ClearSourceMask(int obj,int sourceMask);
-void ObjHits_SetSourceMask(int obj,u8 sourceMask);
-void ObjHits_ClearFlags(int obj,int flags);
-void ObjHits_SetFlags(int obj,int flags);
-void ObjHits_MarkObjectPositionDirty(int obj);
-void ObjHits_SyncObjectPositionIfDirty(u32 obj);
-void ObjHits_DisableObject(u32 obj);
-void ObjHits_EnableObject(u32 obj);
-ushort ObjHits_IsObjectEnabled(int obj);
-void ObjHits_SyncObjectPosition(u32 obj);
 int ObjHits_AllocObjectState(int obj,uint arena);
-void ObjHits_RefreshObjectState(int obj);
-int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
-int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
-                              u8 hitVolume,u8 sphereIndex);
-void ObjHits_AddContactObject(int obj,int contactObj);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
 uint ObjGroup_ContainsObject(uint obj,int group);
@@ -53,9 +35,6 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param);
 void ObjMsg_AllocQueue(void *obj,int capacity);
 undefined4 Obj_IsObjectAlive(u32 param_1);
 bool ObjTrigger_UpdateIdBlockFlag(int obj);
-int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,int *outHitObject,float *outHitPos);
-int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR,uint colorG,
-                                              uint colorB,uint sfxId,float *cooldown);
 void ObjLink_DetachChild(int param_1,int param_2);
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3);
 void ObjContact_DispatchCallbacks(int objA,int objB);

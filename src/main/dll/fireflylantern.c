@@ -3,11 +3,11 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fireflyLantern.h"
+#include "main/objhits.h"
 
 
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern uint randomGetRange(int min, int max);
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int Obj_GetPlayerObject(void);
 extern char fn_80296448(int playerObj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);

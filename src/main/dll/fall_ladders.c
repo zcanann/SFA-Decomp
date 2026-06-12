@@ -5,12 +5,12 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fall_ladders.h"
+#include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
 

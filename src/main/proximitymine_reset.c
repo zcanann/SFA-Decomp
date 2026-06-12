@@ -1,11 +1,9 @@
 #include "main/proximitymine.h"
 #include "main/audio/sfx.h"
+#include "main/objhits.h"
 
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_EnableObject(void* obj);
-extern void ObjHits_MarkObjectPositionDirty(void* obj);
 extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
-extern void ObjHits_SetHitVolumeSlot(void* obj, int param2, int param3, int param4);
 extern void storeZeroToFloatParam(void* timer);
 extern void s16toFloat(void* timer, int duration);
 extern void fn_8009A8C8(void* obj, f32 param2);
@@ -34,8 +32,8 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     storeZeroToFloatParam(state->renderTimer);
     s16toFloat(state->renderTimer, 10);
     state->mode = 0;
-    ObjHits_EnableObject(obj);
-    ObjHits_MarkObjectPositionDirty(obj);
+    ObjHits_EnableObject((u32)obj);
+    ObjHits_MarkObjectPositionDirty((int)obj);
     storeZeroToFloatParam(state->resetTimer);
     fn_8009A8C8(obj, lbl_803E676C);
     {
@@ -43,8 +41,8 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
         spawnExplosion(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
     }
     ObjHitbox_SetCapsuleBounds(obj, (s32)state->triggerDistance, -5, 10);
-    ObjHits_SetHitVolumeSlot(obj, 13, 1, 0);
-    ObjHits_EnableObject(obj);
+    ObjHits_SetHitVolumeSlot((u32)obj, 13, 1, 0);
+    ObjHits_EnableObject((u32)obj);
     if (state->effectHandle != NULL)
     {
         modelLightStruct_freeSlot(&state->effectHandle);

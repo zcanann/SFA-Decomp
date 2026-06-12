@@ -1,8 +1,7 @@
 #include "main/dfppowersl.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-extern void ObjHits_SetHitVolumeSlot(DfpPowerSlObject* obj, int slot, int enabled, int param_4);
+#include "main/objhits.h"
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
@@ -83,7 +82,7 @@ void dfppowersl_init(DfpPowerSlObject* obj, DfpPowerSlMapData* mapData)
         state->spawnObjectId = mapData->spawnObjectId;
         state->eventId = mapData->eventId;
         obj->modeWord = mapData->mode << DFPPOWERSL_MODE_WORD_SHIFT;
-        ObjHits_SetHitVolumeSlot(obj, DFPPOWERSL_HIT_VOLUME_SLOT, DFPPOWERSL_HIT_VOLUME_ENABLED, 0);
+        ObjHits_SetHitVolumeSlot((u32)obj, DFPPOWERSL_HIT_VOLUME_SLOT, DFPPOWERSL_HIT_VOLUME_ENABLED, 0);
     }
     return;
 }
