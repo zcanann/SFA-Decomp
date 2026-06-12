@@ -30,19 +30,30 @@ typedef struct WMColriseState
     u8 pad3;
 } WMColriseState;
 
+int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    animUpdate->hitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    return 0;
+}
+
+int WM_colrise_getExtraSize(void) { return sizeof(WMColriseState); }
+int WM_colrise_getObjectTypeId(void) { return 0x0; }
+
 void WM_colrise_free(void)
 {
 }
 
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5DC8; /* 1.0: render scale */
+
+void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E5DC8);
+}
+
 void WM_colrise_hitDetect(void)
-{
-}
-
-void WM_colrise_release(void)
-{
-}
-
-void WM_colrise_initialise(void)
 {
 }
 
@@ -143,30 +154,19 @@ void WM_colrise_update(int* obj)
     }
 }
 
-int WM_colrise_getExtraSize(void) { return sizeof(WMColriseState); }
-int WM_colrise_getObjectTypeId(void) { return 0x0; }
-
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5DC8; /* 1.0: render scale */
-
-void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5DC8);
-}
-
-int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    animUpdate->hitVolumePair = -1;
-    animUpdate->sequenceEventActive = 0;
-    return 0;
-}
-
 void WM_colrise_init(s16* obj, s8* def)
 {
     WMColriseState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)WM_colrise_SeqFn;
     obj[0] = (s16)((s32)def[0x18] << 8);
     state->gameBit = *(s16*)(def + 0x1e);
+}
+
+void WM_colrise_release(void)
+{
+}
+
+void WM_colrise_initialise(void)
+{
 }
 

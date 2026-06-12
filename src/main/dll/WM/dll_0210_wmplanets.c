@@ -68,7 +68,7 @@ STATIC_ASSERT(sizeof(WmPlanetsMapData) == 0x1C);
 extern void vecRotateZXY(void* angles, void* outVec);
 extern u32 lbl_802C2500[3]; /* (0.0f, 0.0f, 0.0f) */
 
-int wmplanets_getExtraSize(void) { return 0x1c; }
+int wmplanets_getExtraSize(void) { return sizeof(WmPlanetsState); }
 
 int wmplanets_getObjectTypeId(void) { return 0x0; }
 
@@ -76,15 +76,15 @@ void wmplanets_free(void)
 {
 }
 
+void wmplanets_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    if (vis != 0)
+    {
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5F98); /* 1.0f */
+    }
+}
+
 void wmplanets_hitDetect(void)
-{
-}
-
-void wmplanets_release(void)
-{
-}
-
-void wmplanets_initialise(void)
 {
 }
 
@@ -95,6 +95,8 @@ void wmplanets_update(int* obj)
     WmPlanetsRotationWork rotate;
 
     state = ((GameObject*)obj)->extra;
+    /* whole-struct copy of the zero vector (#31: paired lwz/stw, not
+       three lfs/stfs) */
     {
         typedef struct Vec3Words
         {
@@ -155,10 +157,10 @@ void wmplanets_init(int* obj, u8* init)
     ((GameObject*)obj)->anim.localPosZ = ((WmPlanetsMapData*)init)->base.posZ + inner->orbitRadius;
 }
 
-void wmplanets_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void wmplanets_release(void)
 {
-    if (vis != 0)
-    {
-        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5F98); /* 1.0f */
-    }
+}
+
+void wmplanets_initialise(void)
+{
 }

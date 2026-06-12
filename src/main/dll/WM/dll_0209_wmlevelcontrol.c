@@ -11,10 +11,6 @@
  * and fog colors toward their spirit-restored values while the
  * lbl_803DDC8C blend factor (held at 1.0 during restore progress,
  * decaying 0.02/tick after) is up.
- *
- * fn_801F3F18 is placed LAST in this file so MWCC cannot inline it
- * into wmlevelcontrol_update (the retail unit keeps it as an extern
- * call).
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
@@ -89,6 +85,144 @@ extern f32 lbl_803E5E7C;   /* 32.0: light-intensity base */
 extern f32 lbl_803E5E80;   /* 128.0: light-intensity blend range */
 extern f32 lbl_803E5E84;   /* 100.0: override light intensity */
 extern void objRenderFn_8003b8f4(f32);
+
+typedef struct
+{
+    f32 x, y, z;
+} LightVec3;
+
+typedef struct
+{
+    LightVec3 light;
+    LightVec3 color;
+    LightVec3 fog;
+} LightVecSet;
+
+/* Defined before update like retail (TU head); too large for MWCC's
+ * auto-inliner, so update keeps the bl (stream-verified). */
+void fn_801F3F18(int obj)
+{
+    LightVecSet L;
+    f32 lightX;
+    f32 decay;
+    LightVec3* vecs;
+    u8* fromColor;
+    u8* toColor;
+
+    vecs = (LightVec3*)lbl_802C24B8;
+    L.fog = vecs[1];
+    L.color = vecs[2];
+    L.light = vecs[3];
+
+    if ((u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 7)
+    {
+        return;
+    }
+
+    setDrawLights(0);
+    if ((u8)getSkyColorFn_80088e08(0) != 0)
+    {
+        skySetOverrideLightColorEnabled(0);
+        skySetOverrideLightDirectionEnabled(0);
+        skyFn_80089710(7, 0, 1);
+        return;
+    }
+
+    skySetOverrideLightColorEnabled(1);
+    skySetOverrideLightColor(0x88, 0xb7, 0xba);
+    if ((((GameObject*)obj)->unkF4 & 4) == 0)
+    {
+        skyFn_80089710(1, 1, 0);
+        ((GameObject*)obj)->unkF4 |= 4;
+    }
+    else
+    {
+        skyFn_80089710(1, 1, 1);
+    }
+
+    /* hold the blend at full while spirit-restore progress is running,
+       then decay it toward 0. The volatile launders re-load the zero
+       per use (#114; a plain extern CSEs into a reg, a literal would
+       pool locally and block the unit's sdata2 claim). */
+    if (fn_8008ED88() > *(volatile f32*)&lbl_803E5E70)
+    {
+        lbl_803DDC88 = lbl_803E5E74;
+        lbl_803DDC8C = lbl_803E5E74;
+    }
+    decay = -(lbl_803E5E78 * timeDelta - lbl_803DDC8C);
+    lbl_803DDC8C = decay;
+    if (decay < (lightX = *(volatile f32*)&lbl_803E5E70))
+    {
+        lbl_803DDC8C = lightX;
+    }
+
+    /* blend each color channel source->target by the blend factor.
+       The call args re-read the just-stored bytes VOLATILE (#114):
+       MWCC's word-granular store forwarding otherwise passes the last
+       byte stored for all three args - the misforward this fn shipped
+       with before the volatile reads. */
+    fromColor = &lbl_803DC118;
+    toColor = &lbl_803DC11C;
+    (&lbl_803DDC9C)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                  (f32)(s32)fromColor[0];
+    (&lbl_803DDC9C)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1];
+    (&lbl_803DDC9C)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                  (f32)(s32)fromColor[2];
+    skyFn_800895e0(1, *(volatile u8*)&lbl_803DDC9C, ((volatile u8*)&lbl_803DDC9C)[1], ((volatile u8*)&lbl_803DDC9C)[2], 0x40, 0x40);
+
+    fromColor = &lbl_803DC110;
+    toColor = &lbl_803DC114;
+    (&lbl_803DDC98)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                  (f32)(s32)fromColor[0];
+    (&lbl_803DDC98)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1];
+    (&lbl_803DDC98)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                  (f32)(s32)fromColor[2];
+    fn_80089510(1, *(volatile u8*)&lbl_803DDC98, ((volatile u8*)&lbl_803DDC98)[1], ((volatile u8*)&lbl_803DDC98)[2]);
+
+    fromColor = &lbl_803DC120;
+    toColor = &lbl_803DC124;
+    (&lbl_803DDC94)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                  (f32)(s32)fromColor[0];
+    (&lbl_803DDC94)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1];
+    (&lbl_803DDC94)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                  (f32)(s32)fromColor[2];
+    fn_80089578(1, *(volatile u8*)&lbl_803DDC94, ((volatile u8*)&lbl_803DDC94)[1], ((volatile u8*)&lbl_803DDC94)[2]);
+
+    lbl_803DDC90 = lbl_803DDC8C * lbl_803E5E80 + lbl_803E5E7C;
+    skySetOverrideLightDirectionEnabled(1);
+    /* the embedded def pins light.x-then-color.x load order in the
+       x arg (the bare spelling pre-hoists the two-use color.x) */
+    skySetOverrideLightDirection(lbl_803DDC8C * (L.light.x - (lightX = L.color.x)) + lightX,
+                                 lbl_803DDC8C * (L.light.y - L.color.y) + L.color.y,
+                                 lbl_803DDC8C * (L.light.z - L.color.z) + L.color.z,
+                                 lbl_803E5E84);
+    skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
+}
+
+int wmlevelcontrol_getExtraSize(void) { return sizeof(WmLevelControlState); }
+int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
+
+void wmlevelcontrol_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, 9);
+    Music_Trigger(0xa8, 0);
+    GameBit_Set(0xa7f, 0);
+    GameBit_Set(0x372, 1);
+    GameBit_Set(0x390, 1);
+}
+
+void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74);
+}
+
+void wmlevelcontrol_hitDetect(void)
+{
+}
 
 void wmlevelcontrol_update(int obj)
 {
@@ -212,138 +346,4 @@ void wmlevelcontrol_release(void)
 
 void wmlevelcontrol_initialise(void)
 {
-}
-
-typedef struct
-{
-    f32 x, y, z;
-} LightVec3;
-
-typedef struct
-{
-    LightVec3 light;
-    LightVec3 color;
-    LightVec3 fog;
-} LightVecSet;
-
-int wmlevelcontrol_getExtraSize(void) { return sizeof(WmLevelControlState); }
-int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
-
-void wmlevelcontrol_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, 9);
-    Music_Trigger(0xa8, 0);
-    GameBit_Set(0xa7f, 0);
-    GameBit_Set(0x372, 1);
-    GameBit_Set(0x390, 1);
-}
-
-void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74);
-}
-
-void wmlevelcontrol_hitDetect(void)
-{
-}
-
-/* Defined LAST so it cannot be auto-inlined into wmlevelcontrol_update
- * above (extern bl before the re-split; the retail unit keeps the bl). */
-void fn_801F3F18(int obj)
-{
-    LightVecSet L;
-    f32 lightX;
-    LightVec3* vecs;
-    u8* fromColor;
-    u8* toColor;
-
-    vecs = (LightVec3*)lbl_802C24B8;
-    L.fog = vecs[1];
-    L.color = vecs[2];
-    L.light = vecs[3];
-
-    if ((u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 7)
-    {
-        return;
-    }
-
-    setDrawLights(0);
-    if ((u8)getSkyColorFn_80088e08(0) != 0)
-    {
-        skySetOverrideLightColorEnabled(0);
-        skySetOverrideLightDirectionEnabled(0);
-        skyFn_80089710(7, 0, 1);
-        return;
-    }
-
-    skySetOverrideLightColorEnabled(1);
-    skySetOverrideLightColor(0x88, 0xb7, 0xba);
-    if ((((GameObject*)obj)->unkF4 & 4) == 0)
-    {
-        skyFn_80089710(1, 1, 0);
-        ((GameObject*)obj)->unkF4 |= 4;
-    }
-    else
-    {
-        skyFn_80089710(1, 1, 1);
-    }
-
-    /* hold the blend at full while spirit-restore progress is running,
-       then decay it toward 0 */
-    if (fn_8008ED88() > 0.0f)
-    {
-        lbl_803DDC88 = lbl_803E5E74;
-        lbl_803DDC8C = lbl_803E5E74;
-    }
-    lbl_803DDC8C = -(lbl_803E5E78 * timeDelta - lbl_803DDC8C);
-    if (lbl_803DDC8C < 0.0f)
-    {
-        lbl_803DDC8C = 0.0f;
-    }
-
-    /* blend each color channel source->target by the blend factor.
-       The call args re-read the just-stored bytes VOLATILE (#114):
-       MWCC's word-granular store forwarding otherwise passes the last
-       byte stored for all three args - the misforward this fn shipped
-       with before the volatile reads. */
-    fromColor = &lbl_803DC118;
-    toColor = &lbl_803DC11C;
-    (&lbl_803DDC9C)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                  (f32)(s32)fromColor[0];
-    (&lbl_803DDC9C)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                  (f32)(s32)fromColor[1];
-    (&lbl_803DDC9C)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                  (f32)(s32)fromColor[2];
-    skyFn_800895e0(1, *(volatile u8*)&lbl_803DDC9C, ((volatile u8*)&lbl_803DDC9C)[1], ((volatile u8*)&lbl_803DDC9C)[2], 0x40, 0x40);
-
-    fromColor = &lbl_803DC110;
-    toColor = &lbl_803DC114;
-    (&lbl_803DDC98)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                  (f32)(s32)fromColor[0];
-    (&lbl_803DDC98)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                  (f32)(s32)fromColor[1];
-    (&lbl_803DDC98)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                  (f32)(s32)fromColor[2];
-    fn_80089510(1, *(volatile u8*)&lbl_803DDC98, ((volatile u8*)&lbl_803DDC98)[1], ((volatile u8*)&lbl_803DDC98)[2]);
-
-    fromColor = &lbl_803DC120;
-    toColor = &lbl_803DC124;
-    (&lbl_803DDC94)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                  (f32)(s32)fromColor[0];
-    (&lbl_803DDC94)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                  (f32)(s32)fromColor[1];
-    (&lbl_803DDC94)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                  (f32)(s32)fromColor[2];
-    fn_80089578(1, *(volatile u8*)&lbl_803DDC94, ((volatile u8*)&lbl_803DDC94)[1], ((volatile u8*)&lbl_803DDC94)[2]);
-
-    lbl_803DDC90 = lbl_803DDC8C * lbl_803E5E80 + lbl_803E5E7C;
-    skySetOverrideLightDirectionEnabled(1);
-    /* the embedded def pins light.x-then-color.x load order in the
-       x arg (the bare spelling pre-hoists the two-use color.x) */
-    skySetOverrideLightDirection(lbl_803DDC8C * (L.light.x - (lightX = L.color.x)) + lightX,
-                                 lbl_803DDC8C * (L.light.y - L.color.y) + L.color.y,
-                                 lbl_803DDC8C * (L.light.z - L.color.z) + L.color.z,
-                                 lbl_803E5E84);
-    skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }

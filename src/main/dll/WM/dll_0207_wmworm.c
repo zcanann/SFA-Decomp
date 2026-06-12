@@ -27,18 +27,18 @@ extern f32 lbl_803E5E5C; /* 0.0 */
 extern f32 lbl_803E5E60; /* 0.01: chase speed factor */
 extern f32 timeDelta;
 
-void wmworm_hitDetect(void)
-{
-}
-
 int wmworm_getExtraSize(void) { return sizeof(WmWormState); }
 int wmworm_getObjectTypeId(void) { return 0x0; }
-
-void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void wmworm_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void wmworm_hitDetect(void)
+{
 }
 
 /* opt_common_subs off is load-bearing for update ONLY: the retail

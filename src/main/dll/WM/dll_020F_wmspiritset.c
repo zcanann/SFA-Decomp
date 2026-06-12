@@ -32,7 +32,7 @@ STATIC_ASSERT(offsetof(WmSpiritSetMapData, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(WmSpiritSetMapData, visibilityGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(WmSpiritSetMapData) == 0x20);
 
-int wmspiritset_getExtraSize(void) { return 0x2; }
+int wmspiritset_getExtraSize(void) { return sizeof(WmSpiritSetState); }
 
 int wmspiritset_getObjectTypeId(void) { return 0x0; }
 
@@ -40,19 +40,22 @@ void wmspiritset_free(void)
 {
 }
 
+void wmspiritset_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    WmSpiritSetState* state = ((GameObject*)p1)->extra;
+    s16 visibilityGameBit = state->visibilityGameBit;
+
+    if ((visibilityGameBit == -1 || (u32)GameBit_Get(visibilityGameBit) != 0) && vis != 0)
+    {
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
+    }
+}
+
 void wmspiritset_hitDetect(void)
 {
 }
 
 void wmspiritset_update(void)
-{
-}
-
-void wmspiritset_release(void)
-{
-}
-
-void wmspiritset_initialise(void)
 {
 }
 
@@ -68,13 +71,10 @@ void wmspiritset_init(GameObject* obj, WmSpiritSetMapData* mapData)
     state->visibilityGameBit = mapData->visibilityGameBit;
 }
 
-void wmspiritset_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void wmspiritset_release(void)
 {
-    WmSpiritSetState* state = ((GameObject*)p1)->extra;
-    s16 visibilityGameBit = state->visibilityGameBit;
+}
 
-    if ((visibilityGameBit == -1 || (u32)GameBit_Get(visibilityGameBit) != 0) && vis != 0)
-    {
-        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
-    }
+void wmspiritset_initialise(void)
+{
 }

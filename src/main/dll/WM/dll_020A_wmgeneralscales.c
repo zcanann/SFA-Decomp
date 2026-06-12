@@ -1,11 +1,33 @@
 /*
- * WM_GeneralScales (DLL 0x20A) - General Scales (Krazoa Palace).
- * TU = 0x801F48C0..0x801F4C04 (wmgeneralscales_SeqFn + wmgeneralscales_*).
+ * WM_GeneralScales (DLL 0x20A) - General Scales at Krazoa Palace, the
+ * cutscene actor driven entirely by sequence events (his appearance in
+ * the final spirit ceremony). TU = 0x801F48C0..0x801F4C04
+ * (wmgeneralscales_SeqFn + wmgeneralscales_*).
+ *
+ * The SeqFn fades the model in/out through state->fadeAlpha, spawns
+ * impact particles + sfx on the slam events, and attaches/detaches his
+ * 'scalessword' child object on demand. He starts hidden (phase 1
+ * skips render).
  */
 #include "main/dll/LGT/LGTprojectedlight.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+
+/* per-object extra state (getExtraSize == 0x8). unk00 is written here
+   (0.0 / 800.0 on the slam events) but only read by other TUs. */
+typedef struct WmGeneralScalesState
+{
+    f32 unk00;    /* 0x00 */
+    u8 phase;     /* 0x04: 1 = hidden, 2/3 = slam variants, 0 = idle */
+    u8 fadeAlpha; /* 0x05: 0 = invisible; ramps by framesThisStep while set */
+    u8 pad06[2];
+} WmGeneralScalesState;
+
+STATIC_ASSERT(sizeof(WmGeneralScalesState) == 0x8);
+
+/* romlist object type of the sword child (retail 'scalessword') */
+#define WMGENERALSCALES_SWORD_OBJECT_TYPE 0x1B8
 
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern u8 Obj_IsLoadingLocked(void);
@@ -14,25 +36,25 @@ extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int obj, int child, int p3);
 extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
-extern f32 lbl_803E5E98;
-extern f32 lbl_803E5E9C;
-extern f32 lbl_803E5EA0;
+extern f32 lbl_803E5E98; /* 0.0 */
+extern f32 lbl_803E5E9C; /* 800.0 */
+extern f32 lbl_803E5EA0; /* 1.1: sword scale-up */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
 
-extern f32 lbl_803E5EA4;
+extern f32 lbl_803E5EA4; /* 1.0: render scale */
 extern void objRenderFn_8003b8f4(f32);
 
 int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    f32* state;
+    WmGeneralScalesState* state;
     int i;
     u8 buf[16];
 
     state = ((GameObject*)obj)->extra;
-    if (*((u8*)state + 5) != 0)
+    if (state->fadeAlpha != 0)
     {
-        int a = *((u8*)state + 5) + framesThisStep;
+        int a = state->fadeAlpha + framesThisStep;
         if (a < 0)
         {
             a = 0;
@@ -41,7 +63,7 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             a = 0xff;
         }
-        *((u8*)state + 5) = (u8)a;
+        state->fadeAlpha = (u8)a;
         Obj_SetModelRenderOpAlpha(obj, (u8)a);
     }
     else
@@ -52,41 +74,41 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         switch (animUpdate->eventIds[i])
         {
-        case 1:
-            *((u8*)state + 4) = 1;
+        case 1: /* hide */
+            state->phase = 1;
             break;
-        case 2:
-            *((u8*)state + 4) = 2;
+        case 2: /* slam, tracked fx */
+            state->phase = 2;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x556, NULL, 2, -1, buf);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
-            *state = lbl_803E5E98;
+            state->unk00 = lbl_803E5E98;
             break;
-        case 3:
-            *((u8*)state + 4) = 3;
+        case 3: /* slam variant */
+            state->phase = 3;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x556, NULL, 2, -1, NULL);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
-            *state = lbl_803E5E9C;
+            state->unk00 = lbl_803E5E9C;
             break;
-        case 4:
-            *((u8*)state + 4) = 0;
+        case 4: /* back to idle */
+            state->phase = 0;
             break;
-        case 5:
+        case 5: /* draw the sword: spawn + attach a scalessword child */
             if (((GameObject*)obj)->childObjs[0] == NULL && Obj_IsLoadingLocked() != 0)
             {
-                int setup = Obj_AllocObjectSetup(0x24, 0x1b8);
+                int setup = Obj_AllocObjectSetup(0x24, WMGENERALSCALES_SWORD_OBJECT_TYPE);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                *(u8*)(setup + 4) = 0x20;
-                *(u8*)(setup + 5) = 4;
-                *(u8*)(setup + 7) = 0xff;
+                ((ObjPlacement*)setup)->unk04[0] = 0x20;
+                ((ObjPlacement*)setup)->unk04[1] = 4;
+                ((ObjPlacement*)setup)->unk04[3] = 0xff;
                 ObjLink_AttachChild(obj, Obj_SetupObject(setup, 5, -1, -1, 0), 0);
                 *(f32*)(*(int*)&((GameObject*)obj)->childObjs[0] + 8) *= lbl_803E5EA0;
             }
             break;
-        case 6:
+        case 6: /* sheathe: detach the sword child */
             {
                 int* child = ((GameObject*)obj)->childObjs[0];
                 if (child != NULL)
@@ -95,25 +117,42 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             }
-        case 7:
+        case 7: /* begin fade-in (model flag + alpha ramp from 1) */
             {
                 u8* p = *(u8**)&((GameObject*)obj)->anim.modelInstance;
                 p[0x5f] |= 0x10;
-                *((u8*)state + 5) = 1;
+                state->fadeAlpha = 1;
                 break;
             }
-        case 8:
+        case 8: /* end fade: clear the flag, fully invisible */
             {
                 u8* p = *(u8**)&((GameObject*)obj)->anim.modelInstance;
                 p[0x5f] &= ~0x10;
                 Obj_SetModelRenderOpAlpha(obj, 0);
-                *((u8*)state + 5) = 0;
+                state->fadeAlpha = 0;
                 break;
             }
         }
         animUpdate->eventIds[i] = 0;
     }
     return 0;
+}
+
+int wmgeneralscales_getExtraSize(void) { return sizeof(WmGeneralScalesState); }
+int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
+
+void wmgeneralscales_free(int* obj)
+{
+    int* p = (int*)obj[0xc8 / 4]; /* childObjs[0] */
+    if (p != NULL) ObjLink_DetachChild(obj, p);
+}
+
+void wmgeneralscales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    WmGeneralScalesState* state = ((GameObject*)obj)->extra;
+    if (state->phase == 1) return;
+    if (visible == 0) return;
+    ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5EA4);
 }
 
 void wmgeneralscales_hitDetect(void)
@@ -124,36 +163,19 @@ void wmgeneralscales_update(void)
 {
 }
 
+void wmgeneralscales_init(int* obj)
+{
+    WmGeneralScalesState* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = (void*)wmgeneralscales_SeqFn;
+    state->unk00 = lbl_803E5E98;
+    state->phase = 1;
+    *(int*)&((GameObject*)obj)->childObjs[0] = 0;
+}
+
 void wmgeneralscales_release(void)
 {
 }
 
 void wmgeneralscales_initialise(void)
 {
-}
-
-int wmgeneralscales_getExtraSize(void) { return 0x8; }
-int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
-
-void wmgeneralscales_free(int* obj)
-{
-    int* p = (int*)obj[0xc8 / 4];
-    if (p != NULL) ObjLink_DetachChild(obj, p);
-}
-
-void wmgeneralscales_init(int* obj)
-{
-    int* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)wmgeneralscales_SeqFn;
-    *(f32*)state = lbl_803E5E98;
-    *(u8*)((char*)state + 4) = 1;
-    *(int*)&((GameObject*)obj)->childObjs[0] = 0;
-}
-
-void wmgeneralscales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int* state = ((GameObject*)obj)->extra;
-    if (*(u8*)((char*)state + 4) == 1) return;
-    if (visible == 0) return;
-    ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5EA4);
 }

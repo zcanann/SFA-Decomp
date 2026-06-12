@@ -87,6 +87,68 @@ STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 
+extern int mmAlloc(int size, int tag, int p3);
+extern f32 lbl_803E5F8C;  /* 1000.0f */
+extern s16 lbl_803DDCA8;  /* finale countdowns, see file-top comment */
+extern s16 lbl_803DDCAA;
+extern s16 lbl_803DDCAC;
+extern s16 lbl_803DDCAE;
+extern s16 lbl_803DDCB0;
+
+extern int objFindTexture(int obj, int idx, int p3);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern f32 lbl_803E5F20; /* 0.0f */
+extern f32 lbl_803E5F78; /* 0.00375f */
+extern f32 lbl_803E5F7C; /* 50.0f */
+extern f32 lbl_803E5F80; /* 0.8f */
+extern f32 lbl_803E5F84; /* 2400.0f */
+extern f32 lbl_803E5F88; /* 2.8f */
+
+typedef struct
+{
+    f32 x, y, z;
+} WmSunVec3;
+
+/* glare work record; only ang feeds vecRotateZXY - the intensity/v*
+   results are computed and discarded (the struct's address escapes
+   through the g.ang call arg, which keeps the stores live; likely a
+   remnant of the Dinosaur Planet-era glare renderer) */
+typedef struct
+{
+    s16 ang[3];
+    f32 intensity;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+} WmSunGlare;
+
+extern WmSunVec3 lbl_802C24E8; /* (0, 0, -1) */
+extern WmSunVec3 lbl_802C24F4; /* (0, 0, -1) */
+extern f32 lbl_803DDCA0;       /* glare intensity */
+extern f32 lbl_803DDCA4;       /* glare damping accumulator */
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E5F28; /* 0.5f */
+extern f32 lbl_803E5F2C; /* 20.0f */
+extern f32 lbl_803E5F30; /* 3.1415927f */
+extern f32 lbl_803E5F34; /* 32767.0f */
+extern f32 lbl_803E5F38; /* 32768.0f */
+extern f32 lbl_803E5F3C; /* 0.1f */
+extern f32 lbl_803E5F40; /* -0.1f */
+extern f32 lbl_803E5F44; /* 0.2f */
+extern f32 lbl_803E5F48; /* 100.0f */
+extern f32 lbl_803E5F4C; /* 4.0f */
+extern f32 lbl_803E5F50; /* 0.0005f */
+extern f32 lbl_803E5F54; /* 0.0002f */
+extern f32 lbl_803E5F58; /* 0.05f */
+extern f32 lbl_803E5F5C; /* 65535.0f */
+extern f32 lbl_803E5F60; /* 0.001f */
+extern f32 lbl_803E5F64; /* -0.001f */
+extern f32 lbl_803E5F68; /* 0.01f */
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern int Camera_GetCurrentViewSlot(void);
+extern void vecRotateZXY(s16 * ang, WmSunVec3 * vec);
+
 int wmsun_SeqFn(int p1, int p2, ObjAnimUpdateState* actor)
 {
     actor->hitVolumePair = -1;
@@ -94,21 +156,159 @@ int wmsun_SeqFn(int p1, int p2, ObjAnimUpdateState* actor)
     return 0;
 }
 
+/* The sun-glare flicker: measures the angle between the camera->sun
+   ray and the camera facing; staring near the sun (cos > 0.5) ramps
+   the flicker intensity (sin curve + random jitter, damped through
+   lbl_803DDCA4), looking away decays it. */
+void wmsun_updateGlare(int obj)
+{
+    WmSunVec3 dir;
+    WmSunVec3 sun;
+    WmSunGlare g;
+    int cam;
+    f32 dx, dy, dz, len;
+    f32 dot, prod, denom;
+    f32 hy, hz, cosang, hlen;
+    f32 f;
+    f32 cz;
+
+    dir = lbl_802C24E8;
+    sun = lbl_802C24F4;
+    ((GameObject*)obj)->anim.rotX += 400;
+    g.vx = lbl_803E5F20;
+    g.vy = lbl_803E5F20;
+    g.vz = lbl_803E5F20;
+    g.intensity = lbl_803E5F24;
+    g.ang[2] = 0;
+    g.ang[1] = 0;
+    g.ang[0] = ((GameObject*)obj)->anim.rotX;
+    cam = Camera_GetCurrentViewSlot();
+    if ((void*)cam != NULL)
+    {
+        g.ang[0] = 0x8000 - *(s16*)cam;
+        vecRotateZXY(g.ang, &sun);
+        dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
+        dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(cam + 0x10);
+        dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
+        len = sqrtf(dz * dz + (dx * dx + dy * dy));
+        if (*(volatile f32*)&lbl_803E5F20 != len)
+        {
+            dx = dx / len;
+            dy = dy / len;
+            dz = dz / len;
+        }
+        dot = dz * sun.z + (dx * sun.x + dy * sun.y);
+        prod = (dz * dz + (dx * dx + dy * dy)) * (denom = sun.z * sun.z + (sun.x * sun.x + sun.y * sun.y));
+        if (prod != lbl_803E5F20)
+        {
+            denom = sqrtf(prod);
+        }
+        cz = lbl_803E5F20;
+        if (denom != cz)
+        {
+            cosang = dot / denom;
+        }
+        else
+        {
+            cosang = cz;
+        }
+        /* volatile launders: fresh 0.0 loads (named symbol so the
+           unit's sdata2 pool stays claimable; a literal pools locally) */
+        hy = *(volatile f32*)&lbl_803E5F20;
+        if (cosang > hy)
+        {
+            dot = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
+            hz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
+            hlen = sqrtf(hz * hz + (dot * dot + hy));
+            if (*(volatile f32*)&lbl_803E5F20 != hlen)
+            {
+                dot = dot / hlen;
+                hy = hy / hlen;
+                hz = hz / hlen;
+            }
+            len = dir.y;
+            f = dir.z;
+            prod = f * f + (dir.x * dir.x + len * len);
+            prod = prod * (hz * hz + (dot * dot + hy * hy));
+            if (prod != lbl_803E5F20)
+            {
+                sqrtf(prod);
+            }
+            if (cosang > lbl_803E5F28)
+            {
+                g.vx = lbl_803E5F2C * dot;
+                g.vy = lbl_803E5F20;
+                g.vz = lbl_803E5F2C * hz;
+                f = mathSinf(lbl_803E5F30 * (lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - lbl_803DDCA0;
+                if (f > lbl_803E5F3C || f < lbl_803E5F40)
+                {
+                    lbl_803DDCA0 = lbl_803DDCA0 + f / timeDelta;
+                }
+                g.intensity = lbl_803DDCA0;
+                if (lbl_803DDCA0 > *(f32*)&lbl_803E5F44)
+                {
+                    if (lbl_803DDCA4 < lbl_803E5F4C)
+                    {
+                        lbl_803DDCA4 = lbl_803DDCA4 + (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F48;
+                    }
+                    f = g.intensity - lbl_803DDCA4;
+                    g.intensity = f;
+                    if (f < *(f32*)&lbl_803E5F44)
+                    {
+                        g.intensity = *(f32*)&lbl_803E5F44;
+                    }
+                }
+                else
+                {
+                    lbl_803DDCA4 = lbl_803DDCA4 - (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F2C;
+                }
+                g.intensity = lbl_803E5F50 * (f32)(int)randomGetRange(0, 0x1e) + g.intensity;
+                if (lbl_803DDCA0 > lbl_803E5F58)
+                {
+                    lbl_803DDCA0 = lbl_803DDCA0 - lbl_803E5F54;
+                }
+                g.ang[2] = 0;
+                g.ang[1] = 0;
+                g.ang[0] = lbl_803E5F5C * cosang;
+            }
+            else
+            {
+                f = lbl_803E5F20 - lbl_803DDCA0;
+                if (f > lbl_803E5F60)
+                {
+                    lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
+                }
+                else if (f < lbl_803E5F64)
+                {
+                    lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
+                }
+                if (lbl_803DDCA4 > *(f32*)&lbl_803E5F20)
+                {
+                    lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
+                    if (lbl_803DDCA4 < *(f32*)&lbl_803E5F20)
+                    {
+                        lbl_803DDCA4 = *(f32*)&lbl_803E5F20;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (lbl_803DDCA4 > hy)
+            {
+                lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
+                if (lbl_803DDCA4 < hy)
+                {
+                    lbl_803DDCA4 = hy;
+                }
+            }
+        }
+    }
+}
+
 int wmsun_getExtraSize(void) { return 0x10; }
 
 int wmsun_getObjectTypeId(void) { return 0x0; }
-
-void wmsun_hitDetect(void)
-{
-}
-
-void wmsun_release(void)
-{
-}
-
-void wmsun_initialise(void)
-{
-}
 
 void wmsun_free(int obj)
 {
@@ -131,115 +331,9 @@ void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     }
 }
 
-extern int mmAlloc(int size, int tag, int p3);
-extern f32 lbl_803E5F8C;  /* 1000.0f */
-extern s16 lbl_803DDCA8;  /* finale countdowns, see file-top comment */
-extern s16 lbl_803DDCAA;
-extern s16 lbl_803DDCAC;
-extern s16 lbl_803DDCAE;
-extern s16 lbl_803DDCB0;
-
-void wmsun_init(int obj, int params)
+void wmsun_hitDetect(void)
 {
-    ObjAnimComponent* objAnim;
-    WmSunState* state = ((GameObject*)obj)->extra;
-    WmSunMapData* mapData;
-    u8 c;
-    int c2;
-    int j;
-    s16 i;
-    s16 mode;
-
-    objAnim = (ObjAnimComponent*)obj;
-    mapData = (WmSunMapData*)params;
-    ((GameObject*)obj)->animEventCallback = (void*)wmsun_SeqFn;
-    c = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
-    if (c == 3 && (u32)GameBit_Get(0x21b) == 0)
-    {
-        GameBit_Set(0x21b, 1);
-    }
-    state->glareParams = NULL;
-    state->renderEnabled = 1;
-    mode = ((GameObject*)obj)->anim.seqId;
-    if (mode == 0x262) /* WM_Crystal */
-    {
-        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
-        state->riseStep = 100;
-        if (mapData->rootMotionScaleParam >= 1000)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
-        }
-        else
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24; /* 1.0f */
-        }
-    }
-    else if (mode == 0x2bd) /* WM_sun */
-    {
-        lbl_803DDCB0 = 800;
-        lbl_803DDCAE = 800;
-        lbl_803DDCAC = 800;
-        lbl_803DDCAA = 800;
-        lbl_803DDCA8 = 800;
-        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
-        if (mapData->rootMotionScaleParam >= 0)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
-        }
-        else
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24;
-        }
-        *(u8*)&objAnim->bankIndex = mapData->bankIndex;
-        c2 = objAnim->bankIndex;
-        if (c2 == 0)
-        {
-            state->riseStep = randomGetRange(300, 600);
-            state->spinStep = randomGetRange(300, 600);
-        }
-        else if (c2 == 1)
-        {
-            state->riseStep = randomGetRange(500, 800);
-            state->spinStep = randomGetRange(500, 800);
-        }
-        else if (c2 == 2)
-        {
-            state->riseStep = randomGetRange(700, 1000);
-            state->spinStep = randomGetRange(700, 1000);
-        }
-        objAnim->alpha = 0;
-    }
-    else if (mode == 0x2c2) /* unreachable in retail (no OBJINDEX entry) */
-    {
-        state->glareParams = (WmSunGlareParams*)mmAlloc(sizeof(WmSunGlareParams), 0xe, 0);
-        i = 0x14;
-        j = 0x28;
-        while (i != 0)
-        {
-            j -= 2;
-            i--;
-            *(s16*)((u8*)state->glareParams + j + 0x28) = 0;
-            *(s16*)((u8*)state->glareParams + j + 0x50) = randomGetRange(10, 0x14);
-            *(s16*)((u8*)state->glareParams + j + 0x78) = randomGetRange(0x50, 0xff);
-        }
-        objAnim->alpha = 0;
-        if (mapData->rootMotionScaleParam != 0)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24 / ((f32)mapData->rootMotionScaleParam /
-                lbl_803E5F8C);
-        }
-    }
 }
-
-extern int objFindTexture(int obj, int idx, int p3);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void wmsun_updateGlare(int obj);
-extern f32 lbl_803E5F20; /* 0.0f */
-extern f32 lbl_803E5F78; /* 0.00375f */
-extern f32 lbl_803E5F7C; /* 50.0f */
-extern f32 lbl_803E5F80; /* 0.8f */
-extern f32 lbl_803E5F84; /* 2400.0f */
-extern f32 lbl_803E5F88; /* 2.8f */
 
 void wmsun_update(int obj)
 {
@@ -462,195 +556,102 @@ void wmsun_update(int obj)
     }
 }
 
-typedef struct
+void wmsun_init(int obj, int params)
 {
-    f32 x, y, z;
-} WmSunVec3;
+    ObjAnimComponent* objAnim;
+    WmSunState* state = ((GameObject*)obj)->extra;
+    WmSunMapData* mapData;
+    u8 c;
+    int c2;
+    int j;
+    s16 i;
+    s16 mode;
 
-/* glare work record; only ang feeds vecRotateZXY - the intensity/v*
-   results are computed and discarded (the struct's address escapes
-   through the g.ang call arg, which keeps the stores live; likely a
-   remnant of the Dinosaur Planet-era glare renderer) */
-typedef struct
-{
-    s16 ang[3];
-    f32 intensity;
-    f32 vx;
-    f32 vy;
-    f32 vz;
-} WmSunGlare;
-
-extern WmSunVec3 lbl_802C24E8; /* (0, 0, -1) */
-extern WmSunVec3 lbl_802C24F4; /* (0, 0, -1) */
-extern f32 lbl_803DDCA0;       /* glare intensity */
-extern f32 lbl_803DDCA4;       /* glare damping accumulator */
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E5F28; /* 0.5f */
-extern f32 lbl_803E5F2C; /* 20.0f */
-extern f32 lbl_803E5F30; /* 3.1415927f */
-extern f32 lbl_803E5F34; /* 32767.0f */
-extern f32 lbl_803E5F38; /* 32768.0f */
-extern f32 lbl_803E5F3C; /* 0.1f */
-extern f32 lbl_803E5F40; /* -0.1f */
-extern f32 lbl_803E5F44; /* 0.2f */
-extern f32 lbl_803E5F48; /* 100.0f */
-extern f32 lbl_803E5F4C; /* 4.0f */
-extern f32 lbl_803E5F50; /* 0.0005f */
-extern f32 lbl_803E5F54; /* 0.0002f */
-extern f32 lbl_803E5F58; /* 0.05f */
-extern f32 lbl_803E5F5C; /* 65535.0f */
-extern f32 lbl_803E5F60; /* 0.001f */
-extern f32 lbl_803E5F64; /* -0.001f */
-extern f32 lbl_803E5F68; /* 0.01f */
-extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern int Camera_GetCurrentViewSlot(void);
-extern void vecRotateZXY(s16 * ang, WmSunVec3 * vec);
-
-/* The sun-glare flicker: measures the angle between the camera->sun
-   ray and the camera facing; staring near the sun (cos > 0.5) ramps
-   the flicker intensity (sin curve + random jitter, damped through
-   lbl_803DDCA4), looking away decays it. */
-void wmsun_updateGlare(int obj)
-{
-    WmSunVec3 dir;
-    WmSunVec3 sun;
-    WmSunGlare g;
-    int cam;
-    f32 dx, dy, dz, len;
-    f32 dot, prod, denom;
-    f32 hy, hz, cosang, hlen;
-    f32 f;
-    f32 cz;
-
-    dir = lbl_802C24E8;
-    sun = lbl_802C24F4;
-    ((GameObject*)obj)->anim.rotX += 400;
-    g.vx = lbl_803E5F20;
-    g.vy = lbl_803E5F20;
-    g.vz = lbl_803E5F20;
-    g.intensity = lbl_803E5F24;
-    g.ang[2] = 0;
-    g.ang[1] = 0;
-    g.ang[0] = ((GameObject*)obj)->anim.rotX;
-    cam = Camera_GetCurrentViewSlot();
-    if ((void*)cam != NULL)
+    objAnim = (ObjAnimComponent*)obj;
+    mapData = (WmSunMapData*)params;
+    ((GameObject*)obj)->animEventCallback = (void*)wmsun_SeqFn;
+    c = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    if (c == 3 && (u32)GameBit_Get(0x21b) == 0)
     {
-        g.ang[0] = 0x8000 - *(s16*)cam;
-        vecRotateZXY(g.ang, &sun);
-        dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
-        dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(cam + 0x10);
-        dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
-        len = sqrtf(dz * dz + (dx * dx + dy * dy));
-        if (0.0f != len)
+        GameBit_Set(0x21b, 1);
+    }
+    state->glareParams = NULL;
+    state->renderEnabled = 1;
+    mode = ((GameObject*)obj)->anim.seqId;
+    if (mode == 0x262) /* WM_Crystal */
+    {
+        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+        state->riseStep = 100;
+        if (mapData->rootMotionScaleParam >= 1000)
         {
-            dx = dx / len;
-            dy = dy / len;
-            dz = dz / len;
-        }
-        dot = dz * sun.z + (dx * sun.x + dy * sun.y);
-        prod = (dz * dz + (dx * dx + dy * dy)) * (denom = sun.z * sun.z + (sun.x * sun.x + sun.y * sun.y));
-        if (prod != lbl_803E5F20)
-        {
-            denom = sqrtf(prod);
-        }
-        cz = lbl_803E5F20;
-        if (denom != cz)
-        {
-            cosang = dot / denom;
+            ((GameObject*)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
         }
         else
         {
-            cosang = cz;
-        }
-        hy = 0.0f;
-        if (cosang > hy)
-        {
-            dot = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
-            hz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
-            hlen = sqrtf(hz * hz + (dot * dot + hy));
-            if (0.0f != hlen)
-            {
-                dot = dot / hlen;
-                hy = hy / hlen;
-                hz = hz / hlen;
-            }
-            len = dir.y;
-            f = dir.z;
-            prod = f * f + (dir.x * dir.x + len * len);
-            prod = prod * (hz * hz + (dot * dot + hy * hy));
-            if (prod != lbl_803E5F20)
-            {
-                sqrtf(prod);
-            }
-            if (cosang > lbl_803E5F28)
-            {
-                g.vx = lbl_803E5F2C * dot;
-                g.vy = lbl_803E5F20;
-                g.vz = lbl_803E5F2C * hz;
-                f = mathSinf(lbl_803E5F30 * (lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - lbl_803DDCA0;
-                if (f > lbl_803E5F3C || f < lbl_803E5F40)
-                {
-                    lbl_803DDCA0 = lbl_803DDCA0 + f / timeDelta;
-                }
-                g.intensity = lbl_803DDCA0;
-                if (lbl_803DDCA0 > *(f32*)&lbl_803E5F44)
-                {
-                    if (lbl_803DDCA4 < lbl_803E5F4C)
-                    {
-                        lbl_803DDCA4 = lbl_803DDCA4 + (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F48;
-                    }
-                    f = g.intensity - lbl_803DDCA4;
-                    g.intensity = f;
-                    if (f < *(f32*)&lbl_803E5F44)
-                    {
-                        g.intensity = *(f32*)&lbl_803E5F44;
-                    }
-                }
-                else
-                {
-                    lbl_803DDCA4 = lbl_803DDCA4 - (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F2C;
-                }
-                g.intensity = lbl_803E5F50 * (f32)(int)randomGetRange(0, 0x1e) + g.intensity;
-                if (lbl_803DDCA0 > lbl_803E5F58)
-                {
-                    lbl_803DDCA0 = lbl_803DDCA0 - lbl_803E5F54;
-                }
-                g.ang[2] = 0;
-                g.ang[1] = 0;
-                g.ang[0] = lbl_803E5F5C * cosang;
-            }
-            else
-            {
-                f = lbl_803E5F20 - lbl_803DDCA0;
-                if (f > lbl_803E5F60)
-                {
-                    lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
-                }
-                else if (f < lbl_803E5F64)
-                {
-                    lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
-                }
-                if (lbl_803DDCA4 > *(f32*)&lbl_803E5F20)
-                {
-                    lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
-                    if (lbl_803DDCA4 < *(f32*)&lbl_803E5F20)
-                    {
-                        lbl_803DDCA4 = *(f32*)&lbl_803E5F20;
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (lbl_803DDCA4 > hy)
-            {
-                lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
-                if (lbl_803DDCA4 < hy)
-                {
-                    lbl_803DDCA4 = hy;
-                }
-            }
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24; /* 1.0f */
         }
     }
+    else if (mode == 0x2bd) /* WM_sun */
+    {
+        lbl_803DDCB0 = 800;
+        lbl_803DDCAE = 800;
+        lbl_803DDCAC = 800;
+        lbl_803DDCAA = 800;
+        lbl_803DDCA8 = 800;
+        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+        if (mapData->rootMotionScaleParam >= 0)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
+        }
+        else
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24;
+        }
+        *(u8*)&objAnim->bankIndex = mapData->bankIndex;
+        c2 = objAnim->bankIndex;
+        if (c2 == 0)
+        {
+            state->riseStep = randomGetRange(300, 600);
+            state->spinStep = randomGetRange(300, 600);
+        }
+        else if (c2 == 1)
+        {
+            state->riseStep = randomGetRange(500, 800);
+            state->spinStep = randomGetRange(500, 800);
+        }
+        else if (c2 == 2)
+        {
+            state->riseStep = randomGetRange(700, 1000);
+            state->spinStep = randomGetRange(700, 1000);
+        }
+        objAnim->alpha = 0;
+    }
+    else if (mode == 0x2c2) /* unreachable in retail (no OBJINDEX entry) */
+    {
+        state->glareParams = (WmSunGlareParams*)mmAlloc(sizeof(WmSunGlareParams), 0xe, 0);
+        i = 0x14;
+        j = 0x28;
+        while (i != 0)
+        {
+            j -= 2;
+            i--;
+            *(s16*)((u8*)state->glareParams + j + 0x28) = 0;
+            *(s16*)((u8*)state->glareParams + j + 0x50) = randomGetRange(10, 0x14);
+            *(s16*)((u8*)state->glareParams + j + 0x78) = randomGetRange(0x50, 0xff);
+        }
+        objAnim->alpha = 0;
+        if (mapData->rootMotionScaleParam != 0)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24 / ((f32)mapData->rootMotionScaleParam /
+                lbl_803E5F8C);
+        }
+    }
+}
+
+void wmsun_release(void)
+{
+}
+
+void wmsun_initialise(void)
+{
 }

@@ -25,13 +25,13 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern int lbl_803DDC68; /* live WM_WallCraw population counter */
-extern f32 lbl_803E5CC8; /* 1.0 */
+extern const f32 lbl_803E5CC8; /* 1.0 (#127 const: LICM-hoistable in case 6) */
 extern f32 lbl_803E5CCC; /* 10.0: eastward drift base velocity */
 extern f32 lbl_803E5CD0; /* -30.0: westward drift base velocity */
 extern f32 lbl_803E5CD4; /* 0.1: burst velocity scale */
 extern const f32 lbl_803E5CD8; /* 0.0 (#127 const: keeps the case-4 load
                                   CSE'd across the spawned-> stores) */
-extern f32 lbl_803E5CDC; /* 200.0 */
+extern const f32 lbl_803E5CDC; /* 200.0 (#127 const: LICM-hoistable in case 6) */
 
 /* romlist object types this creator spawns (names from the retail
    OBJECTS.bin; the handling DLL ids confirm the targets). */
@@ -47,22 +47,22 @@ enum
 /* gate for the galleon spawn: set once the palace approach has run */
 #define GAMEBIT_WM_GALLEON_GONE 0x78
 
+int WM_ObjCreator_getExtraSize(void) { return 0x8; }
+int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
+
 void WM_ObjCreator_free(void)
 {
 }
-
-void WM_ObjCreator_hitDetect(void)
-{
-}
-
-int WM_ObjCreator_getExtraSize(void) { return 0x8; }
-int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
 void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32); /* #57 */
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5CC8);
+}
+
+void WM_ObjCreator_hitDetect(void)
+{
 }
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
@@ -396,18 +396,18 @@ void WM_ObjCreator_update(int obj)
                 ((WmRockSpawnSetup*)setup)->yawByte = ((GameObject*)obj)->anim.rotX >> 8;
                 Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
-                /* in-loop literals: LICM hoists them into the retail
-                   preheader group (#121); the named externs would load
-                   at statement position */
+                /* in-loop const externs: LICM hoists them into the retail
+                   preheader group (#121/#127; a plain extern cannot
+                   cross the call, a literal would pool locally) */
                 for (n = randomGetRange(2, 5); n != 0; n -= 1)
                 {
-                    vec.pos[0] = 1.0f;
+                    vec.pos[0] = lbl_803E5CC8;
                     vec.dir[0] = 0;
                     vec.dir[1] = 0;
                     vec.dir[2] = 0;
                     vec.pos[1] = (f32)(int)randomGetRange(-200, 200);
                     vec.pos[3] = (f32)(int)randomGetRange(-0x14, 0x14);
-                    vec.pos[2] = 200.0f;
+                    vec.pos[2] = lbl_803E5CDC;
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x1a6, &vec, 0x10002, -1,
                                                      NULL);
                 }
@@ -416,14 +416,6 @@ void WM_ObjCreator_update(int obj)
             break;
         }
     }
-}
-
-void WM_ObjCreator_release(void)
-{
-}
-
-void WM_ObjCreator_initialise(void)
-{
 }
 
 void WM_ObjCreator_init(int* obj, s8* def)
@@ -435,4 +427,12 @@ void WM_ObjCreator_init(int* obj, s8* def)
     state->spawnPeriod = placement->spawnPeriod;
     state->spawnTimer = state->spawnPeriod;
     state->spawnJitter = (s16)(s32)placement->spawnJitter;
+}
+
+void WM_ObjCreator_release(void)
+{
+}
+
+void WM_ObjCreator_initialise(void)
+{
 }

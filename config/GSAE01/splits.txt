@@ -2052,12 +2052,15 @@ main/dll/SB/dll_0259_sbcloudrunner.c:
 
 main/dll/WM/dll_01F9_wmobjcreator.c:
 	.text       start:0x801EF360 end:0x801EFF7C
+	.data       start:0x803286C0 end:0x803286E4
+	.sdata2     start:0x803E5CE0 end:0x803E5CE8
 
 main/dll/wcdial.c:
 	.text       start:0x801EFF7C end:0x801EFF7C
 
 main/dll/WM/dll_01F8_wmgalleon.c:
 	.text       start:0x801EFF7C end:0x801F06D8
+	.data       start:0x80328720 end:0x80328748
 
 main/dll/WM/dll_01FA_wmseqobject.c:
 	.text       start:0x801F06D8 end:0x801F0900
@@ -2085,18 +2088,23 @@ main/dll/WM/dll_0201_wmcolrise.c:
 
 main/dll/WM/dll_0204_wmtorch.c:
 	.text       start:0x801F30DC end:0x801F33B4
+	.sdata2     start:0x803E5E00 end:0x803E5E08
 
 main/dll/dll_0206_lightsource.c:
 	.text       start:0x801F33B4 end:0x801F3C2C
 
 main/dll/WM/dll_0207_wmworm.c:
 	.text       start:0x801F3C2C end:0x801F3F18
+	.sdata2     start:0x803E5E68 end:0x803E5E70
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
 	.text       start:0x801F3F18 end:0x801F48C0
+	.data       start:0x80328BB0 end:0x80328BD0
+	.sdata2     start:0x803E5E88 end:0x803E5E90
 
 main/dll/WM/dll_020A_wmgeneralscales.c:
 	.text       start:0x801F48C0 end:0x801F4C04
+	.data       start:0x80328C08 end:0x80328C2C
 
 main/dll/LGT/lgtcontrollight.c:
 	.text       start:0x801F4C04 end:0x801F4ECC
@@ -2119,15 +2127,18 @@ main/dll/WM/dll_020D_wmseqpoint.c:
 
 main/dll/WM/dll_020E_wmsun.c:
 	.text       start:0x801F6E8C end:0x801F7C50
+	.sdata2     start:0x803E5F70 end:0x803E5F78
 
 main/dll/WM/dll_020F_wmspiritset.c:
 	.text       start:0x801F7C50 end:0x801F7D34
 
 main/dll/WM/dll_0210_wmplanets.c:
 	.text       start:0x801F7D34 end:0x801F7FF4
+	.sdata2     start:0x803E5FA8 end:0x803E5FB0
 
 main/dll/WM/dll_0211_wmwallcrawler.c:
 	.text       start:0x801F7FF4 end:0x801F943C
+	.sdata2     start:0x803E6020 end:0x803E6030
 
 main/dll/WM/dll_0215_wmnewcrystal.c:
 	.text       start:0x801F943C end:0x801F9804
