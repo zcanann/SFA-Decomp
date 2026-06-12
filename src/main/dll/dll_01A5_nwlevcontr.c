@@ -227,15 +227,11 @@ void nw_levcontrol_update(int param_1)
  */
 int sh_tricky_getExtraSize(void);
 
-extern int* getTrickyObject(void);
 
-void sh_tricky_update(int* obj);
 
-int EdibleMushroom_SeqFn(int* obj);
 
 extern uint GameBit_Get(int id);
 
-void sh_tricky_init(int* obj);
 
 extern f32 lbl_803E5280;
 extern void fn_80088870(char* a, char* b, char* c, char* d);
