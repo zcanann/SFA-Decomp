@@ -1079,27 +1079,19 @@ void ecsh_shrine_initialise(void)
 {
 }
 
-void ecsh_creator_free(void)
-{
-}
+void ecsh_creator_free(void);
 
-void ecsh_creator_hitDetect(void)
-{
-}
+void ecsh_creator_hitDetect(void);
 
-void ecsh_creator_release(void)
-{
-}
+void ecsh_creator_release(void);
 
-void ecsh_creator_initialise(void)
-{
-}
+void ecsh_creator_initialise(void);
 
 void gpsh_shrine_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int ecsh_creator_getExtraSize(void) { return 0xa; }
-int ecsh_creator_getObjectTypeId(void) { return 0x0; }
+int ecsh_creator_getExtraSize(void);
+int ecsh_creator_getObjectTypeId(void);
 int gpsh_shrine_getExtraSize(void);
 
 extern void ModelLightStruct_free(void* light);
@@ -1109,26 +1101,9 @@ extern void ModelLightStruct_free(void* light);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
 
-void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(f32); /* #57 */
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4FF8);
-}
+void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void ecsh_creator_init(s16* obj, s8* def)
-{
-    s16* inner = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1e] << 8);
-    ((GameObject*)obj)->unkF8 = 0;
-    inner[0] = 100;
-    inner[1] = 0;
-    *(u8*)((char*)obj + 0x37) = 0xff;
-    ((GameObject*)obj)->anim.alpha = 0xff;
-    inner[2] = *(s16*)(def + 0x18);
-    inner[4] = 2;
-    inner[4] += (u8)def[0x20];
-}
+void ecsh_creator_init(s16* obj, s8* def);
 
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
@@ -1180,67 +1155,7 @@ extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 framesThisStep;
 
-void ecsh_creator_update(s16* obj)
-{
-    u8* def;
-    s16* sub;
-    void* res;
-    u8* p;
-    int ret;
-
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    sub = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->unkF8 == 0 && (u32)GameBit_Get(sub[2]) != 0)
-    {
-        res = Resource_Acquire(0x82, 1);
-        (*(void (**)(s16*, int, int, int, int, int))(*(int*)res + 4))(obj, 0, 0, 1, -1, 0);
-        (*(void (**)(s16*, int, int, int, int, int))(*(int*)res + 4))(obj, 1, 0, 1, -1, 0);
-        Sfx_PlayFromObject(obj, 0x16d);
-        Resource_Release(res);
-        sub[1] = 1;
-        ((GameObject*)obj)->unkF8 = 1;
-    }
-    if (sub[1] != 0)
-    {
-        *sub = *sub - sub[1] * framesThisStep;
-    }
-    if (Obj_IsLoadingLocked() != 0 && *sub <= 0)
-    {
-        p = mmAlloc(0x38, 0xe, 0);
-        *(f32*)(p + 8) = ((ObjPlacement*)def)->posX;
-        *(f32*)(p + 0xc) = ((ObjPlacement*)def)->posY;
-        *(f32*)(p + 0x10) = ((ObjPlacement*)def)->posZ;
-        *(s16*)p = 0x11;
-        *(int*)(p + 0x14) = -1;
-        p[4] = def[4];
-        p[5] = def[5];
-        p[6] = def[6];
-        p[7] = def[7];
-        p[0x27] = 3;
-        p[0x28] = 0;
-        *(s16*)(p + 0x18) = sub[2] + *(s8*)(def + 0x1f);
-        *(s16*)(p + 0x30) = -1;
-        *(s8*)(p + 0x2a) = (s8)(*obj >> 8);
-        p[0x2b] = 2;
-        *(s16*)(p + 0x20) = 0;
-        *(s16*)(p + 0x1e) = 0;
-        *(s16*)(p + 0x22) = -1;
-        p[0x29] = 0xff;
-        *(s8*)(p + 0x2e) = -1;
-        *(s16*)(p + 0x24) = 0;
-        *(s16*)(p + 0x2c) = 0;
-        *(u16*)(p + 0x34) = 0xFFFF;
-        *(s16*)(p + 0x1a) = 0;
-        *(u8*)(p + 0x32) = sub[4];
-        ret = Obj_SetupObject(p, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
-        if ((u32)ret != 0)
-        {
-            *(u8*)(*(int*)&((GameObject*)ret)->extra + 0x404) = 0x20;
-        }
-        *sub = 100;
-        sub[1] = 0;
-    }
-}
+void ecsh_creator_update(s16* obj);
 
 extern f32 lbl_803E5000;
 extern f32 mathSinf(f32 angle);

@@ -1743,8 +1743,11 @@ main/dll/dll_018D_mmshscales.c:
 main/dll/dll_018E_mmshwaters.c:
 	.text       start:0x801C578C end:0x801C5990
 
-main/dll/shrine1C2.c:
-	.text       start:0x801C5990 end:0x801C70F0
+main/dll/dll_018F_ecshshrine.c:
+	.text       start:0x801C5990 end:0x801C6E0C
+
+main/dll/dll_0191_ecshcreato.c:
+	.text       start:0x801C6E0C end:0x801C70F0
 
 main/dll/dll_0192_gpshshrine.c:
 	.text       start:0x801C70F0 end:0x801C8084
