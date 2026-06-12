@@ -112,11 +112,11 @@ int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if ((s32)randomGetRange(0, 1) != 0)
     {
-        animUpdate->sequenceControlFlags = 4;
+        animUpdate->sequenceControlFlags = OBJSEQ_CONTROL_SET_LATCH_A;
     }
     else
     {
-        animUpdate->sequenceControlFlags = 8;
+        animUpdate->sequenceControlFlags = OBJSEQ_CONTROL_CLEAR_LATCH_A;
     }
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair = -1;

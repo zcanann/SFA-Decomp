@@ -401,7 +401,7 @@ int animatedObjGetSeqId(int obj)
 void ObjSeq_yield(ObjSeqState* seq, int value)
 {
     seq->unk74 = value;
-    seq->sequenceControlFlags |= 0x40;
+    seq->sequenceControlFlags |= OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME;
 }
 
 extern int objSeqObjs;

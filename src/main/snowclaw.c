@@ -713,7 +713,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
     }
     if (seq->unk7E == 2)
     {
-        seq->sequenceControlFlags |= 8;
+        seq->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_A;
     }
     seq->flags = seq->unk70;
     for (i = 0; i < seq->eventCount; i++)
@@ -726,13 +726,13 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
         case 4:
             if (GameBit_Get(0xb7d) != 0)
             {
-                seq->sequenceControlFlags |= 4;
+                seq->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
             }
             break;
         case 5:
             if (GameBit_Get(*(s16*)(((SnowclawState*)inner)->moveTablePtr)) != 0)
             {
-                seq->sequenceControlFlags |= 4;
+                seq->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
             }
             break;
         case 2:

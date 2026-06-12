@@ -2719,27 +2719,27 @@ int ObjSeq_update(u8* obj, f32 t)
             lbl_803DD0D8 = 1;
         }
 
-        if ((((ObjSeqState*)seq)->sequenceControlFlags & 1) != 0)
+        if ((((ObjSeqState*)seq)->sequenceControlFlags & OBJSEQ_CONTROL_SET_LATCH_B) != 0)
         {
             base[(s8)((ObjSeqState*)seq)->slot + 0x3b9c] = 1;
         }
-        if ((((ObjSeqState*)seq)->sequenceControlFlags & 2) != 0)
+        if ((((ObjSeqState*)seq)->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_LATCH_B) != 0)
         {
             base[(s8)((ObjSeqState*)seq)->slot + 0x3b9c] = 0;
         }
-        if ((((ObjSeqState*)seq)->sequenceControlFlags & 4) != 0)
+        if ((((ObjSeqState*)seq)->sequenceControlFlags & OBJSEQ_CONTROL_SET_LATCH_A) != 0)
         {
             base[(s8)((ObjSeqState*)seq)->slot + 0x3b44] = 1;
         }
-        if ((((ObjSeqState*)seq)->sequenceControlFlags & 8) != 0)
+        if ((((ObjSeqState*)seq)->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_LATCH_A) != 0)
         {
             base[(s8)((ObjSeqState*)seq)->slot + 0x3b44] = 0;
         }
-        if ((((ObjSeqState*)seq)->sequenceControlFlags & 0x10) != 0)
+        if ((((ObjSeqState*)seq)->sequenceControlFlags & OBJSEQ_CONTROL_SET_STATE_LATCH) != 0)
         {
             base[(s8)((ObjSeqState*)seq)->slot + 0x3a40] = 1;
         }
-        if ((((ObjSeqState*)seq)->sequenceControlFlags & 0x20) != 0)
+        if ((((ObjSeqState*)seq)->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_STATE_LATCH) != 0)
         {
             base[(s8)((ObjSeqState*)seq)->slot + 0x3a40] = 0;
         }
@@ -3018,10 +3018,11 @@ int ObjSeq_update(u8* obj, f32 t)
         if (((ObjSeqState*)seq)->sequenceControlFlags != 0)
         {
             restart = 0;
-            if ((((ObjSeqState*)seq)->sequenceControlFlags & 0x40) != 0)
+            if ((((ObjSeqState*)seq)->sequenceControlFlags & OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME) != 0)
             {
                 restart = 1;
-                ((ObjSeqState*)seq)->sequenceControlFlags = ((ObjSeqState*)seq)->sequenceControlFlags & ~0x40;
+                ((ObjSeqState*)seq)->sequenceControlFlags =
+                    ((ObjSeqState*)seq)->sequenceControlFlags & ~OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME;
                 ((ObjSeqState*)seq)->curFrame = (s16)((ObjSeqState*)seq)->unk74;
                 ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
             }

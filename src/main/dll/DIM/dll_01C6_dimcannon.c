@@ -789,7 +789,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
                 ((DimCannonState*)state)->fireState = 5;
                 *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
-                animUpdate->sequenceControlFlags |= 0x4;
+                animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
                 if (Sfx_IsPlayingFromObjectChannel((u32)obj, 8) != 0)

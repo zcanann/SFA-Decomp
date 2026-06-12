@@ -20,7 +20,7 @@ int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (GameBit_Get(0x4d) != 0)
     {
-        animUpdate->sequenceControlFlags = 4;
+        animUpdate->sequenceControlFlags = OBJSEQ_CONTROL_SET_LATCH_A;
     }
     return 0;
 }

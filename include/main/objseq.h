@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/objanim_internal.h"
+#include "main/objseq_control.h"
 
 /*
  * ObjSeqState - per-object sequence playback state, stored in the obj+0xB8

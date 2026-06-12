@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objseq_control.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
@@ -4031,7 +4032,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     if (lbl_803DE458 != 0)
     {
-        seq->sequenceControlFlags |= 4;
+        seq->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
         lbl_803DE458 = 0;
     }
     {

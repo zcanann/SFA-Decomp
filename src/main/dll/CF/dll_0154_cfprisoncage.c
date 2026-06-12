@@ -80,7 +80,7 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     if (GameBit_Get(data->openedBit) != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
-        animUpdate->sequenceControlFlags |= 4;
+        animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
         return 0;
     }
     if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_CAGE)

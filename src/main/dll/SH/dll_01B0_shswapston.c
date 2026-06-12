@@ -281,7 +281,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             AudioStream_CancelPrepared();
             seqClearTaskTexts();
             doNothing_8000CF54(0);
-            animUpdate->sequenceControlFlags |= 4;
+            animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
         }
     }
 

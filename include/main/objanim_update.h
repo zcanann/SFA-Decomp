@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/objanim_internal.h"
+#include "main/objseq_control.h"
 
 typedef struct ObjAnimUpdateState {
   u8 pad00[0x56];
