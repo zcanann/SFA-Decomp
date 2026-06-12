@@ -190,7 +190,6 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 
 extern u8* mmAlloc(int size, int tag, int p);
-extern u8 Obj_IsLoadingLocked(void);
 
 
 extern int getAngle(f32 dx, f32 dz);
@@ -281,24 +280,8 @@ void fn_801C70F0(s16* obj)
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-typedef struct GpshObjcreatorState
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 pad5[0x8 - 0x5];
-} GpshObjcreatorState;
 
 
-typedef struct GpshObjcreatorObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-} GpshObjcreatorObjectDef;
 
 
 typedef struct GpshShrineState
@@ -632,52 +615,23 @@ void gpsh_shrine_initialise(void)
 
 void gpsh_objcreator_free(void);
 
-void gpsh_objcreator_hitDetect(void);
 
-void gpsh_objcreator_release(void);
 
-void gpsh_objcreator_initialise(void);
 
-extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern f32 lbl_803E504C;
-extern f32 lbl_803E5050;
-extern f32 lbl_803E5054;
-extern s16 lbl_803263B8[];
 
-void gpsh_objcreator_update(int* obj);
 
-void gpsh_scene_free(void);
 
-void gpsh_scene_hitDetect(void);
 
-void gpsh_scene_update(void);
 
-void gpsh_scene_release(void);
 
-void gpsh_scene_initialise(void);
 
-void ecsh_cup_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int gpsh_objcreator_getExtraSize(void);
-int gpsh_objcreator_getObjectTypeId(void);
-int gpsh_scene_getExtraSize(void);
-int gpsh_scene_getObjectTypeId(void);
-int ecsh_cup_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5048;
-extern f32 lbl_803E5058;
-
-void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
-void gpsh_scene_init(int* obj, int* def);
 
-void gpsh_objcreator_init(int* obj, int* def);
+
+
+
