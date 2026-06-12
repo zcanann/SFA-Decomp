@@ -851,9 +851,23 @@ main/dll/dll_003C_TumbleweedBush.c:
 main/dll/dll_003E_dummy3e.c:
 	.text       start:0x80131540 end:0x80132024
 
-main/dll/Tumbleweed.c:
-	.text       start:0x80132024 end:0x8013939C
-	.data       start:0x8031CF64 end:0x8031CFA0
+main/dll/dll_0031_minimap.c:
+	.text       start:0x80132024 end:0x80133F70
+
+main/dll/dll_003F_dll3f.c:
+	.text       start:0x80133F70 end:0x80134098
+
+main/dll/dll_0040_credits.c:
+	.text       start:0x80134098 end:0x801343CC
+
+main/dll/dll_0041_warpstoneui.c:
+	.text       start:0x801343CC end:0x80134870
+
+main/dll/dll_02C0_frontfox.c:
+	.text       start:0x80134870 end:0x80136A40
+
+main/dll/dll_80136A40.c:
+	.text       start:0x80136A40 end:0x8013939C
 
 main/dll/skeetla.c:
 	.text       start:0x8013939C end:0x8013B368
