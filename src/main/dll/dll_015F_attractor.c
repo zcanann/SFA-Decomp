@@ -65,15 +65,15 @@ void cflevelcontrol_free(int param_1);
 undefined4
 FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             undefined4 param_9, undefined4 param_10, int param_11)
+             undefined4 param_9, undefined4 param_10, ObjAnimUpdateState* animUpdate)
 {
     undefined4 uVar1;
     int iVar2;
     undefined8 uVar3;
 
-    for (iVar2 = 0; iVar2 < (int)(uint) * (byte*)(param_11 + 0x8b); iVar2 = iVar2 + 1)
+    for (iVar2 = 0; iVar2 < (int)(uint)animUpdate->eventCount; iVar2 = iVar2 + 1)
     {
-        if (*(char*)(param_11 + iVar2 + 0x81) == '\x01')
+        if (animUpdate->eventIds[iVar2] == 1)
         {
             FUN_80017698(0xdcb, 1);
             uVar3 = FUN_80017698(0x4a3, 0);

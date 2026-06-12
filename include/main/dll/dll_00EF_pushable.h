@@ -25,8 +25,8 @@ void FUN_8017691c(undefined8 param_1,undefined8 param_2,double param_3,undefined
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 undefined4
 FUN_80176920(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
+            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10,
+            ObjAnimUpdateState *animUpdate,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);
 void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

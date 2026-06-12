@@ -111,7 +111,7 @@ void FUN_801fc978(int param_1)
 undefined4
 FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , int param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
+             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
     extern undefined4 FUN_80017698(); /* #57 */
@@ -126,11 +126,11 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined8 extraout_f1_00;
 
     iVar6 = *(int*)&((GameObject*)param_9)->extra;
-    *(undefined2*)(param_11 + 0x70) = 0xffff;
-    *(undefined*)(param_11 + 0x56) = 0;
-    for (iVar5 = 0; iVar5 < (int)(uint) * (byte*)(param_11 + 0x8b); iVar5 = iVar5 + 1)
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    for (iVar5 = 0; iVar5 < (int)(uint)animUpdate->eventCount; iVar5 = iVar5 + 1)
     {
-        if ((*(short*)(iVar6 + 8) == 0xd) && (*(char*)(param_11 + iVar5 + 0x81) == '\x14'))
+        if ((*(short*)(iVar6 + 8) == 0xd) && (animUpdate->eventIds[iVar5] == 0x14))
         {
             FUN_80017698(0x500, 0);
             FUN_80017698(0xd72, 1);
@@ -174,7 +174,7 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
                 }
             }
         }
-        *(undefined*)(param_11 + iVar5 + 0x81) = 0;
+        animUpdate->eventIds[iVar5] = 0;
     }
     return 0;
 }

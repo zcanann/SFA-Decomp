@@ -2,6 +2,7 @@
 #define MAIN_LIGHT_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void vfpblock1_update(int obj);
 void FUN_801fbcd0(int obj);
@@ -26,8 +27,8 @@ void FUN_801fc998(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void FUN_801fcbf4(undefined2 *param_1,int param_2);
 undefined4
 FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
+            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10,
+            ObjAnimUpdateState *animUpdate,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);
 void FUN_801fd0c4(int param_1,int p1,int p2,int p3,int p4,s8 visible);
 void FUN_801fd0ec(int param_1);
