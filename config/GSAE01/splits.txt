@@ -1861,9 +1861,14 @@ main/dll/draghead.c:
 main/dll/lavaflow.c:
 	.text       start:0x801DF4AC end:0x801DF4AC
 
-main/dll/DBrockfall.c:
-	.text       start:0x801DF4AC end:0x801DFA28
-	.data       start:0x80327B70 end:0x80327BA8
+main/dll/dll_0143_feseqobject.c:
+	.text       start:0x801DF4AC end:0x801DF934
+
+main/dll/dll_0142_felevcontro.c:
+	.text       start:0x801DF934 end:0x801DF9AC
+
+main/dll/dll_0144_dll144.c:
+	.text       start:0x801DF9AC end:0x801DFA28
 
 main/dll/DBpointmum.c:
 	.text       start:0x801DFA28 end:0x801DFA28
