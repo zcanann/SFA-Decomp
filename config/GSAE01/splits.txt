@@ -1255,8 +1255,20 @@ main/dll/dll_0134_texscroll2.c:
 main/dll/dll_0135_texscroll.c:
 	.text       start:0x801922E4 end:0x80192394
 
-main/dll/mmp_barrel.c:
-	.text       start:0x80192394 end:0x80194408
+main/dll/dll_0136_waveanimato.c:
+	.text       start:0x80192394 end:0x80192A68
+
+main/dll/dll_0137_alphaanimat.c:
+	.text       start:0x80192A68 end:0x80193100
+
+main/dll/dll_0138_groundanima.c:
+	.text       start:0x80193100 end:0x80193DBC
+
+main/dll/dll_0139_hitanimator.c:
+	.text       start:0x80193DBC end:0x8019423C
+
+main/dll/dll_013A_visanimator.c:
+	.text       start:0x8019423C end:0x80194408
 
 main/dll/dll_013B_wallanimator.c:
 	.text       start:0x80194408 end:0x801948C0

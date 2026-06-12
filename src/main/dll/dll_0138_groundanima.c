@@ -35,16 +35,7 @@ extern void* mapGetBlock(int idx);
 
 
 
-void waveanimator_modelMtxFn(int obj, int a, int b, int c)
-{
-    int* state = ((GameObject*)obj)->extra;
-    u32 v;
-    v = (u32)((WaveanimatorState*)state)->unk34 | 4;
-    ((WaveanimatorState*)state)->unk34 = (u8)v;
-    ((WaveanimatorState*)state)->unk36 = (u8)a;
-    ((WaveanimatorState*)state)->unk37 = (u8)b;
-    ((WaveanimatorState*)state)->unk38 = (u8)c;
-}
+void waveanimator_modelMtxFn(int obj, int a, int b, int c);
 
 
 
@@ -198,23 +189,14 @@ extern undefined4 FUN_80286878();
  */
 #pragma peephole off
 #pragma scheduling off
-void waveanimator_func0B(int* obj)
-{
-    WaveAnimatorState* p = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
-    p->flags |= 2;
-}
+void waveanimator_func0B(int* obj);
 
 #pragma scheduling reset
 #pragma peephole reset
 
 extern void mm_free(void* p);
 
-void alphaanimator_free(int* obj)
-{
-    AlphaAnimatorState* o = (AlphaAnimatorState*)((int**)obj)[0xb8 / 4];
-    void* p = o->buf;
-    if (p != NULL) mm_free(p);
-}
+void alphaanimator_free(int* obj);
 
 /*
  * --INFO--
@@ -307,70 +289,44 @@ void FUN_80192488(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void waveanimator_update(void)
-{
-}
+void waveanimator_update(void);
 
-void waveanimator_release(void)
-{
-}
+void waveanimator_release(void);
 
-void waveanimator_initialise(void)
-{
-}
+void waveanimator_initialise(void);
 
-void alphaanimator_hitDetect(void)
-{
-}
+void alphaanimator_hitDetect(void);
 
-void alphaanimator_release(void)
-{
-}
+void alphaanimator_release(void);
 
-void alphaanimator_initialise(void)
-{
-}
+void alphaanimator_initialise(void);
 
-void visanimator_free(void)
-{
-}
+void visanimator_free(void);
 
-void visanimator_render(void)
-{
-}
+void visanimator_render(void);
 
-void visanimator_hitDetect(void)
-{
-}
+void visanimator_hitDetect(void);
 
-void visanimator_release(void)
-{
-}
+void visanimator_release(void);
 
-void visanimator_initialise(void)
-{
-}
+void visanimator_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int waveanimator_getExtraSize(void) { return 0x3c; }
-int waveanimator_getObjectTypeId(void) { return 0x0; }
-int alphaanimator_getExtraSize(void) { return 0x1c; }
-int alphaanimator_getObjectTypeId(void) { return 0x0; }
+int waveanimator_getExtraSize(void);
+int waveanimator_getObjectTypeId(void);
+int alphaanimator_getExtraSize(void);
+int alphaanimator_getObjectTypeId(void);
 int groundanimator_getExtraSize(void) { return 0x30; }
-int hitanimator_getExtraSize(void) { return 0x4; }
-int visanimator_getExtraSize(void) { return 0x5; }
-int visanimator_getObjectTypeId(void) { return 0x0; }
+int hitanimator_getExtraSize(void);
+int visanimator_getExtraSize(void);
+int visanimator_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
 
 /* 16b chained patterns. */
 #pragma scheduling off
-void alphaanimator_init(int* obj)
-{
-    s8 v = -1;
-    *(s8*)&((AlphaAnimatorState*)((int**)obj)[0xb8 / 4])->prevGate = v;
-}
+void alphaanimator_init(int* obj);
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -378,17 +334,9 @@ extern f32 lbl_803E3F70;
 extern f32 lbl_803E3F78;
 extern f32 lbl_803E3FC4;
 #pragma peephole off
-void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3F70);
-}
+void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3F78);
-}
+void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -401,12 +349,7 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 u8 wallanimator_modelMtxFn(int* obj);
 
-void waveanimator_setScale(int* obj, f32 fval)
-{
-    WaveAnimatorState* p = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
-    p->flags |= 1;
-    p->scaleB = fval;
-}
+void waveanimator_setScale(int* obj, f32 fval);
 #pragma peephole reset
 
 extern f32 lbl_803E3F98;
@@ -429,95 +372,13 @@ extern void fn_80065574(int a, int b, int c);
 extern u8 lbl_803DDAE8;
 #pragma peephole off
 #pragma scheduling off
-void waveanimator_init(int* obj, int* desc)
-{
-    WaveAnimatorState* vstate = (WaveAnimatorState*)((int**)obj)[0xB8 / 4];
-    f32 fz;
-    vstate->unk18 = ((WaveanimatorObjectDef*)desc)->unk20;
-    vstate->originX = ((WaveanimatorObjectDef*)desc)->originX;
-    vstate->originY = ((WaveanimatorObjectDef*)desc)->originY;
-    vstate->spanX = ((WaveanimatorObjectDef*)desc)->spanX;
-    vstate->spanY = ((WaveanimatorObjectDef*)desc)->spanY;
-    vstate->ampX = (f32) * (s8*)((char*)desc + 0x1E);
-    vstate->ampY = (f32) * (s8*)((char*)desc + 0x1F);
-    vstate->period = ((WaveanimatorObjectDef*)desc)->period;
-    vstate->gridN = ((WaveanimatorObjectDef*)desc)->gridN;
-    fz = lbl_803E3F70;
-    vstate->scaleA = fz;
-    vstate->scaleB = fz;
-    if (lbl_803DDAE8 == 0)
-    {
-        fn_801923F8((int*)vstate);
-    }
-    ObjGroup_AddObject(obj, 27);
-    lbl_803DDAE8++;
-}
+void waveanimator_init(int* obj, int* desc);
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
-void hitanimator_update(HitAnimatorObject* obj)
-{
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
-    HitAnimatorPlacement* setup = (HitAnimatorPlacement*)obj->objAnim.placementData;
-    HitAnimatorState* state = obj->state;
-    void* block;
-    block = mapGetBlock(objPosToMapBlockIdx(
-        (double)obj->objAnim.localPosX,
-        (double)obj->objAnim.localPosY,
-        (double)obj->objAnim.localPosZ));
-    if (block == NULL)
-    {
-        state->flags &= ~HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
-        state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
-        return;
-    }
-    state->gameBitValue = (u8)GameBit_Get(setup->gameBit);
-    if (state->previousGameBitValue != state->gameBitValue)
-    {
-        state->activeBit = state->activeBit ^ 1;
-        if (setup->toggleMode == 1)
-        {
-            state->flags |= HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
-        }
-        if ((setup->flags & HITANIMATOR_SETUP_FLAG_SOUND) != 0)
-        {
-            state->flags |= HITANIMATOR_STATE_FLAG_SOUND_PENDING;
-        }
-        if ((setup->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0)
-        {
-            state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
-        }
-    }
-    state->previousGameBitValue = state->gameBitValue;
-    if ((setup->flags & HITANIMATOR_SETUP_FLAG_SOUND) != 0)
-    {
-        if (fn_80065640() != 0)
-        {
-            state->flags |= HITANIMATOR_STATE_FLAG_SOUND_PENDING;
-        }
-        if ((state->flags & HITANIMATOR_STATE_FLAG_SOUND_PENDING) != 0)
-        {
-            if (fn_80065640() == 0)
-            {
-                fn_80065574(setup->soundId, (int)obj->objAnim.parent, state->activeBit);
-                state->flags &= ~HITANIMATOR_STATE_FLAG_SOUND_PENDING;
-            }
-        }
-    }
-    if ((setup->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0)
-    {
-        if (setup->blockEffectId != 0)
-        {
-            if ((state->flags & HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING) != 0)
-            {
-                hitAnimatorFn_80193dbc(block, obj, state, setup);
-                state->flags &= ~HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
-            }
-        }
-    }
-}
+void hitanimator_update(HitAnimatorObject* obj);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -550,105 +411,15 @@ void groundanimator_init(int* obj, int* desc)
 
 #pragma peephole off
 #pragma scheduling off
-void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
-{
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
-    HitAnimatorState* state = obj->state;
-    void* block;
-    u8 g;
-    s8 init_bit;
-    init_bit = (s8)(desc->flags & HITANIMATOR_SETUP_FLAG_INITIAL_INVERT);
-    state->activeBit = init_bit;
-    state->flags = 0;
-    if (GameBit_Get(desc->gameBit) != 0)
-    {
-        state->activeBit = state->activeBit ^ 1;
-        if (desc->toggleMode == 1)
-        {
-            state->flags |= HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
-        }
-    }
-    block = mapGetBlock(objPosToMapBlockIdx(
-        (double)obj->objAnim.localPosX,
-        (double)obj->objAnim.localPosY,
-        (double)obj->objAnim.localPosZ));
-    if (block != NULL)
-    {
-        if ((desc->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0 && desc->blockEffectId != 0)
-        {
-            hitAnimatorFn_80193dbc(block, obj, state, desc);
-        }
-    }
-    state->flags |= HITANIMATOR_STATE_FLAG_SOUND_PENDING;
-    if ((desc->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0)
-    {
-        state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
-    }
-    g = (u8)GameBit_Get(desc->gameBit);
-    state->gameBitValue = g;
-    state->previousGameBitValue = g;
-    obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
-}
+void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc);
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
-void visanimator_init(int* obj, int* desc)
-{
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
-    VisAnimatorState* vstate;
-    u32 gate;
-    u8 tmp;
-    int sv;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
-    vstate = (VisAnimatorState*)((int**)obj)[0xB8 / 4];
-    sv = *(s8*)((char*)desc + 0x1B);
-    vstate->visBit = (s8)sv;
-    vstate->gateMask = (u8)(1 << *(u8*)&((WaveanimatorObjectDef*)desc)->spanX);
-    gate = (u32)GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
-    if ((vstate->gateMask & gate) != 0)
-    {
-        vstate->visBit = vstate->visBit ^ 1;
-    }
-    mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                    (double)((GameObject*)obj)->anim.localPosY,
-                                    (double)((GameObject*)obj)->anim.localPosZ));
-    gate = (u32)GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
-    tmp = (u8)(vstate->gateMask & gate);
-    vstate->gateNow = tmp;
-    vstate->gatePrev = tmp;
-    vstate->flags |= 1;
-}
+void visanimator_init(int* obj, int* desc);
 
-void visanimator_update(int* obj)
-{
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
-    int* state = ((int**)obj)[0x4C / 4];
-    VisAnimatorState* vstate = (VisAnimatorState*)((int**)obj)[0xB8 / 4];
-    int idx = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                  (double)((GameObject*)obj)->anim.localPosY,
-                                  (double)((GameObject*)obj)->anim.localPosZ);
-    if (mapGetBlock(idx) == NULL)
-    {
-        vstate->flags |= 1;
-        return;
-    }
-    {
-        int gate = GameBit_Get(*(s16*)((char*)state + 0x18));
-        vstate->gateNow = (u8)(vstate->gateMask & gate);
-        if (vstate->gatePrev != vstate->gateNow)
-        {
-            vstate->visBit = (s8)(vstate->visBit ^ 1);
-            vstate->flags |= 1;
-        }
-        vstate->gatePrev = vstate->gateNow;
-        if (vstate->flags & 1)
-        {
-            vstate->flags &= ~1;
-        }
-    }
-}
+void visanimator_update(int* obj);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -657,53 +428,14 @@ extern void* lbl_803DDAF0;
 extern void* lbl_803DDAF4;
 #pragma peephole off
 #pragma scheduling off
-void waveanimator_free(int* obj)
-{
-    if (--lbl_803DDAE8 == 0)
-    {
-        if (lbl_803DDAF4 != NULL) mm_free(lbl_803DDAF4);
-        if (lbl_803DDAF0 != NULL) mm_free(lbl_803DDAF0);
-        if (lbl_803DDAEC != NULL) mm_free(lbl_803DDAEC);
-    }
-    ObjGroup_RemoveObject(obj, 27);
-}
+void waveanimator_free(int* obj);
 #pragma scheduling reset
 #pragma peephole reset
 extern u8 lbl_803DDAF8;
 extern u8 framesThisStep;
 #pragma scheduling off
 #pragma peephole off
-void waveanimator_hitDetect(int* obj)
-{
-    int i;
-    int j;
-    int off;
-    WaveAnimatorState* w;
-    if (lbl_803DDAF8 != 0)
-    {
-        return;
-    }
-    w = (WaveAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    off = 0;
-    for (i = 0; i < w->gridN; i++)
-    {
-        for (j = 0; j < w->gridN; j++)
-        {
-            ((s16*)lbl_803DDAF0)[off] += framesThisStep >> 1;
-            while (((s16*)lbl_803DDAF0)[off] >= w->period)
-            {
-                ((s16*)lbl_803DDAF0)[off] -= w->period;
-            }
-            ((s16*)lbl_803DDAF0)[off + 1] += framesThisStep >> 1;
-            while (((s16*)lbl_803DDAF0)[off + 1] >= w->period)
-            {
-                ((s16*)lbl_803DDAF0)[off + 1] -= w->period;
-            }
-            off += 2;
-        }
-    }
-    lbl_803DDAF8 = 1;
-}
+void waveanimator_hitDetect(int* obj);
 
 extern void* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
@@ -1134,237 +866,7 @@ extern f32 lbl_803E3F7C;
 extern f32 lbl_803E3F80;
 extern f32 lbl_803E3F84;
 
-void alphaanimator_update(int* obj)
-{
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
-    int* d;
-    AlphaAnimatorState* s;
-    int mode;
-    void* block;
-    f32 sp;
-    d = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
-    s = (AlphaAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    mode = ((AlphaanimatorPlacement*)d)->unk20 & 3;
-    block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                            (double)((GameObject*)obj)->anim.localPosY,
-                                            (double)((GameObject*)obj)->anim.localPosZ));
-    if (block == NULL)
-    {
-        s->doneCount = 0;
-        return;
-    }
-    if ((((MapBlockData*)block)->unk4 & 8) == 0)
-    {
-        return;
-    }
-    if (s->vertCount == 0)
-    {
-        s->active = ((AlphaanimatorPlacement*)d)->active;
-        if (s->vertCount == 0)
-        {
-            s->active = 0;
-        }
-        if ((s8)s->active == 0)
-        {
-            return;
-        }
-        s->fadeA = lbl_803E3F7C;
-        s->fadeB = lbl_803E3F7C;
-        s->fadeMax = (f32)(u32)((AlphaanimatorPlacement*)d)->fadeMax;
-        if (((AlphaanimatorPlacement*)d)->unk18 == -1)
-        {
-            s->gateVal = 1;
-        }
-        else
-        {
-            s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
-        }
-        s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-        if (((AlphaanimatorPlacement*)d)->unk1A != -1 && GameBit_Get(((AlphaanimatorPlacement*)d)->unk1A) != 0)
-        {
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-            s->fadeA = lbl_803E3F78 + s->fadeMax;
-            s->gateVal = 1;
-        }
-        if (mode == 3)
-        {
-            *(int*)&s->buf = (int)mmAlloc(s->vertCount << 2, 5, 0);
-        }
-        ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
-        ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
-    }
-    if ((s8)s->active == 0)
-    {
-        return;
-    }
-    if (mode == 2)
-    {
-        s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
-        if ((s8)s->doneCount > 2 &&
-            (s8)s->gateVal != (s8)s->prevGate)
-        {
-            if ((((AlphaanimatorPlacement*)d)->unk20 >> 2) != 0)
-            {
-                Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement*)d)->sfxId);
-            }
-            s->doneCount = 0;
-            s->prevGate = s->gateVal;
-        }
-        if ((s8)s->doneCount > 2)
-        {
-            return;
-        }
-    }
-    else
-    {
-        if ((s8)s->doneCount > 2)
-        {
-            return;
-        }
-        if ((s8)s->gateVal == 0)
-        {
-            s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
-            if ((s8)s->gateVal == 0)
-            {
-                return;
-            }
-            if ((((AlphaanimatorPlacement*)d)->unk20 >> 2) != 0)
-            {
-                Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement*)d)->sfxId);
-            }
-        }
-    }
-    if (mode == 0)
-    {
-        if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
-        {
-            s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel <= ((AlphaanimatorPlacement*)d)->unk1D)
-            {
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
-                {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
-                }
-                s->doneCount += 1;
-            }
-        }
-        else
-        {
-            s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel >= ((AlphaanimatorPlacement*)d)->unk1D)
-            {
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
-                {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
-                }
-                s->doneCount += 1;
-            }
-        }
-    }
-    else if (mode == 1)
-    {
-        if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
-        {
-            s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
-            {
-                s->alphaLevel =
-                    (s16)(((AlphaanimatorPlacement*)d)->unk1C -
-                        (((AlphaanimatorPlacement*)d)->unk1D - s->alphaLevel));
-            }
-        }
-        else
-        {
-            s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
-            {
-                s->alphaLevel =
-                    (s16)(((AlphaanimatorPlacement*)d)->unk1D +
-                        (s->alphaLevel - ((AlphaanimatorPlacement*)d)->unk1D));
-            }
-        }
-    }
-    else if (mode == 2)
-    {
-        if ((s8)s->gateVal != 0)
-        {
-            if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
-            {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
-                {
-                    return;
-                }
-            }
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-            if (((AlphaanimatorPlacement*)d)->unk1A != -1)
-            {
-                GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
-            }
-            s->doneCount += 1;
-        }
-        else
-        {
-            if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
-            {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
-                {
-                    return;
-                }
-            }
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-            if (((AlphaanimatorPlacement*)d)->unk1A != -1)
-            {
-                GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 0);
-            }
-            s->doneCount += 1;
-        }
-    }
-    else
-    {
-        sp = (f32)(s8)((AlphaanimatorPlacement*)d)->unk1F;
-        if ((s8)((AlphaanimatorPlacement*)d)->unk1F < 0)
-        {
-            sp = (f32)(-(s8)((AlphaanimatorPlacement*)d)->unk1F);
-        }
-        s->fadeA =
-            sp / lbl_803E3F80 * timeDelta + s->fadeA;
-        if (s->fadeA > s->fadeMax)
-        {
-            s->fadeA = s->fadeMax;
-            GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
-            s->doneCount += 1;
-        }
-        s->fadeB = s->fadeA - lbl_803E3F84;
-    }
-}
+void alphaanimator_update(int* obj);
 
 extern f32 lbl_803E3F40;
 extern f32 lbl_803E3F44;
@@ -1378,155 +880,8 @@ extern f32 lbl_803E3F60;
 extern f32 lbl_803E3F64;
 extern f32 mathSinf(f32);
 
-void fn_801923F8(int* cfgArg)
-{
-    int i;
-    int j;
-    int x;
-    int stepX;
-    int y;
-    int stepY;
-    int flat;
-    int fi;
-    int bi;
-    int hi;
-    f32 c48;
-    f32 c4C;
-    f32 z;
-    WaveAnimatorState* cfg = (WaveAnimatorState*)cfgArg;
-
-    lbl_803DDAF4 = mmAlloc(4 * cfg->period * cfg->period, 0xFFFFFF, 0);
-    lbl_803DDAEC = mmAlloc(3 * cfg->period * cfg->period, 0xFFFFFF, 0);
-
-    x = cfg->originX;
-    stepX = (s32)((lbl_803E3F40 * (f32)cfg->spanX) / (f32)cfg->period);
-    y = cfg->originY;
-    stepY = (s32)((lbl_803E3F40 * (f32)cfg->spanY) / (f32)cfg->period);
-
-    z = lbl_803E3F44;
-    cfg->maxHeight = z;
-    cfg->minHeight = z;
-
-    flat = 0;
-    c48 = lbl_803E3F48;
-    c4C = lbl_803E3F4C;
-    for (i = 0; i < cfg->period; i++)
-    {
-        f32 xv = c48 * (f32)x;
-        for (j = 0; j < cfg->period; j++)
-        {
-            f32 s1 = mathSinf((c48 * (f32)y) / c4C);
-            f32 a = cfg->ampY * s1;
-            f32 s2 = mathSinf(xv / c4C);
-            ((f32*)lbl_803DDAF4)[flat] = cfg->ampX * s2 + a;
-            if (((f32*)lbl_803DDAF4)[flat] < cfg->minHeight)
-            {
-                cfg->minHeight = ((f32*)lbl_803DDAF4)[flat];
-            }
-            if (((f32*)lbl_803DDAF4)[flat] > cfg->maxHeight)
-            {
-                cfg->maxHeight = ((f32*)lbl_803DDAF4)[flat];
-            }
-            y += stepY;
-            flat++;
-        }
-        x += stepX;
-    }
-
-    {
-        f32 negMin = -cfg->minHeight;
-        f32 zero2;
-        fi = 0;
-        bi = 0;
-        zero2 = lbl_803E3F44;
-        for (i = 0; i < cfg->period; i++)
-        {
-            for (j = 0; j < cfg->period; j++)
-            {
-                f32 v = ((f32*)lbl_803DDAF4)[fi];
-                if (v < zero2)
-                {
-                    f32 t = (v - cfg->minHeight) / negMin;
-                    ((s8*)lbl_803DDAEC)[bi] = (s32)(lbl_803E3F54 * t + lbl_803E3F50);
-                    ((s8*)lbl_803DDAEC)[bi + 1] = (s32)(lbl_803E3F5C * t + lbl_803E3F58);
-                    ((s8*)lbl_803DDAEC)[bi + 2] = (s32)(lbl_803E3F64 * t + lbl_803E3F60);
-                }
-                else
-                {
-                    ((s8*)lbl_803DDAEC)[bi] = 255;
-                    ((s8*)lbl_803DDAEC)[bi + 1] = 255;
-                    ((s8*)lbl_803DDAEC)[bi + 2] = 255;
-                }
-                fi++;
-                bi += 3;
-            }
-        }
-    }
-
-    lbl_803DDAF0 = mmAlloc(4 * cfg->gridN * cfg->gridN, 0xFFFFFF, 0);
-    hi = 0;
-    for (i = 0; i < cfg->gridN; i++)
-    {
-        for (j = 0; j < cfg->gridN; j++)
-        {
-            ((s16*)lbl_803DDAF0)[hi] = (s16)(i * 10);
-            ((s16*)lbl_803DDAF0)[hi + 1] = (s16)(j * 10);
-            hi += 2;
-        }
-    }
-}
+void fn_801923F8(int* cfgArg);
 
 extern u8* Shader_getLayer(char* s, int layer);
 
-void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate, HitAnimatorPlacement* desc)
-{
-    extern char* fn_8006070C(void* block, int idx); /* #57 */
-    int i;
-    char* m;
-
-    if ((desc->flags & 0x10) == 0)
-    {
-        for (i = 0; i < ((MapBlockData*)block)->unk9A; i++)
-        {
-            m = (char*)mapBlockFn_800606ec(block, i);
-            if (desc->blockEffectId == mapBlockFn_80060678(m))
-            {
-                if (vstate->activeBit != 0)
-                {
-                    *(int*)(m + 0x10) &= ~2;
-                    if ((desc->flags & 0x2) != 0)
-                    {
-                        *(int*)(m + 0x10) &= ~1;
-                    }
-                }
-                else
-                {
-                    *(int*)(m + 0x10) |= 2;
-                    if ((desc->flags & 0x2) != 0)
-                    {
-                        *(int*)(m + 0x10) |= 1;
-                    }
-                }
-            }
-        }
-    }
-    if ((desc->flags & 0x2) != 0)
-    {
-        for (i = 0; i < *((u8*)block + 0xa2); i++)
-        {
-            char* s = fn_8006070C(block, i);
-            u8* layer = Shader_getLayer(s, 0);
-            if (desc->blockEffectId == layer[5])
-            {
-                if (vstate->activeBit != 0)
-                {
-                    *(int*)(s + 0x3c) &= ~2;
-                }
-                else
-                {
-                    *(int*)(s + 0x3c) |= 2;
-                }
-            }
-        }
-    }
-}
+void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate, HitAnimatorPlacement* desc);
