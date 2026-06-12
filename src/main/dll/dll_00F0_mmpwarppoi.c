@@ -6,44 +6,14 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-typedef struct IceblastPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    s8 unk19;
-    s16 unk1A;
-    s8 unk1C;
-    s8 unk1D;
-    s8 unk1E;
-    u8 unk1F;
-} IceblastPlacement;
 
 
 
 
-typedef struct InvhitState
-{
-    u8 pad0[0x8 - 0x0];
-    u8 unk8;
-    u8 pad9[0xC - 0x9];
-} InvhitState;
 
 
-typedef struct FlameblastState
-{
-    u8 pad0[0x10 - 0x0];
-    u8 unk10;
-    u8 unk11;
-    u8 pad12[0x14 - 0x12];
-} FlameblastState;
 
 
-typedef struct InvhitObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    void* unk1C;
-} InvhitObjectDef;
 
 
 typedef struct WarpPointObjectDef
@@ -83,13 +53,7 @@ static inline int* Transporter_GetActiveModel(void* obj)
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_EnableObject();
-extern void Obj_FreeObject(int* obj);
-extern int ObjList_ContainsObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
@@ -263,17 +227,11 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 /* Trivial 4b 0-arg blr leaves. */
 void invhit_hitDetect(void);
 
-void invhit_release(void);
 
-void invhit_initialise(void);
 
-void iceblast_free(void);
 
-void iceblast_hitDetect(void);
 
-void iceblast_release(void);
 
-void iceblast_initialise(void);
 
 extern unsigned long GameBit_Set(int eventId, int value);
 
@@ -284,28 +242,12 @@ extern unsigned long GameBit_Set(int eventId, int value);
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 int invhit_getExtraSize(void);
-int invhit_getObjectTypeId(void);
-int iceblast_getExtraSize(void);
-int iceblast_getObjectTypeId(void);
-int flameblast_getExtraSize(void);
 
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern f32 lbl_803E3618;
-extern f32 lbl_803E3620;
-extern f32 lbl_803E3628;
-extern f32 lbl_803E362C;
 #pragma peephole on
-void flameblast_render(int* obj);
 
 /* 16b chained patterns. */
-void objSetAnimSpeedTo1(int* obj);
 
 /* render-with-fn(lbl) (no visibility check). */
-extern f32 lbl_803E35E8;
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
-extern f32 lbl_803E3600;
-void invhit_render(int* obj, int a, int b, int c, int d);
-void iceblast_render(int* obj, int a, int b, int c, int d);
 
 #pragma peephole off
 void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -318,7 +260,6 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 void invhit_free(int obj);
 
 #pragma peephole on
-void iceblast_init(int obj, s16* p);
 
 extern void warpToMap(int mapId, int flag);
 
@@ -342,20 +283,10 @@ int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 extern f32 timeDelta;
-extern f32 lbl_803E3630;
-extern f32 lbl_803E3634;
-extern int fn_8017805C(int* obj, f32* state);
 
-void flameblast_update(int* obj);
 
-extern f32 lbl_803E3604;
-extern f32 lbl_803E3608;
-extern f32 lbl_803E360C;
 extern void* Obj_GetPlayerObject(void);
-extern void vecRotateZXY(void* in, void* out);
-extern f32 lbl_803E3638;
 
-void flameblast_init(int* obj, u8* def);
 
 void WarpPoint_init(int* obj, u8* def)
 {
@@ -390,42 +321,20 @@ void WarpPoint_init(int* obj, u8* def)
 
 void iceblast_update(int* obj);
 
-extern s16* getTrickyObject(void);
-extern int fn_80138F90(void);
-extern f32* trickyGetQueuedPathParticlePos(s16 * tricky);
-extern f32 lbl_803E361C;
-extern f32 lbl_803E3624;
 
 #pragma opt_common_subs off
-int fn_8017805C(int* obj, f32* state);
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
-typedef struct InvHitState
-{
-    f32 anchorX;
-    f32 anchorZ;
-    u8 mode;
-} InvHitState;
 
-void invhit_init(int* obj, u8* def);
 #pragma opt_common_subs reset
 
-extern int playerIsDisguised(void* player);
 extern u32 GameBit_Get(int eventId);
 
 
 extern f32 sqrtf(f32 x);
-extern u32 fn_80296118(void);
-extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
-extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-extern f32 lbl_803E35EC;
-extern f32 lbl_803E35F0;
-extern f32 lbl_803E35F4;
 
-void invhit_update(int* obj);
 
 extern int getCurMapLayer(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
