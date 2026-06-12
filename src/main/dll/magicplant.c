@@ -266,14 +266,16 @@ void FUN_801534d8(ushort* param_1, undefined4* param_2)
     int iVar1;
     char cVar2;
     float* pfVar3;
+    ObjHitsPriorityState* hitState;
     float local_28;
     float local_24;
     float local_20;
 
     pfVar3 = (float*)*param_2;
-    if (*(int*)(param_1 + 0x2a) != 0)
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
+    if (hitState != NULL)
     {
-        *(u8*)(*(int*)(param_1 + 0x2a) + 0x70) = 0;
+        hitState->suppressOutgoingHits = 0;
     }
     if (*(char*)((int)param_2 + 0x33b) != '\0')
     {
