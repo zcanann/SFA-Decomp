@@ -1386,7 +1386,7 @@ void dll_19_func19(u8* cam, u8* ctx)
 }
 
 
-extern void* gPlayerInterface;
+extern int* gPlayerInterface;
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
