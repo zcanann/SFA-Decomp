@@ -380,8 +380,32 @@ main/dll/dll_008F_dll8ffunc0.c:
 main/dll/dll_0090_dll90func0.c:
 	.text       start:0x800FA16C end:0x800FA5D8
 
-main/dll/savegame.c:
-	.text       start:0x800FA5D8 end:0x800FC5B8
+main/dll/dll_0091_dll91func0.c:
+	.text       start:0x800FA5D8 end:0x800FA9F8
+
+main/dll/dll_0092_dll92func0.c:
+	.text       start:0x800FA9F8 end:0x800FADA8
+
+main/dll/dll_0093_dll93func0.c:
+	.text       start:0x800FADA8 end:0x800FB078
+
+main/dll/dll_0094_dll94func0.c:
+	.text       start:0x800FB078 end:0x800FB428
+
+main/dll/dll_0095_dll95func0.c:
+	.text       start:0x800FB428 end:0x800FB720
+
+main/dll/dll_0096_dll96func0.c:
+	.text       start:0x800FB720 end:0x800FBA40
+
+main/dll/dll_0097_dll97func0.c:
+	.text       start:0x800FBA40 end:0x800FBDF0
+
+main/dll/dll_0098_dll98func0.c:
+	.text       start:0x800FBDF0 end:0x800FC208
+
+main/dll/dll_0099_dll99func0.c:
+	.text       start:0x800FC208 end:0x800FC5B8
 
 main/dll/dll_009A_dll9afunc0.c:
 	.text       start:0x800FC5B8 end:0x800FCF3C
