@@ -1223,7 +1223,7 @@ class Executor:
         r"#\s+identifier '([^']+)'\s*(?:\n#)?\s*redeclared")
     FILE_RE = re.compile(r"#\s+File: (\S+)")
 
-    def repair_unit(self, fin, budget=30):
+    def repair_unit(self, fin, budget=200):
         """Compile the final unit's .o; on each 'identifier redeclared' error,
         remove the conflicting top-level decl and inject it block-scope into
         the referencing fns that saw it (recipe #57). Other errors raise."""
