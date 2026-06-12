@@ -176,6 +176,7 @@ extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/mapEvent.h"
+#include "main/objhits.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -215,7 +216,6 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern undefined8 FUN_8002fc3c();
-extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_800810f8();
@@ -1856,7 +1856,7 @@ void dll_F7_update(int* obj)
     s16 trio[3];
     DllF7Vec vec = lbl_802C2260;
     f32 radius;
-    int hit;
+    uint hitVolume;
 
     if (state->byte9 != 0)
     {
@@ -1876,9 +1876,9 @@ void dll_F7_update(int* obj)
         }
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, &hit, &px, &py, &pz) != 0)
+    if (ObjHits_GetPriorityHitWithPosition((int)obj, 0, 0, &hitVolume, &px, &py, &pz) != 0)
     {
-        if ((state->hitsRemaining -= hit) > 0)
+        if ((state->hitsRemaining -= hitVolume) > 0)
         {
             Sfx_PlayAtPositionFromObject(obj, px, py, pz, 72);
             Obj_SetActiveModelIndex(obj, 2 - state->hitsRemaining);
