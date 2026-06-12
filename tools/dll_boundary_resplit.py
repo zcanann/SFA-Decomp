@@ -548,6 +548,41 @@ def project(text, keep_names):
     return "\n".join(out)
 
 
+def prune_unused_externs(seg_text, keep_names):
+    """Drop top-level extern/proto decls from a MOVE/CARVE segment whose
+    declared name is referenced by NONE of the kept fn bodies. These are
+    dead drift-era phantoms (v1.1 FUN_xxxx, donor-local helper externs the
+    moved fns don't call) the projection drags along verbatim. Carrying a
+    dead extern into the owner is harmless UNLESS its signature conflicts
+    with the owner's own decl/calls (e.g. a 2-arg `GameBit_Set` prototype
+    breaking a 1-arg owner call -> phantom in_fN), which #57 repair cannot
+    auto-fix because the resulting error is not a redecl. Pruning the dead
+    decl removes the conflict at the source. Only extern/proto are touched
+    (typedef/tagdef/vardef/define kept: transitive-dep and reconcile-safe).
+    Byte-neutral for the owner: an extern no kept fn references emits no
+    code and only matters if it perturbs another decl's visibility."""
+    lines = seg_text.split("\n")
+    spans = {n: (h, e) for n, h, e in parse_fn_spans(seg_text)}
+    parts = []
+    for n in keep_names:
+        if n in spans:
+            h, e = spans[n]
+            parts.append("\n".join(lines[h:e + 1]))
+    bodies = "\n".join(parts)
+    drop = set()
+    for kind, name, h, e in parse_top_items(seg_text):
+        if kind in ("extern", "proto") and name:
+            if not re.search(r"\b%s\b" % re.escape(name), bodies):
+                drop.update(range(h, e + 1))
+    if not drop:
+        return seg_text, []
+    out = [l for i, l in enumerate(lines) if i not in drop]
+    dropped = sorted({name for kind, name, h, e in parse_top_items(seg_text)
+                      if kind in ("extern", "proto") and name
+                      and not re.search(r"\b%s\b" % re.escape(name), bodies)})
+    return "\n".join(out), dropped
+
+
 def defined_fns(text):
     return set(n for n, h, e in parse_fn_spans(text))
 
@@ -1112,6 +1147,10 @@ class Executor:
                 moved_addrs.extend(a for a, n, s in w.fns_in(lo, hi) if n in movable)
                 if movable:
                     seg = project(cur, set(movable))
+                    seg, pruned = prune_unused_externs(seg, set(movable))
+                    if pruned:
+                        self.say(f"pruned {len(pruned)} dead extern(s) from "
+                                 f"{dn} move segment: {pruned}")
                     seg = self.wrap_segment(seg, dn, host_suffix[fin])
                     seg_added[fin].append(
                         (lo, f"/* === moved from {dn} [{lo:08X}-{hi:08X}) "

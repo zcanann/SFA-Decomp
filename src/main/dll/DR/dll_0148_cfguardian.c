@@ -1,3 +1,282 @@
+/* === moved from main/dll/DR/hightop.c [8019AE3C-8019B1D8) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling off
+#pragma peephole off
+#include "main/dll/DR/hightop.h"
+#include "main/camera_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim.h"
+#include "main/objseq.h"
+#include "main/dll/rom_curve_interface.h"
+
+typedef struct TriggerPlacement
+{
+    u8 pad0[0x38 - 0x0];
+    s16 unk38;
+    u8 pad3A[0x46 - 0x3A];
+    u16 unk46;
+} TriggerPlacement;
+
+
+typedef struct ObjInterpretSeqPlacement
+{
+    u8 pad0[0x2 - 0x0];
+    s8 unk2;
+    u8 pad3[0x4 - 0x3];
+    s16 unk4;
+    u8 unk6;
+    u8 pad7[0x8 - 0x7];
+} ObjInterpretSeqPlacement;
+
+
+typedef struct TriggerState
+{
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    u32 unk8;
+    u8 padC[0x1C - 0xC];
+    f32 unk1C;
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    u8 pad34[0x80 - 0x34];
+    s16 unk80;
+    s16 unk82;
+    s16 unk84;
+    s16 unk86;
+    s16 unk88;
+    u8 pad8A[0xAC - 0x8A];
+} TriggerState;
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: objInterpretSeq
+ * EN v1.0 Address: 0x801993B0
+ * EN v1.0 Size: 6644b
+ * EN v1.1 Address: 0x8019992C
+ * EN v1.1 Size: 3936b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8019ae30
+ * EN v1.0 Address: 0x8019AE30
+ * EN v1.0 Size: 2172b
+ * EN v1.1 Address: 0x8019A92C
+ * EN v1.1 Size: 1268b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+
+
+
+
+
+
+typedef struct
+{
+    u8 bit7 : 1;
+    u8 lo : 7;
+} TriggerFlags8A;
+
+
+
+
+
+/* 8b "li r3, N; blr" returners. */
+
+/* Pattern wrappers. */
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+
+
+/* call(x, N) wrappers. */
+
+int cfguardian_setScale(int* obj)
+{
+    return (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa9b) & 0x2) == 0;
+}
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+void fn_8019AE3C(int p1, int p2, s16* p3)
+{
+    u8 v;
+    int i;
+
+    v = 0;
+    for (i = 0; i < *(s8*)(p2 + 0x1b); i++)
+    {
+        switch (*(s8*)(p2 + i + 0x13))
+        {
+        case 0:
+            if (p3 != NULL)
+            {
+                Sfx_PlayFromObject(p1, (u16)p3[0]);
+            }
+            break;
+        case 7:
+            if (p3 != NULL)
+            {
+                Sfx_PlayFromObject(p1, (u16)p3[1]);
+            }
+            break;
+        case 1:
+            v = 1;
+            break;
+        case 2:
+            v = 2;
+            break;
+        case 3:
+            v = 3;
+            break;
+        case 4:
+            v = 4;
+            break;
+        case 9:
+            Sfx_PlayFromObject(p1, 0xe1);
+            break;
+        }
+    }
+    if (v != 0 && p3 != NULL)
+    {
+        Sfx_PlayFromObject(p1, (u16)p3[2]);
+    }
+}
+
+/* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
+ * struct-field form flips MWCC's variable-index/walker addressing, banked).
+ * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
+ *   s32 target @0; s16 data @4; u8 unk6 @6 (zeroed on add); u8 pad @7.
+ * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
+ *   s32 message @0; s32 target @4; s32 data @8. */
+
+
+extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
+extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
+extern int Curve_AdvanceAlongPath(int p1);
+extern s16 getAngle(f32 a, f32 b);
+extern f32 lbl_803E4110;
+extern f32 lbl_803E4120;
+
+typedef struct
+{
+    s16 angle;
+    s16 pad[5];
+    f32 x;
+    f32 y;
+    f32 z;
+} RomCurveTarget;
+
+int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
+{
+    extern int hitDetectFn_800658a4(f32 x, f32 y, f32 z, int obj, f32* out, int p6); /* #57 */
+    int ret;
+    int moved;
+    u8 sel;
+    int pt;
+    s16 v;
+    int cmd[2];
+    RomCurveTarget tgt;
+    f32 ground;
+
+    moved = 1;
+    ret = 0;
+    ground = lbl_803E4110;
+    if (((GameObject*)obj)->unkF4 == -1)
+    {
+        return 1;
+    }
+    if (((GameObject*)obj)->unkF4 == 0)
+    {
+        sel = p3;
+        pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
+        tgt.x = *(f32*)(pt + 8);
+        tgt.y = *(f32*)(pt + 0xc);
+        tgt.z = *(f32*)(pt + 0x10);
+        tgt.angle = *(s8*)(pt + 0x2c) << 8;
+        if (fn_8019B1D8((int*)obj, (int*)&tgt.angle, t, p4) != 0)
+        {
+            cmd[0] = 0x19;
+            cmd[1] = 0x15;
+            (*gRomCurveInterface)->initCurve((void*)p2, (void*)obj, lbl_803E4120, cmd, sel);
+            ((GameObject*)obj)->unkF4 = 1;
+            moved = 1;
+        }
+    }
+    else
+    {
+        ret = 0;
+        if (Curve_AdvanceAlongPath(p2) != 0 || *(int*)(p2 + 0x10) != 0)
+        {
+            ret = (*gRomCurveInterface)->goNextPoint((void*)p2);
+        }
+        ((GameObject*)obj)->anim.localPosX = *(f32*)(p2 + 0x68);
+        ((GameObject*)obj)->anim.localPosY = *(f32*)(p2 + 0x6c);
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)(p2 + 0x70);
+        if (ret != 0)
+        {
+            ((GameObject*)obj)->unkF4 = -1;
+        }
+        if (hitDetectFn_800658a4(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                 ((GameObject*)obj)->anim.localPosZ, obj, &ground, 0) == 0)
+        {
+            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ground;
+        }
+    }
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float*)p4);
+    if (moved != 0)
+    {
+        v = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+                           ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) + 0x8000);
+        v = v - (u16) * (s16*)obj;
+        if (v > 0x8000)
+        {
+            v -= 0xffff;
+        }
+        if (v < -0x8000)
+        {
+            v += 0xffff;
+        }
+        *(s16*)obj = *(s16*)obj + (v >> 3);
+    }
+    if (((GameObject*)obj)->anim.currentMove != 0x1a)
+    {
+        ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
+    }
+    return ret;
+}
+#pragma scheduling reset
+#pragma peephole reset
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+
 /*
  * CFGuardian (DLL 0x148) - CloudRunner Fortress guardian (head fragment).
  * Re-split (descriptor forensics, docs/boundary_audit.md): this unit holds
@@ -1672,14 +1951,11 @@ void fn_8019D9F0(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd);
-extern void fn_8019AE3C(int* obj, void* evbuf, void* p);
 extern int fn_80296A14(int p);
 extern void dll_2E_func04(void* sub);
 extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int a, int b);
 extern void characterDoEyeAnims(int* obj, void* p);
-extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p);
 extern int lbl_80322954[];
 extern u8 lbl_803DBE20;
 extern f32 oneOverTimeDelta;
@@ -1704,6 +1980,9 @@ extern f32 lbl_803E412C;
 #pragma peephole off
 int waterSpellStone1Fn_8019b4c8(int* obj)
 {
+    extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
+    extern void fn_8019AE3C(int* obj, void* evbuf, void* p); /* #57 */
+    extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd); /* #57 */
     u8* def;
     char* player;
     CfGuardianState * sub;

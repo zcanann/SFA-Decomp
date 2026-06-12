@@ -1218,57 +1218,11 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
 /* call(x, N) wrappers. */
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
-int cfguardian_setScale(int* obj)
-{
-    return (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa9b) & 0x2) == 0;
-}
+int cfguardian_setScale(int* obj);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-void fn_8019AE3C(int p1, int p2, s16* p3)
-{
-    u8 v;
-    int i;
-
-    v = 0;
-    for (i = 0; i < *(s8*)(p2 + 0x1b); i++)
-    {
-        switch (*(s8*)(p2 + i + 0x13))
-        {
-        case 0:
-            if (p3 != NULL)
-            {
-                Sfx_PlayFromObject(p1, (u16)p3[0]);
-            }
-            break;
-        case 7:
-            if (p3 != NULL)
-            {
-                Sfx_PlayFromObject(p1, (u16)p3[1]);
-            }
-            break;
-        case 1:
-            v = 1;
-            break;
-        case 2:
-            v = 2;
-            break;
-        case 3:
-            v = 3;
-            break;
-        case 4:
-            v = 4;
-            break;
-        case 9:
-            Sfx_PlayFromObject(p1, 0xe1);
-            break;
-        }
-    }
-    if (v != 0 && p3 != NULL)
-    {
-        Sfx_PlayFromObject(p1, (u16)p3[2]);
-    }
-}
+void fn_8019AE3C(int p1, int p2, s16* p3);
 
 extern s8 lbl_803DDB08;
 extern s8 lbl_803DDB09;
@@ -1386,83 +1340,7 @@ typedef struct
     f32 z;
 } RomCurveTarget;
 
-int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
-{
-    int ret;
-    int moved;
-    u8 sel;
-    int pt;
-    s16 v;
-    int cmd[2];
-    RomCurveTarget tgt;
-    f32 ground;
-
-    moved = 1;
-    ret = 0;
-    ground = lbl_803E4110;
-    if (((GameObject*)obj)->unkF4 == -1)
-    {
-        return 1;
-    }
-    if (((GameObject*)obj)->unkF4 == 0)
-    {
-        sel = p3;
-        pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
-        tgt.x = *(f32*)(pt + 8);
-        tgt.y = *(f32*)(pt + 0xc);
-        tgt.z = *(f32*)(pt + 0x10);
-        tgt.angle = *(s8*)(pt + 0x2c) << 8;
-        if (fn_8019B1D8((int*)obj, (int*)&tgt.angle, t, p4) != 0)
-        {
-            cmd[0] = 0x19;
-            cmd[1] = 0x15;
-            (*gRomCurveInterface)->initCurve((void*)p2, (void*)obj, lbl_803E4120, cmd, sel);
-            ((GameObject*)obj)->unkF4 = 1;
-            moved = 1;
-        }
-    }
-    else
-    {
-        ret = 0;
-        if (Curve_AdvanceAlongPath(p2) != 0 || *(int*)(p2 + 0x10) != 0)
-        {
-            ret = (*gRomCurveInterface)->goNextPoint((void*)p2);
-        }
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(p2 + 0x68);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)(p2 + 0x6c);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(p2 + 0x70);
-        if (ret != 0)
-        {
-            ((GameObject*)obj)->unkF4 = -1;
-        }
-        if (hitDetectFn_800658a4(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, obj, &ground, 0) == 0)
-        {
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ground;
-        }
-    }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float*)p4);
-    if (moved != 0)
-    {
-        v = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                           ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) + 0x8000);
-        v = v - (u16) * (s16*)obj;
-        if (v > 0x8000)
-        {
-            v -= 0xffff;
-        }
-        if (v < -0x8000)
-        {
-            v += 0xffff;
-        }
-        *(s16*)obj = *(s16*)obj + (v >> 3);
-    }
-    if (((GameObject*)obj)->anim.currentMove != 0x1a)
-    {
-        ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
-    }
-    return ret;
-}
+int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4);
 
 extern CloudActionInterface** gCloudActionInterface;
 extern int* gPlayerShadowInterface;
