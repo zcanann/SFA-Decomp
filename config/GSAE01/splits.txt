@@ -1637,8 +1637,41 @@ main/light.c:
 main/main.c:
 	.text       start:0x801FD4A8 end:0x801FE118
 
-main/dll/anim.c:
-	.text       start:0x801FE118 end:0x80206474
+main/dll/dll_023F_dbegg.c:
+	.text       start:0x801FE118 end:0x801FF884
+
+main/dll/dll_0240_gcrobotblas.c:
+	.text       start:0x801FF884 end:0x801FF9B0
+
+main/dll/dll_0241_drakorenerg.c:
+	.text       start:0x801FF9B0 end:0x801FFE18
+
+main/dll/dll_0242_dbstealerwo.c:
+	.text       start:0x801FFE18 end:0x80203C78
+
+main/dll/dll_0243_dbholecontr.c:
+	.text       start:0x80203C78 end:0x80204098
+
+main/dll/dll_0229_dfplevelco.c:
+	.text       start:0x80204098 end:0x80204970
+
+main/dll/dll_022A_dfpobjcrea.c:
+	.text       start:0x80204970 end:0x80204B54
+
+main/dll/dll_022C_dll22c.c:
+	.text       start:0x80204B54 end:0x802050C4
+
+main/dll/dll_022E_dfpdoorswi.c:
+	.text       start:0x802050C4 end:0x80205168
+
+main/dll/dll_022D_dfpseqpoin.c:
+	.text       start:0x80205168 end:0x802057CC
+
+main/dll/dll_022B_dfptorch.c:
+	.text       start:0x802057CC end:0x80205F40
+
+main/dll/dll_0230_dfpwallbar.c:
+	.text       start:0x80205F40 end:0x80206474
 
 main/dll/dll_022F_dfpfloorbar.c:
 	.text       start:0x80206474 end:0x80206968
