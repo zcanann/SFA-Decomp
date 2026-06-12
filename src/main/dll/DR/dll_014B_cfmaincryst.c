@@ -561,59 +561,7 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 #pragma scheduling off
 #pragma peephole off
-void babycloudrunner_init(int* obj, u8* def)
-{
-    BabyCloudRunnerState* sub;
-
-    ObjHits_EnableObject(obj);
-    ObjMsg_AllocQueue(obj, 4);
-    ((GameObject*)obj)->animEventCallback = (void*)babycloudrunner_SeqFn;
-    *(s16*)obj = (s16)(def[0x1d] << 8);
-    ObjGroup_AddObject(obj, 3);
-    sub = ((GameObject*)obj)->extra;
-    sub->unkB0 = 0;
-    sub->unkB4 = 0;
-    sub->unkB8 = 0;
-    sub->unkBC = 0;
-    sub->turnLatch = 0;
-    sub->behaviourState = def[0x1c];
-    sub->unkCC = 0;
-    storeZeroToFloatParam(sub);
-    sub->linkedObj = 0;
-    sub->roostYaw = *(s16*)obj;
-    sub->flags22C = 0;
-    sub->animSpeed = lbl_803E422C;
-    sub->runnerState = 0;
-    if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
-    {
-        ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
-        sub->flags22C = (u8)(sub->flags22C & ~1);
-        Obj_RemoveFromUpdateList(obj);
-        ObjGroup_RemoveObject(obj, 3);
-    }
-    else
-    {
-        sub->runnerIndex = *(s16*)(def + 0x22) - 0x2fc;
-        if (((GameObject*)obj)->anim.seqId == 0x788)
-        {
-            sub->runnerIndex = -1;
-            sub->curveSpeed = lbl_803E4244;
-            sub->mutterSfxTable = &lbl_803DBE30;
-        }
-        else
-        {
-            if (sub->runnerIndex < 0 || sub->runnerIndex > 4)
-            {
-                sub->runnerState = 3;
-            }
-            sub->curveSpeed = lbl_803E4258;
-            sub->mutterSfxTable = &lbl_803DBE28;
-            ObjGroup_AddObject(obj, 0x20);
-        }
-        ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;
-    }
-}
+void babycloudrunner_init(int* obj, u8* def);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -631,17 +579,7 @@ void babycloudrunner_init(int* obj, u8* def)
  * PAL Size: TODO
  */
 #pragma peephole off
-void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    s32 isVisible;
-
-    isVisible = visible;
-    if (isVisible != 0)
-    {
-        objRenderFn_8003b8f4(lbl_803E4228);
-    }
-    return;
-}
+void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 #pragma peephole reset
 
 
@@ -831,47 +769,7 @@ extern f32 timeDelta;
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
-{
-    int shifted;
-    fn_8003ADC4(a, b, (char*)c + 0x3c, 0x28, 0, 3);
-    shifted = Obj_GetYawDeltaToObject((int)a, (int)b, 0) >> 3;
-    *(s16*)a += shifted;
-    if (d == 0) return;
-    if ((s16)shifted > -200 && (s16)shifted < 200)
-    {
-        if (((BabyCloudRunnerState*)c)->turnLatch != 0)
-        {
-            ((BabyCloudRunnerState*)c)->turnLatch = 0;
-            ObjAnim_SetCurrentMove((int)a, 0, lbl_803E4218, 0);
-        }
-        else
-        {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)a, lbl_803E423C, timeDelta, 0);
-        }
-    }
-    else
-    {
-        if (((BabyCloudRunnerState*)c)->turnLatch == 0)
-        {
-            ((BabyCloudRunnerState*)c)->turnLatch = 1;
-            ObjAnim_SetCurrentMove((int)a, 9, lbl_803E4218, 0);
-        }
-        else
-        {
-            s16 t;
-            if ((s16)shifted > 0)
-            {
-                t = (s16)shifted >> 2;
-            }
-            else
-            {
-                t = -(s16)shifted >> 2;
-            }
-            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)a, (f32)t / lbl_803E4240, timeDelta, 0);
-        }
-    }
-}
+void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
@@ -882,48 +780,7 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
  * lit/active state from gamebit 0x44 and notify on completion. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int msg;
-    int v;
-    int w = 0;
-    u8* sub = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(*(s16*)(sub + 0x18)) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-        animUpdate->sequenceControlFlags |= 4;
-        return 0;
-    }
-    if (((GameObject*)obj)->anim.seqId == 0x127)
-    {
-        return 0;
-    }
-    while (ObjMsg_Pop(obj, &msg, &v, &w) != 0)
-    {
-        if (msg == 0xa0005)
-        {
-            GameBit_Set(*(s16*)(sub + 0x18), 1);
-        }
-    }
-    if (GameBit_Get(0x44) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
-    }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
-    {
-        if ((*gGameUIInterface)->isEventReady(0x44) != 0)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        }
-    }
-    return 0;
-}
+int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -939,47 +796,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
  * the idle audio cue. */
 #pragma scheduling off
 #pragma peephole off
-int babycloudrunner_func0B(void* p)
-{
-    int* obj;
-    int flag;
-    u8* r;
-    BabyCloudRunnerState* sub;
-    u8* q;
-    void* player;
-    obj = (int*)p;
-    sub = ((GameObject*)obj)->extra;
-    q = *(u8**)&((GameObject*)obj)->anim.placementData;
-    player = Obj_GetPlayerObject();
-    r = *(u8**)&((GameObject*)obj)->anim.placementData;
-    flag = 0;
-    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16) * (s16*)(r + 0x1a))
-    {
-        if (sub->runnerState == 3)
-        {
-            if ((((GameObject*)obj)->objectFlags & 0x1000) == 0)
-            {
-                flag = 1;
-            }
-        }
-    }
-    if (flag != 0)
-    {
-        s16toFloat((int)sub, 0x3c);
-        ((GameObject*)obj)->unkF4 = 1;
-        *(s16*)obj = sub->roostYaw;
-        (*gObjectTriggerInterface)->runSequence(4, obj, -1);
-        sub->unk00 = lbl_803E4244;
-        gameBitIncrement(0x901);
-        sub->behaviourState = 0xc;
-        GameBit_Set(*(s16*)(q + 0x1e), 1);
-        ((GameObject*)obj)->unkF4 = 0;
-        return 1;
-    }
-    objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
-    Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
-    return 0;
-}
+int babycloudrunner_func0B(void* p);
 #pragma peephole reset
 #pragma scheduling reset
 void windlift_hitDetect(void);
@@ -988,21 +805,13 @@ void windlift_release(void);
 
 void windlift_initialise(void);
 
-void cfpowerbase_free(void)
-{
-}
+void cfpowerbase_free(void);
 
-void cfpowerbase_hitDetect(void)
-{
-}
+void cfpowerbase_hitDetect(void);
 
-void cfpowerbase_release(void)
-{
-}
+void cfpowerbase_release(void);
 
-void cfpowerbase_initialise(void)
-{
-}
+void cfpowerbase_initialise(void);
 
 typedef struct
 {
@@ -1262,46 +1071,7 @@ typedef struct BabycloudrunnerPlacement
  * and gamebit, then gate the active/lit state bits on those gamebits. */
 #pragma scheduling off
 #pragma peephole off
-void cfpowerbase_init(int* obj, u8* params)
-{
-    CfPowerBaseState* sub = ((GameObject*)obj)->extra;
-    s16 type;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    sub->typeBit = *(s16*)(params + 0x1e);
-    type = sub->typeBit;
-    switch (type)
-    {
-    case 0x54:
-        sub->litBit = 0x51;
-        sub->typeIndex = 0;
-        break;
-    case 0x55:
-        sub->litBit = 0x52;
-        sub->typeIndex = 1;
-        Obj_SetActiveModelIndex(obj, 2);
-        break;
-    case 0x56:
-        sub->litBit = 0x53;
-        sub->typeIndex = 2;
-        Obj_SetActiveModelIndex(obj, 1);
-        break;
-    }
-    ((GameObject*)obj)->animEventCallback = (void*)cfpowerbase_SeqFn;
-    ObjMsg_AllocQueue(obj, 2);
-    if (GameBit_Get(sub->litBit) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
-    }
-    if (GameBit_Get(sub->typeBit) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-}
+void cfpowerbase_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1311,35 +1081,7 @@ void cfpowerbase_init(int* obj, u8* params)
  * powered and its UI condition clears, mark it done and notify. */
 #pragma scheduling off
 #pragma peephole off
-void cfpowerbase_update(int* obj)
-{
-    CfPowerBaseState* sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(sub->litBit) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
-    }
-    if (((GameObject*)obj)->unkF4 != 0)
-    {
-        (*gObjectTriggerInterface)->preempt((int)obj, 0xfa);
-        (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
-        ((GameObject*)obj)->unkF4 = 0;
-    }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
-    {
-        if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-            GameBit_Set(sub->litBit, 0);
-            GameBit_Set(0x973, 0);
-            (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, -1);
-        }
-    }
-}
+void cfpowerbase_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 void cfmaincrystal_hitDetect(void)
@@ -1354,29 +1096,17 @@ void cfmaincrystal_initialise(void)
 {
 }
 
-void babycloudrunner_hitDetect(void)
-{
-}
+void babycloudrunner_hitDetect(void);
 
-void babycloudrunner_release(void)
-{
-}
+void babycloudrunner_release(void);
 
-void babycloudrunner_initialise(void)
-{
-}
+void babycloudrunner_initialise(void);
 
-void cfprisonguard_free(void)
-{
-}
+void cfprisonguard_free(void);
 
-void cfprisonguard_release(void)
-{
-}
+void cfprisonguard_release(void);
 
-void cfprisonguard_initialise(void)
-{
-}
+void cfprisonguard_initialise(void);
 
 typedef struct
 {
@@ -1389,21 +1119,7 @@ typedef struct
  * the spawn params, and apply the alarm-active gating bits. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonguard_init(int* obj, u8* params)
-{
-    CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
-    sub->flags = 1;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)cfprisonguard_SeqFn;
-    ObjMsg_AllocQueue(obj, 4);
-    sub->capturedLatch = 1;
-    if (GameBit_Get(0x4d) != 0)
-    {
-        sub->flags = (u8)(sub->flags | 4);
-    }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
-    ((Bit80*)&sub->flags39)->top = 1;
-}
+void cfprisonguard_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1413,70 +1129,16 @@ extern int objGetAnimState80A(void* obj);
 
 #pragma scheduling off
 #pragma peephole off
-void cfprisonguard_update(int* obj)
-{
-    CfPrisonGuardState* sub;
-    int* player;
-    u8* def;
-    int bit44;
-    f32 dist;
-
-    sub = ((GameObject*)obj)->extra;
-    player = (int*)Obj_GetPlayerObject();
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((u32)sub->flags39 >> 7) & 1u)
-    {
-        sub->flags39 = (u8)(sub->flags39 & ~0x80);
-    }
-    if (GameBit_Get(((CfprisonguardPlacement*)def)->unk1E) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
-        ObjHits_DisableObject(obj);
-        Obj_RemoveFromUpdateList(obj);
-        return;
-    }
-    bit44 = GameBit_Get(0x44);
-    dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
-    if (sub->flags == 1)
-    {
-        waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268);
-        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        sub->flags = 2;
-    }
-    if (bit44 == 0)
-    {
-        if (sub->guardState != 4)
-        {
-            if (dist >= (f32)(s32)((CfprisonguardPlacement*)def)->unk1A)
-            {
-                if (waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) == 0)
-                    return;
-            }
-        }
-        if (objGetAnimState80A(player) != 0x40)
-        {
-            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-        }
-    }
-}
+void cfprisonguard_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void cfprisonuncle_free(void)
-{
-}
+void cfprisonuncle_free(void);
 
-void cfprisonuncle_hitDetect(void)
-{
-}
+void cfprisonuncle_hitDetect(void);
 
-void cfprisonuncle_release(void)
-{
-}
+void cfprisonuncle_release(void);
 
-void cfprisonuncle_initialise(void)
-{
-}
+void cfprisonuncle_initialise(void);
 
 extern int objModelGetVecFn_800395d8(int obj, int idx);
 extern void objAudioFn_80039270(int obj, void* p, int id);
@@ -1490,76 +1152,14 @@ extern f32 lbl_803E428C;
  * captured, raise the done flag and notify. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonuncle_update(int* obj)
-{
-    CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
-    void* player;
-    int m2, objectIndex, objectCount, m1, m3;
-    int* objects;
-    int i;
-    if (sub == NULL) return;
-    if (GameBit_Get(0x50) != 0) return;
-    if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0)
-    {
-        *(void**)&sub->target = NULL;
-    }
-    if (*(void**)&sub->target == NULL)
-    {
-        objects = ObjList_GetObjects(&objectIndex, &objectCount);
-        for (i = objectIndex; i < objectCount; i++)
-        {
-            if (*(s16*)((char*)objects[i] + 0x44) == 0x3d)
-            {
-                sub->target = objects[i];
-                i = objectCount;
-            }
-        }
-    }
-    ObjTrigger_UpdateIdBlockFlag((int)obj);
-    sub->captured = (s8)GameBit_Get(0x4d);
-    if (sub->captured == 0)
-    {
-        player = Obj_GetPlayerObject();
-        fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
-        if ((int)randomGetRange(0, 0x1e) == 0)
-        {
-            objAudioFn_80039270((int)obj, (char*)sub + 0x34, 0x297);
-        }
-        if (ObjTrigger_IsSet((int)obj) != 0)
-        {
-            fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
-            *(s16*)objModelGetVecFn_800395d8((int)obj, 1) = -0xaaa;
-            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-        }
-        else
-        {
-            objAnimFn_80038f38((int)obj, (char*)sub + 0x34);
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
-                (int)obj, lbl_803E428C, (f32)(u32)framesThisStep, 0);
-        }
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-        if (((GameObject*)obj)->seqIndex == -1)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        }
-    }
-}
+void cfprisonuncle_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void gcrobotlightbea_render(void)
-{
-}
+void gcrobotlightbea_render(void);
 
-void gcrobotlightbea_release(void)
-{
-}
+void gcrobotlightbea_release(void);
 
-void gcrobotlightbea_initialise(void)
-{
-}
+void gcrobotlightbea_initialise(void);
 
 extern f32 lbl_803E4298;
 
@@ -1568,116 +1168,55 @@ extern f32 lbl_803E4298;
  * and lands inside the beacon's bounding box. */
 #pragma scheduling off
 #pragma peephole off
-void gcrobotlightbea_hitDetect(int* obj)
-{
-    int out;
-    f32 vec[3];
-    void* hit;
-    GcRobotLightBeaState* sub = ((GameObject*)obj)->extra;
-    ((Bit80*)&sub->hitFlags)->top = 0;
-    if (((GameObject*)obj)->ownerObj == NULL) return;
-    if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0)
-    {
-        hit = (void*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
-        if (hit == NULL) return;
-    }
-    if (hit != Obj_GetPlayerObject()) return;
-    if (playerIsDisguised(hit) != 0) return;
-    vec[0] = ((ObjHitsPriorityState*)hit)->primaryRadiusSquared;
-    vec[1] = lbl_803E4298 + ((ObjHitsPriorityState*)hit)->localPosX;
-    vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
-    if (voxmaps_traceWorldLine((void*)((int)obj + 0xc), vec) == 0) return;
-    if (((GameObject*)obj)->unkF4 != 0 ||
-        objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0)
-    {
-        ((Bit80*)&sub->hitFlags)->top = 1;
-    }
-}
+void gcrobotlightbea_hitDetect(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void cfperch_render(void)
-{
-}
+void cfperch_render(void);
 
-void cfperch_hitDetect(void)
-{
-}
+void cfperch_hitDetect(void);
 
-void cfperch_release(void)
-{
-}
+void cfperch_release(void);
 
-void cfperch_initialise(void)
-{
-}
+void cfperch_initialise(void);
 
-void cfprisoncage_free(void)
-{
-}
+void cfprisoncage_free(void);
 
-void cfprisoncage_release(void)
-{
-}
+void cfprisoncage_release(void);
 
-void cfprisoncage_initialise(void)
-{
-}
+void cfprisoncage_initialise(void);
 
 #pragma scheduling off
 #pragma peephole off
-void cfprisoncage_update(int* obj)
-{
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
-    int v;
-    if (((GameObject*)obj)->unkF4 != 0)
-    {
-        switch (((GameObject*)obj)->anim.seqId)
-        {
-        case 0x127: v = 0;
-            break;
-        case 0x128:
-        default: v = 1;
-            break;
-        }
-        (*gObjectTriggerInterface)->runSequence(v, obj, -1);
-        ((GameObject*)obj)->unkF4 = 0;
-    }
-}
+void cfprisoncage_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
-void spiritdoorspirit_hitDetect(void)
-{
-}
+void spiritdoorspirit_hitDetect(void);
 
-void spiritdoorspirit_release(void)
-{
-}
+void spiritdoorspirit_release(void);
 
-void spiritdoorspirit_initialise(void)
-{
-}
+void spiritdoorspirit_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int cfguardian_getExtraSize(void);
 int cfguardian_getObjectTypeId(void);
 int windlift_getExtraSize(void);
 int windlift_getObjectTypeId(void);
-int cfpowerbase_getExtraSize(void) { return 0x6; }
-int cfpowerbase_getObjectTypeId(void) { return 0x1; }
+int cfpowerbase_getExtraSize(void);
+int cfpowerbase_getObjectTypeId(void);
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
 int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
-int babycloudrunner_getExtraSize(void) { return 0x248; }
-int cfprisonguard_getExtraSize(void) { return 0x3c; }
-int cfprisonguard_getObjectTypeId(void) { return 0x49; }
-int cfprisonuncle_getExtraSize(void) { return 0xa8; }
-int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
-int gcrobotlightbea_getExtraSize(void) { return 0xc; }
-int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
-int cfperch_getExtraSize(void) { return 0x0; }
-int cfperch_getObjectTypeId(void) { return 0x0; }
-int cfprisoncage_getExtraSize(void) { return 0x0; }
-int spiritdoorspirit_getExtraSize(void) { return 0x1; }
-int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
+int babycloudrunner_getExtraSize(void);
+int cfprisonguard_getExtraSize(void);
+int cfprisonguard_getObjectTypeId(void);
+int cfprisonuncle_getExtraSize(void);
+int cfprisonuncle_getObjectTypeId(void);
+int gcrobotlightbea_getExtraSize(void);
+int gcrobotlightbea_getObjectTypeId(void);
+int cfperch_getExtraSize(void);
+int cfperch_getObjectTypeId(void);
+int cfprisoncage_getExtraSize(void);
+int spiritdoorspirit_getExtraSize(void);
+int spiritdoorspirit_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4190;
@@ -1687,11 +1226,7 @@ extern f32 lbl_803E42B0;
 #pragma peephole off
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E41D0);
-}
+void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -1699,11 +1234,7 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4210);
 }
 
-void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0);
-}
+void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
 extern f32 lbl_803E4280;
@@ -1717,46 +1248,22 @@ extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
  * once it crosses the threshold spawn a one-shot particle. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
-    if (visible != 0)
-    {
-        objRenderFn_8003b8f4(lbl_803E4280);
-    }
-    if (visible != 0)
-    {
-        f32 t = sub->alarmRamp;
-        if (t > lbl_803E4260)
-        {
-            sub->alarmRamp = lbl_803E4264 * (f32)(u32)
-            framesThisStep + t;
-            if (sub->alarmRamp < lbl_803E4284)
-            {
-                objParticleFn_80099d84((int)obj, lbl_803E4280, 3, 0);
-            }
-        }
-    }
-}
+void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
+void spiritdoorspirit_free(int x);
 #pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-int cfprisoncage_getObjectTypeId(int* obj)
-{
-    if (((GameObject*)obj)->anim.seqId == 0x128) return 0x8;
-    return 0x0;
-}
+int cfprisoncage_getObjectTypeId(int* obj);
 #pragma peephole reset
 
 /* chained byte bit-extract. */
-u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)((int**)obj)[0xb8 / 4])->hitFlags >> 7) & 1; }
+u32 fn_801A0174(int* obj);
 
 typedef struct
 {
@@ -1771,29 +1278,12 @@ extern f32 lbl_803E42C0;
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 #pragma peephole off
-int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    CfPrisonUncleState* p = ((GameObject*)obj)->extra;
-    if (p->kicked != 0) return 0;
-    if (animUpdate->triggerCommand == 2)
-    {
-        p->kicked = 1;
-        playerAddRemoveMagic(Obj_GetPlayerObject(), 2);
-    }
-    return 0;
-}
+int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 
 /* GameBit-gated byte write. */
 #pragma scheduling off
-int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    if (GameBit_Get(0x4d) != 0)
-    {
-        animUpdate->sequenceControlFlags = 4;
-    }
-    return 0;
-}
+int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -1816,88 +1306,29 @@ extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32
 #pragma scheduling off
 #pragma peephole off
 
-int babycloudrunner_getObjectTypeId(void) { return 0; }
+int babycloudrunner_getObjectTypeId(void);
 
-void spiritdoorspirit_init(int* obj)
-{
-    SpiritDoorSpiritState* state = ((GameObject*)obj)->extra;
-    state->active = 0;
-    *(s8*)&((GameObject*)obj)->anim.alpha = 0;
-}
+void spiritdoorspirit_init(int* obj);
 
 extern f32 lbl_803DBE78;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
-void spiritdoorspirit_update(int* obj)
-{
-    SpiritDoorSpiritState* sub;
-    u8* def;
+void spiritdoorspirit_update(int* obj);
 
-    sub = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (sub->active == 0)
-    {
-        sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0);
-        if (sub->active != 0)
-        {
-            ObjGroup_AddObject(obj, 0x4e);
-        }
-        if (((GameObject*)obj)->anim.alpha != 0)
-        {
-            ((GameObject*)obj)->anim.alpha = (u8)(((GameObject*)obj)->anim.alpha - 1);
-        }
-    }
-    else
-    {
-        fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0);
-        if (sub->active == 0)
-        {
-            ObjGroup_RemoveObject(obj, 0x4e);
-        }
-        if (((GameObject*)obj)->anim.alpha < 0xff)
-        {
-            ((GameObject*)obj)->anim.alpha = (u8)(((GameObject*)obj)->anim.alpha + 1);
-        }
-    }
-}
+int babycloudrunner_setScale(int* obj);
 
-int babycloudrunner_setScale(int* obj)
-{
-    BabyCloudRunnerState* state = ((GameObject*)obj)->extra;
-    return !(state->flags22C & 1);
-}
-
-void cfperch_init(int* obj)
-{
-    ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801A04F4;
-}
+void cfperch_init(int* obj);
 
 void cfmaincrystal_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
-void cfperch_free(int* obj)
-{
-    ObjMsg_SendToObjects(62, 0, obj, 0x40001, 0);
-}
+void cfperch_free(int* obj);
 
-void babycloudrunner_free(int* obj)
-{
-    ObjGroup_RemoveObject(obj, 32);
-    ObjGroup_RemoveObject(obj, 3);
-}
+void babycloudrunner_free(int* obj);
 
-void gcrobotlightbea_init(int* obj)
-{
-    GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
-    state->light = 0;
-    state->unk4 = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-}
+void gcrobotlightbea_init(int* obj);
 
 extern f32 lbl_803E42A0;
 extern f32 lbl_803E42A4;
@@ -1914,135 +1345,28 @@ extern void PSVECScale(void* in, void* out, f32 scale);
 extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
-void gcrobotlightbea_update(int* obj)
-{
-    GcRobotLightBeaState* sub;
-    f32 vec[3];
-    f32 vec2[3];
-    u8 b_byte, g_byte, r_byte;
+void gcrobotlightbea_update(int* obj);
 
-    sub = ((GameObject*)obj)->extra;
-    if (sub->light == NULL)
-    {
-        sub->light = modelLightStruct_createPointLight(0xfa, 0xfa, 0xfa, 1);
-        if (sub->light != NULL)
-        {
-            modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
-        }
-    }
-    ObjHits_SetHitVolumeSlot(obj, 0x17, 0, 0);
-    vec[0] = lbl_80322C38[0];
-    vec[1] = lbl_80322C38[1];
-    vec[2] = lbl_80322C38[2];
-    Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
-    voxmaps_traceScaledVectorEnd(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
-    PSVECDistance((char*)obj + 0xc, vec2);
-    PSVECScale(lbl_80322C38, vec2, 0);
-    getAmbientColor(0, &r_byte, &g_byte, &b_byte);
-    if (sub->light != NULL)
-    {
-        modelLightStruct_setDiffuseColor(sub->light,
-                                         (s32)(lbl_803E42A4 * (f32)(u32)r_byte),
-                                         (s32)(lbl_803E42A4 * (f32)(u32)g_byte),
-                                         (s32)(lbl_803E42A4 * (f32)(u32)b_byte),
-                                         0xff);
-        modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
-    }
-}
+void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    SpiritDoorSpiritState* state = ((GameObject*)obj)->extra;
-    if ((s32)visible != 0)
-    {
-        if (state->active != 0)
-        {
-            ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E42B8);
-        }
-    }
-}
+void cfprisonguard_hitDetect(int* obj);
 
-void cfprisonguard_hitDetect(int* obj)
-{
-    CfPrisonGuardState* state = ((GameObject*)obj)->extra;
-    if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19)
-    {
-        state->guardState = 7;
-    }
-}
-
-void gcrobotlightbea_free(int* obj)
-{
-    GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
-    if (state->light != NULL)
-    {
-        modelLightStruct_freeSlot((int*)state);
-    }
-    if (((GameObject*)obj)->ownerObj != NULL)
-    {
-        ObjLink_DetachChild(((GameObject*)obj)->ownerObj, obj);
-    }
-}
+void gcrobotlightbea_free(int* obj);
 
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void cfprisoncage_hitDetect(int* obj)
-{
-    f32 pos_z, pos_y, pos_x;
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0)
-    {
-        objfx_spawnHitEmitterAtPos(&pos_x, 8, 200, 128, 0);
-    }
-}
+void cfprisoncage_hitDetect(int* obj);
 
 extern f32 lbl_803E42B4;
 
-void cfprisoncage_init(int* obj, u8* def)
-{
-    ObjMsg_AllocQueue(obj, 1);
-    *(s16*)obj = (s16)((s32)def[0x1a] << 8);
-    ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->animEventCallback = (void*)cfprisoncage_SeqFn;
-    if (((GameObject*)obj)->anim.seqId == 296)
-    {
-        if (GameBit_Get(((CfprisoncageObjectDef*)def)->unk18) != 0)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
-        }
-        else
-        {
-            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E42B4, 0);
-        }
-    }
-    else
-    {
-        if (GameBit_Get(((CfprisoncageObjectDef*)def)->unk18) != 0)
-        {
-            (*gObjectTriggerInterface)->preempt((int)obj, 60);
-        }
-    }
-}
+void cfprisoncage_init(int* obj, u8* def);
 
 void windlift_free(int* obj);
 
 void cfguardian_free(int* obj, int p2);
 
 
-void cfprisonuncle_init(int* obj)
-{
-    CfPrisonUncleState* state;
-    ObjMsg_AllocQueue(obj, 1);
-    ((GameObject*)obj)->animEventCallback = (void*)fn_8019FC84;
-    state = ((GameObject*)obj)->extra;
-    state->unk64 = 464;
-    state->unk68 = 465;
-    state->unk70 = 0;
-    state->kicked = 0;
-    if ((u32)GameBit_Get(77) != 0u)
-    {
-        GameBit_Set(80, 1);
-    }
-}
+void cfprisonuncle_init(int* obj);
 
 #pragma peephole reset
 #pragma scheduling reset
@@ -2091,72 +1415,13 @@ void cfmaincrystal_update(int* obj)
 
 #pragma scheduling off
 #pragma peephole off
-int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
-{
-    extern int ObjMsg_Pop(int, int*, int*, int*);
-    CfPowerBaseState* sub = ((GameObject*)p1)->extra;
-    u8* animUpdateBytes = (u8*)animUpdate;
-    int msgArg;
-    int msgType;
-    int msgFlag = 0;
-    int i;
-
-    while (ObjMsg_Pop(p1, &msgType, &msgArg, &msgFlag) != 0)
-    {
-        switch (msgType)
-        {
-        case 0x110001:
-            if (sub->typeBit == 84 && *(s16*)(animUpdateBytes + 0x58) > 175)
-            {
-                ObjMsg_SendToObject((void*)msgArg, 0x110001, p1, 0);
-            }
-            break;
-        case 0x110002:
-            if (sub->typeBit == 85 && *(s16*)(animUpdateBytes + 0x58) > 175)
-            {
-                ObjMsg_SendToObject((void*)msgArg, 0x110002, p1, 0);
-            }
-            break;
-        case 0x110003:
-            if (sub->typeBit == 86 && *(s16*)(animUpdateBytes + 0x58) > 175)
-            {
-                ObjMsg_SendToObject((void*)msgArg, 0x110003, p1, 0);
-            }
-            break;
-        case 0xA0005:
-            GameBit_Set(sub->typeBit, 1);
-            break;
-        }
-    }
-
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == 1)
-        {
-            if (GameBit_Get(84) != 0 && GameBit_Get(85) != 0 && GameBit_Get(86) != 0)
-            {
-                GameBit_Set(1248, 1);
-            }
-        }
-    }
-    return 0;
-}
+int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void cfperch_update(int* obj)
-{
-    if (((GameObject*)obj)->unkF4 != 0)
-    {
-        if (GameBit_Get(0x50) == 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        }
-    }
-    ((GameObject*)obj)->unkF4 = 0;
-}
+void cfperch_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2209,50 +1474,7 @@ typedef struct
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-int fn_8019E3F4(int* obj)
-{
-    f32 speed;
-    BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.currentMove != 5 && ((GameObject*)obj)->anim.currentMove != 0xd)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
-    }
-    if (((GameObject*)obj)->anim.currentMove == 5 && ((GameObject*)obj)->anim.velocityY > lbl_803E422C)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
-    }
-    if (((GameObject*)obj)->anim.currentMove == 0xd && ((GameObject*)obj)->anim.velocityY < lbl_803E4218)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 5, ((GameObject*)obj)->anim.currentMoveProgress, 0);
-    }
-    speed = ((GameObject*)obj)->anim.velocityY * lbl_803DBE4C + lbl_803E4230;
-    speed *= lbl_803E4234;
-    if (speed < lbl_803E4218)
-    {
-        speed = lbl_803E4218;
-    }
-    if (speed > lbl_803E4234)
-    {
-        speed = lbl_803E4234;
-    }
-    if (((GameObject*)obj)->anim.currentMove == 0xd)
-    {
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E4234)
-        {
-            if (!((WormSpitByte*)&sub->spitFlags)->spitLatch)
-            {
-                Sfx_PlayFromObject((int)obj, SFXand_spitout);
-                ((WormSpitByte*)&sub->spitFlags)->spitLatch = 1;
-            }
-        }
-        else
-        {
-            ((WormSpitByte*)&sub->spitFlags)->spitLatch = 0;
-        }
-    }
-    ((int(*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, 0);
-    return 1;
-}
+int fn_8019E3F4(int* obj);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -2266,54 +1488,7 @@ extern f32 lbl_803E4288;
  * when path-following, snap the held model to the path point first. */
 #pragma scheduling off
 #pragma peephole off
-void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x50) != 0)
-    {
-        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
-        {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
-        }
-    }
-    else if (GameBit_Get(0x4d) != 0 && visible != 0)
-    {
-        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
-        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
-        {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
-        }
-    }
-    else if (sub != NULL && *(void**)&sub->target != NULL)
-    {
-        if (sub->captured == 0)
-        {
-            if (visible != 0)
-            {
-                if (objUpdateOpacity(sub->target) != 0)
-                {
-                    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(
-                        sub->target, p2, p3, p4, p5, lbl_803E4288);
-                    ObjPath_GetPointWorldPosition(sub->target, 0, (char*)obj + 0xc, (char*)obj + 0x10,
-                                                  (char*)obj + 0x14, 0);
-                }
-                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
-            }
-        }
-        else
-        {
-            if (objUpdateOpacity(sub->target) != 0)
-            {
-                ((void(*)(int, int, int, int, int, f32))
-                    objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
-            }
-            if (visible != 0)
-            {
-                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
-            }
-        }
-    }
-}
+void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2395,113 +1570,7 @@ extern f32 lbl_803E4248;
  * then steer toward the player (or Tricky) per the current behaviour state. */
 #pragma scheduling off
 #pragma peephole off
-int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    u8* animUpdateBytes = (u8*)animUpdate;
-    s8 inRange;
-    s8 i;
-    int yaw;
-    char* player;
-    f32 dx;
-    f32 dz;
-    f32 distSq;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->seqIndex == 4)
-    {
-        return 0;
-    }
-    animUpdate->sequenceEventActive = 0;
-    player = (char*)Obj_GetPlayerObject();
-    dx = ((GameObject*)player)->anim.localPosX - *(f32*)(def + 8);
-    dz = ((GameObject*)player)->anim.localPosZ - *(f32*)(def + 0x10);
-    distSq = dx * dx + dz * dz;
-    if (distSq < (f32)((*(s16*)(def + 0x1a) / 2) * (*(s16*)(def + 0x1a) / 2)))
-    {
-        inRange = 1;
-    }
-    else
-    {
-        inRange = 0;
-    }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-    {
-        BabyCloudRunnerState* sub2 = ((GameObject*)obj)->extra;
-        char* pp = (char*)Obj_GetPlayerObject();
-        u8* def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
-        int found = 0;
-        if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
-            && sub2->runnerState == 3
-            && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
-        {
-            found = 1;
-        }
-        if (found != 0)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
-        }
-        else
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
-        }
-    }
-    if (inRange == 0 && sub->runnerState == 2)
-    {
-        f32 radius = (f32) * (s16*)(def + 0x18);
-        if ((void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL)
-        {
-            inRange = 1;
-        }
-    }
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == 1)
-        {
-            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-        }
-    }
-    sub->behaviourState = 0;
-    switch (sub->behaviourState)
-    {
-    case 10:
-    case 11:
-        if (sub->linkedObj != NULL)
-        {
-            sub->scale *= lbl_803E4248;
-            *(f32*)((char*)sub->linkedObj + 8) = sub->scale;
-        }
-        sub->behaviourState = 0xb;
-        if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32) * (s16*)(def + 0x1a)
-            && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
-        {
-            sub->behaviourState = 7;
-            return 4;
-        }
-        break;
-    case 0:
-    case 8:
-        animUpdate->hitVolumePair &= ~0x2;
-        yaw = Obj_GetYawDeltaToObject((int)obj, (int)player, 0);
-        fn_8003ADC4(obj, (int*)player, (char*)sub + 0x3c, 0x28, 0, 3);
-        *(s16*)obj += (s16)yaw / 8;
-        if (inRange != 0)
-        {
-            animUpdateBytes[0x90] |= 4;
-        }
-        else
-        {
-            animUpdateBytes[0x90] = 8;
-        }
-        break;
-    case 5:
-        animUpdate->hitVolumePair &= ~0x2;
-        yaw = Obj_GetYawDeltaToObject((int)obj, (int)getTrickyObject(), 0);
-        fn_8003ADC4(obj, (int*)getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
-        *(s16*)obj += (s16)yaw / 8;
-        break;
-    }
-    return 0;
-}
+int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2514,147 +1583,7 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
  * SFX and queued-message drain. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    char* player;
-    CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
-    s8 gb50;
-    s8 gb48;
-    s8 moved;
-    f32 dist;
-    int msgB;
-    int msgA;
-    int payload = 0;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    switch (animUpdate->triggerCommand)
-    {
-    case 0x29:
-        sub->alarmRamp = lbl_803E4260;
-        break;
-    case 4:
-        sub->guardState = 6;
-        return 0;
-    case 5:
-        sub->alarmRamp = lbl_803E4264 * (f32)framesThisStep + sub->alarmRamp;
-        break;
-    }
-    if (((GameObject*)obj)->seqIndex < 0)
-    {
-        return 0;
-    }
-    ObjHits_EnableObject(obj);
-    gb50 = GameBit_Get(0x50);
-    gb48 = GameBit_Get(0x48);
-    if ((sub->flags & 2) != 0 && GameBit_Get(0x4d) != 0)
-    {
-        sub->flags &= ~0x2;
-        return 4;
-    }
-    if (gb50 != 0)
-    {
-        return 4;
-    }
-    if (gb50 != 0 || sub->guardState == 5)
-    {
-        sub->guardState = 5;
-        return 0;
-    }
-    moved = 0;
-    player = (char*)Obj_GetPlayerObject();
-    switch (sub->guardState)
-    {
-    case 0:
-        fn_8003B228(obj, sub);
-        dist = Vec_distance((char*)obj + 0x18, player + 0x18);
-        if (gb48 == 0)
-        {
-            if (dist < (f32)((CfprisonguardPlacement*)def)->unk1A
-                || waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) != 0)
-            {
-                if (objGetAnimState80A(player) != 0x40)
-                {
-                    moved = 1;
-                    sub->guardState = 4;
-                }
-                else
-                {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-                    sub->guardState = 5;
-                    sub->stateTimer = 0x14;
-                    (*gObjectTriggerInterface)->runSequence(2, obj, -1);
-                    return 4;
-                }
-            }
-        }
-        break;
-    case 2:
-        if ((sub->stateTimer -= framesThisStep) <= 0)
-        {
-            sub->guardState = 1;
-        }
-        fn_8003B228(obj, sub);
-        break;
-    case 1:
-        dist = Vec_distance((char*)obj + 0x18, player + 0x18);
-        if (gb48 == 0)
-        {
-            if (dist < (f32)((CfprisonguardPlacement*)def)->unk1A)
-            {
-                if (objGetAnimState80A(player) != 0x40)
-                {
-                    moved = 1;
-                    sub->guardState = 4;
-                }
-                else
-                {
-                    sub->guardState = 2;
-                }
-            }
-        }
-        break;
-    case 3:
-        if ((sub->stateTimer -= framesThisStep) <= 0)
-        {
-            sub->guardState = 0;
-        }
-        break;
-    case 5:
-        return 0;
-    case 6:
-        return 0;
-    case 7:
-        moved = 1;
-        sub->guardState = 4;
-        break;
-    }
-    if (((GameObject*)obj)->anim.currentMove == 0x103 || ((GameObject*)obj)->anim.currentMove == 0x2e)
-    {
-        Sfx_PlayFromObject((int)obj, SFXsk_doggydig11);
-    }
-    else
-    {
-        Sfx_StopObjectChannel((int)obj, 0x10);
-    }
-    if (gb50 != 0 && sub->capturedLatch == 0)
-    {
-        moved = 1;
-    }
-    if (moved != 0)
-    {
-        return 4;
-    }
-    sub->capturedLatch = gb50;
-    animUpdate->sequenceEventActive = 0;
-    while (ObjMsg_Pop(obj, &msgA, &msgB, &payload) != 0)
-    {
-    }
-    if (animUpdate->triggerCommand == 1)
-    {
-        getLActions(obj, obj, 0x18, 0, 0, 0);
-        animUpdate->triggerCommand = 0;
-    }
-    return 0;
-}
+int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2733,223 +1662,7 @@ typedef struct
  * to the roost point. */
 #pragma scheduling off
 #pragma peephole off
-void babycloudrunner_update(int* obj)
-{
-    char* player;
-    BabyCloudRunnerState* sub;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    int found;
-    u8* def2;
-    int* near;
-    BabyCloudRunnerState* sub2;
-    int inRange;
-    RunnerTarget tgt;
-    int mode;
-    f32 radius;
-    sub = ((GameObject*)obj)->extra;
-    player = (char*)Obj_GetPlayerObject();
-    getTrickyObject();
-    if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
-    {
-        ((GameObject*)obj)->anim.flags |= 0x4000;
-        sub->flags22C &= ~1;
-        Obj_RemoveFromUpdateList(obj);
-        ObjGroup_RemoveObject(obj, 0x20);
-        ObjGroup_RemoveObject(obj, 3);
-    }
-    if (sub->runnerState == 2 && GameBit_Get(0x66) != 0)
-    {
-        (*gObjectTriggerInterface)->runSequence(6, obj, -1);
-        (*gGameUIInterface)->airMeterSetShutdown();
-    }
-    else if (fn_80080150(sub) != 0)
-    {
-        sub->flags22C |= 1;
-        sub->behaviourState = 0;
-        if (((GameObject*)obj)->unkF4 < 0)
-        {
-            if (*(s16*)(def + 0x22) != -1)
-            {
-                GameBit_Set(*(s16*)(def + 0x22), 1);
-            }
-            ObjHits_DisableObject(obj);
-            ((GameObject*)obj)->anim.flags |= 0x4000;
-            sub->flags22C &= ~1;
-            Obj_RemoveFromUpdateList(obj);
-            ObjGroup_RemoveObject(obj, 0x20);
-            ObjGroup_RemoveObject(obj, 3);
-            ((GameObject*)obj)->anim.flags |= 0x4000;
-        }
-        else
-        {
-            ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - 1;
-        }
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        if (sub->runnerState == 0)
-        {
-            mode = 0x19;
-            if ((*gRomCurveInterface)->initCurve((char*)sub + 0x124, obj, lbl_803E424C, &mode, 0) == 0)
-            {
-                sub->runnerState = 1;
-                storeZeroToFloatParam((char*)sub + 0x238);
-            }
-        }
-        else
-        {
-            if (randFn_80080100(500) != 0)
-            {
-                int r = randomGetRange(0, 3);
-                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, (u16)((s16*)sub->mutterSfxTable)[r]);
-            }
-            objAnimFn_80038f38((int)obj, (char*)sub + 0x6c);
-            if (sub->runnerState == 1 || sub->runnerState == 2)
-            {
-                f32 speed = sub->curveSpeed;
-                Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed,
-                                                 lbl_803E4250 * speed, 1);
-                Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)obj + 0x24, 0x1e, lbl_803E4238, lbl_803E4254);
-                objMove((int)obj, *(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x28), *(f32*)((char*)obj + 0x2c));
-                if (sub->runnerState == 1)
-                {
-                    if (sub->runnerIndex != -1 && GameBit_Get(sub->runnerIndex + 0xb2a) != 0)
-                    {
-                        sub->runnerState = 2;
-                        GameBit_Set(0x66, 0);
-                        (*gGameUIInterface)->initAirMeter(lbl_80322B28[sub->runnerIndex], 0x5d1);
-                        s16toFloat((int)((char*)sub + 0x238), (s16)lbl_80322B28[sub->runnerIndex]);
-                    }
-                    fn_8019E3F4(obj);
-                    return;
-                }
-                if (sub->runnerState == 2)
-                {
-                    near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
-                    if (near == NULL || Vec_distance((char*)near + 0x18, (char*)sub + 0x18) >= lbl_803DBE38)
-                    {
-                        if (near != NULL)
-                        {
-                            fn_8014C66C(near, Obj_GetPlayerObject());
-                        }
-                    }
-                    else
-                    {
-                        sandworm_turnTowardTargetAnim(obj, near, (u8*)sub, 0);
-                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) <= lbl_803DBE3C)
-                        {
-                            fn_8014C66C(near, Obj_GetPlayerObject());
-                        }
-                        else
-                        {
-                            fn_8014C66C(near, obj);
-                            if (((GameObject*)obj)->anim.currentMove != 0xd)
-                            {
-                                ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
-                            }
-                            ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(
-                                (int)obj, lbl_803E422C, timeDelta, 0);
-                        }
-                    }
-                    fn_8019E3F4(obj);
-                }
-            }
-            inRange = Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)(*(s16*)(def + 0x1a) / 2);
-            if (sub->runnerState == 2)
-            {
-                radius = (f32) * (s16*)(def + 0x18);
-                if (fn_80080150((char*)sub + 0x238) != 0)
-                {
-                    if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown(
-                        (char*)sub + 0x238) != 0)
-                    {
-                        (*gObjectTriggerInterface)->runSequence(6, obj, -1);
-                        (*gGameUIInterface)->airMeterSetShutdown();
-                        return;
-                    }
-                    (*gGameUIInterface)->runAirMeter((int)sub->countdownTimer);
-                }
-                if (inRange == 0 && (void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL)
-                {
-                    inRange = 1;
-                }
-                if (GameBit_Get(sub->runnerIndex + 0xb2e) != 0)
-                {
-                    sub->runnerState = 3;
-                    (*gGameUIInterface)->airMeterSetShutdown();
-                    Sfx_PlayFromObject((int)obj, SFXsp_lf_mutter4);
-                    storeZeroToFloatParam((char*)sub + 0x238);
-                }
-            }
-            else
-            {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-                sub2 = ((GameObject*)obj)->extra;
-                {
-                    char* pp = (char*)Obj_GetPlayerObject();
-                    def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
-                    found = 0;
-                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
-                        && sub2->runnerState == 3
-                        && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
-                    {
-                        found = 1;
-                    }
-                }
-                if (found != 0)
-                {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
-                }
-                else
-                {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
-                }
-            }
-            if (sub->runnerState == 3)
-            {
-                if (!((WormSpitByte*)&sub->spitFlags)->_p0)
-                {
-                    tgt.x = *(f32*)(def + 8);
-                    tgt.y = *(f32*)(def + 0xc);
-                    tgt.z = *(f32*)(def + 0x10);
-                    tgt.a = sub->roostYaw;
-                    tgt.b = 0;
-                    tgt.c = 0;
-                    ((GameObject*)obj)->anim.rotY = 0;
-                    ((GameObject*)obj)->anim.rotZ = 0;
-                    if (dll_2E_func0D(obj, &tgt, lbl_803DBE40, -1, &lbl_803DBE44, &lbl_803DBE48) != 0)
-                    {
-                        ((WormSpitByte*)&sub->spitFlags)->_p0 = 1;
-                        GameBit_Set(0x66, 0);
-                    }
-                    ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBE44, timeDelta, 0);
-                }
-                else
-                {
-                    if (inRange != 0)
-                    {
-                        (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-                        sub->unkB0 = 1;
-                    }
-                    sandworm_turnTowardTargetAnim(obj, (int*)Obj_GetPlayerObject(), (u8*)sub, 1);
-                    if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(
-                        (int)obj, sub->animSpeed, timeDelta, 0) != 0)
-                    {
-                        if (randFn_80080100(2) != 0)
-                        {
-                            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E4218, 0);
-                        }
-                        else
-                        {
-                            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4218, 0);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+void babycloudrunner_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 

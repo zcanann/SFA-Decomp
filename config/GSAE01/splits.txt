@@ -792,8 +792,32 @@ main/dll/DR/dll_0148_cfguardian.c:
 main/dll/DR/dll_0149_cfwindlift.c:
 	.text       start:0x8019C784 end:0x8019D578
 
-main/dll/DR/sandwormBoss.c:
-	.text       start:0x8019D578 end:0x801A0B14
+main/dll/DR/dll_014A_cfpowerbase.c:
+	.text       start:0x8019D578 end:0x8019D9F0
+
+main/dll/DR/dll_014B_cfmaincryst.c:
+	.text       start:0x8019D9F0 end:0x8019E3F4
+
+main/dll/DR/dll_014C_cfcloudbaby.c:
+	.text       start:0x8019E3F4 end:0x8019F540
+
+main/dll/DR/dll_014E_cfprisongua.c:
+	.text       start:0x8019F540 end:0x8019FC84
+
+main/dll/DR/dll_014F_cfprisonunc.c:
+	.text       start:0x8019FC84 end:0x801A0174
+
+main/dll/DR/dll_0150_gcrobotligh.c:
+	.text       start:0x801A0174 end:0x801A04F4
+
+main/dll/DR/dll_0153_cfperch.c:
+	.text       start:0x801A04F4 end:0x801A0614
+
+main/dll/DR/dll_0154_cfprisoncag.c:
+	.text       start:0x801A0614 end:0x801A0994
+
+main/dll/DR/dll_0157_spiritdoors.c:
+	.text       start:0x801A0994 end:0x801A0B14
 
 main/dll/DR/dll_0158_gunpowderbarrel.c:
 	.text       start:0x801A0B14 end:0x801A27B8
