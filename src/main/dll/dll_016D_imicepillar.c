@@ -96,9 +96,7 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017ac8();
-extern undefined4 ObjHits_DisableObject();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -181,7 +179,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 
 
-extern u32 randomGetRange(int min, int max);
 
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
  * for the non-172 variants pick a random lifetime and, for type 0x16b, map
@@ -266,8 +263,6 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int kind, int id);
 extern u8 lbl_802C2308[];
 
 
@@ -286,15 +281,12 @@ extern u8 lbl_802C2308[];
 #pragma scheduling reset
 
 extern void Music_Trigger(int track, int flag);
-extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
-extern f32 timeDelta;
 
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
 #pragma scheduling off
 #pragma scheduling reset
 
-extern u8 framesThisStep;
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
@@ -333,24 +325,8 @@ extern u8 lbl_803236B8[];
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-typedef struct Lavaball1bePlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x20 - 0x19];
-} Lavaball1bePlacement;
 
 
-typedef struct Lavaball1bfPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1E - 0x19];
-    s16 unk1E;
-    u8 pad20[0x24 - 0x20];
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} Lavaball1bfPlacement;
 
 
 /* imanimspacecraft_getExtraSize == 0x4. */
@@ -430,7 +406,6 @@ extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
 
-extern EffectInterface** gPartfxInterface;
 
 
 /*
@@ -681,94 +656,46 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-void imanimspacecraft_modelMtxFn(void);
 
-void imanimspacecraft_hitDetect(void);
 
-void imanimspacecraft_release(void);
 
-void imanimspacecraft_initialise(void);
 
-void imspacethruster_hitDetect(void);
 
-void imspacethruster_release(void);
 
-void imspacethruster_initialise(void);
 
-void imspacering_free(void);
 
-void imspacering_hitDetect(void);
 
-void imspacering_release(void);
 
-void imspacering_initialise(void);
 
-void imspaceringgen_hitDetect(void);
 
-void imspaceringgen_release(void);
 
-void imspaceringgen_initialise(void);
 
-void lavaball1be_hitDetect(void);
 
-void lavaball1be_release(void);
 
-void lavaball1be_initialise(void);
 
-void lavaball1bf_hitDetect(void);
 
-void lavaball1bf_release(void);
 
-void lavaball1bf_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int imanimspacecraft_getExtraSize(void);
-int imanimspacecraft_getObjectTypeId(void);
-int imspacethruster_getExtraSize(void);
-int imspacethruster_getObjectTypeId(void);
-int imspacering_getExtraSize(void);
-int imspacering_getObjectTypeId(void);
-int imspaceringgen_getExtraSize(void);
-int imspaceringgen_getObjectTypeId(void);
-int linkb_levcontrol_getExtraSize(void);
-int link_levcontrol_getExtraSize(void);
-int lavaball1bf_getExtraSize(void);
-int lavaball1bf_getObjectTypeId(void);
-int dimlogfire_getExtraSize(void);
 
 /* Pattern wrappers. */
-extern u32 lbl_803DDB48;
-void imspaceringgen_free(void);
 
 /* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
-void imspaceringgen_init(int* obj);
 
 /* If obj->_F4 == 0, set it to 1; else early-return. */
-void imanimspacecraft_update(int* obj);
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
-void imanimspacecraft_free(int* obj);
 
-extern f32 lbl_803E4784;
-extern char lbl_803AC948[];
 
-void imanimspacecraft_init(int* obj);
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
-int imanimspacecraft_setScale(int* obj, int bitIdx);
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
-void lavaball1bf_func11(int* obj);
 
 /* lavaball1bf "request" hook: set pending if gated, return success. */
-int lavaball1bf_setScale(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4768;
-extern f32 lbl_803E4780;
-extern f32 lbl_803E4788;
-extern f32 lbl_803E47B8;
-extern f32 lbl_803E4810;
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -778,155 +705,57 @@ void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* if (o->_X == K) return A; else return B;  pattern. */
-int lavaball1be_getExtraSize(int* obj);
 
-int lavaball1be_getObjectTypeId(int* obj);
 
 /* chained byte mask. */
-u32 imanimspacecraft_func0B(int* obj);
-u32 lavaball1be_func11(int* obj);
 
-int fn_801B0784(int obj, int delta);
 
 extern void Music_Trigger(int id, int p2);
-extern int getSaveGameLoadStatus(void);
-extern void* Obj_GetPlayerObject(void);
-extern int coordsToMapCell(f32 x, f32 z);
-
-void link_levcontrol_free(int obj);
-
-void link_levcontrol_update(int* obj);
-
-extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
-
-void link_levcontrol_updateAreaMusic(int* obj);
-
-extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
-extern void envFxActFn_800887f8(int id);
-extern u8 lbl_803239F0[];
-
-void link_levcontrol_applyEnterAreaEffects(int* obj);
-
-extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
-extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
-extern s16 lbl_80323818[], lbl_80323824[];
-
-void imspacethruster_init(int* obj, u8* param2);
-
-void link_levcontrol_init(int* obj);
-
-extern u8 lbl_803238D8[];
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern int* getTrickyObject(void);
-extern void fn_80138908(int* tricky, int mode);
-extern f32 lbl_803E47C8;
-
-typedef struct
-{
-    int flags;
-    s8 cnt : 2;
-    u8 stage : 3;
-    u8 low : 3;
-    u8 flag5 : 1;
-    u8 pad5 : 7;
-    u8 pad6[2];
-    f32 timer;
-    s16 music;
-} LinkbLevState;
-
-void linkb_levcontrol_init(int* obj);
-
-void linkb_levcontrol_update(int* obj);
-
-extern f32 lbl_803E47C0;
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern f32 lbl_803E47C4;
-
-typedef struct
-{
-    int* ringA;
-    int* ringB;
-    u8 visible;
-} RingGenState;
-
-void imspacering_init(s16* obj, s8* p);
-
-void imspacering_update(s16* obj);
-
-void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-
-void imspaceringgen_update(s16* obj);
-
-extern void ModelLightStruct_free(void* light);
-extern void mm_free(void* p);
-
-extern f32 lbl_803E4814;
-
-void lavaball1bf_init(s16* obj, u8* p);
-
-void lavaball1bf_free(int obj, int mode);
-
-void lavaball1be_free(int obj);
-
-void imspacethruster_free(int obj);
-
-void dimlogfire_free(int* obj, int mode);
 
 
 
-extern void queueGlowRender(int* obj);
 
 
-extern int modelLightStruct_getActiveState(int* p);
-extern f32 lbl_803E47F0;
 
-void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5);
 
-extern void modelLightStruct_updateGlowAlpha(int p);
-extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
-extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
-extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
-extern u8 lbl_802C2318[];
-extern void vecRotateZXY(void* in, void* out);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 extern int ObjList_FindObjectById(int id);
-extern u8* objCreateLight(s16* obj, int b);
-extern void modelLightStruct_setLightKind(u8* light, int value);
-extern void modelLightStruct_setDiffuseColor(u8* light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(u8* light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(u8* light, int p3, int p4, int p5, int p6, int p7, f32 a);
-extern void modelLightStruct_setGlowProjectionRadius(u8* light, f32 a);
-
-typedef struct
-{
-    f32 x, y, z;
-} LavaVec;
-
-void lavaball1be_init(s16* obj, u8* p);
-
-void lavaball1be_update(s16* obj);
-
-extern int* objFindTexture(int* obj, int a, int b);
-extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
-
-int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
-
-extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
-
-void imspacethruster_update(int* obj);
 
 
-void lavaball1bf_update(int* obj);
 
-void lavaball1be_setScale(s16* obj, int p2, int p3);
+
+
+
+
+
+
+
