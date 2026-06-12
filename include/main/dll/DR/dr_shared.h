@@ -15,6 +15,7 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
@@ -291,7 +292,7 @@ extern s16 lbl_803DC2AE;
 extern f32 lbl_803E6998;
 extern f32 lbl_803E69A0;
 extern char sKytesMumYawDiffMessage[];
-extern void Curve_AdvanceAlongPath(void *curve, f32 v);
+extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 v);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int p3);
 extern void Obj_SteerVelocityTowardVector(int obj, f32 *a, f32 *b, f32 f1, f32 f2, f32 f3);
 extern f32 lbl_803E6A4C;
@@ -513,7 +514,7 @@ extern void objModelClearVecFn_8003aa40(int obj);
 
 void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData);
 int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out);
-int drakorhoverpad_update(void *curve, int arg);
+int drakorhoverpad_update(RomCurveWalker *curve, int arg);
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
 int ktrex_stateHandlerB01(int obj, int runtime);

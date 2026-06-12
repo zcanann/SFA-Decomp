@@ -90,42 +90,11 @@ typedef struct DrakorhoverpadHandlePathPointEventState
 } DrakorhoverpadHandlePathPointEventState;
 
 
-/* Rom-curve follow block embedded at state+0x4 (passed to the curve
- * interface; drakorhoverpad_update receives it as its first arg). */
-typedef struct DrakorPadCurve
-{
-    f32 unk00;
-    u8 pad04[0xc];
-    int unk10;
-    u8 pad14[0x54];
-    f32 unk68;
-    f32 unk6C;
-    f32 unk70;
-    f32 unk74;
-    f32 unk78;
-    f32 unk7C;
-    int pointIdx; /* 0x80 */
-    u8 pad84[0xc];
-    int unk90;
-    u8 pad94[8];
-    u8* pointDef; /* 0x9c */
-    u8* pointDef2; /* 0xa0 */
-    void* unkA4;
-    u8 padA8[0x10];
-    f32 vecB8[4];
-    u8 padC8[0x10];
-    f32 vecD8[4];
-    u8 padE8[0x10];
-    f32 vecF8[4];
-} DrakorPadCurve;
-
-STATIC_ASSERT(sizeof(DrakorPadCurve) == 0x108);
-
 /* drakorhoverpad_getExtraSize == 0x17c. */
 typedef struct DrakorHoverpadState
 {
     f32 unk00;
-    DrakorPadCurve curve; /* 0x004 */
+    RomCurveWalker curve; /* 0x004 */
     u8 pad10C[4];
     f32 speed; /* 0x110 */
     f32 targetSpeed; /* 0x114 */
@@ -347,7 +316,7 @@ int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex)
 #pragma dont_inline reset
 
 #pragma peephole on
-int drakorhoverpad_update(void* curve, int arg)
+int drakorhoverpad_update(RomCurveWalker* curve, int arg)
 {
     u8* p = (u8*)curve;
     u8* cur;
@@ -467,7 +436,7 @@ void drakorhoverpad_updateMain(int obj)
     int q = *(int*)&((GameObject*)obj)->anim.placementData;
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
     Flags377* g = (Flags377*)(p + 0x179);
-    u8* curve;
+    RomCurveWalker* curve;
     int curveArg;
     f32 curvePos[3];
     f32 diff[3];
@@ -493,25 +462,25 @@ void drakorhoverpad_updateMain(int obj)
         if (f->bit20 != 0)
         {
             curveArg = 0x2a;
-            (*gRomCurveInterface)->initCurve(p + 4, (void*)obj, lbl_803E6A4C, &curveArg, -1);
-            Curve_AdvanceAlongPath(p + 4, lbl_803E6A50);
-            ((GameObject*)obj)->anim.localPosX = *(f32*)&((GameObject*)p)->anim.jointPoseData;
-            ((GameObject*)obj)->anim.localPosY = ((DrakorHoverpadState*)p)->curve.unk6C;
-            ((GameObject*)obj)->anim.localPosZ = ((DrakorHoverpadState*)p)->curve.unk70;
+            (*gRomCurveInterface)->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, lbl_803E6A4C, &curveArg, -1);
+            Curve_AdvanceAlongPath(&((DrakorHoverpadState*)p)->curve, lbl_803E6A50);
+            ((GameObject*)obj)->anim.localPosX = ((DrakorHoverpadState*)p)->curve.posX;
+            ((GameObject*)obj)->anim.localPosY = ((DrakorHoverpadState*)p)->curve.posY;
+            ((GameObject*)obj)->anim.localPosZ = ((DrakorHoverpadState*)p)->curve.posZ;
             *(f32*)p = lbl_803E6A38;
             Sfx_PlayFromObject(obj, SFXfend_fox_keytap2);
             Sfx_PlayFromObject(obj, SFXfend_pep_wakeup);
         }
         return;
     }
-    curve = p + 4;
+    curve = &((DrakorHoverpadState*)p)->curve;
     if (g->f08 != 0)
     {
         phase = lbl_803E6A54 *
             (f32)(int)
-        getAngle(sqrtf(*(f32*)(curve + 0x74) * *(f32*)(curve + 0x74) +
-                     *(f32*)(curve + 0x7c) * *(f32*)(curve + 0x7c)),
-                 *(f32*)(curve + 0x78)) /
+        getAngle(sqrtf(curve->tangentX * curve->tangentX +
+                     curve->tangentZ * curve->tangentZ),
+                 curve->tangentY) /
             lbl_803E6A58;
         wobbleY = lbl_803E6A8C * mathCosf(phase);
         limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));
@@ -564,29 +533,29 @@ void drakorhoverpad_updateMain(int obj)
     }
     if (((DrakorhoverpadUpdateMainState*)p)->verticalVel < lbl_803E6A3C)
     {
-        (*gRomCurveInterface)->setClosed(p + 4, 1);
+        (*gRomCurveInterface)->setClosed(curve, 1);
     }
     else
     {
-        (*gRomCurveInterface)->setClosed(p + 4, 0);
+        (*gRomCurveInterface)->setClosed(curve, 0);
     }
     ((DrakorhoverpadUpdateMainState*)p)->unk114 = lbl_803E6A3C;
     if (lbl_803E6A3C != ((DrakorhoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorhoverpadUpdateMainState*)p)->verticalVel);
-        if ((*(int*)(curve + 0x80) != 0) != (*(int*)(curve + 0x10) != 0))
+        if ((curve->reverse != 0) != (curve->atSegmentEnd != 0))
         {
-            if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)(*(int*)(curve + 0xa0) + 0x18),
-                                                    *(u8*)(*(int*)(curve + 0xa4) + 0x18),
+            if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)((u8*)curve->nodeA0 + 0x18),
+                                                    *(u8*)((u8*)curve->nodeA4 + 0x18),
                                                     &evOut) != 0)
             {
                 drakorhoverpad_update(curve, evOut);
             }
         }
     }
-    curvePos[0] = *(f32*)(curve + 0x68);
-    curvePos[1] = *(f32*)(curve + 0x6c);
-    curvePos[2] = *(f32*)(curve + 0x70);
+    curvePos[0] = curve->posX;
+    curvePos[1] = curve->posY;
+    curvePos[2] = curve->posZ;
     curvePos[1] = curvePos[1] + (lbl_803E6A48 + mathSinf(lbl_803E6A54 *
         (f32)(int)((DrakorhoverpadUpdateMainState*)p)->anglePhase /
         lbl_803E6A58));
@@ -625,11 +594,11 @@ void drakorhoverpad_updateMain(int obj)
     }
     else
     {
-        phase = sqrtf(*(f32*)(curve + 0x74) * *(f32*)(curve + 0x74) +
-            *(f32*)(curve + 0x7c) * *(f32*)(curve + 0x7c));
-        yawDelta = (s16)((s16)(getAngle(*(f32*)(curve + 0x74), *(f32*)(curve + 0x7c)) + 0x8000) -
+        phase = sqrtf(curve->tangentX * curve->tangentX +
+            curve->tangentZ * curve->tangentZ);
+        yawDelta = (s16)((s16)(getAngle(curve->tangentX, curve->tangentZ) + 0x8000) -
             *(s16*)obj);
-        ((GameObject*)obj)->anim.rotY = getAngle(*(f32*)(curve + 0x78), phase);
+        ((GameObject*)obj)->anim.rotY = getAngle(curve->tangentY, phase);
         if (yawDelta < -0x800)
         {
             yawDelta = -0x800;
