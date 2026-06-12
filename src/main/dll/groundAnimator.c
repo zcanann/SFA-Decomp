@@ -533,7 +533,7 @@ ObjectDescriptor gWM_ColumnObjDescriptor = {
 };
 
 extern void appleontree_init();
-extern u8 appleontree_update[];
+extern void appleontree_update();
 extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 extern void appleontree_free(int* obj);
 extern int appleontree_getExtraSize(void);
@@ -558,13 +558,13 @@ ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
 };
 
 u32 jumptable_803214DC[] = {
-    (u32)(appleontree_update + 0x170),
-    (u32)(appleontree_update + 0x274),
-    (u32)(appleontree_update + 0x3C4),
-    (u32)(appleontree_update + 0x4E8),
-    (u32)(appleontree_update + 0x554),
-    (u32)(appleontree_update + 0x6C8),
-    (u32)(appleontree_update + 0x71C),
+    (u32)((u8*)appleontree_update + 0x170),
+    (u32)((u8*)appleontree_update + 0x274),
+    (u32)((u8*)appleontree_update + 0x3C4),
+    (u32)((u8*)appleontree_update + 0x4E8),
+    (u32)((u8*)appleontree_update + 0x554),
+    (u32)((u8*)appleontree_update + 0x6C8),
+    (u32)((u8*)appleontree_update + 0x71C),
 };
 
 /* appleontree extra block (size 0x64 = appleontree_getExtraSize). */
