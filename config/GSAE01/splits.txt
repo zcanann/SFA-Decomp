@@ -201,14 +201,8 @@ main/dll/dll_00BB_projwallpower.c:
 main/dll/dll_00BC_projquakeshock.c:
 	.text       start:0x80100908 end:0x80100940
 
-main/dll/dll_7A.c:
-	.text       start:0x80100940 end:0x80100970
-
-main/dll/dll_7B.c:
-	.text       start:0x80100970 end:0x80100974
-
-main/dll/dll_7C.c:
-	.text       start:0x80100974 end:0x80100978
+main/dll/dll_00BD_projsunshock.c:
+	.text       start:0x80100940 end:0x80100978
 
 main/dll/dll_7D.c:
 	.text       start:0x80100978 end:0x801009A8
