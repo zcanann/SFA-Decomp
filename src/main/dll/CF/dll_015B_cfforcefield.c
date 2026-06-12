@@ -80,11 +80,6 @@ extern f32 lbl_803DBE90; /* ring radius scale */
 extern int lbl_803DBE94; /* burst position jitter, +/- units */
 extern int lbl_803DBE98; /* collapse rotY rate */
 extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
-extern f32 lbl_803E4390; /* 0.0f */
-extern f32 lbl_803E4394; /* 1.0f */
-extern f32 lbl_803E4398; /* 1/60 - collapse time -> ring scale */
-extern f32 lbl_803E439C; /* 512.0f - idle rotZ rate */
-
 int cfforcefield_getExtraSize(void) { return sizeof(CfForceFieldState); }
 
 int cfforcefield_getObjectTypeId(void) { return 0x0; }
@@ -120,7 +115,7 @@ void cfforcefield_update(u8* obj)
 
     data = (CfForceFieldMapData*)((GameObject*)obj)->anim.placement;
     state = ((GameObject*)obj)->extra;
-    z = lbl_803E4390;
+    z = 0.0f;
     ((GameObject*)obj)->anim.velocityZ = z;
     ((GameObject*)obj)->anim.velocityY = z;
     ((GameObject*)obj)->anim.velocityX = z;
@@ -133,20 +128,21 @@ void cfforcefield_update(u8* obj)
                started, then shrinks with the time left */
             style = data->style % 3;
             val = state->timer;
-            isZero = (val != lbl_803E4390);
+            isZero = (val != z);
             isZero = !isZero;
             if (isZero)
             {
-                strength = lbl_803E4394;
+                strength = 1.0f;
             }
             else
             {
-                strength = lbl_803E4398 * val;
+                /* ring shrinks with the collapse time left (1/60s) */
+                strength = 0.016666668f * val;
             }
 
             {
                 Obj_BuildWorldTransformMatrix(obj, (f32*)mtx, 0);
-                ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803E439C * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotZ);
+                ((GameObject*)obj)->anim.rotZ = (s16)(512.0f * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotZ);
 
                 angle = -0x7fff;
                 emitter = (CfForceFieldEmitter*)((u8*)lbl_80322ED8 + style * 0x18);

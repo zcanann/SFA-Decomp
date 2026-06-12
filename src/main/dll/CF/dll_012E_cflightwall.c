@@ -10,9 +10,15 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
 
+int cflightwall_getExtraSize(void) { return 0x0; }
+
+int cflightwall_getObjectTypeId(void) { return 0x0; }
+
 void cflightwall_free(void)
 {
 }
+
+void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
 
 void cflightwall_hitDetect(void)
 {
@@ -21,19 +27,6 @@ void cflightwall_hitDetect(void)
 void cflightwall_update(void)
 {
 }
-
-void cflightwall_release(void)
-{
-}
-
-void cflightwall_initialise(void)
-{
-}
-
-int cflightwall_getExtraSize(void) { return 0x0; }
-int cflightwall_getObjectTypeId(void) { return 0x0; }
-
-void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
 
 void cflightwall_init(s16* obj, u8* def)
 {
@@ -51,4 +44,12 @@ void cflightwall_init(s16* obj, u8* def)
             ((GameObject*)obj)->anim.rootMotionScale * *(f32*)((char*)*(int**)&((GameObject*)obj)->anim.modelInstance + 4);
     }
     ((GameObject*)obj)->objectFlags |= 0xA000;
+}
+
+void cflightwall_release(void)
+{
+}
+
+void cflightwall_initialise(void)
+{
 }

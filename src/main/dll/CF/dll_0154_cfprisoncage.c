@@ -118,16 +118,31 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+int cfprisoncage_getExtraSize(void) { return 0x0; }
+
+int cfprisoncage_getObjectTypeId(int* obj)
+{
+    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_SWITCH) return 0x8;
+    return 0x0;
+}
+
 void cfprisoncage_free(void)
 {
 }
 
-void cfprisoncage_release(void)
+void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0);
 }
 
-void cfprisoncage_initialise(void)
+void cfprisoncage_hitDetect(int* obj)
 {
+    f32 pos_z, pos_y, pos_x;
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0)
+    {
+        objfx_spawnHitEmitterAtPos(&pos_x, 8, 200, 128, 0);
+    }
 }
 
 void cfprisoncage_update(int* obj)
@@ -146,29 +161,6 @@ void cfprisoncage_update(int* obj)
         }
         (*gObjectTriggerInterface)->runSequence(v, obj, -1);
         ((GameObject*)obj)->unkF4 = 0;
-    }
-}
-
-int cfprisoncage_getExtraSize(void) { return 0x0; }
-
-void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0);
-}
-
-int cfprisoncage_getObjectTypeId(int* obj)
-{
-    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_SWITCH) return 0x8;
-    return 0x0;
-}
-
-void cfprisoncage_hitDetect(int* obj)
-{
-    f32 pos_z, pos_y, pos_x;
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0)
-    {
-        objfx_spawnHitEmitterAtPos(&pos_x, 8, 200, 128, 0);
     }
 }
 
@@ -198,4 +190,12 @@ void cfprisoncage_init(int* obj, u8* def)
             (*gObjectTriggerInterface)->preempt((int)obj, 60);
         }
     }
+}
+
+void cfprisoncage_release(void)
+{
+}
+
+void cfprisoncage_initialise(void)
+{
 }

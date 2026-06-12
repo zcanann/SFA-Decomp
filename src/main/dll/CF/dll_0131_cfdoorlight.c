@@ -54,6 +54,10 @@ extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* objFindTexture(void* obj, int target, int param_3);
 
+int cf_doorlight_getExtraSize(void) { return sizeof(CfDoorLightState); }
+
+int cf_doorlight_getObjectTypeId(void) { return 0x0; }
+
 void cf_doorlight_free(void)
 {
 }
@@ -65,18 +69,6 @@ void cf_doorlight_render(void)
 void cf_doorlight_hitDetect(void)
 {
 }
-
-void cf_doorlight_release(void)
-{
-}
-
-void cf_doorlight_initialise(void)
-{
-}
-
-int cf_doorlight_getExtraSize(void) { return sizeof(CfDoorLightState); }
-
-int cf_doorlight_getObjectTypeId(void) { return 0x0; }
 
 /* obj is a word here, not a pointer: target colors it r30 UNDER the state
    copy (r31) = the integral-param pool (CLAUDE.md recipe #126). */
@@ -138,4 +130,12 @@ void cf_doorlight_init(GameObject* obj, CfDoorLightMapData* mapData)
     }
     obj->objectFlags |= 0x2000;
     obj->objectFlags |= 0x4000;
+}
+
+void cf_doorlight_release(void)
+{
+}
+
+void cf_doorlight_initialise(void)
+{
 }

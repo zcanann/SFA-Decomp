@@ -38,19 +38,81 @@ extern f32 lbl_803E4288;
 
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
+/* release-sequence callback: on the cued trigger, thank Fox with a
+ * one-shot +2 magic (the Power Room key comes from the script) */
+int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    CfPrisonUncleState* p = ((GameObject*)obj)->extra;
+    if (p->magicGranted != 0) return 0;
+    if (animUpdate->triggerCommand == 2)
+    {
+        p->magicGranted = 1;
+        playerAddRemoveMagic(Obj_GetPlayerObject(), 2);
+    }
+    return 0;
+}
+
+int cfprisonuncle_getExtraSize(void) { return 0xa8; }
+
+int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
+
 void cfprisonuncle_free(void)
 {
 }
 
+/* cfprisonuncle_render: render the uncle and/or his companion object
+ * depending on the release gamebits, opacity and visibility; while
+ * still caged, snap the uncle to the companion's path start first. */
+void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
+    if (GameBit_Get(0x50) != 0)
+    {
+        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
+        {
+            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+        }
+    }
+    else if (GameBit_Get(0x4d) != 0 && visible != 0)
+    {
+        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
+        {
+            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+        }
+    }
+    else if (sub != NULL && *(void**)&sub->target != NULL)
+    {
+        if (sub->released == 0)
+        {
+            if (visible != 0)
+            {
+                if (objUpdateOpacity(sub->target) != 0)
+                {
+                    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(
+                        sub->target, p2, p3, p4, p5, lbl_803E4288);
+                    ObjPath_GetPointWorldPosition(sub->target, 0, (char*)obj + 0xc, (char*)obj + 0x10,
+                                                  (char*)obj + 0x14, 0);
+                }
+                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+            }
+        }
+        else
+        {
+            if (objUpdateOpacity(sub->target) != 0)
+            {
+                ((void(*)(int, int, int, int, int, f32))
+                    objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+            }
+            if (visible != 0)
+            {
+                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+            }
+        }
+    }
+}
+
 void cfprisonuncle_hitDetect(void)
-{
-}
-
-void cfprisonuncle_release(void)
-{
-}
-
-void cfprisonuncle_initialise(void)
 {
 }
 
@@ -123,23 +185,6 @@ void cfprisonuncle_update(int* obj)
     }
 }
 
-int cfprisonuncle_getExtraSize(void) { return 0xa8; }
-int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
-
-/* release-sequence callback: on the cued trigger, thank Fox with a
- * one-shot +2 magic (the Power Room key comes from the script) */
-int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    CfPrisonUncleState* p = ((GameObject*)obj)->extra;
-    if (p->magicGranted != 0) return 0;
-    if (animUpdate->triggerCommand == 2)
-    {
-        p->magicGranted = 1;
-        playerAddRemoveMagic(Obj_GetPlayerObject(), 2);
-    }
-    return 0;
-}
-
 void cfprisonuncle_init(int* obj)
 {
     CfPrisonUncleState* state;
@@ -157,54 +202,10 @@ void cfprisonuncle_init(int* obj)
     }
 }
 
-/* cfprisonuncle_render: render the uncle and/or his companion object
- * depending on the release gamebits, opacity and visibility; while
- * still caged, snap the uncle to the companion's path start first. */
-void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void cfprisonuncle_release(void)
 {
-    CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x50) != 0)
-    {
-        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
-        {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
-        }
-    }
-    else if (GameBit_Get(0x4d) != 0 && visible != 0)
-    {
-        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
-        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
-        {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
-        }
-    }
-    else if (sub != NULL && *(void**)&sub->target != NULL)
-    {
-        if (sub->released == 0)
-        {
-            if (visible != 0)
-            {
-                if (objUpdateOpacity(sub->target) != 0)
-                {
-                    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(
-                        sub->target, p2, p3, p4, p5, lbl_803E4288);
-                    ObjPath_GetPointWorldPosition(sub->target, 0, (char*)obj + 0xc, (char*)obj + 0x10,
-                                                  (char*)obj + 0x14, 0);
-                }
-                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
-            }
-        }
-        else
-        {
-            if (objUpdateOpacity(sub->target) != 0)
-            {
-                ((void(*)(int, int, int, int, int, f32))
-                    objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
-            }
-            if (visible != 0)
-            {
-                ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
-            }
-        }
-    }
+}
+
+void cfprisonuncle_initialise(void)
+{
 }

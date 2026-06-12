@@ -1317,6 +1317,7 @@ main/dll/DR/dll_0128_kttorch.c:
 
 main/dll/CF/dll_012A_cfcrate.c:
 	.text       start:0x8018D6E8 end:0x8018E6C4
+	.sdata2     start:0x803E3E28 end:0x803E3E30
 
 main/dll/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
@@ -1335,6 +1336,7 @@ main/dll/dll_012C_transporter.c:
 
 main/dll/CF/dll_012E_cflightwall.c:
 	.text       start:0x80191A70 end:0x80191B60
+	.sdata2     start:0x803E3EF8 end:0x803E3F00
 
 main/dll/dll_012F_barrelpad.c:
 	.text       start:0x80191B60 end:0x80191D00
@@ -1425,6 +1427,7 @@ main/dll/CF/dll_014E_cfprisonguard.c:
 
 main/dll/CF/dll_014F_cfprisonuncle.c:
 	.text       start:0x8019FC84 end:0x801A0174
+	.sdata2     start:0x803E4290 end:0x803E4298
 
 main/dll/dll_0150_gcrobotlightbea.c:
 	.text       start:0x801A0174 end:0x801A04F4
@@ -1449,6 +1452,7 @@ main/dll/dll_015A_explodable.c:
 
 main/dll/CF/dll_015B_cfforcefield.c:
 	.text       start:0x801A39B4 end:0x801A3E9C
+	.sdata2     start:0x803E4390 end:0x803E43B8
 
 main/dll/dll_015D_slidingdoor.c:
 	.text       start:0x801A3E9C end:0x801A41D8
@@ -1458,6 +1462,7 @@ main/dll/dll_015F_attractor.c:
 
 main/dll/CF/dll_0162_cfmagicwall.c:
 	.text       start:0x801A4380 end:0x801A4524
+	.sdata2     start:0x803E43E0 end:0x803E43E8
 
 main/dll/CF/dll_0164_cflevelcontrol.c:
 	.text       start:0x801A4524 end:0x801A4DB8

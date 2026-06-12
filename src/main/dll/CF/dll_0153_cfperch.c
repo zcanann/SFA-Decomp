@@ -14,26 +14,6 @@ extern int ObjMsg_SendToObjects();
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 
-void cfperch_render(void)
-{
-}
-
-void cfperch_hitDetect(void)
-{
-}
-
-void cfperch_release(void)
-{
-}
-
-void cfperch_initialise(void)
-{
-}
-
-int cfperch_getExtraSize(void) { return 0x0; }
-
-int cfperch_getObjectTypeId(void) { return 0x0; }
-
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */
 int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -45,15 +25,21 @@ int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void cfperch_init(int* obj)
-{
-    ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801A04F4;
-}
+int cfperch_getExtraSize(void) { return 0x0; }
+
+int cfperch_getObjectTypeId(void) { return 0x0; }
 
 void cfperch_free(int* obj)
 {
     ObjMsg_SendToObjects(62, 0, obj, 0x40001, 0);
+}
+
+void cfperch_render(void)
+{
+}
+
+void cfperch_hitDetect(void)
+{
 }
 
 void cfperch_update(int* obj)
@@ -67,4 +53,18 @@ void cfperch_update(int* obj)
         }
     }
     ((GameObject*)obj)->unkF4 = 0;
+}
+
+void cfperch_init(int* obj)
+{
+    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->animEventCallback = (void*)fn_801A04F4;
+}
+
+void cfperch_release(void)
+{
+}
+
+void cfperch_initialise(void)
+{
 }
