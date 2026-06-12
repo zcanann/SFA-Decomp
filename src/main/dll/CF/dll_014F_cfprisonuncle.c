@@ -636,15 +636,17 @@ void cfprisonuncle_update(int* obj)
     if (sub->captured == 0)
     {
         player = Obj_GetPlayerObject();
-        fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
+        fn_8003ADC4(obj, player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
         if ((int)randomGetRange(0, 0x1e) == 0)
         {
             objAudioFn_80039270((int)obj, (char*)sub + 0x34, 0x297);
         }
         if (ObjTrigger_IsSet((int)obj) != 0)
         {
-            fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
-            *(s16*)objModelGetVecFn_800395d8((int)obj, 1) = -0xaaa;
+            s16* vec;
+            fn_8003ADC4(obj, player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
+            vec = (s16*)objModelGetVecFn_800395d8((int)obj, 1);
+            *vec = -0xaaa;
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         }
         else
