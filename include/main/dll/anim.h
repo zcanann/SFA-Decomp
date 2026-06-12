@@ -154,13 +154,13 @@ void doorswitch_init(void);
 void doorswitch_release(void);
 void doorswitch_initialise(void);
 
-int dbegg_func0B(void);
-void dbegg_setScale(void);
+int dbegg_func0B(int obj, f32* v);
+int dbegg_setScale(int obj);
 int dbegg_getExtraSize(void);
 int dbegg_getObjectTypeId(void);
-void dbegg_free(void);
-void dbegg_render(void);
-void dbegg_hitDetect(void);
+void dbegg_free(int x);
+void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+void dbegg_hitDetect(int obj);
 void dbegg_update(int obj);
 void dbegg_init(int obj);
 void dbegg_release(void);
