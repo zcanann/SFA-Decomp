@@ -315,8 +315,8 @@ void RollingBarrel_update(int obj)
     }
 }
 
-#pragma peephole off
 
+#pragma peephole off
 void fn_801A5D88(int obj, int explosionVariant)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;

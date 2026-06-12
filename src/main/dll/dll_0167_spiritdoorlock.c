@@ -257,8 +257,6 @@ void SpiritDoorLock_update(int obj)
     }
 }
 
-#pragma peephole on
 void RollingBarrel_update(int obj);
 
-#pragma peephole off
 

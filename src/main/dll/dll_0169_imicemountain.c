@@ -392,8 +392,6 @@ void imicemountain_init(int* obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
@@ -410,19 +408,20 @@ int crrockfall_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E46D8;
 extern void objRenderFn_8003b8f4(f32);
+#pragma scheduling on
 #pragma peephole off
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E46D8);
 }
-#pragma peephole reset
 
 
 /* conditional init/free pair. */
 
 
 #pragma scheduling off
+#pragma peephole on
 int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -437,7 +436,6 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma scheduling reset
 
 
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
@@ -450,7 +448,6 @@ extern void warpToMap(int mapId, int flags);
 
 /* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
  * through jumptable_80323698 (states 1..7; state 0 idles). */
-#pragma scheduling off
 #pragma peephole off
 void imicemountain_updateEventState(int* obj)
 {
@@ -553,8 +550,6 @@ void imicemountain_updateEventState(int* obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
@@ -572,7 +567,7 @@ extern f32 lbl_803E46DC;
 
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-#pragma scheduling off
+#pragma peephole on
 void imicemountain_update(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
@@ -636,8 +631,6 @@ void imicemountain_update(int* obj)
     SCGameBitLatch_Update((char*)extra + 4, 4, -1, -1, 928, 233);
     SCGameBitLatch_Update((char*)extra + 4, 8, -1, -1, 929, extra->musicTrack);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 

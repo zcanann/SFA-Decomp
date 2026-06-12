@@ -1,5 +1,3 @@
-#pragma scheduling on
-#pragma peephole on
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
@@ -78,8 +76,6 @@ STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -93,11 +89,7 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"

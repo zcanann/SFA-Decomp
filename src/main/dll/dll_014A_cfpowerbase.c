@@ -757,15 +757,11 @@ void cfpowerbase_init(int* obj, u8* params)
         ((GameObject*)obj)->unkF4 = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* EN v1.0 0x8019D77C  size: 312b  cfpowerbase_update: track its gamebit's
  * lit state, fire the queued state-change trigger, and when the base is
  * powered and its UI condition clears, mark it done and notify. */
-#pragma scheduling off
-#pragma peephole off
 void cfpowerbase_update(int* obj)
 {
     CfPowerBaseState* sub = ((GameObject*)obj)->extra;
@@ -795,8 +791,6 @@ void cfpowerbase_update(int* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void cfmaincrystal_hitDetect(void);
 
 
@@ -807,8 +801,8 @@ int cfmaincrystal_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E41D0;
-#pragma peephole off
 
+#pragma scheduling on
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -817,7 +811,6 @@ void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-#pragma peephole reset
 
 
 /* chained byte bit-extract. */
@@ -830,7 +823,6 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 #pragma scheduling off
-#pragma peephole off
 int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int ObjMsg_Pop(int, int*, int*, int*);
@@ -881,8 +873,6 @@ int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern int Obj_SetActiveModelIndex(int* obj, int idx);

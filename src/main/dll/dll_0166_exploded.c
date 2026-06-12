@@ -1,6 +1,4 @@
 /* DLL 0x166 - Exploded [801A39B4-801A39D0) */
-#pragma scheduling on
-#pragma peephole on
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
@@ -79,8 +77,6 @@ STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -95,11 +91,7 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"

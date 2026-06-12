@@ -704,8 +704,6 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 Vec_distance(void* a, void* b);
 
@@ -760,6 +758,8 @@ typedef struct CfprisoncageObjectDef
 } CfprisoncageObjectDef;
 
 
+#pragma scheduling on
+#pragma peephole on
 void cfprisoncage_free(void)
 {
 }
@@ -792,8 +792,6 @@ void cfprisoncage_update(int* obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void spiritdoorspirit_hitDetect(void);
 
 
@@ -803,27 +801,24 @@ int spiritdoorspirit_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E42B0;
-#pragma peephole off
 
 
+#pragma scheduling on
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0);
 }
-#pragma peephole reset
 
 extern f32 lbl_803E4280;
 
 
 /* if (o->_X == K) return A; else return B; */
-#pragma peephole off
 int cfprisoncage_getObjectTypeId(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId == 0x128) return 0x8;
     return 0x0;
 }
-#pragma peephole reset
 
 /* chained byte bit-extract. */
 u32 fn_801A0174(int* obj);
@@ -837,10 +832,9 @@ extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 /* ObjMsg_AllocQueue already declared as undefined */
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
+
+
 #pragma scheduling off
-#pragma peephole off
-
-
 void cfprisoncage_hitDetect(int* obj)
 {
     f32 pos_z, pos_y, pos_x;
@@ -881,6 +875,4 @@ void cfprisoncage_init(int* obj, u8* def)
 void windlift_free(int* obj);
 
 
-#pragma peephole reset
-#pragma scheduling reset
 

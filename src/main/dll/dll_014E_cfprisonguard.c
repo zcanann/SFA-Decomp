@@ -756,15 +756,11 @@ void cfprisonguard_init(int* obj, u8* params)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
     ((Bit80*)&sub->flags39)->top = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4268;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 extern int objGetAnimState80A(void* obj);
 
-#pragma scheduling off
-#pragma peephole off
 void cfprisonguard_update(int* obj)
 {
     CfPrisonGuardState* sub;
@@ -812,8 +808,6 @@ void cfprisonguard_update(int* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void cfprisonuncle_free(void);
 
 
@@ -835,8 +829,6 @@ extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
 /* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
  * model when visible, ramp its alarm timer at sub->_30 each frame, and
  * once it crosses the threshold spawn a one-shot particle. */
-#pragma scheduling off
-#pragma peephole off
 void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
@@ -858,8 +850,6 @@ void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* chained byte bit-extract. */
@@ -871,8 +861,6 @@ void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 /* ObjMsg_AllocQueue already declared as undefined */
 
-#pragma scheduling off
-#pragma peephole off
 
 
 void cfprisonguard_hitDetect(int* obj)
@@ -887,8 +875,6 @@ void cfprisonguard_hitDetect(int* obj)
 void gcrobotlightbea_free(int* obj);
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern void Sfx_StopObjectChannel(int obj, int ch);
@@ -898,8 +884,6 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
  * machine - ramp/reset the alarm on cues, bail when captured or freed, watch
  * the player distance/water impacts and chase or stand down, with idle digging
  * SFX and queued-message drain. */
-#pragma scheduling off
-#pragma peephole off
 int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* player;
@@ -1041,8 +1025,6 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 Vec_xzDistance(void* a, void* b);
 

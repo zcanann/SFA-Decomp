@@ -667,8 +667,6 @@ void dfsh_shrine_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -684,8 +682,6 @@ void dfsh_shrine_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -701,13 +697,9 @@ void dfsh_shrine_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dfsh_shrine_hitDetect(void)
 {
 }

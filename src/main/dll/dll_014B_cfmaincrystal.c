@@ -721,9 +721,9 @@ int babycloudrunner_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4210;
+
+
 #pragma peephole off
-
-
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -731,7 +731,6 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-#pragma peephole reset
 
 
 /* chained byte bit-extract. */
@@ -743,10 +742,9 @@ void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 /* ObjMsg_AllocQueue already declared as undefined */
 
+
+
 #pragma scheduling off
-#pragma peephole off
-
-
 void cfmaincrystal_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
@@ -755,14 +753,10 @@ void cfmaincrystal_free(int* obj)
 void cfperch_free(int* obj);
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern void fn_8019D9F0(int* obj);
 extern int* lbl_803DDB10;
-#pragma peephole off
-#pragma scheduling off
 void cfmaincrystal_update(int* obj)
 {
     uint payload;
@@ -789,12 +783,8 @@ void cfmaincrystal_update(int* obj)
         break;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void cfmaincrystal_init(int* obj, u8* def)
 {
     CfMainCrystalState* state = ((GameObject*)obj)->extra;
@@ -810,8 +800,6 @@ void cfmaincrystal_init(int* obj, u8* def)
     }
     ObjMsg_AllocQueue(obj, 2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
 
@@ -846,8 +834,6 @@ typedef struct
  * collect the three pylon positions from messages, re-request missing ones,
  * emit the beam particles toward the crystal (and down from each pylon),
  * ramp the convergence charge, hum volume and per-beam chime timers. */
-#pragma scheduling off
-#pragma peephole off
 void fn_8019D9F0(int* obj)
 {
     char* p16;
@@ -1092,8 +1078,6 @@ void fn_8019D9F0(int* obj)
     while (i < 3);
     *(s16*)obj += framesThisStep * 0x2a;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd);
 

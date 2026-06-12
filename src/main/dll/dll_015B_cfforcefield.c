@@ -1,6 +1,4 @@
 /* DLL 0x015B — cfforcefield (CloudRunner Fortress force field barrier). TU: 0x801A39B4–0x801A3E9C. */
-#pragma scheduling on
-#pragma peephole on
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
@@ -56,6 +54,8 @@ extern u32 randomGetRange(int min, int max);
 
 
 
+#pragma scheduling on
+#pragma peephole on
 void cfforcefield_free(void)
 {
 }
@@ -91,8 +91,6 @@ int cfforcefield_getExtraSize(void) { return 0x8; }
 int cfforcefield_getObjectTypeId(void) { return 0x0; }
 
 extern void Obj_FreeObject(int obj);
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -106,11 +104,7 @@ extern void Obj_FreeObject(int obj);
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
@@ -181,6 +175,8 @@ extern f32 lbl_803E43AC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void cfforcefield_update(u8* obj)
 {
     typedef struct ForceFieldEmitter

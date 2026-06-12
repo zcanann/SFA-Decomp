@@ -51,8 +51,6 @@ static int FEseqobject_findControlObject(void)
     return found;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
@@ -68,8 +66,6 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -85,8 +81,6 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -102,13 +96,9 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -125,6 +115,8 @@ void FElevControl_release(void);
 
 void FElevControl_initialise(void);
 
+#pragma scheduling off
+#pragma peephole off
 void dll_144_free(void)
 {
 }

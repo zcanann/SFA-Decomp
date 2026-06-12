@@ -228,8 +228,6 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
 
-#pragma scheduling on
-#pragma peephole on
 /*
  * Manual recovery stub based on claimed split coverage and the surrounding
  * DF/SC/SH corridor.
@@ -251,6 +249,8 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
  */
 
 /* dfropenode_setScale: copy 4 floats from obj->_b8[0x1c..0x28] to *out_dst[0..0xc]. */
+#pragma scheduling on
+#pragma peephole on
 void dfropenode_setScale(int* obj, f32* out)
 {
     int* p = (int*)obj[0xb8 / 4];
@@ -259,8 +259,6 @@ void dfropenode_setScale(int* obj, f32* out)
     out[2] = *(f32*)((char*)p + 0x24);
     out[3] = *(f32*)((char*)p + 0x28);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E4E20;
 extern f32 lbl_803E4E24;
@@ -278,6 +276,8 @@ extern f32 lbl_803E4E24;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
 {
     extern int getAngle(f32 dx, f32 dz);

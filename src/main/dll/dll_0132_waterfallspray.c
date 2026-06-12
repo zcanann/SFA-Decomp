@@ -224,8 +224,6 @@ void sfxplayerObj_init(u8* obj, u8* data);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -241,8 +239,6 @@ void sfxplayerObj_init(u8* obj, u8* data);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -258,8 +254,6 @@ void sfxplayerObj_init(u8* obj, u8* data);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -275,8 +269,6 @@ void sfxplayerObj_init(u8* obj, u8* data);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -292,13 +284,9 @@ void sfxplayerObj_init(u8* obj, u8* data);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void WaterFallSpray_render(void)
 {
 }

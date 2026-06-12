@@ -161,8 +161,6 @@ int dfsh_door2speci_getExtraSize(void)
     return sizeof(DFDoorSpeciExtra);
 }
 
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -177,12 +175,12 @@ int dfsh_door2speci_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 int dfsh_door2speci_getObjectTypeId(void)
 {
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/game_object.h"
 #include "main/dll/DF/dll_198.h"
@@ -204,6 +202,8 @@ extern void objRenderFn_8003b8f4(f32);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dfsh_door2speci_free(void)
 {
 }

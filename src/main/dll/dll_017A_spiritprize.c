@@ -249,8 +249,6 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -266,8 +264,6 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -283,13 +279,9 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 
 

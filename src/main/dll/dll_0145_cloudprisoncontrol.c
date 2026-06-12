@@ -1048,8 +1048,6 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void Trigger_render(void);
 
 
@@ -1059,6 +1057,8 @@ void Trigger_render(void);
 
 
 
+#pragma scheduling off
+#pragma peephole off
 void cloudprisoncontrol_free(void)
 {
 }

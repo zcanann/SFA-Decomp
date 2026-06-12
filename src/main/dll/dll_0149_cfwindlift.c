@@ -581,7 +581,6 @@ void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
-#pragma peephole reset
 
 
 /* chained byte bit-extract. */
@@ -596,10 +595,9 @@ extern f32 fn_80296214(void* p);
 /* ObjMsg_AllocQueue already declared as undefined */
 extern void Music_Trigger(int a, int b);
 
+
+
 #pragma scheduling off
-#pragma peephole off
-
-
 void windlift_free(int* obj)
 {
     void* p = Obj_GetPlayerObject();
@@ -613,8 +611,6 @@ void windlift_free(int* obj)
 void cfguardian_free(int* obj, int p2);
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
@@ -656,8 +652,6 @@ typedef struct
 /* EN v1.0 0x8019D2AC  size: 708b  windlift_init: look up the lift's sequence
  * timings, scale its rise height from the def byte, arm it from the
  * gamebits and clear all 14 rider slots. */
-#pragma scheduling off
-#pragma peephole off
 void windlift_init(int* obj, u8* def)
 {
     int i;
@@ -718,8 +712,6 @@ void windlift_init(int* obj, u8* def)
     }
     ObjGroup_AddObject(obj, 0x49);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E42E0;
 
@@ -749,8 +741,6 @@ extern f32 lbl_803E41B8;
  * track the rider while above the lift and in range, send the lift/drop
  * messages on state edges, and integrate the rise speed with ramp-up,
  * oscillation damping and player-mode handoff. */
-#pragma scheduling off
-#pragma peephole off
 void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
 {
     char* player;
@@ -951,8 +941,6 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E41BC;
@@ -961,8 +949,6 @@ extern f32 lbl_803E41BC;
  * with its gamebit, spin up over the first second, then assign every nearby
  * group-0x16 object (and the player) to a rider slot and run the lift
  * physics on each. */
-#pragma scheduling off
-#pragma peephole off
 void windlift_update(int* obj)
 {
     u8* def;
@@ -1110,8 +1096,6 @@ void windlift_update(int* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int fn_80080150(void* p);
 

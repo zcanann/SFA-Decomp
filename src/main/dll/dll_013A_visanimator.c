@@ -1,6 +1,4 @@
 /* DLL 0x013A (visanimator) — Visibility animator object [0x8019423C-0x80194408). */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -14,8 +12,6 @@ extern uint GameBit_Get(int eventId);
 extern void* mapGetBlock(int idx);
 
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
@@ -178,8 +174,8 @@ int visanimator_getObjectTypeId(void) { return 0x0; }
 u8 groundanimator_modelMtxFn(int* obj);
 
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void visanimator_init(int* obj, int* desc)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -235,22 +231,10 @@ void visanimator_update(int* obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void* lbl_803DDAEC;
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 

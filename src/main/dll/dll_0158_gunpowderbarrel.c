@@ -842,8 +842,6 @@ typedef struct
  * carryable interface and obj groups, zeroes the roll/contact state, seeds
  * the hit radius from the model's bound halfword, and latches the
  * indestructible bit for the cannon-range variant (type 0x754). */
-#pragma scheduling off
-#pragma peephole off
 void gunpowderbarrel_init(int obj, u8* def)
 {
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
@@ -1212,11 +1210,7 @@ void gunpowderbarrel_update(int obj)
  * re-split, and the retail unit keeps the bls). */
 
 /* chained byte bit-extract (file-default on/on in the old donor). */
-#pragma scheduling on
-#pragma peephole on
 u32 gunpowderbarrel_isHeld(int* obj) { return (((GunpowderBarrelState*)((int**)obj)[0xb8 / 4])->heldFlags >> 5) & 1; }
-#pragma scheduling off
-#pragma peephole off
 
 typedef struct
 {
@@ -1228,8 +1222,6 @@ typedef struct
 
 /* EN v1.0 0x801A0BDC  size: 56b  gunpowderbarrel_setHeldState: flag the
  * barrel as held, mark obj active, and clear its physics-sleep bit. */
-#pragma scheduling off
-#pragma peephole off
 void gunpowderbarrel_setHeldState(int* obj)
 {
     GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
@@ -1332,8 +1324,6 @@ typedef struct GunpowderbarrelLaunchAtTargetPlacement
  * (or the nearest one if 0), temporarily moves obj to that barrel's
  * position so saveGame_saveObjectPos latches the target slot, then
  * restores. */
-#pragma scheduling off
-#pragma peephole off
 void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
 {
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
@@ -1417,8 +1407,6 @@ extern f32 lbl_803E42F0;
  * group-0x1e object above it, scaling velocity and the two heading words by
  * approach rate; on a steep approach play the dive cue and bump the target's
  * cycle phase. */
-#pragma scheduling off
-#pragma peephole off
 void fn_801A0F58(int* obj, s16 a, s16 b)
 {
     f32 dx;

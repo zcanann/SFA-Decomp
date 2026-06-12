@@ -107,8 +107,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -124,8 +122,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -141,8 +137,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -158,6 +152,8 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018f650(void)
 {
     byte bVar1;
@@ -399,8 +395,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -416,8 +410,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -433,8 +425,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -450,8 +440,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -467,8 +455,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -484,8 +470,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -501,8 +485,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void warpPadFn_8019042c(int obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
@@ -549,6 +531,8 @@ typedef struct CFEmitterFxArgs
         (args)->pos[2] += (obj)->objAnim.localPosZ;               \
     } while (0)
 
+#pragma scheduling off
+#pragma peephole off
 void areafxemit_emitEffect(AreaFxEmitObject* obj)
 {
     AreaFxEmitState* state;

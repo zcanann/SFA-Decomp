@@ -1,6 +1,4 @@
 /* DLL 0x170 — IM space ring / ice-mountain event controller [801AE0EC-801AE100) */
-#pragma scheduling on
-#pragma peephole on
 #include "main/effect_interfaces.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
@@ -134,9 +132,6 @@ extern undefined4 FUN_80017ac8();
 /* EN v1.0 0x801AC9C0  size: 828b  imicemountain_init: clear the ice-mountain
  * gamebit block, arm the map-event triggers, then branch on the queried level
  * state to set the boulder's start state and fire the appropriate triggers. */
-#pragma scheduling off
-#pragma peephole reset
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
@@ -150,10 +145,6 @@ extern u32 randomGetRange(int min, int max);
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
  * for the non-172 variants pick a random lifetime and, for type 0x16b, map
  * the spawn subtype to a light-pair / intensity preset. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 
 void imicepillar_free(void);
@@ -166,52 +157,26 @@ int imicepillar_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
-#pragma peephole reset
 
-#pragma peephole off
 
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
-#pragma peephole off
-#pragma peephole reset
 
 
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void warpToMap(int mapId, int flags);
 
@@ -220,10 +185,6 @@ extern void warpToMap(int mapId, int flags);
 
 /* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
  * through jumptable_80323698 (states 1..7; state 0 idles). */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
@@ -232,53 +193,30 @@ extern u8 lbl_802C2308[];
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Music_Trigger(int track, int flag);
 
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-#pragma scheduling off
-#pragma scheduling reset
 
 extern u8 framesThisStep;
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
  * state-table variant by object type. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
  * height/distance, trigger the fall when the player is in range, integrate the
  * fall, then shatter (sfx + explosion) on impact. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -452,8 +390,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -469,8 +405,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -486,8 +420,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -503,8 +435,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -520,8 +450,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -537,13 +465,9 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void imicepillar_hitDetect(void);
 
 void imicepillar_update(void);
@@ -578,6 +502,8 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 
 
 
+#pragma scheduling off
+#pragma peephole off
 void imspacering_free(void)
 {
 }

@@ -307,7 +307,6 @@ void imicemountain_free(void);
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
 
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
@@ -380,8 +379,6 @@ void magiclight_init(int* obj, u8* params)
         sub->unk10 = 0x12d;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dll_16C_release(void);
 
 
@@ -395,8 +392,8 @@ int dll_16C_getExtraSize(void);
 extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
 
-#pragma peephole off
 
+#pragma scheduling on
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (((GameObject*)obj)->anim.seqId == 0x172 && visible != 0)
@@ -404,14 +401,12 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         objRenderFn_8003b8f4(lbl_803E473C);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
 #pragma dont_inline on
 #pragma dont_inline reset
 
+#pragma scheduling off
 void magiclight_free(int obj)
 {
     MagicLightState* inner = ((GameObject*)obj)->extra;
@@ -436,17 +431,14 @@ void magiclight_update(int obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
-#pragma peephole off
+#pragma scheduling on
 int magiclight_getExtraSize(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId == 0x172) return 0x0;
     return 0x14;
 }
-#pragma peephole reset
 
 extern void Obj_FreeObject(int*);
 
@@ -457,7 +449,6 @@ extern void Obj_FreeObject(int*);
 extern float Vec_distance(float* a, float* b);
 extern f32 lbl_803E4738;
 #pragma scheduling off
-#pragma peephole off
 int magiclight_SeqFn(int* obj)
 {
     MagicLightState* state;
@@ -482,8 +473,6 @@ int magiclight_SeqFn(int* obj)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void warpToMap(int mapId, int flags);
@@ -497,5 +486,4 @@ extern void warpToMap(int mapId, int flags);
 
 extern void Music_Trigger(int track, int flag);
 
-#pragma scheduling reset
 

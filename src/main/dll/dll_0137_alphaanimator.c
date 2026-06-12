@@ -1,6 +1,4 @@
 /* DLL 0x137 - AlphaAnimator [80192394-801923C4) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
@@ -16,8 +14,6 @@ extern void* mapGetBlock(int idx);
 extern void objRenderFn_8003b8f4(f32);
 
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
@@ -207,13 +203,13 @@ void alphaanimator_init(int* obj)
     s8 v = -1;
     *(s8*)&((AlphaAnimatorState*)((int**)obj)[0xb8 / 4])->prevGate = v;
 }
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F70;
 extern f32 lbl_803E3F78;
-#pragma peephole off
 
+#pragma scheduling on
+#pragma peephole off
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -221,32 +217,22 @@ void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-#pragma peephole reset
 
 
 extern u8 framesThisStep;
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
 extern f32 timeDelta;
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* mmAlloc(int size, int align, int tag);
-#pragma scheduling off
-#pragma peephole off
 
 extern f32 lbl_803E3F7C;
 extern f32 lbl_803E3F80;
 extern f32 lbl_803E3F84;
 
+#pragma scheduling off
 void alphaanimator_update(int* obj)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */

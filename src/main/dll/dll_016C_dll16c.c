@@ -307,7 +307,6 @@ void imicemountain_free(void);
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
 
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
@@ -361,14 +360,10 @@ void dll_16C_hitDetect(void* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
 extern f32 lbl_803E4758;
-#pragma scheduling off
-#pragma peephole off
 void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     Dll16CState* extra;
@@ -418,12 +413,10 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
         ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
-#pragma scheduling off
+#pragma peephole on
 void dll_16C_init(void* obj, void* arg2)
 {
     Dll16CState* extra;
@@ -439,7 +432,6 @@ void dll_16C_init(void* obj, void* arg2)
     *(u8*)&extra->subObjIndex = *(u8*)((char*)arg2 + 0x27);
     extra->opacity = 0xff;
 }
-#pragma scheduling reset
 
 extern float Vec_distance(float* a, float* b);
 
@@ -460,7 +452,6 @@ extern u8 lbl_802C2308[];
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
-#pragma scheduling off
 #pragma peephole off
 int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -535,13 +526,9 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
-#pragma scheduling off
-#pragma peephole off
 void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i)
 {
     if (i != 0 && (s8)g != 0 && h > 0)
@@ -574,13 +561,10 @@ void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f
     ((GameObject*)a)->anim.velocityY = ((GameObject*)b)->anim.velocityY;
     ((GameObject*)a)->anim.velocityZ = ((GameObject*)b)->anim.velocityZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_801AC01C(int* obj);
 extern void Music_Trigger(int track, int flag);
 
-#pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern u8 framesThisStep;
@@ -591,8 +575,6 @@ extern f32 lbl_803E4764;
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
-#pragma scheduling off
-#pragma peephole off
 void dll_16C_update(int* obj)
 {
     Dll16CState* extra = ((GameObject*)obj)->extra;
@@ -696,8 +678,6 @@ void dll_16C_update(int* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803236B8[];
 

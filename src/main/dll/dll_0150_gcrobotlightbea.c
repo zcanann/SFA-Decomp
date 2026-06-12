@@ -741,8 +741,6 @@ void gcrobotlightbea_hitDetect(int* obj)
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void cfperch_render(void);
 
 
@@ -763,8 +761,6 @@ extern void modelLightStruct_freeSlot(int* p);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 /* ObjMsg_AllocQueue already declared as undefined */
 
-#pragma scheduling off
-#pragma peephole off
 
 
 void gcrobotlightbea_init(int* obj)
@@ -846,6 +842,4 @@ void gcrobotlightbea_free(int* obj)
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
-#pragma peephole reset
-#pragma scheduling reset
 

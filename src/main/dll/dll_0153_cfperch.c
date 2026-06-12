@@ -730,7 +730,6 @@ int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma scheduling reset
 
 /* plain forwarder. */
 extern int waterSpellStone1Fn_8019b4c8();
@@ -739,10 +738,9 @@ extern int waterSpellStone1Fn_8019b4c8();
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 /* ObjMsg_AllocQueue already declared as undefined */
 
-#pragma scheduling off
+
+
 #pragma peephole off
-
-
 void cfperch_init(int* obj)
 {
     ((GameObject*)obj)->unkF4 = 1;
@@ -759,12 +757,8 @@ void cfperch_free(int* obj)
 void babycloudrunner_free(int* obj);
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void cfperch_update(int* obj)
 {
     if (((GameObject*)obj)->unkF4 != 0)
@@ -776,6 +770,4 @@ void cfperch_update(int* obj)
     }
     ((GameObject*)obj)->unkF4 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 

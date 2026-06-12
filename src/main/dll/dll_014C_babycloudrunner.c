@@ -597,8 +597,6 @@ void babycloudrunner_init(int* obj, u8* def)
         ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -613,7 +611,7 @@ void babycloudrunner_init(int* obj, u8* def)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
+#pragma scheduling on
 void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     s32 isVisible;
@@ -625,7 +623,6 @@ void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, 
     }
     return;
 }
-#pragma peephole reset
 
 
 /*
@@ -641,6 +638,7 @@ void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole on
 void FUN_8019f1dc(void)
 {
     uint uVar1;
@@ -813,8 +811,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 
@@ -828,8 +824,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
  * gets within the trigger radius and the runner is in state 3, fire its
  * burst (notify, bump the counter, set the gamebit); otherwise just play
  * the idle audio cue. */
-#pragma scheduling off
-#pragma peephole off
 int babycloudrunner_func0B(void* p)
 {
     int* obj;
@@ -871,8 +865,6 @@ int babycloudrunner_func0B(void* p)
     Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 void windlift_hitDetect(void);
 
 
@@ -909,6 +901,8 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 /* spiritdoorspirit_getExtraSize == 0x1. */
 
 
+#pragma scheduling on
+#pragma peephole on
 void babycloudrunner_hitDetect(void)
 {
 }
@@ -941,14 +935,14 @@ int cfprisonguard_getExtraSize(void);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 /* ObjMsg_AllocQueue already declared as undefined */
 
-#pragma scheduling off
-#pragma peephole off
 
 int babycloudrunner_getObjectTypeId(void) { return 0; }
 
 void spiritdoorspirit_init(int* obj);
 
 
+#pragma scheduling off
+#pragma peephole off
 int babycloudrunner_setScale(int* obj)
 {
     BabyCloudRunnerState* state = ((GameObject*)obj)->extra;
@@ -967,8 +961,6 @@ void babycloudrunner_free(int* obj)
 void gcrobotlightbea_init(int* obj);
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern f32 lbl_803E4230;
@@ -980,8 +972,6 @@ extern f32 lbl_803DBE4C;
  * from the vertical speed, clamp the playback rate, latch the spit SFX
  * while surfacing fast, and advance the current move. */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 int fn_8019E3F4(int* obj)
 {
@@ -1028,8 +1018,6 @@ int fn_8019E3F4(int* obj)
     return 1;
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 extern int objUpdateOpacity(int sub);
@@ -1044,8 +1032,6 @@ extern f32 lbl_803E4248;
 /* EN v1.0 0x8019E81C  size: 920b  babycloudrunner_SeqFn: range-check the
  * runner against the player and its trigger radii, chirp for queued cues,
  * then steer toward the player (or Tricky) per the current behaviour state. */
-#pragma scheduling off
-#pragma peephole off
 int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8* animUpdateBytes = (u8*)animUpdate;
@@ -1153,8 +1139,6 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_StopObjectChannel(int obj, int ch);
 
@@ -1188,8 +1172,6 @@ typedef struct
  * despawn on its gamebit, run the captured/timer flow, follow its rom curve
  * while fleeing, hand off to the nearest sandworm, and once freed steer home
  * to the roost point. */
-#pragma scheduling off
-#pragma peephole off
 void babycloudrunner_update(int* obj)
 {
     char* player;
@@ -1407,8 +1389,6 @@ void babycloudrunner_update(int* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void getEnvfxAct(int a, int b, int c, int d);
 

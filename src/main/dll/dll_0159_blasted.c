@@ -26,8 +26,6 @@ extern f32 lbl_803E4348;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -43,8 +41,6 @@ extern f32 lbl_803E4348;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int blasted_getExtraSize(void)
 {
     return 0x14;
@@ -124,15 +120,11 @@ void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 extern int* gCarryableInterface; /* carryable-object interface singleton */
 
 
-#pragma scheduling off
-#pragma peephole off
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern u8* mapGetBlock(int idx);

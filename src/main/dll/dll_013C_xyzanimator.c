@@ -49,8 +49,6 @@ extern f32 lbl_803E4008;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -66,8 +64,6 @@ extern f32 lbl_803E4008;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
     u8* state;
@@ -121,8 +117,6 @@ f32 objFn_801948c0(u8* obj, u8 coord)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 typedef struct MapBlockHdr
@@ -151,8 +145,6 @@ typedef struct EdgeVerts
     s16 f;
 } EdgeVerts;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80194964(int obj, int state, int block)
 {
     extern uint mapBlockFn_80060678(int* block); /* #57 */
@@ -387,14 +379,6 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
@@ -905,8 +889,6 @@ done_lbl:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -922,8 +904,6 @@ done_lbl:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -939,8 +919,6 @@ done_lbl:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -956,8 +934,6 @@ done_lbl:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -973,13 +949,9 @@ done_lbl:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void explodeanimator_render(void);
 
 

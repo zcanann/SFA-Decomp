@@ -67,8 +67,6 @@ void DFSH_LaserBeam_init(int* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -84,8 +82,6 @@ void DFSH_LaserBeam_init(int* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -118,10 +114,6 @@ int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
 
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"

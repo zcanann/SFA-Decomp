@@ -1,5 +1,3 @@
-#pragma scheduling on
-#pragma peephole on
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
@@ -52,16 +50,12 @@ extern undefined4 ObjGroup_AddObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 
 u8 wallanimator_func0B(int* obj)
 {
     int* p = ((int**)obj)[0xb8 / 4];
     return *p >= WALLANIMATOR_DONE_TIMER;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void mm_free(void* p);
 
@@ -98,89 +92,35 @@ extern void mm_free(void* p);
 /* Pattern wrappers. */
 
 /* 16b chained patterns. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 
 
-#pragma peephole reset
 
 /* wall variant: hashes lha to byte */
-#pragma peephole off
 u8 wallanimator_modelMtxFn(int* obj) { return (u8) * (s16*)((char*)((int**)obj)[0x4c / 4] + 0x1c); }
 
-#pragma peephole reset
 
 extern f32 lbl_803E3F98;
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
+
+
+
+
+
+
+
+
+
+
+
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -319,8 +259,6 @@ f32 wallanimator_setScale(int obj, int target)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -336,8 +274,6 @@ f32 wallanimator_setScale(int obj, int target)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -406,15 +342,11 @@ double FUN_80194a70(int param_1, byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*

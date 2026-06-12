@@ -309,7 +309,6 @@ void imicemountain_free(void);
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
 
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
@@ -349,14 +348,12 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
 #pragma dont_inline on
+#pragma scheduling off
 f32 fn_801ACCFC(int obj)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
@@ -393,11 +390,11 @@ f32 fn_801ACCFC(int obj)
 
 void magiclight_free(int obj);
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* conditional init/free pair. */
+#pragma scheduling on
+#pragma peephole on
 void crrockfall_release(void)
 {
     if (lbl_803DDB40 != NULL)
@@ -425,7 +422,6 @@ extern void warpToMap(int mapId, int flags);
 extern void Music_Trigger(int track, int flag);
 extern f32 timeDelta;
 
-#pragma scheduling reset
 
 extern u8 framesThisStep;
 
@@ -480,8 +476,6 @@ void crrockfall_init(int* obj, u8* params)
         extra->cfg = (CrRockfallCfgEntry*)lbl_803236B8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_800628CC(int* obj);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -501,8 +495,6 @@ extern f32 lbl_803E4720;
 /* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
  * height/distance, trigger the fall when the player is in range, integrate the
  * fall, then shatter (sfx + explosion) on impact. */
-#pragma scheduling off
-#pragma peephole off
 void crrockfall_update(int* obj)
 {
     CrRockfallState* ex = ((GameObject*)obj)->extra;
@@ -680,5 +672,3 @@ void crrockfall_update(int* obj)
         ((GameObject*)obj)->anim.velocityZ = z;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

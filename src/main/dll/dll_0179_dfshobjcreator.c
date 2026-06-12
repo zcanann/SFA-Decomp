@@ -53,8 +53,6 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -70,8 +68,6 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -87,13 +83,9 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -134,14 +126,6 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -272,8 +256,6 @@ extern ModgfxInterface** gModgfxInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -289,8 +271,6 @@ extern ModgfxInterface** gModgfxInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dfsh_objcreator_release(void)
 {
 }

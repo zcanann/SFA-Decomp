@@ -787,8 +787,6 @@ void cfprisonuncle_update(int* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void gcrobotlightbea_render(void);
 
 
@@ -802,7 +800,7 @@ int gcrobotlightbea_getExtraSize(void);
 
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
-#pragma peephole off
+#pragma scheduling on
 int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CfPrisonUncleState* p = ((GameObject*)obj)->extra;
@@ -814,7 +812,6 @@ int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
 
 
 /* plain forwarder. */
@@ -824,10 +821,9 @@ extern int waterSpellStone1Fn_8019b4c8();
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 /* ObjMsg_AllocQueue already declared as undefined */
 
+
+
 #pragma scheduling off
-#pragma peephole off
-
-
 void cfprisonuncle_init(int* obj)
 {
     CfPrisonUncleState* state;
@@ -844,8 +840,6 @@ void cfprisonuncle_init(int* obj)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /* copy 3 floats within same struct */
 void cfguardian_hitDetect(int* obj);
@@ -857,8 +851,6 @@ extern f32 lbl_803E4288;
 /* EN v1.0 0x8019FCF4  size: 484b  cfprisonuncle_render: render the uncle and/or
  * his held model depending on the rescue gamebits, opacity and visibility;
  * when path-following, snap the held model to the path point first. */
-#pragma scheduling off
-#pragma peephole off
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
@@ -907,8 +899,6 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 sqrtf(f32 x);
 
