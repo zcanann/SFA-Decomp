@@ -78,8 +78,6 @@ extern f32 lbl_803E3BB4;
  * PAL Size: TODO
  */
 extern int getAngle(f32 dx, f32 dz);
-extern double sqrtf(double x);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void* Obj_GetPlayerObject(void);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern void* gPlayerInterface;
@@ -114,6 +112,7 @@ extern f32 lbl_803E2F28;
 #pragma peephole off
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
+    extern double sqrtf(double x); /* #57 */
     u16 zone;
     u16 pad;
     u16 dist;
@@ -202,6 +201,8 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 
 int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 {
+    extern double sqrtf(double x); /* #57 */
+    extern void Sfx_PlayFromObject(int obj, u16 sfxId); /* #57 */
     f32 z2, y2, x2, z, y, x;
     u8 hitEdge;
     s16 angle;
@@ -257,6 +258,8 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 
 int grimble_stateHandlerA00(int obj, char* state, f32 arg)
 {
+    extern double sqrtf(double x); /* #57 */
+    extern void Sfx_PlayFromObject(int obj, u16 sfxId); /* #57 */
     u16 zone;
     u16 pad;
     u16 dist;
@@ -1036,3 +1039,281 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     (ObjectDescriptorCallback)grimble_getObjectTypeId,
     grimble_getExtraSize,
 };
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
+/* === moved from main/dll/ladders.c [801630EC-801631C8) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling off
+#pragma peephole off
+#include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
+#include "main/dll/ladders.h"
+#include "main/objanim.h"
+
+typedef struct TumbleweedbushState
+{
+    u8 pad0[0x8 - 0x0];
+    u16 unk8;
+    u8 padA[0x54 - 0xA];
+} TumbleweedbushState;
+
+
+extern uint GameBit_Get(int eventId);
+extern undefined4 ObjHitbox_SetCapsuleBounds();
+extern undefined4 ObjHits_DisableObject();
+extern void* ObjGroup_GetObjects();
+extern int ObjHits_PollPriorityHitWithCooldown();
+extern undefined4 FUN_8003b818();
+
+extern f64 DOUBLE_803e3ba8;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E3B50;
+extern f32 lbl_803E3B54;
+extern f32 lbl_803E3BC0;
+extern f32 lbl_803E3BCC;
+extern f32 lbl_803E3BD0;
+extern f32 lbl_803E3BD8;
+extern f32 lbl_803E3BE0;
+extern f32 lbl_803E3BE4;
+extern f32 lbl_803E3BE8;
+extern f32 lbl_803E3BEC;
+extern f32 lbl_803E3BF0;
+
+/*
+ * --INFO--
+ *
+ * Function: cannonclaw_update
+ * EN v1.0 Address: 0x801630EC
+ * EN v1.0 Size: 668b
+ * EN v1.1 Address: 0x801630F0
+ * EN v1.1 Size: 672b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+/* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
+ * The 668b "Ghidra body" was misattributed; replaced with the right one. */
+extern void getTrickyObject(void);
+extern void* ObjList_FindObjectById(int id);
+extern f32 timeDelta;
+extern f32 lbl_803E2F34;
+extern f32 lbl_803E2F38;
+
+void cannonclaw_update(u8* obj)
+{
+    u8* trickyState;
+    getTrickyObject();
+    trickyState = (u8*)ObjList_FindObjectById(0x1723);
+    if (((GameObject*)obj)->unkF4 != 0) return;
+    if (((GameObject*)obj)->anim.currentMove != 0x208)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 0x208, lbl_803E2F34, 0);
+    }
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
+    if (trickyState == NULL) return;
+    if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
+    ((GameObject*)obj)->unkF4 = 1;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+    ObjHits_DisableObject(obj);
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801633b0
+ * EN v1.0 Address: 0x801633B0
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x80163554
+ * EN v1.1 Size: 68b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801638bc
+ * EN v1.0 Address: 0x801638BC
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801639B8
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801638e4
+ * EN v1.0 Address: 0x801638E4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801639EC
+ * EN v1.1 Size: 432b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801638e8
+ * EN v1.0 Address: 0x801638E8
+ * EN v1.0 Size: 480b
+ * EN v1.1 Address: 0x80163B9C
+ * EN v1.1 Size: 460b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void cannonclaw_release(void)
+{
+}
+
+void cannonclaw_initialise(void)
+{
+}
+
+void tumbleweedbush_free(void);
+
+void tumbleweedbush_hitDetect(void);
+
+void tumbleweedbush_release(void);
+
+void tumbleweedbush_initialise(void);
+
+extern f32 lbl_803E2F48;
+extern f32 lbl_803E2F4C;
+extern f32 lbl_803E2F50;
+extern f32 lbl_803E2F54;
+extern u8 lbl_803201E8[];
+extern void vecRotateZXY(void* obj, void* p);
+extern void* memcpy(void* dst, const void* src, int n);
+
+void tumbleweedbush_init(u8* obj, u8* params, int param3);
+
+/* 8b "li r3, N; blr" returners. */
+int tumbleweedbush_getExtraSize(void);
+int tumbleweedbush_getObjectTypeId(void);
+
+extern u8 lbl_803DDA80;
+extern void* gSHthorntailAnimationInterface;
+extern void* Obj_GetPlayerObject(void);
+extern void objfx_spawnHitEmitterAtPos(int* p, int a, int b, int c, int d);
+extern s8 fn_801631C8(int* obj);
+
+typedef struct TumbleweedBushState
+{
+    f32 scale;
+    u8 pad04[4];
+    u16 triggerRadius;
+    u8 pad0A[2];
+    void* pieceObjects[4];
+    f32 pieceOffsets[3][3];
+    u8 pad40[0x4c - 0x40];
+    u8 variant;
+    u8 pad4D[3];
+    u8 pieceCount;
+    u8 pad51[3];
+} TumbleweedBushState;
+
+void tumbleweedbush_update(int* obj);
+
+/* 16b chained patterns. */
+void fn_80163980(int* obj);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E2F44;
+extern void objRenderFn_8003b8f4(f32);
+
+void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/* byte-to-short shift8 pattern. */
+void cannonclaw_init(s16* dst, void* src)
+{
+    s8 v = *((s8*)src + 0x28);
+    s16 t = v << 8;
+    *dst = t;
+}
+
+/* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
+ * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
+ * the supplied position vector). Returns NULL if no match. */
+extern void* ObjGroup_GetObjects(int type, int* outCount);
+extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern f32 lbl_803E2F58;
+
+void* tumbleweedbush_findNearestActive(f32* p_pos);
+
+/* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
+ * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
+void tumbleweedbush_setScale(u8* obj, void* match);
+
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(int* obj, int a, s8 b, int c, void* d);
+extern int** ObjList_GetObjects(int* idx, int* count);
+extern f32 lbl_803E2F40;
+
+s8 fn_801631C8(int* obj);
+
+extern int fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
+extern f32 lbl_803E2F5C;
+extern f32 lbl_803E2F60;
+extern f32 lbl_803E2F64;
+extern f32 lbl_803E2F68;
+
+void fn_80163990(int* piece, u8* state);
+
+
+ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)tumbleweedbush_initialise,
+        (ObjectDescriptorCallback)tumbleweedbush_release,
+        0,
+        (ObjectDescriptorCallback)tumbleweedbush_init,
+        (ObjectDescriptorCallback)tumbleweedbush_update,
+        (ObjectDescriptorCallback)tumbleweedbush_hitDetect,
+        (ObjectDescriptorCallback)tumbleweedbush_render,
+        (ObjectDescriptorCallback)tumbleweedbush_free,
+        (ObjectDescriptorCallback)tumbleweedbush_getObjectTypeId,
+        tumbleweedbush_getExtraSize,
+        (ObjectDescriptorCallback)tumbleweedbush_setScale,
+    },
+    0,
+};
+#pragma scheduling reset
+#pragma peephole reset

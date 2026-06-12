@@ -990,7 +990,7 @@ config.libs = [
             Object(NonMatching, "main/dll/scarab.c"),
             Object(NonMatching, "main/dll/barrel.c"),
             Object(NonMatching, "main/dll/ladders.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/waterfallControl.c"),
+            Object(NonMatching, "main/dll/dll_00D2_tumbleweed1.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/backpack.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/landedArwing.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/staffAction.c"),

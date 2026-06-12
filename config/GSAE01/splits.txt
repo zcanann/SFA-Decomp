@@ -584,27 +584,27 @@ main/dll/scarab.c:
 	.data       start:0x8031FF90 end:0x80320008
 
 main/dll/barrel.c:
-	.text       start:0x80161F0C end:0x801630EC
+	.text       start:0x80161F0C end:0x801631C8
 	.data       start:0x80320178 end:0x803201B0
 
 main/dll/ladders.c:
-	.text       start:0x801630EC end:0x80163BBC
+	.text       start:0x801631C8 end:0x80163BBC
 	.data       start:0x80320248 end:0x80320288
 
-main/dll/waterfallControl.c:
-	.text       start:0x80163BBC end:0x801641B0
+main/dll/dll_00D2_tumbleweed1.c:
+	.text       start:0x80163BBC end:0x801650D0
 
 main/dll/backpack.c:
-	.text       start:0x801641B0 end:0x8016558C
+	.text       start:0x801650D0 end:0x8016558C
 
 main/dll/landedArwing.c:
 	.text       start:0x8016558C end:0x801659B8
 
 main/dll/staffAction.c:
-	.text       start:0x801659B8 end:0x80166F2C
+	.text       start:0x801659B8 end:0x801675E0
 
 main/dll/treasurechest.c:
-	.text       start:0x80166F2C end:0x80167764
+	.text       start:0x801675E0 end:0x80167764
 	.data       start:0x803203B8 end:0x803203F8
 
 main/dll/cf_doorlight.c:

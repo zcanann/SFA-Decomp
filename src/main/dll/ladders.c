@@ -53,23 +53,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
 
-void cannonclaw_update(u8* obj)
-{
-    u8* trickyState;
-    getTrickyObject();
-    trickyState = (u8*)ObjList_FindObjectById(0x1723);
-    if (((GameObject*)obj)->unkF4 != 0) return;
-    if (((GameObject*)obj)->anim.currentMove != 0x208)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0x208, lbl_803E2F34, 0);
-    }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
-    if (trickyState == NULL) return;
-    if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
-    ((GameObject*)obj)->unkF4 = 1;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-    ObjHits_DisableObject(obj);
-}
+void cannonclaw_update(u8* obj);
 
 
 /*
@@ -148,13 +132,9 @@ void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void cannonclaw_release(void)
-{
-}
+void cannonclaw_release(void);
 
-void cannonclaw_initialise(void)
-{
-}
+void cannonclaw_initialise(void);
 
 void tumbleweedbush_free(void)
 {
@@ -338,12 +318,7 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 /* byte-to-short shift8 pattern. */
-void cannonclaw_init(s16* dst, void* src)
-{
-    s8 v = *((s8*)src + 0x28);
-    s16 t = v << 8;
-    *dst = t;
-}
+void cannonclaw_init(s16* dst, void* src);
 
 /* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
