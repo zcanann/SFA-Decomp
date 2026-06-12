@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
@@ -1129,10 +1130,11 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
         if (((PlayerState*)p2)->baddie.targetObj != NULL)
         {
             int sp = *(int*)&((PlayerState*)p2)->baddie.targetObj;
-            int pt = *(int*)((char*)sp + 0x74) + *(u8*)((char*)sp + 0xe4) * 0x18;
-            f32 dx = *(f32*)pt - ((GameObject*)lbl_803DE44C)->anim.localPosX;
-            f32 dy = *(f32*)((char*)pt + 4) - ((GameObject*)lbl_803DE44C)->anim.localPosY;
-            f32 dz = *(f32*)((char*)pt + 8) - ((GameObject*)lbl_803DE44C)->anim.localPosZ;
+            ObjHitVolumeRuntimeTransform* pt =
+                &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->unkE4];
+            f32 dx = pt->jointX - ((GameObject*)lbl_803DE44C)->anim.localPosX;
+            f32 dy = pt->jointY - ((GameObject*)lbl_803DE44C)->anim.localPosY;
+            f32 dz = pt->jointZ - ((GameObject*)lbl_803DE44C)->anim.localPosZ;
             spawned = sp;
             v.mat[1] = lbl_803E7EA4;
             v.mat[2] = lbl_803E7EA4;
@@ -3266,18 +3268,18 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             }
             else
             {
-                f32* pv = *(f32**)(obj2 + 0x74);
+                ObjHitVolumeRuntimeTransform* pv = ((GameObject*)obj2)->anim.hitVolumeTransforms;
                 if (pv == NULL)
                 {
-                    npos[0] = ((PlayerState*)obj2)->baddie.posY;
-                    npos[1] = ((PlayerState*)obj2)->baddie.posZ;
-                    npos[2] = *(f32*)(obj2 + 0x20);
+                    npos[0] = ((GameObject*)obj2)->anim.worldPosX;
+                    npos[1] = ((GameObject*)obj2)->anim.worldPosY;
+                    npos[2] = ((GameObject*)obj2)->anim.worldPosZ;
                 }
                 else
                 {
-                    npos[0] = pv[0];
-                    npos[1] = pv[1];
-                    npos[2] = pv[2];
+                    npos[0] = pv->jointX;
+                    npos[1] = pv->jointY;
+                    npos[2] = pv->jointZ;
                 }
             }
             ObjPath_GetPointWorldPosition(obj, 5, (int)&px, (int)&py, (int)&pz, 0);
@@ -3787,7 +3789,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         {
                             spd = *(f32*)(prt + 0xa8) * *(f32*)(prt + 8);
                         }
-                        dy2 = (*(f32*)(*(int*)(prt + 0x74) + 4) - *(f32*)(prt + 0x10)) -
+                        dy2 = (((GameObject*)prt)->anim.hitVolumeTransforms->jointY - *(f32*)(prt + 0x10)) -
                             lbl_803E8158;
                     }
                     sp3 = spd *
@@ -13320,7 +13322,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
                 if (*(int**)&((PlayerState*)inner2)->baddie.targetObj != target)
                 {
                     ((PlayerState*)inner2)->baddie.hasTarget = 0;
-                    if ((*(u8*)((char*)*(int*)((char*)target + 0x78) + 4) & 0xf) == 1)
+                    if ((((GameObject*)target)->anim.hitVolumeBounds->flags & 0xf) == 1)
                     {
                         if (lbl_803DE44C != NULL)
                         {
@@ -16288,8 +16290,8 @@ void fn_802AB38C(int a, int b, int c)
                 if (id == 0x414 || id == 0x4a9)
                 {
                     c = 0x5bd;
-                    getAngle(*(f32*)((char*)*(int*)((char*)cam + 0x74)) - *(f32*)((char*)a + 0xc),
-                             *(f32*)((char*)*(int*)((char*)cam + 0x74) + 0x8) - *(f32*)((char*)a + 0x14));
+                    getAngle(((GameObject*)cam)->anim.hitVolumeTransforms->jointX - *(f32*)((char*)a + 0xc),
+                             ((GameObject*)cam)->anim.hitVolumeTransforms->jointZ - *(f32*)((char*)a + 0x14));
                 }
             }
         }

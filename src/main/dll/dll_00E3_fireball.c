@@ -3,6 +3,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -2210,12 +2211,13 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void fn_8016F260(int* obj, int* state, int* other)
 {
-    f32* pt = (f32*)(*(int*)((char*)other + 0x74) + ((GameObject*)other)->unkE4 * 24);
-    if (pt != NULL)
+    ObjHitVolumeRuntimeTransform* hitVolume =
+        &((GameObject*)other)->anim.hitVolumeTransforms[((GameObject*)other)->unkE4];
+    if (hitVolume != NULL)
     {
-        f32 dx = pt[0] - ((FireballState*)state)->posX;
-        f32 dy = pt[1] - lbl_803E3334 - *(f32*)&((FireballState*)state)->posY;
-        f32 dz = pt[2] - ((FireballState*)state)->posZ;
+        f32 dx = hitVolume->jointX - ((FireballState*)state)->posX;
+        f32 dy = hitVolume->jointY - lbl_803E3334 - *(f32*)&((FireballState*)state)->posY;
+        f32 dz = hitVolume->jointZ - ((FireballState*)state)->posZ;
         s16 angY;
         s16 angP;
         s16 difY;

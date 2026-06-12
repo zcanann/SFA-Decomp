@@ -251,7 +251,7 @@ void CameraModeCombat_update(short* cam)
             }
             else
             {
-                path = *(CombatPathPoint**)(tgt + 0x74);
+                path = (CombatPathPoint*)((GameObject*)tgt)->anim.hitVolumeTransforms;
                 if (path != NULL)
                 {
                     range = (f32)(s32)((u32)((GameObject*)tgt)->anim.modelInstance->hitVolumes[0].bounds[1] << 2);
@@ -499,7 +499,7 @@ void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args)
 {
     float dx;
     float dz;
-    int posEntry;
+    ObjHitVolumeRuntimeTransform* hitVolume;
     int targetObj;
     int playerObj;
     double fconv;
@@ -531,16 +531,16 @@ void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args)
         }
         else
         {
-            if (*(void**)(targetObj + 0x74) == NULL)
+            if (((GameObject*)targetObj)->anim.hitVolumeTransforms == NULL)
             {
                 dx = *(float*)(playerObj + 0x18) - *(float*)(targetObj + 0x18);
                 dz = *(float*)(playerObj + 0x20) - *(float*)(targetObj + 0x20);
             }
             else
             {
-                posEntry = *(int*)(targetObj + 0x74) + (uint) * (byte*)(targetObj + 0xe4) * 0x18;
-                dx = *(float*)(posEntry + 0xc) - *(float*)(playerObj + 0x18);
-                dz = *(float*)(posEntry + 0x14) - *(float*)(playerObj + 0x20);
+                hitVolume = &((GameObject*)targetObj)->anim.hitVolumeTransforms[((GameObject*)targetObj)->unkE4];
+                dx = hitVolume->centerX - *(float*)(playerObj + 0x18);
+                dz = hitVolume->centerZ - *(float*)(playerObj + 0x20);
             }
             if (*(short*)(targetObj + 0x44) != 0x6d)
             {
