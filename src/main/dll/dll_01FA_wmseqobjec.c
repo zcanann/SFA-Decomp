@@ -98,114 +98,19 @@ extern f32 lbl_803E5CE8;
 /* Trivial 4b 0-arg blr leaves. */
 
 
-void WM_Galleon_hitDetect(void)
-{
-}
+void WM_Galleon_hitDetect(void);
 
-void WM_Galleon_free(int* obj, int leavingMap)
-{
-    if (((GameObject*)obj)->anim.seqId != 0x188)
-    {
-        WmGalleonState* state = ((GameObject*)obj)->extra;
-        if (state->active != 0 && leavingMap == 0)
-        {
-            state->active = 0;
-        }
-        if (lbl_803DDC74 != NULL)
-        {
-            Resource_Release(lbl_803DDC74);
-            lbl_803DDC74 = NULL;
-        }
-    }
-}
+void WM_Galleon_free(int* obj, int leavingMap);
 
-void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
-    if (GameBit_Get(0x78) != 0)
-    {
-        return;
-    }
-    if (visible == 0)
-    {
-        return;
-    }
-    if (((GameObject*)obj)->anim.seqId == 0x188 && *(s32*)(*(u8**)&((GameObject*)obj)->anim.parent + 0xf4) >= 7)
-    {
-        return;
-    }
-
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5CE8);
-
-    if (lbl_803DDC70 != 0)
-    {
-        (*(void (**)(int))(*(int*)gScreensInterface + 0x4))(1);
-    }
-}
+void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* 8b "li r3, N; blr" returners. */
-int WM_Galleon_getExtraSize(void) { return 0x10; }
-int WM_Galleon_getObjectTypeId(void) { return 0x0; }
+int WM_Galleon_getExtraSize(void);
+int WM_Galleon_getObjectTypeId(void);
 
 void WM_ObjCreator_init(int* obj, s8* def);
 
-int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    extern undefined8 GameBit_Set(int eventId, int value); /* #57 */
-    int i;
-
-    lbl_803DC0F0 = framesThisStep;
-    animUpdate->hitVolumePair = -1;
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
-        case WM_GALLEON_COMMAND_OPENED:
-            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_OPENED;
-            break;
-        case WM_GALLEON_COMMAND_ACTION_11:
-            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_11;
-            break;
-        case WM_GALLEON_COMMAND_ACTION_12:
-            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_12;
-            break;
-        case WM_GALLEON_COMMAND_ACTION_13:
-            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_13;
-            break;
-        case WM_GALLEON_COMMAND_CLEAR_MAP_EVENTS:
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 1, 0);
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 2, 0);
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 4, 0);
-            GameBit_Set(WM_GALLEON_GAMEBIT_CLEAR_DOOR, 0);
-            break;
-        case WM_GALLEON_COMMAND_CLEAR_LACTIONS:
-            getLActions(obj, obj, 0x77, 0, 0, 0);
-            getLActions(obj, obj, 0x78, 0, 0, 0);
-            getLActions(obj, obj, 0x80, 0, 0, 0);
-            break;
-        case WM_GALLEON_COMMAND_SCREEN_FADE:
-            (*(void (**)(int, int, int))((u8*)*lbl_803DCA94 + 0x14))(0, 0x1e, 0x50);
-            break;
-        case WM_GALLEON_COMMAND_SHOW_MODEL:
-            lbl_803DDC70 = 1;
-            break;
-        case WM_GALLEON_COMMAND_HIDE_MODEL:
-            lbl_803DDC70 = 0;
-            break;
-        }
-    }
-
-    if (GameBit_Get(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) != 0)
-    {
-        if ((u8)(*gMapEventInterface)->getAnimEvent(OBJ_U8(obj, 0x34), 2) != 0)
-        {
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 1, 0);
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 2, 0);
-        }
-    }
-    return 0;
-}
+int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #include "main/dll/WC/WClaser.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
@@ -312,124 +217,13 @@ STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
-void WM_Galleon_update(int* obj)
-{
-    int player;
-    WMGalleonState* state;
-    int gameBitA4;
+void WM_Galleon_update(int* obj);
 
-    if (GameBit_Get(0x78) != 0)
-    {
-        return;
-    }
+void WM_Galleon_init(int* obj, WMGalleonSetup* setup);
 
-    if (OBJ_S16(obj, 0x46) == 0x188)
-    {
-        OBJ_U8(obj, 0x36) = 0x80;
-        return;
-    }
+void WM_Galleon_release(void);
 
-    player = Obj_GetPlayerObject();
-    state = (WMGalleonState*)OBJ_PTR(obj, 0xb8);
-
-    if (GameBit_Get(0x429) != 0)
-    {
-        if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) != 0)
-        {
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 0);
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 0);
-        }
-    }
-    else if ((GameBit_Get(0xd0) == 0) && ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) == 0))
-    {
-        MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
-        MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
-    }
-
-    if (GameBit_Get(0xd0) == 0)
-    {
-        if ((state->mapEventsLatched == 0) && (GameBit_Get(0x429) == 0))
-        {
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
-            state->mapEventsLatched = 1;
-        }
-    }
-    else
-    {
-        if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 4) == 0)
-        {
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 4, 1);
-        }
-        if (state->mapEventsLatched != 0)
-        {
-            state->mapEventsLatched = 0;
-        }
-    }
-
-    gameBitA4 = GameBit_Get(0xa4);
-    if (gameBitA4 != 0)
-    {
-        OBJ_S32(obj, 0xf4) = 10;
-    }
-    if (gameBitA4 == 0)
-    {
-        OBJ_F32(player, 0xc) = lbl_803E5CEC;
-        OBJ_F32(player, 0x10) = lbl_803E5CF0;
-        OBJ_F32(player, 0x14) = lbl_803E5CF4;
-        objHitDetectFn_80062e84(player, (int)obj, 0);
-        fn_80296BBC(player);
-        OBJ_S32(obj, 0xf8) = 1;
-    }
-    else if (OBJ_S32(obj, 0xf8) == 1)
-    {
-        OBJ_F32(obj, 0xc) = state->savedX;
-        OBJ_F32(obj, 0x10) = state->savedY;
-        OBJ_F32(obj, 0x14) = state->savedZ;
-        OBJ_S16(obj, 0) = state->savedYaw;
-        OBJECT_TRIGGER_REFRESH(0, obj, -1);
-        OBJ_S32(obj, 0xf8) = 2;
-    }
-}
-
-void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
-{
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
-    WMGalleonState* state;
-    int i;
-
-    state = (WMGalleonState*)OBJ_PTR(obj, 0xb8);
-    if (GameBit_Get(0x78) != 0)
-    {
-        return;
-    }
-    if (OBJ_S16(obj, 0x46) == 0x188)
-    {
-        return;
-    }
-    objSetSlot(obj, 0x5a);
-    ((GameObject*)obj)->animEventCallback = (void*)WM_Galleon_SeqFn;
-    OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
-    OBJ_S32(obj, 0xf4) = 9;
-    state->savedX = OBJ_F32(obj, 0xc);
-    state->savedY = OBJ_F32(obj, 0x10);
-    state->savedZ = OBJ_F32(obj, 0x14);
-    state->savedYaw = OBJ_S16(obj, 0);
-    fn_80065574(0, obj, 0);
-    for (i = 0; i < 5; i++)
-    {
-        MAP_EVENT_SET(OBJ_U8(obj, 0x34), i, 0);
-    }
-    GameBit_Set(0xa4, 1);
-}
-
-void WM_Galleon_release(void)
-{
-}
-
-void WM_Galleon_initialise(void)
-{
-}
+void WM_Galleon_initialise(void);
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -558,84 +352,24 @@ void WM_seqobject_initialise(void)
 {
 }
 
-int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
-    s16 mode = state->triggerMode;
-    u8 flags;
+int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-    if ((mode == 1) || (mode == 2))
-    {
-        flags = (u8)(OBJ_U8(obj, 0xaf) | 8);
-        OBJ_U8(obj, 0xaf) = flags;
-    }
-    animUpdate->activeHitVolumePair = -1;
-    animUpdate->sequenceEventActive = 0;
-    return 0;
-}
+int dll_1FB_getExtraSize_ret_12(void);
+int dll_1FB_getObjectTypeId(void);
 
-int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
-int dll_1FB_getObjectTypeId(void) { return 0; }
+void dll_1FB_free_nop(void);
 
-void dll_1FB_free_nop(void)
-{
-}
+void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(f32 scale); /* #57 */
-    Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
+void dll_1FB_hitDetect_nop(void);
 
-    if (visible == 0 || state->hideModel != 0u)
-    {
-        return;
-    }
-    ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
-}
+void dll_1FB_update(int* obj);
 
-void dll_1FB_hitDetect_nop(void)
-{
-}
+void dll_1FB_init(int* obj, u8* def);
 
-void dll_1FB_update(int* obj)
-{
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
-    Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
+void dll_1FB_release_nop(void);
 
-    if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&
-        (GameBit_Get(0x9ad) == 0))
-    {
-        OBJECT_TRIGGER_REFRESH(4, obj, -1);
-        buttonDisable(0, 0x100);
-        GameBit_Set(0x9ad, 1);
-    }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-        ((int)obj, lbl_803E5D04, timeDelta, NULL);
-}
-
-void dll_1FB_init(int* obj, u8* def)
-{
-    Dll1FBState* state;
-    Dll1FBSetup* setup;
-
-    state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
-    setup = (Dll1FBSetup*)def;
-    ObjMsg_AllocQueue(obj, 4);
-    ((GameObject*)obj)->animEventCallback = (void*)dll_1FB_SeqFn;
-    OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
-    OBJ_S16(obj, 2) = setup->objectParam;
-    state->baseMove = setup->baseMove;
-    state->triggerMode = setup->triggerMode;
-    ObjAnim_SetCurrentMove((int)obj, (int)state->baseMove + 0x100, lbl_803E5D08, 0);
-}
-
-void dll_1FB_release_nop(void)
-{
-}
-
-void dll_1FB_initialise_nop(void)
-{
-}
+void dll_1FB_initialise_nop(void);
 
 
 
