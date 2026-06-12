@@ -100,7 +100,6 @@ void WM_ObjCreator_update(int obj)
     WmObjCreatorPlacement* placement;
     WmObjCreatorState* state;
     int count;
-    s8 ok;
     struct
     {
         s16 dir[3];
@@ -118,27 +117,29 @@ void WM_ObjCreator_update(int obj)
             {
                 int* objs;
                 int k;
-                ok = 0;
+                /* dead-on-this-path state recycled as the spawn-ok flag
+                   (#119: lands the flag web in state's r29 = retail) */
+                state = (WmObjCreatorState*)0;
                 if (((GameObject*)obj)->unkF8 == 0)
                 {
-                    ok = 1;
+                    state = (WmObjCreatorState*)1;
                     if (GameBit_Get(0x78) != 0)
                     {
-                        ok = 0;
+                        state = (WmObjCreatorState*)0;
                     }
                     objs = (int*)ObjGroup_GetObjects(3, &count);
                     k = 0;
-                    while (k < count && ok)
+                    while (k < count && (s8)(int)state)
                     {
                         if (*(s16*)(*objs + 0x46) == 0x139)
                         {
-                            ok = 0;
+                            state = (WmObjCreatorState*)0;
                         }
                         objs += 1;
                         k += 1;
                     }
                 }
-                if (ok)
+                if ((s8)(int)state)
                 {
                     setup = Obj_AllocObjectSetup(0x24, 0x139);
                     ((ObjPlacement*)setup)->posX = placement->base.posX;
