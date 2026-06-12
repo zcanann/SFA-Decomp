@@ -13,10 +13,10 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
-extern undefined4 ObjHits_EnableObject();
+extern int ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
+extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -28,29 +28,9 @@ extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 extern f32 lbl_803E42B4;
 
 
-void babycloudrunner_init_OLD_v1_1(int obj)
-{
-    undefined4* state;
-
-    state = ((GameObject*)obj)->extra;
-    *state = 0;
-    state[1] = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-    return;
-}
-
-
-void cfguardian_release(void);
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-
-/* EN v1.0 0x801A0614  size: 368b  cfprisoncage_SeqFn: drain the object's message
+/* cfprisoncage_SeqFn: drain the object's message
  * queue (re-arming its gamebit on the keyed message), then sync the
  * lit/active state from gamebit 0x44 and notify on completion. */
-#pragma scheduling off
-#pragma peephole off
 typedef struct CfPrisonCageMapData
 {
     ObjPlacement base;
@@ -71,6 +51,8 @@ enum
 /* message granting the cage's open bit (sent by the prison guard) */
 #define CFPRISONCAGE_MSG_OPEN 0xA0005
 
+#pragma scheduling off
+#pragma peephole off
 int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int msg;
@@ -116,28 +98,6 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-/* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
-
-
-/* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
-
-
-/* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
-
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
 
 typedef struct CfprisoncageObjectDef
 {
@@ -189,10 +149,8 @@ void cfprisoncage_update(int* obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
 }
-void spiritdoorspirit_hitDetect(void);
 
 int cfprisoncage_getExtraSize(void) { return 0x0; }
-int spiritdoorspirit_getExtraSize(void);
 
 #pragma scheduling on
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -227,7 +185,7 @@ void cfprisoncage_init(int* obj, u8* def)
     *(s16*)obj = (s16)((s32)def[0x1a] << 8);
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->animEventCallback = (void*)cfprisoncage_SeqFn;
-    if (((GameObject*)obj)->anim.seqId == 296)
+    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_CAGE_2)
     {
         if (GameBit_Get(((CfprisoncageObjectDef*)def)->unk18) != 0)
         {

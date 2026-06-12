@@ -18,7 +18,7 @@ extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DD8;
 extern void* Camera_GetCurrentViewSlot(void);
 extern u32 GameBit_Set(int bit, int value);
-extern int ObjHits_GetPriorityHit(int obj, undefined4* outHit, int* outIdx, u32* outVol);
+extern int ObjHits_GetPriorityHit(int obj, u32* outHit, int* outIdx, u32* outVol);
 extern void Obj_FreeObject(int obj);
 extern int objFindTexture(int p1, int p2, int p3);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
@@ -39,7 +39,6 @@ extern f32 lbl_803E3E10;
 extern f32 lbl_803E3E14;
 extern f64 lbl_803E3E18;
 extern f32 lbl_803E3E20;
-extern undefined4 FUN_80017a78();
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void* lbl_803DBDE8;
 extern f32 lbl_803E3E30;
@@ -142,8 +141,8 @@ void cfccrate_update(int obj)
     extern int randomGetRange(int lo, int hi);
     extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
     extern void* Obj_GetPlayerObject(void);
-    CfCcrateState* state; /* r31 = obj->b8 */
-    int viewslot; /* r29 = obj->4c */
+    CfCcrateState* state;
+    int viewslot;
     int cam;
     int tmp;
     short id;
@@ -351,7 +350,7 @@ void cfccrate_init(int obj, int aux)
     switch (id)
     {
     case 0x2bb:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
         ((GameObject*)obj)->anim.rotZ = *(short*)(aux + 0x1c);
         ((GameObject*)obj)->anim.rootMotionScale = zeroF;
@@ -365,22 +364,22 @@ void cfccrate_init(int obj, int aux)
     case 0x492:
     case 0x78b:
     case 0x78c:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         break;
     case 0x726:
         ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         break;
     case 0x71b:
         state->lingerTimer = *(short*)(aux + 0x1a);
         break;
     case 0x6be:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         state->latch3E = 0;
         state->gameBit2 = *(short*)(aux + 0x20);
         break;
     case 0x828:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         state->latch3E = 0;
         state->gameBit2 = *(short*)(aux + 0x20);
         if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
@@ -390,12 +389,12 @@ void cfccrate_init(int obj, int aux)
         }
         break;
     case 0x6bf:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
         state->gameBit2 = *(short*)(aux + 0x20);
         break;
     case 0x708:
-        objAnim->bankIndex = (s8) * (short*)(aux + 0x1a);
+        objAnim->bankIndex = (s8)*(short*)(aux + 0x1a);
         state->gameBit = *(short*)(aux + 0x20);
         if (objAnim->bankIndex >= 3)
         {
@@ -407,24 +406,24 @@ void cfccrate_init(int obj, int aux)
         state->gameBit = *(short*)(aux + 0x20);
         break;
     case 0x622:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         state->gameBit = *(short*)(aux + 0x20);
         break;
     case 0x6b4:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E3E30, 0);
         break;
     case 0x66c:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         state->gameBit = *(short*)(aux + 0x20);
         break;
     case 0x216:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
         break;
     case 0x4bf:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         *(u8*)&objAnim->bankIndex = *(u8*)(aux + 0x19);
         state->gameBit = *(short*)(aux + 0x20);
         if (GameBit_Get(state->gameBit) != 0)
@@ -437,7 +436,7 @@ void cfccrate_init(int obj, int aux)
         ((GameObject*)obj)->anim.rotY = 0;
         if (*(short*)(aux + 0x1c) >= 0x3e8)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)*(short*)(aux + 0x1c) / lbl_803E3DF4);
         }
         else
         {
@@ -455,17 +454,17 @@ void cfccrate_init(int obj, int aux)
         ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
         break;
     case 0x7de:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         ((GameObject*)obj)->anim.rotY = 0;
         if (*(short*)(aux + 0x1c) >= 0x3e8)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)*(short*)(aux + 0x1c) / lbl_803E3DF4);
         }
         else
         {
             ((GameObject*)obj)->anim.rootMotionScale = zeroF;
         }
-        state->oscVelB = (f32)(s32) * (short*)(aux + 0x1a);
+        state->oscVelB = (f32)(s32)*(short*)(aux + 0x1a);
         state->gameBit = *(short*)(aux + 0x20);
         if (GameBit_Get(state->gameBit) != 0)
         {
@@ -473,7 +472,7 @@ void cfccrate_init(int obj, int aux)
         }
         break;
     case 0xd7:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8)*(u8*)(aux + 0x18) << 8);
         ((GameObject*)obj)->anim.rootMotionScale = zeroF;
         state->latch3E = 0;
         state->homeX = *(f32*)(aux + 0x8);
@@ -503,7 +502,7 @@ void cfccrate_init(int obj, int aux)
             state->sfxTable = (u16*)&lbl_803DBDE8;
             state->sfxCount = 1;
         }
-        state->sfxPeriod = (u16) * (short*)(aux + 0x1c);
+        state->sfxPeriod = (u16)*(short*)(aux + 0x1c);
         state->sfxTimer = (short)state->sfxPeriod;
         break;
     }
@@ -522,4 +521,3 @@ void cfccrate_initialise(void)
 {
 }
 
-void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

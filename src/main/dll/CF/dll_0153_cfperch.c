@@ -10,51 +10,13 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
-extern undefined4 ObjHits_EnableObject();
-extern undefined8 ObjMsg_SendToObjects();
+extern int ObjHits_EnableObject();
+extern int ObjMsg_SendToObjects();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern uint GameBit_Get(int eventId);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
-
-void babycloudrunner_init_OLD_v1_1(int obj)
-{
-    undefined4* state;
-
-    state = ((GameObject*)obj)->extra;
-    *state = 0;
-    state[1] = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-    return;
-}
-
-
-void cfguardian_release(void);
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-
-/* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
-
-
-/* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
-
-
-/* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
-
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
 
 
 void cfperch_render(void)
@@ -96,14 +58,12 @@ void cfperch_init(int* obj)
     ((GameObject*)obj)->animEventCallback = (void*)fn_801A04F4;
 }
 
-void cfmaincrystal_free(int* obj);
 
 void cfperch_free(int* obj)
 {
     ObjMsg_SendToObjects(62, 0, obj, 0x40001, 0);
 }
 
-void babycloudrunner_free(int* obj);
 
 void cfperch_update(int* obj)
 {

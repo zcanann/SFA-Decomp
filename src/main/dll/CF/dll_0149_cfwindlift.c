@@ -12,9 +12,9 @@
 #include "main/objseq.h"
 
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_SendToObject();
+extern int ObjGroup_RemoveObject();
+extern int ObjGroup_AddObject();
+extern int ObjMsg_SendToObject();
 extern void objRenderFn_8003b8f4(f32);
 
 
@@ -57,12 +57,6 @@ extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E41BC;
 
 
-void babycloudrunner_init_OLD_v1_1(int obj);
-
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-
 void windlift_hitDetect(void)
 {
 }
@@ -75,29 +69,6 @@ void windlift_initialise(void)
 {
 }
 
-void cfpowerbase_free(void);
-
-/* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
-
-
-/* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
-
-
-/* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
-
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
 
 typedef struct WindliftPlacement
 {
@@ -132,7 +103,6 @@ typedef struct WindliftObjectDef
 
 int windlift_getExtraSize(void) { return 0x178; }
 int windlift_getObjectTypeId(void) { return 0x0; }
-int cfpowerbase_getExtraSize(void);
 
 #pragma peephole off
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -185,7 +155,7 @@ typedef struct
     u8 _f2 : 6;
 } WindLiftSub;
 
-/* EN v1.0 0x8019D2AC  size: 708b  windlift_init: look up the lift's sequence
+/* windlift_init: look up the lift's sequence
  * timings, scale its rise height from the def byte, arm it from the
  * gamebits and clear all 14 rider slots. */
 void windlift_init(int* obj, u8* def)
@@ -213,8 +183,8 @@ void windlift_init(int* obj, u8* def)
     {
         sub->liftHeight = lbl_803E41CC;
     }
-    ((GameObject*)obj)->anim.rootMotionScale = (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->
-        liftHeight) / lbl_803E41CC;
+    ((GameObject*)obj)->anim.rootMotionScale =
+        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / lbl_803E41CC;
     /* skip the rise-in ramp after the convergence cutscene (0x57)
        or for long lifts */
     if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa)
@@ -250,7 +220,7 @@ void windlift_init(int* obj, u8* def)
     ObjGroup_AddObject(obj, 0x49);
 }
 
-/* EN v1.0 0x8019C784  size: 1396b  fn_8019C784: per-rider wind lift physics -
+/* fn_8019C784: per-rider wind lift physics -
  * track the rider while above the lift and in range, send the lift/drop
  * messages on state edges, and integrate the rise speed with ramp-up,
  * oscillation damping and player-mode handoff. */
@@ -457,7 +427,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     }
 }
 
-/* EN v1.0 0x8019CD98  size: 1300b  windlift_update: fade the lift opacity
+/* windlift_update: fade the lift opacity
  * with its gamebit, spin up over the first second, then assign every nearby
  * group-0x16 object (and the player) to a rider slot and run the lift
  * physics on each. */

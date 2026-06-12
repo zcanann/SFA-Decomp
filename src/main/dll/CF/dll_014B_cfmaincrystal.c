@@ -38,11 +38,11 @@ enum
 #define CFMAINCRYSTAL_CHARGE_FIRE 0x3C   /* charge at which the bolt fires */
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_EnableObject();
+extern int ObjHits_EnableObject();
 extern int ObjMsg_Pop();
-extern undefined8 ObjMsg_SendToObjects();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
+extern int ObjMsg_SendToObjects();
+extern int ObjMsg_SendToObject();
+extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
 
 extern EffectInterface** gPartfxInterface;
@@ -74,44 +74,7 @@ extern f32 lbl_803E4204;
 extern void Camera_EnableViewYOffset(void);
 
 
-void babycloudrunner_init_OLD_v1_1(int obj)
-{
-    undefined4* state;
-
-    state = ((GameObject*)obj)->extra;
-    *state = 0;
-    state[1] = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-    return;
-}
-
-
-void cfguardian_release(void);
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-
-/* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
-
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
-
-/* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
-
-
-/* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
-
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
 
 void cfmaincrystal_hitDetect(void)
 {
@@ -125,7 +88,6 @@ void cfmaincrystal_initialise(void)
 {
 }
 
-void babycloudrunner_hitDetect(void);
 
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
 int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
@@ -138,7 +100,6 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4210);
 }
 
-void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #pragma scheduling off
 void cfmaincrystal_free(int* obj)
@@ -146,7 +107,6 @@ void cfmaincrystal_free(int* obj)
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
-void cfperch_free(int* obj);
 
 void cfmaincrystal_update(int* obj)
 {
@@ -180,7 +140,7 @@ void cfmaincrystal_update(int* obj)
 void cfmaincrystal_init(int* obj, u8* def)
 {
     CfMainCrystalState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
+    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
     if (*(s8*)((char*)def + 0x19) == 0)
     {
         state->chime[0] = 0x28;
@@ -195,12 +155,12 @@ void cfmaincrystal_init(int* obj, u8* def)
 
 typedef struct
 {
-    s16 a, b, c, d;
+    s16 a, b, c, d; /* per-effect s16 params; c/d carry the beam index */
     u8 pad[4];
     f32 x, y, z;
 } PartPayload;
 
-/* EN v1.0 0x8019D9F0  size: 2112b  fn_8019D9F0: main crystal beam update -
+/* fn_8019D9F0: main crystal beam update -
  * collect the three pylon positions from messages, re-request missing ones,
  * emit the beam particles toward the crystal (and down from each pylon),
  * ramp the convergence charge, hum volume and per-beam chime timers. */
@@ -254,7 +214,7 @@ void fn_8019D9F0(int* obj)
     {
         ObjMsg_SendToObjects(0xdc, 5, obj, CFMAINCRYSTAL_MSG_CRYSTAL, 0);
     }
-    if (GameBit_Get(0x54) != 0 && sub->pylonTimer[0] == 0)
+    if (GameBit_Get(GAMEBIT_CFBASE_1) != 0 && sub->pylonTimer[0] == 0)
     {
         ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_1, 0);
     }

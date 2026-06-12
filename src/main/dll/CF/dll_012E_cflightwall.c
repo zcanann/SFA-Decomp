@@ -42,15 +42,13 @@ void cflightwall_init(s16* obj, u8* def)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     if (def[0x1b] != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
-        def[0x1b] / lbl_803E3EEC;
+        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / lbl_803E3EEC;
         if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3EF0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3EE8;
         }
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)((char*)*(int**)&((
-            GameObject*)obj)->anim.modelInstance + 4);
+        ((GameObject*)obj)->anim.rootMotionScale =
+            ((GameObject*)obj)->anim.rootMotionScale * *(f32*)((char*)*(int**)&((GameObject*)obj)->anim.modelInstance + 4);
     }
     ((GameObject*)obj)->objectFlags |= 0xA000;
 }
-

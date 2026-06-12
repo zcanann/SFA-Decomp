@@ -13,12 +13,12 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
-extern undefined4 getLActions();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
+extern int getLActions();
+extern int ObjHits_DisableObject();
+extern int ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
+extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -41,48 +41,9 @@ extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 
 
-void babycloudrunner_init_OLD_v1_1(int obj)
-{
-    undefined4* state;
-
-    state = ((GameObject*)obj)->extra;
-    *state = 0;
-    state[1] = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-    return;
-}
-
-
-void cfguardian_release(void);
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-
-/* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
-
-
-/* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
-
-
-/* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
-
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
-
-typedef struct CfprisonguardPlacement
+typedef struct CfPrisonGuardMapData
 {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -96,7 +57,7 @@ typedef struct CfprisonguardPlacement
     u8 pad20[0x22 - 0x20];
     s16 unk22;
     u8 pad24[0x28 - 0x24];
-} CfprisonguardPlacement;
+} CfPrisonGuardMapData;
 
 void cfprisonguard_free(void)
 {
@@ -110,7 +71,7 @@ void cfprisonguard_initialise(void)
 {
 }
 
-/* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
+/* cfprisonguard_init: set up the guard's
  * substate (update fn cfprisonguard_SeqFn, message queue), seed its header from
  * the spawn params, and apply the alarm-active gating bits. */
 #pragma scheduling off
@@ -153,7 +114,7 @@ void cfprisonguard_update(int* obj)
     {
         ((CfPrisonGuardFlags39*)&sub->flags39)->pulse = 0;
     }
-    if (GameBit_Get(((CfprisonguardPlacement*)def)->disableEvent) != 0)
+    if (GameBit_Get(((CfPrisonGuardMapData*)def)->disableEvent) != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
@@ -174,7 +135,7 @@ void cfprisonguard_update(int* obj)
     {
         if (sub->guardState != 4)
         {
-            if (dist < (f32)(s32)((CfprisonguardPlacement*)def)->watchRadius)
+            if (dist < (f32)(s32)((CfPrisonGuardMapData*)def)->watchRadius)
             {
             }
             else if (waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) == 0)
@@ -188,13 +149,11 @@ void cfprisonguard_update(int* obj)
         }
     }
 }
-void cfprisonuncle_free(void);
 
 int cfprisonguard_getExtraSize(void) { return 0x3c; }
 int cfprisonguard_getObjectTypeId(void) { return 0x49; }
-int cfprisonuncle_getExtraSize(void);
 
-/* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
+/* cfprisonguard_render: render the guard
  * model when visible, ramp its alarm timer at sub->_30 each frame, and
  * once it crosses the threshold spawn a one-shot particle. */
 void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -229,7 +188,7 @@ void cfprisonguard_hitDetect(int* obj)
 
 void gcrobotlightbea_free(int* obj);
 
-/* EN v1.0 0x8019F540  size: 1000b  cfprisonguard_SeqFn: drive the guard state
+/* cfprisonguard_SeqFn: drive the guard state
  * machine - ramp/reset the alarm on cues, bail when captured or freed, watch
  * the player distance/water impacts and chase or stand down, with idle digging
  * SFX and queued-message drain. */
@@ -287,7 +246,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0)
         {
-            if (dist < (f32)((CfprisonguardPlacement*)def)->watchRadius
+            if (dist < (f32)((CfPrisonGuardMapData*)def)->watchRadius
                 || waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) != 0)
             {
                 if (objGetAnimState80A(player) != 0x40)
@@ -317,7 +276,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0)
         {
-            if (dist < (f32)((CfprisonguardPlacement*)def)->watchRadius)
+            if (dist < (f32)((CfPrisonGuardMapData*)def)->watchRadius)
             {
                 if (objGetAnimState80A(player) != 0x40)
                 {

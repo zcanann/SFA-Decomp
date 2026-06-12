@@ -54,11 +54,11 @@ void cfmagicwall_hitDetect(void)
 
 void cfmagicwall_update(int obj)
 {
-    int data = *(int*)&((GameObject*)obj)->anim.placementData;
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     int player = (int)Obj_GetPlayerObject();
     u8 alpha = 0xff;
 
-    if (GameBit_Get(((CfMagicWallMapData*)data)->visibleEvent) != 0)
+    if (GameBit_Get(((CfMagicWallMapData*)placement)->visibleEvent) != 0)
     {
         int yaw = (s16)Obj_GetYawDeltaToObject(obj, player, NULL);
 
@@ -75,7 +75,7 @@ void cfmagicwall_update(int obj)
             f32 playerDistance;
             f32 range;
             f32 fadeDistance;
-            range = (f32)(s32)((CfMagicWallMapData*)data)->fadeRange;
+            range = (f32)(s32)((CfMagicWallMapData*)placement)->fadeRange;
             playerDistance = Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)(player + 0x18));
             fadeDistance = Camera_DistanceToCurrentViewPosition(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,

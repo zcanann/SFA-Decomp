@@ -150,7 +150,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     {
         v = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                            ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) + 0x8000);
-        v = v - (u16) * (s16*)obj;
+        v = v - (u16)*(s16*)obj;
         if (v > 0x8000)
         {
             v = v - 0xffff;
@@ -168,15 +168,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     return ret;
 }
 
-/*
- * CFGuardian (DLL 0x148) - CloudRunner Fortress guardian (head fragment).
- * Re-split (descriptor forensics, docs/boundary_audit.md): this unit holds
- * [8019B1D8-8019C784) = dll 0x148's helpers + descriptor fns, carved from
- * the front of the 12-DLL container sandwormBoss.c. NOTE: 0x148's TU truly
- * starts inside DR/hightop.c (its slot-10 callback is at 0x8019AF4C); the
- * hightop|here boundary at 0x8019B1D8 is a remaining documented cut.
- * Skeleton-copy carve: non-owned defs collapsed to prototypes in place.
- */
 #include "main/dll/cfguardian_state.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -187,24 +178,22 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 
-extern undefined4 ObjHits_EnableObject();
+extern int ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_AllocQueue();
+extern int ObjGroup_RemoveObject();
+extern int ObjGroup_AddObject();
+extern int ObjMsg_AllocQueue();
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
-extern undefined4 objAnimFn_80038f38();
+extern int objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
-extern undefined4 dll_2E_func03();
+extern int dll_2E_func03();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 #pragma scheduling on
 #pragma peephole on
 
-
-void babycloudrunner_init_OLD_v1_1(int obj);
 
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
@@ -232,15 +221,13 @@ extern void dll_2E_func08(u8* sub, int b, int c);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern void objSeqInitFn_80080078(u8* p, int n);
 
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
 #pragma scheduling off
 #pragma peephole off
 void cfguardian_init(int* obj, u8* params)
 {
-    CfGuardianState * sub;
+    CfGuardianState* sub;
     GuardianVec stk1;
     GuardianVec stk2;
 
@@ -295,7 +282,7 @@ extern void saveGame_saveObjectPos(int obj);
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void* player, int n);
 
-/* EN v1.0 0x8019C3A0  size: 252b  cfguardian_SeqFn: guardian message handler.
+/* cfguardian_SeqFn: guardian message handler.
  * Persists position on a negative cue, otherwise picks the active/idle
  * heading pair and routes a move request; on the magic-grant message it
  * tops the player back up. Returns 1 if the move was consumed. */
@@ -337,35 +324,6 @@ extern f32 timeDelta;
 
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 
-/* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
-
-
-/* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
-
-
-/* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
-
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
-
-typedef struct CfguardianState
-{
-    u8 pad0[0x68C - 0x0];
-    void* unk68C;
-    u8 pad690[0xA9C - 0x690];
-} CfguardianState;
-
 extern u8 framesThisStep;
 
 int cfguardian_getExtraSize(void) { return 0xa9c; }
@@ -380,11 +338,11 @@ extern void dll_2E_func06(int* a, int* b, int c);
 
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* sub = ((GameObject*)obj)->extra;
     if ((s32)visible != 0)
     {
         objRenderFn_8003b8f4(lbl_803E4130);
-        dll_2E_func06(obj, state, 0);
+        dll_2E_func06(obj, sub, 0);
     }
 }
 
@@ -399,7 +357,7 @@ void cfguardian_free(int* obj, int p2)
         int i;
         for (i = 0, state = extra; i < 6; i++)
         {
-            int* sub = *(int**)&((CfguardianState*)state)->unk68C;
+            int* sub = (int*)((CfGuardianState*)state)->linkedObjs[0];
             if (sub != NULL)
             {
                 Obj_FreeObject(sub);
@@ -409,7 +367,6 @@ void cfguardian_free(int* obj, int p2)
     }
 }
 
-void cfprisonuncle_init(int* obj);
 
 #pragma scheduling on
 #pragma peephole on
@@ -466,7 +423,7 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 lbl_803E4124;
 extern f32 lbl_803E4128;
 
-/* EN v1.0 0x8019B1D8  size: 544b  fn_8019B1D8: steer the object toward the
+/* fn_8019B1D8: steer the object toward the
  * target: scale its velocity along the normalized delta, blend the yaw by
  * speed over distance, move it and keep the chase move playing. Returns 1
  * when already within the closing threshold. */
@@ -495,7 +452,7 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     ((GameObject*)obj)->anim.velocityX = timeDelta * (dx * speed);
     ((GameObject*)obj)->anim.velocityY = timeDelta * (dy * speed);
     ((GameObject*)obj)->anim.velocityZ = timeDelta * (dz * speed);
-    d = (*(s16*)target + 0x8000) - (u16) * (s16*)obj;
+    d = (*(s16*)target + 0x8000) - (u16)*(s16*)obj;
     if (d > 0x8000)
     {
         d = d - 0xffff;
@@ -504,7 +461,7 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     {
         d = d + 0xffff;
     }
-    *(s16*)obj = (f32) * (s16*)(int)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
+    *(s16*)obj = (f32)*(s16*)(int)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
     objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((GameObject*)obj)->anim.currentMove != 0x1a)
@@ -543,7 +500,7 @@ extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
 extern f32 lbl_803E412C;
 
-/* EN v1.0 0x8019B4C8  size: 3800b  waterSpellStone1Fn_8019b4c8: cfguardian
+/* waterSpellStone1Fn_8019b4c8: cfguardian
  * brain - sixteen-state quest progression for the CloudRunner guardian, with
  * sandworm avoidance, path flights, landing physics, sequenced triggers and
  * idle chatter. */
@@ -574,7 +531,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd); /* #57 */
     u8* def;
     char* player;
-    CfGuardianState * sub;
+    CfGuardianState* sub;
     struct
     {
         f32 v[3];
@@ -714,7 +671,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             {
                 f32 w = lbl_803E4144 * ((GameObject*)obj)->anim.velocityY;
                 w = (w >= lbl_803E4110) ? w : -w;
-                *(s16*)obj = (f32) * (s16*)obj + w;
+                *(s16*)obj = (f32)*(s16*)obj + w;
                 sub->moveSpeed = lbl_803E4148;
                 if (GameBit_Get(0x8e9) != 0)
                 {
@@ -986,7 +943,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     characterDoEyeAnims((int*)obj, (u8*)sub + 0x654);
     if (sub->questState != GameBit_Get(0x4b))
     {
-        GameBit_Set(0x4b);
+        GameBit_Set(0x4b); /* (sic) one-arg call - no prototype in scope; matches retail */
     }
     return 0;
 }

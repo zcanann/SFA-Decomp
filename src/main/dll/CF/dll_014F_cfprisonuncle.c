@@ -12,13 +12,13 @@
 #include "main/objseq.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_EnableObject();
+extern int ObjHits_EnableObject();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
+extern int ObjMsg_AllocQueue();
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
-extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 objAnimFn_80038f38();
+extern int ObjPath_GetPointWorldPosition();
+extern int objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -36,44 +36,7 @@ extern int objUpdateOpacity(int sub);
 extern f32 lbl_803E4288;
 
 
-void babycloudrunner_init_OLD_v1_1(int obj)
-{
-    undefined4* state;
-
-    state = ((GameObject*)obj)->extra;
-    *state = 0;
-    state[1] = 0;
-    ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0x80;
-    return;
-}
-
-
-void cfguardian_release(void);
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-
-/* Per-object extra state for the CloudRunner main crystal
- * (cfmaincrystal_getExtraSize == 0x160). */
-
-
-/* Per-object extra state for the CloudRunner power base
- * (cfpowerbase_getExtraSize == 0x6). */
-
-
-/* Per-object extra state for the CloudRunner prison guard
- * (cfprisonguard_getExtraSize == 0x3c). */
-
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
 
 void cfprisonuncle_free(void)
 {
@@ -91,7 +54,7 @@ void cfprisonuncle_initialise(void)
 {
 }
 
-/* EN v1.0 0x8019FEDC  size: 536b  cfprisonuncle_update: while not captured,
+/* cfprisonuncle_update: while not captured,
  * drain pending messages, re-acquire the keyed target object, then either
  * track/animate toward the player (firing the alert trigger) or, once
  * captured, raise the done flag and notify. */
@@ -161,11 +124,9 @@ void cfprisonuncle_update(int* obj)
         }
     }
 }
-void gcrobotlightbea_render(void);
 
 int cfprisonuncle_getExtraSize(void) { return 0xa8; }
 int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
-int gcrobotlightbea_getExtraSize(void);
 
 #pragma scheduling on
 int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -191,15 +152,15 @@ void cfprisonuncle_init(int* obj)
     state->unk68 = 465;
     state->unk70 = 0;
     state->kicked = 0;
-    if ((u32)GameBit_Get(77) != 0u)
+    if ((u32)GameBit_Get(0x4d) != 0u)
     {
-        GameBit_Set(80, 1);
+        GameBit_Set(0x50, 1);
     }
 }
 
 void cfguardian_hitDetect(int* obj);
 
-/* EN v1.0 0x8019FCF4  size: 484b  cfprisonuncle_render: render the uncle and/or
+/* cfprisonuncle_render: render the uncle and/or
  * his held model depending on the rescue gamebits, opacity and visibility;
  * when path-following, snap the held model to the path point first. */
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)

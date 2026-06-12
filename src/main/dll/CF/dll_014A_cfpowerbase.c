@@ -53,8 +53,8 @@ enum
 #define CFPOWERBASE_SEQ_READY 175
 
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
+extern int ObjMsg_SendToObject();
+extern int ObjMsg_AllocQueue();
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern void objRenderFn_8003b8f4(f32);
 extern uint GameBit_Get(int eventId);
