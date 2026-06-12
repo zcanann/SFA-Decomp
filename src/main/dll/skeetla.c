@@ -119,6 +119,7 @@ extern f32 FLOAT_803e3110;
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
     TrickyState* state;
+    ObjHitsPriorityState* hitState;
     f32 hitOffsetY;
     void* lastContactObj;
     f32 nearestDistance;
@@ -206,8 +207,9 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         ((GameObject*)obj)->anim.velocityY = lbl_803E23DC;
     }
 
-    lastContactObj = (void*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
-    if (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags & 8) == 0 ||
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    lastContactObj = (void*)hitState->lastHitObject;
+    if ((hitState->flags & 8) == 0 ||
         (*(s16*)((u8*)lastContactObj + 0x46) == 0x1f))
     {
         lastContactObj = NULL;
@@ -1295,7 +1297,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
     void** objects;
     u8* obj;
     u8* def;
-    u8* runtime;
+    ObjHitsPriorityState* hitState;
     u16 minRadius;
 
     objects = ObjGroup_GetObjects(0x40, &count);
@@ -1316,8 +1318,8 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
         minRadius = *(u16*)(def + 0x84);
         if (minRadius != 0)
         {
-            runtime = *(u8**)&((GameObject*)obj)->anim.hitReactState;
-            if ((runtime != NULL) && ((*(u16*)&((ObjHitsPriorityState*)runtime)->flags & 1) != 0))
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            if ((hitState != NULL) && ((*(u16*)&hitState->flags & 1) != 0))
             {
                 trickyAdjustStepAroundPoint(start, end, guardPoint, &((GameObject*)obj)->anim.worldPosX,
                                             lbl_803E2484 * (f32)minRadius,
