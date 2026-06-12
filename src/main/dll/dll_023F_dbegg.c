@@ -202,8 +202,8 @@ void dbegg_setupFromDef(int obj, u8* state)
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
     config->speedScaleByte * lbl_803E61D0;
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)(*(int*)&((GameObject*)
-        obj)->anim.modelInstance + 4);
+    ((GameObject*)obj)->anim.rootMotionScale =
+        ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state[0x118] = (u8)(GameBit_Get(config->primaryConditionId) != 0 ? 3 : 1);
     if (state[0x118] == 1)
     {

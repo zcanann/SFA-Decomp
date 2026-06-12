@@ -14199,7 +14199,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             {
                 int held = ((PlayerState*)inner)->unk7F0;
                 (*(void (*)(f32))*(int*)(*(int*)(*(int*)((char*)held + 0x68)) + 0x50))(
-                    *(f32*)((char*)*(int*)&((GameObject*)obj)->anim.modelInstance + 0x4));
+                    ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase);
             }
         }
         if ((*(u32*)((char*)inner + 0x360) & 0x8000000) != 0)

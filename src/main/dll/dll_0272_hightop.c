@@ -360,7 +360,7 @@ void hightop_renderGroundMarker(int obj, f32 scale)
     pos.rx = -0x8000;
     pos.ry = 0;
     pos.rz = 0;
-    pos.scale = scale / *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x4);
+    pos.scale = scale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(lbl_803AD208, &pos);
     mtx44_mult(lbl_803AD208, mtx, lbl_803AD208);
     fn_8003B950(lbl_803AD208);

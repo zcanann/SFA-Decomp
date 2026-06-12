@@ -289,8 +289,8 @@ void slidingdoor_init(u8* obj, u8* data)
     v = (f32)(u32)
     data[0x21] * lbl_803E43C0;
     ((GameObject*)obj)->anim.rootMotionScale = v;
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)((char*)(*(u8**)&((
-        GameObject*)obj)->anim.modelInstance) + 4);
+    ((GameObject*)obj)->anim.rootMotionScale =
+        ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     sub = ((GameObject*)obj)->extra;
     ((SlidingDoorSubFlags*)sub)->doorState = doorState;
 }

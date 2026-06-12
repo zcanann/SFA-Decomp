@@ -489,7 +489,7 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     v.angles[0] = 0;
     v.angles[1] = 0;
     v.angles[2] = 0;
-    v.mat[0] = scale / *(f32*)((char*)*(int*)&((GameObject*)obj)->anim.modelInstance + 0x4);
+    v.mat[0] = scale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(lbl_803DB170, v.angles);
     mtx44_mult(lbl_803DB170, (void*)mtx, lbl_803DB170);
     fn_8003B950((int)lbl_803DB170);

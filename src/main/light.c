@@ -331,13 +331,13 @@ void vfpcoreplat_init(int obj, int data)
     {
         if (GameBit_Get(0x4e9) != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6144 * *(f32*)(*(int*)&((GameObject*)obj)->anim.
-                modelInstance + 4);
+            ((GameObject*)obj)->anim.rootMotionScale =
+                lbl_803E6144 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         }
         if (GameBit_Get(0x63c) != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6148 * *(f32*)(*(int*)&((GameObject*)obj)->anim.
-                modelInstance + 4);
+            ((GameObject*)obj)->anim.rootMotionScale =
+                lbl_803E6148 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         }
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
@@ -408,8 +408,8 @@ void vfpdraghead_init(int obj, int data)
     if (((GameObject*)obj)->anim.seqId == 0x3c5)
     {
         state->despawnTimer = 0x78;
-        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
-            lbl_803E6138;
+        ((GameObject*)obj)->anim.rootMotionScale =
+            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
         ObjHits_SetHitVolumeSlot(obj, 0xE, 1, 0);
     }
     else
@@ -422,8 +422,8 @@ void vfpdraghead_init(int obj, int data)
     state->headIndex = (u8) * (s16*)(data + 0x1a);
     if (*(s8*)(data + 0x19) == 1)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
-            lbl_803E6138;
+        ((GameObject*)obj)->anim.rootMotionScale =
+            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
     }
     ((GameObject*)obj)->objectFlags |= 0x6000;
     lbl_803DDCC0 = Resource_Acquire(0xA5, 1);
