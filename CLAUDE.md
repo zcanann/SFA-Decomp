@@ -2879,6 +2879,28 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     owner-swap (the temp wins r31) that can net-regress a high partial
     (dll_8E: 99.63 tracked form beats 98.81 unfolded form). Read which
     stores target folds before picking a form.
+    **STORE-FORWARDING addendum — a POINTER store between a stack store
+    and its re-read KILLS the forwarding (may-alias), and the escape is
+    NAMED REGISTER LOCALS for the values (cfguardian_updateMain v-block,
+    99.54→99.88).** Shape: compute into a stack array
+    (`stk.v[i] = expr; ... stk.v[i] *= k; ... vel = stk.v[i] + vel;`)
+    where the consuming statements ALSO store through an arbitrary
+    pointer (`obj->velocityX = ...` between v[1]'s store and its
+    re-read). MWCC forwards only the values whose re-read precedes the
+    first pointer store; the rest RELOAD (`lfs` from the slot) and their
+    product temps die early, scrambling the FP numbering. When TARGET
+    shows stores AND register reuse with no reloads, the original
+    computed through per-axis NAMED LOCALS with explicit stores
+    (`v0 = expr; stk.v[0] = v0; ... v0 = v0 * k; stk.v[0] = v0;
+    vel = v0 + vel;`) — locals are alias-immune, the #85 self-reassign
+    keeps the product IN PLACE (fmuls fN,fN,fK = target), and the named
+    k re-ranks to f0. Per-value shape mixing is readable off target's
+    product regs: an in-place product = self-reassigned local; a product
+    in a FRESH low reg = a separate single-def local (cfguardian's v2
+    needed `p2 = v2 * k;`). Decl order then sets the sub-trio numbering
+    (v1-before-v0 for the f3/f2 swap). Compound `*=` on the MEMORY
+    lvalue is byte-identical to the expanded form — the in-place choice
+    is allocator-level, only the named-local restructure reaches it.
 
 95. **`#pragma optimization_level 0-4` IS accepted per-function by GC/2.0
     mwcc** (silently — no warning; `#pragma opt_propagation` /

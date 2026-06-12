@@ -473,17 +473,12 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
  * quest progression with path flights, landing physics, sequenced
  * triggers and idle chatter.
  *
- * BANKED at 99.54: the old saved-quad rotation fell to the #36 burst
-   rule (19 no-op (int)obj casts dropped at once sank obj to r28) +
-   decl reorder; the "found/questState volatile homings" were really
-   #65 dropped args (dll_2E_func04(sub, found) head-track target,
-   GameBit_Set(0x4b, sub->questState) sync - both real behavioral
-   bugs in the import). Remaining residuals, all probed: the case-6
-   velocity stk.v trio perm f3/f2/f4 with in-place products + 2
-   add-side reloads (#82 expression-temp class; compound = byte-
-   identical, product-locals/k-respellings/FP-local promotions inert),
-   the |w| site's beq vs target bne;b (front-end fold, see #63 fold
-   caveat), and content-matched jumptable/bias relocs. */
+ * BANKED at 99.88 (5 ndiff regions): 4 content-matched relocs
+   (jumptable + conversion-bias @NNN-vs-shared, #70-neutral) and the
+   |w| site's beq vs target's bne;b - the #63 keep-or-negate ternary
+   forward-substitutes when single-use and every unfold spelling
+   (if/goto forms, k-recycle, #92 static-inline two-return helper)
+   either folds to the single beq or re-substitutes. 1 instruction. */
 int cfguardian_updateMain(int obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
@@ -667,16 +662,28 @@ int cfguardian_updateMain(int obj)
                     ((GameObject*)obj)->anim.velocityZ = fb * -((GameObject*)obj)->anim.velocityZ;
                 }
                 }
-                stk.v[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
-                stk.v[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-                stk.v[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
-                k = lbl_803E4154 * oneOverTimeDelta;
-                stk.v[0] = stk.v[0] * k;
-                stk.v[1] = stk.v[1] * k;
-                stk.v[2] = stk.v[2] * k;
-                ((GameObject*)obj)->anim.velocityX = stk.v[0] + ((GameObject*)obj)->anim.velocityX;
-                ((GameObject*)obj)->anim.velocityY = stk.v[1] + ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)obj)->anim.velocityZ = stk.v[2] + ((GameObject*)obj)->anim.velocityZ;
+                {
+                    f32 v1;
+                    f32 v0;
+                    f32 v2;
+                    f32 p2;
+                    v0 = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+                    stk.v[0] = v0;
+                    v1 = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
+                    stk.v[1] = v1;
+                    v2 = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+                    stk.v[2] = v2;
+                    k = lbl_803E4154 * oneOverTimeDelta;
+                    v0 = v0 * k;
+                    stk.v[0] = v0;
+                    v1 = v1 * k;
+                    stk.v[1] = v1;
+                    p2 = v2 * k;
+                    stk.v[2] = p2;
+                    ((GameObject*)obj)->anim.velocityX = v0 + ((GameObject*)obj)->anim.velocityX;
+                    ((GameObject*)obj)->anim.velocityY = v1 + ((GameObject*)obj)->anim.velocityY;
+                    ((GameObject*)obj)->anim.velocityZ = p2 + ((GameObject*)obj)->anim.velocityZ;
+                }
                 {
                     f32 fd = lbl_803E4138;
                     ((GameObject*)obj)->anim.velocityX = fd * ((GameObject*)obj)->anim.velocityX;
