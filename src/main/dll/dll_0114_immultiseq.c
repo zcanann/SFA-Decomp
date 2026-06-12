@@ -447,11 +447,8 @@ void seqObj2_init(short* param_1, int param_2)
 /* Trivial 4b 0-arg blr leaves. */
 void seqobj2_render(void);
 
-void seqobj2_hitDetect(void);
 
-void SeqObj2_release(void);
 
-void SeqObj2_initialise(void);
 
 void immultiseq_hitDetect(void)
 {
@@ -499,20 +496,14 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
 void dll_115_hitDetect_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int seqobject_getExtraSize(void);
-int seqobject_getObjectTypeId(void);
-int seqobj2_getExtraSize(void);
-int seqobj2_getObjectTypeId(void);
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_getObjectTypeId(void) { return 0x0; }
 int dll_115_getExtraSize_ret_2(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E37A0;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E37A8;
 
-void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -523,19 +514,12 @@ void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void seqobject_free(int x);
-void seqobj2_free(int x);
 void immultiseq_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dll_115_free(int x);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
-extern void OSReport(const char* fmt, ...);
-extern const char sSeqObjNeedBitUsedBitFormat[];
-extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
-extern const char lbl_80321208[];
 extern int GameBit_Set(int eventId, int value);
-extern int warpToMap(int id, int flags);
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
@@ -578,15 +562,10 @@ int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 
 void fn_8017C294(int* obj);
 
-void seqobj2_init(int* obj, SeqObjectPlacement* def);
 
-int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
 
-int seqobject_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
 
-void seqobject_update(int* obj);
 
-void seqobj2_update(int* obj);
 
 void immultiseq_update(int* obj)
 {
