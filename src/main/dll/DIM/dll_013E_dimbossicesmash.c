@@ -114,6 +114,7 @@ void dimbossicesmash_update(u8* obj)
     int a;
     s16 cnt;
     int t1;
+    int u29;
     f32 nz, nx, ny;
     f32 len, inv, dot;
     f32 fy, fz, ff;
@@ -159,12 +160,13 @@ void dimbossicesmash_update(u8* obj)
             {
                 state[0x29e] = state[0x29e] | 2;
             }
-            if (((DimBossIceSmashState*)state)->unk29C > ((DimbossicesmashPlacement*)setup)->unk3A &&
+            u29 = ((DimBossIceSmashState*)state)->unk29C;
+            if (u29 > ((DimbossicesmashPlacement*)setup)->unk3A &&
                 (t1 = ((DimbossicesmashPlacement*)setup)->unk38 - ((DimbossicesmashPlacement*)setup)->unk3A) != 0)
             {
                 a = (int)(lbl_803E404C *
                     (lbl_803E4048 -
-                        (f32)(((DimBossIceSmashState*)state)->unk29C - ((DimbossicesmashPlacement*)setup)->unk3A) / (
+                        (f32)(u29 - ((DimbossicesmashPlacement*)setup)->unk3A) / (
                             f32)t1));
                 if (a > 0xff)
                 {
