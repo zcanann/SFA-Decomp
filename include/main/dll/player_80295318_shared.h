@@ -817,7 +817,6 @@ extern f32 lbl_803E8218;
 extern f32 lbl_803E821C;
 extern f32 lbl_803E8220;
 extern f32 lbl_803E8224;
-extern MapEventInterface **gMapEventInterface;
 extern int allocModelStruct2(int p1, int p2);
 extern void *mmAlloc(int size, int heap, int flags);
 extern void objSetSlot(int obj, int slot);

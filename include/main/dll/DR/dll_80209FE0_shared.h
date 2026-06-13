@@ -179,7 +179,6 @@ extern int lbl_80329F90[];
 extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int Obj_RemoveFromUpdateList(int *obj);
 extern void Obj_SpawnHitLightAndFade(int obj, f32 *pos, f32 v);
-extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern void gameTextShow(int id);
 extern int warpToMap(int id, int flags);

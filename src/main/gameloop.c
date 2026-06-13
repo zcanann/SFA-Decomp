@@ -711,7 +711,6 @@ extern void* gBaddieControlInterface;
 extern void* gMinimapInterface;
 extern void* gCarryableInterface;
 extern void* gTitleMenuItemInterface;
-extern MapEventInterface **gMapEventInterface;
 extern void *lbl_803DCAC0;
 extern u8 lbl_803DCA3F;
 

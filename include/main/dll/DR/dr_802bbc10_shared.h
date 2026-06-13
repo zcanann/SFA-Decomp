@@ -176,7 +176,6 @@ extern void fn_80137948(const char *fmt, ...);
 extern char sOnCloudFormat[];
 extern void buttonDisable(int a, int b);
 extern void fn_8003B500(int obj, int q, f32 f);
-extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;

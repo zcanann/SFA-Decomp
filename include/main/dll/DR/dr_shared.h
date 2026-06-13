@@ -153,7 +153,6 @@ extern void dll_2E_func06(int obj, void *p, int v);
 extern int lbl_8032AB48[];
 extern s16 lbl_8032A730[];
 extern u8 lbl_803DC968;
-extern MapEventInterface **gMapEventInterface;
 extern int getCurMapLayer(void);
 extern void saveFileStruct_unlockCheat(int v);
 extern HtInitData lbl_802C2590;
