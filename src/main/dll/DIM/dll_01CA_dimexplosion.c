@@ -515,19 +515,23 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
     int state = *(int*)&((GameObject*)obj)->extra;
     int idx;
     int off;
+    int e;
+    int e14;
     idx = ((ExplosionState*)state)->flameCount++;
     off = idx * 0x30;
     *(f32*)((char*)state + off) = x;
-    *(f32*)((char*)state + off + 0x4) = y;
-    *(f32*)((char*)state + off + 0x8) = z;
-    *(f32*)((char*)state + off + 0x18) = lbl_803E492C;
-    *(f32*)((char*)state + off + 0xc) = *(f32*)((char*)state + 0x18);
-    *(f32*)((char*)state + off + 0x1c) = spd;
-    *(u8*)((char*)state + off + 0x2d) = b;
-    *(int*)((char*)state + off + 0x10) = 0;
-    *(int*)((char*)state + off + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
+    e = state + off;
+    e14 = state + off;
+    *(f32*)((char*)e + 0x4) = y;
+    *(f32*)((char*)e + 0x8) = z;
+    *(f32*)((char*)e + 0x18) = lbl_803E492C;
+    *(f32*)((char*)e + 0xc) = *(f32*)((char*)state + 0x18);
+    *(f32*)((char*)e + 0x1c) = spd;
+    *(u8*)((char*)e + 0x2d) = b;
+    *(int*)((char*)e + 0x10) = 0;
+    *(int*)((char*)e14 + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
     {
-        int v = *(int*)((char*)state + off + 0x14);
+        int v = *(int*)((char*)e14 + 0x14);
         if (v < 0)
         {
             v = 0;
@@ -536,9 +540,9 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
         {
             v = 0x3c;
         }
-        *(int*)((char*)state + off + 0x14) = v;
+        *(int*)((char*)e14 + 0x14) = v;
     }
-    if (*(u8*)((char*)state + off + 0x2d) < 1)
+    if (*(u8*)((char*)e + 0x2d) < 1)
     {
         s8 c = *(s8*)((char*)p4c + 0x19);
         if (c != 0)
@@ -580,13 +584,13 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
     }
     *(u8*)((char*)(int)state + off + 0x2c) = randomGetRange(0, 3);
     {
-        f32 sp = *(f32*)((char*)state + off + 0x1c);
+        f32 sp = *(f32*)((char*)e + 0x1c);
         f32 ev = expf(
-            (lbl_803E4934 * ((f32)(int) * (int*)((char*)state + off + 0x14) - (f32)(int) * (int*)((char*)state + off + 0x10))) / (f32)(int)
-            * (int*)((char*)state + off + 0x14));
-        f32 t = (sp - *(f32*)((char*)state + off + 0x18)) * ev;
-        *(f32*)((char*)state + off + 0xc) = sp - t * lbl_803DDB70;
-        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)state + off + 0x10)) / (f32)(int) * (int*)((char*)state + off + 0x14));
+            (lbl_803E4934 * ((f32)(int) * (int*)((char*)e14 + 0x14) - (f32)(int) * (int*)((char*)e + 0x10))) / (f32)(int)
+            * (int*)((char*)e14 + 0x14));
+        f32 t = (sp - *(f32*)((char*)e + 0x18)) * ev;
+        *(f32*)((char*)e + 0xc) = sp - t * lbl_803DDB70;
+        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e14 + 0x14));
         t = lbl_803E4938 * ev;
         *(s8*)((char*)(int)state + off + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
         *(int*)((char*)(int)state + off + 0x20) = (int)lbl_803E4940;
