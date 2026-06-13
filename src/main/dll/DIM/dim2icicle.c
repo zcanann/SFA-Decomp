@@ -128,28 +128,27 @@ void fn_801BB598(DIMbossObject* obj, DIMbossRuntime* runtime)
     objIndex = (int)obj;
     topState = runtime->topState;
     state = (int*)topState;
-    effect = topState->effect;
-    if (effect != NULL)
+    if (topState->effect != NULL)
     {
         if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT)
         {
-            modelLightStruct_setPosition((ModelLightStruct*)effect, *(f32*)(state + 0x16), *(f32*)(state + 0x17),
+            modelLightStruct_setPosition((ModelLightStruct*)topState->effect, *(f32*)(state + 0x16), *(f32*)(state + 0x17),
                                          *(f32*)(state + 0x18));
         }
         else
         {
-            modelLightStruct_setPosition((ModelLightStruct*)effect, *(f32*)(state + 0x10), *(f32*)(state + 0x11),
+            modelLightStruct_setPosition((ModelLightStruct*)topState->effect, *(f32*)(state + 0x10), *(f32*)(state + 0x11),
                                          *(f32*)(state + 0x12));
         }
-        modelLightStruct_getSpecularColor((ModelLightStruct*)effect, &colA, &colB, &colG, &colR);
-        modelLightStruct_setGlowColor((ModelLightStruct*)effect, colA, colB, colG, 0xc0);
-        if (effect->glowType != 0 && effect->enabled != 0)
+        modelLightStruct_getSpecularColor((ModelLightStruct*)topState->effect, &colA, &colB, &colG, &colR);
+        modelLightStruct_setGlowColor((ModelLightStruct*)topState->effect, colA, colB, colG, 0xc0);
+        if (topState->effect->glowType != 0 && topState->effect->enabled != 0)
         {
-            brightness = effect->glowAlpha + effect->glowAlphaStep;
+            brightness = topState->effect->glowAlpha + topState->effect->glowAlphaStep;
             if (brightness < 0)
             {
                 brightness = 0;
-                effect->glowAlphaStep = 0;
+                topState->effect->glowAlphaStep = 0;
             }
             else if (brightness > 0xc)
             {
@@ -157,10 +156,10 @@ void fn_801BB598(DIMbossObject* obj, DIMbossRuntime* runtime)
                 if (brightness > 0xff)
                 {
                     brightness = 0xff;
-                    effect->glowAlphaStep = 0;
+                    topState->effect->glowAlphaStep = 0;
                 }
             }
-            effect->glowAlpha = brightness;
+            topState->effect->glowAlpha = brightness;
         }
     }
     if (gDIMbossSequenceFlags & 0x200)
@@ -501,7 +500,7 @@ void fn_801BC2D8(int obj, int stateRaw)
     hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitUnk);
     if (hitResult != 0)
     {
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags & 0xffffffbf;
+        gDIMbossSequenceFlags &= ~0x40LL;
         if (*(s16*)((int)state + 0x402) == 1)
         {
             if ((gDIMbossSequenceFlags & 8) == 0 || hitType != 2)
@@ -690,7 +689,7 @@ void fn_801BC7E4(int obj, int arg2, int stateRaw, int mode)
     {
         if (gDIMbossSequenceFlags & DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT)
         {
-            gDIMbossSequenceFlags &= ~DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT;
+            gDIMbossSequenceFlags &= ~(long long)DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT;
             DIM2icicle_spawnBlueWhiteEffect((int*)(*(int*)(stateRaw + 0x40c) + 4),
                                             (f32*)(*(int*)(stateRaw + 0x40c) + 0x94));
         }
