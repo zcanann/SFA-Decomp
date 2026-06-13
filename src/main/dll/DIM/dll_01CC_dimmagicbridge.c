@@ -565,12 +565,13 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 #pragma peephole off
 int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    u8* sub = ((GameObject*)obj)->extra;
     int j;
     int i;
+    int o = (int)obj;
+    u8* sub = ((GameObject*)o)->extra;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
-    dimmagicbridge_scrollTextureChannels((int)obj, (u8*)sub);
+    dimmagicbridge_scrollTextureChannels(o, (u8*)sub);
     if (animUpdate->triggerCommand == 1)
     {
         animUpdate->triggerCommand = 0;
@@ -578,7 +579,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
     }
     if (sub[0x5f] != 0)
     {
-        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 - framesThisStep;
+        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 -= framesThisStep;
         if (((DimmagicbridgeFlameSeqFnState*)sub)->unk64 <= 0)
         {
             ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = 0x10;
@@ -597,7 +598,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
             }
         }
     }
-    dimmagicbridge_updateVertexWave((int)obj, (u8*)sub);
+    dimmagicbridge_updateVertexWave(o, (u8*)sub);
     return 0;
 }
 
@@ -605,17 +606,17 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {
-    int model = (int)Obj_GetActiveModel((int)obj);
-    int mdl = *(int*)model;
     int i;
     int cnt;
+    int model = (int)Obj_GetActiveModel(obj);
+    int mdl = *(int*)model;
+    f32 amp = lbl_803E4A00;
     for (i = 0; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
     {
         s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
         s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);
-        int u = (u16)(int)(lbl_803E4A00 * ((f32)(int)vc[2] / *(f32*)sub)
-        )
-        +*(u16*)(sub + 0x60);
+        int u = (u16)(int)(amp * ((f32)(int)vc[2] / *(f32*)sub));
+        u = u + *(u16*)(sub + 0x60);
         if (*vb > 0)
         {
             *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C
