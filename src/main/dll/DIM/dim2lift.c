@@ -1103,7 +1103,7 @@ int fn_801BA654(int obj, int param2)
     }
     if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
     {
-        gDIMbossSequenceFlags |= 0x8020;
+        gDIMbossSequenceFlags |= 0x8020LL;
         Camera_EnableViewYOffset();
         CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
         doRumble(lbl_803E4BD0);
