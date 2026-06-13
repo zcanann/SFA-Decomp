@@ -80,15 +80,16 @@ void dimicewall_update(int* obj)
         {
             f32 desc[6];
             int i;
+            f32 mul = lbl_803E4888;
             desc[2] = (f32)(s8)((DimicewallPlacement*)def)->unk19 / lbl_803E4880;
             desc[5] = lbl_803E4884;
             for (i = 45; i != 0; i--)
             {
-                desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)
+                desc[3] = desc[2] * (mul * (f32)(int)
                 randomGetRange(-250, 250)
                 )
                 ;
-                desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)
+                desc[4] = desc[2] * (mul * (f32)(int)
                 randomGetRange(0, 450)
                 )
                 ;
@@ -96,17 +97,17 @@ void dimicewall_update(int* obj)
             }
             for (i = 25; i != 0; i--)
             {
-                desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)
+                desc[3] = desc[2] * (mul * (f32)(int)
                 randomGetRange(-250, 250)
                 )
                 ;
-                desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)
+                desc[4] = desc[2] * (mul * (f32)(int)
                 randomGetRange(0, 450)
                 )
                 ;
                 (*gPartfxInterface)->spawnObject(obj, 2042, desc, 2, -1, NULL);
             }
-            if (((DimicewallPlacement*)def)->unk14 != 7433)
+            if ((u32)((DimicewallPlacement*)def)->unk14 != 7433)
             {
                 Sfx_PlayFromObject((int)obj, 1147);
             }
