@@ -178,7 +178,8 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         facingAngle = modelVec[1] + ((s32)config->angleBias << 8);
         targetX -= ((GameObject*)obj)->anim.localPosX;
         targetZ -= ((GameObject*)obj)->anim.localPosZ;
-        angleDelta = (((u16)getAngle(targetX, targetZ) + 0x8000) - (u16)facingAngle);
+        angleDelta = ((u16)getAngle(targetX, targetZ) + 0x8000);
+        angleDelta = angleDelta - (u16)facingAngle;
         if (angleDelta > 0x8000)
         {
             angleDelta -= 0xffff;
@@ -235,7 +236,7 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
                     turnStep = (turnStep * ((s32)lbl_803DBF02 - (s32)absPitch)) / (s32)lbl_803DBF04;
                 }
             }
-            modelVec[1] = (s16)(modelVec[1] + turnStep);
+            modelVec[1] = (s16)(*(s16*)((char*)modelVec + 2) + turnStep);
         }
 
         dx = state->targetX - state->posX;
