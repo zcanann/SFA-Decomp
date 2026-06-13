@@ -567,8 +567,10 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
 {
     int j;
     int i;
-    int o = (int)obj;
-    u8* sub = ((GameObject*)o)->extra;
+    u8* sub;
+    int o;
+    o = (int)obj;
+    sub = ((GameObject*)o)->extra;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
     dimmagicbridge_scrollTextureChannels(o, (u8*)sub);
