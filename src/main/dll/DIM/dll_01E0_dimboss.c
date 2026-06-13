@@ -114,12 +114,19 @@ typedef struct DIMbossBoneParticleEffectInterface
     void (*spawnEffect)(DIMbossObject* obj, int effectId, void* params, int frames, void* extra);
 } DIMbossBoneParticleEffectInterface;
 
+typedef struct DIMbossInitVec
+{
+    undefined4 a;
+    undefined4 b;
+    undefined4 c;
+} DIMbossInitVec;
+
 typedef struct DIMbossBaddieControlInterface
 {
     u8 pad00[0x28];
     void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, int moveId,
                       u8* hitReactMode, int param_6, int param_7, int param_8, int param_9);
-    void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount);
+    void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount, int flag);
     int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
     int (*updateHitDetect)(DIMbossObject* obj, ObjAnimUpdateState* animUpdate,
                            DIMbossRuntime* runtime, void* hitDetectAnimTable, void* animTable,
@@ -188,7 +195,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
     DIMbossConfig* config;
     DIMbossTopState* topState;
     u8* animScratchBase;
-    byte hitReactMode;
+    int hitReactMode;
     u8 loadWaitStarted;
     int updateResult;
     int model;
@@ -385,7 +392,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
                 animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET, 0);
             if (baddieResult != 0)
             {
-                DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70);
+                DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70, 1);
             }
         }
         else if ((hitReactMode != 0) && (hitReactMode < 3))
@@ -411,7 +418,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
     }
     else
     {
-        updateResult = -((uint)runtime->hitReactMode) >> 31;
+        updateResult = runtime->hitReactMode != 0;
     }
 LAB_801bd7dc:
     return updateResult;
@@ -620,9 +627,7 @@ void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
     f32 liftHeight;
 
     runtime = obj->runtime;
-    localVec[0] = lbl_802C2338[0];
-    localVec[1] = lbl_802C2338[1];
-    localVec[2] = lbl_802C2338[2];
+    *(DIMbossInitVec*)localVec = *(DIMbossInitVec*)lbl_802C2338;
     *(undefined2*)(localVec + 3) = *(undefined2*)(lbl_802C2338 + 3);
     setDrawCloudsAndLights(0);
     obj->updateMode = 2;
@@ -662,7 +667,7 @@ void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
     dll_2E_func09(gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
     *animFlagsByte |= 8;
-    *animFlagsByte &= 0xfe;
+    *animFlagsByte &= ~1;
     topState->steamFlags.bits.sfxPending = 1;
     gDIMbossHitEffectResource =
         Resource_Acquire(DIMBOSS_HIT_EFFECT_ID, DIMBOSS_HIT_EFFECT_RESOURCE_COUNT);

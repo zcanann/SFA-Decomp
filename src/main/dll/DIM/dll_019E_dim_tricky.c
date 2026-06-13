@@ -202,33 +202,41 @@ STATIC_ASSERT(offsetof(Dll19ESetup, scaleTimer) == 0x1A);
 STATIC_ASSERT(offsetof(Dll19ESetup, sequenceIndex) == 0x1C);
 STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
 
+typedef struct Dll19EResArgs
+{
+    undefined4 a;
+    undefined4 b;
+    undefined4 c;
+    undefined4 d;
+} Dll19EResArgs;
+
 void dll_19E_update(void* obj)
 {
     extern void Sfx_PlayFromObject(void* obj, int sfxId);
     extern int GameBit_Set(int eventId, int value);
     Dll19EState* state;
     void* resource;
-    volatile f32 localScale;
-    undefined effectArgs[16];
+    struct
+    {
+        undefined args[16];
+        volatile f32 scale;
+    } effectBuf;
     undefined4 resourceArgs[4];
     int i;
 
     state = ((GameObject*)obj)->extra;
-    resourceArgs[0] = lbl_802C23D8[0];
-    resourceArgs[1] = lbl_802C23D8[1];
-    resourceArgs[2] = lbl_802C23D8[2];
-    resourceArgs[3] = lbl_802C23D8[3];
+    *(Dll19EResArgs*)resourceArgs = *(Dll19EResArgs*)lbl_802C23D8;
 
     Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     objUpdateOpacity(obj);
     if (state->settleTimer > 0)
     {
-        *(u16*)&state->settleTimer = state->settleTimer - (u16)framesThisStep;
+        state->settleTimer -= framesThisStep;
     }
 
     if (state->mode == 1)
     {
-        localScale = lbl_803E51E0;
+        effectBuf.scale = lbl_803E51E0;
         state->previousActive = state->active;
         if ((ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) ||
             ((state->settleTimer != 0) && (state->settleTimer <= 0x14)))
@@ -252,7 +260,7 @@ void dll_19E_update(void* obj)
 
         if ((state->active != 0) && (state->resetTimer != 0))
         {
-            *(u16*)&state->resetTimer = state->resetTimer - (u16)framesThisStep;
+            state->resetTimer -= framesThisStep;
             if (state->resetTimer <= 0)
             {
                 state->resetTimer = 0;
@@ -274,7 +282,7 @@ void dll_19E_update(void* obj)
                 resourceArgs[1] = (u32)state->sequenceIndex * 2 + 0x19d;
                 resourceArgs[2] = (u32)state->sequenceIndex * 2 + 0x19e;
                 (*(void (*)(void*, int, undefined*, int, int, undefined4*))(*(int*)(*(int*)resource + 4)))(
-                    obj, 1, effectArgs, 0x10004, -1, resourceArgs);
+                    obj, 1, effectBuf.args, 0x10004, -1, resourceArgs);
                 Resource_Release(resource);
 
                 i = 0;
@@ -340,8 +348,11 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
 {
     Dll19EState* state;
     void* resource;
-    undefined stackArg[16];
-    volatile f32 localScale;
+    struct
+    {
+        undefined args[16];
+        volatile f32 scale;
+    } stackArg;
 
     state = ((GameObject*)obj)->extra;
     *(s16*)obj = (s16)(((s32)setup->objectType & 0x3f) << 10);
@@ -358,24 +369,25 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     state->active = 0;
     state->sequenceIndex = 0;
     state->gameBitId = setup->gameBitId;
-    localScale = lbl_803E51E0;
+    stackArg.scale = lbl_803E51E0;
 
-    if (state->mode == 1)
+    switch (state->mode)
     {
-        state->sequenceIndex = (u8)setup->sequenceIndex;
-        state->needsOpenSfx = 0;
-        state->settleTimer = state->sequenceIndex * 0x28 + 0x398;
-        state->previousActive = 0;
-    }
-    else if (state->mode == 0)
-    {
+    case 0:
         state->active = 1;
         resource = Resource_Acquire(0x69, 1);
         if (setup->sequenceIndex == 0)
         {
             (*(void (**)(u8*, int, undefined*, int, int, int))(*(int*)resource + 4))(
-                obj, 0, stackArg, 0x10004, -1, 0);
+                obj, 0, stackArg.args, 0x10004, -1, 0);
         }
+        break;
+    case 1:
+        state->sequenceIndex = (u8)setup->sequenceIndex;
+        state->needsOpenSfx = 0;
+        state->settleTimer = state->sequenceIndex * 0x28 + 0x398;
+        state->previousActive = 0;
+        break;
     }
     state->delayTimer = 0;
 }

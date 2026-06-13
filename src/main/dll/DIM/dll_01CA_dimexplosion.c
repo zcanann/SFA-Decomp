@@ -140,8 +140,8 @@ extern f32 lbl_803DDB64;
 extern f32 lbl_803DDB68;
 extern f32 lbl_803DDB6C;
 extern f32 lbl_803DDB70;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f32 lbl_80325528[];
 extern FbTexTbl lbl_802C2328;
 extern f32 expf(f32 x);
@@ -285,18 +285,14 @@ LAB_801b44d4:
 void explosion_release(uint obj)
 {
     int i;
-    int** p;
 
-    i = 0;
-    p = (int**)lbl_803AC960;
-    for (; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
-        if (*p != NULL)
+        if (((int**)lbl_803AC960)[i] != NULL)
         {
-            textureFree((int)*p);
-            *p = NULL;
+            textureFree((int)((int**)lbl_803AC960)[i]);
+            ((int**)lbl_803AC960)[i] = NULL;
         }
-        p++;
     }
 }
 
@@ -507,7 +503,8 @@ void dim_levelcontrol_free(int p1);
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
+void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out);
+typedef void (*Fn801B40B8IntFirst)(u8 mode, u8* out, f32 a, f32 b);
 
 #pragma peephole off
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
@@ -579,7 +576,7 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     }
     *(s16*)((char*)state + off + 0x28) = randomGetRange(0, 0xffff);
     *(s16*)((char*)state + off + 0x2a) = randomGetRange(0xc8, 0x12c);
-    if (randomGetRange(0, 1) != 0)
+    if ((int)randomGetRange(0, 1) != 0)
     {
         *(s16*)((char*)state + off + 0x2a) = -*(s16*)((char*)state + off + 0x2a);
     }
@@ -601,53 +598,21 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     }
 }
 
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b)
+#pragma dont_inline on
+void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out)
 {
-    s16 c1;
-    s16 c2;
-    s16 c3;
     s16 v1;
     s16 v2;
     s16 v3;
+    s16 c1;
+    s16 c2;
+    s16 c3;
     c1 = 0xff - (u8)(int)(lbl_803DDB64 * (lbl_803E4938 * expf((lbl_803E4950 * a) / b)));
     c2 = 0xff - (u8)(int)(lbl_803DDB60 * (lbl_803E4938 * expf((lbl_803E4954 * a) / b)));
     c3 = 0xff - (u8)(int)(lbl_803DDB5C * (lbl_803E4938 * expf(a / b)));
-    if (c1 < 1)
-    {
-        v1 = 1;
-    }
-    else if (c1 > 0xff)
-    {
-        v1 = 0xff;
-    }
-    else
-    {
-        v1 = c1;
-    }
-    if (c2 < 1)
-    {
-        v2 = 1;
-    }
-    else if (c2 > 0xff)
-    {
-        v2 = 0xff;
-    }
-    else
-    {
-        v2 = c2;
-    }
-    if (c3 < 1)
-    {
-        v3 = 1;
-    }
-    else if (c3 > 0xff)
-    {
-        v3 = 0xff;
-    }
-    else
-    {
-        v3 = c3;
-    }
+    v1 = (c1 < 1) ? 1 : ((c1 > 0xff) ? 0xff : c1);
+    v2 = (c2 < 1) ? 1 : ((c2 > 0xff) ? 0xff : c2);
+    v3 = (c3 < 1) ? 1 : ((c3 > 0xff) ? 0xff : c3);
     switch (mode)
     {
     case 0:
@@ -673,6 +638,7 @@ void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b)
     }
 }
 
+#pragma dont_inline reset
 void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u32 colB2;
@@ -701,7 +667,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         p = state;
         for (i = 0; i < ((ExplosionState*)state)->flameCount; i++)
         {
-            if (*(s8*)&((ExplosionDebris*)p)->unk2F != 0)
+            if (*(u8*)&((ExplosionDebris*)p)->unk2F != 0)
             {
                 void** tex;
                 int k;
@@ -717,8 +683,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(m2, m3, m2);
                 PSMTXScale(m4, ((ExplosionDebris*)p)->unkC, ((ExplosionDebris*)p)->unkC, ((ExplosionDebris*)p)->unkC);
                 PSMTXConcat(m4, m2, m4);
-                PSMTXTrans(mE, ((ExplosionDebris*)p)->unk0 - lbl_803DCDD8, ((ExplosionDebris*)p)->unk4,
-                           ((ExplosionDebris*)p)->unk8 - lbl_803DCDDC);
+                PSMTXTrans(mE, ((ExplosionDebris*)p)->unk0 - playerMapOffsetX, ((ExplosionDebris*)p)->unk4,
+                           ((ExplosionDebris*)p)->unk8 - playerMapOffsetZ);
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
@@ -727,8 +693,9 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     (lbl_803E4958 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) /
                     (f32)(int)((ExplosionDebris*)p)->unk14)));
                 colB = (cv & 0xff) | ((u8)cv << 8) | ((u8)cv << 16) | ((u8)cv << 24);
-                fn_801B40B8(((ExplosionState*)state)->modelKind, (u8*)&colA, (f32)(int)((ExplosionDebris*)p)->unk10,
-                            (f32)(int)((ExplosionDebris*)p)->unk14);
+                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, (u8*)&colA,
+                                                  (f32)(int)((ExplosionDebris*)p)->unk10,
+                                                  (f32)(int)((ExplosionDebris*)p)->unk14);
                 tex = (void**)((int*)lbl_803AC960)[((ExplosionState*)state)->modelKind];
                 for (k = 0; k < ((ExplosionDebris*)p)->unk2C; k++)
                 {
@@ -738,30 +705,35 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 colA2 = colA;
                 fn_80073AAC(tex, &colA2, &colB2, k);
                 GXBegin(0x80, 2, 4);
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
+                {
+                    f32 fc = lbl_803E492C;
+                    f32 fb = lbl_803E4960;
+                    f32 fa = lbl_803E4988;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                }
             }
             p += 0x30;
         }
-        if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(s8*)&((ExplosionState*)
+        if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(u8*)&((ExplosionState*)
             state)->rayMode != 0)
         {
             p = state;
@@ -933,29 +905,26 @@ void explosion_update(int obj)
                         u8 md;
                         ang[5] = 0;
                         md = ((ExplosionState*)state)->modelKind;
-                        if (md == 2)
+                        switch (md)
                         {
+                        case 1:
+                            ang[1] = ang[2];
+                            ang[4] = 0;
+                            break;
+                        case 2:
                             ang[1] = ang[0];
                             ang[4] = ang[3];
                             ang[0] = ang[2];
                             ang[3] = 0;
-                        }
-                        else if (md < 2)
-                        {
-                            if (md != 0)
-                            {
-                                ang[1] = ang[2];
-                                ang[4] = 0;
-                            }
-                        }
-                        else if (md < 4)
-                        {
+                            break;
+                        case 3:
                             ang[1] = ang[2];
                             ang[4] = 0;
                             ang[2] = ang[0];
                             ang[5] = ang[3];
                             ang[0] = sv;
                             ang[3] = 0;
+                            break;
                         }
                     }
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x5e, &fake, 0x200001, -1, ang);
@@ -982,7 +951,7 @@ void explosion_update(int obj)
             }
             else
             {
-                fn_801B40B8(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
+                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
                 if (((ExplosionState*)state)->light != 0)
                 {
                     modelLightStruct_setDiffuseColor(((ExplosionState*)state)->light, rgb[0], rgb[1], rgb[2], 0xff);
@@ -1019,9 +988,9 @@ void explosion_init(int obj, int p2)
     f32 vsp[3];
     f32 mB[12];
     f32 mA[12];
+    int p;
     int state = *(int*)&((GameObject*)obj)->extra;
     f32 scale;
-    int p;
     int i;
     int n;
     ((ExplosionState*)state)->flameCount = 0;
@@ -1182,8 +1151,6 @@ void explosion_initialise(void)
 {
     FbTexTbl t;
     int i;
-    int* src;
-    int* dst;
     t = lbl_802C2328;
     lbl_803DDB70 = lbl_803E492C / expf(lbl_803E4934);
     lbl_803DDB6C = lbl_803E492C / expf(lbl_803E493C);
@@ -1191,11 +1158,9 @@ void explosion_initialise(void)
     lbl_803DDB64 = lbl_803E492C / expf(lbl_803E4950);
     lbl_803DDB60 = lbl_803E492C / expf(lbl_803E4954);
     lbl_803DDB5C = lbl_803E492C / expf(lbl_803E492C);
-    for (i = 0, src = t.v, dst = lbl_803AC960; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
-        *dst = textureLoadAsset(*src);
-        src++;
-        dst++;
+        lbl_803AC960[i] = textureLoadAsset(t.v[i]);
     }
 }
 
