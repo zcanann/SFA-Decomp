@@ -270,14 +270,24 @@ typedef struct ExpgfxSpawnConfig {
   void *attachedSource;
   s32 quadVertex3Pad06;
   s32 lifetimeFrames;
-  s16 sourceVecX;
-  s16 sourceVecY;
-  s16 sourceVecZ;
-  u8 pad12[0x14 - 0x12];
-  ExpgfxFloatWord sourcePosX;
-  ExpgfxFloatWord sourcePosY;
-  ExpgfxFloatWord sourcePosZ;
-  ExpgfxFloatWord sourcePosW;
+  union {
+    struct {
+      s16 sourceVecX;
+      s16 sourceVecY;
+      s16 sourceVecZ;
+      u8 pad12[0x14 - 0x12];
+      ExpgfxFloatWord sourcePosX;
+      ExpgfxFloatWord sourcePosY;
+      ExpgfxFloatWord sourcePosZ;
+      ExpgfxFloatWord sourcePosW;
+    };
+    struct {
+      f32 localOffsetX;
+      f32 localOffsetY;
+      f32 localOffsetZ;
+      u8 padLocalOffset18[0x24 - 0x18];
+    } actorAimOffset;
+  };
   float velocityX;
   float velocityY;
   float velocityZ;
@@ -301,6 +311,10 @@ typedef struct ExpgfxSpawnConfig {
 
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, attachedSource) == 0x00);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, quadVertex3Pad06) == 0x04);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourceVecX) == 0x0C);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, actorAimOffset.localOffsetX) == 0x0C);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, actorAimOffset.localOffsetY) == 0x10);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, actorAimOffset.localOffsetZ) == 0x14);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourcePosW) == 0x20);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, velocityX) == 0x24);
 STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, startPosX) == 0x30);

@@ -808,8 +808,7 @@ foundFirst:
                 {
                     continue;
                 }
-                entry = &runtime->expTab[((u32)slot->encodedTableIndex >> 1) &
-                    EXPGFX_SLOT_TABLE_INDEX_MASK];
+                entry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
                 srcObj = (ExpgfxSourceObject*)entry->sourceId;
                 resource = entry->resource;
                 slot->stateBits.bits.frameParity = 0;
@@ -1741,9 +1740,7 @@ foundFirst:
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
-                    attached = (u8*)runtime->expTab[((u32)slot->encodedTableIndex >> 1) &
-                            EXPGFX_SLOT_TABLE_INDEX_MASK]
-                        .attachedTableKey;
+                    attached = (u8*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].attachedTableKey;
                     rot.x = lbl_803DF35C;
                     rot.y = lbl_803DF35C;
                     rot.z = lbl_803DF35C;
@@ -2110,8 +2107,7 @@ void drawGlow(uint slotPoolBase, int poolIndex)
     do
     {
         slot = (ExpgfxSlot*)((char*)slot + EXPGFX_SLOT_SIZE);
-        tabEntry = &((ExpgfxTableEntry*)dstBuf)[((u32)slot->encodedTableIndex >> 1) &
-            EXPGFX_SLOT_TABLE_INDEX_MASK];
+        tabEntry = &((ExpgfxTableEntry*)dstBuf)[Expgfx_GetSlotTableIndex(slot)];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
         if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
@@ -3008,9 +3004,9 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             else
             {
                 dx = playerObj->anim.worldPosX -
-                    (slot->startPosX.value + *(f32*)((char*)config + 0xc));
+                    (slot->startPosX.value + config->actorAimOffset.localOffsetX);
                 dz = playerObj->anim.worldPosZ -
-                    (slot->startPosZ.value + *(f32*)((char*)config + 0x14));
+                    (slot->startPosZ.value + config->actorAimOffset.localOffsetZ);
                 distSq = dx * dx + dz * dz;
                 if (distSq < lbl_803DF424
                     && lbl_803DF35C != playerObj->anim.velocityX
@@ -3019,11 +3015,11 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
                     slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityY = slot->velocityY -
                         ((lbl_803DF428 + playerObj->anim.worldPosY) -
-                            (slot->startPosY.value + *(f32*)((char*)config + 0x10))) /
+                            (slot->startPosY.value + config->actorAimOffset.localOffsetY)) /
                         (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityZ = slot->velocityZ -
                         (playerObj->anim.worldPosZ -
-                            (slot->startPosZ.value + *(f32*)((char*)config + 0x14))) /
+                            (slot->startPosZ.value + config->actorAimOffset.localOffsetZ)) /
                         (f32)(s32)((int)slot->lifetimeFrame << 1);
                 }
             }
