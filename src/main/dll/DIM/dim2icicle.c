@@ -110,7 +110,7 @@ typedef struct IcicleFxPos
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801BB598(DIMbossObject* obj, DIMbossRuntime* runtime)
+void fn_801BB598(int obj, DIMbossRuntime* runtime)
 {
     int objIndex;
     int* state;
@@ -125,7 +125,7 @@ void fn_801BB598(DIMbossObject* obj, DIMbossRuntime* runtime)
     u8 colG;
     u8 colR;
 
-    objIndex = (int)obj;
+    objIndex = obj;
     topState = runtime->topState;
     state = (int*)topState;
     if (topState->effect != NULL)
