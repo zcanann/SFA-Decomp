@@ -91,7 +91,8 @@ typedef struct CamcontrolCameraState {
   f32 prevWorldX;
   f32 prevWorldY;
   f32 prevWorldZ;
-  u8 padC4[0xDC - 0xC4];
+  f32 focusMoveAverage;
+  f32 focusMoveHistory[5];
   f32 overrideWorldX;
   f32 overrideWorldY;
   f32 overrideWorldZ;
@@ -133,6 +134,9 @@ STATIC_ASSERT(sizeof(CamcontrolCameraState) == 0x144);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, localX) == 0x0C);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, focusObj) == 0xA4);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, fovY) == 0xB4);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, focusMoveAverage) == 0xC4);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, focusMoveHistory) == 0xC8);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, overrideWorldX) == 0xDC);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, blendProgress) == 0xF4);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, blendDeltaYaw) == 0x100);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, blendStartYaw) == 0x106);
@@ -259,6 +263,11 @@ void camcontrol_updateTargetFeedback(void);
 void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
                                     undefined4 arg3, undefined4 arg4, undefined4 arg5,
                                     undefined4 arg6);
+CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState,
+                                                  ObjAnimComponent *focus);
+void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus);
+void camcontrol_applyState(CamcontrolCameraState *cameraState);
+void camcontrol_applyQueuedAction(void);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useLocalPosition);
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z);

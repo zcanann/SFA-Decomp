@@ -11,7 +11,6 @@ extern u8 voxmaps_traceLine(int *from, int *to, int *out, u8 *occOut, int e);
 extern f32 PSVECMag(void *vec);
 extern float sqrtf(float x);
 
-extern int gCamcontrolActiveActionId;
 extern u16 lbl_803DB992;
 extern f32 lbl_803E1630;
 extern f32 lbl_803E1644;
@@ -30,7 +29,7 @@ extern f32 lbl_803E1658;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void *camcontrol_findBestTarget(int param_1, u8 *focus)
+CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState, ObjAnimComponent *focus)
 {
     int objIndex;
     int objCount;
@@ -40,63 +39,62 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
     int g1[3];
     int g2[3];
     int out1[3];
-    u8 *arr[8];
+    GameObject *targets[8];
     f32 dist[8];
-    u8 **ptr;
+    GameObject **ptr;
     int bestPri;
-    u8 *obj;
+    GameObject *obj;
     int idx;
     int count;
-    u8 *player;
-    u8 *f;
+    GameObject *player;
     u8 canTarget;
     ObjHitVolumeRuntimeBounds *data;
     ObjHitVolumeRuntimeBounds *entry;
     ObjDefHitVolume *row;
     ObjHitVolumeRuntimeTransform *src;
     ObjHitVolumeRuntimeTransform *transform;
-    u8 *best;
+    GameObject *best;
     int i;
     int k;
     int ok;
     f32 dx, dz, dy, distsq, range;
     f32 *pd;
-    u8 **pa;
+    GameObject **pa;
 
-    f = focus;
+    (void)cameraState;
     bestPri = -1;
     count = 0;
     player = Obj_GetPlayerObject();
-    if (player == NULL || f == NULL || gCamcontrolActiveActionId == 0x44 ||
+    if (player == NULL || focus == NULL || gCamcontrolActiveActionId == 0x44 ||
         objAnimFn_80296328() == 0) {
         return NULL;
     }
-    ptr = (u8 **)ObjList_GetObjects(&objIndex, &objCount);
+    ptr = (GameObject **)ObjList_GetObjects(&objIndex, &objCount);
     idx = objIndex;
     ptr += idx;
     for (; idx < objCount; ptr++, idx++) {
         obj = *ptr;
-        data = ((GameObject *)obj)->anim.hitVolumeBounds;
+        data = obj->anim.hitVolumeBounds;
         if (data == NULL
-           || ((GameObject *)obj)->anim.alpha != 0xff
-           || (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x28)
-           || (!(((GameObject *)obj)->objectFlags & 0x800) && !(((ObjAnimComponent *)obj)->modelInstance->flags & 1))
-           || (((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN)
-           || (((GameObject *)obj)->objectFlags & 0x40)
-           || (lbl_803DB992 & ((ok = 1) << (data[((GameObject *)obj)->unkE4].flags & 0xf))) == 0) {
+           || obj->anim.alpha != 0xff
+           || (*(u8 *)&obj->anim.resetHitboxMode & 0x28)
+           || (!(obj->objectFlags & 0x800) && !(obj->anim.modelInstance->flags & 1))
+           || (obj->anim.flags & OBJANIM_FLAG_HIDDEN)
+           || (obj->objectFlags & 0x40)
+           || (lbl_803DB992 & ((ok = 1) << (data[obj->unkE4].flags & 0xf))) == 0) {
             ok = 0;
         }
         if (ok == 0) {
             continue;
         }
-        if ((int)((GameObject *)obj)->anim.modelInstance->hitVolumes[((GameObject *)obj)->unkE4].priority < bestPri) {
+        if ((int)obj->anim.modelInstance->hitVolumes[obj->unkE4].priority < bestPri) {
             continue;
         }
-        transform = &((GameObject *)obj)->anim.hitVolumeTransforms[((GameObject *)obj)->unkE4];
-        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x80) || (data[((GameObject *)obj)->unkE4].flags & 0x80)) {
+        transform = &obj->anim.hitVolumeTransforms[obj->unkE4];
+        if ((*(u8 *)&obj->anim.resetHitboxMode & 0x80) || (data[obj->unkE4].flags & 0x80)) {
             dy = lbl_803E1630;
         } else {
-            dy = *(f32 *)(f + 0x1c) - transform->centerY;
+            dy = focus->worldPosY - transform->centerY;
         }
         if (dy <= lbl_803E1644) {
             continue;
@@ -104,10 +102,10 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         if (dy >= lbl_803E1648) {
             continue;
         }
-        dx = *(f32 *)(f + 0x18) - transform->centerX;
-        dz = *(f32 *)(f + 0x20) - transform->centerZ;
+        dx = focus->worldPosX - transform->centerX;
+        dz = focus->worldPosZ - transform->centerZ;
         distsq = dz * dz + dx * dx;
-        entry = &data[((GameObject *)obj)->unkE4];
+        entry = &data[obj->unkE4];
         range = (f32)(int)(entry->bounds[2] << 2);
         if (distsq >= range * range) {
             continue;
@@ -119,41 +117,41 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         if (canTarget == 0) {
             continue;
         }
-        bestPri = ((GameObject *)obj)->anim.modelInstance->hitVolumes[((GameObject *)obj)->unkE4].priority;
+        bestPri = obj->anim.modelInstance->hitVolumes[obj->unkE4].priority;
         i = 0;
-        pa = arr;
+        pa = targets;
         while (i < count
-            && (int)((GameObject *)*pa)->anim.modelInstance->hitVolumes[((GameObject *)*pa)->unkE4].priority > bestPri) {
+            && (int)(*pa)->anim.modelInstance->hitVolumes[(*pa)->unkE4].priority > bestPri) {
             pa++;
             i++;
         }
         pd = dist + i;
-        pa = arr + i;
+        pa = targets + i;
         while (i < count && *pd < distsq
-            && bestPri == (int)((GameObject *)*pa)->anim.modelInstance->hitVolumes[((GameObject *)*pa)->unkE4].priority) {
+            && bestPri == (int)(*pa)->anim.modelInstance->hitVolumes[(*pa)->unkE4].priority) {
             pd++;
             pa++;
             i++;
         }
         for (k = count; k > i; k--) {
             dist[k] = dist[k - 1];
-            arr[k] = arr[k - 1];
+            targets[k] = targets[k - 1];
         }
         dist[i] = distsq;
-        arr[i] = obj;
+        targets[i] = obj;
         count++;
         if (count == 8) {
             break;
         }
     }
     if (count > 0) {
-        best = arr[0];
-        row = &((GameObject *)best)->anim.modelInstance->hitVolumes[((GameObject *)best)->unkE4];
+        best = targets[0];
+        row = &best->anim.modelInstance->hitVolumes[best->unkE4];
         if (row->flags & 0x20) {
-            v1[0] = *(f32 *)(f + 0x18);
-            v1[1] = lbl_803E1648 + *(f32 *)(f + 0x1c);
-            v1[2] = *(f32 *)(f + 0x20);
-            src = &((GameObject *)best)->anim.hitVolumeTransforms[((GameObject *)best)->unkE4];
+            v1[0] = focus->worldPosX;
+            v1[1] = lbl_803E1648 + focus->worldPosY;
+            v1[2] = focus->worldPosZ;
+            src = &best->anim.hitVolumeTransforms[best->unkE4];
             v2[0] = src->jointX;
             v2[1] = src->jointY;
             v2[2] = src->jointZ;
@@ -163,7 +161,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
                 return NULL;
             }
         }
-        return arr[0];
+        return (CamcontrolTargetObject *)targets[0];
     }
     return NULL;
 }
@@ -180,25 +178,25 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_updateMoveAverage(int *obj, void *p) {
+void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus) {
     f32 mag;
-    *(f32 *)&((GameObject *)obj)->unkC8 = *(f32 *)((char *)obj + 0xcc);
-    *(f32 *)((char *)obj + 0xcc) = *(f32 *)((char *)obj + 0xd0);
-    *(f32 *)((char *)obj + 0xd0) = *(f32 *)((char *)obj + 0xd4);
-    *(f32 *)((char *)obj + 0xd4) = *(f32 *)((char *)obj + 0xd8);
-    mag = PSVECMag((char *)p + 0x24);
+    cameraState->focusMoveHistory[0] = cameraState->focusMoveHistory[1];
+    cameraState->focusMoveHistory[1] = cameraState->focusMoveHistory[2];
+    cameraState->focusMoveHistory[2] = cameraState->focusMoveHistory[3];
+    cameraState->focusMoveHistory[3] = cameraState->focusMoveHistory[4];
+    mag = PSVECMag(&focus->velocityX);
     if (mag > lbl_803E1630) {
         mag = sqrtf(mag);
     }
-    *(f32 *)((char *)obj + 0xd8) = mag;
-    *(f32 *)&((GameObject *)obj)->unkC4 = lbl_803E1630;
-    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)&((GameObject *)obj)->unkC8;
-    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xcc);
-    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd0);
-    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd4);
-    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd8);
-    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 * lbl_803E1658;
-    if (*(f32 *)&((GameObject *)obj)->unkC4 < lbl_803E1630) {
-        *(f32 *)&((GameObject *)obj)->unkC4 = -*(f32 *)&((GameObject *)obj)->unkC4;
+    cameraState->focusMoveHistory[4] = mag;
+    cameraState->focusMoveAverage = lbl_803E1630;
+    cameraState->focusMoveAverage += cameraState->focusMoveHistory[0];
+    cameraState->focusMoveAverage += cameraState->focusMoveHistory[1];
+    cameraState->focusMoveAverage += cameraState->focusMoveHistory[2];
+    cameraState->focusMoveAverage += cameraState->focusMoveHistory[3];
+    cameraState->focusMoveAverage += cameraState->focusMoveHistory[4];
+    cameraState->focusMoveAverage *= lbl_803E1658;
+    if (cameraState->focusMoveAverage < lbl_803E1630) {
+        cameraState->focusMoveAverage = -cameraState->focusMoveAverage;
     }
 }

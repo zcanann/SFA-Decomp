@@ -1,8 +1,10 @@
 #ifndef MAIN_DLL_DLL_B6_H_
 #define MAIN_DLL_DLL_B6_H_
 
-#include "ghidra_import.h"
+#include "main/dll/CAM/camcontrol.h"
 
-void *camcontrol_findBestTarget(int param_1, u8 *focus);
+CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState,
+                                                  ObjAnimComponent *focus);
+void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus);
 
 #endif /* MAIN_DLL_DLL_B6_H_ */
