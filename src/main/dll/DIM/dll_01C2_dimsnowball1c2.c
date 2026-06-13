@@ -11,7 +11,7 @@ extern f32 lbl_803E4860;
 extern void objRenderFn_8003b8f4(f32);
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
-extern int fn_802972A8(int player);
+extern uint fn_802972A8(int player);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern f32 lbl_803E4864;
@@ -102,13 +102,14 @@ void dimsnowball1c2_update(int* obj)
     if (Obj_IsLoadingLocked())
     {
         int* extra = ((GameObject*)obj)->extra;
-        *(s16*)extra = *(s16*)extra - framesThisStep;
-        if (*(s16*)extra <= 0)
+        if ((*(s16*)extra -= framesThisStep) <= 0)
         {
             if (fn_802972A8(Obj_GetPlayerObject()) == 0)
             {
-                int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-                int* np = (int*)Obj_AllocObjectSetup(36, 406);
+                int* np;
+                int* def;
+                def = *(int**)&((GameObject*)obj)->anim.placementData;
+                np = (int*)Obj_AllocObjectSetup(36, 406);
                 *(u8*)((char*)np + 4) = ((Dimsnowball1c2Placement*)def)->unk4;
                 *(u8*)((char*)np + 6) = ((Dimsnowball1c2Placement*)def)->unk6;
                 *(u8*)((char*)np + 5) = ((Dimsnowball1c2Placement*)def)->unk5;
@@ -117,14 +118,14 @@ void dimsnowball1c2_update(int* obj)
                 *(f32*)((char*)np + 0xc) = ((GameObject*)obj)->anim.localPosY;
                 *(f32*)&((ObjDef*)np)->jointData = ((GameObject*)obj)->anim.localPosZ;
                 *(int*)((char*)np + 0x14) = ((Dimsnowball1c2Placement*)def)->unk14;
-                *(s8*)((char*)np + 0x18) = ((Dimsnowball1c2Placement*)def)->unk1C;
+                {
+                    int t1c = ((Dimsnowball1c2Placement*)def)->unk1C;
+                    *(s8*)((char*)np + 0x18) = t1c;
+                }
                 *(s16*)((char*)np + 0x1a) = ((Dimsnowball1c2Placement*)def)->unk1A;
                 *(s16*)((char*)np + 0x1c) =
-                    (int)((f32)(u32)((Dimsnowball1c2Placement*)def)->unk1B +
-                        (f32)(int)
-                randomGetRange(0, 100) / lbl_803E4864
-                )
-                ;
+                    (f32)(u32)((Dimsnowball1c2Placement*)def)->unk1B +
+                    (f32)(int)randomGetRange(0, 100) / lbl_803E4864;
                 Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
                 *(s16*)extra = ((Dimsnowball1c2State*)extra)->unk2;
             }
