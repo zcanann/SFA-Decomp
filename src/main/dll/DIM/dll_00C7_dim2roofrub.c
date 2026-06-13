@@ -2030,7 +2030,7 @@ void dim2roofrub_update(int* obj)
         res = (*gObjectTriggerInterface)->update((u8*)obj, timeDelta);
         if (res != 0 && ((GameObject*)obj)->seqIndex == -2)
         {
-            int slot8 = (s8)seq->slot;
+            int slot8 = *(s8*)&seq->slot;
             int* match = NULL;
             int* list;
             int cnt;
