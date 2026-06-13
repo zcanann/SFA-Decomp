@@ -689,11 +689,14 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
-                colA = (colA & 0xffffff00) | ((ExplosionDebris*)p)->unk2E;
+                ((u8*)&colA)[3] = ((ExplosionDebris*)p)->unk2E;
                 cv = (int)(lbl_803DDB68 * (lbl_803E4938 * expf(
                     (lbl_803E4958 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) /
                     (f32)(int)((ExplosionDebris*)p)->unk14)));
-                colB = (cv & 0xff) | ((u8)cv << 8) | ((u8)cv << 16) | ((u8)cv << 24);
+                ((u8*)&colB)[0] = cv;
+                ((u8*)&colB)[1] = cv;
+                ((u8*)&colB)[2] = cv;
+                ((u8*)&colB)[3] = cv;
                 ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, (u8*)&colA,
                                                   (f32)(int)((ExplosionDebris*)p)->unk10,
                                                   (f32)(int)((ExplosionDebris*)p)->unk14);
