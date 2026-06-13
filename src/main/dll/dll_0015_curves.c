@@ -1402,13 +1402,11 @@ void dll_15_func06(short* curveObj, int* state)
     int byteOff;
     int i;
     int n;
-    int count;
     f64 c;
     f32* ptsWalk;
     f32* radWalk;
     f32* radWrite;
     f32* ptsRead;
-    int* walk;
     f32 m[16];
     f32 pts[12];
     CurvesTransformScratch s;
@@ -1489,8 +1487,7 @@ void dll_15_func06(short* curveObj, int* state)
         minX = lbl_803E06A8;
         minZ = lbl_803E06A8;
         minY = lbl_803E06A8;
-        walk = state;
-        for (n = (int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; n != 0; n--)
+        for (n = 0; n < ((int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
         {
             r = *radWrite;
             v = *ptsRead + r;
@@ -1523,39 +1520,38 @@ void dll_15_func06(short* curveObj, int* state)
             {
                 minZ = v;
             }
-            v = *(f32*)(walk + 0xe) + r;
+            v = collision->traceStart[n][0] + r;
             if (maxX < v)
             {
                 maxX = v;
             }
-            v = *(f32*)(walk + 0xe) - r;
+            v = collision->traceStart[n][0] - r;
             if (v < minX)
             {
                 minX = v;
             }
-            v = *(f32*)(walk + 0xf) + r;
+            v = collision->traceStart[n][1] + r;
             if (maxY < v)
             {
                 maxY = v;
             }
-            v = *(f32*)(walk + 0xf) - r;
+            v = collision->traceStart[n][1] - r;
             if (v < minY)
             {
                 minY = v;
             }
-            v = *(f32*)(walk + 0x10) + r;
+            v = collision->traceStart[n][2] + r;
             if (maxZ < v)
             {
                 maxZ = v;
             }
-            r = *(f32*)(walk + 0x10) - r;
+            r = collision->traceStart[n][2] - r;
             if (r < minZ)
             {
                 minZ = r;
             }
             ptsRead = ptsRead + 3;
             radWrite = radWrite + 1;
-            walk = walk + 3;
         }
         collision->hitBounds[0] = (int)minX;
         collision->hitBounds[3] = (int)maxX;
