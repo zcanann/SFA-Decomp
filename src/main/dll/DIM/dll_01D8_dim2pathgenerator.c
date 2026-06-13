@@ -292,9 +292,9 @@ void dim2pathgenerator_update(int* obj)
         if ((((Dim2PathGeneratorState*)extra)->flags & 2) == 0)
         {
             int n = 21;
-            int found = (*gRomCurveInterface)->find(&n, 1, 10, ((GameObject*)obj)->anim.localPosX,
-                                                    ((GameObject*)obj)->anim.localPosY,
-                                                    ((GameObject*)obj)->anim.localPosZ);
+            int found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+                ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                ((GameObject*)obj)->anim.localPosZ, &n, 1, 10);
             if (found != -1)
             {
                 int* cv = (int*)(*gRomCurveInterface)->getById(found);
@@ -348,7 +348,7 @@ void dim2pathgenerator_update(int* obj)
     }
     if (Obj_IsLoadingLocked())
     {
-        int* np = (int*)Obj_AllocObjectSetup(36, ((Dim2PathGeneratorState*)extra)->spawnTypes[toggle]);
+        int* np = (int*)Obj_AllocObjectSetup(36, ((volatile s16*)((Dim2PathGeneratorState*)extra)->spawnTypes)[toggle]);
         *(f32*)((char*)np + 8) = ((Dim2PathGeneratorState*)extra)->originX;
         *(f32*)((char*)np + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
         *(f32*)&((ObjDef*)np)->jointData = ((Dim2PathGeneratorState*)extra)->originZ;
