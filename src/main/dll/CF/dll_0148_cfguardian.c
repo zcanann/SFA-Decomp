@@ -128,11 +128,9 @@ enum
 #define GUARDIAN_SFX_FLAP 0xe1
 #define GUARDIAN_SFX_CHATTER 0xdf
 
-/* All file-scope externs in one block. (A few callees - Sfx_PlayFromObject,
- * hitDetectFn_800658a4 - also carry per-call-site block-scope externs with
- * narrower signatures inside the function bodies; those are deliberate
- * recipe-#57/#115 codegen overrides and must stay local.) */
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+/* All file-scope externs in one block. */
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int p6);
 extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 extern int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4);
 extern int Curve_AdvanceAlongPath(int p1);
@@ -190,7 +188,6 @@ extern f32 oneOverTimeDelta;
  * 1..4 marker event fired. Returns the last 1..4 marker seen. */
 int cfguardianPlayEventSfx(int obj, int evList, s16* sfxIds)
 {
-    extern void Sfx_PlayFromObject(int, u16); /* #57/#115 */
     int i;
     u8 marker;
 
@@ -250,7 +247,6 @@ int cfguardian_setScale(int* obj)
  * the heading of travel. Returns 1 once the path is exhausted. */
 int cfguardianFlyAlongPath(int obj, int p2, f32 t, int p3, int p4)
 {
-    extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int p6); /* #57/#29 */
     int ret;
     int moved;
     u8 sel;
@@ -430,7 +426,6 @@ static inline f32 cfguardianAbs(f32 x)
 
 int cfguardian_updateMain(int obj)
 {
-    extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
     CfGuardianState* sub;
     char* player;
     CfGuardianMapData* def;
@@ -534,7 +529,7 @@ int cfguardian_updateMain(int obj)
                 }
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)
                     ->anim.localPosY;
-                hitDetectFn_800658a4((int*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                      ((GameObject*)obj)->anim.localPosZ, &ground, 0);
                 ((GameObject*)obj)->anim.rotX = (s16)((0xc0 << (((GameObject*)obj)->anim.rotX + 8)) >> 1);
                 ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~0x400;
