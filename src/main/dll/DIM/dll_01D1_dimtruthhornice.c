@@ -247,7 +247,7 @@ void dimtruthhornice_update(int* obj)
         break;
     case 1:
         {
-            f32 desc2[6];
+            f32 desc[6];
             extra->timer = extra->timer + timeDelta;
             if (extra->timer > lbl_803E4A44)
             {
@@ -257,7 +257,6 @@ void dimtruthhornice_update(int* obj)
                 Sfx_PlayFromObject((int)obj, 1147);
                 for (i = 30; i != 0; i--)
                 {
-                    f32 desc[6];
                     desc[3] = 0.1f * (f32)(int)
                     randomGetRange(-100, 100);
                     desc[4] = 0.1f * (f32)(int)
@@ -269,14 +268,14 @@ void dimtruthhornice_update(int* obj)
                     (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
                 }
             }
-            desc2[3] = 0.1f * (f32)(int)
+            desc[3] = 0.1f * (f32)(int)
             randomGetRange(-100, 100);
-            desc2[4] = 0.1f * (f32)(int)
+            desc[4] = 0.1f * (f32)(int)
             randomGetRange(0, 350);
-            desc2[5] = 0.1f * (f32)(int)
+            desc[5] = 0.1f * (f32)(int)
             randomGetRange(-100, 100);
-            desc2[2] = 1.0f;
-            (*gPartfxInterface)->spawnObject(obj, 2044, desc2, 2, -1, NULL);
+            desc[2] = 1.0f;
+            (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
             break;
         }
     case 2:
