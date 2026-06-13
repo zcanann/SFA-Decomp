@@ -18,10 +18,26 @@ typedef void (*EffectFreeObjectFn)(void *obj);
  * reinterpret one of those floats as an effect-specific magnitude.
  */
 typedef struct PartFxSpawnParams {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
+    union {
+        struct {
+            s16 unk0;
+            s16 unk2;
+            s16 unk4;
+            s16 unk6;
+        };
+        struct {
+            s16 rotX;
+            s16 rotY;
+            s16 rotZ;
+            s16 pad06;
+        };
+        struct {
+            s16 arg0;
+            s16 arg1;
+            s16 arg2;
+            s16 arg3;
+        };
+    };
     f32 scale;
     f32 posX;
     f32 posY;
@@ -31,6 +47,12 @@ typedef struct PartFxSpawnParams {
     u8 pad28[0x2C - 0x28];
     f32 unk2C;
 } PartFxSpawnParams;
+
+STATIC_ASSERT(sizeof(PartFxSpawnParams) == 0x30);
+STATIC_ASSERT(offsetof(PartFxSpawnParams, scale) == 0x08);
+STATIC_ASSERT(offsetof(PartFxSpawnParams, posX) == 0x0C);
+STATIC_ASSERT(offsetof(PartFxSpawnParams, posY) == 0x10);
+STATIC_ASSERT(offsetof(PartFxSpawnParams, posZ) == 0x14);
 
 typedef struct EffectInterface {
   u8 pad00[0x04];

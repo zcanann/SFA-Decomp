@@ -1430,7 +1430,7 @@ extern FxNode9 lbl_8039C398;
     lbl_8039C398.unk0 = 0;                         \
     lbl_8039C398.unk2 = 0;                         \
     lbl_8039C398.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C398;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C398;             \
   } while (0)
 
 #undef FILL9
@@ -1445,7 +1445,7 @@ extern FxNode9 lbl_8039C380;
     lbl_8039C380.unk0 = 0;                         \
     lbl_8039C380.unk2 = 0;                         \
     lbl_8039C380.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C380;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C380;             \
   } while (0)
 
 #undef FILL8
@@ -1461,7 +1461,7 @@ extern f32 lbl_803DF884;
     lbl_8039C338.unk0 = 0;                         \
     lbl_8039C338.unk2 = 0;                         \
     lbl_8039C338.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C338;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C338;             \
   } while (0)
 
 extern void vecRotateZXY(void* obj, f32* vec);
@@ -1479,7 +1479,7 @@ extern f32 lbl_803DFCEC;
     lbl_8039C368.unk0 = 0;                         \
     lbl_8039C368.unk2 = 0;                         \
     lbl_8039C368.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C368;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C368;             \
   } while (0)
 
 #undef FILL368
@@ -1518,7 +1518,7 @@ extern f32 lbl_803DFC60;
 extern f32 lbl_803DFC64;
 extern f32 lbl_803DFC68;
 
-int Effect5_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags,
+int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                    u8 modelId, s16* extraArgs)
 {
     int spawnResult;
@@ -1533,13 +1533,13 @@ int Effect5_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
     if ((spawnFlags & 0x200000) != 0)
     {
         if (spawnParams == 0) return -1;
-        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->posZ;
-        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->scale;
-        cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
-        cfg.sourceVecY = ((PartFxSpawnParams*)spawnParams)->unk2;
-        cfg.sourceVecX = *spawnParams;
+        cfg.sourcePosY = spawnParams->posX;
+        cfg.sourcePosZ = spawnParams->posY;
+        cfg.sourcePosW = spawnParams->posZ;
+        cfg.sourcePosX = spawnParams->scale;
+        cfg.sourceVecZ = spawnParams->rotZ;
+        cfg.sourceVecY = spawnParams->rotY;
+        cfg.sourceVecX = spawnParams->rotX;
         cfg.modelIdByte = modelId;
     }
     cfg.behaviorFlags = 0;
@@ -1595,7 +1595,7 @@ int Effect5_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         es.w = lbl_803DFBE8;
         es.rz = 0;
         es.ry = 0;
-        es.rx = *spawnParams;
+        es.rx = spawnParams->rotX;
         vecRotateZXY(&es, &cfg.velocityX);
         cfg.scale = lbl_803DFC04 * (f32)(s32)
         randomGetRange(4, 8);
@@ -1604,15 +1604,15 @@ int Effect5_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x180108;
         cfg.renderFlags = 0x5000000;
-        if (((PartFxSpawnParams*)spawnParams)->unk4 == 0)
+        if (spawnParams->unk4 == 0)
         {
             cfg.textureId = 0x2b;
         }
-        else if (((PartFxSpawnParams*)spawnParams)->unk4 == 1)
+        else if (spawnParams->unk4 == 1)
         {
             cfg.textureId = 0x1a1;
         }
-        else if (((PartFxSpawnParams*)spawnParams)->unk4 == 2)
+        else if (spawnParams->unk4 == 2)
         {
             cfg.textureId = 0xc10;
             cfg.renderFlags = cfg.renderFlags | 0x800;
@@ -1636,7 +1636,7 @@ int Effect5_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         es.w = lbl_803DFBE8;
         es.rz = 0;
         es.ry = 0;
-        es.rx = *spawnParams;
+        es.rx = spawnParams->rotX;
         vecRotateZXY(&es, &cfg.velocityX);
         cfg.scale = lbl_803DFC10 * (f32)(s32)
         randomGetRange(4, 8);
@@ -1645,15 +1645,15 @@ int Effect5_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x1080100;
         cfg.renderFlags = 0x5000000;
-        if (((PartFxSpawnParams*)spawnParams)->unk4 == 0)
+        if (spawnParams->unk4 == 0)
         {
             cfg.textureId = 0x2b;
         }
-        else if (((PartFxSpawnParams*)spawnParams)->unk4 == 1)
+        else if (spawnParams->unk4 == 1)
         {
             cfg.textureId = 0x1a1;
         }
-        else if (((PartFxSpawnParams*)spawnParams)->unk4 == 2)
+        else if (spawnParams->unk4 == 2)
         {
             cfg.textureId = 0xc10;
             cfg.renderFlags = cfg.renderFlags | 0x800;
@@ -1863,7 +1863,7 @@ extern f32 lbl_803DF9D4;
     lbl_8039C350.unk0 = 0;                         \
     lbl_8039C350.unk2 = 0;                         \
     lbl_8039C350.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C350;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C350;             \
   } while (0)
 
 #undef FILL350
@@ -1885,7 +1885,7 @@ extern FxNode9 lbl_8039C320;
     lbl_8039C320.unk0 = 0;                         \
     lbl_8039C320.unk2 = 0;                         \
     lbl_8039C320.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C320;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C320;             \
   } while (0)
 
 #undef FILL320

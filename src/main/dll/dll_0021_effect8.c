@@ -1428,7 +1428,7 @@ extern FxNode9 lbl_8039C398;
     lbl_8039C398.unk0 = 0;                         \
     lbl_8039C398.unk2 = 0;                         \
     lbl_8039C398.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C398;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C398;             \
   } while (0)
 
 #undef FILL9
@@ -1472,10 +1472,10 @@ extern f32 lbl_803DFE10;
     lbl_8039C380.unk0 = 0;                         \
     lbl_8039C380.unk2 = 0;                         \
     lbl_8039C380.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C380;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C380;             \
   } while (0)
 
-int Effect8_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags,
+int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                    u8 modelId, s16* extraArgs)
 {
     int spawnResult;
@@ -1489,13 +1489,13 @@ int Effect8_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
     if ((spawnFlags & 0x200000) != 0)
     {
         if (spawnParams == 0) return -1;
-        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->posZ;
-        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->scale;
-        cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
-        cfg.sourceVecY = ((PartFxSpawnParams*)spawnParams)->unk2;
-        cfg.sourceVecX = *spawnParams;
+        cfg.sourcePosY = spawnParams->posX;
+        cfg.sourcePosZ = spawnParams->posY;
+        cfg.sourcePosW = spawnParams->posZ;
+        cfg.sourcePosX = spawnParams->scale;
+        cfg.sourceVecZ = spawnParams->rotZ;
+        cfg.sourceVecY = spawnParams->rotY;
+        cfg.sourceVecX = spawnParams->rotX;
         cfg.modelIdByte = modelId;
     }
     cfg.behaviorFlags = 0;
@@ -1599,9 +1599,9 @@ int Effect8_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         if (spawnParams == 0)
             FILL8();
         if (spawnParams == 0) return -1;
-        cfg.colorWord0 = (u16)((u8)((PartFxSpawnParams*)spawnParams)->unk4 << 8);
-        cfg.colorWord1 = (u16)((u8)((PartFxSpawnParams*)spawnParams)->unk2 << 8);
-        cfg.colorWord2 = (u16)((u8)((PartFxSpawnParams*)spawnParams)->unk0 << 8);
+        cfg.colorWord0 = (u16)((u8)spawnParams->unk4 << 8);
+        cfg.colorWord1 = (u16)((u8)spawnParams->unk2 << 8);
+        cfg.colorWord2 = (u16)((u8)spawnParams->unk0 << 8);
         cfg.overrideColor0 = 0xfe00;
         cfg.overrideColor1 = 0xfe00;
         cfg.overrideColor2 = 0xfe00;
@@ -1699,28 +1699,28 @@ int Effect8_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         if (spawnParams == 0)
             FILL8();
         if (spawnParams == 0) return -1;
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
-        cfg.scale = lbl_803DFDB0 * (lbl_803DFDE0 * (f32)(s32)((PartFxSpawnParams*)spawnParams)->unk4);
+        cfg.startPosX = spawnParams->posX;
+        cfg.startPosY = spawnParams->posY;
+        cfg.startPosZ = spawnParams->posZ;
+        cfg.scale = lbl_803DFDB0 * (lbl_803DFDE0 * (f32)(s32)spawnParams->unk4);
         cfg.lifetimeFrames = 0x3c;
         cfg.colorWord0 = 0xff00;
         cfg.colorWord1 = 0xff00;
         cfg.colorWord2 = 0xff00;
-        cfg.overrideColor0 = ((PartFxSpawnParams*)spawnParams)->unk4 << 8;
-        cfg.overrideColor1 = ((PartFxSpawnParams*)spawnParams)->unk4 << 8;
+        cfg.overrideColor0 = spawnParams->unk4 << 8;
+        cfg.overrideColor1 = spawnParams->unk4 << 8;
         cfg.overrideColor2 = 0xff00;
         cfg.renderFlags = 0x60;
-        cfg.initialAlpha = ((PartFxSpawnParams*)spawnParams)->unk4;
+        cfg.initialAlpha = spawnParams->unk4;
         cfg.behaviorFlags = 0x201;
         cfg.textureId = 0x76;
         break;
     case 0x35b:
         if (spawnParams == 0)
             FILL8();
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
+        cfg.startPosX = spawnParams->posX;
+        cfg.startPosY = spawnParams->posY;
+        cfg.startPosZ = spawnParams->posZ;
         cfg.scale = lbl_803DFD9C;
         cfg.lifetimeFrames = 0xa;
         cfg.initialAlpha = 0xff;
@@ -1731,38 +1731,38 @@ int Effect8_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         if (spawnParams == 0)
             FILL8();
         if (spawnParams == 0) return -1;
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
-        cfg.scale = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)((PartFxSpawnParams*)spawnParams)->unk0));
+        cfg.startPosX = spawnParams->posX;
+        cfg.startPosY = spawnParams->posY;
+        cfg.startPosZ = spawnParams->posZ;
+        cfg.scale = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)spawnParams->unk0));
         cfg.lifetimeFrames = 0xa;
-        cfg.colorWord0 = (u16)(((PartFxSpawnParams*)spawnParams)->unk0 << 8);
-        cfg.colorWord1 = (u16)(((PartFxSpawnParams*)spawnParams)->unk0 << 8);
+        cfg.colorWord0 = (u16)(spawnParams->unk0 << 8);
+        cfg.colorWord1 = (u16)(spawnParams->unk0 << 8);
         cfg.colorWord2 = 0xff00;
-        cfg.overrideColor0 = ((PartFxSpawnParams*)spawnParams)->unk0 << 8;
-        cfg.overrideColor1 = ((PartFxSpawnParams*)spawnParams)->unk0 << 8;
+        cfg.overrideColor0 = spawnParams->unk0 << 8;
+        cfg.overrideColor1 = spawnParams->unk0 << 8;
         cfg.overrideColor2 = 0xff00;
         cfg.renderFlags = 0x20;
-        cfg.initialAlpha = ((PartFxSpawnParams*)spawnParams)->unk4;
+        cfg.initialAlpha = spawnParams->unk4;
         cfg.textureId = 0xc9d;
         break;
     case 0x35d:
         if (spawnParams == 0)
             FILL8();
         if (spawnParams == 0) return -1;
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
-        cfg.scale = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)((PartFxSpawnParams*)spawnParams)->unk0));
+        cfg.startPosX = spawnParams->posX;
+        cfg.startPosY = spawnParams->posY;
+        cfg.startPosZ = spawnParams->posZ;
+        cfg.scale = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)spawnParams->unk0));
         cfg.lifetimeFrames = 0xa;
         cfg.colorWord0 = 0xff00;
-        cfg.colorWord1 = (u16)(((PartFxSpawnParams*)spawnParams)->unk0 << 8);
+        cfg.colorWord1 = (u16)(spawnParams->unk0 << 8);
         cfg.colorWord2 = 0xff00;
         cfg.overrideColor0 = 0xff00;
-        cfg.overrideColor1 = ((PartFxSpawnParams*)spawnParams)->unk0 << 8;
+        cfg.overrideColor1 = spawnParams->unk0 << 8;
         cfg.overrideColor2 = 0xff00;
         cfg.renderFlags = 0x20;
-        cfg.initialAlpha = ((PartFxSpawnParams*)spawnParams)->unk4;
+        cfg.initialAlpha = spawnParams->unk4;
         cfg.textureId = 0xc9d;
         break;
     case 0x35e:
@@ -1771,11 +1771,11 @@ int Effect8_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.scale = lbl_803DFDEC;
         cfg.startPosY = lbl_803DFDF0;
         cfg.lifetimeFrames = 0x46;
-        cfg.initialAlpha = spawnParams != 0 ? ((PartFxSpawnParams*)spawnParams)->unk4 : 0xff;
+        cfg.initialAlpha = spawnParams != 0 ? spawnParams->unk4 : 0xff;
         cfg.linkGroup = 0;
-        cfg.startPosX = spawnParams != 0 ? ((PartFxSpawnParams*)spawnParams)->posX : 0.0f;
-        cfg.startPosY = spawnParams != 0 ? ((PartFxSpawnParams*)spawnParams)->posY : 0.0f;
-        cfg.startPosZ = spawnParams != 0 ? ((PartFxSpawnParams*)spawnParams)->posZ : 0.0f;
+        cfg.startPosX = spawnParams != 0 ? spawnParams->posX : 0.0f;
+        cfg.startPosY = spawnParams != 0 ? spawnParams->posY : 0.0f;
+        cfg.startPosZ = spawnParams != 0 ? spawnParams->posZ : 0.0f;
         cfg.behaviorFlags = 0xa100200;
         cfg.textureId = 0x7d;
         break;
@@ -1924,7 +1924,7 @@ extern f32 lbl_803DF884;
     lbl_8039C338.unk0 = 0;                         \
     lbl_8039C338.unk2 = 0;                         \
     lbl_8039C338.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C338;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C338;             \
   } while (0)
 
 #undef FILL338
@@ -1940,7 +1940,7 @@ extern f32 lbl_803DFCEC;
     lbl_8039C368.unk0 = 0;                         \
     lbl_8039C368.unk2 = 0;                         \
     lbl_8039C368.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C368;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C368;             \
   } while (0)
 
 #undef FILL368
@@ -1957,7 +1957,7 @@ extern f32 lbl_803DF9D4;
     lbl_8039C350.unk0 = 0;                         \
     lbl_8039C350.unk2 = 0;                         \
     lbl_8039C350.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C350;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C350;             \
   } while (0)
 
 #undef FILL350
@@ -1979,7 +1979,7 @@ extern FxNode9 lbl_8039C320;
     lbl_8039C320.unk0 = 0;                         \
     lbl_8039C320.unk2 = 0;                         \
     lbl_8039C320.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C320;             \
+    spawnParams = (PartFxSpawnParams *)&lbl_8039C320;             \
   } while (0)
 
 #undef FILL320
