@@ -1,5 +1,8 @@
 #include "ghidra_import.h"
-#include "dolphin/os/OSFastCast.h"
+#include "dolphin/dvd.h"
+#include "dolphin/os.h"
+#include "dolphin/pad.h"
+#include "dolphin/vi.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
@@ -346,7 +349,6 @@ int gameBitDecrement(int bit)
     return 0;
 }
 
-extern void OSReport(char* fmt, ...);
 extern void waitNextFrame(void);
 extern void GXFlush_(int a, int b);
 
@@ -636,13 +638,6 @@ void gameTextRun(void);
 
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
 
-extern void OSInit(void);
-extern void DVDInit(void);
-extern void VIInit(void);
-extern void PADInit(void);
-extern u8 OSGetProgressiveMode(void);
-extern int OSGetResetCode(void);
-extern void OSSetProgressiveMode(int mode);
 extern void videoInit(void* rmode, int arg);
 extern void setDisplayCopyFilter(void);
 extern void initLoadingScreenTextures(void);
@@ -659,7 +654,6 @@ extern u8 initLoadFiles(void);
 extern void initFn_8006d020(void);
 extern void dvdCheckError(void);
 extern void gameTextRun(void);
-extern int VIGetDTVStatus(void);
 extern u32 getButtonsHeld(int pad);
 extern void viFn_8004a56c(int arg);
 extern void fn_80137D28(void);
@@ -685,10 +679,6 @@ extern int getDataFileSize(int id);
 extern void loadUiDll(int arg);
 extern void doNothing_beforeTitleScreen(void);
 extern void setDrawCloudsAndLights(int arg);
-extern void OSSetSaveRegion(void* start, void* end);
-extern void VISetBlack(int black);
-extern void VIFlush(void);
-extern void VIWaitForRetrace(void);
 extern void askProgressiveScanMode(void);
 extern void initViewport(void);
 extern void tvInit(void);
@@ -1330,7 +1320,6 @@ extern u8* gameTextGetBox(int boxId);
 extern int padGetStickX(int pad);
 extern int padGetCX(int pad);
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
-extern void VIConfigure(void* rm);
 extern int lbl_803DB428;
 extern int lbl_803DB42C;
 extern void* gameTextGetStr(int textId);
@@ -1459,14 +1448,12 @@ void askProgressiveScanMode(void)
 }
 
 extern u32 getNewInputs(int pad);
-extern int DVDGetDriveStatus(void);
 extern void AISetStreamVolLeft(int vol);
 extern void AISetStreamVolRight(int vol);
 extern void audioStopAll(void);
 extern void AISetStreamPlayState(int state);
 extern void audioReset(void);
 extern void LCDisable(void);
-extern void DVDSetAutoInvalidation(int enable);
 extern void OSResetSystem(int reset, u32 resetCode, int forceMenu);
 extern u8 gAudioStreamPlaying;
 extern u8 gAudioStreamDvdState;
