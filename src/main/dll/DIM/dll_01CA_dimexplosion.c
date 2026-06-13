@@ -880,18 +880,18 @@ void explosion_update(int obj)
                     int t = *(int*)((char*)p + 0x97c);
                     if (t < 0x40)
                     {
-                        ang[4] = t << 6;
-                        ang[0] = -1 - ang[4];
-                        ang[2] = -0x8000;
-                        ang[3] = -0x4000 - ang[4];
-                        ang[4] = -0x6000 - ang[4];
+                        int v = t << 6;
+                        ang[0] = -1 - v;
                         ang[1] = ang[0];
+                        ang[2] = -0x8000;
+                        ang[3] = -0x4000 - v;
+                        ang[4] = -0x6000 - v;
                     }
                     else if (t < 0x80)
                     {
-                        ang[1] = t << 6;
-                        ang[0] = -0x4000 - ang[1];
-                        ang[1] = -0x6000 - ang[1];
+                        int v = t << 6;
+                        ang[0] = -0x4000 - v;
+                        ang[1] = -0x6000 - v;
                         ang[2] = 0;
                         ang[3] = -0x8000;
                         ang[4] = 0;
@@ -905,7 +905,6 @@ void explosion_update(int obj)
                         ang[4] = 0;
                     }
                     {
-                        u16 sv = ang[2];
                         u8 md;
                         ang[5] = 0;
                         md = ((ExplosionState*)state)->modelKind;
@@ -913,21 +912,24 @@ void explosion_update(int obj)
                         {
                         case 1:
                             ang[1] = ang[2];
-                            ang[4] = 0;
+                            ang[4] = ang[5];
                             break;
                         case 2:
                             ang[1] = ang[0];
                             ang[4] = ang[3];
                             ang[0] = ang[2];
-                            ang[3] = 0;
+                            ang[3] = ang[5];
                             break;
                         case 3:
-                            ang[1] = ang[2];
-                            ang[4] = 0;
+                        {
+                            u16 sv = ang[2];
+                            ang[1] = sv;
+                            ang[4] = ang[5];
                             ang[2] = ang[0];
                             ang[5] = ang[3];
                             ang[0] = sv;
                             ang[3] = 0;
+                        }
                             break;
                         }
                     }
