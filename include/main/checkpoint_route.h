@@ -50,6 +50,8 @@ typedef struct CheckpointSlot {
     CheckpointRouteEntry *entry;
 } CheckpointSlot;
 
+CheckpointRouteEntry *Checkpoint_find(s32 key, s32 *idx_out);
+
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, posX) == 0x08);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, checkpointId) == 0x14);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, backLink0) == 0x18);

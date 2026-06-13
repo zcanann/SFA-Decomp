@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_PARTFX_H_
 
 #include "ghidra_import.h"
+#include "main/checkpoint_route.h"
 #include "main/effect_interfaces.h"
 
 int Effect16_func04(void *param_1, int param_2, PartFxSpawnParams *param_3, u32 param_4,
@@ -23,7 +24,6 @@ void FUN_800c8e44(void);
 void FUN_800c8f38(undefined4 param_1,undefined4 param_2,ushort *param_3,uint param_4,
                  undefined param_5,float *param_6);
 void FUN_800c8f3c(void);
-undefined4 FUN_800c9030(uint param_1,int *param_2);
 void FUN_800c90b0(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  float *param_5,float *param_6,float *param_7,uint param_8);
 void FUN_800c9a2c(uint param_1,float *param_2,char *param_3);
