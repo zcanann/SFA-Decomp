@@ -543,10 +543,10 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
 
 int DIMSnowHorn1_stateHandler05(int obj, int state)
 {
-    DIMSnowHorn1State* inner;
-    int id_a, id_b, id_c, id_d;
     void* player;
+    DIMSnowHorn1State* inner;
     int bit_a, bit_b;
+    int id_a, id_b, id_c, id_d;
     int* o1;
     int* o2;
     int v;
