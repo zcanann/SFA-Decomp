@@ -11,7 +11,6 @@ extern undefined4 FUN_80006988();
 extern uint FUN_80006a90();
 extern undefined4 FUN_80006aa8();
 extern undefined4 FUN_80006c30();
-extern uint FUN_80017690();
 extern double FUN_80017714();
 extern undefined8 FUN_80017814();
 extern int FUN_80017830();
@@ -3144,11 +3143,11 @@ void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
                 (found = (**(code**)(*DAT_803dd71c + 0x1c))(), sel = DAT_803dd988, found != 0)) &&
             (sel = found, *(char*)(found + 0x19) == '$'))
         {
-            FUN_80017690(0x4e2);
+            GameBit_Get(0x4e2);
             if (((((int)*(short*)(found + 0x30) == -1) ||
-                        (uval = FUN_80017690((int)*(short*)(found + 0x30)), sel = DAT_803dd988, uval != 0))
+                        (uval = GameBit_Get((int)*(short*)(found + 0x30)), sel = DAT_803dd988, uval != 0))
                     && (((int)*(short*)(found + 0x32) == -1 ||
-                        (uval = FUN_80017690((int)*(short*)(found + 0x32)), sel = DAT_803dd988,
+                        (uval = GameBit_Get((int)*(short*)(found + 0x32)), sel = DAT_803dd988,
                             uval == 0)))) &&
                 ((*(char*)(found + 0x1a) != '\b' || (*(char*)(ent + 0x1a) != '\t'))))
             {
