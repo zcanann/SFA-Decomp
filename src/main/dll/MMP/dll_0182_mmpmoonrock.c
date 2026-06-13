@@ -312,7 +312,7 @@ void fn_801A79E0(int obj)
     int ret;
     state = ((GameObject*)obj)->extra;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    ret = ObjHits_GetPriorityHit(obj, &local_18, (int*)0, (int*)0);
+    ret = ObjHits_GetPriorityHit(obj, &local_18, (int*)0, (u32*)0);
     if (ret == 0)
     {
         ret = objBboxFn_800640cc((int*)&((GameObject*)obj)->anim.previousLocalPosX,
@@ -651,7 +651,6 @@ void mmp_moonrock_update(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
     extern void* Obj_GetPlayerObject(void);
-    extern void* ObjGroup_GetObjects();
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     u8 grabbed;

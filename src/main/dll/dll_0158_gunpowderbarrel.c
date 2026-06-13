@@ -5,6 +5,7 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
 #include "main/objhits.h"
@@ -52,9 +53,6 @@ typedef struct GunpowderbarrelUpdatePhysicsState
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
-extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_800e8630();
 extern undefined4 FUN_8013651c();
@@ -69,13 +67,10 @@ extern f32 lbl_803E4F5C;
 extern f32 lbl_803E4FA0;
 
 extern undefined4* gCarryableInterface;
-extern int Obj_IsObjectAlive();
-extern undefined4 ObjLink_DetachChild();
 extern f32 lbl_803E42DC;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 e);
 extern int barrelgener_getLinkId();
-extern void saveGame_saveObjectPos();
-extern void Sfx_PlayFromObject();
+extern void saveGame_saveObjectPos(int* obj);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern u8* getTrickyObject(void);
 extern void trickyImpress(u8 * tricky);
@@ -96,9 +91,6 @@ extern f32 lbl_803E4318;
 extern f32 lbl_803E431C;
 extern f32 lbl_803E4320;
 extern f32 lbl_803DBE88;
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjLink_AttachChild();
 extern int fn_80080150(void* p1);
 extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
@@ -111,7 +103,6 @@ extern f32 lbl_803E4328;
 extern f32 lbl_803E432C;
 extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
-extern void ObjMsg_AllocQueue(int obj, int capacity);
 extern void storeZeroToFloatParam(void* p);
 extern int timerCountDown(void* p);
 extern void s16toFloat(void* p, int v);
@@ -188,9 +179,9 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
     uint uVar1;
     ObjHitsPriorityState* hitState;
     int iVar2;
-    int* piVar3;
+    uint* piVar3;
     int iVar4;
-    int* piVar5;
+    uint* piVar5;
     int iVar6;
     int iVar7;
     int iVar8;
@@ -204,7 +195,7 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
     double in_ps30_1;
     double in_ps31_1;
     int local_58;
-    undefined4 auStack_54[11];
+    int hitObject;
     float local_28;
     float fStack_24;
     float local_18;
@@ -221,7 +212,7 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
     uVar1 = FUN_80286838();
     iVar8 = *(int*)(uVar1 + 0xb8);
     hitState = (ObjHitsPriorityState*)((GameObject*)uVar1)->anim.hitReactState;
-    iVar2 = ObjHits_GetPriorityHit(uVar1, auStack_54, (int*)0x0, (uint*)0x0);
+    iVar2 = ObjHits_GetPriorityHit(uVar1, &hitObject, (int*)0x0, (uint*)0x0);
     if ((iVar2 != 0) || ((hitState->contactFlags != 0 && ((*(byte*)(iVar8 + 0x49) & 2) != 0))))
     {
         *(char*)(iVar8 + 0x16) = *(char*)(iVar8 + 0x16) + '\x01';
@@ -315,15 +306,15 @@ int gunpowderbarrel_getExtraSize(void)
 void gunpowderbarrel_free(int obj, int param_2)
 {
     int extra;
-    void* child;
+    int child;
     extra = *(int*)&((GameObject*)obj)->extra;
     (*(code*)(*(int*)gCarryableInterface + 0x10))(obj);
-    child = *(void**)&((GunpowderbarrelState*)extra)->unk10;
+    child = ((GunpowderbarrelState*)extra)->unk10;
     if (child != 0 && param_2 == 0)
     {
         if (Obj_IsObjectAlive(child) != 0)
         {
-            ObjLink_DetachChild(obj, *(void**)&((GunpowderbarrelState*)extra)->unk10);
+            ObjLink_DetachChild(obj, ((GunpowderbarrelState*)extra)->unk10);
             ((GunpowderbarrelState*)extra)->unk10 = 0;
         }
     }
@@ -438,7 +429,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
             }
             else
             {
-                best = (int*)ObjGroup_FindNearestObject(0x3a, obj, 0);
+                best = (int*)ObjGroup_FindNearestObject(0x3a, (u32)obj, 0);
             }
             if (best != 0)
             {
@@ -460,7 +451,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         ObjHitbox_SetCapsuleBounds((int)obj, 0x14, -5, 0x14);
         ObjHits_EnableObject((int)obj);
         ObjHits_SetHitVolumeSlot((int)obj, 5, 4, 0);
-        Sfx_PlayFromObject(obj, SFXsk_bapt11_c);
+        Sfx_PlayFromObject((u32)obj, SFXsk_bapt11_c);
         ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion(obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
         if (sub[0x15] != 0)
@@ -470,7 +461,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         }
         sub[0x17] = 1;
         ((GpbFlags4A*)(sub + 0x4a))->held = 0;
-        ObjGroup_RemoveObject(obj, 0x19);
+        ObjGroup_RemoveObject((u32)obj, 0x19);
         if (((GameObject*)obj)->anim.parent != 0)
         {
             ((GunpowderbarrelTriggerExplosionState*)sub)->unk34 = lbl_803E42C4;
@@ -520,8 +511,8 @@ void gunpowderbarrel_updatePhysics(int* obj)
     }
     if (sub[0x16] == 0 && ((sub[0x49] & 2) || ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY > lbl_803E430C))
     {
-        ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
-        ObjHits_EnableObject(obj);
+        ObjHits_SetHitVolumeSlot((u32)obj, 0xe, 1, 0);
+        ObjHits_EnableObject((u32)obj);
     }
     if (!((GpbFlags4A*)(sub + 0x4a))->playerHeld)
     {
@@ -584,7 +575,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
                 {
                     if (((GpbFlags4A*)(sub + 0x4a))->landed)
                     {
-                        Sfx_PlayFromObject(obj, SFXsk_baptr1_c);
+                        Sfx_PlayFromObject((u32)obj, SFXsk_baptr1_c);
                     }
                     else
                     {
@@ -670,7 +661,7 @@ void gunpowderbarrel_hitDetect(int param_1)
     {
         if (state->linkedTimerObject != 0)
         {
-            ObjLink_DetachChild(param_1);
+            ObjLink_DetachChild(param_1, state->linkedTimerObject);
             state->linkedTimerObject = 0;
         }
     }
@@ -759,7 +750,7 @@ void gunpowderbarrel_hitDetect(int param_1)
     {
         if (PSVECMag(&state->throwVelX) > lbl_803DBE84)
         {
-            Sfx_PlayFromObject(param_1, 0x446);
+            Sfx_PlayFromObject((u32)param_1, 0x446);
         }
         state->impactSoundCooldown = lbl_803E42C0;
     }
@@ -795,7 +786,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     (*(void (**)(int, GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x4))(obj, state, 5);
     ObjGroup_AddObject(obj, 0x19);
     ObjGroup_AddObject(obj, 0x16);
-    ObjMsg_AllocQueue(obj, 8);
+    ObjMsg_AllocQueue((void*)obj, 8);
     ((GameObject*)obj)->unkF8 = 0;
     state->unk44 = 0;
     state->unk46 = 0;
@@ -922,10 +913,10 @@ void gunpowderbarrel_update(int obj)
     }
     {
         u32 arg;
-        int msg;
+        uint msg;
         msg = 0;
         arg = 0;
-        while (ObjMsg_Pop(obj, &msg, 0, &arg) != 0)
+        while (ObjMsg_Pop((void*)obj, &msg, 0, &arg) != 0)
         {
             switch (msg)
             {
@@ -974,8 +965,8 @@ void gunpowderbarrel_update(int obj)
             if (((GunpowderbarrelPlacement*)def)->unk1A != 0)
             {
                 int cnt;
-                int* objs = ObjGroup_GetObjects(0x3a, &cnt);
-                int* p;
+                uint* objs = ObjGroup_GetObjects(0x3a, &cnt);
+                uint* p;
                 i = 0;
                 p = objs;
                 for (; i < cnt; i++)
@@ -1038,7 +1029,7 @@ void gunpowderbarrel_update(int obj)
         if (((BarrelBits*)&state->configFlags)->b6 != 0 && ((BarrelBits*)&state->heldFlags)->b4 != 0 &&
             (state->motionFlags & 2) == 0)
         {
-            saveGame_saveObjectPos(obj);
+            saveGame_saveObjectPos((int*)obj);
         }
     }
     if ((state->motionFlags & 2) != 0 || ((BarrelBits*)&state->heldFlags)->b5 != 0 ||
@@ -1266,7 +1257,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     stk[0] = state->launchYaw;
     vecRotateZXY(stk, &state->throwVelX);
     state->motionFlags = (u8)(state->motionFlags | 1);
-    Sfx_PlayFromObject(obj, SFXsk_baptr6_c);
+    Sfx_PlayFromObject((u32)obj, SFXsk_baptr6_c);
     state->motionFlags = (u8)(state->motionFlags | 2);
     if ((state->configFlags & 0x40) != 0)
     {
@@ -1275,9 +1266,9 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         if (*(s16*)(params + 0x1a) != 0)
         {
             int count;
-            int* barrels = (int*)ObjGroup_GetObjects(0x3a, &count);
+            uint* barrels = ObjGroup_GetObjects(0x3a, &count);
             int i;
-            int* p = barrels;
+            uint* p = barrels;
             for (i = 0; i < count; i++)
             {
                 if (((GunpowderbarrelLaunchAtTargetPlacement*)params)->unk1A == barrelgener_getLinkId(*p))
@@ -1300,7 +1291,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
             ((GameObject*)obj)->anim.localPosX = ((GameObject*)target)->anim.localPosX;
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)target)->anim.localPosY;
             ((GameObject*)obj)->anim.localPosZ = ((GameObject*)target)->anim.localPosZ;
-            saveGame_saveObjectPos(obj);
+            saveGame_saveObjectPos((int*)obj);
             ((GameObject*)obj)->anim.localPosX = sx;
             ((GameObject*)obj)->anim.localPosY = sy;
             ((GameObject*)obj)->anim.localPosZ = sz;
@@ -1326,7 +1317,7 @@ void fn_801A0F58(int* obj, s16 a, s16 b)
     char* near;
     f32 radius = lbl_803E42E0;
     player = (char*)Obj_GetPlayerObject();
-    near = (char*)ObjGroup_FindNearestObject(0x1e, obj, &radius);
+    near = (char*)ObjGroup_FindNearestObject(0x1e, (u32)obj, &radius);
     if (near == NULL)
     {
         return;
@@ -1348,7 +1339,7 @@ void fn_801A0F58(int* obj, s16 a, s16 b)
     rate = (dy2 != scale) ? ((GameObject*)obj)->anim.velocityY / dy2 : scale;
     if (rate >= lbl_803E42DC)
     {
-        Sfx_PlayFromObject((int)obj, 0xd2);
+        Sfx_PlayFromObject((u32)obj, 0xd2);
         rate = lbl_803E42DC;
         ((GameObject*)obj)->anim.velocityY = dy2;
         *(f32*)(near + 0xc) += lbl_803E42E8;
