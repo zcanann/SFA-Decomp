@@ -86,17 +86,17 @@ void dimbossfire_update(int obj)
     extern u32 randomGetRange(int min, int max);
     extern undefined4 GameBit_Set(int eventId, int value);
     extern int objCreateLight(int obj, int param_2);
-    extern void modelLightStruct_setDistanceAttenuation(f32 min, f32 max, int light);
+    extern void modelLightStruct_setDistanceAttenuation(int light, f32 min, f32 max);
     uint bitVal;
     int* light;
     int ref;
-    int placement;
     byte* state;
+    int placement;
     float heat;
 
     state = ((GameObject*)obj)->extra;
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    if ((int)*(short*)(placement + 0x20) != 0xffffffff)
+    if ((int)*(short*)(placement + 0x20) != -1)
     {
         bitVal = GameBit_Get((int)*(short*)(placement + 0x20));
         if (bitVal != 0)
@@ -142,20 +142,20 @@ void dimbossfire_update(int obj)
                 ref = 0;
                 do
                 {
-                    if (*(short*)(placement + 0x1a) == 0)
+                    if (*(short*)(placement + 0x1a) != 0)
                     {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4cc, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4c9, NULL, 2, -1, NULL);
                     }
                     else
                     {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4c9, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4cc, NULL, 2, -1, NULL);
                     }
                     ref = ref + 1;
                 }
                 while (ref < 0x32);
             }
             ref = Obj_GetPlayerObject();
-            if ((ref != 0) && ((*(ushort*)(ref + 0xb0) & 0x1000) == 0))
+            if (((void*)ref != NULL) && ((*(ushort*)(ref + 0xb0) & 0x1000) == 0))
             {
                 heat = Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)(ref + 0x18));
                 if (heat <= lbl_803E4DA4)
@@ -165,24 +165,24 @@ void dimbossfire_update(int obj)
                     doRumble(lbl_803E4DB4 * heat);
                 }
             }
-            if (((DimbossfireState*)state)->light == 0)
+            if ((void*)((DimbossfireState*)state)->light == NULL)
             {
                 light = (int*)objCreateLight(obj, 1);
                 *(int**)&((DimbossfireState*)state)->light = light;
-                if (((DimbossfireState*)state)->light != 0)
+                if ((void*)((DimbossfireState*)state)->light != NULL)
                 {
                     modelLightStruct_setLightKind(((DimbossfireState*)state)->light, 2);
                     lightSetFieldBC_8001db14(((DimbossfireState*)state)->light, 1);
-                    if (*(short*)(placement + 0x1a) == 0)
-                    {
-                        modelLightStruct_setDiffuseColor(((DimbossfireState*)state)->light, 0x7f, 0xff, 0, 0);
-                    }
-                    else
+                    if (*(short*)(placement + 0x1a) != 0)
                     {
                         modelLightStruct_setDiffuseColor(((DimbossfireState*)state)->light, 0xff, 0x7f, 0, 0);
                     }
-                    modelLightStruct_setDistanceAttenuation(lbl_803E4DB8, lbl_803E4DBC,
-                                                            ((DimbossfireState*)state)->light);
+                    else
+                    {
+                        modelLightStruct_setDiffuseColor(((DimbossfireState*)state)->light, 0x7f, 0xff, 0, 0);
+                    }
+                    modelLightStruct_setDistanceAttenuation(((DimbossfireState*)state)->light,
+                                                            lbl_803E4DB8, lbl_803E4DBC);
                     modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 1, lbl_803E4DA0);
                     modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 0,
                                                 ((DimbossfireState*)state)->unk4 / lbl_803E4DC0);
@@ -191,21 +191,9 @@ void dimbossfire_update(int obj)
             Sfx_PlayFromObject(obj, SFXar_boost16);
         }
         ((DimbossfireState*)state)->unk4 = ((DimbossfireState*)state)->unk4 - timeDelta;
-        if (((DimbossfireState*)state)->unk4 > lbl_803E4DA0)
+        if (((DimbossfireState*)state)->unk4 <= lbl_803E4DA0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x4ca, NULL, 2, -1, NULL);
-            if (*(short*)(placement + 0x1a) == 0)
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cd, NULL, 2, -1, NULL);
-            }
-            else
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cb, NULL, 2, -1, NULL);
-            }
-        }
-        else
-        {
-            ((DimbossfireState*)state)->unk4 = lbl_803E4DA0;
+            ((DimbossfireState*)state)->unk4 = *(f32*)&lbl_803E4DA0;
             if (*(uint*)&((DimbossfireState*)state)->light != 0)
             {
                 ModelLightStruct_free(*(void**)&((DimbossfireState*)state)->light);
@@ -214,6 +202,18 @@ void dimbossfire_update(int obj)
             ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
             ObjHitbox_SetSphereRadius(obj, 0);
             ObjHits_DisableObject(obj);
+        }
+        else
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x4ca, NULL, 2, -1, NULL);
+            if (*(short*)(placement + 0x1a) != 0)
+            {
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cb, NULL, 2, -1, NULL);
+            }
+            else
+            {
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cd, NULL, 2, -1, NULL);
+            }
         }
     }
     return;
