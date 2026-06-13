@@ -450,7 +450,7 @@ void dimwooddoor2_update(int* obj)
         if (rs != ceil)
         {
             sub->riseSpeed = rs * lbl_803E49D8;
-            sub->riseSpeed = (sub->riseSpeed > ceil) ? ceil : sub->riseSpeed;
+            sub->riseSpeed = (sub->riseSpeed < ceil) ? sub->riseSpeed : ceil;
         }
     }
     if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
