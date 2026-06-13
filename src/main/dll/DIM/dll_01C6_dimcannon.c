@@ -702,13 +702,9 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 s16 mag = *(s16*)((char*)vec + 0x2) < 0 ? -*(s16*)((char*)vec + 0x2) : *(s16*)((char*)vec + 0x2);
                 if (mag > lbl_803DBF02 - lbl_803DBF04)
                 {
-                    int sd, sc;
-                    if (delta < 0) sd = -1;
-                    else if (delta > 0) sd = 1;
-                    else sd = 0;
-                    if (*(s16*)((char*)vec + 0x2) < 0) sc = -1;
-                    else if (*(s16*)((char*)vec + 0x2) > 0) sc = 1;
-                    else sc = 0;
+                    int sc, sd;
+                    sd = delta < 0 ? -1 : (delta > 0 ? 1 : 0);
+                    sc = *(s16*)((char*)vec + 0x2) < 0 ? -1 : (*(s16*)((char*)vec + 0x2) > 0 ? 1 : 0);
                     if (sc == sd)
                     {
                         delta = delta * (lbl_803DBF02 - mag);
