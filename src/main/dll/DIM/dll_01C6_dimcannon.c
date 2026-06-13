@@ -649,11 +649,11 @@ void dimcannon_update(int* obj)
 int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     extern void* Obj_GetPlayerObject(void);
-    int* src = *(int**)&((GameObject*)obj)->anim.placementData;
     char* state;
-    int camMode;
-    u8 done = 0;
+    int* src = *(int**)&((GameObject*)obj)->anim.placementData;
     void* player;
+    u8 done = 0;
+    int camMode;
 
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x608;
