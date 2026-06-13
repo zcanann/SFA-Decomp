@@ -444,32 +444,32 @@ void dimwooddoor2_update(int* obj)
     DimWoodDoor2State* sub = ((GameObject*)obj)->extra;
     ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
-    if (sub->riseSpeed != lbl_803E49D4)
     {
-        sub->riseSpeed = sub->riseSpeed * lbl_803E49D8;
-        if (sub->riseSpeed > lbl_803E49D4)
+        f32 ceil = lbl_803E49D4;
+        if (sub->riseSpeed != ceil)
         {
-            sub->riseSpeed = lbl_803E49D4;
+            sub->riseSpeed = sub->riseSpeed * lbl_803E49D8;
+            sub->riseSpeed = (sub->riseSpeed > ceil) ? ceil : sub->riseSpeed;
         }
     }
     if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
     {
         int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
-        int* q2 = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        int* q2;
         if (v < 0) v = 0;
+        q2 = *(int**)&((GameObject*)obj)->anim.hitReactState;
         ((ObjHitsPriorityState*)q2)->flags = (s16)(((ObjHitsPriorityState*)q2)->flags & ~1);
         ((GameObject*)obj)->anim.alpha = (u8)v;
     }
     else
     {
-        int found = 0;
+        int found;
         int i;
-        int* list = *(int**)((char*)obj + 0x58);
-        int n = (s8) * (s8*)((char*)list + 0x10f);
-        for (i = 0; i < n; i++)
+        found = 0;
+        for (i = 0; i < (int)*(s8*)(*(int*)((int)obj + 0x58) + 0x10f); i++)
         {
-            int* o = *(int**)((char*)list + 0x100 + i * 4);
-            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6)
+            int o = *(int*)(*(int*)((int)obj + 0x58) + i * 4 + 0x100);
+            if (*(s16*)(o + 0x46) == 0x18f || *(s16*)(o + 0x46) == 0x1d6)
             {
                 found = 1;
                 break;
