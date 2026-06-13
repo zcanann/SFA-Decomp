@@ -699,16 +699,15 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             delta = (int)(-lbl_803DBF08 * (f32)padGetStickX(0));
             if (delta != 0)
             {
-                s16 cur = *(s16*)((char*)vec + 0x2);
-                s16 mag = cur < 0 ? -cur : cur;
+                s16 mag = *(s16*)((char*)vec + 0x2) < 0 ? -*(s16*)((char*)vec + 0x2) : *(s16*)((char*)vec + 0x2);
                 if (mag > lbl_803DBF02 - lbl_803DBF04)
                 {
                     int sd, sc;
                     if (delta < 0) sd = -1;
                     else if (delta > 0) sd = 1;
                     else sd = 0;
-                    if (cur < 0) sc = -1;
-                    else if (cur > 0) sc = 1;
+                    if (*(s16*)((char*)vec + 0x2) < 0) sc = -1;
+                    else if (*(s16*)((char*)vec + 0x2) > 0) sc = 1;
                     else sc = 0;
                     if (sc == sd)
                     {
