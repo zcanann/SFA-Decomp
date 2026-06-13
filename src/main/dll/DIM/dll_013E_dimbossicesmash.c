@@ -262,9 +262,9 @@ void dimbossicesmash_update(u8* obj)
                 (*gPathControlInterface)->advance(obj, state, timeDelta);
                 if (((DimBossIceSmashState*)state)->unk261 != 0)
                 {
+                    nz = -((GameObject*)obj)->anim.velocityZ;
                     nx = -((GameObject*)obj)->anim.velocityX;
                     ny = -((GameObject*)obj)->anim.velocityY;
-                    nz = -((GameObject*)obj)->anim.velocityZ;
                     len = sqrtf(nz * nz + (nx * nx + ny * ny));
                     if (lbl_803E4034 != len)
                     {
