@@ -154,7 +154,7 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
     if (hitbox->transformState != (ObjHitboxTransformState*)0x0)
     {
         hitbox->transformState->activeMatrixIndex = 0;
-        hitbox->transformState->resetFrames = 10;
+        hitbox->transformState->resetFrames = OBJHITBOX_ROTATED_BOUNDS_RESET_FRAMES;
         hitbox->transformState->contactObjectCount = 0;
         ObjHitbox_UpdateRotatedBounds(hitbox, 1);
         ObjHitbox_UpdateRotatedBounds(hitbox, 1);
