@@ -114,7 +114,7 @@ void dimbossicesmash_update(u8* obj)
     int a;
     s16 cnt;
     int t1;
-    f32 nx, ny, nz;
+    f32 nz, nx, ny;
     f32 len, inv, dot;
     f32 fy, fz, ff;
     f32 dx, dy, dz, k;
