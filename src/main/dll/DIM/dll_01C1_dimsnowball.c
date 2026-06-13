@@ -158,12 +158,12 @@ void dimsnowball_update(int obj)
         idx[0] = 0;
     }
     idx[2] = idx[1] + 1;
-    if (idx[2] >= count)
+    if ((s16)idx[2] >= count)
     {
         idx[2] = last;
     }
     idx[3] = idx[1] + 2;
-    if (idx[3] >= count)
+    if ((s16)idx[3] >= count)
     {
         idx[3] = last;
     }
