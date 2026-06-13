@@ -13,6 +13,13 @@ typedef struct DimbarrierPlacement
     s16 unk1E;
 } DimbarrierPlacement;
 
+typedef struct DimbarrierState
+{
+    s16 timer;
+    u8 state;
+    s8 countdown;
+} DimbarrierState;
+
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
@@ -77,7 +84,7 @@ int fn_801B17F4(int obj, int delta);
 
 /* dimbarrier_update: while a live type-470 object is in the list, count down the
  * arm timer; on expiry fade the barrier out and latch its gamebit. */
-void dimbarrier_update(int* obj)
+void dimbarrier_update(int obj)
 {
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
     int* extra = ((GameObject*)obj)->extra;
@@ -85,14 +92,16 @@ void dimbarrier_update(int* obj)
     {
     case 0:
         {
-            int* list = *(int**)((char*)obj + 0x58);
-            int found = 0;
+            int entry;
+            int ex;
+            int found;
             int i;
-            for (i = 0; i < *(s8*)((char*)list + 0x10f); i++)
+            found = 0;
+            for (i = 0; i < (int)*(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
             {
-                int* entry = *(int**)((char*)list + 0x100 + i * 4);
-                if (*(s16*)((char*)entry + 0x46) == 470 &&
-                    *(u8*)((char*)*(int**)((char*)entry + 0xb8) + 4) != 0)
+                entry = *(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100);
+                ex = *(int*)(entry + 0xb8);
+                if (*(s16*)(entry + 0x46) == 470 && *(u8*)(ex + 4) != 0)
                 {
                     found = 1;
                     break;
@@ -100,17 +109,16 @@ void dimbarrier_update(int* obj)
             }
             if (found)
             {
-                s8 v = *(u8*)((char*)extra + 3) - 1;
-                *(s8*)((char*)extra + 3) = v;
-                if (v <= 0)
+                DimbarrierState* st = (DimbarrierState*)extra;
+                if (--st->countdown <= 0)
                 {
                     *(s8*)((char*)extra + 2) = 1;
                     *(s16*)extra = 30;
-                    Sfx_PlayFromObject((int)obj, SFXthorntail_chew1);
+                    Sfx_PlayFromObject(obj, SFXthorntail_chew1);
                 }
                 else
                 {
-                    Sfx_PlayFromObject((int)obj, SFXthorntail_chew2);
+                    Sfx_PlayFromObject(obj, SFXthorntail_chew2);
                 }
             }
             break;
@@ -124,7 +132,7 @@ void dimbarrier_update(int* obj)
             }
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
             ((GameObject*)obj)->anim.alpha = v;
-            *(s16*)extra = *(s16*)extra - framesThisStep;
+            *(s16*)extra -= framesThisStep;
             if (*(s16*)extra <= 0)
             {
                 GameBit_Set(((DimbarrierPlacement*)def)->unk1E, 1);
@@ -132,6 +140,8 @@ void dimbarrier_update(int* obj)
             }
             break;
         }
+    case 2:
+        break;
     }
 }
 
