@@ -564,16 +564,15 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
 #pragma peephole off
-int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int j;
     int i;
     u8* sub;
-    int o = (int)obj;
-    sub = ((GameObject*)o)->extra;
+    sub = ((GameObject*)obj)->extra;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
-    dimmagicbridge_scrollTextureChannels(o, (u8*)sub);
+    dimmagicbridge_scrollTextureChannels(obj, (u8*)sub);
     if (animUpdate->triggerCommand == 1)
     {
         animUpdate->triggerCommand = 0;
@@ -601,7 +600,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
             }
         }
     }
-    dimmagicbridge_updateVertexWave(o, (u8*)sub);
+    dimmagicbridge_updateVertexWave(obj, (u8*)sub);
     return 0;
 }
 
