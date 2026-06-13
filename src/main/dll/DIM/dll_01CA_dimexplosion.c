@@ -513,25 +513,22 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
 {
     int p4c = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
-    u8 idx;
+    int idx;
     int off;
-    int e;
-    int p;
     idx = ((ExplosionState*)state)->flameCount;
     ((ExplosionState*)state)->flameCount = idx + 1;
     off = idx * 0x30;
     *(f32*)((char*)state + off) = x;
-    e = state + off;
-    *(f32*)((char*)e + 0x4) = y;
-    *(f32*)((char*)e + 0x8) = z;
-    *(f32*)((char*)e + 0x18) = lbl_803E492C;
-    *(f32*)((char*)e + 0xc) = *(f32*)((char*)state + 0x18);
-    *(f32*)((char*)e + 0x1c) = spd;
-    *(u8*)((char*)e + 0x2d) = b;
-    *(int*)((char*)e + 0x10) = 0;
-    *(int*)((char*)e + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
+    *(f32*)((char*)state + off + 0x4) = y;
+    *(f32*)((char*)state + off + 0x8) = z;
+    *(f32*)((char*)state + off + 0x18) = lbl_803E492C;
+    *(f32*)((char*)state + off + 0xc) = *(f32*)((char*)state + 0x18);
+    *(f32*)((char*)state + off + 0x1c) = spd;
+    *(u8*)((char*)state + off + 0x2d) = b;
+    *(int*)((char*)state + off + 0x10) = 0;
+    *(int*)((char*)state + off + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
     {
-        int v = *(int*)((char*)e + 0x14);
+        int v = *(int*)((char*)state + off + 0x14);
         if (v < 0)
         {
             v = 0;
@@ -540,9 +537,9 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
         {
             v = 0x3c;
         }
-        *(int*)((char*)e + 0x14) = v;
+        *(int*)((char*)state + off + 0x14) = v;
     }
-    if (*(u8*)((char*)e + 0x2d) < 1)
+    if (*(u8*)((char*)state + off + 0x2d) < 1)
     {
         s8 c = *(s8*)((char*)p4c + 0x19);
         if (c != 0)
@@ -576,27 +573,26 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
             }
         }
     }
-    *(s16*)((char*)state + off + 0x28) = randomGetRange(0, 0xffff);
-    *(s16*)((char*)state + off + 0x2a) = randomGetRange(0xc8, 0x12c);
+    *(s16*)((char*)(int)state + off + 0x28) = randomGetRange(0, 0xffff);
+    *(s16*)((char*)(int)state + off + 0x2a) = randomGetRange(0xc8, 0x12c);
     if ((int)randomGetRange(0, 1) != 0)
     {
-        *(s16*)((char*)state + off + 0x2a) = -*(s16*)((char*)state + off + 0x2a);
+        *(s16*)((char*)(int)state + off + 0x2a) = -*(s16*)((char*)(int)state + off + 0x2a);
     }
-    *(u8*)((char*)state + off + 0x2c) = randomGetRange(0, 3);
+    *(u8*)((char*)(int)state + off + 0x2c) = randomGetRange(0, 3);
     {
-        f32 sp = *(f32*)((char*)e + 0x1c);
+        f32 sp = *(f32*)((char*)state + off + 0x1c);
         f32 ev = expf(
-            (lbl_803E4934 * ((f32)(int) * (int*)((char*)e + 0x14) - (f32)(int) * (int*)((char*)e + 0x10))) / (f32)(int)
-            * (int*)((char*)e + 0x14));
-        f32 t = (sp - *(f32*)((char*)e + 0x18)) * ev;
-        *(f32*)((char*)e + 0xc) = sp - t * lbl_803DDB70;
-        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e + 0x14));
+            (lbl_803E4934 * ((f32)(int) * (int*)((char*)state + off + 0x14) - (f32)(int) * (int*)((char*)state + off + 0x10))) / (f32)(int)
+            * (int*)((char*)state + off + 0x14));
+        f32 t = (sp - *(f32*)((char*)state + off + 0x18)) * ev;
+        *(f32*)((char*)state + off + 0xc) = sp - t * lbl_803DDB70;
+        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)state + off + 0x10)) / (f32)(int) * (int*)((char*)state + off + 0x14));
         t = lbl_803E4938 * ev;
-        p = state + off;
-        *(s8*)((char*)p + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
-        *(int*)((char*)p + 0x20) = (int)lbl_803E4940;
-        *(int*)((char*)p + 0x24) = *(int*)((char*)p + 0x20);
-        *(u8*)((char*)p + 0x2f) = 1;
+        *(s8*)((char*)(int)state + off + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
+        *(int*)((char*)(int)state + off + 0x20) = (int)lbl_803E4940;
+        *(int*)((char*)(int)state + off + 0x24) = *(int*)((char*)(int)state + off + 0x20);
+        *(u8*)((char*)(int)state + off + 0x2f) = 1;
     }
 }
 
