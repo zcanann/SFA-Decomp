@@ -588,7 +588,8 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
         f32 ev = expf(
             (lbl_803E4934 * ((f32)(int) * (int*)((char*)e14 + 0x14) - (f32)(int) * (int*)((char*)e + 0x10))) / (f32)(int)
             * (int*)((char*)e14 + 0x14));
-        f32 t = (sp - *(f32*)((char*)e + 0x18)) * ev;
+        f32 d = sp - *(f32*)((char*)e + 0x18);
+        f32 t = d * ev;
         *(f32*)((char*)e + 0xc) = sp - t * lbl_803DDB70;
         ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e14 + 0x14));
         t = lbl_803E4938 * ev;
@@ -776,7 +777,8 @@ void explosion_update(int obj)
             f32 ev = expf(
                 (lbl_803E4934 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) / (
                     f32)(int)((ExplosionDebris*)p)->unk14);
-            f32 t = (sp - ((ExplosionDebris*)p)->unk18) * ev;
+            f32 d = sp - ((ExplosionDebris*)p)->unk18;
+            f32 t = d * ev;
             ((ExplosionDebris*)p)->unkC = sp - t * lbl_803DDB70;
             ev = expf((lbl_803E493C * (f32)(int)((ExplosionDebris*)p)->unk10) / (f32)(int)((ExplosionDebris*)p)->unk14);
             t = lbl_803E4938 * ev;
