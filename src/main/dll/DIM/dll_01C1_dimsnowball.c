@@ -128,8 +128,8 @@ void dimsnowball_update(int obj)
     int last;
     u8 frames;
     u8* model;
-    f32 dy1;
     f32 dy2;
+    f32 dy1;
     f32 v24;
 
     ap = idx;
@@ -168,21 +168,21 @@ void dimsnowball_update(int obj)
         idx[3] = last;
     }
     idx[0] *= 3;
-    x[0] = (f32)gDimSnowballCoords[idx[0]] * lbl_803E484C;
-    y[0] = (f32)gDimSnowballCoords[idx[0] + 1] * lbl_803E484C;
-    z[0] = (f32)gDimSnowballCoords[idx[0] + 2] * lbl_803E484C;
+    { f32 cc1 = (f32)gDimSnowballCoords[idx[0]]; x[0] = cc1 * *(f32*)&lbl_803E484C; }
+    { f32 cc2 = (f32)gDimSnowballCoords[idx[0] + 1]; y[0] = cc2 * lbl_803E484C; }
+    { f32 cc3 = (f32)gDimSnowballCoords[idx[0] + 2]; z[0] = cc3 * lbl_803E484C; }
     idx[1] *= 3;
-    x[1] = (f32)gDimSnowballCoords[idx[1]] * lbl_803E484C;
-    y[1] = (f32)gDimSnowballCoords[idx[1] + 1] * lbl_803E484C;
-    z[1] = (f32)gDimSnowballCoords[idx[1] + 2] * lbl_803E484C;
+    { f32 cc4 = (f32)gDimSnowballCoords[idx[1]]; x[1] = cc4 * lbl_803E484C; }
+    { f32 cc5 = (f32)gDimSnowballCoords[idx[1] + 1]; y[1] = cc5 * lbl_803E484C; }
+    { f32 cc6 = (f32)gDimSnowballCoords[idx[1] + 2]; z[1] = cc6 * lbl_803E484C; }
     idx[2] *= 3;
-    x[2] = (f32)gDimSnowballCoords[idx[2]] * lbl_803E484C;
-    y[2] = (f32)gDimSnowballCoords[idx[2] + 1] * lbl_803E484C;
-    z[2] = (f32)gDimSnowballCoords[idx[2] + 2] * lbl_803E484C;
+    { f32 cc7 = (f32)gDimSnowballCoords[idx[2]]; x[2] = cc7 * lbl_803E484C; }
+    { f32 cc8 = (f32)gDimSnowballCoords[idx[2] + 1]; y[2] = cc8 * lbl_803E484C; }
+    { f32 cc9 = (f32)gDimSnowballCoords[idx[2] + 2]; z[2] = cc9 * lbl_803E484C; }
     idx[3] *= 3;
-    x[3] = (f32)gDimSnowballCoords[idx[3]] * lbl_803E484C;
-    y[3] = (f32)gDimSnowballCoords[idx[3] + 1] * lbl_803E484C;
-    z[3] = (f32)gDimSnowballCoords[idx[3] + 2] * lbl_803E484C;
+    { f32 cc10 = (f32)gDimSnowballCoords[idx[3]]; x[3] = cc10 * lbl_803E484C; }
+    { f32 cc11 = (f32)gDimSnowballCoords[idx[3] + 1]; y[3] = cc11 * lbl_803E484C; }
+    { f32 cc12 = (f32)gDimSnowballCoords[idx[3] + 2]; z[3] = cc12 * lbl_803E484C; }
     dy1 = y[1] - y[0];
     dy2 = y[2] - y[3];
     if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && ((DimsnowballState*)state)->unkC <= 0)
