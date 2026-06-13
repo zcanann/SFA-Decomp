@@ -133,7 +133,7 @@ void dimbossfire_update(int obj)
     {
         if ((*state & 1) != 0)
         {
-            *state = *state & 0xfe;
+            *state &= ~1;
             ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0xf);
             ObjHits_EnableObject(obj);
