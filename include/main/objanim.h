@@ -22,7 +22,7 @@ typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimHandle,double moveStepScal
 typedef int (*ObjAnimAdvanceObjectFirstF32Fn)(int objAnimHandle,f32 moveStepScale,f32 deltaTime,
                                               ObjAnimEventList *events);
 
-extern char gObjAnimSetBlendMoveMissingAnimWarning[];
+extern char gObjAnimMissingCachedMoveWarning[];
 
 #define OBJANIM_STATE_INDEX_CURRENT 0
 #define OBJANIM_STATE_INDEX_ACTIVE 1
