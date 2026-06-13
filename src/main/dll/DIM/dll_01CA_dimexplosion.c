@@ -881,26 +881,26 @@ void explosion_update(int obj)
                     if (t < 0x40)
                     {
                         int v = t << 6;
-                        ang[0] = -1 - v;
+                        ang[0] = 0xffff - v;
                         ang[1] = ang[0];
-                        ang[2] = -0x8000;
-                        ang[3] = -0x4000 - v;
-                        ang[4] = -0x6000 - v;
+                        ang[2] = 0x8000;
+                        ang[3] = 0xc000 - v;
+                        ang[4] = 0xa000 - v;
                         ang[5] = 0;
                     }
                     else if (t < 0x80)
                     {
                         int v = t << 6;
-                        ang[0] = -0x4000 - v;
-                        ang[1] = -0x6000 - v;
+                        ang[0] = 0xc000 - v;
+                        ang[1] = 0xa000 - v;
                         ang[2] = 0;
-                        ang[3] = -0x8000;
+                        ang[3] = 0x8000;
                         ang[4] = 0;
                         ang[5] = 0;
                     }
                     else
                     {
-                        ang[0] = -0x6000;
+                        ang[0] = 0xa000;
                         ang[1] = 0;
                         ang[2] = 0;
                         ang[3] = 0;
