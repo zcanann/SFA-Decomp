@@ -16,7 +16,6 @@ extern CameraViewSlot *Camera_GetCurrentViewSlot(void);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s32 yOffset);
 extern void mm_free(void *ptr);
-extern void camcontrol_activateHandler(u32 actionId,void *actionData);
 
 extern s16 lbl_803DD4C0;
 extern char sDllBBTimeDebugFormat[];

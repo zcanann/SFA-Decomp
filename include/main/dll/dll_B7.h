@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_B7_H_
 #define MAIN_DLL_DLL_B7_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 
 void camcontrol_activateHandler(u32 actionId, void *actionData);
 

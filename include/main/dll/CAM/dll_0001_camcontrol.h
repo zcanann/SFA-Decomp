@@ -219,6 +219,9 @@ typedef struct CamcontrolHandlerEntry {
 #define CAMCONTROL_QUEUED_ACTION_PARAM_SIZE sizeof(CamcontrolQueuedActionParam)
 #define CAMCONTROL_ACTION_FILE_ID 0xB
 #define CAMCONTROL_ACTION_HEAP 0xF
+#define CAMCONTROL_HANDLER_ENTRY_SIZE sizeof(CamcontrolHandlerEntry)
+#define CAMCONTROL_HANDLER_RESOURCE_TYPE 4
+#define CAMCONTROL_HANDLER_PRIORITY_DYNAMIC 1
 #define CAMCONTROL_DEFAULT_BLEND_FRAMES 0x78
 #define CAMCONTROL_QUEUE_SENTINEL 0xFF
 #define CAMCONTROL_CAMERA ((CamcontrolCameraState *)pCamera)
@@ -268,6 +271,7 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
 void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus);
 void camcontrol_applyState(CamcontrolCameraState *cameraState);
 void camcontrol_applyQueuedAction(void);
+void camcontrol_activateHandler(u32 actionId, void *actionData);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useLocalPosition);
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z);
