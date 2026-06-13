@@ -202,6 +202,14 @@ STATIC_ASSERT(offsetof(Dll19ESetup, scaleTimer) == 0x1A);
 STATIC_ASSERT(offsetof(Dll19ESetup, sequenceIndex) == 0x1C);
 STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
 
+typedef struct Dll19EResArgs
+{
+    undefined4 a;
+    undefined4 b;
+    undefined4 c;
+    undefined4 d;
+} Dll19EResArgs;
+
 void dll_19E_update(void* obj)
 {
     extern void Sfx_PlayFromObject(void* obj, int sfxId);
@@ -214,16 +222,13 @@ void dll_19E_update(void* obj)
     int i;
 
     state = ((GameObject*)obj)->extra;
-    resourceArgs[0] = lbl_802C23D8[0];
-    resourceArgs[1] = lbl_802C23D8[1];
-    resourceArgs[2] = lbl_802C23D8[2];
-    resourceArgs[3] = lbl_802C23D8[3];
+    *(Dll19EResArgs*)resourceArgs = *(Dll19EResArgs*)lbl_802C23D8;
 
     Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     objUpdateOpacity(obj);
     if (state->settleTimer > 0)
     {
-        *(u16*)&state->settleTimer = state->settleTimer - (u16)framesThisStep;
+        state->settleTimer -= framesThisStep;
     }
 
     if (state->mode == 1)
@@ -252,7 +257,7 @@ void dll_19E_update(void* obj)
 
         if ((state->active != 0) && (state->resetTimer != 0))
         {
-            *(u16*)&state->resetTimer = state->resetTimer - (u16)framesThisStep;
+            state->resetTimer -= framesThisStep;
             if (state->resetTimer <= 0)
             {
                 state->resetTimer = 0;
