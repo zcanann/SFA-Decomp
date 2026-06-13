@@ -85,6 +85,7 @@ void dim2prisonmammoth_free(void)
 {
 }
 
+#pragma peephole off
 void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
@@ -92,6 +93,7 @@ void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visibl
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E82D0);
     }
 }
+#pragma peephole reset
 
 void dim2prisonmammoth_hitDetect(void)
 {
@@ -225,7 +227,7 @@ void dim2prisonmammoth_init(int obj, int p2)
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
-        ((GameObject*)obj)->anim.modelState->flags |= 0x8020;
+        ((GameObject*)obj)->anim.modelState->flags |= 0x8020LL;
     }
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     ((Dim2prisonmammothState*)inner)->unk25F = 0;
@@ -299,8 +301,11 @@ void dim2prisonmammoth_update(int obj)
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
     ((Dim2prisonmammothState*)inner)->unk354 = 0;
     ((Dim2prisonmammothState*)inner)->unk0 &= ~0x8000;
-    ((Dim2prisonmammothState*)inner)->unk290 = lbl_803E82C0;
-    ((Dim2prisonmammothState*)inner)->unk28C = lbl_803E82C0;
+    {
+        f32 fz = lbl_803E82C0;
+        ((Dim2prisonmammothState*)inner)->unk290 = fz;
+        ((Dim2prisonmammothState*)inner)->unk28C = fz;
+    }
     ((Dim2prisonmammothState*)inner)->unk31C = 0;
     ((Dim2prisonmammothState*)inner)->unk318 = 0;
     ((Dim2prisonmammothState*)inner)->unk330 = 0;

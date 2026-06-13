@@ -1273,7 +1273,7 @@ void DIMSnowHorn1_update(int obj)
         f32 mat[4];
     } v;
     f32 matrix[16];
-    u8* base = lbl_80335030;
+    u8* base = (u8*)(int)lbl_80335030;
     int player = (int)Obj_GetPlayerObject();
     int data;
     s8 c = -1;
