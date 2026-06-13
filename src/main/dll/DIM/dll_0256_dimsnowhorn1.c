@@ -1517,7 +1517,6 @@ void DIMSnowHorn1_initialise(void)
 
 void DIMSnowHorn1_init(int obj, int p2, int p3)
 {
-    extern int GameBit_Get(int id);
     u8* base = lbl_80335030;
     int stk = lbl_803E8230;
     DIMSnowHorn1State* inner;
