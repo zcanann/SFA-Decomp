@@ -492,7 +492,7 @@ void fn_800D6584(void)
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
 
-int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId)
+int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId)
 {
     int spawnResult;
     PartFxSpawn cfg;
@@ -501,13 +501,13 @@ int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
     if ((spawnFlags & 0x200000) != 0)
     {
         if (spawnParams == 0) return -1;
-        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->posZ;
-        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->scale;
-        cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
-        cfg.sourceVecY = ((PartFxSpawnParams*)spawnParams)->unk2;
-        cfg.sourceVecX = *spawnParams;
+        cfg.sourcePosY = spawnParams->posX;
+        cfg.sourcePosZ = spawnParams->posY;
+        cfg.sourcePosW = spawnParams->posZ;
+        cfg.sourcePosX = spawnParams->scale;
+        cfg.sourceVecZ = spawnParams->rotZ;
+        cfg.sourceVecY = spawnParams->rotY;
+        cfg.sourceVecX = spawnParams->rotX;
         cfg.modelIdByte = modelId;
     }
     cfg.behaviorFlags = 0;
@@ -582,18 +582,18 @@ int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
     case 0x44f:
         if (spawnParams == 0)
         {
-            lbl_8039C440.fc = lbl_803E0180;
-            lbl_8039C440.f10 = lbl_803E0180;
-            lbl_8039C440.f14 = lbl_803E0180;
-            lbl_8039C440.f8 = lbl_803E019C;
-            lbl_8039C440.x = 0;
-            lbl_8039C440.y = 0;
-            lbl_8039C440.z = 0;
-            spawnParams = (s16*)&lbl_8039C440;
+            lbl_8039C440.posX = lbl_803E0180;
+            lbl_8039C440.posY = lbl_803E0180;
+            lbl_8039C440.posZ = lbl_803E0180;
+            lbl_8039C440.scale = lbl_803E019C;
+            lbl_8039C440.rotX = 0;
+            lbl_8039C440.rotY = 0;
+            lbl_8039C440.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&lbl_8039C440;
         }
-        (*gWaterfxInterface)->spawnSplashBurst(NULL, ((PartFxSpawnParams*)spawnParams)->posX,
-                                               ((PartFxSpawnParams*)spawnParams)->posY,
-                                               ((PartFxSpawnParams*)spawnParams)->posZ, lbl_803E01A0);
+        (*gWaterfxInterface)->spawnSplashBurst(NULL, spawnParams->posX,
+                                               spawnParams->posY,
+                                               spawnParams->posZ, lbl_803E01A0);
         Sfx_PlayFromObject((int)sourceObj, SFXsc_snort02);
         cfg.lifetimeFrames = 1;
         cfg.scale = lbl_803E01A4;
@@ -643,7 +643,7 @@ int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
     return spawnResult;
 }
 
-int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
+int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
 void Effect13_func05_nop(void)
 {

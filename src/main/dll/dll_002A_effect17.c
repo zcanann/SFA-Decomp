@@ -531,7 +531,7 @@ void Effect18_func05(void);
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
 
-int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags,
+int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                     u8 modelId, s16* extraArgs)
 {
     int spawnResult;
@@ -545,13 +545,13 @@ int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
     if ((spawnFlags & 0x200000) != 0)
     {
         if (spawnParams == 0) return -1;
-        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->posX;
-        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->posY;
-        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->posZ;
-        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->scale;
-        cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
-        cfg.sourceVecY = ((PartFxSpawnParams*)spawnParams)->unk2;
-        cfg.sourceVecX = *spawnParams;
+        cfg.sourcePosY = spawnParams->posX;
+        cfg.sourcePosZ = spawnParams->posY;
+        cfg.sourcePosW = spawnParams->posZ;
+        cfg.sourcePosX = spawnParams->scale;
+        cfg.sourceVecZ = spawnParams->rotZ;
+        cfg.sourceVecY = spawnParams->rotY;
+        cfg.sourceVecX = spawnParams->rotX;
         cfg.modelIdByte = modelId;
     }
     cfg.behaviorFlags = 0;
@@ -716,7 +716,7 @@ int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
         cfg.textureId = 0xdf;
         break;
     case 0x741:
-        if (spawnParams != 0) cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        if (spawnParams != 0) cfg.startPosY = spawnParams->posY;
         cfg.scale = lbl_803E01F8;
         cfg.lifetimeFrames = randomGetRange(0, 0x1e) + 0x50;
         cfg.initialAlpha = 0x60;
@@ -795,7 +795,7 @@ int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
     return spawnResult;
 }
 
-int Effect16_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
+int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
 void Effect17_func03_nop(void)
 {
