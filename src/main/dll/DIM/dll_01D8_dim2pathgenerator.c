@@ -337,7 +337,7 @@ void dim2pathgenerator_update(int* obj)
             *(f32*)((char*)p + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
             *(f32*)((char*)p + 0x10) = ((Dim2PathGeneratorState*)extra)->originZ;
             *(int*)((char*)p + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
-            (*(void (**)(int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], 1);
+            (*(void (**)(int*, int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], p, 1);
             ObjGroup_RemoveObject(objs[i], 47);
             o2 = ObjGroup_GetObjects(47, &count);
             for (j = 0; j < count; j++)
