@@ -316,13 +316,9 @@ void dim2pathgenerator_update(int* obj)
         ((Dim2PathGeneratorState*)extra)->originY = ((GameObject*)obj)->anim.localPosY;
         ((Dim2PathGeneratorState*)extra)->originZ = ((GameObject*)obj)->anim.localPosZ;
     }
+    if ((((Dim2PathGeneratorState*)extra)->spawnTimer -= framesThisStep) > 0)
     {
-        s16 t = ((Dim2PathGeneratorState*)extra)->spawnTimer - framesThisStep;
-        ((Dim2PathGeneratorState*)extra)->spawnTimer = t;
-        if (t > 0)
-        {
-            return;
-        }
+        return;
     }
     toggle = ((Dim2PathGeneratorState*)extra)->flags & 1;
     ((Dim2PathGeneratorState*)extra)->spawnTimer = ((Dim2PathGeneratorState*)extra)->spawnPeriod;
