@@ -798,7 +798,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     {
         return 0;
     }
-    if (near != 0 && (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & 0x4))
+    if ((void*)near != NULL && (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & 0x4))
     {
         return 0;
     }
