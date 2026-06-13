@@ -340,7 +340,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
             mapLoadDataFile(mapDirIndex, DIMTOP_AUDIO_DATA_FILE_B);
             loadWaitStarted = false;
-            while (statusFlags = getLoadedFileFlags(0), (statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0)
+            while (statusFlags = getLoadedFileFlags(0), (int)(statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0)
             {
                 padUpdate();
                 checkReset();
