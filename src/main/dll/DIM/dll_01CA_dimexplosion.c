@@ -822,9 +822,10 @@ void explosion_update(int obj)
                         vpos[2] += ((ExplosionDebris*)p)->unk8;
                         sv = sp2 * (f32)(int)
                         randomGetRange(0xc0, 0x100);
+                        sv = sv * lbl_803E4974;
                         if (((ExplosionState*)st2)->flameCount < 0x32)
                         {
-                            fn_801B3DE4(obj, (u8)(c + 1), sv * lbl_803E4974, vpos[0], vpos[1], vpos[2]);
+                            fn_801B3DE4(obj, (u8)(c + 1), sv, vpos[0], vpos[1], vpos[2]);
                         }
                         ((ExplosionDebris*)p)->unk20 = ((ExplosionDebris*)p)->unk24;
                     }
