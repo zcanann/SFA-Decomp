@@ -110,7 +110,7 @@ void dimbossicesmash_update(u8* obj)
     u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[0x29e];
     u8* setup;
-    u32 t;
+    int t;
     int a;
     s16 cnt;
     int t1;
@@ -155,7 +155,7 @@ void dimbossicesmash_update(u8* obj)
             ((GameObject*)obj)->anim.alpha = 0xff;
             ((DimBossIceSmashState*)state)->unk29C += framesThisStep;
             cnt = ((DimBossIceSmashState*)state)->unk29C;
-            if (((DimbossicesmashPlacement*)setup)->unk38 <= cnt)
+            if (cnt >= ((DimbossicesmashPlacement*)setup)->unk38)
             {
                 state[0x29e] = state[0x29e] | 2;
             }
@@ -402,13 +402,13 @@ void dimbossicesmash_init(u8* obj, u8* params)
     ((DimBossIceSmashState*)state)->unk270 = fz;
     ((DimBossIceSmashState*)state)->unk274 = fz;
     fn_80196520(obj, state, params);
-    if (GameBit_Get(*(s16*)(params + 0x3e)) == 0)
+    if (GameBit_Get(*(s16*)(params + 0x3e)) != 0)
     {
-        t = 0;
+        t = 2;
     }
     else
     {
-        t = 2;
+        t = 0;
     }
     state[0x29e] = t;
     lbl_803DDB00 = 0;
