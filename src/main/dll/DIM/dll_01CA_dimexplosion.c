@@ -521,7 +521,6 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
     off = idx * 0x30;
     *(f32*)((char*)state + off) = x;
     e = state + off;
-    e14 = state + off;
     *(f32*)((char*)e + 0x4) = y;
     *(f32*)((char*)e + 0x8) = z;
     *(f32*)((char*)e + 0x18) = lbl_803E492C;
@@ -529,6 +528,7 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
     *(f32*)((char*)e + 0x1c) = spd;
     *(u8*)((char*)e + 0x2d) = b;
     *(int*)((char*)e + 0x10) = 0;
+    e14 = state + off;
     *(int*)((char*)e14 + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
     {
         int v = *(int*)((char*)e14 + 0x14);
@@ -740,8 +740,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             p = state;
             for (i = 0; i < ((ExplosionState*)state)->rayMode; i++)
             {
-                ((GameObject*)obj)->anim.rotY = ((ExplosionState*)p)->rayYawA;
-                ((GameObject*)obj)->anim.rotX = ((ExplosionState*)p)->rayPitchA;
+                ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)p)->rayYawA;
+                ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)p)->rayPitchA;
                 objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (f32)visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
@@ -757,7 +757,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void explosion_update(int obj)
 {
     ExplosionPartfxSource fake;
-    s16 ang[6];
+    u16 ang[6];
     f32 vpos[3];
     f32 m[12];
     u8 rgb[3];
@@ -797,10 +797,13 @@ void explosion_update(int obj)
                         &&
                         (((ExplosionDebris*)p)->unk20 -= framesThisStep, ((ExplosionDebris*)p)->unk20 <= 0))
                     {
-                        u8 c = ((ExplosionDebris*)p)->unk2D;
-                        f32 sp2 = ((ExplosionDebris*)p)->unk1C;
-                        int st2 = *(int*)&((GameObject*)obj)->extra;
+                        int st2;
+                        u8 c;
+                        f32 sp2;
                         f32 sv;
+                        c = ((ExplosionDebris*)p)->unk2D;
+                        sp2 = ((ExplosionDebris*)p)->unk1C;
+                        st2 = *(int*)&((GameObject*)obj)->extra;
                         vpos[0] = ((ExplosionDebris*)p)->unkC * (lbl_803E495C * (f32)(int)
                         randomGetRange(-5, 3) + lbl_803E492C
                         )
@@ -860,7 +863,7 @@ void explosion_update(int obj)
                 framesThisStep;
                 *(f32*)((char*)p + 0x96c) += *(f32*)((char*)p + 0x978) * (f32)(u32)
                 framesThisStep;
-                if (((ExplosionState*)state)->nearGround != 0 && *(f32*)((char*)p + 0x968) < ((ExplosionState*)state)->
+                if (*(u8*)&((ExplosionState*)state)->nearGround != 0 && *(f32*)((char*)p + 0x968) < ((ExplosionState*)state)->
                     groundY &&
                     *(f32*)((char*)p + 0x974) < lbl_803E4960)
                 {
@@ -877,54 +880,60 @@ void explosion_update(int obj)
                     int t = *(int*)((char*)p + 0x97c);
                     if (t < 0x40)
                     {
-                        ang[4] = t << 6;
-                        ang[0] = -1 - ang[4];
-                        ang[2] = -0x8000;
-                        ang[3] = -0x4000 - ang[4];
-                        ang[4] = -0x6000 - ang[4];
+                        int v = t << 6;
+                        ang[0] = 0xffff - v;
                         ang[1] = ang[0];
+                        ang[2] = 0x8000;
+                        ang[3] = 0xc000 - v;
+                        ang[4] = 0xa000 - v;
+                        ang[5] = 0;
                     }
                     else if (t < 0x80)
                     {
-                        ang[1] = t << 6;
-                        ang[0] = -0x4000 - ang[1];
-                        ang[1] = -0x6000 - ang[1];
+                        int v = t << 6;
+                        ang[0] = 0xc000 - v;
+                        ang[1] = 0xa000 - v;
                         ang[2] = 0;
-                        ang[3] = -0x8000;
+                        ang[3] = 0x8000;
                         ang[4] = 0;
+                        ang[5] = 0;
                     }
                     else
                     {
-                        ang[0] = -0x6000;
+                        ang[0] = 0xa000;
                         ang[1] = 0;
                         ang[2] = 0;
                         ang[3] = 0;
                         ang[4] = 0;
+                        ang[5] = 0;
                     }
                     {
-                        s16 sv = ang[2];
                         u8 md;
-                        ang[5] = 0;
                         md = ((ExplosionState*)state)->modelKind;
                         switch (md)
                         {
+                        case 0:
+                            break;
                         case 1:
                             ang[1] = ang[2];
-                            ang[4] = 0;
+                            ang[4] = ang[5];
                             break;
                         case 2:
                             ang[1] = ang[0];
                             ang[4] = ang[3];
                             ang[0] = ang[2];
-                            ang[3] = 0;
+                            ang[3] = ang[5];
                             break;
                         case 3:
-                            ang[1] = ang[2];
-                            ang[4] = 0;
+                        {
+                            u16 sv = ang[2];
+                            ang[1] = sv;
+                            ang[4] = ang[5];
                             ang[2] = ang[0];
                             ang[5] = ang[3];
                             ang[0] = sv;
                             ang[3] = 0;
+                        }
                             break;
                         }
                     }
@@ -937,15 +946,15 @@ void explosion_update(int obj)
     {
         int e = ((ExplosionState*)state)->frameCounter;
         int d = ((ExplosionState*)state)->lifeFrames;
-        if (d << 1 < e)
+        if (e > d << 1)
         {
             Obj_FreeObject(obj);
         }
         else
         {
-            if (d < e)
+            if (e > d)
             {
-                if (((ExplosionState*)state)->light != 0)
+                if (*(void**)&((ExplosionState*)state)->light != NULL)
                 {
                     modelLightStruct_setEnabled(((ExplosionState*)state)->light, 0, lbl_803E4960);
                 }
@@ -953,7 +962,7 @@ void explosion_update(int obj)
             else
             {
                 ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
-                if (((ExplosionState*)state)->light != 0)
+                if (*(void**)&((ExplosionState*)state)->light != NULL)
                 {
                     modelLightStruct_setDiffuseColor(((ExplosionState*)state)->light, rgb[0], rgb[1], rgb[2], 0xff);
                 }
@@ -961,15 +970,15 @@ void explosion_update(int obj)
             {
                 f32 frac = (f32)(int)((ExplosionState*)state)->frameCounter / (f32)(int)((ExplosionState*)state)->
                     lifeFrames;
-                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * ((ExplosionState*)state)->scale;
-                ((GameObject*)obj)->anim.alpha = (s8)(int) - (lbl_803E4938 * frac - lbl_803E4938);
+                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E49A4 * (frac * ((ExplosionState*)state)->scale);
+                ((GameObject*)obj)->anim.alpha = lbl_803E4938 - lbl_803E4938 * frac;
             }
-            if (((ExplosionState*)state)->halfLifeFired == 0 && (((ExplosionState*)state)->lifeFrames >> 1) <= ((
-                ExplosionState*)state)->frameCounter)
+            if (*(u8*)&((ExplosionState*)state)->halfLifeFired == 0 && ((ExplosionState*)state)->frameCounter >= (((
+                ExplosionState*)state)->lifeFrames >> 1))
             {
                 u32 k;
                 ang[0] = randomGetRange(0x1000, 0x6000);
-                ang[3] = *(s16*)((char*)state + 0x14);
+                ang[3] = *(int*)((char*)state + 0x14);
                 k = 0;
                 while ((f32)(int)k < ((ExplosionState*)state)->scale
                 )

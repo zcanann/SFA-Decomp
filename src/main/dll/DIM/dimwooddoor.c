@@ -163,11 +163,11 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
     f32 accelDenom;
     register int facingAngle;
     int angleDelta;
-    int turnStep;
-    s16 pitch;
-    s16 absPitch;
-    int turnSign;
     int pitchSign;
+    int turnSign;
+    s16 pitch;
+    int turnStep;
+    s16 absPitch;
 
     config = *(DIMWoodDoorConfig**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
