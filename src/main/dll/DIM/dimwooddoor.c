@@ -203,15 +203,8 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         if (turnStep != 0)
         {
             pitch = modelVec[1];
-            if (pitch < 0)
-            {
-                absPitch = -pitch;
-            }
-            else
-            {
-                absPitch = pitch;
-            }
-            if ((s32)lbl_803DBF02 - (s32)lbl_803DBF04 < (s32)absPitch)
+            absPitch = (pitch < 0) ? -pitch : pitch;
+            if ((s32)absPitch > (s32)lbl_803DBF02 - (s32)lbl_803DBF04)
             {
                 if (turnStep < 0)
                 {
