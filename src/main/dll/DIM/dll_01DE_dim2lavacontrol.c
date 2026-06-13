@@ -131,10 +131,9 @@ void dim2lavacontrol_setScale(void* obj)
     if (((s32)((Dim2lavacontrolState*)sub)->unk2 & 1) == 0)
     {
         void* p = *(void**)&((GameObject*)obj)->anim.placementData;
-        s8 cnt = ((Dim2lavacontrolState*)sub)->unk0;
-        if ((s32)cnt > 0)
+        if ((s32)((Dim2lavacontrolState*)sub)->unk0 > 0)
         {
-            ((Dim2lavacontrolState*)sub)->unk0 = cnt - 1;
+            ((Dim2lavacontrolState*)sub)->unk0 -= 1;
             if (((Dim2lavacontrolState*)sub)->unk0 == 0)
             {
                 ((Dim2lavacontrolState*)sub)->unk2 = (s8)(*(u8*)&((Dim2lavacontrolState*)sub)->unk2 | 1);
