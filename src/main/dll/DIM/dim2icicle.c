@@ -225,8 +225,8 @@ void fn_801BB598(int obj, DIMbossRuntime* runtime)
             ((IcicleFxPos*)&lbl_803AC97C)->y = (f32)(int)
             randomGetRange(-0x19, 0x19);
             ((IcicleFxPos*)&lbl_803AC97C)->z = lbl_803E4C34;
-            gDIMbossAnimScratchBase[0] = ((IcicleFxPos*)&lbl_803AC97C)->x / (lbl_803E4C34 * lbl_803E4C38);
-            gDIMbossAnimScratchBase[1] = ((IcicleFxPos*)&lbl_803AC97C)->y / (lbl_803E4C34 * lbl_803E4C38);
+            gDIMbossAnimScratchBase[0] = ((IcicleFxPos*)&lbl_803AC97C)->x / ((*(f32*)&lbl_803E4C34) * lbl_803E4C38);
+            gDIMbossAnimScratchBase[1] = ((IcicleFxPos*)&lbl_803AC97C)->y / ((*(f32*)&lbl_803E4C34) * lbl_803E4C38);
             gDIMbossAnimScratchBase[2] = lbl_803E4BCC;
             PSMTXMultVec(m, gDIMbossAnimScratchBase, gDIMbossAnimScratchBase);
             ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos*)&lbl_803AC97C)->x,
