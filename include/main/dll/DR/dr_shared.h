@@ -115,7 +115,6 @@ extern void modelLightStruct_setLightKind(void *light, int v);
 extern void modelLightStruct_setPosition(void *light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setAffectsAabbLightSelection(void *handle, int v);
 extern void buttonDisable(int index, u32 flags);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gHighTopStateHandlers[];
 extern void *gHighTopDefaultStateHandler;
 extern int hightop_stateHandler01();

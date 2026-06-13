@@ -691,7 +691,6 @@ extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gPlayerInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void* gSHthorntailAnimationInterface;
 extern Sky2Interface** gSky2Interface;
@@ -712,6 +711,8 @@ extern void* gBaddieControlInterface;
 extern void* gMinimapInterface;
 extern void* gCarryableInterface;
 extern void* gTitleMenuItemInterface;
+extern MapEventInterface **gMapEventInterface;
+extern void *lbl_803DCAC0;
 extern u8 lbl_803DCA3F;
 
 #pragma dont_inline on

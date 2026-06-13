@@ -31,9 +31,21 @@ extern f32 lbl_803E2518;
 extern f32 lbl_803E251C;
 extern f32 lbl_803E2524;
 
-extern void trickyDebugPrint(const char* fmt, ...);
-extern void getYButtonItem(s16 * out);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
+/*
+ * --INFO--
+ *
+ * Function: trickyDigTunnel
+ * EN v1.0 Address: 0x80141880
+ * EN v1.0 Size: 1900b
+ * EN v1.1 Address: 0x80141C08
+ * EN v1.1 Size: 1900b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void trickyDebugPrint(const char *fmt, ...);
+extern void getYButtonItem(s16 *out);
 extern void buttonDisable(int a, int b);
 extern void fn_8002B6D8(u8* obj, int a, int b, int c, int d, int e);
 extern char sInWaterMessage[];

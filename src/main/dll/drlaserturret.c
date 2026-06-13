@@ -25,7 +25,6 @@ extern float mathSinf(double);
 extern int playerGetMoney(void* playerObj);
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern u8 framesThisStep;

@@ -251,7 +251,6 @@ extern u32 randomGetRange(int min, int max);
 extern void fn_801F4D54(int obj, int state);
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **gMapEventInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EB4;

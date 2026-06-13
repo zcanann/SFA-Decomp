@@ -21,6 +21,8 @@
  * this DLL live in the adjacent unit main/light.c (next .text range).
  */
 
+extern MapEventInterface **gMapEventInterface;
+extern undefined4 DAT_803de940;
 extern f64 DOUBLE_803e6d90;
 extern f32 lbl_803E6100;
 extern f32 lbl_803E6144;

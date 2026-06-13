@@ -613,7 +613,6 @@ extern f32 lbl_803DAF88[];
 extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
 extern int *gPlayerInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 lbl_803E7F08;
 extern f32 lbl_803E7FD8;
 extern f32 lbl_803E801C;

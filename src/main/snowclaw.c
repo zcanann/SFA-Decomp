@@ -80,7 +80,6 @@ extern void* loadObjectAtObject(int obj, int spawn);
 extern f32 lbl_803E66E0;
 extern void ObjLink_DetachChild(int obj, int* child);
 extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 mathSinf(f32 a);
 extern f32 mathCosf(f32 a);
 extern u32 lbl_8032A350[8];

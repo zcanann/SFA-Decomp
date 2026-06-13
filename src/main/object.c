@@ -78,7 +78,6 @@ extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern void Obj_InitObjectSystem(void);
 extern int getDataFileSize(int id);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void* gTitleMenuControlInterface;
 extern void* gModgfxInterface;
 extern WaterfxInterface** gWaterfxInterface;

@@ -78,7 +78,6 @@ extern f32 lbl_803E27D0;
 extern int playerGetMoney(u8 * player);
 extern void playerAddMoney(u8* player, int amount);
 extern void hudFn_8011f38c(int a);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u16 lbl_803DBCA0[4];
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);

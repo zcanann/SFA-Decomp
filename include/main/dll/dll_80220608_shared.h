@@ -59,7 +59,6 @@ extern f32 lbl_803E6E24;
 extern f32 timeDelta;
 extern MapEventInterface **gMapEventInterface;
 extern EffectInterface **gPartfxInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int isGameTimerDisabled(void);
 extern int randomGetRange(int min, int max);
 extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
