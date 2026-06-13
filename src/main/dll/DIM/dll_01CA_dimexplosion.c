@@ -505,6 +505,8 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out);
 typedef void (*Fn801B40B8IntFirst)(u8 mode, u8* out, f32 a, f32 b);
+typedef void (*Fn801B3DE4SpdFirst)(int obj, f32 spd, int b, f32 x, f32 y, f32 z);
+typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 #pragma peephole off
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
@@ -1006,8 +1008,8 @@ void explosion_init(int obj, int p2)
             scale = lbl_803E49A8;
         }
     }
-    fn_801B3DE4(obj, 0, lbl_803E49AC * scale, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                ((GameObject*)obj)->anim.localPosZ);
+    ((Fn801B3DE4SpdFirst)fn_801B3DE4)(obj, lbl_803E49AC * scale, 0, ((GameObject*)obj)->anim.localPosX,
+                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((ExplosionState*)state)->modelKind = *(s16*)((char*)p2 + 0x1c) & 3;
     Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
@@ -1020,9 +1022,9 @@ void explosion_init(int obj, int p2)
         ((ExplosionState*)state)->driftYSpeed = lbl_803E4960;
     }
     *(u8*)&((ExplosionState*)state)->nearGround = 0;
-    if (hitDetectFn_800658a4(obj, state + 0x960, 0, ((GameObject*)obj)->anim.localPosX,
+    if (((HitDetectFloatsFirst)hitDetectFn_800658a4)(obj, ((GameObject*)obj)->anim.localPosX,
                              lbl_803E49B0 + ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ) == 0)
+                             ((GameObject*)obj)->anim.localPosZ, state + 0x960, 0) == 0)
     {
         if (((ExplosionState*)state)->groundY < lbl_803E49B4)
         {
