@@ -642,19 +642,19 @@ void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out)
 #pragma dont_inline reset
 void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
+    u32 colA;
+    u32 colB;
     u32 colB2;
     u32 colA2;
-    u32 colB;
-    u32 colA;
-    f32 m1[12];
-    f32 m2[12];
-    f32 m3[12];
-    f32 m4[12];
     f32 mE[12];
+    f32 m4[12];
+    f32 m3[12];
+    f32 m2[12];
+    f32 m1[12];
     int state;
     int model;
-    int p;
     int i;
+    int p;
     colA = lbl_803E4928;
     colB = lbl_803E8468;
     state = *(int*)&((GameObject*)obj)->extra;
@@ -665,8 +665,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXSetVtxDesc(9, 1);
         GXSetVtxDesc(0xd, 1);
         GXSetCurrentMtx(0);
-        p = state;
-        for (i = 0; i < ((ExplosionState*)state)->flameCount; i++)
+        for (i = 0, p = state; i < ((ExplosionState*)state)->flameCount; i++)
         {
             if (*(u8*)&((ExplosionDebris*)p)->unk2F != 0)
             {
@@ -689,11 +688,14 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
-                colA = (colA & 0xffffff00) | ((ExplosionDebris*)p)->unk2E;
+                ((u8*)&colA)[3] = ((ExplosionDebris*)p)->unk2E;
                 cv = (int)(lbl_803DDB68 * (lbl_803E4938 * expf(
                     (lbl_803E4958 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) /
                     (f32)(int)((ExplosionDebris*)p)->unk14)));
-                colB = (cv & 0xff) | ((u8)cv << 8) | ((u8)cv << 16) | ((u8)cv << 24);
+                ((u8*)&colB)[0] = cv;
+                ((u8*)&colB)[1] = cv;
+                ((u8*)&colB)[2] = cv;
+                ((u8*)&colB)[3] = cv;
                 ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, (u8*)&colA,
                                                   (f32)(int)((ExplosionDebris*)p)->unk10,
                                                   (f32)(int)((ExplosionDebris*)p)->unk14);
@@ -737,8 +739,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(u8*)&((ExplosionState*)
             state)->rayMode != 0)
         {
-            p = state;
-            for (i = 0; i < ((ExplosionState*)state)->rayMode; i++)
+            for (i = 0, p = state; i < ((ExplosionState*)state)->rayMode; i++)
             {
                 ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)p)->rayYawA;
                 ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)p)->rayPitchA;
