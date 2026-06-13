@@ -1,5 +1,6 @@
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
+#include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
@@ -8,7 +9,6 @@
 extern CameraModeClimbState* lbl_803DD578;
 
 extern uint getAngle(f32 dx, f32 dz);
-extern void camcontrol_traceMove(f32* from, void* to, f32* out, void* work, int a, int b, int c, f32 radius);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern u8 framesThisStep;
@@ -106,7 +106,7 @@ void CameraModeClimb_update(short* camObj)
     *(f32*)(camObj + 0xc) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[0];
     trigValue = mathCosf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
     *(f32*)(camObj + 0x10) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[2];
-    camcontrol_traceMove(traceFrom, camObj + 0xc, traceOut, auStack176, 3, 1, 1, lbl_803E19B4);
+    camcontrol_traceMove(traceFrom, (f32*)(camObj + 0xc), traceOut, auStack176, 3, 1, 1, lbl_803E19B4);
     *(f32*)(camObj + 0xc) = traceOut[0];
     *(f32*)(camObj + 0xe) = traceOut[1];
     *(f32*)(camObj + 0x10) = traceOut[2];

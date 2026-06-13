@@ -1,6 +1,7 @@
 /* DLL 0x0042 — attention / camera-control objects [801046F4-801049B0) */
 #include "main/dll/CAM/attention.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"
 #include "main/dll/CAM/camslide.h"
 #include "main/camera_interface.h"
@@ -53,8 +54,6 @@ extern f32 lbl_803E1700;
 extern f32 lbl_803E1704;
 extern f32 lbl_803E1708;
 extern f32 lbl_803E170C;
-extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
-                                 int b, int c);
 extern void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target);
 extern void camMoveFn_80104040(CameraObject* camera, GameObject* target);
 extern void camcontrol_updateModeSettings(int camera);
@@ -825,8 +824,8 @@ void camstatic_update(CameraObject* camera)
                 aimY2 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
                 aimZ2 = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(lbl_803E1688, &aimX2, &camera->anim.worldPosX,
-                                 &camera->anim.worldPosX, auStack_ac, 3, 1, 1);
+            camcontrol_traceMove(&aimX2, &camera->anim.worldPosX,
+                                 &camera->anim.worldPosX, auStack_ac, 3, 1, 1, lbl_803E1688);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -855,8 +854,8 @@ void camstatic_update(CameraObject* camera)
                 aimY = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
                 aimZ = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(lbl_803E1688, &aimX, &camera->anim.worldPosX,
-                                 &camera->anim.worldPosX, auStack_11c, 3, 1, 1);
+            camcontrol_traceMove(&aimX, &camera->anim.worldPosX,
+                                 &camera->anim.worldPosX, auStack_11c, 3, 1, 1, lbl_803E1688);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;

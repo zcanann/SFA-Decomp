@@ -10,6 +10,7 @@
 #include "main/dll/CAM/camera_mode_54_state.h"
 #include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
+#include "main/dll/CAM/cutCam.h"
 #include "main/dll/CAM/camcrawl_state.h"
 #include "main/dll/CAM/camera_mode_cannon_state.h"
 #include "main/dll/CAM/camperv_state.h"
@@ -44,7 +45,6 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern uint Obj_GetYawDeltaToObject();
-extern int camcontrol_traceMove(void* a, void* b, void* c, void* d, int e, int f, int g, f32 h);
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();

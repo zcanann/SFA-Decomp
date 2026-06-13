@@ -1,6 +1,7 @@
 /* DLL 0x0049 (cameramodecombat) — Camera mode combat handlers [0x8010BF08-0x8010CEC0). */
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcombat_state.h"
+#include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
 #include "main/dll/CAM/camdrakor.h"
 #include "main/camera_object.h"
@@ -18,8 +19,6 @@ extern f32 lbl_803E18C8;
 extern f32 timeDelta;
 extern void Rcp_DisableBlurFilter(void);
 extern void* FUN_800069a8();
-extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
-                                 int b, int c);
 extern undefined4 Camera_GetCurrentViewSlot();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
@@ -399,8 +398,8 @@ void CameraModeCombat_update(short* cam)
                             }
                             PSVECScale(vec, vec, speed);
                             PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
-                            camcontrol_traceMove(lbl_803E18CC, &prevX, (f32*)((char*)cam + 0x18),
-                                                 (f32*)((char*)cam + 0x18), trace, 3, 1, 1);
+                            camcontrol_traceMove(&prevX, (f32*)((char*)cam + 0x18),
+                                                 (f32*)((char*)cam + 0x18), trace, 3, 1, 1, lbl_803E18CC);
                             fb = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + focus->anim.worldPosX);
                             dy = *(f32*)(view + 0x10) - py;
                             fa = *(f32*)(view + 0x14) - (lbl_803E18F8 * dz + focus->anim.worldPosZ);
