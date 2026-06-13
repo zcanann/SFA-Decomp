@@ -605,10 +605,10 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {
-    int model = (int)Obj_GetActiveModel((int)obj);
-    int mdl = *(int*)model;
     int i;
     int cnt;
+    int model = (int)Obj_GetActiveModel((int)obj);
+    int mdl = *(int*)model;
     f32 waveScale = lbl_803E4A00;
     for (i = 0; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
     {
