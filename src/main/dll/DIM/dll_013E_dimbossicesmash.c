@@ -350,9 +350,9 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX = (f32) * (s16*)(setup + 0x20) / (spd = lbl_803E4030);
-        ((GameObject*)obj)->anim.velocityY = (f32) * (s16*)(setup + 0x22) / spd;
-        ((GameObject*)obj)->anim.velocityZ = (f32) * (s16*)(setup + 0x24) / spd;
+        ((GameObject*)obj)->anim.velocityX = (f32) * (s16*)(setup + 0x20) / 100.0f;
+        ((GameObject*)obj)->anim.velocityY = (f32) * (s16*)(setup + 0x22) / 100.0f;
+        ((GameObject*)obj)->anim.velocityZ = (f32) * (s16*)(setup + 0x24) / 100.0f;
     }
     ((DimBossIceSmashState*)state)->unk278 = (f32) * (s16*)(setup + 0x2c);
     ((DimBossIceSmashState*)state)->unk27C = (f32) * (s16*)(setup + 0x2e);
@@ -377,12 +377,12 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
     {
         state[0x29f] = state[0x29f] | 0x10;
     }
-    ((DimBossIceSmashState*)state)->unk284 = (f32) * (s16*)(setup + 0x32) / (spd = lbl_803E4038);
-    ((DimBossIceSmashState*)state)->unk288 = (f32) * (s16*)(setup + 0x34) / spd;
-    ((DimBossIceSmashState*)state)->unk28C = (f32) * (s16*)(setup + 0x36) / spd;
-    ((DimBossIceSmashState*)state)->unk290 = (f32) * (s16*)(setup + 0x26) / (spd = lbl_803E403C);
-    ((DimBossIceSmashState*)state)->unk294 = (f32) * (s16*)(setup + 0x28) / spd;
-    ((DimBossIceSmashState*)state)->unk298 = (f32) * (s16*)(setup + 0x2a) / spd;
+    ((DimBossIceSmashState*)state)->unk284 = (f32) * (s16*)(setup + 0x32) / 10.0f;
+    ((DimBossIceSmashState*)state)->unk288 = (f32) * (s16*)(setup + 0x34) / 10.0f;
+    ((DimBossIceSmashState*)state)->unk28C = (f32) * (s16*)(setup + 0x36) / 10.0f;
+    ((DimBossIceSmashState*)state)->unk290 = (f32) * (s16*)(setup + 0x26) / 1000.0f;
+    ((DimBossIceSmashState*)state)->unk294 = (f32) * (s16*)(setup + 0x28) / 1000.0f;
+    ((DimBossIceSmashState*)state)->unk298 = (f32) * (s16*)(setup + 0x2a) / 1000.0f;
     ((DimBossIceSmashState*)state)->unk29C = 0;
 }
 
