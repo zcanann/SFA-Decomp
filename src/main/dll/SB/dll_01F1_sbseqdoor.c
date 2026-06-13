@@ -72,7 +72,7 @@ void SB_SeqDoor_initialise(void)
 int SB_SeqDoor_getExtraSize(void) { return 0x0; }
 int SB_SeqDoor_getObjectTypeId(void) { return 0x0; }
 
-int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -82,9 +82,9 @@ void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    if (((GameObject*)obj)->anim.seqId != SB_SEQDOOR_SEQ_ID)
+    if (obj->anim.seqId != SB_SEQDOOR_SEQ_ID)
     {
         animUpdate->hitVolumePair = -2;
     }
@@ -92,30 +92,28 @@ int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void SB_SeqDoor_init(int* obj, int* def)
+void SB_SeqDoor_init(GameObject* obj, SBSeqDoorPlacement* placement)
 {
-    SBSeqDoorPlacement* placement = (SBSeqDoorPlacement*)def;
-
-    ((GameObject*)obj)->animEventCallback = (void*)SB_SeqDoor_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)placement->rotXByte << 8);
+    obj->animEventCallback = (void*)SB_SeqDoor_SeqFn;
+    obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
     {
         s8 bankSelect = placement->bankSelect;
-        ((GameObject*)obj)->anim.bankIndex = (s8)(((u32)-bankSelect | (u32)bankSelect) >> 31);
+        obj->anim.bankIndex = (s8)(((u32)-bankSelect | (u32)bankSelect) >> 31);
     }
 }
 
-void SB_SeqDoor_update(int* obj)
+void SB_SeqDoor_update(GameObject* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == SB_SEQDOOR_SEQ_ID)
+    if (obj->anim.seqId == SB_SEQDOOR_SEQ_ID)
     {
-        if (((GameObject*)obj)->unkF4 == 0)
+        if (obj->unkF4 == 0)
         {
             if ((u32)GameBit_Get(SB_SEQDOOR_ARM_GAMEBIT) != 0u)
             {
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                ((GameObject*)obj)->unkF4 = 1;
+                obj->unkF4 = 1;
             }
         }
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= SB_SEQDOOR_HITBOX_RESET_BIT;
+    obj->anim.resetHitboxFlags |= SB_SEQDOOR_HITBOX_RESET_BIT;
 }

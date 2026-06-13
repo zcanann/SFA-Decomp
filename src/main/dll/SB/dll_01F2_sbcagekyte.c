@@ -64,23 +64,23 @@ void SB_CageKyte_initialise(void)
 int SB_CageKyte_getExtraSize(void) { return 0x2; }
 int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
 
-int SB_CageKyte_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int v = ((GameObject*)obj)->unkF4;
+    int v = obj->unkF4;
     if (v > 0)
     {
-        ((GameObject*)obj)->unkF4 = v - 1;
+        obj->unkF4 = v - 1;
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= SB_CAGEKYTE_HITBOX_RESET_BIT;
+    obj->anim.resetHitboxFlags |= SB_CAGEKYTE_HITBOX_RESET_BIT;
     animUpdate->hitVolumePair = -2;
     animUpdate->sequenceEventActive = 0;
     return 0;
 }
 
-void SB_CageKyte_init(int p)
+void SB_CageKyte_init(GameObject* p)
 {
-    ((GameObject*)p)->animEventCallback = (void*)SB_CageKyte_SeqFn;
-    ((GameObject*)p)->objectFlags = (u16)((u32)((GameObject*)p)->objectFlags | 0x6000u);
+    p->animEventCallback = (void*)SB_CageKyte_SeqFn;
+    p->objectFlags = (u16)((u32)p->objectFlags | 0x6000u);
 }
 
 void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -91,24 +91,24 @@ void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void SB_CageKyte_update(int obj)
+void SB_CageKyte_update(GameObject* obj)
 {
     extern f32 Vec_distance(void* a, void* b);
-    extern void* Obj_GetPlayerObject(void);
+    extern GameObject* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     s16* timer;
-    int player;
+    GameObject* player;
 
-    timer = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->unkF4 > 0)
+    timer = obj->extra;
+    if (obj->unkF4 > 0)
     {
-        ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - 1;
+        obj->unkF4 = obj->unkF4 - 1;
     }
 
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= SB_CAGEKYTE_HITBOX_RESET_BIT;
+    obj->anim.resetHitboxFlags |= SB_CAGEKYTE_HITBOX_RESET_BIT;
     *timer -= framesThisStep;
-    player = (int)Obj_GetPlayerObject();
-    Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+    player = Obj_GetPlayerObject();
+    Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX);
 
     if (*timer <= 0)
     {

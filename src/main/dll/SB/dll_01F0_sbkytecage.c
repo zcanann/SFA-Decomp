@@ -108,13 +108,13 @@ enum
     SB_KYTECAGE_SEQEV_LATCH_2 = 2
 };
 
-int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
-    int state;
+    SBKyteCageState* state;
     int i;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = obj->extra;
     i = 0;
     while (i < animUpdate->eventCount)
     {
@@ -123,20 +123,20 @@ int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         seqCode = animUpdate->eventIds[i];
         if (seqCode == SB_KYTECAGE_SEQEV_LATCH_1)
         {
-            *(u8*)(state + 4) = 1;
+            state->seqLatch = 1;
         }
         else if (seqCode == SB_KYTECAGE_SEQEV_LATCH_2)
         {
-            *(u8*)(state + 4) = 2;
+            state->seqLatch = 2;
         }
         i++;
     }
 
     animUpdate->hitVolumePair = -4;
-    if (((GameObject*)obj)->seqIndex != -1)
+    if (obj->seqIndex != -1)
     {
         animUpdate->hitVolumePair &= ~4;
-        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5918,
+        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5918,
                                                                          timeDelta, NULL) != 0)
         {
             Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep2);
@@ -148,21 +148,21 @@ int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 /* detach the attached Kyte child on free */
-void SB_KyteCage_free(int* obj)
+void SB_KyteCage_free(GameObject* obj)
 {
-    void* child = ((SBKyteCageState*)((GameObject*)obj)->extra)->kyte;
+    void* child = ((SBKyteCageState*)obj->extra)->kyte;
     if (child != NULL)
     {
         ObjLink_DetachChild(obj, child);
     }
 }
 
-void SB_KyteCage_init(int* obj, int* params)
+void SB_KyteCage_init(GameObject* obj, int* params)
 {
-    SBKyteCageState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)SB_KyteCage_SeqFn;
-    *(s16*)obj = (s16)((s8) * (s8*)&((ObjHitsPriorityState*)params)->localPosZ << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SB_KYTECAGE_INIT_FLAGS);
+    SBKyteCageState* state = obj->extra;
+    obj->animEventCallback = (void*)SB_KyteCage_SeqFn;
+    obj->anim.rotX = (s16)((s8) * (s8*)&((ObjHitsPriorityState*)params)->localPosZ << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | SB_KYTECAGE_INIT_FLAGS);
     state->seqLatch = 0;
     if ((u32)GameBit_Get(GAMEBIT_KYTE_CAGED) == 0u)
     {
@@ -177,8 +177,8 @@ void SB_KyteCage_update(int obj)
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     extern uint GameBit_Get(int);
     SBKyteCageState* state = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~SB_KYTECAGE_HIT_CLEAR);
+    ((GameObject*)obj)->anim.resetHitboxFlags =
+        (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~SB_KYTECAGE_HIT_CLEAR);
     if (state->kyte == NULL)
     {
         int* head;
@@ -188,15 +188,15 @@ void SB_KyteCage_update(int obj)
         for (i = 0; i < count; i++)
         {
             int child = head[i];
-            if (*(s16*)(child + 0x46) == SB_KYTE_OBJECT_TYPE)
+            if (((GameObject*)child)->anim.seqId == SB_KYTE_OBJECT_TYPE)
             {
-                *(int*)&state->kyte = child;
-                ObjLink_AttachChild(obj, *(int*)&state->kyte, 1);
+                state->kyte = (void*)child;
+                ObjLink_AttachChild(obj, state->kyte, 1);
                 i = count;
             }
         }
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & SB_KYTECAGE_HIT_OPEN) != 0)
+    if ((((GameObject*)obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_OPEN) != 0)
     {
         if (GameBit_Get(GAMEBIT_KYTE_OPENED) == 0)
         {
@@ -207,7 +207,7 @@ void SB_KyteCage_update(int obj)
             return;
         }
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & SB_KYTECAGE_HIT_RELEASE) != 0)
+    if ((((GameObject*)obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_RELEASE) != 0)
     {
         buttonDisable(0, 0x100);
         (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);

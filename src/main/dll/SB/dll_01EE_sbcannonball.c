@@ -75,9 +75,9 @@ void SB_ShipGun_init(int obj);
 int SB_CannonBall_getExtraSize(void) { return SB_CANNONBALL_EXTRA_SIZE; }
 int SB_CannonBall_getObjectTypeId(void) { return 0x0; }
 
-void SB_CannonBall_free(int obj)
+void SB_CannonBall_free(GameObject* obj)
 {
-    SBCannonBallState* state = ((GameObject*)obj)->extra;
+    SBCannonBallState* state = obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if (state->modelLight != NULL)
     {
@@ -96,9 +96,9 @@ void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void SB_CannonBall_update(int* obj)
+void SB_CannonBall_update(GameObject* obj)
 {
-    SBCannonBallState* state = ((GameObject*)obj)->extra;
+    SBCannonBallState* state = obj->extra;
     if ((state->flags & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
@@ -112,24 +112,24 @@ void SB_CannonBall_update(int* obj)
     }
     else
     {
-        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
+        objfx_spawnFlaggedTrailBurst((int*)obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
                                      SB_CANNONBALL_SETUP_PARAM, 0);
-        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
+        objfx_spawnFlaggedTrailBurst((int*)obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
                                      SB_CANNONBALL_SETUP_PARAM, 0);
     }
     (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID,
                                      NULL, 1, -1, NULL);
-    ((GameObject*)obj)->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
+    obj->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
     if ((state->flags & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0)
     {
-        state->velocityX = ((GameObject*)obj)->anim.velocityX;
-        state->velocityY = ((GameObject*)obj)->anim.velocityY;
-        state->velocityZ = ((GameObject*)obj)->anim.velocityZ;
+        state->velocityX = obj->anim.velocityX;
+        state->velocityY = obj->anim.velocityY;
+        state->velocityZ = obj->anim.velocityZ;
         state->flags = (s8)(
             state->flags | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
-        state->posX = ((GameObject*)obj)->anim.localPosX;
-        state->posY = ((GameObject*)obj)->anim.localPosY;
-        state->posZ = ((GameObject*)obj)->anim.localPosZ;
+        state->posX = obj->anim.localPosX;
+        state->posY = obj->anim.localPosY;
+        state->posZ = obj->anim.localPosZ;
     }
     {
         f64 scale = lbl_803E58C0;
@@ -140,34 +140,34 @@ void SB_CannonBall_update(int* obj)
         state->posZ = (f32)(
             scale * (f64)(state->velocityZ * timeDelta) + (f64)state->posZ);
     }
-    ((GameObject*)obj)->anim.localPosX = state->posX;
-    ((GameObject*)obj)->anim.localPosY = state->posY;
-    ((GameObject*)obj)->anim.localPosZ = state->posZ;
-    ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - (int)framesThisStep;
-    if (((GameObject*)obj)->unkF4 < 0)
+    obj->anim.localPosX = state->posX;
+    obj->anim.localPosY = state->posY;
+    obj->anim.localPosZ = state->posZ;
+    obj->unkF4 = obj->unkF4 - (int)framesThisStep;
+    if (obj->unkF4 < 0)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((int*)obj);
     }
     if (state->lifetimeFrames > SB_CANNONBALL_HITBOX_ENABLE_DELAY)
     {
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority =
             SB_CANNONBALL_HITBOX_TYPE;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
     else
     {
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
     state->lifetimeFrames += framesThisStep;
 }
 
-void SB_CannonBall_hitDetect(int* obj)
+void SB_CannonBall_hitDetect(GameObject* obj)
 {
     extern int Sfx_PlayFromObject();
-    SBCannonBallState* state = ((GameObject*)obj)->extra;
+    SBCannonBallState* state = obj->extra;
     f32 t = state->impactCooldown;
     f32 zero = lbl_803E58B4;
 
@@ -176,17 +176,17 @@ void SB_CannonBall_hitDetect(int* obj)
         state->impactCooldown = t - timeDelta;
         if (state->impactCooldown <= zero)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int*)obj);
         }
         return;
     }
 
     {
-        ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         int* target = *(int**)&hitState->lastHitObject;
         s16 type;
         if (target == NULL) return;
-        type = *(s16*)((char*)target + 0x46);
+        type = ((GameObject*)target)->anim.seqId;
         if (type == SB_CLOUDBALL_ALIAS_OBJECT_TYPE) return;
         if (type == SB_CANNONBALL_ALIAS_OBJECT_TYPE) return;
     }
@@ -195,11 +195,11 @@ void SB_CannonBall_hitDetect(int* obj)
 
     Sfx_PlayFromObject(obj, SB_CANNONBALL_IMPACT_SFX);
     {
-        ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         hitState->flags = (s16)(hitState->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     state->impactCooldown = lbl_803E58B8;
-    ((GameObject*)obj)->anim.alpha = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
+    obj->anim.alpha = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
 
     {
         int i;
@@ -219,13 +219,13 @@ void SB_CannonBall_hitDetect(int* obj)
     }
 }
 
-void SB_CannonBall_init(int* obj)
+void SB_CannonBall_init(GameObject* obj)
 {
     extern int Sfx_PlayFromObject();
-    SBCannonBallState* state = ((GameObject*)obj)->extra;
+    SBCannonBallState* state = obj->extra;
     if (state->modelLight == NULL)
     {
-        state->modelLight = objCreateLight(obj, SB_CANNONBALL_LIGHT_KIND);
+        state->modelLight = objCreateLight((int*)obj, SB_CANNONBALL_LIGHT_KIND);
         if (state->modelLight != NULL)
         {
             modelLightStruct_setLightKind(state->modelLight, SB_CANNONBALL_LIGHT_FIELD50);
@@ -238,10 +238,10 @@ void SB_CannonBall_init(int* obj)
         }
     }
     {
-        ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         hitState->flags = (s16)(hitState->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E58D0;
+    obj->anim.rootMotionScale = obj->anim.rootMotionScale * lbl_803E58D0;
     state->flags = (s8)(state->flags | SB_CANNONBALL_INITIAL_BURST_FLAG);
     Sfx_PlayFromObject(obj, SB_CANNONBALL_LAUNCH_SFX);
     Sfx_PlayFromObject(obj, SB_CANNONBALL_LOOP_SFX);

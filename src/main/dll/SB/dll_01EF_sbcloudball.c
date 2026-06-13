@@ -121,10 +121,10 @@ void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
 
-void SB_CloudBall_free(int* obj)
+void SB_CloudBall_free(GameObject* obj)
 {
     extern void ModelLightStruct_free(int* p);
-    SBCloudBallState* state = ((GameObject*)obj)->extra;
+    SBCloudBallState* state = obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     {
         int* child = (int*)state->light;
@@ -136,42 +136,42 @@ void SB_CloudBall_free(int* obj)
     }
 }
 
-void SB_CloudBall_hitDetect(int* obj)
+void SB_CloudBall_hitDetect(GameObject* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
-    SBCloudBallState* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    SBCloudBallState* state = obj->extra;
+    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
     int* target = *(int**)&hits->lastHitObject;
 
     if ((void*)target == NULL) return;
     if (state->fadeTimer != lbl_803E58EC) return;
     if (((GameObject*)target)->anim.seqId == CLOUDBALL_TARGET_TYPE_ID)
     {
-        Sfx_PlayFromObject(obj, SFXen_rockshat16);
+        Sfx_PlayFromObject((int*)obj, SFXen_rockshat16);
     }
-    hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hits->flags = (s16)(hits->flags & ~1);
     state->fadeTimer = lbl_803E58F0;
-    ((GameObject*)obj)->anim.alpha = 0;
-    projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
+    obj->anim.alpha = 0;
+    projectileParticleFxFn_80099660((int*)obj, lbl_803E58E8, 2);
 }
 
-void SB_CloudBall_init(int* obj)
+void SB_CloudBall_init(GameObject* obj)
 {
     extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
     extern void lightSetFieldBC_8001db14(int light, int v);
     extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
     extern void modelLightStruct_setLightKind(int light, int v);
     extern int objCreateLight(int* obj, int mode);
-    SBCloudBallState* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    SBCloudBallState* state = obj->extra;
+    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
 
     hits->flags = (s16)(hits->flags & ~1);
-    hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hits->trackContactMask = (u16)(hits->trackContactMask | 1);
     if ((void*)state->light == NULL)
     {
-        state->light = objCreateLight(obj, 1);
+        state->light = objCreateLight((int*)obj, 1);
         if ((void*)state->light != NULL)
         {
             modelLightStruct_setLightKind(state->light, 2);
@@ -182,12 +182,12 @@ void SB_CloudBall_init(int* obj)
     }
 }
 
-void SB_CloudBall_update(int obj)
+void SB_CloudBall_update(GameObject* obj)
 {
     extern void Obj_FreeObject(int obj);
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     extern void* Obj_GetPlayerObject(void);
-    SBCloudBallState* state = ((GameObject*)obj)->extra;
+    SBCloudBallState* state = obj->extra;
     void* player = Obj_GetPlayerObject();
     f32 timer = state->fadeTimer;
     f32 zero = lbl_803E58EC;
@@ -197,57 +197,57 @@ void SB_CloudBall_update(int obj)
         if (state->fadeTimer <= zero)
         {
             state->fadeTimer = zero;
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
         }
     }
     else
     {
         f32 particleVelocity[3];
         f32 velocityScale;
-        ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E58F8 * (f32)(int)
+        obj->anim.previousLocalPosX = obj->anim.localPosX;
+        obj->anim.previousLocalPosY = obj->anim.localPosY;
+        obj->anim.previousLocalPosZ = obj->anim.localPosZ;
+        obj->anim.rootMotionScale = lbl_803E58F8 * (f32)(int)
         randomGetRange(-0x64, 0x64) + lbl_803E58F4;
         if (*(s8*)&state->launched == 0)
         {
-            state->velX = ((GameObject*)obj)->anim.velocityX;
-            state->velY = ((GameObject*)obj)->anim.velocityY;
-            state->velZ = ((GameObject*)obj)->anim.velocityZ;
+            state->velX = obj->anim.velocityX;
+            state->velY = obj->anim.velocityY;
+            state->velZ = obj->anim.velocityZ;
             state->launched = 1;
-            state->posX = ((GameObject*)obj)->anim.localPosX;
-            state->posY = ((GameObject*)obj)->anim.localPosY;
-            state->posZ = ((GameObject*)obj)->anim.localPosZ;
+            state->posX = obj->anim.localPosX;
+            state->posY = obj->anim.localPosY;
+            state->posZ = obj->anim.localPosZ;
         }
         velocityScale = lbl_803E58FC;
         state->posX = velocityScale * (state->velX * timeDelta) + state->posX;
         state->posY = velocityScale * (state->velY * timeDelta) + state->posY;
         state->posZ = velocityScale * (state->velZ * timeDelta) + state->posZ;
-        ((GameObject*)obj)->anim.localPosX = state->posX;
-        ((GameObject*)obj)->anim.localPosY = state->posY;
-        ((GameObject*)obj)->anim.localPosZ = state->posZ;
-        ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
-        if (((GameObject*)obj)->unkF4 < 0 || (player != NULL && (((GameObject*)player)->objectFlags & 0x1000) != 0))
+        obj->anim.localPosX = state->posX;
+        obj->anim.localPosY = state->posY;
+        obj->anim.localPosZ = state->posZ;
+        obj->unkF4 = obj->unkF4 - framesThisStep;
+        if (obj->unkF4 < 0 || (player != NULL && (((GameObject*)player)->objectFlags & 0x1000) != 0))
         {
             if (state->fadeTimer == lbl_803E58EC)
             {
-                ((GameObject*)obj)->anim.alpha = 0;
+                obj->anim.alpha = 0;
                 state->fadeTimer = lbl_803E58F0;
             }
         }
-        ((GameObject*)obj)->anim.rotX = (s16)getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                                   ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 5;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0x10;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = 0x10;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && state->fadeTimer ==
+        obj->anim.rotX = (s16)getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
+                                   obj->anim.localPosZ - obj->anim.previousLocalPosZ);
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 5;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask = 0x10;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask = 0x10;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= 1;
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0 && state->fadeTimer ==
             lbl_803E58EC)
         {
             projectileParticleFxFn_80099660((int*)obj, lbl_803E58E8, 2);
             state->fadeTimer = lbl_803E58F0;
-            ((GameObject*)obj)->anim.alpha = 0;
+            obj->anim.alpha = 0;
         }
         particleVelocity[0] = lbl_803E5900 * -state->velX;
         particleVelocity[1] = lbl_803E5900 * -state->velY;
@@ -259,7 +259,7 @@ void SB_CloudBall_update(int obj)
     }
 }
 
-void SB_FireBall_init(int p);
+void SB_FireBall_init(GameObject* obj);
 
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */

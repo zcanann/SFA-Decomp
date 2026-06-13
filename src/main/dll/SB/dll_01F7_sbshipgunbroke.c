@@ -64,20 +64,20 @@ void SB_ShipGunBroke_initialise(void)
 int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
 int SB_ShipGunBroke_getObjectTypeId(void) { return 0x0; }
 
-void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
+void SB_ShipGunBroke_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)((GameObject*)obj)->anim.placementData;
+    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
     if ((u32)GameBit_Get(placement->destroyedGameBit) != 0u)
     {
-        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
+        ((void(*)(GameObject*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
     }
 }
 
-void SB_ShipGunBroke_update(int* obj)
+void SB_ShipGunBroke_update(GameObject* obj)
 {
-    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)((GameObject*)obj)->anim.placementData;
+    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
     if ((u32)GameBit_Get(placement->destroyedGameBit) != 0u)
     {
-        Sfx_PlayFromObject(obj, SFXen_nlite1_c);
+        Sfx_PlayFromObject((int*)obj, SFXen_nlite1_c);
     }
 }

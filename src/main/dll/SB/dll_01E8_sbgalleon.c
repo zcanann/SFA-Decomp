@@ -192,7 +192,7 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
                 int* arr = (int*)ObjList_GetObjects(&start, &end);
                 for (i = start; i < end; i++)
                 {
-                    if (*(s16*)(arr[i] + 0x46) == SBGALLEON_ROMLIST_LINKED)
+                    if (((GameObject*)arr[i])->anim.seqId == SBGALLEON_ROMLIST_LINKED)
                     {
                         state->linkedActor = arr[i];
                         i = end;
@@ -541,8 +541,7 @@ void SB_Galleon_update(int obj)
 
 void SB_Galleon_init(int obj)
 {
-    int p = *(int*)&((GameObject*)obj)->extra;
-    SBGalleonState* state = (SBGalleonState*)p;
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
     gSbGalleon = obj;
     ObjGroup_AddObject(obj, 3);
     objSetSlot((void*)obj, 0x5a);
@@ -562,7 +561,7 @@ void SB_Galleon_init(int obj)
     state->envfxActs[0] = 0x87;
     state->envfxActs[1] = 0x97;
     state->mapLayer = ((GameObject*)obj)->anim.mapEventSlot;
-    *(s16*)obj = 0x4000;
+    ((GameObject*)obj)->anim.rotX = 0x4000;
     ((GameObject*)obj)->anim.rotY = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
@@ -572,7 +571,7 @@ void SB_Galleon_init(int obj)
     getLActions(obj, obj, 0x58, 0, 0, 0);
     state->wanderTimerA = lbl_803E56CC;
     state->wanderTimerB = lbl_803E580C;
-    (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
     setDrawLights(0);
     state->musicIdA = 0x92;
     state->musicIdB = 0x91;

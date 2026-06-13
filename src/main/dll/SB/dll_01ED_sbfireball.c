@@ -95,48 +95,48 @@ void SB_FireBall_initialise(void)
 {
 }
 
-void SB_FireBall_init(int p)
+void SB_FireBall_init(GameObject* obj)
 {
-    SBFireBallState* state = ((GameObject*)p)->extra;
-    ((GameObject*)p)->unkF4 = SB_FIREBALL_LIFETIME;
+    SBFireBallState* state = obj->extra;
+    obj->unkF4 = SB_FIREBALL_LIFETIME;
     state->launched = 0;
 }
 
-void SB_FireBall_update(int obj)
+void SB_FireBall_update(GameObject* obj)
 {
     extern void Obj_FreeObject(int obj);
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     SBFireBallState* state;
     f32 particleArgs[7];
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     if (state->owner == NULL)
     {
-        state->owner = *(void**)&((GameObject*)obj)->unkF8;
+        state->owner = *(void**)&obj->unkF8;
     }
 
     if (state->owner != NULL)
     {
-        *(s16*)obj = 0;
-        ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + framesThisStep * SB_FIREBALL_SPIN_STEP);
-        ((GameObject*)obj)->unkF4 -= framesThisStep;
-        if (((GameObject*)obj)->unkF4 < 0)
+        obj->anim.rotX = 0;
+        obj->anim.rotZ = (s16)(obj->anim.rotZ + framesThisStep * SB_FIREBALL_SPIN_STEP);
+        obj->unkF4 -= framesThisStep;
+        if (obj->unkF4 < 0)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
             return;
         }
 
         if (*(s8*)&state->launched == 0)
         {
-            state->velX = ((GameObject*)obj)->anim.velocityX;
-            state->velY = ((GameObject*)obj)->anim.velocityY;
-            state->velZ = ((GameObject*)obj)->anim.velocityZ;
+            state->velX = obj->anim.velocityX;
+            state->velY = obj->anim.velocityY;
+            state->velZ = obj->anim.velocityZ;
             state->launched = 1;
         }
 
-        ((GameObject*)obj)->anim.localPosX += state->velX * timeDelta;
-        ((GameObject*)obj)->anim.localPosY += state->velY * timeDelta;
-        ((GameObject*)obj)->anim.localPosZ += state->velZ * timeDelta;
+        obj->anim.localPosX += state->velX * timeDelta;
+        obj->anim.localPosY += state->velY * timeDelta;
+        obj->anim.localPosZ += state->velZ * timeDelta;
 
         particleArgs[2] = lbl_803E58DC;
         objfx_spawnFlaggedTrailBurst((int*)obj, lbl_803E58E0, SB_FIREBALL_SETUP_SIZE,
@@ -145,20 +145,20 @@ void SB_FireBall_update(int obj)
 
         if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY)
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority =
                 SB_FIREBALL_HITBOX_TYPE;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId =
                 SB_FIREBALL_HITBOX_PRIORITY;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectHitMask =
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask =
                 SB_FIREBALL_HITBOX_SIZE;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->skeletonHitMask =
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask =
                 SB_FIREBALL_HITBOX_SIZE;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |=
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |=
                 SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
         else
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &=
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &=
                 ~SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
 

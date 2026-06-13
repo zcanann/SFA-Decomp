@@ -116,27 +116,27 @@ int ShipBattle_getExtraSize(void);
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */
 
-void SB_MiniFire_free(int* obj)
+void SB_MiniFire_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->detachSource(obj);
 }
 
-void SB_MiniFire_init(int obj)
+void SB_MiniFire_init(GameObject* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     void* resource;
 
-    ((GameObject*)obj)->unkF4 = 180;
-    ((GameObject*)obj)->anim.velocityX =
+    obj->unkF4 = 180;
+    obj->anim.velocityX =
         -(lbl_803E594C * (f32)(s32)randomGetRange(20, 40) + lbl_803E5948);
-    ((GameObject*)obj)->anim.velocityY = lbl_803E592C;
-    ((GameObject*)obj)->anim.velocityZ = lbl_803E5950;
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5948;
+    obj->anim.velocityY = lbl_803E592C;
+    obj->anim.velocityZ = lbl_803E5950;
+    obj->anim.rootMotionScale = obj->anim.rootMotionScale * lbl_803E5948;
 
     resource = Resource_Acquire(117, 1);
     (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(
-        obj, lbl_803DC098, 0, 0x10002, -1, 0);
+        (int)obj, lbl_803DC098, 0, 0x10002, -1, 0);
     lbl_803DC098++;
     if (lbl_803DC098 > 3)
     {
@@ -158,36 +158,33 @@ void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void SB_MiniFire_update(int obj)
+void SB_MiniFire_update(GameObject* obj)
 {
     extern void Obj_FreeObject(int obj);
     f32 buf[6];
     f32 dx;
     f32 dy;
     f32 dz;
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
-        localPosX;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
-        localPosY;
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
-        localPosZ;
+    obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
+    obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+    obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
     buf[3] = lbl_803E592C;
     buf[4] = lbl_803E592C;
     buf[5] = lbl_803E592C;
     buf[2] = lbl_803E5928;
-    if (((GameObject*)obj)->unkF4 <= 0x3c)
+    if (obj->unkF4 <= 0x3c)
     {
-        buf[2] = (f32)((GameObject*)obj)->unkF4 / lbl_803E5930;
-        ((GameObject*)obj)->anim.alpha =
-            (u8)(int)(lbl_803E5934 * ((f32)((GameObject*)obj)->unkF4 / *(f32*)&lbl_803E5930));
+        buf[2] = (f32)obj->unkF4 / lbl_803E5930;
+        obj->anim.alpha =
+            (u8)(int)(lbl_803E5934 * ((f32)obj->unkF4 / *(f32*)&lbl_803E5930));
     }
     *(s16*)((char*)buf + 4) = 0;
     *(s16*)((char*)buf + 2) = 0;
     *(s16*)((char*)buf + 0) = 0;
     (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
-    dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-    dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
-    dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+    dy = obj->anim.localPosY - obj->anim.previousLocalPosY;
+    dz = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
+    dx = obj->anim.localPosX - obj->anim.previousLocalPosX;
     buf[3] = dx / lbl_803E5938;
     buf[4] = dy / lbl_803E5938;
     buf[5] = dz / lbl_803E5938;
@@ -196,12 +193,12 @@ void SB_MiniFire_update(int obj)
     buf[4] = buf[4] * lbl_803E593C;
     buf[5] = buf[5] * lbl_803E593C;
     (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
-    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
-    ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
-    ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
-    if (((GameObject*)obj)->unkF4 < 0)
+    obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x374;
+    obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x12c;
+    obj->unkF4 = obj->unkF4 - framesThisStep;
+    if (obj->unkF4 < 0)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((int)obj);
     }
 }
 
