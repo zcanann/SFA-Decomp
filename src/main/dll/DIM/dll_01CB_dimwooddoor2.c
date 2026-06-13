@@ -445,10 +445,11 @@ void dimwooddoor2_update(int* obj)
     ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
     {
+        f32 rs = sub->riseSpeed;
         f32 ceil = lbl_803E49D4;
-        if (sub->riseSpeed != ceil)
+        if (rs != ceil)
         {
-            sub->riseSpeed = sub->riseSpeed * lbl_803E49D8;
+            sub->riseSpeed = rs * lbl_803E49D8;
             sub->riseSpeed = (sub->riseSpeed > ceil) ? ceil : sub->riseSpeed;
         }
     }
