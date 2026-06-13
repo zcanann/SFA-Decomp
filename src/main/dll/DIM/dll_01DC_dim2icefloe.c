@@ -120,8 +120,11 @@ void dim2icefloe_update(int obj)
     {
         int v;
         int reached;
-        if ((int)((Dim2IceFloeState*)sub)->unkB8 != 0)
+        switch ((int)((Dim2IceFloeState*)sub)->unkB8)
         {
+        case 0:
+            break;
+        default:
             return;
         }
         v = ((GameObject*)obj)->anim.alpha + framesThisStep * 4;
