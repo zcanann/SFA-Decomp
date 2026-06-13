@@ -49,7 +49,7 @@ extern f32 lbl_803DCB70;
 extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48F8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
+extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, u32* b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapBlockFn_800606ec(int arg1, int idx);

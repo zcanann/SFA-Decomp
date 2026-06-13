@@ -173,7 +173,7 @@ void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, 
 undefined4
 FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , int param_11, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15
+             , ObjAnimUpdateState* param_11, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15
              , undefined4 param_16)
 {
     uint uVar1;
@@ -190,10 +190,10 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     piVar5 = ((GameObject*)param_9)->extra;
     *(u8*)(piVar5 + 8) = 0xff;
     iVar6 = *piVar5;
-    if (*(char*)(param_11 + 0x80) == '\x03')
+    if (param_11->triggerCommand == 3)
     {
         *(u8*)((int)piVar5 + 0x21) = 0xff;
-        *(u8*)(param_11 + 0x80) = 0;
+        param_11->triggerCommand = 0;
     }
     local_28 = DAT_802c2a88;
     local_24 = DAT_802c2a8c;
@@ -227,13 +227,13 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
             *(u8*)((int)piVar5 + 0x22) = *(u8*)((int)piVar5 + 0x21);
         }
     }
-    *(undefined2*)(param_11 + 0x6e) = *(undefined2*)(param_11 + 0x70);
-    if ((iVar6 == 0) || (*(char*)(param_11 + 0x80) != '\x02'))
+    param_11->hitVolumePair = param_11->activeHitVolumePair;
+    if ((iVar6 == 0) || (param_11->triggerCommand != 2))
     {
-        if ((iVar6 != 0) && (*(char*)(param_11 + 0x80) == '\x01'))
+        if ((iVar6 != 0) && (param_11->triggerCommand == 1))
         {
             (**(code**)(**(int**)(iVar6 + 0x68) + 0x3c))(iVar6, 0);
-            *(u8*)(param_11 + 0x80) = 0;
+            param_11->triggerCommand = 0;
         }
     }
     else
@@ -250,12 +250,12 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             ((GameObject*)param_9)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
-        *(ushort*)(param_11 + 0x6e) = *(ushort*)(param_11 + 0x6e) & ~0x4;
-        *(u8*)(param_11 + 0x80) = 0;
+        param_11->hitVolumePair &= ~4;
+        param_11->triggerCommand = 0;
     }
     if ((iVar6 != 0) && (iVar6 = (**(code**)(**(int**)(iVar6 + 0x68) + 0x38))(iVar6), iVar6 == 2))
     {
-        *(ushort*)(param_11 + 0x6e) = *(ushort*)(param_11 + 0x6e) & 0xfffc;
+        param_11->hitVolumePair &= 0xfffc;
     }
     return 0;
 }
