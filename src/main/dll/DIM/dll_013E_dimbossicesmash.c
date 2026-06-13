@@ -399,8 +399,8 @@ void dimbossicesmash_init(void* objParam, u8* params)
 
     buf[0] = 5;
     ((ObjAnimComponent*)obj)->bankIndex = params[0x18];
-    fz = lbl_803E4034;
     state = ((GameObject*)obj)->extra;
+    fz = lbl_803E4034;
     ((DimBossIceSmashState*)state)->unk26C = lbl_803E4034;
     ((DimBossIceSmashState*)state)->unk270 = fz;
     ((DimBossIceSmashState*)state)->unk274 = fz;
