@@ -79,7 +79,7 @@ extern f32 oneOverTimeDelta;
 extern s16 lbl_803DBEE8;
 extern s16 gDimSnowballCoords[];
 extern f32 lbl_803E484C;
-extern f32 lbl_803E4850;
+extern const f32 lbl_803E4850;
 extern f32 lbl_803E4854;
 
 extern f32 lbl_803E4848;
@@ -196,10 +196,9 @@ void dimsnowball_update(int obj)
         }
         ((DimsnowballState*)state)->unkC = 0x1e;
     }
-    dy1 = lbl_803E4850;
-    ((GameObject*)obj)->anim.localPosX = dy1 * (x[2] - x[1]) + x[1];
-    ((GameObject*)obj)->anim.localPosY = dy1 * (y[2] - y[1]) + y[1];
-    ((GameObject*)obj)->anim.localPosZ = dy1 * (z[2] - z[1]) + z[1];
+    ((GameObject*)obj)->anim.localPosX = x[1] + lbl_803E4850 * (x[2] - x[1]);
+    ((GameObject*)obj)->anim.localPosY = y[1] + lbl_803E4850 * (y[2] - y[1]);
+    ((GameObject*)obj)->anim.localPosZ = z[1] + lbl_803E4850 * (z[2] - z[1]);
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + *(f32*)(*state + 0xc);
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + *(f32*)(*state + 0x10);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + *(f32*)(*state + 0x14);
