@@ -502,21 +502,20 @@ void dim_levelcontrol_free(int p1);
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
+void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out);
 typedef void (*Fn801B40B8IntFirst)(u8 mode, u8* out, f32 a, f32 b);
 typedef void (*Fn801B3DE4SpdFirst)(int obj, f32 spd, int b, f32 x, f32 y, f32 z);
 typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 #pragma peephole off
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
+void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
 {
     int p4c = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
     int idx;
     int off;
-    idx = ((ExplosionState*)state)->flameCount;
-    ((ExplosionState*)state)->flameCount = idx + 1;
+    idx = ((ExplosionState*)state)->flameCount++;
     off = idx * 0x30;
     *(f32*)((char*)state + off) = x;
     *(f32*)((char*)state + off + 0x4) = y;
