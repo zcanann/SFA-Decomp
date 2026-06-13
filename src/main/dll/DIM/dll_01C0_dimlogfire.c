@@ -301,7 +301,7 @@ void dimlogfire_update(int obj)
     {
         rand = randomGetRange(-0x19, 0x19);
         light = state->light;
-        alpha = *(u8*)(light + 0x2f9) + (*(s8*)(light + 0x2fa) + rand);
+        alpha = *(u8*)(light + 0x2f9) + *(s8*)(light + 0x2fa) + rand;
         if (alpha < 0)
         {
             alpha = 0;
