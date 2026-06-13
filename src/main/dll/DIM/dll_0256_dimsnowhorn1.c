@@ -695,7 +695,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         (f32)(s16) * &((GameObject*)obj)->anim.rotX);
 
     v = *(f32*)((char*)state + 0x298);
-    if (v < lbl_803E8234)
+    if (v < *(f32*)&lbl_803E8234)
     {
         v = lbl_803E8234;
     }
