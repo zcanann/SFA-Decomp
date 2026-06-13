@@ -989,9 +989,9 @@ void explosion_init(int obj, int p2)
     f32 vsp[3];
     f32 mB[12];
     f32 mA[12];
+    int p;
     int state = *(int*)&((GameObject*)obj)->extra;
     f32 scale;
-    int p;
     int i;
     int n;
     ((ExplosionState*)state)->flameCount = 0;
