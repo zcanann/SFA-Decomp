@@ -575,7 +575,7 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     }
     *(s16*)((char*)state + off + 0x28) = randomGetRange(0, 0xffff);
     *(s16*)((char*)state + off + 0x2a) = randomGetRange(0xc8, 0x12c);
-    if (randomGetRange(0, 1) != 0)
+    if ((int)randomGetRange(0, 1) != 0)
     {
         *(s16*)((char*)state + off + 0x2a) = -*(s16*)((char*)state + off + 0x2a);
     }
