@@ -629,16 +629,8 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
             break;
         case 0:
         case 2:
-            if (v != 0 &&
-                Vec_distance((char*)player + 0x18, (char*)obj + 0x18) <= lbl_803E8240)
-            {
-                if (RandomTimer_UpdateRangeTrigger((int)((char*)inner + 0xd08),
-                                                   lbl_803E8294, lbl_803E8284) != 0)
-                {
-                    Sfx_PlayFromObject(obj, 0x375);
-                }
-            }
-            else
+            if ((u32)v == 0 ||
+                Vec_distance((char*)player + 0x18, (char*)obj + 0x18) > lbl_803E8240)
             {
                 o1 = ObjList_FindObjectById(id_a);
                 o2 = ObjList_FindObjectById(id_c);
@@ -647,6 +639,14 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
                 o2 = ObjList_FindObjectById(id_d);
                 if (o1 != NULL && o2 != NULL) fn_8014C66C(o1, (int)o2);
                 inner->unkA91 = 1;
+            }
+            else
+            {
+                if (RandomTimer_UpdateRangeTrigger((int)((char*)inner + 0xd08),
+                                                   lbl_803E8294, lbl_803E8284) != 0)
+                {
+                    Sfx_PlayFromObject(obj, 0x375);
+                }
             }
             break;
         }
