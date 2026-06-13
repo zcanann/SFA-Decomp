@@ -104,7 +104,7 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 #define DIMBOSS_SPAWN_OBJECT_TIMER 0x3C
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, undefined4 param_2, DIMbossRuntime* runtime,
-                                   int param_4, int param_5, int param_6, int param_7, float scale);
+                                   int param_4, int param_5, int param_6, u8 param_7, float scale);
 typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 x, f32 y,
                                         void* hitDetectAnimTable, void* animTable);
 
@@ -261,6 +261,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
             break;
         case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
+            topState = runtime->topState;
             topState->steamFlags.bits.sfxPending = 1;
             Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP, 0);
             break;
@@ -340,7 +341,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
             mapLoadDataFile(mapDirIndex, DIMTOP_AUDIO_DATA_FILE_B);
             loadWaitStarted = false;
-            while (statusFlags = getLoadedFileFlags(0), (statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0)
+            while (statusFlags = getLoadedFileFlags(0), (int)(statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0)
             {
                 padUpdate();
                 checkReset();
@@ -384,8 +385,24 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             runtime->eventGameBit = -1;
         }
         hitReactMode = runtime->hitReactMode;
-        if (hitReactMode == 1)
+        switch (hitReactMode)
         {
+        case 0:
+            break;
+        case 2:
+            animUpdate->hitVolumePair = 0;
+            fn_801BC7E4(obj, animUpdate, (int)runtime, (int)runtime);
+            if (runtime->hitReactMode == 1)
+            {
+                runtime->field270 = 0;
+                DIMboss_GetPlayerInterface()->applyHitReact(
+                    obj, runtime, lbl_803E4C44, *(f32*)&lbl_803E4C44,
+                    animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+                    animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
+                animUpdate->sequenceEventActive = 0;
+            }
+            break;
+        case 1:
             baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
                 obj, animUpdate, runtime,
                 animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
@@ -394,20 +411,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             {
                 DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70, 1);
             }
-        }
-        else if ((hitReactMode != 0) && (hitReactMode < 3))
-        {
-            animUpdate->hitVolumePair = 0;
-            fn_801BC7E4(obj, animUpdate, (int)runtime, (int)runtime);
-            if (runtime->hitReactMode == 1)
-            {
-                runtime->field270 = 0;
-                DIMboss_GetPlayerInterface()->applyHitReact(
-                    obj, runtime, lbl_803E4C44, lbl_803E4C44,
-                    animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-                    animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
-                animUpdate->sequenceEventActive = 0;
-            }
+            break;
         }
     }
     warpDarkIceMines_801bbb44(obj, runtime);
