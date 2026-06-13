@@ -235,7 +235,7 @@ void dim2lavacontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
     obj = *(int*)&((GameObject*)obj)->extra;
-    switch (*(s8*)(obj + 4))
+    switch (*(u8*)(obj + 4))
     {
     case 0:
         if (GameBit_Get(0xacd) != 0)
