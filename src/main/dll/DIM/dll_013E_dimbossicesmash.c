@@ -59,7 +59,7 @@ extern f32 lbl_803E404C;
 extern f32 lbl_803E4050;
 extern f32 lbl_803E4054;
 extern f32 lbl_803E4058;
-extern f32 lbl_803E405C;
+extern const f32 lbl_803E405C;
 extern f32 lbl_803E4030;
 extern f32 lbl_803E4038;
 extern f32 lbl_803E403C;
@@ -119,7 +119,6 @@ void dimbossicesmash_update(u8* obj)
     f32 len, inv, dot;
     f32 fy, fz, ff;
     f32 dx, dy, dz, k;
-    f32 mult;
     int i;
     f32 stk[3];
 
@@ -299,11 +298,10 @@ void dimbossicesmash_update(u8* obj)
                 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
                 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
                 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
-                mult = lbl_803E405C;
                 i = 0;
                 do
                 {
-                    k = (f32)i * mult;
+                    k = (f32)i * lbl_803E405C;
                     stk[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
                     stk[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
                     stk[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;
