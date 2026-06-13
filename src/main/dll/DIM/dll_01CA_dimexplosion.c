@@ -599,51 +599,18 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
 
 void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b)
 {
-    s16 c1;
-    s16 c2;
-    s16 c3;
     s16 v1;
     s16 v2;
     s16 v3;
+    s16 c1;
+    s16 c2;
+    s16 c3;
     c1 = 0xff - (u8)(int)(lbl_803DDB64 * (lbl_803E4938 * expf((lbl_803E4950 * a) / b)));
     c2 = 0xff - (u8)(int)(lbl_803DDB60 * (lbl_803E4938 * expf((lbl_803E4954 * a) / b)));
     c3 = 0xff - (u8)(int)(lbl_803DDB5C * (lbl_803E4938 * expf(a / b)));
-    if (c1 < 1)
-    {
-        v1 = 1;
-    }
-    else if (c1 > 0xff)
-    {
-        v1 = 0xff;
-    }
-    else
-    {
-        v1 = c1;
-    }
-    if (c2 < 1)
-    {
-        v2 = 1;
-    }
-    else if (c2 > 0xff)
-    {
-        v2 = 0xff;
-    }
-    else
-    {
-        v2 = c2;
-    }
-    if (c3 < 1)
-    {
-        v3 = 1;
-    }
-    else if (c3 > 0xff)
-    {
-        v3 = 0xff;
-    }
-    else
-    {
-        v3 = c3;
-    }
+    v1 = (c1 < 1) ? 1 : ((c1 > 0xff) ? 0xff : c1);
+    v2 = (c2 < 1) ? 1 : ((c2 > 0xff) ? 0xff : c2);
+    v3 = (c3 < 1) ? 1 : ((c3 > 0xff) ? 0xff : c3);
     switch (mode)
     {
     case 0:
