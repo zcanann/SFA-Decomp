@@ -46,4 +46,16 @@ typedef struct CfGuardianState {
     u8 flagsA9B;          /* 1 move-latched, 2 path-flying, 4 homing */
 } CfGuardianState;
 
+STATIC_ASSERT(offsetof(CfGuardianState, audioBlock) == 0x624);
+STATIC_ASSERT(offsetof(CfGuardianState, eyeBlock) == 0x654);
+STATIC_ASSERT(offsetof(CfGuardianState, linkedObjs) == 0x68c);
+STATIC_ASSERT(offsetof(CfGuardianState, pathBlock) == 0x6bc);
+STATIC_ASSERT(offsetof(CfGuardianState, moveSpeed) == 0x7fc);
+STATIC_ASSERT(offsetof(CfGuardianState, homeYaw) == 0xa68);
+STATIC_ASSERT(offsetof(CfGuardianState, homeX) == 0xa74);
+STATIC_ASSERT(offsetof(CfGuardianState, questState) == 0xa80);
+STATIC_ASSERT(offsetof(CfGuardianState, landingPhase) == 0xa94);
+STATIC_ASSERT(offsetof(CfGuardianState, flagsA9B) == 0xa9b);
+STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
+
 #endif

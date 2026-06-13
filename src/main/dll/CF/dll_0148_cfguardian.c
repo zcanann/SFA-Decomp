@@ -20,6 +20,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
+/* steer-target header passed to fn_8019B1D8: a yaw plus a world point */
 typedef struct
 {
     s16 angle;
@@ -29,11 +30,25 @@ typedef struct
     f32 z;
 } RomCurveTarget;
 
+/* the rom-curve walker block the guardian flies along (sub->pathBlock);
+   only the fields this DLL touches are mapped. */
+typedef struct CfCurveWalker
+{
+    u8 pad00[0x10];
+    int atEnd;   /* 0x10: non-zero once the curve runs out */
+    u8 pad14[0x54];
+    f32 posX;    /* 0x68: sampled curve position */
+    f32 posY;    /* 0x6C */
+    f32 posZ;    /* 0x70 */
+} CfCurveWalker;
+
+/* hitbox/heading template (lbl_802C22C0/CC), copied to the stack at init */
 typedef struct
 {
     s16 v[5];
 } GuardianVec;
 
+/* active/idle heading-pair template (lbl_802C22D8) used by cfguardian_SeqFn */
 typedef struct
 {
     int a, b, c, d;
@@ -42,20 +57,40 @@ typedef struct
 typedef struct CfGuardianMapData
 {
     ObjPlacement base;
-    s8 unk18;
-    s8 variant; /* 0x19: 1 = the convergence-gated guardian */
+    s8 rotXByte; /* 0x18: initial rotX in 1/256 turns */
+    s8 variant;  /* 0x19: 1 = the convergence-gated guardian */
 } CfGuardianMapData;
 
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
+
+/* sub->flagsA9B bits */
+#define GUARDIAN_FLAG_MOVE_LATCHED 0x1 /* a one-shot move is running */
+#define GUARDIAN_FLAG_PATH_FLYING 0x2  /* flying a rom curve this tick */
+#define GUARDIAN_FLAG_HOMING 0x4       /* steering toward the talk spot */
+
+/* the guardian's anim "fly/chase" move */
+#define GUARDIAN_MOVE_FLY 0x1a
+
+/* game bits this DLL reads/writes. Most are cross-TU quest flags
+   without established names; the few it clearly owns are named here. */
+#define GAMEBIT_GUARDIAN_CONVERGENCE 0x57 /* the convergence cutscene is live */
+#define GAMEBIT_GUARDIAN_QUEST_START 0x94f
+#define GAMEBIT_GUARDIAN_CAGE_OPEN 0x4e   /* this guardian's clouddungeon cage */
+#define GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN 0x48
+#define GAMEBIT_GUARDIAN_RELEASED 0x60
+#define GAMEBIT_GUARDIAN_LANDED 0x8e9     /* the landing sequence finished */
+#define GAMEBIT_GUARDIAN_QUEST_STATE 0x4b /* mirror of sub->questState */
+
+/* sfx ids */
+#define GUARDIAN_SFX_FLAP 0xe1
+#define GUARDIAN_SFX_CHATTER 0xdf
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
 extern int Curve_AdvanceAlongPath(int p1);
 extern s16 getAngle(f32 a, f32 b);
-extern f32 lbl_803E4110;
-extern f32 lbl_803E4120;
 extern int ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
 extern int ObjGroup_RemoveObject();
@@ -69,32 +104,28 @@ extern int dll_2E_func03();
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
-extern GuardianVec lbl_802C22C0;
-extern GuardianVec lbl_802C22CC;
-extern u8 lbl_8032284C[];
+extern GuardianVec lbl_802C22C0; /* hitbox template copied at init */
+extern GuardianVec lbl_802C22CC; /* hitbox template copied at init */
+extern u8 lbl_8032284C[];        /* chatter sequence-stream table, 0xf states */
 extern void dll_2E_func0A(int a, int* obj);
 extern void dll_2E_func05(int* obj, u8* sub, int c, int d, int e);
 extern void dll_2E_func08(u8* sub, int b, int c);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern void objSeqInitFn_80080078(u8* p, int n);
-extern GuardianMsg lbl_802C22D8;
+extern GuardianMsg lbl_802C22D8; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int dll_2E_func07(int* obj, ObjAnimUpdateState* animUpdate, u8* sub, int x, int y);
 extern int animatedObjGetSeqId(int* p);
 extern void saveGame_saveObjectPos(int obj);
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void* player, int n);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 timeDelta;
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern u8 framesThisStep;
 extern int cfguardian_updateMain();
-extern f32 lbl_803E4130;
 extern void dll_2E_func06(int* a, int* b, int c);
 extern f32 sqrtf(f32 x);
 extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32 lbl_803E4124;
-extern f32 lbl_803E4128;
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int randFn_80080100(int n);
@@ -103,74 +134,74 @@ extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int a, int b);
 extern void characterDoEyeAnims(int* obj, void* p);
-extern int lbl_80322954[];
-extern u8 lbl_803DBE20;
+extern int lbl_80322954[]; /* per-quest-state idle move id (-1 = none) */
+extern u8 lbl_803DBE20;     /* per-event sfx-id table passed to fn_8019AE3C */
 extern f32 oneOverTimeDelta;
-extern f32 lbl_803E4134;
-extern f32 lbl_803E4138;
-extern f32 lbl_803E413C;
-extern f32 lbl_803E4140;
-extern f32 lbl_803E4144;
-extern f32 lbl_803E4148;
-extern f32 lbl_803E414C;
-extern f32 lbl_803E4150;
-extern f32 lbl_803E4154;
-extern f32 lbl_803E4158;
-extern f32 lbl_803E415C;
-extern f32 lbl_803E412C;
 
-int fn_8019AE3C(int p1, int p2, s16* p3)
+/* fn_8019AE3C: walk this step's triggered anim events and play the
+ * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,
+ * [1] the alt (event 7) sfx, [2] the "selection" sfx played once if any
+ * 1..4 marker event fired. Returns the last 1..4 marker seen. */
+int fn_8019AE3C(int obj, int evList, s16* sfxIds)
 {
     extern void Sfx_PlayFromObject(int, u16); /* #57/#115 */
     int i;
-    u8 v;
+    u8 marker;
 
-    v = 0;
-    for (i = 0; i < *(s8*)(p2 + 0x1b); i++)
+    marker = 0;
+    for (i = 0; i < ((ObjAnimEventList*)evList)->triggerCount; i++)
     {
-        switch (*(s8*)(p2 + i + 0x13))
+        switch (*(s8*)(evList + i + offsetof(ObjAnimEventList, triggeredIds)))
         {
         case 0:
-            if (p3 != NULL)
+            if (sfxIds != NULL)
             {
-                Sfx_PlayFromObject(p1, (u16)p3[0]);
+                Sfx_PlayFromObject(obj, (u16)sfxIds[0]);
             }
             break;
         case 7:
-            if (p3 != NULL)
+            if (sfxIds != NULL)
             {
-                Sfx_PlayFromObject(p1, (u16)p3[1]);
+                Sfx_PlayFromObject(obj, (u16)sfxIds[1]);
             }
             break;
         case 1:
-            v = 1;
+            marker = 1;
             break;
         case 2:
-            v = 2;
+            marker = 2;
             break;
         case 3:
-            v = 3;
+            marker = 3;
             break;
         case 4:
-            v = 4;
+            marker = 4;
             break;
         case 9:
-            Sfx_PlayFromObject(p1, 0xe1);
+            Sfx_PlayFromObject(obj, GUARDIAN_SFX_FLAP);
             break;
         }
     }
-    if (v != 0 && p3 != NULL)
+    if (marker != 0 && sfxIds != NULL)
     {
-        Sfx_PlayFromObject(p1, (u16)p3[2]);
+        Sfx_PlayFromObject(obj, (u16)sfxIds[2]);
     }
-    return v;
+    return marker;
 }
 
+/* cfguardian_setScale: true when the guardian is not mid path-flight
+ * (queried by the render path to decide whether to apply scale). */
 int cfguardian_setScale(int* obj)
 {
-    return (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa9b) & 0x2) == 0;
+    CfGuardianState* sub = ((GameObject*)obj)->extra;
+    return (sub->flagsA9B & GUARDIAN_FLAG_PATH_FLYING) == 0;
 }
 
+/* fn_8019AF64: fly the guardian along a rom-curve path. On the first
+ * tick (unkF4 == 0) it steers to the nearest curve point then opens the
+ * curve walker; thereafter it advances the walker, snaps the object to
+ * the sampled position, sticks to the ground and blends the yaw toward
+ * the heading of travel. Returns 1 once the path is exhausted. */
 int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 {
     extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int p6); /* #57/#29 */
@@ -185,7 +216,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 
     moved = 1;
     ret = 0;
-    ground = lbl_803E4110;
+    ground = 0.0f;
     if (((GameObject*)obj)->unkF4 == -1)
     {
         return 1;
@@ -202,7 +233,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         {
             cmd[0] = 0x19;
             cmd[1] = 0x15;
-            (*gRomCurveInterface)->initCurve((void*)p2, (void*)obj, lbl_803E4120, cmd, sel);
+            (*gRomCurveInterface)->initCurve((void*)p2, (void*)obj, 200.0f, cmd, sel);
             ((GameObject*)obj)->unkF4 = 1;
             moved = 1;
         }
@@ -210,13 +241,13 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     else
     {
         ret = 0;
-        if (Curve_AdvanceAlongPath(p2) != 0 || *(int*)(p2 + 0x10) != 0)
+        if (Curve_AdvanceAlongPath(p2) != 0 || ((CfCurveWalker*)p2)->atEnd != 0)
         {
             ret = (*gRomCurveInterface)->goNextPoint((void*)p2);
         }
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(p2 + 0x68);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)(p2 + 0x6c);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(p2 + 0x70);
+        ((GameObject*)obj)->anim.localPosX = ((CfCurveWalker*)p2)->posX;
+        ((GameObject*)obj)->anim.localPosY = ((CfCurveWalker*)p2)->posY;
+        ((GameObject*)obj)->anim.localPosZ = ((CfCurveWalker*)p2)->posZ;
         if (ret != 0)
         {
             ((GameObject*)obj)->unkF4 = -1;
@@ -232,7 +263,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     {
         v = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                            ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) + 0x8000);
-        v = v - (u16)*(s16*)obj;
+        v = v - (u16)((GameObject*)obj)->anim.rotX;
         if (v > 0x8000)
         {
             v = v - 0xffff;
@@ -241,11 +272,11 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         {
             v = v + 0xffff;
         }
-        *(s16*)obj = *(s16*)(int)obj + (v >> 3);
+        ((GameObject*)obj)->anim.rotX = *(s16*)(int)obj + (v >> 3);
     }
-    if (((GameObject*)obj)->anim.currentMove != 0x1a)
+    if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
     {
-        ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
+        ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
     }
     return ret;
 }
@@ -270,7 +301,7 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     dist = sqrtf(dz * dz + (dx * dx + dy * dy));
-    if (dist < lbl_803E4124 * speed)
+    if (dist < 5.0f * speed)
     {
         return 1;
     }
@@ -278,7 +309,7 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     ((GameObject*)obj)->anim.velocityX = timeDelta * (dx * speed);
     ((GameObject*)obj)->anim.velocityY = timeDelta * (dy * speed);
     ((GameObject*)obj)->anim.velocityZ = timeDelta * (dz * speed);
-    d = (*(s16*)target + 0x8000) - (u16)*(s16*)obj;
+    d = (((GameObject*)target)->anim.rotX + 0x8000) - (u16)((GameObject*)obj)->anim.rotX;
     if (d > 0x8000)
     {
         d = d - 0xffff;
@@ -287,12 +318,12 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     {
         d = d + 0xffff;
     }
-    *(s16*)obj = (f32)*(s16*)(int)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
+    ((GameObject*)obj)->anim.rotX = (f32)*(s16*)(int)obj + ((0.5f + (f32)d) * (speed * timeDelta)) / dist;
     objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
-    if (((GameObject*)obj)->anim.currentMove != 0x1a)
+    if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
     {
-        ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
+        ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
     }
     ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
     return 0;
@@ -328,9 +359,9 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
         result = (int*)(*gRomCurveInterface)->getById(found);
         if (outVec != NULL)
         {
-            *(f32*)((char*)outVec + 0) = *(f32*)((char*)result + 8);
-            *(f32*)((char*)outVec + 4) = *(f32*)((char*)result + 12);
-            *(f32*)((char*)outVec + 8) = *(f32*)((char*)result + 16);
+            ((f32*)outVec)[0] = ((RomCurveDef*)result)->x;
+            ((f32*)outVec)[1] = ((RomCurveDef*)result)->y;
+            ((f32*)outVec)[2] = ((RomCurveDef*)result)->z;
         }
     }
     return result;
@@ -343,7 +374,7 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
 
 static inline f32 cfguardianAbs(f32 x)
 {
-    if (x >= lbl_803E4110)
+    if (x >= 0.0f)
     {
         return x;
     }
@@ -357,23 +388,23 @@ int cfguardian_updateMain(int obj)
     extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd); /* #57 */
     CfGuardianState* sub;
     char* player;
-    u8* def;
+    CfGuardianMapData* def;
     struct
     {
-        f32 v[3];
-        u8 evbuf[0x1c];
+        f32 v[3];       /* scratch velocity delta during the landing bounce */
+        u8 evbuf[0x1c]; /* ObjAnimEventList filled by ObjAnim_AdvanceCurrentMove */
     } stk;
     f32 k;
-    f32 nearDist = lbl_803E412C;
-    f32 ground = lbl_803E4130;
-    def = (u8*)((GameObject*)obj)->anim.placement;
+    f32 nearDist = 1000.0f;
+    f32 ground = 1.0f;
+    def = (CfGuardianMapData*)((GameObject*)obj)->anim.placement;
     stk.evbuf[0x1b] = 0;
     sub = ((GameObject*)obj)->extra;
-    sub->flagsA9B &= ~0x2;
-    sub->moveSpeed = lbl_803E4134;
+    sub->flagsA9B &= ~GUARDIAN_FLAG_PATH_FLYING;
+    sub->moveSpeed = 0.005f;
     player = (char*)Obj_GetPlayerObject();
     ObjTrigger_UpdateIdBlockFlag(obj);
-    if (((CfGuardianMapData*)def)->variant == 1 && GameBit_Get(0x57) == 0)
+    if (def->variant == 1 && GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) == 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         return 0;
@@ -388,7 +419,7 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = 1;
         }
-        if (GameBit_Get(0x94f) != 0)
+        if (GameBit_Get(GAMEBIT_GUARDIAN_QUEST_START) != 0)
         {
             sub->questState = 1;
         }
@@ -399,14 +430,14 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = 1;
         }
-        if (GameBit_Get(0x4e) != 0)
+        if (GameBit_Get(GAMEBIT_GUARDIAN_CAGE_OPEN) != 0)
         {
             sub->questState = 3;
-            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             ((GameObject*)obj)->unkF4 = 0;
             /* 0x48: broken out - the prison guard stands down on it */
-            GameBit_Set(0x48, 1);
-            sub->flagsA9B |= 1;
+            GameBit_Set(GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN, 1);
+            sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED;
         }
         break;
     case 2: /* fly the escape curve; roost at the end */
@@ -414,22 +445,22 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = 1;
         }
-        sub->flagsA9B |= 2;
-        if (fn_8019AF64((int*)obj, sub->pathBlock, lbl_803E4138, 0, &sub->moveSpeed) != 0)
+        sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
+        if (fn_8019AF64((int*)obj, sub->pathBlock, 0.3f, 0, &sub->moveSpeed) != 0)
         {
-            sub->flagsA9B &= ~1;
+            sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
             sub->questState = 4;
         }
         break;
     case 3: /* play the release sequence once */
         (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-        GameBit_Set(0x60, 1);
+        GameBit_Set(GAMEBIT_GUARDIAN_RELEASED, 1);
         sub->questState = 2;
         break;
     case 4: /* roost until the convergence cutscene parks him */
-        if (GameBit_Get(0x57) != 0)
+        if (GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
         {
-            if (((CfGuardianMapData*)def)->variant != 1)
+            if (def->variant != 1)
             {
                 sub->questState = 0xf;
                 sub->chatterAlt = 0;
@@ -452,7 +483,7 @@ int cfguardian_updateMain(int obj)
             if (sub->landingPhase >= 2)
             {
                 {
-                    f32 fz = lbl_803E4110;
+                    f32 fz = 0.0f;
                     ((GameObject*)obj)->anim.velocityX = fz;
                     ((GameObject*)obj)->anim.velocityZ = fz;
                 }
@@ -460,15 +491,15 @@ int cfguardian_updateMain(int obj)
                     ->anim.localPosY;
                 hitDetectFn_800658a4((int*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                      ((GameObject*)obj)->anim.localPosZ, &ground, 0);
-                *(s16*)obj = (s16)((0xc0 << (*(s16*)obj + 8)) >> 1);
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~0x400;
-                if (ground <= lbl_803E4130)
+                ((GameObject*)obj)->anim.rotX = (s16)((0xc0 << (((GameObject*)obj)->anim.rotX + 8)) >> 1);
+                ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~0x400;
+                if (ground <= 1.0f)
                 {
                     sub->landingPhase = 2;
                     ((GameObject*)obj)->anim.localPosY -= ground;
                     sub->chatterState = 1;
                     ((GameObject*)obj)->unkF4 = 0;
-                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
+                    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                     {
                         RomCurvePlacementDef* pt = (RomCurvePlacementDef*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
                         f32 d;
@@ -477,42 +508,42 @@ int cfguardian_updateMain(int obj)
                         sub->homeZ = pt->base.z;
                         sub->homeYaw = (s16)(pt->rotZ << 8);
                         d = sub->homeY - ((GameObject*)obj)->anim.localPosY;
-                        d = (d >= lbl_803E4110) ? d : -d;
-                        if (d < lbl_803E413C)
+                        d = (d >= 0.0f) ? d : -d;
+                        if (d < 80.0f)
                         {
                             ObjGroup_AddObject(obj, 0x16);
                             sub->questState = 7;
-                            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
+                            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
                         }
                     }
                 }
                 else
                 {
-                    ((GameObject*)obj)->anim.velocityY -= lbl_803E4140;
+                    ((GameObject*)obj)->anim.velocityY -= 0.12f;
                 }
             }
             else
             {
-                f32 w = cfguardianAbs(lbl_803E4144 * ((GameObject*)obj)->anim.velocityY);
+                f32 w = cfguardianAbs(400.0f * ((GameObject*)obj)->anim.velocityY);
                 f32 r;
-                r = (f32)*(s16*)obj;
+                r = (f32)((GameObject*)obj)->anim.rotX;
                 r = r + w;
-                *(s16*)obj = r;
-                sub->moveSpeed = lbl_803E4148;
-                if (GameBit_Get(0x8e9) != 0)
+                ((GameObject*)obj)->anim.rotX = r;
+                sub->moveSpeed = 0.04f;
+                if (GameBit_Get(GAMEBIT_GUARDIAN_LANDED) != 0)
                 {
-                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
+                    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E4110;
+                    ((GameObject*)obj)->anim.velocityY = 0.0f;
                     ObjGroup_RemoveObject(obj, 0x16);
                     {
-                        f32 fz = lbl_803E4110;
+                        f32 fz = 0.0f;
                         ((GameObject*)obj)->anim.velocityX = fz;
-                        ((GameObject*)obj)->anim.velocityY = lbl_803E414C;
+                        ((GameObject*)obj)->anim.velocityY = -0.001f;
                         ((GameObject*)obj)->anim.velocityZ = fz;
                     }
                     sub->landingPhase = 2;
-                    sub->flagsA9B &= ~1;
+                    sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
                 }
             }
             if (sub->landingPhase < 2)
@@ -524,7 +555,7 @@ int cfguardian_updateMain(int obj)
                 if (sub->bounceLatch != 0)
                 {
                 {
-                    f32 fb = lbl_803E4150;
+                    f32 fb = 0.8f;
                     ((GameObject*)obj)->anim.velocityX = fb * -((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityZ = fb * -((GameObject*)obj)->anim.velocityZ;
                 }
@@ -540,7 +571,7 @@ int cfguardian_updateMain(int obj)
                     stk.v[1] = v1;
                     v2 = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
                     stk.v[2] = v2;
-                    k = lbl_803E4154 * oneOverTimeDelta;
+                    k = 0.95f * oneOverTimeDelta;
                     v0 = v0 * k;
                     stk.v[0] = v0;
                     v1 = v1 * k;
@@ -552,7 +583,7 @@ int cfguardian_updateMain(int obj)
                     ((GameObject*)obj)->anim.velocityZ = p2 + ((GameObject*)obj)->anim.velocityZ;
                 }
                 {
-                    f32 fd = lbl_803E4138;
+                    f32 fd = 0.3f;
                     ((GameObject*)obj)->anim.velocityX = fd * ((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityY = fd * ((GameObject*)obj)->anim.velocityY;
                     ((GameObject*)obj)->anim.velocityZ = fd * ((GameObject*)obj)->anim.velocityZ;
@@ -572,8 +603,8 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = 1;
         }
-        sub->flagsA9B |= 2;
-        if (fn_8019AF64((int*)obj, sub->pathBlock, lbl_803E4138, 1, &sub->moveSpeed) != 0)
+        sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
+        if (fn_8019AF64((int*)obj, sub->pathBlock, 0.3f, 1, &sub->moveSpeed) != 0)
         {
             sub->questState = 8;
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
@@ -582,19 +613,19 @@ int cfguardian_updateMain(int obj)
     case 8: /* talk spot: greet and head-track the player; 0x43 advances */
         {
             void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
-            if (found != NULL && nearDist < lbl_803E4158)
+            if (found != NULL && nearDist < 300.0f)
             {
                 dll_2E_func04(sub, found);
                 ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
             }
         }
-        if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C)
+        if (nearDist > 300.0f && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX), (char*)obj + offsetof(GameObject, anim.worldPosX)) < 80.0f)
         {
             ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0)
             {
                 dll_2E_func0C(0xf, (u8*)&sub->homeYaw);
-                sub->flagsA9B |= 5;
+                sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 lbl_80322954[sub->questState] = 0;
             }
             if (sub->chatterState == 2)
@@ -605,19 +636,19 @@ int cfguardian_updateMain(int obj)
         }
         else
         {
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0xe)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0xe)
             {
                 sub->chatterState = 2;
-                sub->flagsA9B |= 5;
+                sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 dll_2E_func0A(0xe, (int*)&sub->homeYaw);
                 lbl_80322954[sub->questState] = 0xe;
             }
         }
-        if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
+        if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0
+            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, 0.5f, (int)&sub->moveSpeed) != 0)
         {
-            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
-            sub->flagsA9B &= ~0x5;
+            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
+            sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
         if (GameBit_Get(0x43) != 0)
         {
@@ -628,17 +659,17 @@ int cfguardian_updateMain(int obj)
     case 9: /* second talk loop; 0x4be sends him onward */
         {
             void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
-            if (found != NULL && nearDist < lbl_803E4158)
+            if (found != NULL && nearDist < 300.0f)
             {
                 dll_2E_func04(sub, found);
             }
         }
-        if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C)
+        if (nearDist > 300.0f && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX), (char*)obj + offsetof(GameObject, anim.worldPosX)) < 80.0f)
         {
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0)
             {
                 dll_2E_func0C(0xf, (u8*)&sub->homeYaw);
-                sub->flagsA9B |= 5;
+                sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 lbl_80322954[sub->questState] = 0;
             }
             if (sub->chatterState == 2)
@@ -649,24 +680,24 @@ int cfguardian_updateMain(int obj)
         }
         else
         {
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0xe)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0xe)
             {
                 sub->chatterState = 2;
-                sub->flagsA9B |= 5;
+                sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 dll_2E_func0A(0xe, (int*)&sub->homeYaw);
                 lbl_80322954[sub->questState] = 0xe;
             }
         }
-        if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
+        if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0
+            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, 0.5f, (int)&sub->moveSpeed) != 0)
         {
-            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
-            sub->flagsA9B &= ~0x5;
+            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
+            sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
         if (GameBit_Get(0x4be) != 0)
         {
             sub->questState = 0xa;
-            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             ((GameObject*)obj)->unkF4 = 0;
         }
         break;
@@ -675,8 +706,8 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = 1;
         }
-        sub->flagsA9B |= 2;
-        if (fn_8019AF64((int*)obj, sub->pathBlock, lbl_803E415C, 2, &sub->moveSpeed) != 0)
+        sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
+        if (fn_8019AF64((int*)obj, sub->pathBlock, 0.6f, 2, &sub->moveSpeed) != 0)
         {
             sub->questState = 0xb;
         }
@@ -687,9 +718,9 @@ int cfguardian_updateMain(int obj)
             sub->chatterState = 1;
         }
         ((GameObject*)obj)->anim.alpha = 0;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~1;
         Obj_RemoveFromUpdateList((int*)obj);
-        ((GameObject*)obj)->anim.flags |= 0x4000;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->questState = 0xf;
         break;
     case 12: /* cutscene perch: sequence 0xB on demand (0x4b7) */
@@ -731,9 +762,9 @@ int cfguardian_updateMain(int obj)
         }
         break;
     case 15: /* parked and hidden */
-        ((GameObject*)obj)->anim.flags |= 0x4000;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList((int*)obj);
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~1;
         break;
     }
     dll_2E_func03(obj, sub);
@@ -780,30 +811,30 @@ int cfguardian_updateMain(int obj)
     }
     {
         int mv = lbl_80322954[sub->questState];
-        if (mv != -1 && (sub->flagsA9B & 1) == 0 && ((GameObject*)obj)->anim.currentMove != mv)
+        if (mv != -1 && (sub->flagsA9B & GUARDIAN_FLAG_MOVE_LATCHED) == 0 && ((GameObject*)obj)->anim.currentMove != mv)
         {
-            ObjAnim_SetCurrentMove(obj, mv, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, mv, 0.0f, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
         }
     }
     if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, sub->moveSpeed, (f32)framesThisStep,
                                                                     stk.evbuf) != 0
-        && (sub->flagsA9B & 1) != 0
-        && ((GameObject*)obj)->anim.currentMove != 0x1a
+        && (sub->flagsA9B & GUARDIAN_FLAG_MOVE_LATCHED) != 0
+        && ((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY
         && ((GameObject*)obj)->anim.currentMove != 9)
     {
-        sub->flagsA9B &= ~1;
+        sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
     }
     fn_8019AE3C((int*)obj, (u8*)&stk + 12, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
-        objAudioFn_800393f8(obj, (u8*)sub + 0x624, 0xdf, 0x1000, -1, 0);
+        objAudioFn_800393f8(obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
     }
-    objAnimFn_80038f38(obj, (u8*)sub + 0x624);
-    characterDoEyeAnims((int*)obj, (u8*)sub + 0x654);
-    if (sub->questState != GameBit_Get(0x4b))
+    objAnimFn_80038f38(obj, sub->audioBlock);
+    characterDoEyeAnims((int*)obj, sub->eyeBlock);
+    if (sub->questState != GameBit_Get(GAMEBIT_GUARDIAN_QUEST_STATE))
     {
-        GameBit_Set(0x4b, sub->questState);
+        GameBit_Set(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);
     }
     return 0;
 }
@@ -849,19 +880,19 @@ int cfguardian_getExtraSize(void) { return 0xa9c; }
 
 int cfguardian_getObjectTypeId(void) { return 0x41; }
 
-void cfguardian_free(int* obj, int p2)
+void cfguardian_free(int* obj, int keep)
 {
     char* extra = ((GameObject*)obj)->extra;
-    if (p2 == 0)
+    if (keep == 0)
     {
         char* state;
         int i;
         for (i = 0, state = extra; i < 6; i++)
         {
-            int* sub = (int*)((CfGuardianState*)state)->linkedObjs[0];
-            if (sub != NULL)
+            int* linked = (int*)((CfGuardianState*)state)->linkedObjs[0];
+            if (linked != NULL)
             {
-                Obj_FreeObject(sub);
+                Obj_FreeObject(linked);
             }
             state += 4;
         }
@@ -873,7 +904,7 @@ void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* sub = ((GameObject*)obj)->extra;
     if ((s32)visible != 0)
     {
-        objRenderFn_8003b8f4(lbl_803E4130);
+        objRenderFn_8003b8f4(1.0f);
         dll_2E_func06(obj, sub, 0);
     }
 }
@@ -898,28 +929,28 @@ void cfguardian_init(int* obj, u8* params)
     stk2 = lbl_802C22CC;
     if (sub == NULL) return;
     ObjMsg_AllocQueue(obj, 4);
-    sub->questState = (u8)GameBit_Get(0x4b);
+    sub->questState = (u8)GameBit_Get(GAMEBIT_GUARDIAN_QUEST_STATE);
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->animEventCallback = (void*)cfguardian_SeqFn;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((CfGuardianMapData*)params)->rotXByte << 8);
     sub->landingPhase = 0;
-    sub->moveSpeed = lbl_803E4110;
+    sub->moveSpeed = 0.0f;
     sub->unkA90 = 6;
     sub->flagsA9B = 0;
     sub->flags611 = (u8)(sub->flags611 | 0x28);
     sub->chatterState = 1;
     sub->chatterAlt = 0;
     sub->chatterPick = 0;
-    if (GameBit_Get(0x57) != 0)
+    if (GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
     {
         sub->questState = 4;
-        if ((s8)params[0x19] == 0)
+        if (((CfGuardianMapData*)params)->variant == 0)
         {
-            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
+            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
             Obj_RemoveFromUpdateList(obj);
         }
     }
-    else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0)
+    else if (GameBit_Get(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)
     {
         sub->questState = 4;
         dll_2E_func0A(8, obj);
