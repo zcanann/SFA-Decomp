@@ -285,18 +285,14 @@ LAB_801b44d4:
 void explosion_release(uint obj)
 {
     int i;
-    int** p;
 
-    i = 0;
-    p = (int**)lbl_803AC960;
-    for (; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
-        if (*p != NULL)
+        if (((int**)lbl_803AC960)[i] != NULL)
         {
-            textureFree((int)*p);
-            *p = NULL;
+            textureFree((int)((int**)lbl_803AC960)[i]);
+            ((int**)lbl_803AC960)[i] = NULL;
         }
-        p++;
     }
 }
 
@@ -1182,8 +1178,6 @@ void explosion_initialise(void)
 {
     FbTexTbl t;
     int i;
-    int* src;
-    int* dst;
     t = lbl_802C2328;
     lbl_803DDB70 = lbl_803E492C / expf(lbl_803E4934);
     lbl_803DDB6C = lbl_803E492C / expf(lbl_803E493C);
@@ -1191,11 +1185,9 @@ void explosion_initialise(void)
     lbl_803DDB64 = lbl_803E492C / expf(lbl_803E4950);
     lbl_803DDB60 = lbl_803E492C / expf(lbl_803E4954);
     lbl_803DDB5C = lbl_803E492C / expf(lbl_803E492C);
-    for (i = 0, src = t.v, dst = lbl_803AC960; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
-        *dst = textureLoadAsset(*src);
-        src++;
-        dst++;
+        lbl_803AC960[i] = textureLoadAsset(t.v[i]);
     }
 }
 
