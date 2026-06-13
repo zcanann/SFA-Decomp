@@ -154,8 +154,7 @@ void dimbossicesmash_update(u8* obj)
         else
         {
             ((GameObject*)obj)->anim.alpha = 0xff;
-            ((DimBossIceSmashState*)state)->unk29C += framesThisStep;
-            cnt = ((DimBossIceSmashState*)state)->unk29C;
+            cnt = (((DimBossIceSmashState*)state)->unk29C += framesThisStep);
             if (cnt >= ((DimbossicesmashPlacement*)setup)->unk38)
             {
                 state[0x29e] = state[0x29e] | 2;
