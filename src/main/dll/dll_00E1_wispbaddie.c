@@ -48,7 +48,7 @@ extern EffectInterface** gPartfxInterface;
 extern int lbl_803DDA68;
 extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
+extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
@@ -146,26 +146,26 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state);
 
 void fn_8014F620(int obj, int* state)
 {
-    int curve;
+    RomCurveWalker* curve;
     int done;
     f32 step;
     f32 wave;
 
-    curve = state[0];
+    curve = (RomCurveWalker*)state[0];
     *(s16*)((u8*)state + 0x26) += (s16)(lbl_803E26D0 * timeDelta);
     *(s16*)(state + 10) += (s16)(lbl_803E26D4 * timeDelta);
 
     wave = lbl_803E26D8 + mathSinf((lbl_803E26DC * (f32) * (s16*)((u8*)state + 0x26)) /
         lbl_803E26E0);
     done = Curve_AdvanceAlongPath(curve, *(f32*)(state + 2) * wave);
-    if (((done != 0) || (*(int*)(curve + 0x10) != lbl_803DDA68)) &&
+    if (((done != 0) || (curve->atSegmentEnd != lbl_803DDA68)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state[0], (void*)obj, lbl_803E26E4,
                                           &lbl_803DBC80, -1) != 0))
     {
         *(u8*)((u8*)state + 0x24) = *(u8*)((u8*)state + 0x24) & ~1;
     }
-    lbl_803DDA68 = *(int*)(curve + 0x10);
+    lbl_803DDA68 = curve->atSegmentEnd;
 
     if ((*(u8*)((u8*)state + 0x24) & 2) != 0)
     {
@@ -280,7 +280,7 @@ void wispbaddie_update(int obj)
 {
     extern void fn_8014F620(int obj, WispBaddieState* state); /* #57 */
     WispBaddieState* state;
-    int curve;
+    RomCurveWalker* curve;
     int hit;
     f32 dx;
     f32 hitZ;
@@ -403,7 +403,7 @@ void wispbaddie_init(int obj, int setup, int initialised)
 
     if (initialised == 0)
     {
-        state->curve = (int)mmAlloc(0x108, 0x1a, 0);
+        state->curve = (RomCurveWalker*)mmAlloc(0x108, 0x1a, 0);
         if ((void*)state->curve != NULL)
         {
             memset((void*)state->curve, 0, 0x108);

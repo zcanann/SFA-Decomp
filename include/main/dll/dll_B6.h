@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_B6_H_
 #define MAIN_DLL_DLL_B6_H_
 
-#include "main/dll/CAM/camcontrol.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 
 CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState,
                                                   ObjAnimComponent *focus);

@@ -264,6 +264,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     int d1, d2;
     int npc;
     f32 vd[3], vc[3], vb[3], va[3];
+    u8 traceWork[CAMCONTROL_TRACE_WORK_SIZE];
     CameraModeNpcSpeakState* speakState;
 
     if (lbl_803DD584 == NULL)
@@ -435,8 +436,8 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     }
 
     fn_8010DB7C(target, va, vb, vc);
-    camcontrol_traceMove(&camera->anim.worldPosX, va, (void*)&speakState->cameraX, vd, 3, 1, 1,
-                         lbl_803E1A20);
+    camcontrol_traceMove(&camera->anim.worldPosX, va, (void*)&speakState->cameraX, traceWork, 3, 1,
+                         1, lbl_803E1A20);
 }
 
 void CameraModeNpcSpeak_update(u8* obj)

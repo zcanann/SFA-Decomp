@@ -18,7 +18,6 @@ extern undefined4 FUN_80017814();
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 
-extern undefined4 doNothing_80103660();
 extern f32 timeDelta;
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1758;

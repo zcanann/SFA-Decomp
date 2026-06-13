@@ -982,8 +982,8 @@ extern f32 lbl_803E0518;
 int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
 {
     extern int getAngle(f32 dx, f32 dz); /* #57 */
-    int slotC;
-    int slot8;
+    s32 slotC;
+    s32 slot8;
     CheckpointRouteEntry* cp;
     CheckpointRouteEntry* cp2;
     short ang;
@@ -1199,8 +1199,8 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
     extern u32 lbl_803DD410; /* #57 */
     int stack[64];
     char visited[200];
-    int cur;
-    int slot;
+    s32 cur;
+    s32 slot;
     int k, count, i, j;
     CheckpointRouteEntry* cp;
     CheckpointRouteEntry* n;

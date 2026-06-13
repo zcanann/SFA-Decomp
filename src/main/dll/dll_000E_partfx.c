@@ -1842,7 +1842,7 @@ extern void vecRotateZXY(void* obj, f32* vec);
 extern char sModgfxAlphaDebugFormat[];
 extern void fn_80137948(char* fmt, ...);
 
-int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 spawnFlags,
+int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                        u32 modelIdArg, void* extraArgsArg)
 {
     int modelId = (int)modelIdArg;

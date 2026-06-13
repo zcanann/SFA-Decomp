@@ -361,7 +361,7 @@ void hagabon_update(int obj)
     f32 dist;
     int hitA;
     int hitB;
-    int hitC;
+    u32 hitC;
     f32 lightPos[3];
     f32 hitX;
     f32 hitZ;

@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/object_transform.h"
-#include "main/dll/CAM/camcontrol.h"
 
 extern f32 lbl_803E1628;
 extern f32 lbl_803E162C;
@@ -27,7 +26,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
   int savedReticleState;
   u8 savedReticleAlpha;
   u8 *reticle;
-  u8 *target;
+  CamcontrolTargetObject *target;
   ObjHitVolumeRuntimeBounds *bounds;
   ObjHitVolumeRuntimeTransform *slot;
   u8 idx;
@@ -36,9 +35,9 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
   u16 *flagsObj;
 
   reticle = (u8 *)gCamcontrolTargetReticle;
-  target = (u8 *)fallbackTarget;
+  target = fallbackTarget;
   if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {
-    target = (u8 *)CAMCONTROL_CAMERA->targetReticleOverride;
+    target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->targetReticleOverride;
     savedReticleState = gCamcontrolTargetState;
     gCamcontrolTargetState = 3;
     savedReticleAlpha = ((GameObject *)reticle)->anim.alpha;
@@ -48,7 +47,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
   if (target != NULL) {
     if (((GameObject *)target)->anim.hitVolumeTransforms == NULL) goto end;
 
-    idx = ((GameObject *)target)->unkE4;
+    idx = target->targetSetupIndex;
     slot = &((GameObject *)target)->anim.hitVolumeTransforms[idx];
     bounds = &((GameObject *)target)->anim.hitVolumeBounds[idx];
 
@@ -65,7 +64,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
       break;
     }
 
-    paletteIdx = (int)((GameObject *)target)->unkE8;
+    paletteIdx = (int)target->targetPaletteIndex;
     if (paletteIdx >= 4) paletteIdx = 0;
     gCamcontrolTargetHelpTextId =
         ((GameObject *)target)->anim.modelInstance->helpTextIds[paletteIdx];

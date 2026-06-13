@@ -1531,7 +1531,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
                 cfg.startPosZ = extraArgs[5];
             }
             cfg.scale = (lbl_803E0374 + spawnParams->posX) * (spawnParams->
-                unk8 * (lbl_803E03CC * (f32)(s32)
+                scale * (lbl_803E03CC * (f32)(s32)
             randomGetRange(10, 0xd)
             )
             )
@@ -1609,7 +1609,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
                 cfg.startPosZ = extraArgs[5];
             }
             cfg.scale = (lbl_803E0374 + spawnParams->posX) * (spawnParams->
-                unk8 * (lbl_803E03DC * (f32)(s32)
+                scale * (lbl_803E03DC * (f32)(s32)
             randomGetRange(2, 0xd)
             )
             )
@@ -1690,7 +1690,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
                 cfg.startPosZ = extraArgs[5];
             }
             cfg.scale = (lbl_803E0374 + spawnParams->posX) * (spawnParams->
-                unk8 * (lbl_803E03CC * (f32)(s32)
+                scale * (lbl_803E03CC * (f32)(s32)
             randomGetRange(10, 0xd)
             )
             )
@@ -1730,7 +1730,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
                 cfg.startPosZ = extraArgs[5];
             }
             cfg.scale = (lbl_803E0374 + spawnParams->posX) * (spawnParams->
-                unk8 * (lbl_803E03DC * (f32)(s32)
+                scale * (lbl_803E03DC * (f32)(s32)
             randomGetRange(2, 0xd)
             )
             )

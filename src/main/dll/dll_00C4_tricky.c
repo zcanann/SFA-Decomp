@@ -82,10 +82,6 @@ extern int voxmaps_traceLine(void* from, void* to, int param_3, u8* hit, int par
 extern void voxmaps_worldToGrid(Vec* world, void* grid);
 extern void* ObjList_FindObjectById(int objId);
 extern int getTrickyObject(void);
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjHits_SyncObjectPosition();
-extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
 extern void* ObjGroup_GetObjects();
@@ -2104,7 +2100,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
     f32 fxB;
     f32 fxC;
     int hitArg;
-    int hitCount;
+    u32 hitCount;
     uint hitEffects;
     u16 impactSfx;
 

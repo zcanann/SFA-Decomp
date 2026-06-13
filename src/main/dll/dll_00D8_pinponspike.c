@@ -45,7 +45,7 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     int iVar2;
     int iVar3;
     ObjHitsPriorityState* hitState;
-    undefined4 auStack_18[4];
+    int auStack_18[4];
 
     iVar3 = *(int*)&((GameObject*)param_9)->extra;
     hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
@@ -270,8 +270,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
-
-void pollen_init(int* obj);
 
 int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
 {

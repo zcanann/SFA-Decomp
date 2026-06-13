@@ -12,10 +12,6 @@
 #include "string.h"
 
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
-extern int camcontrol_findBestTarget(CamcontrolCameraState * cameraState, ObjAnimComponent * target);
-extern void camcontrol_updateMoveAverage(CamcontrolCameraState * cameraState, ObjAnimComponent * target);
-extern void camcontrol_applyState(CamcontrolCameraState * cameraState);
-extern void camcontrol_applyQueuedAction(void);
 extern int dll_19_func1B();
 extern int isTalkingToNpc();
 extern int gameTextFn_80134be8(void);
@@ -634,7 +630,7 @@ void Camera_update(void)
     CamcontrolCameraState* camera;
     ObjAnimComponent* focus;
     u8 textActive;
-    int target;
+    CamcontrolTargetObject* target;
 
     if (gameTextFn_80134be8() != 0)
     {
@@ -705,7 +701,7 @@ void Camera_update(void)
             if (camera->overrideTarget == 0)
             {
                 target = camcontrol_findBestTarget(camera, focus);
-                camera->currentTarget = target;
+                camera->currentTarget = (int)target;
             }
             else
             {

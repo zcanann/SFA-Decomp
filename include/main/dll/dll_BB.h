@@ -2,7 +2,7 @@
 #define MAIN_DLL_DLL_BB_H_
 
 #include "ghidra_import.h"
-#include "main/dll/CAM/camcontrol.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 
 void camcontrol_applyState(CamcontrolCameraState *camera);
 void camcontrol_applyQueuedAction(void);

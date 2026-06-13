@@ -53,7 +53,6 @@ extern f32 interpolate(f32 v, f32 a, f32 b);
 extern void fn_802961D4(short* obj, int v);
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
-extern void Sfx_StopFromObject(int obj, int sfxId);
 
 extern int fn_802966D4(int obj, int* out);
 extern void Rcp_SetViewFinderHudEnabled(int on);

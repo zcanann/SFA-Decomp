@@ -2019,7 +2019,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
                                                 poolBounds->minY, poolBounds->maxY,
                                                 poolBounds->minZ - playerMapOffsetZ,
                                                 poolBounds->maxZ - playerMapOffsetZ,
-                                                boundsTemplate) != 0)
+                                                &boundsTemplate->minX) != 0)
             {
                 drawGlow(*slotPoolBases, poolIndex);
             }
@@ -2492,7 +2492,7 @@ void renderParticles(void)
                                                 (double)poolBounds->minY, (double)poolBounds->maxY,
                                                 (double)(poolBounds->minZ - playerMapOffsetZ),
                                                 (double)(poolBounds->maxZ - playerMapOffsetZ),
-                                                boundsTemplate) != 0)
+                                                &boundsTemplate->minX) != 0)
             {
                 sourcePosition = (ExpgfxPoolSourcePosition*)*poolSourceIds;
                 if (sourcePosition != (ExpgfxPoolSourcePosition*)0x0)

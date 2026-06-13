@@ -870,7 +870,8 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
         }
     }
 
-    fn_8004B31C(state + 0x6b8, route, *(int*)&((TrickyState*)state)->unk28, pathId, ((TrickyState*)state)->unk4A0);
+    fn_8004B31C(state + 0x6b8, route, *(int*)&((TrickyState*)state)->unk28, pathId,
+                ((TrickyState*)state)->route.reverse);
     if (fn_8004B218(state + 0x6b8, 0x1f4) != 1)
     {
         return NULL;

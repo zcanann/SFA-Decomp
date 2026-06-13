@@ -618,13 +618,13 @@ void collectible_func0B(int* obj, int flag)
     *(u8*)(inner + 0xf) = (u8)flag;
     if (flag != 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
     }
     else
     {
         if (GameBit_Get(*(s16*)(inner + 0x10)) == 0)
         {
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((u32)obj);
         }
     }
 }
@@ -726,7 +726,7 @@ void fn_80171E5C(int* obj)
     getTrickyObject();
     Obj_GetPlayerObject();
     getTrickyObject();
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
     if (((GameObject*)obj)->anim.flags & 0x2000)
     {
         *(f32*)(state + 8) = lbl_803E3450;
@@ -1177,7 +1177,7 @@ void collectible_update(int obj)
         if (((GfxEmitState*)state)->delayTimer <= zero)
         {
             ((GfxEmitState*)state)->delayTimer = zero;
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
             {
                 Obj_FreeObject(obj);
@@ -1252,7 +1252,7 @@ void collectible_update(int obj)
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->flags |= 0x100;
         }
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         if (((GfxEmitState*)state)->hideGameBit != -1 && GameBit_Get((s32)((GfxEmitState*)state)->hideGameBit) == 0)
         {
             ((GameObject*)obj)->unkF4 = 0;

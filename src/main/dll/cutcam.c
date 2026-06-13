@@ -648,6 +648,6 @@ void camcontrol_updateModeSettings(int camera)
     return;
 }
 
-void doNothing_80103660(void)
+void doNothing_80103660(int unused)
 {
 }
