@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/camera_object.h"
+#include "main/game_object.h"
 
 typedef struct CamcontrolPathSampleWork {
   u8 unk0[0xc];
@@ -14,7 +15,7 @@ typedef struct CamcontrolPathSampleWork {
   f32 targetZ[4];
   int model;
   u8 unk34[0x70];
-  undefined4 targetObj;
+  GameObject *targetObj;
   f32 localX;
   f32 localY;
   f32 localZ;
@@ -27,6 +28,7 @@ typedef struct CamcontrolPathSampleWork {
 void pathcam_loadSettings(CameraObject *cam, int mode, u8 *data);
 void camcontrol_releaseModeSettings(void);
 void camcontrol_initialiseModeSettings(void);
-void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param_4,int param_5);
+u8 camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,GameObject *target,
+                              CameraObject *camera);
 
 #endif /* MAIN_DLL_CAM_PATHCAM_H_ */

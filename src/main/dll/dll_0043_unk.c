@@ -2,7 +2,9 @@
 #include "main/dll/CAM/camshipbattle.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
+#include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/cutCam.h"
+#include "main/dll/CAM/pathcam.h"
 #include "main/pad.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
@@ -17,15 +19,11 @@ extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 
 extern undefined4 doNothing_80103660();
-extern char camcontrol_samplePathState();
 extern f32 timeDelta;
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1758;
 extern f32 lbl_803E175C;
 extern void memset(void* ptr, int value, int size);
-extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
-                                       f32 height, s16 angleRange, s16 angleLimit,
-                                       int* outPointCount);
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
@@ -109,7 +107,6 @@ void CameraModeStaffAnim_copyToCurrent_nop(void)
 void camclimb_update(CameraObject* cam)
 {
     extern uint getAngle();
-    extern undefined4 camcontrol_updatePathTargetAction();
     byte needsReset;
     uint angle;
     int defaultHandler;

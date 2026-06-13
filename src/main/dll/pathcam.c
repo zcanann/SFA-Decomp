@@ -8,7 +8,8 @@ extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
 extern f32 lbl_803E1748;
 
-void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 param_4, int param_5)
+u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* target,
+                              CameraObject* camera)
 {
     CamcontrolPathSampleWork work;
     int iVar1;
@@ -16,7 +17,7 @@ void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 pa
     f32 pathT;
 
     memset(&work, 0, 0x144);
-    work.model = *(int*)(param_5 + 0x30);
+    work.model = (int)camera->anim.parent;
     work.sampleX = gCamcontrolPathState->pointsX[gCamcontrolPathState->pathCurve.count - 2];
     work.sampleY = *height;
     work.sampleZ = gCamcontrolPathState->pointsZ[gCamcontrolPathState->pathCurve.count - 2];
@@ -25,9 +26,9 @@ void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 pa
     work.localZ = work.sampleZ;
     Obj_TransformLocalPointToWorld((double)work.sampleX, (double)work.sampleY, (double)work.sampleZ,
                                    &work.worldX, &work.worldY, work.worldZ, work.model);
-    work.targetObj = param_4;
+    work.targetObj = target;
     iVar1 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-    (*(code*)(**(int**)(iVar1 + 4) + 0x14))(&work, param_4);
+    (*(code*)(**(int**)(iVar1 + 4) + 0x14))(&work, target);
     Obj_TransformLocalPointToWorld(work.sampleX, work.sampleY, work.sampleZ,
                                    &work.targetX, &work.targetY, work.targetZ, work.model);
     (*(code*)(**(int**)(iVar1 + 4) + 0x24))
