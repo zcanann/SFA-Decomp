@@ -114,6 +114,13 @@ typedef struct DIMbossBoneParticleEffectInterface
     void (*spawnEffect)(DIMbossObject* obj, int effectId, void* params, int frames, void* extra);
 } DIMbossBoneParticleEffectInterface;
 
+typedef struct DIMbossInitVec
+{
+    undefined4 a;
+    undefined4 b;
+    undefined4 c;
+} DIMbossInitVec;
+
 typedef struct DIMbossBaddieControlInterface
 {
     u8 pad00[0x28];
@@ -620,9 +627,7 @@ void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
     f32 liftHeight;
 
     runtime = obj->runtime;
-    localVec[0] = lbl_802C2338[0];
-    localVec[1] = lbl_802C2338[1];
-    localVec[2] = lbl_802C2338[2];
+    *(DIMbossInitVec*)localVec = *(DIMbossInitVec*)lbl_802C2338;
     *(undefined2*)(localVec + 3) = *(undefined2*)(lbl_802C2338 + 3);
     setDrawCloudsAndLights(0);
     obj->updateMode = 2;
@@ -662,7 +667,7 @@ void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
     dll_2E_func09(gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
     *animFlagsByte |= 8;
-    *animFlagsByte &= 0xfe;
+    *animFlagsByte &= ~1;
     topState->steamFlags.bits.sfxPending = 1;
     gDIMbossHitEffectResource =
         Resource_Acquire(DIMBOSS_HIT_EFFECT_ID, DIMBOSS_HIT_EFFECT_RESOURCE_COUNT);
