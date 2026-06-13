@@ -797,10 +797,13 @@ void explosion_update(int obj)
                         &&
                         (((ExplosionDebris*)p)->unk20 -= framesThisStep, ((ExplosionDebris*)p)->unk20 <= 0))
                     {
-                        u8 c = ((ExplosionDebris*)p)->unk2D;
-                        f32 sp2 = ((ExplosionDebris*)p)->unk1C;
-                        int st2 = *(int*)&((GameObject*)obj)->extra;
+                        int st2;
+                        u8 c;
+                        f32 sp2;
                         f32 sv;
+                        c = ((ExplosionDebris*)p)->unk2D;
+                        sp2 = ((ExplosionDebris*)p)->unk1C;
+                        st2 = *(int*)&((GameObject*)obj)->extra;
                         vpos[0] = ((ExplosionDebris*)p)->unkC * (lbl_803E495C * (f32)(int)
                         randomGetRange(-5, 3) + lbl_803E492C
                         )
