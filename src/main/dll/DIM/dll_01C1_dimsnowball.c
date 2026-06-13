@@ -128,8 +128,8 @@ void dimsnowball_update(int obj)
     int last;
     u8 frames;
     u8* model;
-    f32 dy1;
     f32 dy2;
+    f32 dy1;
     f32 v24;
 
     ap = idx;
