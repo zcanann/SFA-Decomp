@@ -211,6 +211,7 @@ void dim2lavacontrol_init(int obj, int param2)
     envFxActFn_800887f8(0);
 }
 
+#pragma opt_common_subs off
 void dim2lavacontrol_update(int obj)
 {
     extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int e1, int e2);
