@@ -521,7 +521,6 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
     off = idx * 0x30;
     *(f32*)((char*)state + off) = x;
     e = state + off;
-    e14 = state + off;
     *(f32*)((char*)e + 0x4) = y;
     *(f32*)((char*)e + 0x8) = z;
     *(f32*)((char*)e + 0x18) = lbl_803E492C;
@@ -529,6 +528,7 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
     *(f32*)((char*)e + 0x1c) = spd;
     *(u8*)((char*)e + 0x2d) = b;
     *(int*)((char*)e + 0x10) = 0;
+    e14 = state + off;
     *(int*)((char*)e14 + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
     {
         int v = *(int*)((char*)e14 + 0x14);
@@ -757,7 +757,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void explosion_update(int obj)
 {
     ExplosionPartfxSource fake;
-    s16 ang[6];
+    u16 ang[6];
     f32 vpos[3];
     f32 m[12];
     u8 rgb[3];
@@ -902,7 +902,7 @@ void explosion_update(int obj)
                         ang[4] = 0;
                     }
                     {
-                        s16 sv = ang[2];
+                        u16 sv = ang[2];
                         u8 md;
                         ang[5] = 0;
                         md = ((ExplosionState*)state)->modelKind;
@@ -937,15 +937,15 @@ void explosion_update(int obj)
     {
         int e = ((ExplosionState*)state)->frameCounter;
         int d = ((ExplosionState*)state)->lifeFrames;
-        if (d << 1 < e)
+        if (e > d << 1)
         {
             Obj_FreeObject(obj);
         }
         else
         {
-            if (d < e)
+            if (e > d)
             {
-                if (((ExplosionState*)state)->light != 0)
+                if (*(void**)&((ExplosionState*)state)->light != NULL)
                 {
                     modelLightStruct_setEnabled(((ExplosionState*)state)->light, 0, lbl_803E4960);
                 }
@@ -953,7 +953,7 @@ void explosion_update(int obj)
             else
             {
                 ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
-                if (((ExplosionState*)state)->light != 0)
+                if (*(void**)&((ExplosionState*)state)->light != NULL)
                 {
                     modelLightStruct_setDiffuseColor(((ExplosionState*)state)->light, rgb[0], rgb[1], rgb[2], 0xff);
                 }
@@ -962,14 +962,14 @@ void explosion_update(int obj)
                 f32 frac = (f32)(int)((ExplosionState*)state)->frameCounter / (f32)(int)((ExplosionState*)state)->
                     lifeFrames;
                 ((GameObject*)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * ((ExplosionState*)state)->scale;
-                ((GameObject*)obj)->anim.alpha = (s8)(int) - (lbl_803E4938 * frac - lbl_803E4938);
+                ((GameObject*)obj)->anim.alpha = (s8)(int)(lbl_803E4938 - lbl_803E4938 * frac);
             }
-            if (((ExplosionState*)state)->halfLifeFired == 0 && (((ExplosionState*)state)->lifeFrames >> 1) <= ((
-                ExplosionState*)state)->frameCounter)
+            if (*(u8*)&((ExplosionState*)state)->halfLifeFired == 0 && ((ExplosionState*)state)->frameCounter >= (((
+                ExplosionState*)state)->lifeFrames >> 1))
             {
                 u32 k;
                 ang[0] = randomGetRange(0x1000, 0x6000);
-                ang[3] = *(s16*)((char*)state + 0x14);
+                ang[3] = *(int*)((char*)state + 0x14);
                 k = 0;
                 while ((f32)(int)k < ((ExplosionState*)state)->scale
                 )
