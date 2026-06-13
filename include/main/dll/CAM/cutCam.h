@@ -17,9 +17,16 @@ typedef struct CamcontrolAction44Payload {
   s16 height;
 } CamcontrolAction44Payload;
 
+#define CAMCONTROL_TRACE_RADIUS_OFFSET 0x40
+#define CAMCONTROL_TRACE_BBOX_HIT_OFFSET 0x50
+#define CAMCONTROL_TRACE_MODE_OFFSET 0x54
+#define CAMCONTROL_TRACE_HIT_COUNT_OFFSET 0x6C
+#define CAMCONTROL_TRACE_BLOCKED_OFFSET 0x6E
+#define CAMCONTROL_TRACE_WORK_SIZE 0x70
+
 int
-camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
-                     char param_6,u8 param_7,u8 param_8,float param_1);
+camcontrol_traceMove(float *fromPos,float *toPos,float *outPos,u8 *traceWork,
+                     char traceMode,u8 runTrace,u8 runBbox,float radius);
 undefined camcontrol_traceFromTarget(float *fromPos,GameObject *target,float *outPos);
 undefined camcontrol_getTargetPosition(int param_1,void *param_2,void *param_3,void *param_4);
 void camcontrol_updateTargetAction(CameraObject *camera,GameObject *target);

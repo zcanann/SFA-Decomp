@@ -48,39 +48,40 @@ extern f32 lbl_803E16CC;
 extern f32 lbl_803DD52C;
 
 int
-camcontrol_traceMove(float* startPos, float* targetPos, float* endPosOut, u8* trace,
-                     char channel, u8 doSweep, u8 doBboxTest, float radius)
+camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
+                     char traceMode, u8 runTrace, u8 runBbox, float radius)
 {
     u8 blocked;
     undefined4 clear;
     float endTmp[3];
     uint sweptBounds[9];
 
-    if (endPosOut == (float*)0x0)
+    if (outPos == (float*)0x0)
     {
-        endPosOut = endTmp;
+        outPos = endTmp;
     }
-    *endPosOut = *targetPos;
-    endPosOut[1] = targetPos[1];
-    endPosOut[2] = targetPos[2];
-    *(float*)(trace + 0x40) = radius;
-    *(s8*)(trace + 0x50) = -1;
-    *(s8*)(trace + 0x54) = channel;
+    *outPos = *toPos;
+    outPos[1] = toPos[1];
+    outPos[2] = toPos[2];
+    *(float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET) = radius;
+    *(s8*)(traceWork + CAMCONTROL_TRACE_BBOX_HIT_OFFSET) = -1;
+    *(s8*)(traceWork + CAMCONTROL_TRACE_MODE_OFFSET) = traceMode;
     blocked = '\0';
-    *(undefined2*)(trace + 0x6c) = 0;
-    if (doBboxTest != '\0')
+    *(undefined2*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) = 0;
+    if (runBbox != '\0')
     {
-        blocked = objBboxFn_800640cc(startPos, endPosOut, (float*)0x1, (int*)0x0, (int*)0x0, 0x10, 0xffffffff, 0xff, 0);
+        blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, (int*)0x0, (int*)0x0, 0x10, 0xffffffff, 0xff, 0);
     }
     lbl_803DD528 = blocked;
-    if (doSweep != '\0')
+    if (runTrace != '\0')
     {
-        hitDetect_calcSweptSphereBounds(sweptBounds, startPos, endPosOut, (float*)(trace + 0x40), 1);
+        hitDetect_calcSweptSphereBounds(sweptBounds, fromPos, outPos,
+                                        (float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET), 1);
         hitDetectFn_800691c0(0, sweptBounds, 0x240, '\x01');
     }
-    hitDetectFn_80067958(0, startPos, endPosOut, 1, (int)trace, 0);
+    hitDetectFn_80067958(0, fromPos, outPos, 1, (int)traceWork, 0);
     clear = 0;
-    if ((lbl_803DD528 == '\0') && (*(short*)(trace + 0x6c) == 0))
+    if ((lbl_803DD528 == '\0') && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
     {
         clear = 1;
     }
@@ -104,7 +105,7 @@ undefined camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* 
         targetPos[2] = target->anim.worldPosZ;
     }
     camcontrol_traceMove(targetPos, fromPos, outPos, traceRec, 3, '\x01', '\x01', (double)lbl_803E1688);
-    return traceRec[110];
+    return traceRec[CAMCONTROL_TRACE_BLOCKED_OFFSET];
 }
 
 undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* arg3)
@@ -171,7 +172,7 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
     {
         *pitchOut = *(s16*)(obj + 2) + d;
     }
-    return box[110];
+    return box[CAMCONTROL_TRACE_BLOCKED_OFFSET];
 }
 
 void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
