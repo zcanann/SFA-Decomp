@@ -740,8 +740,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             p = state;
             for (i = 0; i < ((ExplosionState*)state)->rayMode; i++)
             {
-                ((GameObject*)obj)->anim.rotY = ((ExplosionState*)p)->rayYawA;
-                ((GameObject*)obj)->anim.rotX = ((ExplosionState*)p)->rayPitchA;
+                ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)p)->rayYawA;
+                ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)p)->rayPitchA;
                 objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (f32)visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
