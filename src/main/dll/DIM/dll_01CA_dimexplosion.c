@@ -588,7 +588,8 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
         f32 ev = expf(
             (lbl_803E4934 * ((f32)(int) * (int*)((char*)e14 + 0x14) - (f32)(int) * (int*)((char*)e + 0x10))) / (f32)(int)
             * (int*)((char*)e14 + 0x14));
-        f32 t = (sp - *(f32*)((char*)e + 0x18)) * ev;
+        f32 d = sp - *(f32*)((char*)e + 0x18);
+        f32 t = d * ev;
         *(f32*)((char*)e + 0xc) = sp - t * lbl_803DDB70;
         ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e14 + 0x14));
         t = lbl_803E4938 * ev;
@@ -696,9 +697,9 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 ((u8*)&colB)[1] = cv;
                 ((u8*)&colB)[2] = cv;
                 ((u8*)&colB)[3] = cv;
-                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, (u8*)&colA,
-                                                  (f32)(int)((ExplosionDebris*)p)->unk10,
-                                                  (f32)(int)((ExplosionDebris*)p)->unk14);
+                fn_801B40B8((f32)(int)((ExplosionDebris*)p)->unk10,
+                            (f32)(int)((ExplosionDebris*)p)->unk14,
+                            ((ExplosionState*)state)->modelKind, (u8*)&colA);
                 tex = (void**)((int*)lbl_803AC960)[((ExplosionState*)state)->modelKind];
                 for (k = 0; k < ((ExplosionDebris*)p)->unk2C; k++)
                 {
@@ -776,7 +777,8 @@ void explosion_update(int obj)
             f32 ev = expf(
                 (lbl_803E4934 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) / (
                     f32)(int)((ExplosionDebris*)p)->unk14);
-            f32 t = (sp - ((ExplosionDebris*)p)->unk18) * ev;
+            f32 d = sp - ((ExplosionDebris*)p)->unk18;
+            f32 t = d * ev;
             ((ExplosionDebris*)p)->unkC = sp - t * lbl_803DDB70;
             ev = expf((lbl_803E493C * (f32)(int)((ExplosionDebris*)p)->unk10) / (f32)(int)((ExplosionDebris*)p)->unk14);
             t = lbl_803E4938 * ev;
@@ -820,9 +822,10 @@ void explosion_update(int obj)
                         vpos[2] += ((ExplosionDebris*)p)->unk8;
                         sv = sp2 * (f32)(int)
                         randomGetRange(0xc0, 0x100);
+                        sv = sv * lbl_803E4974;
                         if (((ExplosionState*)st2)->flameCount < 0x32)
                         {
-                            fn_801B3DE4(obj, (u8)(c + 1), sv * lbl_803E4974, vpos[0], vpos[1], vpos[2]);
+                            fn_801B3DE4(obj, (u8)(c + 1), sv, vpos[0], vpos[1], vpos[2]);
                         }
                         ((ExplosionDebris*)p)->unk20 = ((ExplosionDebris*)p)->unk24;
                     }
@@ -964,7 +967,7 @@ void explosion_update(int obj)
             }
             else
             {
-                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
+                fn_801B40B8((f32)(int)e, (f32)(int)d, ((ExplosionState*)state)->modelKind, rgb);
                 if (*(void**)&((ExplosionState*)state)->light != NULL)
                 {
                     modelLightStruct_setDiffuseColor(((ExplosionState*)state)->light, rgb[0], rgb[1], rgb[2], 0xff);
