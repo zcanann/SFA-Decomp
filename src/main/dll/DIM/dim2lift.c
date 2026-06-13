@@ -1039,7 +1039,7 @@ int fn_801BB0D8(int obj, int param2, f32 fParam)
         ((BaddieState*)param2)->moveSpeed = lbl_803259A0[local_c];
         ((BaddieState*)param2)->moveDone = 0;
     }
-    (*(int (**)(int, int, int, f32))(*(int*)gPlayerInterface + 0x20))(obj, param2, 8, fParam);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, param2, fParam, 8);
     return 0;
 }
 
@@ -1061,7 +1061,7 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
         ((BaddieState*)param2)->animSpeedB = v;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 1, lbl_80325AA0);
-    (*(int (**)(int, int, int, f32))(*(int*)gPlayerInterface + 0x30))(obj, param2, 0xf0, fParam);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, fParam, 0xf0);
     return 0;
 }
 
@@ -1103,7 +1103,7 @@ int fn_801BA654(int obj, int param2)
     }
     if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
     {
-        gDIMbossSequenceFlags |= 0x8020;
+        gDIMbossSequenceFlags |= 0x8020LL;
         Camera_EnableViewYOffset();
         CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
         doRumble(lbl_803E4BD0);
@@ -1173,7 +1173,7 @@ int fn_801BACB8(int obj, int param2, f32 arg)
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18)
     {
-        gDIMbossSequenceFlags &= 0xffffffbf;
+        gDIMbossSequenceFlags &= ~0x40LL;
     }
     else if (h > lbl_803E4C1C)
     {
@@ -1208,7 +1208,7 @@ int fn_801BAE00(int obj, int param2, f32 arg)
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18)
     {
-        gDIMbossSequenceFlags &= ~0x40;
+        gDIMbossSequenceFlags &= ~0x40LL;
     }
     else if (h > lbl_803E4C20)
     {
@@ -1216,7 +1216,7 @@ int fn_801BAE00(int obj, int param2, f32 arg)
     }
     if (*(int*)&((BaddieState*)param2)->eventFlags & 0x200)
     {
-        gDIMbossSequenceFlags |= 0x10000;
+        gDIMbossSequenceFlags |= 0x10000LL;
         *(int*)&((BaddieState*)param2)->eventFlags &= ~0x200;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 3, lbl_80325AA0);
