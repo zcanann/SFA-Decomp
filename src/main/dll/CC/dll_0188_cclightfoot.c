@@ -287,19 +287,23 @@ void cclightfoot_update(int obj)
         {
             valid = GameBit_Get(*(s16*)(*(int*)(o1 + 0x4c) + 0x18)) != 0 ? 0 : 1;
         }
-        if (valid != 0)
+        if (valid == 0)
         {
-            o2 = state[3];
-            if (!(fn_8014C5D0(o2) > lbl_803E4680))
-            {
-                valid = 0;
-            }
-            else
-            {
-                valid = GameBit_Get(*(s16*)(*(int*)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
-            }
+            goto cc_else;
         }
-        if (valid != 0)
+        o2 = state[3];
+        if (!(fn_8014C5D0(o2) > lbl_803E4680))
+        {
+            valid = 0;
+        }
+        else
+        {
+            valid = GameBit_Get(*(s16*)(*(int*)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+        }
+        if (valid == 0)
+        {
+            goto cc_else;
+        }
         {
             dist = getXZDistance((f32*)(state[1] + 0x18), (f32*)(state[3] + 0x18));
             if (getXZDistance((f32*)(state[1] + 0x18), (f32*)(state[2] + 0x18)) < dist)
@@ -349,7 +353,8 @@ void cclightfoot_update(int obj)
                 }
             }
         }
-        else
+        goto cc_endif;
+    cc_else:
         {
             o2 = state[2];
             if (!(fn_8014C5D0(o2) > lbl_803E4680))
@@ -399,6 +404,7 @@ void cclightfoot_update(int obj)
                 dist = lbl_803E4674;
             }
         }
+    cc_endif:;
         angle = (s16)getAngle(-(((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX),
                               -(((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ));
         diff = (s16)(*(s16*)obj - (u16)angle);
