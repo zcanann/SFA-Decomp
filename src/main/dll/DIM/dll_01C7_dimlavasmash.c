@@ -350,8 +350,10 @@ typedef struct DimlavasmashState
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
 
 #pragma dont_inline on
+#pragma opt_propagation off
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 {
+    int m;
     int i;
     int* block;
     int* layer;
@@ -374,6 +376,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
             }
         }
     }
+    m = ~2;
     for (i = 0; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
     {
         layer = (int*)fn_8006070C(arg1, i);
@@ -381,7 +384,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
         {
             if (arg2 != 0)
             {
-                *(u32*)(layer + 0x3c / 4) &= ~2LL;
+                *(u32*)(layer + 0x3c / 4) &= m;
             }
             else
             {
@@ -390,6 +393,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
         }
     }
 }
+#pragma opt_propagation reset
 #pragma dont_inline reset
 
 int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
