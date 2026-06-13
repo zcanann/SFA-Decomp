@@ -597,6 +597,7 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     }
 }
 
+#pragma dont_inline on
 void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b)
 {
     s16 v1;
@@ -636,6 +637,7 @@ void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b)
     }
 }
 
+#pragma dont_inline reset
 void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u32 colB2;
@@ -701,26 +703,31 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 colA2 = colA;
                 fn_80073AAC(tex, &colA2, &colB2, k);
                 GXBegin(0x80, 2, 4);
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4988;
-                GXWGFifo.f32 = lbl_803E492C;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E4960;
-                GXWGFifo.f32 = lbl_803E492C;
+                {
+                    f32 fc = lbl_803E492C;
+                    f32 fb = lbl_803E4960;
+                    f32 fa = lbl_803E4988;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fb;
+                    GXWGFifo.f32 = fc;
+                }
             }
             p += 0x30;
         }
