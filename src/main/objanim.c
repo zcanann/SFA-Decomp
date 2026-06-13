@@ -41,16 +41,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     float blendFrameLength;
 
     requestedEventState = eventState;
-    moveIndex = animDef->moveGroupBaseIndices[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-        (moveId & OBJANIM_MOVE_INDEX_MASK);
-    if (moveIndex >= animDef->moveCount)
-    {
-        moveIndex = animDef->moveCount - 1;
-    }
-    if (moveIndex < 0)
-    {
-        moveIndex = 0;
-    }
+    moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
     if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
     {
         if (state->lastBlendMoveIndex != moveIndex)
@@ -66,14 +57,12 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
                                    state->blendMoveCache[state->blendCacheSlot], animDef);
             state->lastBlendMoveIndex = (s16)moveIndex;
         }
-        moveData =
-            (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] +
-                OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = ObjAnim_GetCurrentBlendMoveData(animDef, state);
     }
     else
     {
         state->blendCacheSlot = (u16)moveIndex;
-        moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
+        moveData = ObjAnim_GetCurrentBlendMoveData(animDef, state);
     }
     state->blendFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
     blendFrameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
@@ -408,14 +397,12 @@ Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveC
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData =
-            (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] +
-                OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
     }
     else
     {
         state->moveCacheSlot = (u16)moveId;
-        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
+        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
     }
     state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
@@ -1090,14 +1077,12 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData =
-            (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] +
-                OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
     }
     else
     {
         state->moveCacheSlot = (u16)moveId;
-        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
+        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
     }
     state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
