@@ -205,7 +205,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
         if (((GameObject*)obj)->anim.currentMove != lbl_803DC748)
         {
-            ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
+            ObjAnim_SetCurrentMove(obj, lbl_803DC748, k, 0);
         }
         inner->countdownTimer = randomGetRange(0x4b0, 0x960);
     }
