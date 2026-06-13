@@ -395,7 +395,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             {
                 runtime->field270 = 0;
                 DIMboss_GetPlayerInterface()->applyHitReact(
-                    obj, runtime, lbl_803E4C44, lbl_803E4C44,
+                    obj, runtime, lbl_803E4C44, *(f32*)&lbl_803E4C44,
                     animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
                     animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
                 animUpdate->sequenceEventActive = 0;
