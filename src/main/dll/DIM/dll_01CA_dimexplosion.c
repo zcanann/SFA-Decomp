@@ -140,8 +140,8 @@ extern f32 lbl_803DDB64;
 extern f32 lbl_803DDB68;
 extern f32 lbl_803DDB6C;
 extern f32 lbl_803DDB70;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f32 lbl_80325528[];
 extern FbTexTbl lbl_802C2328;
 extern f32 expf(f32 x);
@@ -666,7 +666,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         p = state;
         for (i = 0; i < ((ExplosionState*)state)->flameCount; i++)
         {
-            if (*(s8*)&((ExplosionDebris*)p)->unk2F != 0)
+            if (*(u8*)&((ExplosionDebris*)p)->unk2F != 0)
             {
                 void** tex;
                 int k;
@@ -682,8 +682,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(m2, m3, m2);
                 PSMTXScale(m4, ((ExplosionDebris*)p)->unkC, ((ExplosionDebris*)p)->unkC, ((ExplosionDebris*)p)->unkC);
                 PSMTXConcat(m4, m2, m4);
-                PSMTXTrans(mE, ((ExplosionDebris*)p)->unk0 - lbl_803DCDD8, ((ExplosionDebris*)p)->unk4,
-                           ((ExplosionDebris*)p)->unk8 - lbl_803DCDDC);
+                PSMTXTrans(mE, ((ExplosionDebris*)p)->unk0 - playerMapOffsetX, ((ExplosionDebris*)p)->unk4,
+                           ((ExplosionDebris*)p)->unk8 - playerMapOffsetZ);
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
@@ -731,7 +731,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             p += 0x30;
         }
-        if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(s8*)&((ExplosionState*)
+        if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(u8*)&((ExplosionState*)
             state)->rayMode != 0)
         {
             p = state;
