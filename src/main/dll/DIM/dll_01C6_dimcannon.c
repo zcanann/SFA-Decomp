@@ -651,7 +651,6 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     extern void* Obj_GetPlayerObject(void);
     char* state;
     int* src = *(int**)&((GameObject*)obj)->anim.placementData;
-    void* player;
     u8 done = 0;
     int camMode;
 
@@ -664,6 +663,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
         s16* vec;
         s8 timer;
         int delta;
+        void* player;
 
         player = Obj_GetPlayerObject();
         setAButtonIcon(0x16);
