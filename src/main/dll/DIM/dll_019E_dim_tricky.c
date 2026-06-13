@@ -348,8 +348,11 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
 {
     Dll19EState* state;
     void* resource;
-    undefined stackArg[16];
-    volatile f32 localScale;
+    struct
+    {
+        undefined args[16];
+        volatile f32 scale;
+    } stackArg;
 
     state = ((GameObject*)obj)->extra;
     *(s16*)obj = (s16)(((s32)setup->objectType & 0x3f) << 10);
@@ -366,7 +369,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     state->active = 0;
     state->sequenceIndex = 0;
     state->gameBitId = setup->gameBitId;
-    localScale = lbl_803E51E0;
+    stackArg.scale = lbl_803E51E0;
 
     switch (state->mode)
     {
@@ -376,7 +379,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
         if (setup->sequenceIndex == 0)
         {
             (*(void (**)(u8*, int, undefined*, int, int, int))(*(int*)resource + 4))(
-                obj, 0, stackArg, 0x10004, -1, 0);
+                obj, 0, stackArg.args, 0x10004, -1, 0);
         }
         break;
     case 1:
