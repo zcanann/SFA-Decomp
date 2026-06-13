@@ -863,7 +863,7 @@ void explosion_update(int obj)
                 framesThisStep;
                 *(f32*)((char*)p + 0x96c) += *(f32*)((char*)p + 0x978) * (f32)(u32)
                 framesThisStep;
-                if (((ExplosionState*)state)->nearGround != 0 && *(f32*)((char*)p + 0x968) < ((ExplosionState*)state)->
+                if (*(u8*)&((ExplosionState*)state)->nearGround != 0 && *(f32*)((char*)p + 0x968) < ((ExplosionState*)state)->
                     groundY &&
                     *(f32*)((char*)p + 0x974) < lbl_803E4960)
                 {
