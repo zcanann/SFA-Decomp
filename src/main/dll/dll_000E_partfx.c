@@ -1652,13 +1652,13 @@ extern f32 lbl_803DFCE0;
 extern FxNode9 lbl_8039C398;
 
 #define FILL9() do {                            \
-    lbl_8039C398.fc = 0.0f;             \
-    lbl_8039C398.f10 = 0.0f;            \
-    lbl_8039C398.f14 = 0.0f;            \
-    lbl_8039C398.f8 = 1.0f;             \
-    lbl_8039C398.x = 0;                         \
-    lbl_8039C398.y = 0;                         \
-    lbl_8039C398.z = 0;                         \
+    lbl_8039C398.posX = 0.0f;             \
+    lbl_8039C398.posY = 0.0f;            \
+    lbl_8039C398.posZ = 0.0f;            \
+    lbl_8039C398.scale = 1.0f;             \
+    lbl_8039C398.unk0 = 0;                         \
+    lbl_8039C398.unk2 = 0;                         \
+    lbl_8039C398.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C398;             \
   } while (0)
 
@@ -1667,13 +1667,13 @@ extern FxNode9 lbl_8039C398;
 extern FxNode9 lbl_8039C380;
 
 #define FILL8() do {                            \
-    lbl_8039C380.fc = 0.0f;             \
-    lbl_8039C380.f10 = 0.0f;            \
-    lbl_8039C380.f14 = 0.0f;            \
-    lbl_8039C380.f8 = 1.0f;             \
-    lbl_8039C380.x = 0;                         \
-    lbl_8039C380.y = 0;                         \
-    lbl_8039C380.z = 0;                         \
+    lbl_8039C380.posX = 0.0f;             \
+    lbl_8039C380.posY = 0.0f;            \
+    lbl_8039C380.posZ = 0.0f;            \
+    lbl_8039C380.scale = 1.0f;             \
+    lbl_8039C380.unk0 = 0;                         \
+    lbl_8039C380.unk2 = 0;                         \
+    lbl_8039C380.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C380;             \
   } while (0)
 
@@ -1683,13 +1683,13 @@ extern FxNode9 lbl_8039C338;
 extern f32 lbl_803DF884;
 
 #define FILL338() do {                          \
-    lbl_8039C338.fc = lbl_803DF884;             \
-    lbl_8039C338.f10 = lbl_803DF884;            \
-    lbl_8039C338.f14 = lbl_803DF884;            \
-    lbl_8039C338.f8 = lbl_803DF878;             \
-    lbl_8039C338.x = 0;                         \
-    lbl_8039C338.y = 0;                         \
-    lbl_8039C338.z = 0;                         \
+    lbl_8039C338.posX = lbl_803DF884;             \
+    lbl_8039C338.posY = lbl_803DF884;            \
+    lbl_8039C338.posZ = lbl_803DF884;            \
+    lbl_8039C338.scale = lbl_803DF878;             \
+    lbl_8039C338.unk0 = 0;                         \
+    lbl_8039C338.unk2 = 0;                         \
+    lbl_8039C338.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C338;             \
   } while (0)
 
@@ -1836,7 +1836,7 @@ extern f32 lbl_803DF700;
 extern f32 lbl_803DF704;
 extern f32 lbl_803DF708;
 extern s16 gPartfxResourceTimeouts[20];
-extern s16 lbl_8039C308[12];
+extern PartFxSpawnParams lbl_8039C308;
 extern void srand(int seed);
 extern void vecRotateZXY(void* obj, f32* vec);
 extern char sModgfxAlphaDebugFormat[];
@@ -2460,15 +2460,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY + (f32)(s32)
         randomGetRange(0xfffffffa, 6);
@@ -2486,14 +2486,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x551:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF4EC;
@@ -2506,14 +2506,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF4EC;
@@ -2525,14 +2525,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x554:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF51C;
@@ -2544,14 +2544,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x553:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.velocityX = lbl_803DF4F0 * (f32)(s32)
         randomGetRange(0xffffffe2, 0x1e);
@@ -2777,15 +2777,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x545:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.scale = lbl_803DF530 * ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.lifetimeFrames = 4;
@@ -2798,15 +2798,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.scale = lbl_803DF534 * ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.lifetimeFrames = 4;
@@ -2823,14 +2823,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         randomGetRange(0xffffff9c, 100);
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.scale = lbl_803DF53C;
         cfg.lifetimeFrames = 300;
@@ -2852,14 +2852,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x548:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.scale = lbl_803DF544;
         cfg.lifetimeFrames = 0x50;
@@ -2873,15 +2873,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x52d:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams != NULL)
         {
@@ -2910,15 +2910,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x531:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams != NULL)
         {
@@ -3010,15 +3010,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -3051,15 +3051,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x533:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -3099,15 +3099,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x535:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -3166,15 +3166,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -3204,15 +3204,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x51e:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -3272,15 +3272,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x2be:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams != NULL)
         {
@@ -3681,15 +3681,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -3760,15 +3760,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -4073,14 +4073,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.velocityY = lbl_803DF508 * (f32)(s32)
         randomGetRange(1, 10);
@@ -4404,14 +4404,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.velocityX = lbl_803DF608;
         ftmp0 = (f32)(s32)
@@ -4469,15 +4469,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -4816,15 +4816,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x6b:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (extraArgs == NULL)
         {
@@ -4861,15 +4861,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x56:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.startPosX = (f32)(s32)
         randomGetRange(0xfffffffa, 6);
@@ -4908,15 +4908,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.startPosY = (f32)(s32)
         randomGetRange(0, 10);
@@ -4955,15 +4955,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x58:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF4F0 * (f32)(s32)
         randomGetRange(0xffffff9c, 100)
@@ -4999,14 +4999,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x323:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.startPosX = lbl_803DF6CC * (f32)(s32)
         randomGetRange(0xffffffea, 0x15) + cfg.startPosX;
@@ -5119,14 +5119,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF6E4;
         rot.m[1] = lbl_803DF4DC;
@@ -5310,15 +5310,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x3de:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         if (spawnParams == NULL)
         {
@@ -5389,15 +5389,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.velocityX = lbl_803DF608 * (f32)(s32)
         randomGetRange(0xfffffffe, 2);
@@ -5417,15 +5417,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x321:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.velocityY = lbl_803DF4CC * (f32)(s32)
         randomGetRange(0, 4);
@@ -5444,15 +5444,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
         cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
@@ -5468,15 +5468,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.velocityZ = lbl_803DF708;
         cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
@@ -5493,15 +5493,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
-            spawnParams = lbl_8039C308;
+            lbl_8039C308.posX = lbl_803DF4DC;
+            lbl_8039C308.posY = lbl_803DF4DC;
+            lbl_8039C308.posZ = lbl_803DF4DC;
+            lbl_8039C308.scale = lbl_803DF4D0;
+            lbl_8039C308.unk0 = 0;
+            lbl_8039C308.unk2 = 0;
+            lbl_8039C308.unk4 = 0;
+            lbl_8039C308.unk6 = 0;
+            spawnParams = (s16 *)&lbl_8039C308;
         }
         cfg.sourceVecX = 700;
         cfg.textureId = 0xc09;
@@ -5522,14 +5522,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             if (spawnParams == NULL)
             {
-                ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
-                ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
-                ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
-                ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
-                ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
-                ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
-                ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
-                ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
+                lbl_8039C308.posX = lbl_803DF4DC;
+                lbl_8039C308.posY = lbl_803DF4DC;
+                lbl_8039C308.posZ = lbl_803DF4DC;
+                lbl_8039C308.scale = lbl_803DF4D0;
+                lbl_8039C308.unk0 = 0;
+                lbl_8039C308.unk2 = 0;
+                lbl_8039C308.unk4 = 0;
+                lbl_8039C308.unk6 = 0;
             }
             cfg.velocityX = lbl_803DF5CC * (f32)(s32)
             randomGetRange(0xffffffd8, 0x28);
@@ -5622,13 +5622,13 @@ extern FxNode9 lbl_8039C368;
 extern f32 lbl_803DFCEC;
 
 #define FILL368() do {                          \
-    lbl_8039C368.fc = lbl_803DFCEC;             \
-    lbl_8039C368.f10 = lbl_803DFCEC;            \
-    lbl_8039C368.f14 = lbl_803DFCEC;            \
-    lbl_8039C368.f8 = lbl_803DFCE0;             \
-    lbl_8039C368.x = 0;                         \
-    lbl_8039C368.y = 0;                         \
-    lbl_8039C368.z = 0;                         \
+    lbl_8039C368.posX = lbl_803DFCEC;             \
+    lbl_8039C368.posY = lbl_803DFCEC;            \
+    lbl_8039C368.posZ = lbl_803DFCEC;            \
+    lbl_8039C368.scale = lbl_803DFCE0;             \
+    lbl_8039C368.unk0 = 0;                         \
+    lbl_8039C368.unk2 = 0;                         \
+    lbl_8039C368.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C368;             \
   } while (0)
 
@@ -5639,13 +5639,13 @@ extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
 
 #define FILL350() do {                          \
-    lbl_8039C350.fc = lbl_803DF9D0;             \
-    lbl_8039C350.f10 = lbl_803DF9D0;            \
-    lbl_8039C350.f14 = lbl_803DF9D0;            \
-    lbl_8039C350.f8 = lbl_803DF9D4;             \
-    lbl_8039C350.x = 0;                         \
-    lbl_8039C350.y = 0;                         \
-    lbl_8039C350.z = 0;                         \
+    lbl_8039C350.posX = lbl_803DF9D0;             \
+    lbl_8039C350.posY = lbl_803DF9D0;            \
+    lbl_8039C350.posZ = lbl_803DF9D0;            \
+    lbl_8039C350.scale = lbl_803DF9D4;             \
+    lbl_8039C350.unk0 = 0;                         \
+    lbl_8039C350.unk2 = 0;                         \
+    lbl_8039C350.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C350;             \
   } while (0)
 
@@ -5661,13 +5661,13 @@ extern FxNode9 lbl_8039C320;
 
 /* ===== (2) FILL macro ===== */
 #define FILL320() do {                          \
-    lbl_8039C320.fc = 0.0f;             \
-    lbl_8039C320.f10 = 0.0f;            \
-    lbl_8039C320.f14 = 0.0f;            \
-    lbl_8039C320.f8 = 1.0f;             \
-    lbl_8039C320.x = 0;                         \
-    lbl_8039C320.y = 0;                         \
-    lbl_8039C320.z = 0;                         \
+    lbl_8039C320.posX = 0.0f;             \
+    lbl_8039C320.posY = 0.0f;            \
+    lbl_8039C320.posZ = 0.0f;            \
+    lbl_8039C320.scale = 1.0f;             \
+    lbl_8039C320.unk0 = 0;                         \
+    lbl_8039C320.unk2 = 0;                         \
+    lbl_8039C320.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C320;             \
   } while (0)
 

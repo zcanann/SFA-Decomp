@@ -1665,13 +1665,13 @@ void Effect7_func05(void);
 extern FxNode9 lbl_8039C398;
 
 #define FILL9() do {                            \
-    lbl_8039C398.fc = 0.0f;             \
-    lbl_8039C398.f10 = 0.0f;            \
-    lbl_8039C398.f14 = 0.0f;            \
-    lbl_8039C398.f8 = 1.0f;             \
-    lbl_8039C398.x = 0;                         \
-    lbl_8039C398.y = 0;                         \
-    lbl_8039C398.z = 0;                         \
+    lbl_8039C398.posX = 0.0f;             \
+    lbl_8039C398.posY = 0.0f;            \
+    lbl_8039C398.posZ = 0.0f;            \
+    lbl_8039C398.scale = 1.0f;             \
+    lbl_8039C398.unk0 = 0;                         \
+    lbl_8039C398.unk2 = 0;                         \
+    lbl_8039C398.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C398;             \
   } while (0)
 
@@ -1680,13 +1680,13 @@ extern FxNode9 lbl_8039C398;
 extern FxNode9 lbl_8039C380;
 
 #define FILL8() do {                            \
-    lbl_8039C380.fc = 0.0f;             \
-    lbl_8039C380.f10 = 0.0f;            \
-    lbl_8039C380.f14 = 0.0f;            \
-    lbl_8039C380.f8 = 1.0f;             \
-    lbl_8039C380.x = 0;                         \
-    lbl_8039C380.y = 0;                         \
-    lbl_8039C380.z = 0;                         \
+    lbl_8039C380.posX = 0.0f;             \
+    lbl_8039C380.posY = 0.0f;            \
+    lbl_8039C380.posZ = 0.0f;            \
+    lbl_8039C380.scale = 1.0f;             \
+    lbl_8039C380.unk0 = 0;                         \
+    lbl_8039C380.unk2 = 0;                         \
+    lbl_8039C380.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C380;             \
   } while (0)
 
@@ -1696,13 +1696,13 @@ extern FxNode9 lbl_8039C338;
 extern f32 lbl_803DF884;
 
 #define FILL338() do {                          \
-    lbl_8039C338.fc = lbl_803DF884;             \
-    lbl_8039C338.f10 = lbl_803DF884;            \
-    lbl_8039C338.f14 = lbl_803DF884;            \
-    lbl_8039C338.f8 = lbl_803DF878;             \
-    lbl_8039C338.x = 0;                         \
-    lbl_8039C338.y = 0;                         \
-    lbl_8039C338.z = 0;                         \
+    lbl_8039C338.posX = lbl_803DF884;             \
+    lbl_8039C338.posY = lbl_803DF884;            \
+    lbl_8039C338.posZ = lbl_803DF884;            \
+    lbl_8039C338.scale = lbl_803DF878;             \
+    lbl_8039C338.unk0 = 0;                         \
+    lbl_8039C338.unk2 = 0;                         \
+    lbl_8039C338.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C338;             \
   } while (0)
 
@@ -1712,13 +1712,13 @@ extern FxNode9 lbl_8039C368;
 extern f32 lbl_803DFCEC;
 
 #define FILL368() do {                          \
-    lbl_8039C368.fc = lbl_803DFCEC;             \
-    lbl_8039C368.f10 = lbl_803DFCEC;            \
-    lbl_8039C368.f14 = lbl_803DFCEC;            \
-    lbl_8039C368.f8 = lbl_803DFCE0;             \
-    lbl_8039C368.x = 0;                         \
-    lbl_8039C368.y = 0;                         \
-    lbl_8039C368.z = 0;                         \
+    lbl_8039C368.posX = lbl_803DFCEC;             \
+    lbl_8039C368.posY = lbl_803DFCEC;            \
+    lbl_8039C368.posZ = lbl_803DFCEC;            \
+    lbl_8039C368.scale = lbl_803DFCE0;             \
+    lbl_8039C368.unk0 = 0;                         \
+    lbl_8039C368.unk2 = 0;                         \
+    lbl_8039C368.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C368;             \
   } while (0)
 
@@ -1729,13 +1729,13 @@ extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
 
 #define FILL350() do {                          \
-    lbl_8039C350.fc = lbl_803DF9D0;             \
-    lbl_8039C350.f10 = lbl_803DF9D0;            \
-    lbl_8039C350.f14 = lbl_803DF9D0;            \
-    lbl_8039C350.f8 = lbl_803DF9D4;             \
-    lbl_8039C350.x = 0;                         \
-    lbl_8039C350.y = 0;                         \
-    lbl_8039C350.z = 0;                         \
+    lbl_8039C350.posX = lbl_803DF9D0;             \
+    lbl_8039C350.posY = lbl_803DF9D0;            \
+    lbl_8039C350.posZ = lbl_803DF9D0;            \
+    lbl_8039C350.scale = lbl_803DF9D4;             \
+    lbl_8039C350.unk0 = 0;                         \
+    lbl_8039C350.unk2 = 0;                         \
+    lbl_8039C350.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C350;             \
   } while (0)
 
@@ -1751,13 +1751,13 @@ extern FxNode9 lbl_8039C320;
 
 /* ===== (2) FILL macro ===== */
 #define FILL320() do {                          \
-    lbl_8039C320.fc = 0.0f;             \
-    lbl_8039C320.f10 = 0.0f;            \
-    lbl_8039C320.f14 = 0.0f;            \
-    lbl_8039C320.f8 = 1.0f;             \
-    lbl_8039C320.x = 0;                         \
-    lbl_8039C320.y = 0;                         \
-    lbl_8039C320.z = 0;                         \
+    lbl_8039C320.posX = 0.0f;             \
+    lbl_8039C320.posY = 0.0f;            \
+    lbl_8039C320.posZ = 0.0f;            \
+    lbl_8039C320.scale = 1.0f;             \
+    lbl_8039C320.unk0 = 0;                         \
+    lbl_8039C320.unk2 = 0;                         \
+    lbl_8039C320.unk4 = 0;                         \
     spawnParams = (s16 *)&lbl_8039C320;             \
   } while (0)
 

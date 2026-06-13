@@ -5,12 +5,14 @@
 
 typedef struct FxNode9
 {
-    s16 x, y, z;
-    s16 pad6;
-    f32 f8;
-    f32 fc;
-    f32 f10;
-    f32 f14;
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    f32 scale;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
 } FxNode9;
 
 #endif
