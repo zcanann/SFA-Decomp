@@ -411,15 +411,15 @@ u8 SB_Galleon_render2(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->e
 
 s32 SB_Galleon_func0B(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->stage; }
 
-int SB_Galleon_setScale(int obj)
+int SB_Galleon_setScale(GameObject* obj)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
     int phase = state->phase;
     if (phase != 1)
     {
         if (phase >= 2)
         {
-            Sfx_PlayFromObject(obj, SFXen_diallp_c);
+            Sfx_PlayFromObject((int)obj, SFXen_diallp_c);
         }
         state->stage += 1;
         return 1;
@@ -435,9 +435,9 @@ int SB_Galleon_setScale(int obj)
     return 0;
 }
 
-void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SB_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
     struct
     {
         u8 pad[6];
@@ -460,13 +460,13 @@ void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             stk.a = lbl_803E5808;
             (*gPartfxInterface)->spawnObject((void*)obj, SBGALLEON_FX_WANDER, stk.pad, 2, -1, NULL);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E57A4);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)((int)obj, p2, p3, p4, p5, lbl_803E57A4);
     }
 }
 
-void SB_Galleon_hitDetect(int obj)
+void SB_Galleon_hitDetect(GameObject* obj)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
     u8 i;
     struct
     {
@@ -492,11 +492,11 @@ void SB_Galleon_hitDetect(int obj)
     }
 }
 
-void SB_Galleon_update(int obj)
+void SB_Galleon_update(GameObject* obj)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.mapEventSlot = state->mapLayer;
-    fn_801E1588(obj, (int)state);
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
+    obj->anim.mapEventSlot = state->mapLayer;
+    fn_801E1588((int)obj, (int)state);
     if (GameBit_Get(SBGALLEON_GAMEBIT_INTRO) == 0)
     {
         (*gMapEventInterface)->setMode(SBGALLEON_MAP_PALACE, 1);
@@ -504,11 +504,11 @@ void SB_Galleon_update(int obj)
         (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 1, 1);
         (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 5, 1);
         lockLevel(mapGetDirIdx(SBGALLEON_MAP_PALACE), 0);
-        if ((*gMapEventInterface)->getAnimEvent(*(u8*)(obj + 0x34), 1) == 0)
+        if ((*gMapEventInterface)->getAnimEvent(*(u8*)((char*)obj + 0x34), 1) == 0)
         {
-            (*gMapEventInterface)->setAnimEvent(*(u8*)(obj + 0x34), 1, 1);
+            (*gMapEventInterface)->setAnimEvent(*(u8*)((char*)obj + 0x34), 1, 1);
         }
-        ((GameObject*)obj)->unkF4 = 0;
+        obj->unkF4 = 0;
     }
     else
     {
@@ -519,18 +519,18 @@ void SB_Galleon_update(int obj)
         switch ((s8)state->cameraState)
         {
         case SBGALLEON_CAM_APPROACH:
-            fn_801DFA28(obj);
+            fn_801DFA28((int)obj);
             break;
         case SBGALLEON_CAM_START_INTRO:
             (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
             state->cameraState = SBGALLEON_CAM_SHIELD;
             break;
         case SBGALLEON_CAM_SHIELD:
-            DBprotection_updateShield(obj);
+            DBprotection_updateShield((int)obj);
             break;
         case SBGALLEON_CAM_END:
             (*gMapEventInterface)->setMode(SBGALLEON_MAP_PALACE, 1);
-            ((GameObject*)obj)->anim.mapEventSlot = -1;
+            obj->anim.mapEventSlot = -1;
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
             state->cameraState = SBGALLEON_CAM_DONE;
             break;
@@ -539,16 +539,16 @@ void SB_Galleon_update(int obj)
     }
 }
 
-void SB_Galleon_init(int obj)
+void SB_Galleon_init(GameObject* obj)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
-    gSbGalleon = obj;
-    ObjGroup_AddObject(obj, 3);
-    objSetSlot((void*)obj, 0x5a);
-    ((GameObject*)obj)->animEventCallback = (void*)SB_Galleon_animEventCallback;
-    state->posX = ((GameObject*)obj)->anim.localPosX;
-    state->posY = ((GameObject*)obj)->anim.localPosY;
-    state->posZ = ((GameObject*)obj)->anim.localPosZ;
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
+    gSbGalleon = (u32)obj;
+    ObjGroup_AddObject((int)obj, 3);
+    objSetSlot(obj, 0x5a);
+    obj->animEventCallback = (void*)SB_Galleon_animEventCallback;
+    state->posX = obj->anim.localPosX;
+    state->posY = obj->anim.localPosY;
+    state->posZ = obj->anim.localPosZ;
     state->sweepDir = 1;
     state->timer26 = 0xf0;
     state->phaseTimer = 0xf0;
@@ -560,27 +560,27 @@ void SB_Galleon_init(int obj)
     state->envfxActs[5] = 0x88;
     state->envfxActs[0] = 0x87;
     state->envfxActs[1] = 0x97;
-    state->mapLayer = ((GameObject*)obj)->anim.mapEventSlot;
-    ((GameObject*)obj)->anim.rotX = 0x4000;
-    ((GameObject*)obj)->anim.rotY = 0;
-    ((GameObject*)obj)->anim.rotZ = 0;
+    state->mapLayer = obj->anim.mapEventSlot;
+    obj->anim.rotX = 0x4000;
+    obj->anim.rotY = 0;
+    obj->anim.rotZ = 0;
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
     lbl_803DDC1C = (int)textureLoadAsset(0x89);
     state->unk84 = 100;
-    (*gMapEventInterface)->setMode(((GameObject*)obj)->anim.mapEventSlot, 1);
+    (*gMapEventInterface)->setMode(obj->anim.mapEventSlot, 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
     state->wanderTimerA = lbl_803E56CC;
     state->wanderTimerB = lbl_803E580C;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= 0x1800;
     setDrawLights(0);
     state->musicIdA = 0x92;
     state->musicIdB = 0x91;
     Music_Trigger(state->musicIdB, 1);
 }
 
-void SB_Galleon_free(int obj, int p2)
+void SB_Galleon_free(GameObject* obj, int p2)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
     if ((void*)lbl_803DDC18 != NULL)
     {
         textureFree((void*)lbl_803DDC18);
@@ -591,7 +591,7 @@ void SB_Galleon_free(int obj, int p2)
         textureFree((void*)lbl_803DDC1C);
         lbl_803DDC1C = 0;
     }
-    ObjGroup_RemoveObject(obj, 3);
+    ObjGroup_RemoveObject((int)obj, 3);
     if (state->unk80 != 0 && p2 == 0)
     {
         state->unk80 = 0;

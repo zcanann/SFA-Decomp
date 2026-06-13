@@ -70,7 +70,7 @@ void SB_CannonBall_initialise(void)
 {
 }
 
-void SB_ShipGun_init(int obj);
+void SB_ShipGun_init(GameObject* obj);
 
 int SB_CannonBall_getExtraSize(void) { return SB_CANNONBALL_EXTRA_SIZE; }
 int SB_CannonBall_getObjectTypeId(void) { return 0x0; }

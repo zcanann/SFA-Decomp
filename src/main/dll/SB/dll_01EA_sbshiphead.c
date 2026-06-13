@@ -80,7 +80,7 @@ extern f32 lbl_803E5830;
 extern f32 lbl_803E5838;
 extern f32 lbl_803E583C;
 
-void SB_ShipHead_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32);
     int phase;
@@ -120,7 +120,7 @@ void SB_ShipHead_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             stk.a = lbl_803E583C;
             stk.mode = 0xc0a;
-            ObjPath_GetPointWorldPosition(obj, 0xd, &stk.b, &stk.c, &stk.d, 0);
+            ObjPath_GetPointWorldPosition((int)obj, 0xd, &stk.b, &stk.c, &stk.d, 0);
             stk.b = stk.b - o->anim.worldPosX;
             stk.c = stk.c - o->anim.worldPosY;
             stk.d = stk.d - o->anim.worldPosZ;
@@ -309,7 +309,7 @@ u32 getSbGalleon(void);
 
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 
-void SB_Propeller_hitDetect(int obj);
+void SB_Propeller_hitDetect(GameObject* obj);
 
 void SB_ShipHead_init(int obj)
 {

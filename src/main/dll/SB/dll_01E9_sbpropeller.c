@@ -190,14 +190,14 @@ void SB_Propeller_update(int obj)
     }
 }
 
-void SB_Propeller_init(int obj, int placement)
+void SB_Propeller_init(GameObject* obj, int placement)
 {
     ObjAnimComponent* objAnim;
     uint randVal;
     SBPropellerState* state;
 
     objAnim = (ObjAnimComponent*)obj;
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     randVal = randomGetRange(0x5a, 0xf0);
     state->smokeTimer = (f32)(s32)(randVal);
     state->spinBlend = lbl_803E64A8;
@@ -206,12 +206,12 @@ void SB_Propeller_init(int obj, int placement)
     objAnim->bankIndex = (char)*(s16*)(placement + 0x1a);
     if (objAnim->seqId != SB_PROPELLER_SEQ_ID)
     {
-        DAT_803de8c0 = obj;
+        DAT_803de8c0 = (u32)obj;
     }
     return;
 }
 
-void SB_ShipHead_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SB_ShipHead_render(GameObject* p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int SB_Propeller_getExtraSize(void) { return sizeof(SBPropellerState); }
 int SB_ShipHead_getExtraSize(void);
@@ -228,11 +228,11 @@ void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void SB_Propeller_hitDetect(int obj)
+void SB_Propeller_hitDetect(GameObject* obj)
 {
-    GameObject* o = (GameObject*)obj;
+    GameObject* o = obj;
     if (o->anim.seqId != SB_PROPELLER_SEQ_ID) return;
     o->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
-void SB_ShipGun_free(int obj);
+void SB_ShipGun_free(GameObject* obj);
