@@ -527,6 +527,7 @@ void dimwooddoor2_init(u8* obj, u8* params);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
+#pragma peephole off
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 {
@@ -534,21 +535,21 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     s32 v;
 
     tex = (u8*)objFindTexture(arg1, 0, 0);
-    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x14);
+    *(s16*)(tex + 10) += 0x14;
     if (*(s16*)(tex + 10) > 10000)
     {
-        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
+        *(s16*)(tex + 10) -= 10000;
     }
-    *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) + 10);
+    *(s16*)(tex + 8) += 10;
     if (*(s16*)(tex + 8) > 10000)
     {
-        *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) - 10000);
+        *(s16*)(tex + 8) -= 10000;
     }
     tex = (u8*)objFindTexture(arg1, 1, 0);
-    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x1e);
+    *(s16*)(tex + 10) += 0x1e;
     if (*(s16*)(tex + 10) > 10000)
     {
-        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
+        *(s16*)(tex + 10) -= 10000;
     }
     v = (s32) * (u16*)(obj + 0x60) + (s32)framesThisStep * 0x100;
     if (v > 0xffff) v = v - 0xffff;
