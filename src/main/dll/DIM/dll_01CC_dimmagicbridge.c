@@ -568,8 +568,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
     int j;
     int i;
     u8* sub;
-    int o;
-    o = (int)obj;
+    int o = (int)obj;
     sub = ((GameObject*)o)->extra;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
@@ -594,7 +593,8 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
         {
             if (sub[0x40 + i] != 0)
             {
-                int v = sub[0x50 + i] + framesThisStep;
+                int sv = sub[0x50 + i];
+                int v = sv + framesThisStep;
                 if (v > 0xff) v = 0xff;
                 sub[0x50 + i] = (u8)v;
             }
