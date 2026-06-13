@@ -645,8 +645,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u32 colA;
     u32 colB;
-    u32 colB2;
     u32 colA2;
+    u32 colB2;
     f32 mE[12];
     f32 m4[12];
     f32 m3[12];
@@ -672,7 +672,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 void** tex;
                 int k;
-                u32 cv;
+                u8 cv;
                 Obj_BuildWorldTransformMatrix(obj, mE, 0);
                 PSMTXRotRad(
                     m1, 0x7a, (f32)((lbl_803E4978 * (f64)(int) * (s16*)&((ExplosionDebris*)p)->unk28) / lbl_803E4980));
@@ -690,9 +690,9 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
                 ((u8*)&colA)[3] = ((ExplosionDebris*)p)->unk2E;
-                cv = (int)(lbl_803DDB68 * (lbl_803E4938 * expf(
+                cv = lbl_803DDB68 * (lbl_803E4938 * expf(
                     (lbl_803E4958 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) /
-                    (f32)(int)((ExplosionDebris*)p)->unk14)));
+                    (f32)(int)((ExplosionDebris*)p)->unk14));
                 ((u8*)&colB)[0] = cv;
                 ((u8*)&colB)[1] = cv;
                 ((u8*)&colB)[2] = cv;
