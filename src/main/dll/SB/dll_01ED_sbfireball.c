@@ -64,7 +64,7 @@ void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_FireBall_hitDetect(int* obj)
 {
-    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim);
     int i;
     if (hits->lastHitObject == 0)
     {
@@ -107,9 +107,11 @@ void SB_FireBall_update(GameObject* obj)
     extern void Obj_FreeObject(int obj);
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     SBFireBallState* state;
+    ObjHitsPriorityState* hits;
     f32 particleArgs[7];
 
     state = obj->extra;
+    hits = ObjAnim_GetPriorityHitState(&obj->anim);
     if (state->owner == NULL)
     {
         state->owner = *(void**)&obj->unkF8;
@@ -145,21 +147,15 @@ void SB_FireBall_update(GameObject* obj)
 
         if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY)
         {
-            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority =
-                SB_FIREBALL_HITBOX_TYPE;
-            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId =
-                SB_FIREBALL_HITBOX_PRIORITY;
-            ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask =
-                SB_FIREBALL_HITBOX_SIZE;
-            ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask =
-                SB_FIREBALL_HITBOX_SIZE;
-            ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |=
-                SB_FIREBALL_SOLID_HITBOX_FLAG;
+            hits->hitVolumePriority = SB_FIREBALL_HITBOX_TYPE;
+            hits->hitVolumeId = SB_FIREBALL_HITBOX_PRIORITY;
+            hits->objectHitMask = SB_FIREBALL_HITBOX_SIZE;
+            hits->skeletonHitMask = SB_FIREBALL_HITBOX_SIZE;
+            hits->flags |= SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
         else
         {
-            ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &=
-                ~SB_FIREBALL_SOLID_HITBOX_FLAG;
+            hits->flags &= ~SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
 
         state->age += framesThisStep;

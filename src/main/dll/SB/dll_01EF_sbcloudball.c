@@ -140,8 +140,8 @@ void SB_CloudBall_hitDetect(GameObject* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     SBCloudBallState* state = obj->extra;
-    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
-    int* target = *(int**)&hits->lastHitObject;
+    ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
+    int* target = (int*)hits->lastHitObject;
 
     if ((void*)target == NULL) return;
     if (state->fadeTimer != lbl_803E58EC) return;
@@ -149,7 +149,6 @@ void SB_CloudBall_hitDetect(GameObject* obj)
     {
         Sfx_PlayFromObject((int*)obj, SFXen_rockshat16);
     }
-    hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hits->flags = (s16)(hits->flags & ~1);
     state->fadeTimer = lbl_803E58F0;
     obj->anim.alpha = 0;
@@ -164,10 +163,9 @@ void SB_CloudBall_init(GameObject* obj)
     extern void modelLightStruct_setLightKind(int light, int v);
     extern int objCreateLight(int* obj, int mode);
     SBCloudBallState* state = obj->extra;
-    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
+    ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
 
     hits->flags = (s16)(hits->flags & ~1);
-    hits = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hits->trackContactMask = (u16)(hits->trackContactMask | 1);
     if ((void*)state->light == NULL)
     {
@@ -188,6 +186,7 @@ void SB_CloudBall_update(GameObject* obj)
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     extern void* Obj_GetPlayerObject(void);
     SBCloudBallState* state = obj->extra;
+    ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
     void* player = Obj_GetPlayerObject();
     f32 timer = state->fadeTimer;
     f32 zero = lbl_803E58EC;
@@ -237,13 +236,12 @@ void SB_CloudBall_update(GameObject* obj)
         }
         obj->anim.rotX = (s16)getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
                                    obj->anim.localPosZ - obj->anim.previousLocalPosZ);
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 5;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask = 0x10;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask = 0x10;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= 1;
-        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0 && state->fadeTimer ==
-            lbl_803E58EC)
+        hits->hitVolumePriority = 5;
+        hits->hitVolumeId = 1;
+        hits->objectHitMask = 0x10;
+        hits->skeletonHitMask = 0x10;
+        hits->flags |= 1;
+        if (hits->contactFlags != 0 && state->fadeTimer == lbl_803E58EC)
         {
             projectileParticleFxFn_80099660((int*)obj, lbl_803E58E8, 2);
             state->fadeTimer = lbl_803E58F0;
