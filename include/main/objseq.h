@@ -51,6 +51,8 @@ typedef struct ObjectTriggerInterface {
     int (*setRunSequenceWorldSpace)(int unused, int mode);
 } ObjectTriggerInterface;
 
+extern ObjectTriggerInterface **gObjectTriggerInterface;
+
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, onMapSetup) == 0x04);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, addBgCommand) == 0x08);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setFlag) == 0x0C);

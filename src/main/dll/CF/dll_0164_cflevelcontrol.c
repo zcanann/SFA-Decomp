@@ -10,6 +10,7 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
+#include "main/dll/alphaanim.h"
 #include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -50,7 +51,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E43E8;
 extern int ObjList_FindObjectById(int objectId);
-extern void fn_8017C294(int obj);
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void unlockLevel(int a, int b, int c);
@@ -120,14 +120,14 @@ void cflevelcontrol_update(int obj)
 
     if (((u32)state[0xc] >> 3 & 1) != 0)
     {
-        fn_8017C294(ObjList_FindObjectById(0x47fae));
-        fn_8017C294(ObjList_FindObjectById(0x47f83));
-        fn_8017C294(ObjList_FindObjectById(0x47f8f));
-        fn_8017C294(ObjList_FindObjectById(0x47fa2));
-        fn_8017C294(ObjList_FindObjectById(0x29f2));
-        fn_8017C294(ObjList_FindObjectById(0x29f3));
-        fn_8017C294(ObjList_FindObjectById(0x29ef));
-        fn_8017C294(ObjList_FindObjectById(0x29ee));
+        fn_8017C294((int*)ObjList_FindObjectById(0x47fae));
+        fn_8017C294((int*)ObjList_FindObjectById(0x47f83));
+        fn_8017C294((int*)ObjList_FindObjectById(0x47f8f));
+        fn_8017C294((int*)ObjList_FindObjectById(0x47fa2));
+        fn_8017C294((int*)ObjList_FindObjectById(0x29f2));
+        fn_8017C294((int*)ObjList_FindObjectById(0x29f3));
+        fn_8017C294((int*)ObjList_FindObjectById(0x29ef));
+        fn_8017C294((int*)ObjList_FindObjectById(0x29ee));
         ((CfLevelControlFlags*)&state[0xc])->b3 = 0;
     }
 

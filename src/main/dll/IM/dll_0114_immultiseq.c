@@ -7,15 +7,11 @@
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);
@@ -65,16 +61,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E37A8;
 extern int GameBit_Set(int eventId, int value);
 
-void FUN_8017c5c4(int param_1)
-{
-    if (param_1 != 0)
-    {
-        (**(code**)(**(int**)&((GameObject*)param_1)->anim.dll + 4))(
-            param_1, *(undefined4*)&((GameObject*)param_1)->anim.placementData, 0);
-    }
-    return;
-}
-
 undefined4
 FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -111,7 +97,7 @@ FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 para
                 if (((bVar1 != 0) && ((*(byte*)(iVar5 + 0x1d) & 1) == 0)) &&
                     ((*(byte*)(iVar5 + 0x1d) & 2) != 0))
                 {
-                    param_1 = FUN_80017698((int)*(short*)(iVar5 + 0x18), 1);
+                    param_1 = GameBit_Set((int)*(short*)(iVar5 + 0x18), 1);
                 }
             }
             else if (bVar1 < 4)
@@ -157,24 +143,24 @@ void seqObject_update(int obj)
         {
             if ((bVar2 & 8) != 0)
             {
-                FUN_80017698(def->openGameBit, 1);
+                GameBit_Set(def->openGameBit, 1);
             }
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
         else if ((bVar2 & 4) == 0)
         {
-            FUN_80017698(def->triggerGameBit, 0);
+            GameBit_Set(def->triggerGameBit, 0);
         }
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_SEQUENCE_DONE);
     }
     if ((state->flags & SEQOBJECT_STATE_OPEN) == 0)
     {
-        bitValue = FUN_80017690(def->openGameBit);
+        bitValue = GameBit_Get(def->openGameBit);
         if (bitValue != 0)
         {
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
-        bitValue = FUN_80017690(def->triggerGameBit);
+        bitValue = GameBit_Get(def->triggerGameBit);
         bVar2 = (byte)bitValue;
         if ((bVar2 != state->triggerBitState) && (state->triggerBitState = bVar2, bVar2 != 0))
         {
@@ -185,14 +171,14 @@ void seqObject_update(int obj)
             }
             if (((def->flags & 1) == 0) && ((def->flags & 10) == 0))
             {
-                FUN_80017698(def->openGameBit, 1);
+                GameBit_Set(def->openGameBit, 1);
             }
         }
     }
     else if ((state->flags & SEQOBJECT_STATE_TRIGGER_SEQUENCE) == 0)
     {
         if (((def->flags & 1) != 0) &&
-            (bitValue = FUN_80017690(def->openGameBit), bitValue == 0))
+            (bitValue = GameBit_Get(def->openGameBit), bitValue == 0))
         {
             state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
         }
@@ -237,18 +223,18 @@ void seqObj2_update(int obj)
         if ((state->flags & SEQOBJECT_STATE_TRIGGER_SEQUENCE) == 0)
         {
             if (((def->triggerGameBit == -1) ||
-                    (bitValue = FUN_80017690(def->triggerGameBit), bitValue != 0)) &&
+                    (bitValue = GameBit_Get(def->triggerGameBit), bitValue != 0)) &&
                 ((def->openGameBit == -1 ||
-                    (bitValue = FUN_80017690(def->openGameBit), bitValue == 0))))
+                    (bitValue = GameBit_Get(def->openGameBit), bitValue == 0))))
             {
                 if ((def->flags & SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE) != 0)
                 {
-                    FUN_80017698(def->triggerGameBit, 0);
+                    GameBit_Set(def->triggerGameBit, 0);
                     FUN_800723a0();
                 }
                 if ((def->flags & SEQOBJECT_FLAG_UNUSED_20) != 0)
                 {
-                    FUN_80017698(def->openGameBit, 1);
+                    GameBit_Set(def->openGameBit, 1);
                     FUN_800723a0();
                 }
                 FUN_800723a0();
@@ -259,12 +245,12 @@ void seqObj2_update(int obj)
         {
             if ((def->flags & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0)
             {
-                FUN_80017698(def->triggerGameBit, 0);
+                GameBit_Set(def->triggerGameBit, 0);
                 FUN_800723a0();
             }
             if ((def->flags & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0)
             {
-                FUN_80017698(def->openGameBit, 1);
+                GameBit_Set(def->openGameBit, 1);
                 FUN_800723a0();
             }
             state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
@@ -274,12 +260,12 @@ void seqObj2_update(int obj)
     {
         if ((def->flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0)
         {
-            FUN_80017698(def->triggerGameBit, 0);
+            GameBit_Set(def->triggerGameBit, 0);
             FUN_800723a0();
         }
         if ((def->flags & SEQOBJECT_FLAG_SET_SOURCE_ON_DONE) != 0)
         {
-            FUN_80017698(def->openGameBit, 1);
+            GameBit_Set(def->openGameBit, 1);
             FUN_800723a0();
         }
         FUN_800723a0();

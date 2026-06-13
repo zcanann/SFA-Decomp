@@ -57,7 +57,6 @@ void FUN_8017c230(int param_1);
 void FUN_8017c254(int param_1,int p1,int p2,int p3,int p4,s8 visible);
 void FUN_8017c29c(int param_1);
 void FUN_8017c5c0(short *param_1,int param_2);
-void FUN_8017c5c4(int param_1);
 undefined4
 FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
@@ -81,6 +80,7 @@ void doorlock_update(int obj);
 
 int seqobject_getExtraSize(void);
 int seqobject_getObjectTypeId(void);
+void fn_8017C294(int *obj);
 void seqobject_free(int x);
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void seqobject_update(int *obj);
