@@ -263,7 +263,6 @@ void dim2snowball_update(int* obj)
     extern void Obj_FreeObject(int* obj);
     extern int Sfx_PlayFromObject(int obj, int sfxId);
     int* extra = ((GameObject*)obj)->extra;
-    int** p;
     int** results;
     int count;
     int start;
@@ -319,14 +318,13 @@ void dim2snowball_update(int* obj)
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
                 ((Dim2SnowballState*)extra)->flagsAC |= 0x18;
                 list = ObjList_GetObjects(&start, &count);
-                for (p = &list[start]; start < count; start++)
+                for (; start < count; start++)
                 {
-                    if (*(s16*)((char*)*p + 0x46) == 214)
+                    if (*(s16*)((char*)list[start] + 0x46) == 214)
                     {
                         hit = list[start];
                         goto checkHit;
                     }
-                    p++;
                 }
                 hit = NULL;
             checkHit:
