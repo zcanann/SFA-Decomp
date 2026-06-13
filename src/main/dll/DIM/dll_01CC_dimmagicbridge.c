@@ -404,13 +404,13 @@ void dimmagicbridge_initialise(void)
 void dimmagicbridge_init(u8* obj, u8* params)
 {
     DimMagicBridgeState * sub;
+    int i;
+    s32 minY;
     int model;
     int modelData;
-    s32 minY;
-    int i;
+    f32* p;
     int j;
     int stable;
-    f32* p;
     f32 a, b;
     int v;
     s16 hh;
@@ -527,6 +527,7 @@ void dimwooddoor2_init(u8* obj, u8* params);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
+#pragma peephole off
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 {
@@ -534,21 +535,21 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     s32 v;
 
     tex = (u8*)objFindTexture(arg1, 0, 0);
-    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x14);
+    *(s16*)(tex + 10) += 0x14;
     if (*(s16*)(tex + 10) > 10000)
     {
-        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
+        *(s16*)(tex + 10) -= 10000;
     }
-    *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) + 10);
+    *(s16*)(tex + 8) += 10;
     if (*(s16*)(tex + 8) > 10000)
     {
-        *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) - 10000);
+        *(s16*)(tex + 8) -= 10000;
     }
     tex = (u8*)objFindTexture(arg1, 1, 0);
-    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x1e);
+    *(s16*)(tex + 10) += 0x1e;
     if (*(s16*)(tex + 10) > 10000)
     {
-        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
+        *(s16*)(tex + 10) -= 10000;
     }
     v = (s32) * (u16*)(obj + 0x60) + (s32)framesThisStep * 0x100;
     if (v > 0xffff) v = v - 0xffff;
@@ -567,8 +568,9 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
 {
     int j;
     int i;
+    u8* sub;
     int o = (int)obj;
-    u8* sub = ((GameObject*)o)->extra;
+    sub = ((GameObject*)o)->extra;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
     dimmagicbridge_scrollTextureChannels(o, (u8*)sub);
@@ -592,7 +594,8 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
         {
             if (sub[0x40 + i] != 0)
             {
-                int v = sub[0x50 + i] + framesThisStep;
+                int sv = sub[0x50 + i];
+                int v = sv + framesThisStep;
                 if (v > 0xff) v = 0xff;
                 sub[0x50 + i] = (u8)v;
             }
@@ -608,10 +611,14 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {
     int i;
     int cnt;
-    int model = (int)Obj_GetActiveModel(obj);
-    int mdl = *(int*)model;
-    f32 amp = lbl_803E4A00;
-    for (i = 0; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
+    int mdl;
+    int model;
+    f32 amp;
+    model = (int)Obj_GetActiveModel(obj);
+    mdl = *(int*)model;
+    i = 0;
+    amp = lbl_803E4A00;
+    for (; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
     {
         s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
         s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);

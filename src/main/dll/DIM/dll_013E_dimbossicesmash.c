@@ -392,7 +392,7 @@ void dimbossicesmash_init(u8* obj, u8* params)
     u8* state;
     f32 fz;
     u8 t;
-    u8 buf[12];
+    u8 buf[8];
 
     buf[0] = 5;
     ((ObjAnimComponent*)obj)->bankIndex = params[0x18];
