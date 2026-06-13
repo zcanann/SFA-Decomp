@@ -609,11 +609,12 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
     int mdl = *(int*)model;
     int i;
     int cnt;
+    f32 waveScale = lbl_803E4A00;
     for (i = 0; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
     {
         s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
         s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);
-        int u = (u16)(int)(lbl_803E4A00 * ((f32)(int)vc[2] / *(f32*)sub)
+        int u = (u16)(int)(waveScale * ((f32)(int)vc[2] / *(f32*)sub)
         )
         +*(u16*)(sub + 0x60);
         if (*vb > 0)
