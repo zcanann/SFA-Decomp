@@ -261,6 +261,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
             break;
         case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
+            topState = runtime->topState;
             topState->steamFlags.bits.sfxPending = 1;
             Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP, 0);
             break;
