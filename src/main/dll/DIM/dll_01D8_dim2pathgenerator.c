@@ -280,6 +280,7 @@ void dim2pathgenerator_update(int* obj)
     int toggle;
     int** objs;
     int i;
+    int n;
     int count;
 
     def = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -291,8 +292,9 @@ void dim2pathgenerator_update(int* obj)
     {
         if ((((Dim2PathGeneratorState*)extra)->flags & 2) == 0)
         {
-            int n = 21;
-            int found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            int found;
+            n = 21;
+            found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &n, 1, 10);
             if (found != -1)
@@ -329,7 +331,6 @@ void dim2pathgenerator_update(int* obj)
         if (((Dim2PathGeneratorState*)extra)->spawnTypes[toggle] == *(s16*)((char*)objs[i] + 0x46))
         {
             int* p = *(int**)((char*)objs[i] + 0x4c);
-            int c2;
             int j;
             int** o2;
             *(f32*)((char*)p + 8) = ((Dim2PathGeneratorState*)extra)->originX;
@@ -338,8 +339,8 @@ void dim2pathgenerator_update(int* obj)
             *(int*)((char*)p + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
             (*(void (**)(int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], 1);
             ObjGroup_RemoveObject(objs[i], 47);
-            o2 = ObjGroup_GetObjects(47, &c2);
-            for (j = 0; j < c2; j++)
+            o2 = ObjGroup_GetObjects(47, &count);
+            for (j = 0; j < count; j++)
             {
             }
             ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
