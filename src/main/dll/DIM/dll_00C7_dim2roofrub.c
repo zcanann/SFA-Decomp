@@ -1989,6 +1989,7 @@ typedef struct Dim2PartVec
     f32 z;
 } Dim2PartVec;
 
+#pragma opt_propagation off
 void dim2roofrub_update(int* obj)
 {
     ObjSeqState* seq = ((GameObject*)obj)->extra;
@@ -2031,13 +2032,14 @@ void dim2roofrub_update(int* obj)
         if (res != 0 && ((GameObject*)obj)->seqIndex == -2)
         {
             int slot8 = *(s8*)&seq->slot;
-            int* match = NULL;
             int* list;
-            int cnt;
             int slot;
+            int cnt;
+            int* match = NULL;
             list = ObjList_GetObjects(&res, &count);
+            res = cnt = 0;
             slot = slot8;
-            for (res = cnt = 0; res < count; res++)
+            for (; res < count; res++)
             {
                 int* other = (int*)*list;
                 if (((GameObject*)other)->seqIndex == slot8)
@@ -2063,6 +2065,7 @@ void dim2roofrub_update(int* obj)
         }
     }
 }
+#pragma opt_propagation reset
 
 void fireball_init(int* obj);
 
