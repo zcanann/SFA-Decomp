@@ -235,13 +235,17 @@ void dim2lavacontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
     obj = *(int*)&((GameObject*)obj)->extra;
-    if (*(s8*)(obj + 4) == 0)
+    switch (*(s8*)(obj + 4))
     {
+    case 0:
         if (GameBit_Get(0xacd) != 0)
         {
             GameBit_Set(0xcc3, 1);
             *(u8*)(obj + 4) = 1;
         }
+        break;
+    case 1:
+        break;
     }
     diff = *(u8*)(obj + 3) - lbl_803DBF28[((Dim2lavacontrolState*)obj)->unk0];
     if (diff != 0)
