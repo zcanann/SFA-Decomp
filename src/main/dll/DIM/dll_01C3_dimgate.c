@@ -68,7 +68,7 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
         inner[0] = 0;
     }
     ((GameObject*)obj)->animEventCallback = (void*)dimgate_SeqFn;
-    *(s16*)obj = (s16)((s32)param[0x18] << 8);
+    *(s16*)obj = (s16)((s8) * (u8*)(param + 0x18) << 8);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
 
@@ -76,7 +76,7 @@ void dimbarrier_init(int obj, s8* p);
 
 /* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
  * present in the trigger list, latching the gamebit. */
-void dimgate_update(int* obj)
+void dimgate_update(int obj)
 {
     int* extra = ((GameObject*)obj)->extra;
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -84,19 +84,16 @@ void dimgate_update(int* obj)
     {
     case 0:
         {
-            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            int* list;
             int found;
             int i;
-            if (hitState->stateIndex != 1)
+            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != 1)
             {
-                ObjHitbox_SetStateIndex((int)obj, hitState, 1);
+                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, 1);
             }
             found = 0;
-            list = *(int**)((char*)obj + 0x58);
-            for (i = 0; i < *(s8*)((char*)list + 0x10f); i++)
+            for (i = 0; i < (int)*(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
             {
-                if (*(s16*)((char*)*(int**)((char*)list + 0x100 + i * 4) + 0x46) == 399)
+                if (*(s16*)(*(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100) + 0x46) == 399)
                 {
                     found = 1;
                     break;
@@ -105,9 +102,9 @@ void dimgate_update(int* obj)
             if (found)
             {
                 GameBit_Set(((DimgatePlacement*)def)->unk1E, 1);
-                if (hitState->stateIndex != 2)
+                if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != 2)
                 {
-                    ObjHitbox_SetStateIndex((int)obj, hitState, 2);
+                    ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, 2);
                 }
                 *(s8*)extra = 2;
             }
@@ -117,10 +114,9 @@ void dimgate_update(int* obj)
         break;
     case 2:
         {
-            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            if (hitState->stateIndex != 2)
+            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != 2)
             {
-                ObjHitbox_SetStateIndex((int)obj, hitState, 2);
+                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, 2);
             }
             break;
         }
