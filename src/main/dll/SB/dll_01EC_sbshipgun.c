@@ -1,9 +1,28 @@
+/*
+ * SB_ShipGun (DLL 0x1EC) - one of the two deck cannons on General Scales'
+ * galleon in the ShipBattle prologue (SB = the retail "ShipBattle" map).
+ * While the player chases the galleon on the Cloudrunner the gun tracks the
+ * bird, fires aimed cannonballs (SB_CannonBall) in volleys, takes damage in
+ * two stages, then runs an explosion + smoke death sequence (the wreck is
+ * then drawn by the SB_ShipGunBroke prop). Both guns are shot out, then the
+ * propellers, then both guns again, to bring the galleon down.
+ *
+ * Lifecycle is a small state machine in state->phase (SBShipGunState +0xA):
+ *   0  idle, waiting on the parent Galleon's "wake" condition
+ *   2  active: aim at the Cloudrunner, fire timed cannonball volleys, react
+ *      to ObjHits damage (two damage thresholds knock the gun toward death)
+ *   3  death trigger: spawn explosion (or skip straight to smoke)
+ *   4  exploded: emit smoke from the path point each frame
+ *   5  smoldering: like 4 but can re-arm if the Galleon re-enters its
+ *      fast-fire phase
+ * The gun caches the ridden Cloudrunner object in state[0] and reads its
+ * parent Galleon's phase through the Galleon DLL's interface vtable.
+ */
 #include "main/game_object.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
-#include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"
@@ -14,29 +33,18 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 randomGetRange(int min, int max);
 extern int ObjHits_GetPriorityHit();
-
 extern EffectInterface** gPartfxInterface;
-
-extern int ObjList_GetObjects(int* start, int* end);
-
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u8 framesThisStep;
-
-extern void Sfx_StopObjectChannel(int obj, int ch);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern f32 sqrtf(f32);
-
-extern u32 gSbGalleon;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E57FC;
 extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void Sfx_StopObjectChannel();
+extern void Sfx_StopObjectChannel(int obj, int ch);
 extern int getAngle(f32 dx, f32 dz);
-extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
-extern void vecRotateZXY(void* a, void* b);
+extern void vecRotateZXY(void* rot, void* vec);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern const f32 lbl_803E588C;
@@ -58,17 +66,17 @@ void SB_ShipGun_free(int param_1)
 
 void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void* o30;
-    s8* p;
-    s32 v;
-    p = ((GameObject*)obj)->extra;
-    o30 = *(void**)&((GameObject*)obj)->anim.parent;
-    if (o30 != NULL)
+    void* parent;
+    s8* state;
+    s32 vis;
+    state = ((GameObject*)obj)->extra;
+    parent = *(void**)&((GameObject*)obj)->anim.parent;
+    if (parent != NULL)
     {
-        if (((GameObject*)o30)->anim.seqId == 0x139) return;
+        if (((GameObject*)parent)->anim.seqId == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) return;
     }
-    v = visible;
-    if (v == 0 || p[0xc] == 0 || ((u8*)p)[0xd] == 0) return;
+    vis = visible;
+    if (vis == 0 || state[0xc] == 0 || ((u8*)state)[0xd] == 0) return;
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
 }
 
@@ -76,29 +84,75 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
 
+/* The cannonball setup block (SBShipGunPlacement) doubles as the spawn-
+   position scratch the gun writes before Obj_SetupObject, then as the
+   live CloudRunner placement the gun reads its target world position from
+   (targetX/Y/Z). */
 typedef struct SBShipGunPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 spawnX; /* 0x08: cannonball muzzle world position */
+    f32 spawnY;
+    f32 spawnZ;
     u8 pad14[0x18 - 0x14];
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
+    f32 targetX; /* 0x18: target (CloudRunner) world position */
+    f32 targetY;
+    f32 targetZ;
     u8 pad24[0x28 - 0x24];
 } SBShipGunPlacement;
 
+STATIC_ASSERT(offsetof(SBShipGunPlacement, spawnX) == 0x8);
+STATIC_ASSERT(offsetof(SBShipGunPlacement, targetX) == 0x18);
+STATIC_ASSERT(sizeof(SBShipGunPlacement) == 0x28);
+
+/* SBShipGunState. Most of update() reaches the timing/aim fields through
+   raw int* offsets (state is int*); the layout is:
+     +0x03 s8  livesRemaining  +0x04 s16 yawAngle    +0x06 s16 pitchAngle
+     +0x08 s16 fireTimer       +0x0A u8  phase        +0x0B s8  hitCount
+     +0x0C u8  health          +0x0D u8  active       +0x0E u8  volleyCount
+   state[0] (+0x00) caches the CloudRunner object pointer. */
 typedef struct SBShipGunState
 {
     u8 pad0[0x3 - 0x0];
-    s8 unk3;
+    s8 livesRemaining; /* 0x03: damage stages left before death */
     u8 pad4[0xC - 0x4];
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
+    u8 health;         /* 0x0C: hit-points within the current stage */
+    u8 active;         /* 0x0D: cleared while the WM-galleon alias is parent */
+    u8 volleyCount;    /* 0x0E: shots fired in the current volley */
     u8 padF[0x10 - 0xF];
 } SBShipGunState;
+
+STATIC_ASSERT(offsetof(SBShipGunState, livesRemaining) == 0x3);
+STATIC_ASSERT(offsetof(SBShipGunState, health) == 0xC);
+STATIC_ASSERT(offsetof(SBShipGunState, active) == 0xD);
+STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
+STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
+
+/* The parent Galleon's DLL exposes an interface vtable (anim.dll -> table);
+   the ship gun reads its phase and "wake"/death conditions through these
+   byte-offset slots. */
+typedef int (*SBGalleonVtblFn)(int galleon);
+#define SB_GALLEON_VTBL(galleon) (**(int**)&((GameObject*)(galleon))->anim.dll)
+#define SB_GALLEON_VTBL_GET_PHASE 0x24
+#define SB_GALLEON_VTBL_WAKE_CONDITION 0x28
+#define SB_GALLEON_VTBL_ON_GUN_DESTROYED 0x20
+
+/* state->phase machine (SBShipGunState +0xA) */
+enum
+{
+    SB_SHIPGUN_PHASE_IDLE = 0,
+    SB_SHIPGUN_PHASE_ACTIVE = 2,
+    SB_SHIPGUN_PHASE_DEATH_TRIGGER = 3,
+    SB_SHIPGUN_PHASE_EXPLODED = 4,
+    SB_SHIPGUN_PHASE_SMOLDERING = 5
+};
+
+/* anim.seqId offset within a raw GameObject pointer held as int */
+#define OBJ_ANIM_SEQID_OFFSET 0x46
+/* placement +0x19: nonzero skips the initial wake delay */
+#define SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY 0x19
+/* elevation (pitch) aim angle clamp, in binary-angle units */
+#define SB_SHIPGUN_MAX_PITCH 8000
 
 void SB_ShipGun_update(int obj)
 {
@@ -108,21 +162,21 @@ void SB_ShipGun_update(int obj)
     extern int Sfx_PlayFromObject();
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     extern u8* Obj_GetPlayerObject(void);
-    extern undefined4 ObjPath_GetPointWorldPosition();
+    extern u32 ObjPath_GetPointWorldPosition();
     char phase;
-    float fa;
+    float boost;
     u8* player;
-    int ref;
+    int galleon;
     int* state;
-    int ref2;
-    int hitKind;
+    int galleonPhase;
+    int hit;
     uint randDelay;
     u16* spawned;
     int placement;
     struct
     {
         s16 rot[3];
-        u16 mode;
+        u16 flags;
         f32 a;
         f32 b;
         f32 c;
@@ -148,64 +202,66 @@ void SB_ShipGun_update(int obj)
     player = Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (*(short*)(*(int*)&((GameObject*)obj)->anim.parent + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE)
+    if (*(short*)(*(int*)&((GameObject*)obj)->anim.parent + OBJ_ANIM_SEQID_OFFSET) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE)
     {
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        *(undefined*)((int)state + 0xd) = 0;
+        *(u8*)((int)state + 0xd) = 0;
     }
     else
     {
         if (*(uint*)state == 0)
         {
-            ref = ObjList_GetObjects(&listStart, &listCount);
+            /* find and cache the CloudRunner object (galleon reused as the
+               object-list base here, before it holds the parent Galleon). */
+            galleon = ObjList_GetObjects(&listStart, &listCount);
             for (i = listStart; i < listCount; i = i + 1)
             {
-                hitKind = *(int*)(ref + i * 4);
-                if (*(short*)(hitKind + 0x46) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
+                hit = *(int*)(galleon + i * 4);
+                if (*(short*)(hit + OBJ_ANIM_SEQID_OFFSET) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
                 {
-                    *state = hitKind;
+                    *state = hit;
                     i = listCount;
                 }
             }
         }
-        ref = *(int*)&((GameObject*)obj)->anim.parent;
-        if (((void*)ref != NULL) &&
-            (((GameObject*)ref)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE))
+        galleon = *(int*)&((GameObject*)obj)->anim.parent;
+        if (((void*)galleon != NULL) &&
+            (((GameObject*)galleon)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE))
         {
-            ref2 = (*(code*)(**(int**)&((GameObject*)ref)->anim.dll + 0x24))(ref);
+            galleonPhase = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_GET_PHASE))(galleon);
         }
         else
         {
-            ref2 = 0;
-            *(undefined*)((int)state + 10) = 4;
+            galleonPhase = 0;
+            *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_EXPLODED;
         }
-        *(undefined*)((int)state + 0xd) = 1;
+        *(u8*)((int)state + 0xd) = 1;
         phase = *(char*)((int)state + 10);
         switch (phase)
         {
-        case 0:
-            if (((void*)ref != NULL) &&
-                (ref = (*(code*)(**(int**)&((GameObject*)ref)->anim.dll + 0x28))(ref), ref == 0))
+        case SB_SHIPGUN_PHASE_IDLE:
+            if (((void*)galleon != NULL) &&
+                (galleon = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon), galleon == 0))
             {
-                if (*(char*)(placement + 0x19) == '\0')
+                if (*(char*)(placement + SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY) == '\0')
                 {
-                    *(undefined*)((int)state + 10) = 2;
-                    *(undefined2*)(state + 2) = SB_SHIPGUN_WAKE_DELAY;
+                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
+                    *(u16*)(state + 2) = SB_SHIPGUN_WAKE_DELAY;
                 }
                 else
                 {
-                    *(undefined*)((int)state + 10) = 2;
-                    *(undefined2*)(state + 2) = 0;
+                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
+                    *(u16*)(state + 2) = 0;
                 }
             }
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
             break;
-        case 2:
+        case SB_SHIPGUN_PHASE_ACTIVE:
             {
                 (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
-                placement = (*(code*)(**(int**)&((GameObject*)ref)->anim.dll + 0x28))(ref);
+                placement = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon);
                 if ((placement == 0) &&
-                    (hitKind = ObjHits_GetPriorityHit(obj, 0, 0, 0), hitKind != 0))
+                    (hit = ObjHits_GetPriorityHit(obj, 0, 0, 0), hit != 0))
                 {
                     Obj_SetModelColorFadeRecursive(obj, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0, 1);
                     Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_A);
@@ -213,26 +269,26 @@ void SB_ShipGun_update(int obj)
                     if (*(char*)((int)state + 0xb) == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT)
                     {
                         *(s8*)(state + 3) -= 1;
-                        *(undefined*)((int)state + 10) = 3;
-                        if ((void*)ref != NULL)
+                        *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
+                        if ((void*)galleon != NULL)
                         {
-                            (*(code*)(**(int**)&((GameObject*)ref)->anim.dll + 0x20))(ref);
+                            (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_ON_GUN_DESTROYED))(galleon);
                         }
                     }
                     else if (*(char*)((int)state + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
                     {
                         Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_B);
                         *(s8*)(state + 3) -= 1;
-                        *(undefined*)((int)state + 10) = 3;
-                        if ((void*)ref != NULL)
+                        *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
+                        if ((void*)galleon != NULL)
                         {
-                            (*(code*)(**(int**)&((GameObject*)ref)->anim.dll + 0x20))(ref);
+                            (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_ON_GUN_DESTROYED))(galleon);
                         }
                     }
                 }
-                if (((void*)ref != NULL) && (placement != 0))
+                if (((void*)galleon != NULL) && (placement != 0))
                 {
-                    *(undefined*)((int)state + 10) = 3;
+                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                 }
                 fdx = *(float*)(player + 0x18) - ((GameObject*)obj)->anim.worldPosX;
                 fdz = *(float*)(player + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
@@ -250,13 +306,13 @@ void SB_ShipGun_update(int obj)
                     extern int getAngle(f32 dx, f32 dz);
                     *(short*)((int)state + 6) = (s16)getAngle(-fdy, dist);
                 }
-                if (*(short*)((int)state + 6) > 8000)
+                if (*(short*)((int)state + 6) > SB_SHIPGUN_MAX_PITCH)
                 {
-                    *(short*)((int)state + 6) = 8000;
+                    *(short*)((int)state + 6) = SB_SHIPGUN_MAX_PITCH;
                 }
-                else if (*(short*)((int)state + 6) < -8000)
+                else if (*(short*)((int)state + 6) < -SB_SHIPGUN_MAX_PITCH)
                 {
-                    *(short*)((int)state + 6) = -8000;
+                    *(short*)((int)state + 6) = -SB_SHIPGUN_MAX_PITCH;
                 }
                 *(s16*)(state + 2) -= framesThisStep;
                 if ((*(short*)(state + 2) < 0) && (Obj_IsLoadingLocked() != 0))
@@ -275,29 +331,29 @@ void SB_ShipGun_update(int obj)
                     vecRotateZXY(stk.rot, &offset.x);
                     placement = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,
                                                        SB_CANNONBALL_ALIAS_OBJECT_TYPE);
-                    ((SBShipGunPlacement*)placement)->unk8 = posX;
-                    ((SBShipGunPlacement*)placement)->unkC = posY;
-                    ((SBShipGunPlacement*)placement)->unk10 = posZ;
-                    *(undefined*)(placement + 4) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
-                    *(undefined*)(placement + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
-                    *(undefined*)(placement + 6) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
-                    *(undefined*)(placement + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+                    ((SBShipGunPlacement*)placement)->spawnX = posX;
+                    ((SBShipGunPlacement*)placement)->spawnY = posY;
+                    ((SBShipGunPlacement*)placement)->spawnZ = posZ;
+                    *(u8*)(placement + 4) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
+                    *(u8*)(placement + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
+                    *(u8*)(placement + 6) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+                    *(u8*)(placement + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
                     spawned = Obj_SetupObject((void*)placement, 5, 0xffffffff, 0xffffffff, 0);
                     placement = *state;
-                    fdx = ((SBShipGunPlacement*)placement)->unk18 - ((GameObject*)obj)->anim.worldPosX;
-                    fdy = ((SBShipGunPlacement*)placement)->unk1C - (((GameObject*)obj)->anim.worldPosY - lbl_803E5898);
-                    fdz = ((SBShipGunPlacement*)placement)->unk20 - ((GameObject*)obj)->anim.worldPosZ;
+                    fdx = ((SBShipGunPlacement*)placement)->targetX - ((GameObject*)obj)->anim.worldPosX;
+                    fdy = ((SBShipGunPlacement*)placement)->targetY - (((GameObject*)obj)->anim.worldPosY - lbl_803E5898);
+                    fdz = ((SBShipGunPlacement*)placement)->targetZ - ((GameObject*)obj)->anim.worldPosZ;
                     posX = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
                     posX = lbl_803E589C / posX;
                     *(float*)(spawned + 0x12) = fdx * posX;
                     *(float*)(spawned + 0x14) = fdy * posX;
                     *(float*)(spawned + 0x16) = fdz * posX;
-                    fa = lbl_803E58A0;
-                    *(float*)(spawned + 6) = fa * *(float*)(spawned + 0x12) + *(float*)(spawned + 6);
-                    *(float*)(spawned + 8) = fa * *(float*)(spawned + 0x14) + *(float*)(spawned + 8);
-                    *(float*)(spawned + 10) = fa * *(float*)(spawned + 0x16) + *(float*)(spawned + 10);
+                    boost = lbl_803E58A0;
+                    *(float*)(spawned + 6) = boost * *(float*)(spawned + 0x12) + *(float*)(spawned + 6);
+                    *(float*)(spawned + 8) = boost * *(float*)(spawned + 0x14) + *(float*)(spawned + 8);
+                    *(float*)(spawned + 10) = boost * *(float*)(spawned + 0x16) + *(float*)(spawned + 10);
                     *(s16*)spawned = getAngle(*(float*)(spawned + 0x12), *(float*)(spawned + 0x16));
-                    *(undefined4*)(spawned + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
+                    *(u32*)(spawned + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
                     *(int*)(spawned + 0x7c) = *state;
                     Camera_EnableViewYOffset();
                     CameraShake_SetAllMagnitudes(lbl_803E58A4);
@@ -305,7 +361,7 @@ void SB_ShipGun_update(int obj)
                     *(u8*)((int)state + 0xe) += 1;
                     if (*(u8*)((int)state + 0xe) == SB_SHIPGUN_VOLLEY_SIZE)
                     {
-                        if (ref2 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
+                        if (galleonPhase >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
                         {
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                             *(short*)(state + 2) = randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
@@ -315,35 +371,35 @@ void SB_ShipGun_update(int obj)
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                             *(short*)(state + 2) = randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
                         }
-                        *(undefined*)((int)state + 0xe) = 0;
+                        *(u8*)((int)state + 0xe) = 0;
                     }
-                    else if (ref2 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
+                    else if (galleonPhase >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
                     {
-                        *(undefined2*)(state + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
+                        *(u16*)(state + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
                     }
                     else
                     {
-                        *(undefined2*)(state + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
+                        *(u16*)(state + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
                     }
                 }
             }
             break;
-        case 3:
+        case SB_SHIPGUN_PHASE_DEATH_TRIGGER:
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
             if (*(char*)(state + 3) == '\0')
             {
                 spawnExplosion(obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
-                *(undefined*)((int)state + 10) = 4;
+                *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_EXPLODED;
             }
             else
             {
-                *(undefined*)((int)state + 10) = 5;
+                *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_SMOLDERING;
             }
             break;
-        case 4:
+        case SB_SHIPGUN_PHASE_EXPLODED:
             {
                 stk.a = lbl_803E58A8;
-                stk.mode = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+                stk.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
                 ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
                 stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
                 stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
@@ -356,27 +412,27 @@ void SB_ShipGun_update(int obj)
                 }
             }
             break;
-        case 5:
+        case SB_SHIPGUN_PHASE_SMOLDERING:
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-            if (((void*)ref != NULL) &&
-                (ref = (*(code*)(**(int**)&((GameObject*)ref)->anim.dll + 0x28))(ref), ref == 0))
+            if (((void*)galleon != NULL) &&
+                (galleon = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon), galleon == 0))
             {
-                if (*(char*)(placement + 0x19) == '\0')
+                if (*(char*)(placement + SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY) == '\0')
                 {
-                    if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= ref2)
+                    if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= galleonPhase)
                     {
-                        *(undefined*)((int)state + 10) = 2;
-                        *(undefined2*)(state + 2) = SB_SHIPGUN_WAKE_DELAY;
+                        *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
+                        *(u16*)(state + 2) = SB_SHIPGUN_WAKE_DELAY;
                     }
                 }
-                else if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= ref2)
+                else if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= galleonPhase)
                 {
-                    *(undefined*)((int)state + 10) = 2;
-                    *(undefined2*)(state + 2) = 0;
+                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
+                    *(u16*)(state + 2) = 0;
                 }
             }
             stk.a = lbl_803E58A8;
-            stk.mode = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+            stk.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
             ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
             stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
             stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
@@ -405,16 +461,12 @@ void SB_ShipGun_update(int obj)
     return;
 }
 
-void SB_CannonBall_release(void);
-
 void SB_ShipGun_init(int obj)
 {
     int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    ((SBShipGunState*)state)->unkD = 0;
-    ((SBShipGunState*)state)->unkC = SB_SHIPGUN_START_HEALTH;
-    ((SBShipGunState*)state)->unkE = 0;
+    ((SBShipGunState*)state)->active = 0;
+    ((SBShipGunState*)state)->health = SB_SHIPGUN_START_HEALTH;
+    ((SBShipGunState*)state)->volleyCount = 0;
 }
-
-int SB_CannonBall_getExtraSize(void);

@@ -1,3 +1,16 @@
+/*
+ * sbcloudball (DLL 0x1EF) - the cloud-ball projectile fired during the
+ * ShipBattle (SB) set. On launch it captures its initial velocity, then
+ * drifts on that velocity each tick (scaled), faces its travel direction,
+ * and arms a contact hitbox. On a hit against the target type, or once it
+ * outlives its lifetime / the player clears the wave, it plays a burst
+ * effect, fades out (fadeTimer) and frees itself. A trailing particle
+ * burst is spawned every frame while alive.
+ *
+ * This unit also carries the shared SB ObjectDescriptor function set
+ * (FireBall / KyteCage / SeqDoor / ShipBattle stubs) so every v1.0 asm
+ * symbol has a source definition.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"
@@ -55,6 +68,9 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
  */
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
+
+/* romlist type id the cloud ball reacts to on contact (plays the shatter sfx) */
+#define CLOUDBALL_TARGET_TYPE_ID 142
 
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E58EC;
@@ -124,17 +140,17 @@ void SB_CloudBall_hitDetect(int* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     SBCloudBallState* state = ((GameObject*)obj)->extra;
-    int* params = *(int**)&((GameObject*)obj)->anim.hitReactState;
-    int* target = *(int**)&((ObjHitsPriorityState*)params)->lastHitObject;
+    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    int* target = *(int**)&hits->lastHitObject;
 
     if ((void*)target == NULL) return;
     if (state->fadeTimer != lbl_803E58EC) return;
-    if (*(s16*)((char*)target + 0x46) == 142)
+    if (((GameObject*)target)->anim.seqId == CLOUDBALL_TARGET_TYPE_ID)
     {
         Sfx_PlayFromObject(obj, SFXen_rockshat16);
     }
-    params = *(int**)&((GameObject*)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)params)->flags = (s16)(((ObjHitsPriorityState*)params)->flags & ~1);
+    hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hits->flags = (s16)(hits->flags & ~1);
     state->fadeTimer = lbl_803E58F0;
     ((GameObject*)obj)->anim.alpha = 0;
     projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
@@ -148,11 +164,11 @@ void SB_CloudBall_init(int* obj)
     extern void modelLightStruct_setLightKind(int light, int v);
     extern int objCreateLight(int* obj, int mode);
     SBCloudBallState* state = ((GameObject*)obj)->extra;
-    int* params = *(int**)&((GameObject*)obj)->anim.hitReactState;
+    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
 
-    ((ObjHitsPriorityState*)params)->flags = (s16)(((ObjHitsPriorityState*)params)->flags & ~1);
-    params = *(int**)&((GameObject*)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)params)->trackContactMask = (u16)(((ObjHitsPriorityState*)params)->trackContactMask | 1);
+    hits->flags = (s16)(hits->flags & ~1);
+    hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hits->trackContactMask = (u16)(hits->trackContactMask | 1);
     if ((void*)state->light == NULL)
     {
         state->light = objCreateLight(obj, 1);
@@ -219,7 +235,7 @@ void SB_CloudBall_update(int obj)
                 state->fadeTimer = lbl_803E58F0;
             }
         }
-        *(s16*)obj = (s16)getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+        ((GameObject*)obj)->anim.rotX = (s16)getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                                    ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 5;
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;

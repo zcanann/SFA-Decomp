@@ -1,3 +1,28 @@
+/*
+ * SB_Galleon (DLL 0x1E8) - General Scales' flying galleon, the centrepiece
+ * of the game's prologue. ("SB" is the retail map name "ShipBattle"; the
+ * ROM ships this level as the map dir ShipBattle/ and every handler here is
+ * a retail SB_* object.) Krystal, riding her Cloudrunner (SB_Cloudrunner),
+ * chases the galleon through the sky and shoots out its deck guns
+ * (SB_ShipGun) and propellers (SB_Propeller); she then lands on the deck for
+ * the game's first on-foot section, talks to the caged baby Cloudrunner Kyte
+ * (SB_CageKyte), and goes after a golden key behind the deck door
+ * (SB_DeckDoor). Returning to Kyte, the closing cutscene cuts in before the
+ * key can be used: Scales storms out of the cabin, grabs Krystal by the
+ * throat and hurls her overboard - her Cloudrunner catches her and carries
+ * her on to Krazoa Palace, where the key actually fits a door.
+ *
+ * This object is both the galleon and the driver of that closing cutscene's
+ * camera/encounter state machine: SB_Galleon_animEventCallback consumes the
+ * sequence events (spirit-vision phase, water spray, sky lighting, the
+ * on-screen gameText subtitle) while SB_Galleon_update steps the camera
+ * state and hands per-phase work to the DBprotection.c handlers
+ * (fn_801DFA28, DBprotection_updateShield) that run on the same object.
+ *
+ * The per-object extra block is SBGalleonState (sbgalleon_state.h), shared
+ * with those DBprotection handlers. Handlers register through the standard
+ * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
+ */
 #include "main/obj_placement.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
@@ -13,11 +38,11 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-extern undefined4 getLActions();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u32 getLActions();
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 
 extern EffectInterface** gPartfxInterface;
 
@@ -92,130 +117,170 @@ extern f32 lbl_803E580C;
 extern void textureFree(void* tex);
 extern void ObjMsg_AllocQueue(int obj, int n);
 
+/* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
+enum SbGalleonSeqEvent
+{
+    SBGALLEON_SEQEV_SPIRIT_VISION_1 = 2,  /* toggle spirit phase 1 */
+    SBGALLEON_SEQEV_SPRAY_ON = 3,
+    SBGALLEON_SEQEV_SPRAY_OFF = 4,
+    SBGALLEON_SEQEV_SPIRIT_VISION_2 = 5,  /* toggle spirit phase 2 */
+    SBGALLEON_SEQEV_SFX_ON = 6,
+    SBGALLEON_SEQEV_SFX_OFF = 7,
+    SBGALLEON_SEQEV_SPIRIT_VISION_8 = 8,  /* toggle spirit phase 8 */
+    SBGALLEON_SEQEV_SKY_ON = 9,
+    SBGALLEON_SEQEV_SKY_OFF = 10,
+    SBGALLEON_SEQEV_SPLASH_SFX = 0xb,
+    SBGALLEON_SEQEV_MUSIC = 0xc,
+    SBGALLEON_SEQEV_TEXT = 0xd
+};
+
+/* SBGalleonState.cameraState - protection-spirit encounter state machine
+   stepped in SB_Galleon_update. */
+enum SbGalleonCameraState
+{
+    SBGALLEON_CAM_APPROACH = 0,
+    SBGALLEON_CAM_START_INTRO = 1,
+    SBGALLEON_CAM_SHIELD = 2,
+    SBGALLEON_CAM_END = 3,
+    SBGALLEON_CAM_DONE = 4
+};
+
+#define SBGALLEON_FX_SPRAY 0x7aa         /* water-spray particle fx */
+#define SBGALLEON_FX_WANDER 0xa3         /* wandering particle fx */
+#define SBGALLEON_ROMLIST_LINKED 0xf7    /* romlist type of the linked spray actor */
+#define SBGALLEON_GAMETEXT 0x4b1         /* on-screen gameText id */
+#define SBGALLEON_GAMEBIT_INTRO 0x75     /* gates the intro map-event setup */
+#define SBGALLEON_GAMEBIT_DEFEATED 0xac8 /* set on free */
+#define SBGALLEON_SFX_SPLASH 0x143
+#define SBGALLEON_SFX_SPRAY 0x2c6
+#define SBGALLEON_MUSIC_INTRO 0xa3
+#define SBGALLEON_MAP_PALACE 0xb         /* map-event/dir id this boss locks */
+#define SBGALLEON_SKY_LIGHT_SLOT 7       /* sky override light slot fn_801E1588 drives */
+
 int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
     int i;
     ((GameObject*)obj)->anim.mapEventSlot = -1;
-    fn_801E1588(obj, state);
+    fn_801E1588(obj, (int)state);
     {
         f32 z = lbl_803E56CC;
-        ((SBGalleonState*)state)->moveScale = lbl_803E56CC;
-        ((SBGalleonState*)state)->swayX = z;
-        ((SBGalleonState*)state)->swayY = z;
-        ((SBGalleonState*)state)->swayZ = z;
+        state->moveScale = lbl_803E56CC;
+        state->swayX = z;
+        state->swayY = z;
+        state->swayZ = z;
     }
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)DBprotection_storeHomePosition;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
-        case 2:
-            if (((SBGalleonState*)state)->spiritPhase == 1)
+        case SBGALLEON_SEQEV_SPIRIT_VISION_1:
+            if (state->spiritPhase == 1)
             {
-                ((SBGalleonState*)state)->spiritPhase = 0;
+                state->spiritPhase = 0;
             }
             else
             {
-                ((SBGalleonState*)state)->spiritPhase = 1;
+                state->spiritPhase = 1;
             }
             break;
-        case 3:
+        case SBGALLEON_SEQEV_SPRAY_ON:
             {
                 int start;
                 int end;
                 int* arr = (int*)ObjList_GetObjects(&start, &end);
                 for (i = start; i < end; i++)
                 {
-                    if (*(s16*)(arr[i] + 0x46) == 0xf7)
+                    if (*(s16*)(arr[i] + 0x46) == SBGALLEON_ROMLIST_LINKED)
                     {
-                        ((SBGalleonState*)state)->linkedActor = arr[i];
+                        state->linkedActor = arr[i];
                         i = end;
                     }
                 }
-                ((SBGalleonState*)state)->sprayActive = 1;
+                state->sprayActive = 1;
                 break;
             }
-        case 4:
-            ((SBGalleonState*)state)->sprayActive = 0;
+        case SBGALLEON_SEQEV_SPRAY_OFF:
+            state->sprayActive = 0;
             break;
-        case 5:
-            if (((SBGalleonState*)state)->spiritPhase == 2)
+        case SBGALLEON_SEQEV_SPIRIT_VISION_2:
+            if (state->spiritPhase == 2)
             {
-                ((SBGalleonState*)state)->spiritPhase = 0;
+                state->spiritPhase = 0;
             }
             else
             {
-                ((SBGalleonState*)state)->spiritPhase = 2;
+                state->spiritPhase = 2;
             }
             break;
-        case 6:
-            Sfx_PlayFromObject(obj, 0x143);
+        case SBGALLEON_SEQEV_SFX_ON:
+            Sfx_PlayFromObject(obj, SBGALLEON_SFX_SPLASH);
             break;
-        case 7:
-            Sfx_StopFromObject(obj, 0x143);
+        case SBGALLEON_SEQEV_SFX_OFF:
+            Sfx_StopFromObject(obj, SBGALLEON_SFX_SPLASH);
             break;
-        case 8:
-            if (((SBGalleonState*)state)->spiritPhase == 8)
+        case SBGALLEON_SEQEV_SPIRIT_VISION_8:
+            if (state->spiritPhase == 8)
             {
-                ((SBGalleonState*)state)->spiritPhase = 1;
+                state->spiritPhase = 1;
             }
             else
             {
-                ((SBGalleonState*)state)->spiritPhase = 8;
+                state->spiritPhase = 8;
             }
             break;
-        case 9:
-            ((SBGalleonState*)state)->skyFlag = 1;
+        case SBGALLEON_SEQEV_SKY_ON:
+            state->skyFlag = 1;
             break;
-        case 10:
-            ((SBGalleonState*)state)->skyFlag = 0;
+        case SBGALLEON_SEQEV_SKY_OFF:
+            state->skyFlag = 0;
             break;
-        case 0xb:
-            Sfx_PlayFromObject(fn_801E2570(), 0x2c6);
+        case SBGALLEON_SEQEV_SPLASH_SFX:
+            Sfx_PlayFromObject(fn_801E2570(), SBGALLEON_SFX_SPRAY);
             break;
-        case 0xc:
-            ((SBGalleonState*)state)->musicIdB = 0xa3;
-            Music_Trigger(((SBGalleonState*)state)->musicIdB, 1);
-            Music_Trigger(((SBGalleonState*)state)->musicIdA, 0);
+        case SBGALLEON_SEQEV_MUSIC:
+            state->musicIdB = SBGALLEON_MUSIC_INTRO;
+            Music_Trigger(state->musicIdB, 1);
+            Music_Trigger(state->musicIdA, 0);
             break;
-        case 0xd:
-            ((SBGalleonState*)state)->textTimer = lbl_803E57F8;
-            ((SBGalleonState*)state)->textRising = 1;
-            ((SBGalleonState*)state)->textAlpha = lbl_803E56CC;
+        case SBGALLEON_SEQEV_TEXT:
+            state->textTimer = lbl_803E57F8;
+            state->textRising = 1;
+            state->textAlpha = lbl_803E56CC;
             break;
         }
     }
-    if (((SBGalleonState*)state)->textTimer >= lbl_803E56CC)
+    if (state->textTimer >= lbl_803E56CC)
     {
-        ((SBGalleonState*)state)->textTimer = ((SBGalleonState*)state)->textTimer - timeDelta;
-        if (((SBGalleonState*)state)->textTimer < lbl_803E56CC)
+        state->textTimer = state->textTimer - timeDelta;
+        if (state->textTimer < lbl_803E56CC)
         {
-            ((SBGalleonState*)state)->textTimer = lbl_803E56CC;
-            ((SBGalleonState*)state)->textRising = 0;
+            state->textTimer = lbl_803E56CC;
+            state->textRising = 0;
         }
     }
-    if (((SBGalleonState*)state)->textRising != 0)
+    if (state->textRising != 0)
     {
-        ((SBGalleonState*)state)->textAlpha = lbl_803E5790 * timeDelta + ((SBGalleonState*)state)->textAlpha;
+        state->textAlpha = lbl_803E5790 * timeDelta + state->textAlpha;
     }
     else
     {
-        ((SBGalleonState*)state)->textAlpha = -(lbl_803E5790 * timeDelta - ((SBGalleonState*)state)->textAlpha);
+        state->textAlpha = -(lbl_803E5790 * timeDelta - state->textAlpha);
     }
     {
-        f32 v = ((SBGalleonState*)state)->textAlpha;
-        ((SBGalleonState*)state)->textAlpha =
+        f32 v = state->textAlpha;
+        state->textAlpha =
             (v < lbl_803E56CC) ? lbl_803E56CC : ((v > lbl_803E57F4) ? lbl_803E57F4 : v);
     }
-    if (((SBGalleonState*)state)->textAlpha > lbl_803E56CC)
+    if (state->textAlpha > lbl_803E56CC)
     {
-        gameTextSetColor(0xff, 0xff, 0xff, (int)((SBGalleonState*)state)->textAlpha);
-        gameTextShow(0x4b1);
+        gameTextSetColor(0xff, 0xff, 0xff, (int)state->textAlpha);
+        gameTextShow(SBGALLEON_GAMETEXT);
     }
-    ((SBGalleonState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
-    ((SBGalleonState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
-    ((SBGalleonState*)state)->posZ = ((GameObject*)obj)->anim.localPosZ;
+    state->posX = ((GameObject*)obj)->anim.localPosX;
+    state->posY = ((GameObject*)obj)->anim.localPosY;
+    state->posZ = ((GameObject*)obj)->anim.localPosZ;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     animUpdate->sequenceEventActive = 0;
     return 0;
@@ -242,7 +307,7 @@ void fn_801E1588(int obj, int state)
     setDrawLights(0);
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
-    skyFn_80089710(7, 1, 0);
+    skyFn_80089710(SBGALLEON_SKY_LIGHT_SLOT, 1, 0);
     if (fn_8008ED88() > *(f32*)&lbl_803E56CC)
     {
         lbl_803DDC24 = lbl_803E57A4;
@@ -268,7 +333,7 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC080[2];
         lbl_803DDC38[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC084[2] - v2);
     }
-    skyFn_800895e0(7, *(volatile u8*)&lbl_803DDC38[0], *(volatile u8*)&lbl_803DDC38[1], *(volatile u8*)&lbl_803DDC38[2], 0x40, 0x40);
+    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC38[0], *(volatile u8*)&lbl_803DDC38[1], *(volatile u8*)&lbl_803DDC38[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
         lbl_803DDC34[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC07C[0] - v0);
@@ -281,7 +346,7 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC078[2];
         lbl_803DDC34[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC07C[2] - v2);
     }
-    fn_80089510(7, *(volatile u8*)&lbl_803DDC34[0], *(volatile u8*)&lbl_803DDC34[1], *(volatile u8*)&lbl_803DDC34[2]);
+    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC34[0], *(volatile u8*)&lbl_803DDC34[1], *(volatile u8*)&lbl_803DDC34[2]);
     {
         int v0 = lbl_803DC088[0];
         lbl_803DDC30[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC08C[0] - v0);
@@ -294,7 +359,7 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC088[2];
         lbl_803DDC30[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC08C[2] - v2);
     }
-    fn_80089578(7, *(volatile u8*)&lbl_803DDC30[0], *(volatile u8*)&lbl_803DDC30[1], *(volatile u8*)&lbl_803DDC30[2]);
+    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC30[0], *(volatile u8*)&lbl_803DDC30[1], *(volatile u8*)&lbl_803DDC30[2]);
     lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x,
@@ -302,11 +367,11 @@ void fn_801E1588(int obj, int state)
                                  lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
     if (((SBGalleonState*)state)->skyFlag == 0)
     {
-        skyFn_800894a8(7, a.x, a.y, a.z);
+        skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, a.x, a.y, a.z);
     }
     else
     {
-        skyFn_800894a8(7, b.x, b.y, b.z);
+        skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, b.x, b.y, b.z);
     }
     model = Obj_GetActiveModel(obj);
     i = 0;
@@ -335,35 +400,35 @@ void SB_Galleon_initialise(void)
 
 void SB_ShipMast_free(void);
 
-int SB_Galleon_getExtraSize(void) { return 0xb4; }
+int SB_Galleon_getExtraSize(void) { return sizeof(SBGalleonState); }
 int SB_Galleon_getObjectTypeId(void) { return 0x0; }
 int SB_Propeller_getExtraSize(void);
 
 u32 getSbGalleon(void) { return gSbGalleon; }
 u32 fn_801E2570(void);
 
-u8 SB_Galleon_render2(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x79); }
+u8 SB_Galleon_render2(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->spiritPhase; }
 
-s32 SB_Galleon_func0B(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
+s32 SB_Galleon_func0B(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->stage; }
 
 int SB_Galleon_setScale(int obj)
 {
-    s8* p = (s8*)((int**)obj)[0xb8 / 4];
-    int s = ((SBGalleonState*)p)->phase;
-    if (s != 1)
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    int phase = state->phase;
+    if (phase != 1)
     {
-        if (s >= 2)
+        if (phase >= 2)
         {
             Sfx_PlayFromObject(obj, SFXen_diallp_c);
         }
-        ((SBGalleonState*)p)->stage += 1;
+        state->stage += 1;
         return 1;
     }
     {
-        int t;
-        if ((t = *(s8*)&((SBGalleonState*)p)->flightPattern) == 0 || t == 1 || t == 2)
+        int pattern;
+        if ((pattern = (s8)state->flightPattern) == 0 || pattern == 1 || pattern == 2)
         {
-            ((SBGalleonState*)p)->phaseCounter += 1;
+            state->phaseCounter += 1;
             return 1;
         }
     }
@@ -372,7 +437,7 @@ int SB_Galleon_setScale(int obj)
 
 void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8* p = (u8*)((int**)obj)[0xb8 / 4];
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
     struct
     {
         u8 pad[6];
@@ -384,16 +449,16 @@ void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     } stk;
     if (visible != 0)
     {
-        if ((s8)((SBGalleonState*)p)->cameraState < 2)
+        if ((s8)state->cameraState < 2)
         {
-            stk.mode = ((SBGalleonState*)p)->wanderA;
+            stk.mode = state->wanderA;
             stk.c = lbl_803E57FC;
             stk.b = lbl_803E5800;
             stk.a = lbl_803E5804;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0xa3, stk.pad, 2, -1, NULL);
-            stk.mode = ((SBGalleonState*)p)->wanderB;
+            (*gPartfxInterface)->spawnObject((void*)obj, SBGALLEON_FX_WANDER, stk.pad, 2, -1, NULL);
+            stk.mode = state->wanderB;
             stk.a = lbl_803E5808;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0xa3, stk.pad, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, SBGALLEON_FX_WANDER, stk.pad, 2, -1, NULL);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E57A4);
     }
@@ -401,7 +466,7 @@ void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_Galleon_hitDetect(int obj)
 {
-    int* p = ((int**)obj)[0xb8 / 4];
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
     u8 i;
     struct
     {
@@ -412,7 +477,7 @@ void SB_Galleon_hitDetect(int obj)
         f32 c;
         f32 d;
     } stk;
-    if (((SBGalleonState*)p)->sprayActive != 0 && *(void**)&((SBGalleonState*)p)->linkedActor != NULL)
+    if (state->sprayActive != 0 && *(void**)&state->linkedActor != NULL)
     {
         stk.a = lbl_803E5738;
         stk.mode = 0xc0a;
@@ -422,23 +487,23 @@ void SB_Galleon_hitDetect(int obj)
         for (i = 0; i < framesThisStep; i++)
         {
             (*gPartfxInterface)->spawnObject(
-                (void*)((SBGalleonState*)p)->linkedActor, 0x7aa, stk.pad, 2, -1, 0);
+                (void*)state->linkedActor, SBGALLEON_FX_SPRAY, stk.pad, 2, -1, 0);
         }
     }
 }
 
 void SB_Galleon_update(int obj)
 {
-    s8* p = (s8*)((int**)obj)[0xb8 / 4];
-    ((GameObject*)obj)->anim.mapEventSlot = ((SBGalleonState*)p)->mapLayer;
-    fn_801E1588(obj, (int)p);
-    if (GameBit_Get(0x75) == 0)
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.mapEventSlot = state->mapLayer;
+    fn_801E1588(obj, (int)state);
+    if (GameBit_Get(SBGALLEON_GAMEBIT_INTRO) == 0)
     {
-        (*gMapEventInterface)->setMode(0xb, 1);
-        (*gMapEventInterface)->setAnimEvent(0xb, 0, 1);
-        (*gMapEventInterface)->setAnimEvent(0xb, 1, 1);
-        (*gMapEventInterface)->setAnimEvent(0xb, 5, 1);
-        lockLevel(mapGetDirIdx(0xb), 0);
+        (*gMapEventInterface)->setMode(SBGALLEON_MAP_PALACE, 1);
+        (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 0, 1);
+        (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 1, 1);
+        (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 5, 1);
+        lockLevel(mapGetDirIdx(SBGALLEON_MAP_PALACE), 0);
         if ((*gMapEventInterface)->getAnimEvent(*(u8*)(obj + 0x34), 1) == 0)
         {
             (*gMapEventInterface)->setAnimEvent(*(u8*)(obj + 0x34), 1, 1);
@@ -447,75 +512,76 @@ void SB_Galleon_update(int obj)
     }
     else
     {
-        if ((((SBGalleonState*)p)->unk80 == 0) && (*(s8*)&((SBGalleonState*)p)->cameraState > 0))
+        if ((state->unk80 == 0) && ((s8)state->cameraState > 0))
         {
-            *(s8*)&((SBGalleonState*)p)->unk80 = 1;
+            state->unk80 = 1;
         }
-        switch (*(s8*)&((SBGalleonState*)p)->cameraState)
+        switch ((s8)state->cameraState)
         {
-        case 0:
+        case SBGALLEON_CAM_APPROACH:
             fn_801DFA28(obj);
             break;
-        case 1:
+        case SBGALLEON_CAM_START_INTRO:
             (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
-            *(s8*)&((SBGalleonState*)p)->cameraState = 2;
+            state->cameraState = SBGALLEON_CAM_SHIELD;
             break;
-        case 2:
+        case SBGALLEON_CAM_SHIELD:
             DBprotection_updateShield(obj);
             break;
-        case 3:
-            (*gMapEventInterface)->setMode(0xb, 1);
+        case SBGALLEON_CAM_END:
+            (*gMapEventInterface)->setMode(SBGALLEON_MAP_PALACE, 1);
             ((GameObject*)obj)->anim.mapEventSlot = -1;
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-            *(s8*)&((SBGalleonState*)p)->cameraState = 4;
+            state->cameraState = SBGALLEON_CAM_DONE;
             break;
         }
-        SCGameBitLatch_Update((u8*)p + 0xb0, 1, -1, -1, 0xa71, 0xa4);
+        SCGameBitLatch_Update(state->gameBitLatch, 1, -1, -1, 0xa71, 0xa4);
     }
 }
 
 void SB_Galleon_init(int obj)
 {
     int p = *(int*)&((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)p;
     gSbGalleon = obj;
     ObjGroup_AddObject(obj, 3);
     objSetSlot((void*)obj, 0x5a);
     ((GameObject*)obj)->animEventCallback = (void*)SB_Galleon_animEventCallback;
-    ((SBGalleonState*)p)->posX = ((GameObject*)obj)->anim.localPosX;
-    ((SBGalleonState*)p)->posY = ((GameObject*)obj)->anim.localPosY;
-    ((SBGalleonState*)p)->posZ = ((GameObject*)obj)->anim.localPosZ;
-    *(u8*)&((SBGalleonState*)p)->sweepDir = 1;
-    ((SBGalleonState*)p)->timer26 = 0xf0;
-    ((SBGalleonState*)p)->phaseTimer = 0xf0;
-    ((SBGalleonState*)p)->spiritPhase = 0;
-    ((SBGalleonState*)p)->headingLatch = 200;
-    ((SBGalleonState*)p)->envfxActs[2] = 0x89;
-    ((SBGalleonState*)p)->envfxActs[3] = 0x95;
-    ((SBGalleonState*)p)->envfxActs[4] = 0x86;
-    ((SBGalleonState*)p)->envfxActs[5] = 0x88;
-    ((SBGalleonState*)p)->envfxActs[0] = 0x87;
-    ((SBGalleonState*)p)->envfxActs[1] = 0x97;
-    ((SBGalleonState*)p)->mapLayer = ((GameObject*)obj)->anim.mapEventSlot;
+    state->posX = ((GameObject*)obj)->anim.localPosX;
+    state->posY = ((GameObject*)obj)->anim.localPosY;
+    state->posZ = ((GameObject*)obj)->anim.localPosZ;
+    state->sweepDir = 1;
+    state->timer26 = 0xf0;
+    state->phaseTimer = 0xf0;
+    state->spiritPhase = 0;
+    state->headingLatch = 200;
+    state->envfxActs[2] = 0x89;
+    state->envfxActs[3] = 0x95;
+    state->envfxActs[4] = 0x86;
+    state->envfxActs[5] = 0x88;
+    state->envfxActs[0] = 0x87;
+    state->envfxActs[1] = 0x97;
+    state->mapLayer = ((GameObject*)obj)->anim.mapEventSlot;
     *(s16*)obj = 0x4000;
     ((GameObject*)obj)->anim.rotY = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
     lbl_803DDC1C = (int)textureLoadAsset(0x89);
-    ((SBGalleonState*)p)->unk84 = 100;
+    state->unk84 = 100;
     (*gMapEventInterface)->setMode(((GameObject*)obj)->anim.mapEventSlot, 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
-    ((SBGalleonState*)p)->wanderTimerA = lbl_803E56CC;
-    ((SBGalleonState*)p)->wanderTimerB = lbl_803E580C;
+    state->wanderTimerA = lbl_803E56CC;
+    state->wanderTimerB = lbl_803E580C;
     (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
     setDrawLights(0);
-    ((SBGalleonState*)p)->musicIdA = 0x92;
-    ((SBGalleonState*)p)->musicIdB = 0x91;
-    Music_Trigger(((SBGalleonState*)p)->musicIdB, 1);
+    state->musicIdA = 0x92;
+    state->musicIdB = 0x91;
+    Music_Trigger(state->musicIdB, 1);
 }
 
 void SB_Galleon_free(int obj, int p2)
 {
-    u8* p = (u8*)((int**)obj)[0xb8 / 4];
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
     if ((void*)lbl_803DDC18 != NULL)
     {
         textureFree((void*)lbl_803DDC18);
@@ -527,43 +593,43 @@ void SB_Galleon_free(int obj, int p2)
         lbl_803DDC1C = 0;
     }
     ObjGroup_RemoveObject(obj, 3);
-    if (((SBGalleonState*)p)->unk80 != 0 && p2 == 0)
+    if (state->unk80 != 0 && p2 == 0)
     {
-        ((SBGalleonState*)p)->unk80 = 0;
+        state->unk80 = 0;
     }
     gSbGalleon = 0;
-    Music_Trigger(((SBGalleonState*)p)->musicIdB, 0);
-    Music_Trigger(((SBGalleonState*)p)->musicIdA, 0);
-    GameBit_Set(0xac8, 1);
+    Music_Trigger(state->musicIdB, 0);
+    Music_Trigger(state->musicIdA, 0);
+    GameBit_Set(SBGALLEON_GAMEBIT_DEFEATED, 1);
 }
 
 void SB_ShipHead_init(int obj);
 
 int SB_Galleon_modelMtxFn(int* obj)
 {
-    int b;
-    u8* p = (u8*)((int**)obj)[0xb8 / 4];
-    int t;
-    b = *(u8*)&((SBGalleonState*)p)->phase;
-    if ((s8)b == 0)
+    int phase;
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    int pattern;
+    phase = (u8)state->phase;
+    if ((s8)phase == 0)
     {
-        if (((SBGalleonState*)p)->timer26 > 0) return -2;
+        if (state->timer26 > 0) return -2;
     }
-    if ((s8)b == 1)
+    if ((s8)phase == 1)
     {
-        if ((t = (s8)((SBGalleonState*)p)->flightPattern) == 2 || t == 3 || t == 5) return -1;
+        if ((pattern = (s8)state->flightPattern) == 2 || pattern == 3 || pattern == 5) return -1;
     }
-    return (s8)b;
+    return (s8)phase;
 }
 
 int SB_Galleon_func0E(int* obj)
 {
-    SBGalleonState* p = (SBGalleonState*)((int**)obj)[0xb8 / 4];
-    if ((s8)*(u8*)&p->phase == 1)
+    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    if ((s8)(u8)state->phase == 1)
     {
         int wrapped;
-        if ((s8)*(u8*)&p->phaseCounter >= 5) wrapped = (s8)*(u8*)&p->phaseCounter - 5;
-        else wrapped = (s8)*(u8*)&p->phaseCounter;
+        if ((s8)(u8)state->phaseCounter >= 5) wrapped = (s8)(u8)state->phaseCounter - 5;
+        else wrapped = (s8)(u8)state->phaseCounter;
         return (6 - wrapped) * 0x5a;
     }
     return 0x640;

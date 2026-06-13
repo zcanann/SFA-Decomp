@@ -1,3 +1,12 @@
+/*
+ * sbminifire (DLL 0x1F3) - the small fire/spark projectile spawned during
+ * the ShipBattle (SB) set. At init it picks a randomised launch velocity,
+ * a cycling resource variant (lbl_803DC098, 1..3) and plays its spawn
+ * sfx. Each tick it integrates its position, spins, spawns three partfx
+ * bursts (a base puff, a velocity-aligned trail and a scaled trail),
+ * fades out over its final frames and frees itself when its lifetime
+ * (unkF4) expires.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"
@@ -156,7 +165,6 @@ void SB_MiniFire_update(int obj)
     f32 dx;
     f32 dy;
     f32 dz;
-    int dt;
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
         localPosX;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
@@ -188,7 +196,7 @@ void SB_MiniFire_update(int obj)
     buf[4] = buf[4] * lbl_803E593C;
     buf[5] = buf[5] * lbl_803E593C;
     (*gPartfxInterface)->spawnObject((void*)obj, 0xa0, buf, 1, -1, NULL);
-    *(s16*)obj = *(s16*)obj + framesThisStep * 0x374;
+    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
     ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
     ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
     if (((GameObject*)obj)->unkF4 < 0)

@@ -1,34 +1,49 @@
-/* DLL 0x1ED — SB fireball object [801E4288-801E42F8) */
+/*
+ * sbfireball (DLL 0x1ED) - the fire projectile used by the ShipBattle
+ * (SB) boss set. A fireball is spawned with an owner (taken from the
+ * spawning object's slot), drifts along the velocity captured on its
+ * first armed frame, spins, trails particles, and arms a solid hitbox
+ * after a short delay. It expires when its life timer runs out, and on
+ * a hit bursts a cloud of impact particles before being freed.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
-#include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
-#include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
-#include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/effect_interfaces.h"
 #include "main/objhits_types.h"
-#include "main/objseq.h"
-#include "main/resource.h"
 
 extern u8 framesThisStep;
 extern EffectInterface** gPartfxInterface;
 
-extern f32 lbl_803E58B0;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E58D8;
+extern f32 lbl_803E58D8; /* fireball render scale */
 extern f32 timeDelta;
-STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
+
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
-STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
-STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
-extern undefined4 ObjLink_DetachChild();
-extern f32 lbl_803E58DC;
-extern f32 lbl_803E58E0;
+
+extern f32 lbl_803E58DC; /* particle arg (particleArgs[2]) */
+extern f32 lbl_803E58E0; /* trail-burst scale */
+
+/* impact-burst particle ids spawned in SB_FireBall_hitDetect */
+enum
+{
+    SB_FIREBALL_HIT_PARTICLE_A = 167,
+    SB_FIREBALL_HIT_PARTICLE_B = 171
+};
+
+/* count of each impact-burst particle */
+enum
+{
+    SB_FIREBALL_HIT_BURST_A = 50,
+    SB_FIREBALL_HIT_BURST_B = 10
+};
+
+/* obj->unkF4 life timer set at init, decremented by framesThisStep */
+#define SB_FIREBALL_LIFETIME 0x4b0
 
 int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
 int SB_FireBall_getObjectTypeId(void) { return 0x0; }
@@ -41,50 +56,34 @@ void SB_FireBall_free(int obj)
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8);
+    if (v != 0)
+    {
+        objRenderFn_8003b8f4(lbl_803E58D8);
+    }
 }
-
-/*
- * Per-object extra state for the ShipBattle cloud-ball projectile
- * (SB_CloudBall_getExtraSize == 0x24).
- */
-
-/*
- * Per-object extra state for the ShipBattle fireball projectile
- * (SB_FireBall_getExtraSize == SB_FIREBALL_EXTRA_SIZE == 0x18).
- */
-
-/*
- * Per-object extra state for the ShipBattle kyte cage
- * (SB_KyteCage_getExtraSize == 0x8).
- */
-
-/*
- * Per-object extra state for the ShipBattle chain segment
- * (ShipBattle_getExtraSize == 0x140). The head is handed to
- * gObjectTriggerInterface (+0x1C/+0x24) - interface-owned record;
- * only the locally-evidenced fields are named.
- */
 
 void SB_FireBall_hitDetect(int* obj)
 {
-    ObjHitsPriorityState* params = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
+    ObjHitsPriorityState* hits = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int i;
-    if (params->lastHitObject == 0) return;
-    params->flags &= ~1;
-    for (i = 50; i != 0; i--)
+    if (hits->lastHitObject == 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, 167, NULL, 1, -1, NULL);
+        return;
     }
-    for (i = 10; i != 0; i--)
+    hits->flags &= ~1;
+    for (i = SB_FIREBALL_HIT_BURST_A; i != 0; i--)
     {
-        (*gPartfxInterface)->spawnObject(obj, 171, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, SB_FIREBALL_HIT_PARTICLE_A, NULL, 1, -1, NULL);
+    }
+    for (i = SB_FIREBALL_HIT_BURST_B; i != 0; i--)
+    {
+        (*gPartfxInterface)->spawnObject(obj, SB_FIREBALL_HIT_PARTICLE_B, NULL, 1, -1, NULL);
     }
 }
 
-void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined2* param_9, int param_10)
+/* unused dispatcher stub kept to align the v1.0 function set */
+void FUN_801e55c0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+                  u64 param_6, u64 param_7, u64 param_8, u16* param_9, int param_10)
 {
 }
 
@@ -96,19 +95,10 @@ void SB_FireBall_initialise(void)
 {
 }
 
-void SB_CloudBall_release(void);
-
-/* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
- * splits at wrong addresses; these stubs ensure every asm symbol has a src
- * definition so future hunters can fill bodies one at a time. */
-
-/* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
- * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-
 void SB_FireBall_init(int p)
 {
     SBFireBallState* state = ((GameObject*)p)->extra;
-    ((GameObject*)p)->unkF4 = 0x4b0;
+    ((GameObject*)p)->unkF4 = SB_FIREBALL_LIFETIME;
     state->launched = 0;
 }
 
@@ -155,40 +145,23 @@ void SB_FireBall_update(int obj)
 
         if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY)
         {
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
                 SB_FIREBALL_HITBOX_TYPE;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
                 SB_FIREBALL_HITBOX_PRIORITY;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = SB_FIREBALL_HITBOX_SIZE;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->skeletonHitMask =
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectHitMask =
                 SB_FIREBALL_HITBOX_SIZE;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= SB_FIREBALL_SOLID_HITBOX_FLAG;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->skeletonHitMask =
+                SB_FIREBALL_HITBOX_SIZE;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |=
+                SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
         else
         {
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~SB_FIREBALL_SOLID_HITBOX_FLAG;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &=
+                ~SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
 
         state->age += framesThisStep;
     }
 }
-
-/* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
- * call ObjLink_DetachChild(obj). */
-void SB_KyteCage_free(int* obj);
-
-/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
- * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
-
-/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
- * obj->_b8[3] += p2. */
-
-/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
- * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-
-/* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
- * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
- * unset.  (i.e. open by default, gated when slot != -1.) */
-
-/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
- * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
