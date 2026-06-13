@@ -115,7 +115,6 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
              , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    extern undefined4 FUN_80017698(); /* #57 */
     char cVar2;
     undefined4 uVar1;
     int iVar3;
@@ -133,9 +132,9 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         if ((*(short*)(iVar6 + 8) == 0xd) && (animUpdate->eventIds[iVar5] == 0x14))
         {
-            FUN_80017698(0x500, 0);
-            FUN_80017698(0xd72, 1);
-            FUN_80017698(0xd44, 1);
+            GameBit_Set(0x500, 0);
+            GameBit_Set(0xd72, 1);
+            GameBit_Set(0xd44, 1);
             (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 1, 1);
             (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 2, 1);
             iVar4 = (int)*gMapEventInterface;
