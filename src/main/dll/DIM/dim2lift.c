@@ -1173,7 +1173,7 @@ int fn_801BACB8(int obj, int param2, f32 arg)
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18)
     {
-        gDIMbossSequenceFlags &= 0xffffffbf;
+        gDIMbossSequenceFlags &= ~0x40LL;
     }
     else if (h > lbl_803E4C1C)
     {
@@ -1181,7 +1181,7 @@ int fn_801BACB8(int obj, int param2, f32 arg)
     }
     if (*(int*)&((BaddieState*)param2)->eventFlags & 1)
     {
-        gDIMbossSequenceFlags |= 0x10000;
+        gDIMbossSequenceFlags |= 0x10000LL;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 3, lbl_80325AA0);
     (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
@@ -1208,7 +1208,7 @@ int fn_801BAE00(int obj, int param2, f32 arg)
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18)
     {
-        gDIMbossSequenceFlags &= ~0x40;
+        gDIMbossSequenceFlags &= ~0x40LL;
     }
     else if (h > lbl_803E4C20)
     {
@@ -1216,7 +1216,7 @@ int fn_801BAE00(int obj, int param2, f32 arg)
     }
     if (*(int*)&((BaddieState*)param2)->eventFlags & 0x200)
     {
-        gDIMbossSequenceFlags |= 0x10000;
+        gDIMbossSequenceFlags |= 0x10000LL;
         *(int*)&((BaddieState*)param2)->eventFlags &= ~0x200;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 3, lbl_80325AA0);
