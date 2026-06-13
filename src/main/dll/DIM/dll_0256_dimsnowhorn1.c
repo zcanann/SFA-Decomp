@@ -1,3 +1,6 @@
+#include "types.h"
+extern f32 lbl_803DC740[2];
+extern s16 lbl_803DC73C[2];
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -283,12 +286,13 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
 
 int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
 {
-    DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
     int near;
+    DIMSnowHorn1State* inner;
     f32 sp = lbl_803E8240;
     s16 d;
 
     near = ObjGroup_FindNearestObject(0x13, obj, &sp);
+    inner = ((GameObject*)obj)->extra;
     *(u32*)((char*)state) |= 0x200000;
 
     if (*(s16*)((char*)state + 0x334) < inner->unkA86 ||
@@ -321,7 +325,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
 
     if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & 0x100)
     {
-        if (near == 0 || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & 4) == 0)
+        if ((GameObject*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & 4) == 0)
         {
             return 0xc;
         }
