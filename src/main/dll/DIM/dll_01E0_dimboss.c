@@ -104,7 +104,7 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 #define DIMBOSS_SPAWN_OBJECT_TIMER 0x3C
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, undefined4 param_2, DIMbossRuntime* runtime,
-                                   int param_4, int param_5, int param_6, int param_7, float scale);
+                                   int param_4, int param_5, int param_6, u8 param_7, float scale);
 typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 x, f32 y,
                                         void* hitDetectAnimTable, void* animTable);
 
