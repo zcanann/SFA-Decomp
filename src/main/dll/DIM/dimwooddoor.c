@@ -244,7 +244,7 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         distSq = dx * dx + dz * dz;
         dist = sqrtf(distSq);
         heightDelta = (lbl_803E48C8 + state->posY) - state->targetY;
-        distSq = (distSq > lbl_803E48C8) ? distSq : lbl_803E48C8;
+        distSq = (distSq < lbl_803E48C8) ? lbl_803E48C8 : distSq;
         if ((distSq < (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2))) ||
             (heightDelta < lbl_803DBF14) ||
             ((((GameObject*)player)->objectFlags & 0x1000) != 0))
