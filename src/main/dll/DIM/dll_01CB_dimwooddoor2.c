@@ -466,10 +466,11 @@ void dimwooddoor2_update(int* obj)
     {
         int found;
         int i;
+        int objAddr = (int)obj;
         found = 0;
-        for (i = 0; i < (int)*(s8*)(*(int*)((int)obj + 0x58) + 0x10f); i++)
+        for (i = 0; i < (int)*(s8*)(*(int*)(objAddr + 0x58) + 0x10f); i++)
         {
-            int o = *(int*)(*(int*)((int)obj + 0x58) + (i * 4 + 0x100));
+            int o = *(int*)(*(int*)(objAddr + 0x58) + i * 4 + 0x100);
             if (*(s16*)(o + 0x46) == 0x18f || *(s16*)(o + 0x46) == 0x1d6)
             {
                 found = 1;
