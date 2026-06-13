@@ -696,9 +696,9 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 ((u8*)&colB)[1] = cv;
                 ((u8*)&colB)[2] = cv;
                 ((u8*)&colB)[3] = cv;
-                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, (u8*)&colA,
-                                                  (f32)(int)((ExplosionDebris*)p)->unk10,
-                                                  (f32)(int)((ExplosionDebris*)p)->unk14);
+                fn_801B40B8((f32)(int)((ExplosionDebris*)p)->unk10,
+                            (f32)(int)((ExplosionDebris*)p)->unk14,
+                            ((ExplosionState*)state)->modelKind, (u8*)&colA);
                 tex = (void**)((int*)lbl_803AC960)[((ExplosionState*)state)->modelKind];
                 for (k = 0; k < ((ExplosionDebris*)p)->unk2C; k++)
                 {
@@ -964,7 +964,7 @@ void explosion_update(int obj)
             }
             else
             {
-                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
+                fn_801B40B8((f32)(int)e, (f32)(int)d, ((ExplosionState*)state)->modelKind, rgb);
                 if (*(void**)&((ExplosionState*)state)->light != NULL)
                 {
                     modelLightStruct_setDiffuseColor(((ExplosionState*)state)->light, rgb[0], rgb[1], rgb[2], 0xff);
