@@ -404,13 +404,13 @@ void dimmagicbridge_initialise(void)
 void dimmagicbridge_init(u8* obj, u8* params)
 {
     DimMagicBridgeState * sub;
+    int i;
+    s32 minY;
     int model;
     int modelData;
-    s32 minY;
-    int i;
+    f32* p;
     int j;
     int stable;
-    f32* p;
     f32 a, b;
     int v;
     s16 hh;
