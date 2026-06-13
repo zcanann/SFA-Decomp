@@ -119,7 +119,7 @@ typedef struct DIMbossBaddieControlInterface
     u8 pad00[0x28];
     void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, int moveId,
                       u8* hitReactMode, int param_6, int param_7, int param_8, int param_9);
-    void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount);
+    void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount, int flag);
     int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
     int (*updateHitDetect)(DIMbossObject* obj, ObjAnimUpdateState* animUpdate,
                            DIMbossRuntime* runtime, void* hitDetectAnimTable, void* animTable,
@@ -385,7 +385,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
                 animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET, 0);
             if (baddieResult != 0)
             {
-                DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70);
+                DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70, 1);
             }
         }
         else if ((hitReactMode != 0) && (hitReactMode < 3))
