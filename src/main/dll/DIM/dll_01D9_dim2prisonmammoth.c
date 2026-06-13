@@ -227,7 +227,7 @@ void dim2prisonmammoth_init(int obj, int p2)
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
-        ((GameObject*)obj)->anim.modelState->flags |= 0x8020;
+        ((GameObject*)obj)->anim.modelState->flags |= 0x8020LL;
     }
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     ((Dim2prisonmammothState*)inner)->unk25F = 0;
