@@ -389,9 +389,8 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
 }
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-void dimbossicesmash_init(void* objParam, u8* params)
+void dimbossicesmash_init(GameObject* obj, u8* params)
 {
-    u8* obj = (u8*)objParam;
     u8* state;
     f32 fz;
     u8 t;
@@ -404,7 +403,7 @@ void dimbossicesmash_init(void* objParam, u8* params)
     ((DimBossIceSmashState*)state)->unk26C = lbl_803E4034;
     ((DimBossIceSmashState*)state)->unk270 = fz;
     ((DimBossIceSmashState*)state)->unk274 = fz;
-    fn_80196520(obj, state, params);
+    fn_80196520((u8*)obj, state, params);
     t = (GameBit_Get(*(s16*)(params + 0x3e)) != 0) ? 2 : 0;
     state[0x29e] = t;
     lbl_803DDB00 = 0;
