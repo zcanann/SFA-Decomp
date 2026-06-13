@@ -503,7 +503,8 @@ void dim_levelcontrol_free(int p1);
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
+void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out);
+typedef void (*Fn801B40B8IntFirst)(u8 mode, u8* out, f32 a, f32 b);
 
 #pragma peephole off
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
@@ -598,7 +599,7 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
 }
 
 #pragma dont_inline on
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b)
+void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out)
 {
     s16 v1;
     s16 v2;
@@ -692,8 +693,9 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     (lbl_803E4958 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) /
                     (f32)(int)((ExplosionDebris*)p)->unk14)));
                 colB = (cv & 0xff) | ((u8)cv << 8) | ((u8)cv << 16) | ((u8)cv << 24);
-                fn_801B40B8(((ExplosionState*)state)->modelKind, (u8*)&colA, (f32)(int)((ExplosionDebris*)p)->unk10,
-                            (f32)(int)((ExplosionDebris*)p)->unk14);
+                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, (u8*)&colA,
+                                                  (f32)(int)((ExplosionDebris*)p)->unk10,
+                                                  (f32)(int)((ExplosionDebris*)p)->unk14);
                 tex = (void**)((int*)lbl_803AC960)[((ExplosionState*)state)->modelKind];
                 for (k = 0; k < ((ExplosionDebris*)p)->unk2C; k++)
                 {
@@ -949,7 +951,7 @@ void explosion_update(int obj)
             }
             else
             {
-                fn_801B40B8(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
+                ((Fn801B40B8IntFirst)fn_801B40B8)(((ExplosionState*)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
                 if (((ExplosionState*)state)->light != 0)
                 {
                     modelLightStruct_setDiffuseColor(((ExplosionState*)state)->light, rgb[0], rgb[1], rgb[2], 0xff);
