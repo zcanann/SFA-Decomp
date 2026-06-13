@@ -188,7 +188,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
     DIMbossConfig* config;
     DIMbossTopState* topState;
     u8* animScratchBase;
-    byte hitReactMode;
+    int hitReactMode;
     u8 loadWaitStarted;
     int updateResult;
     int model;
@@ -411,7 +411,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
     }
     else
     {
-        updateResult = -((uint)runtime->hitReactMode) >> 31;
+        updateResult = runtime->hitReactMode != 0;
     }
 LAB_801bd7dc:
     return updateResult;
