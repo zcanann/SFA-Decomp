@@ -196,9 +196,10 @@ void dimsnowball_update(int obj)
         }
         ((DimsnowballState*)state)->unkC = 0x1e;
     }
-    ((GameObject*)obj)->anim.localPosX = lbl_803E4850 * (x[2] - x[1]) + x[1];
-    ((GameObject*)obj)->anim.localPosY = lbl_803E4850 * (y[2] - y[1]) + y[1];
-    ((GameObject*)obj)->anim.localPosZ = lbl_803E4850 * (z[2] - z[1]) + z[1];
+    dy1 = lbl_803E4850;
+    ((GameObject*)obj)->anim.localPosX = dy1 * (x[2] - x[1]) + x[1];
+    ((GameObject*)obj)->anim.localPosY = dy1 * (y[2] - y[1]) + y[1];
+    ((GameObject*)obj)->anim.localPosZ = dy1 * (z[2] - z[1]) + z[1];
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + *(f32*)(*state + 0xc);
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + *(f32*)(*state + 0x10);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + *(f32*)(*state + 0x14);
@@ -214,9 +215,10 @@ void dimsnowball_update(int obj)
         ((DimsnowballState*)state)->unkC -= frames;
     }
     v24 = ((GameObject*)obj)->anim.velocityX;
-    ((GameObject*)obj)->anim.rotY = (int)-(lbl_803E4854 * -((GameObject*)obj)->anim.velocityZ - (f32)((GameObject*)obj)
+    dy2 = lbl_803E4854;
+    ((GameObject*)obj)->anim.rotY = -(dy2 * -((GameObject*)obj)->anim.velocityZ - (f32)((GameObject*)obj)
         ->anim.rotY);
-    ((GameObject*)obj)->anim.rotZ = (int)-(lbl_803E4854 * v24 - (f32)((GameObject*)obj)->anim.rotZ);
+    ((GameObject*)obj)->anim.rotZ = -(dy2 * v24 - (f32)((GameObject*)obj)->anim.rotZ);
     model = *(u8**)&((GameObject*)obj)->anim.hitReactState;
     if (model != NULL)
     {
