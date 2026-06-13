@@ -985,6 +985,8 @@ void explosion_update(int obj)
                 u32 k;
                 u16 r0v = randomGetRange(0x1000, 0x6000);
                 ang[0] = r0v;
+                ang[1] = r0v;
+                ang[2] = r0v;
                 ang[3] = *(int*)((char*)state + 0x14);
                 k = 0;
                 while ((f32)(int)k < ((ExplosionState*)state)->scale
@@ -993,8 +995,6 @@ void explosion_update(int obj)
                     k++;
                 }
                 *(u8*)&((ExplosionState*)state)->halfLifeFired = 1;
-                ang[1] = r0v;
-                ang[2] = r0v;
             }
         }
     }
