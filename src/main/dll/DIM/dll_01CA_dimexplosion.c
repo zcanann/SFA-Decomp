@@ -970,7 +970,7 @@ void explosion_update(int obj)
             {
                 f32 frac = (f32)(int)((ExplosionState*)state)->frameCounter / (f32)(int)((ExplosionState*)state)->
                     lifeFrames;
-                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * ((ExplosionState*)state)->scale;
+                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E49A4 * (frac * ((ExplosionState*)state)->scale);
                 ((GameObject*)obj)->anim.alpha = (s8)(int)(lbl_803E4938 - lbl_803E4938 * frac);
             }
             if (*(u8*)&((ExplosionState*)state)->halfLifeFired == 0 && ((ExplosionState*)state)->frameCounter >= (((
