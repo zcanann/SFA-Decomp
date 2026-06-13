@@ -912,6 +912,8 @@ void explosion_update(int obj)
                         md = ((ExplosionState*)state)->modelKind;
                         switch (md)
                         {
+                        case 0:
+                            break;
                         case 1:
                             ang[1] = ang[2];
                             ang[4] = ang[5];
