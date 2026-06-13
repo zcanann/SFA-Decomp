@@ -690,9 +690,9 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         return 8;
     }
 
-    ((GameObject*)obj)->anim.rotX = (s16)(s32)(
+    ((GameObject*)obj)->anim.rotX =
         lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State*)state)->baddie.turnRate * t / lbl_803E8254) +
-        (f32)(s16) * &((GameObject*)obj)->anim.rotX);
+        (f32)(s16) * &((GameObject*)obj)->anim.rotX;
 
     v = *(f32*)((char*)state + 0x298);
     if (v < *(f32*)&lbl_803E8234)
