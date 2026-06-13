@@ -578,7 +578,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
     }
     if (sub[0x5f] != 0)
     {
-        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 - framesThisStep;
+        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 -= framesThisStep;
         if (((DimmagicbridgeFlameSeqFnState*)sub)->unk64 <= 0)
         {
             ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = 0x10;
@@ -605,15 +605,16 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {
-    int model = (int)Obj_GetActiveModel((int)obj);
-    int mdl = *(int*)model;
     int i;
     int cnt;
+    int model = (int)Obj_GetActiveModel((int)obj);
+    int mdl = *(int*)model;
+    f32 waveScale = lbl_803E4A00;
     for (i = 0; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
     {
         s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
         s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);
-        int u = (u16)(int)(lbl_803E4A00 * ((f32)(int)vc[2] / *(f32*)sub)
+        int u = (u16)(int)(waveScale * ((f32)(int)vc[2] / *(f32*)sub)
         )
         +*(u16*)(sub + 0x60);
         if (*vb > 0)
