@@ -211,6 +211,7 @@ void dim2lavacontrol_init(int obj, int param2)
     envFxActFn_800887f8(0);
 }
 
+#pragma opt_common_subs off
 void dim2lavacontrol_update(int obj)
 {
     extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int e1, int e2);
@@ -235,7 +236,7 @@ void dim2lavacontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
     obj = *(int*)&((GameObject*)obj)->extra;
-    switch (*(s8*)(obj + 4))
+    switch (*(u8*)(obj + 4))
     {
     case 0:
         if (GameBit_Get(0xacd) != 0)
