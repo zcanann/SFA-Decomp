@@ -508,8 +508,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     int segmentCount;
     int sampleIndex;
     int lastSample;
-    int hasFirstAxis;
-    s16 axisFirstSample;
 
     bank = ObjAnim_GetActiveBank(objAnim);
     animDef = bank->animDef;
@@ -532,19 +530,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         {
             blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
             blendScale = blendCurve->scale * objAnim->rootMotionScale;
-            blendSamples = ObjAnim_GetRootCurveAxisData(blendCurve);
-            if (*blendSamples == 0)
-            {
-                blendSamples++;
-                if (*blendSamples == 0)
-                {
-                    blendSamples++;
-                    if (*blendSamples == 0)
-                    {
-                        blendSamples = NULL;
-                    }
-                }
-            }
+            blendSamples = ObjAnim_FindFirstRootTranslationAxis(blendCurve);
             if (blendSamples != NULL)
             {
                 blendSamples++;
@@ -561,27 +547,8 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     rootScale = curve->scale * objAnim->rootMotionScale;
     segmentCount = curve->sampleCount - 1;
-    axis = ObjAnim_GetRootCurveAxisData(curve);
-    hasFirstAxis = 0;
-    axisFirstSample = *axis;
-    if (axisFirstSample != 0)
-    {
-        hasFirstAxis = 1;
-    }
-    if (axisFirstSample == 0)
-    {
-        axis++;
-    }
-    if (hasFirstAxis == 0)
-    {
-        axisFirstSample = *axis;
-        if (axisFirstSample == 0)
-        {
-            axis++;
-        }
-    }
-    axisFirstSample = *axis;
-    if (axisFirstSample == 0)
+    axis = ObjAnim_FindFirstRootTranslationAxis(curve);
+    if (axis == NULL)
     {
         return 0;
     }
