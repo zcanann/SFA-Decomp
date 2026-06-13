@@ -1193,7 +1193,7 @@ void fn_802BB4B4(int obj, int a, int slot)
 {
     extern u32 getButtonsJustPressed(int controller);
     extern u32 getButtonsHeld(int controller);
-    int matchFrame = (slot == -1) ? 1 : ((framesThisStep - 1 - slot) == 0);
+    int matchFrame = (slot != -1) ? ((framesThisStep - 1 - slot) == 0) : 1;
     int* viewSlot = (int*)Camera_GetCurrentViewSlot();
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
 
