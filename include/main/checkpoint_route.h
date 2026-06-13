@@ -50,6 +50,18 @@ typedef struct CheckpointSlot {
     CheckpointRouteEntry *entry;
 } CheckpointSlot;
 
+typedef struct CheckpointRouteState {
+    f32 localX;
+    f32 localY;
+    f32 pathT;
+    f32 routeProgress;
+    s32 startCheckpointId;
+    s32 matchedCheckpointId;
+    s32 currentCheckpointId;
+    s32 linkDepth;
+    s16 group;
+} CheckpointRouteState;
+
 CheckpointRouteEntry *Checkpoint_find(s32 key, s32 *idx_out);
 
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, posX) == 0x08);
@@ -64,5 +76,13 @@ STATIC_ASSERT(offsetof(CheckpointRouteEntry, heightOffsets) == 0x31);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, waveAmplitude) == 0x3D);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, wavePhase) == 0x3E);
 STATIC_ASSERT(sizeof(CheckpointSlot) == 0x08);
+STATIC_ASSERT(offsetof(CheckpointRouteState, localX) == 0x00);
+STATIC_ASSERT(offsetof(CheckpointRouteState, pathT) == 0x08);
+STATIC_ASSERT(offsetof(CheckpointRouteState, routeProgress) == 0x0C);
+STATIC_ASSERT(offsetof(CheckpointRouteState, startCheckpointId) == 0x10);
+STATIC_ASSERT(offsetof(CheckpointRouteState, matchedCheckpointId) == 0x14);
+STATIC_ASSERT(offsetof(CheckpointRouteState, currentCheckpointId) == 0x18);
+STATIC_ASSERT(offsetof(CheckpointRouteState, linkDepth) == 0x1C);
+STATIC_ASSERT(offsetof(CheckpointRouteState, group) == 0x20);
 
 #endif /* MAIN_CHECKPOINT_ROUTE_H_ */

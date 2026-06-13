@@ -2,8 +2,10 @@
 #define MAIN_DLL_DF_PARTFX_H_
 
 #include "ghidra_import.h"
+#include "main/checkpoint_route.h"
+#include "main/game_object.h"
 
-int Checkpoint_func07(int* obj, int* state);
+int Checkpoint_func07(GameObject *obj, CheckpointRouteState *state);
 void FUN_800d66e4(void);
 void FUN_800d6b38(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_800d7304(void);

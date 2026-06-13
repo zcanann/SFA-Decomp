@@ -495,17 +495,6 @@ extern f32 lbl_803E04E0;
 extern f32 lbl_803E04E4;
 extern f32 mathCosf(f32 x);
 
-typedef struct CheckpointPathState
-{
-    u8 pad00[0x0c];
-    f32 pathProgress;
-    s32 startCheckpointId;
-    u8 pad14[4];
-    s32 currentCheckpointId;
-    s32 linkDepth;
-    s32 nextCheckpointId;
-} CheckpointPathState;
-
 #pragma dont_inline off
 s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
 {
@@ -784,7 +773,7 @@ void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
     }
 }
 
-void Checkpoint_func0C(CheckpointPathState* o)
+void Checkpoint_func0C(CheckpointRouteState* o)
 {
     s32 local_idx;
     CheckpointRouteEntry* ret;
@@ -793,7 +782,7 @@ void Checkpoint_func0C(CheckpointPathState* o)
     if (ret == 0)
     {
         o->currentCheckpointId = 0;
-        o->pathProgress = lbl_803E04E8;
+        o->routeProgress = lbl_803E04E8;
     }
     else
     {
@@ -803,7 +792,7 @@ void Checkpoint_func0C(CheckpointPathState* o)
             o->linkDepth = o->linkDepth + 1;
         }
         o->currentCheckpointId = o->startCheckpointId;
-        o->pathProgress = lbl_803E04E8;
+        o->routeProgress = lbl_803E04E8;
     }
 }
 
@@ -982,7 +971,6 @@ void Checkpoint_onGameLoop(void)
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/baddie_state.h"
 
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E050C;
@@ -991,7 +979,7 @@ extern f32 lbl_803E0514;
 extern f32 lbl_803E0518;
 
 #pragma opt_common_subs off
-int Checkpoint_func07(int* obj, int* state)
+int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
 {
     extern int getAngle(f32 dx, f32 dz); /* #57 */
     int slotC;
@@ -1003,31 +991,31 @@ int Checkpoint_func07(int* obj, int* state)
     f32 dist, dist2, nx, nz, offs, dz;
     f32 offs2, distA, distB, dx, dy, len, q, proj, proj2, t0, sum, frac, zero;
 
-    if (*(int*)&((BaddieState*)state)->posY < 0)
+    if (state->currentCheckpointId < 0)
     {
-        *(int*)&((BaddieState*)state)->posZ = 0;
-        *(f32*)((char*)state + 0xc) = lbl_803E04E8;
-        if (*(int*)((char*)state + 0x10) < 0)
+        state->linkDepth = 0;
+        state->routeProgress = lbl_803E04E8;
+        if (state->startCheckpointId < 0)
         {
             return 0;
         }
-        *(int*)&((BaddieState*)state)->posY = *(int*)((char*)state + 0x10);
+        state->currentCheckpointId = state->startCheckpointId;
     }
-    cp = Checkpoint_find(*(int*)&((BaddieState*)state)->posY, &slot8);
+    cp = Checkpoint_find(state->currentCheckpointId, &slot8);
     if (cp == NULL)
     {
-        *(int*)&((BaddieState*)state)->posY = -1;
+        state->currentCheckpointId = -1;
         return 0;
     }
     cosv = mathSinf((lbl_803E04D8 * (f32)(cp->heading << 8)) / lbl_803E04DC);
     sinv = mathCosf((lbl_803E04D8 * (f32)(cp->heading << 8)) / lbl_803E04DC);
     offs = -(cp->posX * cosv + cp->posZ * sinv);
-    dist = offs + (cosv * ((GameObject*)obj)->anim.localPosX + sinv * ((GameObject*)obj)->anim.localPosZ);
+    dist = offs + (cosv * obj->anim.localPosX + sinv * obj->anim.localPosZ);
     if (cp->backLink0 > -1 && dist >= lbl_803E04E8)
     {
-        *(int*)&((BaddieState*)state)->posY = cp->backLink0;
-        *(f32*)((char*)state + 0xc) = lbl_803E050C;
-        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ - 1;
+        state->currentCheckpointId = cp->backLink0;
+        state->routeProgress = lbl_803E050C;
+        state->linkDepth = state->linkDepth - 1;
         return cp->heading;
     }
     if (cp->forwardLink0 < 0)
@@ -1039,13 +1027,13 @@ int Checkpoint_func07(int* obj, int* state)
     cos2 = mathSinf((lbl_803E04D8 * (f32)(cp2->heading << 8)) / lbl_803E04DC);
     sin2 = mathCosf((lbl_803E04D8 * (f32)(cp2->heading << 8)) / lbl_803E04DC);
     offs2 = -(cp2->posX * cos2 + cp2->posZ * sin2);
-    dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
+    dist2 = offs2 + (cos2 * obj->anim.localPosX + sin2 * obj->anim.localPosZ);
     zero = lbl_803E04E8;
     if (dist2 < zero)
     {
-        *(int*)&((BaddieState*)state)->posY = cp->forwardLink0;
-        *(f32*)((char*)state + 0xc) = zero;
-        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ + 1;
+        state->currentCheckpointId = cp->forwardLink0;
+        state->routeProgress = zero;
+        state->linkDepth = state->linkDepth + 1;
         return ang;
     }
     distA = offs + (cosv * cp2->posX + sinv * cp2->posZ);
@@ -1080,14 +1068,14 @@ int Checkpoint_func07(int* obj, int* state)
         {
             frac = t0 / sum;
         }
-        *(f32*)((char*)state + 0xc) = frac;
-        if (*(f32*)((char*)state + 0xc) < lbl_803E04E8)
+        state->routeProgress = frac;
+        if (state->routeProgress < lbl_803E04E8)
         {
-            *(f32*)((char*)state + 0xc) = lbl_803E04E8;
+            state->routeProgress = lbl_803E04E8;
         }
-        if (*(f32*)((char*)state + 0xc) >= lbl_803E0518)
+        if (state->routeProgress >= lbl_803E0518)
         {
-            *(f32*)((char*)state + 0xc) = lbl_803E0518;
+            state->routeProgress = lbl_803E0518;
         }
     }
     return ang;
@@ -1205,7 +1193,7 @@ extern f32 lbl_803E0530;
 extern f32 lbl_803E0534;
 extern f32 lbl_803E0538;
 
-void Checkpoint_func06(int* obj, int* state, int filter)
+void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
     extern CheckpointSlot lbl_8039C458[]; /* #57 */
     extern u32 lbl_803DD410; /* #57 */
@@ -1228,7 +1216,7 @@ void Checkpoint_func06(int* obj, int* state, int filter)
     {
         visited[i] = 0;
     }
-    cp = Checkpoint_find(*(int*)((char*)state + 0x10), &cur);
+    cp = Checkpoint_find(state->startCheckpointId, &cur);
     if (cp != NULL)
     {
         stack[count++] = cur;
@@ -1240,9 +1228,9 @@ void Checkpoint_func06(int* obj, int* state, int filter)
             e = lbl_8039C458[i].entry;
             if (visited[i] == 0 && (filter == -1 || e->group == filter))
             {
-                ddx = e->posX - ((GameObject*)obj)->anim.localPosX;
-                ddy = e->posY - ((GameObject*)obj)->anim.localPosY;
-                ddz = e->posZ - ((GameObject*)obj)->anim.localPosZ;
+                ddx = e->posX - obj->anim.localPosX;
+                ddy = e->posY - obj->anim.localPosY;
+                ddz = e->posZ - obj->anim.localPosZ;
                 if (ddz * ddz + (ddx * ddx + ddy * ddy) < lbl_803E051C)
                 {
                     stack[count++] = i;
@@ -1271,7 +1259,7 @@ void Checkpoint_func06(int* obj, int* state, int filter)
         }
         else
         {
-            *(int*)((char*)state + 0x10) = -1;
+            state->startCheckpointId = -1;
             return;
         }
         if (cp == NULL)
@@ -1289,8 +1277,8 @@ void Checkpoint_func06(int* obj, int* state, int filter)
                 cos2 = mathSinf((lbl_803E04D8 * (f32)(n->heading << 8)) / lbl_803E04DC);
                 sin2 = mathCosf((lbl_803E04D8 * (f32)(n->heading << 8)) / lbl_803E04DC);
                 offs2 = -(n->posX * cos2 + n->posZ * sin2);
-                dist1 = offs1 + (cos1 * ((GameObject*)obj)->anim.localPosX + sin1 * ((GameObject*)obj)->anim.localPosZ);
-                dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
+                dist1 = offs1 + (cos1 * obj->anim.localPosX + sin1 * obj->anim.localPosZ);
+                dist2 = offs2 + (cos2 * obj->anim.localPosX + sin2 * obj->anim.localPosZ);
                 distA = offs1 + (cos1 * n->posX + sin1 * n->posZ);
                 distB = offs2 + (cos2 * cp->posX + sin2 * cp->posZ);
                 if (((distA <= lbl_803E04E8 && dist1 <= lbl_803E04E8) || (distA > lbl_803E04E8 && dist1 > lbl_803E04E8))
@@ -1332,20 +1320,19 @@ void Checkpoint_func06(int* obj, int* state, int filter)
                     px = -(dx * frac - cp->posX);
                     py = -(dy * frac - cp->posY);
                     pz = -(dz * frac - cp->posZ);
-                    outY = (((GameObject*)obj)->anim.localPosY - py) / width;
-                    outX = (-(px * nz - pz * nx) + (((GameObject*)obj)->anim.localPosX * nz - ((GameObject*)obj)->anim.
-                        localPosZ * nx)) / width;
+                    outY = (obj->anim.localPosY - py) / width;
+                    outX = (-(px * nz - pz * nx) + (obj->anim.localPosX * nz - obj->anim.localPosZ * nx)) / width;
                     if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534)
                     {
                     }
                     else
                     {
-                        *(int*)((char*)state + 0x10) = cp->checkpointId;
-                        *(int*)&((BaddieState*)state)->posX = cp->checkpointId;
-                        *(f32*)((char*)state + 0) = outX;
-                        *(f32*)((char*)state + 4) = outY;
-                        *(f32*)((char*)state + 8) = frac;
-                        *(s16*)((char*)state + 0x20) = cp->group;
+                        state->startCheckpointId = cp->checkpointId;
+                        state->matchedCheckpointId = cp->checkpointId;
+                        state->localX = outX;
+                        state->localY = outY;
+                        state->pathT = frac;
+                        state->group = cp->group;
                         return;
                     }
                 }
