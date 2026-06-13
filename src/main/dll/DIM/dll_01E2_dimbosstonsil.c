@@ -48,7 +48,7 @@ extern void modelLightStruct_setDiffuseTargetColor(void* handle, int r, int g, i
 extern void modelLightStruct_setSpecularTargetColor(void* handle, int r, int g, int b, int a);
 extern void modelLightStruct_startColorFade(void* handle, int param_2, int param_3);
 extern void modelLightStruct_setAffectsAabbLightSelection(void* handle, int param_2);
-extern void modelLightStruct_setupGlow(void* handle, f32 param_2, int param_3, int r, int g, int b, int a);
+extern void modelLightStruct_setupGlow(void* handle, int param_3, int r, int g, int b, int a, f32 radius);
 extern void DIMbosstonsil_updateHitReaction(void);
 extern void DIMbosstonsil_enableHitReaction(void);
 extern void DIMbosstonsil_chooseHitReaction(void);
@@ -366,7 +366,7 @@ void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
 {
     extern undefined4* gBaddieControlInterface;
     extern undefined4* gPlayerInterface;
-    extern void modelLightStruct_setEnabled(void* handle, f32 param_2, int param_3);
+    extern void modelLightStruct_setEnabled(void* handle, int param_2, f32 param_3);
     extern int GameBit_Get(int eventId);
     u32 variant;
     int state;
@@ -402,13 +402,13 @@ void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
         modelLightStruct_setSpecularColor(gDIMbosstonsilLight, 0xff, 0, 0, 0x7f);
         modelLightStruct_setDistanceAttenuation(gDIMbosstonsilLight, lbl_803E4C9C, lbl_803E4CA0);
         lightSetField4D(gDIMbosstonsilLight, 1);
-        modelLightStruct_setEnabled(gDIMbosstonsilLight, lbl_803E4C90, 1);
+        modelLightStruct_setEnabled(gDIMbosstonsilLight, 1, lbl_803E4C90);
         modelLightStruct_setGlowProjectionRadius(gDIMbosstonsilLight, lbl_803E4CA0);
         modelLightStruct_setDiffuseTargetColor(gDIMbosstonsilLight, 0xff, 0x7f, 0, 0x40);
         modelLightStruct_setSpecularTargetColor(gDIMbosstonsilLight, 0xff, 0x7f, 0, 0x40);
         modelLightStruct_startColorFade(gDIMbosstonsilLight, 2, 0x3c);
         modelLightStruct_setAffectsAabbLightSelection(gDIMbosstonsilLight, 1);
-        modelLightStruct_setupGlow(gDIMbosstonsilLight, lbl_803E4CA0, 0, 0xff, 0, 0, 0x7f);
+        modelLightStruct_setupGlow(gDIMbosstonsilLight, 0, 0xff, 0, 0, 0x7f, lbl_803E4CA0);
     }
     return;
 }
