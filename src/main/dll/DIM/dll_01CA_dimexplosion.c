@@ -502,24 +502,26 @@ void dim_levelcontrol_free(int p1);
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
+void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out);
 typedef void (*Fn801B40B8IntFirst)(u8 mode, u8* out, f32 a, f32 b);
+typedef void (*Fn801B3DE4SpdFirst)(int obj, f32 spd, int b, f32 x, f32 y, f32 z);
+typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 #pragma peephole off
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
+void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
 {
     int p4c = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
-    u8 idx;
+    int idx;
     int off;
     int e;
-    int p;
-    idx = ((ExplosionState*)state)->flameCount;
-    ((ExplosionState*)state)->flameCount = idx + 1;
+    int e14;
+    idx = ((ExplosionState*)state)->flameCount++;
     off = idx * 0x30;
     *(f32*)((char*)state + off) = x;
     e = state + off;
+    e14 = state + off;
     *(f32*)((char*)e + 0x4) = y;
     *(f32*)((char*)e + 0x8) = z;
     *(f32*)((char*)e + 0x18) = lbl_803E492C;
@@ -527,9 +529,9 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     *(f32*)((char*)e + 0x1c) = spd;
     *(u8*)((char*)e + 0x2d) = b;
     *(int*)((char*)e + 0x10) = 0;
-    *(int*)((char*)e + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
+    *(int*)((char*)e14 + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
     {
-        int v = *(int*)((char*)e + 0x14);
+        int v = *(int*)((char*)e14 + 0x14);
         if (v < 0)
         {
             v = 0;
@@ -538,7 +540,7 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
         {
             v = 0x3c;
         }
-        *(int*)((char*)e + 0x14) = v;
+        *(int*)((char*)e14 + 0x14) = v;
     }
     if (*(u8*)((char*)e + 0x2d) < 1)
     {
@@ -574,27 +576,26 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
             }
         }
     }
-    *(s16*)((char*)state + off + 0x28) = randomGetRange(0, 0xffff);
-    *(s16*)((char*)state + off + 0x2a) = randomGetRange(0xc8, 0x12c);
+    *(s16*)((char*)(int)state + off + 0x28) = randomGetRange(0, 0xffff);
+    *(s16*)((char*)(int)state + off + 0x2a) = randomGetRange(0xc8, 0x12c);
     if ((int)randomGetRange(0, 1) != 0)
     {
-        *(s16*)((char*)state + off + 0x2a) = -*(s16*)((char*)state + off + 0x2a);
+        *(s16*)((char*)(int)state + off + 0x2a) = -*(s16*)((char*)(int)state + off + 0x2a);
     }
-    *(u8*)((char*)state + off + 0x2c) = randomGetRange(0, 3);
+    *(u8*)((char*)(int)state + off + 0x2c) = randomGetRange(0, 3);
     {
         f32 sp = *(f32*)((char*)e + 0x1c);
         f32 ev = expf(
-            (lbl_803E4934 * ((f32)(int) * (int*)((char*)e + 0x14) - (f32)(int) * (int*)((char*)e + 0x10))) / (f32)(int)
-            * (int*)((char*)e + 0x14));
+            (lbl_803E4934 * ((f32)(int) * (int*)((char*)e14 + 0x14) - (f32)(int) * (int*)((char*)e + 0x10))) / (f32)(int)
+            * (int*)((char*)e14 + 0x14));
         f32 t = (sp - *(f32*)((char*)e + 0x18)) * ev;
         *(f32*)((char*)e + 0xc) = sp - t * lbl_803DDB70;
-        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e + 0x14));
+        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e14 + 0x14));
         t = lbl_803E4938 * ev;
-        p = state + off;
-        *(s8*)((char*)p + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
-        *(int*)((char*)p + 0x20) = (int)lbl_803E4940;
-        *(int*)((char*)p + 0x24) = *(int*)((char*)p + 0x20);
-        *(u8*)((char*)p + 0x2f) = 1;
+        *(s8*)((char*)(int)state + off + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
+        *(int*)((char*)(int)state + off + 0x20) = (int)lbl_803E4940;
+        *(int*)((char*)(int)state + off + 0x24) = *(int*)((char*)(int)state + off + 0x20);
+        *(u8*)((char*)(int)state + off + 0x2f) = 1;
     }
 }
 
@@ -1006,8 +1007,8 @@ void explosion_init(int obj, int p2)
             scale = lbl_803E49A8;
         }
     }
-    fn_801B3DE4(obj, 0, lbl_803E49AC * scale, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                ((GameObject*)obj)->anim.localPosZ);
+    ((Fn801B3DE4SpdFirst)fn_801B3DE4)(obj, lbl_803E49AC * scale, 0, ((GameObject*)obj)->anim.localPosX,
+                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((ExplosionState*)state)->modelKind = *(s16*)((char*)p2 + 0x1c) & 3;
     Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
@@ -1020,9 +1021,9 @@ void explosion_init(int obj, int p2)
         ((ExplosionState*)state)->driftYSpeed = lbl_803E4960;
     }
     *(u8*)&((ExplosionState*)state)->nearGround = 0;
-    if (hitDetectFn_800658a4(obj, state + 0x960, 0, ((GameObject*)obj)->anim.localPosX,
+    if (((HitDetectFloatsFirst)hitDetectFn_800658a4)(obj, ((GameObject*)obj)->anim.localPosX,
                              lbl_803E49B0 + ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ) == 0)
+                             ((GameObject*)obj)->anim.localPosZ, state + 0x960, 0) == 0)
     {
         if (((ExplosionState*)state)->groundY < lbl_803E49B4)
         {
