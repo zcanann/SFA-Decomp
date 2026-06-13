@@ -216,8 +216,11 @@ void dll_19E_update(void* obj)
     extern int GameBit_Set(int eventId, int value);
     Dll19EState* state;
     void* resource;
-    volatile f32 localScale;
-    undefined effectArgs[16];
+    struct
+    {
+        undefined args[16];
+        volatile f32 scale;
+    } effectBuf;
     undefined4 resourceArgs[4];
     int i;
 
@@ -233,7 +236,7 @@ void dll_19E_update(void* obj)
 
     if (state->mode == 1)
     {
-        localScale = lbl_803E51E0;
+        effectBuf.scale = lbl_803E51E0;
         state->previousActive = state->active;
         if ((ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) ||
             ((state->settleTimer != 0) && (state->settleTimer <= 0x14)))
@@ -279,7 +282,7 @@ void dll_19E_update(void* obj)
                 resourceArgs[1] = (u32)state->sequenceIndex * 2 + 0x19d;
                 resourceArgs[2] = (u32)state->sequenceIndex * 2 + 0x19e;
                 (*(void (*)(void*, int, undefined*, int, int, undefined4*))(*(int*)(*(int*)resource + 4)))(
-                    obj, 1, effectArgs, 0x10004, -1, resourceArgs);
+                    obj, 1, effectBuf.args, 0x10004, -1, resourceArgs);
                 Resource_Release(resource);
 
                 i = 0;
