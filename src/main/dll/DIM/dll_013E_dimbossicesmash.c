@@ -110,7 +110,7 @@ void dimbossicesmash_update(u8* obj)
     u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[0x29e];
     u8* setup;
-    u32 t;
+    int t;
     int a;
     s16 cnt;
     int t1;
@@ -155,7 +155,7 @@ void dimbossicesmash_update(u8* obj)
             ((GameObject*)obj)->anim.alpha = 0xff;
             ((DimBossIceSmashState*)state)->unk29C += framesThisStep;
             cnt = ((DimBossIceSmashState*)state)->unk29C;
-            if (((DimbossicesmashPlacement*)setup)->unk38 <= cnt)
+            if (cnt >= ((DimbossicesmashPlacement*)setup)->unk38)
             {
                 state[0x29e] = state[0x29e] | 2;
             }
