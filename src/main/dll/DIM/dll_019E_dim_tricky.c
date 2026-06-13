@@ -360,15 +360,9 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     state->gameBitId = setup->gameBitId;
     localScale = lbl_803E51E0;
 
-    if (state->mode == 1)
+    switch (state->mode)
     {
-        state->sequenceIndex = (u8)setup->sequenceIndex;
-        state->needsOpenSfx = 0;
-        state->settleTimer = state->sequenceIndex * 0x28 + 0x398;
-        state->previousActive = 0;
-    }
-    else if (state->mode == 0)
-    {
+    case 0:
         state->active = 1;
         resource = Resource_Acquire(0x69, 1);
         if (setup->sequenceIndex == 0)
@@ -376,6 +370,13 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
             (*(void (**)(u8*, int, undefined*, int, int, int))(*(int*)resource + 4))(
                 obj, 0, stackArg, 0x10004, -1, 0);
         }
+        break;
+    case 1:
+        state->sequenceIndex = (u8)setup->sequenceIndex;
+        state->needsOpenSfx = 0;
+        state->settleTimer = state->sequenceIndex * 0x28 + 0x398;
+        state->previousActive = 0;
+        break;
     }
     state->delayTimer = 0;
 }
