@@ -507,11 +507,11 @@ typedef struct CheckpointPathState
 } CheckpointPathState;
 
 #pragma dont_inline off
-s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
+s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
 {
     s32 ret;
     s32 local_idx;
-    u8* q;
+    CheckpointRouteEntry* q;
     f32 cosA;
     f32 sinA;
     f32 cosB;
@@ -527,10 +527,10 @@ s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa
     {
         return 0;
     }
-    q = (u8*)Checkpoint_find(((s32*)(p + 0x20))[idx], &local_idx);
+    q = Checkpoint_find(p->forwardLinkIds[idx], &local_idx);
     if (q == NULL)
     {
-        q = (u8*)Checkpoint_find(((s32*)(p + 0x20))[1 - idx], &local_idx);
+        q = Checkpoint_find(p->forwardLinkIds[1 - idx], &local_idx);
         ret = 2;
     }
     if (q == NULL)
@@ -538,12 +538,12 @@ s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa
         return 0;
     }
 
-    cosA = -mathSinf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x29) << 8) / lbl_803E04DC);
-    sinA = -mathCosf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x29) << 8) / lbl_803E04DC);
-    cosB = -mathSinf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x29) << 8) / lbl_803E04DC);
-    sinB = -mathCosf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x29) << 8) / lbl_803E04DC);
-    sclA = lbl_803E04E0 * (f32)(u32) * (u8*)(p + 0x2a);
-    sclB = lbl_803E04E0 * (f32)(u32) * (u8*)(q + 0x2a);
+    cosA = -mathSinf(lbl_803E04D8 * (f32)(p->heading << 8) / lbl_803E04DC);
+    sinA = -mathCosf(lbl_803E04D8 * (f32)(p->heading << 8) / lbl_803E04DC);
+    cosB = -mathSinf(lbl_803E04D8 * (f32)(q->heading << 8) / lbl_803E04DC);
+    sinB = -mathCosf(lbl_803E04D8 * (f32)(q->heading << 8) / lbl_803E04DC);
+    sclA = lbl_803E04E0 * (f32)(u32)p->width;
+    sclB = lbl_803E04E0 * (f32)(u32)q->width;
 
     if (mode == 1)
     {
@@ -560,26 +560,22 @@ s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa
         prodD = sclB * -cosB;
         do
         {
-            u8* pp;
-            u8* qq;
-            pp = p + i;
-            out1[0] = (f32) * (s8*)(pp + 0x2d) * prodA + *(f32*)(p + 8);
-            qq = q + i;
-            out1[1] = (f32) * (s8*)(qq + 0x2d) * prodB + *(f32*)(q + 8);
-            out1[2] = 2.0f * ((f32)(u32) * (u8*)(p + 0x3d) *
-                mathSinf(3.1415927f * (f32)(*(u8*)(p + 0x3e) << 8) / 32768.0f));
-            out1[3] = 2.0f * ((f32)(u32) * (u8*)(q + 0x3d) *
-                mathSinf(3.1415927f * (f32)(*(u8*)(q + 0x3e) << 8) / 32768.0f));
-            out2[0] = sclA * (f32) * (s8*)(pp + 0x31) + *(f32*)(p + 0xc);
-            out2[1] = sclB * (f32) * (s8*)(qq + 0x31) + *(f32*)(q + 0xc);
+            out1[0] = (f32)p->sideOffsets[i] * prodA + p->posX;
+            out1[1] = (f32)q->sideOffsets[i] * prodB + q->posX;
+            out1[2] = 2.0f * ((f32)(u32)p->waveAmplitude *
+                mathSinf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
+            out1[3] = 2.0f * ((f32)(u32)q->waveAmplitude *
+                mathSinf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
+            out2[0] = sclA * (f32)p->heightOffsets[i] + p->posY;
+            out2[1] = sclB * (f32)q->heightOffsets[i] + q->posY;
             out2[2] = 0.0f;
             out2[3] = 0.0f;
-            v3[0] = (f32) * (s8*)(pp + 0x2d) * prodC + *(f32*)(p + 0x10);
-            v3[1] = (f32) * (s8*)(qq + 0x2d) * prodD + *(f32*)(q + 0x10);
-            v3[2] = 2.0f * ((f32)(u32) * (u8*)(p + 0x3d) *
-                mathCosf(3.1415927f * (f32)(*(u8*)(p + 0x3e) << 8) / 32768.0f));
-            v3[3] = 2.0f * ((f32)(u32) * (u8*)(q + 0x3d) *
-                mathCosf(3.1415927f * (f32)(*(u8*)(q + 0x3e) << 8) / 32768.0f));
+            v3[0] = (f32)p->sideOffsets[i] * prodC + p->posZ;
+            v3[1] = (f32)q->sideOffsets[i] * prodD + q->posZ;
+            v3[2] = 2.0f * ((f32)(u32)p->waveAmplitude *
+                mathCosf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
+            v3[3] = 2.0f * ((f32)(u32)q->waveAmplitude *
+                mathCosf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
             i += 1;
             out1 += 4;
             out2 += 4;
@@ -590,51 +586,48 @@ s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa
     }
     else if (mode == 0)
     {
-        out1[0] = fa * (sclA * sinA) + *(f32*)(p + 8);
-        out1[1] = fa * (sclB * sinB) + *(f32*)(q + 8);
-        out1[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
-            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
-        out1[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
-            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
-        out2[0] = sclA * fb + *(f32*)(p + 0xc);
-        out2[1] = sclB * fb + *(f32*)(q + 0xc);
+        out1[0] = fa * (sclA * sinA) + p->posX;
+        out1[1] = fa * (sclB * sinB) + q->posX;
+        out1[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
+            mathSinf(lbl_803E04D8 * (f32)(p->wavePhase << 8) / lbl_803E04DC));
+        out1[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
+            mathSinf(lbl_803E04D8 * (f32)(q->wavePhase << 8) / lbl_803E04DC));
+        out2[0] = sclA * fb + p->posY;
+        out2[1] = sclB * fb + q->posY;
         {
             f32 e8 = lbl_803E04E8;
             out2[2] = e8;
             out2[3] = e8;
         }
-        out3[0] = fa * (sclA * -cosA) + *(f32*)(p + 0x10);
-        out3[1] = fa * (sclB * -cosB) + *(f32*)(q + 0x10);
-        out3[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
-            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
-        out3[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
-            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
+        out3[0] = fa * (sclA * -cosA) + p->posZ;
+        out3[1] = fa * (sclB * -cosB) + q->posZ;
+        out3[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
+            mathCosf(lbl_803E04D8 * (f32)(p->wavePhase << 8) / lbl_803E04DC));
+        out3[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
+            mathCosf(lbl_803E04D8 * (f32)(q->wavePhase << 8) / lbl_803E04DC));
     }
     else
     {
-        u8* pp;
-        u8* qq;
-        pp = p + (mode - 2);
-        out1[0] = (f32) * (s8*)(pp + 0x2d) * (sclA * sinA) + *(f32*)(p + 8);
-        qq = q + (mode - 2);
-        out1[1] = (f32) * (s8*)(qq + 0x2d) * (sclB * sinB) + *(f32*)(q + 8);
-        out1[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
-            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
-        out1[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
-            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
-        out2[0] = sclA * (f32) * (s8*)(pp + 0x31) + *(f32*)(p + 0xc);
-        out2[1] = sclB * (f32) * (s8*)(qq + 0x31) + *(f32*)(q + 0xc);
+        s32 pointIdx = mode - 2;
+        out1[0] = (f32)p->sideOffsets[pointIdx] * (sclA * sinA) + p->posX;
+        out1[1] = (f32)q->sideOffsets[pointIdx] * (sclB * sinB) + q->posX;
+        out1[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
+            mathSinf(lbl_803E04D8 * (f32)(p->wavePhase << 8) / lbl_803E04DC));
+        out1[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
+            mathSinf(lbl_803E04D8 * (f32)(q->wavePhase << 8) / lbl_803E04DC));
+        out2[0] = sclA * (f32)p->heightOffsets[pointIdx] + p->posY;
+        out2[1] = sclB * (f32)q->heightOffsets[pointIdx] + q->posY;
         {
             f32 e8 = lbl_803E04E8;
             out2[2] = e8;
             out2[3] = e8;
         }
-        out3[0] = (f32) * (s8*)(pp + 0x2d) * (sclA * -cosA) + *(f32*)(p + 0x10);
-        out3[1] = (f32) * (s8*)(qq + 0x2d) * (sclB * -cosB) + *(f32*)(q + 0x10);
-        out3[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
-            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
-        out3[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
-            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
+        out3[0] = (f32)p->sideOffsets[pointIdx] * (sclA * -cosA) + p->posZ;
+        out3[1] = (f32)q->sideOffsets[pointIdx] * (sclB * -cosB) + q->posZ;
+        out3[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
+            mathCosf(lbl_803E04D8 * (f32)(p->wavePhase << 8) / lbl_803E04DC));
+        out3[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
+            mathCosf(lbl_803E04D8 * (f32)(q->wavePhase << 8) / lbl_803E04DC));
     }
     return ret;
 }
@@ -851,7 +844,7 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
     s32 local_idx;
     s32 mode;
     s32 alt;
-    u8* n;
+    CheckpointRouteEntry* n;
     s32 i;
     s8 clamp;
     s32 ang1;
@@ -875,18 +868,18 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
         {
             return 1;
         }
-        n = (u8*)Checkpoint_find(*(s32*)(o + 0x10), &local_idx);
+        n = Checkpoint_find(*(s32*)(o + 0x10), &local_idx);
         if (n == NULL)
         {
             return 1;
         }
-        if (*(s32*)(n + 0x20) < 0)
+        if (n->forwardLink0 < 0)
         {
             *(s32*)(o + 0x10) = -1;
             return 1;
         }
         alt = 0;
-        if (*(s32*)(n + 0x24) > -1 && *(u8*)(o + 0x30) != 0)
+        if (n->forwardLink1 > -1 && *(u8*)(o + 0x30) != 0)
         {
             alt = 1;
         }
@@ -935,20 +928,20 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
         }
         if (clamp == -1 && seg < dist)
         {
-            *(s32*)(o + 0x10) = *(s32*)(n + alt * 4 + 0x18);
+            *(s32*)(o + 0x10) = n->backLinkIds[alt];
             *(f32*)(o + 8) = lbl_803E0508;
             if (alt != 0 && *(s32*)(o + 0x10) < 0)
             {
-                *(s32*)(o + 0x10) = *(s32*)(n + 0x18);
+                *(s32*)(o + 0x10) = n->backLink0;
             }
         }
         else if (clamp == 1 && seg < dist)
         {
-            *(s32*)(o + 0x10) = *(s32*)(n + alt * 4 + 0x20);
+            *(s32*)(o + 0x10) = n->forwardLinkIds[alt];
             *(f32*)(o + 8) = lbl_803E04E8;
             if (alt != 0 && *(s32*)(o + 0x10) < 0)
             {
-                *(s32*)(o + 0x10) = *(s32*)(n + 0x20);
+                *(s32*)(o + 0x10) = n->forwardLink0;
             }
         }
         else
