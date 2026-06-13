@@ -9,12 +9,11 @@
 #include "main/lightmap.h"
 #include "main/mm.h"
 #include "main/sky_state.h"
+#include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "track/intersect.h"
 
 extern int renderModeSetOrGet(int mode);
-extern u8 fn_8005E97C(float minX, float maxX, float minY, float maxY, float minZ, float maxZ,
-                      ExpgfxBounds* boundsTemplate);
 extern void debugPrintf(char* message, ...);
 extern undefined8 FUN_80286830();
 
@@ -2015,9 +2014,12 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
             (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET))
         {
             boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
-            if (fn_8005E97C(poolBounds->minX - playerMapOffsetX, poolBounds->maxX - playerMapOffsetX,
-                            poolBounds->minY, poolBounds->maxY, poolBounds->minZ - playerMapOffsetZ,
-                            poolBounds->maxZ - playerMapOffsetZ, boundsTemplate) != 0)
+            if (frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
+                                                poolBounds->maxX - playerMapOffsetX,
+                                                poolBounds->minY, poolBounds->maxY,
+                                                poolBounds->minZ - playerMapOffsetZ,
+                                                poolBounds->maxZ - playerMapOffsetZ,
+                                                boundsTemplate) != 0)
             {
                 drawGlow(*slotPoolBases, poolIndex);
             }
@@ -2485,11 +2487,12 @@ void renderParticles(void)
             (*poolSourceModes == EXPGFX_POOL_SOURCE_MODE_STANDALONE))
         {
             boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
-            if (fn_8005E97C((double)(poolBounds->minX - playerMapOffsetX),
-                            (double)(poolBounds->maxX - playerMapOffsetX),
-                            (double)poolBounds->minY, (double)poolBounds->maxY,
-                            (double)(poolBounds->minZ - playerMapOffsetZ),
-                            (double)(poolBounds->maxZ - playerMapOffsetZ), boundsTemplate) != 0)
+            if (frustumTestAabbWithPlaneOffsets((double)(poolBounds->minX - playerMapOffsetX),
+                                                (double)(poolBounds->maxX - playerMapOffsetX),
+                                                (double)poolBounds->minY, (double)poolBounds->maxY,
+                                                (double)(poolBounds->minZ - playerMapOffsetZ),
+                                                (double)(poolBounds->maxZ - playerMapOffsetZ),
+                                                boundsTemplate) != 0)
             {
                 sourcePosition = (ExpgfxPoolSourcePosition*)*poolSourceIds;
                 if (sourcePosition != (ExpgfxPoolSourcePosition*)0x0)
