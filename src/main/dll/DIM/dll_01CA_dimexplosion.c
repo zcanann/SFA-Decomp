@@ -642,19 +642,19 @@ void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out)
 #pragma dont_inline reset
 void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
+    u32 colA;
+    u32 colB;
     u32 colB2;
     u32 colA2;
-    u32 colB;
-    u32 colA;
-    f32 m1[12];
-    f32 m2[12];
-    f32 m3[12];
-    f32 m4[12];
     f32 mE[12];
+    f32 m4[12];
+    f32 m3[12];
+    f32 m2[12];
+    f32 m1[12];
     int state;
     int model;
-    int p;
     int i;
+    int p;
     colA = lbl_803E4928;
     colB = lbl_803E8468;
     state = *(int*)&((GameObject*)obj)->extra;
@@ -739,8 +739,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(u8*)&((ExplosionState*)
             state)->rayMode != 0)
         {
-            p = state;
-            for (i = 0; i < ((ExplosionState*)state)->rayMode; i++)
+            for (i = 0, p = state; i < ((ExplosionState*)state)->rayMode; i++)
             {
                 ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)p)->rayYawA;
                 ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)p)->rayPitchA;
