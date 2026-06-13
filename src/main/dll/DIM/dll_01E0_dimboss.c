@@ -384,19 +384,11 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             runtime->eventGameBit = -1;
         }
         hitReactMode = runtime->hitReactMode;
-        if (hitReactMode == 1)
+        switch (hitReactMode)
         {
-            baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
-                obj, animUpdate, runtime,
-                animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-                animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET, 0);
-            if (baddieResult != 0)
-            {
-                DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70, 1);
-            }
-        }
-        else if ((hitReactMode != 0) && (hitReactMode < 3))
-        {
+        case 0:
+            break;
+        case 2:
             animUpdate->hitVolumePair = 0;
             fn_801BC7E4(obj, animUpdate, (int)runtime, (int)runtime);
             if (runtime->hitReactMode == 1)
@@ -408,6 +400,17 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
                     animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
                 animUpdate->sequenceEventActive = 0;
             }
+            break;
+        case 1:
+            baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
+                obj, animUpdate, runtime,
+                animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+                animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET, 0);
+            if (baddieResult != 0)
+            {
+                DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70, 1);
+            }
+            break;
         }
     }
     warpDarkIceMines_801bbb44(obj, runtime);
