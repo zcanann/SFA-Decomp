@@ -1,3 +1,12 @@
+/*
+ * DLL 0xC9 — the generic enemy/baddie controller. It runs several romlist
+ * enemy types, including GCRobotPatrol ("GCRobotPatr[ol]"), the floating
+ * patrol robot of CloudRunner Fortress (placed in fortress.romlist).
+ * GCRobotPatrol carries the GCRobotLight scanning beam (DLL 0x150,
+ * dll_0150_gcrobotlightbea.c) as childObjs[0] and reads that child's
+ * "player caught in the beam" hit flag to react — the sharp-claw disguise
+ * fools the beam. ("GC" = GameCube; see the dll_0150 header.)
+ */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

@@ -1,9 +1,22 @@
 /*
- * DLL 0x150 — GC robot light beast; part of the sandwormBoss 10-DLL
- * container (0x14A CFPowerBase .. 0x157 SpiritDoorSpirit) covering
- * [8019D578-801A0B14).  DLLs 0x148/0x149 are defined in
- * DR/dll_0148_cfguardian.c and DR/dll_0149_cfwindlift.c; their
- * prototypes appear here so MWCC can resolve forward references.
+ * DLL 0x150 — GCRobotLight (retail object name "GCRobotLigh[t]"), the
+ * electric scanning-beam of CloudRunner Fortress. It is spawned as the
+ * child of a GCRobotPatrol robot (the patrolling enemy run by
+ * dll_00C9_enemy.c, placed in CloudRunner Fortress / fortress.romlist):
+ * gcrobotlightbea_update aims a point light along a traced vector (the
+ * beam) and gcrobotlightbea_hitDetect flags "player caught in the beam"
+ * (hitFlags 0x80) unless playerIsDisguised — the sharp-claw disguise
+ * fools it; the parent robot reads this child's hit result to react.
+ * "GC" = GameCube: Rare's prefix for content reworked/added when the N64
+ * "Dinosaur Planet" became the GameCube Star Fox Adventures (the GCRobot
+ * family + GCbaddieShip, the GCrubble/GCpillar destructibles, and the
+ * reworked GCRF_* CloudRunner Fortress sequences all carry it).
+ *
+ * This file is part of the sandwormBoss 10-DLL container (0x14A
+ * CFPowerBase .. 0x157 SpiritDoorSpirit) covering [8019D578-801A0B14).
+ * DLLs 0x148/0x149 are defined in DR/dll_0148_cfguardian.c and
+ * DR/dll_0149_cfwindlift.c; their prototypes appear here so MWCC can
+ * resolve forward references.
  */
 #include "main/dll/cfguardian_state.h"
 #include "main/dll/bit80_struct.h"
