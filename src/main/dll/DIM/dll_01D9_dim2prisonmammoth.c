@@ -258,7 +258,7 @@ int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState* animUpdate)
     v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
 
-    Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
@@ -295,7 +295,7 @@ void dim2prisonmammoth_update(int obj)
     v.angles[2] = ((GameObject*)obj)->anim.rotZ;
     v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
-    Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
