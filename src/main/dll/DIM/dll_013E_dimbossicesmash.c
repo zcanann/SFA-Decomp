@@ -110,7 +110,7 @@ void dimbossicesmash_update(u8* obj)
     u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[0x29e];
     u8* setup;
-    int t;
+    uint t;
     int a;
     s16 cnt;
     int t1;
@@ -123,7 +123,7 @@ void dimbossicesmash_update(u8* obj)
 
     if ((flags & 2) != 0)
     {
-        if ((((GameObject*)obj)->anim.flags & 0x2000U) != 0)
+        if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
         {
             Obj_FreeObject(obj);
         }
