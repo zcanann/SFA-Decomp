@@ -665,8 +665,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXSetVtxDesc(9, 1);
         GXSetVtxDesc(0xd, 1);
         GXSetCurrentMtx(0);
-        p = state;
-        for (i = 0; i < ((ExplosionState*)state)->flameCount; i++)
+        for (i = 0, p = state; i < ((ExplosionState*)state)->flameCount; i++)
         {
             if (*(u8*)&((ExplosionDebris*)p)->unk2F != 0)
             {
