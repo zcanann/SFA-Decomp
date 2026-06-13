@@ -445,10 +445,11 @@ void dimwooddoor2_update(int* obj)
     ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
     {
+        f32 rs = sub->riseSpeed;
         f32 ceil = lbl_803E49D4;
-        if (sub->riseSpeed != ceil)
+        if (rs != ceil)
         {
-            sub->riseSpeed = sub->riseSpeed * lbl_803E49D8;
+            sub->riseSpeed = rs * lbl_803E49D8;
             sub->riseSpeed = (sub->riseSpeed > ceil) ? ceil : sub->riseSpeed;
         }
     }
@@ -468,7 +469,7 @@ void dimwooddoor2_update(int* obj)
         found = 0;
         for (i = 0; i < (int)*(s8*)(*(int*)((int)obj + 0x58) + 0x10f); i++)
         {
-            int o = *(int*)(*(int*)((int)obj + 0x58) + i * 4 + 0x100);
+            int o = *(int*)(*(int*)((int)obj + 0x58) + (i * 4 + 0x100));
             if (*(s16*)(o + 0x46) == 0x18f || *(s16*)(o + 0x46) == 0x1d6)
             {
                 found = 1;

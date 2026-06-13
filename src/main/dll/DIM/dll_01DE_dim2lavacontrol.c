@@ -131,10 +131,9 @@ void dim2lavacontrol_setScale(void* obj)
     if (((s32)((Dim2lavacontrolState*)sub)->unk2 & 1) == 0)
     {
         void* p = *(void**)&((GameObject*)obj)->anim.placementData;
-        s8 cnt = ((Dim2lavacontrolState*)sub)->unk0;
-        if ((s32)cnt > 0)
+        if ((s32)((Dim2lavacontrolState*)sub)->unk0 > 0)
         {
-            ((Dim2lavacontrolState*)sub)->unk0 = cnt - 1;
+            ((Dim2lavacontrolState*)sub)->unk0 -= 1;
             if (((Dim2lavacontrolState*)sub)->unk0 == 0)
             {
                 ((Dim2lavacontrolState*)sub)->unk2 = (s8)(*(u8*)&((Dim2lavacontrolState*)sub)->unk2 | 1);
@@ -236,13 +235,17 @@ void dim2lavacontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
     obj = *(int*)&((GameObject*)obj)->extra;
-    if (*(s8*)(obj + 4) == 0)
+    switch (*(s8*)(obj + 4))
     {
+    case 0:
         if (GameBit_Get(0xacd) != 0)
         {
             GameBit_Set(0xcc3, 1);
             *(u8*)(obj + 4) = 1;
         }
+        break;
+    case 1:
+        break;
     }
     diff = *(u8*)(obj + 3) - lbl_803DBF28[((Dim2lavacontrolState*)obj)->unk0];
     if (diff != 0)

@@ -1486,7 +1486,7 @@ void DIMSnowHorn1_update(int obj)
 
 void DIMSnowHorn1_release(void)
 {
-    void** p = &gDIMSnowHorn1Texture;
+    void** p = (void**)(int)&gDIMSnowHorn1Texture;
     void* v = *p;
     if (v != NULL)
     {
