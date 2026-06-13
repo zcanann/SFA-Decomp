@@ -5,7 +5,7 @@ extern CameraViewSlot* Camera_GetCurrentViewSlot(void);
 extern float Camera_GetFovY(void);
 extern f32 lbl_803E162C;
 
-void firstPersonZoomOutOnExit(byte param_1, byte param_2)
+void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)
 {
     CameraViewSlot* vs;
 
@@ -13,19 +13,19 @@ void firstPersonZoomOutOnExit(byte param_1, byte param_2)
 
     Camera_GetCurrentViewSlot();
     fov_const = lbl_803E162C;
-    *(float*)(pCamera + 0xf4) = fov_const;
-    *(float*)(pCamera + 0xf8) = fov_const / (float)param_1;
-    pCamera[0x13f] = param_2;
+    CAMCONTROL_CAMERA->blendProgress = fov_const;
+    CAMCONTROL_CAMERA->blendStep = fov_const / (float)blendFrames;
+    CAMCONTROL_CAMERA->queuedBlendFlags = blendFlags;
 
     vs = Camera_GetCurrentViewSlot();
-    *(float*)(pCamera + 0x10c) = vs->x;
-    *(float*)(pCamera + 0x110) = vs->y;
-    *(float*)(pCamera + 0x114) = vs->z;
-    *(short*)(pCamera + 0x106) = vs->yaw;
-    *(short*)(pCamera + 0x108) = vs->pitch;
-    *(short*)(pCamera + 0x10a) = vs->roll;
+    CAMCONTROL_CAMERA->blendStartX = vs->x;
+    CAMCONTROL_CAMERA->blendStartY = vs->y;
+    CAMCONTROL_CAMERA->blendStartZ = vs->z;
+    CAMCONTROL_CAMERA->blendStartYaw = vs->yaw;
+    CAMCONTROL_CAMERA->blendStartPitch = vs->pitch;
+    CAMCONTROL_CAMERA->blendStartRoll = vs->roll;
 
-    *(float*)(pCamera + 0x118) = Camera_GetFovY();
+    CAMCONTROL_CAMERA->blendStartFovY = Camera_GetFovY();
 }
 
-void cameraSetInterpMode(u8 v) { pCamera[0x139] = v; }
+void cameraSetInterpMode(u8 mode) { CAMCONTROL_CAMERA->blendCurveMode = mode; }

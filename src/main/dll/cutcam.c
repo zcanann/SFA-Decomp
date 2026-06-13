@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "main/dll/dll_B8.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
@@ -14,7 +15,6 @@ extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
 extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints,
                                             float* radii, int pointCount);
 extern int getCurSeqNo();
-extern void cameraSetInterpMode(u8);
 extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);
 extern int objFn_802962b4(int);
