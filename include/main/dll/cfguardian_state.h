@@ -26,12 +26,12 @@ typedef struct CfGuardianState {
     u8 eyeBlock[0x38];    /* 0x654: characterDoEyeAnims block */
     int linkedObjs[6];    /* 0x68c: freed with the guardian */
     u8 pad6A4[0x18];
-    u8 pathBlock[0x140];  /* 0x6bc: fn_8019AF64 path-flight block */
+    u8 pathBlock[0x140];  /* 0x6bc: cfguardianFlyAlongPath path-flight block */
     f32 moveSpeed;        /* 0x7fc */
     u8 pad800[0x25e];
     u8 bounceLatch;            /* bounce-velocity latch while landing */
     u8 padA5F[9];
-    s16 homeYaw;          /* 0xa68: embedded steer-target header (fn_8019B1D8) */
+    s16 homeYaw;          /* 0xa68: embedded steer-target header (cfguardianSteerToward) */
     u8 padA6A[0xa];
     f32 homeX;            /* 0xa74: nearest rom-curve point after landing */
     f32 homeY;

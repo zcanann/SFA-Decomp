@@ -1,11 +1,16 @@
 /*
- * cfguardian (DLL 0x148) - the CloudRunner Fortress guardian. The big
- * cfguardian_updateMain drives the quest state machine (chatter, curve
- * flight between rom-curve points, the six fire spirits and the water
- * spell stone hand-off); helpers steer along rom curves (fn_8019B1D8)
- * and play per-event sfx (fn_8019AE3C). Carved from the front of the
- * sandwormBoss container; the 0x148 TU truly starts in DR/hightop.c
- * (documented cut in docs/boundary_audit.md).
+ * cfguardian (DLL 0x148) - the Queen CloudRunner of the CloudRunner
+ * Fortress. cfguardian_updateMain drives her quest arc: she is caged
+ * until the player rescues her children, then is released and flies an
+ * escape curve to roost. Once the children are all saved (the
+ * "convergence" cutscene that opens the treasure room) she lands, flies
+ * to the talk spots and greets the player across two dialogue loops, then
+ * makes her final flight out. The endgame cutscene perches run her
+ * see-off, where she awards the spell stone. Helpers steer her along rom
+ * curves (cfguardianSteerToward) and play per-event sfx
+ * (cfguardianPlayEventSfx). Carved from the front of the sandwormBoss
+ * container; the 0x148 TU truly starts in DR/hightop.c (documented cut in
+ * docs/boundary_audit.md).
  */
 
 #include "main/game_object.h"
@@ -20,7 +25,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
-/* steer-target header passed to fn_8019B1D8: a yaw plus a world point */
+/* steer-target header passed to cfguardianSteerToward: a yaw plus a world point */
 typedef struct
 {
     s16 angle;
@@ -64,17 +69,54 @@ typedef struct CfGuardianMapData
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
 
+/* cfguardianPlayEventSfx/cfguardianFlyAlongPath are defined below taking
+ * obj as an int (the form their bodies want); cfguardian_updateMain
+ * originally saw them with a pointer-first signature, reproduced via these
+ * call-site fn-ptr casts so its saved-reg coloring matches retail
+ * (CLAUDE.md #57/#115). */
+typedef void (*CfPlayEventSfxFn)(int* obj, void* evbuf, void* sfxIds);
+typedef int (*CfFlyAlongPathFn)(int* obj, void* path, f32 f, int phase, void* spd);
+
 /* sub->flagsA9B bits */
 #define GUARDIAN_FLAG_MOVE_LATCHED 0x1 /* a one-shot move is running */
 #define GUARDIAN_FLAG_PATH_FLYING 0x2  /* flying a rom curve this tick */
 #define GUARDIAN_FLAG_HOMING 0x4       /* steering toward the talk spot */
+
+/* sub->questState: the Queen's quest arc, driven by the
+   cfguardian_updateMain switch and mirrored to game bit 0x4b. The
+   moment-to-moment AI/chatter handling lives in the shared baddie
+   controller dll_2E_func03; these states are the scripted
+   release-rescue-and-see-off progression. */
+enum
+{
+    CFGUARDIAN_DORMANT = 0,          /* asleep until the quest starts (0x94f) */
+    CFGUARDIAN_CAGED = 1,            /* caged, waiting for it to open (0x4e) */
+    CFGUARDIAN_FLY_ESCAPE = 2,       /* flying the escape curve out of the cage */
+    CFGUARDIAN_RELEASE_SEQ = 3,      /* runs the release sequence once */
+    CFGUARDIAN_ROOST = 4,            /* roosting until the convergence cutscene */
+    CFGUARDIAN_LANDING = 6,          /* free-fall, settle to the ground at home */
+    CFGUARDIAN_FLY_TO_TALK = 7,      /* flying the curve to the talk spot */
+    CFGUARDIAN_TALK_1 = 8,           /* first dialogue loop; 0x43 advances */
+    CFGUARDIAN_TALK_2 = 9,           /* second dialogue loop; 0x4be advances */
+    CFGUARDIAN_FLY_OUT = 0xa,        /* final flight out */
+    CFGUARDIAN_VANISH = 0xb,         /* fades out and stops updating */
+    CFGUARDIAN_CUTSCENE_PERCH_A = 0xc, /* see-off cutscene perch, sequence 0xb on cue */
+    CFGUARDIAN_CUTSCENE_PERCH_B = 0xd, /* see-off cutscene perch, sequence 0xa on cue */
+    CFGUARDIAN_PARKED = 0xe,         /* parked, idle chatter only */
+    CFGUARDIAN_PARKED_HIDDEN = 0xf   /* parked and hidden */
+};
+
+/* sub->chatterState: idle-chatter handshake (1 ready to pick a line, 2 a
+   line is playing). */
+#define GUARDIAN_CHATTER_READY 1
+#define GUARDIAN_CHATTER_PLAYING 2
 
 /* the guardian's anim "fly/chase" move */
 #define GUARDIAN_MOVE_FLY 0x1a
 
 /* game bits this DLL reads/writes. Most are cross-TU quest flags
    without established names; the few it clearly owns are named here. */
-#define GAMEBIT_GUARDIAN_CONVERGENCE 0x57 /* the convergence cutscene is live */
+#define GAMEBIT_GUARDIAN_CONVERGENCE 0x57 /* children-rescued convergence cutscene is live */
 #define GAMEBIT_GUARDIAN_QUEST_START 0x94f
 #define GAMEBIT_GUARDIAN_CAGE_OPEN 0x4e   /* this guardian's clouddungeon cage */
 #define GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN 0x48
@@ -86,9 +128,13 @@ STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
 #define GUARDIAN_SFX_FLAP 0xe1
 #define GUARDIAN_SFX_CHATTER 0xdf
 
+/* All file-scope externs in one block. (A few callees - Sfx_PlayFromObject,
+ * hitDetectFn_800658a4 - also carry per-call-site block-scope externs with
+ * narrower signatures inside the function bodies; those are deliberate
+ * recipe-#57/#115 codegen overrides and must stay local.) */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
-extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
+extern int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4);
 extern int Curve_AdvanceAlongPath(int p1);
 extern s16 getAngle(f32 a, f32 b);
 extern int ObjHits_EnableObject();
@@ -135,14 +181,14 @@ extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int a, int b);
 extern void characterDoEyeAnims(int* obj, void* p);
 extern int lbl_80322954[]; /* per-quest-state idle move id (-1 = none) */
-extern u8 lbl_803DBE20;     /* per-event sfx-id table passed to fn_8019AE3C */
+extern u8 lbl_803DBE20;     /* per-event sfx-id table passed to cfguardianPlayEventSfx */
 extern f32 oneOverTimeDelta;
 
-/* fn_8019AE3C: walk this step's triggered anim events and play the
+/* cfguardianPlayEventSfx: walk this step's triggered anim events and play the
  * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,
  * [1] the alt (event 7) sfx, [2] the "selection" sfx played once if any
  * 1..4 marker event fired. Returns the last 1..4 marker seen. */
-int fn_8019AE3C(int obj, int evList, s16* sfxIds)
+int cfguardianPlayEventSfx(int obj, int evList, s16* sfxIds)
 {
     extern void Sfx_PlayFromObject(int, u16); /* #57/#115 */
     int i;
@@ -197,12 +243,12 @@ int cfguardian_setScale(int* obj)
     return (sub->flagsA9B & GUARDIAN_FLAG_PATH_FLYING) == 0;
 }
 
-/* fn_8019AF64: fly the guardian along a rom-curve path. On the first
+/* cfguardianFlyAlongPath: fly the guardian along a rom-curve path. On the first
  * tick (unkF4 == 0) it steers to the nearest curve point then opens the
  * curve walker; thereafter it advances the walker, snaps the object to
  * the sampled position, sticks to the ground and blends the yaw toward
  * the heading of travel. Returns 1 once the path is exhausted. */
-int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
+int cfguardianFlyAlongPath(int obj, int p2, f32 t, int p3, int p4)
 {
     extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int p6); /* #57/#29 */
     int ret;
@@ -229,7 +275,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         tgt.y = ((RomCurvePlacementDef*)pt)->base.y;
         tgt.z = ((RomCurvePlacementDef*)pt)->base.z;
         tgt.angle = ((RomCurvePlacementDef*)pt)->rotZ << 8;
-        if (fn_8019B1D8((int*)obj, (int*)&tgt.angle, t, p4) != 0)
+        if (cfguardianSteerToward((int*)obj, (int*)&tgt.angle, t, p4) != 0)
         {
             cmd[0] = 0x19;
             cmd[1] = 0x15;
@@ -281,12 +327,12 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     return ret;
 }
 
-/* fn_8019B1D8: steer the object toward the target: scale its velocity
+/* cfguardianSteerToward: steer the object toward the target: scale its velocity
  * along the normalized delta, blend the yaw by speed over distance,
  * move it and keep the chase move playing. Returns 1 when already
  * within the closing threshold. */
 #pragma dont_inline on
-int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
+int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4)
 {
     f32 dist;
     f32 dx;
@@ -368,9 +414,10 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
 }
 #pragma dont_inline reset
 
-/* cfguardian_updateMain: the guardian brain - sixteen-state
- * quest progression with path flights, landing physics, sequenced
- * triggers and idle chatter. */
+/* cfguardian_updateMain: the Queen's brain - the sixteen-state quest
+ * progression (path flights, landing physics, dialogue triggers and idle
+ * chatter) that runs from her caged release through to the spell-stone
+ * see-off. */
 
 static inline f32 cfguardianAbs(f32 x)
 {
@@ -384,8 +431,6 @@ static inline f32 cfguardianAbs(f32 x)
 int cfguardian_updateMain(int obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
-    extern void fn_8019AE3C(int* obj, void* evbuf, void* p); /* #57 */
-    extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd); /* #57 */
     CfGuardianState* sub;
     char* player;
     CfGuardianMapData* def;
@@ -414,25 +459,25 @@ int cfguardian_updateMain(int obj)
        8..11 the talk spots, 12..15 the endgame cutscene parks */
     switch (sub->questState)
     {
-    case 0: /* dormant; wake once the quest starts (0x94f) */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_DORMANT: /* dormant; wake once the quest starts (0x94f) */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         if (GameBit_Get(GAMEBIT_GUARDIAN_QUEST_START) != 0)
         {
-            sub->questState = 1;
+            sub->questState = CFGUARDIAN_CAGED;
         }
         break;
-    case 1: /* wait for its own cage to open (0x4E - one of the four
+    case CFGUARDIAN_CAGED: /* wait for its own cage to open (0x4E - one of the four
                clouddungeon cage bits 0x4C-0x4F); alert + take off */
-        if (sub->chatterState == 2)
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         if (GameBit_Get(GAMEBIT_GUARDIAN_CAGE_OPEN) != 0)
         {
-            sub->questState = 3;
+            sub->questState = CFGUARDIAN_RELEASE_SEQ;
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             ((GameObject*)obj)->unkF4 = 0;
             /* 0x48: broken out - the prison guard stands down on it */
@@ -440,44 +485,44 @@ int cfguardian_updateMain(int obj)
             sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED;
         }
         break;
-    case 2: /* fly the escape curve; roost at the end */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_FLY_ESCAPE: /* fly the escape curve; roost at the end */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
-        if (fn_8019AF64((int*)obj, sub->pathBlock, 0.3f, 0, &sub->moveSpeed) != 0)
+        if (((CfFlyAlongPathFn)cfguardianFlyAlongPath)((int*)obj, sub->pathBlock, 0.3f, 0, &sub->moveSpeed) != 0)
         {
             sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
-            sub->questState = 4;
+            sub->questState = CFGUARDIAN_ROOST;
         }
         break;
-    case 3: /* play the release sequence once */
+    case CFGUARDIAN_RELEASE_SEQ: /* play the release sequence once */
         (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
         GameBit_Set(GAMEBIT_GUARDIAN_RELEASED, 1);
-        sub->questState = 2;
+        sub->questState = CFGUARDIAN_FLY_ESCAPE;
         break;
-    case 4: /* roost until the convergence cutscene parks him */
+    case CFGUARDIAN_ROOST: /* roost until the convergence cutscene parks her */
         if (GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
         {
             if (def->variant != 1)
             {
-                sub->questState = 0xf;
+                sub->questState = CFGUARDIAN_PARKED_HIDDEN;
                 sub->chatterAlt = 0;
             }
             else
             {
-                sub->questState = 0xe;
+                sub->questState = CFGUARDIAN_PARKED;
                 sub->chatterAlt = 0;
             }
         }
-        else if (sub->chatterState == 2)
+        else if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
             sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
         }
         break;
-    case 6: /* free-fall to the ground, then settle at the curve home */
+    case CFGUARDIAN_LANDING: /* free-fall to the ground, then settle at the curve home */
         if (sub->landingPhase != 0)
         {
             if (sub->landingPhase >= 2)
@@ -497,7 +542,7 @@ int cfguardian_updateMain(int obj)
                 {
                     sub->landingPhase = 2;
                     ((GameObject*)obj)->anim.localPosY -= ground;
-                    sub->chatterState = 1;
+                    sub->chatterState = GUARDIAN_CHATTER_READY;
                     ((GameObject*)obj)->unkF4 = 0;
                     ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                     {
@@ -512,7 +557,7 @@ int cfguardian_updateMain(int obj)
                         if (d < 80.0f)
                         {
                             ObjGroup_AddObject(obj, 0x16);
-                            sub->questState = 7;
+                            sub->questState = CFGUARDIAN_FLY_TO_TALK;
                             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
                         }
                     }
@@ -592,25 +637,25 @@ int cfguardian_updateMain(int obj)
         }
         else
         {
-            if (sub->chatterState == 2)
+            if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
             {
-                sub->chatterState = 1;
+                sub->chatterState = GUARDIAN_CHATTER_READY;
             }
         }
         break;
-    case 7: /* fly to the talk spot */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_FLY_TO_TALK: /* fly to the talk spot */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
-        if (fn_8019AF64((int*)obj, sub->pathBlock, 0.3f, 1, &sub->moveSpeed) != 0)
+        if (((CfFlyAlongPathFn)cfguardianFlyAlongPath)((int*)obj, sub->pathBlock, 0.3f, 1, &sub->moveSpeed) != 0)
         {
-            sub->questState = 8;
+            sub->questState = CFGUARDIAN_TALK_1;
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
         }
         break;
-    case 8: /* talk spot: greet and head-track the player; 0x43 advances */
+    case CFGUARDIAN_TALK_1: /* talk spot: greet and head-track the player; 0x43 advances */
         {
             void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
             if (found != NULL && nearDist < 300.0f)
@@ -628,9 +673,9 @@ int cfguardian_updateMain(int obj)
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 lbl_80322954[sub->questState] = 0;
             }
-            if (sub->chatterState == 2)
+            if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
             {
-                sub->chatterState = 1;
+                sub->chatterState = GUARDIAN_CHATTER_READY;
                 sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
             }
         }
@@ -638,25 +683,25 @@ int cfguardian_updateMain(int obj)
         {
             if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0xe)
             {
-                sub->chatterState = 2;
+                sub->chatterState = GUARDIAN_CHATTER_PLAYING;
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 dll_2E_func0A(0xe, (int*)&sub->homeYaw);
                 lbl_80322954[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0
-            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, 0.5f, (int)&sub->moveSpeed) != 0)
+            && cfguardianSteerToward((int*)obj, (int*)&sub->homeYaw, 0.5f, (int)&sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
         if (GameBit_Get(0x43) != 0)
         {
-            sub->questState = 9;
+            sub->questState = CFGUARDIAN_TALK_2;
             sub->chatterAlt = 0;
         }
         break;
-    case 9: /* second talk loop; 0x4be sends him onward */
+    case CFGUARDIAN_TALK_2: /* second talk loop; 0x4be sends her onward */
         {
             void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
             if (found != NULL && nearDist < 300.0f)
@@ -672,9 +717,9 @@ int cfguardian_updateMain(int obj)
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 lbl_80322954[sub->questState] = 0;
             }
-            if (sub->chatterState == 2)
+            if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
             {
-                sub->chatterState = 1;
+                sub->chatterState = GUARDIAN_CHATTER_READY;
                 sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
             }
         }
@@ -682,51 +727,51 @@ int cfguardian_updateMain(int obj)
         {
             if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0xe)
             {
-                sub->chatterState = 2;
+                sub->chatterState = GUARDIAN_CHATTER_PLAYING;
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 dll_2E_func0A(0xe, (int*)&sub->homeYaw);
                 lbl_80322954[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0
-            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, 0.5f, (int)&sub->moveSpeed) != 0)
+            && cfguardianSteerToward((int*)obj, (int*)&sub->homeYaw, 0.5f, (int)&sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
         if (GameBit_Get(0x4be) != 0)
         {
-            sub->questState = 0xa;
+            sub->questState = CFGUARDIAN_FLY_OUT;
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             ((GameObject*)obj)->unkF4 = 0;
         }
         break;
-    case 10: /* final flight out */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_FLY_OUT: /* final flight out */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
-        if (fn_8019AF64((int*)obj, sub->pathBlock, 0.6f, 2, &sub->moveSpeed) != 0)
+        if (((CfFlyAlongPathFn)cfguardianFlyAlongPath)((int*)obj, sub->pathBlock, 0.6f, 2, &sub->moveSpeed) != 0)
         {
-            sub->questState = 0xb;
+            sub->questState = CFGUARDIAN_VANISH;
         }
         break;
-    case 11: /* vanish: fade out and stop updating */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_VANISH: /* vanish: fade out and stop updating */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         ((GameObject*)obj)->anim.alpha = 0;
         ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~1;
         Obj_RemoveFromUpdateList((int*)obj);
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        sub->questState = 0xf;
+        sub->questState = CFGUARDIAN_PARKED_HIDDEN;
         break;
-    case 12: /* cutscene perch: sequence 0xB on demand (0x4b7) */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_CUTSCENE_PERCH_A: /* cutscene perch: sequence 0xB on demand (0x4b7) */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         if (GameBit_Get(0x4b7) != 0)
         {
@@ -736,13 +781,13 @@ int cfguardian_updateMain(int obj)
         }
         if (GameBit_Get(0x49a) != 0)
         {
-            sub->questState = 0xd;
+            sub->questState = CFGUARDIAN_CUTSCENE_PERCH_B;
         }
         break;
-    case 13: /* cutscene perch: sequence 0xA on demand (0x4b7) */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_CUTSCENE_PERCH_B: /* cutscene perch: sequence 0xA on demand (0x4b7) */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         if (GameBit_Get(0x4b7) != 0)
         {
@@ -752,16 +797,16 @@ int cfguardian_updateMain(int obj)
         }
         if (GameBit_Get(0x4aa) != 0)
         {
-            sub->questState = 0xe;
+            sub->questState = CFGUARDIAN_PARKED;
         }
         break;
-    case 14: /* parked, idle chatter only */
-        if (sub->chatterState == 2)
+    case CFGUARDIAN_PARKED: /* parked, idle chatter only */
+        if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
         {
-            sub->chatterState = 1;
+            sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         break;
-    case 15: /* parked and hidden */
+    case CFGUARDIAN_PARKED_HIDDEN: /* parked and hidden */
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList((int*)obj);
         ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~1;
@@ -794,7 +839,7 @@ int cfguardian_updateMain(int obj)
             sub->chatterPick += 1;
             if (pick != -1)
             {
-                sub->chatterState = 2;
+                sub->chatterState = GUARDIAN_CHATTER_PLAYING;
                 (*gObjectTriggerInterface)->runSequence(pick, (void*)obj, -1);
             }
         }
@@ -804,7 +849,7 @@ int cfguardian_updateMain(int obj)
         int* tbl2 = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
         if (tbl2[0] != -1)
         {
-            sub->chatterState = 2;
+            sub->chatterState = GUARDIAN_CHATTER_PLAYING;
             (*gObjectTriggerInterface)->runSequence(tbl2[0], (void*)obj, -1);
             GameBit_Set(0x902, 0);
         }
@@ -825,7 +870,7 @@ int cfguardian_updateMain(int obj)
     {
         sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
     }
-    fn_8019AE3C((int*)obj, (u8*)&stk + 12, &lbl_803DBE20);
+    ((CfPlayEventSfxFn)cfguardianPlayEventSfx)((int*)obj, (u8*)&stk + 12, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
         objAudioFn_800393f8(obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
@@ -839,10 +884,11 @@ int cfguardian_updateMain(int obj)
     return 0;
 }
 
-/* cfguardian_SeqFn: guardian message handler.
+/* cfguardian_SeqFn: the Queen's sequence message handler.
  * Persists position on a negative cue, otherwise picks the active/idle
- * heading pair and routes a move request; on the magic-grant message it
- * tops the player back up. Returns 1 if the move was consumed. */
+ * heading pair and routes a move request; on the magic-grant cue
+ * (triggerCommand 2) it refills the player's magic. Returns 1 if the move
+ * was consumed. */
 int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* sel;
@@ -854,7 +900,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         saveGame_saveObjectPos((int)obj);
         return 0;
     }
-    if (sub->questState != 6)
+    if (sub->questState != CFGUARDIAN_LANDING)
     {
         sel = &stk.a;
     }
@@ -938,12 +984,12 @@ void cfguardian_init(int* obj, u8* params)
     sub->unkA90 = 6;
     sub->flagsA9B = 0;
     sub->flags611 = (u8)(sub->flags611 | 0x28);
-    sub->chatterState = 1;
+    sub->chatterState = GUARDIAN_CHATTER_READY;
     sub->chatterAlt = 0;
     sub->chatterPick = 0;
     if (GameBit_Get(GAMEBIT_GUARDIAN_CONVERGENCE) != 0)
     {
-        sub->questState = 4;
+        sub->questState = CFGUARDIAN_ROOST;
         if (((CfGuardianMapData*)params)->variant == 0)
         {
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
@@ -952,7 +998,7 @@ void cfguardian_init(int* obj, u8* params)
     }
     else if (GameBit_Get(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)
     {
-        sub->questState = 4;
+        sub->questState = CFGUARDIAN_ROOST;
         dll_2E_func0A(8, obj);
     }
     ObjHits_EnableObject(obj);
