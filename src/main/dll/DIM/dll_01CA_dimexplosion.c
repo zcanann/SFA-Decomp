@@ -886,6 +886,7 @@ void explosion_update(int obj)
                         ang[2] = -0x8000;
                         ang[3] = -0x4000 - v;
                         ang[4] = -0x6000 - v;
+                        ang[5] = 0;
                     }
                     else if (t < 0x80)
                     {
@@ -895,6 +896,7 @@ void explosion_update(int obj)
                         ang[2] = 0;
                         ang[3] = -0x8000;
                         ang[4] = 0;
+                        ang[5] = 0;
                     }
                     else
                     {
@@ -903,10 +905,10 @@ void explosion_update(int obj)
                         ang[2] = 0;
                         ang[3] = 0;
                         ang[4] = 0;
+                        ang[5] = 0;
                     }
                     {
                         u8 md;
-                        ang[5] = 0;
                         md = ((ExplosionState*)state)->modelKind;
                         switch (md)
                         {
