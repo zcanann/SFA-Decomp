@@ -576,13 +576,13 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
             }
         }
     }
-    *(s16*)((char*)(int)state + off + 0x28) = randomGetRange(0, 0xffff);
-    *(s16*)((char*)(int)state + off + 0x2a) = randomGetRange(0xc8, 0x12c);
+    *(s16*)((char*)state + idx * 0x30 + 0x28) = randomGetRange(0, 0xffff);
+    *(s16*)((char*)state + idx * 0x30 + 0x2a) = randomGetRange(0xc8, 0x12c);
     if ((int)randomGetRange(0, 1) != 0)
     {
-        *(s16*)((char*)(int)state + off + 0x2a) = -*(s16*)((char*)(int)state + off + 0x2a);
+        *(s16*)((char*)state + idx * 0x30 + 0x2a) = -*(s16*)((char*)state + idx * 0x30 + 0x2a);
     }
-    *(u8*)((char*)(int)state + off + 0x2c) = randomGetRange(0, 3);
+    *(u8*)((char*)state + idx * 0x30 + 0x2c) = randomGetRange(0, 3);
     {
         f32 sp = *(f32*)((char*)e + 0x1c);
         f32 ev = expf(
@@ -593,10 +593,10 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
         *(f32*)((char*)e + 0xc) = sp - t * lbl_803DDB70;
         ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e14 + 0x14));
         t = lbl_803E4938 * ev;
-        *(s8*)((char*)(int)state + off + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
-        *(int*)((char*)(int)state + off + 0x20) = (int)lbl_803E4940;
-        *(int*)((char*)(int)state + off + 0x24) = *(int*)((char*)(int)state + off + 0x20);
-        *(u8*)((char*)(int)state + off + 0x2f) = 1;
+        *(s8*)((char*)state + idx * 0x30 + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
+        *(int*)((char*)state + idx * 0x30 + 0x20) = (int)lbl_803E4940;
+        *(int*)((char*)state + idx * 0x30 + 0x24) = *(int*)((char*)state + idx * 0x30 + 0x20);
+        *(u8*)((char*)state + idx * 0x30 + 0x2f) = 1;
     }
 }
 
@@ -983,7 +983,8 @@ void explosion_update(int obj)
                 ExplosionState*)state)->lifeFrames >> 1))
             {
                 u32 k;
-                ang[0] = randomGetRange(0x1000, 0x6000);
+                u16 r0v = randomGetRange(0x1000, 0x6000);
+                ang[0] = r0v;
                 ang[3] = *(int*)((char*)state + 0x14);
                 k = 0;
                 while ((f32)(int)k < ((ExplosionState*)state)->scale
@@ -992,8 +993,8 @@ void explosion_update(int obj)
                     k++;
                 }
                 *(u8*)&((ExplosionState*)state)->halfLifeFired = 1;
-                ang[1] = ang[0];
-                ang[2] = ang[0];
+                ang[1] = r0v;
+                ang[2] = r0v;
             }
         }
     }
