@@ -926,8 +926,8 @@ void explosion_update(int obj)
                             break;
                         case 3:
                         {
-                            u16 sv = ang[2];
                             u16 sv5;
+                            u16 sv = ang[2];
                             ang[1] = sv;
                             sv5 = ang[5];
                             ang[4] = sv5;
