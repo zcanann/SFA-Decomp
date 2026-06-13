@@ -389,8 +389,9 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
 }
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-void dimbossicesmash_init(u8* obj, u8* params)
+void dimbossicesmash_init(void* objParam, u8* params)
 {
+    u8* obj = (u8*)objParam;
     u8* state;
     f32 fz;
     u8 t;
