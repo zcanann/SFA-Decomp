@@ -578,7 +578,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
     }
     if (sub[0x5f] != 0)
     {
-        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 - framesThisStep;
+        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 -= framesThisStep;
         if (((DimmagicbridgeFlameSeqFnState*)sub)->unk64 <= 0)
         {
             ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = 0x10;
