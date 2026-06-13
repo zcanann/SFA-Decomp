@@ -301,8 +301,11 @@ void dim2prisonmammoth_update(int obj)
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
     ((Dim2prisonmammothState*)inner)->unk354 = 0;
     ((Dim2prisonmammothState*)inner)->unk0 &= ~0x8000;
-    ((Dim2prisonmammothState*)inner)->unk290 = lbl_803E82C0;
-    ((Dim2prisonmammothState*)inner)->unk28C = lbl_803E82C0;
+    {
+        f32 fz = lbl_803E82C0;
+        ((Dim2prisonmammothState*)inner)->unk290 = fz;
+        ((Dim2prisonmammothState*)inner)->unk28C = fz;
+    }
     ((Dim2prisonmammothState*)inner)->unk31C = 0;
     ((Dim2prisonmammothState*)inner)->unk318 = 0;
     ((Dim2prisonmammothState*)inner)->unk330 = 0;
