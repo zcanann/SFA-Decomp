@@ -1614,10 +1614,10 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
     if ((spawnFlags & 0x200000) != 0)
     {
         if (spawnParams == 0) return -1;
-        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->unk14;
-        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->posZ;
+        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
         cfg.sourceVecY = ((PartFxSpawnParams*)spawnParams)->unk2;
         cfg.sourceVecX = *spawnParams;
@@ -1708,8 +1708,8 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
             FILL320();
         if (spawnParams != 0)
         {
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
         }
         else
         {
@@ -1734,8 +1734,8 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
             FILL320();
         if (spawnParams != 0)
         {
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
         }
         else
         {
@@ -1796,15 +1796,15 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         if (spawnParams == 0)
             FILL320();
         if (spawnParams == 0) return -1;
-        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF78C * (f32)(s32)
+        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF78C * (f32)(s32)
         randomGetRange(-0x64, 0x64)
         )
         ;
-        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF790 * (f32)(s32)
+        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF790 * (f32)(s32)
         randomGetRange(0x50, 0x8c)
         )
         ;
-        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF794 * (f32)(s32)
+        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF794 * (f32)(s32)
         randomGetRange(-0x64, 0x64)
         )
         ;
@@ -1813,7 +1813,7 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.startPosY = lbl_803DF75C;
         cfg.startPosZ = lbl_803DF79C * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.scale = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF7A0 * (f32)(s32)
+        cfg.scale = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF7A0 * (f32)(s32)
         randomGetRange(0x16, 0x46)
         )
         ;
@@ -1837,9 +1837,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         if (spawnParams == 0)
             FILL320();
         if (spawnParams == 0) return -1;
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = lbl_803DF7A4 + ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = lbl_803DF7A4 + ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.velocityZ = lbl_803DF724 * (f32)(s32)
         randomGetRange(0x14, 0x1e);
         cfg.velocityX = lbl_803DF7A8 * (f32)(s32)
@@ -1865,9 +1865,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         if (spawnParams == 0)
             FILL320();
         if (spawnParams == 0) return -1;
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = lbl_803DF7A4 + ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = lbl_803DF7A4 + ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.velocityZ = lbl_803DF7AC * (f32)(s32)
         randomGetRange(0x14, 0x1e);
         cfg.velocityX = lbl_803DF760 * (f32)(s32)
@@ -1961,9 +1961,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.sourcePosX = 1.0f;
         if (spawnParams != 0)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = lbl_803DF7C4 + ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = lbl_803DF7C4 + ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
             cfg.sourceVecX = *spawnParams;
             cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
         }
@@ -2136,9 +2136,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.sourcePosX = 1.0f;
         if (spawnParams != 0)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = lbl_803DF7C4 + ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = lbl_803DF7C4 + ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
             cfg.sourceVecX = *spawnParams;
             cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
         }
@@ -2159,9 +2159,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.sourcePosX = 1.0f;
         if (spawnParams != 0)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = lbl_803DF7C4 + ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = lbl_803DF7C4 + ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
             cfg.sourceVecX = *spawnParams;
             cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
         }
@@ -2384,9 +2384,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
             FILL320();
         if (spawnParams != 0)
         {
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posZ;
         }
         cfg.sourceVecX = (s16)(s32)
         randomGetRange(0, 0xffff);
@@ -2409,9 +2409,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
             FILL320();
         if (spawnParams != 0)
         {
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posZ;
         }
         cfg.sourceVecX = (s16)(s32)
         randomGetRange(0, 0xffff);
@@ -2467,8 +2467,8 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
             FILL320();
         if (spawnParams != 0)
         {
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
         }
         else
         {
@@ -2493,8 +2493,8 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
             FILL320();
         if (spawnParams != 0)
         {
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
         }
         else
         {
@@ -2551,9 +2551,9 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
         cfg.initialAlpha = 0xff;
         if (spawnParams != 0)
         {
-            cfg.startPosX = cfg.startPosX + ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = cfg.startPosY + ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = cfg.startPosZ + ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = cfg.startPosX + ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = cfg.startPosY + ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = cfg.startPosZ + ((PartFxSpawnParams*)spawnParams)->posZ;
         }
         cfg.scale = lbl_803DF828 * (f32)(s32)
         randomGetRange(0xa, 0x14);
@@ -2590,8 +2590,8 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
             FILL320();
         if (spawnParams != 0)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         }
         cfg.startPosY = lbl_803DF838;
         cfg.velocityX = lbl_803DF7B0 * (f32)(s32)

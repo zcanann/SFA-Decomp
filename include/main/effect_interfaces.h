@@ -13,21 +13,19 @@ typedef void (*EffectFreeObjectFn)(void *obj);
  * PartFxSpawnParams - the s16*-typed spawn-parameter packet passed to the
  * per-effect Effect*_func04 handlers (modgfx/dim_partfx/df_partfx and the
  * gameplay.c spawners). Offset/width layout observed consistent across all
- * handlers (s16 head + f32 block); field semantics vary per effect id, so
- * names stay positional (unkNN convention). Proven non-semantic: dim_partfx
- * reads unk8 as a position-X for some effect ids and as a scale for others,
- * and unkC is a posY to the modgfx/dim_partfx handlers but a position-X
- * offset to gameplay's spawner - no field has a fixed role.
+ * handlers (s16 head + f32 block). The float block is consistently passed as
+ * scale plus a local position/vector triple, though individual effect ids may
+ * reinterpret one of those floats as an effect-specific magnitude.
  */
 typedef struct PartFxSpawnParams {
     s16 unk0;
     s16 unk2;
     s16 unk4;
     s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 scale;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     u8 pad18[0x24 - 0x18];
     f32 unk24;
     u8 pad28[0x2C - 0x28];

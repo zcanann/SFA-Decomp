@@ -839,9 +839,9 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spa
         {
             if (buf.ctx != 0 && spawnParams != 0)
             {
-                buf.pos[0] += *(f32*)(buf.ctx + 0x18) + ((PartFxSpawnParams*)spawnParams)->unkC;
-                buf.pos[1] += *(f32*)(buf.ctx + 0x1c) + ((PartFxSpawnParams*)spawnParams)->unk10;
-                buf.pos[2] += *(f32*)(buf.ctx + 0x20) + ((PartFxSpawnParams*)spawnParams)->unk14;
+                buf.pos[0] += *(f32*)(buf.ctx + 0x18) + ((PartFxSpawnParams*)spawnParams)->posX;
+                buf.pos[1] += *(f32*)(buf.ctx + 0x1c) + ((PartFxSpawnParams*)spawnParams)->posY;
+                buf.pos[2] += *(f32*)(buf.ctx + 0x20) + ((PartFxSpawnParams*)spawnParams)->posZ;
             }
             else if (buf.ctx != 0)
             {
@@ -851,9 +851,9 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spa
             }
             else if (spawnParams != 0)
             {
-                buf.pos[0] += ((PartFxSpawnParams*)spawnParams)->unkC;
-                buf.pos[1] += ((PartFxSpawnParams*)spawnParams)->unk10;
-                buf.pos[2] += ((PartFxSpawnParams*)spawnParams)->unk14;
+                buf.pos[0] += ((PartFxSpawnParams*)spawnParams)->posX;
+                buf.pos[1] += ((PartFxSpawnParams*)spawnParams)->posY;
+                buf.pos[2] += ((PartFxSpawnParams*)spawnParams)->posZ;
             }
         }
         (*gModgfxInterface)->spawnEffect(&buf, 0, variant != 0 ? 4 : 3,

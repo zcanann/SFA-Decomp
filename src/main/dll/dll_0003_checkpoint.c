@@ -98,10 +98,10 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
             {
                 return 0xffffffff;
             }
-            local_80 = ((PartFxSpawnParams*)param_3)->unkC;
-            local_7c = ((PartFxSpawnParams*)param_3)->unk10;
-            local_78 = ((PartFxSpawnParams*)param_3)->unk14;
-            local_84 = *(undefined4*)&((PartFxSpawnParams*)param_3)->unk8;
+            local_80 = ((PartFxSpawnParams*)param_3)->posX;
+            local_7c = ((PartFxSpawnParams*)param_3)->posY;
+            local_78 = ((PartFxSpawnParams*)param_3)->posZ;
+            local_84 = *(undefined4*)&((PartFxSpawnParams*)param_3)->scale;
             local_88 = ((PartFxSpawnParams*)param_3)->unk4;
             local_8a = ((PartFxSpawnParams*)param_3)->unk2;
             local_8c = *param_3;
@@ -324,7 +324,7 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
         case 0x741:
             if (param_3 != (undefined2*)0x0)
             {
-                local_64 = ((PartFxSpawnParams*)param_3)->unk10;
+                local_64 = ((PartFxSpawnParams*)param_3)->posY;
             }
             local_5c = lbl_803E0E78;
             local_98[2] = randomGetRange(0, 0x1e);

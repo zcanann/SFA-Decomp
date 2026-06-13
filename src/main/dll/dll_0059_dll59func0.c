@@ -820,9 +820,9 @@ void dll_59_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->unkC;
-            buf.pos[1] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->unk10;
-            buf.pos[2] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->unk14;
+            buf.pos[0] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->posZ;
         }
         else
         {

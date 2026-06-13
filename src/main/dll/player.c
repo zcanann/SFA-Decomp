@@ -15769,9 +15769,9 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
     v = ((PlayerState*)inner)->flags360;
     if ((v & 0x60000) != 0)
     {
-        ((PartFxSpawnParams*)lbl_803DAEF0)->unkC = ((GameObject*)obj)->anim.localPosX;
-        ((PartFxSpawnParams*)lbl_803DAEF0)->unk10 = ((GameObject*)obj)->anim.localPosY;
-        ((PartFxSpawnParams*)lbl_803DAEF0)->unk14 = ((GameObject*)obj)->anim.localPosZ;
+        ((PartFxSpawnParams*)lbl_803DAEF0)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((PartFxSpawnParams*)lbl_803DAEF0)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((PartFxSpawnParams*)lbl_803DAEF0)->posZ = ((GameObject*)obj)->anim.localPosZ;
         if ((v & 0x40000) != 0)
         {
             (*gPartfxInterface)->spawnObject(

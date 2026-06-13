@@ -100,10 +100,10 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
             {
                 return 0xffffffff;
             }
-            local_80 = ((PartFxSpawnParams*)param_3)->unkC;
-            local_7c = ((PartFxSpawnParams*)param_3)->unk10;
-            local_78 = ((PartFxSpawnParams*)param_3)->unk14;
-            local_84 = *(undefined4*)&((PartFxSpawnParams*)param_3)->unk8;
+            local_80 = ((PartFxSpawnParams*)param_3)->posX;
+            local_7c = ((PartFxSpawnParams*)param_3)->posY;
+            local_78 = ((PartFxSpawnParams*)param_3)->posZ;
+            local_84 = *(undefined4*)&((PartFxSpawnParams*)param_3)->scale;
             local_88 = ((PartFxSpawnParams*)param_3)->unk4;
             local_8a = ((PartFxSpawnParams*)param_3)->unk2;
             local_8c = *param_3;
@@ -326,7 +326,7 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
         case 0x741:
             if (param_3 != (undefined2*)0x0)
             {
-                local_64 = ((PartFxSpawnParams*)param_3)->unk10;
+                local_64 = ((PartFxSpawnParams*)param_3)->posY;
             }
             local_5c = lbl_803E0E78;
             local_98[2] = randomGetRange(0, 0x1e);
@@ -501,10 +501,10 @@ int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
     if ((spawnFlags & 0x200000) != 0)
     {
         if (spawnParams == 0) return -1;
-        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->unk14;
-        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->posZ;
+        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
         cfg.sourceVecY = ((PartFxSpawnParams*)spawnParams)->unk2;
         cfg.sourceVecX = *spawnParams;
@@ -591,9 +591,9 @@ int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
             lbl_8039C440.z = 0;
             spawnParams = (s16*)&lbl_8039C440;
         }
-        (*gWaterfxInterface)->spawnSplashBurst(NULL, ((PartFxSpawnParams*)spawnParams)->unkC,
-                                               ((PartFxSpawnParams*)spawnParams)->unk10,
-                                               ((PartFxSpawnParams*)spawnParams)->unk14, lbl_803E01A0);
+        (*gWaterfxInterface)->spawnSplashBurst(NULL, ((PartFxSpawnParams*)spawnParams)->posX,
+                                               ((PartFxSpawnParams*)spawnParams)->posY,
+                                               ((PartFxSpawnParams*)spawnParams)->posZ, lbl_803E01A0);
         Sfx_PlayFromObject((int)sourceObj, SFXsc_snort02);
         cfg.lifetimeFrames = 1;
         cfg.scale = lbl_803E01A4;

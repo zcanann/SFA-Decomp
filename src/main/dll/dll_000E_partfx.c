@@ -2106,10 +2106,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->unk14;
-        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.sourcePosY = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.sourcePosZ = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.sourcePosW = ((PartFxSpawnParams*)spawnParams)->posZ;
+        cfg.sourcePosX = ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.sourceVecZ = ((PartFxSpawnParams*)spawnParams)->unk4;
         cfg.sourceVecY = ((PartFxSpawnParams*)spawnParams)->unk2;
         cfg.sourceVecX = *spawnParams;
@@ -2319,8 +2319,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x68b:
         if (spawnParams != NULL)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC - *(f32*)(sourceObj + 0xc);
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14 - *(f32*)(sourceObj + 0x10);
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX - *(f32*)(sourceObj + 0xc);
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ - *(f32*)(sourceObj + 0x10);
         }
         else
         {
@@ -2339,7 +2339,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         cfg.scale = lbl_803DF4E8;
         if (spawnParams != NULL)
         {
-            cfg.scale = ((PartFxSpawnParams*)spawnParams)->unk8;
+            cfg.scale = ((PartFxSpawnParams*)spawnParams)->scale;
         }
         cfg.lifetimeFrames = 0x32;
         cfg.initialAlpha = 0x96;
@@ -2460,17 +2460,17 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10 + (f32)(s32)
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY + (f32)(s32)
         randomGetRange(0xfffffffa, 6);
         cfg.velocityX = lbl_803DF4E8 * (f32)(s32)
         randomGetRange(0xffffff9c, 100);
@@ -2486,10 +2486,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x551:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2506,10 +2506,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2525,10 +2525,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x554:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2544,10 +2544,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x553:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2777,17 +2777,17 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x545:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
-        cfg.scale = lbl_803DF530 * ((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.scale = lbl_803DF530 * ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.lifetimeFrames = 4;
         cfg.behaviorFlags = 0x480000;
         cfg.renderFlags = 2;
@@ -2798,17 +2798,17 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
-        cfg.scale = lbl_803DF534 * ((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.scale = lbl_803DF534 * ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.lifetimeFrames = 4;
         cfg.behaviorFlags = 0x480000;
         cfg.renderFlags = 0x2000002;
@@ -2823,10 +2823,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         randomGetRange(0xffffff9c, 100);
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2852,10 +2852,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x548:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2873,10 +2873,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x52d:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2885,9 +2885,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         }
         if (spawnParams != NULL)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
             cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
             cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
             cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
@@ -2910,10 +2910,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x531:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -2922,9 +2922,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         }
         if (spawnParams != NULL)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
             cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
             cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
             cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
@@ -3010,10 +3010,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3024,9 +3024,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.velocityX = lbl_803DF568 * (f32)(s32)
         randomGetRange(0xffffffe2, 0x1e);
         cfg.velocityY = lbl_803DF568 * (f32)(s32)
@@ -3051,10 +3051,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x533:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3065,9 +3065,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.velocityX = lbl_803DF568 * (f32)(s32)
         randomGetRange(0xffffffe2, 0x1e);
         cfg.velocityY = lbl_803DF4E8 * (f32)(s32)
@@ -3099,10 +3099,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x535:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3113,9 +3113,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.velocityX = lbl_803DF4E8 * (f32)(s32)
         randomGetRange(0xffffffe2, 0x1e);
         cfg.velocityY = lbl_803DF4E8 * (f32)(s32)
@@ -3166,10 +3166,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3180,9 +3180,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.scale = lbl_803DF58C;
         cfg.lifetimeFrames = 10;
         cfg.initialAlpha = 0xff;
@@ -3204,10 +3204,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x51e:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3218,9 +3218,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.scale = lbl_803DF598;
         cfg.lifetimeFrames = 10;
         cfg.initialAlpha = 0xff;
@@ -3272,10 +3272,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x2be:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3284,9 +3284,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         }
         if (spawnParams != NULL)
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
             cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
             cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
             cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
@@ -3681,10 +3681,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3695,10 +3695,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
-        cfg.scale = ((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
+        cfg.scale = ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.lifetimeFrames = 1;
         cfg.linkGroup = 0;
         cfg.initialAlpha = 0x19;
@@ -3760,10 +3760,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -3774,9 +3774,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.overrideColor0 = 0xffff;
         cfg.overrideColor1 = 0xffff;
         cfg.overrideColor2 = 0xffff;
@@ -4073,10 +4073,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -4404,10 +4404,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -4469,10 +4469,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -4483,10 +4483,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC + (f32)(s32)
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX + (f32)(s32)
         randomGetRange(0, 6);
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14 + (f32)(s32)
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ + (f32)(s32)
         randomGetRange(0, 6);
         cfg.velocityY = lbl_803DF634 * (f32)(s32)
         randomGetRange(0, 10);
@@ -4816,10 +4816,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x6b:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -4830,15 +4830,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.velocityX = *extraArgs;
         cfg.velocityY = extraArgs[1];
         cfg.velocityZ = extraArgs[2];
         cfg.scale = lbl_803DF4C8;
         cfg.lifetimeFrames = 0x28;
-        cfg.initialAlpha = (u8)(int)((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.initialAlpha = (u8)(int)((PartFxSpawnParams*)spawnParams)->scale;
         cfg.linkGroup = 10;
         cfg.behaviorFlags = 0x200;
         cfg.textureId = 0xc13;
@@ -4861,10 +4861,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x56:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -4875,19 +4875,19 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         randomGetRange(0xfffffffa, 6);
         cfg.startPosZ = (f32)(s32)
         randomGetRange(0xfffffffa, 6);
-        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF508 * (f32)(s32)
+        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF508 * (f32)(s32)
         randomGetRange(0xfffffffe, 2)
         )
         ;
-        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF4CC * (f32)(s32)
+        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF4CC * (f32)(s32)
         randomGetRange(0, 4)
         )
         ;
-        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF508 * (f32)(s32)
+        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF508 * (f32)(s32)
         randomGetRange(0xfffffffe, 2)
         )
         ;
-        cfg.scale = lbl_803DF634 * ((PartFxSpawnParams*)spawnParams)->unk8;
+        cfg.scale = lbl_803DF634 * ((PartFxSpawnParams*)spawnParams)->scale;
         cfg.lifetimeFrames = 0x18;
         cfg.behaviorFlags = 0x1080000;
         cfg.renderFlags = 0x1000000;
@@ -4908,10 +4908,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -4920,24 +4920,24 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         }
         cfg.startPosY = (f32)(s32)
         randomGetRange(0, 10);
-        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF5B4 * (f32)(s32)
+        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF5B4 * (f32)(s32)
         randomGetRange(0xffffff9c, 100)
         )
         ;
-        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF5B4 * (f32)(s32)
+        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF5B4 * (f32)(s32)
         randomGetRange(200, 400)
         )
         ;
-        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF5B4 * (f32)(s32)
+        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF5B4 * (f32)(s32)
         randomGetRange(0xffffff9c, 100)
         )
         ;
-        cfg.scale = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF524 * (f32)(s32)
+        cfg.scale = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF524 * (f32)(s32)
         randomGetRange(8, 0xb)
         )
         ;
         cfg.initialAlpha = 0xbe;
-        cfg.lifetimeFrames = (u32)(lbl_803DF6C8 * ((PartFxSpawnParams*)spawnParams)->unk8);
+        cfg.lifetimeFrames = (u32)(lbl_803DF6C8 * ((PartFxSpawnParams*)spawnParams)->scale);
         cfg.behaviorFlags = 0x1200000;
         cfg.renderFlags = 0x1000000;
         cfg.textureId = 0x77;
@@ -4955,29 +4955,29 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x58:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
-        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF4F0 * (f32)(s32)
+        cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF4F0 * (f32)(s32)
         randomGetRange(0xffffff9c, 100)
         )
         ;
-        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF4F0 * (f32)(s32)
+        cfg.velocityY = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF4F0 * (f32)(s32)
         randomGetRange(10, 200)
         )
         ;
-        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF4F0 * (f32)(s32)
+        cfg.velocityZ = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF4F0 * (f32)(s32)
         randomGetRange(0xffffff9c, 100)
         )
         ;
-        cfg.scale = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF524 * (f32)(s32)
+        cfg.scale = ((PartFxSpawnParams*)spawnParams)->scale * (lbl_803DF524 * (f32)(s32)
         randomGetRange(8, 0xb)
         )
         ;
@@ -4999,10 +4999,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x323:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -5119,10 +5119,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -5310,10 +5310,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x3de:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -5331,9 +5331,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         }
         else
         {
-            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         }
         cfg.velocityX = lbl_803DF4DC;
         cfg.velocityY = lbl_803DF508;
@@ -5389,10 +5389,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -5405,9 +5405,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         randomGetRange(2, 5);
         cfg.velocityZ = lbl_803DF700 * (f32)(s32)
         randomGetRange(1, 3);
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.scale = lbl_803DF550;
         cfg.lifetimeFrames = 0x28;
         cfg.renderFlags = 0x5000000;
@@ -5417,10 +5417,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x321:
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -5431,9 +5431,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         randomGetRange(0, 4);
         cfg.velocityZ = lbl_803DF704 * (f32)(s32)
         randomGetRange(2, 4);
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.scale = lbl_803DF4E8;
         cfg.lifetimeFrames = 100;
         cfg.behaviorFlags = 0x1180200;
@@ -5444,19 +5444,19 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.scale = lbl_803DF504;
         cfg.lifetimeFrames = 0x50;
         cfg.behaviorFlags = 0x180200;
@@ -5468,10 +5468,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -5479,9 +5479,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
             spawnParams = lbl_8039C308;
         }
         cfg.velocityZ = lbl_803DF708;
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+        cfg.startPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
         cfg.scale = lbl_803DF618 * (f32)(s32)
         randomGetRange(0x32, 100);
         cfg.lifetimeFrames = randomGetRange(0x28, 0x50);
@@ -5493,10 +5493,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
             ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
@@ -5505,8 +5505,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         }
         cfg.sourceVecX = 700;
         cfg.textureId = 0xc09;
-        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10;
+        cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+        cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
         cfg.scale = lbl_803DF524 * (f32)(s32)
         randomGetRange(10, 0x14);
         cfg.lifetimeFrames = 0xaa;
@@ -5522,10 +5522,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             if (spawnParams == NULL)
             {
-                ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
-                ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
-                ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
-                ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+                ((PartFxSpawnParams*)lbl_8039C308)->posX = lbl_803DF4DC;
+                ((PartFxSpawnParams*)lbl_8039C308)->posY = lbl_803DF4DC;
+                ((PartFxSpawnParams*)lbl_8039C308)->posZ = lbl_803DF4DC;
+                ((PartFxSpawnParams*)lbl_8039C308)->scale = lbl_803DF4D0;
                 ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
                 ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
                 ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;

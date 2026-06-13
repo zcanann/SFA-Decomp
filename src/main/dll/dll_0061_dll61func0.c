@@ -877,9 +877,9 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         }
         else
         {
-            buf.pos[0] = lbl_803E0858 + ((PartFxSpawnParams*)posSource)->unkC;
-            buf.pos[1] = lbl_803E0864 + ((PartFxSpawnParams*)posSource)->unk10;
-            buf.pos[2] = lbl_803E0888 + ((PartFxSpawnParams*)posSource)->unk14;
+            buf.pos[0] = lbl_803E0858 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E0864 + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0888 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 9, &base[0x0], 8, &base[0x5c], 0x90, 0);

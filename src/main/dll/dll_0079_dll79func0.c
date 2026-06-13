@@ -1017,9 +1017,9 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     if (variant == 0)
