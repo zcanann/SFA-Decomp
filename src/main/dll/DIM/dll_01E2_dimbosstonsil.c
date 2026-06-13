@@ -258,9 +258,6 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
         f32 z;
     } pathPoint;
     int partfxArgs[3];
-    f32* outXPtr;
-    f32* outYPtr;
-    f32* outZPtr;
 
     if (visible != 0)
     {
@@ -270,18 +267,15 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
             {
                 objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
-                outXPtr = &pathPoint.x;
-                outYPtr = &pathPoint.y;
-                outZPtr = &pathPoint.z;
-                ObjPath_GetPointWorldPosition(obj, 1, outXPtr, outYPtr, outZPtr, 0);
+                ObjPath_GetPointWorldPosition(obj, 1, &pathPoint.x, &pathPoint.y, &pathPoint.z, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
-                ObjPath_GetPointWorldPosition(obj, 0, outXPtr, outYPtr, outZPtr, 0);
+                ObjPath_GetPointWorldPosition(obj, 0, &pathPoint.x, &pathPoint.y, &pathPoint.z, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
                 if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
                 {
-                    modelLightStruct_setPosition(*outXPtr, *outYPtr, *outZPtr);
+                    modelLightStruct_setPosition(pathPoint.x, pathPoint.y, pathPoint.z);
                     queueGlowRender(gDIMbosstonsilLight);
                 }
                 break;
