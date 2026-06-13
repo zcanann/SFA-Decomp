@@ -68,7 +68,7 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
         inner[0] = 0;
     }
     ((GameObject*)obj)->animEventCallback = (void*)dimgate_SeqFn;
-    *(s16*)obj = (s16)((s32)param[0x18] << 8);
+    *(s16*)obj = (s16)((s8) * (u8*)(param + 0x18) << 8);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
 
