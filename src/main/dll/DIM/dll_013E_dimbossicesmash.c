@@ -115,12 +115,17 @@ void dimbossicesmash_update(u8* obj)
     s16 cnt;
     int t1;
     int u29;
-    f32 nz, nx, ny;
+    f32 nx, nz, ny;
     f32 len, inv, dot;
-    f32 fy, fz, ff;
+    f32 fx, fy, fz, ff;
     f32 dx, dy, dz, k;
     int i;
-    f32 stk[3];
+    struct
+    {
+        s16 rot[3];
+        f32 scale;
+        f32 pos[3];
+    } stk;
 
     if ((flags & 2) != 0)
     {
@@ -263,9 +268,9 @@ void dimbossicesmash_update(u8* obj)
                 (*gPathControlInterface)->advance(obj, state, timeDelta);
                 if (((DimBossIceSmashState*)state)->unk261 != 0)
                 {
-                    nz = -((GameObject*)obj)->anim.velocityZ;
                     nx = -((GameObject*)obj)->anim.velocityX;
                     ny = -((GameObject*)obj)->anim.velocityY;
+                    nz = -((GameObject*)obj)->anim.velocityZ;
                     len = sqrtf(nz * nz + (nx * nx + ny * ny));
                     if (lbl_803E4034 != len)
                     {
@@ -274,11 +279,12 @@ void dimbossicesmash_update(u8* obj)
                         ny = ny * inv;
                         nz = nz * inv;
                     }
+                    fx = ((DimBossIceSmashState*)state)->unk68;
                     fy = ((DimBossIceSmashState*)state)->unk6C;
                     fz = ((DimBossIceSmashState*)state)->unk70;
                     dot = lbl_803E4050 *
-                        (nz * fz + (nx * ((DimBossIceSmashState*)state)->unk68 + ny * fy));
-                    ((GameObject*)obj)->anim.velocityX = ((DimBossIceSmashState*)state)->unk68 * dot;
+                        (nz * fz + (nx * fx + ny * fy));
+                    ((GameObject*)obj)->anim.velocityX = fx * dot;
                     ((GameObject*)obj)->anim.velocityY = fy * dot;
                     ((GameObject*)obj)->anim.velocityZ = fz * dot;
                     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - nx;
@@ -288,8 +294,7 @@ void dimbossicesmash_update(u8* obj)
                     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E4054;
                     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * len;
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * len;
-                    ff = lbl_803E4058;
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * ff;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (ff = lbl_803E4058);
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * ff;
                 }
             }
@@ -302,10 +307,10 @@ void dimbossicesmash_update(u8* obj)
                 do
                 {
                     k = (f32)i * lbl_803E405C;
-                    stk[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
-                    stk[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
-                    stk[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, 1000, stk, 0x200001, -1, NULL);
+                    stk.pos[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
+                    stk.pos[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
+                    stk.pos[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;
+                    (*gPartfxInterface)->spawnObject(obj, 1000, &stk, 0x200001, -1, NULL);
                     i++;
                 }
                 while (i < 2);
