@@ -645,8 +645,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u32 colA;
     u32 colB;
-    u32 colB2;
     u32 colA2;
+    u32 colB2;
     f32 mE[12];
     f32 m4[12];
     f32 m3[12];
