@@ -10343,11 +10343,11 @@ void fn_802AB5A4(int obj, int p2, int flags)
     char* q = (char*)p2 + 4;
     if (f & 1)
     {
-        curves_updateLocalPointTransforms(obj, (u32*)q);
+        curves_updateLocalPointTransforms(obj, (CurvesCollisionState*)q);
     }
     if (f & 2)
     {
-        curves_preparePointCollisionFrame(obj, (u32*)q);
+        curves_preparePointCollisionFrame(obj, (CurvesCollisionState*)q);
         *(f32*)(q + 0x20) = ((GameObject*)obj)->anim.worldPosX;
         *(f32*)(q + 0x24) = lbl_803E80EC + ((GameObject*)obj)->anim.worldPosY;
         *(f32*)(q + 0x28) = ((GameObject*)obj)->anim.worldPosZ;

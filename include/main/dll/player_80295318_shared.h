@@ -15,6 +15,8 @@
 #include "main/dll/path_control_interface.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
+typedef struct CurvesCollisionState CurvesCollisionState;
+
 typedef struct {
     u8 b80 : 1;
     u8 b40 : 1;
@@ -87,8 +89,26 @@ extern int Obj_GetYawDeltaToObject();
 extern undefined4 playerEyeAnimFn_80038988();
 extern void fn_8005D108();
 extern undefined4 objAudioFn_8006ef38();
-extern void curves_preparePointCollisionFrame(int obj, u32 *state);
-extern void curves_updateLocalPointTransforms(int obj, u32 *state);
+extern uint FUN_8006f764();
+extern undefined4 FUN_80070ec8();
+extern undefined4 FUN_80071d70();
+extern undefined4 FUN_80071f8c();
+extern undefined4 FUN_80071f90();
+extern int FUN_8007f3c8();
+extern int FUN_8007f7c0();
+extern int FUN_8007f810();
+extern uint FUN_80080f34();
+extern undefined4 FUN_80080f3c();
+extern undefined4 FUN_800810d8();
+extern undefined4 FUN_800810dc();
+extern undefined4 FUN_800810f4();
+extern undefined4 FUN_800810f8();
+extern undefined4 FUN_80081110();
+extern undefined4 FUN_8008111c();
+extern undefined4 FUN_80081120();
+extern undefined4 FUN_80081124();
+extern void curves_preparePointCollisionFrame(int obj, CurvesCollisionState *state);
+extern void curves_updateLocalPointTransforms(int obj, CurvesCollisionState *state);
 extern uint playerHasKrazoaSpirit();
 extern undefined4 PSVECDotProduct();
 extern double SeekTwiceBeforeRead();

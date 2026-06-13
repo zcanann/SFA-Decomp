@@ -619,14 +619,8 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
 void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
 {
     u8 pointCount;
-    f32* state;
     u32 flags;
-    f32* point;
     f32* localPoint;
-    u32 averageCount;
-    u32 chunkCount;
-    u32 pointTriples;
-    u32 pointTripletDivisor;
     int pointIndex;
     int radiusOffset;
     int mode;
@@ -638,12 +632,10 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     CurvesTransformScratch transform;
     f32 matrix[16];
 
-    state = (f32*)collision;
     pointCount = collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK;
     radiusOffset = 0;
     collision->localPointHitMask = (u8)radiusOffset;
     pointIndex = 0;
-    point = state;
     while (pointIndex < pointCount)
     {
         if ((s32)(collision->flags & 0x200000) != 0)
@@ -655,7 +647,8 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
             mode = 4;
         }
         collision->localPointHitMask |= objBboxFn_800640cc(
-            point + 0x45, point + 0x39, *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
+            collision->localPointTarget[pointIndex], collision->localPointWorld[pointIndex],
+            *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
             (f32*)collision->localHitPlanes, obj, collision->primaryHitType, -1, 0,
             (s8)collision->activeTimer) << pointIndex;
         flags = collision->flags;
@@ -669,63 +662,29 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
             {
                 mode = 4;
             }
-            objBboxFn_800640cc(point + 0x45, point + 0x39,
+            objBboxFn_800640cc(collision->localPointTarget[pointIndex],
+                               collision->localPointWorld[pointIndex],
                                *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
                                (f32*)collision->localHitPlanes, obj, collision->secondaryHitType, -1, 0,
                                (s8)collision->activeTimer);
         }
         radiusOffset += sizeof(f32);
-        point += 3;
         pointIndex++;
     }
     if (pointCount > 1)
     {
-        if ((s32)(*(u32*)state & 0x100000) != 0)
+        if ((s32)(collision->flags & 0x100000) != 0)
         {
             goto buildTransform;
         }
         zero = lbl_803E0668;
         ((GameObject*)obj)->anim.localPosX = zero;
         ((GameObject*)obj)->anim.localPosZ = zero;
-        pointTriples = pointCount * 3;
-        pointTripletDivisor = 3;
-        averageCount = (pointTriples + 2) / pointTripletDivisor;
-        if (pointTriples != 0)
+        for (pointIndex = 0; pointIndex < pointCount; pointIndex++)
         {
-            chunkCount = averageCount >> 2;
-            point = state;
-            if (chunkCount != 0)
-            {
-                do
-                {
-                    ((GameObject*)obj)->anim.localPosX += point[0x39];
-                    ((GameObject*)obj)->anim.localPosZ += point[0x3b];
-                    ((GameObject*)obj)->anim.localPosX += point[0x3c];
-                    ((GameObject*)obj)->anim.localPosZ += point[0x3e];
-                    ((GameObject*)obj)->anim.localPosX += point[0x3f];
-                    ((GameObject*)obj)->anim.localPosZ += point[0x41];
-                    ((GameObject*)obj)->anim.localPosX += point[0x42];
-                    ((GameObject*)obj)->anim.localPosZ += point[0x44];
-                    point += 0xc;
-                    chunkCount--;
-                }
-                while (chunkCount != 0);
-                averageCount &= 3;
-                if (averageCount == 0)
-                {
-                    goto scaleAverage;
-                }
-            }
-            do
-            {
-                ((GameObject*)obj)->anim.localPosX += point[0x39];
-                ((GameObject*)obj)->anim.localPosZ += point[0x3b];
-                averageCount--;
-                point += 3;
-            }
-            while (averageCount != 0);
+            ((GameObject*)obj)->anim.localPosX += collision->localPointWorld[pointIndex][0];
+            ((GameObject*)obj)->anim.localPosZ += collision->localPointWorld[pointIndex][2];
         }
-    scaleAverage:
         averageScale = lbl_803E068C / (f32)pointCount;
         ((GameObject*)obj)->anim.localPosX *= averageScale;
         ((GameObject*)obj)->anim.localPosZ *= averageScale;
@@ -737,7 +696,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     }
 buildTransform:
     transform.angles[0] = *(s16*)obj;
-    if ((s32)(*(u32*)state & 0x20) != 0)
+    if ((s32)(collision->flags & 0x20) != 0)
     {
         transform.angles[1] = 0;
         transform.angles[2] = 0;
@@ -753,31 +712,25 @@ buildTransform:
     transform.z = ((GameObject*)obj)->anim.localPosZ;
     setMatrixFromObjectPos(matrix, &transform);
     localOffset = 0;
-    point = state;
-    for (pointIndex = 0; pointIndex < (pointCount * 3); pointIndex += 3)
+    for (pointIndex = 0; pointIndex < pointCount; pointIndex++)
     {
-        point[0x45] = point[0x39];
-        point[0x47] = point[0x3b];
+        collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
+        collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
         localPoint = (f32*)((u8*)collision->localPointPositions + localOffset);
         Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2], &tempX,
-                              state + pointIndex + 0x46, &tempZ);
-        point += 3;
+                              &collision->localPointTarget[pointIndex][1], &tempZ);
         localOffset += 0xc;
     }
 }
 
-void curves_preparePointCollisionFrame(int obj, u32* state)
+void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 {
-    u8* stateBytes;
-    CurvesCollisionState* collision;
+    u32* state;
     u32 flags;
     int matrixSource;
     int pointIndex;
     int pointOffset;
-    int pointWordIndex;
     f32* localPoint;
-    f32* point;
-    f32* height;
     f32 raisedPointOffset;
     f32 resetRange;
     f32 resetMin;
@@ -785,8 +738,7 @@ void curves_preparePointCollisionFrame(int obj, u32* state)
     CurvesTransformScratch transform;
     f32 matrix[16];
 
-    stateBytes = (u8*)state;
-    collision = (CurvesCollisionState*)state;
+    state = (u32*)collision;
     if ((s32)(*state & CURVES_COLLISION_STATE_ACTIVE) != 0)
     {
         if (*(int*)&((GameObject*)obj)->anim.parent != 0)
@@ -836,31 +788,26 @@ void curves_preparePointCollisionFrame(int obj, u32* state)
             setMatrixFromObjectPos(matrix, &transform);
             pointIndex = 0;
             pointOffset = 0;
-            pointWordIndex = 0;
             while (pointIndex < ((s8)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
             {
                 localPoint = (f32*)((u8*)collision->segmentLocalPoints + pointOffset);
                 Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
-                                      (f32*)(state + pointWordIndex + 2),
-                                      (f32*)(state + pointWordIndex + 3),
-                                      (f32*)(state + pointWordIndex + 4));
+                                      &collision->points[pointIndex][0],
+                                      &collision->points[pointIndex][1],
+                                      &collision->points[pointIndex][2]);
                 collision->segmentHitTypes[pointIndex] = -1;
                 pointOffset += 0xc;
-                pointWordIndex += 3;
                 pointIndex++;
             }
-            point = (f32*)state;
-            height = (f32*)state;
             raisedPointOffset = lbl_803E06B8;
             for (pointIndex = 0;
                  pointIndex < ((s8)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
                  pointIndex++)
             {
-                point[0xe] = point[2];
-                point[0xf] = raisedPointOffset + (point[3] + height[0x2a]);
-                point[0x10] = point[4];
-                point += 3;
-                height++;
+                collision->traceStart[pointIndex][0] = collision->points[pointIndex][0];
+                collision->traceStart[pointIndex][1] =
+                    raisedPointOffset + collision->points[pointIndex][1] + collision->segmentRadii[pointIndex];
+                collision->traceStart[pointIndex][2] = collision->points[pointIndex][2];
             }
         }
         if (((GameObject*)obj)->anim.classId == 1)
@@ -883,32 +830,28 @@ void curves_preparePointCollisionFrame(int obj, u32* state)
         collision->resultWaterDepth = resetZero;
         collision->resultFloorGap = resetZero;
         collision->contactObj = 0;
-        point = (f32*)state;
         for (pointIndex = 0;
              pointIndex < ((s8)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
              pointIndex++)
         {
-            point[0x80] = resetRange;
-            point[0x7c] = resetRange;
-            point[0x74] = resetMin;
-            point++;
+            collision->waterY[pointIndex] = resetRange;
+            collision->floorY[pointIndex] = resetRange;
+            collision->ceilingY[pointIndex] = resetMin;
         }
     }
 }
 
-void curves_updateLocalPointTransforms(int obj, u32* state)
+void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
 {
-    CurvesCollisionState* collision;
+    u32* state;
     u32 flags;
     int pointIndex;
     int pointOffset;
-    int pointWordIndex;
     f32* localPoint;
-    f32* point;
     CurvesTransformScratch transform;
     f32 matrix[16];
 
-    collision = (CurvesCollisionState*)state;
+    state = (u32*)collision;
     flags = *state;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
@@ -931,47 +874,41 @@ void curves_updateLocalPointTransforms(int obj, u32* state)
         setMatrixFromObjectPos(matrix, &transform);
         pointIndex = 0;
         pointOffset = 0;
-        point = (f32*)state;
-        pointWordIndex = 0;
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
             localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
-                                  point + 0x39, (f32*)(state + pointWordIndex + 0x3a),
-                                  (f32*)(state + pointWordIndex + 0x3b));
-            point += 3;
+                                  &collision->localPointWorld[pointIndex][0],
+                                  &collision->localPointWorld[pointIndex][1],
+                                  &collision->localPointWorld[pointIndex][2]);
             pointOffset += 0xc;
-            pointWordIndex += 3;
             pointIndex++;
         }
-        point = (f32*)state;
         for (pointIndex = 0;
              pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK);
              pointIndex++)
         {
-            point[0x45] = point[0x39];
-            point[0x46] = lbl_803E068C + point[0x3a];
-            point[0x47] = point[0x3b];
-            point += 3;
+            collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
+            collision->localPointTarget[pointIndex][1] =
+                lbl_803E068C + collision->localPointWorld[pointIndex][1];
+            collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
         }
         fn_80063368((short*)obj);
     }
 }
 
-void dll_15_func0A(int obj, u32* state)
+void dll_15_func0A(int obj, CurvesCollisionState* collision)
 {
-    CurvesCollisionState* collision;
+    u32* state;
     u32 flags;
     int pointIndex;
     int pointOffset;
-    int pointWordIndex;
     f32* localPoint;
-    f32* point;
     CurvesTransformScratch transform;
     f32 matrix[16];
 
-    collision = (CurvesCollisionState*)state;
-    curves_preparePointCollisionFrame(obj, state);
+    state = (u32*)collision;
+    curves_preparePointCollisionFrame(obj, collision);
     flags = *state;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
@@ -994,28 +931,24 @@ void dll_15_func0A(int obj, u32* state)
         setMatrixFromObjectPos(matrix, &transform);
         pointIndex = 0;
         pointOffset = 0;
-        point = (f32*)state;
-        pointWordIndex = 0;
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
             localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
-                                  point + 0x39, (f32*)(state + pointWordIndex + 0x3a),
-                                  (f32*)(state + pointWordIndex + 0x3b));
-            point += 3;
+                                  &collision->localPointWorld[pointIndex][0],
+                                  &collision->localPointWorld[pointIndex][1],
+                                  &collision->localPointWorld[pointIndex][2]);
             pointOffset += 0xc;
-            pointWordIndex += 3;
             pointIndex++;
         }
-        point = (f32*)state;
         for (pointIndex = 0;
              pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK);
              pointIndex++)
         {
-            point[0x45] = point[0x39];
-            point[0x46] = lbl_803E068C + point[0x3a];
-            point[0x47] = point[0x3b];
-            point += 3;
+            collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
+            collision->localPointTarget[pointIndex][1] =
+                lbl_803E068C + collision->localPointWorld[pointIndex][1];
+            collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
         }
         fn_80063368((short*)obj);
     }
@@ -1306,7 +1239,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
     }
     else if (collision->subtype == CURVES_COLLISION_SUBTYPE_POINT)
     {
-        curves_preparePointCollisionFrame((int)curveObj, (u32*)state);
+        curves_preparePointCollisionFrame((int)curveObj, collision);
         flags = *state;
         if (((flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
             ((flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
@@ -1386,7 +1319,7 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
     }
     else
     {
-        curves_preparePointCollisionFrame((int)curveObj, (u32*)state);
+        curves_preparePointCollisionFrame((int)curveObj, collision);
         flags = *state;
         if (((flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
             ((flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
