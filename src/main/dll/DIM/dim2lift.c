@@ -1039,7 +1039,7 @@ int fn_801BB0D8(int obj, int param2, f32 fParam)
         ((BaddieState*)param2)->moveSpeed = lbl_803259A0[local_c];
         ((BaddieState*)param2)->moveDone = 0;
     }
-    (*(int (**)(int, int, int, f32))(*(int*)gPlayerInterface + 0x20))(obj, param2, 8, fParam);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, param2, fParam, 8);
     return 0;
 }
 
@@ -1061,7 +1061,7 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
         ((BaddieState*)param2)->animSpeedB = v;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 1, lbl_80325AA0);
-    (*(int (**)(int, int, int, f32))(*(int*)gPlayerInterface + 0x30))(obj, param2, 0xf0, fParam);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, fParam, 0xf0);
     return 0;
 }
 
