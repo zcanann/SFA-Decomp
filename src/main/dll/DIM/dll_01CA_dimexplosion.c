@@ -903,29 +903,26 @@ void explosion_update(int obj)
                         u8 md;
                         ang[5] = 0;
                         md = ((ExplosionState*)state)->modelKind;
-                        if (md == 2)
+                        switch (md)
                         {
+                        case 1:
+                            ang[1] = ang[2];
+                            ang[4] = 0;
+                            break;
+                        case 2:
                             ang[1] = ang[0];
                             ang[4] = ang[3];
                             ang[0] = ang[2];
                             ang[3] = 0;
-                        }
-                        else if (md < 2)
-                        {
-                            if (md != 0)
-                            {
-                                ang[1] = ang[2];
-                                ang[4] = 0;
-                            }
-                        }
-                        else if (md < 4)
-                        {
+                            break;
+                        case 3:
                             ang[1] = ang[2];
                             ang[4] = 0;
                             ang[2] = ang[0];
                             ang[5] = ang[3];
                             ang[0] = sv;
                             ang[3] = 0;
+                            break;
                         }
                     }
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x5e, &fake, 0x200001, -1, ang);
