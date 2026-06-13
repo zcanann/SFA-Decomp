@@ -28,11 +28,12 @@ int
 camcontrol_traceMove(float *fromPos,float *toPos,float *outPos,u8 *traceWork,
                      char traceMode,u8 runTrace,u8 runBbox,float radius);
 undefined camcontrol_traceFromTarget(float *fromPos,GameObject *target,float *outPos);
-undefined camcontrol_getTargetPosition(int param_1,void *param_2,void *param_3,void *param_4);
+u8 camcontrol_getTargetPosition(CameraObject *camera,ObjAnimComponent *targetAnim,
+                                f32 *outPos,s16 *outRotY);
 void camcontrol_updateTargetAction(CameraObject *camera,GameObject *target);
 int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle);
 void camMoveFn_80104040(CameraObject *camera, GameObject *target);
 void camcontrol_updateModeSettings(int camera);
-void doNothing_80103660(void);
+void doNothing_80103660(int unused);
 
 #endif /* MAIN_DLL_CAM_CUTCAM_H_ */

@@ -2,6 +2,7 @@
 #include "main/dll/CAM/camshipbattle.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
+#include "main/dll/CAM/cutCam.h"
 #include "main/pad.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
@@ -107,7 +108,6 @@ void CameraModeStaffAnim_copyToCurrent_nop(void)
 
 void camclimb_update(CameraObject* cam)
 {
-    extern char camcontrol_getTargetPosition();
     extern uint getAngle();
     extern undefined4 camcontrol_updatePathTargetAction();
     byte needsReset;
@@ -168,7 +168,7 @@ void camclimb_update(CameraObject* cam)
         }
         if (gCamcontrolPathState->initialiseCurve[4] > lbl_803E1740)
         {
-            needsReset = camcontrol_getTargetPosition(cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+            needsReset = camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
             if (needsReset == 1)
             {
                 doNothing_80103660(1);
@@ -218,7 +218,6 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
 #pragma peephole off
 void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* settings)
 {
-    extern undefined camcontrol_getTargetPosition(int obj, GameObject* target, f32* outPos, s16* outAngle);
     extern int getAngle(f32 dx, f32 dz);
     GameObject* target;
     int view;
@@ -313,7 +312,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* sett
 
         if (settings[3] != 0)
         {
-            camcontrol_getTargetPosition((int)camera, target, localPos, 0);
+            camcontrol_getTargetPosition(camera, &target->anim, localPos, NULL);
         }
 
         Obj_TransformWorldPointToLocal(localPos[0], localPos[1], localPos[2], &localPos[0],

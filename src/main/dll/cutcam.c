@@ -108,12 +108,9 @@ undefined camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* 
     return traceRec[CAMCONTROL_TRACE_BLOCKED_OFFSET];
 }
 
-undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* arg3)
+u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAnim, f32* outPos,
+                                s16* outRotY)
 {
-    short* pitchOut;
-    int obj;
-    float* posOut;
-    short* rotOut;
     u8 box[112];
     float prev[3];
     float pos[3];
@@ -126,12 +123,8 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
     uint ang;
     int d;
 
-    obj = arg0;
-    rotOut = (short*)arg1;
-    posOut = (float*)arg2;
-    pitchOut = (short*)arg3;
-    cosv = mathSinf((lbl_803E168C * (f32) * rotOut) / lbl_803E1690);
-    sinv = mathCosf((lbl_803E168C * (f32) * rotOut) / lbl_803E1690);
+    cosv = mathSinf((lbl_803E168C * (f32)targetAnim->rotX) / lbl_803E1690);
+    sinv = mathCosf((lbl_803E168C * (f32)targetAnim->rotX) / lbl_803E1690);
     d2 = cameraMtxVar57->maxDistance * cameraMtxVar57->maxDistance -
         cameraMtxVar57->lowerHeightOffset * cameraMtxVar57->lowerHeightOffset;
     if (d2 < lbl_803E1694)
@@ -139,27 +132,27 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
         d2 = *(f32*)&lbl_803E1694;
     }
     d2 = sqrtf(d2);
-    pos[0] = cosv * d2 + *(float*)(rotOut + 0xc);
+    pos[0] = cosv * d2 + targetAnim->worldPosX;
     pos[1] = cameraMtxVar57->lowerHeightOffset +
-        (*(float*)(rotOut + 0xe) + cameraMtxVar57->targetHeight);
-    pos[2] = sinv * d2 + *(float*)(rotOut + 0x10);
-    if (rotOut[0x22] == 1)
+        (targetAnim->worldPosY + cameraMtxVar57->targetHeight);
+    pos[2] = sinv * d2 + targetAnim->worldPosZ;
+    if (targetAnim->classId == 1)
     {
-        cameraGetPrevPos2((int)rotOut, &prev[0], &prev[1], &prev[2]);
+        cameraGetPrevPos2((int)targetAnim, &prev[0], &prev[1], &prev[2]);
     }
     else
     {
-        prev[0] = *(float*)(rotOut + 0xc);
-        prev[1] = *(float*)(rotOut + 0xe) + cameraMtxVar57->targetHeight;
-        prev[2] = *(float*)(rotOut + 0x10);
+        prev[0] = targetAnim->worldPosX;
+        prev[1] = targetAnim->worldPosY + cameraMtxVar57->targetHeight;
+        prev[2] = targetAnim->worldPosZ;
     }
-    camcontrol_traceMove(prev, pos, posOut, box, 3, '\x01', '\x01', lbl_803E1688);
-    (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, obj, &a, &b, &c, &d2, 0);
-    b = *(float*)(obj + 0x1c) -
-        (*(float*)(rotOut + 0xe) + cameraMtxVar57->targetHeight);
+    camcontrol_traceMove(prev, pos, outPos, box, 3, '\x01', '\x01', lbl_803E1688);
+    (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, (int)camera,
+                                             &a, &b, &c, &d2, 0);
+    b = camera->anim.worldPosY - (targetAnim->worldPosY + cameraMtxVar57->targetHeight);
     ang = getAngle(b, d2);
     d = ang & 0xffff;
-    d -= (u16) * (s16*)(obj + 2);
+    d -= (u16)camera->anim.rotY;
     if (0x8000 < d)
     {
         d = d - 0xffff;
@@ -168,9 +161,9 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
     {
         d = d + 0xffff;
     }
-    if (pitchOut != (short*)0x0)
+    if (outRotY != (s16*)0x0)
     {
-        *pitchOut = *(s16*)(obj + 2) + d;
+        *outRotY = camera->anim.rotY + d;
     }
     return box[CAMCONTROL_TRACE_BLOCKED_OFFSET];
 }

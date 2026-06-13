@@ -46,7 +46,6 @@ extern f32 lbl_803E16F0;
 extern f32 lbl_803E16F4;
 extern f32 timeDelta;
 extern undefined4 FUN_800068f4();
-extern undefined4 camcontrol_getTargetPosition();
 extern f32 lbl_803E1710;
 extern f32 lbl_803E1714;
 extern f32 PSVECMag(f32 * vec);
@@ -512,7 +511,7 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
     }
     if (dist > lbl_803E1700 * gCamcontrolModeSettings->maxDistance)
     {
-        camcontrol_getTargetPosition((int)camera, target, &camera->anim.worldPosX, &camera->anim.rotY);
+        camcontrol_getTargetPosition(camera, target, &camera->anim.worldPosX, &camera->anim.rotY);
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY,
                                        &camera->anim.localPosZ, (u32)camera->anim.parent);
@@ -954,7 +953,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
         gCamcontrolModeSettings->pad20 = lbl_803E16D4;
         gCamcontrolModeSettings->initialized = 1;
         gCamcontrolModeSettings->fov = cam->fov;
-        camcontrol_getTargetPosition((int)cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+        camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
         fVal = cam->anim.worldPosX;
         cam->anim.localPosX = fVal;
         cam->probePosX = fVal;
@@ -976,7 +975,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
         }
         break;
     case 4:
-        camcontrol_getTargetPosition((int)cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+        camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
                                        *(int*)&cam->anim.parent);
@@ -1073,7 +1072,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
         gCamcontrolModeSettings->savedHeightAdjustRate = gCamcontrolModeSettings->heightAdjustRate;
         if ((data != NULL) && (data[0xd] != 0))
         {
-            camcontrol_getTargetPosition((int)cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+            camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
             Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                            &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
                                            *(int*)&cam->anim.parent);

@@ -1,6 +1,7 @@
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
+#include "main/dll/CAM/cutCam.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 mathSinf(f32 x);
@@ -34,7 +35,6 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 camcontrol_getTargetPosition();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
@@ -261,7 +261,7 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
         extern int getAngle(f32 dx, f32 dz);
         target->anim.rotX = (s16)getAngle(c, s);
     }
-    camcontrol_getTargetPosition(obj, target, pos, 0);
+    camcontrol_getTargetPosition((CameraObject*)obj, &target->anim, pos, NULL);
     target->anim.rotX = (s16)yaw;
     {
         f32 p;

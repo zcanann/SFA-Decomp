@@ -2,6 +2,7 @@
 #include "main/dll/CAM/cambike_state.h"
 #include "main/mm.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
+#include "main/dll/CAM/cutCam.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/game_object.h"
@@ -244,7 +245,6 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
 
 void firstPersonExit(CameraObject* camera)
 {
-    extern undefined4 camcontrol_getTargetPosition(int param_1, int param_2, float* outPos, void* outAngle);
     register CameraObject* self = camera;
     GameObject* target;
     float fVar1;
@@ -264,7 +264,7 @@ void firstPersonExit(CameraObject* camera)
     lbl_803DD548->posZCurve.start = self->anim.worldPosZ;
     lbl_803DD548->posZCurve.startTangent = fVar1;
     lbl_803DD548->posZCurve.endTangent = fVar1;
-    camcontrol_getTargetPosition((int)self, (int)target, targetPos, auStack_28);
+    camcontrol_getTargetPosition(self, &target->anim, targetPos, (s16*)auStack_28);
     lbl_803DD548->posXCurve.end = targetPos[0];
     lbl_803DD548->posYCurve.end = targetPos[1];
     lbl_803DD548->posZCurve.end = targetPos[2];
