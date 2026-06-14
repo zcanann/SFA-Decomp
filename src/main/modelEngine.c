@@ -211,19 +211,16 @@ BOOL Resource_Release(void* handleSlot)
 {
     s32 i;
     ResourceDescriptor* descriptor;
-    void** loadedHandle;
 
     i = 0;
     descriptor = (ResourceDescriptor*)handleSlot;
-    loadedHandle = gResourceLoadedHandles;
     while (i < 0x2c1)
     {
-        if ((void*)loadedHandle == handleSlot)
+        if ((void*)&gResourceLoadedHandles[i] == handleSlot)
         {
             descriptor = gResourceDescriptors[i];
             break;
         }
-        loadedHandle++;
         i++;
     }
 
