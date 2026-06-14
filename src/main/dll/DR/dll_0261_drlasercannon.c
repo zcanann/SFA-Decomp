@@ -295,7 +295,7 @@ int drlasercannon_getTrackedTarget(int obj, int* arg)
     if (player != 0)
     {
         r = (void*)fn_802972A8();
-        if (r != 0 && (*(u16*)((char*)r + 0xb0) & 0x1000) == 0)
+        if (r != 0 && (((GameObject*)r)->objectFlags & 0x1000) == 0)
         {
             return (int)r;
         }

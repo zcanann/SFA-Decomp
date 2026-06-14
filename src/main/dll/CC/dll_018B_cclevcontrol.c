@@ -228,7 +228,7 @@ void cclevcontrol_update(int obj)
     if (state[1] & 1)
     {
         if (GameBit_Get(0x22d) != 0 || GameBit_Get(0x22e) == 0
-            || (*(u16*)((char*)tricky + 0xb0) & 0x1000) != 0)
+            || (((GameObject*)tricky)->objectFlags & 0x1000) != 0)
         {
             state[1] &= ~1;
             (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);

@@ -134,8 +134,8 @@ void drcagewith_hitDetect(int obj)
                 ((GameObject*)nearest)->anim.rotZ = *(s16*)(*(int*)p + 4);
                 *(int*)(*(int*)p + 0xf4) = 1;
             }
-            if (*(void**)&((DrcagewithState*)p)->unk4 != NULL && (*(u16*)(((DrcagewithState*)p)->unk4 + 0xb0) & 0x40) !=
-                0)
+            if (*(void**)&((DrcagewithState*)p)->unk4 != NULL &&
+                (((GameObject*)((DrcagewithState*)p)->unk4)->objectFlags & 0x40) != 0)
             {
                 ((DrcagewithState*)p)->unk4 = 0;
             }

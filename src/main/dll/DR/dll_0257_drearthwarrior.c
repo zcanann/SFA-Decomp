@@ -1176,7 +1176,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                 {
                     return;
                 }
-                if (*(s16*)((char*)hitObj + 0x46) == 0x23)
+                if (((GameObject*)hitObj)->anim.seqId == 0x23)
                 {
                     return;
                 }
