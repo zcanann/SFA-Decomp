@@ -1287,7 +1287,10 @@ void DIMSnowHorn1_update(int obj)
     *(s16*)((char*)data + 0xa86) = 5;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
-    flags = ((SnowHornFlags*)(base + ((DIMSnowHorn1State*)data)->baddie.controlMode))->flag;
+    {
+        u8* fp = base + 0x94;
+        flags = fp[((DIMSnowHorn1State*)data)->baddie.controlMode];
+    }
     if (!(flags & 8))
     {
         ObjHitReactEntry* arm;
