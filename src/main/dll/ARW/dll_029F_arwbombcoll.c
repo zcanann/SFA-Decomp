@@ -112,12 +112,13 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
 #pragma peephole on
 void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
 {
+    GameObject* arwingObj = (GameObject*)arwing;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
     u8 mode = state->mode;
     if (mode == 0)
     {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
-        if (*(s16*)(arwing + 0x46) == 0x601)
+        if (arwingObj->anim.seqId == 0x601)
         {
             arwarwing_addShield(arwing, 1);
             arwarwing_addScore(arwing, 0xa);
@@ -126,7 +127,7 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
     else if (mode == 1)
     {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
-        if (*(s16*)(arwing + 0x46) == 0x601)
+        if (arwingObj->anim.seqId == 0x601)
         {
             arwarwing_addMaxShield(arwing, 1);
             arwarwing_addShield(arwing, arwarwing_getMaxShield(arwing));
@@ -140,7 +141,7 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
     else
     {
         Sfx_PlayFromObject(arwing, SFXbaddie_vambat_attack);
-        if (*(s16*)(arwing + 0x46) == 0x601)
+        if (arwingObj->anim.seqId == 0x601)
         {
             int seg;
             arwarwing_incrementCollectedRingCount(arwing);
@@ -165,15 +166,17 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
 #pragma peephole off
 int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
 {
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;
     RingFlags* f = &state->flags;
     if (f->bit10)
     {
-        f32 dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(arwing + 0xc);
-        f32 dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(arwing + 0x10);
+        f32 dx = objAnim->localPosX - arwingAnim->localPosX;
+        f32 dy = objAnim->localPosY - arwingAnim->localPosY;
         f32 dz;
         if (dy < lbl_803E70A0)
             dy = -dy;
-        dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(arwing + 0x14);
+        dz = objAnim->localPosZ - arwingAnim->localPosZ;
         if (dy <= lbl_803E70A4)
         {
             if (dx * dx + dz * dz < lbl_803E70A8)
@@ -182,13 +185,13 @@ int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
     }
     else
     {
-        f32 objZ = ((GameObject*)obj)->anim.localPosZ;
-        f32 currentZDelta = objZ - *(f32*)(arwing + 0x14);
-        f32 previousZDelta = objZ - *(f32*)(arwing + 0x88);
+        f32 objZ = objAnim->localPosZ;
+        f32 currentZDelta = objZ - arwingAnim->localPosZ;
+        f32 previousZDelta = objZ - arwingAnim->previousLocalPosZ;
         if (currentZDelta <= lbl_803E70A0 && previousZDelta >= lbl_803E70A0)
         {
-            f32 dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(arwing + 0xc);
-            f32 dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(arwing + 0x10);
+            f32 dx = objAnim->localPosX - arwingAnim->localPosX;
+            f32 dy = objAnim->localPosY - arwingAnim->localPosY;
             if (sqrtf(dx * dx + dy * dy) < lbl_803E70AC)
                 return 1;
             if (state->mode == 2 && f->bit20)
@@ -233,7 +236,7 @@ void arwbombcoll_update(int obj)
     if (flags->b80 == 0)
     {
         a2 = getArwing();
-        if ((((u32)a2 != 0) ? (((GameObject*)obj)->anim.localPosZ - *(f32*)(a2 + 0x14) < lbl_803E7080) : 0) != 0)
+        if ((((u32)a2 != 0) ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)a2)->anim.localPosZ < lbl_803E7080) : 0) != 0)
         {
             goto active;
         }
@@ -274,7 +277,7 @@ active :
         {
             int hit;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0 && (u32)hit != 0 &&
-                (*(s16*)(hit + 0x46) == 0x604 || *(s16*)(hit + 0x46) == 0x605))
+                (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == 0x605))
             {
                 arwarwing_addScore(arw, 0xf);
                 flags->b40 = 1;
