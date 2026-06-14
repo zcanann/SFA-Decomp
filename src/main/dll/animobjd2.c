@@ -1,9 +1,9 @@
 #include "main/dll/tricky_state.h"
 #include "main/dll/animobjD2.h"
+#include "main/dll/player_target.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-extern void* fn_80296118(void* p);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int atan2_8002178c(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
@@ -62,7 +62,7 @@ void* trickyFindCirclingTarget(void* obj, void* arg2)
         return target;
     }
 
-    target = fn_80296118(*(void**)((u8*)arg2 + 0x4));
+    target = (void*)Player_GetTargetObject(*(int*)((u8*)arg2 + 0x4));
     if (target == NULL) goto fail;
 
     list = (void**)ObjGroup_GetObjects(3, &count);
@@ -496,7 +496,7 @@ void fn_8013E0D0(int* obj, register u8* st)
             }
             else
             {
-                t = (int*)fn_80296118(*(void**)(st + 4));
+                t = (int*)Player_GetTargetObject(*(int*)(st + 4));
             }
             if ((u32)t != *(u32*)(st + 0x720) || *(int*)(st + 0x728) != 0)
             {

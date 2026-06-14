@@ -58,7 +58,6 @@ extern void fn_80174438(int* obj, PushableState* state);
 extern void Obj_RemoveFromUpdateList(int* obj);
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
-extern u32 fn_80296118(void);
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);

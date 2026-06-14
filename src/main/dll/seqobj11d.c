@@ -10,6 +10,7 @@
 #include "main/objhits.h"
 #include "main/object_transform.h"
 #include "main/objseq.h"
+#include "main/dll/player_target.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001766c();
@@ -56,7 +57,6 @@ extern void fn_8001FEA8(void);
 extern u8* Obj_GetPlayerObject(void);
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);
-extern uint fn_80296118(u8 * player);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
 extern f32 lbl_803E2740;
 extern f32 timeDelta;
@@ -479,7 +479,7 @@ void fn_8015165C(int obj, u8* state)
             else
             {
                 if (player != NULL && ((((GroundBaddieState*)state)->baddie.controlFlags & 0x800080) != 0 ||
-                    fn_80296118(player) == 0))
+                    Player_GetTargetObject((int)player) == 0))
                 {
                     fn_801511E8(obj, state);
                 }

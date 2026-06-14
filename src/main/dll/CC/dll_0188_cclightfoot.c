@@ -29,6 +29,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
+#include "main/dll/player_target.h"
 
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_PollPriorityHitWithCooldown();
@@ -229,7 +230,6 @@ extern u8 lbl_803DDB38[8];
 extern int getAngle(f32 dx, f32 dz);
 extern f32 fn_8014C5D0(int obj);
 extern void fn_8014C66C(int obj, int target);
-extern void* fn_80296118(int p);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
@@ -321,11 +321,11 @@ void cclightfoot_update(int obj)
                 oFar = state[2];
             }
             if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state[1] + 0x18)) < lbl_803E4684
-                    || fn_80296118(state[1]) == *(void**)(state + 2)
-                    || fn_80296118(state[1]) == *(void**)(state + 3))
+                    || (void*)Player_GetTargetObject(state[1]) == *(void**)(state + 2)
+                    || (void*)Player_GetTargetObject(state[1]) == *(void**)(state + 3))
                 && playerIsDisguised(state[1]) == 0)
             {
-                if (fn_80296118(state[1]) == (void*)oFar)
+                if ((void*)Player_GetTargetObject(state[1]) == (void*)oFar)
                 {
                     u32 tmp = oFar ^ oNear;
                     oNear = oNear ^ tmp;
@@ -390,7 +390,7 @@ void cclightfoot_update(int obj)
             {
                 dist = getXZDistance((f32*)(state[1] + 0x18), (f32*)(fallback + 0x18));
                 if ((getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18)) < dist
-                        && fn_80296118(state[1]) != (void*)fallback)
+                        && (void*)Player_GetTargetObject(state[1]) != (void*)fallback)
                     || playerIsDisguised(state[1]) != 0)
                 {
                     fn_8014C66C(fallback, obj);

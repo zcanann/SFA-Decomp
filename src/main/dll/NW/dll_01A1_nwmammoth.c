@@ -14,6 +14,7 @@
 #include "main/audio/sfx.h"
 #include "main/curve.h"
 #include "main/sky_interface.h"
+#include "main/dll/player_target.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 ObjGroup_FindNearestObject();
@@ -74,7 +75,6 @@ extern int lbl_803DBFB0;
 extern int lbl_803268CC[];
 extern int lbl_803268DC[];
 extern int* ObjList_FindObjectById(int id);
-extern int* fn_80296118(int p);
 extern void fn_8014C66C(int* o, int* target);
 extern int* tumbleweedbush_findNearestActive(void* pos);
 extern f32 getXZDistance(void* a, void* b);
@@ -514,7 +514,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     }
                     {
                         int* o2 = ObjList_FindObjectById(*ids);
-                        if (fn_80296118(*(int*)(st + 0x28)) == o2)
+                        if ((int*)Player_GetTargetObject(*(int*)(st + 0x28)) == o2)
                         {
                             fn_8014C66C(o2, *(int**)(st + 0x28));
                         }

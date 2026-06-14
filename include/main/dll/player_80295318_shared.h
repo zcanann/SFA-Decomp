@@ -12,6 +12,7 @@
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
+#include "main/dll/player_target.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/dll/path_control_interface.h"

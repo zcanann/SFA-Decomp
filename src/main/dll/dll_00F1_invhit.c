@@ -6,6 +6,7 @@
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/dll/player_target.h"
 
 typedef struct InvhitState
 {
@@ -42,7 +43,6 @@ extern void* Obj_GetPlayerObject(void);
 extern s16* getTrickyObject(void);
 extern int playerIsDisguised(void* player);
 extern f32 sqrtf(f32 x);
-extern u32 fn_80296118(void);
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
@@ -332,7 +332,7 @@ void invhit_update(int* obj)
     case 5:
         {
             void* pl = Obj_GetPlayerObject();
-            u32 v = fn_80296118();
+            u32 v = Player_GetTargetObject((int)pl);
             if (pl != NULL && v != 0)
             {
                 lbl_803AC780[0] = ((GameObject*)obj)->anim.worldPosX;
