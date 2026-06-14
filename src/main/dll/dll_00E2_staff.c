@@ -2706,8 +2706,6 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
     }
 }
 
-extern int* fn_802966CC(int* player);
-
 void staffFn_80170380(int* obj, int cmd);
 
 extern int objFn_80296700(int* obj);

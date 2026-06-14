@@ -10,6 +10,7 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
+#include "main/dll/player_objects.h"
 
 extern char padGetCY(int port);
 extern uint getAngle();
@@ -54,7 +55,6 @@ extern void fn_802961D4(short* obj, int v);
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
 
-extern int fn_802966D4(int obj, int* out);
 extern void Rcp_SetViewFinderHudEnabled(int on);
 extern void buttonDisable(int port, int mask);
 extern void firstPersonZoomOutOnExit(int a, int b);
@@ -180,7 +180,7 @@ int firstPersonEnter(u8* cam, s16* p2)
         state[54] = (u8)conv;
         if ((u8*)Obj_GetPlayerObject() == state)
         {
-            fn_802966D4((int)state, &other);
+            Player_GetHeldObject((int)state, &other);
             if ((u32)other != 0)
             {
                 *(u8*)(other + 54) = (u8)conv;
@@ -265,7 +265,7 @@ void CameraModeViewfinder_free(int camObj)
         player = Obj_GetPlayerObject();
         if (player == viewObj)
         {
-            fn_802966D4(viewObj, outBuf);
+            Player_GetHeldObject(viewObj, outBuf);
             if (outBuf[0] != 0)
             {
                 ((GameObject*)outBuf[0])->anim.alpha = 0xff;
@@ -382,7 +382,7 @@ void CameraModeViewfinder_update(s16* obj)
             ((GameObject*)targetObj)->anim.alpha = brightness;
             if ((u8*)Obj_GetPlayerObject() == targetObj)
             {
-                fn_802966D4((int)targetObj, (int*)&shadow2);
+                Player_GetHeldObject((int)targetObj, (int*)&shadow2);
                 if (shadow2 != NULL)
                 {
                     ((GameObject*)shadow2)->anim.alpha = brightness;
@@ -427,7 +427,7 @@ void CameraModeViewfinder_update(s16* obj)
                 ((GameObject*)targetObj)->anim.alpha = 0xff;
                 if ((u8*)Obj_GetPlayerObject() == targetObj)
                 {
-                    fn_802966D4((int)targetObj, (int*)&shadow);
+                    Player_GetHeldObject((int)targetObj, (int*)&shadow);
                     if (shadow != NULL)
                     {
                         ((GameObject*)shadow)->anim.alpha = 0xff;

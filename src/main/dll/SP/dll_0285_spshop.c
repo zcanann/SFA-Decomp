@@ -5,6 +5,7 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/dll/player_objects.h"
 
 extern u32 randomGetRange(int min, int max);
 
@@ -74,7 +75,6 @@ extern void playerAddMoney(int player, int amount);
 extern void playerAddHealth(int player, int amount);
 extern int gameBitIncrement(int bit);
 extern u8 lbl_80327FD0[];
-extern void* fn_802966CC(int player);
 extern void fn_80295CF4(int player, int mode);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void envFxActFn_800887f8(int id);
@@ -340,7 +340,7 @@ void shop_update(int obj)
     int player;
 
     player = (int)Obj_GetPlayerObject();
-    if (fn_802966CC(player) != NULL && (u32)GameBit_Get(0x18b) == 0u)
+    if ((void*)Player_GetStaffObject(player) != NULL && (u32)GameBit_Get(0x18b) == 0u)
     {
         fn_80295CF4(player, 0);
     }

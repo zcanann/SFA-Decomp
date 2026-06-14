@@ -3,6 +3,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/player_objects.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -384,7 +385,6 @@ extern f32 lbl_803E33D8;
 extern f32 lbl_803E33DC;
 extern void quakeSpellTextureFn_8007366c(int param);
 extern void selectTexture(void* tex, int x);
-extern int* fn_802966CC(int* player);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern f32 lbl_803E33B0;
 extern f32 lbl_803E33B4;
@@ -2100,7 +2100,7 @@ void staffFn_80170380(int* obj, int cmd)
     int* player = (int*)Obj_GetPlayerObject();
     if (player != NULL)
     {
-        glow = fn_802966CC(player);
+        glow = (int*)Player_GetStaffObject((int)player);
     }
     switch ((u8)cmd)
     {

@@ -10,6 +10,7 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/dll/player_objects.h"
 
 typedef struct MagiccavetopPlacement
 {
@@ -49,7 +50,6 @@ extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
 extern f32 lbl_803E3C4C;
 extern void stopRumble2(void);
-extern void* fn_802966CC(void* player);
 extern void staffSetGlow(void* a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void mapUnload(int idx, int flags);
@@ -118,7 +118,7 @@ void magiccavetop_free(int* obj)
     p = Obj_GetPlayerObject();
     if (p != NULL)
     {
-        r = fn_802966CC(p);
+        r = (void*)Player_GetStaffObject((int)p);
         if (r != NULL)
         {
             staffSetGlow(r, 5, 0);
@@ -248,7 +248,7 @@ void magiccavetop_update(int* obj)
                         stopRumble();
                         if (player != NULL)
                         {
-                            staff = fn_802966CC(player);
+                            staff = (void*)Player_GetStaffObject((int)player);
                             if (staff != NULL)
                             {
                                 staffSetGlow(staff, 5, 0);
@@ -263,7 +263,7 @@ void magiccavetop_update(int* obj)
                             stopRumble();
                             if (player != NULL)
                             {
-                                staff = fn_802966CC(player);
+                                staff = (void*)Player_GetStaffObject((int)player);
                                 if (staff != NULL)
                                 {
                                     staffSetGlow(staff, 5, 0);
@@ -276,7 +276,7 @@ void magiccavetop_update(int* obj)
                             stopRumble2();
                             if (player != NULL)
                             {
-                                staff = fn_802966CC(player);
+                                staff = (void*)Player_GetStaffObject((int)player);
                                 if (staff != NULL)
                                 {
                                     staffSetGlow(staff, 5, 0);
@@ -290,7 +290,7 @@ void magiccavetop_update(int* obj)
                         stopRumble2();
                         if (player != NULL)
                         {
-                            staff = fn_802966CC(player);
+                            staff = (void*)Player_GetStaffObject((int)player);
                             if (staff != NULL)
                             {
                                 staffSetGlow(staff, 5, 0);
@@ -306,7 +306,7 @@ void magiccavetop_update(int* obj)
                     doRumble(lbl_803E3C44);
                     if (player != NULL)
                     {
-                        staff = fn_802966CC(player);
+                        staff = (void*)Player_GetStaffObject((int)player);
                         if (staff != NULL)
                         {
                             staffSetGlow(staff, 5, 2);

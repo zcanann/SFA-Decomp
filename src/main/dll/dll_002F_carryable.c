@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
+#include "main/dll/player_objects.h"
 #include "main/mapEventTypes.h"
 
 typedef struct CarryableUpdateHeldState
@@ -127,7 +128,6 @@ extern undefined4 uRam803de108;
 extern int maybeTryLoadSave(int a);
 extern void mm_free(u32);
 extern void* Obj_GetPlayerObject(void);
-extern int fn_802966D4(int obj, int* out);
 extern void playerSetHeldObject(void* player, int held);
 extern f32 lbl_803E06D8;
 extern uint buttonGetDisabled(int idx);
@@ -915,7 +915,7 @@ void Carryable_stopCarrying(int* obj, u8* param2)
     void* player = Obj_GetPlayerObject();
     int held;
     param2[5] = 0;
-    fn_802966D4((int)player, &held);
+    Player_GetHeldObject((int)player, &held);
     if ((int*)held == obj)
     {
         playerSetHeldObject(player, 0);

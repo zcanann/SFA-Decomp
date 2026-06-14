@@ -6,6 +6,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/player_objects.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -73,7 +74,6 @@ extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 extern void envFxActFn_800887f8(int a);
 extern u8 lbl_803DBF28[8];
-extern int fn_802966D4(void* obj, f32* out);
 extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 
 void FUN_801b9cc4(int param_1)
@@ -215,7 +215,7 @@ void dim2lavacontrol_update(int obj)
 {
     extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int e1, int e2);
     int diff;
-    f32 local[3];
+    int heldObj;
     if (((GameObject*)obj)->unkF4 != 0)
     {
         if (((GameObject*)obj)->unkF4 == 2)
@@ -260,7 +260,7 @@ void dim2lavacontrol_update(int obj)
         }
         fn_8004C1E4(*(u8*)(obj + 3), lbl_803E4B90);
     }
-    if (fn_802966D4(Obj_GetPlayerObject(), local) != 0)
+    if (Player_GetHeldObject((int)Obj_GetPlayerObject(), &heldObj) != 0)
     {
         if ((*(int*)&((GameObject*)obj)->anim.rootMotionScale & 2) && *(int*)&((GameObject*)obj)->anim.localPosX !=
             0xe0)

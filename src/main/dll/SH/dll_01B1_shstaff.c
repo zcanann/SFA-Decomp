@@ -1,6 +1,7 @@
 /* DLL 0x1B1 — SH staff object [801D9B1C-801D9BDC) */
 #include "main/game_object.h"
 #include "main/dll/beaconflags_types.h"
+#include "main/dll/player_objects.h"
 
 int sh_staff_getExtraSize(void) { return 0x74; }
 
@@ -429,7 +430,6 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 extern f32 getXZDistance(f32 * a, f32 * b);
-extern void* fn_802966CC(int player);
 extern int fn_80295CF4(int player, int a);
 extern int fn_8029672C(int player, int a);
 extern int ObjTrigger_IsSet(int obj);
@@ -509,7 +509,7 @@ void sh_staff_update(int obj)
     if (mode == 0)
     {
         if (player == NULL) goto end;
-        if (fn_802966CC((int)player) == 0) goto end;
+        if (Player_GetStaffObject((int)player) == 0) goto end;
         if (GameBit_Get(0x18b) != 0)
         {
             fn_801DA4A8(obj, state, 0);
