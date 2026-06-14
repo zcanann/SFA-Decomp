@@ -1277,13 +1277,12 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
 
 void fn_8003A9C0(char* p, int count, s16 a, s16 b)
 {
-    int i;
-    if (count <= 0) return;
-    for (i = 0; i < count; i++)
+    while (count > 0)
     {
         *(s16*)(p + 0x14) = a;
         *(s16*)(p + 0x44) = b;
         p += 0x60;
+        count--;
     }
 }
 extern f32 lbl_803DE9C8;
