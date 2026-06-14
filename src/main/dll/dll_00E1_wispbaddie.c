@@ -46,7 +46,7 @@ extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
 extern int lbl_803DDA68;
 extern f32 timeDelta;
-extern int Obj_GetPlayerObject(void);
+extern GameObject* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
@@ -143,43 +143,41 @@ void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if 
 
 void fn_8014EE8C(int obj, SwarmBaddieState* state);
 
-void fn_8014F620(int obj, int* state)
+void fn_8014F620(int obj, WispBaddieState* state)
 {
     RomCurveWalker* curve;
     int done;
     f32 step;
     f32 wave;
 
-    curve = (RomCurveWalker*)state[0];
-    *(s16*)((u8*)state + 0x26) += (s16)(lbl_803E26D0 * timeDelta);
-    *(s16*)(state + 10) += (s16)(lbl_803E26D4 * timeDelta);
+    curve = state->curve;
+    state->pathWavePhase += (s16)(lbl_803E26D0 * timeDelta);
+    state->hoverWavePhase += (s16)(lbl_803E26D4 * timeDelta);
 
-    wave = lbl_803E26D8 + mathSinf((lbl_803E26DC * (f32) * (s16*)((u8*)state + 0x26)) /
-        lbl_803E26E0);
-    done = Curve_AdvanceAlongPath(curve, *(f32*)(state + 2) * wave);
+    wave = lbl_803E26D8 + mathSinf((lbl_803E26DC * (f32)state->pathWavePhase) / lbl_803E26E0);
+    done = Curve_AdvanceAlongPath(curve, state->hitRadius * wave);
     if (((done != 0) || (curve->atSegmentEnd != lbl_803DDA68)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state[0], (void*)obj, lbl_803E26E4,
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E26E4,
                                           &lbl_803DBC80, -1) != 0))
     {
-        *(u8*)((u8*)state + 0x24) = *(u8*)((u8*)state + 0x24) & ~1;
+        state->flags = state->flags & ~1;
     }
     lbl_803DDA68 = curve->atSegmentEnd;
 
-    if ((*(u8*)((u8*)state + 0x24) & 2) != 0)
+    if ((state->flags & 2) != 0)
     {
         ((GameObject*)obj)->anim.velocityX =
-            lbl_803E26E8 * (*(f32*)(state[1] + 0xc) - ((GameObject*)obj)->anim.localPosX) +
+            lbl_803E26E8 * (state->playerObj->anim.localPosX - ((GameObject*)obj)->anim.localPosX) +
             ((GameObject*)obj)->anim.velocityX;
 
-        wave = mathSinf((lbl_803E26DC * (f32) * (s16*)(state + 10)) /
-            lbl_803E26E0);
+        wave = mathSinf((lbl_803E26DC * (f32)state->hoverWavePhase) / lbl_803E26E0);
         ((GameObject*)obj)->anim.velocityY =
-            ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32*)(state[1] + 0x10))) -
+            ((lbl_803E26F0 * wave + (lbl_803E26EC + state->playerObj->anim.localPosY)) -
                 ((GameObject*)obj)->anim.localPosY) * lbl_803E26E8 +
             ((GameObject*)obj)->anim.velocityY;
         ((GameObject*)obj)->anim.velocityZ =
-            lbl_803E26E8 * (*(f32*)(state[1] + 0x14) - ((GameObject*)obj)->anim.localPosZ) +
+            lbl_803E26E8 * (state->playerObj->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) +
             ((GameObject*)obj)->anim.velocityZ;
     }
     else
@@ -188,8 +186,7 @@ void fn_8014F620(int obj, int* state)
             +
             ((GameObject*)obj)->anim.velocityX;
 
-        wave = mathSinf((lbl_803E26DC * (f32) * (s16*)(state + 10)) /
-            lbl_803E26E0);
+        wave = mathSinf((lbl_803E26DC * (f32)state->hoverWavePhase) / lbl_803E26E0);
         ((GameObject*)obj)->anim.velocityY =
             ((lbl_803E26F0 * wave + *(f32*)(curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY) *
             lbl_803E26E8 +
@@ -277,7 +274,6 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
 
 void wispbaddie_update(int obj)
 {
-    extern void fn_8014F620(int obj, WispBaddieState* state); /* #57 */
     WispBaddieState* state;
     RomCurveWalker* curve;
     int hit;
@@ -336,11 +332,11 @@ void wispbaddie_update(int obj)
     (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1,
                                      &particleParam);
     state->playerObj = Obj_GetPlayerObject();
-    if ((void*)state->playerObj != NULL)
+    if (state->playerObj != NULL)
     {
-        d[0] = *(f32*)(state->playerObj + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = *(f32*)(state->playerObj + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = *(f32*)(state->playerObj + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+        d[0] = state->playerObj->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = state->playerObj->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = state->playerObj->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         state->playerDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
     if (curve != 0)
@@ -781,7 +777,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
 void fn_8015039C(int obj, int animState)
 {
     extern f32 Vec_distance(f32 * a, f32 * b); /* #57 */
-    int player;
+    GameObject* player;
     f32 distance;
     f32 rumbleFalloff;
 
@@ -789,9 +785,9 @@ void fn_8015039C(int obj, int animState)
     {
         Sfx_PlayFromObject(obj, 0x383);
         player = Obj_GetPlayerObject();
-        if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
+        if ((player->objectFlags & 0x1000) == 0)
         {
-            distance = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+            distance = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
             if (distance <= lbl_803E2760)
             {
                 rumbleFalloff = lbl_803E2748 - distance / lbl_803E2760;

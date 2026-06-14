@@ -6,9 +6,11 @@
 #include "main/dll/curve_walker.h"
 #include "main/object_descriptor.h"
 
+typedef struct GameObject GameObject;
+
 typedef struct WispBaddieState {
   RomCurveWalker *curve;
-  int playerObj;
+  GameObject *playerObj;
   f32 hitRadius;
   f32 maxHitRadius;
   f32 playerDistance;
@@ -17,6 +19,10 @@ typedef struct WispBaddieState {
   f32 cryTimer;
   int particleId;
   u8 flags;
+  u8 pad25;
+  s16 pathWavePhase;
+  s16 hoverWavePhase;
+  u8 pad2a[2];
 } WispBaddieState;
 
 STATIC_ASSERT(offsetof(WispBaddieState, curve) == 0x00);
@@ -29,6 +35,9 @@ STATIC_ASSERT(offsetof(WispBaddieState, triggerDistance) == 0x18);
 STATIC_ASSERT(offsetof(WispBaddieState, cryTimer) == 0x1C);
 STATIC_ASSERT(offsetof(WispBaddieState, particleId) == 0x20);
 STATIC_ASSERT(offsetof(WispBaddieState, flags) == 0x24);
+STATIC_ASSERT(offsetof(WispBaddieState, pathWavePhase) == 0x26);
+STATIC_ASSERT(offsetof(WispBaddieState, hoverWavePhase) == 0x28);
+STATIC_ASSERT(sizeof(WispBaddieState) == 0x2C);
 
 void wispbaddie_update(int obj);
 void FUN_8014fd38(int param_1);
