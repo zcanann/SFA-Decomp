@@ -2778,9 +2778,9 @@ void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
     v[2] = in[2];
     if (e != 0)
     {
-        v[0] *= lbl_803DEA58;
-        v[1] *= lbl_803DEA58;
-        v[2] *= lbl_803DEA58;
+        v[0] *= 0.00390625f;
+        v[1] *= 0.00390625f;
+        v[2] *= 0.00390625f;
     }
     if (mtx != NULL)
     {
