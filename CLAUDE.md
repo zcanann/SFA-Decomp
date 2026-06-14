@@ -346,7 +346,12 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     compiler (2.0/2.0p1/1.3/1.3.2/1.3.2r/2.5/2.6/2.7/1.2.5n) STILL emits `li;li` — not a
     version-swap fix. Theory: `count=orbIndex` only survives as a copy if the source is non-constant
     (a phi), which needs a guarding branch the target lacks; all identity ops (`&0`,`-x`,`*1`) fold
-    even on a phi. (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
+    even on a phi. MP4-ORACLE CLINCHER: MP4 (100%-matched) has 41 `li;mr` two-counter examples —
+    ALL are `s16`/`int` (extsh), ZERO are `u8` (clrlwi). The target's counters are `u8` (clrlwi
+    r25,24; cmplwi 8) AND `mr` — a combo absent from every 100%-matched MWCC fn. So `u8`+two-counter-
+    copy is not producible by any in-repo compiler; widening to s16/int DOES yield `mr` but breaks
+    the clrlwi masks (net regress). Confirms the target used an unavailable build config.
+    (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
     Arg-eval anchor: embed a DEF inside the size/arg statement (`sz = (u16)((count - (index =
