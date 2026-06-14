@@ -1,36 +1,27 @@
 /* DLL 0x1E7 - DIMBossFire [801C04B8-801C053C) */
 #include "main/dll_000A_expgfx.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/effect_interfaces.h"
+#include "main/model_light.h"
+#include "main/obj_placement.h"
 
-extern void ModelLightStruct_free(void* light);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
-extern void objRenderFn_8003b8f4(f32 scale);
-
-extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int id);
-extern void doRumble(f32 v);
-extern void modelLightStruct_setEnabled(int light, int v, f32 f);
-extern int Obj_GetPlayerObject(void);
-
-extern void lightSetFieldBC_8001db14(int light, int v);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
-extern void doRumble(f32 val);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(int light, int value);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern uint GameBit_Get(int eventId);
-extern f32 Vec_distance(float* posA, float* posB);
 extern undefined4 ObjHits_DisableObject();
+extern f32 timeDelta;
+extern void doRumble(f32 v);
+extern void ModelLightStruct_free(void* light);
+extern void lightSetFieldBC_8001db14(ModelLightStruct* light, u8 v);
+extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
+extern f32 Vec_distance(float* posA, float* posB);
+extern int Obj_GetPlayerObject(void);
+extern ModelLightStruct* objCreateLight(int obj, int param_2);
+extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 min, f32 max);
 extern f32 lbl_80325D68[];
 extern f32 lbl_803E4DA0;
 extern f32 lbl_803E4DA4;
@@ -41,6 +32,38 @@ extern f32 lbl_803E4DB4;
 extern f32 lbl_803E4DB8;
 extern f32 lbl_803E4DBC;
 extern f32 lbl_803E4DC0;
+
+typedef struct DimbossfireState
+{
+    u8 flags;
+    u8 flameIndex;
+    u8 pad02[0x4 - 0x2];
+    f32 activeTimer;
+    f32 initialActiveTimer;
+    f32 cooldownTimer;
+    ModelLightStruct* light;
+    u8 pad14[0x18 - 0x14];
+} DimbossfireState;
+
+typedef struct DimbossfirePlacement
+{
+    ObjPlacement base;
+    u8 pad18[0x1A - 0x18];
+    s16 flameColor;
+    u8 pad1C[0x20 - 0x1C];
+    s16 triggerGameBit;
+    u8 pad22[0x24 - 0x22];
+} DimbossfirePlacement;
+
+#define DIMBOSSFIRE_FLAG_START_BURST 1
+#define DIMBOSSFIRE_FLAME_COUNT 10
+
+STATIC_ASSERT(offsetof(DimbossfireState, activeTimer) == 0x4);
+STATIC_ASSERT(offsetof(DimbossfireState, initialActiveTimer) == 0x8);
+STATIC_ASSERT(offsetof(DimbossfireState, cooldownTimer) == 0xC);
+STATIC_ASSERT(offsetof(DimbossfireState, light) == 0x10);
+STATIC_ASSERT(offsetof(DimbossfirePlacement, flameColor) == 0x1A);
+STATIC_ASSERT(offsetof(DimbossfirePlacement, triggerGameBit) == 0x20);
 
 void dimbossfire_hitDetect(void)
 {
@@ -70,76 +93,56 @@ int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-typedef struct DimbossfireState
-{
-    u8 flags;
-    u8 flameIndex;
-    u8 pad02[0x4 - 0x2];
-    f32 activeTimer;
-    f32 initialActiveTimer;
-    f32 cooldownTimer;
-    s32 light;
-    u8 pad14[0x18 - 0x14];
-} DimbossfireState;
-
-STATIC_ASSERT(offsetof(DimbossfireState, activeTimer) == 0x4);
-STATIC_ASSERT(offsetof(DimbossfireState, initialActiveTimer) == 0x8);
-STATIC_ASSERT(offsetof(DimbossfireState, cooldownTimer) == 0xC);
-STATIC_ASSERT(offsetof(DimbossfireState, light) == 0x10);
-
 void dimbossfire_update(int obj)
 {
     extern u32 randomGetRange(int min, int max);
-    extern undefined4 GameBit_Set(int eventId, int value);
-    extern int objCreateLight(int obj, int param_2);
-    extern void modelLightStruct_setDistanceAttenuation(int light, f32 min, f32 max);
     uint bitVal;
-    int* light;
+    ModelLightStruct* light;
     int ref;
-    byte* state;
-    int placement;
+    DimbossfireState* state;
+    DimbossfirePlacement* placement;
     float heat;
 
     state = ((GameObject*)obj)->extra;
-    placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    if ((int)*(short*)(placement + 0x20) != -1)
+    placement = *(DimbossfirePlacement**)&((GameObject*)obj)->anim.placementData;
+    if ((int)placement->triggerGameBit != -1)
     {
-        bitVal = GameBit_Get((int)*(short*)(placement + 0x20));
+        bitVal = GameBit_Get((int)placement->triggerGameBit);
         if (bitVal != 0)
         {
-            GameBit_Set((int)*(short*)(placement + 0x20), 0);
-            *state = *state | 1;
-            ((DimbossfireState*)state)->activeTimer = lbl_80325D68[state[1]];
-            ((DimbossfireState*)state)->initialActiveTimer = ((DimbossfireState*)state)->activeTimer;
-            state[1] += 1;
-            if (state[1] >= 10)
+            GameBit_Set((int)placement->triggerGameBit, 0);
+            state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
+            state->activeTimer = lbl_80325D68[state->flameIndex];
+            state->initialActiveTimer = state->activeTimer;
+            state->flameIndex += 1;
+            if (state->flameIndex >= DIMBOSSFIRE_FLAME_COUNT)
             {
-                state[1] = 0;
+                state->flameIndex = 0;
             }
         }
     }
     else
     {
-        ((DimbossfireState*)state)->cooldownTimer = ((DimbossfireState*)state)->cooldownTimer - timeDelta;
-        if (((DimbossfireState*)state)->cooldownTimer <= lbl_803E4DA0)
+        state->cooldownTimer = state->cooldownTimer - timeDelta;
+        if (state->cooldownTimer <= lbl_803E4DA0)
         {
-            ((DimbossfireState*)state)->cooldownTimer = (f32)(int)
+            state->cooldownTimer = (f32)(int)
             randomGetRange(0xf0, 0x1e0);
-            *state = *state | 1;
-            ((DimbossfireState*)state)->activeTimer = lbl_80325D68[state[1]];
-            ((DimbossfireState*)state)->initialActiveTimer = ((DimbossfireState*)state)->activeTimer;
-            state[1] += 1;
-            if (state[1] >= 10)
+            state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
+            state->activeTimer = lbl_80325D68[state->flameIndex];
+            state->initialActiveTimer = state->activeTimer;
+            state->flameIndex += 1;
+            if (state->flameIndex >= DIMBOSSFIRE_FLAME_COUNT)
             {
-                state[1] = 0;
+                state->flameIndex = 0;
             }
         }
     }
-    if (((DimbossfireState*)state)->activeTimer > lbl_803E4DA0)
+    if (state->activeTimer > lbl_803E4DA0)
     {
-        if ((*state & 1) != 0)
+        if ((state->flags & DIMBOSSFIRE_FLAG_START_BURST) != 0)
         {
-            *state &= ~1;
+            state->flags &= ~DIMBOSSFIRE_FLAG_START_BURST;
             ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0xf);
             ObjHits_EnableObject(obj);
@@ -148,7 +151,7 @@ void dimbossfire_update(int obj)
                 ref = 0;
                 do
                 {
-                    if (*(short*)(placement + 0x1a) != 0)
+                    if (placement->flameColor != 0)
                     {
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x4c9, NULL, 2, -1, NULL);
                     }
@@ -171,39 +174,37 @@ void dimbossfire_update(int obj)
                     doRumble(lbl_803E4DB4 * heat);
                 }
             }
-            if ((void*)((DimbossfireState*)state)->light == NULL)
+            if ((void*)state->light == NULL)
             {
-                light = (int*)objCreateLight(obj, 1);
-                *(int**)&((DimbossfireState*)state)->light = light;
-                if ((void*)((DimbossfireState*)state)->light != NULL)
+                light = objCreateLight(obj, 1);
+                state->light = light;
+                if ((void*)state->light != NULL)
                 {
-                    modelLightStruct_setLightKind(((DimbossfireState*)state)->light, 2);
-                    lightSetFieldBC_8001db14(((DimbossfireState*)state)->light, 1);
-                    if (*(short*)(placement + 0x1a) != 0)
+                    modelLightStruct_setLightKind(state->light, 2);
+                    lightSetFieldBC_8001db14(state->light, 1);
+                    if (placement->flameColor != 0)
                     {
-                        modelLightStruct_setDiffuseColor(((DimbossfireState*)state)->light, 0xff, 0x7f, 0, 0);
+                        modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0);
                     }
                     else
                     {
-                        modelLightStruct_setDiffuseColor(((DimbossfireState*)state)->light, 0x7f, 0xff, 0, 0);
+                        modelLightStruct_setDiffuseColor(state->light, 0x7f, 0xff, 0, 0);
                     }
-                    modelLightStruct_setDistanceAttenuation(((DimbossfireState*)state)->light,
-                                                            lbl_803E4DB8, lbl_803E4DBC);
-                    modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 1, lbl_803E4DA0);
-                    modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 0,
-                                                ((DimbossfireState*)state)->activeTimer / lbl_803E4DC0);
+                    modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4DB8, lbl_803E4DBC);
+                    modelLightStruct_setEnabled(state->light, 1, lbl_803E4DA0);
+                    modelLightStruct_setEnabled(state->light, 0, state->activeTimer / lbl_803E4DC0);
                 }
             }
             Sfx_PlayFromObject(obj, SFXar_boost16);
         }
-        ((DimbossfireState*)state)->activeTimer = ((DimbossfireState*)state)->activeTimer - timeDelta;
-        if (((DimbossfireState*)state)->activeTimer <= lbl_803E4DA0)
+        state->activeTimer = state->activeTimer - timeDelta;
+        if (state->activeTimer <= lbl_803E4DA0)
         {
-            ((DimbossfireState*)state)->activeTimer = *(f32*)&lbl_803E4DA0;
-            if (*(uint*)&((DimbossfireState*)state)->light != 0)
+            state->activeTimer = *(f32*)&lbl_803E4DA0;
+            if (*(uint*)&state->light != 0)
             {
-                ModelLightStruct_free(*(void**)&((DimbossfireState*)state)->light);
-                ((DimbossfireState*)state)->light = 0;
+                ModelLightStruct_free(state->light);
+                state->light = 0;
             }
             ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
             ObjHitbox_SetSphereRadius(obj, 0);
@@ -212,7 +213,7 @@ void dimbossfire_update(int obj)
         else
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x4ca, NULL, 2, -1, NULL);
-            if (*(short*)(placement + 0x1a) != 0)
+            if (placement->flameColor != 0)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x4cb, NULL, 2, -1, NULL);
             }
