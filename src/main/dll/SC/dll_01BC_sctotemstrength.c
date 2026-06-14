@@ -130,30 +130,28 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 3:
             list = (int*)ObjList_GetObjects(&idx2, &cnt2);
-            p = &list[idx2];
             for (; idx2 < cnt2; idx2++)
             {
-                if ((u32) * p != (u32)obj && ((GameObject*)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                if ((u32)list[idx2] != (u32)obj &&
+                    ((GameObject*)list[idx2])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                 {
                     o = list[idx2];
                     ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 2);
                     break;
                 }
-                p++;
             }
             break;
         case 4:
             list = (int*)ObjList_GetObjects(&idx3, &cnt3);
-            p = &list[idx3];
             for (; idx3 < cnt3; idx3++)
             {
-                if ((u32) * p != (u32)obj && ((GameObject*)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                if ((u32)list[idx3] != (u32)obj &&
+                    ((GameObject*)list[idx3])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                 {
                     o = list[idx3];
                     ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 3);
                     break;
                 }
-                p++;
             }
             break;
         case 5:
@@ -234,16 +232,15 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                 st->flags = (u8)(st->flags | PLATFORM1_FLAG_EXIT_NEGATIVE);
                 list = (int*)ObjList_GetObjects(&idx4, &cnt4);
-                p = &list[idx4];
                 for (; idx4 < cnt4; idx4++)
                 {
-                    if ((u32) * p != (u32)obj && ((GameObject*)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                    if ((u32)list[idx4] != (u32)obj &&
+                        ((GameObject*)list[idx4])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                     {
                         o = list[idx4];
                         ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 4);
                         break;
                     }
-                    p++;
                 }
                 fn_801DE320(&lbl_803DC070, (int)(fn_8001461C() / lbl_803E5694));
                 hudFn_8011f38c(0);
@@ -262,16 +259,15 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                 st->flags = (u8)(st->flags | PLATFORM1_FLAG_EXIT_POSITIVE);
                 list = (int*)ObjList_GetObjects(&idx5, &cnt5);
-                p = &list[idx5];
                 for (; idx5 < cnt5; idx5++)
                 {
-                    if ((u32) * p != (u32)obj && ((GameObject*)*p)->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                    if ((u32)list[idx5] != (u32)obj &&
+                        ((GameObject*)list[idx5])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                     {
                         o = list[idx5];
                         ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 4);
                         break;
                     }
-                    p++;
                 }
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0)
