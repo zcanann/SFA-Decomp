@@ -106,31 +106,35 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    int iVar1;
+    BaddieState* state;
+    GroundBaddieState* groundState;
+    DbStealerwormControl* control;
 
-    iVar1 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    *(byte*)(iVar1 + 0x14) = *(byte*)(iVar1 + 0x14) | 2;
-    *(byte*)(iVar1 + 0x15) = *(byte*)(iVar1 + 0x15) | 4;
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F80;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state = (BaddieState*)param_10;
+    groundState = ((GameObject*)param_9)->extra;
+    control = (DbStealerwormControl*)groundState->control;
+    control->flags14 |= 2;
+    control->flags15 |= 4;
+    state->moveSpeed = lbl_803E6F80;
+    if (state->moveJustStartedA != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        state->moveDone = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 0x1f;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state->unk34D = 0x1f;
+    if (state->moveJustStartedA != '\0')
     {
-        *(undefined4*)(iVar1 + 0x18) = *(undefined4*)(param_10 + 0x2d0);
-        *(undefined2*)(iVar1 + 0x1c) = 0x24;
-        *(undefined4*)(iVar1 + 0x2c) = 0;
+        control->linkedObj = (int)state->targetObj;
+        control->unk1C = 0x24;
+        control->unk2C = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                            *(int*)(iVar1 + 0x18), 0x11, param_9, 0x12, param_13, param_14, param_15, param_16);
+                            control->linkedObj, 0x11, param_9, 0x12, param_13, param_14, param_15, param_16);
         FUN_80006824(param_9, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)param_9)->anim.currentMoveProgress)
     {
-        *(undefined*)(iVar1 + 0x34) = 1;
+        control->unk34 = 1;
     }
     return 0;
 }
@@ -143,9 +147,11 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     float fVar1;
     uint uVar2;
-    int iVar3;
+    GameObject* targetObj;
     short* psVar4;
-    int iVar5;
+    BaddieState* state;
+    GroundBaddieState* groundState;
+    DbStealerwormControl* control;
     double dVar6;
     undefined4 local_48;
     undefined4 local_44;
@@ -160,32 +166,34 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     float local_20;
     float local_1c;
 
-    iVar5 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    *(byte*)(iVar5 + 0x14) = *(byte*)(iVar5 + 0x14) | 2;
-    *(byte*)(iVar5 + 0x15) = *(byte*)(iVar5 + 0x15) & 0xfb;
+    state = (BaddieState*)param_10;
+    groundState = ((GameObject*)param_9)->extra;
+    control = (DbStealerwormControl*)groundState->control;
+    control->flags14 |= 2;
+    control->flags15 &= 0xfb;
     fVar1 = lbl_803E6F88;
-    *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
-    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / fVar1;
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state->animSpeedA = state->animSpeedA / lbl_803E6F88;
+    state->animSpeedB = state->animSpeedB / fVar1;
+    state->moveSpeed = lbl_803E6F8C;
+    if (state->moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        state->moveDone = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 0x1f;
+    state->unk34D = 0x1f;
+    targetObj = (GameObject*)state->targetObj;
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)(param_10 + 0x2d0) + 0x10) - lbl_803E6F90))
+        (((GameObject*)param_9)->anim.localPosY < targetObj->anim.localPosY - lbl_803E6F90))
     {
-        iVar3 = *(int*)(param_10 + 0x2d0);
-        local_24 = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
-        local_20 = *(float*)(iVar3 + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
-        local_1c = *(float*)(iVar3 + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
+        local_24 = targetObj->anim.localPosX - ((GameObject*)param_9)->anim.localPosX;
+        local_20 = targetObj->anim.localPosY - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
+        local_1c = targetObj->anim.localPosZ - ((GameObject*)param_9)->anim.localPosZ;
         dVar6 = FUN_80293900((double)(local_1c * local_1c + local_24 * local_24 + local_20 * local_20));
         if (dVar6 < (double)lbl_803E6F50)
         {
-            local_40 = *(undefined4*)(param_10 + 0x2d0);
-            psVar4 = *(short**)(iVar5 + 0x24);
+            local_40 = (undefined4)state->targetObj;
+            psVar4 = (short*)control->msgStack;
             local_48 = 0xe;
             local_44 = 1;
             uVar2 = FUN_80006ab8(psVar4);
@@ -193,12 +201,12 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 FUN_80006ac4(psVar4, (uint) & local_48);
             }
-            *(undefined*)(iVar5 + 0x34) = 1;
+            control->unk34 = 1;
         }
     }
     else
     {
-        psVar4 = *(short**)(iVar5 + 0x24);
+        psVar4 = (short*)control->msgStack;
         local_30 = 9;
         local_2c = 0;
         local_28 = 0x24;
@@ -207,9 +215,9 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             FUN_80006ac4(psVar4, (uint) & local_30);
         }
-        *(undefined*)(iVar5 + 0x34) = 1;
-        local_34 = *(undefined4*)(param_10 + 0x2d0);
-        psVar4 = *(short**)(iVar5 + 0x24);
+        control->unk34 = 1;
+        local_34 = (undefined4)state->targetObj;
+        psVar4 = (short*)control->msgStack;
         local_3c = 7;
         local_38 = 1;
         uVar2 = FUN_80006ab8(psVar4);
@@ -217,7 +225,7 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             FUN_80006ac4(psVar4, (uint) & local_3c);
         }
-        *(undefined*)(iVar5 + 0x34) = 1;
+        control->unk34 = 1;
     }
     return 0;
 }
@@ -231,26 +239,30 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
     int iVar1;
     uint uVar2;
     short* psVar3;
-    int iVar4;
+    BaddieState* state;
+    GroundBaddieState* groundState;
+    DbStealerwormControl* control;
     undefined4 local_28;
     undefined4 local_24;
     undefined4 local_20;
 
-    iVar4 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state = (BaddieState*)param_10;
+    groundState = ((GameObject*)param_9)->extra;
+    control = (DbStealerwormControl*)groundState->control;
+    if (state->moveJustStartedA != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, param_9, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        state->moveDone = 0;
     }
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    if (state->moveJustStartedA != '\0')
     {
-        *(undefined4*)(param_10 + 0x2d0) = 0;
-        if (*(int*)(iVar4 + 0x18) != 0)
+        state->targetObj = 0;
+        if (control->linkedObj != 0)
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                *(int*)(iVar4 + 0x18), 0x11, param_9, 0x10, param_13, param_14, param_15, param_16);
-            *(undefined4*)(iVar4 + 0x18) = 0;
+                                control->linkedObj, 0x11, param_9, 0x10, param_13, param_14, param_15, param_16);
+            control->linkedObj = 0;
         }
         iVar1 = FUN_80017a98();
         iVar1 = (**(code**)(**(int**)(*(int*)(iVar1 + 200) + 0x68) + 0x44))();
@@ -264,23 +276,23 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
             uVar2 = randomGetRange(3, 4);
             FUN_80006824(param_9, (ushort) * (undefined4*)(&DAT_8032a290 + uVar2 * 4));
         }
-        local_20 = *(undefined4*)(iVar4 + 0x30);
-        local_24 = *(undefined4*)(iVar4 + 0x2c);
-        psVar3 = *(short**)(iVar4 + 0x24);
-        local_28 = *(undefined4*)(iVar4 + 0x28);
+        local_20 = control->unk30;
+        local_24 = control->unk2C;
+        psVar3 = (short*)control->msgStack;
+        local_28 = control->unk28;
         uVar2 = FUN_80006ab8(psVar3);
         if (uVar2 == 0)
         {
             FUN_80006ac4(psVar3, (uint) & local_28);
         }
-        *(undefined4*)(iVar4 + 0x3c) = 0;
+        control->unk3C = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 0x10;
-    *(float*)(param_10 + 0x2a0) = lbl_803E6FD8;
-    *(float*)(param_10 + 0x280) = lbl_803E6F40;
-    if (*(char*)(param_10 + 0x346) != '\0')
+    state->unk34D = 0x10;
+    state->moveSpeed = lbl_803E6FD8;
+    state->animSpeedA = lbl_803E6F40;
+    if (state->moveDone != '\0')
     {
-        *(undefined*)(iVar4 + 0x34) = 1;
+        control->unk34 = 1;
     }
     return 0;
 }
@@ -294,33 +306,36 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
     undefined4 uVar1;
-    int iVar2;
+    BaddieState* state;
+    GroundBaddieState* groundState;
+    DbStealerwormControl* control;
 
-    iVar2 = *(int*)&((GameObject*)param_9)->extra;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state = (BaddieState*)param_10;
+    groundState = ((GameObject*)param_9)->extra;
+    if (state->moveJustStartedA != '\0')
     {
         ObjHits_EnableObject(param_9);
     }
     uVar1 = 0xffffffff;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state->moveSpeed = lbl_803E6F8C;
+    if (state->moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 10, 0, uVar1, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        state->moveDone = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 1;
-    iVar2 = *(int*)(iVar2 + 0x40c);
-    *(byte*)(iVar2 + 0x14) = *(byte*)(iVar2 + 0x14) | 2;
-    if ((*(uint*)(param_10 + 0x314) & 1) != 0)
+    state->unk34D = 1;
+    control = (DbStealerwormControl*)groundState->control;
+    control->flags14 |= 2;
+    if ((state->eventFlags & 1) != 0)
     {
-        *(uint*)(param_10 + 0x314) = *(uint*)(param_10 + 0x314) & ~1;
-        *(byte*)(iVar2 + 0x14) = *(byte*)(iVar2 + 0x14) | 1;
+        state->eventFlags &= ~1;
+        control->flags14 |= 1;
     }
-    if (*(char*)(param_10 + 0x346) != '\0')
+    if (state->moveDone != '\0')
     {
-        *(undefined*)(iVar2 + 0x34) = 1;
+        control->unk34 = 1;
     }
     return 0;
 }
@@ -336,21 +351,23 @@ FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 para
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
     undefined4 uVar1;
+    BaddieState* state;
 
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state = (BaddieState*)param_10;
+    if (state->moveJustStartedA != '\0')
     {
         ObjHits_EnableObject(param_9);
     }
     uVar1 = 0xffffffff;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state->moveSpeed = lbl_803E6F8C;
+    if (state->moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 5, 0, uVar1, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        state->moveDone = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 1;
+    state->unk34D = 1;
     return 0;
 }
 
@@ -364,47 +381,48 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
     uint uVar1;
     undefined4 uVar2;
-    int iVar3;
-    int iVar4;
+    BaddieState* state;
+    GroundBaddieState* groundState;
+    DbStealerwormControl* control;
 
-    iVar3 = *(int*)&((GameObject*)param_9)->extra;
-    iVar4 = *(int*)(iVar3 + 0x40c);
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    state = (BaddieState*)param_10;
+    groundState = ((GameObject*)param_9)->extra;
+    control = (DbStealerwormControl*)groundState->control;
+    if (state->moveJustStartedA != '\0')
     {
         ObjHits_EnableObject(param_9);
     }
     uVar2 = 0xffffffff;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    if (state->moveJustStartedA != '\0')
     {
         uVar1 = randomGetRange(0, 1);
         if (uVar1 == 0)
         {
-            if (*(char*)(param_10 + 0x27a) != '\0')
+            if (state->moveJustStartedA != '\0')
             {
                 FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                              param_9, 7, 0, uVar2, param_13, param_14, param_15, param_16);
-                *(undefined*)(param_10 + 0x346) = 0;
+                state->moveDone = 0;
             }
         }
-        else if (*(char*)(param_10 + 0x27a) != '\0')
+        else if (state->moveJustStartedA != '\0')
         {
             FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                          param_9, 6, 0, uVar2, param_13, param_14, param_15, param_16);
-            *(undefined*)(param_10 + 0x346) = 0;
+            state->moveDone = 0;
         }
-        *(undefined*)(param_10 + 0x34d) = 1;
-        *(float*)(param_10 + 0x2a0) =
+        state->unk34D = 1;
+        state->moveSpeed =
             lbl_803E6FDC +
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(iVar3 + 0x406)) - DOUBLE_803e6f78) /
-            lbl_803E6FE0;
+            (float)((double)CONCAT44(0x43300000, (uint)groundState->aggression) - DOUBLE_803e6f78) / lbl_803E6FE0;
     }
-    *(float*)(param_10 + 0x280) = lbl_803E6F40;
-    if (*(char*)(param_10 + 0x346) != '\0')
+    state->animSpeedA = lbl_803E6F40;
+    if (state->moveDone != '\0')
     {
-        *(undefined*)(iVar4 + 0x34) = 1;
+        control->unk34 = 1;
     }
-    *(byte*)(iVar4 + 0x14) = *(byte*)(iVar4 + 0x14) | 2;
+    control->flags14 |= 2;
     return 0;
 }
 
