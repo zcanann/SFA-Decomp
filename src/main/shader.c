@@ -1447,7 +1447,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 
 extern int* gCheckpointInterface;
 extern int* gNewCloudsInterface;
-extern CloudActionInterface** gCloudActionInterface;
 extern void audioStopByMask(int mask);
 extern void doNothing_8001F678(int a, int b);
 extern void Obj_ResetObjectSystem(void);
@@ -2523,7 +2522,6 @@ void mapLoadUnloadObjects(int flag)
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern ModgfxInterface** gModgfxInterface;
-extern Sky2Interface** gSky2Interface;
 extern int* gSHthorntailAnimationInterface;
 extern int lbl_803DCDD0;
 extern int lbl_803DCDD4;

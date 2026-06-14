@@ -1682,8 +1682,6 @@ extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
 extern void GXPixModeSync(void);
 extern void* gSHthorntailAnimationInterface;
-extern CloudActionInterface** gCloudActionInterface;
-extern Sky2Interface** gSky2Interface;
 extern void* gNewCloudsInterface;
 extern s32 heatEffectIntensity;
 extern void drawSkyStars(void);

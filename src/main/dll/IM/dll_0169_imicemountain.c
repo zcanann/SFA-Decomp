@@ -76,7 +76,6 @@ extern f32 lbl_803E46D8;
 extern void objRenderFn_8003b8f4(f32);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(int* obj, int* extra);
-extern CloudActionInterface** gCloudActionInterface;
 extern void warpToMap(int mapId, int flags);
 extern u8 Obj_IsLoadingLocked(void);
 extern void fn_801AC01C(int* obj);

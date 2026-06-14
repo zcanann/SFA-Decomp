@@ -2253,8 +2253,6 @@ void loadTextureFiles(void)
     textureLoad(0, 0);
 }
 
-extern CloudActionInterface** gCloudActionInterface;
-extern Sky2Interface** gSky2Interface;
 extern void* gSHthorntailAnimationInterface;
 extern void* gNewCloudsInterface;
 extern s16 lbl_803DCEB8;

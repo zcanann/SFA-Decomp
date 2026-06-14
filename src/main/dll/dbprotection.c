@@ -33,7 +33,6 @@ extern f32 mathSinf(f32 x);
 
 extern f32 timeDelta;
 extern s8 lbl_803DDC2C;
-extern CloudActionInterface** gCloudActionInterface;
 extern f32 lbl_803E56CC;
 extern f32 lbl_803E56E4;
 extern f32 lbl_803E56E8;

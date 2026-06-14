@@ -231,6 +231,8 @@ STATIC_ASSERT(offsetof(Sky2Interface, applyFogColor) == 0x10);
 STATIC_ASSERT(offsetof(Sky2Interface, ret0) == 0x14);
 STATIC_ASSERT(offsetof(Sky2Interface, applyTextColor) == 0x18);
 
+extern Sky2Interface **gSky2Interface;
+
 typedef void (*CloudActionUpdateFn)(int a, int b, void *entry, int d, u16 idx);
 typedef void (*CloudActionOnMapSetupFn)(void);
 typedef void (*CloudActionScrollTextureFn)(void);
@@ -266,6 +268,8 @@ STATIC_ASSERT(offsetof(CloudActionInterface, func09Nop) == 0x1C);
 STATIC_ASSERT(offsetof(CloudActionInterface, func10Nop) == 0x20);
 STATIC_ASSERT(offsetof(CloudActionInterface, func11Nop) == 0x24);
 STATIC_ASSERT(offsetof(CloudActionInterface, func12Nop) == 0x28);
+
+extern CloudActionInterface **gCloudActionInterface;
 
 typedef void (*WaterfxRunFrameFn)(u8 framesThisStep);
 typedef void (*WaterfxImpactSurfaceFn)(u8 *surfaceFlags, u16 mask, f32 *positions,

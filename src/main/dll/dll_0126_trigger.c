@@ -120,7 +120,6 @@ extern void objSetSlot(void* obj, int slot);
 extern int GameBit_Get(int eventId);
 extern f32 lbl_803E40F8;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern CloudActionInterface** gCloudActionInterface;
 extern int* gPlayerShadowInterface;
 extern void OSReport(const char* fmt, ...);
 extern int Obj_GetPlayerObject(void);
