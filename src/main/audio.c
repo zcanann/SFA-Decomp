@@ -392,8 +392,9 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
         {
             PSVECSubtract((f32*)((u8*)slot + 0x44), &((GameObject*)player)->anim.worldPosX, v);
             t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
-            if ((t > lbl_803DE5C8 ? t : lbl_803DE5C8) > (t2 = lbl_803DE5C0))
+            if (lbl_803DE5C0 < (t > lbl_803DE5C8 ? t : lbl_803DE5C8))
             {
+                t2 = lbl_803DE5C0;
             }
             else
             {
