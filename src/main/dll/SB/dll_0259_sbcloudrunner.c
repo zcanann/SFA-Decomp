@@ -22,6 +22,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/objhits.h"
@@ -122,7 +123,6 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
 extern undefined4 *DAT_803dd6e4;
-extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e6938;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6908;

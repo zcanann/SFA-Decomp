@@ -26,6 +26,7 @@ extern f32 timeDelta;
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavaball.h"
 #include "main/dll/IM/IMspacecraft.h"
@@ -74,7 +75,6 @@ extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();
 extern undefined4 FUN_8005d0ac();
 
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
 undefined4

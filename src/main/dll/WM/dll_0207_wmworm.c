@@ -16,11 +16,11 @@
  * back to its recorded home position.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/WM/dll_0207_wmworm.h"
 
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E5E58; /* 440.0: chase range */
 extern f32 lbl_803E5E5C; /* 0.0 */

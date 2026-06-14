@@ -2,6 +2,7 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/objseq.h"
@@ -30,8 +31,6 @@ extern int Obj_GetPlayerObject(void);
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 
-extern EffectInterface** gPartfxInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
 extern u8 framesThisStep;

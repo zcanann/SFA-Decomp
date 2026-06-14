@@ -10,14 +10,13 @@
  * modes gate on the placement game bit (-1 = always).
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
-
-extern EffectInterface** gPartfxInterface;
 
 extern u8 framesThisStep;
 extern u32 randomGetRange(int min, int max);
