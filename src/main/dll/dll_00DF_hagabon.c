@@ -66,7 +66,7 @@ extern int lbl_803DBC70;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern int Obj_GetPlayerObject(void);
+extern GameObject* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void* a, void* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
@@ -119,7 +119,7 @@ typedef union PressureSwitchIntToDouble
 void fn_8014E1DC(int obj, HagabonState* state)
 {
     int curve;
-    int player;
+    GameObject* player;
     int angleDelta;
     int angle;
     unsigned char* flags;
@@ -173,12 +173,12 @@ void fn_8014E1DC(int obj, HagabonState* state)
     if ((*flags & 2) != 0)
     {
         player = state->player;
-        ((GameObject*)obj)->anim.velocityX += accel * (((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.velocityX += accel * (player->anim.localPosX - ((GameObject*)obj)->anim.
             localPosX);
         ((GameObject*)obj)->anim.velocityY += accel *
-        ((lbl_803E2628 + ((GameObject*)player)->anim.localPosY) -
+        ((lbl_803E2628 + player->anim.localPosY) -
             ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ += accel * (((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.velocityZ += accel * (player->anim.localPosZ - ((GameObject*)obj)->anim.
             localPosZ);
     }
     else if ((*flags & 4) != 0)
@@ -246,8 +246,8 @@ void fn_8014E1DC(int obj, HagabonState* state)
                                                                 (ObjAnimEventList*)animEvents);
 
     player = state->player;
-    angle = (u16)getAngle(((GameObject*)obj)->anim.worldPosX - ((GameObject*)player)->anim.worldPosX,
-                          ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)player)->anim.worldPosZ);
+    angle = (u16)getAngle(((GameObject*)obj)->anim.worldPosX - player->anim.worldPosX,
+                          ((GameObject*)obj)->anim.worldPosZ - player->anim.worldPosZ);
     angleDelta = angle - ((int)*(s16*)obj & 0xffff);
     if (angleDelta > 0x8000)
     {
@@ -351,7 +351,7 @@ void swarmbaddie_update(int obj);
 
 void hagabon_update(int obj)
 {
-    int player;
+    GameObject* player;
     int data;
     int oldCurve;
     HagabonState* state;
@@ -391,7 +391,7 @@ void hagabon_update(int obj)
     }
 
     player = Obj_GetPlayerObject();
-    dist = Vec_distance((void*)(obj + 0x18), (void*)(player + 0x18));
+    dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
     if (dist < lbl_803E2658)
     {
         Sfx_PlayFromObject(obj, SFXstaff_proj_outofmagic);
@@ -458,9 +458,9 @@ void hagabon_update(int obj)
     state->player = player;
     if (player != 0)
     {
-        dx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        dy = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        dz = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        dx = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        dy = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        dz = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         state->playerDistance = sqrtf(dx * dx + dz * dz + dy * dy);
     }
     if (oldCurve != 0)

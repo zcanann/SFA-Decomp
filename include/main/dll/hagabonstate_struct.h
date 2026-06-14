@@ -3,10 +3,12 @@
 
 #include "types.h"
 
+typedef struct GameObject GameObject;
+
 typedef struct HagabonState
 {
     int curve;
-    int player;
+    GameObject* player;
     f32 curveStep;
     f32 animSpeed;
     f32 playerDistance;
