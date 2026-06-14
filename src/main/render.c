@@ -79,7 +79,7 @@ int getEnvfxActImmediately(int a, int b, u16 idx, int d)
     {
         if (e->kind <= 2 || e->kind == 4)
         {
-            (*(void (*)(int, int, EnvfxActEntry*, int))(*(int*)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
+            (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
         }
         else if (e->kind == 3)
         {
@@ -109,7 +109,7 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
     {
         if (e->kind <= 2 || e->kind == 4)
         {
-            (*(void (*)(int, int, EnvfxActEntry*, int))(*(int*)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
+            (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
         }
         else if (e->kind == 3)
         {

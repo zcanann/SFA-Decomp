@@ -12,6 +12,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/mapEventTypes.h"
+#include "main/newclouds.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
@@ -692,7 +693,6 @@ extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gPlayerInterface;
-extern void* gNewCloudsInterface;
 extern void* gCheckpointInterface;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;

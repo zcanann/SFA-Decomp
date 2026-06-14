@@ -6,6 +6,7 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEvent.h"
+#include "main/newclouds.h"
 #include "main/objseq.h"
 #include "main/shthorntail_interface.h"
 #include "main/shader.h"
@@ -1447,7 +1448,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 }
 
 extern int* gCheckpointInterface;
-extern int* gNewCloudsInterface;
 extern void audioStopByMask(int mask);
 extern void doNothing_8001F678(int a, int b);
 extern void Obj_ResetObjectSystem(void);
@@ -1533,7 +1533,7 @@ void unloadMap(void)
     voxmaps_resetLoadedMaps();
     textureFreeFn_8012fcec();
     fn_80133934();
-    (*(void (*)(int, int))(*(int*)(*gNewCloudsInterface + 0xc)))(-1, 0);
+    (*gNewCloudsInterface)->killSnowCloud(-1, 0);
     (*gCloudActionInterface)->freeCloudObjects();
 }
 
@@ -2648,7 +2648,7 @@ void beginLoadingMap(void)
     (*gCloudActionInterface)->onMapSetup();
     (*gSky2Interface)->onMapSetup();
     (*gSHthorntailAnimationInterface)->onMapSetup();
-    (*(void (*)(void))(*(int*)(*gNewCloudsInterface + 8)))();
+    (*gNewCloudsInterface)->onMapSetup();
     mapInitFn_8006fccc();
     player = (char*)Obj_GetPlayerObject();
     if (lbl_803DCEB8 == -2 && player != 0 && (mapKind == 0 || mapKind == 1))

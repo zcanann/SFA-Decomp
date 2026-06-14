@@ -3,6 +3,7 @@
 #include "main/texture.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
+#include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
 #include "main/screen_transition.h"
 #include "main/shthorntail_interface.h"
@@ -2254,7 +2255,6 @@ void loadTextureFiles(void)
     textureLoad(0, 0);
 }
 
-extern void* gNewCloudsInterface;
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern u8 lbl_803DCA40;
@@ -2287,7 +2287,7 @@ void loadNextMap(void)
             (*gCloudActionInterface)->onMapSetup();
             (*gSky2Interface)->onMapSetup();
             (*gSHthorntailAnimationInterface)->onMapSetup();
-            (*(void (***)(void))gNewCloudsInterface)[2]();
+            (*gNewCloudsInterface)->onMapSetup();
             gameUiResetMenuState();
             lbl_803DCEBD = 0;
             *(f32*)(pos + 0) = ((WarpDestination*)lbl_803879A0)->x;

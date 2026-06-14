@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
+#include "main/newclouds.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
@@ -302,7 +303,6 @@ extern void fn_8003B500(int obj, int q, f32 f);
 extern void fn_802BB4B4(int obj, int a, int slot);
 extern int getCurMapLayer(void);
 extern f32 getXZDistance(int a, int b);
-extern int *gNewCloudsInterface;
 extern f32 lbl_803E82AC;
 extern f32 lbl_803E82B0;
 extern f32 lbl_803E82B4;

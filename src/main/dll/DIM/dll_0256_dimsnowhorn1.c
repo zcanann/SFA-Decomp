@@ -1336,11 +1336,11 @@ void DIMSnowHorn1_update(int obj)
     }
     if (*(u8*)((char*)data + 0xa8a) == 0)
     {
-        (*(void (*)(int))(*(int*)(*gNewCloudsInterface + 0x20)))(0);
+        (*gNewCloudsInterface)->func0ANop(0);
     }
     else
     {
-        (*(void (*)(int))(*(int*)(*gNewCloudsInterface + 0x20)))(1);
+        (*gNewCloudsInterface)->func0ANop(1);
     }
     switch (*(u8*)((char*)data + 0xa8c))
     {

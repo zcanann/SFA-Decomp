@@ -4,6 +4,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"
+#include "main/newclouds.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 #include "main/shthorntail_interface.h"
@@ -1682,7 +1683,6 @@ void getVisibleObjects(s8 * opacity);
 extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
 extern void GXPixModeSync(void);
-extern void* gNewCloudsInterface;
 extern s32 heatEffectIntensity;
 extern void drawSkyStars(void);
 extern u8 lbl_803DCE05;
@@ -1879,7 +1879,7 @@ void sceneDraw(void)
         }
     }
     quakeSpellTextureFn_8016dbf4();
-    (*(void (***)(int))gNewCloudsInterface)[5](0);
+    (*gNewCloudsInterface)->renderSnowClouds(0);
     if (bEnableDistortionFilter != 0)
     {
         updateReflectionTextures();
@@ -2648,7 +2648,7 @@ void updateEnvironment(int mode)
         (*gCloudActionInterface)->scrollTexture();
         (*gSky2Interface)->run();
         (*gSHthorntailAnimationInterface)->run();
-        (*(void (***)(void))gNewCloudsInterface)[4]();
+        (*gNewCloudsInterface)->run();
 
         i = 0;
         offs = i;
