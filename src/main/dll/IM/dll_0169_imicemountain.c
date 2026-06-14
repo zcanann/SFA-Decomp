@@ -10,6 +10,7 @@
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/resource.h"
+#include "main/sky_interface.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -83,7 +84,6 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void Music_Trigger(int track, int flag);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
-extern int* gSkyInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E46DC;
 extern int* ObjGroup_GetObjects(int group, int* countOut);
@@ -529,7 +529,7 @@ void imicemountain_update(int* obj)
             extra->warningTextTimer = lbl_803E46DC;
         }
     }
-    if (((int (*)(int))((int*)*gSkyInterface)[0x24 / 4])(0) != 0)
+    if ((*gSkyInterface)->getSunPosition(0) != 0)
     {
         if (extra->musicTrack != -1)
         {

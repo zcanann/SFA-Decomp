@@ -14,6 +14,7 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/screen_transition.h"
+#include "main/sky_interface.h"
 
 extern void ModelLightStruct_free(void* effect);
 extern u32 GameBit_Get(int bit);
@@ -23,14 +24,11 @@ extern void queueGlowRender(void* effect);
 
 extern f32 lbl_803E3D78;
 
-extern int* gSkyInterface;
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
 extern f32 lbl_803E3D7C;
 extern f32 lbl_803E3D80;
 extern f32 lbl_803E3D84;
-
-typedef int (*ThorntailQueryFn)(u8*);
 
 extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
 extern int objCreateLight(int a, int b);
@@ -59,12 +57,12 @@ void campfire_update(int obj)
     int type;
     int mode;
     int flag;
-    u8 buf[4];
+    f32 sunTime;
     f32 params[3];
 
     state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    if ((*(ThorntailQueryFn*)(*gSkyInterface + 0x24))(buf) != 0)
+    if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
     {
         if (*(void**)state != NULL)
         {
@@ -146,7 +144,7 @@ void campfire_update(int obj)
 void campfire_init(int obj, int p2)
 {
     int* state;
-    u8 buf[4];
+    f32 sunTime;
     u32 size;
     s16 bit;
 
@@ -189,7 +187,7 @@ void campfire_init(int obj, int p2)
         modelLightStruct_setSpecularColor(*state, 0xff, 0x7f, 0, 0xff);
         atten = (int)(lbl_803E3D8C * ((GameObject*)obj)->anim.rootMotionScale);
         modelLightStruct_setDistanceAttenuation(*state, (f32)atten, lbl_803E3D90 + (f32)atten);
-        if ((*(ThorntailQueryFn*)(*gSkyInterface + 0x24))(buf) != 0)
+        if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
             modelLightStruct_setEnabled(*state, 1, lbl_803E3D7C);
         }

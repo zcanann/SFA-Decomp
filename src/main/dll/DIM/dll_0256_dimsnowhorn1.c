@@ -1380,8 +1380,7 @@ void DIMSnowHorn1_update(int obj)
                 if (*(u8*)(found + 0xaf) & 1)
                 {
                     int layer = getCurMapLayer();
-                    (*(void (*)(int, int, int, int))(*(int*)((u8*)*gMapEventInterface + 0x24)))(
-                        player + 0xc, 0x584, layer, 0);
+                    (*gMapEventInterface)->setEventWarpPosition((void*)(player + 0xc), 0x584, layer, 0);
                     buttonDisable(0, 0x100);
                     GameBit_Set(0x3e3, 1);
                     d = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)found;

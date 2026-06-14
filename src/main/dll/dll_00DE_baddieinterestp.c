@@ -3,6 +3,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/sky_interface.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -324,7 +325,6 @@ extern void dll_F7_init();
 extern f32 lbl_803E3220;
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void GameBit_Set(int eventId, int value);
-extern int* gSkyInterface;
 extern void fn_801504BC(int* obj, int kind);
 extern f32 lbl_803E3224;
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
@@ -1791,7 +1791,7 @@ void baddieinterestp_update(int* obj)
                         {
                             if ((int)randomGetRange(1, 100) <= *(s8*)((char*)params + 0x19))
                             {
-                                u8 local;
+                                f32 sunTime;
                                 s8 b = *(s8*)((char*)params + 0x18);
                                 switch ((b & 0x30) >> 4)
                                 {
@@ -1815,9 +1815,9 @@ void baddieinterestp_update(int* obj)
                                             break;
                                         }
                                         break;
-                                    }
+                                }
                                 case 1:
-                                    if (((int (*)(u8*))((int*)*gSkyInterface)[9])(&local) == 0)
+                                    if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
                                     {
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;
@@ -1840,7 +1840,7 @@ void baddieinterestp_update(int* obj)
                                     }
                                     break;
                                 case 2:
-                                    if (((int (*)(u8*))((int*)*gSkyInterface)[9])(&local) != 0)
+                                    if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                                     {
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;

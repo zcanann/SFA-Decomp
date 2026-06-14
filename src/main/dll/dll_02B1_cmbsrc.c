@@ -85,7 +85,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* mapData = (CmbSrcMapData*)setup;
     int result = 0;
-    int hitOut;
+    f32 sunTime;
 
     if (sourceState->light != NULL && modelLightStruct_getActiveState(sourceState->light) != 0)
     {
@@ -96,7 +96,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
         result = 1;
     }
     else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
-        (*(int (**)(int*))(*gSkyInterface + 0x24))(&hitOut) != 0)
+        (*gSkyInterface)->getSunPosition(&sunTime) != 0)
     {
         result = 1;
     }
@@ -119,7 +119,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* mapData = (CmbSrcMapData*)setup;
     int result = 0;
-    int hitOut;
+    f32 sunTime;
 
     if (sourceState->light != NULL && modelLightStruct_getActiveState(sourceState->light) != 2)
     {
@@ -130,7 +130,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
         result = 1;
     }
     else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
-        (*(int (**)(int*))(*gSkyInterface + 0x24))(&hitOut) == 0)
+        (*gSkyInterface)->getSunPosition(&sunTime) == 0)
     {
         result = 1;
     }
@@ -522,7 +522,7 @@ void cmbsrc_init(int obj, u8* setup)
     {
         u8* colorTbl;
         int ci;
-        int local;
+        f32 sunTime;
 
         if (state->light == NULL)
         {
@@ -552,7 +552,7 @@ void cmbsrc_init(int obj, u8* setup)
             }
             if (state->flags & CMBSRC_STATE_THORNTAIL_GATE)
             {
-                if ((*(int (**)(void*))(*gSkyInterface + 0x24))(&local) != 0)
+                if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                 {
                     modelLightStruct_setEnabled(state->light, 1, lbl_803E7374);
                 }

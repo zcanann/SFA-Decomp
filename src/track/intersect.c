@@ -9,6 +9,7 @@
 #include "main/model.h"
 #include "main/texture.h"
 #include "main/dll/player_state.h"
+#include "main/sky_interface.h"
 
 /* Model render-op record (0x44 stride at ModelFileHeader.renderOps);
  * only the fields evidenced in this TU are typed. */
@@ -72,7 +73,6 @@ extern f32 lbl_803DD020;
 extern f32 lbl_803DD024;
 extern f32 lbl_803DD034;
 extern f32 lbl_803DD038;
-extern void* gSkyInterface;
 extern u8 lbl_803DCFF0;
 extern u8 lbl_803DCFF8;
 extern u8 lbl_803DCFF9;
@@ -824,7 +824,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     void* tex2;
     void* model;
     int handle1;
-    f32 buf10[3];
+    u8 ignoredLightColor;
     GXColor tev_color;
     GXColor k_color;
     Mtx scaleMtx;
@@ -861,11 +861,11 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
         ((u8*)&lbl_803DB6F4)[2] = ((u8*)&lbl_803DD01C)[2];
         ((u8*)&lbl_803DB6F4)[3] = 0x80;
     } else {
-        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSkyInterface + 0x40))(
+        (*gSkyInterface)->getCurrentAmbientAndLightColors(
             (u8*)&lbl_803DB6F4,
             (u8*)&lbl_803DB6F4 + 1,
             (u8*)&lbl_803DB6F4 + 2,
-            buf10, buf10, buf10);
+            &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
         ((u8*)&lbl_803DB6F4)[0] = (u8)(((s8)((u8*)&lbl_803DB6F4)[0]) >> 3);
         ((u8*)&lbl_803DB6F4)[1] = (u8)(((s8)((u8*)&lbl_803DB6F4)[1]) >> 3);
         ((u8*)&lbl_803DB6F4)[2] = (u8)(((s8)((u8*)&lbl_803DB6F4)[2]) >> 3);
@@ -5101,12 +5101,12 @@ void fn_8007BD8C(int handle1, int handle2)
         ((u8*)&temp)[1] = ((u8*)&lbl_803DD01C)[1];
         ((u8*)&temp)[2] = ((u8*)&lbl_803DD01C)[2];
     } else {
-        f32 dummy;
-        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSkyInterface + 0x40))(
+        u8 ignoredLightColor;
+        (*gSkyInterface)->getCurrentAmbientAndLightColors(
             &((u8*)&temp)[0],
             &((u8*)&temp)[1],
             &((u8*)&temp)[2],
-            &dummy, &dummy, &dummy);
+            &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
     }
 
     *(u32*)&temp = (lbl_803DB690 & 0xFFFFFF00) | (*(u32*)&temp & 0xFFFFFFFF);
@@ -5257,7 +5257,7 @@ void fn_8007C664(int texHandle)
     extern void selectReflectionTexture(int);
     extern u8 isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
-    f32 dummy;
+    u8 ignoredLightColor;
     f32 tOff;
     f32 sOff;
     f32 indMtx[6];
@@ -5283,8 +5283,9 @@ void fn_8007C664(int texHandle)
         lbl_803DB688.b = lbl_803DD01C.b;
         lbl_803DB688.a = 0x80;
     } else {
-        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSkyInterface + 0x40))(
-            &lbl_803DB688.r, &lbl_803DB688.g, &lbl_803DB688.b, &dummy, &dummy, &dummy);
+        (*gSkyInterface)->getCurrentAmbientAndLightColors(
+            &lbl_803DB688.r, &lbl_803DB688.g, &lbl_803DB688.b,
+            &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
         lbl_803DB688.r = lbl_803DB688.r >> 3;
         lbl_803DB688.g = lbl_803DB688.g >> 3;
         lbl_803DB688.b = lbl_803DB688.b >> 3;
@@ -5349,7 +5350,7 @@ void fn_8007CAF4(void)
     extern void selectReflectionTexture(int);
     extern u8 isHeavyFogEnabled(void);
     extern void fn_8006C678(int);
-    f32 dummy;
+    u8 ignoredLightColor;
     f32 tOff;
     f32 sOff;
     f32 indMtx[6];
@@ -5375,8 +5376,9 @@ void fn_8007CAF4(void)
         lbl_803DB680.b = lbl_803DD01C.b;
         lbl_803DB680.a = 0x80;
     } else {
-        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSkyInterface + 0x40))(
-            &lbl_803DB680.r, &lbl_803DB680.g, &lbl_803DB680.b, &dummy, &dummy, &dummy);
+        (*gSkyInterface)->getCurrentAmbientAndLightColors(
+            &lbl_803DB680.r, &lbl_803DB680.g, &lbl_803DB680.b,
+            &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
         lbl_803DB680.r = lbl_803DB680.r >> 3;
         lbl_803DB680.g = lbl_803DB680.g >> 3;
         lbl_803DB680.b = lbl_803DB680.b >> 3;
@@ -5502,12 +5504,12 @@ void gxTextureSetupFn_8007cf7c(void)
         ((u8*)&lbl_803DB67C)[2] = ((u8*)&lbl_803DD01C)[2];
         ((u8*)&lbl_803DB67C)[3] = 0x80;
     } else {
-        f32 dummy;
-        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSkyInterface + 0x40))(
+        u8 ignoredLightColor;
+        (*gSkyInterface)->getCurrentAmbientAndLightColors(
             (u8*)&lbl_803DB67C,
             (u8*)&lbl_803DB67C + 1,
             (u8*)&lbl_803DB67C + 2,
-            &dummy, &dummy, &dummy);
+            &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
         ((u8*)&lbl_803DB67C)[0] = (u8)((s8)((u8*)&lbl_803DB67C)[0] >> 3);
         ((u8*)&lbl_803DB67C)[1] = (u8)((s8)((u8*)&lbl_803DB67C)[1] >> 3);
         ((u8*)&lbl_803DB67C)[2] = (u8)((s8)((u8*)&lbl_803DB67C)[2] >> 3);

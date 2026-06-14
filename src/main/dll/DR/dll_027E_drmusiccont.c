@@ -164,7 +164,7 @@ void drmusiccont_update(int obj)
             vec[0] = lbl_803E6BE0;
             vec[1] = lbl_803E6BE4;
             vec[2] = lbl_803E6BE8;
-            (*(void (**)(f32*, int, int, int))((u8*)*gMapEventInterface + 0x24))(vec, 0x7fff, 0, 0);
+            (*gMapEventInterface)->setEventWarpPosition(vec, 0x7fff, 0, 0);
             f->b_state = 1;
         }
     }

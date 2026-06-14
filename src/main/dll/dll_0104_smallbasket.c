@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/resource.h"
+#include "main/sky_interface.h"
 #include "main/dll/cfperch_state.h"
 #include "main/objfx.h"
 
@@ -89,7 +90,6 @@ extern void fn_801814D0(int obj, int player, int state);
 extern f32 getXZDistance(f32 * a, f32 * b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern int* gSkyInterface;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3978;
 extern f32 lbl_803E397C;
@@ -768,7 +768,7 @@ void smallbasket_update(int obj)
     player = (int)Obj_GetPlayerObject();
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     animSpeed = lbl_803E3950;
-    (**(void (**)(f32*))(*gSkyInterface + 0x18))(&animSpeed);
+    (*gSkyInterface)->getClockTime(&animSpeed);
     state = *(int*)&((GameObject*)obj)->extra;
     if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)def)->mapId) == 0)
     {

@@ -1622,7 +1622,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     switch (((ObjInterpretSeqPlacement*)p)->unk2)
                     {
                     case 0:
-                        (*(code*)((u8*)*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16*)obj, getCurMapLayer(), 0);
+                        (*gMapEventInterface)->setEventWarpPosition((void*)(obj + 0xc), (int)*(s16*)obj,
+                                                                    getCurMapLayer(), 0);
                         break;
                     case 1:
                         (*(code*)((u8*)*gMapEventInterface + 0x2c))();
@@ -1631,7 +1632,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
                         break;
                     case 3:
-                        (*(code*)((u8*)*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16*)obj, getCurMapLayer(), 1);
+                        (*gMapEventInterface)->setEventWarpPosition((void*)(obj + 0xc), (int)*(s16*)obj,
+                                                                    getCurMapLayer(), 1);
                         break;
                     }
                     break;

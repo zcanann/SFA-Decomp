@@ -206,8 +206,7 @@ void cflevelcontrol_update(int obj)
     /* pending map-event trigger queued by another TU */
     if (GameBit_Get(0xd3d) != 0)
     {
-        ((void (*)(int*, int, int, int))(*(int*)((u8*)*gMapEventInterface + 0x24)))(
-            (int*)&triggerPos, 0, getCurMapLayer(), 1);
+        (*gMapEventInterface)->setEventWarpPosition(&triggerPos, 0, getCurMapLayer(), 1);
         GameBit_Set(0xd3d, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, 0x11, 0);

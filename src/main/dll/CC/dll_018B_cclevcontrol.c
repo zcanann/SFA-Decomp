@@ -3,6 +3,7 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/sky_interface.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -45,7 +46,6 @@ extern f32 lbl_803E4674;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
-extern int* gSkyInterface;
 extern f32 lbl_803E4680;
 extern int Obj_FreeObject(int o);
 
@@ -177,7 +177,7 @@ void cclevcontrol_update(int obj)
             *(f32*)state = *(f32*)&lbl_803E46D0;
         }
     }
-    if ((*(int (**)(int))(*(int*)gSkyInterface + 0x24))(0) != 0)
+    if ((*gSkyInterface)->getSunPosition(0) != 0)
     {
         if (state[2] != -1)
         {
