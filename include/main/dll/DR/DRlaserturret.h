@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DRLASERTURRET_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_internal.h"
 
 #define DR_LASERTURRET_FLAG_ACTION_ACTIVE 0x08
 #define DR_LASERTURRET_FLAG_START_SEQUENCE 0x02
@@ -66,15 +67,20 @@ typedef struct DRLaserTurretState {
 } DRLaserTurretState;
 
 typedef struct DRLaserTurretObject {
-    u8 pad000[0x0c];
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad018[0xa0 - 0x18];
-    s16 currentMove;
-    u8 pad0a2[0xaf - 0xa2];
-    u8 hitFlags;
-    u8 pad0b0[0xb8 - 0xb0];
+    union {
+        ObjAnimComponent anim;
+        struct {
+            u8 pad000[0x0c];
+            f32 x;
+            f32 y;
+            f32 z;
+            u8 pad018[0xa0 - 0x18];
+            s16 currentMove;
+            u8 pad0a2[0xaf - 0xa2];
+            u8 hitFlags;
+        };
+    };
+    u8 pad0b0[0xb8 - sizeof(ObjAnimComponent)];
     DRLaserTurretState *state;
 } DRLaserTurretObject;
 
@@ -88,6 +94,12 @@ typedef struct DRLaserTurretAnimState {
     u8 pad2a4[0x346 - 0x2a4];
     s8 moveComplete;
 } DRLaserTurretAnimState;
+
+STATIC_ASSERT(offsetof(DRLaserTurretObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(DRLaserTurretObject, x) == offsetof(ObjAnimComponent, localPosX));
+STATIC_ASSERT(offsetof(DRLaserTurretObject, currentMove) == offsetof(ObjAnimComponent, currentMove));
+STATIC_ASSERT(offsetof(DRLaserTurretObject, hitFlags) == offsetof(ObjAnimComponent, resetHitboxFlags));
+STATIC_ASSERT(offsetof(DRLaserTurretObject, state) == 0xB8);
 
 int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState);
 int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState);

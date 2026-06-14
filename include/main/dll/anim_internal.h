@@ -2,6 +2,7 @@
 #define MAIN_DLL_ANIM_INTERNAL_H_
 
 #include "global.h"
+#include "main/objanim_internal.h"
 
 typedef struct AnimBehaviorConfig {
   u8 pad00[0x08];
@@ -39,12 +40,17 @@ typedef struct AnimBehaviorState {
 } AnimBehaviorState;
 
 typedef struct AnimBehaviorObject {
-  u8 pad00[0x4C];
-  AnimBehaviorConfig *config;
-  u8 pad50[0xAC - 0x50];
-  s8 mapEventSlot;
-  u8 padAD[0xAF - 0xAD];
-  u8 statusFlags;
+  union {
+    ObjAnimComponent anim;
+    struct {
+      u8 pad00[0x4C];
+      AnimBehaviorConfig *config;
+      u8 pad50[0xAC - 0x50];
+      s8 mapEventSlot;
+      u8 padAD[0xAF - 0xAD];
+      u8 statusFlags;
+    };
+  };
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   AnimBehaviorState *runtimeState;
@@ -66,9 +72,11 @@ STATIC_ASSERT(offsetof(AnimBehaviorState, state) == 0x118);
 STATIC_ASSERT(offsetof(AnimBehaviorState, behaviorFlags) == 0x119);
 STATIC_ASSERT(offsetof(AnimBehaviorState, queuedEvent) == 0x11C);
 
+STATIC_ASSERT(offsetof(AnimBehaviorObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(AnimBehaviorObject, config) == 0x4C);
-STATIC_ASSERT(offsetof(AnimBehaviorObject, mapEventSlot) == 0xAC);
-STATIC_ASSERT(offsetof(AnimBehaviorObject, statusFlags) == 0xAF);
+STATIC_ASSERT(offsetof(AnimBehaviorObject, config) == offsetof(ObjAnimComponent, placementData));
+STATIC_ASSERT(offsetof(AnimBehaviorObject, mapEventSlot) == offsetof(ObjAnimComponent, mapEventSlot));
+STATIC_ASSERT(offsetof(AnimBehaviorObject, statusFlags) == offsetof(ObjAnimComponent, resetHitboxFlags));
 STATIC_ASSERT(offsetof(AnimBehaviorObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(AnimBehaviorObject, runtimeState) == 0xB8);
 

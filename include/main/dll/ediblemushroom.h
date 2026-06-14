@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dll/curve_walker.h"
+#include "main/objanim_internal.h"
 
 typedef struct EnemyMushroomMapData {
   u8 pad00[0x08];
@@ -42,21 +43,26 @@ typedef struct EnemyMushroomState {
 } EnemyMushroomState;
 
 typedef struct EnemyMushroomObject {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
-  s16 flags;
-  f32 scale;
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 pad18[0x36 - 0x18];
-  u8 alpha;
-  u8 pad37[0x4C - 0x37];
-  EnemyMushroomMapData *mapData;
-  u8 pad50[0x64 - 0x50];
-  EnemyMushroomModelState *modelState;
-  u8 pad68[0xB0 - 0x68];
+  union {
+    ObjAnimComponent anim;
+    struct {
+      s16 rotX;
+      s16 rotY;
+      s16 rotZ;
+      s16 flags;
+      f32 scale;
+      f32 posX;
+      f32 posY;
+      f32 posZ;
+      u8 pad18[0x36 - 0x18];
+      u8 alpha;
+      u8 pad37[0x4C - 0x37];
+      EnemyMushroomMapData *mapData;
+      u8 pad50[0x64 - 0x50];
+      EnemyMushroomModelState *modelState;
+      u8 pad68[0xB0 - 0x68];
+    };
+  };
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   EnemyMushroomState *state;
@@ -109,11 +115,12 @@ STATIC_ASSERT(offsetof(EnemyMushroomState, effectTimer) == 0x30);
 STATIC_ASSERT(offsetof(EnemyMushroomState, respawnFrameLimit) == 0x34);
 STATIC_ASSERT(offsetof(EnemyMushroomState, stateId) == 0x36);
 STATIC_ASSERT(offsetof(EnemyMushroomState, stateFlags) == 0x37);
-STATIC_ASSERT(offsetof(EnemyMushroomObject, scale) == 0x08);
-STATIC_ASSERT(offsetof(EnemyMushroomObject, posX) == 0x0C);
-STATIC_ASSERT(offsetof(EnemyMushroomObject, alpha) == 0x36);
-STATIC_ASSERT(offsetof(EnemyMushroomObject, mapData) == 0x4C);
-STATIC_ASSERT(offsetof(EnemyMushroomObject, modelState) == 0x64);
+STATIC_ASSERT(offsetof(EnemyMushroomObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(EnemyMushroomObject, scale) == offsetof(ObjAnimComponent, rootMotionScale));
+STATIC_ASSERT(offsetof(EnemyMushroomObject, posX) == offsetof(ObjAnimComponent, localPosX));
+STATIC_ASSERT(offsetof(EnemyMushroomObject, alpha) == offsetof(ObjAnimComponent, alpha));
+STATIC_ASSERT(offsetof(EnemyMushroomObject, mapData) == offsetof(ObjAnimComponent, placementData));
+STATIC_ASSERT(offsetof(EnemyMushroomObject, modelState) == offsetof(ObjAnimComponent, modelState));
 STATIC_ASSERT(offsetof(EnemyMushroomObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(EnemyMushroomObject, state) == 0xB8);
 

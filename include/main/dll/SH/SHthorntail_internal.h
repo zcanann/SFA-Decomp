@@ -5,6 +5,7 @@
 #include "ghidra_import.h"
 #include "dolphin/mtx.h"
 #include "main/objHitReact.h"
+#include "main/objanim_internal.h"
 #include "main/sky_interface.h"
 
 typedef struct SHthorntailConfig {
@@ -90,30 +91,47 @@ typedef struct SHthorntailRuntime {
 } SHthorntailRuntime;
 
 typedef struct SHthorntailObject {
-  s16 facingAngle;
-  s16 pitch;
-  s16 roll;
-  u8 pad06[0x08 - 0x06];
-  f32 modelScale;
-  Vec modelPos;
-  Vec pos;
-  u8 pad24[0x46 - 0x24];
-  s16 objType;
-  u8 pad48[0x4C - 0x48];
-  SHthorntailConfig *config;
-  u8 pad50[0xA0 - 0x50];
-  s16 currentMove;
-  u8 padA2[0xA8 - 0xA2];
-  f32 cullRadius;
-  s8 animObjId;
-  u8 padAD[0xAF - 0xAD];
-  u8 statusFlags;
+  union {
+    ObjAnimComponent anim;
+    struct {
+      s16 facingAngle;
+      s16 pitch;
+      s16 roll;
+      u8 pad06[0x08 - 0x06];
+      f32 modelScale;
+      Vec modelPos;
+      Vec pos;
+      u8 pad24[0x46 - 0x24];
+      s16 objType;
+      u8 pad48[0x4C - 0x48];
+      SHthorntailConfig *config;
+      u8 pad50[0xA0 - 0x50];
+      s16 currentMove;
+      u8 padA2[0xA8 - 0xA2];
+      f32 cullRadius;
+      s8 animObjId;
+      u8 padAD[0xAF - 0xAD];
+      u8 statusFlags;
+    };
+  };
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   SHthorntailRuntime *runtime;
   void *animEventCallback;
 } SHthorntailObject;
 
+STATIC_ASSERT(offsetof(SHthorntailObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(SHthorntailObject, facingAngle) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(SHthorntailObject, modelScale) == offsetof(ObjAnimComponent, rootMotionScale));
+STATIC_ASSERT(offsetof(SHthorntailObject, modelPos) == offsetof(ObjAnimComponent, localPosX));
+STATIC_ASSERT(offsetof(SHthorntailObject, pos) == offsetof(ObjAnimComponent, worldPosX));
+STATIC_ASSERT(offsetof(SHthorntailObject, objType) == offsetof(ObjAnimComponent, seqId));
+STATIC_ASSERT(offsetof(SHthorntailObject, config) == offsetof(ObjAnimComponent, placementData));
+STATIC_ASSERT(offsetof(SHthorntailObject, currentMove) == offsetof(ObjAnimComponent, currentMove));
+STATIC_ASSERT(offsetof(SHthorntailObject, cullRadius) == offsetof(ObjAnimComponent, hitboxScale));
+STATIC_ASSERT(offsetof(SHthorntailObject, animObjId) == offsetof(ObjAnimComponent, mapEventSlot));
+STATIC_ASSERT(offsetof(SHthorntailObject, statusFlags) == offsetof(ObjAnimComponent, resetHitboxFlags));
+STATIC_ASSERT(offsetof(SHthorntailObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(SHthorntailObject, runtime) == 0xB8);
 STATIC_ASSERT(offsetof(SHthorntailObject, animEventCallback) == 0xBC);
 STATIC_ASSERT(offsetof(SHthorntailConfig, baseScale) == 0x04);

@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
+#include "main/objanim_internal.h"
 
 typedef struct FirePipeExtra {
     int effectObjs[8];
@@ -34,19 +35,24 @@ typedef struct FirePipeMapData {
 } FirePipeMapData;
 
 typedef struct FirePipeObject {
-    s16 modeX;
-    s16 modeY;
-    s16 resetTimer;
-    u8 pad06[0x08 - 0x06];
-    f32 scale;
-    u8 pad0C[0x46 - 0x0C];
-    s16 objectId;
-    u8 pad48[0x4C - 0x48];
-    void *objectDef;
-    void *model;
-    u8 pad54[0xAF - 0x54];
-    u8 statusFlags;
-    u8 padB0[0xB8 - 0xB0];
+    union {
+        ObjAnimComponent anim;
+        struct {
+            s16 modeX;
+            s16 modeY;
+            s16 resetTimer;
+            u8 pad06[0x08 - 0x06];
+            f32 scale;
+            u8 pad0C[0x46 - 0x0C];
+            s16 objectId;
+            u8 pad48[0x4C - 0x48];
+            void *objectDef;
+            void *model;
+            u8 pad54[0xAF - 0x54];
+            u8 statusFlags;
+        };
+    };
+    u8 padB0[0xB8 - sizeof(ObjAnimComponent)];
     FirePipeExtra *extra;
     undefined4 (*sequenceCallback)(struct FirePipeObject *obj);
     u8 padC0[0xC4 - 0xC0];
@@ -60,6 +66,16 @@ STATIC_ASSERT(offsetof(FirePipeMapData, scale) == 0x1C);
 STATIC_ASSERT(offsetof(FirePipeMapData, gameBit) == 0x1E);
 STATIC_ASSERT(offsetof(FirePipeMapData, timer) == 0x20);
 STATIC_ASSERT(offsetof(FirePipeMapData, flags) == 0x22);
+STATIC_ASSERT(offsetof(FirePipeObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(FirePipeObject, modeX) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(FirePipeObject, scale) == offsetof(ObjAnimComponent, rootMotionScale));
+STATIC_ASSERT(offsetof(FirePipeObject, objectId) == offsetof(ObjAnimComponent, seqId));
+STATIC_ASSERT(offsetof(FirePipeObject, objectDef) == offsetof(ObjAnimComponent, placementData));
+STATIC_ASSERT(offsetof(FirePipeObject, model) == offsetof(ObjAnimComponent, modelInstance));
+STATIC_ASSERT(offsetof(FirePipeObject, statusFlags) == offsetof(ObjAnimComponent, resetHitboxFlags));
+STATIC_ASSERT(offsetof(FirePipeObject, extra) == 0xB8);
+STATIC_ASSERT(offsetof(FirePipeObject, sequenceCallback) == 0xBC);
+STATIC_ASSERT(offsetof(FirePipeObject, callback) == 0xC4);
 
 int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef);
 void firepipe_releaseEffectObject(FirePipeObject *obj);
