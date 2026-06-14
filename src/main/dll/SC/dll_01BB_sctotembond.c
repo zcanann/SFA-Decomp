@@ -21,19 +21,17 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/SC/sctotembond.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
 extern f32 timeDelta;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
 extern u8* Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
-extern void ObjHits_DisableObject(ScTotemBondObject * obj);
-extern void ObjHits_EnableObject(ScTotemBondObject * obj);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 mathSinf(f32 angle);
@@ -212,7 +210,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
         state->active = 1;
         obj->yaw = 0x3fff;
         state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         sc_totembond_spawnGameBitOrbs(obj, state, lbl_803E5638);
         GameBit_Set(lbl_80327A60[state->ringIndex], 1);
         obj->mapAlpha = 0;
@@ -246,7 +244,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 (*gCameraInterface)->setMode(0x42, 0, 3, 0, NULL, 0, 0);
                 obj->mapAlpha = 0xff;
                 fn_80296124(player, NULL, NULL, 0);
-                ObjHits_EnableObject(obj);
+                ObjHits_EnableObject((u32)obj);
                 hudFn_8011f38c(0);
                 GameBit_Set(0x2bc, 1);
                 state->eventFlags = 0;
