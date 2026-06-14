@@ -808,6 +808,7 @@ int ktrex_stateHandlerB01(int obj, int runtime)
 {
     f32 z;
     u16 mask;
+    int maskI;
     f32 dx;
     f32 dz;
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
@@ -837,10 +838,11 @@ int ktrex_stateHandlerB01(int obj, int runtime)
     {
         mask = (&lbl_803DC280)[((KTRexArenaState*)gKTRexState)->unkFC];
     }
+    maskI = mask;
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~1;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= mask;
+        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= maskI;
     }
     dx = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->unkE8 - ((GameObject*)obj)->anim.localPosX);
     dz = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->unkF0 - ((GameObject*)obj)->anim.localPosZ);
