@@ -157,7 +157,7 @@ extern f32 lbl_803E4C3C;
 extern f32 lbl_803E4C40;
 extern f32 lbl_803E4C48;
 extern u8 lbl_803AC97C[];
-extern f32 gDIMbossAnimScratchBase[];
+extern DIMbossAnimScratch gDIMbossAnimScratchBase;
 
 typedef struct IcicleFxPos {
     u8 pad[0xc];
@@ -265,13 +265,17 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
       ((IcicleFxPos *)&lbl_803AC97C)->y = (f32)(int)randomGetRange(-0x19, 0x19);
       c34v = lbl_803E4C34;
       ((IcicleFxPos *)&lbl_803AC97C)->z = lbl_803E4C34;
-      gDIMbossAnimScratchBase[0] = ((IcicleFxPos *)&lbl_803AC97C)->x / (c34v * lbl_803E4C38);
-      gDIMbossAnimScratchBase[1] = ((IcicleFxPos *)&lbl_803AC97C)->y / (c34v * lbl_803E4C38);
-      gDIMbossAnimScratchBase[2] = lbl_803E4BCC;
-      PSMTXMultVec(m, gDIMbossAnimScratchBase, gDIMbossAnimScratchBase);
+      gDIMbossAnimScratchBase.effectVelocity[0] =
+          ((IcicleFxPos *)&lbl_803AC97C)->x / (c34v * lbl_803E4C38);
+      gDIMbossAnimScratchBase.effectVelocity[1] =
+          ((IcicleFxPos *)&lbl_803AC97C)->y / (c34v * lbl_803E4C38);
+      gDIMbossAnimScratchBase.effectVelocity[2] = lbl_803E4BCC;
+      PSMTXMultVec(m, gDIMbossAnimScratchBase.effectVelocity,
+                   gDIMbossAnimScratchBase.effectVelocity);
       ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 1);
       (*gPartfxInterface)->spawnObject(
-          (void *)objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, gDIMbossAnimScratchBase);
+          (void *)objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1,
+          gDIMbossAnimScratchBase.effectVelocity);
       i = i + 1;
     } while (i < 5);
   }

@@ -77,7 +77,7 @@ extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern undefined4 gDIMbossRenderMtx[];
-extern u8 gDIMbossAnimScratchBase[];
+extern DIMbossAnimScratch gDIMbossAnimScratchBase;
 extern undefined4 gDIMbossAnimController[];
 extern undefined4 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
@@ -185,7 +185,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
     DIMbossRuntime* runtime;
     DIMbossConfig* config;
     DIMbossTopState* topState;
-    u8* animScratchBase;
+    DIMbossAnimScratch* animScratch;
     int hitReactMode;
     u8 loadWaitStarted;
     int updateResult;
@@ -195,7 +195,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
     int eventIndex;
     int baddieResult;
 
-    animScratchBase = gDIMbossAnimScratchBase;
+    animScratch = &gDIMbossAnimScratchBase;
     runtime = obj->runtime;
     config = obj->config;
     updateResult = 0;
@@ -208,8 +208,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
         return 0;
     }
 
-    dll_2E_func07(obj, animUpdate,
-                  (float*)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET), 1, 1);
+    dll_2E_func07(obj, animUpdate, animScratch->animController, 1, 1);
     for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1)
     {
         switch (animUpdate->eventIds[eventIndex])
@@ -388,16 +387,14 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
                 runtime->field270 = 0;
                 DIMboss_GetPlayerInterface()->applyHitReact(
                     obj, runtime, lbl_803E4C44, *(f32*)&lbl_803E4C44,
-                    animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-                    animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
+                    animScratch->hitDetectAnimTable, animScratch->animTable);
                 animUpdate->sequenceEventActive = 0;
             }
             break;
         case 1:
             baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
                 obj, animUpdate, runtime,
-                animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-                animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET, 0);
+                animScratch->hitDetectAnimTable, animScratch->animTable, 0);
             if (baddieResult != 0)
             {
                 DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70, 1);

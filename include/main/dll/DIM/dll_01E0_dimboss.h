@@ -188,7 +188,10 @@ typedef struct DIMbossTopState {
 } DIMbossTopState;
 
 typedef struct DIMbossAnimScratch {
-  u8 pad000[DIMBOSS_ANIM_CONTROLLER_OFFSET];
+  union {
+    f32 effectVelocity[3];
+    u8 pad000[DIMBOSS_ANIM_CONTROLLER_OFFSET];
+  };
   u8 animController[DIMBOSS_ANIM_CONTROLLER_SIZE];
   void (*animTable[DIMBOSS_ANIM_TABLE_COUNT])(void);
   void (*hitDetectAnimTable[DIMBOSS_HITDETECT_ANIM_TABLE_COUNT])(void);
@@ -301,6 +304,7 @@ STATIC_ASSERT(offsetof(DIMbossTopState, stompDustDelay) == 0xB4);
 STATIC_ASSERT(offsetof(DIMbossTopState, steamFlags) == 0xB6);
 
 STATIC_ASSERT(sizeof(DIMbossAnimScratch) == 0x6D8);
+STATIC_ASSERT(offsetof(DIMbossAnimScratch, effectVelocity) == 0x00);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, animController) == DIMBOSS_ANIM_CONTROLLER_OFFSET);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, animTable) == DIMBOSS_ANIM_TABLE_OFFSET);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, hitDetectAnimTable) == DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET);
