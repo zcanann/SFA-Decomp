@@ -181,13 +181,57 @@ void vfpspellplace_initialise(void)
 {
 }
 
-int vfpflamepoint_getExtraSize(void) { return 0x8; }
+typedef struct
+{
+    s16 showGameBit; /* 0x0 */
+    s16 checkGameBit; /* 0x2 */
+    s8 counter; /* 0x4 */
+    u8 done : 1; /* 0x5 bit 7 */
+    u8 noCheck : 1; /* 0x5 bit 6 */
+    u8 pad06[2];
+} VfpFlamePointData;
+
+typedef struct VfpLavaStarState
+{
+    f32 verticalVelocity;
+    f32 delayRangeMin;
+    f32 delayRangeMax;
+    s16 gameBit;
+    s16 effectTimer;
+    u8 particleToggle;
+    u8 pad11[3];
+} VfpLavaStarState;
+
+typedef struct VfpLavaStarMapData
+{
+    ObjPlacement base;
+    u8 pad18[2];
+    s16 heightOffset;
+    u8 pad1C[2];
+    s16 gameBit;
+} VfpLavaStarMapData;
+
+STATIC_ASSERT(sizeof(VfpFlamePointData) == 0x08);
+STATIC_ASSERT(offsetof(VfpFlamePointData, showGameBit) == 0x00);
+STATIC_ASSERT(offsetof(VfpFlamePointData, checkGameBit) == 0x02);
+STATIC_ASSERT(offsetof(VfpFlamePointData, counter) == 0x04);
+STATIC_ASSERT(sizeof(VfpLavaStarState) == 0x14);
+STATIC_ASSERT(offsetof(VfpLavaStarState, verticalVelocity) == 0x00);
+STATIC_ASSERT(offsetof(VfpLavaStarState, delayRangeMin) == 0x04);
+STATIC_ASSERT(offsetof(VfpLavaStarState, delayRangeMax) == 0x08);
+STATIC_ASSERT(offsetof(VfpLavaStarState, gameBit) == 0x0C);
+STATIC_ASSERT(offsetof(VfpLavaStarState, effectTimer) == 0x0E);
+STATIC_ASSERT(offsetof(VfpLavaStarState, particleToggle) == 0x10);
+STATIC_ASSERT(offsetof(VfpLavaStarMapData, heightOffset) == 0x1A);
+STATIC_ASSERT(offsetof(VfpLavaStarMapData, gameBit) == 0x1E);
+
+int vfpflamepoint_getExtraSize(void) { return sizeof(VfpFlamePointData); }
 int return1_801FDA08(void) { return 0x1; }
 int VFP_lavapool_getExtraSize_ret_24(void) { return 0x18; }
 int VFP_lavapool_getObjectTypeId(void) { return 0x0; }
-int vfplavastar_getExtraSize(void) { return 0x14; }
+int vfplavastar_getExtraSize(void) { return sizeof(VfpLavaStarState); }
 int vfplavastar_getObjectTypeId(void) { return 0x0; }
-int vfpspellplace_getExtraSize(void) { return 0x6; }
+int vfpspellplace_getExtraSize(void) { return sizeof(LaserState); }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
 int dbegg_getExtraSize(void);
 
@@ -199,15 +243,6 @@ void vfplavastar_release(void)
     Resource_Release(lbl_803DDCD8);
     lbl_803DDCD8 = NULL;
 }
-
-typedef struct
-{
-    s16 showGameBit; /* 0x0 */
-    s16 checkGameBit; /* 0x2 */
-    s8 counter; /* 0x4 */
-    u8 done : 1; /* 0x5 bit 7 */
-    u8 noCheck : 1; /* 0x5 bit 6 */
-} VfpFlamePointData;
 
 int fn_801FD4A8(void* obj, int x)
 {
@@ -404,46 +439,47 @@ void VFP_lavapool_init(int obj, int def)
 
 void vfplavastar_update(int obj)
 {
-    int def;
-    f32* extra;
+    VfpLavaStarState* state;
+    VfpLavaStarMapData* mapData;
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    extra = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.localPosY += timeDelta * extra[0];
-    if (((GameObject*)obj)->anim.localPosY > lbl_803E61B0 + ((ObjPlacement*)def)->posY)
+    mapData = (VfpLavaStarMapData*)*(int*)&((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.localPosY += timeDelta * state->verticalVelocity;
+    if (((GameObject*)obj)->anim.localPosY > lbl_803E61B0 + mapData->base.posY)
     {
-        extra[0] = lbl_803E61B4 * (f32)(int)
+        state->verticalVelocity = lbl_803E61B4 * (f32)(int)
         randomGetRange(5, 0x14);
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+        ((GameObject*)obj)->anim.localPosY = mapData->base.posY;
     }
-    *(s16*)((u8*)extra + 0xe) += (s16)(int)
-    timeDelta;
-    if (lbl_803DDCD8 != 0 && *(s16*)((u8*)extra + 0xe) > 0x27)
+    state->effectTimer += (s16)(int)timeDelta;
+    if (lbl_803DDCD8 != 0 && state->effectTimer >= 0x28)
     {
         (*(void (*)(int, int, int, int, int, int))*(int*)(*(int*)lbl_803DDCD8 + 4))(obj, 0, 0, 4, -1, 0);
-        *(s16*)((u8*)extra + 0xe) = 0;
+        state->effectTimer = 0;
     }
-    if (*(u8*)(extra + 4) == 0)
+    if (state->particleToggle == 0)
     {
         (*gPartfxInterface)->spawnObject((void*)obj, 0x3a4, NULL, 2, -1, NULL);
     }
-    *(u8*)(extra + 4) ^= 1;
+    state->particleToggle ^= 1;
 }
 
 void vfplavastar_init(int obj, int def)
 {
-    f32* extra;
+    VfpLavaStarState* state;
+    VfpLavaStarMapData* mapData;
 
-    extra = ((GameObject*)obj)->extra;
-    *(s16*)((u8*)extra + 0xc) = *(s16*)(def + 0x1e);
-    extra[0] = lbl_803E61B4 * (f32)(int)
+    mapData = (VfpLavaStarMapData*)def;
+    state = ((GameObject*)obj)->extra;
+    state->gameBit = mapData->gameBit;
+    state->verticalVelocity = lbl_803E61B4 * (f32)(int)
     randomGetRange(10, 0x19);
-    *(s16*)((u8*)extra + 0xe) = 0x14;
-    ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY + (f32)(int) * (s16*)(def + 0x1a);
+    state->effectTimer = 0x14;
+    ((GameObject*)obj)->anim.localPosY = mapData->base.posY + (f32)(int)mapData->heightOffset;
     ((GameObject*)obj)->objectFlags |= 0x2000;
-    extra[1] = (f32)(int)
+    state->delayRangeMin = (f32)(int)
     randomGetRange(0x1e, 0x3c);
-    extra[2] = (f32)(int)
+    state->delayRangeMax = (f32)(int)
     randomGetRange(100, 200);
 }
 
