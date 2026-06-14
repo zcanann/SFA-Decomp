@@ -259,8 +259,8 @@ void sc_totembond_update(ScTotemBondObject* obj)
             if (GameBit_Get(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0)
             {
                 GameBit_Set(SC_TOTEMBOND_ORB_TRIGGER_EVENT, 0);
-                for (orbIndex = 0, availableCount = orbIndex;
-                     orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
+                availableCount = orbIndex = 0;
+                for (; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
                 {
                     if (GameBit_Get(lbl_80327A70[orbIndex]) == 0)
                     {
