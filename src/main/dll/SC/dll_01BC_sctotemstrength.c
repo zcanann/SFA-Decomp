@@ -219,7 +219,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             if (st->offsetVelocity < lbl_803E568C)
             {
-                st->offsetVelocity = lbl_803E568C;
+                st->offsetVelocity = *(const f32*)&lbl_803E568C;
             }
             if (st->currentTrackOffset >= -0x46dc && st->currentTrackOffset <= -0xb24)
             {
