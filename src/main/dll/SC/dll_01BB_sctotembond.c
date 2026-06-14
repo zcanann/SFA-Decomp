@@ -197,7 +197,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
     int player;
     u8 availableOrbs[8];
     u8 availableCount;
-    s32 orbIndex;
+    u8 orbIndex;
     u8 nextRing;
     u8 allOrbsCollected;
 
