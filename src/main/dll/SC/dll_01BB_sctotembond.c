@@ -44,7 +44,7 @@ extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5638;
 extern f32 lbl_803E563C;
-extern f32 lbl_803E5654;
+extern const f32 lbl_803E5654;
 extern f32 lbl_803E5658;
 extern f32 lbl_803E565C;
 extern f32 lbl_803E5660;
@@ -69,9 +69,9 @@ extern void fn_8011F6D4(int p);
 
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
+    s32 angleOffset;
     u8* setup;
     u8* definition;
-    s32 angleOffset;
     s8 i;
     s8 orbIndex;
 
@@ -114,13 +114,11 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
 undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
     ScTotemBondState* state;
-    int startForEvent3;
-    int countForEvent3;
-    int startForEvent2;
     int countForEvent2;
+    int startForEvent2;
+    int countForEvent3;
+    int startForEvent3;
     int* objects;
-    int* objectPtr;
-    int peer;
     int eventIndex;
     int eventId;
 
@@ -137,37 +135,31 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 p
             break;
         case 2:
             objects = ObjList_GetObjects(&startForEvent2, &countForEvent2);
-            objectPtr = objects + startForEvent2;
-            while (startForEvent2 < countForEvent2)
+            for (; startForEvent2 < countForEvent2; startForEvent2++)
             {
-                peer = *objectPtr;
-                if (((ScTotemBondObject*)peer != obj) &&
-                    (((ScTotemBondObject*)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE))
+                if ((ScTotemBondObject*)objects[startForEvent2] != obj &&
+                    ((ScTotemBondObject*)objects[startForEvent2])->objectType ==
+                        SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
                 {
-                    peer = objects[startForEvent2];
-                    (*(code*)(**(int**)(peer + 0x68) + 0x20))(peer, 2);
+                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + 0x20))(
+                        objects[startForEvent2], 2);
                     break;
                 }
-                objectPtr++;
-                startForEvent2++;
             }
             state->eventFlags |= SC_TOTEMBOND_EVENT_SET_MAP_MODE;
             break;
         case 3:
             objects = ObjList_GetObjects(&startForEvent3, &countForEvent3);
-            objectPtr = objects + startForEvent3;
-            while (startForEvent3 < countForEvent3)
+            for (; startForEvent3 < countForEvent3; startForEvent3++)
             {
-                peer = *objectPtr;
-                if (((ScTotemBondObject*)peer != obj) &&
-                    (((ScTotemBondObject*)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE))
+                if ((ScTotemBondObject*)objects[startForEvent3] != obj &&
+                    ((ScTotemBondObject*)objects[startForEvent3])->objectType ==
+                        SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
                 {
-                    peer = objects[startForEvent3];
-                    (*(code*)(**(int**)(peer + 0x68) + 0x20))(peer, 1);
+                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + 0x20))(
+                        objects[startForEvent3], 1);
                     break;
                 }
-                objectPtr++;
-                startForEvent3++;
             }
             break;
         }
@@ -267,8 +259,8 @@ void sc_totembond_update(ScTotemBondObject* obj)
             if (GameBit_Get(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0)
             {
                 GameBit_Set(SC_TOTEMBOND_ORB_TRIGGER_EVENT, 0);
-                availableCount = 0;
-                for (orbIndex = 0; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
+                for (orbIndex = 0, availableCount = orbIndex;
+                     orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
                 {
                     if (GameBit_Get(lbl_80327A70[orbIndex]) == 0)
                     {
@@ -300,17 +292,17 @@ void sc_totembond_update(ScTotemBondObject* obj)
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                 }
             }
-            if (((u32)(u16)obj->yaw >> 13
+            if ((int)((u32)(u16)obj->yaw >> 13
             )
             !=
             state->ringIndex
             )
             {
-                obj->yaw = (s32) - ((lbl_803E565C * timeDelta) - (f32)(s32)
+                obj->yaw = (s16) - ((lbl_803E565C * timeDelta) - (f32)(s32)
                 obj->yaw
                 )
                 ;
-                if (((u32)(u16)obj->yaw >> 13
+                if ((int)((u32)(u16)obj->yaw >> 13
                 )
                 ==
                 state->ringIndex
@@ -355,42 +347,34 @@ void sc_totembond_init(ScTotemBondObject* obj, int params)
 int fn_801DE320(u16* gameBitIds, u16 newValue)
 {
     u16 values[4];
-    int changed;
-    u8 readIndex;
-    u8 pass;
-    u8 sortIndex;
-    u8 writeIndex;
-    u16 current;
-    u16 next;
+    u8 i, j;
+    s32 changed = 0;
 
-    changed = 0;
-    for (readIndex = 0; readIndex < 3; readIndex++)
+    for (i = 0; i < 3; i++)
     {
-        values[readIndex] = (u16)GameBit_Get(gameBitIds[readIndex]);
+        u16 v = (u16)GameBit_Get(gameBitIds[i]);
+        values[i] = v;
     }
     values[3] = newValue;
-
-    for (pass = 0; pass < 3; pass++)
+    for (j = 0; j < 3; j++)
     {
-        for (sortIndex = 0; sortIndex < 3; sortIndex++)
+        for (i = 0; i < 3; i++)
         {
-            next = values[sortIndex + 1];
-            if (next != 0)
+            if (values[i + 1] != 0)
             {
-                current = values[sortIndex];
-                if ((next < current) || (current == 0))
+                if ((values[i + 1] < values[i]) || (values[i] == 0))
                 {
-                    values[sortIndex] = next;
-                    values[sortIndex + 1] = current;
+                    u16 b = values[i];
+                    values[i] = values[i + 1];
+                    values[i + 1] = b;
                     changed = 1;
                 }
             }
         }
     }
-
-    for (writeIndex = 0; writeIndex < 3; writeIndex++)
+    for (i = 0; i < 3; i++)
     {
-        GameBit_Set(gameBitIds[writeIndex], values[writeIndex]);
+        GameBit_Set(gameBitIds[i], (u32)values[i]);
     }
     return changed;
 }
