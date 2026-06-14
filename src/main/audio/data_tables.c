@@ -538,15 +538,16 @@ s32 dataRemoveMacro(u16 mid)
 
     sndBegin();
     main = (mid >> 6) & 0x3ff;
+    m = &t->macMain[main];
 
-    if (t->macMain[main].num != 0)
+    if (m->num != 0)
     {
-        base = t->macMain[main].subTabIndex;
-        for (i = 0; i < t->macMain[main].num && mid != t->macSub[base + i].id; ++i)
+        base = m->subTabIndex;
+        for (i = 0; i < m->num && mid != t->macSub[base + i].id; ++i)
         {
         }
 
-        if (i < t->macMain[main].num)
+        if (i < m->num)
         {
             if (--t->macSub[base + i].refCount == 0)
             {
