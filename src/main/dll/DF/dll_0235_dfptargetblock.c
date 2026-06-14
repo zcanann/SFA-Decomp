@@ -26,7 +26,6 @@ extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObjec
                                   int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DDCF8;
 extern f32 lbl_803DDCFC;

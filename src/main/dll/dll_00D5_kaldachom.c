@@ -45,7 +45,6 @@ extern f32 lbl_803DDA94;
 extern f32 lbl_803DDA98;
 extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
-extern EffectInterface** gPartfxInterface;
 extern undefined4* gPlayerInterface;
 extern undefined4* gBaddieControlInterface;
 extern void* lbl_803DDA90;

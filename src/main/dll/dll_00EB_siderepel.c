@@ -9,7 +9,6 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003b818();
 
-extern EffectInterface** gPartfxInterface;
 
 void mikabomb_hitDetect(void);
 

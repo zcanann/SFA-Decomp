@@ -40,7 +40,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 randomGetRange(int min, int max);
 
-extern EffectInterface** gPartfxInterface;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;

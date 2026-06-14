@@ -22,7 +22,6 @@ extern u32 randomGetRange(int min, int max);
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
 
 extern void objRenderFn_8003b8f4(f32);
 

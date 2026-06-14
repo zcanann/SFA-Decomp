@@ -16,7 +16,6 @@ extern void* gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C94;
 extern f32 lbl_803E4C98;

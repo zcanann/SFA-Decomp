@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, float arg);

@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern EffectInterface** gPartfxInterface;
 
 #pragma scheduling on
 #pragma peephole on

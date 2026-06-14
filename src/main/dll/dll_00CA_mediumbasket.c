@@ -65,7 +65,6 @@ extern undefined4 FUN_80294964();
 extern undefined4 DAT_803dc990;
 extern undefined4 DAT_803dc994;
 extern undefined4 DAT_803dc998;
-extern EffectInterface** gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern u8 lbl_803DDA78;

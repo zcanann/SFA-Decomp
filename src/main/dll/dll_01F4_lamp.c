@@ -11,7 +11,6 @@ extern undefined4 ObjPath_GetPointWorldPosition();
 
 extern void Sfx_StopObjectChannel();
 extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
 
 extern void objRenderFn_8003b8f4(f32);
 

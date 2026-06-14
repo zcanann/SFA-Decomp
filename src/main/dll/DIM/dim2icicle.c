@@ -150,7 +150,6 @@ typedef struct IcicleState {
 
 extern void PSMTXMultVec(f32 *mtx, f32 *src, f32 *dst);
 extern void memcpy(void *dst, void *src, int n);
-extern EffectInterface **gPartfxInterface;
 extern const f32 lbl_803E4BCC;
 extern const f32 lbl_803E4C34;
 extern const f32 lbl_803E4C38;

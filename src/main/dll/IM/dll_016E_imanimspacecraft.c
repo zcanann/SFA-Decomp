@@ -134,7 +134,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4784;
 extern char lbl_803AC948[];
 extern f32 lbl_803E4780;

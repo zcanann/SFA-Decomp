@@ -25,7 +25,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-extern EffectInterface** gPartfxInterface;
 
 extern void getEnvfxActImmediately(int a, int b, int id, int d);
 extern void getEnvfxAct(int a, int b, int id, int d);

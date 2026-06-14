@@ -29,7 +29,6 @@ extern undefined4 FUN_8003b818();
 extern double FUN_80293900();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern f64 DOUBLE_803e3a58;

@@ -5,7 +5,6 @@
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
-extern EffectInterface** gPartfxInterface;
 
 extern u8 framesThisStep;
 extern f32 sqrtf(f32);

@@ -63,7 +63,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017924();
 extern uint FUN_80017944();
 extern int FUN_80017a54();
-extern EffectInterface** gPartfxInterface;
 extern undefined4 FUN_8002fc3c();
 extern int FUN_80039520();
 extern undefined4 FUN_80242114();

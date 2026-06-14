@@ -12,7 +12,6 @@ extern undefined4 ObjHits_EnableObject();
 extern void objRenderFn_8003b8f4(f32 scale);
 
 extern f32 timeDelta;
-extern EffectInterface** gPartfxInterface;
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void doRumble(f32 v);
 extern void modelLightStruct_setEnabled(int light, int v, f32 f);

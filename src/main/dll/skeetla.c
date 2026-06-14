@@ -78,7 +78,6 @@ extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern int fn_8004B218(void* search, int timeout);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
-extern EffectInterface** gPartfxInterface;
 extern void** ObjList_GetObjects(int* startIndex, int* objectCount);
 extern undefined4 FUN_80006824();
 extern uint FUN_80017690();

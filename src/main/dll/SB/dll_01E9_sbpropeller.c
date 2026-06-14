@@ -42,7 +42,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 randomGetRange(int min, int max);
 
-extern EffectInterface** gPartfxInterface;
 extern u32 DAT_803de8c0;
 extern f32 lbl_803E64A8;
 

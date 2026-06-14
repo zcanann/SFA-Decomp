@@ -22,7 +22,6 @@ extern undefined4 FUN_801577c8();
 
 extern undefined4 DAT_8031ff68;
 extern undefined4 DAT_8031ff70;
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3954;
 
 #pragma scheduling on

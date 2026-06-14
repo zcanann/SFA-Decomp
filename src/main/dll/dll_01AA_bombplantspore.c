@@ -33,7 +33,6 @@ extern void Sfx_PlayFromObject(void* obj, int sndId);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-extern EffectInterface** gPartfxInterface;
 
 extern u8 framesThisStep;
 extern f32 timeDelta;

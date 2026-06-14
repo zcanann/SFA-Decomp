@@ -31,7 +31,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
 
-extern EffectInterface** gPartfxInterface;
 
 extern void imicepillar_free(void);
 extern int imicepillar_getObjectTypeId(void);

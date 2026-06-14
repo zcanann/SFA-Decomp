@@ -29,7 +29,6 @@ extern f32 lbl_803E2F9C;
 
 #pragma peephole on
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E2FC8;
 extern f32 lbl_803E2FCC;
 extern f32 lbl_803E2FD0;

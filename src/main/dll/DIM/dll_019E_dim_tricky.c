@@ -14,7 +14,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 
 extern f32 lbl_803E51B0;
-extern EffectInterface** gPartfxInterface;
 extern void* Camera_GetCurrentViewSlot(void);
 extern float sqrtf(float x);
 extern int randomGetRange(int min, int max);

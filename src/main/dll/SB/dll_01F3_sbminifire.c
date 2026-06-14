@@ -17,7 +17,6 @@
 extern u32 randomGetRange(int min, int max);
 
 extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
 
 extern void objRenderFn_8003b8f4(f32);
 

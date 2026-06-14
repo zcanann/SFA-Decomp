@@ -8,7 +8,6 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objanim.h"
 
-extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de0af;
 
 extern int getAngle(f32 dx, f32 dz);

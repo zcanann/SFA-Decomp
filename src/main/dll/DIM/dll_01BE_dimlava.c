@@ -144,7 +144,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-extern EffectInterface** gPartfxInterface;
 extern void Music_Trigger(int id, int p2);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ModelLightStruct_free(void* light);

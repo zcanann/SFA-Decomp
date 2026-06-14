@@ -30,7 +30,6 @@ extern void Obj_ResetModelColorState(int obj);
 extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
 
-extern EffectInterface** gPartfxInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3858;

@@ -31,7 +31,6 @@ extern f32 lbl_803E3F98;
 extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
 extern void mm_free(void* ptr);
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4C98;
 extern f32 lbl_803E3FFC;
 extern f32 lbl_803E3FD0;

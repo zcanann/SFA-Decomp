@@ -44,7 +44,6 @@ extern u32 getLActions();
 extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 
-extern EffectInterface** gPartfxInterface;
 
 extern void DBprotection_storeHomePosition(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);

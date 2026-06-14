@@ -7,7 +7,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
-extern EffectInterface** gPartfxInterface;
 
 #include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"

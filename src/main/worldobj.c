@@ -28,7 +28,6 @@ extern int fn_8012DDAC(void);
 extern int lbl_803DDD34;
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
-extern EffectInterface** gPartfxInterface;
 extern void vecRotateZXY(void* in, void* out);
 extern int ObjList_FindObjectById(int id);
 extern f32 Vec_distance(void* a, void* b);

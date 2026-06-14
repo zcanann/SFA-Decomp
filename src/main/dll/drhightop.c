@@ -21,7 +21,6 @@ extern u32 randomGetRange(int min, int max);
 
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;

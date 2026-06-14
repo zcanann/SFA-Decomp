@@ -56,7 +56,6 @@ STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 
 extern u32 randomGetRange(int min, int max);
 extern int ObjHits_GetPriorityHit();
-extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);

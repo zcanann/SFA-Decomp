@@ -98,7 +98,6 @@ extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjMsg_AllocQueue(int obj, int capacity);
 extern undefined4* gSHthorntailAnimationInterface;
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3828;
 extern f32 lbl_803E382C;
 extern f32 lbl_803E3830;

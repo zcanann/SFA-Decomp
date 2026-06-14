@@ -29,7 +29,6 @@ extern f32 lbl_803E5084;
 extern f32 lbl_803E5088;
 extern undefined4 lbl_803DDBC8;
 extern f32 Vec_distance(f32 * a, f32 * b);
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_802C23B8[];
 extern f32 mathSinf(f32 v);
 extern int getAngle(f32 dx, f32 dz);

@@ -46,7 +46,6 @@ extern void AudioStream_StopCurrent(void);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void setIsOvercast(int mode);
 extern u32 getButtonsJustPressed(int controller);
-extern EffectInterface** gPartfxInterface;
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
 extern s16 lbl_803DDD0C;

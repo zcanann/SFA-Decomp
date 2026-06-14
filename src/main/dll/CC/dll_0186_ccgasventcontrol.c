@@ -35,7 +35,6 @@ extern undefined4 DAT_803ad598;
 extern undefined4 DAT_803ad59c;
 extern undefined4 DAT_803ad5a0;
 extern undefined4 DAT_803ad5a4;
-extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;

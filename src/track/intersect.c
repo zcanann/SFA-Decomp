@@ -73,7 +73,6 @@ extern f32 lbl_803DD024;
 extern f32 lbl_803DD034;
 extern f32 lbl_803DD038;
 extern void* gSHthorntailAnimationInterface;
-extern EffectInterface **gPartfxInterface;
 extern undefined4* gWaterfxInterface;
 extern u8 lbl_803DCFF0;
 extern u8 lbl_803DCFF8;

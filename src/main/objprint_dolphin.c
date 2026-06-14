@@ -202,7 +202,6 @@ extern undefined4 DAT_803dc0e4;
 extern undefined4 DAT_803dc0e8;
 extern undefined4 DAT_803dc210;
 extern undefined4 DAT_803dd5d0;
-extern EffectInterface **gPartfxInterface;
 extern undefined4 DAT_803dd8a0;
 extern undefined4 DAT_803dd8a4;
 extern undefined4 DAT_803dd8a8;

@@ -42,7 +42,6 @@ extern f32 lbl_803E26CC;
 extern int lbl_803DBC78;
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
-extern EffectInterface** gPartfxInterface;
 extern int lbl_803DDA60;
 extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);

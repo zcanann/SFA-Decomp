@@ -27,7 +27,6 @@ extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern undefined4 ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
 extern void objMove(u8* obj, f32 vx, f32 vy, f32 vz);
 
-extern EffectInterface** gPartfxInterface;
 
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;

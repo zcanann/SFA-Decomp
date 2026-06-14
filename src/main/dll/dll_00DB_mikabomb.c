@@ -18,7 +18,6 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003b818();
 
-extern EffectInterface** gPartfxInterface;
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E3138;

@@ -29,7 +29,6 @@ extern double FUN_80293900();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc920;
-extern EffectInterface** gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e3508;
 extern f64 DOUBLE_803e3530;

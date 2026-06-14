@@ -44,7 +44,6 @@ extern f32 lbl_803E34F0;
 extern f32 lbl_803E34F4;
 extern f32 lbl_803E34F8;
 extern f32 lbl_803E34FC;
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E34B4;
 extern f32 lbl_803E34B8;

@@ -6,7 +6,6 @@ extern u32 GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
 
 extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];

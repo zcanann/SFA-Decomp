@@ -23,7 +23,6 @@ extern int hitDetectFn_80065e50(int obj, void* outHits, int param_3, int param_4
 extern int fn_8029622C(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E38B0;
 extern f32 lbl_803E38B8;
 extern f32 lbl_803E38BC;

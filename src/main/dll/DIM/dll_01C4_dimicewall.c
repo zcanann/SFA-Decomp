@@ -25,7 +25,6 @@ extern u32 randomGetRange(int min, int max);
 extern int Sfx_PlayFromObject(int obj, int sfx);
 extern int* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;
 

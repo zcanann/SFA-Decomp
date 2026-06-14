@@ -35,7 +35,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void modelLightStruct_getSpecularColor(void* light, void* p1, void* p2, void* p3, void* p4);
 extern void modelLightStruct_setGlowColor(void* p1, u8 a, u8 b, u8 c, int d);
 extern f32 lbl_803DDBA4;
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4CC8;
 extern void* objCreateLight(int param_1, int param_2);
 extern void modelLightStruct_setLightKind(void* handle, int param_2);

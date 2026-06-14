@@ -18,7 +18,6 @@ extern f32 Vec_distance(void* a, void* b);
 extern void objUpdateOpacity(int obj);
 
 extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
 extern int lbl_802C23C8[];
 extern s8 lbl_803DDBD0;

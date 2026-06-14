@@ -32,7 +32,6 @@ extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* 
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern f32 lbl_803E536C;
 extern f32 lbl_803E5374;
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5358;
 extern f32 lbl_803E535C;
 extern int objIsFrozen(int* obj);

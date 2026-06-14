@@ -51,7 +51,6 @@ typedef struct TrickyCurveBurstPartfxArgs
 
 extern int objGetAnimState80A(int obj);
 
-extern EffectInterface** gPartfxInterface;
 extern u8 gTrickyCurveBurstCounter;
 extern f32 timeDelta;
 extern f32 lbl_803E6448;

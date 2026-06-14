@@ -25,7 +25,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 extern undefined4 GameBit_Set(int eventId, int value);
 
-extern EffectInterface** gPartfxInterface;
 
 extern f32 timeDelta;
 

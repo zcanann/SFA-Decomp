@@ -31,7 +31,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern int objGetAnimState80A(void* obj);
 extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;

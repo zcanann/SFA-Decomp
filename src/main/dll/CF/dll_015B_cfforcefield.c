@@ -74,7 +74,6 @@ extern void s16toFloat(void* p, int duration);
 extern int timerCountDown(void* timer);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void storeZeroToFloatParam(void* p);
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DBE90; /* ring radius scale */
 extern int lbl_803DBE94; /* burst position jitter, +/- units */

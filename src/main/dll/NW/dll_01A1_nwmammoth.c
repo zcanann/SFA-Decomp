@@ -26,7 +26,6 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_803274f4;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5E98;

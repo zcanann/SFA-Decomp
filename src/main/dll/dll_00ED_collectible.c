@@ -18,7 +18,6 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E40EC;
 

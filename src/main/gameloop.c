@@ -702,7 +702,6 @@ extern void* gTitleMenuControlInterfaceCopy;
 extern void* gModgfxInterface;
 extern ProjgfxInterface** gProjgfxInterface;
 extern void* gPlayerShadowInterface;
-extern EffectInterface** gPartfxInterface;
 extern void* gScreensInterface;
 extern WaterfxInterface** gWaterfxInterface;
 extern void* gTitleMenuLinkInterface;

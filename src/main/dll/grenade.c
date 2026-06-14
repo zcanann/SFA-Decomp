@@ -86,7 +86,6 @@ extern f32 lbl_803E23E4;
 extern u32 lbl_802C21DC[];
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
 extern int* gSHthorntailAnimationInterface;

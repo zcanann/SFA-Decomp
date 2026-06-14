@@ -13,7 +13,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
 extern void queueGlowRender(void* light);
 
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e3d80;
 extern f32 lbl_803E3D78;
 extern f32 timeDelta;

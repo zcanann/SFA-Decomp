@@ -20,7 +20,6 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-extern EffectInterface** gPartfxInterface;
 
 extern f32 timeDelta;
 

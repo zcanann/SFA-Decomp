@@ -2525,7 +2525,6 @@ extern u8 lbl_803DCDE0;
 extern WaterfxInterface** gWaterfxInterface;
 extern ProjgfxInterface** gProjgfxInterface;
 extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern Sky2Interface** gSky2Interface;
 extern int* gSHthorntailAnimationInterface;
 extern int lbl_803DCDD0;

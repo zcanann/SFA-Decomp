@@ -28,7 +28,6 @@ extern f32 lbl_803E5370;
 extern f32 lbl_803E5350;
 extern u8 Obj_IsLoadingLocked(void);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-extern EffectInterface** gPartfxInterface;
 extern int objIsFrozen(int* obj);
 extern int EmissionController_IsLingering(u8 * player);
 extern int fn_80296448(u8 * player);

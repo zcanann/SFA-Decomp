@@ -5,7 +5,6 @@
 extern int randomGetRange(int min, int max);
 extern undefined4 Obj_GetPlayerObject();
 
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5460;
 extern f32 lbl_803E5464;
