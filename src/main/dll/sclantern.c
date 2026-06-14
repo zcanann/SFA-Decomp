@@ -1,4 +1,5 @@
 #include "main/dll/SC/SClantern.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
 
@@ -21,19 +22,10 @@ extern f32 lbl_803E5498;
 #define SCLANTERN_SPARK_SFX_ID 0x415
 #define SCLANTERN_SPARK_SUPPRESS_MOVE 0x1b
 
-typedef struct SClanternAnimObject
-{
-    s16 facingAngle;
-    u8 pad02[0x98 - 0x02];
-    f32 moveProgress;
-    u8 pad9C[0xA0 - 0x9C];
-    s16 currentMove;
-} SClanternAnimObject;
-
 undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
     undefined4 advanceResult;
-    SClanternAnimObject* lantern;
+    GameObject* lantern;
     int pointIndex;
     int i;
     float posZ;
@@ -41,18 +33,18 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     float posX;
 
     pointIndex = 0;
-    lantern = (SClanternAnimObject*)obj;
+    lantern = (GameObject*)obj;
     gSClanternObjAnimEvents.triggerCount = 0;
     gSClanternObjAnimEvents.rootCurveValid = 0;
     advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale, timeDelta, obj, &gSClanternObjAnimEvents);
     if (gSClanternObjAnimEvents.rootCurveValid != 0)
     {
-        lantern->facingAngle += gSClanternObjAnimEvents.rootPitch;
+        lantern->anim.rotX += gSClanternObjAnimEvents.rootPitch;
     }
     i = 0;
     while (i < (s8)gSClanternObjAnimEvents.triggerCount)
     {
-        switch (((s8*)&gSClanternObjAnimEvents)[i + 0x13])
+        switch (gSClanternObjAnimEvents.triggeredIds[i])
         {
         case SCLANTERN_EVENT_LEFT_SPARK_A:
             pointIndex = 1;
@@ -82,8 +74,8 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     if (pointIndex != 0)
     {
         ObjPath_GetPointWorldPosition(obj, pointIndex - 1, &posX, &posY, &posZ, 0);
-        if (!((lantern->currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
-            (lantern->moveProgress < lbl_803E5498)))
+        if (!((lantern->anim.currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
+            (lantern->anim.currentMoveProgress < lbl_803E5498)))
         {
             Sfx_PlayAtPositionFromObject(obj, posX, posY, posZ,SCLANTERN_SPARK_SFX_ID);
         }
