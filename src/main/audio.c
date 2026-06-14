@@ -2045,8 +2045,8 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7)
 {
     int idx;
-    TextCallbackEntry* entry;
     void* buf;
+    TextCallbackEntry* entry;
     idx = lbl_803DC7B8;
     lbl_803DC7B8 = idx + 1;
     entry = &lbl_80335940[idx];
