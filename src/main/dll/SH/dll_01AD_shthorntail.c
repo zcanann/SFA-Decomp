@@ -608,7 +608,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     int moveScratch;
     undefined4 outA[2];
     undefined4 outB;
-    uint uStack_1c;
+    uint stackPad;
 
     runtime = obj->runtime;
     outA[0] = lbl_803E5410;
