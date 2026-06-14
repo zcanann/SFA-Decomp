@@ -71,17 +71,17 @@ int sc_totempole_sortCompletionGameBits(u16* bits, u16 param2)
         stk[i] = v;
     }
     stk[3] = param2;
-    for (i = 0; i < 3; i++)
+    for (j = 0; j < 3; j++)
     {
-        for (j = 0; j < 3; j++)
+        for (i = 0; i < 3; i++)
         {
-            if (stk[j + 1] != 0)
+            if (stk[i + 1] != 0)
             {
-                if ((stk[j + 1] < stk[j]) || (stk[j] == 0))
+                if ((stk[i + 1] < stk[i]) || (stk[i] == 0))
                 {
-                    u16 b = stk[j];
-                    stk[j] = stk[j + 1];
-                    stk[j + 1] = b;
+                    u16 b = stk[i];
+                    stk[i] = stk[i + 1];
+                    stk[i + 1] = b;
                     changed = 1;
                 }
             }
@@ -140,8 +140,8 @@ void sc_totempole_update(int obj)
                 arr = ObjList_GetObjects(&idx, &count);
                 for (; idx < count; idx++)
                 {
-                    void* o = (void*)arr[idx];
-                    if (o != (void*)obj && ((GameObject*)o)->anim.seqId == SC_TOTEMPOLE_OBJECT_TYPE)
+                    if ((void*)arr[idx] != (void*)obj &&
+                        ((GameObject*)arr[idx])->anim.seqId == SC_TOTEMPOLE_OBJECT_TYPE)
                     {
                         (*(void (**)(int, int))(*(int*)(*(int*)(arr[idx] + 0x68)) + 0x20))(arr[idx], 6);
                         break;
