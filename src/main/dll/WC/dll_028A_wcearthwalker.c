@@ -427,13 +427,13 @@ int fn_80223AFC(int obj, int ai)
 
 int fn_80223BC4(int obj, int ai)
 {
-    int player = Obj_GetPlayerObject();
+    GameObject* player = (GameObject*)Obj_GetPlayerObject();
 
     if (*(s8*)(ai + 0x27a) != 0)
     {
         *(f32*)(ai + 0x2a0) = lbl_803E6D10;
-        getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc),
-                 ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14));
+        getAngle(((GameObject*)obj)->anim.localPosX - player->anim.localPosX,
+                 ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ);
     }
     return 0;
 }

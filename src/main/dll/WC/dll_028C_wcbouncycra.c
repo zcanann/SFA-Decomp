@@ -142,6 +142,7 @@ void wcbouncycra_initialise(void)
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     ObjAnimComponent* objAnim;
+    GameObject* playerObj;
     f32 cellX;
     f32 cellZ;
     f32 pos;
@@ -174,7 +175,8 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
     }
 
     min = cellX - WCBLOCK_PLAYER_CELL_MARGIN;
-    pos = *(f32*)(player + 0xc);
+    playerObj = (GameObject*)player;
+    pos = playerObj->anim.localPosX;
     max = WCBLOCK_PLAYER_CELL_MARGIN + cellX;
     if (pos > max || pos < min)
     {
@@ -187,7 +189,7 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
         f32 maxZ;
 
         minZ = cellZ - WCBLOCK_PLAYER_CELL_MARGIN;
-        posZ = *(f32*)(player + 0x14);
+        posZ = playerObj->anim.localPosZ;
         maxZ = WCBLOCK_PLAYER_CELL_MARGIN + cellZ;
         if (posZ > maxZ || posZ < minZ)
         {

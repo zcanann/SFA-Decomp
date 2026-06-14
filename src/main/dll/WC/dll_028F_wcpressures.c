@@ -79,7 +79,7 @@ typedef struct WCPressuresState
     s8 pressTimer;
     s8 mode;
     u8 pad02[2];
-    int objects[WCPRESSURES_TRACKED_COUNT];
+    GameObject* objects[WCPRESSURES_TRACKED_COUNT];
     WCPressuresSavedPos savedPos[WCPRESSURES_TRACKED_COUNT];
 } WCPressuresState;
 
@@ -113,8 +113,8 @@ int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState* animU
         {
             if ((void*)state->objects[i] != NULL)
             {
-                state->savedPos[i].x = *(f32*)(state->objects[i] + 0xc);
-                state->savedPos[i].z = *(f32*)(state->objects[i] + WCPRESSURES_OBJECT_Z_OFFSET);
+                state->savedPos[i].x = state->objects[i]->anim.localPosX;
+                state->savedPos[i].z = state->objects[i]->anim.localPosZ;
             }
         }
         animUpdate->triggerCommand = WCPRESSURES_CALLBACK_NONE;
@@ -187,7 +187,7 @@ void wcpressures_update(int obj)
         {
             int ent = *(int*)(*(int*)(obj + WCPRESSURES_HITLIST_OFFSET) +
                 i * 4 + WCPRESSURES_HITLIST_OBJECTS_OFFSET);
-            if (*(f32*)(ent + 0x10) - ((GameObject*)obj)->anim.localPosY >
+            if (((GameObject*)ent)->anim.localPosY - ((GameObject*)obj)->anim.localPosY >
                 (f32)(u32)
                     setup->triggerHeight
             )
@@ -199,9 +199,9 @@ void wcpressures_update(int obj)
                      (u8)j == WCPRESSURES_TRACKED_COUNT - 1;
                      j++);
                 slot = (u8)j;
-                s2->objects[slot] = ent;
-                s2->savedPos[slot].x = *(f32*)(ent + 0xc);
-                s2->savedPos[slot].z = *(f32*)(ent + 0x14);
+                s2->objects[slot] = (GameObject*)ent;
+                s2->savedPos[slot].x = ((GameObject*)ent)->anim.localPosX;
+                s2->savedPos[slot].z = ((GameObject*)ent)->anim.localPosZ;
             }
         }
     }
@@ -212,11 +212,11 @@ void wcpressures_update(int obj)
         for (j = 0; (u8)j < WCPRESSURES_TRACKED_COUNT; j++)
         {
             int slot = (u8)j;
-            int val = s2->objects[slot];
+            GameObject* val = s2->objects[slot];
             if ((u32)val != 0)
             {
-                if (s2->savedPos[slot].x == *(f32*)(val + 0xc) &&
-                    s2->savedPos[slot].z == *(f32*)(val + 0x14))
+                if (s2->savedPos[slot].x == val->anim.localPosX &&
+                    s2->savedPos[slot].z == val->anim.localPosZ)
                 {
                     found = 1;
                 }
