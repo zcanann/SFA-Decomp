@@ -102,6 +102,7 @@ extern f32 lbl_803E3998;
 
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
 {
+    GameObject* playerObj;
     int mode;
     u8* data;
     f32* vel;
@@ -130,6 +131,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     } spread;
 
     data = dataIn;
+    playerObj = (GameObject*)player;
     slowMo = 0;
     bit = *(s16*)(data + 0x1c);
     if (bit != -1)
@@ -203,8 +205,10 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
-            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+            ((GameObject*)spawned)->anim.velocityX =
+                ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ =
+                ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -265,8 +269,10 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
-            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+            ((GameObject*)spawned)->anim.velocityX =
+                ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ =
+                ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -327,8 +333,10 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
-            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+            ((GameObject*)spawned)->anim.velocityX =
+                ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ =
+                ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;

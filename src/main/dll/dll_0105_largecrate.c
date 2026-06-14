@@ -146,12 +146,14 @@ void fn_80183250(int obj, int def)
 
 int fn_801833E4(int obj, int player, int state)
 {
+    GameObject* playerObj;
     ExplodeArgs blk;
     char* setup;
     char* newObj;
     f32 len;
     int angle;
 
+    playerObj = (GameObject*)player;
     if (Obj_IsLoadingLocked() == 0)
     {
         return 0;
@@ -167,8 +169,10 @@ int fn_801833E4(int obj, int player, int state)
         *(s16*)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                  *(int*)&((GameObject*)obj)->anim.parent);
-        ((GameObject*)newObj)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
-        ((GameObject*)newObj)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+        ((GameObject*)newObj)->anim.velocityX =
+            ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+        ((GameObject*)newObj)->anim.velocityZ =
+            ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
             ((GameObject*)newObj)->anim.velocityZ * ((GameObject*)newObj)->anim.velocityZ;
         if (len != lbl_803E39B8)
@@ -220,8 +224,10 @@ int fn_801833E4(int obj, int player, int state)
         *(s16*)(setup + 0x1a) = 400;
         newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                  *(int*)&((GameObject*)obj)->anim.parent);
-        ((GameObject*)newObj)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
-        ((GameObject*)newObj)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+        ((GameObject*)newObj)->anim.velocityX =
+            ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+        ((GameObject*)newObj)->anim.velocityZ =
+            ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
             ((GameObject*)newObj)->anim.velocityZ * ((GameObject*)newObj)->anim.velocityZ;
         if (len != lbl_803E39B8)
@@ -273,8 +279,10 @@ int fn_801833E4(int obj, int player, int state)
         *(s16*)(setup + 0x1a) = 2000;
         newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                  *(int*)&((GameObject*)obj)->anim.parent);
-        ((GameObject*)newObj)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
-        ((GameObject*)newObj)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+        ((GameObject*)newObj)->anim.velocityX =
+            ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+        ((GameObject*)newObj)->anim.velocityZ =
+            ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
             ((GameObject*)newObj)->anim.velocityZ * ((GameObject*)newObj)->anim.velocityZ;
         if (len != lbl_803E39B8)
