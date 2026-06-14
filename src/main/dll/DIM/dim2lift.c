@@ -16,7 +16,7 @@ extern int FUN_80017a98();
 extern void Obj_FreeObject(int obj);
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjMsg_SendToObject();
-extern undefined4 fn_801BC2D8();
+extern undefined4 DIM2icicle_updateHitResponse();
 
 extern undefined4 DAT_803265a0;
 extern undefined4 DAT_803265e0;
@@ -219,7 +219,7 @@ LAB_801ba764:
     {
         DAT_803adc4d = DAT_803adc4d & 0xfe;
     }
-    fn_801BC2D8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    DIM2icicle_updateHitResponse(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
     return 0;
 }
 
@@ -292,7 +292,7 @@ FUN_801ba6d8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     {
         DAT_803adc4d = DAT_803adc4d | 1;
     }
-    fn_801BC2D8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    DIM2icicle_updateHitResponse(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
     return 0;
 }
 
@@ -1320,6 +1320,6 @@ int fn_801BA224(int obj, int param2)
     {
         gDIMbossAnimController[0x611] &= ~1;
     }
-    fn_801BC2D8(obj, param2);
+    DIM2icicle_updateHitResponse(obj, param2);
     return 0;
 }

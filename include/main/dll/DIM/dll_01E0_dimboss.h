@@ -152,9 +152,26 @@ typedef union DIMbossSteamFlags {
   } bits;
 } DIMbossSteamFlags;
 
+typedef struct DIMbossEffectMarker {
+  u16 rotX;
+  u16 rotY;
+  u16 rotZ;
+  u16 pad06;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} DIMbossEffectMarker;
+
 typedef struct DIMbossTopState {
   DIMbossEffect *effect;
-  u8 pad004[0xA4 - 0x04];
+  DIMbossEffectMarker blueWhiteEffectSource;
+  DIMbossEffectMarker breathBurstSource;
+  DIMbossEffectMarker tonsilDustSource;
+  DIMbossEffectMarker liftGlowSource;
+  f32 breathBurstMtx[12];
+  f32 blueWhiteVelocity[3];
+  u8 pad0A0[0xA4 - 0xA0];
   f32 launchLift;
   f32 idleLift;
   f32 introSinkHeight;
@@ -172,16 +189,28 @@ typedef struct DIMbossAnimScratch {
 } DIMbossAnimScratch;
 
 typedef struct DIMbossRuntime {
-  u8 pad000[0x270];
+  u8 pad000[0x25F];
+  u8 effectActive;
+  u8 pad260[0x270 - 0x260];
   s16 field270;
   u8 pad272[0x274 - 0x272];
   s16 scale;
   u8 pad276[0x2D0 - 0x276];
-  undefined4 targetModel;
-  u8 pad2D4[0x354 - 0x2D4];
+  int targetModel;
+  u8 pad2D4[0x314 - 0x2D4];
+  u32 sequenceTriggerFlags;
+  u8 pad318[0x346 - 0x318];
+  u8 hitResult;
+  u8 pad347[0x349 - 0x347];
+  u8 animFinished;
+  u8 pad34A[0x34F - 0x34A];
+  s8 hitDamageCount;
+  u8 pad350[0x354 - 0x350];
   u8 animMode;
   u8 pad355[0x35C - 0x355];
-  u8 moveScratch[0x3F4 - 0x35C];
+  u8 moveScratch[0x3E0 - 0x35C];
+  u32 savedPendingParentObj;
+  u8 pad3E4[0x3F4 - 0x3E4];
   s16 activeMoveId;
   s16 eventGameBit;
   u8 pad3F8[0x400 - 0x3F8];
@@ -241,8 +270,18 @@ STATIC_ASSERT(offsetof(DIMbossEffect, glowType) == 0x2F8);
 STATIC_ASSERT(offsetof(DIMbossEffect, glowAlpha) == 0x2F9);
 STATIC_ASSERT(offsetof(DIMbossEffect, glowAlphaStep) == 0x2FA);
 
+STATIC_ASSERT(sizeof(DIMbossEffectMarker) == 0x18);
+STATIC_ASSERT(offsetof(DIMbossEffectMarker, scale) == 0x08);
+STATIC_ASSERT(offsetof(DIMbossEffectMarker, x) == 0x0C);
+
 STATIC_ASSERT(sizeof(DIMbossTopState) == 0xB8);
 STATIC_ASSERT(offsetof(DIMbossTopState, effect) == 0x00);
+STATIC_ASSERT(offsetof(DIMbossTopState, blueWhiteEffectSource) == 0x04);
+STATIC_ASSERT(offsetof(DIMbossTopState, breathBurstSource) == 0x1C);
+STATIC_ASSERT(offsetof(DIMbossTopState, tonsilDustSource) == 0x34);
+STATIC_ASSERT(offsetof(DIMbossTopState, liftGlowSource) == 0x4C);
+STATIC_ASSERT(offsetof(DIMbossTopState, breathBurstMtx) == 0x64);
+STATIC_ASSERT(offsetof(DIMbossTopState, blueWhiteVelocity) == 0x94);
 STATIC_ASSERT(offsetof(DIMbossTopState, launchLift) == 0xA4);
 STATIC_ASSERT(offsetof(DIMbossTopState, idleLift) == 0xA8);
 STATIC_ASSERT(offsetof(DIMbossTopState, introSinkHeight) == 0xAC);
@@ -256,13 +295,19 @@ STATIC_ASSERT(offsetof(DIMbossAnimScratch, animTable) == DIMBOSS_ANIM_TABLE_OFFS
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, hitDetectAnimTable) == DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET);
 
 STATIC_ASSERT(sizeof(DIMbossRuntime) == DIMBOSS_RUNTIME_SIZE);
+STATIC_ASSERT(offsetof(DIMbossRuntime, effectActive) == 0x25F);
 STATIC_ASSERT(offsetof(DIMbossRuntime, field270) == 0x270);
 STATIC_ASSERT(offsetof(DIMbossRuntime, scale) == 0x274);
 STATIC_ASSERT(offsetof(DIMbossRuntime, targetModel) == 0x2D0);
+STATIC_ASSERT(offsetof(DIMbossRuntime, sequenceTriggerFlags) == 0x314);
+STATIC_ASSERT(offsetof(DIMbossRuntime, hitResult) == 0x346);
+STATIC_ASSERT(offsetof(DIMbossRuntime, animFinished) == 0x349);
+STATIC_ASSERT(offsetof(DIMbossRuntime, hitDamageCount) == 0x34F);
 STATIC_ASSERT(offsetof(DIMbossRuntime, animMode) == 0x354);
 STATIC_ASSERT(offsetof(DIMbossRuntime, moveScratch) == 0x35C);
 STATIC_ASSERT(offsetof(DIMbossRuntime, activeMoveId) == 0x3F4);
 STATIC_ASSERT(offsetof(DIMbossRuntime, eventGameBit) == 0x3F6);
+STATIC_ASSERT(offsetof(DIMbossRuntime, savedPendingParentObj) == 0x3E0);
 STATIC_ASSERT(offsetof(DIMbossRuntime, stateFlags) == 0x400);
 STATIC_ASSERT(offsetof(DIMbossRuntime, phase) == 0x402);
 STATIC_ASSERT(offsetof(DIMbossRuntime, hitReactMode) == 0x405);

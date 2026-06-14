@@ -39,7 +39,7 @@ extern int* gPlayerInterface;
 extern u8 lbl_803DDB84;
 extern u8 lbl_80325960[];
 extern u8 gDIMbossAnimController[];
-extern int fn_801BC2D8(int a, int obj);
+extern int DIM2icicle_updateHitResponse();
 extern f32 lbl_803E4BB8;
 
 void FUN_801b9cc4(int param_1)
@@ -161,7 +161,7 @@ int fn_801B9ECC(int a, int obj)
     {
         gDIMbossAnimController[0x611] &= ~1;
     }
-    fn_801BC2D8(a, obj);
+    DIM2icicle_updateHitResponse(a, obj);
     return 0;
 }
 

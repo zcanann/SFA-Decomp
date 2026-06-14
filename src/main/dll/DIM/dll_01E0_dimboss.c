@@ -388,7 +388,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             break;
         case 2:
             animUpdate->hitVolumePair = 0;
-            fn_801BC7E4(obj, animUpdate, (int)runtime, (int)runtime);
+            DIM2icicle_updateCombatState(obj, animUpdate, runtime, runtime);
             if (runtime->hitReactMode == 1)
             {
                 runtime->field270 = 0;
@@ -411,7 +411,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
             break;
         }
     }
-    warpDarkIceMines_801bbb44(obj, runtime);
+    DIM2icicle_updateDarkIceMinesWarpAndEffects(obj, runtime);
     if (obj->animStateId == -1)
     {
         runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
@@ -493,7 +493,7 @@ void DIMboss_render(DIMbossObject* obj, undefined4 param_2, undefined4 param_3, 
     }
 
     objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E4C44);
-    fn_801BB598(obj, runtime);
+    DIM2icicle_updateBossSequenceEffects(obj, runtime);
     dll_2E_func06(obj, gDIMbossAnimController, 0);
 
     effect = runtime->topState->effect;
@@ -608,10 +608,10 @@ void DIMboss_update(DIMbossObject* obj)
                 {
                     *(undefined4*)((int)childObject + 0x30) = obj->facingAngle;
                 }
-                fn_801BC7E4(obj, 0, runtime, runtime);
+                DIM2icicle_updateCombatState(obj, NULL, runtime, runtime);
                 dll_2E_func04(gDIMbossAnimController, runtime->targetModel);
                 dll_2E_func03(obj, gDIMbossAnimController);
-                warpDarkIceMines_801bbb44(obj, runtime);
+                DIM2icicle_updateDarkIceMinesWarpAndEffects(obj, runtime);
             }
         }
     }

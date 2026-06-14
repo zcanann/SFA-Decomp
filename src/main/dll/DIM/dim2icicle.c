@@ -170,7 +170,7 @@ typedef struct IcicleFxPos {
 /*
  * --INFO--
  *
- * Function: fn_801BB598
+ * Function: DIM2icicle_updateBossSequenceEffects
  * EN v1.0 Address: 0x801BB598
  * EN v1.0 Size: 1452b
  * EN v1.1 Size: 1452b
@@ -181,10 +181,9 @@ typedef struct IcicleFxPos {
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801BB598(DIMbossObject *obj, DIMbossRuntime *runtime)
+void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
   int objIndex;
-  int *state;
   DIMbossTopState *topState;
   DIMbossEffect *effect;
   s16 brightness;
@@ -198,14 +197,13 @@ void fn_801BB598(DIMbossObject *obj, DIMbossRuntime *runtime)
 
   objIndex = (int)obj;
   topState = runtime->topState;
-  state = (int *)topState;
   effect = topState->effect;
   if (effect != NULL) {
     if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
-      modelLightStruct_setPosition((ModelLightStruct *)effect, *(f32 *)(state + 0x16), *(f32 *)(state + 0x17), *(f32 *)(state + 0x18));
+      modelLightStruct_setPosition((ModelLightStruct *)effect, topState->liftGlowSource.x, topState->liftGlowSource.y, topState->liftGlowSource.z);
     }
     else {
-      modelLightStruct_setPosition((ModelLightStruct *)effect, *(f32 *)(state + 0x10), *(f32 *)(state + 0x11), *(f32 *)(state + 0x12));
+      modelLightStruct_setPosition((ModelLightStruct *)effect, topState->tonsilDustSource.x, topState->tonsilDustSource.y, topState->tonsilDustSource.z);
     }
     modelLightStruct_getSpecularColor((ModelLightStruct *)effect, &colA, &colB, &colG, &colR);
     modelLightStruct_setGlowColor((ModelLightStruct *)effect, colA, colB, colG, 0xc0);
@@ -278,29 +276,29 @@ void fn_801BB598(DIMbossObject *obj, DIMbossRuntime *runtime)
       i = i + 1;
     } while (i < 5);
   }
-  *(f32 *)(state + 10) = lbl_803E4BD8;
-  *(f32 *)(state + 0xb) = lbl_803E4C3C;
-  *(f32 *)(state + 0xc) = lbl_803E4C40;
-  *(f32 *)(state + 9) = lbl_803E4C44;
-  *(u16 *)(state + 8) = 0;
-  *(u16 *)((int)state + 0x1e) = 0;
-  *(u16 *)(state + 7) = 0;
-  ObjPath_GetPointWorldPosition(objIndex, 0xd, (f32 *)(state + 10), (f32 *)(state + 0xb), (f32 *)(state + 0xc), 1);
-  ObjPath_GetPointWorldPosition(objIndex, 0xd, (f32 *)(state + 4), (f32 *)(state + 5), (f32 *)(state + 6), 0);
-  ObjPath_GetPointWorldPosition(objIndex, 0xb, (f32 *)(state + 0x10), (f32 *)(state + 0x11), (f32 *)(state + 0x12), 0);
-  *(f32 *)(state + 0x16) = lbl_803E4BD8;
-  *(f32 *)(state + 0x17) = lbl_803E4C48;
-  *(f32 *)(state + 0x18) = lbl_803E4BC8;
-  *(f32 *)(state + 0x15) = lbl_803E4C44;
-  *(u16 *)(state + 0x14) = 0;
-  *(u16 *)((int)state + 0x4e) = 0;
-  *(u16 *)(state + 0x13) = 0;
-  ObjPath_GetPointWorldPosition(objIndex, 0xc, (f32 *)(state + 0x16), (f32 *)(state + 0x17), (f32 *)(state + 0x18), 1);
-  memcpy(state + 0x19, (void *)ObjPath_GetPointModelMtx(objIndex, 0), 0x30);
+  topState->breathBurstSource.x = lbl_803E4BD8;
+  topState->breathBurstSource.y = lbl_803E4C3C;
+  topState->breathBurstSource.z = lbl_803E4C40;
+  topState->breathBurstSource.scale = lbl_803E4C44;
+  topState->breathBurstSource.rotZ = 0;
+  topState->breathBurstSource.rotY = 0;
+  topState->breathBurstSource.rotX = 0;
+  ObjPath_GetPointWorldPosition(objIndex, 0xd, &topState->breathBurstSource.x, &topState->breathBurstSource.y, &topState->breathBurstSource.z, 1);
+  ObjPath_GetPointWorldPosition(objIndex, 0xd, &topState->blueWhiteEffectSource.x, &topState->blueWhiteEffectSource.y, &topState->blueWhiteEffectSource.z, 0);
+  ObjPath_GetPointWorldPosition(objIndex, 0xb, &topState->tonsilDustSource.x, &topState->tonsilDustSource.y, &topState->tonsilDustSource.z, 0);
+  topState->liftGlowSource.x = lbl_803E4BD8;
+  topState->liftGlowSource.y = lbl_803E4C48;
+  topState->liftGlowSource.z = lbl_803E4BC8;
+  topState->liftGlowSource.scale = lbl_803E4C44;
+  topState->liftGlowSource.rotZ = 0;
+  topState->liftGlowSource.rotY = 0;
+  topState->liftGlowSource.rotX = 0;
+  ObjPath_GetPointWorldPosition(objIndex, 0xc, &topState->liftGlowSource.x, &topState->liftGlowSource.y, &topState->liftGlowSource.z, 1);
+  memcpy(topState->breathBurstMtx, (void *)ObjPath_GetPointModelMtx(objIndex, 0), 0x30);
   zero = lbl_803E4BD8;
-  *(f32 *)(state + 0x1c) = zero;
-  *(f32 *)(state + 0x20) = zero;
-  *(f32 *)(state + 0x24) = zero;
+  topState->breathBurstMtx[3] = zero;
+  topState->breathBurstMtx[7] = zero;
+  topState->breathBurstMtx[11] = zero;
   gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAGS_ICICLE_DUST_AND_BREATH;
 }
 
@@ -329,15 +327,10 @@ extern f32 lbl_803E4C64;
 extern f32 lbl_803E4C68;
 extern f32 lbl_803E4C6C;
 
-typedef struct IcicleWarpFlags {
-    u8 pending : 1;
-    u8 rest : 7;
-} IcicleWarpFlags;
-
 /*
  * --INFO--
  *
- * Function: warpDarkIceMines_801bbb44
+ * Function: DIM2icicle_updateDarkIceMinesWarpAndEffects
  * EN v1.0 Address: 0x801BBB44
  * EN v1.0 Size: 1940b
  * EN v1.1 Size: 1940b
@@ -346,85 +339,86 @@ typedef struct IcicleWarpFlags {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void warpDarkIceMines_801bbb44(int obj, int runtime)
+void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
-  u8 *state;
+  int objIndex;
+  DIMbossTopState *topState;
   int counter;
   int i;
-  u32 flags;
   f32 vec[3];
 
-  state = *(u8 **)(runtime + 0x40c);
-  counter = *(int *)(state + 0xb0);
+  objIndex = (int)obj;
+  topState = runtime->topState;
+  counter = topState->defeatTimer;
   if (counter != 0) {
-    *(int *)(state + 0xb0) = counter - 1;
-    if (*(int *)(state + 0xb0) <= 0) {
-      *(int *)(state + 0xb0) = 0;
+    topState->defeatTimer = counter - 1;
+    if (topState->defeatTimer <= 0) {
+      topState->defeatTimer = 0;
       setShowWorldMapHud(0);
       warpToMap(0x77, 1);
       return;
     }
   }
-  if (((IcicleWarpFlags *)(state + 0xb6))->pending) {
+  if (topState->steamFlags.bits.sfxPending) {
     getEnvfxAct(0, 0, 0xdb, 0);
     getEnvfxAct(0, 0, 0xdc, 0);
     skyFn_80089710(7, 1, 0);
     skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
     skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
-    ((IcicleWarpFlags *)(state + 0xb6))->pending = 0;
+    topState->steamFlags.bits.sfxPending = 0;
   }
-  if (*(int *)(runtime + 0x314) & 4) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~4;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[0]);
+  if (runtime->sequenceTriggerFlags & 4) {
+    runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~4;
+    Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[0]);
     gDIMbossSequenceFlags |= 0x204;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(runtime + 0x314) & 2) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~2;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[1]);
+  if (runtime->sequenceTriggerFlags & 2) {
+    runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~2;
+    Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[1]);
     gDIMbossSequenceFlags |= 0x404;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(runtime + 0x314) & 0x10) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~0x10;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[2]);
+  if (runtime->sequenceTriggerFlags & 0x10) {
+    runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~0x10;
+    Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[2]);
     gDIMbossSequenceFlags |= 0x804;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(runtime + 0x314) & 8) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~8;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[3]);
+  if (runtime->sequenceTriggerFlags & 8) {
+    runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~8;
+    Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[3]);
     gDIMbossSequenceFlags |= 0x1004;
     doRumble(lbl_803E4BF8);
   }
   if (gDIMbossSequenceFlags & 0x2000) {
     i = 0;
     do {
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b1, state + 0x4c, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b1, &topState->liftGlowSource, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0x32);
-    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, state + 0x4c, 0x200001, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, state + 0x4c, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, &topState->liftGlowSource, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, &topState->liftGlowSource, 0x200001, -1, NULL);
   }
   if (gDIMbossSequenceFlags & 0x80000) {
-    ((void (*)(int, int, int, int, int))*(code **)(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x800, 0, 1, 0);
+    ((void (*)(int, int, int, int, int))*(code **)(*(int *)lbl_803DCAB4 + 0xc))(objIndex, 0x800, 0, 1, 0);
   }
-  if ((gDIMbossSequenceFlags & 0x8020) || *(s8 *)(runtime + 0x354) < 2) {
+  if ((gDIMbossSequenceFlags & 0x8020) || runtime->animMode < 2) {
     if (gDIMbossSequenceFlags & 0x20) {
       i = 0;
       do {
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, state + 0x34, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, &topState->tonsilDustSource, 0x200001, -1, NULL);
         i = i + 1;
       } while (i < 7);
     }
     else {
-      if (randomGetRange(0, *(s8 *)(runtime + 0x354)) == 0 && *(s16 *)(runtime + 0x402) == 2) {
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, state + 0x34, 0x200001, -1, NULL);
+      if (randomGetRange(0, runtime->animMode) == 0 && runtime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, &topState->tonsilDustSource, 0x200001, -1, NULL);
       }
     }
     if (gDIMbossSequenceFlags & 0x8000) {
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, state + 0x34, 0x200001, -1, NULL);
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, state + 0x34, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, &topState->tonsilDustSource, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, &topState->tonsilDustSource, 0x200001, -1, NULL);
     }
   }
   if (gDIMbossSequenceFlags & 0x101c0) {
@@ -434,27 +428,27 @@ void warpDarkIceMines_801bbb44(int obj, int runtime)
         vec[0] = lbl_803E4C58 * (f32)(int)randomGetRange(-5, 5);
         vec[1] = lbl_803E4C58 * (f32)(int)randomGetRange(-5, 5);
         vec[2] = lbl_803E4C5C * (f32)(int)randomGetRange(2, 8);
-        PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, state + 0x1c, 0x200001, -1, vec);
+        PSMTXMultVec(topState->breathBurstMtx, vec, vec);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, &topState->breathBurstSource, 0x200001, -1, vec);
         i = i + 1;
       } while (i < 5);
     }
     if (gDIMbossSequenceFlags & 0x80) {
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, state + 4, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, &topState->blueWhiteEffectSource, 0x200001, -1, NULL);
     }
     if (gDIMbossSequenceFlags & 0x100) {
       vec[0] = lbl_803E4C58;
       vec[1] = lbl_803E4C60;
       vec[2] = lbl_803E4C64 * (f32)(int)randomGetRange(4, 8);
-      PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b6, state + 4, 0x200001, -1, vec);
+      PSMTXMultVec(topState->breathBurstMtx, vec, vec);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b6, &topState->blueWhiteEffectSource, 0x200001, -1, vec);
     }
     if (gDIMbossSequenceFlags & 0x10000) {
       vec[0] = lbl_803E4BD8;
       vec[1] = lbl_803E4C60;
       vec[2] = lbl_803E4C68;
-      PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-      memcpy(state + 0x94, vec, 0xc);
+      PSMTXMultVec(topState->breathBurstMtx, vec, vec);
+      memcpy(topState->blueWhiteVelocity, vec, 0xc);
       gDIMbossSequenceFlags |= 0x20000LL;
     }
   }
@@ -529,7 +523,7 @@ typedef struct IcicleHitFx {
 /*
  * --INFO--
  *
- * Function: fn_801BC2D8
+ * Function: DIM2icicle_updateHitResponse
  * EN v1.0 Address: 0x801BC2D8
  * EN v1.0 Size: 1292b
  * EN v1.1 Size: 1292b
@@ -538,9 +532,10 @@ typedef struct IcicleHitFx {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801BC2D8(int obj, int param_2)
+void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
 {
-  int *state;
+  DIMbossRuntime *objectRuntime;
+  int objIndex;
   u8 hit;
   int hitResult;
   int player;
@@ -551,101 +546,102 @@ void fn_801BC2D8(int obj, int param_2)
   int hitId;
   IcicleHitDesc desc;
 
-  state = ((GameObject *)obj)->extra;
+  objIndex = (int)obj;
+  objectRuntime = (DIMbossRuntime *)obj->extra;
   Obj_GetPlayerObject();
   hit = 0;
   desc = *(IcicleHitDesc *)lbl_802C2348;
   if (lbl_803DDB8C != 0) {
     lbl_803DDB8C = lbl_803DDB8C - 1;
   }
-  hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitVolume);
+  hitResult = ObjHits_GetPriorityHit(objIndex, &hitId, &hitType, &hitVolume);
   if (hitResult != 0) {
     gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
-    if (*(s16 *)((int)state + 0x402) == 1) {
+    if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
       if ((gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE) == 0 ||
           hitType != 2) {
         hit = 1;
       }
     }
-    else if (*(s16 *)((int)state + 0x402) == 2) {
-      if (hitType != 4 || ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E4C10 || ((GameObject *)obj)->anim.currentMove != 0x12) {
+    else if (objectRuntime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
+      if (hitType != 4 || obj->anim.currentMoveProgress < lbl_803E4C10 || obj->anim.currentMove != 0x12) {
         hit = 1;
       }
     }
     if (hit) {
       if (lbl_803DDB8C == 0) {
-        Sfx_PlayFromObject(obj, 0x4b2);
+        Sfx_PlayFromObject(objIndex, 0x4b2);
         base = (IcicleHitEntry *)DIM2Icicle_GetActiveModel((void *)obj)[0x14];
         ((IcicleHitFx *)lbl_803AC994)->x = playerMapOffsetX + base[hitType].px;
         ((IcicleHitFx *)lbl_803AC994)->y = base[hitType].py;
         ((IcicleHitFx *)lbl_803AC994)->z = playerMapOffsetZ + base[hitType].pz;
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x328, lbl_803AC994, 0x200001, -1, NULL);
-        ((IcicleHitFx *)lbl_803AC994)->x = ((IcicleHitFx *)lbl_803AC994)->x - ((GameObject *)obj)->anim.worldPosX;
-        ((IcicleHitFx *)lbl_803AC994)->y = ((IcicleHitFx *)lbl_803AC994)->y - ((GameObject *)obj)->anim.worldPosY;
-        ((IcicleHitFx *)lbl_803AC994)->z = ((IcicleHitFx *)lbl_803AC994)->z - ((GameObject *)obj)->anim.worldPosZ;
+        (*gPartfxInterface)->spawnObject((void *)objIndex, 0x328, lbl_803AC994, 0x200001, -1, NULL);
+        ((IcicleHitFx *)lbl_803AC994)->x = ((IcicleHitFx *)lbl_803AC994)->x - obj->anim.worldPosX;
+        ((IcicleHitFx *)lbl_803AC994)->y = ((IcicleHitFx *)lbl_803AC994)->y - obj->anim.worldPosY;
+        ((IcicleHitFx *)lbl_803AC994)->z = ((IcicleHitFx *)lbl_803AC994)->z - obj->anim.worldPosZ;
         ((IcicleHitFx *)lbl_803AC994)->scale = lbl_803E4C44;
         ((IcicleHitFx *)lbl_803AC994)->a = 0;
         ((IcicleHitFx *)lbl_803AC994)->b = 0;
         ((IcicleHitFx *)lbl_803AC994)->c = 0;
         desc.f1 += randomGetRange(0, 0x9b);
         desc.f2 += randomGetRange(0, 0x9b);
-        ((void (*)(int, int, u8 *, int, int, IcicleHitDesc *))*(code **)(*(int *)gDIMbossHitEffectResource + 4))(obj, 0, lbl_803AC994, 1, -1, &desc);
+        ((void (*)(int, int, u8 *, int, int, IcicleHitDesc *))*(code **)(*(int *)gDIMbossHitEffectResource + 4))(objIndex, 0, lbl_803AC994, 1, -1, &desc);
         lbl_803DDB8C = 0x1e;
       }
     }
     else {
-      if (*(void **)(param_2 + 0x2d0) == NULL) {
+      if (runtime->targetModel == 0) {
         player = Obj_GetPlayerObject();
         if (fn_80295A04(player, 1) != 0) {
           ((void (*)(int, int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x28))
-                    (obj, param_2, (int)state + 0x35c, (int)*(s16 *)((int)state + 0x3f4), 0, 2, 10, -1, -1);
-          *(int *)(param_2 + 0x2d0) = player;
-          *(u8 *)(param_2 + 0x349) = 0;
+                    (objIndex, (int)runtime, (int)objectRuntime->moveScratch, (int)objectRuntime->activeMoveId, 0, 2, 10, -1, -1);
+          runtime->targetModel = player;
+          runtime->animFinished = 0;
         }
       }
-      if (*(s16 *)((int)state + 0x402) == 1) {
-        if (*(s8 *)(param_2 + 0x354) == 3) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x68, 0, 0, 0);
+      if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
+        if (runtime->animMode == 3) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x68, 0, 0, 0);
         }
-        else if (*(s8 *)(param_2 + 0x354) == 2) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x6c, 0, 0, 0);
-        }
-      }
-      else if (*(s16 *)((int)state + 0x402) == 2) {
-        if (*(s8 *)(param_2 + 0x354) == 3) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x77, 0, 0, 0);
-        }
-        else if (*(s8 *)(param_2 + 0x354) == 2) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x78, 0, 0, 0);
+        else if (runtime->animMode == 2) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x6c, 0, 0, 0);
         }
       }
-      *(u8 *)(param_2 + 0x346) = 0;
-      *(s8 *)(param_2 + 0x34f) = hitResult;
-      *(u8 *)(param_2 + 0x354) -= 1;
-      Sfx_PlayFromObject(obj, 0x4b1);
-      if (*(s8 *)(param_2 + 0x354) <= 0) {
-        *(u8 *)(param_2 + 0x354) = 0;
-        *(u8 *)(param_2 + 0x349) = 0;
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0);
-        hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
+      else if (objectRuntime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
+        if (runtime->animMode == 3) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x77, 0, 0, 0);
+        }
+        else if (runtime->animMode == 2) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x78, 0, 0, 0);
+        }
+      }
+      runtime->hitResult = 0;
+      runtime->hitDamageCount = hitResult;
+      runtime->animMode -= 1;
+      Sfx_PlayFromObject(objIndex, 0x4b1);
+      if (runtime->animMode <= 0) {
+        runtime->animMode = 0;
+        runtime->animFinished = 0;
+        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(objIndex, (int)runtime, 0);
+        hitState = (ObjHitsPriorityState *)obj->anim.hitReactState;
         hitState->flags &= ~1;
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
+        *(u8 *)&obj->anim.resetHitboxMode |= 8;
+        *(u8 *)&obj->anim.resetHitboxMode &= ~0x80;
         GameBit_Set(0x20e, 1);
-        if (*(s16 *)((int)state + 0x402) == 1) {
+        if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
           GameBit_Set(0x20b, 1);
         }
-        else if (*(s16 *)((int)state + 0x402) == 2) {
+        else if (objectRuntime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
           GameBit_Set(0x266, 1);
         }
       }
-      else if (*(s16 *)((int)state + 0x402) == 1) {
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 10);
+      else if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
+        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(objIndex, (int)runtime, 10);
       }
       else {
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0xb);
+        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(objIndex, (int)runtime, 0xb);
       }
-      ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
+      ObjMsg_SendToObject(hitId, 0xe0001, objIndex, 0);
     }
   }
 }
@@ -653,7 +649,7 @@ void fn_801BC2D8(int obj, int param_2)
 /*
  * --INFO--
  *
- * Function: fn_801BC7E4
+ * Function: DIM2icicle_updateCombatState
  * EN v1.0 Address: 0x801BC7E4
  * EN v1.0 Size: 848b
  * EN v1.1 Size: 848b
@@ -662,21 +658,24 @@ void fn_801BC2D8(int obj, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801BC7E4(int obj, int animUpdate, int runtime, int updateRuntime)
+void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUpdate,
+                                  DIMbossRuntime *runtime, DIMbossRuntime *updateRuntime)
 {
   IcicleState *state;
   u8 *tricky;
+  int objIndex;
   f32 timer;
   f32 limit;
 
-  state = *(IcicleState **)(runtime + 0x40c);
+  objIndex = (int)obj;
+  state = (IcicleState *)runtime->topState;
   tricky = (u8 *)getTrickyObject();
-  ObjHits_EnableObject(obj);
-  *(u8 *)(updateRuntime + 0x25f) = 1;
-  ((void (*)(int, int, f32, int))*(code **)(*gBaddieControlInterface + 0x2c))(obj, updateRuntime, lbl_803E4C70, 1);
+  ObjHits_EnableObject(objIndex);
+  updateRuntime->effectActive = 1;
+  ((void (*)(int, int, f32, int))*(code **)(*gBaddieControlInterface + 0x2c))(objIndex, (int)updateRuntime, lbl_803E4C70, 1);
   ((void (*)(int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x54))
-            (obj, updateRuntime, runtime + 0x35c, (int)*(s16 *)(runtime + 0x3f4), runtime + 0x405, 0, 0, 0);
-  if (*(s16 *)(updateRuntime + 0x274) == 6) {
+            (objIndex, (int)updateRuntime, (int)runtime->moveScratch, (int)runtime->activeMoveId, (int)&runtime->hitReactMode, 0, 0, 0);
+  if (updateRuntime->scale == 6) {
     state->meltTimer =
          -(timeDelta * (lbl_803E4BC8 * ((GameObject *)obj)->anim.currentMoveProgress + lbl_803E4C44) - state->meltTimer);
   }
@@ -699,47 +698,47 @@ void fn_801BC7E4(int obj, int animUpdate, int runtime, int updateRuntime)
       if (timer <= limit) {
         state->lightTimer = timer + timeDelta;
         if (state->lightTimer >= limit) {
-          ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 1, obj);
+          ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 1, objIndex);
         }
       }
     }
     if (state->fadeTimer > (timer = lbl_803E4BD8)) {
       state->fadeTimer = state->fadeTimer + timeDelta;
       if (state->fadeTimer >= lbl_803E4BEC) {
-        *(u16 *)(runtime + 0x400) &= ~4;
+        runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_TARGET_TRICKY;
         state->fadeTimer = timer;
         ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 0, 0);
         state->lightTimer = lbl_803E4C44;
       }
     }
-    else if (*(s16 *)(runtime + 0x402) == 1) {
-      *(u16 *)(runtime + 0x400) |= 4;
+    else if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
+      runtime->stateFlags |= DIMBOSS_STATE_FLAG_TARGET_TRICKY;
       state->fadeTimer = lbl_803E4C44;
-      DIM2icicle_createStateLight(obj, 0);
+      DIM2icicle_createStateLight(objIndex, 0);
     }
   }
-  if (*(s16 *)(runtime + 0x402) == 2) {
-    DIM2icicle_createStateLight(obj, 1);
+  if (runtime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
+    DIM2icicle_createStateLight(objIndex, 1);
   }
   {
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT) {
       gDIMbossSequenceFlags &= ~DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT;
-      DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(runtime + 0x40c) + 4), (f32 *)(*(int *)(runtime + 0x40c) + 0x94));
+      DIM2icicle_spawnBlueWhiteEffect((int *)&runtime->topState->blueWhiteEffectSource, runtime->topState->blueWhiteVelocity);
     }
   }
-  if (*(u16 *)(runtime + 0x400) & 4) {
+  if (runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) {
     gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE;
   }
-  if (*(s16 *)(runtime + 0x402) == 1) {
-    ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
+  if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
+    ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, objIndex, 1, 2);
     ((GameObject *)obj)->unkE4 = 1;
   }
   else {
     ((GameObject *)obj)->unkE4 = 2;
   }
-  *(int *)(runtime + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
-  *(int *)&((GameObject *)obj)->unkC0 = 0;
+  runtime->savedPendingParentObj = *(int *)&((GameObject *)obj)->pendingParentObj;
+  *(int *)&((GameObject *)obj)->pendingParentObj = 0;
   ((void (*)(f32, int, int, f32, void *, void *))*(code **)(*(int *)gPlayerInterface + 8))
-            (timeDelta, obj, updateRuntime, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
-  *(int *)&((GameObject *)obj)->unkC0 = *(int *)(runtime + 0x3e0);
+            (timeDelta, objIndex, (int)updateRuntime, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
+  *(int *)&((GameObject *)obj)->pendingParentObj = runtime->savedPendingParentObj;
 }
