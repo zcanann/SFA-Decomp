@@ -177,14 +177,14 @@ void* objCreateLight(int arg, u8 addToList)
 
 void modelLightStruct_freeSlot(void** lightSlot)
 {
-    int count;
     int i;
+    int count;
     ModelLightStruct* light;
 
     light = *lightSlot;
     if (light != NULL)
     {
-        for (i = 0; i < (count = gModelLightCount); i++)
+        for (i = 0, count = gModelLightCount; i < count; i++)
         {
             if (gModelLightList[i] == light)
             {
