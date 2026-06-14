@@ -1049,7 +1049,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
         }
         else
         {
-            if (*(s16*)(hitObj + 0x46) == 0x6ae && ((ArwingState*)state)->mode == 1)
+            if (((GameObject*)hitObj)->anim.seqId == 0x6ae && ((ArwingState*)state)->mode == 1)
             {
                 Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_movelp);
                 return;

@@ -89,12 +89,13 @@ void arwarwingbo_initialise(void)
 
 void arwarwingbo_update(int obj)
 {
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ArwingBombState* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
     int arwing = getArwing();
     f32 zero = lbl_803E7044;
 
-    if (*(u16*)(arwing + 0xb0) & 0x1000)
+    if (((GameObject*)arwing)->objectFlags & 0x1000)
     {
         arwarwing_clearActiveBomb(arwing);
         Obj_FreeObject(obj);
@@ -117,19 +118,19 @@ void arwarwingbo_update(int obj)
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             state->explosionTimer = lbl_803E7040;
             state->control.fuseTimer = lbl_803E7044;
-            ((GameObject*)obj)->anim.alpha = 0;
+            objAnim->alpha = 0;
             hitState->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
-            ((GameObject*)obj)->anim.velocityX = lbl_803E7044;
-            ((GameObject*)obj)->anim.velocityY = lbl_803E7044;
-            ((GameObject*)obj)->anim.velocityZ = lbl_803E7044;
+            objAnim->velocityX = lbl_803E7044;
+            objAnim->velocityY = lbl_803E7044;
+            objAnim->velocityZ = lbl_803E7044;
         }
         (*gPartfxInterface)->spawnObject((void*)obj, 0x79e, NULL, 1, -1,
-                                         (void*)(obj + 0x24));
+                                         &objAnim->velocityX);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x79e, NULL, 1, -1,
-                                         (void*)(obj + 0x24));
+                                         &objAnim->velocityX);
         ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
         if (hitState->lastHitObject != 0 ||
             hitState->contactFlags != 0 ||
@@ -140,16 +141,16 @@ void arwarwingbo_update(int obj)
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             state->explosionTimer = lbl_803E7040;
             state->control.fuseTimer = lbl_803E7044;
-            ((GameObject*)obj)->anim.alpha = 0;
+            objAnim->alpha = 0;
             hitState->flags &= ~0x200;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
-            ((GameObject*)obj)->anim.velocityX = lbl_803E7044;
-            ((GameObject*)obj)->anim.velocityY = lbl_803E7044;
-            ((GameObject*)obj)->anim.velocityZ = lbl_803E7044;
+            objAnim->velocityX = lbl_803E7044;
+            objAnim->velocityY = lbl_803E7044;
+            objAnim->velocityZ = lbl_803E7044;
         }
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
+                objAnim->velocityZ * timeDelta);
     }
 }
