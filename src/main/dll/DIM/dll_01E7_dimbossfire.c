@@ -72,13 +72,20 @@ void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 typedef struct DimbossfireState
 {
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
+    u8 flags;
+    u8 flameIndex;
+    u8 pad02[0x4 - 0x2];
+    f32 activeTimer;
+    f32 initialActiveTimer;
+    f32 cooldownTimer;
     s32 light;
     u8 pad14[0x18 - 0x14];
 } DimbossfireState;
+
+STATIC_ASSERT(offsetof(DimbossfireState, activeTimer) == 0x4);
+STATIC_ASSERT(offsetof(DimbossfireState, initialActiveTimer) == 0x8);
+STATIC_ASSERT(offsetof(DimbossfireState, cooldownTimer) == 0xC);
+STATIC_ASSERT(offsetof(DimbossfireState, light) == 0x10);
 
 void dimbossfire_update(int obj)
 {
@@ -102,8 +109,8 @@ void dimbossfire_update(int obj)
         {
             GameBit_Set((int)*(short*)(placement + 0x20), 0);
             *state = *state | 1;
-            ((DimbossfireState*)state)->unk4 = lbl_80325D68[state[1]];
-            ((DimbossfireState*)state)->unk8 = ((DimbossfireState*)state)->unk4;
+            ((DimbossfireState*)state)->activeTimer = lbl_80325D68[state[1]];
+            ((DimbossfireState*)state)->initialActiveTimer = ((DimbossfireState*)state)->activeTimer;
             state[1] += 1;
             if (state[1] >= 10)
             {
@@ -113,14 +120,14 @@ void dimbossfire_update(int obj)
     }
     else
     {
-        ((DimbossfireState*)state)->unkC = ((DimbossfireState*)state)->unkC - timeDelta;
-        if (((DimbossfireState*)state)->unkC <= lbl_803E4DA0)
+        ((DimbossfireState*)state)->cooldownTimer = ((DimbossfireState*)state)->cooldownTimer - timeDelta;
+        if (((DimbossfireState*)state)->cooldownTimer <= lbl_803E4DA0)
         {
-            ((DimbossfireState*)state)->unkC = (f32)(int)
+            ((DimbossfireState*)state)->cooldownTimer = (f32)(int)
             randomGetRange(0xf0, 0x1e0);
             *state = *state | 1;
-            ((DimbossfireState*)state)->unk4 = lbl_80325D68[state[1]];
-            ((DimbossfireState*)state)->unk8 = ((DimbossfireState*)state)->unk4;
+            ((DimbossfireState*)state)->activeTimer = lbl_80325D68[state[1]];
+            ((DimbossfireState*)state)->initialActiveTimer = ((DimbossfireState*)state)->activeTimer;
             state[1] += 1;
             if (state[1] >= 10)
             {
@@ -128,7 +135,7 @@ void dimbossfire_update(int obj)
             }
         }
     }
-    if (((DimbossfireState*)state)->unk4 > lbl_803E4DA0)
+    if (((DimbossfireState*)state)->activeTimer > lbl_803E4DA0)
     {
         if ((*state & 1) != 0)
         {
@@ -184,15 +191,15 @@ void dimbossfire_update(int obj)
                                                             lbl_803E4DB8, lbl_803E4DBC);
                     modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 1, lbl_803E4DA0);
                     modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 0,
-                                                ((DimbossfireState*)state)->unk4 / lbl_803E4DC0);
+                                                ((DimbossfireState*)state)->activeTimer / lbl_803E4DC0);
                 }
             }
             Sfx_PlayFromObject(obj, SFXar_boost16);
         }
-        ((DimbossfireState*)state)->unk4 = ((DimbossfireState*)state)->unk4 - timeDelta;
-        if (((DimbossfireState*)state)->unk4 <= lbl_803E4DA0)
+        ((DimbossfireState*)state)->activeTimer = ((DimbossfireState*)state)->activeTimer - timeDelta;
+        if (((DimbossfireState*)state)->activeTimer <= lbl_803E4DA0)
         {
-            ((DimbossfireState*)state)->unk4 = *(f32*)&lbl_803E4DA0;
+            ((DimbossfireState*)state)->activeTimer = *(f32*)&lbl_803E4DA0;
             if (*(uint*)&((DimbossfireState*)state)->light != 0)
             {
                 ModelLightStruct_free(*(void**)&((DimbossfireState*)state)->light);
@@ -231,7 +238,7 @@ void dimbossfire_init(int obj, undefined4 arg2, int placement)
     ObjHits_DisableObject(obj);
     if (placement == 0)
     {
-        ((DimbossfireState*)state)->unkC = (f32)(int)
+        ((DimbossfireState*)state)->cooldownTimer = (f32)(int)
         randomGetRange(0xf0, 0x1e0);
         randVal = randomGetRange(0, 9);
         *(undefined*)(state + 1) = randVal;
