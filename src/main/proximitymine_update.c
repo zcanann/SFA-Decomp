@@ -30,7 +30,6 @@ extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(void* params, f32* vec);
 extern void Obj_FreeObject(void* obj);
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DC234;

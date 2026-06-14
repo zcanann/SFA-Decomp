@@ -68,6 +68,8 @@ STATIC_ASSERT(offsetof(EffectInterface, spawnObject) == 0x08);
 STATIC_ASSERT(offsetof(EffectInterface, updateFrameState) == 0x0C);
 STATIC_ASSERT(offsetof(EffectInterface, freeObject) == 0x18);
 
+extern EffectInterface **gPartfxInterface;
+
 typedef int (*ExpgfxSpawnEffectFn)(void *config, int preferredPoolIndex, int sourceId,
                                    int flags);
 typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int sourceId, int unused0,
