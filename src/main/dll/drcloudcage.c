@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/checkpoint_interface.h"
 #include "main/game_object.h"
 #include "main/dll/DR/DRcloudcage.h"
 
@@ -13,7 +14,6 @@ extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* hitsOut, int unused, int mask);
 extern void* memcpy(void* dst, const void* src, u32 n);
 
-extern undefined4* gCheckpointInterface;
 extern s32 lbl_803DC0BC;
 extern f32 lbl_803DC0E0;
 extern f32 timeDelta;
@@ -486,7 +486,8 @@ f32 fn_801EA678(int obj, int state)
     int player;
 
     if ((lbl_803DC0BC == -1) ||
-        (player = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28), lbl_803DC0BC > player))
+        (player = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28)),
+         lbl_803DC0BC > player))
     {
         if (lbl_803DC0BC == -1)
         {
@@ -541,7 +542,7 @@ f32 fn_801EA678(int obj, int state)
     }
     else
     {
-        player = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28);
+        player = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28));
         if (player == 2)
         {
             result = lbl_803E5B60;

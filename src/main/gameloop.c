@@ -6,6 +6,7 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
@@ -693,7 +694,6 @@ extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gPlayerInterface;
-extern void* gCheckpointInterface;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
 extern void* gModgfxInterface;
@@ -956,7 +956,7 @@ void gameUpdate(void)
     playerUpdateFn_8005649c();
     doPendingMapLoads();
     Obj_ApplyPendingParentLinks();
-    (*(void (**)(void))(*(int*)gCheckpointInterface + 0x3c))();
+    (*gCheckpointInterface)->onGameLoop();
     resetSomeGxFlags();
     if (screenBlankFrameCount == 0)
     {

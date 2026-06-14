@@ -1,6 +1,7 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -1447,7 +1448,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     return 0;
 }
 
-extern int* gCheckpointInterface;
 extern void audioStopByMask(int mask);
 extern void doNothing_8001F678(int a, int b);
 extern void Obj_ResetObjectSystem(void);
@@ -1525,7 +1525,7 @@ void unloadMap(void)
             gLoadedRomListPages[n] = 0;
         }
     }
-    (*(void (*)(void))(*(int*)(*gCheckpointInterface + 4)))();
+    (*gCheckpointInterface)->reset();
     (*gRomCurveInterface)->initialise();
     lbl_803DCDEC = 0;
     playerMapOffsetX = lbl_803DEBCC;
@@ -2051,7 +2051,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                 if (*(s16*)cur == 110)
                     (*gRomCurveInterface)->addCurveDef((RomCurveDef*)cur);
                 if (*(s16*)cur == 5)
-                    (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 0xc)))(cur);
+                    (*gCheckpointInterface)->removeRouteEntry((CheckpointRouteEntry*)cur);
             }
             else
             {
@@ -2061,7 +2061,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                     if (t == 110)
                         (*gRomCurveInterface)->remove((RomCurveDef*)cur);
                     else
-                        (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 8)))(cur);
+                        (*gCheckpointInterface)->addRouteEntry((CheckpointRouteEntry*)cur);
                     if (found == 0)
                     {
                         tbl[0x21] = (int)cur - *(int*)(p + 0x20);

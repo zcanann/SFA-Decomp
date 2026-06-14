@@ -1,5 +1,6 @@
 #include "main/dll/DR/DRshackle.h"
 #include "main/dll/path_control_interface.h"
+#include "main/checkpoint_interface.h"
 #include "main/game_object.h"
 
 extern f32 sqrtf(f32 x);
@@ -9,7 +10,6 @@ extern int objPosToMapBlockIdx(double x, double y, double z);
 extern int fn_801EC870(int p1, int p2);
 extern void hitDetectFn_800658a4(int p1, f32 x, f32 y, f32 z, f32* out, int flag);
 
-extern undefined4* gCheckpointInterface;
 extern f32 timeDelta;
 
 extern f32 lbl_803E5AE8; /* 0.0f  */
@@ -72,13 +72,15 @@ int drshackle_updateSwingBlend(int obj, int state)
         fade = *(f32*)&lbl_803E5AE8;
     }
 
-    hitResult = (*(int (**)(int, int, u8, int, int, f32))(*gCheckpointInterface + 0x18))(
-        state, state + DRSHACKLE_COLLIDER_OFFSET, *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET),
-        1, 0, fade);
+    hitResult = (*gCheckpointInterface)->advanceRoute(
+        (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET), fade,
+        *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
 
-    (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
+    (*gCheckpointInterface)
+        ->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET));
 
-    (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
+    (*gCheckpointInterface)->queueRouteRankItem(
+        (CheckpointRankItem*)(state + DRSHACKLE_COLLIDER_OFFSET));
 
     if (hitResult != 0)
     {
@@ -163,12 +165,14 @@ int drshackle_updateAttachedPosition(int obj, int state)
                 *(f32*)(state + 0x498) = zero;
             }
             *(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) = -fn_801EA678(obj, state);
-            hitResult = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
-                state, state + DRSHACKLE_COLLIDER_OFFSET,
+            hitResult = (*gCheckpointInterface)->advanceRoute(
+                (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET),
                 -*(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) * timeDelta,
-                *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1, 0);
-            (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
-            (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
+                *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
+            (*gCheckpointInterface)
+                ->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET));
+            (*gCheckpointInterface)->queueRouteRankItem(
+                (CheckpointRankItem*)(state + DRSHACKLE_COLLIDER_OFFSET));
             if (hitResult != 0)
             {
                 return 0;
@@ -206,11 +210,13 @@ int drshackle_updateAttachedPosition(int obj, int state)
         return drshackle_updateSwingBlend(obj, state) != 0;
     }
 
-    hitResult = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
-        state, state + DRSHACKLE_COLLIDER_OFFSET, timeDelta * fn_801EA678(obj, state),
-        *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1, 0);
-    (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
-    (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
+    hitResult = (*gCheckpointInterface)->advanceRoute(
+        (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET),
+        timeDelta * fn_801EA678(obj, state), *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
+    (*gCheckpointInterface)
+        ->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET));
+    (*gCheckpointInterface)->queueRouteRankItem(
+        (CheckpointRankItem*)(state + DRSHACKLE_COLLIDER_OFFSET));
     if (hitResult != 0)
     {
         return 0;

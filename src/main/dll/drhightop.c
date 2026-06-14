@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
+#include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -61,7 +62,6 @@ extern s16 lbl_803DC0DC;
 extern f32 lbl_803E5B68;
 extern f32 lbl_803E5B7C;
 extern char lbl_803AD088[];
-extern undefined4* gCheckpointInterface;
 extern void SnowBike_func15();
 
 typedef struct HightopFlags3
@@ -133,17 +133,19 @@ void fn_801EAE4C(short* obj, int stateRaw)
             }
             else
             {
-                (*(code*)(*gCheckpointInterface + 0x10))(obj, stateRaw + 0x28,
-                                                         st->unk05C);
+                (*gCheckpointInterface)
+                    ->findRouteForObject((GameObject*)obj, (CheckpointRouteState*)(stateRaw + 0x28),
+                                         st->unk05C);
             }
-            (*(code*)(*gCheckpointInterface + 0x28))(stateRaw + 0x28);
+            (*gCheckpointInterface)->rewindRoute((CheckpointRouteState*)(stateRaw + 0x28));
         }
     }
     else
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
         {
-            uRet = (*(code*)(*gCheckpointInterface + 0x14))(obj, stateRaw + 0x28);
+            uRet = (*gCheckpointInterface)
+                       ->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(stateRaw + 0x28));
             angDelta = *obj - uRet;
             if (0x8000 < angDelta)
             {
@@ -177,8 +179,9 @@ void fn_801EAE4C(short* obj, int stateRaw)
             {
                 gameTextShow(0x475);
             }
-            (*(code*)(*gCheckpointInterface + 0x2c))(stateRaw + 0x28);
-            st->unk422 = (s8)(*(code*)(*gCheckpointInterface + 0x34))(stateRaw + 0x28);
+            (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)(stateRaw + 0x28));
+            st->unk422 =
+                (s8)(*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(stateRaw + 0x28));
             ch = st->unk422;
             if ((ch == 1) && (lbl_803DC0BC == -1))
             {
