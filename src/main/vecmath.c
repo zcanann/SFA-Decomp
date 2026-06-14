@@ -579,7 +579,7 @@ void vecRotateYXZ(s16* a, f32* v)
     v[2] = z;
 }
 
-#pragma peephole on
+#pragma peephole off
 void setMatrixFromObjectPos(f32* m, u8* p)
 {
     f32 scale;
@@ -720,7 +720,7 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
 }
 
 #pragma fp_contract on
-#pragma peephole on
+#pragma peephole off
 void vecRotateZXY(u8* p, f32* v)
 {
     f32 s2;
