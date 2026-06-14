@@ -37,7 +37,7 @@ extern u8* Obj_GetPlayerObject(void);
 
 extern u32 getButtonsJustPressedIfNotBusy(int pad);
 extern int isGameTimerDisabled(void);
-extern f64 fn_8001461C(void);
+extern f32 fn_8001461C(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(int n);
@@ -84,14 +84,14 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int o;
     int i;
     u8 ev;
-    u32 buttons;
+    int buttons;
     f32 wob1, wob2, push;
     f32 diff;
     f32 absDiff;
     f32 t;
     int vol;
     int ret;
-    int cnt1, idx1, cnt2, idx2, cnt3, idx3, cnt4, idx4, cnt5, idx5;
+    int idx1, cnt1, cnt2, idx2, cnt3, idx3, cnt4, idx4, cnt5, idx5;
     struct
     {
         int mode;
@@ -213,7 +213,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 wob2 = -wob2;
             }
-            push = (lbl_803E5684 * wob1 + lbl_803E5680) * wob2 + lbl_803E567C;
+            push = wob2 * (lbl_803E5684 * wob1 + lbl_803E5680) + lbl_803E567C;
             buttons = getButtonsJustPressedIfNotBusy(0);
             if ((buttons & 0x100) != 0 && isGameTimerDisabled() == 0)
             {
@@ -223,7 +223,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 st->offsetVelocity = lbl_803E568C;
             }
-            if (st->currentTrackOffset > -0x46de && st->currentTrackOffset < -0xb23)
+            if (st->currentTrackOffset >= -0x46dc && st->currentTrackOffset <= -0xb24)
             {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
@@ -313,30 +313,30 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         st->playerSfxTimer = st->playerSfxTimer - timeDelta;
         if (st->playerSfxTimer < lbl_803E5678)
         {
-            if (lbl_803E5678 <= diff)
+            if (diff < lbl_803E5678)
             {
                 st->playerSfxTimer = (f32)(int)
-                randomGetRange(0x78, 0xf0);
+                randomGetRange(0x28, 100);
             }
             else
             {
                 st->playerSfxTimer = (f32)(int)
-                randomGetRange(0x28, 100);
+                randomGetRange(0x78, 0xf0);
             }
             Sfx_PlayFromObject(player, PLATFORM1_PLAYER_SFX_ID);
         }
         st->platformSfxTimer = st->platformSfxTimer - timeDelta;
         if (st->platformSfxTimer < lbl_803E5678)
         {
-            if (diff <= lbl_803E5678)
+            if (diff > lbl_803E5678)
             {
                 st->platformSfxTimer = (f32)(int)
-                randomGetRange(0x78, 0xf0);
+                randomGetRange(0x28, 100);
             }
             else
             {
                 st->platformSfxTimer = (f32)(int)
-                randomGetRange(0x28, 100);
+                randomGetRange(0x78, 0xf0);
             }
             Sfx_PlayFromObject(obj, PLATFORM1_PLATFORM_SFX_ID);
         }
