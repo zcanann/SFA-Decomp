@@ -81,6 +81,7 @@ STATIC_ASSERT(sizeof(TreeState) == 0x5c);
 
 int tree_getExtraSize(void) { return 0x5c; }
 
+#pragma scheduling off
 void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 {
     TreeSetup* setup = (TreeSetup*)((GameObject*)obj)->anim.placementData;
@@ -107,7 +108,7 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
         effectSetup->colorA[1] = 0x28;
         effectSetup->colorA[2] = 0x32;
         effectSetup->colorB[0] = 0xa;
-        effectSetup->colorB[1] = 0x28;
+        effectSetup->colorB[1] = 0x32;
         effectSetup->verticalDrift = -0x28;
         effectSetup->modelId = -1;
         effectSetup->sourceObject = 0;
@@ -117,6 +118,7 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
     }
 }
 
+#pragma scheduling reset
 void tree_updateAmbientEffects(int obj, int p2)
 {
     TreeState* state = (TreeState*)p2;
