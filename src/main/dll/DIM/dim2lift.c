@@ -524,6 +524,16 @@ FUN_801bb2a0(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 #pragma scheduling off
 #pragma peephole off
+typedef struct DIM2icicleBlueWhiteEffectPlacement {
+    ObjPlacement base;
+    u8 pad18[0x1E - 0x18];
+    s16 field1E;
+    s16 field20;
+    u8 pad22[0x24 - 0x22];
+} DIM2icicleBlueWhiteEffectPlacement;
+
+STATIC_ASSERT(sizeof(DIM2icicleBlueWhiteEffectPlacement) == 0x24);
+
 void DIM2icicle_createStateLight(int obj, u8 isGreen)
 {
     extern int objCreateLight(int, int);
@@ -850,28 +860,28 @@ int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight)
     return 0;
 }
 
-void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity)
+void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
 {
-    int* spawnedObj;
-    void* setup;
+    GameObject* spawnedObj;
+    DIM2icicleBlueWhiteEffectPlacement* setup;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(36, 656);
-        ((ObjPlacement*)setup)->posX = *(f32*)((char*)sourceObj + 0xc);
-        ((ObjPlacement*)setup)->posY = *(f32*)((char*)sourceObj + 0x10);
-        ((ObjPlacement*)setup)->posZ = *(f32*)((char*)sourceObj + 0x14);
-        *(u8*)((char*)setup + 4) = 1;
-        *(u8*)((char*)setup + 5) = 1;
-        *(u8*)((char*)setup + 6) = 255;
-        *(u8*)((char*)setup + 7) = 255;
-        *(s16*)((char*)setup + 0x1e) = -1;
-        *(s16*)((char*)setup + 0x20) = -1;
-        spawnedObj = Obj_SetupObject(setup, 5, -1, -1, (void*)0);
+        setup->base.posX = source->x;
+        setup->base.posY = source->y;
+        setup->base.posZ = source->z;
+        setup->base.unk04[0] = 1;
+        setup->base.unk04[1] = 1;
+        setup->base.unk04[2] = 255;
+        setup->base.unk04[3] = 255;
+        setup->field1E = -1;
+        setup->field20 = -1;
+        spawnedObj = (GameObject*)Obj_SetupObject(setup, 5, -1, -1, (void*)0);
         if (spawnedObj != NULL)
         {
-            ((GameObject*)spawnedObj)->anim.velocityX = velocity[0];
-            ((GameObject*)spawnedObj)->anim.velocityY = velocity[1];
-            ((GameObject*)spawnedObj)->anim.velocityZ = velocity[2];
+            spawnedObj->anim.velocityX = velocity[0];
+            spawnedObj->anim.velocityY = velocity[1];
+            spawnedObj->anim.velocityZ = velocity[2];
         }
     }
 }

@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/dll/DIM/DIM2lift.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
@@ -118,9 +119,6 @@ extern f32 lbl_803E5908;
 extern f32 lbl_803E590C;
 extern undefined4 gDIMbossAnimTable[];
 extern undefined4 gDIMbossHitDetectAnimTable[];
-extern void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity);
-extern void DIM2icicle_createStateLight(int obj, u8 isGreen);
-
 extern int getTrickyObject(void);
 extern undefined4* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
@@ -727,7 +725,7 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
   {
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT) {
       gDIMbossSequenceFlags &= ~(u64)DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT;
-      DIM2icicle_spawnBlueWhiteEffect((int *)&runtime->topState->blueWhiteEffectSource, runtime->topState->blueWhiteVelocity);
+      DIM2icicle_spawnBlueWhiteEffect(&runtime->topState->blueWhiteEffectSource, runtime->topState->blueWhiteVelocity);
     }
   }
   if (runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) {
