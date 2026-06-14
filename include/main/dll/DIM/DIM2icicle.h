@@ -6,7 +6,7 @@
 #include "ghidra_import.h"
 
 void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *runtime);
-void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRuntime *runtime);
+void DIM2icicle_updateDarkIceMinesWarpAndEffects();
 void DIM2icicle_updateHitResponse();
 void DIM2icicle_updateCombatState();
 
