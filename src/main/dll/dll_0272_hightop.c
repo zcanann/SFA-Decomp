@@ -105,14 +105,24 @@ STATIC_ASSERT(offsetof(HighTopRuntime, unkC4B) == 0xC4B);
 
 typedef struct HighTopObject
 {
-    s16 yaw;
-    u8 pad02[0xc - 0x2];
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad18[0xb8 - 0x18];
+    union {
+        ObjAnimComponent anim;
+        struct {
+            s16 yaw;
+            u8 pad02[0xc - 0x2];
+            f32 x;
+            f32 y;
+            f32 z;
+            u8 pad18[0xb8 - 0x18];
+        };
+    };
     HighTopRuntime* runtime;
 } HighTopObject;
+
+STATIC_ASSERT(offsetof(HighTopObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(HighTopObject, yaw) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(HighTopObject, x) == offsetof(ObjAnimComponent, localPosX));
+STATIC_ASSERT(offsetof(HighTopObject, runtime) == 0xB8);
 
 int hightop_defaultStateHandler(void) { return 0x0; }
 

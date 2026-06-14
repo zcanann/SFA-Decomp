@@ -27,11 +27,16 @@ typedef struct LaserObjectMapData {
 } LaserObjectMapData;
 
 typedef struct LaserObject {
-  s16 modeWord;
-  u8 pad02[0xAC - 2];
-  s8 mapEventSlot;
-  u8 padAD[0xAF - 0xAD];
-  u8 statusFlags;
+  union {
+    ObjAnimComponent anim;
+    struct {
+      s16 modeWord;
+      u8 pad02[0xAC - 2];
+      s8 mapEventSlot;
+      u8 padAD[0xAF - 0xAD];
+      u8 statusFlags;
+    };
+  };
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   LaserState *state;
@@ -54,9 +59,10 @@ STATIC_ASSERT(offsetof(LaserObjectMapData, completionGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(LaserObjectMapData, activationGameBit) == 0x20);
 STATIC_ASSERT(sizeof(LaserObjectMapData) == 0x24);
 
-STATIC_ASSERT(offsetof(LaserObject, modeWord) == 0x00);
-STATIC_ASSERT(offsetof(LaserObject, mapEventSlot) == 0xAC);
-STATIC_ASSERT(offsetof(LaserObject, statusFlags) == 0xAF);
+STATIC_ASSERT(offsetof(LaserObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(LaserObject, modeWord) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(LaserObject, mapEventSlot) == offsetof(ObjAnimComponent, mapEventSlot));
+STATIC_ASSERT(offsetof(LaserObject, statusFlags) == offsetof(ObjAnimComponent, resetHitboxFlags));
 STATIC_ASSERT(offsetof(LaserObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(LaserObject, state) == 0xB8);
 

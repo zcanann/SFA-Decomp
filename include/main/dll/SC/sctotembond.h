@@ -14,12 +14,17 @@ typedef struct ScTotemPuzzleState {
 } ScTotemPuzzleState;
 
 typedef struct ScTotemPuzzleObject {
-    s16 yaw;
-    u8 pad02[0x46 - 0x02];
-    s16 objectType;
-    u8 pad48[0xAD - 0x48];
-    s8 puzzleIndex;
-    u8 padAE[0xB0 - 0xAE];
+    union {
+        ObjAnimComponent anim;
+        struct {
+            s16 yaw;
+            u8 pad02[0x46 - 0x02];
+            s16 objectType;
+            u8 pad48[0xAD - 0x48];
+            s8 puzzleIndex;
+            u8 padAE[0xB0 - 0xAE];
+        };
+    };
     u16 objectFlags;
     u8 padB2[0xB8 - 0xB2];
     ScTotemPuzzleState *state;
@@ -48,25 +53,47 @@ typedef struct ScTotemBondState {
 } ScTotemBondState;
 
 typedef struct ScTotemBondObject {
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    u8 pad06[0x0C - 0x06];
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad18[0x36 - 0x18];
-    u8 mapAlpha;
-    u8 pad37[0x46 - 0x37];
-    s16 objectType;
-    u8 pad48[0x4C - 0x48];
-    u8 *definition;
-    u8 pad50[0xB0 - 0x50];
+    union {
+        ObjAnimComponent anim;
+        struct {
+            s16 yaw;
+            s16 pitch;
+            s16 roll;
+            u8 pad06[0x0C - 0x06];
+            f32 x;
+            f32 y;
+            f32 z;
+            u8 pad18[0x36 - 0x18];
+            u8 mapAlpha;
+            u8 pad37[0x46 - 0x37];
+            s16 objectType;
+            u8 pad48[0x4C - 0x48];
+            u8 *definition;
+            u8 pad50[0xB0 - 0x50];
+        };
+    };
     u16 objectFlags;
     u8 padB2[0xB8 - 0xB2];
     ScTotemBondState *state;
     undefined4 (*animEventCallback)(struct ScTotemBondObject *obj,undefined4 param2,ObjAnimUpdateState *animUpdate);
 } ScTotemBondObject;
+
+STATIC_ASSERT(offsetof(ScTotemPuzzleObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(ScTotemPuzzleObject, yaw) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(ScTotemPuzzleObject, objectType) == offsetof(ObjAnimComponent, seqId));
+STATIC_ASSERT(offsetof(ScTotemPuzzleObject, puzzleIndex) == offsetof(ObjAnimComponent, bankIndex));
+STATIC_ASSERT(offsetof(ScTotemPuzzleObject, objectFlags) == 0xB0);
+STATIC_ASSERT(offsetof(ScTotemPuzzleObject, state) == 0xB8);
+STATIC_ASSERT(offsetof(ScTotemPuzzleObject, animEventCallback) == 0xBC);
+STATIC_ASSERT(offsetof(ScTotemBondObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(ScTotemBondObject, yaw) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(ScTotemBondObject, x) == offsetof(ObjAnimComponent, localPosX));
+STATIC_ASSERT(offsetof(ScTotemBondObject, mapAlpha) == offsetof(ObjAnimComponent, alpha));
+STATIC_ASSERT(offsetof(ScTotemBondObject, objectType) == offsetof(ObjAnimComponent, seqId));
+STATIC_ASSERT(offsetof(ScTotemBondObject, definition) == offsetof(ObjAnimComponent, placementData));
+STATIC_ASSERT(offsetof(ScTotemBondObject, objectFlags) == 0xB0);
+STATIC_ASSERT(offsetof(ScTotemBondObject, state) == 0xB8);
+STATIC_ASSERT(offsetof(ScTotemBondObject, animEventCallback) == 0xBC);
 
 void sc_totempuzzle_update(ScTotemPuzzleObject *obj);
 void sc_totempuzzle_init(ScTotemPuzzleObject *obj,ScTotemPuzzleMapData *params);

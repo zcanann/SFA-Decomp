@@ -2,6 +2,7 @@
 #define MAIN_DLL_IM_IMICICLE_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_internal.h"
 #include "main/objanim_update.h"
 
 typedef struct ExplodedObjectMapData {
@@ -61,28 +62,44 @@ typedef struct ExplodedObjectState {
 } ExplodedObjectState;
 
 typedef struct ExplodedObject {
-  s16 angleX;
-  s16 angleY;
-  s16 angleZ;
-  s16 flags06;
-  f32 modelScale;
-  f32 x;
-  f32 y;
-  f32 z;
-  u8 pad18[0x24 - 0x18];
-  f32 velocityX;
-  f32 velocityY;
-  f32 velocityZ;
-  u8 pad30[0x36 - 0x30];
-  u8 alpha;
-  u8 pad37[0x4C - 0x37];
-  ExplodedObjectMapData *mapData;
-  void *modelData;
-  u8 pad54[0xAD - 0x54];
-  s8 objectTypeTag;
-  u8 padAE[0xB8 - 0xAE];
+  union {
+    ObjAnimComponent anim;
+    struct {
+      s16 angleX;
+      s16 angleY;
+      s16 angleZ;
+      s16 flags06;
+      f32 modelScale;
+      f32 x;
+      f32 y;
+      f32 z;
+      u8 pad18[0x24 - 0x18];
+      f32 velocityX;
+      f32 velocityY;
+      f32 velocityZ;
+      u8 pad30[0x36 - 0x30];
+      u8 alpha;
+      u8 pad37[0x4C - 0x37];
+      ExplodedObjectMapData *mapData;
+      void *modelData;
+      u8 pad54[0xAD - 0x54];
+      s8 objectTypeTag;
+      u8 padAE[0xB8 - 0xAE];
+    };
+  };
   ExplodedObjectState *state;
 } ExplodedObject;
+
+STATIC_ASSERT(offsetof(ExplodedObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(ExplodedObject, angleX) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(ExplodedObject, modelScale) == offsetof(ObjAnimComponent, rootMotionScale));
+STATIC_ASSERT(offsetof(ExplodedObject, x) == offsetof(ObjAnimComponent, localPosX));
+STATIC_ASSERT(offsetof(ExplodedObject, velocityX) == offsetof(ObjAnimComponent, velocityX));
+STATIC_ASSERT(offsetof(ExplodedObject, alpha) == offsetof(ObjAnimComponent, alpha));
+STATIC_ASSERT(offsetof(ExplodedObject, mapData) == offsetof(ObjAnimComponent, placementData));
+STATIC_ASSERT(offsetof(ExplodedObject, modelData) == offsetof(ObjAnimComponent, modelInstance));
+STATIC_ASSERT(offsetof(ExplodedObject, objectTypeTag) == offsetof(ObjAnimComponent, bankIndex));
+STATIC_ASSERT(offsetof(ExplodedObject, state) == 0xB8);
 
 void cfforcefield_free(void);
 void cfforcefield_render(void);
