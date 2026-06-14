@@ -184,7 +184,6 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
 {
   int objIndex;
   DIMbossTopState *topState;
-  DIMbossEffect *effect;
   s16 brightness;
   int i;
   f32 zero;
@@ -196,30 +195,29 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
 
   objIndex = (int)obj;
   topState = runtime->topState;
-  effect = topState->effect;
-  if (effect != NULL) {
+  if (topState->effect != NULL) {
     if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
-      modelLightStruct_setPosition((ModelLightStruct *)effect, topState->liftGlowSource.x, topState->liftGlowSource.y, topState->liftGlowSource.z);
+      modelLightStruct_setPosition((ModelLightStruct *)topState->effect, topState->liftGlowSource.x, topState->liftGlowSource.y, topState->liftGlowSource.z);
     }
     else {
-      modelLightStruct_setPosition((ModelLightStruct *)effect, topState->tonsilDustSource.x, topState->tonsilDustSource.y, topState->tonsilDustSource.z);
+      modelLightStruct_setPosition((ModelLightStruct *)topState->effect, topState->tonsilDustSource.x, topState->tonsilDustSource.y, topState->tonsilDustSource.z);
     }
-    modelLightStruct_getSpecularColor((ModelLightStruct *)effect, &colA, &colB, &colG, &colR);
-    modelLightStruct_setGlowColor((ModelLightStruct *)effect, colA, colB, colG, 0xc0);
-    if (effect->glowType != 0 && effect->enabled != 0) {
-      brightness = effect->glowAlpha + effect->glowAlphaStep;
+    modelLightStruct_getSpecularColor((ModelLightStruct *)topState->effect, &colA, &colB, &colG, &colR);
+    modelLightStruct_setGlowColor((ModelLightStruct *)topState->effect, colA, colB, colG, 0xc0);
+    if (topState->effect->glowType != 0 && topState->effect->enabled != 0) {
+      brightness = topState->effect->glowAlpha + topState->effect->glowAlphaStep;
       if (brightness < 0) {
         brightness = 0;
-        effect->glowAlphaStep = 0;
+        topState->effect->glowAlphaStep = 0;
       }
       else if (brightness > 0xc) {
         brightness = brightness + randomGetRange(-0xc, 0xc);
         if (brightness > 0xff) {
           brightness = 0xff;
-          effect->glowAlphaStep = 0;
+          topState->effect->glowAlphaStep = 0;
         }
       }
-      effect->glowAlpha = brightness;
+      topState->effect->glowAlpha = brightness;
     }
   }
   if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_7) {
@@ -366,25 +364,25 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
     skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
     topState->steamFlags.bits.sfxPending = 0;
   }
-  if (runtime->sequenceTriggerFlags & 4) {
+  if ((int)runtime->sequenceTriggerFlags & 4) {
     runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~4;
     Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[0]);
     gDIMbossSequenceFlags |= 0x204;
     doRumble(lbl_803E4BF8);
   }
-  if (runtime->sequenceTriggerFlags & 2) {
+  if ((int)runtime->sequenceTriggerFlags & 2) {
     runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~2;
     Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[1]);
     gDIMbossSequenceFlags |= 0x404;
     doRumble(lbl_803E4BF8);
   }
-  if (runtime->sequenceTriggerFlags & 0x10) {
+  if ((int)runtime->sequenceTriggerFlags & 0x10) {
     runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~0x10;
     Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[2]);
     gDIMbossSequenceFlags |= 0x804;
     doRumble(lbl_803E4BF8);
   }
-  if (runtime->sequenceTriggerFlags & 8) {
+  if ((int)runtime->sequenceTriggerFlags & 8) {
     runtime->sequenceTriggerFlags = runtime->sequenceTriggerFlags & ~8;
     Sfx_PlayFromObject(objIndex, (u16)lbl_80325AB8[3]);
     gDIMbossSequenceFlags |= 0x1004;
@@ -589,7 +587,7 @@ void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
       }
     }
     else {
-      if (runtime->targetModel == 0) {
+      if (*(void **)&runtime->targetModel == NULL) {
         player = Obj_GetPlayerObject();
         if (fn_80295A04(player, 1) != 0) {
           ((void (*)(int, int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x28))
@@ -599,18 +597,18 @@ void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
         }
       }
       if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
-        if (runtime->animMode == 3) {
+        if ((s8)runtime->animMode == 3) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x68, 0, 0, 0);
         }
-        else if (runtime->animMode == 2) {
+        else if ((s8)runtime->animMode == 2) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x6c, 0, 0, 0);
         }
       }
       else if (objectRuntime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
-        if (runtime->animMode == 3) {
+        if ((s8)runtime->animMode == 3) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x77, 0, 0, 0);
         }
-        else if (runtime->animMode == 2) {
+        else if ((s8)runtime->animMode == 2) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x78, 0, 0, 0);
         }
       }
@@ -618,7 +616,7 @@ void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
       runtime->hitDamageCount = hitResult;
       runtime->animMode -= 1;
       Sfx_PlayFromObject(objIndex, 0x4b1);
-      if (runtime->animMode <= 0) {
+      if ((s8)runtime->animMode <= 0) {
         runtime->animMode = 0;
         runtime->animFinished = 0;
         ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(objIndex, (int)runtime, 0);
@@ -721,7 +719,7 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
   }
   {
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT) {
-      gDIMbossSequenceFlags &= ~DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT;
+      gDIMbossSequenceFlags &= ~(u64)DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT;
       DIM2icicle_spawnBlueWhiteEffect((int *)&runtime->topState->blueWhiteEffectSource, runtime->topState->blueWhiteVelocity);
     }
   }
