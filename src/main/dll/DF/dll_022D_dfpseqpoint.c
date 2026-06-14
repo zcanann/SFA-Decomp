@@ -591,8 +591,9 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         switch (((DfpSeqPointState*)blob)->triggerId)
         {
         case 1:
-            if (animUpdate->eventIds[i] == 1)
+            switch (animUpdate->eventIds[i])
             {
+            case 1:
                 if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 1)
                 {
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 5, 0);
@@ -605,11 +606,13 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 0);
                     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 7, 0);
                 }
+                break;
             }
             break;
         case 0xa:
-            if (animUpdate->eventIds[i] == 0x14)
+            switch (animUpdate->eventIds[i])
             {
+            case 0x14:
                 if (*(u32*)&((DfpseqpointPlacement*)data)->unk14 == 0x49de8)
                 {
                     ((DfpFlags7*)&((DfpSeqPointState*)blob)->flags0F)->b80 = 1;
@@ -625,6 +628,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
                         warpToMap(0x73, 0);
                     }
                 }
+                break;
             }
             break;
         }
