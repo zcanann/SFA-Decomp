@@ -15311,7 +15311,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     int sub = inner->unk7F0;
     f32 wpos[3];
 
-    inner->flags360 &= ~0x2;
+    inner->flags360 &= ~0x2LL;
     inner->flags360 |= 0x2000;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
