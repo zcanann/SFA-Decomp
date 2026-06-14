@@ -1443,7 +1443,7 @@ void fn_8003A168(int p1, int p2)
         {
             u8* data = *(u8**)((char*)table + 0x10);
             s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(p1);
-            if (data[(offset + i) + 1] != 0xff && data[i] == 0)
+            if ((int)data[(offset + i) + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)*(void**)(p1 + 0x6c) + j);
             }
@@ -1527,7 +1527,7 @@ void fn_8003AC14(int obj, int* keys, int count)
             {
                 u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key)
+                if ((int)data[di] != 0xff && (int)data[i] == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
@@ -1610,7 +1610,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
             {
                 u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key)
+                if ((int)data[di] != 0xff && (int)data[i] == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
@@ -2055,8 +2055,7 @@ void fn_8003A230(int obj, int p2, f32 val)
         for (k = 0; k < n; k++)
         {
             u8* data = *(u8**)&((ObjDef*)table)->jointData;
-            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0)
+            if ((int)data[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
@@ -2082,7 +2081,7 @@ void fn_8003A230(int obj, int p2, f32 val)
         {
             fn_80039B54(obj, (s16*)p2, found, val);
         }
-        *(s16*)((char*)p2 + 0x1a) = (s16)(u8) * (s16*)((char*)p2 + 0x1a);
+        *(s16*)((char*)p2 + 0x1a) = (s16)(u16) * (s16*)((char*)p2 + 0x1a);
         if (val > lbl_803DE9E4)
         {
             flag = 1;
