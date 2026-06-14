@@ -60,12 +60,13 @@ void warpstone_hitDetect(int obj)
     extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     f32 pos[3];
+    f32 buf[3];
 
     if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos[0], &pos[1], &pos[2]) != 0)
     {
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
-        objLightFn_8009a1dc((void*)obj, lbl_803E54A0, pos, 1, 0);
+        objLightFn_8009a1dc((void*)obj, lbl_803E54A0, buf, 1, 0);
         if (randFn_80080100(3) != 0)
         {
             Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
