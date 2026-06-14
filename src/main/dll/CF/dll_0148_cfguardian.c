@@ -23,6 +23,7 @@
 #include "main/game_ui_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
+#include "main/dll/player_status.h"
 #include "main/objseq.h"
 
 /* steer-target header passed to cfguardianSteerToward: a yaw plus a world point */
@@ -189,7 +190,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int randFn_80080100(int n);
-extern int fn_80296A14(int p);
 extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int a, int b);
@@ -835,7 +835,7 @@ int cfguardian_updateMain(int obj)
         {
             int* tbl = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
             int pick;
-            if (fn_80296A14((int)player) > 3)
+            if (Player_GetCurrentMagic((int)player) > 3)
             {
                 pick = tbl[0];
             }

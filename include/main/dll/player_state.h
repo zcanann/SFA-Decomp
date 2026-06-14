@@ -5,6 +5,16 @@
 #include "global.h"
 #include "main/dll/baddie_state.h"
 
+typedef struct PlayerStatus {
+    s8 health;
+    s8 maxHealth;
+    s8 animStateFlags;
+    u8 unk3;
+    s16 magic;
+    s16 maxMagic;
+    u8 money;
+} PlayerStatus;
+
 /*
  * PlayerState - player.c's obj+0xB8 "inner" record. The head is the
  * engine-wide BaddieState actor-control record (baddie_state.h); the
@@ -14,7 +24,7 @@
  */
 typedef struct PlayerState {
     BaddieState baddie;
-    int playerStatus;
+    int playerStatus; /* PlayerStatus*; kept integer while raw decomp arithmetic remains */
     int flags360; /* player state flag word; bits 2/0x2000/0x800000/0x2000000... */
     u8 pad364[0x3C4 - 0x364];
     f32 fxOffsetX;
@@ -372,6 +382,9 @@ typedef struct PlayerState {
 } PlayerState;
 
 STATIC_ASSERT(sizeof(PlayerState) == 0x8E0);
+STATIC_ASSERT(offsetof(PlayerStatus, magic) == 0x4);
+STATIC_ASSERT(offsetof(PlayerStatus, maxMagic) == 0x6);
+STATIC_ASSERT(offsetof(PlayerStatus, money) == 0x8);
 STATIC_ASSERT(offsetof(PlayerState, playerStatus) == 0x35C);
 STATIC_ASSERT(offsetof(PlayerState, targetYaw) == 0x478);
 STATIC_ASSERT(offsetof(PlayerState, heldObj) == 0x7F8);

@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
+#include "main/dll/player_status.h"
 #include "main/mapEventTypes.h"
 
 typedef struct SaveGameData
@@ -1737,7 +1738,6 @@ void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapByte)
     }
 }
 
-extern int fn_80296AE8(int obj);
 extern void playerAddHealth(u8* player, int v);
 extern void* mmAlloc(int size, int heap, int flags);
 
@@ -1752,7 +1752,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     if (flag != 0)
     {
         GameBit_Set(0x970, 1);
-        if (fn_80296AE8((int)Obj_GetPlayerObject()) > 1)
+        if (Player_GetCurrentHealth((int)Obj_GetPlayerObject()) > 1)
         {
             playerAddHealth((u8*)Obj_GetPlayerObject(), -1);
             healed = 1;

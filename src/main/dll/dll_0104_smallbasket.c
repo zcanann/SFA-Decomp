@@ -6,6 +6,7 @@
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/dll/cfperch_state.h"
+#include "main/dll/player_status.h"
 #include "main/objfx.h"
 
 typedef struct SmallbasketState
@@ -23,8 +24,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int fn_80296AE8(u8 * obj);
-extern int fn_80296AD4(u8 * obj);
 extern u8* Obj_AllocObjectSetup(int size, int typeId);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern f32 sqrtf(f32 x);
@@ -149,9 +148,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     if (data[0x1e] == 7)
     {
         num = (f32)(int)
-        fn_80296AE8(player);
+        Player_GetCurrentHealth((int)player);
         den = (f32)(int)
-        fn_80296AD4(player);
+        Player_GetMaxHealth((int)player);
         ratio = num / den;
         ratio = ratio * lbl_803E3930;
         if (ratio <= lbl_803E3940)

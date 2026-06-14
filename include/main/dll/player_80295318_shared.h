@@ -13,6 +13,7 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/dll/player_objects.h"
+#include "main/dll/player_status.h"
 #include "main/dll/player_target.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"

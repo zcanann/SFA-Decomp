@@ -28,6 +28,7 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 #include "main/mapEvent.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/player_status.h"
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
@@ -98,7 +99,6 @@ extern int* gPlayerInterface;
 extern f32 lbl_803E1B78;
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
-extern int fn_80296AE8(int obj);
 extern f32 lbl_803E1C48;
 extern f32 lbl_803E1C6C;
 extern f32 lbl_803E1AC0;
@@ -498,7 +498,7 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
         {
             result = 1;
         }
-        else if (fn_80296AE8(player) <= 0)
+        else if (Player_GetCurrentHealth(player) <= 0)
         {
             result = 1;
         }
@@ -686,7 +686,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                 {
                     found = 0;
                 }
-                if (fn_80296AE8(obj) <= 0)
+                if (Player_GetCurrentHealth(obj) <= 0)
                 {
                     found = 0;
                 }

@@ -4,13 +4,10 @@
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
+#include "main/dll/player_status.h"
 
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
-extern void* fn_80296AE8(void* player);
-extern void* fn_80296AD4(void* player);
-extern int fn_80296A14(void* player);
-extern int fn_80296A8C(void* player);
 extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
 extern int getHudHiddenFrameCount(void);
@@ -461,14 +458,14 @@ void pauseMenuDrawStatus(void)
     player = (u8*)Obj_GetPlayerObject();
     getTrickyObject();
     trickyStatus = PMDS_MAP_EVENT_GET_STATUS();
-    statuses[0] = (int)fn_80296AE8(player);
-    statuses[7] = (int)fn_80296AD4(player);
+    statuses[0] = Player_GetCurrentHealth((int)player);
+    statuses[7] = Player_GetMaxHealth((int)player);
     statuses[1] = GameBit_Get(0xC1);
-    if (*(int*)(base + 0xB38) - fn_80296A14(player) < 0)
+    if (*(int*)(base + 0xB38) - Player_GetCurrentMagic((int)player) < 0)
     {
         delta = -1;
     }
-    else if (*(int*)(base + 0xB38) - fn_80296A14(player) > 0)
+    else if (*(int*)(base + 0xB38) - Player_GetCurrentMagic((int)player) > 0)
     {
         delta = 1;
     }
@@ -477,11 +474,11 @@ void pauseMenuDrawStatus(void)
         delta = 0;
     }
     statuses[2] = *(int*)(base + 0xB38) - delta;
-    if (*(int*)(base + 0xB50) - fn_80296A8C(player) < 0)
+    if (*(int*)(base + 0xB50) - Player_GetMaxMagic((int)player) < 0)
     {
         delta = -1;
     }
-    else if (*(int*)(base + 0xB50) - fn_80296A8C(player) > 0)
+    else if (*(int*)(base + 0xB50) - Player_GetMaxMagic((int)player) > 0)
     {
         delta = 1;
     }

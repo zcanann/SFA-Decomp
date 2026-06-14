@@ -6,6 +6,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
+#include "main/dll/player_status.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -72,7 +73,6 @@ extern void setBButtonIcon(int icon);
 extern void hudFn_8011f38c(int v);
 extern s16* objModelGetVecFn_800395d8(int* obj, int p2);
 extern s8 padGetStickX(int chan);
-extern int fn_80296A14(void* player);
 extern void playerAddRemoveMagic(void* player, int amount);
 extern u32 getButtonsJustPressed(int chan);
 extern u32 getButtonsHeld(int chan);
@@ -727,7 +727,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             if ((getButtonsHeld(0) & 0x100) && ((DimCannonState*)state)->aimYaw <= 0)
             {
                 buttonDisable(0, 0x100);
-                if (fn_80296A14(player) >= 1)
+                if (Player_GetCurrentMagic((int)player) >= 1)
                 {
                     ((DimCannonState*)state)->unkAE += framesThisStep;
                     if (Sfx_IsPlayingFromObjectChannel((u32)obj, 2) == 0)
@@ -754,7 +754,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             if ((getButtonsJustPressedIfNotBusy(0) & 0x100) ||
                 ((DimCannonState*)state)->unkAE == lbl_803DBF00)
             {
-                if (((DimCannonState*)state)->aimYaw <= 0 && fn_80296A14(player) >= 1)
+                if (((DimCannonState*)state)->aimYaw <= 0 && Player_GetCurrentMagic((int)player) >= 1)
                 {
                     buttonDisable(0, 0x100);
                     playerAddRemoveMagic(player, -1);
