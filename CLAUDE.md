@@ -350,7 +350,13 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     ALL are `s16`/`int` (extsh), ZERO are `u8` (clrlwi). The target's counters are `u8` (clrlwi
     r25,24; cmplwi 8) AND `mr` — a combo absent from every 100%-matched MWCC fn. So `u8`+two-counter-
     copy is not producible by any in-repo compiler; widening to s16/int DOES yield `mr` but breaks
-    the clrlwi masks (net regress). Confirms the target used an unavailable build config.
+    the clrlwi masks (net regress). Confirms the target used an unavailable build config. COMPLETE
+    COMPILER SWEEP (definitive): ALL 29 MWCC binaries in build/compilers (every GC 1.0→3.0a5 AND all
+    9 Wii 1.0→1.7) emit `li;li` — none produces the `mr`. Also ruled out: static-helper extraction
+    (stays separate→`bl` diverges; force-inline→different frame/alloc), runtime/volatile loop bound
+    (still `li`), register-web analysis (orbIndex/nextRing coalesce into a multi-def web identically
+    in both builds, yet only the target declines to rematerialize the copy — a pure allocator-
+    heuristic divergence with no source-reachable cause).
     (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
