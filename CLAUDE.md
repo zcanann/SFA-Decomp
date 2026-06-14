@@ -342,7 +342,11 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     objFreeObjDef) STILL emits `li;li` in a small fn — so the copy-vs-rematerialize choice is
     decided by fn-GLOBAL register pressure/alloc state (#108 dose-effect), not the local construct.
     Bank-and-retry; the lone-instr residual is the whole fuzzy gap (the co-located @NNN-vs-named f64
-    int→float magic is #70-neutral). (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
+    int→float magic is #70-neutral). ALSO RULED OUT (verified): recompiling the TU with every GC
+    compiler (2.0/2.0p1/1.3/1.3.2/1.3.2r/2.5/2.6/2.7/1.2.5n) STILL emits `li;li` — not a
+    version-swap fix. Theory: `count=orbIndex` only survives as a copy if the source is non-constant
+    (a phi), which needs a guarding branch the target lacks; all identity ops (`&0`,`-x`,`*1`) fold
+    even on a phi. (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
     Arg-eval anchor: embed a DEF inside the size/arg statement (`sz = (u16)((count - (index =
