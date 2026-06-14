@@ -14,6 +14,7 @@
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/objlib.h"
 
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
@@ -47,7 +48,6 @@ extern int getCurSeqNo(void);
 extern f32 lbl_803E5E70; /* 0.0 */
 extern f32 timeDelta;
 
-extern void ObjGroup_AddObject(int obj, int group);
 extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int a, int b, int c);
 extern void lockLevel(int idx, int p2);
@@ -64,7 +64,6 @@ extern void fn_80089578(int flags, int red, int green, int blue);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
-extern void ObjGroup_RemoveObject(int obj, int group);
 extern void Music_Trigger(int musicId, int param);
 extern f32 lbl_802C24B8[]; /* sky light/color/fog vector table */
 extern u8 lbl_803DC110;    /* sky-color blend source triplet */
@@ -207,7 +206,7 @@ int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
 void wmlevelcontrol_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 9);
+    ObjGroup_RemoveObject((u32)obj, 9);
     Music_Trigger(0xa8, 0);
     GameBit_Set(0xa7f, 0);
     GameBit_Set(0x372, 1);
@@ -273,7 +272,7 @@ void wmlevelcontrol_init(int obj)
     WmLevelControlState* state;
     u8 mode;
 
-    ObjGroup_AddObject(obj, 9);
+    ObjGroup_AddObject((u32)obj, 9);
     unlockLevel(mapGetDirIdx(0xb), 0, 0);
     state = ((GameObject*)obj)->extra;
     state->unk0B = 0;
