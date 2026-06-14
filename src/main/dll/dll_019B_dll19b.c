@@ -29,7 +29,6 @@ extern f32 Vec_distance(f32 * a, f32 * b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);
 extern char sShrineTimeFormat[];
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
 extern f32 lbl_803E5194;

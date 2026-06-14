@@ -15,8 +15,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotYByte) == 0x19);

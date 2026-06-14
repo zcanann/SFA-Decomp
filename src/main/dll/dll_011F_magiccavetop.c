@@ -3,7 +3,6 @@
 
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/camera_interface.h"

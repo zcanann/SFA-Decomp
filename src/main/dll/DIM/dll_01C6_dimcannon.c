@@ -36,7 +36,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dcb68;
 extern undefined4 DAT_803dcb6a;
 extern undefined4 DAT_803dcb6c;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern f64 DOUBLE_803e5578;
 extern f32 lbl_803DC074;

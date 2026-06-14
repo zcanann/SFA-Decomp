@@ -27,8 +27,6 @@ extern int getLActions();
 extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
 extern f32 lbl_803E5918; /* ObjAnim_AdvanceCurrentMove speed */

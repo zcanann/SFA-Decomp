@@ -51,8 +51,6 @@ extern u32 randomGetRange(int min, int max);
 extern uint FUN_80017a98();
 extern undefined4 ObjMsg_SendToObject();
 extern int FUN_800632f4();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6A1C;
 extern f32 lbl_803E6A20;
@@ -248,7 +246,6 @@ void fn_801F27E4(int obj)
 {
     extern void*Obj_GetPlayerObject(void);
     extern int fn_80296A14(void);
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     extern void buttonDisable(int a, int b);
     extern u8 framesThisStep;
     extern f32 lbl_803E5D98;

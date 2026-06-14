@@ -18,8 +18,6 @@ extern undefined4 GameBit_Set();
 extern undefined4 SCGameBitLatch_Update();
 extern u8* Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5F10;

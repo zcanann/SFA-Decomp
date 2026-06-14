@@ -48,7 +48,6 @@ extern f32 mathCosf(f32 x);
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern SHthorntailPathControlInterface** gPathControlInterface;
 extern f32 lbl_803E544C;
 extern f32 lbl_803E5450;

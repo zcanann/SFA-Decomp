@@ -16,8 +16,6 @@ extern void fn_8011F6D4(int p);
 extern int fn_801C49B8(int obj);
 extern int Obj_GetPlayerObject(void);
 extern void fn_80296518(int obj, int arg, int enable);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;

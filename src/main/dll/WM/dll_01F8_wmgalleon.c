@@ -82,7 +82,6 @@ extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80065574(int a, int* obj, int b);
 extern void fn_80296BBC(int player);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E5CEC;
 extern f32 lbl_803E5CF0;
 extern f32 lbl_803E5CF4;

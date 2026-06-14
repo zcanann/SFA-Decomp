@@ -62,8 +62,6 @@ extern undefined8 ObjMsg_SendToObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_8003b818();
 extern double FUN_80293900();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern f64 DOUBLE_803e3a58;
@@ -555,7 +553,6 @@ int fn_8016043C(int obj, GroundBaddieState* p)
 void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
 {
     extern int* gBaddieControlInterface;
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     extern int* gPlayerInterface;
     extern void* lbl_803AC5D0[];
     extern void* lbl_803AC5E8[];
@@ -649,7 +646,6 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     extern int Curve_AdvanceAlongPath(int* p, f32 t);
     extern int getAngle(f32 a, f32 b);
     extern int* gBaddieControlInterface;
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     extern int* gPlayerInterface;
     extern void* lbl_803AC5D0[];
     extern void* lbl_803AC5E8[];

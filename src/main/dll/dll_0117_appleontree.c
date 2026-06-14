@@ -17,8 +17,6 @@ extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern f32 Vec_distance(float* posA, float* posB);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)wm_column_initialise,

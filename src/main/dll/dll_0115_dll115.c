@@ -11,8 +11,6 @@
 extern uint GameBit_Get(int eventId);
 extern undefined8 ObjGroup_RemoveObject();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern f32 lbl_803E37B0;
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();

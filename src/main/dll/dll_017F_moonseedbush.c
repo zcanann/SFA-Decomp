@@ -9,8 +9,6 @@ extern u32 GameBit_Get(int eventId);
 
 extern void objRenderFn_8003b8f4(f32 v);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */

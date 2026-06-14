@@ -11,7 +11,6 @@
 #include "main/objseq.h"
 
 extern int ObjMsg_SendToObjects();
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 
 /* perch anim-event callback: stop the sequence once the old

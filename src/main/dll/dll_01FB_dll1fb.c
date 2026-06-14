@@ -67,8 +67,6 @@ extern u32 randomGetRange(int min, int max);
 
 extern void buttonDisable(int controller, int mask);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern f32 timeDelta;
 extern f32 lbl_803E5D00;
 extern f32 lbl_803E5D04;

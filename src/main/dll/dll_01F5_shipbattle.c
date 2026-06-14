@@ -58,8 +58,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
  */
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 

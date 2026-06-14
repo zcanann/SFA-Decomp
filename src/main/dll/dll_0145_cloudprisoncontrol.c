@@ -66,7 +66,6 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d0;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd704;

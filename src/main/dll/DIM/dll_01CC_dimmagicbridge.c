@@ -90,7 +90,6 @@ extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_803dc070;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e56a8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE7EC;

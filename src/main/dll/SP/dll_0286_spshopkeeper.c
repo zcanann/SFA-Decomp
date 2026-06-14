@@ -56,7 +56,6 @@ extern f32 lbl_803E5A28;
 extern void* allocModelStruct_800139e8(int, int);
 extern void dll_2E_func05(int, int, int, int, int);
 extern int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void DRlaserturret_startTimedChallenge(int);
 extern void DRlaserturret_handlePromptChoice(int);
 extern void setAButtonIcon(int icon);

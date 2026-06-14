@@ -50,7 +50,6 @@ extern f32 lbl_803E5368;
 extern f32 lbl_803E537C;
 extern f32 lbl_803E5380;
 extern u8 lbl_80326D20[];
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 int bombplant_getExtraSize(void)
 {

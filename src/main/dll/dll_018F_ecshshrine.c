@@ -18,8 +18,6 @@ extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern f32 mathSinf(f32 x);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803E4F90;

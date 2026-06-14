@@ -7,7 +7,6 @@
 #include "main/mapEventTypes.h"
 
 extern uint GameBit_Get(int eventId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);

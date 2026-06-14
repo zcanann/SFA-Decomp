@@ -175,7 +175,6 @@ extern void voxmaps_updateRoutePath(void* from, void* to);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 extern f32 sqrtf(f32);
@@ -2336,7 +2335,6 @@ void dll_CA_update(int obj, int p2, int p3)
     extern void mediumbasket_updateTargetMotion(int obj, int sub, int sub2);
     extern int* gBaddieControlInterface;
     extern MapEventInterface** gMapEventInterface;
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     extern f32 lbl_803E2D14;
     extern f32 lbl_803E2D90;
     extern f32 lbl_803E2DB8;

@@ -22,8 +22,6 @@ extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);
 extern int RandomTimer_UpdateRangeTrigger(f32* state, f32 min, f32 max);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u8 lbl_803DBFC8;
 extern u8 lbl_803DBFCC;
 extern u8 lbl_803DBFD0;

@@ -35,7 +35,6 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;

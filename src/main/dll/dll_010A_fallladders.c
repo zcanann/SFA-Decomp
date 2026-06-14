@@ -27,8 +27,6 @@ extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80043030();
 extern undefined4 FUN_80044404();
 extern undefined4 FUN_80053c98();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 FLOAT_803e4830;
 extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;

@@ -63,7 +63,6 @@ extern undefined4 FUN_800305f8();
 extern undefined4 DAT_802c2a88;
 extern undefined4 DAT_802c2a8c;
 extern undefined4 DAT_802c2a90;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;

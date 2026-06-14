@@ -25,7 +25,6 @@ extern undefined4 objAudioFn_8006ef38();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803274f4;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5E98;
@@ -146,7 +145,6 @@ void fn_801CEE0C(int p1, int p2)
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
     extern int gameBitDecrement(int);
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     extern int lbl_803DBF70;
     extern int lbl_803DBF74;
     extern int lbl_803DBF78;

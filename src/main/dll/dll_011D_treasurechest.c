@@ -95,7 +95,6 @@ void treasurechest_hitDetect(int obj)
 extern void* Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
 extern void fn_802967E0(void* obj, int enabled);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 typedef struct ChestHitParams
 {

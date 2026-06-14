@@ -59,7 +59,6 @@ STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
 extern int ObjMsg_Pop();
 extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern f32 lbl_803E42B0;
 extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
@@ -147,7 +146,6 @@ void cfprisoncage_hitDetect(int* obj)
 
 void cfprisoncage_update(int* obj)
 {
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     int v;
     if (((GameObject*)obj)->unkF4 != 0)
     {

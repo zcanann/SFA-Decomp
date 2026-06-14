@@ -106,7 +106,6 @@ extern void lockLevel(int idx, int p2);
 extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void objSetSlot(void* obj, int slot);
 extern void* textureLoadAsset(int id);
 extern int lbl_803DDC18;

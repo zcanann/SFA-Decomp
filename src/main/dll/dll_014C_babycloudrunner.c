@@ -58,7 +58,6 @@ extern undefined4 DAT_802c2a58;
 extern undefined4 DAT_802c2a5c;
 extern undefined4 DAT_802c2a60;
 extern undefined4 DAT_802c2a64;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e4db0;
 extern f32 lbl_803DC074;
 extern f32 gBoneParticleEffectInterface;

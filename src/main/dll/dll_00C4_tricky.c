@@ -319,7 +319,6 @@ extern int ObjModel_ClearBlendChannels(int model);
 extern void characterDoEyeAnims(int obj, void* p);
 extern int fn_80138D7C(int obj, int state);
 extern void Tricky_updateBlendChannelWeight(int obj, int state);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

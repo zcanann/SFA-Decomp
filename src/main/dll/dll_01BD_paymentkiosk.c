@@ -9,8 +9,6 @@
 
 extern u8* Obj_GetPlayerObject(void);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 void paymentkiosk_free(void)
 {
 }

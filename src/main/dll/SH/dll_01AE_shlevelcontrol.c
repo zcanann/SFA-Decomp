@@ -17,7 +17,6 @@ extern undefined8 FUN_80286838();
 extern undefined4 FUN_80286884();
 extern uint countLeadingZeros();
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern char sSPShopNumBloopsFormat[];
 extern f32 lbl_803E54B0;
 extern f32 lbl_803E54B4;

@@ -59,7 +59,6 @@ extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern void objRenderFn_8003b8f4(f32);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E41D0;
 
 int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);

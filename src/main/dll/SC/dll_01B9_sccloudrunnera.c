@@ -28,8 +28,6 @@ extern int Obj_SetupObject(int s, int a, int b, int c, int d);
 extern void cmbsrc_setExternalActive(int obj, int active);
 extern void Obj_FreeObject(int obj);
 extern void objSetSlot(int obj, int slot);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterface;
 
 extern u8 lbl_803DB411;

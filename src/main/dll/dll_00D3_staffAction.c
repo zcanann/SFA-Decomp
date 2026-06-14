@@ -1291,8 +1291,6 @@ extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
 extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
 extern f32 sqrtf(f32);
 extern void* memset(void* dst, int val, u32 size);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gPlayerInterface;
 
 extern int lbl_803202E8[];

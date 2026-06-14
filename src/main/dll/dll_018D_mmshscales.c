@@ -21,8 +21,6 @@ typedef struct MmshScalesState
 } MmshScalesState;
 
 extern void Obj_FreeObject(void* obj);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 

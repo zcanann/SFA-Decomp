@@ -52,8 +52,6 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017ac8();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 /* Trivial 4b 0-arg blr leaves. */
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))

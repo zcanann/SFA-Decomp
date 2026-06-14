@@ -44,8 +44,6 @@ typedef struct DoorPlacement
 
 extern undefined4 ObjHits_DisableObject();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern u32 GameBit_Get(int eventId);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 

@@ -12,8 +12,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void GameBit_Set(int eventId, int value);
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
                                 void* scratch, f32 scaleX, f32 scaleZ);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5210;
 

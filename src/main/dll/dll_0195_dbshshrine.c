@@ -38,8 +38,6 @@ extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
 extern void Music_Trigger(int musicId, int value);
 extern void audioStopByMask(int mask);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 

@@ -16,7 +16,6 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern f32 lbl_803E384C;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 void dll_FC_free_nop(void)
 {

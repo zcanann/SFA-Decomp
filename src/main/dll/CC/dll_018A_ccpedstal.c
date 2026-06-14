@@ -7,8 +7,6 @@
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 /* 8b "li r3, N; blr" returners. */
 
 #include "main/camera_interface.h"

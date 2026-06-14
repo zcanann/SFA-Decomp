@@ -35,7 +35,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dcb68;
 extern undefined4 DAT_803dcb6a;
 extern undefined4 DAT_803dcb6c;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern f64 DOUBLE_803e5578;
 extern f32 lbl_803DC074;
@@ -301,7 +300,6 @@ void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimlavasmash_update(int* obj)
 {
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     u8* sub;
     ObjHitsPriorityState* hitState;
     sub = ((GameObject*)obj)->extra;

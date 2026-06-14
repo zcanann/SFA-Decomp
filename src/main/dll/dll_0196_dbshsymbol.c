@@ -16,7 +16,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 
 extern u8 lbl_803DBF68;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u8 framesThisStep;
 
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);

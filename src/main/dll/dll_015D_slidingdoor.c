@@ -35,8 +35,6 @@ extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 

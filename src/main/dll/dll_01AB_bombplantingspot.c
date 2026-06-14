@@ -6,8 +6,6 @@
 
 extern u32 GameBit_Get(int eventId);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"

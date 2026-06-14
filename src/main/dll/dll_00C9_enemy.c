@@ -147,7 +147,6 @@ extern f32 lbl_803E25DC;
 extern int getAngle(f32 x, f32 z);
 extern uint lbl_8031DBF0[];
 extern uint lbl_8031DC10[];
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void fn_80026C30(int* obj, int flag);
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;

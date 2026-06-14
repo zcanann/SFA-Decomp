@@ -27,8 +27,6 @@ extern undefined8 ObjMsg_SendToObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_8003b818();
 extern double FUN_80293900();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern f64 DOUBLE_803e3a58;
@@ -1141,7 +1139,6 @@ void dll_CE_update(int obj, int p2, int p3)
     extern void fn_8015EA48(int obj, u8* p);
     extern int* gBaddieControlInterface;
     extern MapEventInterface** gMapEventInterface;
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     extern int* gSHthorntailAnimationInterface;
     extern int* gPlayerInterface;
     extern void* lbl_803AC5B0[];

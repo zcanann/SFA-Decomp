@@ -51,8 +51,6 @@ extern u32 randomGetRange(int min, int max);
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 
 extern u8 lbl_803DDC78;

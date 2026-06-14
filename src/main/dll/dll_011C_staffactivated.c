@@ -54,7 +54,6 @@ STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 extern void Obj_GetPlayerObject(void);
 extern int fn_80295CE4(void);
 extern u32 GameBit_Get(int eventId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;

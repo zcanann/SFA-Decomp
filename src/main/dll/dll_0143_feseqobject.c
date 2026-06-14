@@ -6,8 +6,6 @@
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E56B0;
 extern f32 lbl_803E56B4;
 

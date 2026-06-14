@@ -16,8 +16,6 @@ extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern void doRumble(f32 strength);
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;

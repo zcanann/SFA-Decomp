@@ -94,7 +94,6 @@ extern undefined4 FUN_8003b818();
 extern double FUN_80293900();
 
 extern undefined4 DAT_8032a290;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e6f78;
 extern f64 DOUBLE_803e7000;
 extern f32 lbl_803DC074;

@@ -47,8 +47,6 @@ extern undefined4 ObjMsg_SendToNearbyObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80081110();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B8;
 

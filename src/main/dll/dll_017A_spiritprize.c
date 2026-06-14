@@ -23,8 +23,6 @@ typedef struct SpiritPrizePlacement
 } SpiritPrizePlacement;
 
 extern u32 randomGetRange(int min, int max);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern void Sfx_PlayFromObject(int obj, int sfxId);

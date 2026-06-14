@@ -279,7 +279,6 @@ extern undefined4 DAT_803ad32c;
 extern undefined4 DAT_803ad330;
 extern undefined4 DAT_803ad334;
 extern undefined4 DAT_803ad338;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void** gTitleMenuControlInterfaceCopy;
 extern f64 DOUBLE_803e3e88;
 extern f64 DOUBLE_803e4068;

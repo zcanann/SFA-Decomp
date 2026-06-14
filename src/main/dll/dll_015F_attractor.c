@@ -24,8 +24,6 @@ extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43D0;
 extern void* Obj_GetPlayerObject(void);

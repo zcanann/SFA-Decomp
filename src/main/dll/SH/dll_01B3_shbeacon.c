@@ -40,7 +40,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern int GameBit_Set(int eventId, int value);
 extern void gameBitDecrement(int eventId);

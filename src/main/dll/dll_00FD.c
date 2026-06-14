@@ -19,7 +19,6 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E3854;
 extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;

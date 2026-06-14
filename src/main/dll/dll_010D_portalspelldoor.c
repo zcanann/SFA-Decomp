@@ -38,7 +38,6 @@ void portalspelldoor_update(int obj)
     extern void fn_80296B78(int player, int v);
     extern int getTrickyObject(void);
     extern void trickyImpress(int tricky);
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
     typedef struct
     {
         u8 open : 1;

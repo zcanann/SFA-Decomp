@@ -25,8 +25,6 @@ extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 
 extern void objRenderFn_8003b8f4(f32 v);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern int lbl_802C22F8[4];

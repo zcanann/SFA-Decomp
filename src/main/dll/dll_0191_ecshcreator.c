@@ -15,8 +15,6 @@
 
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;

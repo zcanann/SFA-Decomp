@@ -7,7 +7,6 @@
 #include "main/game_object.h"
 
 extern void* Obj_GetPlayerObject(void);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 
 extern f32 lbl_803E5048;

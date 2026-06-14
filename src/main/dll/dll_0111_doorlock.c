@@ -43,8 +43,6 @@ typedef struct DoorlockPlacement
 
 extern undefined4 ObjGroup_AddObject();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern u32 GameBit_Get(int eventId);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];

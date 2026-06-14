@@ -436,7 +436,6 @@ extern int ObjTrigger_IsSet(int obj);
 extern void mapUnload(int idx, int flags);
 extern void loadMapAndParent(int mapId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;

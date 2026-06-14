@@ -36,7 +36,6 @@ extern f32 lbl_803E5B88;
 extern f32 lbl_803E5B8C;
 extern f32 lbl_803DC0D8;
 extern f32 lbl_803E5BA0;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
