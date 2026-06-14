@@ -27,7 +27,6 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
     ObjHitReactEffectPos effectPos;
     ObjHitReactEffectColorArgs effectColorArgs;
     int hitSphereIndex;
-    int reactionEntryIndex;
 
     objAnim = (ObjAnimComponent*)obj;
     effectColorArgs = gObjHitReactEffectColorArgs;
@@ -54,13 +53,13 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
         effectPos.y = 0;
         effectPos.x = 0;
         animDef = bank->animDef;
-        reactionEntryIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
-        if (reactionEntryIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK))
+        hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
+        if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK))
         {
-            OSReport(sObjHitReactSphereOverflowString, reactionEntryIndex);
-            reactionEntryIndex = 0;
+            OSReport(sObjHitReactSphereOverflowString, hitSphereIndex);
+            hitSphereIndex = 0;
         }
-        reactionEntry = &reactionEntryTable[reactionEntryIndex];
+        reactionEntry = &reactionEntryTable[hitSphereIndex];
         if (hitType != OBJHITREACT_COLLISION_SKIP_REACTION)
         {
             if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
@@ -166,20 +165,23 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType,
                                  ObjHitReactState* hitState, int moveId, int async)
 {
-    ObjHitReactMoveEntry* moveEntry;
+    s16* moveEntryTable;
+    int moveEntryWordIndex;
+    s16* moveEntry;
     s16 entryByteOffset;
-    ObjHitReactMoveEntry* moveEntryTable;
 
-    moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
+    moveEntryTable = (s16*)objAnim->modelInstance->hitReactMoveTable;
     hitState->activeEntryByteCount = 0;
     if (moveEntryTable != NULL)
     {
-        for (moveEntry = moveEntryTable; moveEntry->moveId != OBJHITREACT_MOVE_ID_END; moveEntry++)
+        for (moveEntryWordIndex = 0, moveEntry = moveEntryTable; moveEntry[0] != OBJHITREACT_MOVE_ID_END;
+             moveEntry += OBJHITREACT_MOVE_ENTRY_SHORT_COUNT, moveEntryWordIndex += OBJHITREACT_MOVE_ENTRY_SHORT_COUNT)
         {
-            if (moveId == moveEntry->moveId)
+            if (moveId == moveEntry[0])
             {
-                entryByteOffset = moveEntry->firstEntryByteOffset;
-                hitState->activeEntryByteCount = moveEntry->entryByteCount;
+                moveEntry = &moveEntryTable[moveEntryWordIndex];
+                entryByteOffset = moveEntry[1];
+                hitState->activeEntryByteCount = moveEntry[2];
                 if (hitState->activeEntryByteCount > hitState->entryBufferByteCapacity)
                 {
                     hitState->activeEntryByteCount = hitState->entryBufferByteCapacity;

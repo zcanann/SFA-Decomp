@@ -73,6 +73,7 @@ extern ObjAnimComponent **gObjHitReactResetObjects;
 #define OBJHITREACT_RESET_HITBOX_MODE 2
 #define OBJHITREACT_DISABLED_HITBOX_MODE 0x64
 #define OBJHITREACT_MOVE_ID_END -1
+#define OBJHITREACT_MOVE_ENTRY_SHORT_COUNT 3
 
 typedef struct ObjHitReactState {
   int activeHit;
