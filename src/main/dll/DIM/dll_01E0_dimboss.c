@@ -367,7 +367,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
         }
         if (obj->childObject != NULL)
         {
-            *(undefined4*)((int)obj->childObject + 0x30) = obj->facingAngle;
+            ((ObjAnimComponent*)obj->childObject)->parent = obj->anim.parent;
         }
         if ((runtime->eventGameBit != -1) &&
             (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0))
@@ -529,9 +529,9 @@ void DIMboss_update(DIMbossObject* obj)
         ObjHits_RegisterActiveHitVolumeObject(obj);
         if (obj->updateInitialized == 0)
         {
-            obj->posX = config->spawnX;
-            obj->posY = config->spawnY;
-            obj->posZ = config->spawnZ;
+            obj->anim.localPosX = config->spawnX;
+            obj->anim.localPosY = config->spawnY;
+            obj->anim.localPosZ = config->spawnZ;
             DIMboss_GetObjectTriggerInterface()->spawnAnimObject((int)config->animObjId, obj, -1);
             obj->updateInitialized = 1;
         }
@@ -572,7 +572,8 @@ void DIMboss_update(DIMbossObject* obj)
                         Obj_BuildWorldTransformMatrix(obj, gDIMbossRenderMtx, 0);
                         targetModel = Obj_GetActiveModel(obj);
                         ObjModel_EnableDefaultRenderCallback
-                            (obj, targetModel, gDIMbossRenderMtx, 1, (double)(obj->modelScale * obj->baseScale));
+                            (obj, targetModel, gDIMbossRenderMtx, 1,
+                             (double)(obj->anim.hitboxScale * obj->anim.rootMotionScale));
                     }
                 }
                 if (topState->steamFlags.bits.sfxPending != 0)
@@ -600,7 +601,7 @@ void DIMboss_update(DIMbossObject* obj)
                 childObject = obj->childObject;
                 if (childObject != NULL)
                 {
-                    *(undefined4*)((int)childObject + 0x30) = obj->facingAngle;
+                    ((ObjAnimComponent*)childObject)->parent = obj->anim.parent;
                 }
                 DIM2icicle_updateCombatState(obj, NULL, runtime, runtime);
                 dll_2E_func04(gDIMbossAnimController, runtime->targetModel);
@@ -653,7 +654,7 @@ void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
     liftHeight = lbl_803E4BD8;
     topState->idleLift = liftHeight;
     topState->launchLift = liftHeight;
-    obj->activeModelId = -1;
+    obj->anim.activeMove = -1;
     topState->effect = NULL;
     lbl_803DDB84 = 0;
     gDIMbossSequenceFlags = 0;

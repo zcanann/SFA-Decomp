@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_internal.h"
 #include "main/objanim_update.h"
 
 #define DIMBOSS_RUNTIME_SIZE 0x4C8
@@ -234,21 +235,26 @@ typedef struct DIMbossConfig {
 } DIMbossConfig;
 
 typedef struct DIMbossObject {
-  u8 pad00[0x08];
-  f32 baseScale;
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 pad18[0x30 - 0x18];
-  undefined4 facingAngle;
-  u8 pad34[0x4C - 0x34];
-  DIMbossConfig *config;
-  u8 pad50[0xA2 - 0x50];
-  s16 activeModelId;
-  u8 padA4[0xA8 - 0xA4];
-  f32 modelScale;
-  u8 padAC[0xAF - 0xAC];
-  u8 objectFlags;
+  union {
+    ObjAnimComponent anim;
+    struct {
+      u8 pad00[0x08];
+      f32 baseScale;
+      f32 posX;
+      f32 posY;
+      f32 posZ;
+      u8 pad18[0x30 - 0x18];
+      void *parentObj;
+      u8 pad34[0x4C - 0x34];
+      DIMbossConfig *config;
+      u8 pad50[0xA2 - 0x50];
+      s16 activeModelId;
+      u8 padA4[0xA8 - 0xA4];
+      f32 modelScale;
+      u8 padAC[0xAF - 0xAC];
+      u8 objectFlags;
+    };
+  };
   u8 padB0[0xB4 - 0xB0];
   s16 animStateId;
   u8 padB6[0xB8 - 0xB6];
@@ -320,13 +326,20 @@ STATIC_ASSERT(offsetof(DIMbossConfig, spawnZ) == 0x10);
 STATIC_ASSERT(offsetof(DIMbossConfig, eventId) == 0x2C);
 STATIC_ASSERT(offsetof(DIMbossConfig, animObjId) == 0x2E);
 
+STATIC_ASSERT(offsetof(DIMbossObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(DIMbossObject, baseScale) == 0x08);
+STATIC_ASSERT(offsetof(DIMbossObject, baseScale) == offsetof(ObjAnimComponent, rootMotionScale));
 STATIC_ASSERT(offsetof(DIMbossObject, posX) == 0x0C);
-STATIC_ASSERT(offsetof(DIMbossObject, facingAngle) == 0x30);
+STATIC_ASSERT(offsetof(DIMbossObject, posX) == offsetof(ObjAnimComponent, localPosX));
+STATIC_ASSERT(offsetof(DIMbossObject, parentObj) == offsetof(ObjAnimComponent, parent));
 STATIC_ASSERT(offsetof(DIMbossObject, config) == 0x4C);
+STATIC_ASSERT(offsetof(DIMbossObject, config) == offsetof(ObjAnimComponent, placementData));
 STATIC_ASSERT(offsetof(DIMbossObject, activeModelId) == 0xA2);
+STATIC_ASSERT(offsetof(DIMbossObject, activeModelId) == offsetof(ObjAnimComponent, activeMove));
 STATIC_ASSERT(offsetof(DIMbossObject, modelScale) == 0xA8);
+STATIC_ASSERT(offsetof(DIMbossObject, modelScale) == offsetof(ObjAnimComponent, hitboxScale));
 STATIC_ASSERT(offsetof(DIMbossObject, objectFlags) == 0xAF);
+STATIC_ASSERT(offsetof(DIMbossObject, objectFlags) == offsetof(ObjAnimComponent, resetHitboxFlags));
 STATIC_ASSERT(offsetof(DIMbossObject, animStateId) == 0xB4);
 STATIC_ASSERT(offsetof(DIMbossObject, runtime) == 0xB8);
 STATIC_ASSERT(offsetof(DIMbossObject, updateState) == 0xBC);
