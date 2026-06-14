@@ -153,7 +153,7 @@ int voiceScaleSampleRate(u16 x)
         f64 d;
     } conv;
 
-    return (int)(lbl_803E7818 * (f64)(u32)x);
+    return (int)(lbl_803E7818 * (f32)(u32)x);
 }
 
 /*
