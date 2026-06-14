@@ -655,8 +655,8 @@ void fn_80151C68(int obj, u8* state)
 
 void fn_80151DB8(int obj, u8* state)
 {
-    u8* player;
-    u8* setup;
+    GameObject* player;
+    ObjPlacement* setup;
     f32 dy;
     f32 px0;
     f32 pz0;
@@ -668,36 +668,36 @@ void fn_80151DB8(int obj, u8* state)
     f32 dx;
     f32 dz;
 
-    player = Obj_GetPlayerObject();
-    setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    dy = *(f32*)(player + 0x10) - ((GameObject*)obj)->anim.localPosY;
+    player = (GameObject*)Obj_GetPlayerObject();
+    setup = ((GameObject*)obj)->anim.placement;
+    dy = player->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     dy = (dy >= lbl_803E27D8) ? dy : -dy;
     if (dy > lbl_803E27DC)
     {
         return;
     }
-    px0 = ((ObjPlacement*)setup)->posX - lbl_803E27DC * mathSinf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
-    pz0 = ((ObjPlacement*)setup)->posZ - lbl_803E27DC * mathCosf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
-    dx = *(f32*)(player + 0x18) - px0;
-    dz = *(f32*)(player + 0x20) - pz0;
+    px0 = setup->posX - lbl_803E27DC * mathSinf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
+    pz0 = setup->posZ - lbl_803E27DC * mathCosf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
+    dx = player->anim.worldPosX - px0;
+    dz = player->anim.worldPosZ - pz0;
     if (sqrtf(dx * dx + dz * dz) < *(f32*)(state + 0x2ac))
     {
         cosA = mathSinf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
         sinA = mathCosf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
         base = -(cosA * (px0 - cosA) + sinA * (pz0 - sinA));
-        f5 = base + (cosA * *(f32*)(player + 0x8c) + sinA * *(f32*)(player + 0x94));
-        f2v = base + (cosA * *(f32*)(player + 0x18) + sinA * *(f32*)(player + 0x20));
+        f5 = base + (cosA * player->anim.previousWorldPosX + sinA * player->anim.previousWorldPosZ);
+        f2v = base + (cosA * player->anim.worldPosX + sinA * player->anim.worldPosZ);
         if (f2v > lbl_803E27D8)
         {
             if (!(f5 >= lbl_803E27E8))
             {
                 return;
             }
-            *(f32*)(player + 0x18) = *(f32*)(player + 0x18) - cosA * f5;
-            *(f32*)(player + 0x20) = *(f32*)(player + 0x20) - sinA * f5;
-            Obj_TransformWorldPointToLocal(*(f32*)(player + 0x18), *(f32*)(player + 0x1c), *(f32*)(player + 0x20),
-                                           (f32*)(player + 0xc), (f32*)(player + 0x10), (f32*)(player + 0x14),
-                                           *(int*)(player + 0x30));
+            player->anim.worldPosX = player->anim.worldPosX - cosA * f5;
+            player->anim.worldPosZ = player->anim.worldPosZ - sinA * f5;
+            Obj_TransformWorldPointToLocal(player->anim.worldPosX, player->anim.worldPosY, player->anim.worldPosZ,
+                                           &player->anim.localPosX, &player->anim.localPosY, &player->anim.localPosZ,
+                                           (u32)player->anim.parent);
         }
     }
 }
