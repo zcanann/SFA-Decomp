@@ -1124,8 +1124,8 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
     extern u32 lbl_803DD410; /* #57 */
     int i = 0;
     CheckpointSlot* p = lbl_8039C458;
-    int count = lbl_803DD410;
-    while (i < count && (u32)entry->sortKey > p[i].key)
+    int count;
+    while (i < (count = lbl_803DD410) && (u32)entry->sortKey > p[i].key)
     {
         i++;
     }
