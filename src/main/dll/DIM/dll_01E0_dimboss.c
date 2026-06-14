@@ -1,5 +1,6 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/dll/DIM/DIM2lift.h"
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -40,23 +41,6 @@ extern undefined8 dll_2E_func07();
 extern undefined4 dll_2E_func09();
 extern undefined4 dll_2E_func05();
 extern void fn_801B9ECC(void);
-extern void fn_801BA224(void);
-extern void fn_801BA4B8(void);
-extern void fn_801BA590(void);
-extern void fn_801BA5A8(void);
-extern void fn_801BA5F0(void);
-extern void fn_801BA654(void);
-extern void fn_801BA780(void);
-extern void fn_801BA880(void);
-extern void fn_801BA958(void);
-extern void fn_801BAA84(void);
-extern void fn_801BAB88(void);
-extern void fn_801BACB8(void);
-extern void fn_801BAE00(void);
-extern void fn_801BAF58(void);
-extern void fn_801BB0D8(void);
-extern void fn_801BB1EC(void);
-extern void fn_801BB2B0(void);
 extern undefined4 dll_2E_func04();
 extern void OSReport(const char* msg, ...);
 
@@ -719,27 +703,28 @@ ObjectDescriptor12 gDIM_BossObjDescriptor = {
 
 void DIMboss_initialiseAnimTables(void)
 {
-    void (**table)(void);
+    typedef void (*DIMbossRawAnimCallback)(void);
+    DIMbossRawAnimCallback *table;
 
     table = gDIMbossHitDetectAnimTable;
-    table[0] = fn_801BB2B0;
-    table[1] = fn_801BB1EC;
-    table[2] = fn_801BB0D8;
-    table[3] = fn_801BAF58;
-    table[4] = fn_801BAE00;
-    table[5] = fn_801BACB8;
-    table[6] = fn_801BAB88;
-    table[7] = fn_801BAA84;
-    table[8] = fn_801BA958;
-    table[9] = fn_801BA880;
-    table[10] = fn_801BA780;
-    table[11] = fn_801BA654;
+    table[0] = (DIMbossRawAnimCallback)DIMbossHitDetect_resetIdleMove;
+    table[1] = (DIMbossRawAnimCallback)DIMbossHitDetect_applyForwardMove;
+    table[2] = (DIMbossRawAnimCallback)DIMbossHitDetect_trackTargetMove;
+    table[3] = (DIMbossRawAnimCallback)DIMbossHitDetect_randomSwipe;
+    table[4] = (DIMbossRawAnimCallback)DIMbossHitDetect_blueWhiteEventCapture;
+    table[5] = (DIMbossRawAnimCallback)DIMbossHitDetect_blueWhiteCapture;
+    table[6] = (DIMbossRawAnimCallback)DIMbossHitDetect_breathBurst;
+    table[7] = (DIMbossRawAnimCallback)DIMbossHitDetect_lungeAttack;
+    table[8] = (DIMbossRawAnimCallback)DIMbossHitDetect_chooseIdleTaunt;
+    table[9] = (DIMbossRawAnimCallback)DIMbossHitDetect_liftImpact;
+    table[10] = (DIMbossRawAnimCallback)DIMbossHitDetect_liftSlam;
+    table[11] = (DIMbossRawAnimCallback)DIMbossHitDetect_tonsilSlam;
 
     table = gDIMbossAnimTable;
-    table[0] = fn_801BA5F0;
-    table[1] = fn_801BA5A8;
-    table[2] = fn_801BA590;
-    table[3] = fn_801BA4B8;
-    table[4] = fn_801BA224;
+    table[0] = (DIMbossRawAnimCallback)DIMbossAnim_selectTargetControlMode;
+    table[1] = (DIMbossRawAnimCallback)DIMbossAnim_returnToIdleWhenDone;
+    table[2] = (DIMbossRawAnimCallback)DIMbossAnim_hasMoveDone;
+    table[3] = (DIMbossRawAnimCallback)DIMbossAnim_finishDefeat;
+    table[4] = (DIMbossRawAnimCallback)DIMbossAnim_updatePlayerHitReaction;
     table[5] = fn_801B9ECC;
 }
