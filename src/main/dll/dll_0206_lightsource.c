@@ -279,7 +279,6 @@ void lightsource_update(int obj)
     extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
-    extern EffectInterface** gPartfxInterface;
     extern f32 timeDelta;
     extern f32 lbl_803E5E08;
     extern f32 lbl_803E5E0C;

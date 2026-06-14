@@ -146,7 +146,6 @@ void fn_80185B74(int obj)
 {
     extern void* lbl_803DDAD4;
     extern void* gSHthorntailAnimationInterface;
-    extern EffectInterface** gPartfxInterface;
     extern f32 lbl_803E3A58;
     extern f32 lbl_803E3A5C;
     extern f32 lbl_803E3A60;

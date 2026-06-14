@@ -94,7 +94,6 @@ void LaserBeam_hitDetect(void)
 }
 
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -174,7 +173,6 @@ void LaserBeam_update(int obj2)
     extern f32 mathCosf(f32 x);
     extern f32 mathSinf(f32 x);
     extern int* lbl_803DDC80;
-    extern EffectInterface** gPartfxInterface;
     extern u8 framesThisStep;
     extern f32 timeDelta;
     extern f32 lbl_803E5D10;
