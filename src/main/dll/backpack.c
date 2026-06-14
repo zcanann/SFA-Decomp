@@ -6,6 +6,7 @@
 #include "main/dll/landedArwing.h"
 #include "main/objlib.h"
 #include "main/objhits.h"
+#include "main/player_control_interface.h"
 
 typedef struct LandedArwingTriggerLaunchTargetState
 {
@@ -18,7 +19,6 @@ typedef struct LandedArwingTriggerLaunchTargetState
 } LandedArwingTriggerLaunchTargetState;
 
 extern void* gBaddieControlInterface;
-extern void* gPlayerInterface;
 
 extern void Obj_FreeObject(int obj);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -49,7 +49,7 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target)
     {
         (*(int(**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(
             obj, (int)((LandedArwingTriggerLaunchTargetState*)aux)->unk3F0, -1, 0);
-        (*(int(**)(int, int, int, int, int))(*(int*)gPlayerInterface + 0x58))(obj, target, 0x3c, 0xa, 0);
+        (*gPlayerInterface)->spawnPartfx((void*)obj, (void*)target, 0x3c, 0xa, 0);
         GameBit_Set((int)((LandedArwingTriggerLaunchTargetState*)aux)->unk3F2, 1);
         ((LandedArwingTriggerLaunchTargetState*)aux)->unk405 = 0;
     }

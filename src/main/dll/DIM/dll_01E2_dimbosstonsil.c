@@ -3,6 +3,7 @@
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/effect_interfaces.h"
+#include "main/player_control_interface.h"
 
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
@@ -59,7 +60,6 @@ int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState
 {
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
-    extern void* gPlayerInterface;
     extern void modelLightStruct_setEnabled(void* light, int enabled, f32 value);
     extern uint GameBit_Get(int eventId);
     extern u8 lbl_803DDBB0;
@@ -178,8 +178,8 @@ int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState
             if (state->hitReactMode == 1)
             {
                 state->field270 = 0;
-                (*(void (**)(void*, DIMbosstonsilState*, f32, f32, u8*, u8*))(*(int*)gPlayerInterface + 0x8))
-                    (obj, state, lbl_803E4CB8, *(f32*)&lbl_803E4CB8, &lbl_803DDBB0, &lbl_803DDBA8);
+                (*gPlayerInterface)->update(obj, state, lbl_803E4CB8, *(f32*)&lbl_803E4CB8,
+                                            &lbl_803DDBB0, &lbl_803DDBA8);
                 animUpdate->sequenceEventActive = 0;
             }
             goto updateDone;
@@ -286,10 +286,8 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
 
 void DIMbosstonsil_hitDetect(void* obj)
 {
-    extern void* gPlayerInterface;
     extern int lbl_803DDBB0;
-    (*(void (***)(void*, DIMbosstonsilState*, int*))gPlayerInterface)[3](
-        obj, ((GameObject*)obj)->extra, &lbl_803DDBB0);
+    (*gPlayerInterface)->updateVelocityState(obj, ((GameObject*)obj)->extra, &lbl_803DDBB0);
 }
 
 void DIMbosstonsil_update(void* obj)
@@ -365,7 +363,6 @@ void DIMbosstonsil_update(void* obj)
 void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
 {
     extern undefined4* gBaddieControlInterface;
-    extern undefined4* gPlayerInterface;
     extern void modelLightStruct_setEnabled(void* handle, int param_2, f32 param_3);
     extern int GameBit_Get(int eventId);
     u8 variant;
@@ -379,7 +376,7 @@ void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
     }
     (*(void (**)(int, undefined4, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, param_2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
     ((GameObject*)obj)->animEventCallback = (void*)dll_DIM_BossGutSpik_update;
-    (*(code*)(*gPlayerInterface + 0x14))(obj, state, 0);
+    (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
     *(s16*)(state + 0x270) = 0;
     gDIMbosstonsilRoutePhase = (s8)GameBit_Get(0x20c);
     if (gDIMbosstonsilRoutePhase < 3)

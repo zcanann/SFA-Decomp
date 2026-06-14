@@ -7,6 +7,7 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
+#include "main/player_control_interface.h"
 #include "main/screen_transition.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
@@ -48,7 +49,6 @@ extern int playerGetMoney(void* player);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void dll_2E_func03(int, int);
 extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
-extern int* gPlayerInterface;
 extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
 extern void* allocModelStruct_800139e8(int, int);
@@ -228,8 +228,8 @@ void shopkeeper_update(int obj)
         ((ShopkeeperState*)state)->vendorObj = ObjGroup_FindNearestObject(9, obj, &dist);
     }
     ((ShopkeeperState*)state)->playerMoney = (s16)playerGetMoney(player);
-    ((void (*)(int, int, f32, f32, void*, void*))(*(int*)((int)*gPlayerInterface + 8)))
-        (obj, state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
+    (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068,
+                                &lbl_803DDC58);
     dll_2E_func03(obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);
     ((GameObject*)obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
@@ -338,12 +338,12 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             ((ShopkeeperState*)state)->flags9D4 |= 2;
             break;
         case 2:
-            (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state2, 3);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state2, 3);
             (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7EF, &range, 0x50, NULL);
             ((ShopkeeperState*)state)->opacity = 0;
             break;
         case 3:
-            (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state2, 2);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state2, 2);
             ((ShopkeeperState*)state)->flags9D4 |= 0x20;
             ((ShopkeeperState*)state)->opacity = 0xFF;
             break;

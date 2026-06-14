@@ -6,6 +6,7 @@
 #include "main/model_light.h"
 #include "main/objanim_internal.h"
 #include "main/objhits.h"
+#include "main/player_control_interface.h"
 
 static inline int *DIM2Icicle_GetActiveModel(void *obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -122,7 +123,6 @@ extern void DIM2icicle_createStateLight(int obj, u8 isGreen);
 
 extern int getTrickyObject(void);
 extern undefined4* gBaddieControlInterface;
-extern int gPlayerInterface;
 extern u32 gDIMbossSequenceFlags;
 extern f32 timeDelta;
 extern f32 lbl_803E4BC8;
@@ -621,7 +621,7 @@ void DIM2icicle_updateHitResponse(int obj, int param_2)
       if (*(s8 *)(param_2 + 0x354) <= 0) {
         *(u8 *)(param_2 + 0x354) = 0;
         *(u8 *)(param_2 + 0x349) = 0;
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0);
+        (*gPlayerInterface)->setState((void*)obj, (void*)param_2, 0);
         hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -635,10 +635,10 @@ void DIM2icicle_updateHitResponse(int obj, int param_2)
         }
       }
       else if (*(s16 *)((int)state + 0x402) == 1) {
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 10);
+        (*gPlayerInterface)->setState((void*)obj, (void*)param_2, 10);
       }
       else {
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0xb);
+        (*gPlayerInterface)->setState((void*)obj, (void*)param_2, 0xb);
       }
       ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
     }
@@ -734,7 +734,7 @@ void DIM2icicle_updateCombatState(int obj, int animUpdate, int runtime, int upda
   }
   *(int *)(runtime + 0x3e0) = *(int *)&((GameObject *)obj)->pendingParentObj;
   *(int *)&((GameObject *)obj)->pendingParentObj = 0;
-  ((void (*)(f32, int, int, f32, void *, void *))*(code **)(*(int *)gPlayerInterface + 8))
-            (timeDelta, obj, updateRuntime, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
+  (*gPlayerInterface)->update((void*)obj, (void*)updateRuntime, timeDelta, timeDelta,
+                              gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
   *(int *)&((GameObject *)obj)->pendingParentObj = *(int *)(runtime + 0x3e0);
 }

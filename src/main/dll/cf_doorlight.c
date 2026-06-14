@@ -7,6 +7,7 @@
 #include "main/dll/wallanimator.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
+#include "main/player_control_interface.h"
 
 typedef struct KaldachomPlacement
 {
@@ -15,8 +16,6 @@ typedef struct KaldachomPlacement
 } KaldachomPlacement;
 
 extern u32 randomGetRange(int min, int max);
-
-extern void** gPlayerInterface;
 
 extern f32 timeDelta;
 extern f32 lbl_803E3060;
@@ -50,13 +49,13 @@ int kaldachom_stateHandlerB05(int obj, int p)
         def = *(int*)&((GameObject*)obj)->anim.placementData;
         if ((int)randomGetRange(0, 0x63) < (int)((KaldachomPlacement*)def)->unk2F)
         {
-            ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, p, 3);
+            (*gPlayerInterface)->setState((void*)obj, (void*)p, 3);
         }
         else
         {
             control->pullupSfxTimer = (f32)(int)
             randomGetRange(0x12c, 0x258);
-            ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, p, 2);
+            (*gPlayerInterface)->setState((void*)obj, (void*)p, 2);
         }
     }
     return 0;
@@ -66,7 +65,7 @@ int kaldachom_stateHandlerB04(int obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
-        ((void (*)(int, GroundBaddieState*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+        (*gPlayerInterface)->setState((void*)obj, state, 1);
     }
     return 0;
 }
@@ -194,7 +193,7 @@ int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
             f32 fz = lbl_803E3060;
             state->baddie.animSpeedB = fz;
             state->baddie.animSpeedA = fz;
-            ((void(*)(int*, GroundBaddieState*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+            (*gPlayerInterface)->setState(obj, state, 0);
         }
         else if ((s8)state->baddie.moveDone != 0)
         {
@@ -215,7 +214,7 @@ int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
     )
     {
         ((CfDoorlightState*)sub)->control->soundFlags = 0;
-        (**(void (**)(int, GroundBaddieState*, int))((char*)(*gPlayerInterface) + 0x14))(obj, p2, 7);
+        (*gPlayerInterface)->setState((void*)obj, p2, 7);
         ObjHits_DisableObject(obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
         ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);

@@ -7,6 +7,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/player_control_interface.h"
 
 typedef struct DllCBPlacement
 {
@@ -470,7 +471,6 @@ void iceball_update(undefined2* param_1, int param_2);
 
 int fn_801601C4(int obj, GroundBaddieState* p)
 {
-    extern int* gPlayerInterface;
     extern void*memcpy(void* dst, const void* src, int n);
     extern void voxmaps_updateRoutePath(char* a, char* b);
     extern f32 lbl_803E2E68;
@@ -485,7 +485,7 @@ int fn_801601C4(int obj, GroundBaddieState* p)
     sub = ((GameObject*)obj)->extra;
     if (*(void**)&p->baddie.targetObj != NULL)
     {
-        (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)p, 1);
+        (*gPlayerInterface)->setState((void*)obj, p, 1);
         wp = (char*)sub->route35C;
         z = lbl_803E2E68;
         p->baddie.moveInputX = z;
@@ -499,20 +499,18 @@ int fn_801601C4(int obj, GroundBaddieState* p)
         }
         if (*(u8*)(wp + 0x25) == 0)
         {
-            (*(void (**)(int, u8*, f32, f32, f32, f32, f32))(*(int*)gPlayerInterface + 0x1c))(
-                obj, (u8*)p, *(f32*)(wp + 0x18), *(f32*)(wp + 0x20), lbl_803E2E68, *(f32*)&lbl_803E2E68,
-                lbl_803E2E70);
+            (*gPlayerInterface)->moveTowardPoint((void*)obj, p, *(f32*)(wp + 0x18), *(f32*)(wp + 0x20),
+                                                 lbl_803E2E68, *(f32*)&lbl_803E2E68, lbl_803E2E70);
         }
         else
         {
-            (*(void (**)(int, u8*, f32, f32, f32, f32, f32))(*(int*)gPlayerInterface + 0x1c))(
-                obj, (u8*)p, *(f32*)(wp + 0x18), *(f32*)(wp + 0x20), lbl_803E2E74, lbl_803E2E78,
-                lbl_803E2E70);
+            (*gPlayerInterface)->moveTowardPoint((void*)obj, p, *(f32*)(wp + 0x18), *(f32*)(wp + 0x20),
+                                                 lbl_803E2E74, lbl_803E2E78, lbl_803E2E70);
         }
     }
     else
     {
-        (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)p, 0);
+        (*gPlayerInterface)->setState((void*)obj, p, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     return 0;
@@ -520,7 +518,6 @@ int fn_801601C4(int obj, GroundBaddieState* p)
 
 int fn_8016043C(int obj, GroundBaddieState* p)
 {
-    extern int* gPlayerInterface;
     extern int Obj_GetPlayerObject(void);
     extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
     extern void Obj_FreeObject(int* obj);
@@ -528,7 +525,7 @@ int fn_8016043C(int obj, GroundBaddieState* p)
 
     if (*(char*)&p->baddie.moveJustStartedB != '\0')
     {
-        (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)p, 3);
+        (*gPlayerInterface)->setState((void*)obj, p, 3);
         *(int*)&p->baddie.targetObj = 0;
         *(s8*)&p->baddie.physicsActive = 0;
         *(s8*)&p->baddie.hasTarget = 0;
@@ -553,7 +550,6 @@ int fn_8016043C(int obj, GroundBaddieState* p)
 void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
 {
     extern int* gBaddieControlInterface;
-    extern int* gPlayerInterface;
     extern void* lbl_803AC5D0[];
     extern void* lbl_803AC5E8[];
     extern f32 timeDelta;
@@ -585,8 +581,7 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
                                                                               lbl_803E2E9C, 1);
     *(int*)(sub + 0x3e0) = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
-    (*(void (**)(int, u8*, f32, f32, void*, void*))(*(int*)gPlayerInterface + 8))(
-        obj, (u8*)p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
+    (*gPlayerInterface)->update((void*)obj, p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
     *(int*)&((GameObject*)obj)->pendingParentObj = *(int*)(sub + 0x3e0);
 }
 #pragma dont_inline reset
@@ -646,7 +641,6 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     extern int Curve_AdvanceAlongPath(int* p, f32 t);
     extern int getAngle(f32 a, f32 b);
     extern int* gBaddieControlInterface;
-    extern int* gPlayerInterface;
     extern void* lbl_803AC5D0[];
     extern void* lbl_803AC5E8[];
     extern f32 lbl_803E2E8C;
@@ -683,8 +677,8 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             if (*(u8*)&((DllCBState*)sub)->unk405 == 1)
             {
                 ((GroundBaddieState*)sub)->baddie.substate = 5;
-                (*(void (**)(short*, int, f32, f32, void*, void*))(*(int*)gPlayerInterface + 8))(
-                    obj, sub, lbl_803E2E8C, *(f32*)&lbl_803E2E8C, lbl_803AC5E8, lbl_803AC5D0);
+                (*gPlayerInterface)->update(obj, (void*)sub, lbl_803E2E8C, *(f32*)&lbl_803E2E8C,
+                                            lbl_803AC5E8, lbl_803AC5D0);
                 *(s8*)(e + 0x56) = 0;
             }
             break;
@@ -1058,7 +1052,6 @@ extern f32 lbl_803E2EA8;
 void dll_CB_init(int* obj, u8* params, int extra)
 {
     extern int* gBaddieControlInterface;
-    extern int* gPlayerInterface;
     GroundBaddieState* sub;
     u8 flags;
 
@@ -1071,7 +1064,7 @@ void dll_CB_init(int* obj, u8* params, int extra)
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
         obj, params, (u8*)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
     ((GameObject*)obj)->animEventCallback = (void*)dll_CB_seqFn;
-    ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, (u8*)sub, 0);
+    (*gPlayerInterface)->setState(obj, sub, 0);
     sub->baddie.substate = 0;
     if (sub->aggroRange < 0x32)
     {
@@ -1179,12 +1172,11 @@ int fn_801603E8(int* obj, u8* obj2)
 }
 
 extern u8 lbl_803AC5E8[];
-extern undefined4* gPlayerInterface;
 #pragma peephole on
 void dll_CB_hitDetect(int* obj)
 {
     void* a = ((GameObject*)obj)->extra;
-    (*(code*)((char*)(*gPlayerInterface) + 0xc))(obj, a, lbl_803AC5E8);
+    (*gPlayerInterface)->updateVelocityState(obj, a, lbl_803AC5E8);
 }
 
 extern f32 lbl_803E2E8C;
@@ -1227,7 +1219,7 @@ int fn_80160690(short* out, u8* obj)
     *(s8*)(obj + 0x25f) = 1;
     out[2] = *(s16*)(obj + 0x19e);
     out[1] = *(s16*)(obj + 0x19c);
-    (*(code*)((char*)(*gPlayerInterface) + 0x30))(out, obj, 5);
+    (*gPlayerInterface)->rotateTowardTarget(out, obj, 5);
     return 0;
 }
 
@@ -1244,7 +1236,7 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
         f32 fz;
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
+        (*gPlayerInterface)->setState(obj, state, 0);
         fz = lbl_803E2E7C;
         ((GameObject*)obj)->anim.velocityY = fz;
         state->baddie.animSpeedA = fz;

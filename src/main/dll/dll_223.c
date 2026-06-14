@@ -3,6 +3,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
+#include "main/player_control_interface.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
@@ -11,7 +12,6 @@ extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern void doRumble(f32 val);
 extern void ObjMsg_SendToObject(void* obj, int msg, void* sender, int param_4);
 
-extern void* gPlayerInterface;
 extern void* gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
@@ -38,7 +38,7 @@ int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int pa
 {
     if (state->active != 0)
     {
-        (*(void (***)(void*, DIMbosstonsilState*, int))gPlayerInterface)[5](obj, state, 1);
+        (*gPlayerInterface)->setState(obj, state, 1);
     }
     if (state->hitResult != 0)
     {
@@ -52,7 +52,7 @@ int DIMbosstonsil_enableHitReaction(void* obj, DIMbosstonsilState* state)
     if (state->stunReady != 0)
     {
         state->active = 1;
-        (*(void (***)(void*, DIMbosstonsilState*, int))gPlayerInterface)[5](obj, state, 0);
+        (*gPlayerInterface)->setState(obj, state, 0);
     }
     return 0;
 }
@@ -165,7 +165,7 @@ void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
             {
                 lbl_803DDB98 = lbl_803E4C90;
             }
-            (*(void (***)(void*, DIMbosstonsilState*, int))gPlayerInterface)[5](obj, state, 1);
+            (*gPlayerInterface)->setState(obj, state, 1);
             state->field270 = 1;
             ObjMsg_SendToObject((void*)hitObj,DIMBOSSTONSIL_ADVANCE_MSG, obj, 0);
         }
