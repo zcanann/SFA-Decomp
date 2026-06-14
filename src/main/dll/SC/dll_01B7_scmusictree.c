@@ -344,10 +344,11 @@ end:
         f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
         f32 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
         f32 d = sqrtf(dx * dx + dz * dz);
-        if ((u16)(s32)d < ((ScMusictreeState*)inner)->unk48
+        int di = (s32)d;
+        if ((u16)di < ((ScMusictreeState*)inner)->unk48
         )
         {
-            if ((((ScMusictreeState*)inner)->unk4C & 0x10) && ((ScMusictreeState*)inner)->unk4A >= (u16)(s32)d && ((
+            if ((((ScMusictreeState*)inner)->unk4C & 0x10) && ((ScMusictreeState*)inner)->unk4A >= (u16)di && ((
                 CloudRunnerState*)inner)->baddie.velY <= lbl_803E5590
             )
             {
@@ -370,7 +371,7 @@ end:
                 ((ScMusictreeState*)inner)->unk30 = ((ScMusictreeState*)inner)->unk30 + lbl_803E55B4;
             }
         }
-        ((ScMusictreeState*)inner)->unk4A = (s32)d;
+        ((ScMusictreeState*)inner)->unk4A = di;
     }
 }
 
