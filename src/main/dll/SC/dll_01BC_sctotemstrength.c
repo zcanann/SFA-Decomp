@@ -211,7 +211,8 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 wob2 = -wob2;
             }
-            push = wob2 * (lbl_803E5684 * wob1 + lbl_803E5680) + lbl_803E567C;
+            push = lbl_803E5684 * wob1 + lbl_803E5680;
+            push = push * wob2 + lbl_803E567C;
             buttons = getButtonsJustPressedIfNotBusy(0);
             if ((buttons & 0x100) != 0 && isGameTimerDisabled() == 0)
             {
