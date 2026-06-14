@@ -864,7 +864,7 @@ void init(void)
     testAndSet_onlyUseHeap3(0);
     loadAssetFileById((int)&gGameBitTable, 0x33);
     gGameBitCount = (s16)(getDataFileSize(0x33) >> 1);
-    gGameBitSaveData = (*(u8 *(**)(void))((u8*)*gMapEventInterface + 0x88))();
+    gGameBitSaveData = (*gMapEventInterface)->getGameBitSaveData();
     lbl_803DCA3F = 1;
     loadUiDll(2);
     doNothing_beforeTitleScreen();
@@ -930,7 +930,7 @@ void gameUpdate(void)
         int t;
 
         updateEnvironment(0);
-        (*(void (**)(void))((u8*)*gMapEventInterface + 0x70))();
+        (*gMapEventInterface)->updateTransientMapBits();
         player = Obj_GetPlayerObject();
         idx = lbl_803DCAD4;
         rec = (u8*)lbl_8033BFB8 + idx * 16;
