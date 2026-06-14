@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/game_object.h"
 
 void audioStopByMask(int mask)
 {
@@ -379,7 +380,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
 
     if (player != NULL && seqNo == 0)
     {
-        listener = (f32*)((u8*)player + 0x18);
+        listener = &((GameObject*)player)->anim.worldPosX;
     }
     else
     {
@@ -389,7 +390,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
         }
         if (player != NULL)
         {
-            PSVECSubtract((f32*)((u8*)slot + 0x44), (f32*)((u8*)player + 0x18), v);
+            PSVECSubtract((f32*)((u8*)slot + 0x44), &((GameObject*)player)->anim.worldPosX, v);
             t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
             if ((t > lbl_803DE5C8 ? t : lbl_803DE5C8) > (t2 = lbl_803DE5C0))
             {
@@ -399,7 +400,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
                 t2 = (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
             }
             PSVECScale(v, v, t2);
-            PSVECAdd((f32*)((int)player + 0x18), v, v);
+            PSVECAdd(&((GameObject*)player)->anim.worldPosX, v, v);
             listener = v;
         }
         else
@@ -712,7 +713,7 @@ void Sfx_UpdateLoopedObjectSounds(void)
             removeSound = 1;
         }
         obj = *op;
-        if (((obj != 0) && ((*(u16*)(obj + 0xB0) & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound)
+        if (((obj != 0) && ((((GameObject*)obj)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound)
         {
             Sfx_StopFromObject(obj, *ip);
             gSfxLoopedObjectSoundCount--;
@@ -1326,7 +1327,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
     }
     if (obj != 0 && pos == NULL)
     {
-        pos = (f32*)(obj + 0x18);
+        pos = &((GameObject*)obj)->anim.worldPosX;
         tracksObj = 1;
     }
     if (pos != NULL)
@@ -1515,15 +1516,15 @@ void Sfx_UpdateObjectSounds(void)
         {
             if (objectChannel->tracksObjectPosition != 0)
             {
-                if ((*(u16*)(objectChannel->object + 0xB0) & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)
+                if ((((GameObject*)objectChannel->object)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)
                 {
                     objectChannel->tracksObjectPosition = 0;
                 }
                 else
                 {
-                    objectChannel->x = *(f32*)(objectChannel->object + 0x18);
-                    objectChannel->y = *(f32*)(objectChannel->object + 0x1C);
-                    objectChannel->z = *(f32*)(objectChannel->object + 0x20);
+                    objectChannel->x = ((GameObject*)objectChannel->object)->anim.worldPosX;
+                    objectChannel->y = ((GameObject*)objectChannel->object)->anim.worldPosY;
+                    objectChannel->z = ((GameObject*)objectChannel->object)->anim.worldPosZ;
                 }
             }
 
