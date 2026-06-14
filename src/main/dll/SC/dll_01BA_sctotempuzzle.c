@@ -235,13 +235,13 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 {
     ScTotemPuzzleState* state;
     int hitKind;
-    int startA, countA;
-    int startB, countB;
     int* objects;
     int other;
     int* texture;
-    f32 hitNx, hitNy, hitNz;
     f32 lightArgs[6];
+    f32 hitNx, hitNy, hitNz;
+    int countA, startA;
+    int countB, startB;
 
     state = obj->state;
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitNx, &hitNy, &hitNz, &lightArgs[3],

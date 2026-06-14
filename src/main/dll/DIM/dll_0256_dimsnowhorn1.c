@@ -1505,10 +1505,11 @@ void DIMSnowHorn1_release(void)
 }
 #pragma opt_propagation reset
 
+#pragma opt_propagation off
 void DIMSnowHorn1_initialise(void)
 {
-    s16* src = &gDIMSnowHorn1TextureId;
-    void** dst = &gDIMSnowHorn1Texture;
+    s16* src;
+    void** dst;
     ((void**)gDIMSnowHorn1StateHandlers)[0] = (void*)DIMSnowHorn1_stateHandler00;
     ((void**)gDIMSnowHorn1StateHandlers)[1] = (void*)DIMSnowHorn1_stateHandler01;
     ((void**)gDIMSnowHorn1StateHandlers)[2] = (void*)DIMSnowHorn1_stateHandler02;
@@ -1522,8 +1523,11 @@ void DIMSnowHorn1_initialise(void)
     ((void**)gDIMSnowHorn1StateHandlers)[10] = (void*)DIMSnowHorn1_stateHandler0A;
     ((void**)gDIMSnowHorn1StateHandlers)[11] = (void*)DIMSnowHorn1_stateHandler0B;
     *(void* *)&gDIMSnowHorn1DefaultStateHandler = (void*)DIMSnowHorn1_defaultStateHandler;
+    src = &gDIMSnowHorn1TextureId;
+    dst = &gDIMSnowHorn1Texture;
     *dst = (void*)textureLoad(*src, 0);
 }
+#pragma opt_propagation reset
 
 void DIMSnowHorn1_init(int obj, int p2, int p3)
 {
