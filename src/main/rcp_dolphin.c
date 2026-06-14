@@ -862,6 +862,8 @@ void ShaderDef_free(int* def)
     void* p1 = (void*)def[0];
     int i;
     void* p2;
+    void* s2;
+    int j;
 
     if (p1 != NULL)
     {
@@ -877,12 +879,12 @@ void ShaderDef_free(int* def)
     }
     p2 = (void*)def[1];
     if (p2 == NULL) return;
-    for (i = 0; i < 6; i++)
+    for (j = 0; j < 6; j++)
     {
-        s = *(void**)(lbl_8037E000 + i * 0x1C);
-        if (*(u16*)((char*)s + 0xE) != 0 && s == p2)
+        if (*(u16*)((char*)*(void**)(lbl_8037E000 + j * 0x1C) + 0xE) != 0 &&
+            *(void**)(lbl_8037E000 + j * 0x1C) == p2)
         {
-            (*(u16*)((char*)*(void**)(lbl_8037E000 + i * 0x1C) + 0xE))--;
+            (*(u16*)((char*)*(void**)(lbl_8037E000 + j * 0x1C) + 0xE))--;
             return;
         }
     }
