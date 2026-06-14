@@ -661,6 +661,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     colB = lbl_803E8468;
     state = *(int*)&((GameObject*)obj)->extra;
     model = Obj_GetActiveModel((int)obj);
+    p = state;
     if (visible != 0)
     {
         GXClearVtxDesc();
@@ -741,7 +742,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(u8*)&((ExplosionState*)
             state)->rayMode != 0)
         {
-            for (i = 0, p = state; i < ((ExplosionState*)state)->rayMode; i++)
+            for (i = 0, p = state; i < ((ExplosionState*)state)->rayMode; i++, p += 4)
             {
                 ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)p)->rayYawA;
                 ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)p)->rayPitchA;
@@ -750,7 +751,6 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     *(u16*)((char*)model + 0x18) &= ~8;
                 }
-                p += 4;
             }
         }
     }
@@ -768,6 +768,7 @@ void explosion_update(int obj)
     int i;
     int p;
     lbl_803DDB58 += 1;
+    p = state;
     ((ExplosionState*)state)->frameCounter += framesThisStep;
     for (i = 0, p = state; i < ((ExplosionState*)state)->flameCount; i++)
     {
