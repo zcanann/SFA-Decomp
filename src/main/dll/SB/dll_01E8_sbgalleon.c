@@ -32,6 +32,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
@@ -42,13 +43,10 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 extern u32 getLActions();
 extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
 
 extern EffectInterface** gPartfxInterface;
 
 extern void DBprotection_storeHomePosition(int obj);
-extern int ObjList_GetObjects(int* start, int* end);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Music_Trigger(s32 snd, s32 mode);
 extern const f32 lbl_803E56CC;
@@ -116,7 +114,6 @@ extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 extern f32 lbl_803E580C;
 extern void textureFree(void* tex);
-extern void ObjMsg_AllocQueue(int obj, int n);
 
 /* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
 enum SbGalleonSeqEvent
@@ -545,7 +542,7 @@ void SB_Galleon_init(GameObject* obj)
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     ObjHitsPriorityState* hitState;
     gSbGalleon = (u32)obj;
-    ObjGroup_AddObject((int)obj, 3);
+    ObjGroup_AddObject((u32)obj, 3);
     objSetSlot(obj, 0x5a);
     obj->animEventCallback = (void*)SB_Galleon_animEventCallback;
     state->posX = obj->anim.localPosX;
@@ -594,7 +591,7 @@ void SB_Galleon_free(GameObject* obj, int p2)
         textureFree((void*)lbl_803DDC1C);
         lbl_803DDC1C = 0;
     }
-    ObjGroup_RemoveObject((int)obj, 3);
+    ObjGroup_RemoveObject((u32)obj, 3);
     if (state->unk80 != 0 && p2 == 0)
     {
         state->unk80 = 0;

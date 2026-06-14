@@ -16,6 +16,7 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/objlib.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
@@ -38,15 +39,9 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define GALLEON_VT_GET_PHASE 0x2c
 
 extern u32 randomGetRange(int min, int max);
-extern u32 ObjHits_DisableObject();
-extern int ObjHits_GetPriorityHit();
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
 
 extern EffectInterface** gPartfxInterface;
 
-extern int ObjList_GetObjects(int* start, int* end);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
 
@@ -54,7 +49,6 @@ extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern int Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
-extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p);
 
 extern u32 getSbGalleon(void);
 extern f32 Vec_distance(void* a, void* b);
@@ -75,7 +69,6 @@ extern f32 lbl_803E5854;
 extern f32 lbl_803E5858;
 extern f32 lbl_803E585C;
 extern f32 sqrtf(f32);
-extern void ObjMsg_AllocQueue(int obj, int n);
 extern f32 lbl_803E5830;
 extern f32 lbl_803E5838;
 extern f32 lbl_803E583C;
@@ -193,7 +186,7 @@ void SB_ShipHead_update(int obj)
                 }
             }
         }
-        if (ObjMsg_Pop(obj, &msg, tmp2, &tmp3) != 0)
+        if (ObjMsg_Pop((void*)obj, (uint*)&msg, (uint*)tmp2, (uint*)&tmp3) != 0)
         {
             /* object-message opcodes raised by the galleon sequence */
             switch (msg)
@@ -220,7 +213,7 @@ void SB_ShipHead_update(int obj)
             {
                 (**(void (**)(u8*))(**(int**)&((GameObject*)galleon)->anim.dll + GALLEON_VT_ON_HEAD_DESTROYED))(galleon);
                 o->unkF8 = 300;
-                ObjHits_DisableObject(obj);
+                ObjHits_DisableObject((u32)obj);
             }
         }
         if (0 < o->unkF8)
@@ -307,15 +300,15 @@ int SB_ShipMast_getExtraSize(void);
 
 u32 getSbGalleon(void);
 
-void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
+void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, 0x3); }
 
 void SB_Propeller_hitDetect(GameObject* obj);
 
 void SB_ShipHead_init(int obj)
 {
     SBShipHeadState* state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, 3);
-    ObjMsg_AllocQueue(obj, 10);
+    ObjGroup_AddObject((u32)obj, 3);
+    ObjMsg_AllocQueue((void*)obj, 10);
     state->health = 4;
     state->swayB = state->swayB + lbl_803E5830;
     state->swayA = state->swayA + lbl_803E5838;
