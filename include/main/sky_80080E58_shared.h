@@ -89,7 +89,6 @@ extern int lbl_8030EDA4[];
 extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
 extern int lbl_803DB720;
-extern EffectInterface **gPartfxInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern s16 seqGlobal1;
 extern s16 seqGlobal2;

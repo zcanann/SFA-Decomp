@@ -331,7 +331,6 @@ extern void Obj_SpawnHitLightAndFade(int obj, f32 *p, f32 v);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int ObjGroup_FindNearestObject(int group, int obj, void *out);
 extern void timer_addDuration(int obj, s16 dur);
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E6B5C;
 extern f32 lbl_803E6B60;
 extern f32 lbl_803E6B64;
