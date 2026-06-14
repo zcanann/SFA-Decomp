@@ -182,8 +182,8 @@ typedef struct IcicleFxPos {
 #pragma peephole off
 void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
-  int objIndex;
   DIMbossTopState *topState;
+  int objIndex;
   s16 brightness;
   int i;
   f32 zero;
