@@ -2042,7 +2042,7 @@ void dim2roofrub_update(int* obj)
                 int* other = (int*)*list;
                 if (((GameObject*)other)->seqIndex == slot8)
                 {
-                    match = other;
+                    match = (int*)*list;
                 }
                 if (((GameObject*)other)->seqIndex == -2 && ((GameObject*)other)->anim.classId == 0x10)
                 {
