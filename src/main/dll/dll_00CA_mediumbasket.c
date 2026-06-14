@@ -1246,11 +1246,9 @@ int mediumbasket_updateContactHitState(int obj, int state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control;
     f32 noBlend;
-    ObjHitsPriorityState* hitState;
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 10;
-    hitState->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (sub->aggression > 0x32)
     {
@@ -1546,11 +1544,9 @@ int mediumbasket_updateImpactHitState(int obj, int state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control = *(int*)&sub->control;
-    ObjHitsPriorityState* hitState;
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 10;
-    hitState->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
