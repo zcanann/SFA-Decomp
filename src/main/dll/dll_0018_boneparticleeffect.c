@@ -152,19 +152,9 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-extern undefined4 FUN_800033a8();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017814();
-extern uint FUN_80017830();
 extern void* mmAlloc(int size, int heap, int flags);
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80053754();
-extern undefined4 FUN_802420e0();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
 
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;

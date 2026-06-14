@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/expgfx_internal.h"
 #include "main/object_descriptor.h"
+#include "main/rcp_dolphin.h"
 
 extern ObjectDescriptor11 projgfx_funcs;
 extern char sProjgfxReleaseDoNoLongerSupported[];
@@ -11,6 +12,16 @@ extern char sProjgfxRayhitDoNoLongerSupported[];
 extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
+
+extern undefined4 FUN_800033a8();
+extern undefined4 FUN_80017748();
+extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_80017814();
+extern uint FUN_80017830();
+extern undefined4 FUN_80017ac8();
+extern undefined4 FUN_802420e0();
+extern undefined8 FUN_80286840();
+extern undefined4 FUN_8028688c();
 
 void modgfx_releaseExpgfxPools(void);
 void modgfx_allocExpgfxPools(void);
