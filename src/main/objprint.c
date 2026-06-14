@@ -1776,8 +1776,7 @@ void fn_8003B500(int obj, int p4)
         for (k = 0; k < n; k++)
         {
             u8* data = *(u8**)&((ObjDef*)table)->jointData;
-            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0)
+            if ((int)data[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
@@ -1792,7 +1791,7 @@ void fn_8003B500(int obj, int p4)
             found[0] = (s16)(found[0] * 3 / 4);
         }
         fn_80039DF8(obj, (s16*)p4, found, lbl_803DE9A4);
-        *(s16*)(p4 + 0x1a) = (s16)(u8) * (s16*)(p4 + 0x1a);
+        *(s16*)(p4 + 0x1a) = (s16)(u16) * (s16*)(p4 + 0x1a);
     }
 }
 
