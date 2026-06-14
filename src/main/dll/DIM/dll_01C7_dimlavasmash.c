@@ -354,11 +354,12 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 {
     int m;
     int i;
+    int j;
     int* block;
     int got;
-    for (i = 0; i < (int)*(u16*)((char*)arg1 + 0x9a); i++)
+    for (j = 0; j < (int)*(u16*)((char*)arg1 + 0x9a); j++)
     {
-        block = (int*)mapBlockFn_800606ec(arg1, i);
+        block = (int*)mapBlockFn_800606ec(arg1, j);
         got = mapBlockFn_80060678();
         if (arg3 == got)
         {
