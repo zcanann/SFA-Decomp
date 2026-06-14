@@ -41,7 +41,16 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     float blendFrameLength;
 
     requestedEventState = eventState;
-    moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
+    moveIndex = animDef->moveGroupBaseIndices[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+        (moveId & OBJANIM_MOVE_INDEX_MASK);
+    if (moveIndex >= animDef->moveCount)
+    {
+        moveIndex = animDef->moveCount - 1;
+    }
+    if (moveIndex < 0)
+    {
+        moveIndex = 0;
+    }
     if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
     {
         if (state->lastBlendMoveIndex != moveIndex)
@@ -57,12 +66,13 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
                                    state->blendMoveCache[state->blendCacheSlot], animDef);
             state->lastBlendMoveIndex = (s16)moveIndex;
         }
-        moveData = ObjAnim_GetCurrentBlendMoveData(animDef, state);
+        moveData = (ObjAnimMoveData*)
+            (state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
     }
     else
     {
         state->blendCacheSlot = (u16)moveIndex;
-        moveData = ObjAnim_GetCurrentBlendMoveData(animDef, state);
+        moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
     }
     state->blendFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
     blendFrameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
