@@ -10,6 +10,8 @@ extern char sProjgfxReleaseDoNoLongerSupported[];
 extern char sProjgfxRayhitDoNoLongerSupported[];
 extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
+#define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
+
 void modgfx_releaseExpgfxPools(void);
 void modgfx_allocExpgfxPools(void);
 void modgfx_scrollVertexTexcoords(int param_1,int param_2);
@@ -96,6 +98,11 @@ void FUN_800a392c(void);
 void projgfx_release_doUnsupported(void);
 int projgfx_rayhit_doUnsupported(void);
 int projgfx_setzscale_doUnsupported(void);
+int projgfx_func04_ret_m1(void);
+void projgfx_func05_nop(void);
+void projgfx_func06_nop(void);
+void projgfx_func07_nop(void);
+int projgfx_getObjectTypeId(void);
 void projgfx_onMapSetup(void);
 void projgfx_initialise(void);
 

@@ -22,7 +22,6 @@ static inline int* Modgfx_GetActiveModel(void* obj)
 }
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
-#define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 #define PARTFX_STAGE_COUNT 7
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);

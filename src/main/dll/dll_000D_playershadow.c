@@ -24,7 +24,6 @@ static inline int* Modgfx_GetActiveModel(void* obj)
 }
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
-#define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 #define PARTFX_STAGE_COUNT 7
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
@@ -1302,15 +1301,10 @@ FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3
     return 0;
 }
 
-void projgfx_func07_nop(void);
 
-void projgfx_func06_nop(void);
 
-void projgfx_func05_nop(void);
 
-void projgfx_onMapSetup(void);
 
-void projgfx_initialise(void);
 
 void playerShadow_func03_nop(void)
 {
@@ -1326,9 +1320,7 @@ void playerShadow_initialise_nop(void)
 
 void boneParticleEffect_func08_nop(void);
 
-int projgfx_getObjectTypeId(void);
 
-int projgfx_func04_ret_m1(void);
 
 ObjectDescriptor11 projgfx_funcs = {
     0,

@@ -68,7 +68,6 @@ static inline int* Modgfx_GetActiveModel(void* obj)
 }
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
-#define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 #define PARTFX_ACTIVE_EFFECT_COUNT 0x32
 #define PARTFX_STAGE_COUNT 7
 
@@ -1349,17 +1348,11 @@ FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3
     return 0;
 }
 
-void projgfx_func07_nop(void);
 
-void projgfx_func06_nop(void);
 
-void projgfx_func05_nop(void);
 
-void projgfx_onMapSetup(void);
 
-void projgfx_initialise(void);
 
-int projgfx_getObjectTypeId(void);
 
 extern u8 lbl_8039BE98[];
 extern ModgfxPendingSpawn gModgfxPendingSpawnQueue[];
@@ -1419,7 +1412,6 @@ void dll_0B_func10(void)
 
 extern void OSReport(const char* fmt, ...);
 
-int projgfx_func04_ret_m1(void);
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
