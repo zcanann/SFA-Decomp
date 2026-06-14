@@ -714,7 +714,6 @@ extern void staffactivated_calcInteractionTargetXZ(int a, void *b, void *c);
 extern f32 lbl_803E812C;
 extern f32 lbl_803E7F28;
 extern f32 lbl_803E7F2C;
-extern WaterfxInterface **gWaterfxInterface;
 extern void Sfx_StopFromObject(int obj, int id);
 extern f32 lbl_803E7F40;
 extern f32 lbl_803E805C;

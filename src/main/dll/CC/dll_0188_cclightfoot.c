@@ -177,8 +177,6 @@ extern int ObjTrigger_IsSet(int obj);
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4670;
 
 #pragma scheduling off

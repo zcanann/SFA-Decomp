@@ -76,7 +76,6 @@ extern f32 lbl_803E37F0;
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E37D4;
 extern f32 lbl_803E37D8;
 extern f32 lbl_803E37DC;

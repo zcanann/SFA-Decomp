@@ -36,7 +36,6 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
 extern int ObjTrigger_IsSet(int obj);
 extern void gameBitIncrement(int id);
-extern WaterfxInterface** gWaterfxInterface;
 extern void* fn_802972A8(void* obj);
 
 void FUN_801aaa6c(double param_1, int param_2, int param_3)

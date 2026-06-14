@@ -32,7 +32,6 @@ extern void fn_80137948(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
 extern u8 framesThisStep;
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;

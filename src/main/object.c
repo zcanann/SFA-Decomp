@@ -80,7 +80,6 @@ extern void Obj_InitObjectSystem(void);
 extern int getDataFileSize(int id);
 extern void* gTitleMenuControlInterface;
 extern void* gModgfxInterface;
-extern WaterfxInterface** gWaterfxInterface;
 extern void fn_802B4DE0(u8* obj, int flag);
 extern void Obj_FreeObject(u8 * obj);
 extern void fn_80059A50(int arg);

@@ -1997,8 +1997,6 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 void dim2roofrub_update(int* obj);
 
 void fireball_init(int* obj);
-
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 mathSinf(f32 v);
 extern f32 mathCosf(f32 x);
 

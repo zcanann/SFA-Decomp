@@ -60,7 +60,6 @@ extern int ObjHits_GetPriorityHit();
 #pragma peephole on
 extern u32 GameBit_Get(int id);
 extern f32 lbl_803E4B80;
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4B6C;
 extern f32 lbl_803E4B70;
 extern f32 lbl_803E4B74;

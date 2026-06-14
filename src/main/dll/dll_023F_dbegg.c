@@ -1000,7 +1000,6 @@ void dbegg_update(int obj)
     extern void fn_80137948(char*, ...);
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_DisableObject(int);
-    extern WaterfxInterface** gWaterfxInterface;
     extern f32 timeDelta;
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];

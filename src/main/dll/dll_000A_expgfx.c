@@ -64,7 +64,6 @@ extern f32 fn_80138F78(void* tricky);
 extern f32 fn_8029610C(void* player);
 extern void vecRotateZXY(void* params, void* vec);
 extern u8 framesThisStep;
-extern WaterfxInterface** gWaterfxInterface;
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern f32 lbl_803DF38C;

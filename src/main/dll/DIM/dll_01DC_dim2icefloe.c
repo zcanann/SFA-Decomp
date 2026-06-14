@@ -51,7 +51,6 @@ extern f32 lbl_803E4B4C;
 extern f32 lbl_803E4B50;
 extern f32 lbl_803E4B54;
 extern f32 lbl_803E4B58;
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4B30;
 
 void FUN_801b9cc4(int param_1)

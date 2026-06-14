@@ -399,7 +399,6 @@ extern f32 lbl_803E337C;
 extern f32 lbl_803E3380;
 extern f32 Vec3_Length(f32 * v);
 extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern WaterfxInterface** gWaterfxInterface;
 extern f32 mathSinf(f32 v);
 extern f32 mathCosf(f32 x);
 extern void fn_8016F260(int* obj, int* state, int* other);

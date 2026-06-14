@@ -135,6 +135,8 @@ STATIC_ASSERT(offsetof(ProjgfxInterface, getObjectTypeId) == 0x18);
 STATIC_ASSERT(offsetof(ProjgfxInterface, setZScaleUnsupported) == 0x1C);
 STATIC_ASSERT(offsetof(ProjgfxInterface, rayHitUnsupported) == 0x20);
 
+extern ProjgfxInterface **gProjgfxInterface;
+
 typedef void (*ModgfxDetachSourceFn)(void *sourceObject);
 typedef void (*ModgfxOnMapSetupFn)(void);
 typedef void (*ModgfxUpdateActiveEffectsFn)(int unused0, int unused1, int unused2);
@@ -300,5 +302,7 @@ STATIC_ASSERT(offsetof(WaterfxInterface, spawnRipple) == 0x14);
 STATIC_ASSERT(offsetof(WaterfxInterface, spawnSimpleRipple) == 0x18);
 STATIC_ASSERT(offsetof(WaterfxInterface, onMapSetup) == 0x1C);
 STATIC_ASSERT(offsetof(WaterfxInterface, setRippleScale) == 0x20);
+
+extern WaterfxInterface **gWaterfxInterface;
 
 #endif /* MAIN_EFFECT_INTERFACES_H_ */

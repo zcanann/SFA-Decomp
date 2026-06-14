@@ -461,7 +461,6 @@ extern f32 lbl_803E01A0;
 extern f32 lbl_803E01A4;
 extern f32 lbl_803E01A8;
 extern f32 lbl_803E01AC;
-extern WaterfxInterface** gWaterfxInterface;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern WaterfxCfg lbl_8039C440;

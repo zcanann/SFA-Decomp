@@ -232,7 +232,6 @@ void fn_80154328(int obj, int p)
     extern u32 randomGetRange(int min, int max);
     extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* px, f32* py, f32* pz);
     extern f32 sqrtf(f32 x);
-    extern WaterfxInterface** gWaterfxInterface;
     f32 mtx[17];
     struct
     {
