@@ -473,7 +473,7 @@ void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* ou
     (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
         gCameraProjectionMatrix[14] * pos[2]);
-    if (w != lbl_803DE60C)
+    if (lbl_803DE60C != w)
     {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -514,7 +514,7 @@ void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* ou
     (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
         gCameraProjectionMatrix[14] * pos[2]);
-    if (w != lbl_803DE60C)
+    if (lbl_803DE60C != w)
     {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -561,7 +561,7 @@ void Camera_ProjectWorldSphere(
     (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
         gCameraProjectionMatrix[14] * pos[2]);
-    if (w != lbl_803DE60C)
+    if (lbl_803DE60C != w)
     {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -578,7 +578,7 @@ void Camera_ProjectWorldSphere(
         (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
             gCameraProjectionMatrix[14] * pos[2]);
-        if (w != lbl_803DE60C)
+        if (lbl_803DE60C != w)
         {
             invW = lbl_803DE5F0 / w;
             *outRadiusX = fabsf(invW * (radius * gCameraProjectionMatrix[0]));
