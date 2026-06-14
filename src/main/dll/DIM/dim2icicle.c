@@ -187,6 +187,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
   s16 brightness;
   int i;
   f32 zero;
+  f32 c34v;
   f32 m[12];
   u8 colA;
   u8 colB;
@@ -262,9 +263,10 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
     do {
       ((IcicleFxPos *)&lbl_803AC97C)->x = (f32)(int)randomGetRange(-0x19, 0x19);
       ((IcicleFxPos *)&lbl_803AC97C)->y = (f32)(int)randomGetRange(-0x19, 0x19);
+      c34v = lbl_803E4C34;
       ((IcicleFxPos *)&lbl_803AC97C)->z = lbl_803E4C34;
-      lbl_803AC970[0] = ((IcicleFxPos *)&lbl_803AC97C)->x / (lbl_803E4C34 * lbl_803E4C38);
-      lbl_803AC970[1] = ((IcicleFxPos *)&lbl_803AC97C)->y / (lbl_803E4C34 * lbl_803E4C38);
+      lbl_803AC970[0] = ((IcicleFxPos *)&lbl_803AC97C)->x / (c34v * lbl_803E4C38);
+      lbl_803AC970[1] = ((IcicleFxPos *)&lbl_803AC97C)->y / (c34v * lbl_803E4C38);
       lbl_803AC970[2] = lbl_803E4BCC;
       PSMTXMultVec(m, lbl_803AC970, lbl_803AC970);
       ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 1);
