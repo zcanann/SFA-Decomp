@@ -44,7 +44,7 @@ extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
 extern int lbl_803DDA60;
 extern f32 timeDelta;
-extern int Obj_GetPlayerObject(void);
+extern GameObject* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
@@ -167,13 +167,13 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
     if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         step = lbl_803E267C;
-        ((GameObject*)obj)->anim.velocityX = step * (*(f32*)(state->player + 0xc) - ((GameObject*)obj)->anim.localPosX)
+        ((GameObject*)obj)->anim.velocityX = step * (state->player->anim.localPosX - ((GameObject*)obj)->anim.localPosX)
             +
             ((GameObject*)obj)->anim.velocityX;
         ((GameObject*)obj)->anim.velocityY =
-            step * ((lbl_803E2680 + *(f32*)(state->player + 0x10)) - ((GameObject*)obj)->anim.localPosY) +
+            step * ((lbl_803E2680 + state->player->anim.localPosY) - ((GameObject*)obj)->anim.localPosY) +
             ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ = step * (*(f32*)(state->player + 0x14) - ((GameObject*)obj)->anim.localPosZ)
+        ((GameObject*)obj)->anim.velocityZ = step * (state->player->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ)
             +
             ((GameObject*)obj)->anim.velocityZ;
     }
@@ -273,11 +273,11 @@ void swarmbaddie_update(int obj)
     (*gPartfxInterface)->spawnObject((void*)obj, 0x336, NULL, 2, -1,
                                      &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
-    if (*(void**)&state->player != NULL)
+    if (state->player != NULL)
     {
-        d[0] = *(f32*)(state->player + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = *(f32*)(state->player + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = *(f32*)(state->player + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+        d[0] = state->player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = state->player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = state->player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         sqz = d[2] * d[2];
         sqx = d[0] * d[0];
         sqy = d[1] * d[1];
@@ -302,7 +302,7 @@ void swarmbaddie_update(int obj)
     {
         state->flags = state->flags & ~4;
     }
-    if (((state->flags & 6) == 0) && (*(void**)&state->player != NULL) &&
+    if (((state->flags & 6) == 0) && (state->player != NULL) &&
         (state->playerDistance < state->chaseRadius))
     {
         state->flags = state->flags | 2;

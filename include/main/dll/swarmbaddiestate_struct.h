@@ -3,10 +3,12 @@
 
 #include "types.h"
 
+typedef struct GameObject GameObject;
+
 typedef struct SwarmBaddieState
 {
     int curve;
-    int player;
+    GameObject* player;
     f32 curveStep;
     f32 playerDistance;
     f32 pathDistance;
