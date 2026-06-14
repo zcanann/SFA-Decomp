@@ -490,7 +490,8 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
                 int iv;
                 *(s16*)(inner + 0xc) += 0x1000;
                 s = mathSinf(lbl_803E45E0 * (f32) * (s16*)(inner + 0xc) / lbl_803E45E4);
-                iv = (int)(lbl_803E45D8 * (lbl_803E45DC + s));
+                s = lbl_803E45DC + s;
+                iv = (int)(lbl_803E45D8 * s);
                 fn_8003B608((u8)(iv + 0x7f), 0xff, 0xff);
             }
         }
