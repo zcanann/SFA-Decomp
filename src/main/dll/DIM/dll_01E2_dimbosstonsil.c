@@ -249,6 +249,7 @@ void DIMbosstonsil_free(void* obj)
     }
 }
 
+#pragma opt_propagation off
 void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     struct
@@ -258,7 +259,7 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
         f32 z;
     } pathPoint;
     int partfxArgs[3];
-    f32* pp = &pathPoint.x;
+    f32* pp;
 
     if (visible != 0)
     {
@@ -268,10 +269,10 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
             {
                 objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
-                ObjPath_GetPointWorldPosition(obj, 1, pp, pp + 1, pp + 2, 0);
+                ObjPath_GetPointWorldPosition(obj, 1, (pp = &pathPoint.x), &pathPoint.y, &pathPoint.z, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
-                ObjPath_GetPointWorldPosition(obj, 0, pp, pp + 1, pp + 2, 0);
+                ObjPath_GetPointWorldPosition(obj, 0, pp, &pathPoint.y, &pathPoint.z, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
                 if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
@@ -284,6 +285,7 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
         }
     }
 }
+#pragma opt_propagation reset
 
 void DIMbosstonsil_hitDetect(void* obj)
 {
