@@ -4668,8 +4668,7 @@ int GXFlush_(u8 visible, int unused)
     GXCopyDisp(renderFrameBuffer, 1);
     GXFlush();
     lbl_803DB5CE = (u16)(lbl_803DB5CE + 1);
-    next = externalFrameBuffer0;
-    if (renderFrameBuffer == next) next = externalFrameBuffer1;
+    next = renderFrameBuffer == externalFrameBuffer0 ? externalFrameBuffer1 : externalFrameBuffer0;
     renderFrameBuffer = next;
     if (visible != 0 && lbl_803DB5CC != 0)
     {
