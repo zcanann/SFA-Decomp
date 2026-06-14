@@ -742,10 +742,10 @@ int Tricky_updateSideCommandPrompts(int obj)
 
 void Tricky_destroy(int obj, int shouldKeepFlameChildren)
 {
-    int state;
-    bool bVar1;
     int i;
     int childSlot;
+    bool bVar1;
+    int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[0]);
