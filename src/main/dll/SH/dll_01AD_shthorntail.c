@@ -612,7 +612,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 
     runtime = obj->runtime;
     outA[0] = lbl_803E5410;
-    *(short*)obj = (short)((int)config->initialFacingByte << 8);
+    obj->facingAngle = (short)((int)config->initialFacingByte << 8);
     switch (config->controlMode)
     {
     case SHTHORNTAIL_CONTROL_MODE_LEVEL_0:
@@ -638,10 +638,10 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
         randomTime;
         break;
     }
-    *(float*)((int)obj + 8) = *(float*)(*(int*)((int)obj + 0x50) + 4) *
+    obj->modelScale = *(float*)((int)obj->anim.modelInstance + 4) *
         ((float)config->initScale / lbl_803E545C);
     Obj_GetActiveModel((int)obj);
-    modelInitBones((double)*(float*)((int)obj + 8));
+    modelInitBones((double)obj->modelScale);
     moveScratch = (int)runtime->moveScratch;
     (*gSHthorntailPathControlInterface)->initControl(moveScratch, SHTHORNTAIL_PATH_CONTROL_MODE,
                                                      SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
