@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
@@ -48,7 +49,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
-extern EffectInterface** gPartfxInterface;
 
 extern f32 lbl_803E6460;
 extern f32 lbl_803E6464;

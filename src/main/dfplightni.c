@@ -1,11 +1,11 @@
 #include "main/dfplightni.h"
+#include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 
 extern void lightningRender(void* handle);
 extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E64E0;
 extern f32 lbl_803E64E4;

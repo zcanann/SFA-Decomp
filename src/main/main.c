@@ -1,6 +1,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/main.h"
 #include "main/objtexture.h"
@@ -11,7 +12,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017ac8();
 
 extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de944;
 extern undefined4 DAT_803de946;
 extern f32 lbl_803DC074;
