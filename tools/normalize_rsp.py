@@ -9,7 +9,10 @@ def main() -> int:
 
     path = Path(sys.argv[1])
     data = path.read_text(encoding="utf-8")
-    path.write_text(data, encoding="utf-8", newline="\r\n")
+    # Normalize all line endings to CRLF, version-agnostically (Path.write_text
+    # only gained the `newline` kwarg in Python 3.10; this also works on 3.9).
+    normalized = data.replace("\r\n", "\n").replace("\r", "\n").replace("\n", "\r\n")
+    path.write_bytes(normalized.encode("utf-8"))
     return 0
 
 
