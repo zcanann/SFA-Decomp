@@ -1,10 +1,24 @@
 #include "main/dll/dll_B3.h"
 
-extern u8* ObjModel_GetRenderOp(int model, int idx);
+typedef struct CamcontrolLockIconRenderOp {
+    u8 pad00[0x24];
+    s32 textureId;
+    u8 pad28;
+    u8 distanceTier;
+} CamcontrolLockIconRenderOp;
+
+typedef struct CamcontrolIconColor {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} CamcontrolIconColor;
+
+extern CamcontrolLockIconRenderOp* ObjModel_GetRenderOp(int model, int idx);
 extern void resetLotsOfRenderVars(void);
 extern void textureFn_800528bc(void);
 extern void* textureIdxToPtr(int idx);
-extern void fn_80051D5C(void* tex, void* arg2, int arg3, void* color);
+extern void fn_80051D5C(void* tex, void* arg2, int arg3, CamcontrolIconColor* color);
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int op);
 extern void gxSetZMode_(u32 enable, int func, u32 update);
 extern void gxSetPeControl_ZCompLoc_(u32 ctrl);
@@ -13,14 +27,14 @@ extern void GXSetCullMode(int mode);
 
 int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
 {
-    u8* renderOp;
+    CamcontrolLockIconRenderOp* renderOp;
     u8 tier;
-    u8 colorBuf[4];
+    CamcontrolIconColor color;
     f32 dist;
     int alphaVal;
 
     renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
-    dist = *(f32*)(pCamera + 0x134);
+    dist = CAMCONTROL_CAMERA->targetDistance;
     if (dist <= gCamcontrolNormalizedMin)
     {
         tier = 4;
@@ -42,25 +56,25 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
         tier = 0;
     }
     resetLotsOfRenderVars();
-    if (renderOp[0x29] <= tier)
+    if (renderOp->distanceTier <= tier)
     {
-        colorBuf[0] = 0;
-        colorBuf[1] = 0;
-        colorBuf[2] = 0;
+        color.r = 0;
+        color.g = 0;
+        color.b = 0;
         alphaVal = ((obj->anim.alpha + 1) * 0x60) >> 8;
-        colorBuf[3] = alphaVal;
-        fn_80051D5C(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, colorBuf);
+        color.a = alphaVal;
+        fn_80051D5C(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
     }
     else
     {
-        colorBuf[0] = 0xff;
-        colorBuf[1] = 0xff;
-        colorBuf[2] = 0xff;
-        colorBuf[3] = obj->anim.alpha;
-        fn_80051D5C(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, colorBuf);
+        color.r = 0xff;
+        color.g = 0xff;
+        color.b = 0xff;
+        color.a = obj->anim.alpha;
+        fn_80051D5C(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
     }
     textureFn_800528bc();
-    if (obj->anim.alpha < 0xff || renderOp[0x29] <= tier)
+    if (obj->anim.alpha < 0xff || renderOp->distanceTier <= tier)
     {
         GXSetBlendMode(1, 4, 5, 5);
         gxSetZMode_(1, 3, 0);

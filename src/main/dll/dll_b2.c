@@ -1,12 +1,25 @@
 #include "main/dll/dll_B2.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 
-extern u8* pCamera;
+typedef struct CamcontrolIconRenderOp {
+    u8 pad00[0x24];
+    s32 textureId;
+    u8 pad28;
+    u8 variantId;
+} CamcontrolIconRenderOp;
 
-extern void* ObjModel_GetRenderOp(void* model, undefined4 idx);
+typedef struct CamcontrolIconColor {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} CamcontrolIconColor;
+
+extern CamcontrolIconRenderOp* ObjModel_GetRenderOp(void* model, undefined4 idx);
 extern void* textureIdxToPtr(int idx);
 extern void resetLotsOfRenderVars(void);
 extern void textureFn_800528bc(void);
-extern void fn_80051D5C(void* tex, undefined4 a, undefined4 b, u8* color);
+extern void fn_80051D5C(void* tex, undefined4 a, undefined4 b, CamcontrolIconColor* color);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
 extern void gxSetZMode_(u32 a, int b, u32 c);
 extern void gxSetPeControl_ZCompLoc_(u32 a);
@@ -15,33 +28,33 @@ extern void GXSetCullMode(int mode);
 
 int aButtonIconTexCb(GameObject* obj, void** objPtr, undefined4 arg3)
 {
-    u8* renderOp;
-    u8 color[4];
+    CamcontrolIconRenderOp* renderOp;
+    CamcontrolIconColor color;
 
-    renderOp = (u8*)ObjModel_GetRenderOp(*objPtr, arg3);
+    renderOp = ObjModel_GetRenderOp(*objPtr, arg3);
     resetLotsOfRenderVars();
-    if (renderOp[0x29] == 1)
+    if (renderOp->variantId == 1)
     {
-        if ((pCamera[0x141] & 0x20) == 0)
+        if ((CAMCONTROL_CAMERA->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT) == 0)
         {
-            color[3] = 0;
+            color.a = 0;
         }
         else
         {
-            color[3] = obj->anim.alpha;
+            color.a = obj->anim.alpha;
         }
     }
     else
     {
-        color[3] = obj->anim.alpha;
+        color.a = obj->anim.alpha;
     }
-    if (pCamera[0x138] == 8)
+    if (CAMCONTROL_CAMERA->targetKind == CAMCONTROL_TARGET_KIND_SUPPRESSED)
     {
-        color[3] = 0;
+        color.a = 0;
     }
-    fn_80051D5C(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, color);
+    fn_80051D5C(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
     textureFn_800528bc();
-    if (color[3] < 0xff)
+    if (color.a < 0xff)
     {
         GXSetBlendMode(1, 4, 5, 5);
         gxSetZMode_(1, 3, 0);
