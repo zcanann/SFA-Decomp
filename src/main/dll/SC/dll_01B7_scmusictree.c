@@ -342,7 +342,7 @@ end:
         f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
         f32 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
         f32 d = sqrtf(dx * dx + dz * dz);
-        u16 di = (s32)d;
+        u16 di = d;
         if (di < ((ScMusictreeState*)inner)->unk48
         )
         {
