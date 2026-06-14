@@ -463,21 +463,22 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
     long pos;
     long base;
     long i;
-    long num;
+    u16 num;
     MAC_MAINTAB* m;
 
     sndBegin();
 
     main = (mid >> 6) & 0x3ff;
-    num = t->macMain[main].num;
+    m = &t->macMain[main];
+    num = m->num;
 
     if (num == 0)
     {
-        pos = base = t->macMain[main].subTabIndex = dataMacTotal;
+        pos = base = m->subTabIndex = dataMacTotal;
     }
     else
     {
-        base = t->macMain[main].subTabIndex;
+        base = m->subTabIndex;
         for (i = 0; i < num && t->macSub[base + i].id < mid; ++i)
         {
         }
