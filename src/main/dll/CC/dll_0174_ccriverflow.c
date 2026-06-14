@@ -1,6 +1,5 @@
 #include "main/dll_000A_expgfx.h"
-
-extern undefined8 ObjGroup_RemoveObject();
+#include "main/objlib.h"
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -14,8 +13,6 @@ extern undefined8 ObjGroup_RemoveObject();
 #include "main/effect_interfaces.h"
 
 extern uint GameBit_Get(int eventId);
-extern undefined8 ObjGroup_RemoveObject(int obj, int groupId);
-extern undefined4 ObjGroup_AddObject(int obj, int groupId);
 
 extern f32 lbl_803E4DD0;
 extern f32 lbl_803E4DD4;
@@ -29,7 +26,7 @@ void ccriverflow_free(CCriverflowObject* obj)
 {
     if (obj->state->active != 0)
     {
-        ObjGroup_RemoveObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
+        ObjGroup_RemoveObject((u32)obj, CCRIVERFLOW_OBJECT_GROUP);
     }
     return;
 }
@@ -54,13 +51,13 @@ void ccriverflow_update(CCriverflowObject* obj)
             if (state->active != 0)
             {
                 state->active = 0;
-                ObjGroup_RemoveObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
+                ObjGroup_RemoveObject((u32)obj, CCRIVERFLOW_OBJECT_GROUP);
             }
         }
         else if (state->active == 0)
         {
             state->active = 1;
-            ObjGroup_AddObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
+            ObjGroup_AddObject((u32)obj, CCRIVERFLOW_OBJECT_GROUP);
         }
     }
     return;
@@ -70,7 +67,7 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
 {
     if (params->gameBit == -1)
     {
-        ObjGroup_AddObject((int)obj, CCRIVERFLOW_OBJECT_GROUP);
+        ObjGroup_AddObject((u32)obj, CCRIVERFLOW_OBJECT_GROUP);
         obj->state->active = 1;
     }
     obj->angle = (u16)params->angleByte << 8;
