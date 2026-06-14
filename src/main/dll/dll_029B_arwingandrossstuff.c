@@ -80,11 +80,13 @@ void arwingandrossstuff_hitDetect(int obj)
     {
         f32 x, y, z;
     } d, v, w;
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ArwProjectileState* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
     int arwing = getArwing();
+    ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;
 
-    if (((GameObject*)obj)->anim.seqId == 0x80d)
+    if (objAnim->seqId == 0x80d)
     {
         int hit;
         uint vol;
@@ -92,21 +94,21 @@ void arwingandrossstuff_hitDetect(int obj)
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0)
         {
             spawnExplosion(obj, lbl_803E7014, 1, 0, 0, 1, 0, 0, 3);
-            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            objAnim->flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
             state->despawnTimer = lbl_803E7028;
         }
     }
     if (hitState->lastHitObject != 0 && *((u8*)&state->param0 + 1) == 0)
     {
-        if (((GameObject*)obj)->anim.seqId != 0x6ae)
+        if (objAnim->seqId != 0x6ae)
         {
             Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
-        if (((GameObject*)obj)->anim.seqId == 0x7e4)
+        if (objAnim->seqId == 0x7e4)
         {
-            s16 a = (s16) - getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(arwing + 0xc),
-                                     ((GameObject*)obj)->anim.localPosY - *(f32*)(arwing + 0x10));
+            s16 a = (s16) - getAngle(objAnim->localPosX - arwingAnim->localPosX,
+                                     objAnim->localPosY - arwingAnim->localPosY);
             f32 ang = lbl_803E7030 * (f32)a / lbl_803E7034;
 
             v.x = lbl_803E702C * mathSinf(ang);
@@ -120,20 +122,20 @@ void arwingandrossstuff_hitDetect(int obj)
         {
             if (arwarwing_isBarrelRolling(arwing) != 0)
             {
-                PSVECNormalize((void*)(obj + 0x24), (void*)(obj + 0x24));
-                d.x = ((GameObject*)obj)->anim.localPosX - *(f32*)(arwing + 0xc);
-                d.y = ((GameObject*)obj)->anim.localPosY - *(f32*)(arwing + 0x10);
-                d.z = ((GameObject*)obj)->anim.localPosZ - *(f32*)(arwing + 0x14);
+                PSVECNormalize(&objAnim->velocityX, &objAnim->velocityX);
+                d.x = objAnim->localPosX - arwingAnim->localPosX;
+                d.y = objAnim->localPosY - arwingAnim->localPosY;
+                d.z = objAnim->localPosZ - arwingAnim->localPosZ;
                 PSVECNormalize(&d, &d);
-                C_VECHalfAngle((void*)(obj + 0x24), &d, (void*)(obj + 0x24));
-                ((GameObject*)obj)->anim.velocityX *= state->deflectSpeedScale;
-                ((GameObject*)obj)->anim.velocityY *= state->deflectSpeedScale;
-                ((GameObject*)obj)->anim.velocityZ *= state->deflectSpeedScale;
+                C_VECHalfAngle(&objAnim->velocityX, &d, &objAnim->velocityX);
+                objAnim->velocityX *= state->deflectSpeedScale;
+                objAnim->velocityY *= state->deflectSpeedScale;
+                objAnim->velocityZ *= state->deflectSpeedScale;
                 *((u8*)&state->param0 + 1) = 1;
             }
         }
         state->despawnTimer = lbl_803E7028;
-        ((GameObject*)obj)->anim.alpha = 0;
+        objAnim->alpha = 0;
         projectileParticleFxFn_80099660(obj, lbl_803E701C, state->param0.particleKind);
         if (state->light != NULL)
         {
@@ -231,7 +233,7 @@ void arwingandrossstuff_update(int obj)
     ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int arwing = getArwing();
 
-    if (arwing != 0 && (*(u16*)(arwing + 0xb0) & 0x1000) != 0)
+    if (arwing != 0 && (((GameObject*)arwing)->objectFlags & 0x1000) != 0)
     {
         Obj_FreeObject(obj);
         return;
