@@ -1055,9 +1055,7 @@ int pauseMenuGridFn_8012b4c4(void)
     if (mag < 0) mag = -mag;
     if (mag >= 0xf)
     {
-        if (cx < 0) dir = -1;
-        else if (cx > 0) dir = 1;
-        else dir = 0;
+        dir = (cx < 0) ? -1 : ((cx > 0) ? 1 : 0);
     }
     else
     {
