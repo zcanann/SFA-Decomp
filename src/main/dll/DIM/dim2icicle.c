@@ -338,8 +338,8 @@ extern f32 lbl_803E4C6C;
  */
 void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
-  int objIndex;
   DIMbossTopState *topState;
+  int objIndex;
   int counter;
   int i;
   f32 vec[3];
@@ -400,7 +400,7 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
   if (gDIMbossSequenceFlags & 0x80000) {
     ((void (*)(int, int, int, int, int))*(code **)(*(int *)lbl_803DCAB4 + 0xc))(objIndex, 0x800, 0, 1, 0);
   }
-  if ((gDIMbossSequenceFlags & 0x8020) || runtime->animMode < 2) {
+  if ((gDIMbossSequenceFlags & 0x8020) || (s8)runtime->animMode < 2) {
     if (gDIMbossSequenceFlags & 0x20) {
       i = 0;
       do {
@@ -409,7 +409,7 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
       } while (i < 7);
     }
     else {
-      if (randomGetRange(0, runtime->animMode) == 0 && runtime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
+      if (randomGetRange(0, (s8)runtime->animMode) == 0 && runtime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
         (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, &topState->tonsilDustSource, 0x200001, -1, NULL);
       }
     }
