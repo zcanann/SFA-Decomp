@@ -1860,10 +1860,9 @@ void objPosFn_80039510(int obj, int key, int out)
     n = (s32)(u32)((ObjDef*)table)->jointCount;
     for (k = 0; k < n; k++)
     {
-        u8* data = *(u8**)&((ObjDef*)table)->jointData;
-        if (key == (int)data[i])
+        if (key == (int)(*(u8**)&((ObjDef*)table)->jointData)[i])
         {
-            joint = *(u8*)(data + i + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 1);
+            joint = (*(u8**)&((ObjDef*)table)->jointData + i + OBJPRINT_ACTIVE_BANK_INDEX(obj))[1];
             break;
         }
         i = i + ((ObjDef*)table)->modelCount + 1;
