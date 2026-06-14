@@ -553,7 +553,7 @@ void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
   }
   hitResult = ObjHits_GetPriorityHit(objIndex, &hitId, &hitType, &hitVolume);
   if (hitResult != 0) {
-    gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
+    gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;
     if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
       if ((gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE) == 0 ||
           hitType != 2) {
