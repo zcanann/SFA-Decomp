@@ -65,10 +65,10 @@ void arwproximit_update(int obj)
 
     if (state->textVariant == 1)
     {
-        char* arwing = (char*)getArwing();
+        GameObject* arwing = (GameObject*)getArwing();
         if (arwing == NULL)
-            arwing = (char*)Obj_GetPlayerObject();
-        if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E71E8)
+            arwing = (GameObject*)Obj_GetPlayerObject();
+        if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < lbl_803E71E8)
         {
             gameTextFn_80125ba4(0xb);
             state->textVariant = 0;
@@ -79,10 +79,10 @@ void arwproximit_update(int obj)
     {
     case 0:
         {
-            char* arwing = (char*)getArwing();
+            GameObject* arwing = (GameObject*)getArwing();
             if (arwing == NULL)
-                arwing = (char*)Obj_GetPlayerObject();
-            if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E71EC)
+                arwing = (GameObject*)Obj_GetPlayerObject();
+            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < lbl_803E71EC)
             {
                 state->light = objCreateLight(obj, 1);
                 if (state->light != NULL)
@@ -106,7 +106,7 @@ void arwproximit_update(int obj)
     case 1:
     default:
         {
-            char* arwing;
+            GameObject* arwing;
             int a = (int)
             (lbl_803E71FC * timeDelta + (f32)(u32)
             objAnim->alpha
@@ -115,10 +115,10 @@ void arwproximit_update(int obj)
             if (a > 0xff)
                 a = 0xff;
             objAnim->alpha = a;
-            arwing = (char*)getArwing();
+            arwing = (GameObject*)getArwing();
             if (arwing == NULL)
-                arwing = (char*)Obj_GetPlayerObject();
-            if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E7200)
+                arwing = (GameObject*)Obj_GetPlayerObject();
+            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < lbl_803E7200)
             {
                 if (state->light != NULL)
                 {
