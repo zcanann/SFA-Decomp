@@ -47,7 +47,7 @@ extern int lbl_803DDC10;
 extern int lbl_803DC070;
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern f32 lbl_803E5668;
+extern const f32 lbl_803E5668;
 extern const f32 lbl_803E566C;
 extern const f32 lbl_803E5670;
 extern const f32 lbl_803E5674;
