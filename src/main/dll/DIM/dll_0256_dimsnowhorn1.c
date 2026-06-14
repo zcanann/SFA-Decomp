@@ -685,14 +685,16 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         ((DIMSnowHorn1State*)state)->baddie.turnRate = 0;
         *(f32*)((char*)state + 0x298) = lbl_803E8234;
     }
-    if (*(s16*)((char*)state + 0x334) >= 0x5a)
+    if (*(s16*)((char*)state + 0x334) < 0x5a)
+    {
+        ((GameObject*)obj)->anim.rotX =
+            lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State*)state)->baddie.turnRate * t / lbl_803E8254) +
+            (f32)(s16) * &((GameObject*)obj)->anim.rotX;
+    }
+    else
     {
         return 8;
     }
-
-    ((GameObject*)obj)->anim.rotX =
-        lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State*)state)->baddie.turnRate * t / lbl_803E8254) +
-        (f32)(s16) * &((GameObject*)obj)->anim.rotX;
 
     v = *(f32*)((char*)state + 0x298);
     if (v < *(f32*)&lbl_803E8234)
