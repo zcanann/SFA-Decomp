@@ -9,6 +9,7 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
+#include "main/sky_interface.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -299,12 +300,11 @@ void link_levcontrol_update(int* obj)
 
 void link_levcontrol_updateAreaMusic(int* obj)
 {
-    extern void* gSkyInterface; /* #57 */
     LinkLevControlState* sub = ((GameObject*)obj)->extra;
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
     case 0x47:
-        if (((int (*)(int))((void**)*(int*)gSkyInterface)[9])(0) != 0)
+        if ((*gSkyInterface)->getSunPosition(0) != 0)
         {
             if (sub->musicTrack != 0x2d)
             {
@@ -332,7 +332,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
                     Music_Trigger(0x95, 1);
                 }
             }
-            else if (((int (*)(int))((void**)*(int*)gSkyInterface)[9])(0) != 0)
+            else if ((*gSkyInterface)->getSunPosition(0) != 0)
             {
                 if (sub->musicTrack != 0x2d)
                 {

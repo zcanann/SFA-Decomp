@@ -8,6 +8,7 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
+#include "main/sky_interface.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -323,7 +324,6 @@ void linkb_levcontrol_init(int* obj)
 
 void linkb_levcontrol_update(int* obj)
 {
-    extern void* gSkyInterface; /* #57 */
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     LinkbLevState* state;
     int* tricky;
@@ -334,7 +334,7 @@ void linkb_levcontrol_update(int* obj)
     player = (int*)Obj_GetPlayerObject();
     tricky = getTrickyObject();
     cur = (*gMapEventInterface)->getProgressPtr();
-    if (((int (*)(int))((void**)*(int*)gSkyInterface)[9])(0) != 0)
+    if ((*gSkyInterface)->getSunPosition(0) != 0)
     {
         if (state->music != -1)
         {

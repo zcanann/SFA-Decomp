@@ -193,7 +193,7 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
 {
     int flag;
 
-    if ((*(int (**)(int))(*gSkyInterface + 0x24))(0))
+    if ((*gSkyInterface)->getSunPosition(0))
     {
         if (state->thorntailMusicId != 0x2d)
         {
