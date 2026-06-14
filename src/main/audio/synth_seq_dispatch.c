@@ -488,7 +488,6 @@ void fn_8026E864(void)
 void fn_8026E90C(u8 voice)
 {
     u32 group;
-    u32 queueOffset;
     u32 i;
     u32 x;
 
@@ -506,7 +505,6 @@ void fn_8026E90C(u8 voice)
     else
     {
         group = voice & 0xff;
-        queueOffset = group * 0x38;
         for (i = 0; i < 0x40; i++)
         {
             if (group == *(u8*)(*(u32*)(gSynthCurrentVoice + 0x14e4) + i))
@@ -514,7 +512,7 @@ void fn_8026E90C(u8 voice)
                 x = synthGetNextChannelEvent((u8)i);
                 if (x != 0)
                 {
-                    synthInsertChannelEvent(gSynthCurrentVoice + queueOffset + 0x14e8, x);
+                    synthInsertChannelEvent(gSynthCurrentVoice + group * 0x38 + 0x14e8, x);
                 }
             }
         }
