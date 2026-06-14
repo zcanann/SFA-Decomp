@@ -1,4 +1,4 @@
-/* DLL 0x801E66DC — SB ship gun and related Starfox battle objects [0x801E66DC-0x801E67BC). */
+/* DLL 0x801E66DC - SB ship gun and related Starfox battle objects [0x801E66DC-0x801E67BC). */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"
@@ -55,7 +55,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
-extern int* gBoneParticleEffectInterface;
 extern int Stack_IsEmpty(int stack);
 extern int Stack_Pop(int stack, int* out);
 
@@ -93,8 +92,7 @@ int fn_801E66EC(int arg1, int arg2)
     {
         if ((*(u16*)(arg1 + 0xb0) & 0x800) != 0)
         {
-            ((void (*)(int, int, f32*, int, int))((void**)*gBoneParticleEffectInterface)[3])(
-                arg1, 2031, &local, 80, 0);
+            (*gBoneParticleEffectInterface)->spawnEffect((void*)arg1, 2031, &local, 80, NULL);
         }
     }
 

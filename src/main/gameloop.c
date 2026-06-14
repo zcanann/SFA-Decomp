@@ -82,7 +82,6 @@ void doNothing_onSaveSelectScreenExit(void)
 int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
-extern void* gBoneParticleEffectInterface;
 extern u8 framesThisStep;
 
 extern u8 gameState;

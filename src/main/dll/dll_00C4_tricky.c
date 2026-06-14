@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
@@ -2038,7 +2039,6 @@ void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_802C2200[];
-extern int* gBoneParticleEffectInterface;
 extern int* lbl_803DDA50;
 extern f32 lbl_803E2588;
 extern f32 lbl_803E258C;
@@ -2146,8 +2146,10 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 if (hit != 0x10)
                 {
                     params.scale = lbl_803E258C;
-                    ((void (**)(int, int, int, int, void*))*(int*)gBoneParticleEffectInterface)[3](obj, 0x7fb, 0, 0x64, &params);
-                    ((void (**)(int, int, int, int, void*))*(int*)gBoneParticleEffectInterface)[3](obj, 0x7fc, 0, 0x32, 0);
+                    (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fb, NULL,
+                                                                 0x64, &params);
+                    (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fc, NULL,
+                                                                 0x32, NULL);
                     Obj_ResetModelColorState(obj);
                     *(u16*)&((TrickyState*)state)->unk2B0 = 0;
                     ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & 0xffffffdf;

@@ -1,11 +1,11 @@
 /*
- * DLL 0x150 — GCRobotLight (retail object name "GCRobotLigh[t]"), the
+ * DLL 0x150 - GCRobotLight (retail object name "GCRobotLigh[t]"), the
  * electric scanning-beam of CloudRunner Fortress. It is spawned as the
  * child of a GCRobotPatrol robot (the patrolling enemy run by
  * dll_00C9_enemy.c, placed in CloudRunner Fortress / fortress.romlist):
  * gcrobotlightbea_update aims a point light along a traced vector (the
  * beam) and gcrobotlightbea_hitDetect flags "player caught in the beam"
- * (hitFlags 0x80) unless playerIsDisguised — the sharp-claw disguise
+ * (hitFlags 0x80) unless playerIsDisguised - the sharp-claw disguise
  * fools it; the parent robot reads this child's hit result to react.
  * "GC" = GameCube: Rare's prefix for content reworked/added when the N64
  * "Dinosaur Planet" became the GameCube Star Fox Adventures (the GCRobot
@@ -68,7 +68,7 @@ extern undefined4 DAT_802c2a60;
 extern undefined4 DAT_802c2a64;
 extern f64 DOUBLE_803e4db0;
 extern f32 lbl_803DC074;
-extern f32 gBoneParticleEffectInterface;
+extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4DA8;
 extern f32 lbl_803E4DBC;
 extern f32 lbl_803E4DC0;
@@ -389,7 +389,7 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
                      param_6, param_7,
                      param_8, param_9, 5, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * gBoneParticleEffectInterface + lbl_803E4EC8) * lbl_803E4ECC);
+    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
     if (dVar2 < (double)lbl_803E4EB0)
     {
         dVar2 = (double)lbl_803E4EB0;

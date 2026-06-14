@@ -1,5 +1,6 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/effect_interfaces.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -105,12 +106,6 @@ typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, undefined4 param_2, DIMbo
 typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 x, f32 y,
                                         void* hitDetectAnimTable, void* animTable);
 
-typedef struct DIMbossBoneParticleEffectInterface
-{
-    u8 pad00[0x0C];
-    void (*spawnEffect)(DIMbossObject* obj, int effectId, void* params, int frames, void* extra);
-} DIMbossBoneParticleEffectInterface;
-
 typedef struct DIMbossInitVec
 {
     undefined4 a;
@@ -163,7 +158,6 @@ typedef struct DIMbossObjectTriggerInterface
     void (*triggerEvent)(ObjAnimUpdateState* animUpdate, int eventId);
 } DIMbossObjectTriggerInterface;
 
-extern DIMbossBoneParticleEffectInterface** gBoneParticleEffectInterface;
 extern DIMbossMapEventInterface** gMapEventInterface;
 
 static inline DIMbossBaddieControlInterface* DIMboss_GetBaddieControlInterface(void)
@@ -171,7 +165,7 @@ static inline DIMbossBaddieControlInterface* DIMboss_GetBaddieControlInterface(v
     return (DIMbossBaddieControlInterface*)*gBaddieControlInterface;
 }
 
-static inline DIMbossBoneParticleEffectInterface* DIMboss_GetBoneParticleEffectInterface(void)
+static inline BoneParticleEffectInterface* DIMboss_GetBoneParticleEffectInterface(void)
 {
     return *gBoneParticleEffectInterface;
 }
