@@ -200,15 +200,14 @@ int objSeqFindLabel(u8* seq, int label)
         }
         else if ((s8)command[0] == 0xb)
         {
-            repeatCount = *(s16*)(command + 2);
-            if (repeatCount > 0)
+            if (*(s16*)(command + 2) > 0)
             {
                 packed = *(u32*)(command + 4);
                 if ((int)(packed & 0x3f) == 9 && (int)(packed >> 16) == label)
                 {
                     return currentLabel;
                 }
-                commandIndex += repeatCount;
+                commandIndex += *(s16*)(command + 2);
             }
         }
         currentLabel += command[1];
@@ -224,7 +223,6 @@ int objSeqFindConditional(u8* seq, u8* seqState)
     int currentLabel;
     int commandIndex;
     u8* command;
-    int repeatCount;
     u32 packed;
 
     currentLabel = -1;
@@ -238,8 +236,7 @@ int objSeqFindConditional(u8* seq, u8* seqState)
         }
         else if ((s8)command[0] == 0xb)
         {
-            repeatCount = *(s16*)(command + 2);
-            if (repeatCount > 0)
+            if (*(s16*)(command + 2) > 0)
             {
                 packed = *(u32*)(command + 4);
                 if ((int)(packed & 0x3f) == 4 &&
@@ -252,7 +249,7 @@ int objSeqFindConditional(u8* seq, u8* seqState)
                     }
                     return currentLabel;
                 }
-                commandIndex += repeatCount;
+                commandIndex += *(s16*)(command + 2);
             }
         }
         currentLabel += command[1];
