@@ -791,38 +791,39 @@ void Obj_FlushDeferredFreeList(void)
     lbl_803DCB94 = 0;
 }
 
-void fn_8002B6D8(u8* obj, int a, int b, int c, u8 d, u8 e)
+void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound,
+                                  u8 radiusOrHeight, u8 flags)
 {
-    ObjHitVolumeRuntimeBounds *p;
+    ObjHitVolumeRuntimeBounds* bounds;
     if (obj == NULL)
     {
         return;
     }
-    p = ((GameObject *)obj)->anim.hitVolumeBounds;
-    if (p == NULL)
+    bounds = obj->anim.hitVolumeBounds;
+    if (bounds == NULL)
     {
         return;
     }
-    p += ((GameObject*)obj)->unkE4;
-    if (a != 0)
+    bounds += obj->unkE4;
+    if (xBound != 0)
     {
-        p->bounds[0] = a >> 2;
+        bounds->bounds[0] = xBound >> 2;
     }
-    if (c != 0)
+    if (yBound != 0)
     {
-        p->bounds[1] = c >> 2;
+        bounds->bounds[1] = yBound >> 2;
     }
-    if (b != 0)
+    if (zBound != 0)
     {
-        p->bounds[2] = b >> 2;
+        bounds->bounds[2] = zBound >> 2;
     }
-    if (d != 0)
+    if (radiusOrHeight != 0)
     {
-        p->bounds[3] = d;
+        bounds->bounds[3] = radiusOrHeight;
     }
-    if (e != 0)
+    if (flags != 0)
     {
-        p->flags = e;
+        bounds->flags = flags;
     }
 }
 

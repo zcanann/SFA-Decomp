@@ -77,4 +77,7 @@ STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 
+void Obj_SetActiveHitVolumeBounds(GameObject *obj, int xBound, int zBound, int yBound,
+                                  u8 radiusOrHeight, u8 flags);
+
 #endif

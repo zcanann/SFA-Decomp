@@ -7,6 +7,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/model.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
@@ -631,12 +632,10 @@ extern int lbl_803DE47C;
 extern f32 lbl_803DC670;
 extern f32 lbl_803DC674;
 extern f32 lbl_803DC678;
-extern void tailFn_80026c38(int a, f32 x, f32 y, f32 z);
 extern void playerTailFn_80026b3c(int *a, int b, int c, void *fn);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int randomGetRange(int lo, int hi);
 extern void mm_free(void *ptr);
-extern void fn_80026C88(int a);
 extern void buttonDisable(int a, int b);
 extern int getYButtonItem(s16 *out);
 extern void cameraSetInterpMode(int mode);
@@ -762,7 +761,6 @@ extern s16 lbl_803DC69C;
 extern s16 lbl_803DC698;
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 zoom);
-extern void fn_80026C30(int obj, int flag);
 extern int ObjModel_ClearBlendChannels();
 extern void *lbl_803DE444;
 extern f32 lbl_803E80CC;
@@ -814,7 +812,6 @@ extern f32 lbl_803E8218;
 extern f32 lbl_803E821C;
 extern f32 lbl_803E8220;
 extern f32 lbl_803E8224;
-extern int allocModelStruct2(int p1, int p2);
 extern void *mmAlloc(int size, int heap, int flags);
 extern void objSetSlot(int obj, int slot);
 extern int lbl_803DC668;

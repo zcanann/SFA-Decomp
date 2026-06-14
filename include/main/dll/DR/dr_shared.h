@@ -504,7 +504,6 @@ extern f32 lbl_803E6AA4;
 extern s16 lbl_803DC330;
 extern void getYButtonItem(s16 *out);
 extern int cMenuGetSelectedItem(void);
-extern void fn_8002B6D8(int obj, int a, int b, int c, int d, int e);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern void objModelClearVecFn_8003aa40(int obj);
 

@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objanim_internal.h"
 #include "main/objseq_control.h"
 #include "main/audio/sfx_ids.h"
@@ -3886,10 +3887,10 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 break;
             case 0x1f:
                 __set_debug_bba(lbl_803DE420);
-                fn_80026C30(lbl_803DE420, 1);
+                ObjModelChain_SetEnabled((ObjModelChain*)lbl_803DE420, 1);
                 break;
             case 0x20:
-                fn_80026C30(lbl_803DE420, 0);
+                ObjModelChain_SetEnabled((ObjModelChain*)lbl_803DE420, 0);
                 break;
             case 0x21:
                 lbl_803DC66C = 2;
@@ -8071,7 +8072,6 @@ int fn_802A6694(int obj, int state, f32 fv)
     return 0;
 }
 
-extern void fn_80026C54(int a);
 
 typedef struct
 {
@@ -8108,7 +8108,7 @@ void playerDoHitDetection(int obj)
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
     (*gPathControlInterface)->advance((void*)obj, (void*)(inner + 4), timeDelta);
-    fn_80026C54(lbl_803DE420);
+    ObjModelChain_AdvancePhase((ObjModelChain*)lbl_803DE420);
     if (!(((PlayerState*)inner)->unk820 >= lbl_803E7EF0))
     {
         (*(void (*)(int, int, void*))(*(int*)(*gPlayerInterface + 0xc)))(obj, inner,
@@ -9632,7 +9632,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     {
         fn_802AB5A4(obj, (int)inner, 7);
     }
-    fn_80026C30(lbl_803DE420, 1);
+    ObjModelChain_SetEnabled((ObjModelChain*)lbl_803DE420, 1);
     inner->unk8C4 = 2;
     if (lbl_803DE444 != NULL)
     {
@@ -10740,7 +10740,7 @@ void fn_802B4DE0(int obj)
     }
     ObjGroup_RemoveObject(obj, 0);
     ObjGroup_RemoveObject(obj, 0x25);
-    fn_80026C88(lbl_803DE420);
+    ObjModelChain_Free((ObjModelChain*)lbl_803DE420);
 }
 
 void fn_802A13F4(int obj, int p2)
@@ -12711,7 +12711,7 @@ void objLoadPlayerFromSave(int obj)
         ((PlayerState*)inner)->unk7DC = lbl_803E8170;
         ((PlayerState*)inner)->unk874 = lbl_803E8174;
     }
-    lbl_803DE420 = allocModelStruct2((int)&lbl_803DC668, 1);
+    lbl_803DE420 = (int)ObjModelChain_Alloc(&lbl_803DC668, 1);
     *(int*)((char*)obj + 0x108) = (int)fn_8029560C;
     if (lbl_803DE424 != 0)
     {
@@ -18562,7 +18562,7 @@ void fn_8029560C(int obj, void* statep)
     int v = *state;
     if ((void*)lbl_803DE420 != NULL)
     {
-        tailFn_80026c38(lbl_803DE420, lbl_803DC670, lbl_803DC674, lbl_803DC678);
+        ObjModelChain_SetOrigin((ObjModelChain*)lbl_803DE420, lbl_803DC670, lbl_803DC674, lbl_803DC678);
         playerTailFn_80026b3c(state, v, lbl_803DE420, fn_80295334);
     }
 }

@@ -3,6 +3,7 @@
 #include "main/gamebits.h"
 #include "main/objHitReact.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -84,7 +85,6 @@ extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
 
-extern void fn_80026C88(int p);
 extern int Obj_FreeObject(int obj);
 
 extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);

@@ -144,6 +144,43 @@ STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
 STATIC_ASSERT(offsetof(ObjModel, unk60) == 0x60);
 
+typedef struct ObjModelChainEntry {
+    void *frameBuffer;
+    void *model;
+    s32 frameCount;
+} ObjModelChainEntry;
+
+typedef struct ObjModelChain {
+    ObjModelChainEntry *entries;
+    s32 count;
+    f32 originX;
+    f32 originY;
+    f32 originZ;
+    f32 phase;
+    u8 updateFlag;
+    u8 unk19;
+    u8 enabled;
+} ObjModelChain;
+
+STATIC_ASSERT(sizeof(ObjModelChainEntry) == 0x0C);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, frameBuffer) == 0x00);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, model) == 0x04);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, frameCount) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelChain, entries) == 0x00);
+STATIC_ASSERT(offsetof(ObjModelChain, count) == 0x04);
+STATIC_ASSERT(offsetof(ObjModelChain, originX) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelChain, originY) == 0x0C);
+STATIC_ASSERT(offsetof(ObjModelChain, originZ) == 0x10);
+STATIC_ASSERT(offsetof(ObjModelChain, phase) == 0x14);
+STATIC_ASSERT(offsetof(ObjModelChain, updateFlag) == 0x18);
+STATIC_ASSERT(offsetof(ObjModelChain, unk19) == 0x19);
+STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
+
 ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
+ObjModelChain *ObjModelChain_Alloc(void *models, int count);
+void ObjModelChain_SetOrigin(ObjModelChain *chain, f32 x, f32 y, f32 z);
+void ObjModelChain_SetEnabled(ObjModelChain *chain, u8 enabled);
+void ObjModelChain_AdvancePhase(ObjModelChain *chain);
+void ObjModelChain_Free(ObjModelChain *chain);
 
 #endif

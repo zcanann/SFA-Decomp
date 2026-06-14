@@ -1,5 +1,6 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/curve_walker.h"
@@ -58,8 +59,6 @@ extern f32 lbl_803E2C94;
 extern u8 lbl_8031FB70[];
 extern u8 lbl_8031FC2C[];
 extern int fn_8014D08C(int* obj, int* st, int p3, f32 f, int p5, int p6);
-extern int* allocModelStruct2(int p1, int p2);
-extern void tailFn_80026c38(int* p, f32 a, f32 b, f32 c);
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
 extern u8 lbl_8031FD48[];
@@ -505,8 +504,8 @@ void smallbasket_initTailModelState(int* obj, int* st)
     }
     *(f32*)((char*)st + 0x328) = lbl_803E2C58;
     ObjHits_SetHitVolumeMasks((int)obj, 0xe, 1, 0xfff);
-    *(int**)((char*)st + 0x36c) = allocModelStruct2((int)lbl_8031FC2C, 5);
-    tailFn_80026c38(*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
+    *(int**)((char*)st + 0x36c) = (int*)ObjModelChain_Alloc(lbl_8031FC2C, 5);
+    ObjModelChain_SetOrigin((ObjModelChain*)*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
     ((BaddieState*)st)->reactionFlags = ((BaddieState*)st)->reactionFlags | 0x100;
     *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
 }

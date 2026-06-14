@@ -1099,11 +1099,11 @@ int hightop_stateHandler09(int obj, int p)
         getYButtonItem(&yItem);
         if ((GameBit_Get(0xaf7) != 0 && cMenuGetSelectedItem() != -1) || yItem == 0xaf7)
         {
-            fn_8002B6D8(obj, 0, 0, 0, 0, 4);
+            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         }
         else
         {
-            fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
         }
     }
     if (ObjTrigger_IsSetById(obj, 0xaf7) != 0)
@@ -1123,7 +1123,7 @@ int hightop_stateHandler09(int obj, int p)
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0);
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
         ObjHits_DisableObject(obj);
-        fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
         (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         return 0;
     }

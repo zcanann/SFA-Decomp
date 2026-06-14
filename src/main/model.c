@@ -224,9 +224,9 @@ int roundUpTo16(int x);
 
 int roundUpTo32(int x);
 
-void fn_80026C30(u8* p, u8 v)
+void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
 {
-    p[0x1a] = v;
+    chain->enabled = enabled;
 }
 
 extern void* mmAlloc(int size, int type, int flag);
@@ -237,11 +237,11 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void textureFree(void* tex);
 
-void tailFn_80026c38(u8* p, f32 a, f32 b, f32 c)
+void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 {
-    *(f32*)(p + 8) = a;
-    *(f32*)(p + 0xc) = b;
-    *(f32*)(p + 0x10) = c;
+    chain->originX = x;
+    chain->originY = y;
+    chain->originZ = z;
 }
 
 int alignUp2(int x);
@@ -257,13 +257,13 @@ void cacheQueueWait(int sync);
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80026C54(u8* p)
+void ObjModelChain_AdvancePhase(ObjModelChain* chain)
 {
-    p[0x18] = 0;
-    *(f32*)(p + 0x14) += timeDelta;
-    if (*(f32*)(p + 0x14) > lbl_803DE854)
+    chain->updateFlag = 0;
+    chain->phase += timeDelta;
+    if (chain->phase > lbl_803DE854)
     {
-        *(f32*)(p + 0x14) -= *(f32*)&lbl_803DE854;
+        chain->phase -= *(f32*)&lbl_803DE854;
     }
 }
 
@@ -737,15 +737,15 @@ void model_multMtxs(u8* model, f32* out)
     }
 }
 
-void fn_80026C88(u8* p)
+void ObjModelChain_Free(ObjModelChain* chain)
 {
     int i;
-    for (i = 0; i < *(int*)(p + 4); i++)
+    for (i = 0; i < chain->count; i++)
     {
-        mm_free(*(void**)(*(u8**)p + i * 0xc));
+        mm_free(chain->entries[i].frameBuffer);
     }
-    mm_free(*(void**)p);
-    mm_free(p);
+    mm_free(chain->entries);
+    mm_free(chain);
 }
 
 extern f32 lbl_803DE858;
@@ -754,31 +754,29 @@ extern f32 lbl_803DE860;
 extern f32 lbl_803DE828;
 extern f32 lbl_803DE864;
 
-void* allocModelStruct2(int** models, int count)
+ObjModelChain* ObjModelChain_Alloc(void* models, int count)
 {
     int i;
-    int offset;
     int** p;
-    u8* state;
+    ObjModelChain* state;
 
     state = mmAlloc(0x1c, 0x1a, 0);
-    *(int*)(state + 4) = count;
-    state[0x19] = 0;
-    state[0x18] = 0;
-    *(u8**)state = mmAlloc(count * 0xc, 0x1a, 0);
-    for (i = 0, p = models, offset = 0; i < count; i++)
+    state->count = count;
+    state->unk19 = 0;
+    state->updateFlag = 0;
+    state->entries = mmAlloc(count * 0xc, 0x1a, 0);
+    for (i = 0, p = (int**)models; i < count; i++)
     {
-        *(int**)(*(u8**)state + offset + 4) = *p;
-        *(int*)(*(u8**)state + offset + 8) = (*p)[1];
-        *(void**)(*(u8**)state + offset) = mmAlloc((*(int*)(*(u8**)state + offset + 8) + 1) * 0x54, 0x1a, 0);
+        state->entries[i].model = *p;
+        state->entries[i].frameCount = (*p)[1];
+        state->entries[i].frameBuffer = mmAlloc((state->entries[i].frameCount + 1) * 0x54, 0x1a, 0);
         p++;
-        offset += 0xc;
     }
-    *(f32*)(state + 8) = lbl_803DE858;
-    *(f32*)(state + 0xc) = lbl_803DE85C;
-    *(f32*)(state + 0x10) = lbl_803DE860;
-    *(f32*)(state + 0x14) = lbl_803DE828;
-    state[0x1a] = 1;
+    state->originX = lbl_803DE858;
+    state->originY = lbl_803DE85C;
+    state->originZ = lbl_803DE860;
+    state->phase = lbl_803DE828;
+    state->enabled = 1;
     return state;
 }
 

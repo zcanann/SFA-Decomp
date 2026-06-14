@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct DREarthWarriorPlacement
@@ -241,10 +242,6 @@ extern void setAButtonIcon(int icon);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
 extern void fn_80113F94(int p, f32 f);
 extern void objAudioFn_8006edcc(int obj, int a, int b, int c, int d, f32 v, f32 lim);
-extern int allocModelStruct2(char* tag, int n);
-extern void tailFn_80026c38(int h, f32 a, f32 b, f32 c);
-extern void fn_80026C30(int h, int n);
-extern void fn_80026C54(int h);
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SpawnHitLightAndFade(int obj, void* pos, f32 v);
 extern void doRumble(f32 v);
@@ -423,7 +420,7 @@ void DR_EarthWarrior_free(int obj)
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     if (*(void* *)&inner->sub.unk9A0 != NULL)
     {
-        fn_80026C88(inner->sub.unk9A0);
+        ObjModelChain_Free((ObjModelChain*)inner->sub.unk9A0);
     }
     ObjGroup_RemoveObject(obj, 0xa);
     if (((ByteFlags*)&inner->sub.flags994)->b02)
@@ -1263,7 +1260,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         }
         if ((void*)inner != NULL)
         {
-            fn_80026C54(inner->sub.unk9A0);
+            ObjModelChain_AdvancePhase((ObjModelChain*)inner->sub.unk9A0);
         }
     }
 }
@@ -1457,8 +1454,8 @@ void DR_EarthWarrior_init(int obj, int p2)
     {
         ((DREarthWarriorState*)inner)->unk14ED = 1;
     }
-    ((DREarthWarriorState*)inner)->tailSimHandle = allocModelStruct2(&lbl_803DC768, 1);
-    tailFn_80026c38(((DREarthWarriorState*)inner)->tailSimHandle, lbl_803E8324, lbl_803E831C, lbl_803E8394);
+    ((DREarthWarriorState*)inner)->tailSimHandle = (s32)ObjModelChain_Alloc(&lbl_803DC768, 1);
+    ObjModelChain_SetOrigin((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, lbl_803E8324, lbl_803E831C, lbl_803E8394);
     *(int*)((char*)obj + 0x108) = (int)fn_802BC788;
-    fn_80026C30(((DREarthWarriorState*)inner)->tailSimHandle, 1);
+    ObjModelChain_SetEnabled((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, 1);
 }

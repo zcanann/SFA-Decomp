@@ -86,7 +86,6 @@ extern int ObjTrigger_IsSetById();
 extern void fn_8003A168(int obj, void* p);
 extern void characterDoEyeAnims(int obj, void* p);
 extern int cMenuGetSelectedItem(void);
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void fn_801CDF94(int obj, void* state, int flag);
 extern u8 lbl_803267C0[];
 extern u8 lbl_803267E8[];
@@ -843,11 +842,11 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
         if (((stateFlags & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
             (cMenuGetSelectedItem() != -1))
         {
-            fn_8002B6D8((int)obj, 0, 0, 0, 0, 4);
+            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         }
         else
         {
-            fn_8002B6D8((int)obj, 0, 0, 0, 0, 2);
+            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
         }
     }
     stateIndex = state->stateIndex;

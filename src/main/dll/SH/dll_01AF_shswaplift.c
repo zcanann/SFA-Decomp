@@ -8,7 +8,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E54C8;
 
 extern s32 lbl_803DC058[2];
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void getYButtonItem(s16 * out);
 extern int cMenuGetSelectedItem(void);
 extern int ObjTrigger_IsSetById(int obj, int id);
@@ -51,10 +50,10 @@ void warpstonelift_init(int obj, s8* def)
     {
     case 0:
     case 2:
-        fn_8002B6D8((int)obj, 0, 0, 0, 0, 3);
+        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
         break;
     case 1:
-        fn_8002B6D8((int)obj, 0, 0, 0, 0, 4);
+        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         break;
     }
 }
@@ -94,18 +93,18 @@ void warpstonelift_update(u8* obj)
             getYButtonItem(&item);
             if ((GameBit_Get(0xC7C) != 0 && cMenuGetSelectedItem() != -1) || item == 0xC7C)
             {
-                fn_8002B6D8((int)obj, 0, 0, 0, 0, 4);
+                Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
             }
             else
             {
-                fn_8002B6D8((int)obj, 0, 0, 0, 0, 2);
+                Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
             }
             if (ObjTrigger_IsSetById((int)obj, 0xC7C) != 0)
             {
                 GameBit_Set(0x886, 1);
                 GameBit_Set(0xC7D, 1);
                 *state = 2;
-                fn_8002B6D8((int)obj, 0, 0, 0, 0, 3);
+                Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
             }
             else if (ObjTrigger_IsSet((int)obj) != 0)
             {

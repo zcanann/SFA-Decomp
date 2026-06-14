@@ -44,7 +44,6 @@ extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern int GameBit_Set(int eventId, int value);
 extern void gameBitDecrement(int eventId);
 extern void* getTrickyObject(void);
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
 extern f32 lbl_803E5530;
 extern f32 lbl_803E5534;
 extern f32 lbl_803E5538;
@@ -203,7 +202,7 @@ void sh_beacon_update(int obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
         if (((ShBeaconState*)state)->mode == 2)
         {
-            fn_8002B6D8(obj, 0, 0, 0, 0, 8);
+            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 8);
         }
         else if ((((ShBeaconState*)state)->mode == 0) && (GameBit_Get(0x194) == 0))
         {

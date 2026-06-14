@@ -7,6 +7,7 @@
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/model.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
@@ -111,7 +112,6 @@ extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
 extern f32 lbl_803E8304;
-extern void fn_80026C88(int p);
 extern int Obj_FreeObject(int obj);
 extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);
 extern f32 lbl_803E82E8;

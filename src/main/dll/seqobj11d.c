@@ -4,6 +4,7 @@
 #include "main/obj_placement.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/seqObj11D.h"
 #include "main/objhits.h"
@@ -59,9 +60,6 @@ extern uint fn_80296118(u8 * player);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
 extern f32 lbl_803E2740;
 extern f32 timeDelta;
-extern int allocModelStruct2(f32* p, int n);
-extern void tailFn_80026c38(int p, f32 a, f32 b, f32 c);
-extern void fn_80026C30(int p, int n);
 extern void baddieAfterUpdateBonesCb();
 extern f32 lbl_803DBC98;
 extern f32 lbl_803E2748;
@@ -610,10 +608,10 @@ void fn_80151954(int obj, u8* state)
         ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;
         state[0x322] = z;
         ((GroundBaddieState*)state)->baddie.unk31C = fz;
-        *(int*)(state + 0x36c) = allocModelStruct2(&lbl_803DBC98, 1);
-        tailFn_80026c38(*(int*)(state + 0x36c), lbl_803E27C8, lbl_803E27CC, lbl_803E27D0);
+        *(int*)(state + 0x36c) = (int)ObjModelChain_Alloc(&lbl_803DBC98, 1);
+        ObjModelChain_SetOrigin((ObjModelChain*)*(int*)(state + 0x36c), lbl_803E27C8, lbl_803E27CC, lbl_803E27D0);
         *(int*)(obj + 0x108) = (int)baddieAfterUpdateBonesCb;
-        fn_80026C30(*(int*)(state + 0x36c), 1);
+        ObjModelChain_SetEnabled((ObjModelChain*)*(int*)(state + 0x36c), 1);
         break;
     }
     if (*(s8*)(setup + 0x2e) != -1)

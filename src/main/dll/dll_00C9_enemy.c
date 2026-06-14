@@ -1,14 +1,15 @@
 /*
- * DLL 0xC9 — the generic enemy/baddie controller. It runs several romlist
+ * DLL 0xC9 - the generic enemy/baddie controller. It runs several romlist
  * enemy types, including GCRobotPatrol ("GCRobotPatr[ol]"), the floating
  * patrol robot of CloudRunner Fortress (placed in fortress.romlist).
  * GCRobotPatrol carries the GCRobotLight scanning beam (DLL 0x150,
  * dll_0150_gcrobotlightbea.c) as childObjs[0] and reads that child's
- * "player caught in the beam" hit flag to react — the sharp-claw disguise
+ * "player caught in the beam" hit flag to react - the sharp-claw disguise
  * fools the beam. ("GC" = GameCube; see the dll_0150 header.)
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_00C9_enemy.h"
@@ -147,7 +148,6 @@ extern f32 lbl_803E25DC;
 extern int getAngle(f32 x, f32 z);
 extern uint lbl_8031DBF0[];
 extern uint lbl_8031DC10[];
-extern void fn_80026C30(int* obj, int flag);
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
@@ -190,8 +190,6 @@ extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int lig
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int modelLightStruct_getActiveState(int light);
 extern void ModelLightStruct_free(int light);
-extern void fn_80026C54(int p);
-extern void fn_80026C88(int p);
 extern void mm_free(int p);
 extern void smallbasket_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
@@ -1402,11 +1400,11 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             break;
         case 6:
             if (*(int**)&((TrickyState*)sub)->unk36C != NULL)
-                fn_80026C30(*(int**)&((TrickyState*)sub)->unk36C, 1);
+                ObjModelChain_SetEnabled(*(ObjModelChain**)&((TrickyState*)sub)->unk36C, 1);
             break;
         case 7:
             if (*(int**)&((TrickyState*)sub)->unk36C != NULL)
-                fn_80026C30(*(int**)&((TrickyState*)sub)->unk36C, 0);
+                ObjModelChain_SetEnabled(*(ObjModelChain**)&((TrickyState*)sub)->unk36C, 0);
             break;
         }
     }
@@ -2024,7 +2022,7 @@ void enemy_hitDetect(int obj)
     }
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {
-        fn_80026C54(((EnemyState*)state)->tailSimHandle);
+        ObjModelChain_AdvancePhase((ObjModelChain*)((EnemyState*)state)->tailSimHandle);
     }
 }
 
@@ -2039,7 +2037,7 @@ void enemy_free(int obj, int flag)
 
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {
-        fn_80026C88(((EnemyState*)state)->tailSimHandle);
+        ObjModelChain_Free((ObjModelChain*)((EnemyState*)state)->tailSimHandle);
     }
     if (*(void**)&((EnemyState*)state)->modelLight != NULL)
     {

@@ -48,7 +48,6 @@ extern f32 lbl_803E2524;
 extern void trickyDebugPrint(const char *fmt, ...);
 extern void getYButtonItem(s16 *out);
 extern void buttonDisable(int a, int b);
-extern void fn_8002B6D8(u8* obj, int a, int b, int c, int d, int e);
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 
@@ -1719,7 +1718,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
         else
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-            fn_8002B6D8(obj, 0, 0, 0, 0, 4);
+            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         }
     }
     else
@@ -1770,7 +1769,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                 return 1;
             }
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-            fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
         }
     }
     return 0;

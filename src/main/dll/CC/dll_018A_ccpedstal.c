@@ -1,4 +1,4 @@
-/* DLL 0x018A — ccpedstal (Crystal Caves pedestal gate). TU: 0x801AB6F8–0x801ABA84. */
+/* DLL 0x018A - ccpedstal (Crystal Caves pedestal gate). TU: 0x801AB6F8-0x801ABA84. */
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
@@ -31,7 +31,6 @@ extern f32 lbl_803E5360;
 #pragma peephole on
 extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
 extern void ccpedstal_updateAltVariant(int obj, u8* state2);
-extern void fn_8002B6D8(void* obj, int p2, int p3, int p4, int p5, int p6);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
 extern int ObjTrigger_IsSet(int obj);
@@ -98,7 +97,7 @@ void ccpedstal_init(int* obj, u8* params)
     case 0x45f1a:
         *(void**)state = (void*)ccpedstal_updateAltVariant;
         *(s16*)(state + 4) = 0xaa;
-        fn_8002B6D8(obj, 0, 0, 0, 0, 3);
+        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
         break;
     case 0x45f1b:
         *(void**)state = (void*)ccpedstal_updateGameBitGate;

@@ -13,7 +13,6 @@ extern f32 getXZDistance(f32 * a, f32 * b);
 extern int fn_8003B500(void* obj, void* p2, f32 f1);
 extern int fn_8003B228(void* obj, void* p2);
 extern int characterDoEyeAnims(void* obj, void* p2);
-extern void fn_8002B6D8(void* obj, int arg1, int arg2, int arg3, int arg4, int arg5);
 extern int cMenuGetSelectedItem(void);
 extern int getYButtonItem(s16 * outTrigger);
 extern void* getTrickyObject(void);
@@ -252,7 +251,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
                     getXZDistance((f32*)((u8*)tricky + 0x18), &((GameObject*)obj)->anim.worldPosX) <
                     lbl_803E5400)
                 {
-                    fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+                    Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
                 }
                 else
                 {
@@ -261,7 +260,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
                 break;
             }
         }
-        fn_8002B6D8(obj, 0, 0, 0, 0, 4);
+        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
         if (ObjTrigger_IsSetById(obj, 0x66d) != 0)
         {
             ((QueenEarthWalkerState*)state)->flags |= 0x10;
@@ -294,7 +293,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         ((QueenEarthWalkerState*)state)->stateIndex = 3;
         break;
     case 3:
-        fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
         ((QueenEarthWalkerState*)state)->flags &= ~0x4;
         ((QueenEarthWalkerState*)state)->flags &= ~0x8;
         ((QueenEarthWalkerState*)state)->eventTable = &lbl_803DBFD0;
