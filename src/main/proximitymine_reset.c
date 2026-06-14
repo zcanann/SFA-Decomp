@@ -29,12 +29,12 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     zero = lbl_803E6768;
     obj->velocityX = zero;
     obj->velocityZ = zero;
-    storeZeroToFloatParam(state->renderTimer);
-    s16toFloat(state->renderTimer, 10);
+    storeZeroToFloatParam(&state->renderTimer);
+    s16toFloat(&state->renderTimer, 10);
     state->mode = 0;
     ObjHits_EnableObject((u32)obj);
     ObjHits_MarkObjectPositionDirty((int)obj);
-    storeZeroToFloatParam(state->resetTimer);
+    storeZeroToFloatParam(&state->resetTimer);
     fn_8009A8C8(obj, lbl_803E676C);
     {
         f32 dist = state->triggerDistance - lbl_803E6774;
