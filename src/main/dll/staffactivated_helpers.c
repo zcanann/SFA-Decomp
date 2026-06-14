@@ -2,10 +2,10 @@
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/mapEventTypes.h"
+#include "main/objhits.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void doRumble(f32 strength);
 extern int Obj_GetPlayerObject(void);
