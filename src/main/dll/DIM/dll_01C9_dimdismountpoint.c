@@ -1,5 +1,6 @@
 #include "main/dll/DIM/DIM2conveyor.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 
 typedef struct DimdismountpointState
@@ -11,10 +12,7 @@ typedef struct DimdismountpointState
 } DimdismountpointState;
 
 extern uint GameBit_Get(int eventId);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E4910;
 extern f32 lbl_803E4908;
@@ -47,7 +45,7 @@ void dimdismountpoint_update(int* obj)
     f32 d;
 
     d = lbl_803E4910;
-    nearest = ObjGroup_FindNearestObject(0xa, obj, &d);
+    nearest = (int*)ObjGroup_FindNearestObject(0xa, (u32)obj, &d);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
     if (GameBit_Get(0x3e3) != 0)
     {
@@ -81,7 +79,7 @@ void dimdismountpoint_init(u8* obj, u8* params)
 {
     f32* sub;
 
-    ObjGroup_AddObject(obj, 0x13);
+    ObjGroup_AddObject((u32)obj, 0x13);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     sub = ((GameObject*)obj)->extra;
     sub[0] = mathSinf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918);

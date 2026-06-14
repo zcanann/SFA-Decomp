@@ -1,5 +1,6 @@
 #include "main/dll/DIM/DIM2conveyor.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 
 typedef struct DimbridgecogmaiObjectDef
@@ -22,8 +23,6 @@ typedef struct DimbridgecogmaiPlacement
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 
 extern unsigned long GameBit_Set(int eventId, int value);
 extern f32 lbl_803E4900;
@@ -65,7 +64,7 @@ void dimbridgecogmai_init(int* obj, int* def)
     *(u8*)((GameObject*)obj)->extra = 100;
     *(s16*)obj = (s16)((u32)((DimbridgecogmaiObjectDef*)def)->unk1C << 8);
     ((GameObject*)obj)->animEventCallback = (void*)dimbridgecogmai_SeqFn;
-    ObjGroup_AddObject(obj, 15);
+    ObjGroup_AddObject((u32)obj, 15);
     if ((u8)GameBit_Get(((DimbridgecogmaiObjectDef*)def)->unk18) != 0)
     {
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
