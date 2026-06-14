@@ -1155,9 +1155,7 @@ void Checkpoint_remove(CheckpointRouteEntry* obj)
     CheckpointSlot* p = lbl_8039C458;
     CheckpointSlot* e;
 
-    count = lbl_803DD410;
-
-    while (i < count && (u32)obj->sortKey != p[i].key)
+    while (i < (count = lbl_803DD410) && (u32)obj->sortKey != p[i].key)
     {
         i++;
     }
