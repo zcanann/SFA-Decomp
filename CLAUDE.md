@@ -391,6 +391,16 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     member addresses are special-cased as cheap-remat (volatile) otherwise; #84/#90 "embedded-assign
     explodes" does NOT apply when the assigned value is reused by a LATER identical call, not a later
     arg of the same call. (dimbosstonsil_render 97.5→100.)
+129. **Frame/conversion-temp inflation is often a DOWNSTREAM symptom of EXIT-BLOCK fragmentation —
+    fix the return-path layout first.** Two trailing `if(c)return K;` guards before `return D;`
+    emit as two separate `li r3,K` islands AND can block the conversion-temp pool from recycling
+    earlier scratch slots (bigger frame). Merge to one fall-through tail: `if (guardA) { if
+    (!guardB) return D; } return K;` (hoist the shared `return K` to the single tail, nest the
+    distinct `return D`). Collapsed both the duplicate return island AND the frame 112→96 in one
+    edit. Pair with #33 (keep the constant return in the else arm: `if(x<K){<body>}else{return E;}`
+    floats the cold island out of line) and #107 for-GPR (un-name a loop-invariant member —
+    `obj->field` inline at each use CSEs to one load but colors LOWER than a named local, fixing a
+    volatile r4/r5/r6 carrier rotation). (DIMSnowHorn1_stateHandler0A 95.6→100.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
