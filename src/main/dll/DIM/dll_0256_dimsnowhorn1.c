@@ -1488,16 +1488,22 @@ void DIMSnowHorn1_update(int obj)
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
 }
 
+#pragma opt_propagation off
 void DIMSnowHorn1_release(void)
 {
-    void** p = (void**)(int)&gDIMSnowHorn1Texture;
-    void* v = *p;
+    void* zero;
+    void** p;
+    void* v;
+    p = (void**)(int)&gDIMSnowHorn1Texture;
+    zero = NULL;
+    v = *p;
     if (v != NULL)
     {
         textureFree((int)v);
     }
-    *p = NULL;
+    *p = zero;
 }
+#pragma opt_propagation reset
 
 void DIMSnowHorn1_initialise(void)
 {
