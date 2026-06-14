@@ -510,6 +510,7 @@ typedef void (*Fn801B3DE4SpdFirst)(int obj, f32 spd, int b, f32 x, f32 y, f32 z)
 typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 #pragma peephole off
+#pragma opt_propagation off
 void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
 {
     int p4c = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -591,15 +592,16 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
             * (int*)((char*)e14 + 0x14));
         f32 d = sp - *(f32*)((char*)e + 0x18);
         f32 t = d * ev;
-        *(f32*)((char*)e + 0xc) = sp - t * lbl_803DDB70;
+        *(f32*)((char*)e + 0xc) = sp - lbl_803DDB70 * t;
         ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e14 + 0x14));
         t = lbl_803E4938 * ev;
-        *(s8*)((char*)state + idx * 0x30 + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
+        *(s8*)((char*)state + idx * 0x30 + 0x2e) = lbl_803E4938 - lbl_803DDB6C * t;
         *(int*)((char*)state + idx * 0x30 + 0x20) = (int)lbl_803E4940;
         *(int*)((char*)state + idx * 0x30 + 0x24) = *(int*)((char*)state + idx * 0x30 + 0x20);
         *(u8*)((char*)state + idx * 0x30 + 0x2f) = 1;
     }
 }
+#pragma opt_propagation reset
 
 #pragma dont_inline on
 void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out)
@@ -757,6 +759,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     renderResetFn_8003fc60();
 }
 
+#pragma opt_propagation off
 void explosion_update(int obj)
 {
     ExplosionPartfxSource fake;
@@ -781,10 +784,10 @@ void explosion_update(int obj)
                     f32)(int)((ExplosionDebris*)p)->unk14);
             f32 d = sp - ((ExplosionDebris*)p)->unk18;
             f32 t = d * ev;
-            ((ExplosionDebris*)p)->unkC = sp - t * lbl_803DDB70;
+            ((ExplosionDebris*)p)->unkC = sp - lbl_803DDB70 * t;
             ev = expf((lbl_803E493C * (f32)(int)((ExplosionDebris*)p)->unk10) / (f32)(int)((ExplosionDebris*)p)->unk14);
             t = lbl_803E4938 * ev;
-            *(s8*)&((ExplosionDebris*)p)->unk2E = lbl_803E4938 - t * lbl_803DDB6C;
+            *(s8*)&((ExplosionDebris*)p)->unk2E = lbl_803E4938 - lbl_803DDB6C * t;
             if (((ExplosionDebris*)p)->unk10 >= ((ExplosionDebris*)p)->unk14)
             {
                 ((ExplosionDebris*)p)->unk2F = 0;
@@ -1001,6 +1004,7 @@ void explosion_update(int obj)
         }
     }
 }
+#pragma opt_propagation reset
 
 void explosion_init(int obj, int p2)
 {

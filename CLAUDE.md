@@ -332,62 +332,6 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
 110. **`li rY,K; mr rX,rY` (target chains a const-equal copy) = per-fn `#pragma optimization_level
     1`** (copy-prop doesn't fold the copy; O1≈O4 for small call-free loop fns). Value-diamond else-
     arm copies are O4-producible via a CSE'd laundered-expression input + named per-arm result.
-    ⚠️ CAVEAT (verified): for a LARGE/call-heavy fn the optimization_level hammer SCRAMBLES the
-    whole allocation — O1/O2/O3 all regress (sc_totembond_update: O4=99.79, O1=89, O2=95.7,
-    O3=99.4). For a single zero-init copy `li r25,0; mr r26,r25` between two independent loop
-    counters, NO source/pragma lever reaches it: chained/separate/for-comma init, block-scope decl,
-    register class, split increment, and EVERY opt_* pragma (opt_propagation/common_subs/strength_
-    reduction/loop_invariants/lifetimes off) are all byte-INERT. A /tmp probe proves it: a faithful
-    replica of the surviving-copy idiom (`i=0; off=i; cnt=i;`, even with a derived-IV `off` like
-    objFreeObjDef) STILL emits `li;li` in a small fn — so the copy-vs-rematerialize choice is
-    decided by fn-GLOBAL register pressure/alloc state (#108 dose-effect), not the local construct.
-    Bank-and-retry; the lone-instr residual is the whole fuzzy gap (the co-located @NNN-vs-named f64
-    int→float magic is #70-neutral). ALSO RULED OUT (verified): recompiling the TU with every GC
-    compiler (2.0/2.0p1/1.3/1.3.2/1.3.2r/2.5/2.6/2.7/1.2.5n) STILL emits `li;li` — not a
-    version-swap fix. Theory: `count=orbIndex` only survives as a copy if the source is non-constant
-    (a phi), which needs a guarding branch the target lacks; all identity ops (`&0`,`-x`,`*1`) fold
-    even on a phi. MP4-ORACLE CLINCHER: MP4 (100%-matched) has 41 `li;mr` two-counter examples —
-    ALL are `s16`/`int` (extsh), ZERO are `u8` (clrlwi). The target's counters are `u8` (clrlwi
-    r25,24; cmplwi 8) AND `mr` — a combo absent from every 100%-matched MWCC fn. So `u8`+two-counter-
-    copy is not producible by any in-repo compiler. ⚠️CORRECTION (2026-06-14, verified in-tree): the
-    earlier claim that "widening to s16/int DOES yield `mr`" is FALSE for THIS construct — widening
-    orbIndex (copy source), availableCount (copy dest), or BOTH to int/s16 ALL still emit `li r26,0`
-    (the static-0 copy folds regardless of width) AND break the clrlwi masks. The width is irrelevant;
-    only the constness of the source matters. Confirms the target used an unavailable build config. COMPLETE
-    COMPILER SWEEP (definitive): ALL 29 MWCC binaries in build/compilers (every GC 1.0→3.0a5 AND all
-    9 Wii 1.0→1.7) emit `li;li` — none produces the `mr`. Also ruled out: static-helper extraction
-    (stays separate→`bl` diverges; force-inline→different frame/alloc), runtime/volatile loop bound
-    (still `li`), register-web analysis (orbIndex/nextRing coalesce into a multi-def web identically
-    in both builds, yet only the target declines to rematerialize the copy — a pure allocator-
-    heuristic divergence with no source-reachable cause).
-    O2-vs-O4 TRADEOFF (proven): the `mr` IS producible by MWCC under `-O2,p` (creation-order
-    allocator keeps the copy) — BUT O2 scrambles the body to 95.68% (vs O4=99.79%). Per-fn
-    `#pragma optimization_level 2` gives the same 95.68%. So the copy needs creation-order alloc and
-    the body needs O4's coloring alloc — NO in-repo flag/level/pragma produces BOTH at once. The
-    target had an O4-quality allocator that ALSO keeps static-0 copies; absent from all 29 builds.
-    TERNARY li→mr TECHNIQUE (corpus-discovered, generally useful): an `= 0` that should be `mr rX,rY`
-    is fixed by assigning from a VARIABLE that holds 0 instead of the literal — the canonical form is
-    the zgaQ5 idiom `v = (cond) ? f(x) : x;` where the else-arm copies a runtime var (`x`) that the
-    branch proves is 0 (compiler keeps it in a reg → `mr`, not a rematerialized `li`). BOUNDARY
-    (verified for this fn): the technique needs a RUNTIME 0 (memory load / call result known-0 via a
-    branch); it does NOT help a STATIC-0 STRAIGHT-LINE copy like `count = orbIndex = 0` — there the
-    ternary condition folds and the copy folds with it (orbIndex is `li 0`, statically known). So
-    sc_totembond_update's straight-line static-0 copy is outside the ternary trick's reach.
-    (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
-    FRESH-EYES RE-ATTACK (2026-06-14, no prior map): reconfirmed unreachable. The lone scoring diff is
-    the `li r26,0` vs `mr r26,r25` for `availableCount = orbIndex = 0` (the second region, @95-vs-
-    lbl_803E5648 f64 int→float magic, is #70-neutral). Tested this session: reversed chain
-    `orbIndex = availableCount = 0` → 3 regions (worse); ternary `availableCount = orbIndex ? 1 :
-    orbIndex` → folds (no change, condition statically 0); `register u8` class + separate-statement
-    init → both inert; per-fn `#pragma optimization_level 2` → fixes the `mr` but regresses body to
-    95.68% (matches the banked O2 tradeoff). No register-resident RUNTIME 0 exists at the init point
-    (the only nearby 0 is GameBit_Set's r4 arg, clobbered by the call) so the ternary trick cannot be
-    fed a non-foldable source without adding an instruction the target lacks. Confirmed documented
-    partial; stays banked. ALSO this session: `#pragma opt_propagation off` is byte-INERT (the
-    `availableCount = orbIndex` → `= 0` fold happens in value-numbering, below pragma control), and
-    recompiling the TU at the EXACT production flags (`-O4,p -opt nopeephole,noschedule`) across
-    GC/1.2.5n,1.3.2,2.0,2.0p1,2.5,2.6,2.7,3.0a3,3.0a5.2 ALL emit `li;li` — extends #110's
-    default-flag version sweep to the real cflags. Irreducible toolchain limitation; do NOT inline-asm it.
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
     Arg-eval anchor: embed a DEF inside the size/arg statement (`sz = (u16)((count - (index =
