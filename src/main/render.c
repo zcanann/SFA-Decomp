@@ -89,7 +89,7 @@ int getEnvfxActImmediately(int a, int b, u16 idx, int d)
         else if (e->kind == 5)
         {
             e->field_2a = 0;
-            (*(void (*)(int, int, EnvfxActEntry*, int))(*(int*)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
+            (*gSHthorntailAnimationInterface)->updateEnvfxAct(a, b, e, d);
         }
         else if (e->kind == 6)
         {
@@ -117,7 +117,7 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
         }
         else if (e->kind == 5)
         {
-            (*(void (*)(int, int, EnvfxActEntry*, int))(*(int*)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
+            (*gSHthorntailAnimationInterface)->updateEnvfxAct(a, b, e, d);
         }
         else if (e->kind == 6)
         {

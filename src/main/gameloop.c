@@ -15,6 +15,7 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
+#include "main/shthorntail_interface.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();
@@ -691,7 +692,6 @@ extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gPlayerInterface;
-extern void* gSHthorntailAnimationInterface;
 extern void* gNewCloudsInterface;
 extern void* gCheckpointInterface;
 extern void* gTitleMenuControlInterface;

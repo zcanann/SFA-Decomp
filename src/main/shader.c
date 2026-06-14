@@ -7,6 +7,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
+#include "main/shthorntail_interface.h"
 #include "main/shader.h"
 
 extern float ABS();
@@ -2522,7 +2523,6 @@ void mapLoadUnloadObjects(int flag)
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern ModgfxInterface** gModgfxInterface;
-extern int* gSHthorntailAnimationInterface;
 extern int lbl_803DCDD0;
 extern int lbl_803DCDD4;
 extern int lbl_803DCDC8;
@@ -2647,7 +2647,7 @@ void beginLoadingMap(void)
     (*gCloudActionInterface)->freeCloudObjects();
     (*gCloudActionInterface)->onMapSetup();
     (*gSky2Interface)->onMapSetup();
-    (*(void (*)(void))(*(int*)(*gSHthorntailAnimationInterface + 8)))();
+    (*gSHthorntailAnimationInterface)->onMapSetup();
     (*(void (*)(void))(*(int*)(*gNewCloudsInterface + 8)))();
     mapInitFn_8006fccc();
     player = (char*)Obj_GetPlayerObject();
@@ -2747,11 +2747,11 @@ void beginLoadingMap(void)
                 getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
             }
         }
-        (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(*(f32*)env);
+        (*gSHthorntailAnimationInterface)->setEnvironmentBlend(*(f32*)env);
     }
     else
     {
-        (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(lbl_803DEBD0);
+        (*gSHthorntailAnimationInterface)->setEnvironmentBlend(lbl_803DEBD0);
         (*gCloudActionInterface)->func09Nop(1);
     }
     clearSaveGameLoadingFlag();

@@ -5,6 +5,7 @@
 #include "ghidra_import.h"
 #include "dolphin/mtx.h"
 #include "main/objHitReact.h"
+#include "main/shthorntail_interface.h"
 
 typedef struct SHthorntailConfig {
   u8 pad00[0x04];
@@ -118,11 +119,6 @@ STATIC_ASSERT(offsetof(SHthorntailObject, animEventCallback) == 0xBC);
 STATIC_ASSERT(offsetof(SHthorntailConfig, baseScale) == 0x04);
 STATIC_ASSERT(offsetof(SHthorntailConfig, homePos) == 0x08);
 STATIC_ASSERT(offsetof(SHthorntailConfig, configToken) == 0x14);
-
-typedef struct SHthorntailAnimationInterface {
-  u8 pad00[0x24];
-  int (*isTailSwingQueued)(void *out);
-} SHthorntailAnimationInterface;
 
 typedef struct SHthorntailEventInterface {
   u8 pad00[0x44];
@@ -239,8 +235,6 @@ extern u8 gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
 extern u8 gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
 extern u8 gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
 extern u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable;
-extern SHthorntailAnimationInterface **gSHthorntailAnimationInterface;
-
 STATIC_ASSERT(sizeof(SHthorntailRuntime) == SHTHORNTAIL_EXTRA_STATE_BYTES);
 
 static inline s16 SHthorntail_GetLinkedGameBit(SHthorntailConfig *config) {

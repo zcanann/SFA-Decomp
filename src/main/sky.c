@@ -52,7 +52,7 @@ void envFxFn_80088884(void)
     u8 b;
     u8 flags;
 
-    a = (u8)(*(int (**)(int))((char*)*gSHthorntailAnimationInterface + 0x24))(0);
+    a = (u8)(*gSHthorntailAnimationInterface)->isTailSwingQueued(0);
     b = (u8)GameBit_Get(0x2ba);
     if (a != lbl_803DD16C)
     {
@@ -1218,7 +1218,7 @@ void sky2_run(void)
             }
             else if ((*(u16*)&((GameObject*)p)->anim.flags & 0x20) != 0)
             {
-                (*(void (**)(f32*))((char*)*gSHthorntailAnimationInterface + 0x14))(&height);
+                (*gSHthorntailAnimationInterface)->getTailHeight(&height);
                 t = height / lbl_803DF15C;
                 if (t < lbl_803DF108)
                 {
@@ -2689,7 +2689,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     q2.rz = 0;
     q2.ry = 0;
     q2.rx = 0;
-    (*(void (**)(int*))((char*)*gSHthorntailAnimationInterface + 0x20))(&v);
+    (*gSHthorntailAnimationInterface)->getSkyState(&v);
     if (cam != NULL && lbl_803DD12C != NULL)
     {
         far = Camera_GetFarPlane();

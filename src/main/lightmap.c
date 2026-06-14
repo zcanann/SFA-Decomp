@@ -6,6 +6,7 @@
 #include "main/lightmap.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/shthorntail_interface.h"
 #include "main/vecmath.h"
 
 extern undefined4 FUN_80006934();
@@ -1681,7 +1682,6 @@ void getVisibleObjects(s8 * opacity);
 extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
 extern void GXPixModeSync(void);
-extern void* gSHthorntailAnimationInterface;
 extern void* gNewCloudsInterface;
 extern s32 heatEffectIntensity;
 extern void drawSkyStars(void);
@@ -1782,12 +1782,12 @@ void sceneDraw(void)
     flag = t;
     if ((renderFlags & 0x40000) != 0)
     {
-        (*(void (***)(int, int))gSHthorntailAnimationInterface)[14](0, 0);
+        (*(void (**)(int, int))((char*)*gSHthorntailAnimationInterface + 0x38))(0, 0);
         if (flag != 0)
         {
             drawSkyStars();
         }
-        (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
+        (*gSHthorntailAnimationInterface)->render(0, 0, 0, 0, flag);
         if ((renderFlags & 0x10) != 0)
         {
             (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
@@ -1795,7 +1795,7 @@ void sceneDraw(void)
     }
     else
     {
-        (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
+        (*gSHthorntailAnimationInterface)->render(0, 0, 0, 0, flag);
         (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }
@@ -2647,7 +2647,7 @@ void updateEnvironment(int mode)
         envFxFn_80088884();
         (*gCloudActionInterface)->scrollTexture();
         (*gSky2Interface)->run();
-        (*(void (***)(void))gSHthorntailAnimationInterface)[3]();
+        (*gSHthorntailAnimationInterface)->run();
         (*(void (***)(void))gNewCloudsInterface)[4]();
 
         i = 0;

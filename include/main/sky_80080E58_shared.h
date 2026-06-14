@@ -12,6 +12,7 @@
 #include "main/objtexture.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
+#include "main/shthorntail_interface.h"
 
 typedef struct ObjSeqBgCmd {
     int object;
@@ -90,7 +91,6 @@ extern int lbl_803DB720;
 extern s16 seqGlobal1;
 extern s16 seqGlobal2;
 extern s8 seqGlobal3;
-extern int *gSHthorntailAnimationInterface;
 extern s8 lbl_803DD0BC;
 extern void *lbl_803DD0D4;
 extern u8 lbl_803DD0D8;

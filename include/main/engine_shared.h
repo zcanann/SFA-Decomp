@@ -5,6 +5,7 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
 #include "main/effect_interfaces.h"
+#include "main/shthorntail_interface.h"
 
 #define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
 #define SFX_OBJECT_CHANNEL_COUNT 56
@@ -588,7 +589,6 @@ extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 extern void getTabEntry(void* dst, int kind, int offset, int size);
 extern int *gNewCloudsInterface;
-extern int *gSHthorntailAnimationInterface;
 s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state);
 void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit);
 extern int lbl_802C18C0[];
