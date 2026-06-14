@@ -538,21 +538,21 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     s32 v;
 
     tex = objFindTexture((void*)arg1, 0, 0);
-    tex->offsetT = (s16)(tex->offsetT + 0x14);
+    tex->offsetT += 0x14;
     if (tex->offsetT > 10000)
     {
-        tex->offsetT = (s16)(tex->offsetT - 10000);
+        tex->offsetT -= 10000;
     }
-    tex->offsetS = (s16)(tex->offsetS + 10);
+    tex->offsetS += 10;
     if (tex->offsetS > 10000)
     {
-        tex->offsetS = (s16)(tex->offsetS - 10000);
+        tex->offsetS -= 10000;
     }
     tex = objFindTexture((void*)arg1, 1, 0);
-    tex->offsetT = (s16)(tex->offsetT + 0x1e);
+    tex->offsetT += 0x1e;
     if (tex->offsetT > 10000)
     {
-        tex->offsetT = (s16)(tex->offsetT - 10000);
+        tex->offsetT -= 10000;
     }
     v = (s32) * (u16*)(obj + 0x60) + (s32)framesThisStep * 0x100;
     if (v > 0xffff) v = v - 0xffff;
