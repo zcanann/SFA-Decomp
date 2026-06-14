@@ -1,9 +1,7 @@
-/* DLL 0x01A3 — NW animated-ice objects [801CF78C-801CF7E8) */
+/* DLL 0x01A3 - NW animated-ice objects [801CF78C-801CF7E8) */
 #include "main/dll/dim2conveyor.h"
 #include "main/gameplay_runtime.h"
-
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjGroup_RemoveObject();
+#include "main/objlib.h"
 
 #include "main/dll/creator1D6.h"
 #include "main/game_object.h"
@@ -43,5 +41,5 @@ void nw_animice_init(int* obj)
 {
     ((GameObject*)obj)->animEventCallback = (void*)nw_animice_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    ObjGroup_AddObject(obj, 0x3d);
+    ObjGroup_AddObject((u32)obj, 0x3d);
 }

@@ -1,9 +1,7 @@
-/* DLL 0x01A4 — NW ice objects [801CF78C-801CF7E8) */
+/* DLL 0x01A4 - NW ice objects [801CF78C-801CF7E8) */
 #include "main/dll/dim2conveyor.h"
 #include "main/gameplay_runtime.h"
-
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjGroup_RemoveObject();
+#include "main/objlib.h"
 
 #include "main/dll/creator1D6.h"
 #include "main/game_object.h"
@@ -16,10 +14,6 @@ typedef struct NwIcePlacement
     u8 pad1C[0x20 - 0x1C];
 } NwIcePlacement;
 
-extern int ObjGroup_FindNearestObjectForObject(int group, int* obj, f32* maxDistance);
-extern int** ObjGroup_GetObjects(int group, int* countOut);
-extern void ObjHits_DisableObject(int* obj);
-extern void ObjHits_EnableObject(int* obj);
 extern void fn_80296D20(int playerObj, int* obj);
 
 extern f32 lbl_803E5270;
@@ -60,16 +54,16 @@ void nw_ice_update(int* obj)
         ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)state->linkedObj + 0x10);
         ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)state->linkedObj + 0x14);
         *(s16*)obj = *(s16*)state->linkedObj;
-        ObjGroup_FindNearestObjectForObject(0x3c, obj, &nearestDist);
+        ObjGroup_FindNearestObjectForObject(0x3c, (u32)obj, &nearestDist);
 
         if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             fn_80296D20(Obj_GetPlayerObject(), obj);
         }
         else
         {
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((u32)obj);
         }
 
         if ((((GameObject*)state->linkedObj)->anim.alpha < 0xc0) || (nearestDist < lbl_803E5274))
@@ -83,7 +77,7 @@ void nw_ice_update(int* obj)
     }
     else
     {
-        objects = ObjGroup_GetObjects(0x3d, &count);
+        objects = (int**)ObjGroup_GetObjects(0x3d, &count);
         setup = *(int**)&((GameObject*)obj)->anim.placementData;
         scan = objects;
         for (i = 0; i < count; scan++, i++)
