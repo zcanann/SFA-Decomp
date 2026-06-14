@@ -1255,15 +1255,8 @@ void fn_802BB4B4(int obj, int a, int slot)
 
     {
         f32 cur = ((GameObject*)obj)->anim.velocityY;
-        if (cur < lbl_803E82A8)
-        {
-            cur = lbl_803E82A8;
-        }
-        else if (cur > lbl_803E8234)
-        {
-            cur = lbl_803E8234;
-        }
-        ((GameObject*)obj)->anim.velocityY = cur;
+        ((GameObject*)obj)->anim.velocityY =
+            (cur < lbl_803E82A8) ? lbl_803E82A8 : ((cur > lbl_803E8234) ? lbl_803E8234 : cur);
     }
 
     (*(void (**)(int, int, f32, f32, int*, f32*))(*(int*)gPlayerInterface + 0x8))
