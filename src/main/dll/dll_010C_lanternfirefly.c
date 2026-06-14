@@ -6,6 +6,7 @@
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
 
@@ -60,7 +61,6 @@ extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 extern f32 lbl_803DBDD8;
-extern EffectInterface** gPartfxInterface;
 extern f32 Curve_EvalBSpline(f32* control, f32 t, f32* out);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);

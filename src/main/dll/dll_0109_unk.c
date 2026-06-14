@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
@@ -29,7 +30,6 @@ extern undefined4 FUN_80043030();
 extern undefined4 FUN_80044404();
 extern undefined4 FUN_80053c98();
 
-extern EffectInterface** gPartfxInterface;
 extern f32 FLOAT_803e4830;
 extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;

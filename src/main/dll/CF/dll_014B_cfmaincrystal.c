@@ -8,6 +8,7 @@
 
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
@@ -55,7 +56,6 @@ extern int ObjMsg_SendToObjects();
 extern int ObjMsg_SendToObject();
 extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
-extern EffectInterface** gPartfxInterface;
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);

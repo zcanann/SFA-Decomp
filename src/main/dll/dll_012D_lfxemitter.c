@@ -2,6 +2,7 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/objseq.h"
@@ -21,7 +22,6 @@ extern void* mmAlloc(int size, int heap, int flags);
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 
-extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e4af8;

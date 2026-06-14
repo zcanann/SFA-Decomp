@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
@@ -44,7 +45,6 @@ extern f32 lbl_803E4D44;
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern EffectInterface** gPartfxInterface;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void CameraShake_SetAllMagnitudes(f32 mag);

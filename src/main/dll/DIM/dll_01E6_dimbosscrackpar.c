@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
@@ -13,8 +14,6 @@ typedef struct DimbosscrackparPlacement
     u8 pad1C[0x1E - 0x1C];
     s16 unk1E;
 } DimbosscrackparPlacement;
-
-extern EffectInterface** gPartfxInterface;
 
 extern u8 Obj_IsLoadingLocked(void);
 extern f32 lbl_803E4D98;

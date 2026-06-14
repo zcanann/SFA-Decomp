@@ -3,6 +3,7 @@
 #include "main/camera.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
@@ -19,7 +20,6 @@ extern undefined8 FUN_80286830();
 
 extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern ExpgfxBounds gExpgfxPoolBounds[];
-extern EffectInterface** gPartfxInterface;
 extern u8 lbl_803DD253;
 extern volatile f32 timeDelta;
 extern volatile f32 gExpgfxFrameTimerA;

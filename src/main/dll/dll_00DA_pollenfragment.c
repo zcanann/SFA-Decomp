@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 
@@ -45,7 +46,6 @@ typedef struct PollenFragmentExtra
 
 extern void storeZeroToFloatParam(void* timer);
 
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DF4;
 extern f32 lbl_803E3DF8;
 extern f32 lbl_803E3198;

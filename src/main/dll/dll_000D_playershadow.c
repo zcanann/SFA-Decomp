@@ -3,6 +3,7 @@
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
@@ -164,7 +165,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
 extern f32 lbl_803DC450;

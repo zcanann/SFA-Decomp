@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
@@ -44,7 +45,6 @@ extern f32 sqrtf(f32 x);
 extern u32 fn_80296118(void);
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;

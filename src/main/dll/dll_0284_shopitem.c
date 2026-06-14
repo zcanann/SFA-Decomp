@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
@@ -54,7 +55,6 @@ extern void* Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(void*, void*);
 extern void ObjGroup_AddObject(int, int);
 extern void fn_801F4C28(int, int);
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5A60;
 extern f32 lbl_803E5A64;
 extern f32 lbl_803E5A68;
@@ -62,7 +62,6 @@ extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
 extern void showHelpText(int textId);
 extern void buttonDisable(int a, int b);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void objRenderFn_80041018(int obj);
 extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 extern void DRlaserturret_startTimedChallenge(int);
@@ -118,7 +117,6 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
     extern void fn_801F4ECC(int obj, int sub);
     extern f32 Curve_EvalBSpline(int p, f32 t, int m);
     extern int getAngle(f32 a, f32 b);
-    extern EffectInterface** gPartfxInterface;
     extern f32 lbl_803E5A30;
     extern f32 lbl_803E5A60;
     extern f32 timeDelta;

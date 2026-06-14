@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 
@@ -10,7 +11,6 @@ extern uint FUN_8007f6c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8008112c();
 
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DF4;
 extern f32 lbl_803E3DF8;
 
