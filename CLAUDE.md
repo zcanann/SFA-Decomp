@@ -371,6 +371,16 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     ternary condition folds and the copy folds with it (orbIndex is `li 0`, statically known). So
     sc_totembond_update's straight-line static-0 copy is outside the ternary trick's reach.
     (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
+    FRESH-EYES RE-ATTACK (2026-06-14, no prior map): reconfirmed unreachable. The lone scoring diff is
+    the `li r26,0` vs `mr r26,r25` for `availableCount = orbIndex = 0` (the second region, @95-vs-
+    lbl_803E5648 f64 int→float magic, is #70-neutral). Tested this session: reversed chain
+    `orbIndex = availableCount = 0` → 3 regions (worse); ternary `availableCount = orbIndex ? 1 :
+    orbIndex` → folds (no change, condition statically 0); `register u8` class + separate-statement
+    init → both inert; per-fn `#pragma optimization_level 2` → fixes the `mr` but regresses body to
+    95.68% (matches the banked O2 tradeoff). No register-resident RUNTIME 0 exists at the init point
+    (the only nearby 0 is GameBit_Set's r4 arg, clobbered by the call) so the ternary trick cannot be
+    fed a non-foldable source without adding an instruction the target lacks. Confirmed documented
+    partial; stays banked.
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
     Arg-eval anchor: embed a DEF inside the size/arg statement (`sz = (u16)((count - (index =
