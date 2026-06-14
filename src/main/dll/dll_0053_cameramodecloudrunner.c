@@ -23,6 +23,7 @@ extern float mathCosf(float x);
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/player_motion.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
@@ -54,7 +55,6 @@ extern f32 mathCosf(f32);
 extern f32 mathSinf(f32);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BE4;
-extern void fn_8029697C(int state, s16* a, s16* b);
 extern int fn_802972A8(int state);
 extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
 extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
@@ -275,7 +275,7 @@ void CameraModeCloudRunner_update(u8* obj)
     u8 mxin[24];
     f32 matrix[12];
 
-    fn_8029697C((int)target, &tgtYaw, &tgtPitch);
+    Player_GetAimAngles((int)target, &tgtYaw, &tgtPitch);
     curve = (u8*)fn_802972A8((int)target);
     if (curve != NULL)
     {

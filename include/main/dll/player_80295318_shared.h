@@ -12,6 +12,7 @@
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
+#include "main/dll/player_motion.h"
 #include "main/dll/player_objects.h"
 #include "main/dll/player_status.h"
 #include "main/dll/player_target.h"

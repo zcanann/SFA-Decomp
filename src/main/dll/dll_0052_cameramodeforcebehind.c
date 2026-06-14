@@ -23,6 +23,7 @@ extern float mathCosf(float x);
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/player_motion.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
@@ -64,7 +65,6 @@ extern f32 lbl_803DD5AC;
 extern f32 lbl_803DD5B0;
 extern f32 lbl_803DD5A8;
 extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern void fn_8029697C(int state, s16* a, s16* b);
 extern f32 lbl_803E1B18;
 extern int Obj_GetPlayerObject(void);
 extern int ObjList_GetObjects(int* idx, int* count);
@@ -283,7 +283,7 @@ void CameraModeForceBehind_update(u8* obj)
     camcontrol_traceFromTarget(pos, target, pos, &extra);
     lbl_803DD5A8 = lbl_803DD5B0 = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
 
-    fn_8029697C((int)target, &yaw, &pitch);
+    Player_GetAimAngles((int)target, &yaw, &pitch);
     yaw = (s16)((0x8000 - target->anim.rotX) + (yaw >> 1));
     pitch = (s16)(pitch >> 1);
     baseX = target->anim.worldPosX;

@@ -10,6 +10,7 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
+#include "main/dll/player_motion.h"
 #include "main/dll/player_objects.h"
 
 extern char padGetCY(int port);
@@ -51,7 +52,6 @@ extern f32 lbl_803E1830;
 extern char padGetStickX(int port);
 extern char padGetStickY(int port);
 extern f32 interpolate(f32 v, f32 a, f32 b);
-extern void fn_802961D4(short* obj, int v);
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
 
@@ -114,7 +114,7 @@ void firstPersonDoControls(short* obj)
     *camObj = 0x8000 - *obj;
     if (camObj[0x22] == 1)
     {
-        fn_802961D4(camObj, *camObj);
+        Player_SetHeading((int)camObj, *camObj);
     }
     if (lbl_803DD548->camPosY < lbl_803DD548->clampedPosY)
     {

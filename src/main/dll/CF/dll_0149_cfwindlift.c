@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
+#include "main/dll/player_motion.h"
 #include "main/objseq.h"
 
 typedef struct WindliftPlacement
@@ -88,7 +89,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E4190;
 extern const f32 lbl_803E416C;
-extern f32 fn_80296214(void* p);
 extern void Music_Trigger(int a, int b);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern u8 lbl_80322A48[];
@@ -97,7 +97,6 @@ extern f32 lbl_803E41C8;
 extern f32 lbl_803E41CC;
 extern const f32 lbl_803E4168;
 extern f32 Vec_xzDistance(void* a, void* b);
-extern void fn_80296220(int* rider, f32 v);
 extern f32 lbl_803E4170;
 extern f32 lbl_803E4174;
 extern f32 lbl_803E4178;
@@ -304,7 +303,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         }
         if (pm != 0)
         {
-            fn_80296220(rider, slot->fc);
+            Player_SetLiftVelocityY((int)rider, slot->fc);
         }
         else
         {
@@ -316,7 +315,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     {
         if (pm != 0)
         {
-            fn_80296220(rider, lbl_803E416C);
+            Player_SetLiftVelocityY((int)rider, lbl_803E416C);
         }
         if (pm == 0)
         {
@@ -335,7 +334,7 @@ int windlift_getObjectTypeId(void) { return 0x0; }
 void windlift_free(int* obj)
 {
     void* p = Obj_GetPlayerObject();
-    if (p == NULL || fn_80296214(p) == lbl_803E416C)
+    if (p == NULL || Player_GetLiftVelocityY((int)p) == lbl_803E416C)
     {
         Music_Trigger(189, 0);
     }
@@ -428,7 +427,7 @@ void windlift_update(int* obj)
             if ((sub->slots[0].b10 & 0xe0) != 0)
             {
                 u8 b;
-                fn_80296220((int*)player, lbl_803E416C);
+                Player_SetLiftVelocityY((int)player, lbl_803E416C);
                 b = sub->slots[0].b10;
                 if ((b & 0xe) != 0)
                 {

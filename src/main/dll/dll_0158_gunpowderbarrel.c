@@ -8,6 +8,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
+#include "main/dll/player_motion.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
 
@@ -117,7 +118,6 @@ extern u32 playerGetStateFlag310(u8 * player);
 extern void setAButtonIcon(int kind);
 extern int fn_802966B4(u8 * player);
 extern int fn_8029669C(u8 * player);
-extern f32 fn_80296214(u8 * player);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern void fn_801A1230(int obj);
@@ -1051,7 +1051,7 @@ void gunpowderbarrel_update(int obj)
                 ObjHits_MarkObjectPositionDirty(obj);
                 gunpowderbarrel_launchAtTarget(obj, 1);
             }
-            else if (lbl_803E42C0 == fn_80296214(player))
+            else if (lbl_803E42C0 == Player_GetLiftVelocityY((int)player))
             {
                 ObjHits_SyncObjectPositionIfDirty(obj);
                 gunpowderbarrel_launchAtTarget(obj, 0);
