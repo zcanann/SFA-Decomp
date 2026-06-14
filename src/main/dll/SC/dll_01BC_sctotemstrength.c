@@ -1,3 +1,11 @@
+/*
+ * LightFoot Village "Test of Strength" (DLL 0x1BC): a push-of-war against
+ * MuscleFoot - both shove opposite sides of a rotating mechanism, and
+ * button-mashing hard enough pushes him into the pit to win. platform1_control
+ * is the minigame; it runs while the village map-event 0xe is in state 6.
+ * Winning sets GameBit 0x784, losing sets 0x786. (This file also carries the
+ * FElevControl descriptor tail.)
+ */
 #include "main/dll/paymentkiosk.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/camera_interface.h"

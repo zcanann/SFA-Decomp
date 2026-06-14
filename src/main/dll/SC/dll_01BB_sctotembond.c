@@ -2,6 +2,18 @@
  * sctotembond (DLL 0x1BB) + the tail of sctotempuzzle (DLL 0x1BA).
  * The sc_totempuzzle and sc_totembond fns interleave across this range
  * (one original TU).
+ *
+ * Behaviour: the CloudRunner fire-breathing capture minigame. Eight LightFoot
+ * villagers surround the player with spears; you command the CloudRunner to
+ * breathe fire on whichever one attacks, via a quick-time event (a slider
+ * sweeps left-right, tap A as it crosses the middle). The hit window shrinks
+ * with each villager burned; a miss takes damage and a new random villager
+ * attacks. The code's "orbs"/ring (lbl_80327A60/70, ORB_COUNT 8) are the eight
+ * villagers, and the ring rotation is the QTE targeting. Burning all 8 sets
+ * GameBit 0x2bc, which a seqobject (placement 0x2829: trigger 0x2bc -> open
+ * 0x2d0) turns into 0x2d0; sclevelcontrol then advances the village to
+ * map-event 0xe mode 6, spawning the chief. START_ORBS is anim event 1; anim
+ * event 2 also calls setMode(0xe, 6) directly.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"

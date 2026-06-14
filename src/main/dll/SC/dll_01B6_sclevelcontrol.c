@@ -1,4 +1,10 @@
-/* DLL 0x01B6 — SC level-control objects [801DAFA4-801DAFDC) */
+/* DLL 0x01B6 — SC level-control objects [801DAFA4-801DAFDC).
+ * Master controller for the LightFoot Village (map "swapcircle", map-event
+ * 0xe). Drives the village "mode" that gates which NPCs spawn (see lightfoot
+ * objShouldLoad): mode 1->2 when GameBit 0x5f3 is set (water spellstone placed
+ * at the Ocean Force Point), mode 2->6 when 0x2d0 is set (totem-bond ceremony
+ * complete). Chief/MuscleFoot/throne require mode >=3. Also resets the four
+ * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"

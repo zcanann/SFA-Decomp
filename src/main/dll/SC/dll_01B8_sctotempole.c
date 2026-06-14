@@ -1,4 +1,8 @@
-/* DLL 0x1B8 - SCTotemPole [801DBFA0-801DC310) */
+/* DLL 0x1B8 - SCTotemPole [801DBFA0-801DC310).
+ * The four LightFoot Village totem poles — the "Tracking Test". Each pole's
+ * lit state is one GameBit: FRONT 0x81 / LEFT 0x82 / RIGHT 0x83 / REAR 0x84
+ * (reset by sclevelcontrol on entry). Lighting all four plays the success
+ * fanfare; the test is timed (beat MuscleFoot's record). */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/game_object.h"

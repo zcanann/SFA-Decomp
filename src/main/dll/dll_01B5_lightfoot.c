@@ -1,3 +1,15 @@
+/*
+ * LightFoot Village NPCs (DLL 0x1B5). The village is map "swapcircle"
+ * (Cape Claw). The chief who offers the trials is the SC_lightfoo at the
+ * throne (placement id 0x45c47), with MuscleFoot (SC_muscleli, 0x460b6)
+ * beside him. Chief/MuscleFoot/throne spawn is gated by the village mode
+ * (map-event 0xe) via objShouldLoad: their placement map_acts1=0x03 suppresses
+ * them in modes 1-2, so they only appear once the village reaches mode >=3
+ * (normally 6). Trials: "tracking test" = light all 4 totem poles
+ * (sctotempole); "test of strength" = a push-of-war that shoves MuscleFoot
+ * into the pit (sctotemstrength). The baby-lightfoot -> blTarget herding gated by
+ * 0xc42/0xc46 below is a separate per-NPC reveal, not the chief.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"

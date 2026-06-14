@@ -5,6 +5,14 @@
  * (0x801DDC20) lives in the 01BB unit - it sits in dll 0x1BB's helper gap,
  * interleaved with sc_totembond_spawnGameBitOrbs (both DLLs shared one
  * original TU).
+ *
+ * Behaviour: the LightFoot Village totem puzzle - a stack of 4-6 totem
+ * sections that spin independently; shoot each section as it comes around to
+ * lock it, and the puzzle is solved when all sections line up. Inert until
+ * GameBit 0xc10 activates it (only after both the tracking and strength trials
+ * are done); solving it sets GameBit 0x639, which opens the gate to the Krazoa
+ * shrine below the village. Distinct from sctotempole (the 4 standing totem
+ * poles of the tracking test).
  */
 #include "main/objlib.h"
 

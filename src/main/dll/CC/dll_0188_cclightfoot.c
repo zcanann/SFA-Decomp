@@ -1,4 +1,10 @@
-/* DLL 0x0188 (cclightfoot) — CloudRunner Lightfoot object [0x801AA734-0x801AB468). */
+/* DLL 0x0188 (cclightfoot) — CloudRunner Lightfoot object [0x801AA734-0x801AB468).
+ * The LightFoot enemies in the CloudRunner capture/escape encounter (they
+ * chase the player; target actors 0x45d7d/0x45d7f). GameBit 9 is the
+ * per-encounter latch: the first creature to reach state 0xc sets it (when its
+ * ObjTrigger fires), and on (re)spawn any creature that sees GameBit 9 already
+ * set despawns immediately (state 0 -> 0xe). GameBit 0x24 marks full
+ * completion. Nothing else in the game writes GameBit 9. */
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"

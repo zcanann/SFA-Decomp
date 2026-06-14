@@ -1,3 +1,11 @@
+/*
+ * Generic "sequence object" family (DLL 0x112): a gamebit-driven cutscene /
+ * latch trigger. SeqObjectPlacement carries openGameBit (+0x18) and
+ * triggerGameBit (+0x1A): when triggerGameBit transitions to set, the object
+ * runs sequence `triggerId` and sets openGameBit. Used throughout to chain
+ * progression (e.g. LightFoot Village placement 0x2829 maps 0x2bc -> 0x2d0,
+ * the totem-bond completion that advances the village to mode 6).
+ */
 #include "main/dll/alphaanim.h"
 #include "main/dll/seqobjectstate_struct.h"
 #include "main/dll/seqobj2state_struct.h"
