@@ -157,8 +157,8 @@ void shopkeeper_free(int obj)
 void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    float local_18[4];
-    local_18[0] = lbl_803E59D8;
+    float effectArgs[4];
+    effectArgs[0] = lbl_803E59D8;
     if (*(s16*)(state + 0x274) != 7 && visible != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
@@ -167,7 +167,7 @@ void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param
     }
     if ((*(u8*)(state + 0x9d4) & 0x20) != 0)
     {
-        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, local_18, 0x50, NULL);
+        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, effectArgs, 0x50, NULL);
     }
 }
 
