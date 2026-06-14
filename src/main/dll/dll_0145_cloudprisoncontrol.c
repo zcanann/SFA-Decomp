@@ -754,74 +754,74 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                   undefined4 param_9, undefined4 param_10, float* param_11, undefined4 param_12,
                   int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    short sVar1;
+    short seqType;
     bool bVar2;
-    bool bVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
-    uint uVar7;
-    byte* pbVar8;
+    bool ok;
+    int obj;
+    int self;
+    int target;
+    uint mode;
+    byte* walker;
     int unaff_r28;
-    int iVar9;
-    short* psVar10;
-    byte* pbVar11;
+    int childObj;
+    short* placement;
+    byte* state;
     undefined8 extraout_f1;
     undefined8 extraout_f1_00;
     undefined8 extraout_f1_01;
     undefined8 uVar12;
     float local_28[10];
 
-    iVar4 = FUN_8028683c();
-    pbVar11 = *(byte**)(iVar4 + 0xb8);
-    psVar10 = *(short**)(iVar4 + 0x4c);
+    obj = FUN_8028683c();
+    state = *(byte**)(obj + 0xb8);
+    placement = *(short**)(obj + 0x4c);
     local_28[0] = lbl_803E4D9C;
-    if ((psVar10[0x1c] < 1) || (*psVar10 == 0xf4))
+    if ((placement[0x1c] < 1) || (*placement == 0xf4))
     {
         uVar12 = extraout_f1;
-        iVar5 = FUN_80017a98();
-        if (iVar5 == 0)
+        self = FUN_80017a98();
+        if (self == 0)
         {
-            iVar5 = FUN_8020a6fc();
+            self = FUN_8020a6fc();
         }
         else
         {
-            iVar6 = FUN_80294dbc(iVar5);
-            if (iVar6 != 0)
+            target = FUN_80294dbc(self);
+            if (target != 0)
             {
-                iVar5 = iVar6;
+                self = target;
             }
         }
-        iVar6 = FUN_80017a90();
-        if ((iVar5 != 0) || (iVar6 != 0))
+        target = FUN_80017a90();
+        if ((self != 0) || (target != 0))
         {
-            if ((*pbVar11 & 4) == 0)
+            if ((*state & 4) == 0)
             {
-                bVar3 = true;
-                uVar7 = (uint) * (byte*)((int)psVar10 + 0x43);
-                if (uVar7 < 3)
+                ok = true;
+                mode = (uint) * (byte*)((int)placement + 0x43);
+                if (mode < 3)
                 {
-                    if (uVar7 == 1)
+                    if (mode == 1)
                     {
-                        if (iVar6 == 0)
+                        if (target == 0)
                         {
-                            bVar3 = false;
+                            ok = false;
                         }
                     }
-                    else if (uVar7 == 0)
+                    else if (mode == 0)
                     {
-                        iVar6 = iVar5;
-                        if (iVar5 == 0)
+                        target = self;
+                        if (self == 0)
                         {
-                            bVar3 = false;
+                            ok = false;
                         }
                     }
                     else
                     {
-                        iVar6 = unaff_r28;
-                        if (uVar7 < 3)
+                        target = unaff_r28;
+                        if (mode < 3)
                         {
-                            iVar6 = (**(code**)(*DAT_803dd6d0 + 0xc))();
+                            target = (**(code**)(*DAT_803dd6d0 + 0xc))();
                             uVar12 = extraout_f1_01;
                         }
                     }
@@ -829,192 +829,192 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                 else
                 {
                     param_11 = local_28;
-                    iVar6 = ObjGroup_FindNearestObject(uVar7 - 1, iVar4, param_11);
+                    target = ObjGroup_FindNearestObject(mode - 1, obj, param_11);
                     uVar12 = extraout_f1_00;
-                    if (iVar6 == 0)
+                    if (target == 0)
                     {
-                        bVar3 = false;
+                        ok = false;
                     }
                 }
-                if (bVar3)
+                if (ok)
                 {
-                    if ((*pbVar11 & 0x40) == 0)
+                    if ((*state & 0x40) == 0)
                     {
-                        *(undefined4*)(pbVar11 + 0x1c) = *(undefined4*)(pbVar11 + 0x28);
-                        *(undefined4*)(pbVar11 + 0x20) = *(undefined4*)(pbVar11 + 0x2c);
-                        *(undefined4*)(pbVar11 + 0x24) = *(undefined4*)(pbVar11 + 0x30);
+                        *(undefined4*)(state + 0x1c) = *(undefined4*)(state + 0x28);
+                        *(undefined4*)(state + 0x20) = *(undefined4*)(state + 0x2c);
+                        *(undefined4*)(state + 0x24) = *(undefined4*)(state + 0x30);
                     }
                     else
                     {
-                        if (*(byte*)((int)psVar10 + 0x43) == 2)
+                        if (*(byte*)((int)placement + 0x43) == 2)
                         {
-                            *(undefined4*)(pbVar11 + 0x1c) = *(undefined4*)(iVar6 + 0x18);
-                            *(undefined4*)(pbVar11 + 0x20) = *(undefined4*)(iVar6 + 0x1c);
-                            *(undefined4*)(pbVar11 + 0x24) = *(undefined4*)(iVar6 + 0x20);
+                            *(undefined4*)(state + 0x1c) = *(undefined4*)(target + 0x18);
+                            *(undefined4*)(state + 0x20) = *(undefined4*)(target + 0x1c);
+                            *(undefined4*)(state + 0x24) = *(undefined4*)(target + 0x20);
                         }
-                        else if (*(byte*)((int)psVar10 + 0x43) < 2)
+                        else if (*(byte*)((int)placement + 0x43) < 2)
                         {
-                            *(undefined4*)(pbVar11 + 0x1c) = *(undefined4*)(iVar6 + 0x8c);
-                            *(undefined4*)(pbVar11 + 0x20) = *(undefined4*)(iVar6 + 0x90);
-                            *(undefined4*)(pbVar11 + 0x24) = *(undefined4*)(iVar6 + 0x94);
+                            *(undefined4*)(state + 0x1c) = *(undefined4*)(target + 0x8c);
+                            *(undefined4*)(state + 0x20) = *(undefined4*)(target + 0x90);
+                            *(undefined4*)(state + 0x24) = *(undefined4*)(target + 0x94);
                         }
                         else
                         {
-                            *(undefined4*)(pbVar11 + 0x1c) = *(undefined4*)(iVar6 + 0x80);
-                            *(undefined4*)(pbVar11 + 0x20) = *(undefined4*)(iVar6 + 0x84);
-                            *(undefined4*)(pbVar11 + 0x24) = *(undefined4*)(iVar6 + 0x88);
+                            *(undefined4*)(state + 0x1c) = *(undefined4*)(target + 0x80);
+                            *(undefined4*)(state + 0x20) = *(undefined4*)(target + 0x84);
+                            *(undefined4*)(state + 0x24) = *(undefined4*)(target + 0x88);
                         }
-                        *pbVar11 = *pbVar11 & 0xbf;
+                        *state = *state & 0xbf;
                     }
-                    if (*(byte*)((int)psVar10 + 0x43) < 3)
+                    if (*(byte*)((int)placement + 0x43) < 3)
                     {
-                        *(undefined4*)(pbVar11 + 0x28) = *(undefined4*)(iVar6 + 0x18);
-                        *(undefined4*)(pbVar11 + 0x2c) = *(undefined4*)(iVar6 + 0x1c);
-                        *(undefined4*)(pbVar11 + 0x30) = *(undefined4*)(iVar6 + 0x20);
+                        *(undefined4*)(state + 0x28) = *(undefined4*)(target + 0x18);
+                        *(undefined4*)(state + 0x2c) = *(undefined4*)(target + 0x1c);
+                        *(undefined4*)(state + 0x30) = *(undefined4*)(target + 0x20);
                     }
                     else
                     {
-                        *(undefined4*)(pbVar11 + 0x28) = *(undefined4*)(iVar6 + 0xc);
-                        *(undefined4*)(pbVar11 + 0x2c) = *(undefined4*)(iVar6 + 0x10);
-                        *(undefined4*)(pbVar11 + 0x30) = *(undefined4*)(iVar6 + 0x14);
+                        *(undefined4*)(state + 0x28) = *(undefined4*)(target + 0xc);
+                        *(undefined4*)(state + 0x2c) = *(undefined4*)(target + 0x10);
+                        *(undefined4*)(state + 0x30) = *(undefined4*)(target + 0x14);
                     }
                 }
-                sVar1 = *psVar10;
-                if (sVar1 == 0x50)
+                seqType = *placement;
+                if (seqType == 0x50)
                 {
                     uVar12 = objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                        param_8, iVar4
-                                                        , iVar5, 1, 0, param_13, param_14, param_15, param_16);
-                    iVar5 = FUN_8001769c();
-                    if (iVar5 != 0)
+                                                        param_8, obj
+                                                        , self, 1, 0, param_13, param_14, param_15, param_16);
+                    self = FUN_8001769c();
+                    if (self != 0)
                     {
-                        FUN_80017ac8(uVar12, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4);
+                        FUN_80017ac8(uVar12, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
                     }
                 }
-                else if (sVar1 < 0x50)
+                else if (seqType < 0x50)
                 {
-                    if (sVar1 == 0x4d)
+                    if (seqType == 0x4d)
                     {
-                        if (bVar3)
+                        if (ok)
                         {
-                            iVar9 = *(int*)(iVar4 + 0xb8);
-                            iVar5 = objFn_80198fa4(iVar4, (float*)(iVar9 + 0x28));
-                            iVar9 = objFn_80198fa4(iVar4, (float*)(iVar9 + 0x1c));
-                            if (iVar5 == 0)
+                            childObj = *(int*)(obj + 0xb8);
+                            self = objFn_80198fa4(obj, (float*)(childObj + 0x28));
+                            childObj = objFn_80198fa4(obj, (float*)(childObj + 0x1c));
+                            if (self == 0)
                             {
-                                if (iVar9 == 0)
+                                if (childObj == 0)
                                 {
                                     objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6,
-                                                               param_7, param_8, iVar4,
-                                                               iVar6, 0xfffffffe, 0, param_13, param_14, param_15,
+                                                               param_7, param_8, obj,
+                                                               target, 0xfffffffe, 0, param_13, param_14, param_15,
                                                                param_16);
                                 }
                                 else
                                 {
                                     objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6,
-                                                               param_7, param_8, iVar4,
-                                                               iVar6, 0xffffffff, 0, param_13, param_14, param_15,
+                                                               param_7, param_8, obj,
+                                                               target, 0xffffffff, 0, param_13, param_14, param_15,
                                                                param_16);
                                 }
                             }
-                            else if (iVar9 == 0)
+                            else if (childObj == 0)
                             {
                                 objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                           param_8, iVar4,
-                                                           iVar6, 1, 0, param_13, param_14, param_15, param_16);
+                                                           param_8, obj,
+                                                           target, 1, 0, param_13, param_14, param_15, param_16);
                             }
                             else
                             {
                                 objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                           param_8, iVar4,
-                                                           iVar6, 2, 0, param_13, param_14, param_15, param_16);
+                                                           param_8, obj,
+                                                           target, 2, 0, param_13, param_14, param_15, param_16);
                             }
                         }
                     }
-                    else if (sVar1 < 0x4d)
+                    else if (seqType < 0x4d)
                     {
-                        if (sVar1 == 0x4b)
+                        if (seqType == 0x4b)
                         {
-                            if (bVar3)
+                            if (ok)
                             {
-                                FUN_80199744(iVar4, iVar6, param_11, param_12, param_13, param_14, param_15, param_16);
+                                FUN_80199744(obj, target, param_11, param_12, param_13, param_14, param_15, param_16);
                             }
                         }
-                        else if (0x4a < sVar1)
+                        else if (0x4a < seqType)
                         {
                             bVar2 = true;
-                            if (((int)*(short*)(pbVar11 + 0x82) != 0xffffffff) &&
-                                (uVar7 = FUN_80017690((int)*(short*)(pbVar11 + 0x82)), uVar7 == 0))
+                            if (((int)*(short*)(state + 0x82) != 0xffffffff) &&
+                                (mode = FUN_80017690((int)*(short*)(state + 0x82)), mode == 0))
                             {
                                 bVar2 = false;
                             }
-                            if ((bVar2) && (bVar3))
+                            if ((bVar2) && (ok))
                             {
                                 FUN_801991bc();
                             }
                         }
                     }
-                    else if ((sVar1 < 0x4f) &&
-                        (*(uint*)(pbVar11 + 8) = *(int*)(pbVar11 + 8) + (uint)DAT_803dc070,
+                    else if ((seqType < 0x4f) &&
+                        (*(uint*)(state + 8) = *(int*)(state + 8) + (uint)DAT_803dc070,
                             (uint)(ushort)
-                            psVar10[0x23] <= *(uint*)(pbVar11 + 8)
+                            placement[0x23] <= *(uint*)(state + 8)
                     )
                     )
                     {
                         objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                   param_8, iVar4, 0, 1, 0,
+                                                   param_8, obj, 0, 1, 0,
                                                    param_13, param_14, param_15, param_16);
                     }
                 }
-                else if (sVar1 == 0xf4)
+                else if (seqType == 0xf4)
                 {
-                    if (bVar3)
+                    if (ok)
                     {
                         FUN_80198e08();
                     }
                 }
-                else if (sVar1 < 0xf4)
+                else if (seqType < 0xf4)
                 {
-                    if (sVar1 == 0x54)
+                    if (seqType == 0x54)
                     {
-                        bVar3 = true;
-                        iVar6 = 0;
-                        pbVar8 = pbVar11;
-                        while ((iVar6 < 4 && (bVar3)))
+                        ok = true;
+                        target = 0;
+                        walker = state;
+                        while ((target < 4 && (ok)))
                         {
-                            if (((int)*(short*)(pbVar8 + 0x82) != 0xffffffff) &&
-                                (uVar7 = FUN_80017690((int)*(short*)(pbVar8 + 0x82)), uVar7 == 0))
+                            if (((int)*(short*)(walker + 0x82) != 0xffffffff) &&
+                                (mode = FUN_80017690((int)*(short*)(walker + 0x82)), mode == 0))
                             {
-                                bVar3 = false;
+                                ok = false;
                             }
-                            pbVar8 = pbVar8 + 2;
-                            iVar6 = iVar6 + 1;
+                            walker = walker + 2;
+                            target = target + 1;
                         }
-                        if ((bVar3) && (-1 < (char)pbVar11[0x8a]))
+                        if ((ok) && (-1 < (char)state[0x8a]))
                         {
-                            pbVar11[0x8a] = pbVar11[0x8a] & 0x7f | 0x80;
+                            state[0x8a] = state[0x8a] & 0x7f | 0x80;
                             objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                       param_8, iVar4,
-                                                       iVar5, 1, 0, param_13, param_14, param_15, param_16);
+                                                       param_8, obj,
+                                                       self, 1, 0, param_13, param_14, param_15, param_16);
                         }
-                        if (!bVar3)
+                        if (!ok)
                         {
-                            pbVar11[0x8a] = pbVar11[0x8a] & 0x7f;
+                            state[0x8a] = state[0x8a] & 0x7f;
                         }
                     }
                 }
-                else if ((sVar1 == 0x230) && (bVar3))
+                else if ((seqType == 0x230) && (ok))
                 {
-                    FUN_8019959c(iVar4, iVar6, param_11, param_12, param_13, param_14, param_15, param_16);
+                    FUN_8019959c(obj, target, param_11, param_12, param_13, param_14, param_15, param_16);
                 }
             }
             else
             {
-                objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4,
-                                           iVar5, 1, 0,
+                objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj,
+                                           self, 1, 0,
                                            param_13, param_14, param_15, param_16);
-                *pbVar11 = *pbVar11 & 0xfb;
-                *pbVar11 = *pbVar11 | 1;
+                *state = *state & 0xfb;
+                *state = *state | 1;
             }
         }
     }
