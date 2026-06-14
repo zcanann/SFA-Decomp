@@ -16,8 +16,6 @@ extern void modelLightStruct_setDirection(u8* p, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
 
 extern u8* lbl_803DD4C4;
-extern f32 lbl_803E162C;
-extern f32 lbl_803E1630;
 extern f32 lbl_803E1640;
 
 void lockIconInit(void)
@@ -38,7 +36,7 @@ void lockIconInit(void)
             modelLightStruct_setLightKind(lbl_803DD4C4, 4);
             modelLightStruct_setObjectLightMaskIndex(lbl_803DD4C4, 1);
             objSetEventName(lbl_803DD4C4, 1);
-            modelLightStruct_setDirection(lbl_803DD4C4, lbl_803E162C, lbl_803E1630, lbl_803E1640);
+            modelLightStruct_setDirection(lbl_803DD4C4, gCamcontrolNormalizedMax, gCamcontrolNormalizedMin, lbl_803E1640);
             modelLightStruct_setDiffuseColor(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);
         }
     }

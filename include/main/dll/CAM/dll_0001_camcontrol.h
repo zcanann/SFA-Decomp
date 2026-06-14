@@ -260,7 +260,19 @@ extern CamcontrolReticleObject *gCamcontrolTargetReticle;
 extern s8 gCamcontrolTargetChanged;
 extern s8 gCamcontrolTargetState;
 extern s16 gCamcontrolTargetHelpTextId;
+extern u16 gCamcontrolTargetClassMask;
 extern u16 gCamcontrolReticleSpin;
+extern f32 gCamcontrolNormalizedMax;
+extern f32 gCamcontrolNormalizedMin;
+extern f32 gCamcontrolTargetDistanceTier1;
+extern f32 gCamcontrolTargetDistanceTier2;
+extern f32 gCamcontrolTargetDistanceTier3;
+extern f32 gCamcontrolReticleFadeOutStep;
+extern f32 gCamcontrolReticleFadeInStep;
+extern f32 gCamcontrolReticleAlphaScale;
+extern f32 gCamcontrolReticleSpinStepPerFrame;
+extern f32 gCamcontrolMinTargetDistance;
+extern f32 gCamcontrolDefaultFovY;
 
 void camcontrol_updateTargetFeedback(void);
 void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,

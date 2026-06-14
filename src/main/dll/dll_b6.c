@@ -11,8 +11,6 @@ extern u8 voxmaps_traceLine(int *from, int *to, int *out, u8 *occOut, int e);
 extern f32 PSVECMag(void *vec);
 extern float sqrtf(float x);
 
-extern u16 lbl_803DB992;
-extern f32 lbl_803E1630;
 extern f32 lbl_803E1644;
 extern f32 lbl_803E1648;
 extern f32 lbl_803E1658;
@@ -81,7 +79,7 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
            || (!(obj->objectFlags & 0x800) && !(obj->anim.modelInstance->flags & 1))
            || (obj->anim.flags & OBJANIM_FLAG_HIDDEN)
            || (obj->objectFlags & 0x40)
-           || (lbl_803DB992 & ((ok = 1) << (data[obj->unkE4].flags & 0xf))) == 0) {
+           || (gCamcontrolTargetClassMask & ((ok = 1) << (data[obj->unkE4].flags & 0xf))) == 0) {
             ok = 0;
         }
         if (ok == 0) {
@@ -92,7 +90,7 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         }
         transform = &obj->anim.hitVolumeTransforms[obj->unkE4];
         if ((*(u8 *)&obj->anim.resetHitboxMode & 0x80) || (data[obj->unkE4].flags & 0x80)) {
-            dy = lbl_803E1630;
+            dy = gCamcontrolNormalizedMin;
         } else {
             dy = focus->worldPosY - transform->centerY;
         }
@@ -185,18 +183,18 @@ void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimCom
     cameraState->focusMoveHistory[2] = cameraState->focusMoveHistory[3];
     cameraState->focusMoveHistory[3] = cameraState->focusMoveHistory[4];
     mag = PSVECMag(&focus->velocityX);
-    if (mag > lbl_803E1630) {
+    if (mag > gCamcontrolNormalizedMin) {
         mag = sqrtf(mag);
     }
     cameraState->focusMoveHistory[4] = mag;
-    cameraState->focusMoveAverage = lbl_803E1630;
+    cameraState->focusMoveAverage = gCamcontrolNormalizedMin;
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[0];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[1];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[2];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[3];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[4];
     cameraState->focusMoveAverage *= lbl_803E1658;
-    if (cameraState->focusMoveAverage < lbl_803E1630) {
+    if (cameraState->focusMoveAverage < gCamcontrolNormalizedMin) {
         cameraState->focusMoveAverage = -cameraState->focusMoveAverage;
     }
 }

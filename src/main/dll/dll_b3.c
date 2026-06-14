@@ -11,12 +11,6 @@ extern void gxSetPeControl_ZCompLoc_(u32 ctrl);
 extern void GXSetAlphaCompare(int compA, int refA, int op, int compB, int refB);
 extern void GXSetCullMode(int mode);
 
-extern u8* pCamera;
-extern f32 lbl_803E1630;
-extern f32 lbl_803E1634;
-extern f32 lbl_803E1638;
-extern f32 lbl_803E163C;
-
 int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
 {
     u8* renderOp;
@@ -27,19 +21,19 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
 
     renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
     dist = *(f32*)(pCamera + 0x134);
-    if (dist <= lbl_803E1630)
+    if (dist <= gCamcontrolNormalizedMin)
     {
         tier = 4;
     }
-    else if (dist <= lbl_803E1634)
+    else if (dist <= gCamcontrolTargetDistanceTier1)
     {
         tier = 3;
     }
-    else if (dist <= lbl_803E1638)
+    else if (dist <= gCamcontrolTargetDistanceTier2)
     {
         tier = 2;
     }
-    else if (dist <= lbl_803E163C)
+    else if (dist <= gCamcontrolTargetDistanceTier3)
     {
         tier = 1;
     }

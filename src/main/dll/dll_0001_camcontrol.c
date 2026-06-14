@@ -28,18 +28,6 @@ extern f32 gCamcontrolSavedFocusWorldX;
 extern f32 gCamcontrolSavedFocusLocalZ;
 extern f32 gCamcontrolSavedFocusLocalY;
 extern f32 gCamcontrolSavedFocusLocalX;
-extern f32 lbl_803E162C;
-extern f32 lbl_803E1630;
-extern f32 lbl_803E1634;
-extern f32 lbl_803E1638;
-extern f32 lbl_803E163C;
-extern f32 lbl_803E1670;
-extern f32 lbl_803E1674;
-extern f32 lbl_803E1678;
-extern f32 lbl_803E167C;
-extern f32 lbl_803E1680;
-extern f32 lbl_803E1684;
-extern u16 lbl_803DB992;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
 
@@ -84,18 +72,18 @@ void camcontrol_updateTargetFeedback(void)
         if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON)
         {
             Sfx_PlayFromObject(0, 0x3ff);
-            objShowButtonGlow(reticle, lbl_803E162C, 2);
+            objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 2);
         }
         else if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
             (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B))
         {
             Sfx_PlayFromObject(0, 0x402);
-            objShowButtonGlow(reticle, lbl_803E162C, 3);
+            objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 3);
         }
         else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED)
         {
             Sfx_PlayFromObject(0, SFXsc_spotfox01);
-            objShowButtonGlow(reticle, lbl_803E162C, 1);
+            objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 1);
         }
     }
     if (target != NULL)
@@ -127,7 +115,7 @@ void camcontrol_updateTargetFeedback(void)
     }
     if (gCamcontrolTargetState == '\0')
     {
-        if (lbl_803E1630 >= reticle->currentMoveProgress)
+        if (gCamcontrolNormalizedMin >= reticle->currentMoveProgress)
         {
             if (target != NULL)
             {
@@ -143,14 +131,14 @@ void camcontrol_updateTargetFeedback(void)
         }
         else
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)reticle, lbl_803E1670, timeDelta,
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)reticle, gCamcontrolReticleFadeOutStep, timeDelta,
                                                                         (ObjAnimEventList*)0x0);
         }
     }
     else if (((uint)CAMCONTROL_CAMERA->targetReticleFocus == (uint)target) ||
-        (reticle->currentMoveProgress < lbl_803E162C))
+        (reticle->currentMoveProgress < gCamcontrolNormalizedMax))
     {
-        ObjAnim_AdvanceCurrentMove(lbl_803E1674, timeDelta, (int)reticle,
+        ObjAnim_AdvanceCurrentMove(gCamcontrolReticleFadeInStep, timeDelta, (int)reticle,
                                    (ObjAnimEventList*)0x0);
     }
     else
@@ -175,7 +163,7 @@ void camcontrol_updateTargetFeedback(void)
         }
         else
         {
-            ObjAnim_SetMoveProgress(lbl_803E1630, reticle);
+            ObjAnim_SetMoveProgress(gCamcontrolNormalizedMin, reticle);
         }
     }
     result = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);
@@ -234,13 +222,13 @@ void camcontrol_updateTargetFeedback(void)
         targetDistance = fn_80183204((int)target);
         break;
     case 0x31:
-        targetDistance = lbl_803E162C;
+        targetDistance = gCamcontrolNormalizedMax;
         break;
     default:
         result = dll_19_func1B((int)target);
         if (result == 0)
         {
-            targetDistance = lbl_803E162C;
+            targetDistance = gCamcontrolNormalizedMax;
         }
         else
         {
@@ -249,42 +237,42 @@ void camcontrol_updateTargetFeedback(void)
         }
         break;
     }
-    if (targetDistance <= lbl_803E1630 && CAMCONTROL_CAMERA->targetDistance > lbl_803E1630)
+    if (targetDistance <= gCamcontrolNormalizedMin && CAMCONTROL_CAMERA->targetDistance > gCamcontrolNormalizedMin)
     {
-        objShowButtonGlow(reticle, lbl_803E162C, 4);
+        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
     }
-    else if (targetDistance <= lbl_803E1634 && CAMCONTROL_CAMERA->targetDistance > lbl_803E1634)
+    else if (targetDistance <= gCamcontrolTargetDistanceTier1 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier1)
     {
-        objShowButtonGlow(reticle, lbl_803E162C, 4);
+        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
     }
-    else if (targetDistance <= lbl_803E1638 && CAMCONTROL_CAMERA->targetDistance > lbl_803E1638)
+    else if (targetDistance <= gCamcontrolTargetDistanceTier2 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier2)
     {
-        objShowButtonGlow(reticle, lbl_803E162C, 4);
+        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
     }
-    else if (targetDistance <= lbl_803E163C && CAMCONTROL_CAMERA->targetDistance > lbl_803E163C)
+    else if (targetDistance <= gCamcontrolTargetDistanceTier3 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier3)
     {
-        objShowButtonGlow(reticle, lbl_803E162C, 4);
+        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
     }
     CAMCONTROL_CAMERA->targetDistance = targetDistance;
 LAB_80102ab4:
-    fVar4 = lbl_803E1678 * reticle->currentMoveProgress;
-    if (fVar4 < lbl_803E1630)
+    fVar4 = gCamcontrolReticleAlphaScale * reticle->currentMoveProgress;
+    if (fVar4 < gCamcontrolNormalizedMin)
     {
-        fVar4 = lbl_803E1630;
+        fVar4 = gCamcontrolNormalizedMin;
     }
-    else if (lbl_803E1678 < fVar4)
+    else if (gCamcontrolReticleAlphaScale < fVar4)
     {
-        fVar4 = lbl_803E1678;
+        fVar4 = gCamcontrolReticleAlphaScale;
     }
     reticle->alpha = (int)fVar4;
     gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
-    reticle->rotX = (short)(int)(lbl_803E167C * timeDelta + (float)reticle->rotX);
+    reticle->rotX = (short)(int)(gCamcontrolReticleSpinStepPerFrame * timeDelta + (float)reticle->rotX);
     return;
 }
 
 int Camera_isZooming(void)
 {
-    return CAMCONTROL_CAMERA->blendProgress > lbl_803E1630;
+    return CAMCONTROL_CAMERA->blendProgress > gCamcontrolNormalizedMin;
 }
 
 void Camera_setTargetReticleOverride(int target)
@@ -331,13 +319,13 @@ void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, float* outX
     if (outDistanceXZ != (float*)0x0)
     {
         *outDistanceXZ = *outX * *outX + *outZ * *outZ;
-        if (*outDistanceXZ > lbl_803E1630)
+        if (*outDistanceXZ > gCamcontrolNormalizedMin)
         {
             *outDistanceXZ = sqrtf(*outDistanceXZ);
         }
-        if (*outDistanceXZ < lbl_803E1680)
+        if (*outDistanceXZ < gCamcontrolMinTargetDistance)
         {
-            *outDistanceXZ = *(f32*)&lbl_803E1680;
+            *outDistanceXZ = *(f32*)&gCamcontrolMinTargetDistance;
         }
     }
     return;
@@ -354,7 +342,7 @@ void camcontrol_initialise(float* dst, f32 numerator, f32 denominator, f32 minVa
     }
     dst[0] = x;
     dst[1] = y;
-    dst[2] = lbl_803E1630;
+    dst[2] = gCamcontrolNormalizedMin;
     dst[3] = z;
 }
 
@@ -768,7 +756,7 @@ void Camera_init(void* focus, f32 x, f32 y, f32 z)
     CAMCONTROL_CAMERA->prevWorldY = y;
     CAMCONTROL_CAMERA->prevWorldZ = z;
     CAMCONTROL_CAMERA->focusObj = focus;
-    CAMCONTROL_CAMERA->fovY = lbl_803E1684;
+    CAMCONTROL_CAMERA->fovY = gCamcontrolDefaultFovY;
     gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
 }
 
@@ -788,5 +776,5 @@ void Camera_initialise(void)
     gCamcontrolQueuedActionId = -1;
     lbl_803DD4CC = 0;
     lbl_803DD4CB = -1;
-    lbl_803DB992 = 0xffff;
+    gCamcontrolTargetClassMask = 0xffff;
 }

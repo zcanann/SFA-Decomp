@@ -22,8 +22,6 @@ extern char sDllBBTimeDebugFormat[];
 extern f64 lbl_803E1650;
 extern f32 timeDelta;
 extern f32 lbl_803DD4D0;
-extern f32 lbl_803E162C;
-extern f32 lbl_803E1630;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
@@ -58,11 +56,11 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
   if ((camera->smoothingFlags & 0x80) != 0) {
     PSVECSubtract(&camera->localX,&view->x,delta);
     fVar5 = PSVECMag(delta);
-    if (fVar5 > lbl_803E1630) {
+    if (fVar5 > gCamcontrolNormalizedMin) {
       PSVECNormalize(delta,delta);
     }
     fVar6 = interpolate(fVar5,lbl_803E1668,timeDelta);
-    fVar5 = (fVar6 < lbl_803E1630) ? lbl_803E1630 : ((fVar6 > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : fVar6);
+    fVar5 = (fVar6 < gCamcontrolNormalizedMin) ? gCamcontrolNormalizedMin : ((fVar6 > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : fVar6);
     view->x = fVar5 * delta[0] + view->x;
     view->y = fVar5 * delta[1] + view->y;
     view->z = fVar5 * delta[2] + view->z;
@@ -72,24 +70,24 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
     view->y = camera->localY;
     view->z = camera->localZ;
   }
-  fVar2 = lbl_803E1630;
+  fVar2 = gCamcontrolNormalizedMin;
   lbl_803DD4D0 = camera->fovY;
-  if (lbl_803E1630 < camera->blendProgress) {
+  if (gCamcontrolNormalizedMin < camera->blendProgress) {
     camera->blendProgress = -(camera->blendStep * timeDelta - camera->blendProgress);
     fVar1 = camera->blendProgress;
-    fVar2 = (fVar1 < fVar2) ? fVar2 : ((fVar1 > lbl_803E162C) ? lbl_803E162C : fVar1);
+    fVar2 = (fVar1 < fVar2) ? fVar2 : ((fVar1 > gCamcontrolNormalizedMax) ? gCamcontrolNormalizedMax : fVar1);
     camera->blendProgress = fVar2;
     if (camera->blendCurveMode == 2) {
       fVar2 = camera->blendProgress;
-      fVar5 = lbl_803E162C - fVar2 * fVar2 * fVar2;
+      fVar5 = gCamcontrolNormalizedMax - fVar2 * fVar2 * fVar2;
     }
     else if (camera->blendCurveMode == 1) {
-      fVar5 = lbl_803E162C - camera->blendProgress * camera->blendProgress;
+      fVar5 = gCamcontrolNormalizedMax - camera->blendProgress * camera->blendProgress;
     }
     else {
-      fVar5 = lbl_803E162C - camera->blendProgress;
+      fVar5 = gCamcontrolNormalizedMax - camera->blendProgress;
     }
-    fVar6 = (fVar5 < lbl_803E1630) ? lbl_803E1630 : ((fVar5 > lbl_803E162C) ? lbl_803E162C : fVar5);
+    fVar6 = (fVar5 < gCamcontrolNormalizedMin) ? gCamcontrolNormalizedMin : ((fVar5 > gCamcontrolNormalizedMax) ? gCamcontrolNormalizedMax : fVar5);
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_X) != 0) {
       view->x = fVar6 * (view->x - camera->blendStartX) + camera->blendStartX;
     }
@@ -175,20 +173,20 @@ void camcontrol_applyQueuedAction(void)
   if (gCamcontrolQueuedActionPending != '\0') {
     camera = CAMCONTROL_CAMERA;
     if (gCamcontrolQueuedActionBlendFrames > 1) {
-      blendStep = lbl_803E162C / (float)gCamcontrolQueuedActionBlendFrames;
-      if ((blendStep <= lbl_803E1630) || (blendStep > lbl_803E162C)) {
-        blendStep = lbl_803E162C;
+      blendStep = gCamcontrolNormalizedMax / (float)gCamcontrolQueuedActionBlendFrames;
+      if ((blendStep <= gCamcontrolNormalizedMin) || (blendStep > gCamcontrolNormalizedMax)) {
+        blendStep = gCamcontrolNormalizedMax;
       }
-      camera->blendProgress = lbl_803E162C;
+      camera->blendProgress = gCamcontrolNormalizedMax;
       camera->blendStep = blendStep;
       camera->queuedBlendFlags = gCamcontrolQueuedActionMode;
     }
     else {
-      camera->blendProgress = lbl_803E1630;
+      camera->blendProgress = gCamcontrolNormalizedMin;
       camera->queuedBlendFlags = 0;
     }
     view = Camera_GetCurrentViewSlot();
-    if (lbl_803E162C == camera->blendProgress) {
+    if (gCamcontrolNormalizedMax == camera->blendProgress) {
       camera->blendStartX = view->x;
       camera->blendStartY = view->y;
       camera->blendStartZ = view->z;

@@ -3,7 +3,6 @@
 
 extern CameraViewSlot* Camera_GetCurrentViewSlot(void);
 extern float Camera_GetFovY(void);
-extern f32 lbl_803E162C;
 
 void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)
 {
@@ -12,7 +11,7 @@ void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)
     float fov_const;
 
     Camera_GetCurrentViewSlot();
-    fov_const = lbl_803E162C;
+    fov_const = gCamcontrolNormalizedMax;
     CAMCONTROL_CAMERA->blendProgress = fov_const;
     CAMCONTROL_CAMERA->blendStep = fov_const / (float)blendFrames;
     CAMCONTROL_CAMERA->queuedBlendFlags = blendFlags;

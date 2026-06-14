@@ -4,7 +4,6 @@
 #include "main/object_transform.h"
 
 extern f32 lbl_803E1628;
-extern f32 lbl_803E162C;
 
 extern void objRenderFn_8003b8f4(u8 *reticle, undefined4 a, undefined4 b, undefined4 c,
                         undefined4 d, f32 f);
@@ -91,7 +90,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
     *(s16 *)(reticle + 0x4) = 0;
     *(f32 *)(reticle + 0x8) = lbl_803E1628;
     reticle[0x37] = ((GameObject *)reticle)->anim.alpha;
-    objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, lbl_803E162C);
+    objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, gCamcontrolNormalizedMax);
   } else {
     *(u32 *)(reticle + 0x30) = 0;
   }
