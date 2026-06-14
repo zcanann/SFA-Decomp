@@ -1,8 +1,7 @@
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
-
-extern undefined4 ObjGroup_AddObject();
+#include "main/objlib.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
@@ -20,7 +19,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/objseq.h"
 
 extern undefined8 FUN_80017698();
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
@@ -134,7 +132,7 @@ int attractor_setScale(int* obj)
 
 void attractor_init(s16* obj, void* data)
 {
-    ObjGroup_AddObject(obj, 0x1e);
+    ObjGroup_AddObject((u32)obj, 0x1e);
     {
         s8 v = *((s8*)data + 0x18);
         s16 t = v << 8;
