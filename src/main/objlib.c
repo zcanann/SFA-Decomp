@@ -1060,7 +1060,7 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     {
         if (*entry != 0)
         {
-            distanceSq = PSVECSquareDistance(point, (float*)(*entry + 0x18));
+            distanceSq = PSVECSquareDistance(point, &((GameObject*)*entry)->anim.worldPosX);
             if (distanceSq < bestDistanceSq)
             {
                 bestDistanceSq = distanceSq;
@@ -1106,7 +1106,8 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
     {
         if (*entry != obj)
         {
-            distanceSq = vec3f_distanceSquared((float*)(obj + 0x18), (float*)(*entry + 0x18));
+            distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
+                                                &((GameObject*)*entry)->anim.worldPosX);
             if (distanceSq < bestDistanceSq)
             {
                 bestDistanceSq = distanceSq;
@@ -1152,7 +1153,8 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     {
         if (*entry != obj)
         {
-            distanceSq = vec3f_distanceSquared((float*)(obj + 0x18), (float*)(*entry + 0x18));
+            distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
+                                                &((GameObject*)*entry)->anim.worldPosX);
             if (distanceSq < bestDistanceSq)
             {
                 bestDistanceSq = distanceSq;
@@ -1394,7 +1396,8 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
         if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
             ((((GameObject*)obj)->anim.seqId == (short)targetId ||
                 ((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0))) &&
-            ((Vec_distance((float*)((byte*)sender + 0x18), (float*)((byte*)obj + 0x18)) < radius &&
+            ((Vec_distance(&((GameObject*)sender)->anim.worldPosX,
+                           &((GameObject*)obj)->anim.worldPosX) < radius &&
                     (obj != (void*)0x0)) &&
                 (queue = *(ObjMsgQueue**)((byte*)obj + OBJMSG_QUEUE_OFFSET),
                     queue != (ObjMsgQueue*)0x0)))
