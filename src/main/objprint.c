@@ -67,9 +67,9 @@ void objAnimFn_80038f38(int obj, char* p2)
     extern f32 lbl_803DE99C;
     extern f32 lbl_803DB464;
     extern u8 framesThisStep;
-    int t;
     s16* found;
     void* m;
+    int t;
 
     t = (s32) * (f32*)(p2 + 0xc);
     found = NULL;
