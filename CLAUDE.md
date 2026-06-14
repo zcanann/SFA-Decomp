@@ -384,6 +384,13 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
 127. **`extern const f32 lbl_X;` = a store-aliasing exemption** — cross-statement load CSE without
     naming a local (a named local CSEs too but flips the FP pair). A/B per unit (check writers
     first); can CSE-overshoot a sibling fn (fix per-site with the #81 launder, don't revert const).
+128. **Stack-address pointer that must be SAVED-reg + materialized LATE at first use:** `#pragma
+    opt_propagation off` round the fn (stops the rematerialization that a block-scoped `&local` def
+    normally suffers — keeps it a real saved-reg var) AND embed the assignment in the consuming call
+    arg: `f(.., (pp = &s.x), &s.y, ..)`. Pins the `addi` to that arg's emission slot. Offset-0
+    member addresses are special-cased as cheap-remat (volatile) otherwise; #84/#90 "embedded-assign
+    explodes" does NOT apply when the assigned value is reused by a LATER identical call, not a later
+    arg of the same call. (dimbosstonsil_render 97.5→100.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
