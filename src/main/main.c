@@ -454,8 +454,7 @@ void vfpspellplace_update(int obj)
     u8 mode;
 
     spellPlace = (LaserObject*)obj;
-    state = spellPlace->state;
-    if (state->completionLatched == 0 && GameBit_Get((int)state->activationGameBit) != 0)
+    if (spellPlace->state->completionLatched == 0 && GameBit_Get((int)spellPlace->state->activationGameBit) != 0)
     {
         spellPlace->statusFlags &= ~LASER_OBJECT_STATUS_DISABLED;
     }
@@ -470,6 +469,7 @@ void vfpspellplace_update(int obj)
         switch (mode)
         {
         case LASEROBJ_MODE_SEQUENCE_A:
+            state = spellPlace->state;
             if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT) != 0)
             {
                 GameBit_Set(state->completionGameBit, 1);
@@ -479,6 +479,7 @@ void vfpspellplace_update(int obj)
             }
             break;
         case LASEROBJ_MODE_SEQUENCE_B:
+            state = spellPlace->state;
             if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT) != 0)
             {
                 GameBit_Set(state->completionGameBit, 1);
