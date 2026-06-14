@@ -340,6 +340,10 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     K(rT)` (base first); `base + (idx + K)` = idx first; flat `base+idx+K` = `addi idx,K; lbzx`
     (fold-onto-index). Named `p` needs MULTI-use (single-use re-folds); symbol-array bases resist
     aliases (direct `tbl[i*4+K]`). Wide deref re-folds to lwzx — `(u8*)` launder the grouped base.
+    **Field-load `(T*)(base+idx)->field` (field at const K) → `add base,idx; lbz K` via grouping the
+    FIELD CONSTANT onto base: `u8 *p = base + K; flags = p[idx];`** — single-use `p` is fine here (the
+    constant grouping pins it; only `p = base+idx` single-use re-folds to lbzx). Both `(T*)(base+idx)
+    ->field` and `p=base+idx; p[K]` re-fold to lbzx. (DIMSnowHorn1_update 99.5→99.84.)
 113. **The SPECULATIVE unroller (`srwi ,1; mtctr; ... andi. ,1`) is pragma-controllable:**
     `#pragma ppc_unroll_speculative on|off`, `ppc_unroll_factor_limit N`,
     `ppc_unroll_instructions_limit N`, `opt_unroll_count N`. `reset` is a SYNTAX ERROR for these —
