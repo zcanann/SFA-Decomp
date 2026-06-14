@@ -1,5 +1,6 @@
 #include "main/dll/weaponE6.h"
 #include "main/audio/sfx.h"
+#include "main/frustum.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
@@ -39,7 +40,6 @@ extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern int ViewFrustum_IsSphereVisible(int posPtr, float radius);
 extern void Obj_FreeObject(int obj);
 
 extern char sInWaterMessage[];
@@ -402,7 +402,7 @@ void fn_8013F100(int obj, register int state)
         break;
     }
     if (((((TrickyState*)state)->stateFlags & 0x10000) != 0) &&
-        ViewFrustum_IsSphereVisible(obj + 0xc, lbl_803E2500) == 0)
+        ViewFrustum_IsSphereVisible((float*)(obj + 0xc), lbl_803E2500) == 0)
     {
         Obj_FreeObject(*(int*)&((TrickyState*)state)->followObj);
     }

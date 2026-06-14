@@ -1,4 +1,5 @@
 #include "main/dll/SH/dll_1E7.h"
+#include "main/frustum.h"
 
 extern void Sfx_PlayFromObject(uint objectId, u16 volumeId);
 extern f32 getXZDistance(Vec * a, Vec * b);
@@ -7,7 +8,6 @@ extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern int randomGetRange(int min, int max);
 extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
-extern int ViewFrustum_IsSphereVisible(Vec* pos, f32 radius);
 extern void fn_8014C66C(SHthorntailObject * obj, SHthorntailObject * other);
 extern void OSReport(const char* msg, ...);
 
@@ -193,7 +193,8 @@ uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* 
                 return SHTHORNTAIL_STATE_CLOSE_ATTACK;
             }
         }
-        value = ViewFrustum_IsSphereVisible(&object->modelPos, object->cullRadius * object->modelScale);
+        value = ViewFrustum_IsSphereVisible((float*)&object->modelPos,
+                                            object->cullRadius * object->modelScale);
         if (value == 0)
         {
             nextState = SHTHORNTAIL_STATE_CLOSE_ATTACK;

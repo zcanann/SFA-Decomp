@@ -1,5 +1,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/obj_placement.h"
+#include "main/frustum.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
@@ -42,7 +43,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 extern f32 lbl_803E3AF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B40;

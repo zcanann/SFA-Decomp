@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/dll/dusterstate_types.h"
+#include "main/frustum.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
@@ -17,7 +18,6 @@ extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int param_2);
 extern int getPatchGroup(f32* pos, int patchGroup);
 
 extern f32 lbl_803E38A0;
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 
 void MagicPlant_update(int obj);
 

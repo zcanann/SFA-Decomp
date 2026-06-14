@@ -8,6 +8,7 @@
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
 #include "main/obj_placement.h"
+#include "main/frustum.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
@@ -63,7 +64,6 @@ extern f32 Vec_distance(void* a, void* b);
 extern void playerAddMoney(int player, u8 b);
 extern int objHitboxFn_801843c0(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, void* p5, int obj, int p7, int p8, int p9, int p10);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
 extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);

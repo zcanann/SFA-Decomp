@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/frustum.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -106,7 +107,6 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
 extern int objModelGetVecFn_800395d8(int obj, int param_2);
 extern void freeAndNull(void* param_1);
 extern void trickyVoxAllocFn_8004b5d4(void* param_1);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int param_6, int param_7);
 extern void objAudioFn_8006edcc(f32 param_1, f32 param_2, int obj, u16 param_4, int param_5, float* points, void* aux);
