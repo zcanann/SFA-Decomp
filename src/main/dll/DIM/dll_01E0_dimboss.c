@@ -1,5 +1,6 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/objseq.h"
 #include "main/resource.h"
 
 extern void Music_Trigger(s32 triggerId, s32 mode);
@@ -81,7 +82,6 @@ extern undefined4 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
 extern void (*gDIMbossHitDetectAnimTable[])(void);
 extern int gPlayerInterface;
-extern undefined4* gObjectTriggerInterface;
 extern undefined4* gBaddieControlInterface;
 extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
