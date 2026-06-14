@@ -173,6 +173,51 @@ typedef struct {
     u8 pad : 4;
 } PushBlockFlags;
 
+typedef struct WCLevelContInterface WCLevelContInterface;
+
+typedef struct WCLevelContInterface {
+    u8 pad00[0x20];
+    void (*tileAToWorldPos)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ,
+                            WCLevelContInterface *iface);
+    void (*worldPosToTileA)(int obj, s16 *outTileX, s16 *outTileY, f32 x, f32 z,
+                            WCLevelContInterface *iface);
+    void (*setTileA)(int value, int tileX, int tileY, WCLevelContInterface *iface);
+    int (*getTileA)(int tileX, int tileY, WCLevelContInterface *iface);
+    void (*getInitialTileXYA)(int value, s16 *outTileX, s16 *outTileY,
+                              WCLevelContInterface *iface);
+    void (*getSolvedTileXYA)(int value, s16 *outTileX, s16 *outTileY,
+                             WCLevelContInterface *iface);
+    int (*traceMoveA)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
+                      int dy, WCLevelContInterface *iface);
+    void (*tileBToWorldPos)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ,
+                            WCLevelContInterface *iface);
+    void (*worldPosToTileB)(int obj, s16 *outTileX, s16 *outTileY, f32 x, f32 z,
+                            WCLevelContInterface *iface);
+    void (*setTileB)(int value, int tileX, int tileY, WCLevelContInterface *iface);
+    int (*getTileB)(int tileX, int tileY, WCLevelContInterface *iface);
+    void (*getInitialTileXYB)(int value, s16 *outTileX, s16 *outTileY,
+                              WCLevelContInterface *iface);
+    void (*getSolvedTileXYB)(int value, s16 *outTileX, s16 *outTileY,
+                             WCLevelContInterface *iface);
+    int (*traceMoveB)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
+                      int dy, WCLevelContInterface *iface);
+} WCLevelContInterface;
+
+STATIC_ASSERT(offsetof(WCLevelContInterface, tileAToWorldPos) == 0x20);
+STATIC_ASSERT(offsetof(WCLevelContInterface, worldPosToTileA) == 0x24);
+STATIC_ASSERT(offsetof(WCLevelContInterface, setTileA) == 0x28);
+STATIC_ASSERT(offsetof(WCLevelContInterface, getTileA) == 0x2C);
+STATIC_ASSERT(offsetof(WCLevelContInterface, getInitialTileXYA) == 0x30);
+STATIC_ASSERT(offsetof(WCLevelContInterface, getSolvedTileXYA) == 0x34);
+STATIC_ASSERT(offsetof(WCLevelContInterface, traceMoveA) == 0x38);
+STATIC_ASSERT(offsetof(WCLevelContInterface, tileBToWorldPos) == 0x3C);
+STATIC_ASSERT(offsetof(WCLevelContInterface, worldPosToTileB) == 0x40);
+STATIC_ASSERT(offsetof(WCLevelContInterface, setTileB) == 0x44);
+STATIC_ASSERT(offsetof(WCLevelContInterface, getTileB) == 0x48);
+STATIC_ASSERT(offsetof(WCLevelContInterface, getInitialTileXYB) == 0x4C);
+STATIC_ASSERT(offsetof(WCLevelContInterface, getSolvedTileXYB) == 0x50);
+STATIC_ASSERT(offsetof(WCLevelContInterface, traceMoveB) == 0x54);
+
 extern u8 fn_80296414(int player, int obj, int dir);
 extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 extern int Obj_GetPlayerObject(void);
