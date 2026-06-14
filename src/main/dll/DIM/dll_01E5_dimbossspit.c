@@ -2,6 +2,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/DF/rope.h"
@@ -10,7 +11,7 @@
 typedef struct DIMbossspitUpdateBurstState
 {
     u8 pad0[0x4 - 0x0];
-    s32 light;
+    ModelLightStruct* light;
     u8 pad8[0x3DC - 0x8];
     s32 unk3DC;
     u8 pad3E0[0x400 - 0x3E0];
@@ -23,7 +24,7 @@ typedef struct DIMbossspitState
 {
     s16 unk0;
     s16 unk2;
-    s32 light;
+    ModelLightStruct* light;
     u8 pad8[0x3DC - 0x8];
     s32 unk3DC;
     u8 pad3E0[0x400 - 0x3E0];
@@ -39,7 +40,6 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
 extern void objRenderFn_8003b8f4(f32 scale);
-extern void queueGlowRender(void* light);
 
 extern f32 lbl_803E4D44;
 
@@ -49,7 +49,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern void doRumble(f32 v);
-extern void modelLightStruct_setEnabled(int light, int v, f32 f);
 extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D3C;
 extern f32 lbl_803E4D40;
@@ -61,16 +60,10 @@ extern f32 lbl_803E4D64;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
 
-extern void* objCreateLight(int obj, int n);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
+extern ModelLightStruct* objCreateLight(int obj, int n);
+extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 a, f32 b);
 
-extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
-extern void lightSetField4D(int light, int v);
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
+extern void lightSetField4D(ModelLightStruct* light, u8 v);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* cb);
 extern void postRenderSetAlphaBlendState(void);
@@ -173,15 +166,15 @@ void DIMbossspit_free(int param_1)
 
 void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-    u8* light;
+    ModelLightStruct* light;
 
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, param_2, param_3, param_4, param_5,
                                                                       lbl_803E4D44);
-        light = *(u8**)&((DIMbossspitState*)light)->light;
-        if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
+        light = ((DIMbossspitState*)light)->light;
+        if (((light != 0) && (light->glowType != 0)) && (light->enabled != 0))
         {
             queueGlowRender(light);
         }
@@ -194,7 +187,7 @@ void DIMbossspit_update(int obj)
     int state;
     int i;
     s16 v;
-    u8* p;
+    ModelLightStruct* p;
 
     state = *(int*)&((GameObject*)obj)->extra;
     if (*(s16*)state == 0)
@@ -237,14 +230,14 @@ void DIMbossspit_update(int obj)
     {
         DIMbossspit_updateBurst(obj);
     }
-    p = *(u8**)&((DIMbossspitState*)state)->light;
-    if (p != NULL && p[0x2f8] != 0 && p[0x4c] != 0)
+    p = ((DIMbossspitState*)state)->light;
+    if (p != NULL && p->glowType != 0 && p->enabled != 0)
     {
-        v = (s16)(p[0x2f9] + *(s8*)(p + 0x2fa));
+        v = (s16)(p->glowAlpha + p->glowAlphaStep);
         if (v < 0)
         {
             v = 0;
-            p[0x2fa] = 0;
+            p->glowAlphaStep = 0;
         }
         else if (v > 0xc)
         {
@@ -252,10 +245,10 @@ void DIMbossspit_update(int obj)
             if (v > 0xff)
             {
                 v = 0xff;
-                (*(u8**)&((DIMbossspitState*)state)->light)[0x2fa] = 0;
+                ((DIMbossspitState*)state)->light->glowAlphaStep = 0;
             }
         }
-        (*(u8**)&((DIMbossspitState*)state)->light)[0x2f9] = (u8)v;
+        ((DIMbossspitState*)state)->light->glowAlpha = (u8)v;
     }
     return;
 }
