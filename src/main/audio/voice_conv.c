@@ -143,16 +143,6 @@ void voiceInitRegistrationTables(void)
  */
 int voiceScaleSampleRate(u16 x)
 {
-    union
-    {
-        struct
-        {
-            u32 hi, lo;
-        } w;
-
-        f64 d;
-    } conv;
-
     return (int)(lbl_803E7818 * (f32)(u32)x);
 }
 
