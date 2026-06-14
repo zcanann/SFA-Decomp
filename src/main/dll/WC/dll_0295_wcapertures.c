@@ -154,8 +154,8 @@ void wcapertures_initialise(void)
 
 int wcapertures_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    WCAperturesState* state = ((GameObject*)obj)->extra;
     int i;
+    WCAperturesState* state = ((GameObject*)obj)->extra;
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
