@@ -10,11 +10,9 @@
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
 #include "main/dll/anim_internal.h"
+#include "main/gamebits.h"
 #include "main/main.h"
 #include "main/objlib.h"
-
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -638,102 +636,102 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 void dfpseqpoint_update(int obj)
 {
     extern int Obj_GetPlayerObject(void);
-    extern uint GameBit_Get(int);
-    extern void GameBit_Set(int, int);
-    extern f32 Vec_distance(int, int);
-    int player;
-    int blob;
+    extern f32 Vec_distance(f32* a, f32* b);
+    GameObject* self;
+    GameObject* player;
+    DfpSeqPointState* state;
     int h;
 
-    player = Obj_GetPlayerObject();
-    blob = *(int*)&((GameObject*)obj)->extra;
-    if (((u32)((DfpSeqPointState*)blob)->flags0F >> 7 & 1) != 0)
+    self = (GameObject*)obj;
+    player = (GameObject*)Obj_GetPlayerObject();
+    state = self->extra;
+    if (((u32)state->flags0F >> 7 & 1) != 0)
     {
         GameBit_Set(0xef7, 1);
-        ((DfpFlags7*)&((DfpSeqPointState*)blob)->flags0F)->b80 = 0;
+        ((DfpFlags7*)&state->flags0F)->b80 = 0;
     }
-    h = ((DfpSeqPointState*)blob)->gameBitDone;
+    h = state->gameBitDone;
     if (h != -1)
     {
-        if (((DfpSeqPointState*)blob)->doneLatch != 0)
+        if (state->doneLatch != 0)
         {
             if (GameBit_Get(h) != 0)
             {
                 return;
             }
-            GameBit_Set(((DfpSeqPointState*)blob)->gameBitDone, 1);
-            ((DfpSeqPointState*)blob)->doneLatch = 1;
+            GameBit_Set(state->gameBitDone, 1);
+            state->doneLatch = 1;
             return;
         }
         if (GameBit_Get(h) != 0)
         {
-            ((DfpSeqPointState*)blob)->doneLatch = 1;
+            state->doneLatch = 1;
             return;
         }
     }
-    if (((DfpSeqPointState*)blob)->doneLatch != 0)
+    if (state->doneLatch != 0)
     {
         return;
     }
-    switch (((DfpSeqPointState*)blob)->triggerMode)
+    switch (state->triggerMode)
     {
     case 0:
-        if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState*)blob)->triggerRadius)
+        if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
-            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState*)blob)->triggerId,
+            (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
-            ((DfpSeqPointState*)blob)->doneLatch = 1;
+            state->doneLatch = 1;
         }
         break;
     case 1:
-        h = ((DfpSeqPointState*)blob)->gameBitGate;
+        h = state->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0)
         {
-            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState*)blob)->triggerId,
+            (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
-            ((DfpSeqPointState*)blob)->doneLatch = 1;
+            state->doneLatch = 1;
         }
         break;
     case 2:
-        if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState*)blob)->triggerRadius)
+        if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
-            h = ((DfpSeqPointState*)blob)->gameBitGate;
+            h = state->gameBitGate;
             if (h != -1 && GameBit_Get(h) != 0)
             {
-                (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState*)blob)->triggerId,
+                (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                         (void*)obj, -1);
-                ((DfpSeqPointState*)blob)->doneLatch = 1;
+                state->doneLatch = 1;
             }
         }
         break;
     case 3:
-        if (Vec_distance(obj + 0x18, player + 0x18) < ((DfpSeqPointState*)blob)->triggerRadius)
+        if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
-            h = ((DfpSeqPointState*)blob)->gameBitGate;
+            h = state->gameBitGate;
             if (h != -1 && GameBit_Get(h) == 0)
             {
-                (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState*)blob)->triggerId,
+                (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                         (void*)obj, -1);
-                GameBit_Set(((DfpSeqPointState*)blob)->gameBitGate, 1);
-                ((DfpSeqPointState*)blob)->doneLatch = 1;
+                GameBit_Set(state->gameBitGate, 1);
+                state->doneLatch = 1;
             }
         }
         break;
     case 4:
-        h = ((DfpSeqPointState*)blob)->gameBitGate;
+        h = state->gameBitGate;
         if (h != -1 && GameBit_Get(h) == 0)
         {
-            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState*)blob)->triggerId,
+            (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
-            GameBit_Set(((DfpSeqPointState*)blob)->gameBitGate, 1);
-            ((DfpSeqPointState*)blob)->doneLatch = 1;
+            GameBit_Set(state->gameBitGate, 1);
+            state->doneLatch = 1;
         }
         break;
     case 5:
-        h = ((DfpSeqPointState*)blob)->gameBitGate;
+        h = state->gameBitGate;
         if (h != -1 && GameBit_Get(h) != 0)
         {
-            (*gObjectTriggerInterface)->runSequence(((DfpSeqPointState*)blob)->triggerId,
+            (*gObjectTriggerInterface)->runSequence(state->triggerId,
                                                     (void*)obj, -1);
         }
         break;
