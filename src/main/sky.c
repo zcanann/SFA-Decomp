@@ -592,8 +592,7 @@ void fn_800897D4(int slot, f32* x, f32* y, f32* z)
     offset = slot * 0xa4;
     sky = lbl_803DD12C + offset;
     *x = ((SkyState*)sky)->lights[0].directionX;
-    sky = lbl_803DD12C;
-    sky += offset;
+    sky = lbl_803DD12C + offset;
     *y = ((SkyState*)sky)->lights[0].directionY;
     sky = lbl_803DD12C;
     sky += offset;
