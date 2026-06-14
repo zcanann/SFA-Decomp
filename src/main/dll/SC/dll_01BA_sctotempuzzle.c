@@ -296,7 +296,11 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
                 }
                 startB++;
             }
-            texture = objFindTexture((int)obj, 0, 0);
+            {
+                extern int* objFindTexture(ScTotemPuzzleObject* obj, int textureIndex,
+                                           int materialIndex);
+                texture = objFindTexture(obj, 0, 0);
+            }
             if (texture != NULL)
             {
                 *texture = 0;
@@ -318,8 +322,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
             Sfx_PlayFromObjectLimited((int)obj, SFXtr_jbike_whine2, 2);
             if ((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0)
             {
-                state->stepIndex--;
-                if (state->stepIndex < 0)
+                if (--state->stepIndex < 0)
                 {
                     state->angle += lbl_803E5624;
                     state->stepIndex = 7;
@@ -327,8 +330,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
             }
             else
             {
-                state->stepIndex++;
-                if (state->stepIndex > 7)
+                if (++state->stepIndex > 7)
                 {
                     state->angle -= lbl_803E5624;
                     state->stepIndex = 0;
@@ -341,13 +343,15 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         if (((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) &&
             (state->angle > (lbl_803E55F0 * (f32)(s32)(state->stepIndex + 1))))
         {
-            state->angle -= lbl_803E5628 * state->peerPhaseOffset * timeDelta;
+            f32 step = lbl_803E5628 * state->peerPhaseOffset;
+            state->angle -= step * timeDelta;
         }
         else if (state->angle < (lbl_803E55F0 * (f32)(s32)state->stepIndex
         )
         )
         {
-            state->angle += lbl_803E5628 * state->peerPhaseOffset * timeDelta;
+            f32 step = lbl_803E5628 * state->peerPhaseOffset;
+            state->angle += step * timeDelta;
         }
         else
         {

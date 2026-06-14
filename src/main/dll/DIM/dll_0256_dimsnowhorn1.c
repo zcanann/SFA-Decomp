@@ -659,6 +659,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     int near;
     DIMSnowHorn1State* inner;
     int phase;
+    int p2;
     int changed;
     int useNormal;
     f32 v;
@@ -740,7 +741,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     blend = ((GameObject*)obj)->anim.currentMoveProgress;
     moveId = ((GameObject*)obj)->anim.currentMove;
     phase = 0;
-    while (phase < 2 && (&lbl_803DC748)[phase] != moveId)
+    while ((&lbl_803DC748)[phase] != moveId && phase < 2)
     {
         phase++;
     }
@@ -754,7 +755,8 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     f2 = ((DIMSnowHorn1State*)state)->baddie.animSpeedC;
-    if (f2 < lbl_80335128[phase * 2])
+    p2 = phase * 2;
+    if (f2 < lbl_80335128[p2])
     {
         if (phase == 1)
         {
@@ -763,7 +765,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         phase--;
         changed = 1;
     }
-    else if (f2 >= lbl_80335128[phase * 2 + 1])
+    else if (f2 >= lbl_80335128[p2 + 1])
     {
         if (phase == 0)
         {
