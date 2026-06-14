@@ -2794,7 +2794,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
     int ok;
     int* p;
 
-    if ((destBuf == 0) && (lbl_8035F208[mapIndex] == 0))
+    if (((void*)destBuf == NULL) && ((void*)lbl_8035F208[mapIndex] == NULL))
     {
         sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
         fi = AtomicSList_Pop(lbl_803DCC8C);
@@ -2808,7 +2808,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
     }
     else
     {
-        if (lbl_8035F208[mapIndex] == 0)
+        if ((void*)lbl_8035F208[mapIndex] == NULL)
         {
             sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
             fi = AtomicSList_Pop(lbl_803DCC8C);
