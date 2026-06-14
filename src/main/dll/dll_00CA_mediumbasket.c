@@ -1282,21 +1282,24 @@ int mediumbasket_stateHandlerA0B(int obj, int state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control;
 
-    if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA == 0)
+    if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
+        {
+            ObjAnim_SetCurrentMove(obj, 2, lbl_803E2D14, 0);
+            ((GroundBaddieState*)state)->baddie.moveDone = 0;
+        }
+        sub->targetState = 2;
+        ((GroundBaddieState*)state)->baddie.unk34D = 1;
+        ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D34;
+    }
+    else
     {
         if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
         {
             sub->targetState = 3;
         }
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        ObjAnim_SetCurrentMove(obj, 2, lbl_803E2D14, 0);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
-        sub->targetState = 2;
-        ((GroundBaddieState*)state)->baddie.unk34D = 1;
-        ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D34;
     }
     control = *(int*)&sub->control;
     *(u8*)(control + 0x44) |= 4;
