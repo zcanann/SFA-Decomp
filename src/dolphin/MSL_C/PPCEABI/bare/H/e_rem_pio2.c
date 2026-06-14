@@ -290,7 +290,7 @@ float fn_80293DA4(float x) {
         case 4:
             return -(y * (lbl_803E7D64 * y2 + lbl_803E7D60));
         default:
-            return lbl_803E7D68 - y2 * (lbl_803E7D70 * y2 + lbl_803E7D6C);
+            return -(y2 * (lbl_803E7D70 * y2 + lbl_803E7D6C) + lbl_803E7D68);
     }
 }
 
@@ -311,7 +311,7 @@ float mathSinf(float x) {
         case 4:
             return -(y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74));
         default:
-            return lbl_803E7D80 - y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84);
+            return -(y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84) + lbl_803E7D80);
     }
 }
 
@@ -333,7 +333,7 @@ float fn_80293F7C(float x) {
         case 4:
             return -(y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90));
         default:
-            return lbl_803E7D80
-                   - y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0);
+            return -(y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0)
+                     + lbl_803E7D80);
     }
 }
