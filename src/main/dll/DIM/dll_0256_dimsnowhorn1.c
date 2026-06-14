@@ -1263,6 +1263,7 @@ void fn_802BB4B4(int obj, int a, int slot)
     fn_802BB998(obj, (int)state, (int)state);
 }
 
+#pragma opt_lifetimes off
 void DIMSnowHorn1_update(int obj)
 {
     f32 nearDist;
@@ -1485,6 +1486,7 @@ void DIMSnowHorn1_update(int obj)
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
 }
+#pragma opt_lifetimes reset
 
 #pragma opt_propagation off
 void DIMSnowHorn1_release(void)
