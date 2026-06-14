@@ -939,9 +939,9 @@ void gameUpdate(void)
         lbl_803DCAD0 = t;
         if (player != 0)
         {
-            *(f32*)(rec + 0) = *(f32*)((u8*)player + 0xc);
-            *(f32*)(rec + 4) = *(f32*)((u8*)player + 0x10);
-            *(f32*)(rec + 8) = *(f32*)((u8*)player + 0x14);
+            *(f32*)(rec + 0) = ((GameObject*)player)->anim.localPosX;
+            *(f32*)(rec + 4) = ((GameObject*)player)->anim.localPosY;
+            *(f32*)(rec + 8) = ((GameObject*)player)->anim.localPosZ;
             *(int*)(rec + 0xc) = t;
             lbl_803DCAD4 = idx + 1;
             if (lbl_803DCAD4 >= 0x3c)
