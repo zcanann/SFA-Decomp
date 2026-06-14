@@ -425,51 +425,46 @@ void sc_levelcontrol_update(int obj)
             return;
         }
     }
-    if (((ScLevelControlState*)state)->fadeTimer != lbl_803E5558)
+    if (((ScLevelControlState*)state)->fadeTimer != lbl_803E5558 &&
+        (((GameObject*)player)->objectFlags & 0x1000) == 0)
     {
-        if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
+        if (lbl_803E5550 == ((ScLevelControlState*)state)->fadeTimer)
         {
-            f32 lim;
-            if (lbl_803E5550 == ((ScLevelControlState*)state)->fadeTimer)
-            {
-                (*gScreenTransitionInterface)->start(0x73, 1);
-            }
-            ((ScLevelControlState*)state)->fadeTimer -= timeDelta;
-            if (((ScLevelControlState*)state)->fadeTimer <= (lim = lbl_803E5558))
-            {
-                ((ScLevelControlState*)state)->fadeTimer = lim;
-                ((ScLevelControlState*)state)->timer10 = lim;
-                GameBit_Set(0x2b8, 0);
-                GameBit_Set(0x4bd, 1);
-                GameBit_Set(0x81, 0);
-                GameBit_Set(0x82, 0);
-                GameBit_Set(0x83, 0);
-                GameBit_Set(0x84, 0);
-                GameBit_Set(0x63e, 1);
-                GameBit_Set(0x7cf, 1);
-            }
+            (*gScreenTransitionInterface)->start(0x73, 1);
+        }
+        ((ScLevelControlState*)state)->fadeTimer -= timeDelta;
+        if (((ScLevelControlState*)state)->fadeTimer <= *(f32*)&lbl_803E5558)
+        {
+            ((ScLevelControlState*)state)->fadeTimer = lbl_803E5558;
+            ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
+            GameBit_Set(0x2b8, 0);
+            GameBit_Set(0x4bd, 1);
+            GameBit_Set(0x81, 0);
+            GameBit_Set(0x82, 0);
+            GameBit_Set(0x83, 0);
+            GameBit_Set(0x84, 0);
+            GameBit_Set(0x63e, 1);
+            GameBit_Set(0x7cf, 1);
         }
     }
-    else if (((ScLevelControlState*)state)->timer10 != *(volatile f32*)&lbl_803E5558)
+    else if (((ScLevelControlState*)state)->timer10 != *(volatile f32*)&lbl_803E5558 &&
+             (((GameObject*)player)->objectFlags & 0x1000) == 0)
     {
-        if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
+        if (lbl_803E5550 == ((ScLevelControlState*)state)->timer10)
         {
-            if (lbl_803E5550 == ((ScLevelControlState*)state)->timer10)
-            {
-                (*gScreenTransitionInterface)->start(0x73, 1);
-            }
-            ((ScLevelControlState*)state)->timer10 -= timeDelta;
-            if (((ScLevelControlState*)state)->timer10 <= *(f32*)&lbl_803E5558)
-            {
-                GameBit_Set(0x640, 1);
-                ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
-                GameBit_Set(0x2b8, 0);
-                GameBit_Set(0x4bd, 1);
-                GameBit_Set(0x81, 0);
-                GameBit_Set(0x82, 0);
-                GameBit_Set(0x83, 0);
-                GameBit_Set(0x84, 0);
-            }
+            (*gScreenTransitionInterface)->start(0x73, 1);
+        }
+        ((ScLevelControlState*)state)->timer10 -= timeDelta;
+        if (((ScLevelControlState*)state)->timer10 <= *(f32*)&lbl_803E5558)
+        {
+            GameBit_Set(0x640, 1);
+            ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
+            GameBit_Set(0x2b8, 0);
+            GameBit_Set(0x4bd, 1);
+            GameBit_Set(0x81, 0);
+            GameBit_Set(0x82, 0);
+            GameBit_Set(0x83, 0);
+            GameBit_Set(0x84, 0);
         }
     }
     ((ScLevelControlState*)state)->areaCell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
