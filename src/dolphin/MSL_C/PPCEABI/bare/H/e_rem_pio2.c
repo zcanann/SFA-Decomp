@@ -90,7 +90,8 @@ float fsin16Precise(int angle) {
 
 float fn_80293D0C(int angle) {
     s16 reduced = angle << 2;
-    double y = lbl_803E7CD0 * fastCastS16ToFloat(&reduced);
+    float cast = fastCastS16ToFloat(&reduced);
+    double y = lbl_803E7CD0 * cast;
     double y2 = y * y;
 
     switch (angle & 0xE000) {
@@ -120,14 +121,14 @@ float fn_80293D0C(int angle) {
                                       * y2
                                   + lbl_803E7CD8)));
         default:
-            return (float)(lbl_803E7D08
-                           - y2
+            return (float)(-(y2
                                  * (((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2
                                       + lbl_803E7D20)
                                          * y2
                                      + lbl_803E7D18)
                                         * y2
-                                    + lbl_803E7D10));
+                                    + lbl_803E7D10)
+                             + lbl_803E7D08));
     }
 }
 
@@ -195,7 +196,8 @@ float fcos16Precise(int angle) {
 
 float fn_80293AC4(int angle) {
     s16 reduced = angle << 2;
-    double y = lbl_803E7CD0 * fastCastS16ToFloat(&reduced);
+    float cast = fastCastS16ToFloat(&reduced);
+    double y = lbl_803E7CD0 * cast;
     double y2 = y * y;
 
     switch (angle & 0xE000) {
@@ -218,14 +220,14 @@ float fn_80293AC4(int angle) {
                                   + lbl_803E7CD8)));
         case 0x6000:
         case 0x8000:
-            return (float)(lbl_803E7D08
-                           - y2
+            return (float)(-(y2
                                  * (((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2
                                       + lbl_803E7D20)
                                          * y2
                                      + lbl_803E7D18)
                                         * y2
-                                    + lbl_803E7D10));
+                                    + lbl_803E7D10)
+                             + lbl_803E7D08));
         default:
             return (float)(y * (((((lbl_803E7D00 * y2 + lbl_803E7CF8) * y2 + lbl_803E7CF0) * y2
                                   + lbl_803E7CE8)
