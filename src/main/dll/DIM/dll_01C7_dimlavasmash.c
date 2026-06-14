@@ -356,7 +356,6 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
     int m;
     int i;
     int* block;
-    int* layer;
     int got;
     for (i = 0; i < (int)*(u16*)((char*)arg1 + 0x9a); i++)
     {
@@ -376,21 +375,23 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
             }
         }
     }
+    i = 0;
     m = ~2;
-    for (i = 0; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
+    while (i < (int)*(u8*)((char*)arg1 + 0xa2))
     {
-        layer = (int*)fn_8006070C(arg1, i);
-        if (arg3 == (int)*(u8*)((char*)Shader_getLayer((int)layer, 0) + 5))
+        block = (int*)fn_8006070C(arg1, i);
+        if (arg3 == (int)*(u8*)((char*)Shader_getLayer((int)block, 0) + 5))
         {
             if (arg2 != 0)
             {
-                *(u32*)(layer + 0x3c / 4) &= m;
+                *(u32*)(block + 0x3c / 4) &= m;
             }
             else
             {
-                layer[0x3c / 4] = layer[0x3c / 4] | 2;
+                block[0x3c / 4] = block[0x3c / 4] | 2;
             }
         }
+        i++;
     }
 }
 #pragma opt_propagation reset

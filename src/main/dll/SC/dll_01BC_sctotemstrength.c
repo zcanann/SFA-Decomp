@@ -48,19 +48,19 @@ extern int lbl_803DC070;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E5668;
-extern f32 lbl_803E566C;
-extern f32 lbl_803E5670;
-extern f32 lbl_803E5674;
-extern f32 lbl_803E5678;
-extern f32 lbl_803E567C;
-extern f32 lbl_803E5680;
-extern f32 lbl_803E5684;
+extern const f32 lbl_803E566C;
+extern const f32 lbl_803E5670;
+extern const f32 lbl_803E5674;
+extern const f32 lbl_803E5678;
+extern const f32 lbl_803E567C;
+extern const f32 lbl_803E5680;
+extern const f32 lbl_803E5684;
 extern f32 lbl_803E5688;
-extern f32 lbl_803E568C;
-extern f32 lbl_803E5690;
+extern const f32 lbl_803E568C;
+extern const f32 lbl_803E5690;
 extern f32 lbl_803E5694;
 extern f32 lbl_803E5698;
-extern f32 lbl_803E569C;
+extern const f32 lbl_803E569C;
 extern f32 lbl_803E56A0;
 extern f32 lbl_803E56A4;
 
@@ -85,7 +85,6 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int i;
     u8 ev;
     u32 buttons;
-    f32 c566C, c5674, c5670, c5678, c5684, c5680, c567C, c568C, c5690, c569C;
     f32 wob1, wob2, push;
     f32 diff;
     f32 absDiff;
@@ -201,16 +200,6 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->hitVolumePair = -1;
         animUpdate->sequenceEventActive = 0;
         Sfx_KeepAliveLoopedObjectSound(obj, PLATFORM1_LOOP_SFX_ID);
-        c566C = lbl_803E566C;
-        c5674 = lbl_803E5674;
-        c5670 = lbl_803E5670;
-        c5678 = lbl_803E5678;
-        c5684 = lbl_803E5684;
-        c5680 = lbl_803E5680;
-        c567C = lbl_803E567C;
-        c568C = lbl_803E568C;
-        c5690 = lbl_803E5690;
-        c569C = lbl_803E569C;
         for (i = 0; i < framesThisStep; i++)
         {
             if ((u32)st->linkedObject == 0)
@@ -218,27 +207,27 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ret = 0;
                 goto done;
             }
-            wob1 = (f32)(st->currentTrackOffset + 0xb24) / c566C;
-            wob2 = c5674 * wob1 + c5670;
-            if (wob2 < c5678)
+            wob1 = (f32)(st->currentTrackOffset + 0xb24) / lbl_803E566C;
+            wob2 = lbl_803E5674 * wob1 + lbl_803E5670;
+            if (wob2 < lbl_803E5678)
             {
                 wob2 = -wob2;
             }
-            push = (c5684 * wob1 + c5680) * wob2 + c567C;
+            push = (lbl_803E5684 * wob1 + lbl_803E5680) * wob2 + lbl_803E567C;
             buttons = getButtonsJustPressedIfNotBusy(0);
             if ((buttons & 0x100) != 0 && isGameTimerDisabled() == 0)
             {
                 st->offsetVelocity = st->offsetVelocity - lbl_803E5688;
             }
-            if (st->offsetVelocity < c568C)
+            if (st->offsetVelocity < lbl_803E568C)
             {
-                st->offsetVelocity = c568C;
+                st->offsetVelocity = lbl_803E568C;
             }
             if (st->currentTrackOffset > -0x46de && st->currentTrackOffset < -0xb23)
             {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
-            diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / c5690;
+            diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E5690;
             if (st->currentTrackOffset < -0x46dc)
             {
                 st->transitionStep = 0;
@@ -298,25 +287,25 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 (*gObjectTriggerInterface)->setXrot(st->loopSfxHandle, st->currentTrackOffset);
             }
-            if (st->offsetVelocity < c5690)
+            if (st->offsetVelocity < lbl_803E5690)
             {
                 st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
             }
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                    player, ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / c569C,
+                    player, ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E569C,
                     timeDelta, 0) != 0 &&
-                playerObj->anim.currentMoveProgress < c5678)
+                playerObj->anim.currentMoveProgress < lbl_803E5678)
             {
-                playerObj->anim.currentMoveProgress = c567C + playerObj->anim.currentMoveProgress;
+                playerObj->anim.currentMoveProgress = lbl_803E567C + playerObj->anim.currentMoveProgress;
             }
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                st->linkedObject, ((f32)st->currentTrackOffset - (f32)st->prevTrackOffset) / c569C,
+                st->linkedObject, ((f32)st->currentTrackOffset - (f32)st->prevTrackOffset) / lbl_803E569C,
                 timeDelta, 0) != 0)
             {
                 t = ((GameObject*)st->linkedObject)->anim.currentMoveProgress;
-                if (t < c5678)
+                if (t < lbl_803E5678)
                 {
-                    ((GameObject*)st->linkedObject)->anim.currentMoveProgress = c567C + t;
+                    ((GameObject*)st->linkedObject)->anim.currentMoveProgress = lbl_803E567C + t;
                 }
             }
             st->prevTrackOffset = st->currentTrackOffset;

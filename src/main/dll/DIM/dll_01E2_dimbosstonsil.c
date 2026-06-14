@@ -268,10 +268,10 @@ void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
             {
                 objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
-                ObjPath_GetPointWorldPosition(obj, 1, pp, &pathPoint.y, &pathPoint.z, 0);
+                ObjPath_GetPointWorldPosition(obj, 1, pp, pp + 1, pp + 2, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
-                ObjPath_GetPointWorldPosition(obj, 0, pp, &pathPoint.y, &pathPoint.z, 0);
+                ObjPath_GetPointWorldPosition(obj, 0, pp, pp + 1, pp + 2, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
 
                 if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
