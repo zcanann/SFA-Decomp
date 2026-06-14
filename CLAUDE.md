@@ -444,6 +444,20 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     floats the cold island out of line) and #107 for-GPR (un-name a loop-invariant member —
     `obj->field` inline at each use CSEs to one load but colors LOWER than a named local, fixing a
     volatile r4/r5/r6 carrier rotation). (DIMSnowHorn1_stateHandler0A 95.6→100.)
+130. **WEB-DECOUPLING cracks "#108 byte-identical-except-one-register" caps.** When a value
+    assigned from a NAMED local/temp lands in the wrong saved/volatile reg, RE-DERIVE it from a
+    fresh MEMORY DEREF instead of the temp: `match = other;` (loop temp) → `match = (int*)*list;`
+    (fresh deref of the walked pointer). This decouples the value's live-range/web from the temp,
+    changes the interference graph, and flips the allocator's reg choice with ZERO other instruction
+    change — reuses a different just-freed reg. CONVERSE (un-name a temp by inlining its defining
+    EXPRESSION at each use, #107) also flips it. ONLY works for re-derivable values (memory derefs,
+    `obj->field`); does NOT work for CALL RESULTS (can't re-call) or VN-equal pointer copies (fold
+    back). Also #115-adjacent: renaming ONE loop's counter to a distinct var removes a cross-loop
+    coalescing barrier. Brute-force MANY spellings and grep the affected reg each build — this
+    cracked dim2roofrub_update (byte-identical-except-r29/r31, declared an uncrackable cap by 5
+    prior agents → 100%) and the int-permutation half of dimwooddoor (pitchSign from fresh
+    modelVec[1] read). The "#108 within-class scramble is the genuine open frontier / no source
+    lever" assertion is FALSE for deref-sourced values — second-guess it.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
