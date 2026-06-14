@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
@@ -51,7 +52,6 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance);
-extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int ObjTrigger_IsSet();
@@ -404,7 +404,7 @@ typedef struct LandedArwingFxScratch
 
 typedef struct CFLandedArwingState
 {
-    f32 unk0;
+    f32 sequenceHitCooldown;
     f32 path7Fx;
     f32 path8Fx;
     f32 path6Fx;
@@ -420,7 +420,7 @@ typedef struct CFLandedArwingState
     u8 hitFlags;
     u8 unk1E;
     u8 spawnCount;
-    u8 hitCooldown[4];
+    f32 hitEffectCooldown;
 } CFLandedArwingState;
 
 typedef struct LandedArwingHitFlagBits
@@ -774,7 +774,8 @@ void landed_arwing_update(int obj)
             state->sequenceState = 2;
             cutSceneFn_8011dd30();
         }
-        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, state);
+        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                                  &state->sequenceHitCooldown);
         break;
     case 2:
         if (fn_8012DDA4() != 0)
@@ -900,7 +901,7 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
             ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(-200, 200);
         }
         ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                  state->hitCooldown);
+                                                  &state->hitEffectCooldown);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
                                                                   &events);
