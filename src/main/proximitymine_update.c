@@ -84,7 +84,7 @@ void proximitymine_render(ProximityMineObject* obj, undefined4 param_2, undefine
         state->targetObj = obj->pendingTarget;
         obj->pendingTarget = NULL;
     }
-    if (fn_80080150(state->renderTimer) == 0)
+    if (fn_80080150(&state->renderTimer) == 0)
     {
         mapBlock = objPosToMapBlockIdx((double)obj->posX, (double)obj->posY, (double)obj->posZ);
         if (mapBlock != -1)
@@ -108,7 +108,7 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
     ProximityMineCollider* collider;
     ProximityMineState* state;
 
-    if (fn_80080150(obj->state->renderTimer) == 0)
+    if (fn_80080150(&obj->state->renderTimer) == 0)
     {
         hit = ObjHits_GetPriorityHit((int)obj, (int*)0, (int*)0, (uint*)0);
         collider = obj->collider;
@@ -121,9 +121,9 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
             obj->velocityX = zeroVelocity;
             obj->velocityZ = zeroVelocity;
             state->mode = 0;
-            storeZeroToFloatParam(state->resetTimer);
-            s16toFloat(state->resetTimer, 1);
-            s16toFloat(state->renderTimer, 10);
+            storeZeroToFloatParam(&state->resetTimer);
+            s16toFloat(&state->resetTimer, 1);
+            s16toFloat(&state->renderTimer, 10);
         }
     }
     return;
@@ -156,7 +156,7 @@ void proximitymine_update(ProximityMineObject* obj)
         state->targetObj = obj->pendingTarget;
         obj->pendingTarget = NULL;
     }
-    if (fn_80080150(state->lifespanTimer) != 0)
+    if (fn_80080150(&state->lifespanTimer) != 0)
     {
         obj->height += state->verticalStep * timeDelta;
         if (state->targetObj != NULL)
@@ -173,7 +173,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 obj->posZ = ((ProximityMineObject*)state->targetObj)->posZ;
             }
         }
-        if (timerCountDown(state->lifespanTimer) != 0)
+        if (timerCountDown(&state->lifespanTimer) != 0)
         {
             if (state->mode == 2)
             {
@@ -217,7 +217,7 @@ void proximitymine_update(ProximityMineObject* obj)
     }
     else
     {
-        if (fn_80080150(state->resetTimer) != 0)
+        if (fn_80080150(&state->resetTimer) != 0)
         {
             Sfx_PlayFromObject((u32)obj, 0xef);
             if (state->effectHandle == NULL)
@@ -232,7 +232,7 @@ void proximitymine_update(ProximityMineObject* obj)
                     }
                 }
             }
-            if (timerCountDown(state->resetTimer) != 0)
+            if (timerCountDown(&state->resetTimer) != 0)
             {
                 proximitymine_resetToIdle(obj);
                 return;
@@ -250,13 +250,13 @@ void proximitymine_update(ProximityMineObject* obj)
                 if (Vec_distance(&obj->prevX, &player->prevX) < trigger)
                 {
                     state->mode = 2;
-                    s16toFloat(state->resetTimer, 0x78);
+                    s16toFloat(&state->resetTimer, 0x78);
                 }
                 break;
             }
         case 0:
             Sfx_StopObjectChannel((u32)obj, 0x40);
-            if (timerCountDown(state->renderTimer) != 0)
+            if (timerCountDown(&state->renderTimer) != 0)
             {
                 Obj_FreeObject(obj);
                 return;
@@ -286,7 +286,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 Sfx_PlayFromObject((u32)obj, 0xf0);
             }
         case 1:
-            if (timerCountDown(state->launchTimer) != 0)
+            if (timerCountDown(&state->launchTimer) != 0)
             {
                 f32 zero;
 
@@ -296,9 +296,9 @@ void proximitymine_update(ProximityMineObject* obj)
                 obj->velocityX = zero;
                 obj->velocityZ = zero;
                 state->mode = 0;
-                storeZeroToFloatParam(state->resetTimer);
-                s16toFloat(state->resetTimer, 1);
-                s16toFloat(state->renderTimer, 10);
+                storeZeroToFloatParam(&state->resetTimer);
+                s16toFloat(&state->resetTimer, 1);
+                s16toFloat(&state->renderTimer, 10);
                 return;
             }
             if (obj->velocityY > lbl_803E6784)
@@ -315,7 +315,7 @@ void proximitymine_update(ProximityMineObject* obj)
             obj->prevZ = obj->posZ;
         case 2:
             (*gPartfxInterface)->spawnObject(obj, 0x51c, NULL, 1, -1, NULL);
-            if (timerCountDown(state->bounceTimer) != 0)
+            if (timerCountDown(&state->bounceTimer) != 0)
             {
                 ObjHits_EnableObject((u32)obj);
             }
@@ -334,7 +334,7 @@ void proximitymine_update(ProximityMineObject* obj)
             }
             break;
         }
-        if (fn_80080150(state->renderTimer) == 0)
+        if (fn_80080150(&state->renderTimer) == 0)
         {
             if (objPosToMapBlockIdx((double)obj->posX, (double)obj->posY, (double)obj->posZ) == -1)
             {
@@ -346,9 +346,9 @@ void proximitymine_update(ProximityMineObject* obj)
                 obj->velocityX = zero;
                 obj->velocityZ = zero;
                 state->mode = 0;
-                storeZeroToFloatParam(state->resetTimer);
-                s16toFloat(state->resetTimer, 1);
-                s16toFloat(state->renderTimer, 10);
+                storeZeroToFloatParam(&state->resetTimer);
+                s16toFloat(&state->resetTimer, 1);
+                s16toFloat(&state->renderTimer, 10);
             }
         }
     }
@@ -367,16 +367,16 @@ void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
     obj->angle = 0;
     ObjHits_DisableObject((u32)obj);
     state->mode = 0;
-    storeZeroToFloatParam(state->renderTimer);
-    storeZeroToFloatParam(state->resetTimer);
-    storeZeroToFloatParam(state->bounceTimer);
-    s16toFloat(state->bounceTimer, 0x14);
-    storeZeroToFloatParam(state->launchTimer);
-    storeZeroToFloatParam(state->initTimer);
-    s16toFloat(state->initTimer, 5);
+    storeZeroToFloatParam(&state->renderTimer);
+    storeZeroToFloatParam(&state->resetTimer);
+    storeZeroToFloatParam(&state->bounceTimer);
+    s16toFloat(&state->bounceTimer, 0x14);
+    storeZeroToFloatParam(&state->launchTimer);
+    storeZeroToFloatParam(&state->initTimer);
+    s16toFloat(&state->initTimer, 5);
     obj->angle = def->angleSeed << 8;
-    storeZeroToFloatParam(state->lifespanTimer);
-    s16toFloat(state->lifespanTimer, (s16)lbl_803DC230);
+    storeZeroToFloatParam(&state->lifespanTimer);
+    s16toFloat(&state->lifespanTimer, (s16)lbl_803DC230);
     state->flashMode = 0;
     state->triggerDistance = lbl_803E6774;
     state->effectVisible = 0;
@@ -384,25 +384,25 @@ void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
     switch (mode)
     {
     case 0:
-        s16toFloat(state->resetTimer, def->parameter);
+        s16toFloat(&state->resetTimer, def->parameter);
         state->mode = 2;
         Obj_SetActiveModelIndex(obj, 1);
         obj->height *= lbl_803E6798;
         break;
     case 1:
-        s16toFloat(state->launchTimer, 800);
-        s16toFloat(state->resetTimer, 800);
+        s16toFloat(&state->launchTimer, 800);
+        s16toFloat(&state->resetTimer, 800);
         obj->angle = def->parameter;
         state->mode = -1;
         obj->height *= lbl_803E6798;
         break;
     case 2:
-        storeZeroToFloatParam(state->lifespanTimer);
+        storeZeroToFloatParam(&state->lifespanTimer);
         state->mode = 3;
         ObjHits_EnableObject((u32)obj);
         state->triggerDistance = (f32)(s32)
         def->parameter;
-        storeZeroToFloatParam(state->bounceTimer);
+        storeZeroToFloatParam(&state->bounceTimer);
         break;
     }
     state->verticalStep =

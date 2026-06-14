@@ -17,12 +17,12 @@ typedef struct ProximityMineState {
   f32 triggerDistance;
   f32 verticalStep;
   u8 unk10[4];
-  u8 renderTimer[4];
-  u8 launchTimer[4];
-  u8 resetTimer[4];
-  u8 bounceTimer[4];
-  u8 initTimer[4];
-  u8 lifespanTimer[4];
+  f32 renderTimer;
+  f32 launchTimer;
+  f32 resetTimer;
+  f32 bounceTimer;
+  f32 initTimer;
+  f32 lifespanTimer;
   s8 mode;
   u8 unk2D;
   u8 flashMode;
