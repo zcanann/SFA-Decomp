@@ -176,7 +176,7 @@ void wcpushblock_update(int obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCPushBlockRuntimeState* state = ((GameObject*)obj)->extra;
-    int player = Obj_GetPlayerObject();
+    GameObject* player = (GameObject*)Obj_GetPlayerObject();
     f32 range = lbl_803E6D58;
     f32 dist;
     ObjTextureRuntimeSlot *tex;
@@ -284,7 +284,7 @@ void wcpushblock_update(int obj)
             ((GameObject*)obj)->anim.velocityX = zero;
             ((GameObject*)obj)->anim.velocityZ = zero;
         }
-        if (fn_80296414(player, obj, (int)&state->pushDir) != 0)
+        if (fn_80296414((int)player, obj, (int)&state->pushDir) != 0)
         {
             u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
@@ -616,11 +616,11 @@ void fn_802251B4(int obj, WcLevelControlState* state)
     case 4:
         if ((u32)GameBit_Get(0x2a5) != 0)
         {
-            int player;
+            GameObject* player;
             GameBit_Set(0x274, 1);
             GameBit_Set(0xef1, 0);
-            player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
+            player = (GameObject*)Obj_GetPlayerObject();
+            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
             state->completionFlags |= 0x40;
             state->mode = 0;
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -742,13 +742,13 @@ void fn_802251B4(int obj, WcLevelControlState* state)
     {
         if ((u32)GameBit_Get(0xbcf) != 0)
         {
-            int player;
+            GameObject* player;
             GameBit_Set(0xbc8, 0);
             GameBit_Set(0x2f0, 1);
             GameBit_Set(0xeec, 0);
             GameBit_Set(0xbd0, 0);
-            player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
+            player = (GameObject*)Obj_GetPlayerObject();
+            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             state->completionFlags |= 0x100;
         }
@@ -852,11 +852,11 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
     case 3:
         if ((u32)GameBit_Get(0xcac) != 0)
         {
-            int player;
+            GameObject* player;
             GameBit_Set(0xda9, 0);
             GameBit_Set(0xc37, 1);
-            player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
+            player = (GameObject*)Obj_GetPlayerObject();
+            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
             state->mode = 7;
         }
         break;
@@ -896,10 +896,10 @@ int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateSt
         state->eventTimer = t;
         if (t <= lbl_803E6DA8)
         {
-            int player;
+            GameObject* player;
             GameBit_Set(0x7f7, 1);
-            player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
+            player = (GameObject*)Obj_GetPlayerObject();
+            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
         }
     }
     else if (state->previousMode == 2)
@@ -908,10 +908,10 @@ int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateSt
         state->eventTimer = t;
         if (t <= lbl_803E6DA8)
         {
-            int player;
+            GameObject* player;
             GameBit_Set(0x802, 1);
-            player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
+            player = (GameObject*)Obj_GetPlayerObject();
+            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
         }
     }
     for (i = 0; i < animUpdate->eventCount; i++)
