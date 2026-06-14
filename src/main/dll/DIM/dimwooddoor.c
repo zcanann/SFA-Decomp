@@ -244,14 +244,16 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         distSq = dx * dx + dz * dz;
         dist = sqrtf(distSq);
         heightDelta = (lbl_803E48C8 + state->posY) - state->targetY;
-        if (distSq > lbl_803E48C8) { distSq = distSq; } else { distSq = lbl_803E48C8; }
+        distSq = (distSq < lbl_803E48C8) ? lbl_803E48C8 : distSq;
         if ((distSq < (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2))) ||
             (heightDelta < lbl_803DBF14) ||
             ((((GameObject*)player)->objectFlags & 0x1000) != 0))
         {
             state->shouldSpawnShard = 0;
         }
-        if (distSq > (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2))) {} else { distSq = (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2)); }
+        distSq = (distSq > (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2)))
+                     ? distSq
+                     : (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
 
         accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
         accelDenom = lbl_803E48CC * heightDelta - lbl_803E48D0 * dist;
