@@ -593,11 +593,11 @@ void FUN_8016d188(int param_1, int param_2)
 
 void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
 {
-    int iVar1;
+    int state;
 
-    iVar1 = *(int*)&((GameObject*)param_1)->extra;
-    *(undefined*)(iVar1 + 0xbb) = param_2;
-    *(undefined*)(iVar1 + 0xba) = param_3;
+    state = *(int*)&((GameObject*)param_1)->extra;
+    *(undefined*)(state + 0xbb) = param_2;
+    *(undefined*)(state + 0xba) = param_3;
     return;
 }
 
@@ -605,98 +605,98 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
 {
-    short sVar1;
-    int iVar2;
-    int* piVar3;
-    uint uVar4;
-    int iVar5;
-    int* piVar6;
-    double dVar7;
-    double dVar8;
+    short alpha;
+    int hitbox;
+    int* group;
+    uint idx;
+    int particle;
+    int* state;
+    double computed;
+    double clamped;
     undefined8 local_18;
 
-    piVar6 = ((GameObject*)param_9)->extra;
-    iVar2 = FUN_80017a54(param_9);
-    *(ushort*)(iVar2 + 0x18) = *(ushort*)(iVar2 + 0x18) & ~0x8;
-    FUN_8002fc3c((double)(float)piVar6[0x14], (double)lbl_803DC074);
-    iVar2 = 3;
-    piVar3 = piVar6;
+    state = ((GameObject*)param_9)->extra;
+    hitbox = FUN_80017a54(param_9);
+    *(ushort*)(hitbox + 0x18) = *(ushort*)(hitbox + 0x18) & ~0x8;
+    FUN_8002fc3c((double)(float)state[0x14], (double)lbl_803DC074);
+    hitbox = 3;
+    group = state;
     do
     {
-        if ((*(byte*)(piVar3 + 5) & 2) != 0)
+        if ((*(byte*)(group + 5) & 2) != 0)
         {
-            uVar4 = (uint) * (ushort*)(piVar3 + 3);
-            iVar5 = *piVar3 + uVar4 * 0x14;
-            for (; (int)uVar4 < (int)(uint) * (ushort*)((int)piVar3 + 0xe); uVar4 = uVar4 + 2)
+            idx = (uint) * (ushort*)(group + 3);
+            particle = *group + idx * 0x14;
+            for (; (int)idx < (int)(uint) * (ushort*)((int)group + 0xe); idx = idx + 2)
             {
-                if (piVar3 == (int*)piVar6[0x12])
+                if (group == (int*)state[0x12])
                 {
                     param_3 = (double)lbl_803E3F8C;
-                    dVar7 = (double)(float)(param_3 *
-                        (double)((lbl_803E3FA4 * (float)piVar6[0x26] -
-                            *(float*)(iVar5 + 0xc)) * lbl_803E3FA8));
-                    dVar8 = (double)lbl_803E3F4C;
-                    if ((dVar8 <= dVar7) && (dVar8 = dVar7, param_3 < dVar7))
+                    computed = (double)(float)(param_3 *
+                        (double)((lbl_803E3FA4 * (float)state[0x26] -
+                            *(float*)(particle + 0xc)) * lbl_803E3FA8));
+                    clamped = (double)lbl_803E3F4C;
+                    if ((clamped <= computed) && (clamped = computed, param_3 < computed))
                     {
-                        dVar8 = param_3;
+                        clamped = param_3;
                     }
-                    *(short*)(iVar5 + 0x10) = (short)(int)(param_3 - dVar8);
-                    *(undefined2*)(iVar5 + 0x24) = *(undefined2*)(iVar5 + 0x10);
+                    *(short*)(particle + 0x10) = (short)(int)(param_3 - clamped);
+                    *(undefined2*)(particle + 0x24) = *(undefined2*)(particle + 0x10);
                 }
                 else
                 {
                     param_3 = (double)lbl_803E3FC4;
-                    *(short*)(iVar5 + 0x10) =
+                    *(short*)(particle + 0x10) =
                         (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
-                            (double)(f32)(s32)((int)*(short*)(iVar5 + 0x10)));
-                    *(undefined2*)(iVar5 + 0x24) = *(undefined2*)(iVar5 + 0x10);
+                            (double)(f32)(s32)((int)*(short*)(particle + 0x10)));
+                    *(undefined2*)(particle + 0x24) = *(undefined2*)(particle + 0x10);
                 }
-                sVar1 = *(short*)(iVar5 + 0x10);
-                if (sVar1 < 0)
+                alpha = *(short*)(particle + 0x10);
+                if (alpha < 0)
                 {
-                    sVar1 = 0;
+                    alpha = 0;
                 }
-                else if (0xff < sVar1)
+                else if (0xff < alpha)
                 {
-                    sVar1 = 0xff;
+                    alpha = 0xff;
                 }
-                *(short*)(iVar5 + 0x10) = sVar1;
-                sVar1 = *(short*)(iVar5 + 0x24);
-                if (sVar1 < 0)
+                *(short*)(particle + 0x10) = alpha;
+                alpha = *(short*)(particle + 0x24);
+                if (alpha < 0)
                 {
-                    sVar1 = 0;
+                    alpha = 0;
                 }
-                else if (0xff < sVar1)
+                else if (0xff < alpha)
                 {
-                    sVar1 = 0xff;
+                    alpha = 0xff;
                 }
-                *(short*)(iVar5 + 0x24) = sVar1;
-                if ((*(short*)(iVar5 + 0x10) < 1) && (*(short*)(iVar5 + 0x24) < 1))
+                *(short*)(particle + 0x24) = alpha;
+                if ((*(short*)(particle + 0x10) < 1) && (*(short*)(particle + 0x24) < 1))
                 {
-                    *(short*)((int)piVar3 + 0x12) = *(short*)((int)piVar3 + 0x12) + -2;
-                    *(short*)(piVar3 + 3) = *(short*)(piVar3 + 3) + 2;
+                    *(short*)((int)group + 0x12) = *(short*)((int)group + 0x12) + -2;
+                    *(short*)(group + 3) = *(short*)(group + 3) + 2;
                 }
-                iVar5 = iVar5 + 0x28;
+                particle = particle + 0x28;
             }
-            if ((piVar3 != (int*)piVar6[0x12]) && (*(short*)((int)piVar3 + 0x12) == 0))
+            if ((group != (int*)state[0x12]) && (*(short*)((int)group + 0x12) == 0))
             {
-                *(byte*)(piVar3 + 5) = *(byte*)(piVar3 + 5) & 0xfd;
+                *(byte*)(group + 5) = *(byte*)(group + 5) & 0xfd;
             }
         }
-        piVar3 = piVar3 + 6;
-        iVar2 = iVar2 + -1;
+        group = group + 6;
+        hitbox = hitbox + -1;
     }
-    while (iVar2 != 0);
+    while (hitbox != 0);
     FUN_8016d188(param_9, *(int*)&((GameObject*)param_9)->ownerObj);
     FUN_80294d6c(*(int*)&((GameObject*)param_9)->ownerObj);
-    *(undefined*)((int)piVar6 + 0xb9) = 0;
+    *(undefined*)((int)state + 0xb9) = 0;
     if (DAT_803ad338 != '\0')
     {
         DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
         ObjHitbox_SetSphereRadius(DAT_803ad334, (short)(int)DAT_803ad324);
         ObjHits_SetHitVolumeSlot(DAT_803ad334, 0x11, 5, 0);
         DAT_803ad330 = DAT_803ad330 + lbl_803E3F7C;
-        dVar8 = (double)DAT_803ad330;
+        clamped = (double)DAT_803ad330;
         DAT_803ad328 = DAT_803ad328 * lbl_803E3F80;
         DAT_803ad32c = DAT_803ad32c * lbl_803E3F84;
         ((GameObject*)DAT_803ad334)->anim.alpha = (char)(int)DAT_803ad330;
@@ -705,7 +705,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
         if ((double)DAT_803ad330 < (double)lbl_803E3F20)
         {
             DAT_803ad338 = '\0';
-            FUN_80017ac8((double)DAT_803ad330, dVar8, param_3, param_4, param_5, param_6, param_7, param_8,
+            FUN_80017ac8((double)DAT_803ad330, clamped, param_3, param_4, param_5, param_6, param_7, param_8,
                          DAT_803ad334);
             DAT_803ad334 = 0;
         }
