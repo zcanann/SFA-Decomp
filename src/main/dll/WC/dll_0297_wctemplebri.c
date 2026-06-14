@@ -74,7 +74,7 @@ STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == WCTEMPLEBRI_SETUP_TYPE_OFFSET)
 STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET);
 
-#pragma peephole on
+#pragma peephole off
 void wctemplebri_updateModelWarp(int obj, int p2)
 {
     WCTempleBriState* state = (WCTempleBriState*)p2;
@@ -90,10 +90,10 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     tex->offsetT += WCTEMPLEBRI_UV1_V_STEP;
     if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP) tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
     v = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
-    if (v > WCTEMPLEBRI_WAVE_WRAP) v -= WCTEMPLEBRI_WAVE_WRAP;
+    if (v > WCTEMPLEBRI_WAVE_WRAP) v = (v - 0x10000) + 1;
     state->wavePhaseA = (u16)v;
     v = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
-    if (v > WCTEMPLEBRI_WAVE_WRAP) v -= WCTEMPLEBRI_WAVE_WRAP;
+    if (v > WCTEMPLEBRI_WAVE_WRAP) v = (v - 0x10000) + 1;
     state->wavePhaseB = (u16)v;
 }
 
