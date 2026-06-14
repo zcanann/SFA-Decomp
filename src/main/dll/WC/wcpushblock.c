@@ -1,5 +1,6 @@
 #include "main/audio/sfx.h"
 #include "main/dll/WC/WCpushblock.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 
 #define WCPUSHBLOCK_SPAWN_OBJECT_ID 0x119
@@ -42,19 +43,36 @@ typedef struct WCPushBlockRotationWork
 
 typedef struct WCPushBlockObject
 {
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    u8 pad6[0x1e];
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
-    u8 pad30[0x70];
-    s16 currentMove;
-    u8 padA2[0x52];
+    union
+    {
+        ObjAnimComponent anim;
+        struct
+        {
+            s16 yaw;
+            s16 pitch;
+            s16 roll;
+            u8 pad6[0x1e];
+            f32 velocityX;
+            f32 velocityY;
+            f32 velocityZ;
+            u8 pad30[0x70];
+            s16 currentMove;
+            u8 padA2[0xA4 - 0xA2];
+            void* linkedObject;
+            u8 padA8[0xB0 - 0xA8];
+        };
+    };
+    u8 padB0[0xF4 - sizeof(ObjAnimComponent)];
     int actionState;
     void* spawnPath;
 } WCPushBlockObject;
+
+STATIC_ASSERT(offsetof(WCPushBlockObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(WCPushBlockObject, velocityX) == offsetof(ObjAnimComponent, velocityX));
+STATIC_ASSERT(offsetof(WCPushBlockObject, currentMove) == offsetof(ObjAnimComponent, currentMove));
+STATIC_ASSERT(offsetof(WCPushBlockObject, linkedObject) == offsetof(ObjAnimComponent, targetObj));
+STATIC_ASSERT(offsetof(WCPushBlockObject, actionState) == offsetof(GameObject, unkF4));
+STATIC_ASSERT(offsetof(WCPushBlockObject, spawnPath) == offsetof(GameObject, unkF8));
 
 typedef struct WCPushBlockState
 {
