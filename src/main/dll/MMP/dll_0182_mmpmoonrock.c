@@ -309,10 +309,8 @@ void fn_801A79E0(int obj)
     int auStack_14[21];
     int local_18;
     MmpMoonrockState * state;
-    ObjHitsPriorityState* hitState;
     int ret;
     state = ((GameObject*)obj)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     ret = ObjHits_GetPriorityHit(obj, &local_18, (int*)0, (u32*)0);
     if (ret == 0)
     {
@@ -321,7 +319,7 @@ void fn_801A79E0(int obj)
                                  0xff, 0);
     }
     if ((ret != 0) ||
-        ((hitState->contactFlags != 0 && (state->flags & 0x40) != 0) ||
+        ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (state->flags & 0x40) != 0) ||
             (state->flags & 0x100) != 0))
     {
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E4550;
