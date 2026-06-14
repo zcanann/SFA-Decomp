@@ -6,12 +6,12 @@ typedef struct WCTileIface WCTileIface;
 struct WCTileIface
 {
     int pad00[8]; /* 0x00 */
-    void (*moveToTileA)(int obj, int x, int y, int px, int pz, WCTileIface*); /* 0x20 */
+    void (*moveToTileA)(int obj, int x, int y, f32* outX, f32* outZ, WCTileIface*); /* 0x20 */
     int pad24[2]; /* 0x24 */
     int (*getTileIndexA)(int x, int y, WCTileIface*); /* 0x2c */
     void (*getTileXYA)(int idx, void* xOut, void* yOut, WCTileIface*); /* 0x30 */
     int pad34[2]; /* 0x34 */
-    void (*moveToTileB)(int obj, int x, int y, int px, int pz, WCTileIface*); /* 0x3c */
+    void (*moveToTileB)(int obj, int x, int y, f32* outX, f32* outZ, WCTileIface*); /* 0x3c */
     int pad40[2]; /* 0x40 */
     int (*getTileIndexB)(int x, int y, WCTileIface*); /* 0x48 */
     void (*getTileXYB)(int idx, void* xOut, void* yOut, WCTileIface*); /* 0x4c */
@@ -171,15 +171,19 @@ void wctile_update(int obj)
         {
             WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
                                                   &state->tileY, WCTILE_STATE_IFACE(state));
-            WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
-                                                   obj + 0x14, WCTILE_STATE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY,
+                                                   &((GameObject*)obj)->anim.localPosX,
+                                                   &((GameObject*)obj)->anim.localPosZ,
+                                                   WCTILE_STATE_IFACE(state));
         }
         else
         {
             WCTILE_STATE_IFACE(state)->getTileXYB(state->targetTile, &state->tileX,
                                                   &state->tileY, WCTILE_STATE_IFACE(state));
-            WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY, obj + 0xc,
-                                                   obj + 0x14, WCTILE_STATE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY,
+                                                   &((GameObject*)obj)->anim.localPosX,
+                                                   &((GameObject*)obj)->anim.localPosZ,
+                                                   WCTILE_STATE_IFACE(state));
         }
         objAnim->alpha = WCTILE_ALPHA_OPAQUE;
         state->mode = WCTILE_MODE_SOLID;
@@ -203,16 +207,20 @@ void wctile_update(int obj)
             {
                 WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
                                                       &state->tileY, WCTILE_STATE_IFACE(state));
-                WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
-                                                       obj + 0x14, WCTILE_STATE_IFACE(state));
+                WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY,
+                                                       &((GameObject*)obj)->anim.localPosX,
+                                                       &((GameObject*)obj)->anim.localPosZ,
+                                                       WCTILE_STATE_IFACE(state));
                 state->mode = WCTILE_MODE_FADE_IN;
             }
             else
             {
                 WCTILE_STATE_IFACE(state)->getTileXYB(state->targetTile, &state->tileX,
                                                       &state->tileY, WCTILE_STATE_IFACE(state));
-                WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY, obj + 0xc,
-                                                       obj + 0x14, WCTILE_STATE_IFACE(state));
+                WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY,
+                                                       &((GameObject*)obj)->anim.localPosX,
+                                                       &((GameObject*)obj)->anim.localPosZ,
+                                                       WCTILE_STATE_IFACE(state));
                 state->mode = WCTILE_MODE_FADE_IN;
             }
         }
