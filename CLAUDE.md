@@ -380,7 +380,11 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     95.68% (matches the banked O2 tradeoff). No register-resident RUNTIME 0 exists at the init point
     (the only nearby 0 is GameBit_Set's r4 arg, clobbered by the call) so the ternary trick cannot be
     fed a non-foldable source without adding an instruction the target lacks. Confirmed documented
-    partial; stays banked.
+    partial; stays banked. ALSO this session: `#pragma opt_propagation off` is byte-INERT (the
+    `availableCount = orbIndex` → `= 0` fold happens in value-numbering, below pragma control), and
+    recompiling the TU at the EXACT production flags (`-O4,p -opt nopeephole,noschedule`) across
+    GC/1.2.5n,1.3.2,2.0,2.0p1,2.5,2.6,2.7,3.0a3,3.0a5.2 ALL emit `li;li` — extends #110's
+    default-flag version sweep to the real cflags. Irreducible toolchain limitation; do NOT inline-asm it.
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
     Arg-eval anchor: embed a DEF inside the size/arg statement (`sz = (u16)((count - (index =
