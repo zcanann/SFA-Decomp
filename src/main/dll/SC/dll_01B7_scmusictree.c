@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/objfx.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 typedef struct ScMusictreePlacement
@@ -45,9 +46,6 @@ extern u16 lbl_803DC060[4];
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
-extern int ObjHits_GetPriorityHitWithPosition(int obj, int* type, int* a, int* b, f32* x, f32* y, f32* z);
-extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int* state);
-extern void ObjHits_RecordObjectHit(int target, int src, int a, int b, int c);
 extern int Obj_SetupObject(int s, int a, int b, int c, int d);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
@@ -282,11 +280,13 @@ void sc_musictree_update(int obj)
     }
     if (((ScMusictreeState*)inner)->unk4C & 0xc0)
     {
-        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, &hr3, &vec[0], &vec[1], &vec[2]);
+        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, (uint*)&hr3, &vec[0],
+                                                    &vec[1], &vec[2]);
     }
     else
     {
-        rcType = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int*)(inner + 0x44));
+        rcType = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
+                                                           (f32*)(inner + 0x44));
     }
     if (((CloudRunnerState*)inner)->baddie.velZ >= lbl_803E5590)
     {

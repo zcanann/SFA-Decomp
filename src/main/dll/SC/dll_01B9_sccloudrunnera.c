@@ -13,6 +13,7 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objfx.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 
 typedef struct ScCloudrunneraPlacement
@@ -23,10 +24,7 @@ typedef struct ScCloudrunneraPlacement
 } ScCloudrunneraPlacement;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern int Obj_SetupObject(int s, int a, int b, int c, int d);
-extern int ObjLink_AttachChild(int parent, int child, int a);
-extern int ObjLink_DetachChild(int parent, int child);
 extern void cmbsrc_setExternalActive(int obj, int active);
 extern void Obj_FreeObject(int obj);
 extern void objSetSlot(int obj, int slot);

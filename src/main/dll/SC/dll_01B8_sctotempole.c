@@ -15,12 +15,11 @@ extern void Sfx_PlayFromObject(int a, int b);
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objfx.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int* state);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 fn_8001461C(void);
 
 extern f32 timeDelta;
@@ -163,7 +162,7 @@ void sc_totempole_update(int obj)
     }
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
                                                                 (ObjAnimEventList*)&stk);
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int*)&lbl_803DDC08);
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (f32*)&lbl_803DDC08);
 }
 
 void sc_totempole_init(int obj, int p2)
