@@ -1076,7 +1076,7 @@ void DR_CloudRunner_update(int obj)
                     vec[0] = lbl_803E8418;
                     vec[1] = lbl_803E841C;
                     vec[2] = lbl_803E8420;
-                    (*(void (*)(f32*, int, int, int))(*(int*)((u8*)*gMapEventInterface + 0x24)))(vec, 0, 0, 0);
+                    (*gMapEventInterface)->setEventWarpPosition(vec, 0, 0, 0);
                 }
                 (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
                 inner->unkB04 = 0;
