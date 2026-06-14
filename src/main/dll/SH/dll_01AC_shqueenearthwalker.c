@@ -342,7 +342,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     }
 
     player = Obj_GetPlayerObject();
-    *(u8*)((int)state + 0x8) = 1;
+    ((u8*)state)[8] = 1;
     ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
     ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
     ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
