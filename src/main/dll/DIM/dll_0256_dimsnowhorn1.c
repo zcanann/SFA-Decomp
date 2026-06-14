@@ -796,15 +796,14 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
         (int)obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA,
         &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
-    if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & 0x100) == 0)
+    if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & 0x100) != 0)
     {
-        return 0;
+        if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & 0x4) == 0)
+        {
+            return 0xc;
+        }
     }
-    if ((void*)near != NULL && (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & 0x4))
-    {
-        return 0;
-    }
-    return 0xc;
+    return 0;
 }
 
 /*
