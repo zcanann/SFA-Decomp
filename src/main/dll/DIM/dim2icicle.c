@@ -157,7 +157,7 @@ extern f32 lbl_803E4C3C;
 extern f32 lbl_803E4C40;
 extern f32 lbl_803E4C48;
 extern u8 lbl_803AC97C[];
-extern f32 lbl_803AC970[];
+extern f32 gDIMbossAnimScratchBase[];
 
 typedef struct IcicleFxPos {
     u8 pad[0xc];
@@ -265,13 +265,13 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
       ((IcicleFxPos *)&lbl_803AC97C)->y = (f32)(int)randomGetRange(-0x19, 0x19);
       c34v = lbl_803E4C34;
       ((IcicleFxPos *)&lbl_803AC97C)->z = lbl_803E4C34;
-      lbl_803AC970[0] = ((IcicleFxPos *)&lbl_803AC97C)->x / (c34v * lbl_803E4C38);
-      lbl_803AC970[1] = ((IcicleFxPos *)&lbl_803AC97C)->y / (c34v * lbl_803E4C38);
-      lbl_803AC970[2] = lbl_803E4BCC;
-      PSMTXMultVec(m, lbl_803AC970, lbl_803AC970);
+      gDIMbossAnimScratchBase[0] = ((IcicleFxPos *)&lbl_803AC97C)->x / (c34v * lbl_803E4C38);
+      gDIMbossAnimScratchBase[1] = ((IcicleFxPos *)&lbl_803AC97C)->y / (c34v * lbl_803E4C38);
+      gDIMbossAnimScratchBase[2] = lbl_803E4BCC;
+      PSMTXMultVec(m, gDIMbossAnimScratchBase, gDIMbossAnimScratchBase);
       ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 1);
       (*gPartfxInterface)->spawnObject(
-          (void *)objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, lbl_803AC970);
+          (void *)objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, gDIMbossAnimScratchBase);
       i = i + 1;
     } while (i < 5);
   }
@@ -311,7 +311,6 @@ extern void doRumble(f32 v);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void *lbl_803DCAB4;
 extern int lbl_80325AB8[];
 extern f32 lbl_803E4BC4;
 extern f32 lbl_803E4BF4;
@@ -343,147 +342,147 @@ typedef struct IcicleWarpFlags {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIM2icicle_updateDarkIceMinesWarpAndEffects(int obj, int runtime)
+void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
-  u8 *state;
+  DIMbossTopState *topState;
   int counter;
   int i;
   u32 flags;
   f32 vec[3];
 
-  state = *(u8 **)(runtime + 0x40c);
-  counter = *(int *)(state + 0xb0);
+  topState = runtime->topState;
+  counter = topState->defeatTimer;
   if (counter != 0) {
-    *(int *)(state + 0xb0) = counter - 1;
-    if (*(int *)(state + 0xb0) <= 0) {
-      *(int *)(state + 0xb0) = 0;
+    topState->defeatTimer = counter - 1;
+    if (topState->defeatTimer <= 0) {
+      topState->defeatTimer = 0;
       setShowWorldMapHud(0);
       warpToMap(0x77, 1);
       return;
     }
   }
-  if (((IcicleWarpFlags *)(state + 0xb6))->pending) {
+  if (((IcicleWarpFlags *)&topState->steamFlags)->pending) {
     getEnvfxAct(0, 0, 0xdb, 0);
     getEnvfxAct(0, 0, 0xdc, 0);
     skyFn_80089710(7, 1, 0);
     skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
     skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
-    ((IcicleWarpFlags *)(state + 0xb6))->pending = 0;
+    ((IcicleWarpFlags *)&topState->steamFlags)->pending = 0;
   }
-  if (*(int *)(runtime + 0x314) & 4) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~4;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[0]);
-    gDIMbossSequenceFlags |= 0x204;
+  if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_0004) {
+    runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_0004;
+    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[0]);
+    gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_7;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(runtime + 0x314) & 2) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~2;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[1]);
-    gDIMbossSequenceFlags |= 0x404;
+  if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_0002) {
+    runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_0002;
+    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[1]);
+    gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_8;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(runtime + 0x314) & 0x10) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~0x10;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[2]);
-    gDIMbossSequenceFlags |= 0x804;
+  if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_BREATH_BURST) {
+    runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_BREATH_BURST;
+    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[2]);
+    gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_9;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(runtime + 0x314) & 8) {
-    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~8;
-    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[3]);
-    gDIMbossSequenceFlags |= 0x1004;
+  if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE) {
+    runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE;
+    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[3]);
+    gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_10;
     doRumble(lbl_803E4BF8);
   }
-  if (gDIMbossSequenceFlags & 0x2000) {
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_2000) {
     i = 0;
     do {
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b1, state + 0x4c, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b1, &topState->liftGlowSource, 0x200001, -1, NULL);
       i = i + 1;
     } while (i < 0x32);
-    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, state + 0x4c, 0x200001, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, state + 0x4c, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, &topState->liftGlowSource, 0x200001, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, &topState->liftGlowSource, 0x200001, -1, NULL);
   }
-  if (gDIMbossSequenceFlags & 0x80000) {
-    ((void (*)(int, int, int, int, int))*(code **)(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x800, 0, 1, 0);
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_80000) {
+    (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x800, NULL, 1, NULL);
   }
-  if ((gDIMbossSequenceFlags & 0x8020) || *(s8 *)(runtime + 0x354) < 2) {
-    if (gDIMbossSequenceFlags & 0x20) {
+  if ((gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAGS_TONSIL_IMPACT) || runtime->animMode < 2) {
+    if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0020) {
       i = 0;
       do {
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, state + 0x34, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, &topState->tonsilDustSource, 0x200001, -1, NULL);
         i = i + 1;
       } while (i < 7);
     }
     else {
-      if (randomGetRange(0, *(s8 *)(runtime + 0x354)) == 0 && *(s16 *)(runtime + 0x402) == 2) {
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, state + 0x34, 0x200001, -1, NULL);
+      if (randomGetRange(0, runtime->animMode) == 0 && runtime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, &topState->tonsilDustSource, 0x200001, -1, NULL);
       }
     }
-    if (gDIMbossSequenceFlags & 0x8000) {
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, state + 0x34, 0x200001, -1, NULL);
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, state + 0x34, 0x200001, -1, NULL);
+    if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_8000) {
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, &topState->tonsilDustSource, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b3, &topState->tonsilDustSource, 0x200001, -1, NULL);
     }
   }
-  if (gDIMbossSequenceFlags & 0x101c0) {
-    if (gDIMbossSequenceFlags & 0x40) {
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAGS_ICICLE_HIT_EFFECTS) {
+    if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0040) {
       i = 0;
       do {
         vec[0] = lbl_803E4C58 * (f32)(int)randomGetRange(-5, 5);
         vec[1] = lbl_803E4C58 * (f32)(int)randomGetRange(-5, 5);
         vec[2] = lbl_803E4C5C * (f32)(int)randomGetRange(2, 8);
-        PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, state + 0x1c, 0x200001, -1, vec);
+        PSMTXMultVec(topState->breathBurstMtx, vec, vec);
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, &topState->breathBurstSource, 0x200001, -1, vec);
         i = i + 1;
       } while (i < 5);
     }
-    if (gDIMbossSequenceFlags & 0x80) {
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, state + 4, 0x200001, -1, NULL);
+    if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0080) {
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b5, &topState->blueWhiteEffectSource, 0x200001, -1, NULL);
     }
-    if (gDIMbossSequenceFlags & 0x100) {
+    if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0100) {
       vec[0] = lbl_803E4C58;
       vec[1] = lbl_803E4C60;
       vec[2] = lbl_803E4C64 * (f32)(int)randomGetRange(4, 8);
-      PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b6, state + 4, 0x200001, -1, vec);
+      PSMTXMultVec(topState->breathBurstMtx, vec, vec);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x4b6, &topState->blueWhiteEffectSource, 0x200001, -1, vec);
     }
-    if (gDIMbossSequenceFlags & 0x10000) {
+    if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_CAPTURE_BLUE_WHITE_VELOCITY) {
       vec[0] = lbl_803E4BD8;
       vec[1] = lbl_803E4C60;
       vec[2] = lbl_803E4C68;
-      PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
-      memcpy(state + 0x94, vec, 0xc);
-      gDIMbossSequenceFlags |= 0x20000LL;
+      PSMTXMultVec(topState->breathBurstMtx, vec, vec);
+      memcpy(topState->blueWhiteVelocity, vec, 0xc);
+      gDIMbossSequenceFlags |= (u64)DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT;
     }
   }
-  if (gDIMbossSequenceFlags & 0x4000) {
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_ARENA_DUST_BURST) {
     i = 0;
     do {
       (*gPartfxInterface)->spawnObject((void *)obj, 0x4b7, NULL, 1, -1, NULL);
       i = i + 1;
     } while (i < 0x32);
   }
-  if (gDIMbossSequenceFlags & 1) {
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0001) {
     Camera_EnableViewYOffset();
     doRumble(lbl_803E4BF8);
     CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
   }
-  if (gDIMbossSequenceFlags & 0x40000) {
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_40000) {
     Camera_EnableViewYOffset();
     doRumble(lbl_803E4C6C);
     CameraShake_Start(lbl_803E4BC8, lbl_803E4BF4, lbl_803E4BF8);
   }
-  if (gDIMbossSequenceFlags & 2) {
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0002) {
     Camera_EnableViewYOffset();
     CameraShake_Start(lbl_803E4BD8, lbl_803E4BD8, lbl_803E4BD8);
     CameraShake_SetAllMagnitudes(lbl_803E4BD8);
   }
-  if (gDIMbossSequenceFlags & 4) {
+  if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0004) {
     GameBit_Set(0x25e, 1);
   }
   else {
     GameBit_Set(0x25e, 0);
   }
-  gDIMbossSequenceFlags = gDIMbossSequenceFlags & 0xa1ff0;
+  gDIMbossSequenceFlags &= DIMBOSS_SEQUENCE_FLAGS_PERSIST_AFTER_EFFECT_UPDATE;
 }
 
 extern int Obj_GetPlayerObject(void);
