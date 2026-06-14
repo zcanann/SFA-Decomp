@@ -68,28 +68,28 @@ extern f32 lbl_803E5A34;
 
 undefined4 FUN_801e76a0(int param_1)
 {
-    uint uVar1;
-    undefined4 uVar2;
-    int iVar3;
+    uint bit;
+    undefined4 result;
+    int state;
 
-    iVar3 = *(int*)&((GameObject*)param_1)->extra;
-    uVar1 = GameBit_Get(0xcef);
-    if (uVar1 == 0)
+    state = *(int*)&((GameObject*)param_1)->extra;
+    bit = GameBit_Get(0xcef);
+    if (bit == 0)
     {
-        uVar2 = 0;
+        result = 0;
     }
     else
     {
-        uVar1 = GameBit_Get(0xad3);
-        if (uVar1 == 0)
+        bit = GameBit_Get(0xad3);
+        if (bit == 0)
         {
             GameBit_Set(0xad3, 1);
-            iVar3 = *(int*)(iVar3 + 0x9b4);
-            (**(code**)(**(int**)&((GameObject*)iVar3)->anim.dll + 0x24))(iVar3, 1, 2);
+            state = *(int*)(state + 0x9b4);
+            (**(code**)(**(int**)&((GameObject*)state)->anim.dll + 0x24))(state, 1, 2);
         }
-        uVar2 = 2;
+        result = 2;
     }
-    return uVar2;
+    return result;
 }
 
 #pragma scheduling off
