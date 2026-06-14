@@ -5,7 +5,7 @@
 
 extern f32 lbl_803E1628;
 
-extern void objRenderFn_8003b8f4(u8 *reticle, undefined4 a, undefined4 b, undefined4 c,
+extern void objRenderFn_8003b8f4(GameObject *reticle, undefined4 a, undefined4 b, undefined4 c,
                         undefined4 d, f32 f);
 
 #pragma scheduling off
@@ -24,31 +24,34 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
 {
   int savedReticleState;
   u8 savedReticleAlpha;
-  u8 *reticle;
+  GameObject *reticle;
+  GameObject *targetObject;
   CamcontrolTargetObject *target;
   ObjHitVolumeRuntimeBounds *bounds;
   ObjHitVolumeRuntimeTransform *slot;
+  ObjAnimBank *activeBank;
   u8 idx;
   int mode;
   int paletteIdx;
   u16 *flagsObj;
 
-  reticle = (u8 *)gCamcontrolTargetReticle;
+  reticle = (GameObject *)gCamcontrolTargetReticle;
   target = fallbackTarget;
   if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {
     target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->targetReticleOverride;
     savedReticleState = gCamcontrolTargetState;
     gCamcontrolTargetState = 3;
-    savedReticleAlpha = ((GameObject *)reticle)->anim.alpha;
-    ((GameObject *)reticle)->anim.alpha = 0xFF;
+    savedReticleAlpha = reticle->anim.alpha;
+    reticle->anim.alpha = 0xFF;
   }
 
   if (target != NULL) {
-    if (((GameObject *)target)->anim.hitVolumeTransforms == NULL) goto end;
+    targetObject = (GameObject *)target;
+    if (targetObject->anim.hitVolumeTransforms == NULL) goto end;
 
     idx = target->targetSetupIndex;
-    slot = &((GameObject *)target)->anim.hitVolumeTransforms[idx];
-    bounds = &((GameObject *)target)->anim.hitVolumeBounds[idx];
+    slot = &targetObject->anim.hitVolumeTransforms[idx];
+    bounds = &targetObject->anim.hitVolumeBounds[idx];
 
     switch (bounds->flags & 0xF) {
     case 1:
@@ -65,42 +68,42 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
 
     paletteIdx = (int)target->targetPaletteIndex;
     if (paletteIdx >= 4) paletteIdx = 0;
-    gCamcontrolTargetHelpTextId =
-        ((GameObject *)target)->anim.modelInstance->helpTextIds[paletteIdx];
+    gCamcontrolTargetHelpTextId = targetObject->anim.modelInstance->helpTextIds[paletteIdx];
 
-    *(f32 *)(reticle + 0x18) = slot->jointX;
-    *(f32 *)(reticle + 0x1C) = slot->jointY;
-    *(f32 *)(reticle + 0x20) = slot->jointZ;
-    *(s8 *)(reticle + 0xAD) = mode;
+    reticle->anim.worldPosX = slot->jointX;
+    reticle->anim.worldPosY = slot->jointY;
+    reticle->anim.worldPosZ = slot->jointZ;
+    reticle->anim.bankIndex = mode;
 
-    *(u32 *)(reticle + 0x30) = *(u32 *)&((GameObject *)target)->anim.parent;
-    if (*(u32 *)(reticle + 0x30) != 0) {
-      Obj_TransformWorldPointToLocal(*(f32 *)(reticle + 0x18),
-                                     *(f32 *)(reticle + 0x1C),
-                                     *(f32 *)(reticle + 0x20),
-                                     (f32 *)(reticle + 0xC), (f32 *)(reticle + 0x10),
-                                     (f32 *)(reticle + 0x14),
-                                     *(u32 *)(reticle + 0x30));
+    reticle->anim.parent = targetObject->anim.parent;
+    if (reticle->anim.parent != NULL) {
+      Obj_TransformWorldPointToLocal(reticle->anim.worldPosX,
+                                     reticle->anim.worldPosY,
+                                     reticle->anim.worldPosZ,
+                                     &reticle->anim.localPosX, &reticle->anim.localPosY,
+                                     &reticle->anim.localPosZ,
+                                     (u32)reticle->anim.parent);
     } else {
-      *(f32 *)(reticle + 0xC) = *(f32 *)(reticle + 0x18);
-      *(f32 *)(reticle + 0x10) = *(f32 *)(reticle + 0x1C);
-      *(f32 *)(reticle + 0x14) = *(f32 *)(reticle + 0x20);
+      reticle->anim.localPosX = reticle->anim.worldPosX;
+      reticle->anim.localPosY = reticle->anim.worldPosY;
+      reticle->anim.localPosZ = reticle->anim.worldPosZ;
     }
-    *(s16 *)(reticle + 0x2) = 0;
-    *(s16 *)(reticle + 0x4) = 0;
-    *(f32 *)(reticle + 0x8) = lbl_803E1628;
-    reticle[0x37] = ((GameObject *)reticle)->anim.alpha;
+    reticle->anim.rotY = 0;
+    reticle->anim.rotZ = 0;
+    reticle->anim.rootMotionScale = lbl_803E1628;
+    ((u8 *)reticle)[0x37] = reticle->anim.alpha;
     objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, gCamcontrolNormalizedMax);
   } else {
-    *(u32 *)(reticle + 0x30) = 0;
+    reticle->anim.parent = NULL;
   }
 
-  flagsObj = *(u16 **)((u8 *)*(u32 *)(reticle + 0x7C) + (s8)reticle[0xAD] * 4);
+  activeBank = reticle->anim.banks[reticle->anim.bankIndex];
+  flagsObj = (u16 *)activeBank;
   *(u16 *)((u8 *)flagsObj + 0x18) = (u16)(*(u16 *)((u8 *)flagsObj + 0x18) & ~8);
 
   if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {
     gCamcontrolTargetState = (s8)savedReticleState;
-    ((GameObject *)reticle)->anim.alpha = savedReticleAlpha;
+    reticle->anim.alpha = savedReticleAlpha;
   }
 end:
   ;
