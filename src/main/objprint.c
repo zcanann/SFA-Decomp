@@ -1557,6 +1557,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
 
     for (idx = 0; idx < count; idx++)
     {
+        int key = *keys;
         found = NULL;
         table = (void*)((GameObject*)obj)->anim.modelInstance;
         if (table != NULL)
@@ -1567,7 +1568,8 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
             for (k = 0; k < n; k++)
             {
                 u8* data = *(u8**)&((ObjDef*)table)->jointData;
-                if ((int)data[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff && (int)data[i] == *keys)
+                s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
+                if ((int)data[di] != 0xff && (int)data[i] == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
@@ -2118,8 +2120,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         for (k = 0; k < n; k++)
         {
             u8* data = *(u8**)&((ObjDef*)table)->jointData;
-            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0)
+            if ((int)data[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
