@@ -323,9 +323,12 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
             if (movementState != 2)
             {
                 ((ObjSeqState*)seq)->posOffsetScale = lbl_803DEFC8;
-                ((ObjSeqState*)seq)->posOffsetX = ((GameObject*)obj)->anim.localPosX - *(f32*)(sourceObj + 0xc);
-                ((ObjSeqState*)seq)->posOffsetY = ((GameObject*)obj)->anim.localPosY - *(f32*)(sourceObj + 0x10);
-                ((ObjSeqState*)seq)->posOffsetZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(sourceObj + 0x14);
+                ((ObjSeqState*)seq)->posOffsetX =
+                    ((GameObject*)obj)->anim.localPosX - ((GameObject*)sourceObj)->anim.localPosX;
+                ((ObjSeqState*)seq)->posOffsetY =
+                    ((GameObject*)obj)->anim.localPosY - ((GameObject*)sourceObj)->anim.localPosY;
+                ((ObjSeqState*)seq)->posOffsetZ =
+                    ((GameObject*)obj)->anim.localPosZ - ((GameObject*)sourceObj)->anim.localPosZ;
                 ((ObjSeqState*)seq)->movementState = 2;
             }
             if ((s8)sourceModel[0x20] == 1)
@@ -349,7 +352,8 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
     flags = obj[0xaf];
     flags &= 0xf8;
     obj[0xaf] = flags;
-    Obj_GetWorldPosition(obj, (f32*)(obj + 0x18), (f32*)(obj + 0x1c), (f32*)(obj + 0x20));
+    Obj_GetWorldPosition(obj, &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY,
+                         &((GameObject*)obj)->anim.worldPosZ);
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject = 0;
@@ -569,8 +573,9 @@ void ObjSeq_run(void)
                     ((ObjSeqState*)seqp)->unk7E = 2;
                     ((ObjSeqState*)seqp)->unk5E = xrot;
                     ObjSeq_update(candidate, lbl_803DEFC8);
-                    Obj_GetWorldPosition(candidate, (f32*)(candidate + 0x18),
-                                         (f32*)(candidate + 0x1c), (f32*)(candidate + 0x20));
+                    Obj_GetWorldPosition(candidate, &((GameObject*)candidate)->anim.worldPosX,
+                                         &((GameObject*)candidate)->anim.worldPosY,
+                                         &((GameObject*)candidate)->anim.worldPosZ);
                 }
                 else
                 {
@@ -1312,7 +1317,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             break;
         }
-        dist = Vec_xzDistance((f32*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
+        dist = Vec_xzDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
         strength = lbl_803DF008 * (f32)(cmdArg - 7) + lbl_803DEFC8;
         if (dist < lbl_803DF00C)
         {
@@ -3274,8 +3279,8 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
         lbl_803DD0B8 = obj;
         lbl_803DD0B6 = framesThisStep;
     }
-    Obj_GetWorldPosition(seqObj, (f32*)(seqObj + 0x18), (f32*)(seqObj + 0x1c),
-                         (f32*)(seqObj + 0x20));
+    Obj_GetWorldPosition(seqObj, &((GameObject*)seqObj)->anim.worldPosX, &((GameObject*)seqObj)->anim.worldPosY,
+                         &((GameObject*)seqObj)->anim.worldPosZ);
 }
 
 int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj)
