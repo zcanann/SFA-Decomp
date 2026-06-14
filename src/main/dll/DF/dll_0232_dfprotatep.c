@@ -596,8 +596,9 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState
     gameTimerStop();
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        if (animUpdate->eventIds[i] == 1)
+        switch ((int)animUpdate->eventIds[i])
         {
+        case 1:
             state->flags.bit10 = 1;
             state->ringCount = 0;
             GameBit_Set(state->activationEventId, 0);
@@ -607,6 +608,7 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState
                 sfxplayer_ensureEffectHandlePair(obj, i);
             }
             state->flags.bit40 = 1;
+            break;
         }
     }
 
