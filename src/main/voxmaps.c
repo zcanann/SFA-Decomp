@@ -194,15 +194,15 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     ix = (int)sx;
     iy = (int)sy;
     iz = (int)sz;
-    if (sx < lbl_803DE6B0)
+    if (sx < 0.0f)
     {
         ix -= 10;
     }
-    if (sy < lbl_803DE6B0)
+    if (sy < 0.0f)
     {
         iy -= 10;
     }
-    if (sz < lbl_803DE6B0)
+    if (sz < 0.0f)
     {
         iz -= 10;
     }
