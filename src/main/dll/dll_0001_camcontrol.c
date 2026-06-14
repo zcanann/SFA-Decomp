@@ -278,7 +278,7 @@ LAB_80102ab4:
     }
     reticle->alpha = (int)fVar4;
     gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
-    *(s16*)reticle = (short)(int)(lbl_803E167C * timeDelta + (float)*(s16*)reticle);
+    reticle->rotX = (short)(int)(lbl_803E167C * timeDelta + (float)reticle->rotX);
     return;
 }
 
@@ -684,7 +684,7 @@ void Camera_update(void)
         }
         if (focus->parent != (void*)0x0)
         {
-            focus->rotX += *(s16*)focus->parent;
+            focus->rotX += ((ObjAnimComponent*)focus->parent)->rotX;
         }
         camcontrol_applyQueuedAction();
         if (gCamcontrolCurrentHandler != 0)
@@ -723,7 +723,7 @@ void Camera_update(void)
         focus->worldPosZ = gCamcontrolSavedFocusWorldZ;
         if (focus->parent != (void*)0x0)
         {
-            focus->rotX -= *(s16*)focus->parent;
+            focus->rotX -= ((ObjAnimComponent*)focus->parent)->rotX;
         }
     }
     return;
