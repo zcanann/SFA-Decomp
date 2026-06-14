@@ -1234,8 +1234,9 @@ void fn_802BB4B4(int obj, int a, int slot)
     }
     else
     {
-        state->baddie.moveInputX = lbl_803E8234;
-        state->baddie.moveInputZ = lbl_803E8234;
+        f32 zero = lbl_803E8234;
+        state->baddie.moveInputX = zero;
+        state->baddie.moveInputZ = zero;
         *(u32*)&state->baddie.unk31C = 0;
         *(u32*)&state->baddie.unk318 = 0;
         *(u16*)&state->baddie.cameraYaw = 0;
