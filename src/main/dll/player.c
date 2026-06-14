@@ -12976,7 +12976,7 @@ void fn_802AF7F8(int obj, int state)
     case 0x2d:
         break;
     case 0x40:
-        if ((getButtonsJustPressed(0) & 0x200) != 0 &&
+        if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x200) != 0 &&
             ((ByteFlags*)((char*)state + 0x3f3))->b08 != 0 &&
             ((PlayerState*)state)->curAnimId != 0x44)
         {
