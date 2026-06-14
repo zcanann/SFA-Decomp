@@ -181,12 +181,12 @@ void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 #pragma dont_inline on
 int objSeqFindLabel(u8* seq, int label)
 {
-    int currentLabel;
-    int commandIndex;
     int commandCount;
-    u8* command;
+    int commandIndex;
     int repeatCount;
     u32 packed;
+    int currentLabel;
+    u8* command;
 
     currentLabel = 0;
     commandIndex = 0;
