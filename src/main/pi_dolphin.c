@@ -4673,7 +4673,7 @@ int GXFlush_(u8 visible, int unused)
     renderFrameBuffer = next;
     if (visible != 0 && lbl_803DB5CC != 0)
     {
-        lbl_803DB5CC = lbl_803DB5CC - 1;
+        lbl_803DB5CC--;
         if (lbl_803DB5CC == 0)
         {
             VISetBlack(0);
