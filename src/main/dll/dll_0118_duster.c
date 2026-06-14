@@ -183,6 +183,7 @@ void duster_update(int obj)
     DusterState* state;
     DusterSetup* setup;
     int player;
+    GameObject* playerObj;
     void* floorHits;
     int msg;
     int next;
@@ -197,6 +198,7 @@ void duster_update(int obj)
     state = ((GameObject*)obj)->extra;
     setup = *(DusterSetup**)&((GameObject*)obj)->anim.placementData;
     player = (int)Obj_GetPlayerObject();
+    playerObj = (GameObject*)player;
 
     while (ObjMsg_Pop(obj, &msg, 0, 0) != 0)
     {
@@ -342,13 +344,13 @@ void duster_update(int obj)
         *(s16*)obj = (s16)((f32) * (s16*)obj + lbl_803E38CC * timeDelta);
     }
 
-    floorDelta = *(f32*)(player + 0x10) - ((GameObject*)obj)->anim.localPosY;
+    floorDelta = playerObj->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     if (floorDelta < lbl_803E38C4)
     {
         floorDelta = -floorDelta;
     }
     if (floorDelta < lbl_803E38D0 &&
-        Vec_xzDistance((f32*)(player + 0x18), (f32*)(obj + 0x18)) < lbl_803E38D4 &&
+        Vec_xzDistance(&playerObj->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < lbl_803E38D4 &&
         fn_8029622C(player) != 0)
     {
         if (GameBit_Get(0xcc0) == 0)

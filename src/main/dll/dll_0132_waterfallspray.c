@@ -57,6 +57,7 @@ void WaterFallSpray_update(int* objParam)
     u32* state;
     u8* data;
     u8* player;
+    GameObject* playerObj;
     WaterFallSprayPartfxArgs partfxArgs;
     f32 dx;
     f32 dy;
@@ -69,6 +70,7 @@ void WaterFallSpray_update(int* objParam)
     state = ((GameObject*)obj)->extra;
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
+    playerObj = (GameObject*)player;
     if (player != NULL)
     {
         if (*(s16*)(data + 0x18) != -1)
@@ -90,9 +92,9 @@ void WaterFallSpray_update(int* objParam)
             cooldown = ((GameObject*)obj)->unkF4;
             if (cooldown <= 0)
             {
-                dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)(player + 0x18);
-                dy = ((GameObject*)obj)->anim.worldPosY - *(f32*)(player + 0x1c);
-                dz = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(player + 0x20);
+                dx = ((GameObject*)obj)->anim.worldPosX - playerObj->anim.worldPosX;
+                dy = ((GameObject*)obj)->anim.worldPosY - playerObj->anim.worldPosY;
+                dz = ((GameObject*)obj)->anim.worldPosZ - playerObj->anim.worldPosZ;
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
                 if (((distance <= (f32)(s32)((u32)data[0x20] << 4)) || (data[0x20] == 0)) &&
                     ((((GameObject*)obj)->objectFlags & 0x800) != 0))
