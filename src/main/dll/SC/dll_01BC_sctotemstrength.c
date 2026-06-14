@@ -308,7 +308,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             st->prevTrackOffset = st->currentTrackOffset;
         }
         st->playerSfxTimer = st->playerSfxTimer - timeDelta;
-        if (st->playerSfxTimer < lbl_803E5678)
+        if (st->playerSfxTimer < *(f32*)&lbl_803E5678)
         {
             if (diff < lbl_803E5678)
             {
@@ -323,7 +323,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             Sfx_PlayFromObject(player, PLATFORM1_PLAYER_SFX_ID);
         }
         st->platformSfxTimer = st->platformSfxTimer - timeDelta;
-        if (st->platformSfxTimer < lbl_803E5678)
+        if (st->platformSfxTimer < *(f32*)&lbl_803E5678)
         {
             if (diff > lbl_803E5678)
             {
