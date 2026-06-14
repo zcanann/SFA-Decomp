@@ -349,8 +349,11 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     even on a phi. MP4-ORACLE CLINCHER: MP4 (100%-matched) has 41 `li;mr` two-counter examples —
     ALL are `s16`/`int` (extsh), ZERO are `u8` (clrlwi). The target's counters are `u8` (clrlwi
     r25,24; cmplwi 8) AND `mr` — a combo absent from every 100%-matched MWCC fn. So `u8`+two-counter-
-    copy is not producible by any in-repo compiler; widening to s16/int DOES yield `mr` but breaks
-    the clrlwi masks (net regress). Confirms the target used an unavailable build config. COMPLETE
+    copy is not producible by any in-repo compiler. ⚠️CORRECTION (2026-06-14, verified in-tree): the
+    earlier claim that "widening to s16/int DOES yield `mr`" is FALSE for THIS construct — widening
+    orbIndex (copy source), availableCount (copy dest), or BOTH to int/s16 ALL still emit `li r26,0`
+    (the static-0 copy folds regardless of width) AND break the clrlwi masks. The width is irrelevant;
+    only the constness of the source matters. Confirms the target used an unavailable build config. COMPLETE
     COMPILER SWEEP (definitive): ALL 29 MWCC binaries in build/compilers (every GC 1.0→3.0a5 AND all
     9 Wii 1.0→1.7) emit `li;li` — none produces the `mr`. Also ruled out: static-helper extraction
     (stays separate→`bl` diverges; force-inline→different frame/alloc), runtime/volatile loop bound
