@@ -593,7 +593,7 @@ void chuka_update(int obj)
         for (i = idx; i < cnt; i++)
         {
             o = base[i];
-            if (*(s16*)(o + 0x46) == 0x431)
+            if (((GameObject*)o)->anim.seqId == 0x431)
             {
                 ((ChukaState*)blob)->linkedObject = o;
                 i = cnt;
