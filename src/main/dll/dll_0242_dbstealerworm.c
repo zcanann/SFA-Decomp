@@ -2265,7 +2265,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_ClearHitVolumes(int);
-    extern int RandomTimer_UpdateRangeTrigger(int, f32, f32);
+    extern int RandomTimer_UpdateRangeTrigger(void*, f32, f32);
     extern void Sfx_PlayFromObject(int, int);
     extern int Obj_GetPlayerObject(void);
     extern int Obj_GetYawDeltaToObject(int, int, f32*);
@@ -2348,14 +2348,14 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
             ((BaddieState*)p2)->moveDone = 0;
         }
         frac = (f32)blob->aggression / lbl_803E62C4;
-        if (RandomTimer_UpdateRangeTrigger((int)&sub->randomTimer4C, lbl_803E62C8, lbl_803E632C) != 0)
+        if (RandomTimer_UpdateRangeTrigger(&sub->randomTimer4C, lbl_803E62C8, lbl_803E632C) != 0)
         {
             Sfx_PlayFromObject(obj, 0x43f);
         }
     }
     else
     {
-        if (RandomTimer_UpdateRangeTrigger((int)&sub->randomTimer48, lbl_803E62C8, lbl_803E632C) != 0)
+        if (RandomTimer_UpdateRangeTrigger(&sub->randomTimer48, lbl_803E62C8, lbl_803E632C) != 0)
         {
             Sfx_PlayFromObject(obj, 0x440);
         }

@@ -461,7 +461,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     }
     if (GameBit_Get(0x3e3) != 0)
     {
-        if (RandomTimer_UpdateRangeTrigger((int)((char*)inner + 0xd04), lbl_803E8244, lbl_803E8248) != 0)
+        if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
             Sfx_PlayFromObject(obj, 0x43a);
         }
@@ -644,7 +644,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
             }
             else
             {
-                if (RandomTimer_UpdateRangeTrigger((int)((char*)inner + 0xd08),
+                if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd08,
                                                    lbl_803E8294, lbl_803E8284) != 0)
                 {
                     Sfx_PlayFromObject(obj, 0x375);
@@ -675,7 +675,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     inner = ((GameObject*)obj)->extra;
     if (GameBit_Get(0x3e3) != 0)
     {
-        if (RandomTimer_UpdateRangeTrigger((int)((char*)inner + 0xd04), lbl_803E8244, lbl_803E8248) != 0)
+        if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
             Sfx_PlayFromObject(obj, 0x43a);
         }

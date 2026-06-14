@@ -82,7 +82,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2);
 extern int DR_EarthWarrior_stateHandler03(int obj, int p2);
 extern f32 lbl_803E82C0;
 extern int randomGetRange(int lo, int hi);
-extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
+extern int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
 extern void buttonDisable(int a, int b);
 extern f32 lbl_803E83F4;
 extern f32 lbl_803E83F8;

@@ -10,5 +10,6 @@ void Vec3_ReflectAgainstNormal(f32 *normal, f32 *velocity, f32 *out);
 f32 Vec3_Normalize(f32 *v);
 void mtxRotateByVec3s(f32 *mtx, void *transform);
 void setMatrixFromObjectPos(f32 *mtx, void *transform);
+int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
 
 #endif /* MAIN_VECMATH_H_ */

@@ -671,7 +671,7 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 
 #pragma fp_contract off
 #pragma dont_inline off
-int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void* timerp)
+int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
 {
     extern f32 oneOverTimeDelta;
     extern f32 lbl_803DE7F4;

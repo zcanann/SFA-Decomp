@@ -185,7 +185,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
     }
     inner = ((GameObject*)obj)->extra;
     Vec_distance(obj + 0x18, (int)Obj_GetPlayerObject() + 0x18);
-    if (RandomTimer_UpdateRangeTrigger((int)((char*)inner + 0xb54), lbl_803E83F8, lbl_803E840C))
+    if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xb54, lbl_803E83F8, lbl_803E840C))
     {
         Sfx_PlayFromObject(obj, 0x464);
     }

@@ -7786,7 +7786,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         {
             move = 0x5d;
             fv = lbl_803E7F78;
-            if (RandomTimer_UpdateRangeTrigger(inner + 0x3ec, lbl_803E7ED4, lbl_803E7F10) != 0)
+            if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x3ec), lbl_803E7ED4, lbl_803E7F10) != 0)
             {
                 Sfx_PlayFromObject(obj, 0x452);
             }

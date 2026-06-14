@@ -1,13 +1,10 @@
+#include "dolphin/os.h"
 #include "main/dll/SH/SHthorntail.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
+#include "main/vecmath.h"
 
-extern void Sfx_PlayFromObject(SHthorntailObject* obj, u16 volumeId);
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern u32 RandomTimer_UpdateRangeTrigger(f32* state, f32 min, f32 max);
-extern int randomGetRange(int min, int max);
-extern int ObjTrigger_IsSet(int obj);
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject * obj);
-extern void OSPanic(const char* file, int line, const char* msg, ...);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -35,7 +32,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
                                            SHTHORNTAIL_PROXIMITY_ALERT_MAX_TIME);
         if (alertTriggered != 0)
         {
-            Sfx_PlayFromObject(obj, SHTHORNTAIL_ALERT_VOLUME_ID);
+            Sfx_PlayFromObject((u32)obj, SHTHORNTAIL_ALERT_VOLUME_ID);
         }
         runtime->idleTimer = runtime->idleTimer - timeDelta;
         if (runtime->idleTimer <= SHTHORNTAIL_IDLE_COUNTDOWN_TIME)

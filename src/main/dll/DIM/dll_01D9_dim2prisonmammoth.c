@@ -62,7 +62,6 @@ extern f32 lbl_803E82CC;
 extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
-extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
 
 extern f32 lbl_803E83F4;
 extern f32 lbl_803E83F8;
@@ -282,7 +281,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int p2)
         GameBit_Set(0x223, 1);
         buttonDisable(0, 0x100);
     }
-    if (RandomTimer_UpdateRangeTrigger(inner + 0x600, lbl_803E82C8, lbl_803E82CC))
+    if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), lbl_803E82C8, lbl_803E82CC))
     {
         Sfx_PlayFromObject(obj, 0x43a);
     }
