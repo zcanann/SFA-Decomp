@@ -364,7 +364,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxActImmediately(0, 0, 0x4f, 0);
             getEnvfxActImmediately(0, 0, 0x50, 0);
             getEnvfxActImmediately(0, 0, 0x245, 0);
-            if ((*gMapEventInterface)->getObjGroupStatus(0xe, 5) != 0)
+            if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
             {
                 getEnvfxActImmediately(0, 0, 0x246, 0);
             }
@@ -378,7 +378,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxAct(0, 0, 0x4f, 0);
             getEnvfxAct(0, 0, 0x50, 0);
             getEnvfxAct(0, 0, 0x245, 0);
-            if ((*gMapEventInterface)->getObjGroupStatus(0xe, 5) != 0)
+            if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
             {
                 getEnvfxAct(0, 0, 0x246, 0);
             }
@@ -479,12 +479,12 @@ void sc_levelcontrol_update(int obj)
                 ((ScLevelControlState*)state)->fog0C = lbl_803E5558;
             }
         }
-        if ((*gMapEventInterface)->getObjGroupStatus(0xe, 1) != 0)
+        if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 1) != 0)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E555C;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5560;
         }
-        else if ((*gMapEventInterface)->getObjGroupStatus(0xe, 5) != 0)
+        else if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(0xe, 5) != 0)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E5564;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5568;
