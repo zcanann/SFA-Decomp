@@ -15,6 +15,7 @@
 #include "main/mapEventTypes.h"
 #include "main/newclouds.h"
 #include "main/objseq.h"
+#include "main/player_control_interface.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
@@ -692,7 +693,6 @@ extern u8 lbl_8033C3B8[];
 extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
-extern void* gPlayerInterface;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
 extern void* gModgfxInterface;
