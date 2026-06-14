@@ -667,7 +667,6 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     f32 f2;
     f32 blend;
     f32 nearDist;
-    s16 moveId;
 
     nearDist = lbl_803E8240;
     near = ObjGroup_FindNearestObject(0x13, obj, &nearDist);
@@ -739,9 +738,8 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 
     changed = 0;
     blend = ((GameObject*)obj)->anim.currentMoveProgress;
-    moveId = ((GameObject*)obj)->anim.currentMove;
     phase = 0;
-    while ((&lbl_803DC748)[phase] != moveId && phase < 2)
+    while ((&lbl_803DC748)[phase] != ((GameObject*)obj)->anim.currentMove && phase < 2)
     {
         phase++;
     }
@@ -749,7 +747,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     {
         phase = 0;
     }
-    if (moveId == 0x208)
+    if (((GameObject*)obj)->anim.currentMove == 0x208)
     {
         phase = 1;
     }
@@ -776,7 +774,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     useNormal = 1;
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0 && moveId == 0x208)
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0 && ((GameObject*)obj)->anim.currentMove == 0x208)
     {
         changed = 1;
         useNormal = 0;
