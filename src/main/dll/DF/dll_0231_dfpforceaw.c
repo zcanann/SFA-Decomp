@@ -306,16 +306,16 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
     local_28 = (float)savedF29;
     fStack_24 = (float)savedPs29;
     obj = FUN_80286838();
-    state = *(short**)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     ref = FUN_80017a98();
     insideCount = 0;
     xSide = '\0';
     ySide = '\0';
     zSide = '\0';
-    dx = (double)(*(float*)(ref + 0xc) - *(float*)(obj + 0xc));
-    dy = (double)(*(float*)(ref + 0x10) - *(float*)(obj + 0x10));
+    dx = (double)(*(float*)(ref + 0xc) - ((GameObject *)obj)->anim.localPosX);
+    dy = (double)(*(float*)(ref + 0x10) - ((GameObject *)obj)->anim.localPosY);
     ftmp = (double)*(float*)(ref + 0x14);
-    dz = (double)(float)(ftmp - (double)*(float*)(obj + 0x14));
+    dz = (double)(float)(ftmp - (double)((GameObject *)obj)->anim.localPosZ);
     if (((int)state[4] == 0xffffffff) || (bitVal = FUN_80017690((int)state[4]), bitVal == 0))
     {
         bitVal = FUN_80017690((int)state[5]);
