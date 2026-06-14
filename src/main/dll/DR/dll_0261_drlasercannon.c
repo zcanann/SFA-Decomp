@@ -396,11 +396,11 @@ void drlasercannon_hitDetect(int obj)
         }
     }
     else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
-             state->lastHitObject != hitObject &&
+             (void *)state->lastHitObject != (void *)hitObject &&
              *(s16 *)(hitObject + 0x46) != state->hitExcludeType)
     {
         state->lastHitObject = hitObject;
-        state->health = state->health - hitVolume;
+        state->health -= hitVolume;
         Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E68F0);
         fn_8009A8C8(obj, lbl_803E68F4);
         Sfx_PlayFromObject(obj, 0x3cc);
