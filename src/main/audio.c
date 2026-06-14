@@ -858,8 +858,10 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = (u32*)&(&table->flags[i << 2])[384];
-    ip = (u16*)&(&table->flags[i << 1])[128];
+    op = (u32*)&table->flags[i << 2];
+    op += 96;
+    ip = (u16*)&table->flags[i << 1];
+    ip += 64;
     sfx16 = (u16)sfxId;
     for (; i >= 0; i--)
     {
