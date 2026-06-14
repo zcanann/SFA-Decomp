@@ -1374,7 +1374,7 @@ int fn_80202DA4(u8* obj, u8* p6, f32 p1, f32 p2, f32 p3, f32 p4)
     if (yawF < p1)
     {
         dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(p6 + 0x10);
-        dy = (dy >= zero) ? dy : -dy;
+        if (dy >= zero) {} else { dy = -dy; }
         if (dy < lbl_803E6378)
         {
             return 1;
