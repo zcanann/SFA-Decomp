@@ -30,7 +30,6 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 
 extern uint GameBit_Get(int eventId);
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DD8;
 extern void* Camera_GetCurrentViewSlot(void);
 extern u32 GameBit_Set(int bit, int value);
@@ -38,7 +37,6 @@ extern int ObjHits_GetPriorityHit(int obj, u32* outHit, int* outIdx, u32* outVol
 extern void Obj_FreeObject(int obj);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 lbl_803E3DE0;
 extern const f32 lbl_803E3DE8;
 extern f32 lbl_803E3DEC;
