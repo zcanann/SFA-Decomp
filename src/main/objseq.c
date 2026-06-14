@@ -4230,8 +4230,8 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
 
 void* ObjSeq_FindTargetObject(u8* obj)
 {
-    void* unused;
     int objectCount;
+    void* unused;
     void** objects;
     int targetId;
     int objectType;
