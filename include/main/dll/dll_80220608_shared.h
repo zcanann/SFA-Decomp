@@ -131,22 +131,28 @@ STATIC_ASSERT(offsetof(EarthWalkerState, encounterType) == 0x65B);
 STATIC_ASSERT(offsetof(EarthWalkerState, lastTriggeredState) == 0x65C);
 
 typedef struct EarthWalkerObject {
-    s16 facingAngle;
-    u8 pad02[0xA0 - 0x02];
-    s16 currentMove;
-    u8 padA2[0xAC - 0xA2];
-    s8 mapEventId;
-    u8 padAD[0xAF - 0xAD];
-    u8 statusFlags;
-    u8 padB0[0xB8 - 0xB0];
+    union {
+        ObjAnimComponent anim;
+        struct {
+            s16 facingAngle;
+            u8 pad02[0xA0 - 0x02];
+            s16 currentMove;
+            u8 padA2[0xAC - 0xA2];
+            s8 mapEventId;
+            u8 padAD[0xAF - 0xAD];
+            u8 statusFlags;
+        };
+    };
+    u8 padB0[0xB8 - sizeof(ObjAnimComponent)];
     EarthWalkerState *state;
     void *animEventCallback;
 } EarthWalkerObject;
 
+STATIC_ASSERT(offsetof(EarthWalkerObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(EarthWalkerObject, facingAngle) == 0x00);
-STATIC_ASSERT(offsetof(EarthWalkerObject, currentMove) == 0xA0);
-STATIC_ASSERT(offsetof(EarthWalkerObject, mapEventId) == 0xAC);
-STATIC_ASSERT(offsetof(EarthWalkerObject, statusFlags) == 0xAF);
+STATIC_ASSERT(offsetof(EarthWalkerObject, currentMove) == offsetof(ObjAnimComponent, currentMove));
+STATIC_ASSERT(offsetof(EarthWalkerObject, mapEventId) == offsetof(ObjAnimComponent, mapEventSlot));
+STATIC_ASSERT(offsetof(EarthWalkerObject, statusFlags) == offsetof(ObjAnimComponent, resetHitboxFlags));
 STATIC_ASSERT(offsetof(EarthWalkerObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(EarthWalkerObject, animEventCallback) == 0xBC);
 
