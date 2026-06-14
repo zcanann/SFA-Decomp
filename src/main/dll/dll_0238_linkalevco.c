@@ -1,7 +1,7 @@
 #include "main/dll/dll_0238_linkalevco.h"
 #include "main/gameplay_runtime.h"
+#include "main/objseq.h"
 
-extern FireObjectInterface** gObjectTriggerInterface;
 extern f32 lbl_803E64D8;
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B
@@ -162,7 +162,7 @@ void fireObj_hitDetect(void)
 
 void fireObj_update(FireObject* obj)
 {
-    (*gObjectTriggerInterface)->refresh(0, obj, 0xffffffff);
+    (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
     return;
 }
 

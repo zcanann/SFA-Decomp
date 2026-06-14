@@ -27,19 +27,11 @@ struct LinkALevelControlObject {
     LinkALevelControlAnimEventCallback animEventCallback;
 };
 
-typedef struct LinkALevelControlTriggerInterface {
-  u8 pad00[0x48];
-  void (*refresh)(int mode, LinkALevelControlObject *obj, int mask);
-} LinkALevelControlTriggerInterface;
-
-typedef LinkALevelControlTriggerInterface FireObjectInterface;
-
 #define LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS 0x2000
 
 STATIC_ASSERT(offsetof(LinkALevelControlObject, mapEventMapId) == 0xAC);
 STATIC_ASSERT(offsetof(LinkALevelControlObject, flags) == 0xB0);
 STATIC_ASSERT(offsetof(LinkALevelControlObject, animEventCallback) == 0xBC);
-STATIC_ASSERT(offsetof(LinkALevelControlTriggerInterface, refresh) == 0x48);
 
 extern ObjectDescriptor gFireObjDescriptor;
 
