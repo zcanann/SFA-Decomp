@@ -31,7 +31,6 @@ extern void Music_Trigger(int track, int arg2);
 extern void mapUnload(int mapId, int flags);
 extern int getCurMapLayer(void);
 extern void envFxActFn_800887f8(int arg);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
 extern int getLoadedFileFlags(int file);

@@ -45,7 +45,6 @@ extern undefined4 FUN_80294964();
 extern undefined4 DAT_802c2910;
 extern undefined4 DAT_802c2914;
 extern undefined4 DAT_802c2918;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;

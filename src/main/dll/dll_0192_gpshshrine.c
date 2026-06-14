@@ -14,7 +14,6 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern void skyFn_80088c94(int a, int b);
 extern void audioStopByMask(int mask);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 timeDelta;
 
 extern void ModelLightStruct_free(void* light);

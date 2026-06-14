@@ -691,7 +691,6 @@ extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gPlayerInterface;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void* gSHthorntailAnimationInterface;
 extern Sky2Interface** gSky2Interface;
 extern void* gNewCloudsInterface;

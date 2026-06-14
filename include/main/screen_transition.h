@@ -26,4 +26,6 @@ STATIC_ASSERT(offsetof(ScreenTransitionInterface, stepWithBlend) == 0x10);
 STATIC_ASSERT(offsetof(ScreenTransitionInterface, isFinished) == 0x14);
 STATIC_ASSERT(offsetof(ScreenTransitionInterface, getProgress) == 0x18);
 
+extern ScreenTransitionInterface **gScreenTransitionInterface;
+
 #endif

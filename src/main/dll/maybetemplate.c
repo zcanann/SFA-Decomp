@@ -66,7 +66,6 @@ extern f32 lbl_803E1E70;
 extern f32 lbl_803E1F9C;
 extern f32 lbl_803E1FA8;
 extern f32 lbl_803E1FB8;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int lbl_803A87F0[];
 extern f32 lbl_803DD83C;
 extern u8 lbl_803DD75B;

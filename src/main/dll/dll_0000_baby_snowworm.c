@@ -2704,7 +2704,6 @@ extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
 extern void gameTextLoadDir(int dir);
 extern u8 getCurTaskHintTextMap(void);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void hintTextFn_800ea174(u8 * buf);
 extern void textureFree(void* tex);
 extern void Obj_FreeObject(char* obj);

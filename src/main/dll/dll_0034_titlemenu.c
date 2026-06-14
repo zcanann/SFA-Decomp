@@ -301,7 +301,6 @@ void n_attractmode_prepareMovie(void)
 
 void TitleMenu_render(u8* param_1)
 {
-    extern ScreenTransitionInterface** gScreenTransitionInterface; /* #57 */
     extern u8 shouldShowCredits(u8 * obj); /* #57 */
     int menuAction;
 
@@ -626,7 +625,6 @@ void TitleMenu_setSelection(int selection)
 
 void TitleMenu_initialise(void)
 {
-    extern TitleMenuControl* gScreenTransitionInterface; /* #57 */
     extern TitleMenuTextEntry sNAttractModeStringBlock[1]; /* #57 */
     int i;
     int mode;
@@ -667,12 +665,12 @@ void TitleMenu_initialise(void)
             (mode = getUiDllFn_80014930(), mode == 6)) ||
         (mode = getUiDllFn_80014930(), mode == 5))
     {
-        ((ScreenTransitionInterface*)gScreenTransitionInterface->vtable)->step(0x23, 5);
+        (*gScreenTransitionInterface)->step(0x23, 5);
     }
     else
     {
         audioStopByMask(0xf);
-        ((ScreenTransitionInterface*)gScreenTransitionInterface->vtable)->step(0x3c, 1);
+        (*gScreenTransitionInterface)->step(0x3c, 1);
     }
 
     setLinkIsRotated();

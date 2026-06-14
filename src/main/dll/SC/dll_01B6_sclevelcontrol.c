@@ -33,7 +33,6 @@ extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern int FUN_80017a98();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 lbl_803E61E8;
 
 #pragma scheduling on

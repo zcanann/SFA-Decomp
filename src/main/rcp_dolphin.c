@@ -829,7 +829,6 @@ extern u8* lbl_803DCE78;
 extern s16 lbl_803DCEBA;
 extern u8 lbl_803DCEBC;
 extern u8 lbl_803DCEBD;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void Pause_SetDisabled(int);
 
 #pragma peephole off

@@ -36,7 +36,6 @@ extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5638;

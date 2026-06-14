@@ -17,7 +17,6 @@ extern void GameBit_Set(int eventId, int value);
 extern void OSReport(const char* fmt, ...);
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern u8 lbl_803DD60A;
 
 void n_rareware_render(void)

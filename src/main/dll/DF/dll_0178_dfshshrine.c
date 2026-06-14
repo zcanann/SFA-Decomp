@@ -46,7 +46,6 @@ typedef struct DFlanternShrineState
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjMsg_AllocQueue();
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
 extern u16 lbl_80325F88[];

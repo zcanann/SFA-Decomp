@@ -31,7 +31,6 @@ extern void audioSetSoundMode(u8 mode, u8 enabled);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
 extern void saveFileStruct_resetVolumes(void);
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int* gTitleMenuControlInterface;
 extern int* gTitleMenuItemInterface;
 extern int* lbl_803A87D0[8];

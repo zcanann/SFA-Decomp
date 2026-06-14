@@ -13,7 +13,6 @@ extern undefined4 languageMenuInit();
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de3a8;
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;
 extern s8 lbl_803DBA28;

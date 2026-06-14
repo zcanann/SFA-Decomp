@@ -997,7 +997,6 @@ extern f32 lbl_803E760C;
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 
-extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern f32 lbl_803E7480;
 extern int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *animUpdate);
 extern void gf_levelcon_findLinkedObjects(int obj);
@@ -1299,7 +1298,6 @@ extern f32 lbl_803E6F6C;
 extern f32 lbl_803E6EF8;
 extern f32 lbl_803E6FFC;
 extern f32 lbl_803E7000;
-extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void unlockLevel(int a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int idx, int p2);

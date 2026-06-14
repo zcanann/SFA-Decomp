@@ -6,7 +6,6 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern undefined4 DAT_803de0af;
 
 void FUN_800d7780(undefined param_1)

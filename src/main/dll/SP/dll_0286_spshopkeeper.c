@@ -20,7 +20,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjGroup_FindNearestObject();
 extern void dll_2E_func06();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern undefined4* gBoneParticleEffectInterface;
 extern f32 lbl_803E59D8;
 extern void objRenderFn_8003b8f4(f32);

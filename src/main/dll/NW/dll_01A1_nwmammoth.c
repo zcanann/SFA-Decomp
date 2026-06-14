@@ -80,7 +80,6 @@ extern int* tumbleweedbush_findNearestActive(void* pos);
 extern f32 getXZDistance(void* a, void* b);
 extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 lbl_803E5210;
 extern undefined4 ObjGroup_AddObject();
 extern int ObjTrigger_IsSetById();

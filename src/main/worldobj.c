@@ -18,7 +18,6 @@ typedef struct
 } GreatFoxFxEntry;
 
 extern void ModelLightStruct_free(int model);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void objRenderFn_8003b8f4(f32 e);
 extern f32 lbl_803E6678;
 extern int randomGetRange(int min, int max);

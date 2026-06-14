@@ -7109,7 +7109,6 @@ int fn_802AD2F4(int obj, int inner, int state)
     return 0;
 }
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void Pause_ResetMenuFrameCounter(void);
 extern int getSkyColorFn_80088e30(int idx);
 extern void objAudioFn_8006edcc();

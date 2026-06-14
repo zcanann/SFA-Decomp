@@ -85,7 +85,6 @@ extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern void Music_Trigger(int id, int restart);
 extern int GameBit_Get(int bit);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int lbl_803E8470;
 extern f32 lbl_803E4FCC;
 extern f32 lbl_803E4FD0;
