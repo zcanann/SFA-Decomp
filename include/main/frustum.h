@@ -13,5 +13,6 @@ typedef struct FrustumPlane {
 } FrustumPlane;
 
 void frustumPlanes_updateAabbCornerIndices(FrustumPlane *planes, int count);
+int ViewFrustum_IsSphereVisible(float *center, float radius);
 
 #endif /* MAIN_FRUSTUM_H_ */
