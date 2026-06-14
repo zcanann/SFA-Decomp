@@ -509,7 +509,7 @@ void earthwalker_init(int obj, int setup)
     ewState->encounterType = *(u8*)(setup + 0x19);
     if (ewState->encounterType == 1)
     {
-        if (GameBit_Get(0x7fc) != 0 ||
+        if ((int)GameBit_Get(0x7fc) != 0 ||
             (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
         {
             ewState->interactionState = 2;
