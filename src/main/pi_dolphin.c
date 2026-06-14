@@ -1520,7 +1520,7 @@ extern u8 gDvdErrorPauseActive;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u8 framesThisStep;
-extern char sZlbBlockTag[];
+extern char sZlbBlockTag;
 extern int return0_8002A5B8(int p);
 extern int OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(int s);
@@ -2617,7 +2617,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                 }
             }
-            if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
+            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
             {
                 decompSize = *(u32*)(fileBuf + 8);
                 zlbDecompress((void*)(fileBuf + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
@@ -2658,7 +2658,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             return;
         }
         fileBuf = fileBuf + offsetFlags;
-        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) != 0)
+        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) != 0)
         {
             return;
         }
@@ -2673,7 +2673,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             return;
         }
         fileBuf = fileBuf + offsetFlags;
-        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) != 0)
+        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) != 0)
         {
             return;
         }
@@ -2709,7 +2709,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         {
             return;
         }
-        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
+        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
             zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
@@ -2724,7 +2724,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         {
             return;
         }
-        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
+        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
             zlbDecompress((void*)(MLDF_PTR(0x4f) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
@@ -4818,7 +4818,7 @@ void checkLoadBlock(int a, int* pc, int* p8)
             idx = 0x47;
         }
         blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-        if (strncmp(blk, sZlbBlockTag, 3) != 0)
+        if (strncmp(blk, &sZlbBlockTag, 3) != 0)
         {
             *p8 = 0;
             *pc = 0;
@@ -4873,7 +4873,7 @@ void loadVoxMaps(int a, int* pc, int* p8)
         if ((a & 0xf0000000) != 0)
         {
             blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-            if (strncmp(blk, sZlbBlockTag, 3) != 0)
+            if (strncmp(blk, &sZlbBlockTag, 3) != 0)
             {
                 *p8 = 0;
                 *pc = 0;
@@ -7070,7 +7070,7 @@ int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
         return size;
     }
     DVDOpen(sResourceFileNameTable[id], fileInfo);
-    if (((int)buffer & 0x1f) != 0 || (size & 0x1f) != 0)
+    if (((int)buffer & 0x1fu) != 0 || (size & 0x1fu) != 0)
     {
         asize = (size + 0x1f) & ~0x1f;
         tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
