@@ -165,6 +165,7 @@ void andross_init(int obj, u8* setup)
     int state = *(int*)&((GameObject*)obj)->extra;
     int i;
     int model;
+    int val;
 
     ((AndrossState*)state)->homePosX = ((ObjPlacement*)setup)->posX;
     ((AndrossState*)state)->homePosY = ((ObjPlacement*)setup)->posY;
@@ -187,9 +188,9 @@ void andross_init(int obj, u8* setup)
     ((GameObject*)obj)->animEventCallback = (void*)andross_updateModelAlpha;
     fn_8006CB50();
     model = *(int*)Obj_GetActiveModel(obj);
-    for (i = 0; i < *(u8*)(model + 0xf8); i++)
+    for (i = 0, val = i; i < *(u8*)(model + 0xf8); i++)
     {
-        *(u8*)(ObjModel_GetRenderOp(model, i) + 0x43) = 0;
+        *(u8*)(ObjModel_GetRenderOp(model, i) + 0x43) = val;
     }
     GameBit_Set(0xd, 0);
     unlockLevel(0, 0, 1);
