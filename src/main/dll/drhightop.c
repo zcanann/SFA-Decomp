@@ -18,12 +18,6 @@ extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, fl
                                   float* outY, float* outZ);
 extern f32 PSVECMag(void* vec);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_IsObjectEnabled();
 
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
@@ -307,7 +301,7 @@ void fn_801EB334(int* obj)
         state->unk40C = sv;
         state->unk430 = lbl_803E5B74;
     }
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((u32)obj);
     (*gPathControlInterface)->attachObject((void*)obj, (char*)state + 0x178);
     {
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -345,7 +339,7 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
 
     state = *(int*)(obj + 0x5c);
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801EB334;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject((u32)obj);
 
     for (i = 0; i < (int)(uint)seq->eventCount; i++)
     {
@@ -409,7 +403,7 @@ void fn_801EB634(int obj, int stateRaw)
     f32 dot;
     int hitOutB;
     uint hitOutC;
-    uint hitObj;
+    int hitObj;
     float velNrm[3];
 
     hitReact = *(int*)(obj + 0x54);

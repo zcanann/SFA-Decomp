@@ -112,7 +112,6 @@ enum
 #define COLORFADE_RUMBLE_PRESET 4000     /* anim.rotY written on a fade hit */
 
 extern u32 GameBit_Get(int eventId);
-extern undefined4 ObjHits_SetTargetMask();
 extern void *ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -568,7 +567,7 @@ void SB_CloudRunner_init(GameObject *obj)
     state->texture0 = textureLoadAsset(342);
     state->texture1 = textureLoadAsset(3085);
     *(void **)&state->resource = Resource_Acquire(121, 1);
-    ObjHits_SetTargetMask(obj, 1);
+    ObjHits_SetTargetMask((int)obj, 1);
     ObjGroup_AddObject(obj, 10);
 }
 

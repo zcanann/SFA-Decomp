@@ -24,7 +24,6 @@ extern f32 lbl_803E5304;
 #pragma dont_inline on
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern f32 lbl_803E5310;
-extern undefined4 ObjHits_ClearHitVolumes();
 extern f32 lbl_803E5370;
 extern f32 lbl_803E5350;
 extern u8 Obj_IsLoadingLocked(void);
@@ -60,7 +59,6 @@ extern f32 lbl_803E5340;
 
 void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
 {
-    extern void ObjHits_RefreshObjectState(int obj); /* #57 */
     EnemyMushroomMapData* mapData;
     u32 randomValue;
     f32 fr;
@@ -206,7 +204,7 @@ void enemymushroom_update(int* obj)
 
     player = (u8*)Obj_GetPlayerObject();
     src = *(int**)&((GameObject*)obj)->anim.placementData;
-    ObjHits_ClearHitVolumes(obj);
+    ObjHits_ClearHitVolumes((int)obj);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
     ((EnemyMushroomState*)state)->stateFlags |= 0x4;
 
@@ -404,7 +402,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 0xa:
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
         if (((EnemyMushroomState*)state)->timer > (f32)((EnemyMushroomState*)state)->respawnFrameLimit)
         {

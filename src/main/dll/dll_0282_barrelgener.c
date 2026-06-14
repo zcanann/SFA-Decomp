@@ -255,7 +255,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
     {
         if (Curve_AdvanceAlongPath(route, a) != 0 || route->atSegmentEnd != 0)
         {
-            if (((u8 (*)(RomCurveWalker*, int))(*gRomCurveInterface)->slot9C)(route, *pickIdx) != 0)
+            if ((*gRomCurveInterface)->goNextPointIndexed(route, *pickIdx) != 0)
                 result = -1;
             else
                 result = (s8) * (u8*)((int)route->node9C + 0x18);

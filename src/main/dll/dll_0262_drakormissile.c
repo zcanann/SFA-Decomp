@@ -175,7 +175,7 @@ void drakormissile_update(int obj)
     int moving;
     f32 toTarget[3];
     f32 dir[3];
-    int* hitObj;
+    int hitObj;
     int hit;
     int* near;
     ObjHitsPriorityState* hitState;
@@ -256,7 +256,7 @@ void drakormissile_update(int obj)
     {
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         near = (int*)hitState->lastHitObject;
-        hitObj = NULL;
+        hitObj = 0;
         hit = ObjHits_GetPriorityHit(obj, &hitObj, 0, 0);
         f5 = 0;
         rem = *(int*)(p + DRAKORMISSILE_FIELD_TIMER) - framesThisStep;
@@ -281,7 +281,7 @@ void drakormissile_update(int obj)
                 result |= 1;
             }
         }
-        if (hitObj != NULL && *(s16*)((char*)hitObj + 0x46) == DRAKORMISSILE_IGNORE_OBJECT_TYPE)
+        if (hitObj != 0 && *(s16*)((char*)hitObj + 0x46) == DRAKORMISSILE_IGNORE_OBJECT_TYPE)
         {
             result = 0;
         }

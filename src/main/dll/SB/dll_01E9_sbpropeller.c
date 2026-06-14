@@ -41,8 +41,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_SFX_DESTROYED 0x2c8
 
 extern u32 randomGetRange(int min, int max);
-extern u32 ObjHits_DisableObject();
-extern int ObjHits_GetPriorityHit();
 
 extern EffectInterface** gPartfxInterface;
 extern u32 DAT_803de8c0;
@@ -79,7 +77,7 @@ void SB_Propeller_update(int obj)
     GameObject* o;
     int i;
     int j;
-    u32 hit;
+    int hit;
     SBPropellerState* state;
     ObjHitsPriorityState* hitState;
     struct

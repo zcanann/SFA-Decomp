@@ -86,6 +86,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 /* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/asset_load.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
@@ -134,7 +135,6 @@ extern f32 lbl_803E4A80;
 extern f32 lbl_803E4A84;
 extern f32 lbl_803E4A8C;
 extern f32 lbl_803E4A90;
-extern int Curve_AdvanceAlongPath(int* extra, f32 t);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
@@ -291,7 +291,6 @@ void dll_1D6_init(int* obj, u8* params)
 
 void dll_1D6_update(int* obj)
 {
-    extern int Sfx_PlayFromObject(int obj, int sfxId);
     Dll1D6State* extra;
     int* def;
     int* model;
@@ -318,7 +317,7 @@ void dll_1D6_update(int* obj)
         extra->dizzyTimer = extra->dizzyTimer - framesThisStep;
         if (extra->dizzyTimer <= 0)
         {
-            Sfx_PlayFromObject((int)obj, SFXmv_mushdizzylp12);
+            Sfx_PlayFromObject((u32)obj, SFXmv_mushdizzylp12);
         }
         if (extra->downTimer <= 0)
         {
@@ -330,7 +329,7 @@ void dll_1D6_update(int* obj)
                 extra->upTimer = 15;
             }
             extra->flags1D &= ~1;
-            Sfx_PlayFromObject((int)obj, SFXfoot_metal_land);
+            Sfx_PlayFromObject((u32)obj, SFXfoot_metal_land);
         }
     }
     else
@@ -353,7 +352,7 @@ void dll_1D6_update(int* obj)
                 extra->downTimer = 15;
             }
             extra->flags1D |= 1;
-            Sfx_PlayFromObject((int)obj, SFXfoot_ice_scuff);
+            Sfx_PlayFromObject((u32)obj, SFXfoot_ice_scuff);
             extra->dizzyTimer = 20;
         }
     }

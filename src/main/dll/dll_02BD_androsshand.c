@@ -383,7 +383,6 @@ void androsshand_handleDamage(int obj, int hand)
 void androsshand_init(int obj, u8* setup)
 {
     AndrossHandState* state = ((GameObject*)obj)->extra;
-    int animState;
 
     state->sideFlag = setup[0x1b];
     state->prevState = -1;
@@ -391,9 +390,8 @@ void androsshand_init(int obj, u8* setup)
     state->startupDelay = 5;
     *(u8*)&state->handState = 3;
     *(u8*)&state->prevState = 3;
-    animState = *(int*)&((GameObject*)obj)->extra;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-    ((AndrosshandState*)animState)->unk14 = lbl_8032C270[4];
+    state->animSpeed = lbl_8032C270[4];
     ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E75B0;
     ObjHits_SetTargetMask(obj, 4);
 }

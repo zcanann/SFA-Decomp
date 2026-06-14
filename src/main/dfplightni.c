@@ -145,7 +145,7 @@ void dfplightni_update(DfpLightniObject* obj)
                 {
                     f32 clampX;
                     f32 clampY;
-                    Sfx_PlayFromObjectLimited(obj, DFPLIGHTNI_SFX_ID, DFPLIGHTNI_SFX_MAX_COUNT);
+                    Sfx_PlayFromObjectLimited((u32)obj, DFPLIGHTNI_SFX_ID, DFPLIGHTNI_SFX_MAX_COUNT);
                     if (eventActive != 0)
                     {
                         clampY = (radiusY < lbl_803E6500)

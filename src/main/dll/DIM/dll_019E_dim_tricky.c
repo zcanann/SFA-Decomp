@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll/dll_019E_dim_tricky.h"
 #include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"
@@ -25,7 +26,6 @@ extern f32 lbl_803E51D0;
 extern f32 lbl_803E51D4;
 extern f32 lbl_803E51D8;
 extern f32 lbl_803E51DC;
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void objUpdateOpacity(void* obj);
 extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
 extern s8 lbl_803DDBE8;
@@ -212,7 +212,6 @@ typedef struct Dll19EResArgs
 
 void dll_19E_update(void* obj)
 {
-    extern void Sfx_PlayFromObject(void* obj, int sfxId);
     extern int GameBit_Set(int eventId, int value);
     Dll19EState* state;
     void* resource;
@@ -227,7 +226,7 @@ void dll_19E_update(void* obj)
     state = ((GameObject*)obj)->extra;
     *(Dll19EResArgs*)resourceArgs = *(Dll19EResArgs*)lbl_802C23D8;
 
-    Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
+    Sfx_PlayFromObject((u32)obj, SFXmn_eggylaugh216);
     objUpdateOpacity(obj);
     if (state->settleTimer > 0)
     {
@@ -271,7 +270,7 @@ void dll_19E_update(void* obj)
         if ((state->active != 0) && (state->delayTimer <= 0) && (state->needsOpenSfx != 0))
         {
             state->needsOpenSfx = 0;
-            Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap1);
+            Sfx_PlayFromObject((u32)obj, SFXmn_sml_trex_snap1);
         }
 
         if (state->active != state->previousActive)
@@ -318,7 +317,7 @@ void dll_19E_update(void* obj)
             }
             else
             {
-                Sfx_StopObjectChannel(obj, 0x40);
+                Sfx_StopObjectChannel((u32)obj, 0x40);
                 (*gModgfxInterface)->detachSource(obj);
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 if ((state->gameBitId != -1) && (GameBit_Get(state->gameBitId) != 0))

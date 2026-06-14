@@ -11,6 +11,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
+#include "main/audio/sfx.h"
+#include "main/curve.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 ObjGroup_FindNearestObject();
@@ -43,7 +45,6 @@ extern f32 lbl_803E5ED0;
 extern f32 timeDelta;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
-extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void* gSHthorntailAnimationInterface;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E523C;
@@ -62,7 +63,6 @@ extern int lbl_803DBF98;
 extern int lbl_803DBF9C;
 extern int lbl_803DBFA0;
 extern int lbl_803DBFA4;
-extern int Curve_AdvanceAlongPath(u8* cv, f32 t);
 extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5228;
@@ -80,7 +80,6 @@ extern int* fn_80296118(int p);
 extern void fn_8014C66C(int* o, int* target);
 extern int* tumbleweedbush_findNearestActive(void* pos);
 extern f32 getXZDistance(void* a, void* b);
-extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
 extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
 extern ScreenTransitionInterface** gScreenTransitionInterface;
@@ -92,7 +91,6 @@ extern void characterDoEyeAnims(int obj, void* p);
 extern int cMenuGetSelectedItem(void);
 extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void fn_801CDF94(int obj, void* state, int flag);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern u8 lbl_803267C0[];
 extern u8 lbl_803267E8[];
 extern u8 lbl_80326818[];
@@ -291,7 +289,7 @@ int fn_801CE078(int* obj, u8* st)
     case 0x14:
         if (snd != 0)
         {
-            Sfx_PlayFromObject(obj, 0x14b);
+            Sfx_PlayFromObject((u32)obj, 0x14b);
         }
         if (st[0x43c] & 2)
         {
@@ -303,7 +301,7 @@ int fn_801CE078(int* obj, u8* st)
     case 0x15:
         if (snd != 0)
         {
-            Sfx_PlayFromObject(obj, 0x14c);
+            Sfx_PlayFromObject((u32)obj, 0x14c);
         }
         *(f32*)(st + 4) -= timeDelta;
         if (cv == 0 && *(f32*)(st + 4) <= lbl_803E520C)
@@ -329,7 +327,7 @@ int fn_801CE078(int* obj, u8* st)
     case 0x16:
         if (snd != 0)
         {
-            Sfx_PlayFromObject(obj, 0x14d);
+            Sfx_PlayFromObject((u32)obj, 0x14d);
         }
         if (st[0x43c] & 2)
         {
@@ -377,7 +375,7 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     case 8:
         {
             u8* cv = st + 0x5c;
-            if (Curve_AdvanceAlongPath(cv, *(f32*)(st + 0x54)) != 0 || *(int*)(cv + 0x10) != 0)
+            if (Curve_AdvanceAlongPath((Curve*)cv, *(f32*)(st + 0x54)) != 0 || *(int*)(cv + 0x10) != 0)
             {
                 (*gRomCurveInterface)->goNextPoint(cv);
             }
@@ -463,7 +461,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         *(f32*)(st + 0) += timeDelta;
         if (*(f32*)(st + 0) > lbl_803E5228)
         {
-            Sfx_PlayFromObject(obj, 0x150);
+            Sfx_PlayFromObject((u32)obj, 0x150);
             *(f32*)(st + 0) -= lbl_803E5228;
         }
         if (*(f32*)(st + 0x18) < (f32)(s32)(p3[0xc] * p3[0xc]))
@@ -481,7 +479,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         *(f32*)(st + 0) += timeDelta;
         if (*(f32*)(st + 0) > lbl_803E5228)
         {
-            Sfx_PlayFromObject(obj, 0x150);
+            Sfx_PlayFromObject((u32)obj, 0x150);
             *(f32*)(st + 0) -= lbl_803E5228;
         }
         if (ObjTrigger_IsSet(obj) != 0)
@@ -566,9 +564,9 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     {
                         if (getXZDistance((char*)obj + 0x18, (char*)tw2 + 0x18) < (f32)(s32)(cfg[0xc] * cfg[0xc]))
                         {
-                            if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+                            if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                             {
-                                Sfx_PlayFromObject(obj, 0x38a);
+                                Sfx_PlayFromObject((u32)obj, 0x38a);
                             }
                             if ((**(int (**)(int*))((char*)(*(int**)*(int*)((char*)tw2 + 0x68)) + 0x30))(tw2) == 0)
                             {
@@ -591,7 +589,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     case 0xe:
         if (getXZDistance(st + 0xc, *(char**)(st + 0x24) + 0x18) < lbl_803E5230)
         {
-            Sfx_PlayFromObject(obj, 0x38b);
+            Sfx_PlayFromObject((u32)obj, 0x38b);
             fn_80163980(*(int*)(st + 0x24));
             st[0x408] = 0xf;
         }
@@ -615,7 +613,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             {
                 if (*(s8*)(st + 0x43f) % 2 == 0)
                 {
-                    Sfx_PlayFromObject(obj, 0x14f);
+                    Sfx_PlayFromObject((u32)obj, 0x14f);
                 }
                 st[0x408] = 0xd;
             }
@@ -629,7 +627,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     case 0x11:
         if (!(*(u16*)(*(char**)(st + 0x28) + 0xb0) & 0x1000) && *(f32*)(st + 8) >= lbl_803E5234)
         {
-            Sfx_PlayFromObject(obj, 0x109);
+            Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
             st[0x408] = 0x12;
             GameBit_Set(0xd32, 0);

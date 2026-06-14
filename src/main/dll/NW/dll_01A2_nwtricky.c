@@ -4,9 +4,9 @@
 #include "main/dll/creator1D6.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/audio/sfx.h"
 
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 
 extern f32 timeDelta;
 
@@ -28,7 +28,7 @@ int nw_tricky_getExtraSize(void)
 
 int nw_tricky_SeqFn(void)
 {
-    Sfx_StopObjectChannel(getTrickyObject(), 16);
+    Sfx_StopObjectChannel((u32)getTrickyObject(), 16);
     return 0;
 }
 
