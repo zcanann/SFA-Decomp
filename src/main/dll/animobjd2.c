@@ -167,7 +167,7 @@ typedef struct
 
 #define TRICKY_RETARGET(st, X) \
     { \
-        u32 px = (u32)((char *)(X) + 0x18); \
+        u32 px = (u32)&((GameObject *)(X))->anim.worldPosX; \
         if (*(u32 *)((st) + 0x28) != px) { \
             *(u32 *)((st) + 0x28) = px; \
             *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG; \
@@ -254,7 +254,8 @@ void fn_8013E0D0(int* obj, register u8* st)
                     TRICKY_RESET(st);
                     break;
                 }
-                if (getXZDistance((char*)obj + 0x18, (char*)*(int*)(st + 0x24) + 0x18) < lbl_803E24DC)
+                if (getXZDistance(&((GameObject*)obj)->anim.worldPosX,
+                                  &((GameObject*)*(int*)(st + 0x24))->anim.worldPosX) < lbl_803E24DC)
                 {
                     int b;
                     st[0xa] = 1;
@@ -387,7 +388,8 @@ void fn_8013E0D0(int* obj, register u8* st)
                         break;
                     }
                 }
-                if (getXZDistance((char*)obj + 0x18, (char*)*(int*)(st + 0x24) + 0x18) > lbl_803E24E0)
+                if (getXZDistance(&((GameObject*)obj)->anim.worldPosX,
+                                  &((GameObject*)*(int*)(st + 0x24))->anim.worldPosX) > lbl_803E24E0)
                 {
                     st[0xa] = 0;
                     break;
@@ -511,12 +513,16 @@ void fn_8013E0D0(int* obj, register u8* st)
                 f32 ratio = lbl_803E23F8;
                 for (; i < count; i++)
                 {
-                    f32 d1 = Vec_xzDistance((u8*)list[0] + 0x18, (u8*)t + 0x18);
-                    f32 d2 = Vec_xzDistance((u8*)list[0] + 0x18, *(u8**)(st + 4) + 0x18);
-                    f32 d3 = Vec_xzDistance((u8*)t + 0x18, *(u8**)(st + 4) + 0x18);
+                    f32 d1 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
+                                            &((GameObject*)t)->anim.worldPosX);
+                    f32 d2 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
+                                            &((GameObject*)*(void**)(st + 4))->anim.worldPosX);
+                    f32 d3 = Vec_xzDistance(&((GameObject*)t)->anim.worldPosX,
+                                            &((GameObject*)*(void**)(st + 4))->anim.worldPosX);
                     if (d1 + d2 > ratio * d3)
                     {
-                        f32 d4 = Vec_xzDistance((u8*)list[0] + 0x18, (u8*)obj + 0x18);
+                        f32 d4 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
+                                                &((GameObject*)obj)->anim.worldPosX);
                         if (d2 - d4 > bestd)
                         {
                             bestd = d2 - d4;
@@ -527,7 +533,7 @@ void fn_8013E0D0(int* obj, register u8* st)
                 }
                 {
                     int* c = *(int**)(st + 0x724);
-                    if (c != NULL && (*(u16*)((char*)c + 0xb0) & 0x40))
+                    if (c != NULL && (((GameObject*)c)->objectFlags & 0x40))
                     {
                         *(int*)(st + 0x724) = 0;
                         TRICKY_RETARGET(st, *(int *)(st + 4));

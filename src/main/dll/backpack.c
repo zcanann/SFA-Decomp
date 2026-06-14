@@ -130,12 +130,14 @@ int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
     f32 scale;
     int player;
     LandedArwingState* state;
+    GameObject* playerObj;
     f32 x;
     f32 y;
     f32 z;
 
     state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
     player = (int)Obj_GetPlayerObject();
+    playerObj = (GameObject*)player;
     *(u8*)(stateWord + 0x34d) = 1;
     if (*(s8*)(stateWord + 0x27a) != 0)
     {
@@ -151,25 +153,25 @@ int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
     {
         goto use_object_position;
     }
-    if (*(f32*)(player + 0x18) < state->boundsMinX)
+    if (playerObj->anim.worldPosX < state->boundsMinX)
     {
         goto use_object_position;
     }
-    if (*(f32*)(player + 0x18) > state->boundsMaxX)
+    if (playerObj->anim.worldPosX > state->boundsMaxX)
     {
-        if (*(f32*)(player + 0x1c) < state->boundsMinY)
+        if (playerObj->anim.worldPosY < state->boundsMinY)
         {
             goto use_object_position;
         }
     }
-    if (*(f32*)(player + 0x1c) > state->boundsMaxY)
+    if (playerObj->anim.worldPosY > state->boundsMaxY)
     {
-        if (*(f32*)(player + 0x20) < state->boundsMinZ)
+        if (playerObj->anim.worldPosZ < state->boundsMinZ)
         {
             goto use_object_position;
         }
     }
-    if (*(f32*)(player + 0x20) > state->boundsMaxZ)
+    if (playerObj->anim.worldPosZ > state->boundsMaxZ)
     {
         goto use_object_position;
     }
@@ -184,11 +186,11 @@ use_object_position:
     }
 use_player_reflect_position:
     {
-        x = ((GameObject*)obj)->anim.localPosX - lbl_803E3000 * (*(f32*)(player + 0xc) - ((GameObject*)obj)->anim.
+        x = ((GameObject*)obj)->anim.localPosX - lbl_803E3000 * (playerObj->anim.localPosX - ((GameObject*)obj)->anim.
             localPosX);
-        y = ((GameObject*)obj)->anim.localPosY - lbl_803E3000 * (*(f32*)(player + 0x10) - ((GameObject*)obj)->anim.
+        y = ((GameObject*)obj)->anim.localPosY - lbl_803E3000 * (playerObj->anim.localPosY - ((GameObject*)obj)->anim.
             localPosY);
-        z = ((GameObject*)obj)->anim.localPosZ - lbl_803E3000 * (*(f32*)(player + 0x14) - ((GameObject*)obj)->anim.
+        z = ((GameObject*)obj)->anim.localPosZ - lbl_803E3000 * (playerObj->anim.localPosZ - ((GameObject*)obj)->anim.
             localPosZ);
         scale = lbl_803E2FF4;
     }
