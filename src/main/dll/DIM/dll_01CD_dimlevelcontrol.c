@@ -20,6 +20,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
+#include "main/sky_interface.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -84,7 +85,6 @@ extern void getEnvfxAct(int a, int b, int id, int d);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
-extern int* gSkyInterface;
 extern f32 lbl_803E4A24;
 extern u8 lbl_803DBF20;
 extern f32 lbl_803E4A28;
@@ -265,7 +265,7 @@ void dim_levelcontrol_update(int obj)
     {
         GameBit_Set(0x8a4, 1);
     }
-    if ((*(int (**)(int))(*(int*)gSkyInterface + 0x24))(0) == 0)
+    if ((*gSkyInterface)->getSunPosition(0) == 0)
     {
         if (st->musicTrack != 0xe2)
         {
