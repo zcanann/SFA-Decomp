@@ -1,15 +1,13 @@
 /* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
+#include "main/audio/sfx.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/dll/dll_002E_moveLib.h"
 
-extern void Sfx_PlayFromObject(SHthorntailObject* obj, u16 volumeId);
-extern void Sfx_StopObjectChannel(int obj, u16 volumeId);
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
 extern int ObjTrigger_IsSet();
 extern void characterDoEyeAnims(int obj, int collisionShapeState);
@@ -269,7 +267,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unuse
     levelControlReady = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY);
     if (levelControlReady == 0)
     {
-        Sfx_StopObjectChannel((int)obj,SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL);
+        Sfx_StopObjectChannel((u32)obj,SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL);
         runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
         randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN, SHTHORNTAIL_IDLE_WAIT_MAX);
         runtime->idleTimer = (float)randomIdleWait;
@@ -516,14 +514,14 @@ void SHthorntail_update(SHthorntailObject* obj)
                 if (SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState] != 0)
                 {
                     Sfx_PlayFromObject(
-                        obj,SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
+                        (u32)obj,SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
                 }
             }
             else if ((*eventId == '\a') &&
                 (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0))
             {
                 Sfx_PlayFromObject(
-                    obj, (ushort)SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
+                    (u32)obj, (ushort)SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
             }
             eventId++;
         }
