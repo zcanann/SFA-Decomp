@@ -584,9 +584,9 @@ void fn_80204B6C(int p1)
 
 void fn_80204BF8(int obj)
 {
-    extern int Obj_GetPlayerObject(void);
+    extern GameObject* Obj_GetPlayerObject(void);
     extern uint GameBit_Get(int);
-    extern f32 Vec_xzDistance(int, int);
+    extern f32 Vec_xzDistance(f32*, f32*);
     extern int Sfx_IsPlayingFromObjectChannel(int, int);
     extern void Sfx_PlayFromObject(int, int);
     extern void Sfx_StopObjectChannel(int, int);
@@ -595,15 +595,16 @@ void fn_80204BF8(int obj)
     extern f32 lbl_803E63A0;
     extern f32 lbl_803E63A4;
     extern f32 lbl_803E63A8;
-    int data = *(int*)&((GameObject*)obj)->anim.placementData;
-    Dll22CState* blob = ((GameObject*)obj)->extra;
-    int player;
+    GameObject* object = (GameObject*)obj;
+    ObjPlacement* placement = object->anim.placement;
+    Dll22CState* blob = object->extra;
+    GameObject* player;
     int h;
     f32 d;
     f32 k;
 
     player = Obj_GetPlayerObject();
-    if ((u32)player == 0)
+    if (player == NULL)
     {
         return;
     }
@@ -612,19 +613,19 @@ void fn_80204BF8(int obj)
     case 0:
         if (GameBit_Get(blob->gameBit) != 0 && blob->unk0C != 1)
         {
-            if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E639C)
+            if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
             {
-                if (((GameObject*)obj)->anim.localPosY < lbl_803E63A0 + *(f32*)(data + 0xc))
+                if (object->anim.localPosY < lbl_803E63A0 + placement->posY)
                 {
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
                         Sfx_PlayFromObject(obj, 0x116);
                         blob->sfxLatch = 1;
                     }
-                    ((GameObject*)obj)->anim.localPosY += timeDelta;
-                    if (((GameObject*)obj)->anim.localPosY >= lbl_803E63A0 + *(f32*)(data + 0xc))
+                    object->anim.localPosY += timeDelta;
+                    if (object->anim.localPosY >= lbl_803E63A0 + placement->posY)
                     {
-                        ((GameObject*)obj)->anim.localPosY = lbl_803E63A0 + *(f32*)(data + 0xc);
+                        object->anim.localPosY = lbl_803E63A0 + placement->posY;
                         blob->mode = 1;
                         Sfx_StopObjectChannel(obj, 8);
                     }
@@ -635,14 +636,14 @@ void fn_80204BF8(int obj)
         {
             if (blob->unk0C == 1)
             {
-                if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E639C)
+                if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
                 {
-                    if (((GameObject*)obj)->anim.localPosY < (k = lbl_803E63A0) + *(f32*)(data + 0xc))
+                    if (object->anim.localPosY < (k = lbl_803E63A0) + placement->posY)
                     {
-                        ((GameObject*)obj)->anim.localPosY += timeDelta;
-                        if (((GameObject*)obj)->anim.localPosY >= k + *(f32*)(data + 0xc))
+                        object->anim.localPosY += timeDelta;
+                        if (object->anim.localPosY >= k + placement->posY)
                         {
-                            ((GameObject*)obj)->anim.localPosY = k + *(f32*)(data + 0xc);
+                            object->anim.localPosY = k + placement->posY;
                             blob->mode = 1;
                         }
                     }
@@ -666,10 +667,10 @@ void fn_80204BF8(int obj)
         }
         else
         {
-            d = Vec_xzDistance(obj + 0x18, player + 0x18);
+            d = Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
             if (d < lbl_803E63A4)
             {
-                if (((GameObject*)obj)->anim.localPosY == lbl_803E63A0 + *(f32*)(data + 0xc))
+                if (object->anim.localPosY == lbl_803E63A0 + placement->posY)
                 {
                     blob->mode = 3;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
@@ -678,7 +679,7 @@ void fn_80204BF8(int obj)
                         blob->sfxLatch = 1;
                     }
                 }
-                else if (((GameObject*)obj)->anim.localPosY == d - lbl_803E63A8)
+                else if (object->anim.localPosY == d - lbl_803E63A8)
                 {
                     blob->mode = 4;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
@@ -690,7 +691,7 @@ void fn_80204BF8(int obj)
             }
             else
             {
-                if (*(f32*)(player + 0x10) < *(f32*)(data + 0xc))
+                if (player->anim.localPosY < placement->posY)
                 {
                     blob->mode = 3;
                     if (blob->sfxLatch == 1)
@@ -698,7 +699,7 @@ void fn_80204BF8(int obj)
                         blob->sfxLatch = 0;
                     }
                 }
-                else if (*(f32*)(player + 0x10) > *(f32*)(data + 0xc))
+                else if (player->anim.localPosY > placement->posY)
                 {
                     blob->mode = 4;
                     if (blob->sfxLatch == 1)
@@ -710,45 +711,45 @@ void fn_80204BF8(int obj)
         }
         break;
     case 3:
-        if (((GameObject*)obj)->anim.localPosY > *(f32*)(data + 0xc) - (k = lbl_803E63A8))
+        if (object->anim.localPosY > placement->posY - (k = lbl_803E63A8))
         {
-            ((GameObject*)obj)->anim.localPosY -= timeDelta;
-            if (((GameObject*)obj)->anim.localPosY <= *(f32*)(data + 0xc) - k)
+            object->anim.localPosY -= timeDelta;
+            if (object->anim.localPosY <= placement->posY - k)
             {
-                ((GameObject*)obj)->anim.localPosY = *(f32*)(data + 0xc) - k;
+                object->anim.localPosY = placement->posY - k;
                 blob->mode = 2;
                 Sfx_StopObjectChannel(obj, 8);
                 blob->pauseTimer = 0x64;
             }
-            Vec_xzDistance(obj + 0x18, player + 0x18);
+            Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
         }
         else
         {
             Sfx_StopObjectChannel(obj, 8);
-            Vec_xzDistance(obj + 0x18, player + 0x18);
+            Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
             blob->mode = 2;
             blob->pauseTimer = 0x64;
         }
         break;
     case 4:
-        if (((GameObject*)obj)->anim.localPosY < (k = lbl_803E63A0) + *(f32*)(data + 0xc))
+        if (object->anim.localPosY < (k = lbl_803E63A0) + placement->posY)
         {
-            ((GameObject*)obj)->anim.localPosY += timeDelta;
-            if (((GameObject*)obj)->anim.localPosY >= k + *(f32*)(data + 0xc))
+            object->anim.localPosY += timeDelta;
+            if (object->anim.localPosY >= k + placement->posY)
             {
-                ((GameObject*)obj)->anim.localPosY = k + *(f32*)(data + 0xc);
+                object->anim.localPosY = k + placement->posY;
                 blob->mode = 2;
                 blob->pauseTimer = 0x64;
                 Sfx_StopObjectChannel(obj, 8);
             }
-            Vec_xzDistance(obj + 0x18, player + 0x18);
+            Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
         }
         else
         {
             blob->mode = 2;
             blob->pauseTimer = 0x64;
             Sfx_StopObjectChannel(obj, 8);
-            Vec_xzDistance(obj + 0x18, player + 0x18);
+            Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
         }
         break;
     }
