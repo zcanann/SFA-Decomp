@@ -529,10 +529,9 @@ typedef struct IcicleHitFx {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
+void DIM2icicle_updateHitResponse(int obj, int param_2)
 {
-  DIMbossRuntime *objectRuntime;
-  int objIndex;
+  int *state;
   u8 hit;
   int hitResult;
   int player;
@@ -543,102 +542,101 @@ void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
   int hitId;
   IcicleHitDesc desc;
 
-  objIndex = (int)obj;
-  objectRuntime = (DIMbossRuntime *)obj->extra;
+  state = ((GameObject *)obj)->extra;
   Obj_GetPlayerObject();
   hit = 0;
   desc = *(IcicleHitDesc *)lbl_802C2348;
   if (lbl_803DDB8C != 0) {
     lbl_803DDB8C = lbl_803DDB8C - 1;
   }
-  hitResult = ObjHits_GetPriorityHit(objIndex, &hitId, &hitType, &hitVolume);
+  hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitVolume);
   if (hitResult != 0) {
     gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;
-    if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
+    if (*(s16 *)((int)state + 0x402) == 1) {
       if ((gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE) == 0 ||
           hitType != 2) {
         hit = 1;
       }
     }
-    else if (objectRuntime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
-      if (hitType != 4 || obj->anim.currentMoveProgress < lbl_803E4C10 || obj->anim.currentMove != 0x12) {
+    else if (*(s16 *)((int)state + 0x402) == 2) {
+      if (hitType != 4 || ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E4C10 || ((GameObject *)obj)->anim.currentMove != 0x12) {
         hit = 1;
       }
     }
     if (hit) {
       if (lbl_803DDB8C == 0) {
-        Sfx_PlayFromObject(objIndex, 0x4b2);
+        Sfx_PlayFromObject(obj, 0x4b2);
         base = (IcicleHitEntry *)DIM2Icicle_GetActiveModel((void *)obj)[0x14];
         ((IcicleHitFx *)lbl_803AC994)->x = playerMapOffsetX + base[hitType].px;
         ((IcicleHitFx *)lbl_803AC994)->y = base[hitType].py;
         ((IcicleHitFx *)lbl_803AC994)->z = playerMapOffsetZ + base[hitType].pz;
-        (*gPartfxInterface)->spawnObject((void *)objIndex, 0x328, lbl_803AC994, 0x200001, -1, NULL);
-        ((IcicleHitFx *)lbl_803AC994)->x = ((IcicleHitFx *)lbl_803AC994)->x - obj->anim.worldPosX;
-        ((IcicleHitFx *)lbl_803AC994)->y = ((IcicleHitFx *)lbl_803AC994)->y - obj->anim.worldPosY;
-        ((IcicleHitFx *)lbl_803AC994)->z = ((IcicleHitFx *)lbl_803AC994)->z - obj->anim.worldPosZ;
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x328, lbl_803AC994, 0x200001, -1, NULL);
+        ((IcicleHitFx *)lbl_803AC994)->x = ((IcicleHitFx *)lbl_803AC994)->x - ((GameObject *)obj)->anim.worldPosX;
+        ((IcicleHitFx *)lbl_803AC994)->y = ((IcicleHitFx *)lbl_803AC994)->y - ((GameObject *)obj)->anim.worldPosY;
+        ((IcicleHitFx *)lbl_803AC994)->z = ((IcicleHitFx *)lbl_803AC994)->z - ((GameObject *)obj)->anim.worldPosZ;
         ((IcicleHitFx *)lbl_803AC994)->scale = lbl_803E4C44;
         ((IcicleHitFx *)lbl_803AC994)->a = 0;
         ((IcicleHitFx *)lbl_803AC994)->b = 0;
         ((IcicleHitFx *)lbl_803AC994)->c = 0;
         desc.f1 += randomGetRange(0, 0x9b);
         desc.f2 += randomGetRange(0, 0x9b);
-        ((void (*)(int, int, u8 *, int, int, IcicleHitDesc *))*(code **)(*(int *)gDIMbossHitEffectResource + 4))(objIndex, 0, lbl_803AC994, 1, -1, &desc);
+        ((void (*)(int, int, u8 *, int, int, IcicleHitDesc *))*(code **)(*(int *)gDIMbossHitEffectResource + 4))(obj, 0, lbl_803AC994, 1, -1, &desc);
         lbl_803DDB8C = 0x1e;
       }
     }
     else {
-      if (*(void **)&runtime->targetModel == NULL) {
+      if (*(void **)(param_2 + 0x2d0) == NULL) {
         player = Obj_GetPlayerObject();
         if (fn_80295A04(player, 1) != 0) {
           ((void (*)(int, int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x28))
-                    (objIndex, (int)runtime, (int)objectRuntime->moveScratch, (int)objectRuntime->activeMoveId, 0, 2, 10, -1, -1);
-          runtime->targetModel = player;
-          runtime->animFinished = 0;
+                    (obj, param_2, (int)state + 0x35c, (int)*(s16 *)((int)state + 0x3f4), 0, 2, 10, -1, -1);
+          *(int *)(param_2 + 0x2d0) = player;
+          *(u8 *)(param_2 + 0x349) = 0;
         }
       }
-      if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
-        if ((s8)runtime->animMode == 3) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x68, 0, 0, 0);
+      if (*(s16 *)((int)state + 0x402) == 1) {
+        if (*(s8 *)(param_2 + 0x354) == 3) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x68, 0, 0, 0);
         }
-        else if ((s8)runtime->animMode == 2) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x6c, 0, 0, 0);
-        }
-      }
-      else if (objectRuntime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
-        if ((s8)runtime->animMode == 3) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x77, 0, 0, 0);
-        }
-        else if ((s8)runtime->animMode == 2) {
-          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(objIndex, 0x78, 0, 0, 0);
+        else if (*(s8 *)(param_2 + 0x354) == 2) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x6c, 0, 0, 0);
         }
       }
-      runtime->hitResult = 0;
-      runtime->hitDamageCount = hitResult;
-      runtime->animMode -= 1;
-      Sfx_PlayFromObject(objIndex, 0x4b1);
-      if ((s8)runtime->animMode <= 0) {
-        runtime->animMode = 0;
-        runtime->animFinished = 0;
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(objIndex, (int)runtime, 0);
-        hitState = (ObjHitsPriorityState *)obj->anim.hitReactState;
+      else if (*(s16 *)((int)state + 0x402) == 2) {
+        if (*(s8 *)(param_2 + 0x354) == 3) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x77, 0, 0, 0);
+        }
+        else if (*(s8 *)(param_2 + 0x354) == 2) {
+          ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x78, 0, 0, 0);
+        }
+      }
+      *(u8 *)(param_2 + 0x346) = 0;
+      *(s8 *)(param_2 + 0x34f) = hitResult;
+      *(u8 *)(param_2 + 0x354) -= 1;
+      Sfx_PlayFromObject(obj, 0x4b1);
+      if (*(s8 *)(param_2 + 0x354) <= 0) {
+        *(u8 *)(param_2 + 0x354) = 0;
+        *(u8 *)(param_2 + 0x349) = 0;
+        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0);
+        hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        *(u8 *)&obj->anim.resetHitboxMode |= 8;
-        *(u8 *)&obj->anim.resetHitboxMode &= ~0x80;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
         GameBit_Set(0x20e, 1);
-        if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
+        if (*(s16 *)((int)state + 0x402) == 1) {
           GameBit_Set(0x20b, 1);
         }
-        else if (objectRuntime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
+        else if (*(s16 *)((int)state + 0x402) == 2) {
           GameBit_Set(0x266, 1);
         }
       }
-      else if (objectRuntime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(objIndex, (int)runtime, 10);
+      else if (*(s16 *)((int)state + 0x402) == 1) {
+        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 10);
       }
       else {
-        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(objIndex, (int)runtime, 0xb);
+        ((void (*)(int, int, int))*(code **)(*(int *)gPlayerInterface + 0x14))(obj, param_2, 0xb);
       }
-      ObjMsg_SendToObject(hitId, 0xe0001, objIndex, 0);
+      ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
     }
   }
 }
