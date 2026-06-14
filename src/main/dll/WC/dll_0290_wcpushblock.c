@@ -620,7 +620,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
             GameBit_Set(0x274, 1);
             GameBit_Set(0xef1, 0);
             player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
             state->completionFlags |= 0x40;
             state->mode = 0;
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -748,7 +748,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
             GameBit_Set(0xeec, 0);
             GameBit_Set(0xbd0, 0);
             player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             state->completionFlags |= 0x100;
         }
@@ -856,7 +856,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             GameBit_Set(0xda9, 0);
             GameBit_Set(0xc37, 1);
             player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
             state->mode = 7;
         }
         break;
@@ -899,7 +899,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateSt
             int player;
             GameBit_Set(0x7f7, 1);
             player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
         }
     }
     else if (state->previousMode == 2)
@@ -911,7 +911,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateSt
             int player;
             GameBit_Set(0x802, 1);
             player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
         }
     }
     for (i = 0; i < animUpdate->eventCount; i++)

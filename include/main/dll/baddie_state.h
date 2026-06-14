@@ -132,12 +132,15 @@ typedef struct BaddieState {
 
 STATIC_ASSERT(sizeof(BaddieState) == 0x35C);
 STATIC_ASSERT(offsetof(BaddieState, controlMode) == 0x274);
+STATIC_ASSERT(offsetof(BaddieState, moveJustStartedB) == 0x27B);
 STATIC_ASSERT(offsetof(BaddieState, trackedObj) == 0x29C);
 STATIC_ASSERT(offsetof(BaddieState, moveSpeed) == 0x2A0);
+STATIC_ASSERT(offsetof(BaddieState, targetObj) == 0x2D0);
 STATIC_ASSERT(offsetof(BaddieState, controlFlags) == 0x2DC);
 STATIC_ASSERT(offsetof(BaddieState, pathStep) == 0x2FC);
 STATIC_ASSERT(offsetof(BaddieState, eventFlags) == 0x314);
 STATIC_ASSERT(offsetof(BaddieState, moveDone) == 0x346);
+STATIC_ASSERT(offsetof(BaddieState, hitPoints) == 0x354);
 
 /*
  * GroundBaddieState - BaddieState plus the route/config tail shared by the

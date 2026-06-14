@@ -135,11 +135,11 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
             GameBit_Set(0x500, 0);
             GameBit_Set(0xd72, 1);
             GameBit_Set(0xd44, 1);
-            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 1, 1);
-            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 2, 1);
+            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)param_9)->anim.mapEventSlot, 1, 1);
+            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)param_9)->anim.mapEventSlot, 2, 1);
             iVar4 = (int)*gMapEventInterface;
-            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 0x16, 1);
-            cVar2 = (*gMapEventInterface)->getMode((int)((GameObject*)param_9)->anim.mapEventSlot);
+            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)param_9)->anim.mapEventSlot, 0x16, 1);
+            cVar2 = (*gMapEventInterface)->getMapAct((int)((GameObject*)param_9)->anim.mapEventSlot);
             if (cVar2 == '\x01')
             {
                 uVar7 = extraout_f1;
@@ -150,13 +150,13 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80042bec(uVar1, 0);
                 FUN_80041ff8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
                 iVar3 = (int)*gMapEventInterface;
-                (*gMapEventInterface)->setMode(0x12, 2);
+                (*gMapEventInterface)->setMapAct(0x12, 2);
                 FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iVar3,
                              iVar4, param_13, param_14, param_15, param_16);
             }
             else
             {
-                cVar2 = (*gMapEventInterface)->getMode((int)((GameObject*)param_9)->anim.mapEventSlot);
+                cVar2 = (*gMapEventInterface)->getMapAct((int)((GameObject*)param_9)->anim.mapEventSlot);
                 if (cVar2 == '\x02')
                 {
                     uVar7 = extraout_f1_00;
@@ -166,9 +166,9 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
                     uVar1 = FUN_80044404(4);
                     FUN_80042bec(uVar1, 0);
                     FUN_80041ff8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
-                    (*gMapEventInterface)->setMode(0xb, 4);
+                    (*gMapEventInterface)->setMapAct(0xb, 4);
                     iVar3 = (int)*gMapEventInterface;
-                    (*gMapEventInterface)->setMode(8, 6);
+                    (*gMapEventInterface)->setMapAct(8, 6);
                     FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iVar3
                                  , iVar4, param_13, param_14, param_15, param_16);
                 }
@@ -694,26 +694,26 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
-                (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
-                (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
-                (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 22, 1);
-                if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 1)
+                (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
+                (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
+                (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 22, 1);
+                if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 1)
                 {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);
                     loadMapAndParent(70);
-                    (*gMapEventInterface)->setMode(18, 2);
+                    (*gMapEventInterface)->setMapAct(18, 2);
                     warpToMap(124, 0);
                 }
-                else if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 2)
+                else if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 2)
                 {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);
                     loadMapAndParent(70);
-                    (*gMapEventInterface)->setMode(11, 4);
-                    (*gMapEventInterface)->setMode(8, 6);
+                    (*gMapEventInterface)->setMapAct(11, 4);
+                    (*gMapEventInterface)->setMapAct(8, 6);
                     warpToMap(124, 0);
                 }
             }
@@ -1063,7 +1063,7 @@ void dll_224_update(void* param_1)
     extern int lbl_803DDCC8; /* #57 */
     void* obj = param_1;
     int v;
-    v = (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
+    v = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     v = (u8)v;
     switch (v)
     {

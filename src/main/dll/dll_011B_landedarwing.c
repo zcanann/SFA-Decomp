@@ -121,7 +121,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 if (iVar4 == 0x451b9)
                 {
-                    cVar2 = (*gMapEventInterface)->getMode(0xd);
+                    cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1;
                     if (cVar2 == '\x02')
                     {
@@ -183,7 +183,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 if (iVar3 == 0x451b9)
                 {
-                    cVar2 = (*gMapEventInterface)->getMode(0xd);
+                    cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1_00;
                     if (cVar2 == '\x02')
                     {
@@ -191,8 +191,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                         FUN_80042b9c(0, 0, 1);
                         FUN_80044404(0xd);
                         FUN_80043030(uVar8, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-                        (*gMapEventInterface)->setAnimEvent(0xd, 10, 0);
-                        (*gMapEventInterface)->setAnimEvent(0xd, 0xb, 0);
+                        (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 0);
+                        (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 0);
                         iVar4 = 0;
                         param_12 = (int)*gMapEventInterface;
                         param_1 = (**(code**)(param_12 + 0x50))(0xd, 0xe);
@@ -218,7 +218,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             iVar3 = *(int*)(iVar6 + 0x14);
             if (iVar3 == 0x451b9)
             {
-                cVar2 = (*gMapEventInterface)->getMode(0xd);
+                cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_01;
                 if (cVar2 == '\x02')
                 {
@@ -239,7 +239,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             iVar3 = *(int*)(iVar6 + 0x14);
             if (iVar3 == 0x451b9)
             {
-                cVar2 = (*gMapEventInterface)->getMode(0xd);
+                cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_02;
                 if (cVar2 == '\x02')
                 {
@@ -267,7 +267,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             else if (iVar3 < 0x49f5a)
             {
                 if ((iVar3 == 0x451b9) &&
-                    (cVar2 = (*gMapEventInterface)->getMode(0xd), param_1 = extraout_f1_03,
+                    (cVar2 = (*gMapEventInterface)->getMapAct(0xd), param_1 = extraout_f1_03,
                         cVar2 == '\x02'))
                 {
                     iVar4 = (int)*gMapEventInterface;
@@ -498,9 +498,9 @@ extern f32 lbl_803E3BA8;
 extern f32 lbl_803E3BAC;
 extern f32 lbl_803E3BB0;
 
-#define MAP_EVENT_STATUS(mapId) (*gMapEventInterface)->getMode((mapId))
-#define MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMode((mapId), (value))
-#define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setAnimEvent((mapId), (arg), (value))
+#define MAP_EVENT_STATUS(mapId) (*gMapEventInterface)->getMapAct((mapId))
+#define MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMapAct((mapId), (value))
+#define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (arg), (value))
 
 int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

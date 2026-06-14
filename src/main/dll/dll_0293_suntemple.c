@@ -111,7 +111,7 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
             break;
         case 3:
             if (((ObjAnimComponent*)obj)->bankIndex == 1)
-                (*gMapEventInterface)->setEventWarpPosition(&vec, -0x4000, getCurMapLayer(), 0);
+                (*gMapEventInterface)->restartPoint(&vec, -0x4000, getCurMapLayer(), 0);
             break;
         }
     }
@@ -137,7 +137,7 @@ void suntemple_init(u8* obj, u8* setup)
     }
     state = ((GameObject*)obj)->extra;
     state->activationLatched = (u8)GameBit_Get(setupData->activationGameBit);
-    state->mapEventMode = (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
+    state->mapEventMode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     if ((setupData->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0)
     {
         ((GameObject*)obj)->anim.alpha = 0;

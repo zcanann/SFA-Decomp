@@ -164,7 +164,7 @@ void magiccavetop_update(int* obj)
         if (GameBit_Get(0x91e) != 0)
         {
             GameBit_Set(0x91e, 0);
-            (*gMapEventInterface)->setAnimEvent(def[0x1f], def[0x1a], 0);
+            (*gMapEventInterface)->setObjGroupStatus(def[0x1f], def[0x1a], 0);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             unlockLevel(0, 0, 1);
             *sub = 3;
@@ -199,8 +199,8 @@ void magiccavetop_update(int* obj)
             else if (dist < lbl_803E3C30 && gb != 0)
             {
                 *sub = 2;
-                (*gMapEventInterface)->setAnimEvent(def[0x1f], def[0x1a], 1);
-                (*gMapEventInterface)->setMode(def[0x1f], def[0x1b]);
+                (*gMapEventInterface)->setObjGroupStatus(def[0x1f], def[0x1a], 1);
+                (*gMapEventInterface)->setMapAct(def[0x1f], def[0x1b]);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             }

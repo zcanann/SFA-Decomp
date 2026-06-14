@@ -408,7 +408,7 @@ void sc_totemstrength_update(u8* obj)
 
     Obj_GetPlayerObject();
     GameBit_Set(0xf1d, 0);
-    t = (*gMapEventInterface)->getMode(0xe);
+    t = (*gMapEventInterface)->getMapAct(0xe);
     if (t == 6)
     {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0)

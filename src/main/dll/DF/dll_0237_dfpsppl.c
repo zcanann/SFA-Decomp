@@ -51,7 +51,7 @@ void laserObj_update(LaserObject* obj)
     objRenderFn_80041018((int)obj);
     if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0)
     {
-        mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapEventSlot);
+        mode = (u8)(*gMapEventInterface)->getMapAct((int)obj->mapEventSlot);
         switch (mode)
         {
         case LASEROBJ_MODE_SEQUENCE_A:
@@ -74,9 +74,9 @@ void laserObj_update(LaserObject* obj)
                 GameBit_Set((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
                 obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
-                (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_MODE_MAP_A,
+                (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_A,
                                                LASEROBJ_SEQUENCE_B_MODE_A);
-                (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_MODE_MAP_B,
+                (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_B,
                                                LASEROBJ_SEQUENCE_B_MODE_B);
             }
             break;

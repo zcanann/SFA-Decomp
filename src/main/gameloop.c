@@ -6,6 +6,7 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
@@ -81,7 +82,6 @@ void doNothing_onSaveSelectScreenExit(void)
 int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
-extern void* gBoneParticleEffectInterface;
 extern u8 framesThisStep;
 
 extern u8 gameState;
@@ -693,7 +693,6 @@ extern u8 lbl_8033C378[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gPlayerInterface;
-extern void* gCheckpointInterface;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
 extern void* gModgfxInterface;
@@ -865,7 +864,7 @@ void init(void)
     testAndSet_onlyUseHeap3(0);
     loadAssetFileById((int)&gGameBitTable, 0x33);
     gGameBitCount = (s16)(getDataFileSize(0x33) >> 1);
-    gGameBitSaveData = (*(u8 *(**)(void))((u8*)*gMapEventInterface + 0x88))();
+    gGameBitSaveData = (*gMapEventInterface)->getLast();
     lbl_803DCA3F = 1;
     loadUiDll(2);
     doNothing_beforeTitleScreen();
@@ -931,7 +930,7 @@ void gameUpdate(void)
         int t;
 
         updateEnvironment(0);
-        (*(void (**)(void))((u8*)*gMapEventInterface + 0x70))();
+        (*gMapEventInterface)->updateTimes();
         player = Obj_GetPlayerObject();
         idx = lbl_803DCAD4;
         rec = (u8*)lbl_8033BFB8 + idx * 16;
@@ -956,7 +955,7 @@ void gameUpdate(void)
     playerUpdateFn_8005649c();
     doPendingMapLoads();
     Obj_ApplyPendingParentLinks();
-    (*(void (**)(void))(*(int*)gCheckpointInterface + 0x3c))();
+    (*gCheckpointInterface)->onGameLoop();
     resetSomeGxFlags();
     if (screenBlankFrameCount == 0)
     {

@@ -21,7 +21,6 @@
 extern void mm_free(void* ptr);
 
 extern f32 timeDelta;
-extern int* gBoneParticleEffectInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
 extern f32 lbl_803DE89C;
@@ -372,8 +371,8 @@ void Obj_ResetModelColorState(u8* obj)
     ((GameObject*)obj)->colorFadeFlags &= ~1;
     ((GameObject*)obj)->fadeCounter = 0;
     ObjModel_ClearRenderAttachment((u8*)Obj_GetActiveModel(obj));
-    (*(void (*)(int, int, int, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))((int)obj, 0x7fb, 0, 0x50, 0);
-    (*(void (*)(int, int, int, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
+    (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fb, NULL, 0x50, NULL);
+    (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fc, NULL, 0x32, NULL);
 }
 
 void Obj_StartModelFadeIn(u8* obj, int frames)
@@ -409,7 +408,7 @@ void Obj_StartModelFadeIn(u8* obj, int frames)
             ((void (*)(u8*, u8*, f32*, int, f32))ObjModel_EnableDefaultRenderCallback)(
                 obj, (u8*)objAnim->banks[objAnim->bankIndex], mtx, 1,
                 ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale);
-            (*(void (*)(int, int, int, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))((int)obj, 0x7fc, 0, 0x64, 0);
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fc, NULL, 0x64, NULL);
         }
     }
 }
@@ -1527,7 +1526,7 @@ void objFreeObjDef(void* objp, int flag)
     int defs[46];
     void(*fp)(u8 *, int);
     void(*cb)(u8 *);
-    void(*cb2)(u8 *, int, int, int, int);
+    BoneParticleEffectSpawnFn cb2;
     int i;
     int count;
     int n;
@@ -1670,10 +1669,10 @@ void objFreeObjDef(void* objp, int flag)
         ((GameObject*)obj)->colorFadeFlags = ((GameObject*)obj)->colorFadeFlags & ~1;
         ((GameObject*)obj)->fadeCounter = 0;
         ObjModel_ClearRenderAttachment((u8*)objAnim->banks[objAnim->bankIndex]);
-        cb2 = (void (*)(u8*, int, int, int, int))*(int*)(*(int*)gBoneParticleEffectInterface + 0xc);
-        cb2(obj, 0x7fb, 0, 0x50, 0);
-        cb2 = (void (*)(u8*, int, int, int, int))*(int*)(*(int*)gBoneParticleEffectInterface + 0xc);
-        cb2(obj, 0x7fc, 0, 0x32, 0);
+        cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
+        cb2(obj, 0x7fb, NULL, 0x50, NULL);
+        cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
+        cb2(obj, 0x7fc, NULL, 0x32, NULL);
     }
     if (((GameObject*)obj)->colorFadeFlags & 2)
     {
@@ -1727,7 +1726,7 @@ void Obj_UpdateObject(u8* obj)
     ObjHitsPriorityState* hitState;
     ObjHitsPriorityState* childHitState;
     u8* t;
-    void(*cb)(u8 *, int, int, int, int);
+    BoneParticleEffectSpawnFn cb;
     void(*cb2)(u8 *);
 
     object = (ObjAnimComponent*)obj;
@@ -1803,10 +1802,10 @@ void Obj_UpdateObject(u8* obj)
             ((GameObject*)obj)->colorFadeFlags &= ~1;
             ((GameObject*)obj)->fadeCounter = 0;
             ObjModel_ClearRenderAttachment((u8*)object->banks[object->bankIndex]);
-            cb = (void (*)(u8*, int, int, int, int))*(int*)(*gBoneParticleEffectInterface + 0xc);
-            cb(obj, 0x7fb, 0, 0x50, 0);
-            cb = (void (*)(u8*, int, int, int, int))*(int*)(*gBoneParticleEffectInterface + 0xc);
-            cb(obj, 0x7fc, 0, 0x32, 0);
+            cb = (*gBoneParticleEffectInterface)->spawnEffect;
+            cb(obj, 0x7fb, NULL, 0x50, NULL);
+            cb = (*gBoneParticleEffectInterface)->spawnEffect;
+            cb(obj, 0x7fc, NULL, 0x32, NULL);
             Sfx_PlayFromObject((u32)obj, 0x47b);
         }
     }
@@ -2046,8 +2045,8 @@ void mapSetupPlayer(void)
     }
     else
     {
-        playerNo = (*gMapEventInterface)->getPlayerNo();
-        pos = (f32*)(*gMapEventInterface)->getWarpPos();
+        playerNo = (*gMapEventInterface)->getCurChar();
+        pos = (f32*)(*gMapEventInterface)->getCurCharPos();
         x = pos[0];
         y = pos[1];
         z = pos[2];

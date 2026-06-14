@@ -126,7 +126,7 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
     }
     if (fromLoad == 0)
     {
-        if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == WCTREXSTATU_MAPEVENT_RAISED)
+        if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == WCTREXSTATU_MAPEVENT_RAISED)
         {
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E6E14;
         }

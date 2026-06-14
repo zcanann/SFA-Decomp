@@ -677,7 +677,7 @@ void dfplevelcontrol_init(int obj, int param2)
     {
         state->mode = v;
     }
-    (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
+    (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     unlockLevel(0, 0, 1);
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x4000;
     if (((GameObject*)obj)->anim.mapEventSlot == 0x15)
@@ -728,7 +728,7 @@ void dfplevelcontrol_update(int obj)
         GameBit_Set(0x5e8, 1);
     }
     coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14));
-    mode = (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
+    mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     switch (mode)
     {
     case 1:
@@ -825,9 +825,9 @@ void fn_80204098(int obj)
     }
     if (GameBit_Get(0x7a1) != 0)
     {
-        if ((*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 6) == 0)
+        if ((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6) == 0)
         {
-            (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
         }
     }
 }

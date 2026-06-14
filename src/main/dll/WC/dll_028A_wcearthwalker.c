@@ -107,7 +107,7 @@ void earthwalker_update(int obj)
             switch (ewState->encounterType)
             {
             case 0:
-                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2)
+                if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
                     if (ewState->lastTriggeredState == 0x14)
                     {
@@ -148,7 +148,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 9:
-                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2)
+                if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
                     if (ewState->lastTriggeredState == 0x16)
                     {
@@ -185,7 +185,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 10:
-                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2)
+                if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
                     if (ewState->lastTriggeredState == 0x18)
                     {
@@ -229,7 +229,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 11:
-                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2)
+                if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
                     if (ewState->lastTriggeredState == 0x1c)
                     {
@@ -273,7 +273,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 1:
-                if ((*gMapEventInterface)->getMode(ewObj->mapEventId) == 2)
+                if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
                     if (GameBit_Get(0xc92) != 0)
                     {
@@ -514,7 +514,7 @@ void earthwalker_init(int obj, int setup)
     if (ewState->encounterType == 1)
     {
         if (GameBit_Get(0x7fc) != 0 ||
-            (*gMapEventInterface)->getMode(ewObj->mapEventId) == 2)
+            (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
         {
             ewState->interactionState = 2;
         }

@@ -1,5 +1,6 @@
 /* DLL 0x255 - SnowBike [801EC7A0-801ECEC4) */
 #include "main/dll/path_control_interface.h"
+#include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
@@ -80,7 +81,6 @@ typedef struct SnowBikeSetTypeState
 
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void mm_free(void* p);
-extern void* gCheckpointInterface;
 extern int lbl_803DC0BC;
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5AE8;
@@ -241,7 +241,8 @@ void SnowBike_func15(int obj)
             ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)found + 0x10);
             ((GameObject*)obj)->anim.rotX = (s16)((*(u8*)((char*)found + 0x29)) << 8);
         }
-        (*(void (**)(int, int, int))((char*)*(int*)gCheckpointInterface + 0x10))(obj, t + 0x28, 0);
+        (*gCheckpointInterface)->findRouteForObject((GameObject*)obj,
+                                                    (CheckpointRouteState*)(t + 0x28), 0);
         *(f32*)(t + 0xc) = ((GameObject*)obj)->anim.localPosX;
         *(f32*)(t + 0x10) = ((GameObject*)obj)->anim.localPosY;
         *(f32*)(t + 0x14) = ((GameObject*)obj)->anim.localPosZ;
@@ -440,13 +441,15 @@ u32 SnowBike_setScale(int obj)
 
 void fn_801EC9BC(int obj)
 {
-    (*(void (**)(int))((char*)*(int*)gCheckpointInterface + 0x34))(*(int*)&((GameObject*)obj)->extra + 0x28);
+    (*gCheckpointInterface)
+        ->getRouteRank((CheckpointRankItem*)(*(int*)&((GameObject*)obj)->extra + 0x28));
 }
 
 u32 fn_801EC9F4(int obj)
 {
-    int result = (*(int (**)(int))((char*)*(int*)gCheckpointInterface +
-        0x34))(*(int*)&((GameObject*)obj)->extra + 0x28);
+    int result =
+        (*gCheckpointInterface)
+            ->getRouteRank((CheckpointRankItem*)(*(int*)&((GameObject*)obj)->extra + 0x28));
     if (result == 3)
     {
         if (lbl_803DC0BC == -1)

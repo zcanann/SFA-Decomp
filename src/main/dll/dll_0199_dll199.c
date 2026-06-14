@@ -412,7 +412,7 @@ void dll_199_update(int obj)
             (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
                 3, 0x2c, 0x50, state[4] & 0xff, 0);
             GameBit_Set(0x1ce, 1);
-            (*gMapEventInterface)->setMode(0xb, 6);
+            (*gMapEventInterface)->setMapAct(0xb, 6);
             break;
         }
     }

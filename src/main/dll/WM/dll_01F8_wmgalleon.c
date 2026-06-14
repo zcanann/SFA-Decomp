@@ -111,9 +111,9 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_13;
             break;
         case WM_GALLEON_COMMAND_CLEAR_MAP_EVENTS:
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 1, 0);
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 2, 0);
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 4, 0);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 1, 0);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 2, 0);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 4, 0);
             GameBit_Set(WM_GALLEON_GAMEBIT_CLEAR_DOOR, 0);
             break;
         case WM_GALLEON_COMMAND_CLEAR_LACTIONS:
@@ -135,10 +135,10 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (GameBit_Get(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) != 0)
     {
-        if ((u8)(*gMapEventInterface)->getAnimEvent(OBJ_U8(obj, 0x34), 2) != 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(OBJ_U8(obj, 0x34), 2) != 0)
         {
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 1, 0);
-            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 2, 0);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 1, 0);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 2, 0);
         }
     }
     return 0;
@@ -196,9 +196,9 @@ void WM_Galleon_hitDetect(void)
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
 #define MAP_EVENT_TEST(mapId, eventId) \
-    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
+    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
 #define MAP_EVENT_SET(mapId, eventId, value) \
-    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
+    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 

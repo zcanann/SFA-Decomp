@@ -196,7 +196,7 @@ void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8
     double extraout_f1;
     undefined8 uVar2;
 
-    iVar1 = (int)(*gMapEventInterface)->getState(*gMapEventInterface);
+    iVar1 = (int)(*gMapEventInterface)->getCurCharacterState();
     uVar2 = FUN_8012c894(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
     if (*(char*)(iVar1 + 9) == '\0')
     {
@@ -489,7 +489,7 @@ extern u8 lbl_803DB424;
 void showDeathMenu(void)
 {
     MapEventInterface* mapEvents = *gMapEventInterface;
-    int* r = (int*)mapEvents->getState(mapEvents);
+    int* r = (int*)mapEvents->getCurCharacterState();
     pauseMenuInit();
     if (*((u8*)r + 9) != 0)
     {

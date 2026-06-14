@@ -378,7 +378,7 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     s16 timer;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    if (((*gMapEventInterface)->isTimedEventActive(*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14)) == 0)
+    if (((*gMapEventInterface)->shouldNotSaveTime(*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14)) == 0)
         ||
         (((timer = ((ExplodableState*)state)->explodeTimer) != 0) && (timer <= 0x32)) ||
         (((ExplodableState*)state)->animTimer > lbl_803E39B8))
@@ -435,7 +435,7 @@ void largecrate_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     }
-    if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)def)->mapId) == 0)
+    if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)def)->mapId) == 0)
     {
         ObjHits_DisableObject(obj);
     }
@@ -481,7 +481,7 @@ void largecrate_update(int obj)
                     if (*(int*)state > 0)
                     {
                         ((ExplodableState*)state)->animTimer = lbl_803E39AC;
-                        (*gMapEventInterface)->startTimedEvent(((ObjPlacement*)def)->mapId, (f32) * (int*)state);
+                        (*gMapEventInterface)->addTime(((ObjPlacement*)def)->mapId, (f32) * (int*)state);
                     }
                     else
                     {

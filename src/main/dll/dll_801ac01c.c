@@ -147,7 +147,7 @@ void fn_801AC108(int obj, int param2)
             r = 0;
         }
         GameBit_Set(0x4e5, 1);
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
         if (r == 1)
         {
             (*gGameUIInterface)->setShowWorldMapHud(1);

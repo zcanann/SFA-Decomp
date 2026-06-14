@@ -1071,12 +1071,12 @@ void DR_CloudRunner_update(int obj)
             {
                 f32 vec[3];
                 buttonDisable(0, 0x100);
-                if ((*(int (*)(void))(*(int*)((u8*)*gMapEventInterface + 0x30)))() == 0)
+                if ((*gMapEventInterface)->getRestartGameNotCleared() == 0)
                 {
                     vec[0] = lbl_803E8418;
                     vec[1] = lbl_803E841C;
                     vec[2] = lbl_803E8420;
-                    (*gMapEventInterface)->setEventWarpPosition(vec, 0, 0, 0);
+                    (*gMapEventInterface)->restartPoint(vec, 0, 0, 0);
                 }
                 (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
                 inner->unkB04 = 0;

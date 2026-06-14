@@ -501,7 +501,7 @@ void vfpspellplace_update(int obj)
     objRenderFn_80041018((void*)obj);
     if (spellPlace->statusFlags & LASER_OBJECT_STATUS_ACTIVE)
     {
-        mode = (*gMapEventInterface)->getMode((int)spellPlace->mapEventSlot);
+        mode = (*gMapEventInterface)->getMapAct((int)spellPlace->mapEventSlot);
         switch (mode)
         {
         case LASEROBJ_MODE_SEQUENCE_A:

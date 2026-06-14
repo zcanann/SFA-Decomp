@@ -253,9 +253,9 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void imicemountain_free(void);
 
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
+#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
 
 #undef MEVT_TRIGGER
 #undef MEVT_SET
@@ -400,8 +400,8 @@ int magiclight_SeqFn(int* obj)
     return 0;
 }
 
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
 
 #undef MEVT_TRIGGER
 #undef MEVT_SET

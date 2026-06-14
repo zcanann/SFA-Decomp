@@ -132,7 +132,7 @@ extern f32 lbl_803E57B8;
 #define DBPROT_CAMERA_SHAKE(amount, arg) \
   (*gCameraInterface)->releaseAction((amount), (arg))
 #define DBPROT_MAP_EVENT(layer, a, b) \
-  (*gMapEventInterface)->setAnimEvent((layer), (a), (b))
+  (*gMapEventInterface)->setObjGroupStatus((layer), (a), (b))
 #define DBPROT_SCREEN_FADE(kind, value) \
   (*gScreenTransitionInterface)->start((kind), (value))
 #define DBPROT_CLOUD_SET_A(flag) \

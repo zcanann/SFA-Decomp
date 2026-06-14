@@ -122,10 +122,10 @@ int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState
             Music_Trigger(DIMBOSSTONSIL_STEAM_MUSIC, 1);
             break;
         case DIMBOSSTONSIL_ANIM_EVENT_ENABLE_AREA:
-            (*gMapEventInterface)->setAnimEvent(DIMBOSSTONSIL_MAP_DIR, DIMBOSSTONSIL_MAP_AREA, 1);
+            (*gMapEventInterface)->setObjGroupStatus(DIMBOSSTONSIL_MAP_DIR, DIMBOSSTONSIL_MAP_AREA, 1);
             break;
         case DIMBOSSTONSIL_ANIM_EVENT_DISABLE_AREA:
-            (*gMapEventInterface)->setAnimEvent(DIMBOSSTONSIL_MAP_DIR, DIMBOSSTONSIL_MAP_AREA, 0);
+            (*gMapEventInterface)->setObjGroupStatus(DIMBOSSTONSIL_MAP_DIR, DIMBOSSTONSIL_MAP_AREA, 0);
             break;
         case DIMBOSSTONSIL_ANIM_EVENT_ENABLE_LIGHT:
             if (gDIMbosstonsilLight != NULL)

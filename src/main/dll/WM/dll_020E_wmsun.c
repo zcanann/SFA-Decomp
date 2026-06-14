@@ -570,7 +570,7 @@ void wmsun_init(int obj, int params)
     objAnim = (ObjAnimComponent*)obj;
     mapData = (WmSunMapData*)params;
     ((GameObject*)obj)->animEventCallback = (void*)wmsun_SeqFn;
-    c = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    c = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0)
     {
         GameBit_Set(0x21b, 1);

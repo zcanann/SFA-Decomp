@@ -2039,7 +2039,7 @@ void andross_update(int obj)
             (ref = GameBit_Get(4), ref != 0))
         {
             GameBit_Set(0x405, 0);
-            (*gMapEventInterface)->setMode(0xb, 7);
+            (*gMapEventInterface)->setMapAct(0xb, 7);
             unlockLevel(0, 0, 1);
             loadMapAndParent(mapGetDirIdx(0xb));
             objId = mapGetDirIdx(0xb);

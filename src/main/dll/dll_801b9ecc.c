@@ -2,13 +2,18 @@
  * (fn_801B9ECC) and shared helpers for DIM2 objects (icicle, geyser, rolling rock,
  * conveyor, crusher, snowball, path generator, truth-horn ice). */
 #include "main/audio/sfx_ids.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/DIM/DIM2projrock.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -24,15 +29,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
-
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2projrock.h"
-#include "main/objanim_internal.h"
 
 extern int* gBaddieControlInterface;
 extern int* gPlayerInterface;
@@ -68,9 +64,31 @@ void dll_1DA_release(void);
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
 
-typedef void (*BaddieQueryFn)(int a, int objId, int n, u16* anim, u16* pad, u16* dist);
-typedef u8 (*BaddieCheckFn)(int a, int obj, f32 d);
-typedef void (*PlayerAnimFn)(int a, int obj, int animId);
+typedef void (*Dim2QueryTargetMoveFn)(int obj, void* targetObj, int queryFlags, u16* animId,
+                                      s16* outParam, u16* targetDistance);
+typedef u8 (*Dim2CheckTargetRangeFn)(int obj, BaddieState* state, f32 rangeScale);
+typedef void (*Dim2RequestControlModeFn)(int obj, BaddieState* state, int controlMode);
+
+typedef struct Dim2BaddieControlInterface {
+    u8 pad00[0x14];
+    Dim2QueryTargetMoveFn queryTargetMove;
+    Dim2CheckTargetRangeFn checkTargetRange;
+} Dim2BaddieControlInterface;
+
+typedef struct Dim2PlayerInterface {
+    u8 pad00[0x14];
+    Dim2RequestControlModeFn requestControlMode;
+} Dim2PlayerInterface;
+
+static inline Dim2BaddieControlInterface* DIM2_GetBaddieControlInterface(void)
+{
+    return (Dim2BaddieControlInterface*)*gBaddieControlInterface;
+}
+
+static inline Dim2PlayerInterface* DIM2_GetPlayerInterface(void)
+{
+    return (Dim2PlayerInterface*)*gPlayerInterface;
+}
 
 typedef struct
 {
@@ -86,41 +104,42 @@ typedef struct
 int fn_801B9ECC(int a, int obj)
 {
     DimAnimTable* base;
-    u16 pad;
-    u16 dist;
-    u16 anim[2];
+    BaddieState* state;
+    s16 targetParam;
+    u16 targetDistance;
+    u16 targetAnim[2];
 
     base = (DimAnimTable*)lbl_80325960;
-    if (*(s8*)(obj + 0x346) != 0 || *(s8*)(obj + 0x27b) != 0)
+    state = (BaddieState*)obj;
+    if ((s8)state->moveDone != 0 || (s8)state->moveJustStartedB != 0)
     {
-        (*(BaddieQueryFn)*(int*)(*gBaddieControlInterface + 0x14))(a, *(int*)(obj + 0x2d0), 0x10,
-                                                                   anim, &pad, &dist);
-        *(u8*)(obj + 0x346) = 0;
-        if (dist < 0x5a)
+        DIM2_GetBaddieControlInterface()->queryTargetMove(a, state->targetObj, 0x10, targetAnim,
+                                                          &targetParam, &targetDistance);
+        state->moveDone = 0;
+        if (targetDistance < 0x5a)
         {
-            if (dist > 0x1e &&
-                ((u16)(anim[0] - 3) <= 1 || anim[0] == 0xb || anim[0] == 0xc))
+            if (targetDistance > 0x1e &&
+                ((u16)(targetAnim[0] - 3) <= 1 || targetAnim[0] == 0xb || targetAnim[0] == 0xc))
             {
-                (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(a, obj, 2);
+                DIM2_GetPlayerInterface()->requestControlMode(a, state, 2);
             }
             else
             {
-                (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(a, obj, 9);
+                DIM2_GetPlayerInterface()->requestControlMode(a, state, 9);
             }
         }
-        else if (anim[0] == 0 || anim[0] == 0xf)
+        else if (targetAnim[0] == 0 || targetAnim[0] == 0xf)
         {
-            *(u8*)(obj + 0x346) = 0;
-            if (dist > 0x1a9 &&
-                ((*(BaddieCheckFn)*(int*)(*gBaddieControlInterface + 0x18))(a, obj, lbl_803E4BB8) &
-                    1) != 0)
+            state->moveDone = 0;
+            if (targetDistance > 0x1a9 &&
+                (DIM2_GetBaddieControlInterface()->checkTargetRange(a, state, lbl_803E4BB8) & 1) != 0)
             {
-                (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(
-                    a, obj, base->surprised[randomGetRange(0, 5)]);
+                DIM2_GetPlayerInterface()->requestControlMode(
+                    a, state, base->surprised[randomGetRange(0, 5)]);
             }
-            else if (dist < 0xfa)
+            else if (targetDistance < 0xfa)
             {
-                (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(a, obj, 3);
+                DIM2_GetPlayerInterface()->requestControlMode(a, state, 3);
             }
             else
             {
@@ -128,32 +147,32 @@ int fn_801B9ECC(int a, int obj)
                 {
                     lbl_803DDB84 = 0;
                 }
-                switch (*(s8*)(obj + 0x354))
+                switch ((s8)state->hitPoints)
                 {
                 case 3:
-                    (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(
-                        a, obj, base->group3[lbl_803DDB84++]);
+                    DIM2_GetPlayerInterface()->requestControlMode(
+                        a, state, base->group3[lbl_803DDB84++]);
                     break;
                 case 2:
-                    (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(
-                        a, obj, base->group2[lbl_803DDB84++]);
+                    DIM2_GetPlayerInterface()->requestControlMode(
+                        a, state, base->group2[lbl_803DDB84++]);
                     break;
                 case 1:
-                    (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(
-                        a, obj, base->group1[lbl_803DDB84++]);
+                    DIM2_GetPlayerInterface()->requestControlMode(
+                        a, state, base->group1[lbl_803DDB84++]);
                     break;
                 default:
-                    (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(a, obj, 3);
+                    DIM2_GetPlayerInterface()->requestControlMode(a, state, 3);
                     break;
                 }
             }
         }
         else
         {
-            (*(PlayerAnimFn)*(int*)(*gPlayerInterface + 0x14))(a, obj, 2);
+            DIM2_GetPlayerInterface()->requestControlMode(a, state, 2);
         }
     }
-    if (*(s16*)(obj + 0x274) == 3 || *(s16*)(obj + 0x274) == 7)
+    if (state->controlMode == 3 || state->controlMode == 7)
     {
         gDIMbossAnimController[0x611] |= 1;
     }
@@ -161,7 +180,7 @@ int fn_801B9ECC(int a, int obj)
     {
         gDIMbossAnimController[0x611] &= ~1;
     }
-    DIM2icicle_updateHitResponse(a, obj);
+    DIM2icicle_updateHitResponse(a, (int)state);
     return 0;
 }
 

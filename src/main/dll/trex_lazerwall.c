@@ -158,7 +158,7 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
 
         hudFn_8011f38c(2);
 
-        (*gMapEventInterface)->setAnimEvent((s32)((GameObject*)arg1)->anim.mapEventSlot, 6, 0);
+        (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)arg1)->anim.mapEventSlot, 6, 0);
 
         (*(void (**)(int, int, int, int, int))((char*)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
     }

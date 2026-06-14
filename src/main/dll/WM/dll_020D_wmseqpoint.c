@@ -141,9 +141,9 @@ void wmseqpoint_onSeqFree(int obj)
             getEnvfxActImmediately(obj, obj, 0x22c, 0);
             getEnvfxActImmediately(obj, obj, 0x229, 0);
             getEnvfxActImmediately(obj, obj, 0x22a, 0);
-            (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
-            (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 10, 0);
-            (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0xb, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 0);
         }
         else if (state->skyEnabledLatch == 0 && skyOn != 0)
         {
@@ -151,9 +151,9 @@ void wmseqpoint_onSeqFree(int obj)
             getEnvfxActImmediately(obj, obj, 0x216, 0);
             getEnvfxActImmediately(obj, obj, 0x84, 0);
             getEnvfxActImmediately(obj, obj, 0x8a, 0);
-            (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
-            (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 10, 1);
-            (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
         }
     }
 }
@@ -208,9 +208,9 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
                     getEnvfxActImmediately(obj, obj, 0x216, 0);
                     getEnvfxActImmediately(obj, obj, 0x84, 0);
                     getEnvfxActImmediately(obj, obj, 0x8a, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 10, 1);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
                 }
                 break;
             case 0xa:
@@ -220,9 +220,9 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
                     getEnvfxActImmediately(obj, obj, 0x22c, 0);
                     getEnvfxActImmediately(obj, obj, 0x229, 0);
                     getEnvfxActImmediately(obj, obj, 0x22a, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 10, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0xb, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 10, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 0);
                 }
                 break;
             default:

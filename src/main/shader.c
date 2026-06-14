@@ -1,6 +1,7 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -93,7 +94,7 @@ int objShouldLoad(int obj, int param_2, int param_3)
     {
         verbose = 0;
     }
-    t = (*gMapEventInterface)->getMode(param_3);
+    t = (*gMapEventInterface)->getMapAct(param_3);
     if (t == -1)
     {
         ok = 0;
@@ -863,7 +864,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     *outMapId = mapId;
     if (mapId != -1)
     {
-        *outEvent = (s32) * (s8*)((*gMapEventInterface)->getWarpPos() + 0xe);
+        *outEvent = (s32) * (s8*)((*gMapEventInterface)->getCurCharPos() + 0xe);
     }
 }
 
@@ -1131,9 +1132,9 @@ void mapLoadForObject(int p1, char* p2)
         slot++;
     }
     *(u8*)(p2 + 0x34) = (u8)slot;
-    (*gMapEventInterface)->setRomListSlot(p1, slot);
+    (*gMapEventInterface)->setMapActLut(p1, slot);
     defStartFn_8005972c((char*)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
-    (*gMapEventInterface)->loadRomListObjects(slot);
+    (*gMapEventInterface)->updateObjGroups(slot);
     lbl_803DCEC8 = saved;
 }
 
@@ -1305,7 +1306,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     if (flag == 0)
     {
         defStartFn_8005972c(lbl_803DCEA0, (u32*)&lbl_803822C8[p1 * 0x8c], p1, 0);
-        (*gMapEventInterface)->loadRomListObjects(p1);
+        (*gMapEventInterface)->updateObjGroups(p1);
     }
     return (int)lbl_803DCEA0;
 }
@@ -1447,7 +1448,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     return 0;
 }
 
-extern int* gCheckpointInterface;
 extern void audioStopByMask(int mask);
 extern void doNothing_8001F678(int a, int b);
 extern void Obj_ResetObjectSystem(void);
@@ -1525,7 +1525,7 @@ void unloadMap(void)
             gLoadedRomListPages[n] = 0;
         }
     }
-    (*(void (*)(void))(*(int*)(*gCheckpointInterface + 4)))();
+    (*gCheckpointInterface)->reset();
     (*gRomCurveInterface)->initialise();
     lbl_803DCDEC = 0;
     playerMapOffsetX = lbl_803DEBCC;
@@ -2051,7 +2051,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                 if (*(s16*)cur == 110)
                     (*gRomCurveInterface)->addCurveDef((RomCurveDef*)cur);
                 if (*(s16*)cur == 5)
-                    (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 0xc)))(cur);
+                    (*gCheckpointInterface)->removeRouteEntry((CheckpointRouteEntry*)cur);
             }
             else
             {
@@ -2061,7 +2061,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                     if (t == 110)
                         (*gRomCurveInterface)->remove((RomCurveDef*)cur);
                     else
-                        (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 8)))(cur);
+                        (*gCheckpointInterface)->addRouteEntry((CheckpointRouteEntry*)cur);
                     if (found == 0)
                     {
                         tbl[0x21] = (int)cur - *(int*)(p + 0x20);
@@ -2373,7 +2373,7 @@ void mapLoadUnloadObjects(int flag)
         {
             if (*(int*)(base + i * 4 + 0x83A8) != 0)
             {
-                bits = (*gMapEventInterface)->getObjectLoadBits(i);
+                bits = (*gMapEventInterface)->getObjGroups(i);
                 if (bits != 0)
                 {
                     b = 0;
@@ -2460,7 +2460,7 @@ void mapLoadUnloadObjects(int flag)
                     bit = 0;
                     cur = *(u32*)(page2 + 0x20);
                     end = cur + *(int*)(base + mid2 * 0x8C + 0x4290);
-                    bits = (*gMapEventInterface)->getObjectLoadBits(mid2);
+                    bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0)
                     {
                         b = 0;
@@ -2594,8 +2594,8 @@ void beginLoadingMap(void)
     }
     lbl_803DCE98 = 0;
     lbl_803DCDEC = 0;
-    mapKind = (*gMapEventInterface)->getPlayerNo();
-    p = (f32*)(*gMapEventInterface)->getWarpPos();
+    mapKind = (*gMapEventInterface)->getCurChar();
+    p = (f32*)(*gMapEventInterface)->getCurCharPos();
     lbl_803DCDD0 = (int)fastFloorf(p[0] / gMapBlockWorldSize);
     lbl_803DCDD4 = (int)fastFloorf(p[2] / gMapBlockWorldSize);
     *(f32*)(base + 0x8588) = p[0];

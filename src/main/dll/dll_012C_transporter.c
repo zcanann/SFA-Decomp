@@ -45,12 +45,12 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             {
             case 0x49c33:
                 GameBit_Set(0x884, 1);
-                (*gMapEventInterface)->setAnimEvent(7, 0, 1);
-                (*gMapEventInterface)->setAnimEvent(7, 2, 1);
-                (*gMapEventInterface)->setAnimEvent(7, 3, 1);
-                (*gMapEventInterface)->setAnimEvent(7, 7, 1);
-                (*gMapEventInterface)->setAnimEvent(7, 10, 1);
-                (*gMapEventInterface)->setAnimEvent(10, 7, 0);
+                (*gMapEventInterface)->setObjGroupStatus(7, 0, 1);
+                (*gMapEventInterface)->setObjGroupStatus(7, 2, 1);
+                (*gMapEventInterface)->setObjGroupStatus(7, 3, 1);
+                (*gMapEventInterface)->setObjGroupStatus(7, 7, 1);
+                (*gMapEventInterface)->setObjGroupStatus(7, 10, 1);
+                (*gMapEventInterface)->setObjGroupStatus(10, 7, 0);
             case 0x48506:
             case 0x4977d:
                 loadMapAndParent(7);
@@ -81,11 +81,11 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             case 0x48018:
                 unlockLevel(mapGetDirIdx(0x22), 1, 0);
                 GameBit_Set(0x36a, 0);
-                (*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
-                (*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
-                (*gMapEventInterface)->setAnimEvent(0xd, 5, 1);
-                (*gMapEventInterface)->setAnimEvent(0xd, 10, 1);
-                (*gMapEventInterface)->setAnimEvent(0xd, 0xb, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
                 GameBit_Set(0xe05, 0);
                 break;
             case 0x45dd6:
@@ -188,7 +188,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             case 0x4b667:
                 getEnvfxActImmediately(obj, obj, 0x23a, 0);
                 getEnvfxActImmediately(obj, obj, 0x23b, 0);
-                (*gMapEventInterface)->setAnimEvent(0x15, 2, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0x15, 2, 1);
                 getEnvfxActImmediately(0, 0, 0x23e, 0);
                 skyFn_80088e54(1, lbl_803E3E98);
                 break;

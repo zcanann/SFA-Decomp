@@ -182,7 +182,7 @@ void wmnewcrystal_init(GameObject* obj, void* setup)
 {
     WmNewCrystalState* state = obj->extra;
     obj->animEventCallback = (void*)wmnewcrystal_SeqFn;
-    if ((*gMapEventInterface)->getMode(obj->anim.mapEventSlot) > 1)
+    if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) > 1)
     {
         GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);
         state->active = 1;

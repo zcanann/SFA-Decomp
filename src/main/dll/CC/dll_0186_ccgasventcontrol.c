@@ -296,12 +296,12 @@ void ccgasventcontrol_update(int obj)
         }
         break;
     case 4:
-        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+        (*gMapEventInterface)->gotoRestartPoint();
         break;
     case 5:
         {
             int player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
             *(u8*)ex = 6;
             break;
         }

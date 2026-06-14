@@ -58,15 +58,15 @@ void nw_levcontrol_update(int param_1)
             *state = *(f32 *)&lbl_803E5F10;
         }
     }
-    mode = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     if (mode != '\x01')
     {
-        (*gMapEventInterface)->setMode((int)((GameObject*)obj)->anim.mapEventSlot, 1);
+        (*gMapEventInterface)->setMapAct((int)((GameObject*)obj)->anim.mapEventSlot, 1);
     }
-    mode = (*gMapEventInterface)->getMode(7);
+    mode = (*gMapEventInterface)->getMapAct(7);
     if (mode == '\x01')
     {
-        (*gMapEventInterface)->setMode(7, 2);
+        (*gMapEventInterface)->setMapAct(7, 2);
         GameBit_Set(0xf22, 1);
         GameBit_Set(0xf23, 1);
         GameBit_Set(0xf24, 1);
@@ -101,10 +101,10 @@ void nw_levcontrol_update(int param_1)
     SCGameBitLatch_Update(state + 2, 0x80, -1, -1, 0xf31, (int*)0xaf);
     bitVal = GameBit_Get(0x398);
     if ((bitVal != 0) &&
-        (mode = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == '\0')
+        (mode = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == '\0')
     )
     {
-        (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
+        (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
     }
     if (((*((uint*)state + 2) & 2) == 0) || (flag = FUN_80006b44(), flag == 0))
     {
@@ -163,7 +163,7 @@ void nw_levcontrol_update(int param_1)
                     *((uint*)state + 2) = *((uint*)state + 2) | 2;
                     FUN_80006b54(0x15, (uint) * (byte*)((int)state + 5));
                     FUN_80006b50();
-                    (*gMapEventInterface)->triggerEvent((int)(player + 6), (int)*player, 0, 0);
+                    (*gMapEventInterface)->savePoint((int)(player + 6), (int)*player, 0, 0);
                 }
                 else if ((bitVal2 & 4) != 0)
                 {
@@ -201,7 +201,7 @@ void nw_levcontrol_update(int param_1)
     else
     {
         FUN_80006824(0, SFXsc_clubhit02);
-        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+        (*gMapEventInterface)->gotoRestartPoint();
     }
     return;
 }
@@ -246,12 +246,12 @@ void nw_levcontrol_init(int* obj)
         getEnvfxAct(0, 0, 0x23c, 0);
     }
 
-    (*gMapEventInterface)->setAnimEvent(7, 0, 0);
-    (*gMapEventInterface)->setAnimEvent(7, 2, 0);
-    (*gMapEventInterface)->setAnimEvent(7, 5, 0);
-    (*gMapEventInterface)->setAnimEvent(7, 10, 0);
-    (*gMapEventInterface)->setAnimEvent(7, 0x1c, 0);
-    (*gMapEventInterface)->setAnimEvent(7, 9, 1);
+    (*gMapEventInterface)->setObjGroupStatus(7, 0, 0);
+    (*gMapEventInterface)->setObjGroupStatus(7, 2, 0);
+    (*gMapEventInterface)->setObjGroupStatus(7, 5, 0);
+    (*gMapEventInterface)->setObjGroupStatus(7, 10, 0);
+    (*gMapEventInterface)->setObjGroupStatus(7, 0x1c, 0);
+    (*gMapEventInterface)->setObjGroupStatus(7, 9, 1);
 }
 
 int fn_801CFD68(u8* state)
@@ -301,7 +301,7 @@ void nw_levcontrol_free(GameObject* obj)
 {
     extern void envFxActFn_800887f8(s32);
     s8 v = obj->anim.mapEventSlot;
-    int ret = (*gMapEventInterface)->getAnimEvent((s32)v, 0);
+    int ret = (*gMapEventInterface)->getObjGroupStatus((s32)v, 0);
     if ((u8)ret == 0)
     {
         envFxActFn_800887f8(0);

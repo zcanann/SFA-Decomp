@@ -245,7 +245,7 @@ void WarpPoint_update(int* obj)
     if (*(u8*)(def + 0x1f) != 0 && ((WarpPointState*)state)->unkD == 0 && lbl_803DCEB8 > -1 &&
         lbl_803DCEB8 == *(s8*)(def + 0x19))
     {
-        (*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16*)player,
+        (*gMapEventInterface)->savePoint((int)(player + 0xc), *(s16*)player,
                                             0, getCurMapLayer());
         ((WarpPointState*)state)->unkD = 1;
     }
@@ -265,7 +265,7 @@ void WarpPoint_update(int* obj)
                 if (((GameObject*)obj)->anim.seqId == 0x27e)
                 {
                     GameBit_Set(0xd53, 1);
-                    (*gMapEventInterface)->triggerEvent(
+                    (*gMapEventInterface)->savePoint(
                         (int)(player + 0xc), *(s16*)player, 0, getCurMapLayer());
                 }
                 (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);

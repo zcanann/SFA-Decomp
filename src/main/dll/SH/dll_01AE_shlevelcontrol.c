@@ -107,12 +107,12 @@ void mapUnloadFn_801d7c94(void* obj, void* p2)
 
     if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET)
     {
-        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 1, 0);
-        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 4, 0);
-        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 6, 0);
-        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 7, 0);
-        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 8, 0);
-        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 9, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 1, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 4, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 6, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 7, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 8, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 9, 0);
         mapUnload(0x13, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x41, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
@@ -122,11 +122,11 @@ void mapUnloadFn_801d7c94(void* obj, void* p2)
     {
         goto dec;
     }
-    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 0, 1);
-    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 2, 1);
-    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 3, 1);
-    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 5, 1);
-    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 0xa, 1);
+    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0, 1);
+    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 2, 1);
+    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 3, 1);
+    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 5, 1);
+    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0xa, 1);
 dec:
     runtime->eventCountdown--;
 }
@@ -275,7 +275,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     u8 bloopsRemaining;
     u8 j;
 
-    if (((*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0) == 0) &&
+    if (((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0) &&
         (GameBit_Get(0x13f) == 0))
     {
         *(u8*)(state + 6) = 0;
@@ -302,7 +302,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     case 1:
         if (GameBit_Get(0x124) != 0)
         {
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
             *(f32*)(state + 8) = lbl_803E54B0;
             (*gGameUIInterface)->initAirMeter(100000, 0x5db);
             *(u8*)(state + 6) = 2;
@@ -332,7 +332,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
             {
                 (*gGameUIInterface)->runAirMeter((int)*(f32*)(state + 8));
             }
-            else if ((*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0) != 0)
+            else if ((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) != 0)
             {
                 (*gGameUIInterface)->airMeterShutdown();
                 (*gScreenTransitionInterface)->start(0x14, 1);
@@ -366,7 +366,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         }
         break;
     case 6:
-        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+        (*gMapEventInterface)->gotoRestartPoint();
         break;
     case 7:
         if (GameBit_Get(0xea6) == 0)
@@ -399,7 +399,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     if ((GameBit_Get(0xea8) == 0) && (GameBit_Get(0x91b) != 0))
     {
         GameBit_Set(0xea8, 1);
-        (*gMapEventInterface)->triggerEvent(0, 0, 1, 0);
+        (*gMapEventInterface)->savePoint(0, 0, 1, 0);
     }
 }
 #pragma dont_inline reset
@@ -453,11 +453,11 @@ typedef struct ShopkeeperObject
 #define SCREEN_TRANSITION_FINISHED() \
     (*gScreenTransitionInterface)->isFinished()
 #define MAP_EVENT_TRIGGER(mapId, eventId, value, arg) \
-    (*gMapEventInterface)->triggerEvent((mapId), (eventId), (value), (arg))
+    (*gMapEventInterface)->savePoint((mapId), (eventId), (value), (arg))
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
+    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
+    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 #define SHOPKEEPER_APPLY_MAP_OVERRIDE(state, enabledBit)      \
     if (GameBit_Get((enabledBit)) != 0) {                     \
         if ((state)->mapOverride != 0xcc) {                   \
@@ -664,60 +664,60 @@ void sh_levelcontrol_update(int obj)
     {
         if (((GameObject*)obj)->anim.mapEventSlot == 8)
         {
-            animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d);
+            animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d);
             if (animEvt == '\0')
             {
-                (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
+                (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
             }
         }
         else
         {
-            animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d);
+            animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d);
             if (animEvt != '\0')
             {
-                (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d, 0);
+                (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d, 0);
             }
         }
     }
     val = GameBit_Get(0x3b8);
     if (val != 0)
     {
-        animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c);
         if (animEvt == '\0')
         {
-            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 1);
+            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 1);
         }
     }
     else
     {
-        animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c);
         if (animEvt != '\0')
         {
-            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 0);
+            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 0);
         }
     }
     val = GameBit_Get(999);
     if ((val != 0) &&
-        (animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b),
+        (animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b),
             animEvt == '\0'))
     {
-        (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b, 1);
+        (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b, 1);
     }
     val = GameBit_Get(0x11);
     if (val != 0)
     {
-        animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
         if (animEvt == '\0')
         {
-            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a, 1);
+            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a, 1);
         }
     }
     else
     {
-        animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
         if (animEvt != '\0')
         {
-            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a, 0);
+            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a, 0);
         }
     }
     switch (*(undefined*)((int)state + 5))
@@ -982,7 +982,7 @@ void sh_levelcontrol_init(int obj)
         *(int*)state |= 0x40;
     }
 
-    ((ShLevelcontrolState*)state)->unk5 = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    ((ShLevelcontrolState*)state)->unk5 = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
 
     ((ShLevelcontrolState*)state)->unk12 = -1;
     Music_Trigger(34, 0);

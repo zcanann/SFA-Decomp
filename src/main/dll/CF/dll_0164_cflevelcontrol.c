@@ -132,10 +132,10 @@ void cflevelcontrol_update(int obj)
     }
 
     /* advance the fortress map event once the intro bit (0x40) lands */
-    if ((*gMapEventInterface)->getMode(0x1d) == 1 &&
+    if ((*gMapEventInterface)->getMapAct(0x1d) == 1 &&
         GameBit_Get(0x40) != 0)
     {
-        (*gMapEventInterface)->setMode(0x1d, 2);
+        (*gMapEventInterface)->setMapAct(0x1d, 2);
     }
 
     /* sting on the first of the two fortress alarm bits, fanfare once
@@ -206,7 +206,7 @@ void cflevelcontrol_update(int obj)
     /* pending map-event trigger queued by another TU */
     if (GameBit_Get(0xd3d) != 0)
     {
-        (*gMapEventInterface)->setEventWarpPosition(&triggerPos, 0, getCurMapLayer(), 1);
+        (*gMapEventInterface)->restartPoint(&triggerPos, 0, getCurMapLayer(), 1);
         GameBit_Set(0xd3d, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
         getEnvfxActImmediately((void*)obj, (void*)obj, 0x11, 0);
@@ -277,10 +277,10 @@ void cflevelcontrol_init(u8* obj, u8* params)
             GameBit_Set(lbl_80323008[i], 0);
         }
     }
-    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
-    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x11, 0);
-    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x15, 0);
-    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x16, 0);
+    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
+    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x11, 0);
+    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x15, 0);
+    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x16, 0);
     ((CfLevelControlFlags*)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
     ((CfLevelControlFlags*)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
     objSetSlot(obj, 0x51);

@@ -56,9 +56,9 @@ extern undefined4 FUN_80017ac8();
 
 /* Trivial 4b 0-arg blr leaves. */
 
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
+#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
 
 #undef MEVT_TRIGGER
 #undef MEVT_SET
@@ -71,8 +71,8 @@ int imicepillar_getObjectTypeId(void);
 
 extern void warpToMap(int mapId, int flags);
 
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
 
 /* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
  * through jumptable_80323698 (states 1..7; state 0 idles). */

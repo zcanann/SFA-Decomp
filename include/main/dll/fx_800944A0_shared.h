@@ -298,7 +298,6 @@ extern int lbl_8030F7B0[];
 extern f32 lbl_803DF2DC;
 extern int saveGameGetEnvState(void);
 extern int lbl_802C212C[];
-extern int *gBoneParticleEffectInterface;
 extern f32 lbl_803DF394;
 extern f32 lbl_803DF398;
 extern void modelLightStruct_setLightKind(void *light, int v);

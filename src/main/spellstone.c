@@ -91,7 +91,7 @@ void spellstone_update(SpellStoneObject* obj)
         GameBit_Set(*(&lbl_803DC228 + def->eventIndex), 1);
         obj->flags = (s16)(obj->flags | 0x4000);
         Obj_RemoveFromUpdateList(obj);
-        (*gMapEventInterface)->setMode(0x1d, 2);
+        (*gMapEventInterface)->setMapAct(0x1d, 2);
     }
     else
     {

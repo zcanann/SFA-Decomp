@@ -1258,7 +1258,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         ((SeqByte136*)(seq + 0x136))->mapEvent = 1;
         break;
     case 36:
-        (*gMapEventInterface)->triggerEvent(0, 0, 1, getCurMapLayer());
+        (*gMapEventInterface)->savePoint(0, 0, 1, getCurMapLayer());
         break;
     case 38:
         playerLock(Obj_GetPlayerObject(), cmdArg);
@@ -1366,13 +1366,13 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         Obj_SetActiveModelIndex(sourceObj, cmdArg);
         break;
     case 27:
-        (*gMapEventInterface)->setAnimEvent(sourceAnim->mapEventSlot, cmdArg, 1);
+        (*gMapEventInterface)->setObjGroupStatus(sourceAnim->mapEventSlot, cmdArg, 1);
         break;
     case 28:
-        (*gMapEventInterface)->setAnimEvent(sourceAnim->mapEventSlot, cmdArg, 0);
+        (*gMapEventInterface)->setObjGroupStatus(sourceAnim->mapEventSlot, cmdArg, 0);
         break;
     case 29:
-        (*gMapEventInterface)->setMode(sourceAnim->mapEventSlot, cmdArg);
+        (*gMapEventInterface)->setMapAct(sourceAnim->mapEventSlot, cmdArg);
         break;
     case 19:
         if (flag != 0)
@@ -1389,10 +1389,10 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         base[(s8)((ObjSeqState*)seq)->slot + 0x3538] |= 0x10;
         break;
     case 31:
-        (*(void (**)(void))((u8*)*gMapEventInterface + 0x2c))();
+        (*gMapEventInterface)->clearRestartPoint();
         break;
     case 32:
-        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+        (*gMapEventInterface)->gotoRestartPoint();
         break;
     case 39:
         if (lbl_803DB720 == (s8)((ObjSeqState*)seq)->slot)
@@ -4912,7 +4912,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
     if ((((u32)((ObjSeqState*)seq)->unk136[0] >> 2) & 1U) != 0U)
     {
         player = Obj_GetPlayerObject();
-        (*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16*)player, 0,
+        (*gMapEventInterface)->savePoint((int)(player + 0xc), *(s16*)player, 0,
                                             getCurMapLayer());
         clearBit = 0;
         {

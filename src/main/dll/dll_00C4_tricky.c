@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
@@ -1682,7 +1683,7 @@ void Tricky_init(int obj)
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[6]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[7]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[8]);
-    ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getProgressPtr();
+    ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getTrickyEnergy();
     ((TrickyState*)state)->playerObj = Obj_GetPlayerObject();
     ((TrickyState*)state)->unk08 = 0;
     ((TrickyState*)state)->unk0B = 0;
@@ -1862,7 +1863,7 @@ void trickyFn_80148d8c(int obj, int state)
         {
             if (*(s16*)(setup + 0x2c) != 0)
             {
-                (*gMapEventInterface)->startTimedEvent(((ObjPlacement*)setup)->mapId,
+                (*gMapEventInterface)->addTime(((ObjPlacement*)setup)->mapId,
                                                        lbl_803E2570 * (f32) * (s16*)(setup + 0x2c));
             }
             ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~(u64)0x800;
@@ -2038,7 +2039,6 @@ void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_802C2200[];
-extern int* gBoneParticleEffectInterface;
 extern int* lbl_803DDA50;
 extern f32 lbl_803E2588;
 extern f32 lbl_803E258C;
@@ -2146,8 +2146,10 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 if (hit != 0x10)
                 {
                     params.scale = lbl_803E258C;
-                    ((void (**)(int, int, int, int, void*))*(int*)gBoneParticleEffectInterface)[3](obj, 0x7fb, 0, 0x64, &params);
-                    ((void (**)(int, int, int, int, void*))*(int*)gBoneParticleEffectInterface)[3](obj, 0x7fc, 0, 0x32, 0);
+                    (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fb, NULL,
+                                                                 0x64, &params);
+                    (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fc, NULL,
+                                                                 0x32, NULL);
                     Obj_ResetModelColorState(obj);
                     *(u16*)&((TrickyState*)state)->unk2B0 = 0;
                     ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & 0xffffffdf;

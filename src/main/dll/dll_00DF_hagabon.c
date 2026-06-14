@@ -379,7 +379,7 @@ void hagabon_update(int obj)
         {
             return;
         }
-        if (((u8 (*)(int))(*gMapEventInterface)->isTimedEventActive)(((HagabonPlacement*)data)->unk14) == 0)
+        if (((u8 (*)(int))(*gMapEventInterface)->shouldNotSaveTime)(((HagabonPlacement*)data)->unk14) == 0)
         {
             return;
         }
@@ -443,7 +443,7 @@ void hagabon_update(int obj)
             lightPos[0] = hitX;
             lightPos[2] = hitZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E2660, lightPos, 3, 0);
-            (*gMapEventInterface)->startTimedEvent(((HagabonPlacement*)data)->unk14,
+            (*gMapEventInterface)->addTime(((HagabonPlacement*)data)->unk14,
                                                    (f32)(s32)(((HagabonPlacement*)data)->unk1C * 0x3c));
             if (((HagabonPlacement*)data)->unk20 != -1)
             {

@@ -703,7 +703,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
         {
             if (*(s16*)(*objs + 0x46) != 2129)
             {
-                if ((*gMapEventInterface)->isTimedEventActive(
+                if ((*gMapEventInterface)->shouldNotSaveTime(
                     *(int*)((char*)data + 0x14)) != 0)
                 {
                     if (p2 == 0)

@@ -498,7 +498,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
         (0x32 < *(short*)(state + 4)))
     {
         FUN_800068c4((uint)obj, 0x459);
-        mode = (*gMapEventInterface)->getMode((int)*(char*)(obj + 0x56));
+        mode = (*gMapEventInterface)->getMapAct((int)*(char*)(obj + 0x56));
         if (mode == '\x02')
         {
             convLo0 = (uint) * (byte*)(state + 7);

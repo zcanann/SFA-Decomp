@@ -1932,7 +1932,7 @@ void FUN_80041c10(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 
     if (*(short*)(&DAT_802cc9d4 + param_9 * 2) != -1)
     {
-        iVar1 = (int)(*gMapEventInterface)->getWarpPos();
+        iVar1 = (int)(*gMapEventInterface)->getCurCharPos();
         *(char*)(iVar1 + 0xe) = (char)param_9;
         param_1 = extraout_f1;
     }
@@ -5968,7 +5968,7 @@ void mapLoadDataFiles(int mapIdx)
 {
     if (sMapFileNameAdjacencyTable[mapIdx] != -1)
     {
-        int* r = (int*)(*gMapEventInterface)->getWarpPos();
+        int* r = (int*)(*gMapEventInterface)->getCurCharPos();
         *(s8*)((char*)r + 0xe) = (s8)mapIdx;
     }
     mapLoadDataFile(mapIdx, 0x20);
@@ -6017,7 +6017,7 @@ int mapUnload(int mapId, int flags)
     base = lbl_80345E10;
     i = 0;
     needWait = 0;
-    st = (int*)(*gMapEventInterface)->getWarpPos();
+    st = (int*)(*gMapEventInterface)->getCurCharPos();
     {
         int pairs[56] = {
             0x2b, 0x1, 0x2a, 0x2, 0x2f, 0x8, 0x30, 0x4,
@@ -6055,7 +6055,7 @@ int mapUnload(int mapId, int flags)
             }
         }
 
-        st = (int*)(*gMapEventInterface)->getWarpPos();
+        st = (int*)(*gMapEventInterface)->getCurCharPos();
         {
             int v = *(s8*)((char*)st + 0xe);
             if (v != lbl_803DB5B0 && v != (&lbl_803DB5B0)[1])

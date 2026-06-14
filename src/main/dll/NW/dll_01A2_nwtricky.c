@@ -157,7 +157,7 @@ void nw_tricky_update(int* obj)
         }
         if (GameBit_Get(0x4e3) == 1)
         {
-            if ((*gMapEventInterface)->getProgressPtr()[0] >= 4)
+            if ((*gMapEventInterface)->getTrickyEnergy()[0] >= 4)
             {
                 GameBit_Set(0x4e3, 0xff);
             }
@@ -168,7 +168,7 @@ void nw_tricky_update(int* obj)
             ((NwTrickyState*)state)->unk4 = t - lbl_803E5268;
             if (GameBit_Get(0x4e3) == 0xff)
             {
-                if ((*gMapEventInterface)->getProgressPtr()[0] < 4)
+                if ((*gMapEventInterface)->getTrickyEnergy()[0] < 4)
                 {
                     GameBit_Set(0x4e3, 1);
                 }

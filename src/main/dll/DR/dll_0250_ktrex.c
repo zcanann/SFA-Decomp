@@ -1796,15 +1796,15 @@ int ktrex_stateHandlerA01(int obj, int runtime)
         ((ObjAnimComponent*)obj)->bankIndex = 1;
         GameBit_Set(1380, 1);
         GameBit_Set(874, 0);
-        (*gMapEventInterface)->setAnimEvent(13, 0, 1);
-        (*gMapEventInterface)->setAnimEvent(13, 1, 1);
-        (*gMapEventInterface)->setAnimEvent(13, 5, 1);
-        (*gMapEventInterface)->setAnimEvent(13, 10, 1);
-        (*gMapEventInterface)->setAnimEvent(13, 11, 1);
+        (*gMapEventInterface)->setObjGroupStatus(13, 0, 1);
+        (*gMapEventInterface)->setObjGroupStatus(13, 1, 1);
+        (*gMapEventInterface)->setObjGroupStatus(13, 5, 1);
+        (*gMapEventInterface)->setObjGroupStatus(13, 10, 1);
+        (*gMapEventInterface)->setObjGroupStatus(13, 11, 1);
         GameBit_Set(3589, 0);
         unlockLevel(53, 1, 0);
         GameBit_Set(2107, 1);
-        (*gMapEventInterface)->setMode(4, 2);
+        (*gMapEventInterface)->setMapAct(4, 2);
     }
     return 0;
 }

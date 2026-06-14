@@ -628,7 +628,7 @@ void smallbasket_render(int obj, undefined4 param_2, undefined4 param_3, undefin
     int result;
     short field_a;
     extra = *(int*)&((GameObject*)obj)->extra;
-    result = (*gMapEventInterface)->isTimedEventActive(
+    result = (*gMapEventInterface)->shouldNotSaveTime(
         *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14));
     if (result == 0)
     {
@@ -770,7 +770,7 @@ void smallbasket_update(int obj)
     animSpeed = lbl_803E3950;
     (*gSkyInterface)->getClockTime(&animSpeed);
     state = *(int*)&((GameObject*)obj)->extra;
-    if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)def)->mapId) == 0)
+    if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)def)->mapId) == 0)
     {
         return;
     }
@@ -839,7 +839,7 @@ void smallbasket_update(int obj)
                 {
                     ((CfperchState*)state)->unk14 = 1;
                 }
-                (*gMapEventInterface)->startTimedEvent(((ObjPlacement*)def)->mapId, (f32)((CfperchState*)state)->unk18);
+                (*gMapEventInterface)->addTime(((ObjPlacement*)def)->mapId, (f32)((CfperchState*)state)->unk18);
                 ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
                 ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;

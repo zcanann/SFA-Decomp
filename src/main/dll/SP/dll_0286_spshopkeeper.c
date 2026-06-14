@@ -20,7 +20,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjGroup_FindNearestObject();
 extern void dll_2E_func06();
 
-extern undefined4* gBoneParticleEffectInterface;
 extern f32 lbl_803E59D8;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -108,7 +107,7 @@ void fn_801E7DC8(int p1, int p2, int count)
 
     if (Obj_IsLoadingLocked() == 0) return;
 
-    (*gMapEventInterface)->setAnimEvent((s32)((GameObject*)p1)->anim.mapEventSlot, 6, 1);
+    (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)p1)->anim.mapEventSlot, 6, 1);
 
     hitDetectFn_800658a4(p1, &local, 0, ((GameObject*)p1)->anim.localPosX, ((GameObject*)p1)->anim.localPosY,
                          ((GameObject*)p1)->anim.localPosZ);
@@ -168,8 +167,7 @@ void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param
     }
     if ((*(u8*)(state + 0x9d4) & 0x20) != 0)
     {
-        (*(void (*)(int, int, float*, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
-            obj, 0x7ef, local_18, 0x50, 0);
+        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, local_18, 0x50, NULL);
     }
 }
 
@@ -341,7 +339,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             break;
         case 2:
             (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state2, 3);
-            (*(void (**)(int, int, f32*, int, int))(*(int*)gBoneParticleEffectInterface + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7EF, &range, 0x50, NULL);
             ((ShopkeeperState*)state)->opacity = 0;
             break;
         case 3:
@@ -387,7 +385,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             playerAddMoney(player, -(int)((ShopkeeperState*)state)->amount);
             break;
         case 0xB:
-            (*(void (**)(int, int, f32*, int, int))(*(int*)gBoneParticleEffectInterface + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7EF, &range, 0x50, NULL);
             break;
         case 0xC:
             ((ShopkeeperState*)state)->amount = 1;

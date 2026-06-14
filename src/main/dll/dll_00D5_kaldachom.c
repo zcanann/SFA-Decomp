@@ -402,7 +402,7 @@ void kaldachom_update(int obj)
     if (((GameObject*)obj)->unkF4 != 0)
     {
         if ((((CampfireState*)state)->unk270 != 3) &&
-            (cond = (*gMapEventInterface)->isTimedEventActive(((KaldachomPlacement*)ref)->unk14), cond != 0))
+            (cond = (*gMapEventInterface)->shouldNotSaveTime(((KaldachomPlacement*)ref)->unk14), cond != 0))
         {
             (**(code**)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
             *(undefined2*)(state + 0x402) = 0;

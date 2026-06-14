@@ -218,7 +218,7 @@ void dim_levelcontrol_update(int obj)
     {
         if ((u32)GameBit_Get(0x651) == 0)
         {
-            (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 0);
+            (*gMapEventInterface)->setObjGroupStatus(0x13, 0xd, 0);
             st->unkD = 0;
         }
     }
@@ -226,7 +226,7 @@ void dim_levelcontrol_update(int obj)
     {
         if ((u32)GameBit_Get(0x651) != 0)
         {
-            (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 1);
+            (*gMapEventInterface)->setObjGroupStatus(0x13, 0xd, 1);
             st->unkD = 1;
         }
     }
@@ -391,7 +391,7 @@ void dim_levelcontrol_init(int obj)
     st->b5 = (u8)GameBit_Get(0xd0d);
     st->b4 = (u8)GameBit_Get(0xd0e);
     st->b3 = (u8)GameBit_Get(0xa21);
-    (*gMapEventInterface)->setMode(((GameObject*)obj)->anim.mapEventSlot, 1);
+    (*gMapEventInterface)->setMapAct(((GameObject*)obj)->anim.mapEventSlot, 1);
     ((GameObject*)obj)->objectFlags |= 0x6000;
     unlockLevel(0, 0, 1);
 }

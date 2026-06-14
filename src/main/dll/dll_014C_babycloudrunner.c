@@ -1,5 +1,5 @@
 /*
- * sandwormBoss.c — 10-DLL container (DLL 0x14A CFPowerBase .. 0x157
+ * sandwormBoss.c - 10-DLL container (DLL 0x14A CFPowerBase .. 0x157
  * SpiritDoorSpirit), TU [8019D578-801A0B14). DLLs 0x148 and 0x149 are
  * defined in dll_0148_cfguardian.c and dll_0149_cfwindlift.c; their
  * definitions here are collapsed to forward prototypes.
@@ -60,7 +60,7 @@ extern undefined4 DAT_802c2a60;
 extern undefined4 DAT_802c2a64;
 extern f64 DOUBLE_803e4db0;
 extern f32 lbl_803DC074;
-extern f32 gBoneParticleEffectInterface;
+extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4228;
 extern f32 lbl_803E4DA8;
 extern f32 lbl_803E4DBC;
@@ -409,7 +409,7 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
                      param_6, param_7,
                      param_8, param_9, 5, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * gBoneParticleEffectInterface + lbl_803E4EC8) * lbl_803E4ECC);
+    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
     if (dVar2 < (double)lbl_803E4EB0)
     {
         dVar2 = (double)lbl_803E4EB0;

@@ -138,7 +138,7 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 fn_80296518(player, 0x80, 1);
                 GameBit_Set(0x12b, 1);
                 GameBit_Set(0xc85, 1);
-                (*gMapEventInterface)->setMode(0xb, 5);
+                (*gMapEventInterface)->setMapAct(0xb, 5);
                 break;
             case 14:
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -441,11 +441,11 @@ void gpsh_shrine_update(int obj)
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                     ((GpshShrineState*)data)->unk14 = 4;
                     GameBit_Set(0x36a, 0);
-                    (*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
-                    (*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
-                    (*gMapEventInterface)->setAnimEvent(0xd, 5, 1);
-                    (*gMapEventInterface)->setAnimEvent(0xd, 10, 1);
-                    (*gMapEventInterface)->setAnimEvent(0xd, 0xb, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
                     GameBit_Set(0xc91, 1);
                     GameBit_Set(0xe05, 0);
                 }

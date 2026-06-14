@@ -3,6 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
+#include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 
@@ -64,7 +65,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern void* gPlayerInterface;
 extern void* gBaddieControlInterface;
-extern int* gBoneParticleEffectInterface;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
 extern void objRenderFn_8003b8f4(f32);
@@ -413,8 +413,7 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                                                                    lbl_803E2EBC);
     if (((GrimbleControl*)sub)->unk50 > lbl_803E2EB8)
     {
-        (*(void (**)(int, int, int, int, int))(*(int*)gBoneParticleEffectInterface + 0xc))(obj, 0x52a, 0, 0x64,
-                                                                           0);
+        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x52a, NULL, 0x64, NULL);
     }
     if ((((GrimbleState*)state)->unk400 & 0x60) != 0)
     {
@@ -438,7 +437,7 @@ void grimble_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((*gMapEventInterface)->isTimedEventActive(((GrimblePlacement*)def)->unk14) != 0)
+        if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->unk14) != 0)
         {
             (*(void (**)(int, int, char*, int, int, int, int, f32))(*(int*)gBaddieControlInterface +
                 0x58))(obj, def, state, 0xa, 6,
