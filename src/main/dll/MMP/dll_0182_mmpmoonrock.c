@@ -697,7 +697,7 @@ void mmp_moonrock_update(int obj)
     }
     grabbed = 0;
     if ((state->flags & 8) != 0 &&
-        (*gMapEventInterface)->getObjGroupStatus(0x12, 6) == 0)
+        (u8)(*gMapEventInterface)->getObjGroupStatus(0x12, 6) == 0)
     {
         state->flags |= 1;
     }
