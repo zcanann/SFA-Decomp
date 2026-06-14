@@ -160,7 +160,7 @@ void arwlevelcon_update(int obj)
     if (state->ringChoiceTriggered == 0)
     {
         int mb = mapBlockFn_800592e4();
-        if (*(f32*)(arwing + 0x14) - *(f32*)(mb + 0x28) > lbl_803E70E8 &&
+        if (((GameObject*)arwing)->anim.localPosZ - *(f32*)(mb + 0x28) > lbl_803E70E8 &&
             arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0)
         {
             int a, b;
