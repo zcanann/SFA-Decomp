@@ -16,13 +16,13 @@
 #include "main/screen_transition.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/effect_interfaces.h"
+#include "main/objlib.h"
 #include "main/objanim_internal.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
 extern undefined4 Sfx_KeepAliveLoopedObjectSound();
 extern uint randomGetRange();
-extern int ObjList_GetObjects();
 extern undefined4 setAButtonIcon();
 extern u8* Obj_GetPlayerObject(void);
 
