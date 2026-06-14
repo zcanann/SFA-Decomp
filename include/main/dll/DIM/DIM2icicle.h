@@ -8,7 +8,6 @@
 void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *runtime);
 void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRuntime *runtime);
 void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime);
-void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUpdate,
-                                  DIMbossRuntime *runtime, DIMbossRuntime *updateRuntime);
+void DIM2icicle_updateCombatState();
 
 #endif /* MAIN_DLL_DIM_DIM2ICICLE_H_ */

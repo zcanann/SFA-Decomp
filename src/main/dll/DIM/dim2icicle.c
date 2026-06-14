@@ -655,24 +655,21 @@ void DIM2icicle_updateHitResponse(GameObject *obj, DIMbossRuntime *runtime)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUpdate,
-                                  DIMbossRuntime *runtime, DIMbossRuntime *updateRuntime)
+void DIM2icicle_updateCombatState(int obj, int animUpdate, int runtime, int updateRuntime)
 {
   IcicleState *state;
   u8 *tricky;
-  int objIndex;
   f32 timer;
   f32 limit;
 
-  objIndex = (int)obj;
-  state = (IcicleState *)runtime->topState;
+  state = *(IcicleState **)(runtime + 0x40c);
   tricky = (u8 *)getTrickyObject();
-  ObjHits_EnableObject(objIndex);
-  updateRuntime->effectActive = 1;
-  ((void (*)(int, int, f32, int))*(code **)(*gBaddieControlInterface + 0x2c))(objIndex, (int)updateRuntime, lbl_803E4C70, 1);
+  ObjHits_EnableObject(obj);
+  *(u8 *)(updateRuntime + 0x25f) = 1;
+  ((void (*)(int, int, f32, int))*(code **)(*gBaddieControlInterface + 0x2c))(obj, updateRuntime, lbl_803E4C70, 1);
   ((void (*)(int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x54))
-            (objIndex, (int)updateRuntime, (int)runtime->moveScratch, (int)runtime->activeMoveId, (int)&runtime->hitReactMode, 0, 0, 0);
-  if (updateRuntime->scale == 6) {
+            (obj, updateRuntime, runtime + 0x35c, (int)*(s16 *)(runtime + 0x3f4), runtime + 0x405, 0, 0, 0);
+  if (*(s16 *)(updateRuntime + 0x274) == 6) {
     state->meltTimer =
          -(timeDelta * (lbl_803E4BC8 * ((GameObject *)obj)->anim.currentMoveProgress + lbl_803E4C44) - state->meltTimer);
   }
@@ -695,47 +692,47 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
       if (timer <= limit) {
         state->lightTimer = timer + timeDelta;
         if (state->lightTimer >= limit) {
-          ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 1, objIndex);
+          ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 1, obj);
         }
       }
     }
     if (state->fadeTimer > (timer = lbl_803E4BD8)) {
       state->fadeTimer = state->fadeTimer + timeDelta;
       if (state->fadeTimer >= lbl_803E4BEC) {
-        runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_TARGET_TRICKY;
+        *(u16 *)(runtime + 0x400) &= ~4;
         state->fadeTimer = timer;
         ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 0, 0);
         state->lightTimer = lbl_803E4C44;
       }
     }
-    else if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
-      runtime->stateFlags |= DIMBOSS_STATE_FLAG_TARGET_TRICKY;
+    else if (*(s16 *)(runtime + 0x402) == 1) {
+      *(u16 *)(runtime + 0x400) |= 4;
       state->fadeTimer = lbl_803E4C44;
-      DIM2icicle_createStateLight(objIndex, 0);
+      DIM2icicle_createStateLight(obj, 0);
     }
   }
-  if (runtime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET) {
-    DIM2icicle_createStateLight(objIndex, 1);
+  if (*(s16 *)(runtime + 0x402) == 2) {
+    DIM2icicle_createStateLight(obj, 1);
   }
   {
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT) {
       gDIMbossSequenceFlags &= ~(u64)DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT;
-      DIM2icicle_spawnBlueWhiteEffect((int *)&runtime->topState->blueWhiteEffectSource, runtime->topState->blueWhiteVelocity);
+      DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(runtime + 0x40c) + 4), (f32 *)(*(int *)(runtime + 0x40c) + 0x94));
     }
   }
-  if (runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) {
+  if (*(u16 *)(runtime + 0x400) & 4) {
     gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE;
   }
-  if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
-    ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, objIndex, 1, 2);
+  if (*(s16 *)(runtime + 0x402) == 1) {
+    ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
     ((GameObject *)obj)->unkE4 = 1;
   }
   else {
     ((GameObject *)obj)->unkE4 = 2;
   }
-  runtime->savedPendingParentObj = *(int *)&((GameObject *)obj)->pendingParentObj;
+  *(int *)(runtime + 0x3e0) = *(int *)&((GameObject *)obj)->pendingParentObj;
   *(int *)&((GameObject *)obj)->pendingParentObj = 0;
   ((void (*)(f32, int, int, f32, void *, void *))*(code **)(*(int *)gPlayerInterface + 8))
-            (timeDelta, objIndex, (int)updateRuntime, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
-  *(int *)&((GameObject *)obj)->pendingParentObj = runtime->savedPendingParentObj;
+            (timeDelta, obj, updateRuntime, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
+  *(int *)&((GameObject *)obj)->pendingParentObj = *(int *)(runtime + 0x3e0);
 }
