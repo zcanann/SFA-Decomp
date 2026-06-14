@@ -358,22 +358,17 @@ int fn_80223D10(void) { return 0x2; }
 int fn_802239A4(int obj, int ai)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    int result;
 
     if (*(s8*)(ai + 0x27b) != 0)
     {
         ((EarthwalkerState*)state)->flagsAC0 &= ~1;
-        result = (*(int (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
+        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
     }
     else if (*(s8*)(ai + 0x346) != 0)
     {
-        result = 3;
+        return 3;
     }
-    else
-    {
-        result = 0;
-    }
-    return result;
+    return 0;
 }
 
 int fn_80223A1C(int obj, int ai)
