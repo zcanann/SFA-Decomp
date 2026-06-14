@@ -13,6 +13,7 @@
  * close holding nothing.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/carryable_interface.h"
 #include "main/dll/groundAnimator.h"
 #include "main/game_object.h"
 
@@ -45,28 +46,6 @@ extern f32 lbl_803E37B8; /* 1.0: render scale */
 extern f32 lbl_803E37BC; /* 10000.0: nearest-object sentinel */
 extern f32 lbl_803E37C0; /* 35.0: scene-spot snap radius */
 extern f32 lbl_803E37C4; /* 60.0: pickup prompt distance */
-
-typedef void (*GroundAnimatorFreeFn)(int obj);
-typedef int (*GroundAnimatorVisibleFn)(int obj, int visible);
-typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
-typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
-typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int arg);
-
-/* the carryable/groundAnimator interface vtable (gCarryableInterface) */
-typedef struct CarryableInterface
-{
-    u8 pad00[4];
-    GroundAnimatorInitAnimFn initAnim;      /* 0x04 */
-    GroundAnimatorAnimStateFn getAnimState; /* 0x08: nonzero while held */
-    GroundAnimatorVisibleFn isVisible;      /* 0x0C */
-    GroundAnimatorFreeFn free;              /* 0x10 */
-    u8 pad14[0x24 - 0x14];
-    GroundAnimatorSetVisibleFn setVisible;  /* 0x24 */
-} CarryableInterface;
-
-STATIC_ASSERT(offsetof(CarryableInterface, setVisible) == 0x24);
-
-extern CarryableInterface** gCarryableInterface;
 
 int wm_column_getExtraSize(void)
 {

@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "main/carryable_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/frustum.h"
@@ -35,7 +36,6 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
-extern int* gCarryableInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E3B44;
 extern f32 lbl_803E3B48;
@@ -363,10 +363,10 @@ void carryable_break_respawn_update(int obj)
     switch (state->state)
     {
     case 0:
-        (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*gCarryableInterface + 8)))(obj, state);
+        (*gCarryableInterface)->getAnimState(obj, (int)state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
-            (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*gCarryableInterface + 0x30)))(obj, state);
+            (*(void (*)(int, CarryableBreakRespawnState*))((u8*)*gCarryableInterface + 0x30))(obj, state);
             Sfx_PlayFromObject(obj, SFXen_rfall5_c);
             ObjHitbox_SetSphereRadius(obj, 0x28);
             ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
@@ -415,8 +415,8 @@ void dll_109_init(int obj, u8* p)
 {
     *(s16*)obj = (s16)((s32)p[0x1a] << 8);
     ((GameObject*)obj)->objectFlags |= 0x2000;
-    (*(void (*)(int, int*, int))(*(int*)(*gCarryableInterface + 0x4)))(obj, ((GameObject*)obj)->extra, 0x21);
-    (*(void (*)(int*, int))(*(int*)(*gCarryableInterface + 0x2c)))(((GameObject*)obj)->extra, 1);
+    (*gCarryableInterface)->initAnim((void*)obj, *(int*)&((GameObject*)obj)->extra, 0x21);
+    (*(void (*)(int*, int))((u8*)*gCarryableInterface + 0x2c))(((GameObject*)obj)->extra, 1);
 }
 
 #pragma dont_inline on
@@ -427,7 +427,7 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 #pragma peephole on
 void dll_109_free(int obj)
 {
-    (*(void (*)(int))(*(int*)(*gCarryableInterface + 0x10)))(obj);
+    (*gCarryableInterface)->free(obj);
 }
 
 #pragma scheduling off
@@ -437,7 +437,7 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     int* inner = ((GameObject*)obj)->extra;
     if (((Dll109State*)inner)->unkA == 0)
     {
-        if ((*(int (*)(int, s32))(*(int*)(*gCarryableInterface + 0xc)))(obj, visible) != 0)
+        if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
         {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
         }
