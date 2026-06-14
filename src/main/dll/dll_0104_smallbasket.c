@@ -800,7 +800,8 @@ void smallbasket_update(int obj)
         ((CfperchState*)state)->unk14 -= (s16)(int)(timeDelta * animSpeed);
         if (((CfperchState*)state)->unk14 <= 0)
         {
-            if ((Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((int)Obj_GetPlayerObject() + 0x18)) >
+            if ((Vec_distance(&((GameObject*)obj)->anim.worldPosX,
+                    &((GameObject*)player)->anim.worldPosX) >
                     lbl_803E3930) &&
                 (((CfperchState*)state)->enableGameBit == -1))
             {

@@ -97,9 +97,11 @@ void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* statePar
     int i;
     s16 timer;
     int player;
+    GameObject* playerObj;
     f32 distance;
 
     player = (int)Obj_GetPlayerObject();
+    playerObj = (GameObject*)player;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
 
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitObj, &hitPos[0], &hitPos[1], &hitPos[2]);
@@ -162,7 +164,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* statePar
         }
     }
 
-    distance = Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18));
+    distance = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &playerObj->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) == 0)
     {
         if (distance < lbl_803E3894)
