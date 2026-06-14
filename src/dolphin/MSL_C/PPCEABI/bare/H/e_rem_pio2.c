@@ -83,8 +83,8 @@ float fsin16Precise(int angle) {
         case 0x8000:
             return -(y * (((lbl_803E7CBC * y2 + lbl_803E7CB8) * y2 + lbl_803E7CB4) * y2 + lbl_803E7CB0));
         default:
-            return lbl_803E7CA0
-                   - y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0);
+            return -(y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0)
+                     + lbl_803E7CA0);
     }
 }
 
@@ -146,7 +146,7 @@ float fcos16Approx(int angle) {
             return -(y * (lbl_803E7C90 * y2 + lbl_803E7C8C));
         case 0x6000:
         case 0x8000:
-            return lbl_803E7C80 - y2 * (lbl_803E7C88 * y2 + lbl_803E7C84);
+            return -(y2 * (lbl_803E7C88 * y2 + lbl_803E7C84) + lbl_803E7C80);
         default:
             return y * (lbl_803E7C90 * y2 + lbl_803E7C8C);
     }
@@ -166,7 +166,7 @@ float fsin16(int angle) {
             return -(y * ((lbl_803E7C9C * y2 + lbl_803E7C98) * y2 + lbl_803E7C94));
         case 0x6000:
         case 0x8000:
-            return lbl_803E7CA0 - y2 * ((lbl_803E7CAC * y2 + lbl_803E7CA8) * y2 + lbl_803E7CA4);
+            return -(y2 * ((lbl_803E7CAC * y2 + lbl_803E7CA8) * y2 + lbl_803E7CA4) + lbl_803E7CA0);
         default:
             return y * ((lbl_803E7C9C * y2 + lbl_803E7C98) * y2 + lbl_803E7C94);
     }
@@ -187,8 +187,8 @@ float fcos16Precise(int angle) {
             return -(y * (((lbl_803E7CBC * y2 + lbl_803E7CB8) * y2 + lbl_803E7CB4) * y2 + lbl_803E7CB0));
         case 0x6000:
         case 0x8000:
-            return lbl_803E7CA0
-                   - y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0);
+            return -(y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0)
+                     + lbl_803E7CA0);
         default:
             return y * (((lbl_803E7CBC * y2 + lbl_803E7CB8) * y2 + lbl_803E7CB4) * y2 + lbl_803E7CB0);
     }
