@@ -139,12 +139,12 @@ typedef struct DFSHLaserBeamObject
     s16 roll;
     s16 flags06;
     u8 pad08[0x0C - 0x08];
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    f32 prevPosX;
-    f32 prevPosY;
-    f32 prevPosZ;
+    f32 localPosX;
+    f32 localPosY;
+    f32 localPosZ;
+    f32 worldPosX;
+    f32 worldPosY;
+    f32 worldPosZ;
     u8 pad24[0x36 - 0x24];
     u8 alpha;
     u8 pad37[0x4C - 0x37];
@@ -271,7 +271,7 @@ void DFSH_LaserBeam_update(uint param_1)
     rangeSq = range * range;
     yawSin = mathCosf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
     yawCos = mathSinf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
-    beamPlane = -(obj->posX * yawSin + obj->posZ * yawCos);
+    beamPlane = -(obj->localPosX * yawSin + obj->localPosZ * yawCos);
     playerObj = Obj_GetPlayerObject();
 
     DFSH_LASER_DAMAGE_COOLDOWN(runtime) =
@@ -325,13 +325,13 @@ void DFSH_LaserBeam_update(uint param_1)
     if (((playerObj != NULL) && (DFSH_LASER_DAMAGE_COOLDOWN(runtime) == 0)) &&
         (DFSH_LASER_ACTIVE(runtime) != 0))
     {
-        heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->posY;
+        heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->localPosY;
         if ((heightDelta < (lbl_803E4EE0 + (f32)DFSH_LASER_HEIGHT_WINDOW(runtime))) &&
             (-(lbl_803E4EE4 + (lbl_803E4EE0 + (f32)DFSH_LASER_HEIGHT_WINDOW(runtime))) <
                 heightDelta))
         {
-            xDelta = ((GameObject*)playerObj)->anim.localPosX - obj->posX;
-            zDelta = ((GameObject*)playerObj)->anim.localPosZ - obj->posZ;
+            xDelta = ((GameObject*)playerObj)->anim.localPosX - obj->localPosX;
+            zDelta = ((GameObject*)playerObj)->anim.localPosZ - obj->localPosZ;
             if ((xDelta * xDelta + zDelta * zDelta) < rangeSq)
             {
                 damageDistance = beamPlane + (yawSin * ((GameObject*)playerObj)->anim.localPosX +
@@ -468,7 +468,7 @@ void fn_801C4664(void* objArg)
     if ((obj->flags06 & 0x4000) != 0)
     {
         obj->yaw = 0;
-        obj->posY = *(f32*)((u8*)config + 0xC);
+        obj->localPosY = *(f32*)((u8*)config + 0xC);
         return;
     }
 
@@ -479,7 +479,7 @@ void fn_801C4664(void* objArg)
     DFSH_LASER_ORBIT_C(runtime) =
         (s16)(DFSH_LASER_ORBIT_C(runtime) + (int)(lbl_803E4F10 * timeDelta));
 
-    obj->posY = lbl_803E4F14 +
+    obj->localPosY = lbl_803E4F14 +
     (*(f32*)((u8*)config + 0xC) +
         mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
             lbl_803E4F1C));
@@ -503,8 +503,8 @@ void fn_801C4664(void* objArg)
         return;
     }
 
-    angleDelta = (u16)getAngle(obj->prevPosX - *(f32*)((u8*)playerObj + 0x18),
-                               obj->prevPosZ - ((GameObject*)playerObj)->anim.worldPosZ) -
+    angleDelta = (u16)getAngle(obj->worldPosX - ((GameObject*)playerObj)->anim.worldPosX,
+                               obj->worldPosZ - ((GameObject*)playerObj)->anim.worldPosZ) -
         (u16)obj->yaw;
     if (angleDelta > 0x8000)
     {
@@ -516,7 +516,7 @@ void fn_801C4664(void* objArg)
     }
 
     obj->yaw = (s16)(obj->yaw + (s16)(int)(((f32)angleDelta * timeDelta) / lbl_803E4F28));
-    distance = Vec_xzDistance(&obj->prevPosX, (f32*)((u8*)playerObj + 0x18));
+    distance = Vec_xzDistance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX);
     if (distance <= lbl_803E4F2C)
     {
         obj->alpha = (u8)(int)(lbl_803E4F30 * (distance / lbl_803E4F2C));

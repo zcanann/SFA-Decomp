@@ -503,7 +503,7 @@ void drlasercannon_update(int obj)
         (state->optionalGameBit == -1 || GameBit_Get(state->optionalGameBit) == 0))
     {
         hit = 1;
-        dist = Vec_xzDistance((f32*)((char*)target + 0x18), &((GameObject*)obj)->anim.worldPosX);
+        dist = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
         if (dist < (f32)setup->targetRange)
         {
             hit = drlasercannon_aimAtTarget((GameObject*)obj, (GameObject*)target, &state->aim, 0x168,
