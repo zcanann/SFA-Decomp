@@ -332,6 +332,17 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
 110. **`li rY,K; mr rX,rY` (target chains a const-equal copy) = per-fn `#pragma optimization_level
     1`** (copy-prop doesn't fold the copy; O1≈O4 for small call-free loop fns). Value-diamond else-
     arm copies are O4-producible via a CSE'd laundered-expression input + named per-arm result.
+    ⚠️ CAVEAT (verified): for a LARGE/call-heavy fn the optimization_level hammer SCRAMBLES the
+    whole allocation — O1/O2/O3 all regress (sc_totembond_update: O4=99.79, O1=89, O2=95.7,
+    O3=99.4). For a single zero-init copy `li r25,0; mr r26,r25` between two independent loop
+    counters, NO source/pragma lever reaches it: chained/separate/for-comma init, block-scope decl,
+    register class, split increment, and EVERY opt_* pragma (opt_propagation/common_subs/strength_
+    reduction/loop_invariants/lifetimes off) are all byte-INERT. A /tmp probe proves it: a faithful
+    replica of the surviving-copy idiom (`i=0; off=i; cnt=i;`, even with a derived-IV `off` like
+    objFreeObjDef) STILL emits `li;li` in a small fn — so the copy-vs-rematerialize choice is
+    decided by fn-GLOBAL register pressure/alloc state (#108 dose-effect), not the local construct.
+    Bank-and-retry; the lone-instr residual is the whole fuzzy gap (the co-located @NNN-vs-named f64
+    int→float magic is #70-neutral). (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
     Arg-eval anchor: embed a DEF inside the size/arg statement (`sz = (u16)((count - (index =
