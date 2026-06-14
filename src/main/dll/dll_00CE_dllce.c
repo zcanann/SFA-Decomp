@@ -7,6 +7,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/sky_interface.h"
 
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
@@ -1139,7 +1140,6 @@ void dll_CE_update(int obj, int p2, int p3)
     extern void fn_8015EA48(int obj, u8* p);
     extern int* gBaddieControlInterface;
     extern MapEventInterface** gMapEventInterface;
-    extern int* gSkyInterface;
     extern int* gPlayerInterface;
     extern void* lbl_803AC5B0[];
     extern void* lbl_803AC598[];
@@ -1151,7 +1151,7 @@ void dll_CE_update(int obj, int p2, int p3)
     int setup;
     u8* hit;
     int n;
-    int buf[4];
+    f32 sunTime;
 
     sub = ((GameObject*)obj)->extra;
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -1186,7 +1186,7 @@ void dll_CE_update(int obj, int p2, int p3)
             sub->targetState = 0;
         }
         else if ((sub->configFlags & 0x10) != 0 &&
-            (*(int (**)(int*))(*(int*)gSkyInterface + 0x24))(buf) == 0)
+            (*gSkyInterface)->getSunPosition(&sunTime) == 0)
         {
             sub->targetState = 0;
         }

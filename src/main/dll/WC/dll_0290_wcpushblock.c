@@ -603,9 +603,9 @@ void wcpushblock_update(int obj)
 
 void fn_802251B4(int obj, WcLevelControlState* state)
 {
-    int scratch;
+    f32 sunTime;
 
-    (*(int (**)(int*))(*gSkyInterface + 0x24))(&scratch);
+    (*gSkyInterface)->getSunPosition(&sunTime);
     switch (state->mode)
     {
     case 6:

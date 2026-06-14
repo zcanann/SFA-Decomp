@@ -10,6 +10,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
+#include "main/sky_interface.h"
 
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
@@ -41,7 +42,6 @@ extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 getXZDistance(f32 * p1, f32 * p2);
 extern void gameBitIncrement(int eventId);
 extern void fn_80163990(int obj, int aux);
-extern void* gSkyInterface;
 extern f32 lbl_803E2FA0;
 extern f32 lbl_803E2FA4;
 extern f32 lbl_803E2FA8;
@@ -642,7 +642,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     int sphereIndex;
     u32 hitVolume;
     int hitObject;
-    int animPhase;
+    f32 sunTime;
     int aux;
     GameObject* player;
     u32 state;
@@ -651,7 +651,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     state = ((BackpackState*)aux)->phase;
     if (state == 0)
     {
-        if ((*(int(**)(int*))(*(int*)gSkyInterface + 0x24))(&animPhase) != 0)
+        if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
             if (((GameObject*)obj)->anim.rootMotionScale < ((BackpackState*)aux)->targetScale)
             {
@@ -666,7 +666,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     }
     else if (state == 1)
     {
-        if ((*(int(**)(int*))(*(int*)gSkyInterface + 0x24))(&animPhase) != 0)
+        if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
             f32 dx, dz, d;
             player = (GameObject*)((BackpackState*)aux)->unk284;

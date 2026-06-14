@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
+#include "main/sky_interface.h"
 
 typedef struct TumbleweedbushState
 {
@@ -28,7 +29,6 @@ extern u8 lbl_803201E8[];
 extern void vecRotateZXY(void* obj, void* p);
 extern void* memcpy(void* dst, const void* src, int n);
 extern u8 lbl_803DDA80;
-extern void* gSkyInterface;
 extern void* Obj_GetPlayerObject(void);
 extern void objfx_spawnHitEmitterAtPos(int* p, int a, int b, int c, int d);
 extern int Sfx_PlayFromObject(int* obj, int sfx);
@@ -158,7 +158,7 @@ void tumbleweedbush_update(int* obj)
     TumbleweedBushState* state;
     int* player;
     int hitExtra;
-    int hit1;
+    f32 sunTime;
     int hit0;
     f32 dx, dy, d;
     int j;
@@ -180,7 +180,7 @@ void tumbleweedbush_update(int* obj)
                 {
                     if (((GameObject*)obj)->anim.seqId == 0x28d)
                     {
-                        if (((int(*)(int*))((void**)*(int*)gSkyInterface)[9])(&hit1) == 0) continue;
+                        if ((*gSkyInterface)->getSunPosition(&sunTime) == 0) continue;
                     }
                     ((void(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x28))(*slot);
                 }
@@ -287,7 +287,7 @@ s8 fn_801631C8(int* obj)
     int siblingType;
     int idx;
     int outCount;
-    int aliveOut;
+    f32 sunTime;
     int freeSlot;
     u8* scan;
     int** list;
@@ -300,7 +300,7 @@ s8 fn_801631C8(int* obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x28d:
-        if (((int(*)(int*))((void**)*(int*)gSkyInterface)[9])(&aliveOut) == 0)
+        if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
             return -1;
         siblingType = 0x39d;
         break;

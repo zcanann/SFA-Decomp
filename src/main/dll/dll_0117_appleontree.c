@@ -10,6 +10,7 @@
 #include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll_0117_appleontree.h"
+#include "main/sky_interface.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjMsg_SendToObject();
@@ -94,7 +95,6 @@ extern undefined4 FUN_80039520();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjMsg_AllocQueue(int obj, int capacity);
-extern undefined4* gSkyInterface;
 extern f32 lbl_803E3828;
 extern f32 lbl_803E382C;
 extern f32 lbl_803E3830;
@@ -572,7 +572,7 @@ void appleontree_update(int param_1)
     f32 fd;
     f32 frac;
     int msg;
-    undefined msgExtra[4];
+    f32 sunTime;
 
     obj = (undefined2*)param_1;
     state = *(int*)(obj + 0x5c);
@@ -693,8 +693,7 @@ void appleontree_update(int param_1)
                 }
                 else
                 {
-                    placement = (*(int (**)(void*))(*gSkyInterface + 0x24))(msgExtra);
-                    if (placement != 0)
+                    if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                     {
                         FUN_8002fc3c(lbl_803E3804, timeDelta);
                     }
