@@ -1088,6 +1088,7 @@ int DIMSnowHorn1_setScale(int obj)
 void fn_802BB998(int obj, int pointState, int inputState)
 {
     extern u16 audioPickSoundEffect_8006ed24(u8 id, int bank);
+    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
     u8 flags;
     u8 pointIndex;
     u8 count;
@@ -1284,14 +1285,15 @@ void DIMSnowHorn1_update(int obj)
     s16 d;
     u32 flip;
     int flags;
-    ObjHitsPriorityState* hitState;
 
     data = *(int*)&((GameObject*)obj)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     *(s16*)((char*)data + 0xa86) = 5;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    hitState->trackContactMask = 9;
-    flags = ((SnowHornFlags*)(base + ((DIMSnowHorn1State*)data)->baddie.controlMode))->flag;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
+    {
+        u8* fp = base + 0x94;
+        flags = fp[((DIMSnowHorn1State*)data)->baddie.controlMode];
+    }
     if (!(flags & 8))
     {
         ObjHitReactEntry* arm;
