@@ -42,13 +42,14 @@ int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
 
 void cnthitobjec_hitDetect(int obj)
 {
+    CntHitObjectState* state;
     CntHitObjectSetup* setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
-    CntHitObjectState* state = ((GameObject*)obj)->extra;
     int hit;
     uint dmg;
     int amount;
     int model;
 
+    state = ((GameObject*)obj)->extra;
     if (state->remainingHealth == 0)
     {
         return;
