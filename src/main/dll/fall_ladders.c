@@ -1,4 +1,5 @@
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_setmove.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -37,7 +38,6 @@ extern f32 lbl_803E360C;
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
-extern int fn_8014D08C(int obj, int p, int c, f32 f, int d, int e);
 extern void fn_8014CF7C(int obj, int p, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int p, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int p, int c, f32 a, f32 b, int d);
@@ -117,7 +117,7 @@ void fn_801540A0(int obj, void* pp)
         *(f32*)(p + 0x32c) = lbl_803E294C;
         if (((GameObject*)obj)->anim.currentMove != 0)
         {
-            fn_8014D08C(obj, p, 2, lbl_803E2958, 0, 3);
+            Baddie_SetMove(obj, p, 2, lbl_803E2958, 0, 3);
         }
     }
     if (((GameObject*)obj)->anim.currentMove != 3)
@@ -132,7 +132,7 @@ void fn_801540A0(int obj, void* pp)
             done = 1;
             *(f32*)(p + 0x32c) = lbl_803E2940;
             *(f32*)(p + 0x324) = lbl_803E2944;
-            fn_8014D08C(obj, p, 4, lbl_803E2948, 0, 3);
+            Baddie_SetMove(obj, p, 4, lbl_803E2948, 0, 3);
         }
     }
     if (done != 0)
@@ -142,10 +142,10 @@ void fn_801540A0(int obj, void* pp)
     else if (*(u8*)(p + 0x33a) == 0)
     {
         *(u8*)(p + 0x33a) = 1;
-        fn_8014D08C(obj, p, 1, lbl_803E296C, 0, 3);
+        Baddie_SetMove(obj, p, 1, lbl_803E296C, 0, 3);
     }
     else if ((*(u32*)(p + 0x2dc) & 0x40000000) != 0 &&
-        (fn_8014D08C(obj, p, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(p + 0x328)))
+        (Baddie_SetMove(obj, p, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(p + 0x328)))
     {
         *(f32*)(p + 0x328) = lbl_803E2974;
         fn_8014CF7C(obj, p, *(f32*)(*(int*)(p + 0x29c) + 0xc), *(f32*)(*(int*)(p + 0x29c) + 0x14), 1, 0);

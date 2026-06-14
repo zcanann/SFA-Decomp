@@ -2,6 +2,8 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/swarmbaddiestate_struct.h"
 #include "main/dll/hagabonstate_struct.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/baddie_setmove.h"
 #include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -102,7 +104,6 @@ extern f32 lbl_803E2738;
 extern f32 lbl_803E273C;
 extern char lbl_8031F16C[];
 extern u8 lbl_8031DD30[];
-extern void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
 
 void wispbaddie_hitDetect(void)
 {
@@ -726,7 +727,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) | 0x80;
             *(u8*)(state + 0x2f3) = 0;
             *(u8*)(state + 0x2f4) = 0;
-            fn_8014D08C(obj, state, row[8], blendScale * *(f32*)row, 0, *(u32*)(row + 4) & 0xff);
+            Baddie_SetMove(obj, state, row[8], blendScale * *(f32*)row, 0, *(u32*)(row + 4) & 0xff);
             ObjAnim_SetMoveProgress(*(f32*)(base + row[8] * 4), (ObjAnimComponent*)obj);
             *(u8*)(state + 0x33c) = eventIndex;
             return 1;
@@ -749,7 +750,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         {
             eventTableIndex = *(u8*)(state + 0x33c) * 0xc;
             row = eventRows + eventTableIndex;
-            fn_8014D08C(obj, state, row[8], *(f32*)(eventRows + eventTableIndex), 0,
+            Baddie_SetMove(obj, state, row[8], *(f32*)(eventRows + eventTableIndex), 0,
                         *(u32*)(row + 4) & 0xff);
             ObjAnim_SetMoveProgress(
                 *(f32*)(base + eventRows[*(u8*)(state + 0x33c) * 0xc + 8] * 4),
