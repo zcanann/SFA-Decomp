@@ -357,6 +357,11 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     (still `li`), register-web analysis (orbIndex/nextRing coalesce into a multi-def web identically
     in both builds, yet only the target declines to rematerialize the copy — a pure allocator-
     heuristic divergence with no source-reachable cause).
+    O2-vs-O4 TRADEOFF (proven): the `mr` IS producible by MWCC under `-O2,p` (creation-order
+    allocator keeps the copy) — BUT O2 scrambles the body to 95.68% (vs O4=99.79%). Per-fn
+    `#pragma optimization_level 2` gives the same 95.68%. So the copy needs creation-order alloc and
+    the body needs O4's coloring alloc — NO in-repo flag/level/pragma produces BOTH at once. The
+    target had an O4-quality allocator that ALSO keeps static-0 copies; absent from all 29 builds.
     TERNARY li→mr TECHNIQUE (corpus-discovered, generally useful): an `= 0` that should be `mr rX,rY`
     is fixed by assigning from a VARIABLE that holds 0 instead of the literal — the canonical form is
     the zgaQ5 idiom `v = (cond) ? f(x) : x;` where the else-arm copies a runtime var (`x`) that the
