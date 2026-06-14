@@ -78,7 +78,6 @@ void SB_Propeller_update(int obj)
     int j;
     int hit;
     SBPropellerState* state;
-    ObjHitsPriorityState* hitState;
     struct
     {
         u8 pad[6];
@@ -153,7 +152,7 @@ void SB_Propeller_update(int obj)
         }
         if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0))
                         && (o->unkF4 == 0))
-                    && ((hit != 0 && (hit != Obj_GetPlayerObject()))))
+                    && (((void*)hit != NULL && ((void*)hit != (void*)Obj_GetPlayerObject()))))
                 && ((((GameObject*)hit)->anim.seqId != SB_PROPELLER_SEQ_ID
                     && ((((GameObject*)hit)->anim.seqId != SB_OTHER_SEQ_ID
                         && ((o->unkF4 = 0x14, objAnim->parent != NULL)))))))
@@ -175,16 +174,14 @@ void SB_Propeller_update(int obj)
         }
         if (o->unkF4 == 0)
         {
-            hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
-            hitState->hitVolumePriority = 6;
-            hitState->hitVolumeId = 1;
-            hitState->objectHitMask = 0x10;
-            hitState->skeletonHitMask = 0x10;
+            ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumePriority = 6;
+            ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumeId = 1;
+            ((ObjHitsPriorityState*)objAnim->hitReactState)->objectHitMask = 0x10;
+            ((ObjHitsPriorityState*)objAnim->hitReactState)->skeletonHitMask = 0x10;
         }
         else
         {
-            hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
-            hitState->objectPairPriority = 0;
+            ((ObjHitsPriorityState*)objAnim->hitReactState)->objectPairPriority = 0;
         }
         objAnim->rotZ = -((f32)state->spinRate * timeDelta - (
             f32)objAnim->rotZ);
