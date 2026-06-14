@@ -3555,7 +3555,7 @@ void objFn_8003dc50(u8* obj, u8* model)
     u8 ch;
     u16 f;
     u8 b;
-    int larr[10];
+    int larr[6];
     s32 count;
     ObjGXColor c;
 
