@@ -82,12 +82,12 @@ void cloudaction_free(void)
 
 void renderClouds(int a, int b, int c, int d)
 {
-    u8 p0;
-    u8 p1;
-    u8 p2;
-    u8 p3;
-    u8 p4;
-    u8 p5;
+    u8 ambientRed;
+    u8 ambientGreen;
+    u8 ambientBlue;
+    u8 lightRed;
+    u8 lightGreen;
+    u8 lightBlue;
     int s0;
     int s1;
     int s2;
@@ -105,8 +105,8 @@ void renderClouds(int a, int b, int c, int d)
     f32 v;
 
     view = Camera_GetCurrentViewSlot();
-    (*(void (**)(u8*, u8*, u8*, u8*, u8*, u8*))(*(char**)gSkyInterface + 0x40))(
-        &p0, &p1, &p2, &p3, &p4, &p5);
+    (*gSkyInterface)->getCurrentAmbientAndLightColors(
+        &ambientRed, &ambientGreen, &ambientBlue, &lightRed, &lightGreen, &lightBlue);
 
     if (gCloudOverrideObject != NULL)
     {
@@ -123,7 +123,7 @@ void renderClouds(int a, int b, int c, int d)
         v = *(f32*)(view + 0x14);
         gCloudOverrideObject->anim.worldPosZ = v;
         gCloudOverrideObject->anim.localPosZ = v;
-        fn_800412B8(p0, p1, p2);
+        fn_800412B8(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, (int)gCloudOverrideObject, 1);
         return;
     }
@@ -151,7 +151,7 @@ void renderClouds(int a, int b, int c, int d)
             lbl_8039AB28.upperCloudObj->anim.localPosY = *(f32*)(view + 0x10);
             lbl_8039AB28.upperCloudObj->anim.localPosZ = *(f32*)(view + 0x14);
         }
-        fn_800412B8(p0, p1, p2);
+        fn_800412B8(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, (int)lbl_8039AB28.upperCloudObj, 1);
     }
 
@@ -174,7 +174,7 @@ void renderClouds(int a, int b, int c, int d)
         lbl_8039AB28.mainCloudObj->anim.worldPosZ = v;
         lbl_8039AB28.mainCloudObj->anim.localPosZ = v;
         *(u16*)((u8*)lbl_8039AB28.mainCloudObj + 2) = 0;
-        fn_800412B8(p0, p1, p2);
+        fn_800412B8(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
 
         fn_80060490(&s0, &s1, &s2, &s3);
