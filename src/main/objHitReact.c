@@ -35,7 +35,7 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
     {
         OSReport(sObjHitReactHitstateFrameString, objAnim->currentMoveProgress);
         moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
-            (obj, (double)*reactionStepScale, (double)timeDelta, (ObjAnimEventList*)0x0);
+            (obj, (double)*reactionStepScale, (double)timeDelta, NULL);
         if (moveEnded != 0)
         {
             OSReport(sObjHitReactResetString);
@@ -109,20 +109,20 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
 void ObjHitReact_ResetActiveObjects(int objectCount)
 {
     ObjHitReactState* hitState;
-    int obj;
-    int* objectListCursor;
+    ObjAnimComponent* objAnim;
+    ObjAnimComponent** objectListCursor;
     int stateActive;
     int resetPending;
     int objectListCount;
     int startIndex;
 
-    objectListCursor = (int*)ObjList_GetObjects(&startIndex, &objectListCount);
+    objectListCursor = (ObjAnimComponent**)ObjList_GetObjects(&startIndex, &objectListCount);
     gObjHitReactResetObjectCount = 0;
     while (objectCount > 0)
     {
-        obj = *objectListCursor;
-        hitState = ((ObjAnimComponent*)obj)->hitReactState;
-        if (hitState != (ObjHitReactState*)0x0)
+        objAnim = *objectListCursor;
+        hitState = objAnim->hitReactState;
+        if (hitState != NULL)
         {
             stateActive = hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED;
             if (stateActive != 0)
@@ -132,7 +132,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
                 {
                     if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS)
                     {
-                        gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = (ObjAnimComponent*)obj;
+                        gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = objAnim;
                     }
                     hitState->activeHit = 0;
                     hitState->flags = (s16)(hitState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED);
@@ -151,7 +151,7 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
 
     transformState = (ObjHitboxTransformState*)roundUpTo4(arena);
     hitbox->transformState = transformState;
-    if (hitbox->transformState != (ObjHitboxTransformState*)0x0)
+    if (hitbox->transformState != NULL)
     {
         hitbox->transformState->activeMatrixIndex = 0;
         hitbox->transformState->resetFrames = OBJHITBOX_ROTATED_BOUNDS_RESET_FRAMES;
@@ -172,7 +172,7 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
 
     moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
     hitState->activeEntryByteCount = 0;
-    if (moveEntryTable != (ObjHitReactMoveEntry*)0x0)
+    if (moveEntryTable != NULL)
     {
         for (moveEntry = moveEntryTable; moveEntry->moveId != OBJHITREACT_MOVE_ID_END; moveEntry++)
         {
@@ -205,7 +205,7 @@ u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitS
 {
     ObjHitReactEntry* entries;
 
-    if (bank == (ObjAnimBank*)0x0)
+    if (bank == NULL)
     {
         return entryArena;
     }
