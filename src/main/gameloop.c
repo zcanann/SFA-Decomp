@@ -8,6 +8,7 @@
 #include "main/camera_interface.h"
 #include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
 #include "main/dll/rom_curve_interface.h"
@@ -1067,7 +1068,8 @@ void gameLoop(void)
                 for (; i < lbl_803DCA48; i++)
                 {
                     objRenderFn_8003b8f4(*p, 0, 0, 0, 0, lbl_803DE7A8);
-                    if (*(s16*)(*p + 0x46) == 0x882 || *(s16*)(*p + 0x46) == 0x887)
+                    if (((GameObject*)*p)->anim.seqId == 0x882 ||
+                        ((GameObject*)*p)->anim.seqId == 0x887)
                     {
                         objRenderFuzz();
                     }

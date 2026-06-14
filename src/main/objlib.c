@@ -1866,8 +1866,9 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
         while (objectIndex < objectCount)
         {
             otherObj = *objects;
-            if (((defNo == *(s16*)(otherObj + 0x46)) && (obj != otherObj)) &&
-                (distanceSq = vec3f_distanceSquared((float*)(obj + 0x18), (float*)(otherObj + 0x18)),
+            if (((defNo == ((GameObject*)otherObj)->anim.seqId) && (obj != otherObj)) &&
+                (distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
+                                                     &((GameObject*)otherObj)->anim.worldPosX),
                     distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
@@ -1884,7 +1885,8 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
         invalidDistance = lbl_803DE970;
         while (objectIndex < objectCount)
         {
-            distanceSq = vec3f_distanceSquared((float*)(obj + 0x18), (float*)(*objects + 0x18));
+            distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
+                                               &((GameObject*)*objects)->anim.worldPosX);
             if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;

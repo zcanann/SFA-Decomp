@@ -4190,11 +4190,11 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
                 }
                 if (linked == NULL)
                 {
-                    if (*(s16*)(candidate + 0x46) == objType)
+                    if (((GameObject*)candidate)->anim.seqId == objType)
                     {
-                        dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(candidate + 0xc);
-                        dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(candidate + 0x10);
-                        dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(candidate + 0x14);
+                        dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)candidate)->anim.localPosX;
+                        dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)candidate)->anim.localPosY;
+                        dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)candidate)->anim.localPosZ;
                         distSq = dx * dx + dy * dy + dz * dz;
                         if (bestDist < lbl_803DEFB0 || distSq < bestDist)
                         {
@@ -4261,11 +4261,11 @@ void* ObjSeq_FindTargetObject(u8* obj)
     for (i = 0; i < objectCount; i++)
     {
         candidate = objects[i];
-        if (*(s16*)(candidate + 0x46) == objectType)
+        if (((GameObject*)candidate)->anim.seqId == objectType)
         {
-            dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(candidate + 0xc);
-            dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(candidate + 0x10);
-            dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(candidate + 0x14);
+            dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)candidate)->anim.localPosX;
+            dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)candidate)->anim.localPosY;
+            dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)candidate)->anim.localPosZ;
             distSq = dx * dx + dy * dy + dz * dz;
             if (bestDistSq < lbl_803DEFB0 || distSq < bestDistSq)
             {
