@@ -95,7 +95,7 @@ undefined4 playerFn_801d6d58(void)
 {
     undefined4 playerObj;
 
-    (*gMapEventInterface)->getPlayerNo();
+    (*gMapEventInterface)->getCurChar();
     playerObj = Obj_GetPlayerObject();
     objGetAnimStateFlags(playerObj, 0xff);
     return 2;

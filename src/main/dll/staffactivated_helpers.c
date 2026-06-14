@@ -146,10 +146,10 @@ void staffactivated_spawnMapEventDebris(int obj)
     tricky = getTrickyObject();
     state = ((GameObject*)obj)->extra;
 
-    if ((*gMapEventInterface)->isTimedEventActive(setup->base.mapId) != 0 &&
+    if ((*gMapEventInterface)->shouldNotSaveTime(setup->base.mapId) != 0 &&
         Obj_IsLoadingLocked() != 0)
     {
-        (*gMapEventInterface)->startTimedEvent(setup->base.mapId,
+        (*gMapEventInterface)->addTime(setup->base.mapId,
                                                lbl_803E3BD8 * (f32)setup->timedEventSeconds);
         if (tricky != 0)
         {

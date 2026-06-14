@@ -2233,7 +2233,7 @@ void enemy_update(int obj)
             {
                 return;
             }
-            if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)setup)->mapId) != 0)
+            if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
             {
                 if ((((EnemyState*)state)->controlFlags & 0x800) == 0)
                 {
@@ -2347,7 +2347,7 @@ void enemy_init(int obj, u8* setup, int flag)
                 {
                     if (*(s16*)(setup + 0x2c) != 0)
                     {
-                        if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)setup)->mapId) == 0)
+                        if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) == 0)
                         {
                             ((GameObject*)obj)->unkF4 = 1;
                         }

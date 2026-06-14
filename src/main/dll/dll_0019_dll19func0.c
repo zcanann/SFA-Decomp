@@ -761,7 +761,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                 p1[54] = 0;
                 *(int*)(p1 + 244) = 1;
                 *(s16*)(p1 + 6) = *(s16*)(p1 + 6) | 0x4000;
-                (*gMapEventInterface)->startTimedEvent(
+                (*gMapEventInterface)->addTime(
                     *(int*)(other + 20),
                     (f32)(s32)(*(s16*)(other + 44) * 60) - lbl_803E1C30);
             }
@@ -1061,7 +1061,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     {
         *(int*)(p1 + 244) = 0;
     }
-    if ((*gMapEventInterface)->isTimedEventActive(*(int*)(p2 + 20)) == 0)
+    if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)(p2 + 20)) == 0)
     {
         *(int*)(p1 + 244) = 1;
     }

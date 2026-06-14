@@ -2045,8 +2045,8 @@ void mapSetupPlayer(void)
     }
     else
     {
-        playerNo = (*gMapEventInterface)->getPlayerNo();
-        pos = (f32*)(*gMapEventInterface)->getWarpPos();
+        playerNo = (*gMapEventInterface)->getCurChar();
+        pos = (f32*)(*gMapEventInterface)->getCurCharPos();
         x = pos[0];
         y = pos[1];
         z = pos[2];

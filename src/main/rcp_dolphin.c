@@ -1575,7 +1575,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
         }
         if (visible == 0)
         {
-            v = (*gMapEventInterface)->getMode(mapId);
+            v = (*gMapEventInterface)->getMapAct(mapId);
             if (v == -1)
             {
                 flag = 0;
@@ -2265,7 +2265,7 @@ extern void blankScreen(int);
 void loadNextMap(void)
 {
     u8* pos;
-    pos = (*gMapEventInterface)->getWarpPos();
+    pos = (*gMapEventInterface)->getCurCharPos();
     if (lbl_803DCEB8 != -1)
     {
         lbl_803DCDE0 -= 1;
@@ -2348,7 +2348,7 @@ int objShouldUnload(u8* obj)
     {
         return 0;
     }
-    m = (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
+    m = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     if (m == -1)
     {
         keep = 0;
@@ -2387,7 +2387,7 @@ int objShouldUnload(u8* obj)
     }
     if (flags & 0x10)
     {
-        return !(*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, def[6]);
+        return !(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, def[6]);
     }
     if (((GameObject*)obj)->pendingParentObj != NULL && ((GameObject*)obj)->seqIndex < 0)
     {

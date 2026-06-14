@@ -124,7 +124,7 @@ int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *anim
             loadMapAndParent(CRCLOUDRACE_DRAG_ROCK_MAP_ID);
             unlockLevel(0, 0, 1);
             lockLevel(mapGetDirIdx(CRCLOUDRACE_DRAG_ROCK_MAP_ID), 0);
-            (*gMapEventInterface)->setAnimEvent(CRCLOUDRACE_DRAG_ROCK_MAP_ID, 1, 1);
+            (*gMapEventInterface)->setObjGroupStatus(CRCLOUDRACE_DRAG_ROCK_MAP_ID, 1, 1);
             break;
         }
     }

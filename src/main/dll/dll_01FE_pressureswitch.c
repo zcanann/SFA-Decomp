@@ -416,7 +416,7 @@ void pressureswitch_update(int obj)
     else
     {
         ac = ((GameObject*)obj)->anim.mapEventSlot;
-        if (ac == 11 && (*gMapEventInterface)->getMode(ac) == 3 &&
+        if (ac == 11 && (*gMapEventInterface)->getMapAct(ac) == 3 &&
             (tricky = getTrickyObject()) != NULL &&
             Vec_distance((char*)obj + 0x18, (char*)tricky + 0x18) < lbl_803E5D64)
         {
@@ -424,7 +424,7 @@ void pressureswitch_update(int obj)
         }
     }
     ac = ((GameObject*)obj)->anim.mapEventSlot;
-    if (ac == 11 && (*gMapEventInterface)->getMode(ac) == 1 && far == 0)
+    if (ac == 11 && (*gMapEventInterface)->getMapAct(ac) == 1 && far == 0)
     {
         if (b->holdTimer != 0)
         {

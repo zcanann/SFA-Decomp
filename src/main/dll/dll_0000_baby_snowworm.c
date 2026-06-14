@@ -1421,7 +1421,7 @@ void drawWorldMapHud(void)
             }
             else if (cur == 2)
             {
-                if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0)
+                if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                 {
                     hint = 0x51e5;
                 }
@@ -1443,7 +1443,7 @@ void drawWorldMapHud(void)
             }
             else if (cur == 0)
             {
-                if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0)
+                if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                 {
                     hint = 0x51e2;
                 }
@@ -2562,7 +2562,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 }
                 else if (cur == 2)
                 {
-                    if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0)
+                    if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                     {
                         hint = 0x577;
                     }
@@ -2584,7 +2584,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 }
                 else if (cur == 0)
                 {
-                    if ((*gMapEventInterface)->getMode(0xd) == 2 && lv == 0)
+                    if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                     {
                         hint = 0x568;
                     }
@@ -2801,7 +2801,7 @@ void pauseMenuFn_80129ee0(void)
 
     player = (u8*)Obj_GetPlayerObject();
     objIsCurModelNotZero();
-    mapVal = (int)(*gMapEventInterface)->getState(*gMapEventInterface);
+    mapVal = (int)(*gMapEventInterface)->getCurCharacterState();
     if (gameTextFn_80019c00() == 0.0f)
     {
         btn = (u16)getButtonsJustPressed(0);
@@ -2845,44 +2845,44 @@ void pauseMenuFn_80129ee0(void)
         lbl_803DD8E0 = cell;
         if (cell == 0x36)
         {
-            if ((*gMapEventInterface)->getMode(cell) == 1)
+            if ((*gMapEventInterface)->getMapAct(cell) == 1)
             {
-                if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0))
+                if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
                 {
                     lbl_803DD8E0 = 5;
                 }
-                else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
                 {
                     lbl_803DD8E0 = 0xc;
                 }
             }
-            else if ((*gMapEventInterface)->getMode(lbl_803DD8E0) == 2)
+            else if ((*gMapEventInterface)->getMapAct(lbl_803DD8E0) == 2)
             {
-                if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 0))
+                if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 1))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 2))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 3))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 3))
                 {
                     lbl_803DD8E0 = 0xa;
                 }
-                else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 4))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 4))
                 {
                     lbl_803DD8E0 = 9;
                 }
-                else if ((*gMapEventInterface)->getAnimEvent(lbl_803DD8E0, 5))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 5))
                 {
                     lbl_803DD8E0 = 3;
                 }
@@ -3431,13 +3431,13 @@ void pauseMenuFn_80129ee0(void)
                     break;
                 case 0xa:
                     Music_Trigger(0x23, 0);
-                    if ((*(int (**)(void))(*(int*)((u8*)*gMapEventInterface + 0x30)))() != 0)
+                    if ((*gMapEventInterface)->getRestartGameNotCleared() != 0)
                     {
-                        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+                        (*gMapEventInterface)->gotoRestartPoint();
                     }
                     else
                     {
-                        (*(void (**)(void))(*(int*)((u8*)*gMapEventInterface + 0x20)))();
+                        (*gMapEventInterface)->gotoSavegame();
                     }
                     break;
                 default:

@@ -430,7 +430,7 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yP
 }
 
 #define PMDS_MAP_EVENT_GET_STATUS() \
-  (*gMapEventInterface)->getProgressPtr()
+  (*gMapEventInterface)->getTrickyEnergy()
 #define PMDS_SCREEN_GET_FADE() \
   (*gScreenTransitionInterface)->getProgress()
 #define PMDS_CAMERA_GET_STATE() \

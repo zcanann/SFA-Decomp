@@ -207,7 +207,7 @@ void duster_update(int obj)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
             GameBit_Set(state->completeGameBit, 1);
-            mapState = (DusterMapEventState*)(*gMapEventInterface)->getState(*gMapEventInterface);
+            mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
             mapState->collectedCount =
                 (mapState->maxCollectedCount >= (next = mapState->collectedCount + 1))
                     ? next
@@ -360,7 +360,7 @@ void duster_update(int obj)
         }
         else
         {
-            mapState = (DusterMapEventState*)(*gMapEventInterface)->getState(*gMapEventInterface);
+            mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
             if (mapState->collectedCount < mapState->maxCollectedCount)
             {
                 Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
@@ -368,7 +368,7 @@ void duster_update(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
                 GameBit_Set(state->completeGameBit, 1);
-                mapState = (DusterMapEventState*)(*gMapEventInterface)->getState(*gMapEventInterface);
+                mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
                 mapState->collectedCount =
                     (mapState->maxCollectedCount >= (next = mapState->collectedCount + 1))
                         ? next

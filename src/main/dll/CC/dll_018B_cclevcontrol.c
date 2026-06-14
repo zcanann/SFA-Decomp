@@ -139,7 +139,7 @@ void cclevcontrol_init(int* obj)
     }
     *(f32*)state = lbl_803E46D4;
     state[2] = -1;
-    state[3] = (u32)(u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
+    state[3] = (u32)(u8)(*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
 }
 
 #pragma dont_inline on
@@ -210,19 +210,19 @@ void cclevcontrol_update(int obj)
         SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 1), 0x80, -1, -1, 0x24, 0xea);
     }
     if (GameBit_Get(0x3d6) != 0
-        && (*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1f) != 0)
+        && (*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f) != 0)
     {
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
     }
     if (GameBit_Get(0x161) != 0
-        && (*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1e) == 0)
+        && (*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1e) == 0)
     {
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1e, 1);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1e, 1);
     }
     if (GameBit_Get(0x3d7) != 0
-        && (*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1d) == 0)
+        && (*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d) == 0)
     {
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
     }
     tricky = (int*)getTrickyObject();
     if (state[1] & 1)

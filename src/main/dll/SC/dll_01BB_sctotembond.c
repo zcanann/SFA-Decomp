@@ -238,7 +238,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
             {
                 state->completionTimer = lbl_803E5654;
                 player = Obj_GetPlayerObject();
-                (*(code*)((u8*)*gMapEventInterface + 0x2c))();
+                (*gMapEventInterface)->clearRestartPoint();
                 (*gCameraInterface)->setMode(0x42, 0, 3, 0, NULL, 0, 0);
                 obj->mapAlpha = 0xff;
                 fn_80296124(player, NULL, NULL, 0);
@@ -322,7 +322,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
 
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0)
     {
-        (*gMapEventInterface)->setMode(0xe, 6);
+        (*gMapEventInterface)->setMapAct(0xe, 6);
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_SET_MAP_MODE;
     }
 }

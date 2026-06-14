@@ -224,28 +224,28 @@ int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
             case WMSPIRITPLACE_MAP_1:
                 lockLevel(mapGetDirIdx(0x41), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-                (*gMapEventInterface)->unk78(1);
+                (*gMapEventInterface)->setCharacter(1);
                 break;
             case WMSPIRITPLACE_MAP_2:
                 loadMapAndParent(0x42);
                 lockLevel(mapGetDirIdx(0x42), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-                (*gMapEventInterface)->setMode(0x42, 3);
-                (*gMapEventInterface)->setMode(7, 4);
+                (*gMapEventInterface)->setMapAct(0x42, 3);
+                (*gMapEventInterface)->setMapAct(7, 4);
                 break;
             case WMSPIRITPLACE_MAP_3:
                 loadMapAndParent(0x42);
                 lockLevel(mapGetDirIdx(0x42), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-                (*gMapEventInterface)->setMode(0x42, 3);
-                (*gMapEventInterface)->setMode(7, 5);
+                (*gMapEventInterface)->setMapAct(0x42, 3);
+                (*gMapEventInterface)->setMapAct(7, 5);
                 break;
             case WMSPIRITPLACE_MAP_4:
                 loadMapAndParent(0x42);
                 lockLevel(mapGetDirIdx(0x42), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-                (*gMapEventInterface)->setMode(0x42, 3);
-                (*gMapEventInterface)->setMode(7, 7);
+                (*gMapEventInterface)->setMapAct(0x42, 3);
+                (*gMapEventInterface)->setMapAct(7, 7);
                 break;
             }
             break;
@@ -497,9 +497,9 @@ void wmspiritplace_update(GameObject* obj)
                         getEnvfxActImmediately((int)obj, (int)obj, 0x216, 0);
                         getEnvfxActImmediately((int)obj, (int)obj, 0x229, 0);
                         getEnvfxActImmediately((int)obj, (int)obj, 0x22a, 0);
-                        (*gMapEventInterface)->setAnimEvent(obj->anim.mapEventSlot, 4, 1);
-                        (*gMapEventInterface)->setAnimEvent(obj->anim.mapEventSlot, 10, 0);
-                        (*gMapEventInterface)->setAnimEvent(obj->anim.mapEventSlot, 0xb, 1);
+                        (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 4, 1);
+                        (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 10, 0);
+                        (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 0xb, 1);
                     }
                 }
                 else
@@ -577,7 +577,7 @@ void wmspiritplace_init(GameObject* obj, WmSpiritPlaceMapData* placement)
     state->setupParam = placement->setupParam;
     state->sequenceStarted = 0;
     obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
-    state->mapEventMode = (*gMapEventInterface)->getMode(obj->anim.mapEventSlot);
+    state->mapEventMode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
 
     if (obj->anim.placement->mapId == WMSPIRITPLACE_MAP_2)
     {

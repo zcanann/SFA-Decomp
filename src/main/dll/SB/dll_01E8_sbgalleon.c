@@ -495,14 +495,14 @@ void SB_Galleon_update(GameObject* obj)
     fn_801E1588((int)obj, (int)state);
     if (GameBit_Get(SBGALLEON_GAMEBIT_INTRO) == 0)
     {
-        (*gMapEventInterface)->setMode(SBGALLEON_MAP_PALACE, 1);
-        (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 0, 1);
-        (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 1, 1);
-        (*gMapEventInterface)->setAnimEvent(SBGALLEON_MAP_PALACE, 5, 1);
+        (*gMapEventInterface)->setMapAct(SBGALLEON_MAP_PALACE, 1);
+        (*gMapEventInterface)->setObjGroupStatus(SBGALLEON_MAP_PALACE, 0, 1);
+        (*gMapEventInterface)->setObjGroupStatus(SBGALLEON_MAP_PALACE, 1, 1);
+        (*gMapEventInterface)->setObjGroupStatus(SBGALLEON_MAP_PALACE, 5, 1);
         lockLevel(mapGetDirIdx(SBGALLEON_MAP_PALACE), 0);
-        if ((*gMapEventInterface)->getAnimEvent(*(u8*)((char*)obj + 0x34), 1) == 0)
+        if ((*gMapEventInterface)->getObjGroupStatus(*(u8*)((char*)obj + 0x34), 1) == 0)
         {
-            (*gMapEventInterface)->setAnimEvent(*(u8*)((char*)obj + 0x34), 1, 1);
+            (*gMapEventInterface)->setObjGroupStatus(*(u8*)((char*)obj + 0x34), 1, 1);
         }
         obj->unkF4 = 0;
     }
@@ -525,7 +525,7 @@ void SB_Galleon_update(GameObject* obj)
             DBprotection_updateShield((int)obj);
             break;
         case SBGALLEON_CAM_END:
-            (*gMapEventInterface)->setMode(SBGALLEON_MAP_PALACE, 1);
+            (*gMapEventInterface)->setMapAct(SBGALLEON_MAP_PALACE, 1);
             obj->anim.mapEventSlot = -1;
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
             state->cameraState = SBGALLEON_CAM_DONE;
@@ -564,7 +564,7 @@ void SB_Galleon_init(GameObject* obj)
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
     lbl_803DDC1C = (int)textureLoadAsset(0x89);
     state->unk84 = 100;
-    (*gMapEventInterface)->setMode(obj->anim.mapEventSlot, 1);
+    (*gMapEventInterface)->setMapAct(obj->anim.mapEventSlot, 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
     state->wanderTimerA = lbl_803E56CC;
     state->wanderTimerB = lbl_803E580C;

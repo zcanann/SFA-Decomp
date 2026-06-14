@@ -364,7 +364,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxActImmediately(0, 0, 0x4f, 0);
             getEnvfxActImmediately(0, 0, 0x50, 0);
             getEnvfxActImmediately(0, 0, 0x245, 0);
-            if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0)
+            if ((*gMapEventInterface)->getObjGroupStatus(0xe, 5) != 0)
             {
                 getEnvfxActImmediately(0, 0, 0x246, 0);
             }
@@ -378,7 +378,7 @@ void sc_levelcontrol_update(int obj)
             getEnvfxAct(0, 0, 0x4f, 0);
             getEnvfxAct(0, 0, 0x50, 0);
             getEnvfxAct(0, 0, 0x245, 0);
-            if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0)
+            if ((*gMapEventInterface)->getObjGroupStatus(0xe, 5) != 0)
             {
                 getEnvfxAct(0, 0, 0x246, 0);
             }
@@ -391,21 +391,21 @@ void sc_levelcontrol_update(int obj)
     }
     if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0)
     {
-        (*gMapEventInterface)->setAnimEvent(0xe, 0xa, 1);
+        (*gMapEventInterface)->setObjGroupStatus(0xe, 0xa, 1);
         ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 1;
     }
     if (((ScLevelControlState*)state)->areaCell != 0xe)
     {
         if (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xe)
         {
-            u8 c = ((int (*)(s32))(*gMapEventInterface)->getMode)(0xe);
+            u8 c = ((int (*)(s32))(*gMapEventInterface)->getMapAct)(0xe);
             Obj_GetPlayerObject();
             switch (c)
             {
             case 1:
                 if ((u32)GameBit_Get(0x5f3) != 0)
                 {
-                    (*gMapEventInterface)->setMode(0xe, 2);
+                    (*gMapEventInterface)->setMapAct(0xe, 2);
                 }
                 break;
             case 2:
@@ -414,7 +414,7 @@ void sc_levelcontrol_update(int obj)
             case 5:
                 if ((u32)GameBit_Get(0x2d0) != 0)
                 {
-                    (*gMapEventInterface)->setMode(0xe, 6);
+                    (*gMapEventInterface)->setMapAct(0xe, 6);
                 }
                 break;
             }
@@ -479,12 +479,12 @@ void sc_levelcontrol_update(int obj)
                 ((ScLevelControlState*)state)->fog0C = lbl_803E5558;
             }
         }
-        if ((*gMapEventInterface)->getAnimEvent(0xe, 1) != 0)
+        if ((*gMapEventInterface)->getObjGroupStatus(0xe, 1) != 0)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E555C;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5560;
         }
-        else if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0)
+        else if ((*gMapEventInterface)->getObjGroupStatus(0xe, 5) != 0)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E5564;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5568;
@@ -651,9 +651,9 @@ void sc_levelcontrol_update(int obj)
         if ((u32)GameBit_Get(0x2b5) != 0)
         {
             GameBit_Set(0x4d0, 1);
-            (*gMapEventInterface)->setAnimEvent(0xe, 2, 1);
+            (*gMapEventInterface)->setObjGroupStatus(0xe, 2, 1);
             warpToMap(0x50, 0);
-            (*gMapEventInterface)->setAnimEvent(0xe, 1, 0);
+            (*gMapEventInterface)->setObjGroupStatus(0xe, 1, 0);
         }
     }
     if ((*gSkyInterface)->getSunPosition(0) != 0)

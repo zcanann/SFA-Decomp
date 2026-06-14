@@ -264,7 +264,7 @@ void MagicPlant_update(int obj)
     switch (state->mode)
     {
     case MAGICPLANT_MODE_WAIT_FOR_EVENT:
-        if ((*gMapEventInterface)->isTimedEventActive(setup->eventId) != 0)
+        if ((*gMapEventInterface)->shouldNotSaveTime(setup->eventId) != 0)
         {
             fn_8017F7B8(obj, lbl_803DBD98[setup->variant & 3]);
             state->mode = MAGICPLANT_MODE_ACTIVE;
@@ -272,7 +272,7 @@ void MagicPlant_update(int obj)
         }
         else
         {
-            progress = (*gMapEventInterface)->getTimedEventProgress(setup->eventId);
+            progress = (*gMapEventInterface)->getTime(setup->eventId);
             divisor = setup->eventDuration;
             if (divisor < 100)
             {
@@ -327,7 +327,7 @@ void MagicPlant_update(int obj)
         {
             alpha = 0xff;
             state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
-            (*gMapEventInterface)->startTimedEvent(setup->eventId, (f32)setup->eventDuration);
+            (*gMapEventInterface)->addTime(setup->eventId, (f32)setup->eventDuration);
         }
         plant->objAnim.alpha = (u8)alpha;
         hitState->flags |= 1;
@@ -433,10 +433,10 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     state = plant->state;
     ObjGroup_AddObject(obj, 52);
     ObjGroup_AddObject(obj, 62);
-    r = (*gMapEventInterface)->isTimedEventActive(setup->eventId);
+    r = (*gMapEventInterface)->shouldNotSaveTime(setup->eventId);
     if (r == 0)
     {
-        t = (*gMapEventInterface)->getTimedEventProgress(setup->eventId);
+        t = (*gMapEventInterface)->getTime(setup->eventId);
         divisor = setup->eventDuration;
         if (divisor < 100) divisor = 100;
         t /= (f32)divisor;

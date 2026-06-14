@@ -383,7 +383,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             case 8:
                 {
                     MapEventInterface* mapEvents = *gMapEventInterface;
-                    int* info = (int*)mapEvents->getState(mapEvents);
+                    int* info = (int*)mapEvents->getCurCharacterState();
                     char buf[0x10];
                     *(int*)buf = lbl_803E1E04;
                     gameTextFn_80016810(0x3e0, 0xc8, 0x118);
@@ -592,7 +592,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         s32 h24;
         s32 mins25;
         f32 playRatio;
-        info = (int*)mapEvents->getState(mapEvents);
+        info = (int*)mapEvents->getCurCharacterState();
         hintCount = (u8)((u32)(u16)getNextTaskHintText() * 0x64 / 0x32);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
         ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);

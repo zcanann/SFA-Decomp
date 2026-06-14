@@ -2346,7 +2346,7 @@ void dll_CA_update(int obj, int p2, int p3)
     if (((GameObject*)obj)->unkF4 != 0)
     {
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
-            (*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)setup)->mapId) != 0)
+            (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
         {
             (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface +
                 0x58))(

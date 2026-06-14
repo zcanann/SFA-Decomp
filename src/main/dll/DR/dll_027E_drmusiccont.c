@@ -152,7 +152,7 @@ void drmusiccont_update(int obj)
     {
         if ((u32)GameBit_Get(0x9f0) == 0 || (u32)GameBit_Get(0x632) != 0)
         {
-            (*(void (**)(void))((u8*)*gMapEventInterface + 0x2c))();
+            (*gMapEventInterface)->clearRestartPoint();
             f->b_state = 0;
         }
     }
@@ -164,7 +164,7 @@ void drmusiccont_update(int obj)
             vec[0] = lbl_803E6BE0;
             vec[1] = lbl_803E6BE4;
             vec[2] = lbl_803E6BE8;
-            (*gMapEventInterface)->setEventWarpPosition(vec, 0x7fff, 0, 0);
+            (*gMapEventInterface)->restartPoint(vec, 0x7fff, 0, 0);
             f->b_state = 1;
         }
     }

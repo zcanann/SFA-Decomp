@@ -1683,7 +1683,7 @@ void Tricky_init(int obj)
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[6]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[7]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[8]);
-    ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getProgressPtr();
+    ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getTrickyEnergy();
     ((TrickyState*)state)->playerObj = Obj_GetPlayerObject();
     ((TrickyState*)state)->unk08 = 0;
     ((TrickyState*)state)->unk0B = 0;
@@ -1863,7 +1863,7 @@ void trickyFn_80148d8c(int obj, int state)
         {
             if (*(s16*)(setup + 0x2c) != 0)
             {
-                (*gMapEventInterface)->startTimedEvent(((ObjPlacement*)setup)->mapId,
+                (*gMapEventInterface)->addTime(((ObjPlacement*)setup)->mapId,
                                                        lbl_803E2570 * (f32) * (s16*)(setup + 0x2c));
             }
             ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~(u64)0x800;

@@ -125,7 +125,7 @@ int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* se
                 fn_80296518(playerObj, 4, 1);
                 GameBit_Set(MMSH_SHRINE_SEQ_GB_KRYSTAL, 1);
                 GameBit_Set(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF, 1);
-                (*gMapEventInterface)->setMode(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
+                (*gMapEventInterface)->setMapAct(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
                 break;
             case 0xe:
                 obj->flags06 |= MMSH_SHRINE_FLAG_LIT;

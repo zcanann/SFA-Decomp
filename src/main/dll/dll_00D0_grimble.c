@@ -437,7 +437,7 @@ void grimble_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((*gMapEventInterface)->isTimedEventActive(((GrimblePlacement*)def)->unk14) != 0)
+        if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->unk14) != 0)
         {
             (*(void (**)(int, int, char*, int, int, int, int, f32))(*(int*)gBaddieControlInterface +
                 0x58))(obj, def, state, 0xa, 6,

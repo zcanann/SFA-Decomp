@@ -117,9 +117,9 @@ extern void lockLevel(int dirIdx, int locked);
 extern void mapUnload(int dirIdx, int flags);
 
 #define WARPSTONE_MAP_EVENT_SET(mapId, value) \
-    (*gMapEventInterface)->setMode((mapId), (value))
+    (*gMapEventInterface)->setMapAct((mapId), (value))
 #define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
-    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
+    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
 int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
 {

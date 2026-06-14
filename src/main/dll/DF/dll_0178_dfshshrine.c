@@ -172,7 +172,7 @@ int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 fn_80296518(player, 1, 1);
                 GameBit_Set(0xbfd, 1);
                 GameBit_Set(0x956, 1);
-                (*gMapEventInterface)->setMode(0xb, 2);
+                (*gMapEventInterface)->setMapAct(0xb, 2);
                 break;
             case 0xe:
                 *(s16*)(objLocal + 6) = (s16)(*(s16*)(objLocal + 6) | 0x4000);

@@ -416,7 +416,7 @@ void WarpstoneUI_showUI(int param_1)
         idx = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0x14))();
         if (sel > 0)
         {
-            (*gMapEventInterface)->setMode(0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
+            (*gMapEventInterface)->setMapAct(0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
         }
         (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(param_1);
         break;

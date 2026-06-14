@@ -36,7 +36,7 @@ char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; 
 
 void nw_geyser_free(int* obj)
 {
-    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
+    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
 }
 
 void nw_geyser_update(int obj)

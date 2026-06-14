@@ -44,9 +44,9 @@ extern f32 lbl_803E50DC;
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
+    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
+    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
 void dbsh_shrine_update(DbshShrineObject* obj)
 {
@@ -201,7 +201,7 @@ int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
                 fn_80296518(player, 2, 1);
                 GameBit_Set(0x15f, 1);
                 GameBit_Set(0xc6e, 1);
-                (*gMapEventInterface)->setMode(0xb, 3);
+                (*gMapEventInterface)->setMapAct(0xb, 3);
                 unlockLevel(0, 0, 1);
                 lockLevel(mapGetDirIdx(10), 0);
                 break;
@@ -297,9 +297,9 @@ extern void ObjMsg_AllocQueue(DbshShrineObject* obj, int capacity);
 extern void* objCreateLight(int obj, int lightType);
 
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
+    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
+    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
 void dbsh_shrine_init(DbshShrineObject* obj)
 {

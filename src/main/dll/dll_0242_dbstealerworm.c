@@ -703,7 +703,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
         if (((DbstealerwormPlacement*)data)->unk2C == 0)
         {
             (*gMapEventInterface)->
-                startTimedEvent(*(int*)&((DbstealerwormPlacement*)data)->eventConfigId, lbl_803E633C);
+                addTime(*(int*)&((DbstealerwormPlacement*)data)->eventConfigId, lbl_803E633C);
         }
         sub->configFlags |= ((DbstealerwormPlacement*)data)->unk2B;
     }
@@ -2548,7 +2548,7 @@ void dbstealerworm_update(u8* objp)
         if (((GameObject*)obj)->unkF4 != 0)
         {
             if ((((GroundBaddieState*)blob)->configFlags & 4) == 0 &&
-                (*gMapEventInterface)->isTimedEventActive(*(int*)(data + 0x14)) != 0)
+                (*gMapEventInterface)->shouldNotSaveTime(*(int*)(data + 0x14)) != 0)
             {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void**)*gBaddieControlInterface)[22])(
                     obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);

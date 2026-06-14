@@ -79,7 +79,7 @@ int drcloudper_setScale(int obj)
         return 0;
     }
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
-    (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
+    (*gMapEventInterface)->setObjGroupStatus(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
     return 1;
 }
@@ -119,6 +119,6 @@ void drcloudper_init(int obj, int setup)
     cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;
     if (setupData->cloudIndex == GameBit_Get(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT))
     {
-        (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
+        (*gMapEventInterface)->setObjGroupStatus(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }

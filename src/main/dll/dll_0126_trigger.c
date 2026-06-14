@@ -1497,7 +1497,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (((u32)p[2] << 8) >> 13)));
                     break;
                 case 0x13:
-                    (*gMapEventInterface)->setAnimEvent(
+                    (*gMapEventInterface)->setObjGroupStatus(
                         (int)((GameObject*)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]), 1);
                     break;
                 case 0x27:
@@ -1530,13 +1530,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x14:
-                    (*gMapEventInterface)->setAnimEvent(
+                    (*gMapEventInterface)->setObjGroupStatus(
                         (int)((GameObject*)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]), 0);
                     break;
                 case 0x22:
                     id = (u16)((p[2] << 8) | p[3]);
-                    c = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, id);
-                    (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
+                    c = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
+                    (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:
                     tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
@@ -1565,17 +1565,17 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x18:
-                    (*gMapEventInterface)->setMode(
+                    (*gMapEventInterface)->setMapAct(
                         (int)((GameObject*)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]));
                     break;
                 case 0x1a:
-                    (*gMapEventInterface)->setAnimEvent(p[3], p[2], 1);
+                    (*gMapEventInterface)->setObjGroupStatus(p[3], p[2], 1);
                     break;
                 case 0x1b:
-                    (*gMapEventInterface)->setAnimEvent(p[3], p[2], 0);
+                    (*gMapEventInterface)->setObjGroupStatus(p[3], p[2], 0);
                     break;
                 case 0x1e:
-                    (*gMapEventInterface)->setMode(p[3], p[2]);
+                    (*gMapEventInterface)->setMapAct(p[3], p[2]);
                     break;
                 case 0x11:
                     GameBit_Set(0x4e3, (p[2] << 8) | p[3]);
@@ -1598,13 +1598,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     if (ang > 0x4000)
                     {
-                        (*gMapEventInterface)->triggerEvent(obj + 0xc,
+                        (*gMapEventInterface)->savePoint(obj + 0xc,
                                                             (int)(s16)(*(s16*)obj + 0x8000),
                                                             p[3], getCurMapLayer());
                     }
                     else
                     {
-                        (*gMapEventInterface)->triggerEvent(obj + 0xc, (int)*(s16*)obj,
+                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)*(s16*)obj,
                                                             p[3], getCurMapLayer());
                     }
                     break;
@@ -1622,17 +1622,17 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     switch (((ObjInterpretSeqPlacement*)p)->unk2)
                     {
                     case 0:
-                        (*gMapEventInterface)->setEventWarpPosition((void*)(obj + 0xc), (int)*(s16*)obj,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
                                                                     getCurMapLayer(), 0);
                         break;
                     case 1:
-                        (*(code*)((u8*)*gMapEventInterface + 0x2c))();
+                        (*gMapEventInterface)->clearRestartPoint();
                         break;
                     case 2:
-                        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+                        (*gMapEventInterface)->gotoRestartPoint();
                         break;
                     case 3:
-                        (*gMapEventInterface)->setEventWarpPosition((void*)(obj + 0xc), (int)*(s16*)obj,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
                                                                     getCurMapLayer(), 1);
                         break;
                     }

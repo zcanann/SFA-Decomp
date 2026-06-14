@@ -113,7 +113,7 @@ void fn_801F3F18(int obj)
     L.color = vecs[2];
     L.light = vecs[3];
 
-    if ((u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 7)
+    if ((u8)(*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 7)
     {
         return;
     }
@@ -247,7 +247,7 @@ void wmlevelcontrol_update(int obj)
     if (state->latchesDisabled == 0)
     {
         /* mode6 = (map-event mode == 6), via the cntlzw idiom (#23) */
-        mode6 = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+        mode6 = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
         mode6 = __cntlzw(6 - (mode6 & 0xff));
         mode6 = mode6 >> 5;
         if ((((int)mode6 == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
@@ -283,12 +283,12 @@ void wmlevelcontrol_init(int obj)
     /* the 0xD1B..0xD1F chain marks how many Krazoa spirits the palace
        has received (wmspiritplace's progression); 0xF43/0xF44 pick the
        ambience variant. All cross-TU bits without established names. */
-    mode = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     switch (mode)
     {
     case 1:
-        (*gMapEventInterface)->setMode(0xe, 1);
-        (*gMapEventInterface)->setAnimEvent(0xe, 0, 1);
+        (*gMapEventInterface)->setMapAct(0xe, 1);
+        (*gMapEventInterface)->setObjGroupStatus(0xe, 0, 1);
         break;
     case 2:
         GameBit_Set(0xd1b, 1);

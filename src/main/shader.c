@@ -94,7 +94,7 @@ int objShouldLoad(int obj, int param_2, int param_3)
     {
         verbose = 0;
     }
-    t = (*gMapEventInterface)->getMode(param_3);
+    t = (*gMapEventInterface)->getMapAct(param_3);
     if (t == -1)
     {
         ok = 0;
@@ -864,7 +864,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     *outMapId = mapId;
     if (mapId != -1)
     {
-        *outEvent = (s32) * (s8*)((*gMapEventInterface)->getWarpPos() + 0xe);
+        *outEvent = (s32) * (s8*)((*gMapEventInterface)->getCurCharPos() + 0xe);
     }
 }
 
@@ -1132,9 +1132,9 @@ void mapLoadForObject(int p1, char* p2)
         slot++;
     }
     *(u8*)(p2 + 0x34) = (u8)slot;
-    (*gMapEventInterface)->setRomListSlot(p1, slot);
+    (*gMapEventInterface)->setMapActLut(p1, slot);
     defStartFn_8005972c((char*)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
-    (*gMapEventInterface)->loadRomListObjects(slot);
+    (*gMapEventInterface)->updateObjGroups(slot);
     lbl_803DCEC8 = saved;
 }
 
@@ -1306,7 +1306,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     if (flag == 0)
     {
         defStartFn_8005972c(lbl_803DCEA0, (u32*)&lbl_803822C8[p1 * 0x8c], p1, 0);
-        (*gMapEventInterface)->loadRomListObjects(p1);
+        (*gMapEventInterface)->updateObjGroups(p1);
     }
     return (int)lbl_803DCEA0;
 }
@@ -2373,7 +2373,7 @@ void mapLoadUnloadObjects(int flag)
         {
             if (*(int*)(base + i * 4 + 0x83A8) != 0)
             {
-                bits = (*gMapEventInterface)->getObjectLoadBits(i);
+                bits = (*gMapEventInterface)->getObjGroups(i);
                 if (bits != 0)
                 {
                     b = 0;
@@ -2460,7 +2460,7 @@ void mapLoadUnloadObjects(int flag)
                     bit = 0;
                     cur = *(u32*)(page2 + 0x20);
                     end = cur + *(int*)(base + mid2 * 0x8C + 0x4290);
-                    bits = (*gMapEventInterface)->getObjectLoadBits(mid2);
+                    bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0)
                     {
                         b = 0;
@@ -2594,8 +2594,8 @@ void beginLoadingMap(void)
     }
     lbl_803DCE98 = 0;
     lbl_803DCDEC = 0;
-    mapKind = (*gMapEventInterface)->getPlayerNo();
-    p = (f32*)(*gMapEventInterface)->getWarpPos();
+    mapKind = (*gMapEventInterface)->getCurChar();
+    p = (f32*)(*gMapEventInterface)->getCurCharPos();
     lbl_803DCDD0 = (int)fastFloorf(p[0] / gMapBlockWorldSize);
     lbl_803DCDD4 = (int)fastFloorf(p[2] / gMapBlockWorldSize);
     *(f32*)(base + 0x8588) = p[0];

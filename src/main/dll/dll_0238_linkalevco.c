@@ -42,7 +42,7 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
     u8 eventId;
     int mapDir;
 
-    mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapEventMapId);
+    mode = (u8)(*gMapEventInterface)->getMapAct((int)obj->mapEventMapId);
     Sfx_KeepAliveLoopedObjectSound(0,LINKA_LEVCONTROL_LOOP_SFX_ID);
     for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++)
     {
@@ -54,12 +54,12 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
             {
             case LINKA_LEVCONTROL_MODE_0:
             case LINKA_LEVCONTROL_MODE_1:
-                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 0, 0);
-                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 2, 0);
-                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 3, 0);
-                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 7, 0);
-                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 10, 0);
-                (*gMapEventInterface)->setAnimEvent(10, 7, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 0, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 2, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 3, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 7, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 10, 0);
+                (*gMapEventInterface)->setObjGroupStatus(10, 7, 0);
                 GameBit_Set(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT, 1);
                 loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_17);
                 mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
@@ -89,23 +89,23 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
                 GameBit_Set(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT, 0);
                 if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0)
                 {
-                    (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B, 3);
-                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
-                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
+                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 3);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
                 }
                 else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT) != 0)
                 {
-                    (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B, 2);
-                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 5, 1);
-                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 6, 1);
+                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 2);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 5, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 6, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A, 0);
                 }
                 else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT) != 0)
                 {
-                    (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B, 4);
-                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
-                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
+                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 4);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
                 }
                 break;

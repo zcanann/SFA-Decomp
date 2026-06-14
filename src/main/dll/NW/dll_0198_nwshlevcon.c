@@ -100,11 +100,11 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 fn_80296518(player, 0x10, 1);
                 GameBit_Set(0x174, 1);
-                (*gMapEventInterface)->setAnimEvent(0xb, 4, 1);
-                (*gMapEventInterface)->setAnimEvent(0xb, 0x1d, 1);
-                (*gMapEventInterface)->setAnimEvent(0xb, 0x1e, 1);
-                (*gMapEventInterface)->setAnimEvent(0xb, 0x1f, 1);
-                (*gMapEventInterface)->setMode(0xb, 6);
+                (*gMapEventInterface)->setObjGroupStatus(0xb, 4, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1d, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1e, 1);
+                (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1f, 1);
+                (*gMapEventInterface)->setMapAct(0xb, 6);
             }
         }
     }

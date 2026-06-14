@@ -107,7 +107,7 @@ void fn_801E7DC8(int p1, int p2, int count)
 
     if (Obj_IsLoadingLocked() == 0) return;
 
-    (*gMapEventInterface)->setAnimEvent((s32)((GameObject*)p1)->anim.mapEventSlot, 6, 1);
+    (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)p1)->anim.mapEventSlot, 6, 1);
 
     hitDetectFn_800658a4(p1, &local, 0, ((GameObject*)p1)->anim.localPosX, ((GameObject*)p1)->anim.localPosY,
                          ((GameObject*)p1)->anim.localPosZ);

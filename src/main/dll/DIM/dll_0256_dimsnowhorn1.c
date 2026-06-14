@@ -1222,8 +1222,7 @@ void fn_802BB4B4(int obj, int a, int slot)
         if (state->airMeterValue < 0)
         {
             state->airMeterValue = 0;
-            ((MapEventInterface*)*(int*)gMapEventInterface)
-                ->finishCurrentEvent((MapEventInterface*)*(int*)gMapEventInterface);
+            (*gMapEventInterface)->gotoRestartPoint();
         }
         state->baddie.moveInputX = (f32)(s8)
         padGetStickX(0);
@@ -1380,7 +1379,7 @@ void DIMSnowHorn1_update(int obj)
                 if (*(u8*)(found + 0xaf) & 1)
                 {
                     int layer = getCurMapLayer();
-                    (*gMapEventInterface)->setEventWarpPosition((void*)(player + 0xc), 0x584, layer, 0);
+                    (*gMapEventInterface)->restartPoint((void*)(player + 0xc), 0x584, layer, 0);
                     buttonDisable(0, 0x100);
                     GameBit_Set(0x3e3, 1);
                     d = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)found;
@@ -1463,7 +1462,7 @@ void DIMSnowHorn1_update(int obj)
                     }
                     *(int*)&((DIMSnowHorn1State*)data)->baddie.unk31C = 0;
                     (*gGameUIInterface)->airMeterSetShutdown();
-                    (*(void (*)(void))(*(int*)((u8*)*gMapEventInterface + 0x2c)))();
+                    (*gMapEventInterface)->clearRestartPoint();
                 }
             }
             else

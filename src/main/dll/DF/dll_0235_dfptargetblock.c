@@ -237,7 +237,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     dx = home->x - obj->x;
     dz = home->z - obj->z;
-    mode = (*gMapEventInterface)->getMode(obj->mapId);
+    mode = (*gMapEventInterface)->getMapAct(obj->mapId);
 
     if (mode == 1)
     {

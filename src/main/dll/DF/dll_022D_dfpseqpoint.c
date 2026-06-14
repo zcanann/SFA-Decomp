@@ -595,17 +595,17 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         case 1:
             if (animUpdate->eventIds[i] == 1)
             {
-                if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 1)
+                if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 1)
                 {
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 5, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 6, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 7, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 5, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 7, 0);
                 }
-                else if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 2)
+                else if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 2)
                 {
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 5, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 6, 0);
-                    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 7, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 5, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 7, 0);
                 }
             }
             break;
@@ -618,12 +618,12 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
                 }
                 else
                 {
-                    if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 1 ||
-                        (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 2)
+                    if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 1 ||
+                        (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 2)
                     {
                         unlockLevel(0, 0, 1);
                         lockLevel(mapGetDirIdx(0x32), 0);
-                        (*gMapEventInterface)->setMode(0x32, 2);
+                        (*gMapEventInterface)->setMapAct(0x32, 2);
                         warpToMap(0x73, 0);
                     }
                 }

@@ -413,7 +413,7 @@ int gplayNewGame(char* name, int slot)
     {
         if (lbl_80311720[i] != 0)
         {
-            (*gMapEventInterface)->setMode(i, 1);
+            (*gMapEventInterface)->setMapAct(i, 1);
         }
     }
 
@@ -834,7 +834,7 @@ void titleDoLoadSave(void)
     OSSetSaveRegion(0, 0);
     DAT_803dc4f0 = (undefined)((int)(*((byte*)DAT_803de110 + 0x21) & 0x60) >> 5);
     *((byte*)DAT_803de110 + 0x21) = *((byte*)DAT_803de110 + 0x21) & 0x1f;
-    (*(void (**)(void))((char*)*gMapEventInterface + 0x20))();
+    (*gMapEventInterface)->gotoSavegame();
     return;
 }
 
@@ -927,7 +927,7 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     {
         if (*psVar6 != 0)
         {
-            (*gMapEventInterface)->setMode(iVar5, 1);
+            (*gMapEventInterface)->setMapAct(iVar5, 1);
         }
         psVar6 = psVar6 + 1;
         iVar5 = iVar5 + 1;

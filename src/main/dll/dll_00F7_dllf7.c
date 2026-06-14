@@ -1772,7 +1772,7 @@ void dll_F7_init(int* obj, int* params)
     *(u8*)((char*)state + 0xb) = *(u8*)((char*)params + 0x19);
     if (*(s8*)((char*)state + 0xb) == 0)
     {
-        int r = (*gMapEventInterface)->isTimedEventActive(*(int*)((char*)params + 0x14));
+        int r = (*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)params + 0x14));
         if (r == 0)
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -1861,7 +1861,7 @@ void dll_F7_update(int* obj)
     {
         int* params = *(int**)&((GameObject*)obj)->anim.placementData;
         if (state->byteB == 0 &&
-            (*gMapEventInterface)->isTimedEventActive(((DllF7Placement*)params)->unk14) != 0)
+            (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->unk14) != 0)
         {
             state->byte9 = 0;
             state->byte8 = 1;
@@ -1901,7 +1901,7 @@ void dll_F7_update(int* obj)
         int* params = *(int**)&((GameObject*)obj)->anim.placementData;
         if (state->byteB == 0)
         {
-            (*gMapEventInterface)->startTimedEvent(((DllF7Placement*)params)->unk14, lbl_803E340C);
+            (*gMapEventInterface)->addTime(((DllF7Placement*)params)->unk14, lbl_803E340C);
         }
         state->byte9 = 1;
         state->byte8 = 0;

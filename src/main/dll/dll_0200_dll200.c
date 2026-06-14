@@ -356,7 +356,7 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     s32 v = visible;
     int areaId;
     if (v == 0) return;
-    areaId = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    areaId = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     if ((u8)areaId == 4)
     {
         if ((u32)GameBit_Get(0x2bd) == 0u) return;
@@ -402,7 +402,7 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     int i;
     int state;
 
-    mode = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     switch (mode)
     {
     case 1:
@@ -502,7 +502,7 @@ void dll_200_update(int obj)
     else
     {
         b->mode = (u8)(b->mode & ~0x80);
-        ev = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+        ev = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
         switch (ev)
         {
         case 1:

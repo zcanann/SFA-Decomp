@@ -3870,7 +3870,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 loadUiDll(1);
                 break;
             case 0x19:
-                (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+                (*gMapEventInterface)->gotoRestartPoint();
                 break;
             case 0x1c:
                 fn_80295CF4(obj, 0);
@@ -3984,7 +3984,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 hudFn_8011f38c(0);
                 break;
             case 0x2a:
-                if ((*gMapEventInterface)->getMode(0xb) == 7)
+                if ((*gMapEventInterface)->getMapAct(0xb) == 7)
                 {
                     getEnvfxActImmediately(obj, obj, 0x1fb, 0);
                     getEnvfxActImmediately(obj, obj, 0x1ff, 0);
@@ -7362,7 +7362,7 @@ void playerUpdate(int obj)
             if (((ByteFlags*)((char*)inner + 0x3f3))->b20 != 0 &&
                 (*gScreenTransitionInterface)->isFinished() != 0)
             {
-                (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
+                (*gMapEventInterface)->gotoRestartPoint();
             }
             if (((ByteFlags*)((char*)inner + 0x3f3))->b20 == 0 &&
                 (*(int*)((char*)inner + 0x310) & 1) != 0)
@@ -12619,11 +12619,11 @@ void objLoadPlayerFromSave(int obj)
     *(int*)&((GameObject*)obj)->anim.placementData = 0;
     ((PlayerState*)inner)->heldObj = 0;
     ((PlayerState*)inner)->playerStatus =
-        (int)(*gMapEventInterface)->getState(*gMapEventInterface);
+        (int)(*gMapEventInterface)->getCurCharacterState();
     *(u16*)((char*)inner + 0x81a) =
-        (*gMapEventInterface)->getPlayerNo();
+        (*gMapEventInterface)->getCurChar();
     Obj_SetActiveModelIndex(obj, ((PlayerState*)inner)->characterId);
-    me = (int)(*gMapEventInterface)->getWarpPos();
+    me = (int)(*gMapEventInterface)->getCurCharPos();
     ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)me + 0xc) << 8);
     ((PlayerState*)inner)->targetYaw = ((GameObject*)obj)->anim.rotX;
     ((PlayerState*)inner)->yaw = ((GameObject*)obj)->anim.rotX;
