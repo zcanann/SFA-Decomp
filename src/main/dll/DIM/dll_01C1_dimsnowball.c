@@ -107,8 +107,8 @@ void dimsnowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dimsnowball_hitDetect(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
-    int* inner = (int*)state[0];
-    if ((*(u16*)((char*)inner + 0xb0) & 0x40) == 0) return;
+    GameObject* target = (GameObject*)state[0];
+    if ((target->objectFlags & 0x40) == 0) return;
     state[0] = 0;
 }
 
@@ -199,9 +199,12 @@ void dimsnowball_update(int obj)
     ((GameObject*)obj)->anim.localPosX = x[1] + lbl_803E4850 * (x[2] - x[1]);
     ((GameObject*)obj)->anim.localPosY = y[1] + lbl_803E4850 * (y[2] - y[1]);
     ((GameObject*)obj)->anim.localPosZ = z[1] + lbl_803E4850 * (z[2] - z[1]);
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + *(f32*)(*state + 0xc);
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + *(f32*)(*state + 0x10);
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + *(f32*)(*state + 0x14);
+    ((GameObject*)obj)->anim.localPosX =
+        ((GameObject*)obj)->anim.localPosX + ((GameObject*)*state)->anim.localPosX;
+    ((GameObject*)obj)->anim.localPosY =
+        ((GameObject*)obj)->anim.localPosY + ((GameObject*)*state)->anim.localPosY;
+    ((GameObject*)obj)->anim.localPosZ =
+        ((GameObject*)obj)->anim.localPosZ + ((GameObject*)*state)->anim.localPosZ;
     ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->
         anim.previousLocalPosX);
     ((GameObject*)obj)->anim.velocityY = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->

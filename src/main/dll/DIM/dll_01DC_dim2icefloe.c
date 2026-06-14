@@ -104,8 +104,8 @@ void dim2icefloe_update(int obj)
 {
     extern int Obj_FreeObject(int obj);
     int sub = *(int*)&((GameObject*)obj)->extra;
-    if (*(void**)&((Dim2IceFloeState*)sub)->followedObj != NULL && (*(u16*)(((Dim2IceFloeState*)sub)->followedObj + 0xb0) & 0x40) !=
-        0)
+    if (*(void**)&((Dim2IceFloeState*)sub)->followedObj != NULL &&
+        (((GameObject*)((Dim2IceFloeState*)sub)->followedObj)->objectFlags & 0x40) != 0)
     {
         ((Dim2IceFloeState*)sub)->flags &= ~1;
         ((Dim2IceFloeState*)sub)->followedObj = 0;

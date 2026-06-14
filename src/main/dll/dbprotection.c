@@ -204,7 +204,7 @@ void fn_801DFA28(u8* obj)
         for (t = objIndex; t < objCount; t++)
         {
             otherObj = *(u8**)(objArray + t * 4);
-            if (*(s16*)(otherObj + 0x46) == 0x8C)
+            if (((GameObject*)otherObj)->anim.seqId == 0x8C)
             {
                 ((SBGalleonState*)state)->targetObj = otherObj;
                 t = objCount;
