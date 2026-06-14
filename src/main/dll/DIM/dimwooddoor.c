@@ -207,30 +207,8 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
             absPitch = (pitch < 0) ? -pitch : pitch;
             if ((s32)absPitch > (s32)lbl_803DBF02 - (s32)lbl_803DBF04)
             {
-                if (turnStep < 0)
-                {
-                    turnSign = -1;
-                }
-                else if (turnStep > 0)
-                {
-                    turnSign = 1;
-                }
-                else
-                {
-                    turnSign = 0;
-                }
-                if (pitch < 0)
-                {
-                    pitchSign = -1;
-                }
-                else if (pitch > 0)
-                {
-                    pitchSign = 1;
-                }
-                else
-                {
-                    pitchSign = 0;
-                }
+                turnSign = (turnStep < 0) ? -1 : ((turnStep > 0) ? 1 : 0);
+                pitchSign = (pitch < 0) ? -1 : ((pitch > 0) ? 1 : 0);
                 if (pitchSign == turnSign)
                 {
                     turnStep = (turnStep * ((s32)lbl_803DBF02 - (s32)absPitch)) / (s32)lbl_803DBF04;
