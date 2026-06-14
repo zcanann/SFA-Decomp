@@ -357,6 +357,14 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     (still `li`), register-web analysis (orbIndex/nextRing coalesce into a multi-def web identically
     in both builds, yet only the target declines to rematerialize the copy — a pure allocator-
     heuristic divergence with no source-reachable cause).
+    TERNARY li→mr TECHNIQUE (corpus-discovered, generally useful): an `= 0` that should be `mr rX,rY`
+    is fixed by assigning from a VARIABLE that holds 0 instead of the literal — the canonical form is
+    the zgaQ5 idiom `v = (cond) ? f(x) : x;` where the else-arm copies a runtime var (`x`) that the
+    branch proves is 0 (compiler keeps it in a reg → `mr`, not a rematerialized `li`). BOUNDARY
+    (verified for this fn): the technique needs a RUNTIME 0 (memory load / call result known-0 via a
+    branch); it does NOT help a STATIC-0 STRAIGHT-LINE copy like `count = orbIndex = 0` — there the
+    ternary condition folds and the copy folds with it (orbIndex is `li 0`, statically known). So
+    sc_totembond_update's straight-line static-0 copy is outside the ternary trick's reach.
     (sc_totembond_update, dll_01BB_sctotembond, banked 99.79.)
 111. **Member-address reassociation is keyed on the constant's SYNTACTIC ORIGIN** — spell the const
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
