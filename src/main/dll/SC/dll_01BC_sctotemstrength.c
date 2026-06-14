@@ -132,7 +132,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             list = (int*)ObjList_GetObjects(&idx2, &cnt2);
             for (; idx2 < cnt2; idx2++)
             {
-                if ((u32)list[idx2] != (u32)obj &&
+                if ((GameObject*)list[idx2] != self &&
                     ((GameObject*)list[idx2])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                 {
                     o = list[idx2];
@@ -145,7 +145,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             list = (int*)ObjList_GetObjects(&idx3, &cnt3);
             for (; idx3 < cnt3; idx3++)
             {
-                if ((u32)list[idx3] != (u32)obj &&
+                if ((GameObject*)list[idx3] != self &&
                     ((GameObject*)list[idx3])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                 {
                     o = list[idx3];
@@ -234,7 +234,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 list = (int*)ObjList_GetObjects(&idx4, &cnt4);
                 for (; idx4 < cnt4; idx4++)
                 {
-                    if ((u32)list[idx4] != (u32)obj &&
+                    if ((GameObject*)list[idx4] != self &&
                         ((GameObject*)list[idx4])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                     {
                         o = list[idx4];
@@ -261,7 +261,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 list = (int*)ObjList_GetObjects(&idx5, &cnt5);
                 for (; idx5 < cnt5; idx5++)
                 {
-                    if ((u32)list[idx5] != (u32)obj &&
+                    if ((GameObject*)list[idx5] != self &&
                         ((GameObject*)list[idx5])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                     {
                         o = list[idx5];
