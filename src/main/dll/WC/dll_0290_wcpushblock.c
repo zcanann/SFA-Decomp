@@ -605,7 +605,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
 {
     int scratch;
 
-    (*(int (**)(int*))(*gSHthorntailAnimationInterface + 0x24))(&scratch);
+    (*(int (**)(int*))(*gSkyInterface + 0x24))(&scratch);
     switch (state->mode)
     {
     case 6:

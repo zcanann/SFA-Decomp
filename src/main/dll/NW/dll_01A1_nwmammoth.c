@@ -43,7 +43,7 @@ extern f32 lbl_803E5ED0;
 extern f32 timeDelta;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
-extern void* gSHthorntailAnimationInterface;
+extern void* gSkyInterface;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E523C;
 extern f32 lbl_803E5240;
@@ -255,7 +255,7 @@ int fn_801CE078(int* obj, u8* st)
     u8 buf[4];
     WoPartfxBlock blk;
 
-    cv = ((u8 (*)(u8*))((void**)*(void**)gSHthorntailAnimationInterface)[0x24 / 4])(buf);
+    cv = ((u8 (*)(u8*))((void**)*(void**)gSkyInterface)[0x24 / 4])(buf);
     if (*(s8*)(st + 0x45b) != 0)
     {
         snd = !*(s8*)(st + 0x453);

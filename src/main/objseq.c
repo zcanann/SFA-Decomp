@@ -1951,7 +1951,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[4] & 0xfff, frame);
                 }
             }
-            (*gSHthorntailAnimationInterface)->setEnvironmentBlend(lbl_803DEFFC * val);
+            (*gSkyInterface)->setTimeOfDay(lbl_803DEFFC * val);
         }
 
         if ((((ObjSeqState*)seq)->flags & 0x10) != 0 && ((ObjSeqState*)seq)->trackRunLength[5] != 0)
@@ -3280,7 +3280,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 
 int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj)
 {
-    int tailState;
+    f32 sunTime;
     int result;
 
     result = 0;
@@ -3300,13 +3300,13 @@ int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj)
         }
         break;
     case 2:
-        if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(&tailState) == 0)
+        if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
         {
             result = 1;
         }
         break;
     case 3:
-        if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(&tailState) != 0)
+        if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
             result = 1;
         }

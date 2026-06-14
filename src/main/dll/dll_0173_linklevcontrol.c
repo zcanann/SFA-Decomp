@@ -299,12 +299,12 @@ void link_levcontrol_update(int* obj)
 
 void link_levcontrol_updateAreaMusic(int* obj)
 {
-    extern void* gSHthorntailAnimationInterface; /* #57 */
+    extern void* gSkyInterface; /* #57 */
     LinkLevControlState* sub = ((GameObject*)obj)->extra;
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
     case 0x47:
-        if (((int (*)(int))((void**)*(int*)gSHthorntailAnimationInterface)[9])(0) != 0)
+        if (((int (*)(int))((void**)*(int*)gSkyInterface)[9])(0) != 0)
         {
             if (sub->musicTrack != 0x2d)
             {
@@ -332,7 +332,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
                     Music_Trigger(0x95, 1);
                 }
             }
-            else if (((int (*)(int))((void**)*(int*)gSHthorntailAnimationInterface)[9])(0) != 0)
+            else if (((int (*)(int))((void**)*(int*)gSkyInterface)[9])(0) != 0)
             {
                 if (sub->musicTrack != 0x2d)
                 {

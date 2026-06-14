@@ -7,7 +7,7 @@
 #include "main/newclouds.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
-#include "main/shthorntail_interface.h"
+#include "main/sky_interface.h"
 #include "main/vecmath.h"
 
 extern undefined4 FUN_80006934();
@@ -1782,12 +1782,12 @@ void sceneDraw(void)
     flag = t;
     if ((renderFlags & 0x40000) != 0)
     {
-        (*(void (**)(int, int))((char*)*gSHthorntailAnimationInterface + 0x38))(0, 0);
+        (*gSkyInterface)->renderTimeOfDayBackdrop(0, 0);
         if (flag != 0)
         {
             drawSkyStars();
         }
-        (*gSHthorntailAnimationInterface)->render(0, 0, 0, 0, flag);
+        (*gSkyInterface)->render();
         if ((renderFlags & 0x10) != 0)
         {
             (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
@@ -1795,7 +1795,7 @@ void sceneDraw(void)
     }
     else
     {
-        (*gSHthorntailAnimationInterface)->render(0, 0, 0, 0, flag);
+        (*gSkyInterface)->render();
         (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }
@@ -2647,7 +2647,7 @@ void updateEnvironment(int mode)
         envFxFn_80088884();
         (*gCloudActionInterface)->scrollTexture();
         (*gSky2Interface)->run();
-        (*gSHthorntailAnimationInterface)->run();
+        (*gSkyInterface)->updateTimeOfDay();
         (*gNewCloudsInterface)->run();
 
         i = 0;

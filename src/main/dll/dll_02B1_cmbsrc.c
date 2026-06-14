@@ -96,7 +96,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
         result = 1;
     }
     else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
-        (*(int (**)(int*))(*gSHthorntailAnimationInterface + 0x24))(&hitOut) != 0)
+        (*(int (**)(int*))(*gSkyInterface + 0x24))(&hitOut) != 0)
     {
         result = 1;
     }
@@ -130,7 +130,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
         result = 1;
     }
     else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
-        (*(int (**)(int*))(*gSHthorntailAnimationInterface + 0x24))(&hitOut) == 0)
+        (*(int (**)(int*))(*gSkyInterface + 0x24))(&hitOut) == 0)
     {
         result = 1;
     }
@@ -552,7 +552,7 @@ void cmbsrc_init(int obj, u8* setup)
             }
             if (state->flags & CMBSRC_STATE_THORNTAIL_GATE)
             {
-                if ((*(int (**)(void*))(*gSHthorntailAnimationInterface + 0x24))(&local) != 0)
+                if ((*(int (**)(void*))(*gSkyInterface + 0x24))(&local) != 0)
                 {
                     modelLightStruct_setEnabled(state->light, 1, lbl_803E7374);
                 }

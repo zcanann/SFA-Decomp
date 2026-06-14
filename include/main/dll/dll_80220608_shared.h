@@ -18,6 +18,7 @@
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/resource.h"
+#include "main/sky_interface.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -212,7 +213,6 @@ extern f32 lbl_803E6DD8;
 extern void mapGetBlockOriginForPos(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z);
 extern void gameTimerStop(void);
 extern u8 gameTimerIsRunning(void);
-extern int *gSHthorntailAnimationInterface;
 extern void Music_Trigger(int id, int p2);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern f32 lbl_803E6DA8;
@@ -1038,7 +1038,6 @@ extern int cmbsrc_update(int obj);
 
 
 extern void modelLightStruct_setSpecularColor(void *light, u8 r, u8 g, u8 b, int a);
-extern int *gSHthorntailAnimationInterface;
 extern f32 lbl_803E7360;
 extern f32 lbl_803E7364;
 extern f32 lbl_803E7368;

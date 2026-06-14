@@ -7,6 +7,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
 #include "main/resource.h"
+#include "main/sky_interface.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
 typedef struct {
@@ -222,7 +223,6 @@ extern void gxSetPeControl_ZCompLoc_(int zcomploc);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetCullMode(int mode);
 extern void GXSetTevKColor(int id, void *color);
-extern int *gSHthorntailAnimationInterface;
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);

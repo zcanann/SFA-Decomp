@@ -206,7 +206,7 @@ void SH_LevelControl_setMusic(short* obj)
     extern void Music_Trigger(int trackId, int restart); /* #57 */
     extern void SH_LevelControl_setMusic(void* p); /* #57 */
     extern void GameBit_Set(int eventId, int value); /* #57 */
-    if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(0) != 0)
+    if ((*gSkyInterface)->getSunPosition(0) != 0)
     {
         if (obj[8] == 0x39 || obj[8] == -1)
         {

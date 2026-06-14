@@ -193,7 +193,7 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
 {
     int flag;
 
-    if ((*(int (**)(int))(*gSHthorntailAnimationInterface + 0x24))(0))
+    if ((*(int (**)(int))(*gSkyInterface + 0x24))(0))
     {
         if (state->thorntailMusicId != 0x2d)
         {
@@ -261,7 +261,7 @@ void wclevelcont_update(int obj)
         break;
     }
     wclevelcont_syncProgressBits(state);
-    if ((*(int (**)(int*))(*gSHthorntailAnimationInterface + 0x24))(&hitOut))
+    if ((*(int (**)(int*))(*gSkyInterface + 0x24))(&hitOut))
     {
         GameBit_Set(0x7f3, 1);
         GameBit_Set(0x7f1, 0);

@@ -5,7 +5,7 @@
 #include "ghidra_import.h"
 #include "dolphin/mtx.h"
 #include "main/objHitReact.h"
-#include "main/shthorntail_interface.h"
+#include "main/sky_interface.h"
 
 typedef struct SHthorntailConfig {
   u8 pad00[0x04];

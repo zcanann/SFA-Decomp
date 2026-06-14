@@ -105,7 +105,7 @@ void renderClouds(int a, int b, int c, int d)
     f32 v;
 
     view = Camera_GetCurrentViewSlot();
-    (*(void (**)(u8*, u8*, u8*, u8*, u8*, u8*))(*(char**)gSHthorntailAnimationInterface + 0x40))(
+    (*(void (**)(u8*, u8*, u8*, u8*, u8*, u8*))(*(char**)gSkyInterface + 0x40))(
         &p0, &p1, &p2, &p3, &p4, &p5);
 
     if (gCloudOverrideObject != NULL)

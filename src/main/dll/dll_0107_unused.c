@@ -145,7 +145,7 @@ end:;
 void fn_80185B74(int obj)
 {
     extern void* lbl_803DDAD4;
-    extern void* gSHthorntailAnimationInterface;
+    extern void* gSkyInterface;
     extern f32 lbl_803E3A58;
     extern f32 lbl_803E3A5C;
     extern f32 lbl_803E3A60;
@@ -195,7 +195,7 @@ void fn_80185B74(int obj)
 
     p4c = *(int*)&((GameObject*)obj)->anim.placementData;
     spd = lbl_803E3A5C;
-    (*(code*)(*(int*)gSHthorntailAnimationInterface + 0x18))(&spd);
+    (*(code*)(*(int*)gSkyInterface + 0x18))(&spd);
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     sub = *(int*)&((GameObject*)player)->extra;

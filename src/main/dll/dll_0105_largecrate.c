@@ -42,7 +42,7 @@ extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern f32 lbl_803E39A8;
@@ -428,7 +428,7 @@ void largecrate_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     local40 = -1;
     animSpeed = lbl_803E39AC;
-    (**(void (**)(f32*))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
+    (**(void (**)(f32*))(*gSkyInterface + 0x18))(&animSpeed);
     state = *(int*)&((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     if (((GameObject*)obj)->anim.parent != NULL)

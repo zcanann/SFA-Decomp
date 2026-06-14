@@ -73,7 +73,7 @@ extern void skyFn_80088e54(int mode, f32 brightness);
 extern void warpToMap(int mapId, int flag);
 extern void timeListFn_8012df14(void);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 extern u16 lbl_803DC060[4];
 extern f32 timeDelta;
 extern const f32 lbl_803E5558;
@@ -656,7 +656,7 @@ void sc_levelcontrol_update(int obj)
             (*gMapEventInterface)->setAnimEvent(0xe, 1, 0);
         }
     }
-    if ((*(int (**)(int))((char*)*gSHthorntailAnimationInterface + 0x24))(0) != 0)
+    if ((*(int (**)(int))((char*)*gSkyInterface + 0x24))(0) != 0)
     {
         if (((ScLevelControlState*)state)->musicTrack != 0x2d)
         {

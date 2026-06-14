@@ -1139,7 +1139,7 @@ void dll_CE_update(int obj, int p2, int p3)
     extern void fn_8015EA48(int obj, u8* p);
     extern int* gBaddieControlInterface;
     extern MapEventInterface** gMapEventInterface;
-    extern int* gSHthorntailAnimationInterface;
+    extern int* gSkyInterface;
     extern int* gPlayerInterface;
     extern void* lbl_803AC5B0[];
     extern void* lbl_803AC598[];
@@ -1186,7 +1186,7 @@ void dll_CE_update(int obj, int p2, int p3)
             sub->targetState = 0;
         }
         else if ((sub->configFlags & 0x10) != 0 &&
-            (*(int (**)(int*))(*(int*)gSHthorntailAnimationInterface + 0x24))(buf) == 0)
+            (*(int (**)(int*))(*(int*)gSkyInterface + 0x24))(buf) == 0)
         {
             sub->targetState = 0;
         }

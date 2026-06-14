@@ -94,7 +94,7 @@ extern undefined4 FUN_80039520();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjMsg_AllocQueue(int obj, int capacity);
-extern undefined4* gSHthorntailAnimationInterface;
+extern undefined4* gSkyInterface;
 extern f32 lbl_803E3828;
 extern f32 lbl_803E382C;
 extern f32 lbl_803E3830;
@@ -693,7 +693,7 @@ void appleontree_update(int param_1)
                 }
                 else
                 {
-                    placement = (*(int (**)(void*))(*gSHthorntailAnimationInterface + 0x24))(msgExtra);
+                    placement = (*(int (**)(void*))(*gSkyInterface + 0x24))(msgExtra);
                     if (placement != 0)
                     {
                         FUN_8002fc3c(lbl_803E3804, timeDelta);

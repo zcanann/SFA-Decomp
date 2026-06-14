@@ -323,7 +323,7 @@ void linkb_levcontrol_init(int* obj)
 
 void linkb_levcontrol_update(int* obj)
 {
-    extern void* gSHthorntailAnimationInterface; /* #57 */
+    extern void* gSkyInterface; /* #57 */
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     LinkbLevState* state;
     int* tricky;
@@ -334,7 +334,7 @@ void linkb_levcontrol_update(int* obj)
     player = (int*)Obj_GetPlayerObject();
     tricky = getTrickyObject();
     cur = (*gMapEventInterface)->getProgressPtr();
-    if (((int (*)(int))((void**)*(int*)gSHthorntailAnimationInterface)[9])(0) != 0)
+    if (((int (*)(int))((void**)*(int*)gSkyInterface)[9])(0) != 0)
     {
         if (state->music != -1)
         {

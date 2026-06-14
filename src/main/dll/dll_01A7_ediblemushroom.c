@@ -99,7 +99,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         f32 y;
         f32 z;
     } fx;
-    int thorntailOut;
+    f32 sunTime;
     u8* player;
 
     curve = (RomCurveWalker*)state;
@@ -121,7 +121,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         {
             ((EdibleMushroomState*)state)->animState = 9;
         }
-        else if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(&thorntailOut) == 0)
+        else if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
         {
             if (((EdibleMushroomState*)state)->currentTargetDistance < (f32)other[0x19])
             {

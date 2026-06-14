@@ -7,6 +7,7 @@
 #include "main/object_transform.h"
 #include "main/objtexture.h"
 #include "main/resource.h"
+#include "main/sky_interface.h"
 
 typedef struct LightningEffect
 {
@@ -32,7 +33,6 @@ extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern int randomGetRange(int min, int max);
 
-extern int* gSHthorntailAnimationInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803DF1A0;
@@ -746,7 +746,7 @@ void drawSkyStars(void)
     FogColor color;
     f32 t;
 
-    timeOk = (int)(*(code*)(*(int*)gSHthorntailAnimationInterface + 0x24))(&t);
+    timeOk = (*gSkyInterface)->getSunPosition(&t);
     if (isOvercast() != 0)
     {
         if (timeOk != 0)

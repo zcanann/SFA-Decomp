@@ -16,7 +16,7 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
-#include "main/shthorntail_interface.h"
+#include "main/sky_interface.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();
@@ -837,7 +837,7 @@ void init(void)
     gPlayerInterface = Resource_Acquire(0xf, 0x16);
     gObjectTriggerInterface = Resource_Acquire(2, 0x1d);
     gScreenTransitionInterface = Resource_Acquire(0x16, 4);
-    gSHthorntailAnimationInterface = Resource_Acquire(5, 0xf);
+    gSkyInterface = Resource_Acquire(5, 0xf);
     gSky2Interface = Resource_Acquire(6, 0xc);
     gNewCloudsInterface = Resource_Acquire(7, 8);
     gCloudActionInterface = Resource_Acquire(9, 0xa);

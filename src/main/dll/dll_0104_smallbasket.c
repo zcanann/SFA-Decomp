@@ -89,7 +89,7 @@ extern void fn_801814D0(int obj, int player, int state);
 extern f32 getXZDistance(f32 * a, f32 * b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3978;
 extern f32 lbl_803E397C;
@@ -768,7 +768,7 @@ void smallbasket_update(int obj)
     player = (int)Obj_GetPlayerObject();
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     animSpeed = lbl_803E3950;
-    (**(void (**)(f32*))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
+    (**(void (**)(f32*))(*gSkyInterface + 0x18))(&animSpeed);
     state = *(int*)&((GameObject*)obj)->extra;
     if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)def)->mapId) == 0)
     {

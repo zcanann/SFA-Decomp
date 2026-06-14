@@ -324,7 +324,7 @@ extern void dll_F7_init();
 extern f32 lbl_803E3220;
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void GameBit_Set(int eventId, int value);
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 extern void fn_801504BC(int* obj, int kind);
 extern f32 lbl_803E3224;
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
@@ -1817,7 +1817,7 @@ void baddieinterestp_update(int* obj)
                                         break;
                                     }
                                 case 1:
-                                    if (((int (*)(u8*))((int*)*gSHthorntailAnimationInterface)[9])(&local) == 0)
+                                    if (((int (*)(u8*))((int*)*gSkyInterface)[9])(&local) == 0)
                                     {
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;
@@ -1840,7 +1840,7 @@ void baddieinterestp_update(int* obj)
                                     }
                                     break;
                                 case 2:
-                                    if (((int (*)(u8*))((int*)*gSHthorntailAnimationInterface)[9])(&local) != 0)
+                                    if (((int (*)(u8*))((int*)*gSkyInterface)[9])(&local) != 0)
                                     {
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;

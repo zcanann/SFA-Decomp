@@ -83,7 +83,7 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void Music_Trigger(int track, int flag);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E46DC;
 extern int* ObjGroup_GetObjects(int group, int* countOut);
@@ -529,7 +529,7 @@ void imicemountain_update(int* obj)
             extra->warningTextTimer = lbl_803E46DC;
         }
     }
-    if (((int (*)(int))((int*)*gSHthorntailAnimationInterface)[0x24 / 4])(0) != 0)
+    if (((int (*)(int))((int*)*gSkyInterface)[0x24 / 4])(0) != 0)
     {
         if (extra->musicTrack != -1)
         {

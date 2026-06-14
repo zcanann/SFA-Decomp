@@ -72,8 +72,7 @@ extern f32 lbl_803DD020;
 extern f32 lbl_803DD024;
 extern f32 lbl_803DD034;
 extern f32 lbl_803DD038;
-extern void* gSHthorntailAnimationInterface;
-extern undefined4* gWaterfxInterface;
+extern void* gSkyInterface;
 extern u8 lbl_803DCFF0;
 extern u8 lbl_803DCFF8;
 extern u8 lbl_803DCFF9;
@@ -862,7 +861,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
         ((u8*)&lbl_803DB6F4)[2] = ((u8*)&lbl_803DD01C)[2];
         ((u8*)&lbl_803DB6F4)[3] = 0x80;
     } else {
-        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSHthorntailAnimationInterface + 0x40))(
+        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSkyInterface + 0x40))(
             (u8*)&lbl_803DB6F4,
             (u8*)&lbl_803DB6F4 + 1,
             (u8*)&lbl_803DB6F4 + 2,
@@ -5103,7 +5102,7 @@ void fn_8007BD8C(int handle1, int handle2)
         ((u8*)&temp)[2] = ((u8*)&lbl_803DD01C)[2];
     } else {
         f32 dummy;
-        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSHthorntailAnimationInterface + 0x40))(
+        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSkyInterface + 0x40))(
             &((u8*)&temp)[0],
             &((u8*)&temp)[1],
             &((u8*)&temp)[2],
@@ -5284,7 +5283,7 @@ void fn_8007C664(int texHandle)
         lbl_803DB688.b = lbl_803DD01C.b;
         lbl_803DB688.a = 0x80;
     } else {
-        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSHthorntailAnimationInterface + 0x40))(
+        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSkyInterface + 0x40))(
             &lbl_803DB688.r, &lbl_803DB688.g, &lbl_803DB688.b, &dummy, &dummy, &dummy);
         lbl_803DB688.r = lbl_803DB688.r >> 3;
         lbl_803DB688.g = lbl_803DB688.g >> 3;
@@ -5376,7 +5375,7 @@ void fn_8007CAF4(void)
         lbl_803DB680.b = lbl_803DD01C.b;
         lbl_803DB680.a = 0x80;
     } else {
-        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSHthorntailAnimationInterface + 0x40))(
+        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSkyInterface + 0x40))(
             &lbl_803DB680.r, &lbl_803DB680.g, &lbl_803DB680.b, &dummy, &dummy, &dummy);
         lbl_803DB680.r = lbl_803DB680.r >> 3;
         lbl_803DB680.g = lbl_803DB680.g >> 3;
@@ -5504,7 +5503,7 @@ void gxTextureSetupFn_8007cf7c(void)
         ((u8*)&lbl_803DB67C)[3] = 0x80;
     } else {
         f32 dummy;
-        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSHthorntailAnimationInterface + 0x40))(
+        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSkyInterface + 0x40))(
             (u8*)&lbl_803DB67C,
             (u8*)&lbl_803DB67C + 1,
             (u8*)&lbl_803DB67C + 2,

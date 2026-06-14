@@ -12,6 +12,7 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/sky_interface.h"
 #include "main/dll/path_control_interface.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
@@ -832,7 +833,6 @@ extern void AudioStream_StopCurrent(void);
 extern void AudioStream_Play(int a, void *cb);
 extern void AudioStream_StartPrepared(void);
 extern ModgfxInterface **gModgfxInterface;
-extern int *gSHthorntailAnimationInterface;
 extern f32 lbl_803DAEF0[];
 extern f32 lbl_803E7FFC;
 extern f32 lbl_803E7EC8;

@@ -6,7 +6,7 @@
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
 #include "main/screen_transition.h"
-#include "main/shthorntail_interface.h"
+#include "main/sky_interface.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8001763c();
@@ -2286,7 +2286,7 @@ void loadNextMap(void)
             (*gCloudActionInterface)->freeCloudObjects();
             (*gCloudActionInterface)->onMapSetup();
             (*gSky2Interface)->onMapSetup();
-            (*gSHthorntailAnimationInterface)->onMapSetup();
+            (*gSkyInterface)->loadLights();
             (*gNewCloudsInterface)->onMapSetup();
             gameUiResetMenuState();
             lbl_803DCEBD = 0;

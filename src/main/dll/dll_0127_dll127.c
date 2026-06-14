@@ -10,7 +10,7 @@ extern void setPendingMapLoad(int v);
 extern u8 framesThisStep;
 extern f32 lbl_803E3D64;
 extern f32 lbl_803E3D68;
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 
 void dll_127_free_nop(void)
 {

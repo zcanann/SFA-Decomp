@@ -52,7 +52,7 @@ void waterfx_setupSplashDropPointRender(void)
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXSetCullMode(0);
-    (*(void (*)(void*, void*, void*, f32*, f32*, f32*))(*(int*)(*gSHthorntailAnimationInterface + 0x40)))(
+    (*(void (*)(void*, void*, void*, f32*, f32*, f32*))(*(int*)(*gSkyInterface + 0x40)))(
         &col[0], &col[1], &col[2], &dummy, &dummy, &dummy);
     col[0] = (col[0] >> 2) + 0x80;
     col[1] = (col[1] >> 2) + 0x80;

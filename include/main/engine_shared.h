@@ -6,7 +6,7 @@
 #include "main/audio/snd_core.h"
 #include "main/effect_interfaces.h"
 #include "main/newclouds.h"
-#include "main/shthorntail_interface.h"
+#include "main/sky_interface.h"
 
 #define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
 #define SFX_OBJECT_CHANNEL_COUNT 56

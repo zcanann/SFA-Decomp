@@ -28,7 +28,7 @@ extern u8 lbl_803201E8[];
 extern void vecRotateZXY(void* obj, void* p);
 extern void* memcpy(void* dst, const void* src, int n);
 extern u8 lbl_803DDA80;
-extern void* gSHthorntailAnimationInterface;
+extern void* gSkyInterface;
 extern void* Obj_GetPlayerObject(void);
 extern void objfx_spawnHitEmitterAtPos(int* p, int a, int b, int c, int d);
 extern int Sfx_PlayFromObject(int* obj, int sfx);
@@ -180,7 +180,7 @@ void tumbleweedbush_update(int* obj)
                 {
                     if (((GameObject*)obj)->anim.seqId == 0x28d)
                     {
-                        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hit1) == 0) continue;
+                        if (((int(*)(int*))((void**)*(int*)gSkyInterface)[9])(&hit1) == 0) continue;
                     }
                     ((void(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x28))(*slot);
                 }
@@ -300,7 +300,7 @@ s8 fn_801631C8(int* obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x28d:
-        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&aliveOut) == 0)
+        if (((int(*)(int*))((void**)*(int*)gSkyInterface)[9])(&aliveOut) == 0)
             return -1;
         siblingType = 0x39d;
         break;

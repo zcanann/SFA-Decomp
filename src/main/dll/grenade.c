@@ -88,7 +88,7 @@ extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
 extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 extern int cMenuGetSelectedItem(void);
 extern f32 mathSinf(f64 x);
 extern f64 mathCosf(f64 x);
@@ -1047,7 +1047,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
             }
             else
             {
-                val = (**(code**)(*gSHthorntailAnimationInterface + 0x24))(0);
+                val = (**(code**)(*gSkyInterface + 0x24))(0);
                 if (val == 0)
                 {
                     objAnimFn_8013a3f0(obj, 0x2c, lbl_803E251C, 0);
@@ -1209,7 +1209,7 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
         ((TrickyState*)state)->unk7C4 = z;
         ((TrickyState*)state)->unk7C8 = z;
     }
-    if (((int (**)(int))*gSHthorntailAnimationInterface)[9](0) != 0
+    if (((int (**)(int))*gSkyInterface)[9](0) != 0
         && ((TrickyState*)state)->unk71C <= lbl_803E23DC
         && GameBit_Get(0xdd) != 0)
     {
@@ -1486,7 +1486,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     {
         lo = 0;
     }
-    if (((int (**)(int))*gSHthorntailAnimationInterface)[9](0) == 0 || GameBit_Get(0xdd) == 0)
+    if (((int (**)(int))*gSkyInterface)[9](0) == 0 || GameBit_Get(0xdd) == 0)
     {
         hi = 2;
     }

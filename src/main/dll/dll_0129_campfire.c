@@ -23,7 +23,7 @@ extern void queueGlowRender(void* effect);
 
 extern f32 lbl_803E3D78;
 
-extern int* gSHthorntailAnimationInterface;
+extern int* gSkyInterface;
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
 extern f32 lbl_803E3D7C;
@@ -64,7 +64,7 @@ void campfire_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    if ((*(ThorntailQueryFn*)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0)
+    if ((*(ThorntailQueryFn*)(*gSkyInterface + 0x24))(buf) != 0)
     {
         if (*(void**)state != NULL)
         {
@@ -189,7 +189,7 @@ void campfire_init(int obj, int p2)
         modelLightStruct_setSpecularColor(*state, 0xff, 0x7f, 0, 0xff);
         atten = (int)(lbl_803E3D8C * ((GameObject*)obj)->anim.rootMotionScale);
         modelLightStruct_setDistanceAttenuation(*state, (f32)atten, lbl_803E3D90 + (f32)atten);
-        if ((*(ThorntailQueryFn*)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0)
+        if ((*(ThorntailQueryFn*)(*gSkyInterface + 0x24))(buf) != 0)
         {
             modelLightStruct_setEnabled(*state, 1, lbl_803E3D7C);
         }

@@ -12,7 +12,7 @@
 #include "main/objtexture.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
-#include "main/shthorntail_interface.h"
+#include "main/sky_interface.h"
 
 typedef struct ObjSeqBgCmd {
     int object;

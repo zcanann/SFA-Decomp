@@ -35,7 +35,7 @@ extern uint fn_80295CBC();
 
 extern undefined4 lbl_8031F2F8;
 extern u8 lbl_8031F318[];
-extern undefined4* gSHthorntailAnimationInterface;
+extern undefined4* gSkyInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
@@ -431,7 +431,7 @@ void timeOfDayFn_80155cf8(int obj, int state)
     byte isDaytime;
     float timeInfo[4];
 
-    (*(code*)(*(int*)gSHthorntailAnimationInterface + 0x14))(timeInfo);
+    (*(code*)(*(int*)gSkyInterface + 0x14))(timeInfo);
     if ((timeInfo[0] >= lbl_803E2A70) && (timeInfo[0] <= lbl_803E2A74))
     {
         isDaytime = 1;

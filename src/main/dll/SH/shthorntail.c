@@ -44,7 +44,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
         runtime->idleTimer = runtime->idleTimer - timeDelta;
         if (runtime->idleTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
-            tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0);
+            tailSwingQueued = (*gSkyInterface)->getSunPosition(0);
             if (tailSwingQueued != 0)
             {
                 runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
@@ -63,7 +63,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
     case SHTHORNTAIL_STATE_TURN_HOME:
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0)
         {
-            tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0);
+            tailSwingQueued = (*gSkyInterface)->getSunPosition(0);
             if (tailSwingQueued != 0)
             {
                 runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
@@ -127,7 +127,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
     case SHTHORNTAIL_STATE_TAIL_SWING:
         SHthorntail_updateTailSwing((uint)obj, runtime);
         if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
-            (tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0), tailSwingQueued == 0))
+            (tailSwingQueued = (*gSkyInterface)->getSunPosition(0), tailSwingQueued == 0))
         {
             runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
         }

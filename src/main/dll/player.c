@@ -15761,7 +15761,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
     {
         fn_802AA8D0(obj);
     }
-    if ((*(int (**)(int))((char*)(*gSHthorntailAnimationInterface) + 0x34))(2) != 0)
+    if ((*(int (**)(int))((char*)(*gSkyInterface) + 0x34))(2) != 0)
     {
         playerUpdatePathEffectCountdown(obj, inner);
     }

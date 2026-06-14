@@ -8,7 +8,7 @@
 #include "main/mapEvent.h"
 #include "main/newclouds.h"
 #include "main/objseq.h"
-#include "main/shthorntail_interface.h"
+#include "main/sky_interface.h"
 #include "main/shader.h"
 
 extern float ABS();
@@ -2647,7 +2647,7 @@ void beginLoadingMap(void)
     (*gCloudActionInterface)->freeCloudObjects();
     (*gCloudActionInterface)->onMapSetup();
     (*gSky2Interface)->onMapSetup();
-    (*gSHthorntailAnimationInterface)->onMapSetup();
+    (*gSkyInterface)->loadLights();
     (*gNewCloudsInterface)->onMapSetup();
     mapInitFn_8006fccc();
     player = (char*)Obj_GetPlayerObject();
@@ -2747,11 +2747,11 @@ void beginLoadingMap(void)
                 getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
             }
         }
-        (*gSHthorntailAnimationInterface)->setEnvironmentBlend(*(f32*)env);
+        (*gSkyInterface)->setTimeOfDay(*(f32*)env);
     }
     else
     {
-        (*gSHthorntailAnimationInterface)->setEnvironmentBlend(lbl_803DEBD0);
+        (*gSkyInterface)->setTimeOfDay(lbl_803DEBD0);
         (*gCloudActionInterface)->func09Nop(1);
     }
     clearSaveGameLoadingFlag();
