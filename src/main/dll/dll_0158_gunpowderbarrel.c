@@ -305,14 +305,15 @@ int gunpowderbarrel_getExtraSize(void)
 
 void gunpowderbarrel_free(int obj, int param_2)
 {
+    extern int Obj_IsObjectAlive(int obj); /* #57 */
     int extra;
-    int child;
+    void* child;
     extra = *(int*)&((GameObject*)obj)->extra;
     (*(code*)(*(int*)gCarryableInterface + 0x10))(obj);
-    child = ((GunpowderbarrelState*)extra)->unk10;
-    if (child != 0 && param_2 == 0)
+    child = (void*)((GunpowderbarrelState*)extra)->unk10;
+    if (child != NULL && param_2 == 0)
     {
-        if (Obj_IsObjectAlive(child) != 0)
+        if (Obj_IsObjectAlive((int)child) != 0)
         {
             ObjLink_DetachChild(obj, ((GunpowderbarrelState*)extra)->unk10);
             ((GunpowderbarrelState*)extra)->unk10 = 0;
