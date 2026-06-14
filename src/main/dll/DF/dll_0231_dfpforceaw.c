@@ -90,9 +90,9 @@ void TrickyCurve_updateBurstTrigger(int obj)
     xSide = 0;
     ySide = 0;
     zSide = 0;
-    dx = *(f32*)(player + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dy = *(f32*)(player + 0x10) - ((GameObject*)obj)->anim.localPosY;
-    dz = *(f32*)(player + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
 
     if ((((TrickyCurveObjState*)state)->unk8 != -1) && (GameBit_Get(((TrickyCurveObjState*)state)->unk8) != 0))
     {

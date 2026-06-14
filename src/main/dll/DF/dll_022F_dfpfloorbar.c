@@ -173,12 +173,12 @@ void dfpfloorbar_update(int obj)
     playerObj = Obj_GetPlayerObject();
     if (playerObj == NULL) return;
 
-    yDelta = ((GameObject*)obj)->anim.localPosY - *(f32*)(playerObj + 0x10);
+    yDelta = ((GameObject*)obj)->anim.localPosY - ((GameObject*)playerObj)->anim.localPosY;
     if (yDelta < 0.0f) yDelta = yDelta * lbl_803E6414;
     if (yDelta < 100.0f)
     {
-        xMid = *(f32*)(playerObj + 0xc) - (((GameObject*)obj)->anim.localPosX - 100.0f);
-        zDelta = ((GameObject*)obj)->anim.localPosZ - *(f32*)(playerObj + 0x14);
+        xMid = ((GameObject*)playerObj)->anim.localPosX - (((GameObject*)obj)->anim.localPosX - 100.0f);
+        zDelta = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)playerObj)->anim.localPosZ;
         if (zDelta < 0.0f) zDelta = zDelta * lbl_803E6414;
         if (zDelta < 18.0f)
         {

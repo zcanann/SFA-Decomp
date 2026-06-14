@@ -61,8 +61,8 @@ void ktfallingrocks_update(int obj)
     {
         return;
     }
-    ((GameObject*)obj)->anim.localPosX = *(f32*)(player + 0xc);
-    ((GameObject*)obj)->anim.localPosZ = *(f32*)(player + 0x14);
+    ((GameObject*)obj)->anim.localPosX = ((GameObject*)player)->anim.localPosX;
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
     for (i = 0; i < 10; i++)
     {
         params.x = ((GameObject*)obj)->anim.localPosX + (f32)(int)

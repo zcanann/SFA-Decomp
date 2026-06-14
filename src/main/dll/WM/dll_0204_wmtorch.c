@@ -83,7 +83,8 @@ void wmtorch_update(int obj)
     {
         *(s16*)obj += 0x32;
     }
-    if (Vec_distance((f32*)(Obj_GetPlayerObject() + 0x18), &((GameObject*)obj)->anim.worldPosX) < lbl_803E5DE8)
+    if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
+        lbl_803E5DE8)
     {
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     }
