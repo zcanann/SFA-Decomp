@@ -1,4 +1,4 @@
-/* DLL 0x01D5 — dim2conveyor / dimwooddoor2 / dim2pathgenerator group. TU: 0x801B63F4–0x801B6464. */
+/* DLL 0x01D5 - dim2conveyor / dimwooddoor2 / dim2pathgenerator group. TU: 0x801B63F4-0x801B6464. */
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -89,6 +89,7 @@ extern f32 mathSinf(f32 x);
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
+#include "main/objlib.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -104,10 +105,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern undefined4 FUN_800067c0();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern f32 lbl_803E4A58;
-extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 extern u8 lbl_803DBF20;
 extern f32 mathCosf(f32 x);
 extern f32 lbl_803E4A5C;
@@ -266,7 +264,7 @@ void dim2conveyor_init(int* obj, u8* params)
     extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
     extra->swapTimer = lbl_803E4A60;
     extra->musicHold = 0;
-    ObjGroup_AddObject(obj, 22);
+    ObjGroup_AddObject((u32)obj, 22);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     if (*(u32*)((char*)params + 0x14) == 0x49b23)
     {
