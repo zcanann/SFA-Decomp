@@ -1595,22 +1595,23 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         }
         if (idx >= 0)
         {
-            SnowHornEntry* e = &((SnowHornEntry*)base)[idx];
-            if (GameBit_Get(e->h1e))
+            SnowHornEntry* tbl = (SnowHornEntry*)base;
+            if (GameBit_Get(tbl[idx].h1e))
             {
-                ((GameObject*)obj)->anim.localPosX = e->f10;
-                ((GameObject*)obj)->anim.localPosY = e->f14;
-                ((GameObject*)obj)->anim.localPosZ = e->f18;
-                ((GameObject*)obj)->anim.rotX = e->h1c;
+                ((GameObject*)obj)->anim.localPosX = tbl[idx].f10;
+                ((GameObject*)obj)->anim.localPosY = tbl[idx].f14;
+                ((GameObject*)obj)->anim.localPosZ = tbl[idx].f18;
+                ((GameObject*)obj)->anim.rotX = tbl[idx].h1c;
             }
             else
             {
+                SnowHornEntry* e = &tbl[idx];
                 ((GameObject*)obj)->anim.localPosX = e->f0;
                 ((GameObject*)obj)->anim.localPosY = e->f4;
                 ((GameObject*)obj)->anim.localPosZ = e->f8;
                 ((GameObject*)obj)->anim.rotX = e->hc;
             }
-            if (GameBit_Get(e->h20))
+            if (GameBit_Get(tbl[idx].h20))
             {
                 ((GameObject*)obj)->anim.rotX += 0x8000;
             }
