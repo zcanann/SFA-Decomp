@@ -1765,7 +1765,7 @@ undefined4 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback call
     }
     entry = gObjContactCallbacks;
     count = gObjContactCallbackCount;
-    for (i = 0; i < count; i++)
+    for (i = 0; i != count; i++)
     {
         if (((u32)entry->objA == (u32)obj) && ((u32)entry->objB == (u32)otherObj))
         {
@@ -1781,10 +1781,8 @@ undefined4 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback call
     entry->objA = obj;
     entry->objB = otherObj;
     entry->callback = callback;
-    *(undefined*)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-        *(u8*)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
-    *(undefined*)(otherObj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-        *(u8*)(otherObj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
+    *(u8*)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) += 1;
+    *(u8*)(otherObj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) += 1;
     gObjContactCallbackCount = gObjContactCallbackCount + 1;
     return 1;
 }
