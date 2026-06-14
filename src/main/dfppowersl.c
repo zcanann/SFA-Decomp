@@ -3,7 +3,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
 
 static inline DfpPowerSlState* dfppowersl_getState(DfpPowerSlObject* obj)

@@ -7,8 +7,6 @@ extern undefined4 sfxplayer_updateState(int obj, undefined4 param_2, int hitStat
 
 extern f32 timeDelta;
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 #pragma dont_inline on
 void dfpstatue1_updateState(DfpStatue1Object* obj)
 {
