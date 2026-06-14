@@ -254,9 +254,7 @@ void sc_musictree_update(int obj)
     }
     if ((((ScMusictreeState*)inner)->unk4C & 0x80) && ((GameObject*)obj)->unkF8 != 0)
     {
-        p = (int*)inner;
-        q = (int*)inner;
-        for (i = 0; i < 3; i++)
+        for (i = 0, p = (int*)inner, q = (int*)inner; i < 3; i++)
         {
             if (*(void**)p == NULL)
             {
@@ -344,11 +342,12 @@ end:
         f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
         f32 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
         f32 d = sqrtf(dx * dx + dz * dz);
-        int di = (s32)d;
-        if ((u16)di < ((ScMusictreeState*)inner)->unk48
+        u16 di = (s32)d;
+        if (di < ((ScMusictreeState*)inner)->unk48
         )
         {
-            if ((((ScMusictreeState*)inner)->unk4C & 0x10) && ((ScMusictreeState*)inner)->unk4A >= (u16)di && ((
+            if ((((ScMusictreeState*)inner)->unk4C & 0x10)
+                && ((ScMusictreeState*)inner)->unk4A >= ((ScMusictreeState*)inner)->unk48 && ((
                 CloudRunnerState*)inner)->baddie.velY <= lbl_803E5590
             )
             {
@@ -362,10 +361,11 @@ end:
             ((ScMusictreeState*)inner)->unk30 = ((ScMusictreeState*)inner)->unk30 - timeDelta;
             if (((ScMusictreeState*)inner)->unk30 <= lbl_803E5590)
             {
-                vec[0] = lbl_803E5590;
+                f32* rv;
+                *(rv = &vec[0]) = lbl_803E5590;
                 vec[1] = lbl_803E55A0 * ((CloudRunnerState*)inner)->baddie.velX;
                 vec[2] = lbl_803E5590;
-                vecRotateZXY(obj, vec);
+                vecRotateZXY(obj, rv);
                 objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->unk4C & 0xf, 1, vec2,
                                        lbl_803E55A4 * ((CloudRunnerState*)inner)->baddie.velX, 0);
                 ((ScMusictreeState*)inner)->unk30 = ((ScMusictreeState*)inner)->unk30 + lbl_803E55B4;
