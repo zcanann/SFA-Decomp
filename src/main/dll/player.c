@@ -5964,7 +5964,7 @@ int fn_8029F108(int obj, int state)
     }
     {
         int inner2 = *(int*)&((GameObject*)obj)->extra;
-        *(int*)((char*)inner2 + 0x360) &= ~0x2;
+        *(int*)((char*)inner2 + 0x360) &= ~0x2LL;
         *(int*)((char*)inner2 + 0x360) |= 0x2000;
     }
     *(int*)((char*)state + 0x4) |= 0x100000;
@@ -6061,7 +6061,7 @@ int fn_8029F108(int obj, int state)
             *(s16*)vec = 0;
             *(s16*)((char*)vec + 0x4) = 0;
         }
-        ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+        ((GameObject*)obj)->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         ((GameObject*)obj)->anim.worldPosX = inner->savedPosX;
         ((GameObject*)obj)->anim.worldPosZ = inner->savedPosZ;
         if (((GameObject*)obj)->anim.parent != NULL)
