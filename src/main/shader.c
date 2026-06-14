@@ -1105,7 +1105,7 @@ void mapTextureOverrideSetValue(int type, u32 key, int value)
     {
         off = i * 0x10;
         if (*(s16*)(lbl_803DCE6C + off + 0xc) > 0 &&
-            *(u32*)(lbl_803DCE6C + off) == key &&
+            *(void**)(lbl_803DCE6C + off) == (void*)key &&
             type == *(u8*)(lbl_803DCE6C + off + 0xe))
         {
             *(int*)(lbl_803DCE6C + off + 4) = value;
