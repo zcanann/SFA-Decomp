@@ -406,17 +406,6 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
   the global straight into the arg slot.
 - **Vtable double-deref:** `*(int *)lbl + 0x34` (no `&`) for two `lwz`s through the variable.
 
-## `#pragma dont_inline on` for same-TU callees
-With `-inline auto`, MWCC inlines small fns into callers. If target keeps the `bl`, wrap the
-CALLEE's def in `dont_inline on`…`reset`. CAUTION: it disables inlining BOTH directions — if the
-callee inlines ITS OWN leaves, use SOURCE ORDER (place the new caller before the callee's def)
-instead, or manually inline the blocked leaf. Diagnose with `callset_audit.py` / `function_objdump.py
---diff` (a TGT-only `bl` = an inline victim; a CUR-only same-TU `bl` = a callee defined too late or
-`static inline` — move its def UP). Inverse: extra repeated `bl`s in YOURS = a duplicated post-block
-tail (use `break` to share one tail). 90-95 band triage order: (1) call-set diff, (2) frame (#67),
-(3) per-class recipe. UN-NAMED locals (import names every repeated chain) are the #1 import-damage
-class — drop the local, inline the chain (#107/#83a).
-
 ## Drift handling (Ghidra `FUN_xxx` don't match v1.0)
 Don't fix `FUN_xxx` — add the asm symbol as a NEW correctly-named/signed function (linker matches by
 name; the FUN_ floats harmlessly). `tools/drift_audit.py <unit>` + `tools/realign_skeleton.py`. A
@@ -449,17 +438,6 @@ deltas; source fn order = address order); (2) pool claim (`objdump -h`; claim th
 range in splits.txt, .o pool bytes = retail's); (3) post-flip DEFAULT-target build + dol byte-
 compare + md5. A local @NNN conversion-bias .sdata2 with no retail TU pool = flip held (banks the
 100% anyway). Status edits are the team-lead's.
-
-## Graduating a `placeholder_XXXX` into real DLL files
-Match-safe when: `.text`-only (no pooled data), 0 file-local statics, symbols place by name→address,
-families are contiguous address runs. Procedure: map families → `dll/<AREA>/dll_XXXX_<name>.c` (+
-area shared header with the COMPLETE extern set), graduate EDGE-FIRST in address order, emit fns in
-source-line order wrapped in EFFECTIVE pragma state (stack model), update splits.txt/configure.py,
-conserve-check after each family (matched_code + fn-count must equal the pre-move total). For messy
-call sites use the SKELETON-COPY method (each family file = the whole original .c with other families
-collapsed to one-line prototypes at the same position). A `total_code: 0` placeholder may own
-.data/.bss — grep its `.s` before deleting; graduate data-owning ones to a topical filename. Helper-
-last placement (append below callers) prevents auto-inlining; fns up to ~0x100B get inlined.
 
 ## Tooling
 - `function_objdump.py <unit> <symbol>` — FULL target asm. Run FIRST (before any diff).
