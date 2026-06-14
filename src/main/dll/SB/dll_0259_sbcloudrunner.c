@@ -170,33 +170,33 @@ extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
 void FUN_801ee668(u16 *param_1, int param_2)
 {
-    f32 fVar1;
-    f64 dVar2;
-    f64 dVar3;
-    f64 dVar4;
-    f64 dVar5;
+    f32 heading;
+    f64 negHeading;
+    f64 sinYaw;
+    f64 cosYaw;
+    f64 scale;
 
     (**(code **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(param_2 + 0x6a));
-    dVar3 = (f64)FUN_80294964();
-    dVar4 = (f64)FUN_80293f90();
-    fVar1 = lbl_803E6908;
+    sinYaw = (f64)FUN_80294964();
+    cosYaw = (f64)FUN_80293f90();
+    heading = lbl_803E6908;
     if (*(int *)(param_2 + 0x10) != 0)
     {
-        fVar1 = (f32)((f64)CONCAT44(0x43300000, (int)*(s16 *)(param_2 + 0x2e) ^ 0x80000000) -
+        heading = (f32)((f64)CONCAT44(0x43300000, (int)*(s16 *)(param_2 + 0x2e) ^ 0x80000000) -
             DOUBLE_803e6938) / lbl_803E6924;
     }
     *(f32 *)(param_2 + 0x60) =
-        lbl_803DC074 * (fVar1 - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
+        lbl_803DC074 * (heading - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
         *(f32 *)(param_2 + 0x60);
-    fVar1 = lbl_803E692C;
-    dVar5 = (f64)lbl_803E692C;
-    dVar2 = -(f64)*(f32 *)(param_2 + 0x60);
+    heading = lbl_803E692C;
+    scale = (f64)lbl_803E692C;
+    negHeading = -(f64)*(f32 *)(param_2 + 0x60);
     *(f32 *)(param_2 + 0x78) = *(f32 *)(param_2 + 0x60);
-    *(f32 *)(param_2 + 0x7c) = fVar1;
+    *(f32 *)(param_2 + 0x7c) = heading;
     (**(code **)(*DAT_803dd6e4 + 0x28))
-    ((f64)(((f32)(dVar4 * dVar2 + (f64)(f32)(dVar5 * -dVar3)) * lbl_803DC074) /
+    ((f64)(((f32)(cosYaw * negHeading + (f64)(f32)(scale * -sinYaw)) * lbl_803DC074) /
          lbl_803E6930),
-     (f64)(((f32)(dVar3 * dVar2 + (f64)(f32)(dVar5 * dVar4)) * lbl_803DC074) /
+     (f64)(((f32)(sinYaw * negHeading + (f64)(f32)(scale * cosYaw)) * lbl_803DC074) /
          lbl_803E6930));
     return;
 }
