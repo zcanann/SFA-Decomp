@@ -14,8 +14,8 @@ typedef struct ARWProximitState
     u8 pad02[2];
     void* light;
     u8 pad08[4];
-    u8 warningTimer[4];
-    u8 despawnTimer[4];
+    f32 warningTimer;
+    f32 despawnTimer;
     u8 phase;
     u8 textVariant;
     u8 pad16[2];
@@ -126,7 +126,7 @@ void arwproximit_update(int obj)
                     modelLightStruct_setGlowColor(state->light, 0xff, 0, 0, 0x64);
                     modelLightStruct_startColorFade(state->light, 2, 0xa);
                 }
-                s16toFloat((void*)state->warningTimer, 0x3c);
+                s16toFloat((void*)&state->warningTimer, 0x3c);
                 state->phase = 2;
                 if (state->textVariant == 2)
                 {
@@ -147,12 +147,12 @@ void arwproximit_update(int obj)
                 modelLightStruct_getDiffuseColor(state->light, &b0, &b1, &b2, &b3);
                 modelLightStruct_setGlowColor(state->light, b0, b1, b2, 0x64);
             }
-            if (timerCountDown((void*)state->warningTimer) != 0 ||
+            if (timerCountDown((void*)&state->warningTimer) != 0 ||
                 ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
                     (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == getArwing()))
             {
-                storeZeroToFloatParam((void*)state->warningTimer);
-                s16toFloat((void*)state->despawnTimer, 0x14);
+                storeZeroToFloatParam((void*)&state->warningTimer);
+                s16toFloat((void*)&state->despawnTimer, 0x14);
                 if (state->light != NULL)
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
                 spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
@@ -165,7 +165,7 @@ void arwproximit_update(int obj)
             break;
         }
     case 3:
-        if (timerCountDown((void*)state->despawnTimer) != 0)
+        if (timerCountDown((void*)&state->despawnTimer) != 0)
         {
             ObjHits_DisableObject(obj);
             state->phase = 4;
@@ -221,8 +221,8 @@ void arwproximit_init(int obj, int setup, int p3)
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
     }
-    storeZeroToFloatParam((void*)state->warningTimer);
-    storeZeroToFloatParam((void*)state->despawnTimer);
+    storeZeroToFloatParam((void*)&state->warningTimer);
+    storeZeroToFloatParam((void*)&state->despawnTimer);
     ObjHits_DisableObject(obj);
     ObjHits_MarkObjectPositionDirty(obj);
 }
