@@ -669,15 +669,13 @@ int mediumbasket_updateOpenHitState(int obj, int p)
     extern f32 lbl_803E2D80;
     GroundBaddieState* sub;
     int sub_40c;
-    ObjHitsPriorityState* hitState;
 
     sub = ((GameObject*)obj)->extra;
     sub_40c = *(int*)&sub->control;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->flags |= 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
     ((GroundBaddieState*)p)->baddie.physicsActive = 1;
-    hitState->hitVolumePriority = 9;
-    hitState->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (*(char*)&((GroundBaddieState*)p)->baddie.moveJustStartedA != '\0')
     {
