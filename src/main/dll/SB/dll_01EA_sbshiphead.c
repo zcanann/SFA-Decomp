@@ -185,7 +185,7 @@ void SB_ShipHead_update(int obj)
                 }
             }
         }
-        if (ObjMsg_Pop((void*)obj, (uint*)&msg, (uint*)tmp2, (uint*)&tmp3) != 0)
+        if ((int)ObjMsg_Pop((void*)obj, (uint*)&msg, (uint*)tmp2, (uint*)&tmp3) != 0)
         {
             /* object-message opcodes raised by the galleon sequence */
             switch (msg)
