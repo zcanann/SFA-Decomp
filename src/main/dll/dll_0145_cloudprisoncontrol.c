@@ -773,8 +773,8 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
     float local_28[10];
 
     obj = FUN_8028683c();
-    state = *(byte**)(obj + 0xb8);
-    placement = *(short**)(obj + 0x4c);
+    state = ((GameObject *)obj)->extra;
+    placement = *(short**)&((GameObject *)obj)->anim.placementData;
     local_28[0] = lbl_803E4D9C;
     if ((placement[0x1c] < 1) || (*placement == 0xf4))
     {
@@ -897,7 +897,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                     {
                         if (ok)
                         {
-                            childObj = *(int*)(obj + 0xb8);
+                            childObj = *(int *)&((GameObject *)obj)->extra;
                             self = objFn_80198fa4(obj, (float*)(childObj + 0x28));
                             childObj = objFn_80198fa4(obj, (float*)(childObj + 0x1c));
                             if (self == 0)

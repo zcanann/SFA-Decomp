@@ -426,8 +426,8 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
                     (bit = GameBit_Get((int)*(short*)(obj + 0x30)), bit != 0)))) &&
             ((((int)*(short*)(obj + 0x32) == 0xffffffff ||
                     (bit = GameBit_Get((int)*(short*)(obj + 0x32)), bit == 0)) &&
-                (dx = *pos - *(float*)(obj + 8), dy = pos[1] - *(float*)(obj + 0xc),
-                    dz = pos[2] - *(float*)(obj + 0x10),
+                (dx = *pos - ((GameObject *)obj)->anim.rootMotionScale, dy = pos[1] - ((GameObject *)obj)->anim.localPosX,
+                    dz = pos[2] - ((GameObject *)obj)->anim.localPosY,
                     distSq = (double)(dz * dz + dx * dx + dy * dy), distSq < bestDistSq))))
         {
             bestDistSq = distSq;
