@@ -164,10 +164,11 @@ void SB_CloudBall_init(GameObject* obj)
     extern void modelLightStruct_setLightKind(int light, int v);
     extern int objCreateLight(int* obj, int mode);
     SBCloudBallState* state = obj->extra;
-    ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
 
-    hits->flags = (s16)(hits->flags & ~1);
-    hits->trackContactMask = (u16)(hits->trackContactMask | 1);
+    ObjAnim_GetPriorityHitState(&obj->anim)->flags =
+        (s16)(ObjAnim_GetPriorityHitState(&obj->anim)->flags & ~1);
+    ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask =
+        (u16)(ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask | 1);
     if ((void*)state->light == NULL)
     {
         state->light = objCreateLight((int*)obj, 1);
