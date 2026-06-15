@@ -906,9 +906,9 @@ int fn_802A36EC(int obj, int state)
                                            (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                            *(int*)&((GameObject*)obj)->anim.parent);
             objHitDetectFn_80062e84(obj, inner->unk4C4, 1);
-            inner->unk5B4 = *(f32*)((char*)obj + 0xc);
-            inner->unk5B8 = *(f32*)((char*)obj + 0x10);
-            inner->unk5BC = *(f32*)((char*)obj + 0x14);
+            inner->unk5B4 = ((GameObject*)obj)->anim.localPosX;
+            inner->unk5B8 = ((GameObject*)obj)->anim.localPosY;
+            inner->unk5BC = ((GameObject*)obj)->anim.localPosZ;
             if (*(void**)((char*)inner + 0x4c4) != NULL)
             {
                 Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5d4), *(f32*)((char*)inner + 0x5d8),
