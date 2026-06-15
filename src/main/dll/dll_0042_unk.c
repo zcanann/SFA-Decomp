@@ -45,7 +45,6 @@ extern f32 lbl_803E16EC;
 extern f32 lbl_803E16F0;
 extern f32 lbl_803E16F4;
 extern f32 timeDelta;
-extern undefined4 FUN_800068f4();
 extern f32 lbl_803E1710;
 extern f32 lbl_803E1714;
 extern f32 PSVECMag(f32 * vec);
