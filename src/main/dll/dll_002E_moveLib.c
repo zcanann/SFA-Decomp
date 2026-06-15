@@ -618,15 +618,15 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
     {
         return 0;
     }
-    dx = *(f32*)(target + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dy = *(f32*)(target + 0x10) - ((GameObject*)obj)->anim.localPosY;
-    dz = *(f32*)(target + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     dist = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (dist < lbl_803E1CB4 * speed)
     {
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(target + 0xc);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)(target + 0x10);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(target + 0x14);
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)target)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)target)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)target)->anim.localPosZ;
         if (*flags & 1)
         {
             if (hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
