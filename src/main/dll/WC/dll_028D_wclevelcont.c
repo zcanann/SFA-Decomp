@@ -193,6 +193,7 @@ void wclevelcont_hitDetect(void)
 {
 }
 
+#pragma opt_common_subs off
 void wclevelcont_syncProgressBits(WcLevelControlState* state)
 {
     int flag;
@@ -235,6 +236,7 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
     GameBit_Set(0xf31, flag);
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
+#pragma reset
 
 void wclevelcont_update(int obj)
 {
