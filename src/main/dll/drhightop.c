@@ -3,12 +3,10 @@
 #include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
-#include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
-#include "main/dll/DR/DRhightop.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 
