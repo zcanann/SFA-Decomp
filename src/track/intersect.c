@@ -1493,18 +1493,21 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     *(u32*)&c1 = lbl_803DEEBC;
     *(u32*)&c2 = lbl_803DEEC0;
     *(u32*)&c3 = lbl_803DEEC4;
-    c0.r = (u8)(c0.r + (mod[0] >> 2));
-    c0.g = (u8)(c0.g + (mod[1] >> 2));
-    c0.b = (u8)(c0.b + (mod[2] >> 2));
-    c1.r = (u8)(c1.r + (mod[0] >> 2));
-    c1.g = (u8)(c1.g + (mod[1] >> 2));
-    c1.b = (u8)(c1.b + (mod[2] >> 2));
-    c2.r = (u8)(c2.r + (mod[0] >> 2));
-    c2.g = (u8)(c2.g + (mod[1] >> 2));
-    c2.b = (u8)(c2.b + (mod[2] >> 2));
-    c3.r = (u8)(c3.r + (mod[0] >> 3));
-    c3.g = (u8)(c3.g + (mod[1] >> 3));
-    c3.b = (u8)(c3.b + (mod[2] >> 3));
+    {
+        int s0, s1, s2;
+        c0.r = (u8)(c0.r + (s0 = mod[0] >> 2));
+        c0.g = (u8)(c0.g + (s1 = mod[1] >> 2));
+        c0.b = (u8)(c0.b + (s2 = mod[2] >> 2));
+        c1.r = (u8)(c1.r + s0);
+        c1.g = (u8)(c1.g + s1);
+        c1.b = (u8)(c1.b + s2);
+        c2.r = (u8)(c2.r + s0);
+        c2.g = (u8)(c2.g + s1);
+        c2.b = (u8)(c2.b + s2);
+        c3.r = (u8)(c3.r + (mod[0] >> 3));
+        c3.g = (u8)(c3.g + (mod[1] >> 3));
+        c3.b = (u8)(c3.b + (mod[2] >> 3));
+    }
 
     Camera_ProjectWorldSphere(&proj5, &proj4, &proj3, &proj2, &proj1, &proj0,
                               pos[0] - playerMapOffsetX, pos[1], pos[2] - playerMapOffsetZ, radius);
