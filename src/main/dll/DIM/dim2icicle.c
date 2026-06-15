@@ -1,4 +1,3 @@
-#include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
@@ -6,7 +5,6 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
-#include "main/objanim_internal.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
 
@@ -15,109 +13,10 @@ static inline int *DIM2Icicle_GetActiveModel(void *obj) {
   return (int *)objAnim->banks[objAnim->bankIndex];
 }
 
-extern undefined4 FUN_80003494();
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_8000691c();
-extern undefined4 FUN_80006920();
-extern undefined4 FUN_800069bc();
-extern undefined4 FUN_80006b94();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017544();
-extern undefined4 FUN_80017548();
-extern undefined4 FUN_8001754c();
-extern undefined4 FUN_80017580();
-extern undefined4 FUN_80017584();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_80017594();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175bc();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175d8();
-extern undefined4 FUN_800175ec();
-extern void* FUN_80017624();
 extern int randomGetRange(int min, int max);
-extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern uint ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_80053c98();
-extern undefined8 FUN_8012e0b8();
-extern undefined4 FUN_801bbf98();
-extern undefined4 FUN_80247bf8();
-extern undefined8 FUN_80286824();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286870();
-extern undefined4 FUN_8028688c();
-extern uint FUN_80294bd8();
 
-extern undefined4 DAT_802c2ac8;
-extern undefined4 DAT_802c2acc;
-extern undefined4 DAT_802c2ad0;
-extern undefined4 DAT_802c2ad4;
-extern undefined4 DAT_80326620;
-extern undefined4 DAT_80326624;
-extern undefined4 DAT_803266f8;
-extern undefined4 DAT_803266fc;
-extern undefined4 DAT_80326700;
-extern undefined4 DAT_80326704;
-extern undefined4 DAT_803ad5d0;
-extern undefined4 DAT_803ad5d4;
-extern undefined4 DAT_803ad5d8;
-extern undefined4 DAT_803ad5dc;
-extern undefined4 DAT_803ad5e8;
-extern undefined4 DAT_803ad5ec;
-extern undefined4 DAT_803ad5f0;
-extern undefined4 DAT_803ad5f4;
-extern undefined4 DAT_803ad5f6;
-extern undefined4 DAT_803ad5f8;
-extern undefined4 DAT_803ad5fc;
-extern undefined4 DAT_803ad600;
-extern undefined4 DAT_803ad604;
-extern undefined4 DAT_803ad608;
-extern undefined4 DAT_803adc60;
-extern undefined4 DAT_803adc78;
-extern undefined4* DAT_803dd70c;
-extern undefined4* DAT_803dd734;
-extern undefined4* DAT_803dd738;
-extern undefined4 DAT_803de800;
-extern undefined4* DAT_803de808;
-extern undefined4 DAT_803de80c;
-extern f64 DOUBLE_803e5878;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E5854;
-extern f32 lbl_803E585C;
-extern f32 lbl_803E5860;
-extern f32 lbl_803E5864;
-extern f32 lbl_803E5870;
-extern f32 lbl_803E5884;
-extern f32 lbl_803E588C;
-extern f32 lbl_803E5890;
-extern f32 lbl_803E58A8;
-extern f32 lbl_803E58C0;
-extern f32 lbl_803E58C4;
-extern f32 lbl_803E58C8;
-extern f32 lbl_803E58CC;
-extern f32 lbl_803E58D0;
-extern f32 lbl_803E58D4;
-extern f32 lbl_803E58D8;
-extern f32 lbl_803E58DC;
-extern f32 lbl_803E58E0;
-extern f32 lbl_803E58E4;
-extern f32 lbl_803E58E8;
-extern f32 lbl_803E58EC;
-extern f32 lbl_803E58F0;
-extern f32 lbl_803E58F4;
-extern f32 lbl_803E58F8;
-extern f32 lbl_803E58FC;
-extern f32 lbl_803E5900;
-extern f32 lbl_803E5904;
-extern f32 lbl_803E5908;
-extern f32 lbl_803E590C;
 extern undefined4 gDIMbossAnimTable[];
 extern undefined4 gDIMbossHitDetectAnimTable[];
 extern int getTrickyObject(void);
