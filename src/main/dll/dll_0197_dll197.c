@@ -61,7 +61,6 @@ extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
 extern void voxmaps_worldToGrid(void* world, void* grid);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
-extern f32 lbl_803E5118;
 extern int ObjHits_GetPriorityHit();
 extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
