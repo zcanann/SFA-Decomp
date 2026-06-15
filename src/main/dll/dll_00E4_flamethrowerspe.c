@@ -1785,6 +1785,7 @@ void dim2roofrub_init(int* obj, int* params);
 
 void animatedobj_init(int* obj, int* params);
 
+#pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
     extern int timerCountDown(f32 * p); /* #57 */
@@ -1830,6 +1831,7 @@ void flamethrowerspe_update(int* obj)
         break;
     }
 }
+#pragma opt_common_subs reset
 
 void mikabomb_update(int* obj);
 
