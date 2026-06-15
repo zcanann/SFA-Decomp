@@ -1,5 +1,4 @@
 #include "main/dll/DR/DRpickup.h"
-#include "main/game_object.h"
 #include "main/camera_interface.h"
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -31,7 +30,7 @@ void fn_801EC1AC(int obj, int state)
     flags = (PickupFlags*)(state + 0x428);
     origBit4 = flags->b4;
 
-    if ((*(u32*)(state + 0x458) & 0x100) != 0)
+    if ((((DRPickupState*)state)->flags458 & 0x100) != 0)
     {
         flags->b6 = 1;
     }
@@ -40,7 +39,7 @@ void fn_801EC1AC(int obj, int state)
         flags->b6 = 0;
     }
 
-    if ((*(u32*)(state + 0x458) & 0x200) != 0)
+    if ((((DRPickupState*)state)->flags458 & 0x200) != 0)
     {
         flags->b4 = 1;
     }
@@ -86,34 +85,34 @@ void fn_801EC1AC(int obj, int state)
     }
     {
         f32 fz = *(f32*)&lbl_803E5AE8;
-        *(f32*)(state + 0x4a0) = fz;
-        *(f32*)(state + 0x4a4) = fz;
+        ((DRPickupState*)state)->unk4A0 = fz;
+        ((DRPickupState*)state)->unk4A4 = fz;
     }
-    *(f32*)(state + 0x4a8) = (*(f32*)(state + 0x430) + target) * timeDelta;
+    ((DRPickupState*)state)->unk4A8 = (*(f32*)(state + 0x430) + target) * timeDelta;
 
     Matrix_TransformPoint((void*)(state + 0x6c),
-                          *(f32*)(state + 0x4a0),
-                          *(f32*)(state + 0x4a4),
-                          *(f32*)(state + 0x4a8),
+                          ((DRPickupState*)state)->unk4A0,
+                          ((DRPickupState*)state)->unk4A4,
+                          ((DRPickupState*)state)->unk4A8,
                           &out[0], &out[1], &out[2]);
     Matrix_TransformPoint((void*)(state + 0x12c),
                           out[0], out[1], out[2],
                           &out[0], &out[1], &out[2]);
     PSVECAdd(out, (void*)(state + 0x494), (void*)(state + 0x494));
 
-    *(f32*)(state + 0x414) =
-        (-*(f32*)(state + 0x45c) * *(f32*)(state + 0x52c)) * timeDelta +
-        *(f32*)(state + 0x414);
-    *(f32*)(state + 0x414) =
-        powfBitEstimate(*(f32*)(state + 0x530), timeDelta) *
-        *(f32*)(state + 0x414);
+    ((DRPickupState*)state)->angVel414 =
+        (-((DRPickupState*)state)->unk45C * ((DRPickupState*)state)->unk52C) * timeDelta +
+        ((DRPickupState*)state)->angVel414;
+    ((DRPickupState*)state)->angVel414 =
+        powfBitEstimate(((DRPickupState*)state)->unk530, timeDelta) *
+        ((DRPickupState*)state)->angVel414;
 
     {
         f32 lim;
         f32 v;
-        v = *(f32*)(state + 0x414);
-        lim = *(f32*)(state + 0x534);
-        *(f32*)(state + 0x414) = (v < -lim) ? -lim : ((v > lim) ? lim : v);
+        v = ((DRPickupState*)state)->angVel414;
+        lim = ((DRPickupState*)state)->unk534;
+        ((DRPickupState*)state)->angVel414 = (v < -lim) ? -lim : ((v > lim) ? lim : v);
     }
 
     /* Apply 0x414 * timeDelta to short at 0x40e, then chase the scaled
@@ -153,22 +152,22 @@ void fn_801EC1AC(int obj, int state)
 
     if (flags->b7 != 0)
     {
-        *(f32*)(state + 0x584) =
-            (-*(f32*)(state + 0x570)) * timeDelta + *(f32*)(state + 0x584);
+        ((DRPickupState*)state)->unk584 =
+            (-((DRPickupState*)state)->unk570) * timeDelta + ((DRPickupState*)state)->unk584;
         {
-            f32 v = *(f32*)(state + 0x584);
-            *(f32*)(state + 0x584) = (v < lbl_803E5C30)
+            f32 v = ((DRPickupState*)state)->unk584;
+            ((DRPickupState*)state)->unk584 = (v < lbl_803E5C30)
                                          ? lbl_803E5C30
                                          : ((v > lbl_803E5B48) ? lbl_803E5B48 : v);
         }
-        ((GameObject *)obj)->anim.rotY = (f32)(s32) * (s16*)(obj + 0x2) +
-            *(f32*)(state + 0x584) * timeDelta;
+        *(s16*)(obj + 0x2) = (f32)(s32) * (s16*)(obj + 0x2) +
+            ((DRPickupState*)state)->unk584 * timeDelta;
     }
 
     if (flags->b1 == 0)
     {
-        vec_args[0] = *(f32*)(state + 0x414);
-        vec_args[1] = *(f32*)(state + 0x49c);
+        vec_args[0] = ((DRPickupState*)state)->angVel414;
+        vec_args[1] = ((DRPickupState*)state)->unk49C;
         vec_args[2] = (f32)(s32) * (s16*)(obj + 0x4);
         vec_args[3] = (f32)(s32) * (s16*)(obj + 0x2);
         (*gCameraInterface)->releaseAction(vec_args, 0x10);
@@ -177,31 +176,31 @@ void fn_801EC1AC(int obj, int state)
     {
         f32 lim;
         f32 v;
-        v = *(f32*)(state + 0x494);
-        lim = *(f32*)(state + 0x47c);
-        *(f32*)(state + 0x494) = (v < -lim) ? -lim : ((v > lim) ? lim : v);
-        v = *(f32*)(state + 0x494);
+        v = ((DRPickupState*)state)->unk494;
+        lim = ((DRPickupState*)state)->unk47C;
+        ((DRPickupState*)state)->unk494 = (v < -lim) ? -lim : ((v > lim) ? lim : v);
+        v = ((DRPickupState*)state)->unk494;
         if (v < lbl_803E5B8C)
         {
             if (v > lbl_803E5BA4)
             {
-                *(f32*)(state + 0x494) = lbl_803E5AE8;
+                ((DRPickupState*)state)->unk494 = lbl_803E5AE8;
             }
         }
     }
 
     {
-        f32 v = *(f32*)(state + 0x498);
-        f32 lim = -*(f32*)(state + 0x480);
-        *(f32*)(state + 0x498) = (v < lim)
+        f32 v = ((DRPickupState*)state)->unk498;
+        f32 lim = -((DRPickupState*)state)->unk480;
+        ((DRPickupState*)state)->unk498 = (v < lim)
                                      ? lim
                                      : ((v > lbl_803E5AEC) ? lbl_803E5AEC : v);
-        v = *(f32*)(state + 0x498);
+        v = ((DRPickupState*)state)->unk498;
         if (v < lbl_803E5B8C)
         {
             if (v > lbl_803E5BA4)
             {
-                *(f32*)(state + 0x498) = lbl_803E5AE8;
+                ((DRPickupState*)state)->unk498 = lbl_803E5AE8;
             }
         }
     }
@@ -209,15 +208,15 @@ void fn_801EC1AC(int obj, int state)
     {
         f32 lim;
         f32 v;
-        v = *(f32*)(state + 0x49c);
-        lim = *(f32*)(state + 0x484);
-        *(f32*)(state + 0x49c) = (v < -lim) ? -lim : ((v > lim) ? lim : v);
-        v = *(f32*)(state + 0x49c);
+        v = ((DRPickupState*)state)->unk49C;
+        lim = ((DRPickupState*)state)->unk484;
+        ((DRPickupState*)state)->unk49C = (v < -lim) ? -lim : ((v > lim) ? lim : v);
+        v = ((DRPickupState*)state)->unk49C;
         if (v < lbl_803E5B8C)
         {
             if (v > lbl_803E5BA4)
             {
-                *(f32*)(state + 0x49c) = lbl_803E5AE8;
+                ((DRPickupState*)state)->unk49C = lbl_803E5AE8;
             }
         }
     }
