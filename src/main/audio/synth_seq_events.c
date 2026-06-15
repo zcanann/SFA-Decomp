@@ -12,7 +12,7 @@ typedef struct SynthVoiceKeyGroups
 } SynthVoiceKeyGroups;
 
 #define KEYGROUP_STATE(voice, index) \
-    (((SynthVoiceKeyGroups*)(voice))->keyGroupStates[index])
+    (((SynthKeyGroupState*)((u8*)(voice) + 0x14E8))[index])
 
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
 {
