@@ -148,17 +148,19 @@ void arwarwing_addScore(int arwing, u8 amount)
 }
 #pragma scheduling reset
 
+#pragma peephole off
 int arwarwing_getScore(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    u16 score = state->score;
-    if (score > 0x270f)
+    int score = state->score;
+    if ((u32)score > 0x270f)
     {
         score = 0x270f;
     }
     state->score = score;
     return state->score;
 }
+#pragma peephole reset
 
 int arwarwing_getBombCount(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->bombCount; }
 
