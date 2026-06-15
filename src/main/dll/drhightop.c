@@ -18,7 +18,7 @@ extern void mtxRotateByVec3s(void* matrix, void* transform);
 extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, float* outX,
                                   float* outY, float* outZ);
 extern f32 PSVECMag(void* vec);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
@@ -252,7 +252,7 @@ void fn_801EB0D4(uint obj, int stateRaw)
             Sfx_StopObjectChannel((u32)obj, 0x7f);
             if (st->unk464 > lbl_803E5B20)
             {
-                if ((u32)randomGetRange(0, 10) == 0)
+                if (randomGetRange(0, 10) == 0)
                 {
                     Sfx_PlayFromObject(0, SFXsp_lfoot_taunt7);
                 }
