@@ -78,7 +78,6 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
-extern void* memset(void* dst, int val, u32 n);
 extern f32 timeDelta;
 extern f32 lbl_803A43C0[];
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
@@ -98,7 +97,6 @@ extern f32 lbl_803E1BA0;
 extern f32 lbl_803E1BA8;
 extern f32 lbl_803E1BAC;
 extern f32 lbl_803E1BB0;
-extern int ObjList_FindObjectById(int id);
 extern s16 getAngle(f32 x, f32 z);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
