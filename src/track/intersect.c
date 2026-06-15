@@ -819,9 +819,10 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern void selectReflectionTexture(int);
     extern void GXInitTexObj();
     extern void newshadows_getReflectionScrollOffsets(void* a, void* b);
-    extern int isHeavyFogEnabled(void);
+    extern u8 isHeavyFogEnabled(void);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
+    extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     void* renderOp;
@@ -829,8 +830,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     void* model;
     int handle1;
     u8 ignoredLightColor;
-    GXColor tev_color;
-    GXColor k_color;
     Mtx scaleMtx;
     f32 fA, fB;
     int wrapBit;
@@ -859,7 +858,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXSetTexCoordGen2(3, 1, 4, 0x21, 0, 0x7d);
 
     if (isHeavyFogEnabled() != 0) {
-        *(u32*)&k_color = *(u32*)&lbl_803DD01C;
         ((u8*)&lbl_803DB6F4)[0] = ((u8*)&lbl_803DD01C)[0];
         ((u8*)&lbl_803DB6F4)[1] = ((u8*)&lbl_803DD01C)[1];
         ((u8*)&lbl_803DB6F4)[2] = ((u8*)&lbl_803DD01C)[2];
@@ -870,15 +868,13 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
             (u8*)&lbl_803DB6F4 + 1,
             (u8*)&lbl_803DB6F4 + 2,
             &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
-        ((u8*)&lbl_803DB6F4)[0] = (u8)(((s8)((u8*)&lbl_803DB6F4)[0]) >> 3);
-        ((u8*)&lbl_803DB6F4)[1] = (u8)(((s8)((u8*)&lbl_803DB6F4)[1]) >> 3);
-        ((u8*)&lbl_803DB6F4)[2] = (u8)(((s8)((u8*)&lbl_803DB6F4)[2]) >> 3);
+        ((u8*)&lbl_803DB6F4)[0] = (u8)((int)((u8*)&lbl_803DB6F4)[0] >> 3);
+        ((u8*)&lbl_803DB6F4)[1] = (u8)((int)((u8*)&lbl_803DB6F4)[1] >> 3);
+        ((u8*)&lbl_803DB6F4)[2] = (u8)((int)((u8*)&lbl_803DB6F4)[2] >> 3);
         ((u8*)&lbl_803DB6F4)[3] = lbl_803DB678;
     }
-    *(u32*)&tev_color = lbl_803DB6F4;
-    GXSetTevColor(3, tev_color);
-    *(u32*)&k_color = lbl_803DB6F8;
-    GXSetTevKColor(0, k_color);
+    GXSetTevColor(3, *(GXColor*)&lbl_803DB6F4);
+    GXSetTevKColor(0, *(GXColor*)&lbl_803DB6F8);
     GXSetTevKColorSel(1, 0xC);
     GXSetIndTexOrder(0, 2, 2);
     GXSetIndTexCoordScale(0, 0, 0);
@@ -921,18 +917,50 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
         pcb(obj_a, obj_b, slot);
     } else {
         u8 zCompLoc = 1;
-        u32 flags2;
-        u32 modelFlags;
-        if (((u8*)obj_a)[0x37] >= 0xFF
-            && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
-            && ((ModelRenderOp *)renderOp)->alpha >= 0xFF) {
-            flags2 = ((ModelRenderOp *)renderOp)->flags;
-            modelFlags = ((ModelRenderOp *)renderOp)->flags;
+        if (((u8*)obj_a)[0x37] < 0xFF
+            || (((ModelRenderOp *)renderOp)->flags & 0x40000000) != 0
+            || ((ModelRenderOp *)renderOp)->alpha < 0xFF) {
+            GXSetBlendMode(1, 4, 5, 5);
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                int a = fn_8003BB74();
-                int b = fn_8003BB74();
+                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(0, 3, 0);
+                    lbl_803DD018 = 0;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
+            } else if ((((ModelFileHeader *)model)->flags & 0x2000) != 0) {
+                zCompLoc = 0;
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 1);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 1;
+                    lbl_803DD01A = 1;
+                }
+                {
+                    int a = fn_8003BB74();
+                    int b = fn_8003BB74();
+                    GXSetAlphaCompare(4, b, 0, 4, a);
+                }
+            } else {
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 0);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
+            }
+        } else {
+            if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
                 GXSetBlendMode(0, 1, 0, 5);
-                if ((modelFlags & 0x400) != 0) {
+                if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
                         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
                         GXSetZMode(0, 3, 0);
@@ -954,36 +982,24 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
                 GXSetAlphaCompare(4, 0xC0, 0, 4, 0xC0);
             } else {
                 GXSetBlendMode(0, 1, 0, 5);
-                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                    GXSetZMode(1, 3, 0);
-                    lbl_803DD018 = 1;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 0;
-                    lbl_803DD01A = 1;
-                }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
-            }
-        } else {
-            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                GXSetBlendMode(1, 4, 5, 5);
-                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                    GXSetZMode(1, 3, 1);
-                    lbl_803DD018 = 1;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 0;
-                    lbl_803DD01A = 1;
-                }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
-            } else {
-                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                    GXSetZMode(0, 3, 0);
-                    lbl_803DD018 = 0;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 0;
-                    lbl_803DD01A = 1;
+                if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
+                    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                        GXSetZMode(0, 3, 0);
+                        lbl_803DD018 = 0;
+                        lbl_803DD014 = 3;
+                        lbl_803DD012 = 0;
+                        lbl_803DD01A = 1;
+                    }
+                } else {
+                    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                        (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
+                        GXSetZMode(1, 3, 1);
+                        lbl_803DD018 = 1;
+                        lbl_803DD014 = 3;
+                        lbl_803DD012 = 1;
+                        lbl_803DD01A = 1;
+                    }
                 }
                 GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
@@ -996,7 +1012,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
             lbl_803DD011 = zCompLoc;
             lbl_803DD019 = 1;
         }
-        if ((((ModelRenderOp *)renderOp)->flags & 0x10) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x8) != 0) {
             GXSetCullMode(2);
         } else {
             GXSetCullMode(0);
