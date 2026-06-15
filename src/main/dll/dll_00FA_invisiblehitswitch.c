@@ -1,6 +1,5 @@
 /* DLL 0x00FA (invisiblehitswitch) — Invisible hit switch object [0x8017A8EC-0x8017AC2C). */
 #include "main/dll/tFrameAnimator.h"
-#include "main/game_object.h"
 #include "main/objlib.h"
 
 extern void GameBit_Set(int gameBit, int value);
@@ -39,9 +38,6 @@ ObjectDescriptor gAreaObjDescriptor = {
 };
 
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/screenOverlay.h"
-#include "main/objanim_internal.h"
 
 typedef struct InvisibleHitSwitchPlacement
 {
