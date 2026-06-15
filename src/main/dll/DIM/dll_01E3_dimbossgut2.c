@@ -217,14 +217,14 @@ void dimbossgut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void dimbossgut2_update(int obj)
 {
     int state;
-    int iVar;
-    uint uval;
+    int tmpVar;
+    uint randomThreshold;
     uint n;
     float* posData;
     int val;
-    f32 fdiff;
-    f32 fscale;
-    u8* p;
+    f32 heightDiff;
+    f32 xyScale;
+    u8* curveLight;
     uint msgB;
     uint msgA;
     uint msgC;
@@ -240,34 +240,34 @@ void dimbossgut2_update(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     if ((((GameObject*)obj)->unkF4 == 0) &&
         ((((GameObject*)obj)->anim.parent != NULL ||
-            (iVar = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            (tmpVar = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ),
-                iVar >= 0))))
+                tmpVar >= 0))))
     {
         msgC = 0;
         do
         {
-            iVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
+            tmpVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
         }
-        while (iVar != 0);
+        while (tmpVar != 0);
         posData = *(float**)&((Dimbossgut2State*)state)->unk40C;
         if ((*posData < lbl_803E4CD0) && (posData[4] < lbl_803E4CD4))
         {
-            fdiff = posData[3] - ((GameObject*)obj)->anim.localPosY;
-            if (fdiff < lbl_803E4CD8)
+            heightDiff = posData[3] - ((GameObject*)obj)->anim.localPosY;
+            if (heightDiff < lbl_803E4CD8)
             {
-                fdiff = -fdiff;
+                heightDiff = -heightDiff;
             }
-            if ((fdiff < lbl_803E4CDC) &&
-                (stk.f4c = posData[3], uval = randomGetRange(0x1e, 0x3c),
-                    (int)(uint) * (u16*)((int)posData + 0x16) > (int)uval))
+            if ((heightDiff < lbl_803E4CDC) &&
+                (stk.f4c = posData[3], randomThreshold = randomGetRange(0x1e, 0x3c),
+                    (int)(uint) * (u16*)((int)posData + 0x16) > (int)randomThreshold))
             {
-                fscale = lbl_803E4CE0 * posData[4];
+                xyScale = lbl_803E4CE0 * posData[4];
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -
-                    fscale * mathSinf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
+                    xyScale * mathSinf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
                 stk.f48 = ((GameObject*)obj)->anim.localPosZ -
-                    fscale * mathCosf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
-                stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
+                    xyScale * mathCosf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
+                stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - heightDiff / lbl_803E4CDC);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x32b, &stk, 1, -1,
                                                  NULL);
                 *(u16*)((int)posData + 0x16) = 0;
@@ -281,10 +281,10 @@ void dimbossgut2_update(int obj)
         ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
         val = ((Dimbossgut2State*)state)->unk40C;
-        p = *(u8**)(val + 0x18);
-        if ((p != NULL) && (p[0x2f8] != 0) && (p[0x4c] != 0))
+        curveLight = *(u8**)(val + 0x18);
+        if ((curveLight != NULL) && (curveLight[0x2f8] != 0) && (curveLight[0x4c] != 0))
         {
-            n = (p[0x2f9] + *(s8*)(p + 0x2fa)) & 0xffff;
+            n = (curveLight[0x2f9] + *(s8*)(curveLight + 0x2fa)) & 0xffff;
             if (0xc < n)
             {
                 n = (n + randomGetRange(-12, 12)) & 0xffff;
