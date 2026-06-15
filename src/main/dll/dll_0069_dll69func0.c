@@ -722,10 +722,11 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int pa
     GfxCmd* entries;
     GfxCmd* e;
     u8* base = (u8*)(int)lbl_803137F8;
-    int a = 1;
     int b = 0x30;
     int c = 0x31;
+    int a = 1;
     int d = 0x50;
+    entries = buf.entries;
     if (overrideParams != (int*)0)
     {
         a = overrideParams[0];
@@ -733,7 +734,6 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int pa
         c = overrideParams[2];
         d = overrideParams[3];
     }
-    entries = buf.entries;
     entries[0].layer = 0;
     entries[0].flags = 8;
     entries[0].tex = &base[0x68];
