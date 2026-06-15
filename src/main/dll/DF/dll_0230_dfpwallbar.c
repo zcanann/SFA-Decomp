@@ -1,5 +1,4 @@
 /* DLL 0x230 — DFP wall bar / floor bar / torch objects [801FE118-801FEB30) */
-#include "main/game_object.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
@@ -9,8 +8,6 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
-#include "main/dll/anim_internal.h"
-#include "main/main.h"
 #include "main/objlib.h"
 
 extern uint GameBit_Get(int eventId);
@@ -19,17 +16,10 @@ extern int Obj_SetActiveModelIndex(int obj, int idx);
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/anim.h"
 #include "main/dll/baddie_state.h"
-#include "main/objseq.h"
-#include "main/objfx.h"
-#include "main/resource.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -705,10 +695,6 @@ void chuka_update(int obj)
 
 void DFP_Torch_update(int obj);
 
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 extern u8 gChukaModeTable[9];
 extern f32 lbl_803E63F8;
