@@ -32,6 +32,7 @@ typedef struct DepthReadRequest {
 } DepthReadRequest;
 
 typedef struct IndMtxBlob { f32 m[6]; } IndMtxBlob;
+typedef struct StageBlob { u32 w[7]; } StageBlob;
 
 extern Mtx lbl_803967C0;
 extern Mtx lbl_80396820;
@@ -3617,12 +3618,12 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     extern void GXSetZCompLoc(u8);
     Mtx mtx_e0;
     Mtx mtx_110;
-    f32 buf_38[8];
-    f32 buf_54[8];
-    f32 buf_70[8];
-    f32 buf_8c[8];
-    f32 buf_a8[8];
-    f32 buf_c4[8];
+    StageBlob buf_c4;
+    StageBlob buf_a8;
+    StageBlob buf_8c;
+    StageBlob buf_70;
+    StageBlob buf_54;
+    StageBlob buf_38;
     GXColor temp;
     GXColor color2;
     f32 fog_var;
@@ -3633,37 +3634,12 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     int stage_base;
     f32 f31_val;
 
-    {
-        u32* src = (u32*)(lbl_802C1EA8 + 0x18);
-        u32* dst1 = (u32*)buf_c4; /* +0xC4 in stack */
-        int i;
-        for (i = 0; i < 7; i++) dst1[i] = src[i];
-        {
-            u32* src2 = (u32*)(lbl_802C1EA8 + 0x34);
-            u32* dst2 = (u32*)buf_a8;
-            for (i = 0; i < 7; i++) dst2[i] = src2[i];
-        }
-        {
-            u32* src3 = (u32*)(lbl_802C1EA8 + 0x50);
-            u32* dst3 = (u32*)buf_8c;
-            for (i = 0; i < 7; i++) dst3[i] = src3[i];
-        }
-        {
-            u32* src4 = (u32*)(lbl_802C1EA8 + 0x6C);
-            u32* dst4 = (u32*)buf_70;
-            for (i = 0; i < 7; i++) dst4[i] = src4[i];
-        }
-        {
-            u32* src5 = (u32*)(lbl_802C1EA8 + 0x88);
-            u32* dst5 = (u32*)buf_54;
-            for (i = 0; i < 7; i++) dst5[i] = src5[i];
-        }
-        {
-            u32* src6 = (u32*)(lbl_802C1EA8 + 0xA4);
-            u32* dst6 = (u32*)buf_38;
-            for (i = 0; i < 7; i++) dst6[i] = src6[i];
-        }
-    }
+    buf_c4 = *(StageBlob*)(lbl_802C1EA8 + 0x18);
+    buf_a8 = *(StageBlob*)(lbl_802C1EA8 + 0x34);
+    buf_8c = *(StageBlob*)(lbl_802C1EA8 + 0x50);
+    buf_70 = *(StageBlob*)(lbl_802C1EA8 + 0x6C);
+    buf_54 = *(StageBlob*)(lbl_802C1EA8 + 0x88);
+    buf_38 = *(StageBlob*)(lbl_802C1EA8 + 0xA4);
     *(u32*)&color2 = lbl_803DEEAC;
     *(u16*)((u8*)&temp + 0) = (u16)lbl_803DEEB0;
     ((u8*)&temp)[2] = (u8)(lbl_803DEEB0 >> 8);
@@ -3698,14 +3674,14 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     GXSetTevKColor(0, temp);
 
     stage_base = 0;
-    stage_count = ((u8*)buf_c4)[0];  /* indexed by stage_idx but for skel we just ignore */
+    stage_count = ((u8*)&buf_c4)[0];  /* indexed by stage_idx but for skel we just ignore */
     if (stage_count != 0) {
         GXSetTevDirect(0);
         GXSetTevSwapMode(0, 0, 1);
         GXSetTevOrder(0, 0, 0, 0xFF);
-        GXSetTevColorIn(0, 0xF, 0x8, 0xC, ((u8*)buf_c4)[stage_idx * 4]);
+        GXSetTevColorIn(0, 0xF, 0x8, 0xC, ((u8*)&buf_c4)[stage_idx * 4]);
         GXSetTevAlphaIn(0, 7, 7, 7, 7);
-        GXSetTevColorOp(0, 0, 0, ((u8*)buf_a8)[stage_idx * 4], 0, 0);
+        GXSetTevColorOp(0, 0, 0, ((u8*)&buf_a8)[stage_idx * 4], 0, 0);
         GXSetTevAlphaOp(0, 0, 0, 0, 0, 0);
         stage_base = 1;
     }
@@ -3714,9 +3690,9 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
         GXSetTevDirect(stage_base);
         GXSetTevSwapMode(stage_base, 0, 0);
         GXSetTevOrder(stage_base, 0xFF, 0xFF, 0xFF);
-        GXSetTevColorIn(stage_base, 0xF, 0, 0xC, ((u8*)buf_70)[stage_idx * 4]);
+        GXSetTevColorIn(stage_base, 0xF, 0, 0xC, ((u8*)&buf_70)[stage_idx * 4]);
         GXSetTevAlphaIn(stage_base, 7, 7, 7, 7);
-        GXSetTevColorOp(stage_base, 0, 0, ((u8*)buf_70)[stage_idx * 4], 0, 0);
+        GXSetTevColorOp(stage_base, 0, 0, ((u8*)&buf_70)[stage_idx * 4], 0, 0);
         GXSetTevAlphaOp(stage_base, 0, 0, 0, 0, 0);
         stage_base++;
     }
@@ -3725,9 +3701,9 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
         GXSetTevDirect(stage_base);
         GXSetTevSwapMode(stage_base, 0, 0);
         GXSetTevOrder(stage_base, 0xFF, 0xFF, 0xFF);
-        GXSetTevColorIn(stage_base, 0xF, 0, 0xC, ((u8*)buf_54)[stage_idx * 4]);
+        GXSetTevColorIn(stage_base, 0xF, 0, 0xC, ((u8*)&buf_54)[stage_idx * 4]);
         GXSetTevAlphaIn(stage_base, 7, 7, 7, 7);
-        GXSetTevColorOp(stage_base, 0, 0, ((u8*)buf_38)[stage_idx * 4], 0, 0);
+        GXSetTevColorOp(stage_base, 0, 0, ((u8*)&buf_38)[stage_idx * 4], 0, 0);
         GXSetTevAlphaOp(stage_base, 0, 0, 0, 0, 0);
         stage_base++;
     }
