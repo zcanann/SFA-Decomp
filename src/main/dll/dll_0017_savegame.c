@@ -234,7 +234,7 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
     u8* position;
     int i;
 
-    for (i = 0, position = gSaveGameData; i < SAVEGAME_OBJECT_POSITION_COUNT;
+    for (i = 0, position = &gSaveGameData[0]; i < SAVEGAME_OBJECT_POSITION_COUNT;
          position += sizeof(SaveGameObjectPosition), i++)
     {
         if (object->objectId == *(u32*)(position + SAVEGAME_OBJECT_POSITION_OFFSET))
@@ -279,13 +279,16 @@ void saveGame_unsaveObjectPos(u8* obj)
             return;
         }
 
-        slot = (SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET);
-        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++)
+        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, saveBase += sizeof(SaveGameObjectPosition))
         {
-            slot[0].objectId = slot[1].objectId;
-            slot[0].x = slot[1].x;
-            slot[0].y = slot[1].y;
-            slot[0].z = slot[1].z;
+            ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[0].objectId =
+                ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[1].objectId;
+            ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[0].x =
+                ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[1].x;
+            ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[0].y =
+                ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[1].y;
+            ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[0].z =
+                ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))[1].z;
         }
         *(u32*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
     }
@@ -478,13 +481,14 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     MapBitTransient* transient;
     u32* groupStatuses;
     u16* eventIds;
-    u8* base;
+    s8 found;
+    MapBitTransient* base;
 
-    base = (u8*)gTransientMapBits;
+    base = gTransientMapBits;
     createTransient = 0;
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
     {
-        idx = base[idx + 460];
+        idx = ((u8*)base)[idx + 460];
     }
     eventIds = lbl_80311810;
     if (idx < SAVEGAME_MAP_COUNT && eventIds[idx] != 0)
@@ -516,7 +520,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         lbl_803DD48C = idx;
         (&lbl_803DD48C)[1] = newStatus;
 
-        groupStatuses = (u32*)(base + 60);
+        groupStatuses = (u32*)((s8*)base + 60);
         if (value != 0)
         {
             if ((oldStatus & bit) == 0)
@@ -542,7 +546,8 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 
             if (!createTransient)
             {
-                transient = (MapBitTransient*)base;
+                found = -1;
+                transient = base;
                 for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
                 {
                     if (idx == transient->mapId && shift == transient->shift)
@@ -552,8 +557,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                     }
                 }
 
-                transient = (MapBitTransient*)base;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                if (found == -1)
                 {
                     transient = base;
                     for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
