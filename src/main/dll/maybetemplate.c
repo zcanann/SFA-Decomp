@@ -1199,6 +1199,10 @@ void cMenuUpdateAnims(void)
             lbl_803DD8D6 = 0;
         }
     }
+    if (cMenuFadeCounter != 0)
+    {
+        return;
+    }
 }
 
 int trickyBitFn_801241cc(short* arr, sbyte flag)
