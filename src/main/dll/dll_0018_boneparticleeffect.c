@@ -1357,8 +1357,8 @@ extern void textureFree(void* resource);
 #pragma peephole off
 void boneParticleEffect_release(void)
 {
-    int i;
     void** p;
+    int i;
     void* zero;
     i = 0;
     p = gBoneParticleEffectBuffers;
