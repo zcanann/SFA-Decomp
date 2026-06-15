@@ -363,9 +363,9 @@ void bombplantspore_update(void* obj)
         objMove(((GameObject*)obj)->anim.velocityX * timeDelta,
                 ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
-        (*gPathControlInterface)->update(obj, (u8*)state + 4, timeDelta);
-        (*gPathControlInterface)->apply(obj, (u8*)state + 4);
-        (*gPathControlInterface)->advance(obj, (u8*)state + 4, timeDelta);
+        (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
+        (*gPathControlInterface)->apply(obj, state->pathState);
+        (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
         if (hitObj != NULL &&
             (hitId = *(s16*)((u8*)hitObj + 0x46), hitId != 0x36d) &&
             hitId != 0x198 && hitId != 0x63c)
