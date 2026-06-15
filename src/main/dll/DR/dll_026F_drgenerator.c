@@ -135,7 +135,7 @@ void drgenerator_hitDetect(int obj)
     {
         return;
     }
-    p[0x19a] -= hitVolume;
+    p[0x19a] = *(u8*)(p + 0x19a) - hitVolume;
     Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E6B5C);
     fn_8009A8C8(obj, lbl_803E6B60);
     if (p[0x19a] > 0)
