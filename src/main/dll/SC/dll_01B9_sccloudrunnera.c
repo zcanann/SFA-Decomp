@@ -209,6 +209,7 @@ void sc_cloudrunnera_init(int obj, int p2)
 {
     ObjSeqState* seq;
     f32 base;
+    int phase;
 
     objSetSlot(obj, 0x64);
     seq = ((GameObject*)obj)->extra;
@@ -219,13 +220,14 @@ void sc_cloudrunnera_init(int obj, int p2)
     seq->curveId = -1;
     ((GameObject*)obj)->unkF8 = 0;
 
-    if (((GameObject*)obj)->unkF4 == 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != 1)
+    phase = ((GameObject*)obj)->unkF4;
+    if (phase == 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)seq, (u8*)p2);
         ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->unk18 + 1;
     }
-    else if (((GameObject*)obj)->unkF4 != 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != ((GameObject*)obj)->unkF4 - 1)
+    else if (phase != 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != phase - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)seq);
         if (((ScCloudrunneraPlacement*)p2)->unk18 != -1)
