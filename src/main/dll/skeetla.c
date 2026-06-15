@@ -694,44 +694,44 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
     f32 fz;
-    if (*(int*)(t + 0x20) == newState)
+    if (((TrickyState*)t)->moveId == newState)
     {
         if (((GameObject*)obj)->anim.currentMove == newState)
         {
-            *(f32*)(t + 0x34) = speed;
-            *(u32*)(t + 0x54) = *(u32*)(t + 0x54) | flags;
+            ((TrickyState*)t)->moveProgress = speed;
+            ((TrickyState*)t)->stateFlags = ((TrickyState*)t)->stateFlags | flags;
         }
         return 1;
     }
     if ((flags & 0x4000000) != 0)
     {
-        *(f32*)(t + 0x18) = lbl_803E247C;
+        ((TrickyState*)t)->animTransitionTimer = lbl_803E247C;
     }
-    *(int*)(t + 0x20) = newState;
-    *(f32*)(t + 0x38) = speed;
-    *(u32*)(t + 0x50) = flags;
+    ((TrickyState*)t)->moveId = newState;
+    ((TrickyState*)t)->moveProgressTarget = speed;
+    ((TrickyState*)t)->pendingStateFlags = flags;
     if ((flags & 0x20) == 0)
     {
-        *(u32*)(t + 0x54) = *(u32*)(t + 0x54) & ~(u64)0x20;
+        ((TrickyState*)t)->stateFlags = ((TrickyState*)t)->stateFlags & ~(u64)0x20;
     }
     if ((flags & 0x40) == 0)
     {
-        *(u32*)(t + 0x54) = *(u32*)(t + 0x54) & ~(u64)0x40;
+        ((TrickyState*)t)->stateFlags = ((TrickyState*)t)->stateFlags & ~(u64)0x40;
     }
     if ((flags & 0x80) == 0)
     {
-        *(u32*)(t + 0x54) = *(u32*)(t + 0x54) & ~(u64)0x80;
+        ((TrickyState*)t)->stateFlags = ((TrickyState*)t)->stateFlags & ~(u64)0x80;
     }
     if ((flags & 0x100) == 0)
     {
-        *(u32*)(t + 0x54) = *(u32*)(t + 0x54) & ~(u64)0x100;
+        ((TrickyState*)t)->stateFlags = ((TrickyState*)t)->stateFlags & ~(u64)0x100;
     }
     fz = lbl_803E23E8;
-    *(f32*)(t + 0x40) = fz;
-    *(f32*)(t + 0x44) = fz;
-    *(f32*)(t + 0x48) = fz;
-    *(f32*)(t + 0x4c) = fz;
-    if (*(f32*)(t + 0x18) >= lbl_803E247C)
+    ((TrickyState*)t)->sidestepDelta = fz;
+    ((TrickyState*)t)->backstepDelta = fz;
+    ((TrickyState*)t)->verticalDelta = fz;
+    ((TrickyState*)t)->rotStepScale = fz;
+    if (((TrickyState*)t)->animTransitionTimer >= lbl_803E247C)
     {
         return 1;
     }

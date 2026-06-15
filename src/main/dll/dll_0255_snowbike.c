@@ -218,9 +218,9 @@ void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
 void SnowBike_modelMtxFn(int obj, f32* x, f32* y, f32* z)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
-    *x = *(f32*)(t + 0x3e8);
-    *y = *(f32*)(t + 0x3ec);
-    *z = *(f32*)(t + 0x3f0);
+    *x = ((SnowBikeMountState*)t)->unk3E8;
+    *y = ((SnowBikeMountState*)t)->unk3EC;
+    *z = ((SnowBikeMountState*)t)->unk3F0;
 }
 
 void SnowBike_func15(int obj)
@@ -230,11 +230,11 @@ void SnowBike_func15(int obj)
     void* found;
     f32 zero;
 
-    table = (int*)((int)lbl_80328590 + (int)(*(u8*)(t + 0x434)) * 12);
-    found = mapRomListFindItem(table[*(u8*)(t + 0x435)], 0, 0, 0, 0);
+    table = (int*)((int)lbl_80328590 + (int)(((SnowBikeMountState*)t)->unk434) * 12);
+    found = mapRomListFindItem(table[((SnowBikeMountState*)t)->unk435], 0, 0, 0, 0);
     if (found != NULL)
     {
-        if (*(u8*)(t + 0x434) != 0)
+        if (((SnowBikeMountState*)t)->unk434 != 0)
         {
             ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)found + 0x8);
             ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)found + 0xc);
@@ -243,14 +243,14 @@ void SnowBike_func15(int obj)
         }
         (*gCheckpointInterface)->findRouteForObject((GameObject*)obj,
                                                     (CheckpointRouteState*)(t + 0x28), 0);
-        *(f32*)(t + 0xc) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(t + 0x10) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(t + 0x14) = ((GameObject*)obj)->anim.localPosZ;
-        *(s16*)(t + 0x0) = ((GameObject*)obj)->anim.rotX;
+        ((SnowBikeMountState*)t)->unkC = ((GameObject*)obj)->anim.localPosX;
+        ((SnowBikeMountState*)t)->unk10 = ((GameObject*)obj)->anim.localPosY;
+        ((SnowBikeMountState*)t)->unk14 = ((GameObject*)obj)->anim.localPosZ;
+        ((SnowBikeMountState*)t)->unk0 = ((GameObject*)obj)->anim.rotX;
         zero = lbl_803E5AE8;
-        *(f32*)(t + 0x494) = zero;
-        *(f32*)(t + 0x498) = zero;
-        *(f32*)(t + 0x49c) = zero;
+        ((SnowBikeMountState*)t)->unk494 = zero;
+        ((SnowBikeMountState*)t)->unk498 = zero;
+        ((SnowBikeMountState*)t)->unk49C = zero;
         (*gPathControlInterface)->attachObject((void*)obj, (void*)(t + 0x178));
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -261,7 +261,7 @@ void SnowBike_func15(int obj)
             hitState->worldPosY = ((GameObject*)obj)->anim.worldPosY;
             hitState->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
         }
-        *(s8*)(t + 0x3d3) = 1;
+        ((SnowBikeMountState*)t)->unk3D3 = 1;
     }
 }
 
@@ -405,10 +405,10 @@ void SnowBike_func12(int obj, f32* outFloat, s32* outBool)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
     f32 v, r;
-    *outFloat = *(f32*)(t + 0x414) / lbl_803E5C48;
+    *outFloat = ((SnowBikeMountState*)t)->unk414 / lbl_803E5C48;
     v = *outFloat;
     *outFloat = (v < lbl_803E5B70) ? lbl_803E5B70 : ((v > lbl_803E5AEC) ? lbl_803E5AEC : v);
-    *outBool = *(f32*)(t + 0x414) < lbl_803E5AE8;
+    *outBool = ((SnowBikeMountState*)t)->unk414 < lbl_803E5AE8;
 }
 
 f32 SnowBike_func13(int obj, f32* out)
@@ -416,9 +416,9 @@ f32 SnowBike_func13(int obj, f32* out)
     int t = *(int*)&((GameObject*)obj)->extra;
     f32 r;
     *out = lbl_803E5BB8;
-    r = sqrtf(*(f32*)(t + 0x49c) * *(f32*)(t + 0x49c)
-        + (*(f32*)(t + 0x494) * *(f32*)(t + 0x494)
-            + *(f32*)(t + 0x498) * *(f32*)(t + 0x498)));
+    r = sqrtf(((SnowBikeMountState*)t)->unk49C * ((SnowBikeMountState*)t)->unk49C
+        + (((SnowBikeMountState*)t)->unk494 * ((SnowBikeMountState*)t)->unk494
+            + ((SnowBikeMountState*)t)->unk498 * ((SnowBikeMountState*)t)->unk498));
     r = r * lbl_803E5BA8;
     if (r > lbl_803E5AEC)
     {
@@ -430,12 +430,12 @@ f32 SnowBike_func13(int obj, f32* out)
 u32 SnowBike_setScale(int obj)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
-    u32 bit = (*(u8*)(t + 0x428) >> 1) & 1;
+    u32 bit = (((SnowBikeMountState*)t)->unk428 >> 1) & 1;
     if (bit != 0)
     {
         return 0;
     }
-    return *(u8*)(t + 0x420);
+    return ((SnowBikeMountState*)t)->unk420;
 }
 
 void fn_801EC9BC(int obj)
@@ -475,7 +475,7 @@ void SnowBike_free(int obj)
         mm_free(*(void**)(p + 0x4c8));
         p += 8;
     }
-    bit = (*(u8*)(t + 0x428) >> 5) & 1;
+    bit = (((SnowBikeMountState*)t)->unk428 >> 5) & 1;
     if (bit != 0)
     {
         (*gGameUIInterface)->airMeterSetShutdown();

@@ -988,92 +988,92 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
     return 0;
 }
 
-int DIMbossAnim_returnToIdleWhenDone(int obj, int param2)
+int DIMbossAnim_returnToIdleWhenDone(int obj, int runtime)
 {
-    if (*(s8*)&((BaddieState*)param2)->moveDone != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveDone != 0)
     {
-        (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, param2, 0);
+        (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 0);
     }
     return 0;
 }
 
-int DIMbossHitDetect_chooseIdleTaunt(int obj, int param2)
+int DIMbossHitDetect_chooseIdleTaunt(int obj, int runtime)
 {
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         f32 v;
         ((GameObject*)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
-        ((BaddieState*)param2)->moveSpeed = lbl_803E4C00;
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
+        ((BaddieState*)runtime)->moveSpeed = lbl_803E4C00;
         if ((int)randomGetRange(0, 1) != 0)
         {
-            if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+            if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
             {
                 ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E4BD8, 0);
-                ((BaddieState*)param2)->moveDone = 0;
+                ((BaddieState*)runtime)->moveDone = 0;
             }
         }
         else
         {
-            if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+            if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
             {
                 ObjAnim_SetCurrentMove(obj, 0xc, lbl_803E4BD8, 0);
-                ((BaddieState*)param2)->moveDone = 0;
+                ((BaddieState*)runtime)->moveDone = 0;
             }
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 0, lbl_80325AA0);
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 7, 1, lbl_80325AA0);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 0, lbl_80325AA0);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 7, 1, lbl_80325AA0);
     return 0;
 }
 
-int DIMbossHitDetect_trackTargetMove(int obj, int param2, f32 fParam)
+int DIMbossHitDetect_trackTargetMove(int obj, int runtime, f32 hitAmount)
 {
     u16 local_c;
     s16 local_a;
     s16 local_8;
-    ((BaddieState*)param2)->animSpeedA = lbl_803E4BD8;
-    if (*(s8*)&((BaddieState*)param2)->moveDone != 0 || *(s8*)&((BaddieState*)param2)->moveJustStartedA != 0 || ((
+    ((BaddieState*)runtime)->animSpeedA = lbl_803E4BD8;
+    if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0 || ((
         GameObject*)obj)->anim.currentMove == 1)
     {
         (*(int (**)(int, int, int, u16*, s16*, s16*))(*(int*)gBaddieControlInterface + 0x14))(
-            obj, *(int*)&((BaddieState*)param2)->targetObj, 0x10, &local_c, &local_a, &local_8);
+            obj, *(int*)&((BaddieState*)runtime)->targetObj, 0x10, &local_c, &local_a, &local_8);
         ObjAnim_SetCurrentMove(obj, lbl_80325960[local_c], lbl_803E4BD8, 0);
-        ((BaddieState*)param2)->moveSpeed = lbl_803259A0[local_c];
-        ((BaddieState*)param2)->moveDone = 0;
+        ((BaddieState*)runtime)->moveSpeed = lbl_803259A0[local_c];
+        ((BaddieState*)runtime)->moveDone = 0;
     }
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, param2, fParam, 8);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, runtime, hitAmount, 8);
     return 0;
 }
 
-int DIMbossHitDetect_lungeAttack(int obj, int param2, f32 fParam)
+int DIMbossHitDetect_lungeAttack(int obj, int runtime, f32 hitAmount)
 {
     ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         f32 v;
-        ((BaddieState*)param2)->moveSpeed = lbl_803E4C04;
-        if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+        ((BaddieState*)runtime)->moveSpeed = lbl_803E4C04;
+        if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E4BD8, 0);
-            ((BaddieState*)param2)->moveDone = 0;
+            ((BaddieState*)runtime)->moveDone = 0;
         }
         ((GameObject*)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 1, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, fParam, 0xf0);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 1, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, runtime, hitAmount, 0xf0);
     return 0;
 }
 
-int DIMbossHitDetect_liftSlam(int obj, int param2)
+int DIMbossHitDetect_liftSlam(int obj, int runtime)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         f32 v;
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_2000;
@@ -1081,71 +1081,71 @@ int DIMbossHitDetect_liftSlam(int obj, int param2)
         CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
         doRumble(lbl_803E4BD0);
         ((GameObject*)obj)->anim.activeMove = -1;
-        ((BaddieState*)param2)->moveSpeed = lbl_803E4BE8;
+        ((BaddieState*)runtime)->moveSpeed = lbl_803E4BE8;
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
-        if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
+        if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0xe, v, 0);
-            ((BaddieState*)param2)->moveDone = 0;
+            ((BaddieState*)runtime)->moveDone = 0;
         }
         if (((GroundBaddieState*)state)->targetState == 1)
         {
             *(f32*)(*(int*)&((GroundBaddieState*)state)->control + 0xa8) = lbl_803E4BEC;
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 1, &lbl_803DBF30);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 1, &lbl_803DBF30);
     return 0;
 }
 
-int DIMbossHitDetect_tonsilSlam(int obj, int param2)
+int DIMbossHitDetect_tonsilSlam(int obj, int runtime)
 {
     f32 v;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E4BC0)
     {
         gDIMbossSequenceFlags &= ~DIMBOSS_SEQUENCE_FLAG_0020;
     }
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         gDIMbossSequenceFlags |= (u64)DIMBOSS_SEQUENCE_FLAGS_TONSIL_IMPACT;
         Camera_EnableViewYOffset();
         CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
         doRumble(lbl_803E4BD0);
         ((GameObject*)obj)->anim.activeMove = -1;
-        ((BaddieState*)param2)->moveSpeed = lbl_803E4BD4 * (f32)(*(s8*)&((BaddieState*)param2)->hitPoints + 1);
+        ((BaddieState*)runtime)->moveSpeed = lbl_803E4BD4 * (f32)(*(s8*)&((BaddieState*)runtime)->hitPoints + 1);
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
-        if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
+        if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0x15, v, 0);
-            ((BaddieState*)param2)->moveDone = 0;
+            ((BaddieState*)runtime)->moveDone = 0;
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 0, &lbl_803DBF30);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 0, &lbl_803DBF30);
     return 0;
 }
 
-int DIMbossHitDetect_breathBurst(int obj, int param2, f32 arg)
+int DIMbossHitDetect_breathBurst(int obj, int runtime, f32 arg)
 {
     f32 h;
     f32 v;
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
-        ((BaddieState*)param2)->moveSpeed = lbl_803E4C08;
-        if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+        ((BaddieState*)runtime)->moveSpeed = lbl_803E4C08;
+        if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E4BD8, 0);
-            ((BaddieState*)param2)->moveDone = 0;
+            ((BaddieState*)runtime)->moveDone = 0;
         }
         ((GameObject*)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
     }
     h = ((GameObject*)obj)->anim.currentMoveProgress;
-    if (h > lbl_803E4C0C || *(s8*)&((BaddieState*)param2)->moveDone != 0)
+    if (h > lbl_803E4C0C || *(s8*)&((BaddieState*)runtime)->moveDone != 0)
     {
         return 8;
     }
@@ -1153,27 +1153,27 @@ int DIMbossHitDetect_breathBurst(int obj, int param2, f32 arg)
     {
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_BREATH_BURST;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 5, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 5, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, runtime, arg, 0xf0);
     return 0;
 }
 
-int DIMbossHitDetect_blueWhiteCapture(int obj, int param2, f32 arg)
+int DIMbossHitDetect_blueWhiteCapture(int obj, int runtime, f32 arg)
 {
     f32 h;
     f32 v;
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
-        ((BaddieState*)param2)->moveSpeed = lbl_803E4C14;
-        if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+        ((BaddieState*)runtime)->moveSpeed = lbl_803E4C14;
+        if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E4BD8, 0);
-            ((BaddieState*)param2)->moveDone = 0;
+            ((BaddieState*)runtime)->moveDone = 0;
         }
         ((GameObject*)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
     }
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18)
@@ -1184,31 +1184,31 @@ int DIMbossHitDetect_blueWhiteCapture(int obj, int param2, f32 arg)
     {
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0040;
     }
-    if (*(int*)&((BaddieState*)param2)->eventFlags & 1)
+    if (*(int*)&((BaddieState*)runtime)->eventFlags & 1)
     {
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_CAPTURE_BLUE_WHITE_VELOCITY;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 3, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 3, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, runtime, arg, 0xf0);
     return 0;
 }
 
-int DIMbossHitDetect_blueWhiteEventCapture(int obj, int param2, f32 arg)
+int DIMbossHitDetect_blueWhiteEventCapture(int obj, int runtime, f32 arg)
 {
     f32 h;
     f32 v;
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
-        ((BaddieState*)param2)->moveSpeed = lbl_803E4C00;
-        if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+        ((BaddieState*)runtime)->moveSpeed = lbl_803E4C00;
+        if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E4BD8, 0);
-            ((BaddieState*)param2)->moveDone = 0;
+            ((BaddieState*)runtime)->moveDone = 0;
         }
         ((GameObject*)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
     }
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E4C18)
@@ -1219,59 +1219,59 @@ int DIMbossHitDetect_blueWhiteEventCapture(int obj, int param2, f32 arg)
     {
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0040;
     }
-    if (*(int*)&((BaddieState*)param2)->eventFlags & 0x200)
+    if (*(int*)&((BaddieState*)runtime)->eventFlags & 0x200)
     {
         gDIMbossSequenceFlags |= (u64)DIMBOSS_SEQUENCE_FLAG_CAPTURE_BLUE_WHITE_VELOCITY;
-        *(int*)&((BaddieState*)param2)->eventFlags &= ~0x200;
+        *(int*)&((BaddieState*)runtime)->eventFlags &= ~0x200;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 3, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, 3, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, runtime, arg, 0xf0);
     return 0;
 }
 
-int DIMbossHitDetect_randomSwipe(int obj, int param2, f32 arg)
+int DIMbossHitDetect_randomSwipe(int obj, int runtime, f32 arg)
 {
     int t;
     f32 v;
     ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
-    if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         ((GameObject*)obj)->anim.activeMove = -1;
         v = lbl_803E4BD8;
-        ((BaddieState*)param2)->animSpeedA = v;
-        ((BaddieState*)param2)->animSpeedB = v;
+        ((BaddieState*)runtime)->animSpeedA = v;
+        ((BaddieState*)runtime)->animSpeedB = v;
         if ((int)randomGetRange(0, 1) != 0)
         {
-            if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+            if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
             {
                 ObjAnim_SetCurrentMove(obj, 0xb, lbl_803E4BD8, 0);
-                ((BaddieState*)param2)->moveDone = 0;
+                ((BaddieState*)runtime)->moveDone = 0;
             }
-            ((BaddieState*)param2)->moveSpeed = lbl_803E4C00;
+            ((BaddieState*)runtime)->moveSpeed = lbl_803E4C00;
         }
         else
         {
-            if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
+            if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
             {
                 ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E4BD8, 0);
-                ((BaddieState*)param2)->moveDone = 0;
+                ((BaddieState*)runtime)->moveDone = 0;
             }
-            ((BaddieState*)param2)->moveSpeed = lbl_803E4C04;
+            ((BaddieState*)runtime)->moveSpeed = lbl_803E4C04;
         }
     }
-    t = *(int*)&((BaddieState*)param2)->eventFlags;
+    t = *(int*)&((BaddieState*)runtime)->eventFlags;
     if (t & 0x200)
     {
-        *(int*)&((BaddieState*)param2)->eventFlags = t & ~0x200;
+        *(int*)&((BaddieState*)runtime)->eventFlags = t & ~0x200;
         gDIMbossSequenceFlags |= (DIMBOSS_SEQUENCE_FLAG_0001 | DIMBOSS_SEQUENCE_FLAG_0004);
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(
-        obj, param2, 0, randomGetRange(0, 1), lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+        obj, runtime, 0, randomGetRange(0, 1), lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, runtime, arg, 0xf0);
     return 0;
 }
 
-int DIMbossAnim_updatePlayerHitReaction(int obj, int param2)
+int DIMbossAnim_updatePlayerHitReaction(int obj, int runtime)
 {
     u16 local_c;
     s16 local_a;
@@ -1279,50 +1279,50 @@ int DIMbossAnim_updatePlayerHitReaction(int obj, int param2)
     int state;
     s16 mode;
     state = *(int*)&((GameObject*)obj)->extra;
-    if (*(s8*)&((BaddieState*)param2)->moveDone != 0 || *(s8*)&((BaddieState*)param2)->moveJustStartedB != 0)
+    if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedB != 0)
     {
         (*(int (**)(int, int, int, u16*, s16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
-            obj, *(int*)&((BaddieState*)param2)->targetObj, 0x10, &local_c, &local_a, &local_8);
-        ((BaddieState*)param2)->moveDone = 0;
+            obj, *(int*)&((BaddieState*)runtime)->targetObj, 0x10, &local_c, &local_a, &local_8);
+        ((BaddieState*)runtime)->moveDone = 0;
         if (local_8 < 90)
         {
             if (local_8 > 30 && ((u16)(local_c - 3) <= 1 || local_c == 11 || local_c == 12))
             {
-                (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, param2, 2);
+                (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 2);
             }
             else
             {
-                (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, param2, 9);
+                (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 9);
             }
         }
         else
         {
             if (local_c == 0 || local_c == 15)
             {
-                ((BaddieState*)param2)->moveDone = 0;
+                ((BaddieState*)runtime)->moveDone = 0;
                 if (local_8 > 240 && (((u8)(*(u8 (**)(int, int, f32))(*(int*)gBaddieControlInterface + 0x18))(
-                    obj, param2, lbl_803E4BBC)) & 1))
+                    obj, runtime, lbl_803E4BBC)) & 1))
                 {
                     (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(
-                        obj, param2, lbl_80325AC8[randomGetRange(0, 5)]);
+                        obj, runtime, lbl_80325AC8[randomGetRange(0, 5)]);
                 }
                 else if (((GroundBaddieState*)state)->flags400 & 4)
                 {
                     (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(
-                        obj, param2, lbl_803DBF38[randomGetRange(0, 1)]);
+                        obj, runtime, lbl_803DBF38[randomGetRange(0, 1)]);
                 }
                 else
                 {
-                    (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, param2, 3);
+                    (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 3);
                 }
             }
             else
             {
-                (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, param2, 2);
+                (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 2);
             }
         }
     }
-    mode = ((BaddieState*)param2)->controlMode;
+    mode = ((BaddieState*)runtime)->controlMode;
     if (mode != 1 && mode != 4 && mode != 5)
     {
         gDIMbossAnimController[0x611] |= 1;
@@ -1331,6 +1331,6 @@ int DIMbossAnim_updatePlayerHitReaction(int obj, int param2)
     {
         gDIMbossAnimController[0x611] &= ~1;
     }
-    DIM2icicle_updateHitResponse(obj, param2);
+    DIM2icicle_updateHitResponse(obj, runtime);
     return 0;
 }

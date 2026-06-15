@@ -67,10 +67,10 @@ int dll_19E_getObjectTypeId(void) { return 0x1; }
  */
 /* segment pragma-stack balance (re-split): */
 
-void dll_19E_free(int param_1)
+void dll_19E_free(int obj)
 {
-    (*gModgfxInterface)->detachSource((void*)param_1);
-    (*gExpgfxInterface)->freeSource2((u32)param_1);
+    (*gModgfxInterface)->detachSource((void*)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void dll_19E_render(int obj, int param_2, int param_3, int param_4,

@@ -92,7 +92,7 @@ int cflevelcontrol_getExtraSize(void) { return 0x10; }
 
 int cflevelcontrol_getObjectTypeId(void) { return 0x0; }
 
-void cflevelcontrol_free(int param_1)
+void cflevelcontrol_free(int obj)
 {
 }
 

@@ -10,7 +10,7 @@ extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;
 
-int DIMbossgut_updateState(int obj, int param_2, ObjAnimUpdateState* animUpdate)
+int DIMbossgut_updateState(int obj, int runtime, ObjAnimUpdateState* animUpdate)
 {
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
