@@ -213,7 +213,7 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
     p[0].y = lbl_803E0E80;
     p[0].z = lbl_803E0E80;
     p[1].layer = 5;
-    p[1].flags = 0xffff;
+    *(s16*)&p[1].flags = -1;
     p[1].tex = (void*)0;
     p[1].mode = 0x10000;
     p[1].x = lbl_803E0E80;
