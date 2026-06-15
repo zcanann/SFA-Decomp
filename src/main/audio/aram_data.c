@@ -87,7 +87,7 @@ void aramInitStreamBuffers(void)
     AramStreamBufferEntry* buffers;
     AramStreamBufferEntry* node;
     int batchCount;
-    int i;
+    u32 i;
 
     aramQueueWrite = 0;
     aramQueueValid = 0;
@@ -110,14 +110,14 @@ void aramInitStreamBuffers(void)
         i += 8;
     }
 
-    node = &buffers[i];
+    node = (AramStreamBufferEntry*)(base + 0x508) + i;
     while (i < 64)
     {
         node[-1].next = node;
         node++;
         i++;
     }
-    buffers[i - 1].next = NULL;
+    ((AramStreamBufferEntry*)(base + 0x508))[i - 1].next = NULL;
     aramStream = aramTop;
 }
 #pragma ppc_unroll_speculative on
