@@ -99,7 +99,7 @@ void InvisibleHitSwitch_update(int obj)
         }
     }
 
-    if (lbl_803E3730 < ((InvisibleHitSwitchState*)state)->unk4)
+    if (((InvisibleHitSwitchState*)state)->unk4 > lbl_803E3730)
     {
         ((InvisibleHitSwitchState*)state)->unk4 =
             ((InvisibleHitSwitchState*)state)->unk4 - (f32)(u32)
