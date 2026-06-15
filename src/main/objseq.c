@@ -4712,7 +4712,6 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     f32 length;
     f32 scale;
     f32 angle;
-    f32* times;
     int segment;
     int i;
 
@@ -4722,15 +4721,15 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     if (from != NULL && state->toNodeId > -1)
     {
         to = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
-        times = &state->fromTime;
         i = 0;
-        while (i < 9 && t >= times[i])
+        while (i <= 8 && t >= (&state->fromTime)[i])
         {
             i++;
         }
         segment = i - 1;
         segmentT = ((f32)segment +
-                (t - times[segment]) / (times[segment + 1] - times[segment])) *
+                (t - (&state->fromTime)[segment]) /
+                    ((&state->fromTime)[segment + 1] - (&state->fromTime)[segment])) *
             lbl_803DF01C;
 
         fromScale = ROM_CURVE_NODE_SCALE(from);
