@@ -709,7 +709,7 @@ void DFP_Torch_update(int obj)
             h = blob->litTimer;
             if (h != 0)
             {
-                blob->litTimer -= (int)timeDelta;
+                blob->litTimer -= (s16)timeDelta;
                 if (blob->litTimer <= 0)
                 {
                     blob->litTimer = 0;
