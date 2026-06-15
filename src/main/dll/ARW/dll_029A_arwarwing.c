@@ -134,18 +134,20 @@ int arwarwing_getCollectedRingCount(int arwing)
 }
 
 #pragma scheduling off
+#pragma peephole off
 void arwarwing_addScore(int arwing, u8 amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    u16 v;
-    state->score = state->score + amount;
+    int v;
+    state->score += amount;
     v = state->score;
-    if (v > 0x270f)
+    if ((u32)v > 0x270f)
     {
         v = 0x270f;
     }
     state->score = v;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
