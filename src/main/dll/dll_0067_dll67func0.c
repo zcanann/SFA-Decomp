@@ -118,7 +118,6 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-extern int maybeTryLoadSave(int a);
 extern u8 lbl_803133B8[];
 extern f32 lbl_803E09C8;
 extern f32 lbl_803E09CC;
