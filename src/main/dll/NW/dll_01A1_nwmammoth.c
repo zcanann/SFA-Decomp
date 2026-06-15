@@ -129,6 +129,7 @@ void fn_801CEE0C(int p1, int p2)
     extern int lbl_803DBF74;
     extern int lbl_803DBF78;
     extern int lbl_803DBF7C;
+    NwMammothState* state = (NwMammothState*)p2;
 
     if (fn_801CE078(p1) != 0) return;
 
@@ -190,6 +191,7 @@ void fn_801CED2C(int p1, int p2)
     extern int lbl_803DBFB8;
     extern int lbl_803DBFBC;
 
+    NwMammothState* state = (NwMammothState*)p2;
     switch (*(u8*)(p2 + 0x408))
     {
     case 4:
@@ -678,6 +680,7 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
     int i;
     void* node;
 
+    NwMammothState* state = (NwMammothState*)p2;
     node = ((GameObject*)obj)->extra;
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++)
