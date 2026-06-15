@@ -487,7 +487,7 @@ void imicemountain_updateEventState(int* obj)
 
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-#pragma peephole on
+#pragma peephole off
 void imicemountain_update(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
@@ -546,8 +546,8 @@ void imicemountain_update(int* obj)
             }
         }
     }
-    SCGameBitLatch_Update((char*)extra + 4, 2, 705, 568, 493, 178);
-    SCGameBitLatch_Update((char*)extra + 4, 16, 442, 441, 470, 180);
-    SCGameBitLatch_Update((char*)extra + 4, 4, -1, -1, 928, 233);
-    SCGameBitLatch_Update((char*)extra + 4, 8, -1, -1, 929, extra->musicTrack);
+    SCGameBitLatch_Update(&extra->latchFlags, 2, 705, 568, 493, 178);
+    SCGameBitLatch_Update(&extra->latchFlags, 16, 442, 441, 470, 180);
+    SCGameBitLatch_Update(&extra->latchFlags, 4, -1, -1, 928, 233);
+    SCGameBitLatch_Update(&extra->latchFlags, 8, -1, -1, 929, extra->musicTrack);
 }
