@@ -1,6 +1,5 @@
 #include "main/game_object.h"
 #include "main/dll/DF/DFbarrelanim.h"
-#include "main/dll/DF/dfropenode.h"
 #include "main/objlib.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/dll/DF/dll_196.h"
