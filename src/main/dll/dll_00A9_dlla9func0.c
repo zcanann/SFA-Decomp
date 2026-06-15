@@ -48,7 +48,7 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefi
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    u8* tab = lbl_80319028;
+    u8* tab = (u8*)(int)lbl_80319028;
     f32 sx;
     GfxCmd* e;
     GfxCmd* p;
@@ -206,7 +206,7 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefi
             buf.pos[2] = lbl_803E15D8 + *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, tab, 0xc, &tab[0x8c], 0x586, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80319028, 0xc, &tab[0x8c], 0x586, 0);
 }
 
 void dll_A9_func01_nop(void)
