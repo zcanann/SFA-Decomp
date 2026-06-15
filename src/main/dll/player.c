@@ -11316,7 +11316,7 @@ int fn_802957B4(int obj)
     PlayerState* inner = ((GameObject*)obj)->extra;
     int sub;
 
-    if (obj == 0)
+    if ((void*)obj == NULL)
     {
         return 0;
     }
@@ -11324,7 +11324,7 @@ int fn_802957B4(int obj)
     (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
 
     sub = inner->unk7F0;
-    if (sub == 0)
+    if ((void*)sub == NULL)
     {
         return 0;
     }
