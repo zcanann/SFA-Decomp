@@ -1,7 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
