@@ -2417,7 +2417,6 @@ u32 objCallback_80074d04(int handle, void* model)
     Mtx mtx_5c;
     f32 indMtx_44[6];
     f32 indMtx_2c[6];
-    f32 buf_8c_2[12];
     int handle1, handle2;
     f32 f1, f2;
     f32 f31_val;
@@ -2494,19 +2493,19 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_2c, -4);
     GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
 
-    buf_8c_2[0] = lbl_803DB6AC;
-    buf_8c_2[1] = lbl_803DEEDC;
-    buf_8c_2[2] = lbl_803DEEDC;
-    buf_8c_2[3] = gSynthDelayedActionWord0;
-    buf_8c_2[4] = lbl_803DEEDC;
-    buf_8c_2[5] = lbl_803DB6AC;
-    buf_8c_2[6] = lbl_803DEEDC;
-    buf_8c_2[7] = gSynthDelayedActionWord0;
-    buf_8c_2[8] = lbl_803DEEDC;
-    buf_8c_2[9] = lbl_803DEEDC;
-    buf_8c_2[10] = lbl_803DEEDC;
-    buf_8c_2[11] = lbl_803DEEE4;
-    GXLoadTexMtxImm((f32(*)[4])buf_8c_2, 0x55, 0);
+    ((f32*)mtx_8c)[0] = lbl_803DB6AC;
+    ((f32*)mtx_8c)[1] = lbl_803DEEDC;
+    ((f32*)mtx_8c)[2] = lbl_803DEEDC;
+    ((f32*)mtx_8c)[3] = gSynthDelayedActionWord0;
+    ((f32*)mtx_8c)[4] = lbl_803DEEDC;
+    ((f32*)mtx_8c)[5] = lbl_803DB6AC;
+    ((f32*)mtx_8c)[6] = lbl_803DEEDC;
+    ((f32*)mtx_8c)[7] = gSynthDelayedActionWord0;
+    ((f32*)mtx_8c)[8] = lbl_803DEEDC;
+    ((f32*)mtx_8c)[9] = lbl_803DEEDC;
+    ((f32*)mtx_8c)[10] = lbl_803DEEDC;
+    ((f32*)mtx_8c)[11] = lbl_803DEEE4;
+    GXLoadTexMtxImm((f32(*)[4])mtx_8c, 0x55, 0);
     GXSetTexCoordGen2(3, 0, 1, 0x1e, 0, 0x55);
 
     fn_8006C5CC(&handle2);
