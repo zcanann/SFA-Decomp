@@ -25,7 +25,6 @@ extern f32 lbl_803E14A8;
 extern f32 lbl_803E14AC;
 extern f32 lbl_803E14B0;
 
-extern u8 lbl_803188D8[];
 
 void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
 {
