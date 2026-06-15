@@ -1410,11 +1410,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 10:
-                    getEnvfxAct(obj, p2, (s16)((p[2] << 8) | p[3]), p4);
-                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (s16)((p[2] << 8) | p[3]), p4);
+                    getEnvfxAct(obj, p2, (u16)((p[2] << 8) | p[3]), p4);
+                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (u16)((p[2] << 8) | p[3]), p4);
                     break;
                 case 0xd:
-                    getLActions(obj, p2, (s16)((p[2] << 8) | p[3]), p3, p4, 0);
+                    getLActions(obj, p2, (u16)((p[2] << 8) | p[3]), p3, p4, 0);
                     break;
                 case 0xb:
                     switch (((ObjInterpretSeqPlacement*)p)->unk2)
