@@ -231,13 +231,13 @@ int fn_80056800(int index)
     return (int)(DAT_803ddaec + index * 4);
 }
 
-void FUN_80056418(int param_1, int param_2, int param_3, int param_4, int param_5)
+void FUN_80056418(int idx, int xStep, int yStep, int texWidthFixed, int texHeightFixed)
 {
-    int iVar1;
+    int entry;
 
-    iVar1 = DAT_803ddae8 + param_1 * 0x10;
-    *(short*)(iVar1 + 8) = (short)((param_2 << 0x10) / (param_4 >> 6));
-    *(short*)(iVar1 + 10) = (short)((param_3 << 0x10) / (param_5 >> 6));
+    entry = DAT_803ddae8 + idx * 0x10;
+    *(short*)(entry + 8) = (short)((xStep << 0x10) / (texWidthFixed >> 6));
+    *(short*)(entry + 10) = (short)((yStep << 0x10) / (texHeightFixed >> 6));
     return;
 }
 
@@ -248,172 +248,172 @@ int FUN_80056600(void)
 
 void FUN_80056cfc(void)
 {
-    byte* pbVar1;
-    short sVar2;
-    bool bVar3;
-    uint uVar4;
-    uint* puVar5;
-    uint* puVar6;
+    byte* stepPtr;
+    short tag;
+    bool found;
+    uint v;
+    uint* q;
+    uint* tbl;
     int in_r6;
-    uint uVar7;
-    int iVar8;
-    uint uVar9;
-    short* psVar10;
-    int iVar11;
-    undefined8 uVar12;
+    uint mask;
+    int pos;
+    uint count;
+    short* cur;
+    int page;
+    undefined8 ret;
 
-    uVar12 = FUN_80286834();
-    iVar11 = (int)((ulonglong)uVar12 >> 0x20);
-    puVar6 = (uint*)uVar12;
-    bVar3 = false;
-    uVar7 = 0;
-    psVar10 = *(short**)(iVar11 + 0x20);
-    uVar9 = (uint) * (ushort*)(iVar11 + 8);
-    if (uVar9 != 0)
+    ret = FUN_80286834();
+    page = (int)((ulonglong)ret >> 0x20);
+    tbl = (uint*)ret;
+    found = false;
+    mask = 0;
+    cur = *(short**)(page + 0x20);
+    count = (uint) * (ushort*)(page + 8);
+    if (count != 0)
     {
-        iVar8 = 0;
+        pos = 0;
         if (in_r6 == 0)
         {
-            puVar6[0x21] = 0xffffffff;
-            *puVar6 = 0xffffffff;
-            puVar6[1] = 0xffffffff;
-            puVar6[2] = 0xffffffff;
-            puVar6[3] = 0xffffffff;
-            puVar6[4] = 0xffffffff;
-            puVar6[5] = 0xffffffff;
-            puVar6[6] = 0xffffffff;
-            puVar6[7] = 0xffffffff;
-            puVar6[8] = 0xffffffff;
-            puVar6[9] = 0xffffffff;
-            puVar6[10] = 0xffffffff;
-            puVar6[0xb] = 0xffffffff;
-            puVar6[0xc] = 0xffffffff;
-            puVar6[0xd] = 0xffffffff;
-            puVar6[0xe] = 0xffffffff;
-            puVar6[0xf] = 0xffffffff;
-            puVar6[0x10] = 0xffffffff;
-            puVar6[0x11] = 0xffffffff;
-            puVar6[0x12] = 0xffffffff;
-            puVar6[0x13] = 0xffffffff;
-            puVar6[0x14] = 0xffffffff;
-            puVar6[0x15] = 0xffffffff;
-            puVar6[0x16] = 0xffffffff;
-            puVar6[0x17] = 0xffffffff;
-            puVar6[0x18] = 0xffffffff;
-            puVar6[0x19] = 0xffffffff;
-            puVar6[0x1a] = 0xffffffff;
-            puVar6[0x1b] = 0xffffffff;
-            puVar6[0x1c] = 0xffffffff;
-            puVar6[0x1d] = 0xffffffff;
-            puVar6[0x1e] = 0xffffffff;
-            puVar6[0x1f] = 0xffffffff;
+            tbl[0x21] = 0xffffffff;
+            *tbl = 0xffffffff;
+            tbl[1] = 0xffffffff;
+            tbl[2] = 0xffffffff;
+            tbl[3] = 0xffffffff;
+            tbl[4] = 0xffffffff;
+            tbl[5] = 0xffffffff;
+            tbl[6] = 0xffffffff;
+            tbl[7] = 0xffffffff;
+            tbl[8] = 0xffffffff;
+            tbl[9] = 0xffffffff;
+            tbl[10] = 0xffffffff;
+            tbl[0xb] = 0xffffffff;
+            tbl[0xc] = 0xffffffff;
+            tbl[0xd] = 0xffffffff;
+            tbl[0xe] = 0xffffffff;
+            tbl[0xf] = 0xffffffff;
+            tbl[0x10] = 0xffffffff;
+            tbl[0x11] = 0xffffffff;
+            tbl[0x12] = 0xffffffff;
+            tbl[0x13] = 0xffffffff;
+            tbl[0x14] = 0xffffffff;
+            tbl[0x15] = 0xffffffff;
+            tbl[0x16] = 0xffffffff;
+            tbl[0x17] = 0xffffffff;
+            tbl[0x18] = 0xffffffff;
+            tbl[0x19] = 0xffffffff;
+            tbl[0x1a] = 0xffffffff;
+            tbl[0x1b] = 0xffffffff;
+            tbl[0x1c] = 0xffffffff;
+            tbl[0x1d] = 0xffffffff;
+            tbl[0x1e] = 0xffffffff;
+            tbl[0x1f] = 0xffffffff;
         }
-        for (; iVar8 < (int)uVar9; iVar8 = iVar8 + (uint) * pbVar1 * 4)
+        for (; pos < (int)count; pos = pos + (uint) * stepPtr * 4)
         {
             if (in_r6 == 0)
             {
-                sVar2 = *psVar10;
-                if ((sVar2 == 0x6e) || (sVar2 == 5))
+                tag = *cur;
+                if ((tag == 0x6e) || (tag == 5))
                 {
-                    if (sVar2 == 0x6e)
+                    if (tag == 0x6e)
                     {
-                        (**(code**)(*DAT_803dd71c + 8))(psVar10);
+                        (**(code**)(*DAT_803dd71c + 8))(cur);
                     }
                     else
                     {
-                        (**(code**)(*DAT_803dd6ec + 8))(psVar10);
+                        (**(code**)(*DAT_803dd6ec + 8))(cur);
                     }
-                    if (!bVar3)
+                    if (!found)
                     {
-                        puVar6[0x21] = (int)psVar10 - *(int*)(iVar11 + 0x20);
-                        bVar3 = true;
+                        tbl[0x21] = (int)cur - *(int*)(page + 0x20);
+                        found = true;
                     }
                 }
-                else if (((*(byte*)(psVar10 + 2) & 0x10) != 0) &&
-                    ((uVar7 & 1 << (uint) * (byte*)(psVar10 + 3)) == 0))
+                else if (((*(byte*)(cur + 2) & 0x10) != 0) &&
+                    ((mask & 1 << (uint) * (byte*)(cur + 3)) == 0))
                 {
-                    puVar6[*(byte*)(psVar10 + 3)] = (int)psVar10 - *(int*)(iVar11 + 0x20);
-                    uVar7 = uVar7 | 1 << (uint) * (byte*)(psVar10 + 3);
+                    tbl[*(byte*)(cur + 3)] = (int)cur - *(int*)(page + 0x20);
+                    mask = mask | 1 << (uint) * (byte*)(cur + 3);
                 }
             }
             else
             {
-                if (*psVar10 == 0x6e)
+                if (*cur == 0x6e)
                 {
-                    (**(code**)(*DAT_803dd71c + 0xc))(psVar10);
+                    (**(code**)(*DAT_803dd71c + 0xc))(cur);
                 }
-                if (*psVar10 == 5)
+                if (*cur == 5)
                 {
-                    (**(code**)(*DAT_803dd6ec + 0xc))(psVar10);
+                    (**(code**)(*DAT_803dd6ec + 0xc))(cur);
                 }
             }
-            pbVar1 = (byte*)(psVar10 + 1);
-            psVar10 = psVar10 + (uint) * pbVar1 * 2;
+            stepPtr = (byte*)(cur + 1);
+            cur = cur + (uint) * stepPtr * 2;
         }
         if (in_r6 == 0)
         {
-            uVar4 = puVar6[0x21];
-            uVar7 = uVar9;
-            if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar9))
+            v = tbl[0x21];
+            mask = count;
+            if ((v != 0xffffffff) && ((int)v < (int)count))
             {
-                uVar7 = uVar4;
+                mask = v;
             }
-            iVar11 = 4;
-            puVar5 = puVar6;
+            page = 4;
+            q = tbl;
             do
             {
-                uVar4 = *puVar5;
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = *q;
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                uVar4 = puVar5[1];
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = q[1];
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                uVar4 = puVar5[2];
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = q[2];
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                uVar4 = puVar5[3];
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = q[3];
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                uVar4 = puVar5[4];
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = q[4];
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                uVar4 = puVar5[5];
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = q[5];
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                uVar4 = puVar5[6];
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = q[6];
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                uVar4 = puVar5[7];
-                if ((uVar4 != 0xffffffff) && ((int)uVar4 < (int)uVar7))
+                v = q[7];
+                if ((v != 0xffffffff) && ((int)v < (int)mask))
                 {
-                    uVar7 = uVar4;
+                    mask = v;
                 }
-                puVar5 = puVar5 + 8;
-                iVar11 = iVar11 + -1;
+                q = q + 8;
+                page = page + -1;
             }
-            while (iVar11 != 0);
-            puVar6[0x22] = uVar7;
-            if (puVar6[0x21] == 0xffffffff)
+            while (page != 0);
+            tbl[0x22] = mask;
+            if (tbl[0x21] == 0xffffffff)
             {
-                puVar6[0x20] = uVar9;
+                tbl[0x20] = count;
             }
             else
             {
-                puVar6[0x20] = puVar6[0x21];
+                tbl[0x20] = tbl[0x21];
             }
         }
     }
@@ -421,43 +421,43 @@ void FUN_80056cfc(void)
     return;
 }
 
-void FUN_800571f8(u8* param_1)
+void FUN_800571f8(u8* outFlags)
 {
-    int iVar1;
-    int iVar2;
-    int* piVar3;
-    int iVar4;
+    int foundIdx;
+    int remain;
+    int* entry;
+    int mapId;
 
-    iVar4 = 0;
+    mapId = 0;
     do
     {
-        iVar2 = 0;
-        iVar1 = (int)DAT_803dda6c;
-        piVar3 = &DAT_80382eac;
-        if (0 < iVar1)
+        foundIdx = 0;
+        remain = (int)DAT_803dda6c;
+        entry = &DAT_80382eac;
+        if (0 < remain)
         {
             do
             {
-                if ((*piVar3 != 0) && (iVar4 == *(short*)(piVar3 + 1))) goto LAB_80059dfc;
-                piVar3 = piVar3 + 2;
-                iVar2 = iVar2 + 1;
-                iVar1 = iVar1 + -1;
+                if ((*entry != 0) && (mapId == *(short*)(entry + 1))) goto found;
+                entry = entry + 2;
+                foundIdx = foundIdx + 1;
+                remain = remain + -1;
             }
-            while (iVar1 != 0);
+            while (remain != 0);
         }
-        iVar2 = -1;
-    LAB_80059dfc:
-        if (iVar2 == -1)
+        foundIdx = -1;
+    found:
+        if (foundIdx == -1)
         {
-            *param_1 = 0;
+            *outFlags = 0;
         }
         else
         {
-            *param_1 = 1;
+            *outFlags = 1;
         }
-        iVar4 = iVar4 + 1;
-        param_1 = param_1 + 1;
-        if (0x77 < iVar4)
+        mapId = mapId + 1;
+        outFlags = outFlags + 1;
+        if (0x77 < mapId)
         {
             return;
         }
@@ -465,42 +465,42 @@ void FUN_800571f8(u8* param_1)
     while (true);
 }
 
-undefined4 FUN_800575b4(double param_1, float* param_2)
+undefined4 FUN_800575b4(double radius, float* pos)
 {
-    uint uVar1;
-    byte bVar2;
+    uint planeIdx;
+    byte i;
 
-    bVar2 = 0;
+    i = 0;
     while (true)
     {
-        if (4 < bVar2)
+        if (4 < i)
         {
             return 1;
         }
-        uVar1 = (uint)bVar2;
-        if ((float)(param_1 +
-                (double)((float)(&DAT_803885a8)[uVar1 * 5] +
-                    (float)(&DAT_803885a4)[uVar1 * 5] * (param_2[2] - lbl_803DDA5C) +
-                    param_2[1] * (float)(&DAT_803885a0)[uVar1 * 5] +
-                    (float)(&DAT_8038859c)[uVar1 * 5] * (*param_2 - lbl_803DDA58))) <
+        planeIdx = (uint)i;
+        if ((float)(radius +
+                (double)((float)(&DAT_803885a8)[planeIdx * 5] +
+                    (float)(&DAT_803885a4)[planeIdx * 5] * (pos[2] - lbl_803DDA5C) +
+                    pos[1] * (float)(&DAT_803885a0)[planeIdx * 5] +
+                    (float)(&DAT_8038859c)[planeIdx * 5] * (*pos - lbl_803DDA58))) <
             lbl_803DF84C)
             break;
-        bVar2 = bVar2 + 1;
+        i = i + 1;
     }
     return 0;
 }
 
 undefined4 FUN_80057690(int param_1)
 {
-    float fVar1;
-    int iVar2;
-    undefined4 uVar3;
-    byte bVar4;
-    int iVar5;
-    uint uVar6;
-    double dVar7;
-    double dVar8;
-    double dVar9;
+    float projSize;
+    int viewObj;
+    undefined4 result;
+    byte planeIdx;
+    int placementData;
+    uint alpha;
+    double nearDist;
+    double dist;
+    double range;
     float fStack_48;
     float fStack_44;
     float local_40;
@@ -514,39 +514,39 @@ undefined4 FUN_80057690(int param_1)
         *(u8*)(param_1 + 0x37) = 0;
         return 0;
     }
-    iVar5 = *(int*)&((GameObject*)param_1)->anim.placementData;
-    if ((iVar5 == 0) || ((*(byte*)(iVar5 + 5) & 1) == 0))
+    placementData = *(int*)&((GameObject*)param_1)->anim.placementData;
+    if ((placementData == 0) || ((*(byte*)(placementData + 5) & 1) == 0))
     {
-        dVar9 = (double)*(float*)(param_1 + 0x40);
-        if (dVar9 < (double)lbl_803DF838)
+        range = (double)*(float*)(param_1 + 0x40);
+        if (range < (double)lbl_803DF838)
         {
             *(u8*)(param_1 + 0x37) = 0;
             return 0;
         }
-        iVar2 = FUN_80017a98();
-        if (((iVar5 == 0) || ((*(byte*)(iVar5 + 5) & 2) == 0)) || (iVar2 == 0))
+        viewObj = FUN_80017a98();
+        if (((placementData == 0) || ((*(byte*)(placementData + 5) & 2) == 0)) || (viewObj == 0))
         {
-            dVar8 = (double)FUN_80006958((double)((GameObject*)param_1)->anim.worldPosX,
+            dist = (double)FUN_80006958((double)((GameObject*)param_1)->anim.worldPosX,
                                          (double)((GameObject*)param_1)->anim.worldPosY,
                                          (double)((GameObject*)param_1)->anim.worldPosZ);
         }
         else
         {
-            dVar8 = (double)FUN_8001771c((float*)(param_1 + 0x18), (float*)(iVar2 + 0x18));
+            dist = (double)FUN_8001771c((float*)(param_1 + 0x18), (float*)(viewObj + 0x18));
         }
-        if (dVar9 < dVar8)
+        if (range < dist)
         {
             *(u8*)(param_1 + 0x37) = 0;
             return 0;
         }
-        uVar6 = 0xff;
-        dVar7 = (double)(float)(dVar9 - (double)lbl_803DF854);
-        if (dVar7 < dVar8)
+        alpha = 0xff;
+        nearDist = (double)(float)(range - (double)lbl_803DF854);
+        if (nearDist < dist)
         {
-            uVar6 = (uint)(lbl_803DF858 *
-                (lbl_803DF85C - (float)(dVar8 - dVar7) / (float)(dVar9 - dVar7)));
+            alpha = (uint)(lbl_803DF858 *
+                (lbl_803DF85C - (float)(dist - nearDist) / (float)(range - nearDist)));
             local_30 = (double)(longlong)(int)
-            uVar6;
+            alpha;
         }
         FUN_8000693c((double)(((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58),
                      (double)((GameObject*)param_1)->anim.worldPosY,
@@ -554,19 +554,19 @@ undefined4 FUN_80057690(int param_1)
                      (double)(((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale),
                      auStack_34,
                      auStack_38, &fStack_3c, &local_40, &fStack_44, &fStack_48);
-        fVar1 = ABS(local_40) * lbl_803DF834;
-        if (fVar1 < lbl_803DF860)
+        projSize = ABS(local_40) * lbl_803DF834;
+        if (projSize < lbl_803DF860)
         {
             *(u8*)(param_1 + 0x37) = 0;
             return 0;
         }
-        if (fVar1 < lbl_803DF868)
+        if (projSize < lbl_803DF868)
         {
-            local_30 = (double)CONCAT44(0x43300000, uVar6 ^ 0x80000000);
-            uVar6 = (uint)(((float)(local_30 - DOUBLE_803df840) * (fVar1 - lbl_803DF860)) /
+            local_30 = (double)CONCAT44(0x43300000, alpha ^ 0x80000000);
+            alpha = (uint)(((float)(local_30 - DOUBLE_803df840) * (projSize - lbl_803DF860)) /
                 lbl_803DF864);
         }
-        *(char*)(param_1 + 0x37) = (char)(uVar6 * (((GameObject*)param_1)->anim.alpha + 1) >> 8);
+        *(char*)(param_1 + 0x37) = (char)(alpha * (((GameObject*)param_1)->anim.alpha + 1) >> 8);
     }
     else
     {
@@ -574,26 +574,26 @@ undefined4 FUN_80057690(int param_1)
     }
     if (*(char*)(param_1 + 0x37) == '\0')
     {
-        uVar3 = 0;
+        result = 0;
     }
     else
     {
-        for (bVar4 = 0; bVar4 < 5; bVar4 = bVar4 + 1)
+        for (planeIdx = 0; planeIdx < 5; planeIdx = planeIdx + 1)
         {
-            uVar6 = (uint)bVar4;
+            alpha = (uint)planeIdx;
             if (((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale +
-                (float)(&DAT_803885a8)[uVar6 * 5] +
-                (float)(&DAT_803885a4)[uVar6 * 5] * (((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C) +
-                ((GameObject*)param_1)->anim.worldPosY * (float)(&DAT_803885a0)[uVar6 * 5] +
-                (float)(&DAT_8038859c)[uVar6 * 5] * (((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58) <
+                (float)(&DAT_803885a8)[alpha * 5] +
+                (float)(&DAT_803885a4)[alpha * 5] * (((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C) +
+                ((GameObject*)param_1)->anim.worldPosY * (float)(&DAT_803885a0)[alpha * 5] +
+                (float)(&DAT_8038859c)[alpha * 5] * (((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58) <
                 lbl_803DF84C)
             {
                 return 0;
             }
         }
-        uVar3 = 1;
+        result = 1;
     }
-    return uVar3;
+    return result;
 }
 
 int return0_80056694(void) { return 0x0; }
