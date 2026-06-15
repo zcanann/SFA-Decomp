@@ -1150,8 +1150,8 @@ void arwarwing_handleObjectDamage(int obj, int state)
 #pragma scheduling off
 int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
     int i;
+    int state = *(int*)&((GameObject*)obj)->extra;
 
     Camera_GetCurrentViewSlot();
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)arwarwing_clearAimSnapshot;
@@ -1162,7 +1162,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     arwarwing_updateRollAndEngine(obj, state);
     arwarwing_updateThrusters(obj, state);
-    if (((ArwingState*)state)->bombObj != 0)
+    if ((void*)((ArwingState*)state)->bombObj != NULL)
         arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
     ((GameObject*)((ArwingState*)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha = 0;
