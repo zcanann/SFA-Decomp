@@ -5800,12 +5800,19 @@ int cardDeleteFn_8007d99c(void)
     lbl_803DD058 = 0;
 
     do {
+        int ok;
         if (cardProbe(0) == 0) {
-            return 0;
+            ok = 0;
+        } else {
+            lbl_803DD040 = mmAlloc(0xA000, -1, 0);
+            if (lbl_803DD040 == 0) {
+                lbl_803DB700 = 8;
+                ok = 0;
+            } else {
+                ok = 1;
+            }
         }
-        lbl_803DD040 = mmAlloc(0xA000, -1, 0);
-        if (lbl_803DD040 == 0) {
-            lbl_803DB700 = 8;
+        if (!ok) {
             return 0;
         }
         lbl_803DB700 = 0;
