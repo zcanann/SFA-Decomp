@@ -30,8 +30,6 @@ extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
-extern u8 lbl_803DBF20;
-extern void* mmAlloc(int size, int a, int b);
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -76,9 +74,7 @@ extern f32 lbl_803E4B18;
 extern f32 lbl_803E4B1C;
 extern f32 lbl_803E4B20;
 extern f32 lbl_803E4B24;
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E4B08;
-extern void envFxActFn_800887f8(int a);
 
 void FUN_801b9cc4(int param_1)
 {
