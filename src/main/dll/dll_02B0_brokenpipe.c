@@ -30,7 +30,6 @@ void brokenpipe_init(int obj, int setup)
 {
     GameObject* object = (GameObject*)obj;
     BrokenPipeSetup* setupData = (BrokenPipeSetup*)setup;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)object->anim.hitReactState;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);
@@ -44,7 +43,8 @@ void brokenpipe_init(int obj, int setup)
             object->anim.rootMotionScale = lbl_803E7340;
         }
         ObjHitbox_SetSphereRadius(obj,
-                                  (int)((f32)hitState->primaryRadius * object->anim.rootMotionScale));
+                                  (int)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
+                                        object->anim.rootMotionScale));
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags |= BROKENPIPE_OBJECT_FLAGS_INIT;
