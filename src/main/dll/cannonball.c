@@ -55,17 +55,15 @@ void trickyFn_80141290(int obj, int ball)
     float speed;
     double distance;
     double bestDistance;
-    RomCurveWalker *route;
 
-    route = (RomCurveWalker *)(ball + CANNONBALL_ROUTE);
     nodeCount = 0;
     if (*(u8*)(ball + CANNONBALL_INIT_DONE) != 0)
     {
-        if (route->reverse == 0)
+        if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->reverse == 0)
         {
-            if (route->atSegmentEnd != 0)
+            if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->atSegmentEnd != 0)
             {
-                nodeSet = (int)route->nodeA4;
+                nodeSet = (int)((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->nodeA4;
                 mask = 1;
                 for (bit = 0; bit < 4; bit++)
                 {
@@ -78,12 +76,12 @@ void trickyFn_80141290(int obj, int ball)
                 }
             }
         }
-        else if (route->atSegmentEnd == 0)
+        else if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->atSegmentEnd == 0)
         {
             int node2;
             int nodeSet2;
             u32 mask2;
-            nodeSet2 = (int)route->nodeA4;
+            nodeSet2 = (int)((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->nodeA4;
             mask2 = 1;
             for (bit = 0; bit < 4; bit++)
             {
@@ -114,7 +112,7 @@ void trickyFn_80141290(int obj, int ball)
                 }
             }
 
-            curveFn_800da23c(route, (void *)targetNode);
+            curveFn_800da23c(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), (void *)targetNode);
         }
 
         speed = *(float*)(ball + CANNONBALL_SPEED);
@@ -144,7 +142,7 @@ void trickyFn_80141290(int obj, int ball)
         }
 
         *(float*)(ball + CANNONBALL_SPEED) = speed;
-        trickyAdvanceRouteTargetAhead(obj, route, *(float*)(ball + CANNONBALL_SPEED));
+        trickyAdvanceRouteTargetAhead(obj, ((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), *(float*)(ball + CANNONBALL_SPEED));
         trickyMove(obj, (void*)(ball + CANNONBALL_MOVE_STATE));
 
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, (void*)0) != 0)
@@ -195,23 +193,23 @@ void trickyFn_80141290(int obj, int ball)
             {
                 nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(fromNode, 0);
                 targetNode = (int)(*gRomCurveInterface)->getById(nextNode);
-                route->reverse = 0;
+                ((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->reverse = 0;
             }
             else
             {
                 fromNode = toNode;
                 nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(toNode, 0);
                 targetNode = (int)(*gRomCurveInterface)->getById(nextNode);
-                route->reverse = 1;
+                ((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->reverse = 1;
             }
 
-            fn_800DA980(route, (void *)curve, (void *)fromNode, (void *)targetNode);
-            if (route->reverse != 0) {
-                RomCurve_stepClamped(route, lbl_803E250C);
+            fn_800DA980(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), (void *)curve, (void *)fromNode, (void *)targetNode);
+            if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->reverse != 0) {
+                RomCurve_stepClamped(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), lbl_803E250C);
             }
             else
             {
-                RomCurve_stepClamped(route, lbl_803E23E0);
+                RomCurve_stepClamped(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), lbl_803E23E0);
             }
 
             *(float*)(ball + CANNONBALL_SFX_TIMER) = lbl_803E23DC;
