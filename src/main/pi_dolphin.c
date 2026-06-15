@@ -5427,7 +5427,8 @@ void fn_8004DA54(char* p1)
     newshadows_getReflectionScrollOffsets(&rx, &ry);
     fn_80293C64(Prepared_803DEAD8 * rx, &sv, &cv);
     s = mathCosf(Prepared_803DEAD8 * ry);
-    k = (lbl_803DEB08 * s + lbl_803DEB04) * lbl_803DB5F0;
+    k = lbl_803DEB08 * s + lbl_803DEB04;
+    k = k * lbl_803DB5F0;
     cv = cv * k;
     sv = sv * k;
     m1.v[0][0] = cv;
@@ -5437,7 +5438,8 @@ void fn_8004DA54(char* p1)
     fn_80293C64(Prepared_803DEAD8 * -ry, &sv, &cv);
     s = mathCosf(Prepared_803DEAD8 * rx);
     f31v = lbl_803DEADC * s + lbl_803DEADC;
-    k = (lbl_803DEB08 * s + lbl_803DEB04) * lbl_803DB5F0;
+    k = lbl_803DEB08 * s + lbl_803DEB04;
+    k = k * lbl_803DB5F0;
     cv = cv * k;
     sv = sv * k;
     m2.v[0][0] = cv;
