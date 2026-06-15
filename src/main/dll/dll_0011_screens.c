@@ -707,18 +707,22 @@ u32 SaveGame_mapGetObjGroups(int idx);
 
 void loadTaskTexts(void)
 {
+    char** pp;
     int i;
-    int idx;
     u8* s;
-    u8* p = &lbl_803A4218[0xd];
+    int idx;
+    u8* p;
     int n = 0xd;
-    while (n-- != 0)
+    p = &lbl_803A4218[0xd];
+    while (p--, n-- != 0)
     {
-        *--p = 0xff;
+        *p = 0xff;
     }
-    for (i = 0x49; i != 0; i--)
+    i = 0x49;
+    pp = &sMapDirectoryNameTable[0x49];
+    while (pp--, i-- != 0)
     {
-        s = (u8*)sMapDirectoryNameTable[i];
+        s = (u8*)*pp;
         if (s[0] == 'T' && s[1] == 'a' && s[2] == 's' && s[3] == 'k' &&
             s[4] == 'T' && s[5] == 'e' && s[6] == 'x' && s[7] == 't' && s[8] == 's')
         {
