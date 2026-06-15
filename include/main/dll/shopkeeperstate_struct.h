@@ -5,7 +5,9 @@
 
 typedef struct ShopkeeperState
 {
-    u8 pad000[0x280];
+    u8 pad000[0x274];
+    s16 controlMode; /* 0x274: shared BaddieState control mode (!= 7 gates render) */
+    u8 pad276[0x280 - 0x276];
     f32 animSpeed; /* 0x280 */
     u8 pad284[0x35C - 0x284];
     u8 dll2EBlock[0x96D - 0x35C]; /* 0x35c: dll_2E look-controller block (address-used) */
