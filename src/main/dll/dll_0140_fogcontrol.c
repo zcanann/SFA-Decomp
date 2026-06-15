@@ -41,7 +41,7 @@ extern f32 lbl_803E4070;
 extern f32 lbl_803E4074;
 extern f32 lbl_803E4078;
 extern f32 lbl_803E407C;
-extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 extern f32 lbl_803E4068;
 extern f32 lbl_803E406C;
 
@@ -181,11 +181,12 @@ void fogcontrol_update(int obj)
             t = st->blend * ((f32)((FogcontrolPlacement*)setup)->unk1C - (f32)((FogcontrolPlacement*)setup)->unk20) +
                 (f32)((FogcontrolPlacement*)setup)->unk20;
             t = ((GameObject*)obj)->anim.localPosY + t;
-            enableHeavyFog(*(u8*)(setup + 0x1a) & 1, t,
+            enableHeavyFog(t,
                            ((f32)((FogcontrolPlacement*)setup)->unk1E + t) - (f32)((FogcontrolPlacement*)setup)->unk1C,
                            (f32)((FogcontrolPlacement*)setup)->unk24,
                            (f32)((FogcontrolPlacement*)setup)->unk22 / lbl_803E4078,
-                           lbl_803E407C);
+                           lbl_803E407C,
+                           *(u8*)(setup + 0x1a) & 1);
         }
     }
 }
