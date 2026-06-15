@@ -53,13 +53,13 @@ typedef struct Dim2lavacontrolPlacement
 
 typedef struct Dim2lavacontrolState
 {
-    s8 unk0;
-    u8 unk1;
-    s8 unk2;
-    u8 unk3;
-    u8 unk4;
+    s8 countdown;
+    u8 countdownSave;
+    s8 flags;
+    u8 sfxLevel;
+    u8 phase;
     u8 pad5[0xC - 0x5];
-    int unkC;
+    int musicTrack;
     u8 padC[0x24 - 0x10];
     f32 unk24;
 } Dim2lavacontrolState;
@@ -75,19 +75,19 @@ extern void envFxActFn_800887f8(int a);
 extern u8 lbl_803DBF28[8];
 extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 
-void FUN_801b9cc4(int param_1)
+void FUN_801b9cc4(int obj)
 {
-    char* pcVar1;
-    int iVar2;
+    char* state;
+    int placement;
 
-    pcVar1 = ((GameObject*)param_1)->extra;
-    if ((pcVar1[2] & 1U) == 0)
+    state = ((GameObject*)obj)->extra;
+    if ((state[2] & 1U) == 0)
     {
-        iVar2 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if (('\0' < *pcVar1) && (*pcVar1 = *pcVar1 + -1, *pcVar1 == '\0'))
+        placement = *(int*)&((GameObject*)obj)->anim.placementData;
+        if (('\0' < *state) && (*state = *state + -1, *state == '\0'))
         {
-            pcVar1[2] = pcVar1[2] | 1;
-            GameBit_Set((int)*(short*)(iVar2 + 0x1e), 1);
+            state[2] = state[2] | 1;
+            GameBit_Set((int)*(short*)(placement + 0x1e), 1);
         }
     }
     return;
@@ -106,15 +106,15 @@ void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dim2lavacontrol_setScale(void* obj)
 {
     void* sub = ((GameObject*)obj)->extra;
-    if (((s32)((Dim2lavacontrolState*)sub)->unk2 & 1) == 0)
+    if (((s32)((Dim2lavacontrolState*)sub)->flags & 1) == 0)
     {
         void* p = *(void**)&((GameObject*)obj)->anim.placementData;
-        if ((s32)((Dim2lavacontrolState*)sub)->unk0 > 0)
+        if ((s32)((Dim2lavacontrolState*)sub)->countdown > 0)
         {
-            ((Dim2lavacontrolState*)sub)->unk0 -= 1;
-            if (((Dim2lavacontrolState*)sub)->unk0 == 0)
+            ((Dim2lavacontrolState*)sub)->countdown -= 1;
+            if (((Dim2lavacontrolState*)sub)->countdown == 0)
             {
-                ((Dim2lavacontrolState*)sub)->unk2 = (s8)(*(u8*)&((Dim2lavacontrolState*)sub)->unk2 | 1);
+                ((Dim2lavacontrolState*)sub)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)sub)->flags | 1);
                 GameBit_Set(((Dim2lavacontrolPlacement*)p)->unk1E, 1);
             }
         }
@@ -147,8 +147,8 @@ void dim2lavacontrol_init(int obj, int param2)
         gameBitFn_800ea2e0(i);
     }
     state = *(int*)&((GameObject*)obj)->extra;
-    ((Dim2lavacontrolState*)state)->unk0 = (s8) * (s16*)(param2 + 0x1a);
-    ((Dim2lavacontrolState*)state)->unk1 = *(u8*)&((Dim2lavacontrolState*)state)->unk0;
+    ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);
+    ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
     if (GameBit_Get(*(s16*)(param2 + 0x1e)) != 0)
     {
         g = 1;
@@ -157,19 +157,19 @@ void dim2lavacontrol_init(int obj, int param2)
     {
         g = 0;
     }
-    ((Dim2lavacontrolState*)state)->unk2 = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->unk2 | g);
-    ((Dim2lavacontrolState*)state)->unkC = 0xd7;
-    ((Dim2lavacontrolState*)state)->unk4 = 0;
-    if ((((Dim2lavacontrolState*)state)->unk2 & 1) != 0)
+    ((Dim2lavacontrolState*)state)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->flags | g);
+    ((Dim2lavacontrolState*)state)->musicTrack = 0xd7;
+    ((Dim2lavacontrolState*)state)->phase = 0;
+    if ((((Dim2lavacontrolState*)state)->flags & 1) != 0)
     {
-        *(u8*)&((Dim2lavacontrolState*)state)->unk0 = 0;
-        ((Dim2lavacontrolState*)state)->unk3 = lbl_803DBF28[0];
+        *(u8*)&((Dim2lavacontrolState*)state)->countdown = 0;
+        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[0];
         fn_8004C1E4(lbl_803DBF28[0], lbl_803E4B90);
     }
     else
     {
-        *(u8*)&((Dim2lavacontrolState*)state)->unk0 = 3;
-        ((Dim2lavacontrolState*)state)->unk3 = lbl_803DBF28[3];
+        *(u8*)&((Dim2lavacontrolState*)state)->countdown = 3;
+        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[3];
         fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
     }
     Music_Trigger(0xdd, 1);
@@ -201,30 +201,30 @@ void dim2lavacontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
     obj = *(int*)&((GameObject*)obj)->extra;
-    switch (((Dim2lavacontrolState*)obj)->unk4)
+    switch (((Dim2lavacontrolState*)obj)->phase)
     {
     case 0:
         if (GameBit_Get(0xacd) != 0)
         {
             GameBit_Set(0xcc3, 1);
-            ((Dim2lavacontrolState*)obj)->unk4 = 1;
+            ((Dim2lavacontrolState*)obj)->phase = 1;
         }
         break;
     case 1:
         break;
     }
-    diff = ((Dim2lavacontrolState*)obj)->unk3 - lbl_803DBF28[((Dim2lavacontrolState*)obj)->unk0];
+    diff = ((Dim2lavacontrolState*)obj)->sfxLevel - lbl_803DBF28[((Dim2lavacontrolState*)obj)->countdown];
     if (diff != 0)
     {
         if (diff > 0)
         {
-            ((Dim2lavacontrolState*)obj)->unk3 -= 1;
+            ((Dim2lavacontrolState*)obj)->sfxLevel -= 1;
         }
         else
         {
-            ((Dim2lavacontrolState*)obj)->unk3 += 1;
+            ((Dim2lavacontrolState*)obj)->sfxLevel += 1;
         }
-        fn_8004C1E4(((Dim2lavacontrolState*)obj)->unk3, lbl_803E4B90);
+        fn_8004C1E4(((Dim2lavacontrolState*)obj)->sfxLevel, lbl_803E4B90);
     }
     if (Player_GetHeldObject((int)Obj_GetPlayerObject(), &heldObj) != 0)
     {
