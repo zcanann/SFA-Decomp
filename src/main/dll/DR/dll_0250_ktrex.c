@@ -1400,6 +1400,7 @@ int ktrex_stateHandlerA03(int obj, int runtime)
     int phase;
     f32 f4;
     f32 f5;
+    f32 result;
     int popped;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
@@ -1414,16 +1415,17 @@ int ktrex_stateHandlerA03(int obj, int runtime)
             gKTRexState)->rowAZ)[phase];
         if (__fabs(f5) > __fabs(f4))
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 =
+            result =
                 (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
                 f5;
         }
         else
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 =
+            result =
                 (((GameObject*)obj)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
                 f4;
         }
+        ((KTRexArenaState*)gKTRexState)->unk8 = result;
         popped = 0;
         if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
         {
