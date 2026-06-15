@@ -245,6 +245,7 @@ void arwarwing_addMaxShield(int arwing, int p2)
 #pragma peephole reset
 
 #pragma scheduling off
+#pragma peephole off
 void arwarwing_addShield(int arwing, int p2)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
@@ -256,9 +257,9 @@ void arwarwing_addShield(int arwing, int p2)
     {
         v = 0;
     }
-    else if (v > *(s8*)&state->maxShield)
+    else
     {
-        v = *(s8*)&state->maxShield;
+        v = (v > *(s8*)&state->maxShield) ? *(s8*)&state->maxShield : v;
     }
     *(s8*)&state->shield = v;
     if (*(s8*)&state->shield > 3)
@@ -266,6 +267,7 @@ void arwarwing_addShield(int arwing, int p2)
         Sfx_StopObjectChannel(arwing, 4);
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
