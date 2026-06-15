@@ -1,7 +1,6 @@
 #include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
 
-extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F38;
 
