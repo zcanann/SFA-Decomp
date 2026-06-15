@@ -1239,7 +1239,7 @@ int mapProcessRomList(int slot)
     rl = mapGetRomListAndOffsets(slot, 0);
     entry = base + i * 8 + 0x418C;
     *(int*)entry = rl;
-    *(int*)(base + slot * 4 + 0x83A8) = rl;
+    ((int*)(base + 0x83A8))[slot] = rl;
     *(s16*)(base + i * 8 + 0x4190) = slot;
     lbl_803DCEA0 = *(void**)entry;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
