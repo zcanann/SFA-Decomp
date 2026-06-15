@@ -3418,10 +3418,13 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
         pp += 1;
     }
 
-    hitCount = hitDetect_800667ec(0,
+    {
+        extern int hitDetect_800667ec();
+        hitCount = hitDetect_800667ec(0,
                                (void*)(lbl_803DCF30 + *(s16*)(tbl + 4) * 0x4c),
                                (void*)(lbl_803DCF30 + *(s16*)(tbl + 0x1c) * 0x4c),
                                param_2, param_3, count, results, 0);
+    }
 
     fp = (f32*)results;
     pp = (void**)results;
