@@ -273,7 +273,6 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     DRLaserTurretState* state;
     char stickHi;
     char stickLo;
-    s16 v9d0;
     int btn;
     int slot;
     char nudge;
@@ -305,11 +304,10 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         {
             state->countValue = (s16)(state->countScale >> 1);
         }
-        v9d0 = state->countValue;
         texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-        texture->textureId = (v9d0 - v9d0 / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        texture->textureId = (state->countValue - state->countValue / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-        slot = v9d0 / 10;
+        slot = state->countValue / 10;
         texture->textureId = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         slot = slot / 10;
         if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
@@ -342,11 +340,10 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
             state->digitCount = DR_LASERTURRET_MIN_DIGIT_COUNT;
         }
         {
-            u8 v = state->digitCount;
             texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-            texture->textureId = (v - v / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            texture->textureId = (state->digitCount - state->digitCount / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-            slot = v / 10;
+            slot = state->digitCount / 10;
             texture->textureId = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             slot = slot / 10;
             if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
