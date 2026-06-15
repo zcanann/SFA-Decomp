@@ -736,12 +736,15 @@ void gunpowderbarrel_hitDetect(int param_1)
     Vec3_ReflectAgainstNormal(sp10, (void*)(param_1 + 0x24), (void*)(param_1 + 0x24));
     Vec3_ReflectAgainstNormal(sp10, &state->throwVelX, &state->throwVelX);
 
-    barrel->anim.velocityX = lbl_803E4330 * barrel->anim.velocityX;
-    barrel->anim.velocityY = lbl_803E4330 * barrel->anim.velocityY;
-    barrel->anim.velocityZ = lbl_803E4330 * barrel->anim.velocityZ;
-    state->throwVelX = lbl_803E4330 * state->throwVelX;
-    state->throwVelY = lbl_803E4330 * state->throwVelY;
-    state->throwVelZ = lbl_803E4330 * state->throwVelZ;
+    {
+        f32 damp = lbl_803E4330;
+        barrel->anim.velocityX = damp * barrel->anim.velocityX;
+        barrel->anim.velocityY = damp * barrel->anim.velocityY;
+        barrel->anim.velocityZ = damp * barrel->anim.velocityZ;
+        state->throwVelX = damp * state->throwVelX;
+        state->throwVelY = damp * state->throwVelY;
+        state->throwVelZ = damp * state->throwVelZ;
+    }
     (void)sp1c;
 
     if (state->impactSoundCooldown > lbl_803E4334)
