@@ -438,10 +438,10 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
     return;
 }
 
-void FUN_800da850(uint param_1, undefined* param_2)
+void FUN_800da850(uint value, undefined* out)
 {
-    *param_2 = (char)(param_1 & 0xffff);
-    param_2[1] = (char)((param_1 & 0xffff) >> 8);
+    *out = (char)(value & 0xffff);
+    out[1] = (char)((value & 0xffff) >> 8);
     return;
 }
 
