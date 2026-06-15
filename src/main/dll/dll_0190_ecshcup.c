@@ -9,7 +9,6 @@
 extern GameObject* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 
-extern f32 lbl_803E5048;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5060;
 extern undefined4 ObjHits_SetHitVolumeSlot();
