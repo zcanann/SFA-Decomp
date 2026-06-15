@@ -652,7 +652,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
 
     sequenceIndex = *(u8*)(state + 0x33b);
     eventRows = *(u8**)(base + sequenceIndex * 0x28 + 0x1444);
-    stateFlags = *(u32*)(state + 0x2dc);
+    stateFlags = ((BaddieState*)state)->controlFlags;
     if ((stateFlags & 0x4000) != 0)
     {
         return 0;
@@ -716,14 +716,14 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
             (*(u8*)(state + 0x2f1) & 0x20) != 0) &&
         !(*(u8*)(state + 0x33c) == eventIndex && lbl_803E2740 != *(f32*)(state + 0x32c)))
     {
-        sf2 = *(u32*)(state + 0x2dc);
+        sf2 = ((BaddieState*)state)->controlFlags;
         if ((sf2 & 0x800080) != 0 || (*(u8*)(state + 0x2f1) & 0x20) != 0)
         {
             row = eventRows + eventIndex * 0xc;
             blendTimer = lbl_803E274C * (blendScale * *(f32*)row);
             *(f32*)(state + 0x330) = blendTimer;
             *(f32*)(state + 0x32c) = blendTimer;
-            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) | 0x80;
             *(u8*)(state + 0x2f3) = 0;
             *(u8*)(state + 0x2f4) = 0;
@@ -746,7 +746,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         {
             *(f32*)(state + 0x308) = *(f32*)(state + 0x308) - lbl_803E2754;
         }
-        if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             eventTableIndex = *(u8*)(state + 0x33c) * 0xc;
             row = eventRows + eventTableIndex;
@@ -760,8 +760,8 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         if (*(f32*)(state + 0x32c) <= lbl_803E2740)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
-            *(u32*)(state + 0x2dc) =
-                (*(u32*)(state + 0x2dc) & ~SEQOBJ_ANIM_BLEND_ACTIVE_FLAG) |
+            ((BaddieState*)state)->controlFlags =
+                (((BaddieState*)state)->controlFlags & ~SEQOBJ_ANIM_BLEND_ACTIVE_FLAG) |
                 SEQOBJ_ANIM_EVENT_HOLD_FLAG;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & 0x7f;
             *(u8*)(state + 0x33c) = 0;
