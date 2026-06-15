@@ -107,15 +107,14 @@ void drcagewith_hitDetect(int obj)
             }
             return;
         }
-        v = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX) *
-            lbl_803E69FC;
+        v = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
+        v = v * lbl_803E69FC;
         v = interpolate(v - ((DrcagewithState*)p)->unk24, lbl_803E6A00, timeDelta);
         clamped = (v < lbl_803E6A04 * timeDelta)
                       ? lbl_803E6A04 * timeDelta
                       : ((v > lbl_803E6A08 * timeDelta) ? lbl_803E6A08 * timeDelta : v);
         ((DrcagewithState*)p)->unk24 = ((DrcagewithState*)p)->unk24 + clamped;
-        div = lbl_803E6A0C;
-        for (i = 0; i < 9; i++)
+        for (i = 0, div = lbl_803E6A0C; i < 9; i++)
         {
             nearest = objModelGetVecFn_800395d8(obj, i);
             if (nearest != NULL)
@@ -125,7 +124,7 @@ void drcagewith_hitDetect(int obj)
         }
         if (*(void**)p != NULL)
         {
-            *(s16*)(*(int*)p + 4) = (int)((DrcagewithState*)p)->unk24;
+            *(s16*)(*(int*)p + 4) = (s16)((DrcagewithState*)p)->unk24;
             nearest = (int*)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
