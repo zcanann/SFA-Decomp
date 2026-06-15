@@ -47,7 +47,7 @@ int FUN_8007eb04(uint param_1)
     uint uVar11;
     uint uVar12;
     int iVar13;
-    int iVar14;
+    int sum2;
     uint uVar15;
     uint uVar16;
     uint uVar17;
@@ -56,9 +56,9 @@ int FUN_8007eb04(uint param_1)
     uint uVar20;
     uint uVar21;
     uint uVar22;
-    uint* puVar23;
+    uint* wp;
     uint uVar24;
-    bool bVar25;
+    bool carry;
 
     uVar7 = DAT_803ddcc4;
     uVar2 = 0;
@@ -67,42 +67,42 @@ int FUN_8007eb04(uint param_1)
     iVar13 = 0;
     for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8)
     {
-        puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
-        uVar12 = puVar23[1];
-        bVar25 = CARRY4(uVar6, uVar12);
+        wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+        uVar12 = wp[1];
+        carry = CARRY4(uVar6, uVar12);
         uVar3 = uVar6 + uVar12;
-        uVar15 = puVar23[3];
+        uVar15 = wp[3];
         uVar5 = uVar3 + uVar15;
-        uVar16 = puVar23[5];
+        uVar16 = wp[5];
         uVar24 = uVar5 + uVar16;
-        uVar17 = puVar23[7];
+        uVar17 = wp[7];
         uVar8 = uVar24 + uVar17;
-        uVar18 = puVar23[9];
+        uVar18 = wp[9];
         uVar9 = uVar8 + uVar18;
-        uVar19 = puVar23[0xb];
+        uVar19 = wp[0xb];
         uVar10 = uVar9 + uVar19;
-        uVar20 = puVar23[0xd];
+        uVar20 = wp[0xd];
         uVar11 = uVar10 + uVar20;
-        uVar21 = puVar23[0xf];
+        uVar21 = wp[0xf];
         uVar2 = uVar2 ^ uVar12 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21;
-        uVar1 = uVar1 ^ *puVar23 ^ puVar23[2] ^ puVar23[4] ^ puVar23[6] ^ puVar23[8] ^ puVar23[10] ^
-            puVar23[0xc] ^ puVar23[0xe];
+        uVar1 = uVar1 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
+            wp[0xc] ^ wp[0xe];
         uVar6 = uVar11 + uVar21;
-        iVar13 = iVar13 + *puVar23 + (uint)bVar25 + puVar23[2] + (uint)CARRY4(uVar3, uVar15) +
-            puVar23[4] + (uint)CARRY4(uVar5, uVar16) + puVar23[6] + (uint)CARRY4(uVar24, uVar17) +
-            puVar23[8] + (uint)CARRY4(uVar8, uVar18) + puVar23[10] + (uint)CARRY4(uVar9, uVar19) +
-            puVar23[0xc] + (uint)CARRY4(uVar10, uVar20) + puVar23[0xe] + (uint)CARRY4(uVar11, uVar21);
+        iVar13 = iVar13 + *wp + (uint)carry + wp[2] + (uint)CARRY4(uVar3, uVar15) +
+            wp[4] + (uint)CARRY4(uVar5, uVar16) + wp[6] + (uint)CARRY4(uVar24, uVar17) +
+            wp[8] + (uint)CARRY4(uVar8, uVar18) + wp[10] + (uint)CARRY4(uVar9, uVar19) +
+            wp[0xc] + (uint)CARRY4(uVar10, uVar20) + wp[0xe] + (uint)CARRY4(uVar11, uVar21);
     }
     for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1)
     {
-        puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
-        uVar3 = *puVar23;
-        uVar5 = puVar23[1];
+        wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+        uVar3 = *wp;
+        uVar5 = wp[1];
         uVar2 = uVar2 ^ uVar5;
         uVar1 = uVar1 ^ uVar3;
-        bVar25 = CARRY4(uVar6, uVar5);
+        carry = CARRY4(uVar6, uVar5);
         uVar6 = uVar6 + uVar5;
-        iVar13 = iVar13 + uVar3 + bVar25;
+        iVar13 = iVar13 + uVar3 + carry;
     }
     uVar2 = uVar2 ^ uVar6 + 0xd;
     uVar1 = uVar1 ^ iVar13 + (uint)(0xfffffff2 < uVar6);
@@ -128,50 +128,50 @@ int FUN_8007eb04(uint param_1)
             uVar3 = 0;
             uVar6 = 0;
             uVar7 = 1;
-            iVar14 = 0;
+            sum2 = 0;
             for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8)
             {
-                puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
-                uVar15 = puVar23[1];
-                bVar25 = CARRY4(uVar7, uVar15);
+                wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+                uVar15 = wp[1];
+                carry = CARRY4(uVar7, uVar15);
                 uVar5 = uVar7 + uVar15;
-                uVar16 = puVar23[3];
+                uVar16 = wp[3];
                 uVar24 = uVar5 + uVar16;
-                uVar17 = puVar23[5];
+                uVar17 = wp[5];
                 uVar8 = uVar24 + uVar17;
-                uVar18 = puVar23[7];
+                uVar18 = wp[7];
                 uVar9 = uVar8 + uVar18;
-                uVar19 = puVar23[9];
+                uVar19 = wp[9];
                 uVar10 = uVar9 + uVar19;
-                uVar20 = puVar23[0xb];
+                uVar20 = wp[0xb];
                 uVar11 = uVar10 + uVar20;
-                uVar21 = puVar23[0xd];
+                uVar21 = wp[0xd];
                 uVar12 = uVar11 + uVar21;
-                uVar22 = puVar23[0xf];
+                uVar22 = wp[0xf];
                 uVar3 = uVar3 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21 ^ uVar22;
-                uVar6 = uVar6 ^ *puVar23 ^ puVar23[2] ^ puVar23[4] ^ puVar23[6] ^ puVar23[8] ^ puVar23[10] ^
-                    puVar23[0xc] ^ puVar23[0xe];
+                uVar6 = uVar6 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
+                    wp[0xc] ^ wp[0xe];
                 uVar7 = uVar12 + uVar22;
-                iVar14 = iVar14 + *puVar23 + (uint)bVar25 + puVar23[2] + (uint)CARRY4(uVar5, uVar16) +
-                    puVar23[4] + (uint)CARRY4(uVar24, uVar17) + puVar23[6] + (uint)CARRY4(uVar8, uVar18)
-                    + puVar23[8] + (uint)CARRY4(uVar9, uVar19) +
-                    puVar23[10] + (uint)CARRY4(uVar10, uVar20) +
-                    puVar23[0xc] + (uint)CARRY4(uVar11, uVar21) +
-                    puVar23[0xe] + (uint)CARRY4(uVar12, uVar22);
+                sum2 = sum2 + *wp + (uint)carry + wp[2] + (uint)CARRY4(uVar5, uVar16) +
+                    wp[4] + (uint)CARRY4(uVar24, uVar17) + wp[6] + (uint)CARRY4(uVar8, uVar18)
+                    + wp[8] + (uint)CARRY4(uVar9, uVar19) +
+                    wp[10] + (uint)CARRY4(uVar10, uVar20) +
+                    wp[0xc] + (uint)CARRY4(uVar11, uVar21) +
+                    wp[0xe] + (uint)CARRY4(uVar12, uVar22);
             }
             for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1)
             {
-                puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
-                uVar5 = *puVar23;
-                uVar24 = puVar23[1];
+                wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+                uVar5 = *wp;
+                uVar24 = wp[1];
                 uVar3 = uVar3 ^ uVar24;
                 uVar6 = uVar6 ^ uVar5;
-                bVar25 = CARRY4(uVar7, uVar24);
+                carry = CARRY4(uVar7, uVar24);
                 uVar7 = uVar7 + uVar24;
-                iVar14 = iVar14 + uVar5 + bVar25;
+                sum2 = sum2 + uVar5 + carry;
             }
             uVar3 = uVar3 ^ uVar7 + 0xd;
-            uVar6 = uVar6 ^ iVar14 + (uint)(0xfffffff2 < uVar7);
+            uVar6 = uVar6 ^ sum2 + (uint)(0xfffffff2 < uVar7);
             if (uVar2 != uVar3 || uVar1 != uVar6)
             {
                 iVar13 = -0x55;
@@ -195,98 +195,98 @@ FUN_8007f350(undefined8 param_1, double param_2, undefined8 param_3, undefined8 
     return 0;
 }
 
-int FUN_8007f3c8(int* param_1, int param_2, int param_3)
+int FUN_8007f3c8(int* arr, int count, int target)
 {
-    int iVar1;
-    int iVar2;
+    int v;
+    int idx;
 
-    iVar2 = 0;
-    if (0 < param_2)
+    idx = 0;
+    if (0 < count)
     {
         do
         {
-            iVar1 = *param_1;
-            param_1 = param_1 + 1;
-            if (iVar1 == param_3)
+            v = *arr;
+            arr = arr + 1;
+            if (v == target)
             {
-                return iVar2;
+                return idx;
             }
-            iVar2 = iVar2 + 1;
-            param_2 = param_2 + -1;
+            idx = idx + 1;
+            count = count + -1;
         }
-        while (param_2 != 0);
+        while (count != 0);
     }
     return -1;
 }
 
-int FUN_8007f56c(int* param_1, int param_2, int param_3)
+int FUN_8007f56c(int* pairs, int count, int key)
 {
-    int iVar1;
-    int iVar2;
-    int iVar3;
+    int lo;
+    int next;
+    int mid;
 
-    if (0x10 < param_2)
+    if (0x10 < count)
     {
-        iVar1 = 0;
+        lo = 0;
         while (true)
         {
-            iVar3 = param_2 + iVar1 >> 1;
-            iVar2 = iVar3;
-            if ((param_3 <= param_1[iVar3 * 2]) &&
-                (param_2 = iVar3, iVar2 = iVar1, param_3 == param_1[iVar3 * 2]))
+            mid = count + lo >> 1;
+            next = mid;
+            if ((key <= pairs[mid * 2]) &&
+                (count = mid, next = lo, key == pairs[mid * 2]))
                 break;
-            iVar1 = iVar2;
-            if (iVar2 < param_2)
+            lo = next;
+            if (next < count)
             {
                 return 0;
             }
         }
-        return param_1[iVar3 * 2 + 1];
+        return pairs[mid * 2 + 1];
     }
-    if (param_2 != 0)
+    if (count != 0)
     {
         do
         {
-            if (*param_1 == param_3)
+            if (*pairs == key)
             {
-                return param_1[1];
+                return pairs[1];
             }
-            param_1 = param_1 + 2;
-            param_2 = param_2 + -1;
+            pairs = pairs + 2;
+            count = count + -1;
         }
-        while (param_2 != 0);
+        while (count != 0);
     }
     return 0;
 }
 
-uint FUN_8007f6c8(float* param_1)
+uint FUN_8007f6c8(float* timer)
 {
-    return ((uint)(byte)((lbl_803DFC20 == *param_1) << 1) << 0x1c) >> 0x1d ^ 1;
+    return ((uint)(byte)((lbl_803DFC20 == *timer) << 1) << 0x1c) >> 0x1d ^ 1;
 }
 
-void FUN_8007f6e4(undefined4* param_1)
+void FUN_8007f6e4(undefined4* timer)
 {
-    *param_1 = lbl_803DFC20;
+    *timer = lbl_803DFC20;
     return;
 }
 
-void FUN_8007f718(float* param_1, short param_2)
+void FUN_8007f718(float* out, short val)
 {
-    *param_1 = (float)((double)CONCAT44(0x43300000, (int)param_2 ^ 0x80000000) - DOUBLE_803dfc28);
+    *out = (float)((double)CONCAT44(0x43300000, (int)val ^ 0x80000000) - DOUBLE_803dfc28);
     return;
 }
 
-undefined4 FUN_8007f764(float* param_1)
+undefined4 FUN_8007f764(float* timer)
 {
-    float fVar1;
+    float zero;
 
-    fVar1 = lbl_803DFC20;
-    if (*param_1 != lbl_803DFC20)
+    zero = lbl_803DFC20;
+    if (*timer != lbl_803DFC20)
     {
-        *param_1 = *param_1 - lbl_803DC074;
-        if (*param_1 <= fVar1)
+        *timer = *timer - lbl_803DC074;
+        if (*timer <= zero)
         {
-            *param_1 = fVar1;
+            *timer = zero;
             return 1;
         }
     }
