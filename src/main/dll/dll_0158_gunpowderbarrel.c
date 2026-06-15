@@ -649,9 +649,9 @@ void gunpowderbarrel_hitDetect(int param_1)
     extern int Obj_IsObjectAlive(int obj); /* #57 */
     GameObject* barrel;
     GunpowderBarrelState* state;
-    f32 sp10[3];
     f32 sp1c[3];
-    f32 collision_buf[26];
+    f32 sp10[3];
+    f32 collision_buf[24];
 
     barrel = (GameObject*)param_1;
     state = barrel->extra;
@@ -696,9 +696,9 @@ void gunpowderbarrel_hitDetect(int param_1)
             sp1c[1] = sp1c[1] * inv;
             sp1c[2] = sp1c[2] * inv;
         }
-        state->throwVelX = sp1c[0] + state->throwVelX;
-        state->throwVelY = sp1c[1] + state->throwVelY;
-        state->throwVelZ = sp1c[2] + state->throwVelZ;
+        state->throwVelX = ((f32*)sp1c)[0] + state->throwVelX;
+        state->throwVelY = ((f32*)sp1c)[1] + state->throwVelY;
+        state->throwVelZ = ((f32*)sp1c)[2] + state->throwVelZ;
         sp1c[1] = lbl_803E42C0;
         {
             f32 g = lbl_803E4328;
