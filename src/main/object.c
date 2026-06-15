@@ -1,13 +1,18 @@
+#include "ghidra_import.h"
 #include "main/dll/objpathtransform_struct.h"
 #include "main/dll/objmodel_types.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
 #include "main/mapEvent.h"
 #include "main/object_transform.h"
+#include "main/objanim_internal.h"
+#include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/resource.h"
@@ -186,13 +191,13 @@ void ObjModel_SetRenderCallback(u8* model, void* callback);
 
 #pragma scheduling off
 #pragma peephole off
-void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
+void Obj_SetModelRenderOpAlpha(u8* obj, int alpha)
 {
     ObjAnimComponent* objAnim;
-    s8 renderOpAlpha;
+    int renderOpAlpha;
+    int renderOpIndex;
     ObjModelFileHeaderLite* modelFile;
     ObjModelInstanceLite* model;
-    int renderOpIndex;
 
     objAnim = (ObjAnimComponent*)obj;
     renderOpAlpha = alpha;
@@ -231,8 +236,8 @@ void* Obj_GetActiveModel(u8* obj)
 
 void Obj_ClearModelColorFadeRecursive(u8* obj)
 {
-    u8* childScan;
     int i;
+    u8* childScan;
 
     ((GameObject*)obj)->colorFadeFrames = 0;
     ((GameObject*)obj)->colorFadeFlags &= ~0x6;
@@ -249,8 +254,8 @@ void Obj_ClearModelColorFadeRecursive(u8* obj)
 void Obj_TickModelColorFadeRecursive(u8* obj)
 {
     f32 alpha;
-    u8* childScan;
     int i;
+    u8* childScan;
 
     if ((((GameObject*)obj)->colorFadeFlags & 4) != 0)
     {
@@ -272,7 +277,7 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
         ((GameObject*)obj)->colorFadeFlags ^= 4;
     }
 
-    ((GameObject*)obj)->colorFadeAlpha = (s8)alpha;
+    ((GameObject*)obj)->colorFadeAlpha = (int)alpha;
     if ((((GameObject*)obj)->colorFadeFlags & 8) == 0)
     {
         ((GameObject*)obj)->colorFadeFrames -= framesThisStep;
@@ -334,8 +339,8 @@ void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 bl
 #pragma dont_inline off
 void Obj_SetModelColorOverrideRecursive(u8* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled)
 {
-    u8* childScan;
     int i;
+    u8* childScan;
 
     if (enabled != 0)
     {
@@ -457,8 +462,9 @@ void objSetSlot(u8* obj, s8 slot)
 void fn_8002B758(void* v)
 {
     int i;
-    s8 count = lbl_803DCB74;
+    int count;
 
+    count = lbl_803DCB74;
     for (i = 0; i < count; i++)
     {
         if ((void*)lbl_803408A8[i] == v)
@@ -742,12 +748,11 @@ void objFn_8002b67c(u8* obj)
 
 int objApplyVelocity(u8* obj)
 {
-    f32 scale = lbl_803DE8B8;
-    ((GameObject*)obj)->anim.localPosX += timeDelta * (scale * (((GameObject*)obj)->externalVelX + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelX + ((GameObject*)
         obj)->anim.velocityX));
-    ((GameObject*)obj)->anim.localPosY += timeDelta * (scale * (((GameObject*)obj)->externalVelY + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelY + ((GameObject*)
         obj)->anim.velocityY));
-    ((GameObject*)obj)->anim.localPosZ += timeDelta * (scale * (((GameObject*)obj)->externalVelZ + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelZ + ((GameObject*)
         obj)->anim.velocityZ));
     return 1;
 }
@@ -874,25 +879,21 @@ void ObjModel_Release(u8 * model);
 void Obj_RunInitCallback(u8* obj, int cb, int unused)
 {
     s16 mode = ((GameObject*)obj)->anim.seqId;
-    switch (mode)
+    if (mode == 0x1f || mode == 0)
     {
-    case 0x1f:
-    case 0:
         objLoadPlayerFromSave(obj);
-        break;
-    default:
+    }
+    else
+    {
+        int* p = (int*)((GameObject*)obj)->anim.dll;
+        if (p != NULL)
         {
-            int* p = (int*)((GameObject*)obj)->anim.dll;
-            if (p != NULL)
+            int fn = ((int*)*p)[1];
+            if (fn != -1 && (void*)fn != NULL)
             {
-                int fn = ((int*)*p)[1];
-                if (fn != -1 && (void*)fn != NULL)
-                {
-                    ((void (*)(u8*))fn)(obj);
-                }
+                ((void (*)(u8*))fn)(obj);
             }
         }
-        break;
     }
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
@@ -1052,13 +1053,13 @@ void ObjList_PartitionForRender(int* out)
         stop = 0;
         while (j >= 0 && stop == 0)
         {
-            if (!(((ObjAnimComponent*)arr[j])->modelInstance->flags & 1))
+            if (((ObjAnimComponent*)arr[j])->modelInstance->flags & 1)
             {
-                j--;
+                stop = -1;
             }
             else
             {
-                stop = -1;
+                j--;
             }
         }
         if (i < j)
@@ -1522,8 +1523,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 void objFreeObjDef(void* objp, int flag)
 {
     u8* obj = (u8*)objp;
-
-    int defs[46];
+    int defs[40];
     void(*fp)(u8 *, int);
     void(*cb)(u8 *);
     BoneParticleEffectSpawnFn cb2;
@@ -1540,7 +1540,7 @@ void objFreeObjDef(void* objp, int flag)
     int group;
     int type;
 
-    if (*(u8*)((u8*)obj + 0xE9) != 0)
+    if (*(u8*)&((GameObject*)obj)->unkE9 != 0)
     {
         ObjContact_RemoveObjectCallbacks((int)obj);
     }
@@ -1918,10 +1918,10 @@ void Obj_UpdateAllObjects(u8 flags)
     {
         obj2 = 0;
     }
-    if (obj2 != 0 && (u8*)(child = *(int*)&((GameObject*)obj2)->childObjs[0]) != NULL)
+    if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
     {
-        *(int*)((u8*)child + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
-        Obj_UpdateObject((u8*)*(int*)&((GameObject*)obj2)->childObjs[0]);
+        *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
+        Obj_UpdateObject(((GameObject*)obj2)->childObjs[0]);
     }
     if (timeStop == 0)
     {
@@ -1963,9 +1963,9 @@ void Obj_UpdateAllObjects(u8 flags)
         {
             obj2 = 0;
         }
-        if (obj2 != 0 && (u8*)(child = *(int*)&((GameObject*)obj2)->childObjs[0]) != NULL)
+        if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
         {
-            *(int*)((u8*)child + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
+            *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
             child = *(int*)&((GameObject*)obj2)->childObjs[0];
             if ((((GameObject*)child)->objectFlags & 0x2000) == 0)
             {
@@ -2566,12 +2566,9 @@ u8* loadObjectFile(int id)
         }
         *(u8**)((int)lbl_803DCBA8 + off) = buf;
         lbl_803DCBA4[id] = 1;
+        return buf;
     }
-    else
-    {
-        return 0;
-    }
-    return buf;
+    return 0;
 }
 
 int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
