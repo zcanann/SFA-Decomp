@@ -41,7 +41,6 @@ extern f32 lbl_803E64B4;
 extern f32 lbl_803E64B8;
 extern f32 lbl_803E64BC;
 extern f32 lbl_803E64C0;
-extern undefined4 streamFn_8000a380();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
