@@ -701,6 +701,9 @@ void mapBlockFn_80059c2c(u8* outFlags)
 }
 
 extern f32 lbl_803DEBCC;
+extern f32 retraceCount;
+extern f32 flushFlag;
+extern f32 retraceQueue;
 extern char gViewFrustumPlanes[];
 
 int ViewFrustum_IsSphereVisible(float* center, float radius)
@@ -2205,14 +2208,14 @@ int objUpdateOpacity(char* obj)
                                   &o1, &o2, &o3, &sz, &o5, &o6);
         sz = __fabs(sz);
         sz = sz * gMapBlockWorldSize;
-        if (sz < (&lbl_803DEBCC)[5])
+        if (sz < retraceCount)
         {
             *(u8*)(obj + 0x37) = 0;
             return 0;
         }
-        if (sz < (&lbl_803DEBCC)[7])
+        if (sz < retraceQueue)
         {
-            alpha = (int)(((f32)alpha * (sz - (&lbl_803DEBCC)[5])) / (&lbl_803DEBCC)[6]);
+            alpha = (int)(((f32)alpha * (sz - retraceCount)) / flushFlag);
         }
         *(u8*)(obj + 0x37) = (u8)((alpha * (((GameObject*)obj)->anim.alpha + 1)) >> 8);
     }
