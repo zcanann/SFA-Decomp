@@ -1726,7 +1726,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
     stateB->flags = stateB->flags | 8;
     *(int*)stateA = objB;
     *(int*)stateB = objA;
-    if (*(int*)&animA->parent != 0)
+    if (animA->parent != NULL)
     {
         Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, *(int*)&animA->parent);
     }
@@ -1736,7 +1736,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         localAy = y;
         localAz = z;
     }
-    if (*(int*)&animB->parent != 0)
+    if (animB->parent != NULL)
     {
         Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, *(int*)&animB->parent);
     }
@@ -1859,16 +1859,13 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         sinSq = sinVal * sinVal;
         weightB = (f32)stateB->lateralResponseWeight * sinSq +
             (f32)stateB->axialResponseWeight * (gObjHitsScalarOne - sinSq);
-        if (weightA >= weightB * lbl_803DB450)
-        {
-            if (weightB < weightA * lbl_803DB450)
-            {
-                weightB = gObjHitsScalarZero;
-            }
-        }
-        else
+        if (weightA < weightB * lbl_803DB450)
         {
             weightA = gObjHitsScalarZero;
+        }
+        else if (weightB < weightA * lbl_803DB450)
+        {
+            weightB = gObjHitsScalarZero;
         }
         sum = weightA + weightB;
         blend = (sum > gObjHitsScalarZero) ? weightB / sum : gObjHitsScalarZero;
