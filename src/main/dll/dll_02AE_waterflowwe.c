@@ -233,14 +233,14 @@ void waterflowwe_update(int obj)
 
         lbl_803DDDB0 = lbl_803E72EC * timeDelta + lbl_803DDDB0;
         a = lbl_803DDDB0;
-        while (a > lbl_803E72E8)
+        while (a > *(f32*)&lbl_803E72E8)
         {
             a -= lbl_803E72E8;
         }
         lbl_803DDDB0 = a;
         lbl_803DDDAC = lbl_803E72F0 * timeDelta + lbl_803DDDAC;
         a = lbl_803DDDAC;
-        while (a > lbl_803E72E8)
+        while (a > *(f32*)&lbl_803E72E8)
         {
             a -= lbl_803E72E8;
         }

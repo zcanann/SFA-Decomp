@@ -37,6 +37,12 @@ extern f32 lbl_803E5B78; /* 2.0f */
 #define DRSHACKLE_LAST_PITCH_OFFSET 0x49c
 #define DRSHACKLE_ATTACHMENT_OFFSET 0x178
 
+/* advanceRoute takes a trailing (always-zero) arg not reflected in the shared
+ * interface header; cast the slot locally to emit the extra r7=0. */
+#define DRSHACKLE_ADVANCE_ROUTE(iface, out, route, dist, mode, flag) \
+    ((s32 (*)(u8 *, CheckpointRouteState *, f32, s32, u8, int))(iface)->advanceRoute)( \
+        (out), (route), (dist), (mode), (flag), 0)
+
 #define DRSHACKLE_ANGLE_STEP 0xb6
 #define DRSHACKLE_SWING_BLEND_LIMIT 0x41
 #define DRSHACKLE_SWING_RETURN_LEFT 0x100
@@ -44,10 +50,8 @@ extern f32 lbl_803E5B78; /* 2.0f */
 
 int drshackle_updateSwingBlend(int obj, int state)
 {
-    f32 fVar1;
-    f32 fVar2;
-    int yawDelta;
     int hitResult;
+    int yawDelta;
     f32 fade;
 
     {
@@ -71,7 +75,8 @@ int drshackle_updateSwingBlend(int obj, int state)
         fade = *(f32*)&lbl_803E5AE8;
     }
 
-    hitResult = (*gCheckpointInterface)->advanceRoute(
+    hitResult = DRSHACKLE_ADVANCE_ROUTE(
+        (*gCheckpointInterface),
         (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET), fade,
         *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
 
@@ -164,7 +169,8 @@ int drshackle_updateAttachedPosition(int obj, int state)
                 *(f32*)(state + 0x498) = zero;
             }
             *(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) = -fn_801EA678(obj, state);
-            hitResult = (*gCheckpointInterface)->advanceRoute(
+            hitResult = DRSHACKLE_ADVANCE_ROUTE(
+                (*gCheckpointInterface),
                 (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET),
                 -*(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) * timeDelta,
                 *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
@@ -209,7 +215,8 @@ int drshackle_updateAttachedPosition(int obj, int state)
         return drshackle_updateSwingBlend(obj, state) != 0;
     }
 
-    hitResult = (*gCheckpointInterface)->advanceRoute(
+    hitResult = DRSHACKLE_ADVANCE_ROUTE(
+        (*gCheckpointInterface),
         (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET),
         timeDelta * fn_801EA678(obj, state), *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
     (*gCheckpointInterface)

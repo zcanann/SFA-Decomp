@@ -196,8 +196,9 @@ void drbarrelgr_update(int obj)
         break;
     case 5:
         {
+            f32 spd = lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->unk128;
             int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
-                                                     (lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->unk128) * timeDelta,
+                                                     spd * timeDelta,
                                                      lbl_803E6CBC, lbl_803E6CB4, 1);
             objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                     ((GameObject*)obj)->anim.velocityZ);

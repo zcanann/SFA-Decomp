@@ -278,7 +278,8 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     f32 range;
     f32 speed;
 
-    state = state2 = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
+    state2 = *(int*)&((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     range = lbl_803E59D8;
     ((ShopkeeperState*)state)->flags9D4 &= ~0x20;

@@ -238,10 +238,10 @@ extern f32 timeDelta;
 int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 {
     extern int playerFn_801d6d58(void); /* #57 */
+    int state = *(int*)&((GameObject*)obj)->extra;
     int i;
     int child;
     u8 command;
-    int state = *(int*)&((GameObject*)obj)->extra;
     ObjAnimUpdateState* animUpdate = (ObjAnimUpdateState*)animObj;
 
     if (animatedObjGetSeqId(animObj) == 0x35f)
@@ -273,7 +273,19 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA | 1;
         }
         {
-            int hit = (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0) ? 1 : 0;
+            int hit;
+            if (GameBit_Get(0x2e8) != 0)
+            {
+                hit = 1;
+            }
+            else if (GameBit_Get(0x123) != 0)
+            {
+                hit = 1;
+            }
+            else
+            {
+                hit = 0;
+            }
             if (hit)
             {
                 ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA | 2;
@@ -346,7 +358,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             if (getCurUiDll() == 0x10)
             {
                 int dll16 = getDLL16();
-                (*(void (**)(int))(*(int*)dll16 + 0x10))(command - 0xd);
+                (*(void (**)(int))(*(int*)dll16 + 0x10))(animUpdate->eventIds[i] - 0xd);
             }
             GameBit_Set(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE, 1);
             GameBit_Set(0x887, 1);
@@ -482,7 +494,7 @@ void warpstone_update(int obj)
 
     if (modelVec != NULL)
     {
-        modelVec[1] += lbl_803DDBF2;
+        modelVec[1] = modelVec[1] + lbl_803DDBF2;
         modelVec[0] = 0;
         modelVec[0] += lbl_803DC044;
     }

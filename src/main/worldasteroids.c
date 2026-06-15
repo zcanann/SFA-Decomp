@@ -77,8 +77,7 @@ void worldasteroids_update(WorldAsteroidsObject* obj)
     orbitSin = fsin16Approx(WORLD_ASTEROIDS_ORBIT_TILT_ANGLE);
     orbitScale = fsin16Approx((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);
-    orbitScale = radius * orbitScale;
-    obj->posY = orbitScale * orbitSin + (anchor->posY +
+    obj->posY = (radius * orbitScale) * orbitSin + (anchor->posY +
         worldasteroids_s32AsFloat(state->heightOffset));
     orbitCos = fcos16Approx((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);

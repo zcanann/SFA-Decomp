@@ -80,11 +80,11 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
     {
         newObj = Obj_AllocObjectSetup(0x20, 0x616);
         *(f32*)(newObj + 8) = ((GameObject*)obj)->anim.localPosX + (f32)(int)
-        randomGetRange(-(s8)setup->spreadX, (s8)setup->spreadX);
+        randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
         *(f32*)(newObj + 0xc) = ((GameObject*)obj)->anim.localPosY + (f32)(int)
-        randomGetRange(-(s8)setup->spreadY, (s8)setup->spreadY);
+        randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
         *(f32*)(newObj + 0x10) = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
-        randomGetRange(-(s8)setup->spreadZ, (s8)setup->spreadZ);
+        randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         *(u8*)(newObj + 0x1a) = 0;
         *(u8*)(newObj + 0x19) = 0;
         *(u8*)(newObj + 0x18) = 0;
@@ -108,11 +108,11 @@ void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
     {
         newObj = Obj_AllocObjectSetup(0x20, 0x617);
         *(f32*)(newObj + 8) = ((GameObject*)obj)->anim.localPosX + (f32)(int)
-        randomGetRange(-(s8)setup->spreadX, (s8)setup->spreadX);
+        randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
         *(f32*)(newObj + 0xc) = ((GameObject*)obj)->anim.localPosY + (f32)(int)
-        randomGetRange(-(s8)setup->spreadY, (s8)setup->spreadY);
+        randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
         *(f32*)(newObj + 0x10) = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
-        randomGetRange(-(s8)setup->spreadZ, (s8)setup->spreadZ);
+        randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         *(u8*)(newObj + 0x1a) = 0;
         *(u8*)(newObj + 0x19) = 0;
         *(u8*)(newObj + 0x18) = 0;

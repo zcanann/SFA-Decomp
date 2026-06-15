@@ -206,7 +206,7 @@ u32 voiceConvertDbToLinear(u32 dbCents)
     f32 result;
 
     scaledDb = (f32)(s32)dbCents;
-    base = powf(lbl_803E7834, lbl_803E7838 * scaledDb);
+    base = powf(lbl_803E7834, scaledDb * lbl_803E7838);
     result = lbl_803E7830 * base;
     return __cvt_fp2unsigned(result);
 }

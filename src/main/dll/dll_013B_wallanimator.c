@@ -93,12 +93,12 @@ f32 wallanimator_setScale(int obj, int target)
 
     desc = *(int*)&((GameObject*)obj)->anim.placementData;
     count = 6;
-    kD0 = lbl_803E3FD0;
-    kD4 = lbl_803E3FD4;
-    kD8 = lbl_803E3FD8;
-    kDC = lbl_803E3FDC;
     do
     {
+        kD0 = lbl_803E3FD0;
+        kD4 = lbl_803E3FD4;
+        kD8 = lbl_803E3FD8;
+        kDC = lbl_803E3FDC;
         out[0] = kD0 * (f32)(int)
         randomGetRange(-0x64, 0x64);
         out[1] = kD4;

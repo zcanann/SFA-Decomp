@@ -197,7 +197,6 @@ void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
 {
     DfpLightniState* state;
     f32 radiusMax;
-    f32 radiusParamScale;
     int randomValue;
 
     if (obj != 0)
@@ -217,13 +216,12 @@ void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
         state->triggerTime = (f32)randomValue + lbl_803E6508;
         radiusMax = lbl_803E6504;
-        radiusParamScale = lbl_803E650C;
         state->radiusX = ((f32)(s32)
-        mapData->radiusX / radiusParamScale
+        mapData->radiusX / lbl_803E650C
         )
         *radiusMax;
         state->radiusY = ((f32)(s32)
-        mapData->radiusY / radiusParamScale
+        mapData->radiusY / lbl_803E650C
         )
         *radiusMax;
         state->angleIndex = mapData->angleIndex;

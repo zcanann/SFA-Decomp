@@ -342,10 +342,10 @@ void fn_801C8B68(int obj)
         mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x10)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
-    ((GameObject*)self)->anim.rotZ = (short)(int)(lbl_803E50B8 * (angA + angB));
+    ((GameObject*)self)->anim.rotZ = (short)(int)(lbl_803E50B8 * (angB + angA));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x12)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
-    ((GameObject*)self)->anim.rotY = (short)(int)(lbl_803E50B8 * (angA + angB));
+    ((GameObject*)self)->anim.rotY = (short)(int)(lbl_803E50B8 * (angB + angA));
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(self, lbl_803E50BC, timeDelta,
                                                                  (ObjAnimEventList*)&local_var);
@@ -357,8 +357,8 @@ void fn_801C8B68(int obj)
         float dz = ((GameObject*)self)->anim.worldPosZ - player->anim.worldPosZ;
         int ang = (int)getAngle(dx, dz);
         delta = (int)(u16)ang - (int)(u16) * (short*)self;
-        if (delta > 0x8000) delta -= 0x10000;
-        if (delta < -0x8000) delta += 0x10000;
+        if (delta > 0x8000) delta -= 0xffff;
+        if (delta < -0x8000) delta += 0xffff;
         *(short*)self = (short)(
             (int)*(short*)self
             + (int)((f32)delta * timeDelta / lbl_803E50C0));
