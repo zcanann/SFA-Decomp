@@ -26,7 +26,6 @@ extern undefined4 DAT_803de6c0;
 extern f32 FLOAT_803e3098;
 
 extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int eventId);
 
 void FUN_80132034(void)
 {
@@ -217,7 +216,6 @@ void fn_80133F70(void* obj)
     sprintf(buf, lbl_803DBBF0, b);
 }
 
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
@@ -375,6 +373,5 @@ int Credits_frameStart(void)
     return 0;
 }
 
-extern u32 lbl_803E2200;
 
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
