@@ -28,6 +28,8 @@ extern u8* Obj_GetPlayerObject(void);
 #define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
 #define PLATFORM1_IDLE_PULL_MOVE_ID 0
 
+#define PLATFORM1_VT_HANDLE_EVENT 0x20 /* peer anim.dll vtable slot */
+
 #define PLATFORM1_LOOP_SFX_ID 0x3af
 #define PLATFORM1_PLAYER_SFX_ID 0x13a
 #define PLATFORM1_PLATFORM_SFX_ID 0x4a3
@@ -65,6 +67,7 @@ extern f32 lbl_803E56A4;
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
 extern void objRenderFn_8003b8f4(f32);
+extern u32 GameBit_Get(int eventId);
 
 int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -129,7 +132,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     ((GameObject*)list[idx2])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                 {
                     o = list[idx2];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 2);
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 2);
                     break;
                 }
             }
@@ -142,7 +145,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     ((GameObject*)list[idx3])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                 {
                     o = list[idx3];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 3);
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 3);
                     break;
                 }
             }
@@ -232,7 +235,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                         ((GameObject*)list[idx4])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                     {
                         o = list[idx4];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 4);
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 4);
                         break;
                     }
                 }
@@ -259,7 +262,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                         ((GameObject*)list[idx5])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
                     {
                         o = list[idx5];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 4);
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 4);
                         break;
                     }
                 }
@@ -366,14 +369,10 @@ void sc_totemstrength_initialise(void)
 {
 }
 
-void paymentkiosk_free(void);
-
 int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
-int paymentkiosk_getExtraSize(void);
 
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
-void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void sc_totemstrength_init(int* obj)
 {
@@ -470,41 +469,6 @@ void sc_totemstrength_update(u8* obj)
         }
     }
 }
-
-/* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
-u32 PaymentKiosk_testEvent(int obj, int p2, int ev);
-
-/* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
-
-/* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
-
-static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
-
-static int FEseqobject_findControlObject(void);
-
-/*
- * Function: FEseqobject_init
- * EN v1.0 Address: 0x801DF8F4
- * EN v1.0 Size: 56b
- */
-
-/*
- * Function: FEseqobject_update
- * EN v1.0 Address: 0x801DF894
- * EN v1.0 Size: 96b
- */
-
-/*
- * Function: dll_144_SeqFn
- * EN v1.0 Address: 0x801DF9AC
- * EN v1.0 Size: 16b
- */
-
-/*
- * Function: dll_144_init
- * EN v1.0 Address: 0x801DFA08
- * EN v1.0 Size: 24b
- */
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
