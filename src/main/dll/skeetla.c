@@ -867,10 +867,9 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
     }
 
     fn_8004B148(state + 0x6b8);
-    entry = fn_8004B118(state + 0x6b8);
-    ((TrickyState*)state)->unk6E8 = entry;
+    ((TrickyState*)state)->unk6E8 = fn_8004B118(state + 0x6b8);
     ((TrickyState*)state)->unk6EC = pathId;
-    return entry;
+    return ((TrickyState*)state)->unk6E8;
 }
 #pragma dont_inline reset
 
