@@ -443,13 +443,13 @@ void timeOfDayFn_80155cf8(int obj, int state)
     if ((isDaytime != 0) && (((BaddieState*)state)->seqEntryIndex == 0))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
     }
     else if ((isDaytime == 0) && (((BaddieState*)state)->seqEntryIndex == 2))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
     }
     return;
