@@ -177,7 +177,7 @@ int ktrex_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
             *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x1000;
             break;
         case 5:
-            *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000;
+            *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000LL;
             break;
         case 6:
             if (((KTRexArenaState*)gKTRexState)->light != NULL)
