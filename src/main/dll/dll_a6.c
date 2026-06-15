@@ -27,7 +27,6 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
   GameObject *reticle;
   GameObject *targetObject;
   CamcontrolTargetObject *target;
-  ObjHitVolumeRuntimeBounds *bounds;
   ObjHitVolumeRuntimeTransform *slot;
   ObjAnimBank *activeBank;
   u8 idx;
@@ -51,9 +50,8 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
 
     idx = target->targetSetupIndex;
     slot = &targetObject->anim.hitVolumeTransforms[idx];
-    bounds = &targetObject->anim.hitVolumeBounds[idx];
 
-    switch (bounds->flags & 0xF) {
+    switch (targetObject->anim.hitVolumeBounds[idx].flags & 0xF) {
     case 1:
       mode = 0;
       break;
