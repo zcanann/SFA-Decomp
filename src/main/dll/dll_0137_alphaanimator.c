@@ -18,8 +18,8 @@ typedef struct AlphaanimatorPlacement
     u8 pad0[0x18 - 0x0];
     s16 unk18;
     s16 unk1A;
-    s8 unk1C;
-    s8 unk1D;
+    u8 unk1C;
+    u8 unk1D;
     u8 active;
     u8 unk1F;
     u8 unk20;
@@ -284,8 +284,9 @@ void alphaanimator_update(int* obj)
             }
         }
     }
-    if (mode == 0)
+    switch (mode)
     {
+    case 0:
         if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
         {
             s->alphaLevel =
@@ -314,9 +315,8 @@ void alphaanimator_update(int* obj)
                 s->doneCount += 1;
             }
         }
-    }
-    else if (mode == 1)
-    {
+        break;
+    case 1:
         if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
         {
             s->alphaLevel =
@@ -339,9 +339,8 @@ void alphaanimator_update(int* obj)
                         (s->alphaLevel - ((AlphaanimatorPlacement*)d)->unk1D));
             }
         }
-    }
-    else if (mode == 2)
-    {
+        break;
+    case 2:
         if ((s8)s->gateVal != 0)
         {
             if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
@@ -396,9 +395,8 @@ void alphaanimator_update(int* obj)
             }
             s->doneCount += 1;
         }
-    }
-    else
-    {
+        break;
+    case 3:
         sp = (f32)(s8)((AlphaanimatorPlacement*)d)->unk1F;
         if ((s8)((AlphaanimatorPlacement*)d)->unk1F < 0)
         {
@@ -413,5 +411,6 @@ void alphaanimator_update(int* obj)
             s->doneCount += 1;
         }
         s->fadeB = s->fadeA - lbl_803E3F84;
+        break;
     }
 }
