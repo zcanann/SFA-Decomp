@@ -35,48 +35,48 @@ extern f32 lbl_803E0E88;
 extern f32 lbl_803E0E8C;
 
 undefined4
-FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4, u8 param_5,
-             int param_6)
+FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint spawnFlags, u8 modelId,
+             int useWorldOffset)
 {
-    undefined4 uVar1;
-    uint uVar2;
-    int local_98[3];
-    undefined2 local_8c;
-    undefined2 local_8a;
-    undefined2 local_88;
-    undefined4 local_84;
-    float local_80;
-    float local_7c;
-    float local_78;
-    float local_74;
-    float local_70;
-    float local_6c;
-    float local_68;
-    float local_64;
-    float local_60;
-    float local_5c;
-    undefined2 local_58;
-    undefined2 local_56;
-    uint local_54;
-    undefined4 local_50;
-    undefined4 local_4c;
-    uint local_48;
-    uint local_44;
-    undefined2 local_40;
-    undefined2 local_3e;
-    undefined2 local_3c;
-    u8 local_3a;
-    u8 local_38;
-    u8 local_37;
-    u8 local_36;
+    undefined4 result;
+    uint rngRoll;
+    int cfg[3];
+    undefined2 srcRotX;
+    undefined2 srcRotY;
+    undefined2 srcRotZ;
+    undefined4 srcScale;
+    float srcPosX;
+    float srcPosY;
+    float srcPosZ;
+    float velX;
+    float velY;
+    float velZ;
+    float startPosX;
+    float startPosY;
+    float startPosZ;
+    float scale;
+    undefined2 linkGroup;
+    undefined2 textureId;
+    uint behaviorFlags;
+    undefined4 renderFlags;
+    undefined4 overrideColor0;
+    uint overrideColor1;
+    uint overrideColor2;
+    undefined2 colorWord0;
+    undefined2 colorWord1;
+    undefined2 colorWord2;
+    u8 effectIdByte;
+    u8 initialAlpha;
+    u8 textureSetupFlags;
+    u8 modelIdByte;
     undefined4 local_30;
-    uint uStack_2c;
+    uint rngTmp0;
     undefined4 local_28;
-    uint uStack_24;
+    uint rngTmp1;
     undefined4 local_20;
-    uint uStack_1c;
+    uint rngTmp2;
     undefined4 local_18;
-    uint uStack_14;
+    uint rngTmp3;
 
     lbl_803DC4B0 = lbl_803DC4B0 + lbl_803E0E38;
     if (lbl_803E0E40 < lbl_803DC4B0)
@@ -88,362 +88,362 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
     {
         lbl_803DC4B4 = lbl_803E0E48;
     }
-    if (param_1 == 0)
+    if (sourceObj == 0)
     {
-        uVar1 = 0xffffffff;
+        result = 0xffffffff;
     }
     else
     {
-        if ((param_4 & 0x200000) != 0)
+        if ((spawnFlags & 0x200000) != 0)
         {
-            if (param_3 == (undefined2*)0x0)
+            if (spawnParams == (undefined2*)0x0)
             {
                 return 0xffffffff;
             }
-            local_80 = ((PartFxSpawnParams*)param_3)->posX;
-            local_7c = ((PartFxSpawnParams*)param_3)->posY;
-            local_78 = ((PartFxSpawnParams*)param_3)->posZ;
-            local_84 = *(undefined4*)&((PartFxSpawnParams*)param_3)->scale;
-            local_88 = ((PartFxSpawnParams*)param_3)->unk4;
-            local_8a = ((PartFxSpawnParams*)param_3)->unk2;
-            local_8c = *param_3;
-            local_36 = param_5;
+            srcPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            srcPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            srcPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
+            srcScale = *(undefined4*)&((PartFxSpawnParams*)spawnParams)->scale;
+            srcRotZ = ((PartFxSpawnParams*)spawnParams)->unk4;
+            srcRotY = ((PartFxSpawnParams*)spawnParams)->unk2;
+            srcRotX = *spawnParams;
+            modelIdByte = modelId;
         }
-        local_54 = 0;
-        local_50 = 0;
-        local_3a = (undefined)param_2;
-        local_68 = lbl_803E0E4C;
-        local_64 = lbl_803E0E4C;
-        local_60 = lbl_803E0E4C;
-        local_74 = lbl_803E0E4C;
-        local_70 = lbl_803E0E4C;
-        local_6c = lbl_803E0E4C;
-        local_5c = lbl_803E0E4C;
-        local_98[2] = 0;
-        local_98[1] = 0xffffffff;
-        local_38 = 0xff;
-        local_37 = 0;
-        local_56 = 0;
-        local_40 = 0xffff;
-        local_3e = 0xffff;
-        local_3c = 0xffff;
-        local_4c = 0xffff;
-        local_48 = 0xffff;
-        local_44 = 0xffff;
-        local_58 = 0;
-        local_98[0] = param_1;
-        switch (param_2)
+        behaviorFlags = 0;
+        renderFlags = 0;
+        effectIdByte = (undefined)effectId;
+        startPosX = lbl_803E0E4C;
+        startPosY = lbl_803E0E4C;
+        startPosZ = lbl_803E0E4C;
+        velX = lbl_803E0E4C;
+        velY = lbl_803E0E4C;
+        velZ = lbl_803E0E4C;
+        scale = lbl_803E0E4C;
+        cfg[2] = 0;
+        cfg[1] = 0xffffffff;
+        initialAlpha = 0xff;
+        textureSetupFlags = 0;
+        textureId = 0;
+        colorWord0 = 0xffff;
+        colorWord1 = 0xffff;
+        colorWord2 = 0xffff;
+        overrideColor0 = 0xffff;
+        overrideColor1 = 0xffff;
+        overrideColor2 = 0xffff;
+        linkGroup = 0;
+        cfg[0] = sourceObj;
+        switch (effectId)
         {
         case 0x73a:
-            uStack_2c = randomGetRange(8, 10);
-            local_70 = lbl_803E0E50 * (f32)(s32)
-            uStack_2c;
-            uVar2 = randomGetRange(0, 0x28);
-            if (uVar2 == 0)
+            rngTmp0 = randomGetRange(8, 10);
+            velY = lbl_803E0E50 * (f32)(s32)
+            rngTmp0;
+            rngRoll = randomGetRange(0, 0x28);
+            if (rngRoll == 0)
             {
-                uStack_2c = randomGetRange(0x15, 0x29);
-                local_5c = lbl_803E0E38 *
+                rngTmp0 = randomGetRange(0x15, 0x29);
+                scale = lbl_803E0E38 *
                     (f32)(s32)
-                uStack_2c;
-                local_98[2] = 0x1cc;
+                rngTmp0;
+                cfg[2] = 0x1cc;
             }
             else
             {
-                uStack_2c = randomGetRange(8, 0x14);
-                local_5c = lbl_803E0E38 *
+                rngTmp0 = randomGetRange(8, 0x14);
+                scale = lbl_803E0E38 *
                     (f32)(s32)
-                uStack_2c;
-                local_98[2] = randomGetRange(0x5a, 0x78);
+                rngTmp0;
+                cfg[2] = randomGetRange(0x5a, 0x78);
             }
-            local_54 = 0x80180200;
-            local_50 = 0x1000020;
-            local_56 = 0xc0b;
-            local_38 = 0x7f;
-            local_3c = 0x3fff;
-            local_3e = 0x3fff;
-            local_40 = 0x3fff;
-            local_44 = 0xffff;
-            local_48 = 0xffff;
-            local_4c = 0xffff;
-            local_64 = lbl_803E0E54;
+            behaviorFlags = 0x80180200;
+            renderFlags = 0x1000020;
+            textureId = 0xc0b;
+            initialAlpha = 0x7f;
+            colorWord2 = 0x3fff;
+            colorWord1 = 0x3fff;
+            colorWord0 = 0x3fff;
+            overrideColor2 = 0xffff;
+            overrideColor1 = 0xffff;
+            overrideColor0 = 0xffff;
+            startPosY = lbl_803E0E54;
             break;
         case 0x73b:
-            uStack_2c = randomGetRange(0xffffffec, 0x14);
-            local_74 = lbl_803E0E50 * (f32)(s32)
-            uStack_2c;
-            uStack_24 = randomGetRange(8, 0x14);
-            local_70 = lbl_803E0E50 * (f32)(s32)
-            uStack_24;
-            uStack_1c = randomGetRange(0xffffffec, 0x14);
-            local_6c = lbl_803E0E50 * (f32)(s32)
-            uStack_1c;
-            local_5c = lbl_803E0E58;
-            local_98[2] = 0x32;
-            local_54 = 0x3000200;
-            local_50 = 0x200020;
-            local_56 = 0x33;
-            local_38 = 0xff;
-            local_40 = 0xffff;
-            local_3e = 0xffff;
-            local_3c = 0xffff;
-            local_4c = 0xffff;
-            local_48 = randomGetRange(0, 0x8000);
-            local_64 = lbl_803E0E5C;
-            local_44 = local_48;
+            rngTmp0 = randomGetRange(0xffffffec, 0x14);
+            velX = lbl_803E0E50 * (f32)(s32)
+            rngTmp0;
+            rngTmp1 = randomGetRange(8, 0x14);
+            velY = lbl_803E0E50 * (f32)(s32)
+            rngTmp1;
+            rngTmp2 = randomGetRange(0xffffffec, 0x14);
+            velZ = lbl_803E0E50 * (f32)(s32)
+            rngTmp2;
+            scale = lbl_803E0E58;
+            cfg[2] = 0x32;
+            behaviorFlags = 0x3000200;
+            renderFlags = 0x200020;
+            textureId = 0x33;
+            initialAlpha = 0xff;
+            colorWord0 = 0xffff;
+            colorWord1 = 0xffff;
+            colorWord2 = 0xffff;
+            overrideColor0 = 0xffff;
+            overrideColor1 = randomGetRange(0, 0x8000);
+            startPosY = lbl_803E0E5C;
+            overrideColor2 = overrideColor1;
             break;
         default:
             return 0xffffffff;
         case 0x73d:
-            uStack_1c = randomGetRange(0xfffffff6, 10);
-            local_68 = lbl_803E0E3C * (f32)(s32)
-            uStack_1c;
-            uStack_24 = randomGetRange(0xfffffff6, 100);
-            local_64 = lbl_803E0E50 * (f32)(s32)
-            uStack_24;
-            uStack_2c = randomGetRange(0xfffffff6, 10);
-            local_60 = lbl_803E0E3C * (f32)(s32)
-            uStack_2c;
-            uStack_14 = randomGetRange(7, 9);
-            local_5c = lbl_803E0E60 *
+            rngTmp2 = randomGetRange(0xfffffff6, 10);
+            startPosX = lbl_803E0E3C * (f32)(s32)
+            rngTmp2;
+            rngTmp1 = randomGetRange(0xfffffff6, 100);
+            startPosY = lbl_803E0E50 * (f32)(s32)
+            rngTmp1;
+            rngTmp0 = randomGetRange(0xfffffff6, 10);
+            startPosZ = lbl_803E0E3C * (f32)(s32)
+            rngTmp0;
+            rngTmp3 = randomGetRange(7, 9);
+            scale = lbl_803E0E60 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_14;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xde;
+            rngTmp3;
+            cfg[2] = 0x3c;
+            behaviorFlags = 0x80100;
+            textureSetupFlags = 0x10;
+            textureId = 0xde;
             break;
         case 0x73e:
-            uStack_14 = randomGetRange(0xfffffff6, 10);
-            local_68 = lbl_803E0E3C * (f32)(s32)
-            uStack_14;
-            uStack_1c = randomGetRange(0xfffffff6, 100);
-            local_64 = lbl_803E0E50 * (f32)(s32)
-            uStack_1c;
-            uStack_24 = randomGetRange(0xfffffff6, 10);
-            local_60 = lbl_803E0E3C * (f32)(s32)
-            uStack_24;
-            uStack_2c = randomGetRange(7, 9);
-            local_5c = lbl_803E0E60 *
+            rngTmp3 = randomGetRange(0xfffffff6, 10);
+            startPosX = lbl_803E0E3C * (f32)(s32)
+            rngTmp3;
+            rngTmp2 = randomGetRange(0xfffffff6, 100);
+            startPosY = lbl_803E0E50 * (f32)(s32)
+            rngTmp2;
+            rngTmp1 = randomGetRange(0xfffffff6, 10);
+            startPosZ = lbl_803E0E3C * (f32)(s32)
+            rngTmp1;
+            rngTmp0 = randomGetRange(7, 9);
+            scale = lbl_803E0E60 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_2c;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xdf;
+            rngTmp0;
+            cfg[2] = 0x3c;
+            behaviorFlags = 0x80100;
+            textureSetupFlags = 0x10;
+            textureId = 0xdf;
             break;
         case 0x73f:
-            if (param_6 == 0)
+            if (useWorldOffset == 0)
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rngTmp3 = randomGetRange(0xfffffff6, 10);
+                startPosX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rngTmp3;
+                rngTmp2 = randomGetRange(0xfffffff6, 100);
+                startPosY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rngTmp2;
+                rngTmp1 = randomGetRange(0xfffffff6, 10);
+                rngTmp1 = rngTmp1 ^ 0x80000000;
+                startPosZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24;
+                rngTmp1;
             }
             else
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rngTmp3 = randomGetRange(0xfffffff6, 10);
+                startPosX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14 +
+                rngTmp3 +
                     lbl_803E0E68;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rngTmp2 = randomGetRange(0xfffffff6, 100);
+                startPosY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c +
+                rngTmp2 +
                     lbl_803E0E6C;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rngTmp1 = randomGetRange(0xfffffff6, 10);
+                rngTmp1 = rngTmp1 ^ 0x80000000;
+                startPosZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24 +
+                rngTmp1 +
                     lbl_803E0E70;
             }
             local_28 = 0x43300000;
-            uStack_14 = randomGetRange(7, 9);
-            local_5c = lbl_803E0E74 *
+            rngTmp3 = randomGetRange(7, 9);
+            scale = lbl_803E0E74 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_14;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xde;
+            rngTmp3;
+            cfg[2] = 0x3c;
+            behaviorFlags = 0x80100;
+            textureSetupFlags = 0x10;
+            textureId = 0xde;
             break;
         case 0x740:
-            if (param_6 == 0)
+            if (useWorldOffset == 0)
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rngTmp3 = randomGetRange(0xfffffff6, 10);
+                startPosX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rngTmp3;
+                rngTmp2 = randomGetRange(0xfffffff6, 100);
+                startPosY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rngTmp2;
+                rngTmp1 = randomGetRange(0xfffffff6, 10);
+                rngTmp1 = rngTmp1 ^ 0x80000000;
+                startPosZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24;
+                rngTmp1;
             }
             else
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rngTmp3 = randomGetRange(0xfffffff6, 10);
+                startPosX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14 +
+                rngTmp3 +
                     lbl_803E0E68;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rngTmp2 = randomGetRange(0xfffffff6, 100);
+                startPosY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c +
+                rngTmp2 +
                     lbl_803E0E6C;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rngTmp1 = randomGetRange(0xfffffff6, 10);
+                rngTmp1 = rngTmp1 ^ 0x80000000;
+                startPosZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24 +
+                rngTmp1 +
                     lbl_803E0E70;
             }
             local_28 = 0x43300000;
-            uStack_14 = randomGetRange(7, 9);
-            local_5c = lbl_803E0E74 *
+            rngTmp3 = randomGetRange(7, 9);
+            scale = lbl_803E0E74 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_14;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xdf;
+            rngTmp3;
+            cfg[2] = 0x3c;
+            behaviorFlags = 0x80100;
+            textureSetupFlags = 0x10;
+            textureId = 0xdf;
             break;
         case 0x741:
-            if (param_3 != (undefined2*)0x0)
+            if (spawnParams != (undefined2*)0x0)
             {
-                local_64 = ((PartFxSpawnParams*)param_3)->posY;
+                startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
             }
-            local_5c = lbl_803E0E78;
-            local_98[2] = randomGetRange(0, 0x1e);
-            local_98[2] = local_98[2] + 0x50;
-            local_38 = 0x60;
-            local_54 = 0x80110;
-            local_56 = 0x7b;
-            local_37 = 0x20;
+            scale = lbl_803E0E78;
+            cfg[2] = randomGetRange(0, 0x1e);
+            cfg[2] = cfg[2] + 0x50;
+            initialAlpha = 0x60;
+            behaviorFlags = 0x80110;
+            textureId = 0x7b;
+            textureSetupFlags = 0x20;
             break;
         case 0x742:
-            local_6c = lbl_803E0E7C;
-            uStack_14 = randomGetRange(0xffffffec, 0x14);
-            local_74 = lbl_803E0E80 * (f32)(s32)
-            uStack_14;
-            uStack_1c = randomGetRange(0xffffffec, 0x14);
-            local_70 = lbl_803E0E80 * (f32)(s32)
-            uStack_1c;
-            local_5c = lbl_803E0E84;
-            local_98[2] = randomGetRange(0x46, 0x50);
-            local_38 = 0xff;
-            local_54 = 0x82000104;
-            local_50 = 0x400;
-            local_56 = 0x3f4;
+            velZ = lbl_803E0E7C;
+            rngTmp3 = randomGetRange(0xffffffec, 0x14);
+            velX = lbl_803E0E80 * (f32)(s32)
+            rngTmp3;
+            rngTmp2 = randomGetRange(0xffffffec, 0x14);
+            velY = lbl_803E0E80 * (f32)(s32)
+            rngTmp2;
+            scale = lbl_803E0E84;
+            cfg[2] = randomGetRange(0x46, 0x50);
+            initialAlpha = 0xff;
+            behaviorFlags = 0x82000104;
+            renderFlags = 0x400;
+            textureId = 0x3f4;
             break;
         case 0x743:
-            local_6c = lbl_803E0E7C;
-            uStack_14 = randomGetRange(0xffffffec, 0x14);
-            local_74 = lbl_803E0E80 * (f32)(s32)
-            uStack_14;
-            uStack_1c = randomGetRange(0xffffffec, 0x14);
-            local_70 = lbl_803E0E80 * (f32)(s32)
-            uStack_1c;
-            local_5c = lbl_803E0E84;
-            local_98[2] = randomGetRange(0x46, 0x50);
-            local_38 = 0xff;
-            local_54 = 0x82000104;
-            local_50 = 0x400;
-            local_56 = 0x500;
+            velZ = lbl_803E0E7C;
+            rngTmp3 = randomGetRange(0xffffffec, 0x14);
+            velX = lbl_803E0E80 * (f32)(s32)
+            rngTmp3;
+            rngTmp2 = randomGetRange(0xffffffec, 0x14);
+            velY = lbl_803E0E80 * (f32)(s32)
+            rngTmp2;
+            scale = lbl_803E0E84;
+            cfg[2] = randomGetRange(0x46, 0x50);
+            initialAlpha = 0xff;
+            behaviorFlags = 0x82000104;
+            renderFlags = 0x400;
+            textureId = 0x500;
             break;
         case 0x744:
-            uVar2 = randomGetRange(0, 4);
-            if (uVar2 == 4)
+            rngRoll = randomGetRange(0, 4);
+            if (rngRoll == 4)
             {
-                local_5c = lbl_803E0E88;
-                local_38 = 0x9b;
-                local_54 = 0x480000;
-                local_98[2] = randomGetRange(0x1e, 0x28);
+                scale = lbl_803E0E88;
+                initialAlpha = 0x9b;
+                behaviorFlags = 0x480000;
+                cfg[2] = randomGetRange(0x1e, 0x28);
             }
             else
             {
-                local_5c = lbl_803E0E8C;
-                local_38 = 0x7d;
-                local_54 = 0x180000;
-                local_98[2] = 0x50;
+                scale = lbl_803E0E8C;
+                initialAlpha = 0x7d;
+                behaviorFlags = 0x180000;
+                cfg[2] = 0x50;
             }
-            local_50 = 0x2000000;
-            local_56 = 0x88;
+            renderFlags = 0x2000000;
+            textureId = 0x88;
         }
-        local_54 = local_54 | param_4;
-        if (((local_54 & 1) != 0) && ((local_54 & 2) != 0))
+        behaviorFlags = behaviorFlags | spawnFlags;
+        if (((behaviorFlags & 1) != 0) && ((behaviorFlags & 2) != 0))
         {
-            local_54 = local_54 ^ 2;
+            behaviorFlags = behaviorFlags ^ 2;
         }
-        if ((local_54 & 1) != 0)
+        if ((behaviorFlags & 1) != 0)
         {
-            if ((param_4 & 0x200000) == 0)
+            if ((spawnFlags & 0x200000) == 0)
             {
-                if (local_98[0] != 0)
+                if (cfg[0] != 0)
                 {
-                    local_68 = local_68 + *(float*)(local_98[0] + 0x18);
-                    local_64 = local_64 + *(float*)(local_98[0] + 0x1c);
-                    local_60 = local_60 + *(float*)(local_98[0] + 0x20);
+                    startPosX = startPosX + *(float*)(cfg[0] + 0x18);
+                    startPosY = startPosY + *(float*)(cfg[0] + 0x1c);
+                    startPosZ = startPosZ + *(float*)(cfg[0] + 0x20);
                 }
             }
             else
             {
-                local_68 = local_68 + local_80;
-                local_64 = local_64 + local_7c;
-                local_60 = local_60 + local_78;
+                startPosX = startPosX + srcPosX;
+                startPosY = startPosY + srcPosY;
+                startPosZ = startPosZ + srcPosZ;
             }
         }
-        uVar1 = (*gExpgfxInterface)->spawnEffect(local_98, 0xffffffff, param_2, 0);
+        result = (*gExpgfxInterface)->spawnEffect(cfg, 0xffffffff, effectId, 0);
     }
-    return uVar1;
+    return result;
 }
 
-undefined4 FUN_800c9030(uint param_1, int* param_2)
+undefined4 FUN_800c9030(uint searchKey, int* outIndex)
 {
-    int iVar1;
-    int iVar2;
-    int iVar3;
+    int hi;
+    int lo;
+    int mid;
 
-    *param_2 = -1;
-    if ((int)param_1 < 0)
+    *outIndex = -1;
+    if ((int)searchKey < 0)
     {
         return 0;
     }
-    iVar1 = DAT_803de090 + -1;
-    iVar2 = 0;
+    hi = DAT_803de090 + -1;
+    lo = 0;
     while (true)
     {
         while (true)
         {
-            if (iVar1 < iVar2)
+            if (hi < lo)
             {
-                *param_2 = -1;
+                *outIndex = -1;
                 return 0;
             }
-            iVar3 = iVar1 + iVar2 >> 1;
-            if (param_1 <= (uint)(&DAT_8039d0b8)[iVar3 * 2]) break;
-            iVar2 = iVar3 + 1;
+            mid = hi + lo >> 1;
+            if (searchKey <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
+            lo = mid + 1;
         }
-        if ((uint)(&DAT_8039d0b8)[iVar3 * 2] <= param_1) break;
-        iVar1 = iVar3 + -1;
+        if ((uint)(&DAT_8039d0b8)[mid * 2] <= searchKey) break;
+        hi = mid + -1;
     }
-    *param_2 = iVar3;
-    return (&DAT_8039d0bc)[iVar3 * 2];
+    *outIndex = mid;
+    return (&DAT_8039d0bc)[mid * 2];
 }
 
 extern s16 lbl_803DD414;
