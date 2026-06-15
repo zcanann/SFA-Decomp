@@ -1,11 +1,8 @@
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/backpack.h"
 #include "main/dll/landedArwing.h"
 #include "main/objlib.h"
-#include "main/objhits.h"
 #include "main/player_control_interface.h"
 
 typedef struct LandedArwingTriggerLaunchTargetState
