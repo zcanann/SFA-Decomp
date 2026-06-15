@@ -661,9 +661,9 @@ void fn_8005C8CC(void)
     return;
 }
 
-void FUN_8005cff0(int param_1)
+void FUN_8005cff0(int enable)
 {
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xfffdffff;
     }
@@ -674,9 +674,9 @@ void FUN_8005cff0(int param_1)
     return;
 }
 
-undefined4 FUN_8005d018(char param_1)
+undefined4 FUN_8005d018(char enable)
 {
-    if (param_1 == '\0')
+    if (enable == '\0')
     {
         DAT_803dda68 = DAT_803dda68 & 0xfffffff7;
         FUN_800069f4((double)lbl_803DC2D0);
@@ -694,12 +694,12 @@ uint FUN_8005d06c(void)
     return DAT_803dda68 & 8;
 }
 
-void FUN_8005d0ac(int param_1)
+void FUN_8005d0ac(int enable)
 {
     undefined4* puVar1;
 
     puVar1 = FUN_800e87a8();
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffbf;
         *(byte*)(puVar1 + 0x10) = *(byte*)(puVar1 + 0x10) & 0xf7;
@@ -712,12 +712,12 @@ void FUN_8005d0ac(int param_1)
     return;
 }
 
-void FUN_8005d17c(int param_1)
+void FUN_8005d17c(int enable)
 {
     undefined4* puVar1;
 
     puVar1 = FUN_800e87a8();
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffaf;
         *(byte*)(puVar1 + 0x10) = *(byte*)(puVar1 + 0x10) & 0xf6;
@@ -730,9 +730,9 @@ void FUN_8005d17c(int param_1)
     return;
 }
 
-void FUN_8005d1e8(int param_1)
+void FUN_8005d1e8(int enable)
 {
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffefff;
     }
