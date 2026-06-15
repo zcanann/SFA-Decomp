@@ -1,7 +1,5 @@
 #include "main/audio/sfx_ids.h"
 #include "main/checkpoint_interface.h"
-#include "main/game_object.h"
-#include "main/dll/DR/DRcloudcage.h"
 
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, uint volumeByte, f32 volume);
