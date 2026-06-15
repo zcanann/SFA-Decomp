@@ -205,8 +205,12 @@ void drbarrelgr_update(int obj)
                 newMode = r - 1;
                 storeZeroToFloatParam((void*)(state + 12));
                 s16toFloat((void*)(state + 12), ((DrbarrelgrPlacement*)setup)->unk1A);
-                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityY =
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E6CA4;
+                {
+                    f32 z = lbl_803E6CA4;
+                    ((GameObject*)obj)->anim.velocityX = z;
+                    ((GameObject*)obj)->anim.velocityY = z;
+                    ((GameObject*)obj)->anim.velocityZ = z;
+                }
             }
             break;
         }
