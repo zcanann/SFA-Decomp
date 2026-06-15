@@ -22,7 +22,7 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     u8 buf[440];
     ScreenFxPart parts[14];
     ScreenFxPart* pp = parts;
-    u8* base = (u8*)lbl_80317BD8;
+    u8* base = (u8*)(int)lbl_80317BD8;
 
     parts[0].state = 0;
     parts[0].id = 0x15;
@@ -164,7 +164,7 @@ void dll_9B_func03(int a, int b, int p, uint flags)
             hdr.bz = lbl_803E13A0 + *(f32*)(p + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x156, 0);
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317BD8, 0x18, base + 0xd4, 0x156, 0);
 }
 
 
