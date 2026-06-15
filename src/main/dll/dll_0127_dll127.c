@@ -1,8 +1,4 @@
 #include "main/game_object.h"
-#include "main/screen_transition.h"
-#include "main/dll/CF/treasureRelated0177.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/objanim_internal.h"
 
 extern f32 lbl_803E3D60;
 extern void objRenderFn_8003b8f4(f32);
