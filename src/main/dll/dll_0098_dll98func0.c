@@ -220,7 +220,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
         {
             v = 0x3f3;
         }
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (uint)extraArgs != 0 ? base + 0xb4 : base, 0x10, base + 0x168, v,
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (uint)extraArgs != 0 ? base + 0xb4 : (u8*)(int)lbl_803178B0, 0x10, base + 0x168, v,
                                          0);
     }
 }
