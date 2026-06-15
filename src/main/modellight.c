@@ -1241,10 +1241,8 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     i = 12;
     do
     {
-        cornerWords[0] = sourceWords[0];
-        cornerWords[1] = sourceWords[1];
-        cornerWords += 2;
-        sourceWords += 2;
+        *cornerWords++ = *sourceWords++;
+        *cornerWords++ = *sourceWords++;
     }
     while (--i != 0);
 
