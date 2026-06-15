@@ -1446,7 +1446,7 @@ int ktrex_stateHandlerA04(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 4);
         ((KTRexArenaState*)gKTRexState)->unk4 =
-            (f32)(u32) * (u16*)((char*)p + ((KTRexArenaState*)gKTRexState)->unkFD * 2 + 0x44);
+            (f32)(u32)((u16*)((char*)p + 0x44))[((KTRexArenaState*)gKTRexState)->unkFD];
         return 0;
     }
     t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
