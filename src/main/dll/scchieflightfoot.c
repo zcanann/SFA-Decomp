@@ -1,6 +1,5 @@
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/effect_interfaces.h"
-#include "main/objseq.h"
 
 extern int randomGetRange(int min, int max);
 extern undefined4 Obj_GetPlayerObject();
