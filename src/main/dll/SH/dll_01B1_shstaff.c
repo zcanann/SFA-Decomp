@@ -5,7 +5,7 @@
 
 int sh_staff_getExtraSize(void) { return 0x74; }
 
-#pragma opt_strength_reduction off
+#pragma opt_strength_reduction on
 void sh_staff_free(int* obj, int p2)
 {
     int* state = ((GameObject*)obj)->extra;

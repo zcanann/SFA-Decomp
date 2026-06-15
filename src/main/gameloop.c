@@ -520,7 +520,7 @@ void GameBit_Set(int eventId, int value)
     }
     if (eventId & 0x8000)
     {
-        value = (value & 1LL) ^ 1LL;
+        value = ((u32)value & 1LL) ^ 1LL;
     }
     id = (s16)eventId & 0xfff;
     if (id == 0x95)

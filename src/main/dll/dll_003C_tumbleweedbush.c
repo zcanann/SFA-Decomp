@@ -692,6 +692,7 @@ void Link_initialise(void)
     linkFlag_803dd8f8 = 1;
 }
 
+#pragma peephole off
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage,
                 int unused1, int unused2, int baseRed, int baseGreen, int baseBlue,
                 int selectedRed, int selectedGreen, int selectedBlue)
@@ -796,6 +797,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
         lbl_803DD908 = defaultText;
     }
 }
+#pragma peephole reset
 
 void TitleMenuItem_release(void);
 
