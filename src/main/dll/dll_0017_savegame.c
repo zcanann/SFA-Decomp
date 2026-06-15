@@ -267,20 +267,17 @@ void saveGame_unsaveObjectPos(u8* obj)
 {
     int i;
     u8* saveBase;
-    SaveGameObjectPosition* slot;
-    u32 objectId;
 
     if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         return;
     }
-    if (saveGameLoadStatus == 0)
+    if ((int)saveGameLoadStatus == 0)
     {
-        objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
         saveBase = gSaveGameData;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
         {
-            if (objectId == ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
+            if (*(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14) == *(u32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))
             {
                 break;
             }
@@ -291,13 +288,13 @@ void saveGame_unsaveObjectPos(u8* obj)
             return;
         }
 
-        slot = (SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET);
-        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++)
+        saveBase = (u8*)gSaveGameData + i * sizeof(SaveGameObjectPosition);
+        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, saveBase += sizeof(SaveGameObjectPosition))
         {
-            slot[0].objectId = slot[1].objectId;
-            slot[0].x = slot[1].x;
-            slot[0].y = slot[1].y;
-            slot[0].z = slot[1].z;
+            *(u32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 0) = *(u32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 16);
+            *(f32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = *(f32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 20);
+            *(f32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = *(f32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 24);
+            *(f32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 12) = *(f32*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET + 28);
         }
         *(u32*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
     }
@@ -1444,14 +1441,15 @@ void saveGame_saveObjectPos(int* obj);
 
 void saveGame_saveObjectPos(int* obj)
 {
-    register u8* slot;
+    u8* slot;
     register int v;
     register int i;
     if (((GameObject*)obj)->anim.flags & 0x2000) return;
-    if (saveGameLoadStatus == 0)
+    if ((int)saveGameLoadStatus == 0)
     {
+        i = 0;
         slot = gSaveGameData;
-        for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
+        for (; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
         {
             v = *(int*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET);
             if (v == 0) break;
