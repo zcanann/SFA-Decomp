@@ -82,7 +82,6 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 lbl_802C2308[];
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
@@ -100,7 +99,6 @@ extern u8 framesThisStep;
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
 
-extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -130,7 +128,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
@@ -139,7 +136,6 @@ extern u32 lbl_803DDB48;
 extern f32 lbl_803E47B8;
 extern void Music_Trigger(int id, int p2);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int ObjList_FindObjectById(int id);
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
