@@ -1,4 +1,3 @@
-#include "main/dll/cannon.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
