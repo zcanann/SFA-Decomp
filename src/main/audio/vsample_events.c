@@ -1,5 +1,4 @@
 #include "main/audio/synth_virtual_sample.h"
-#include "main/audio/vsample_events.h"
 
 extern u8 synthVirtualSampleState[];
 
