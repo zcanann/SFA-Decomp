@@ -231,72 +231,72 @@ LAB_801b44d4:
 
 void explosion_release(uint obj);
 
-void fn_explosion_release_v11_unused(uint param_1)
+void fn_explosion_release_v11_unused(uint obj)
 {
-    short sVar1;
-    float fVar2;
-    bool bVar3;
-    int iVar4;
-    int iVar5;
-    char* pcVar6;
-    short* psVar7;
+    short moveId;
+    float minSpeed;
+    bool sequenceDone;
+    int count;
+    int idx;
+    char* state;
+    short* placement;
     ObjHitsPriorityState* hitState;
 
-    psVar7 = *(short**)&((GameObject*)param_1)->anim.placementData;
-    pcVar6 = ((GameObject*)param_1)->extra;
-    FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)pcVar6)->unk4, (double)lbl_803DC074);
-    ((GameObject*)param_1)->anim.localPosZ = ((GameObject*)param_1)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
-        *)pcVar6)->unk8;
-    fVar2 = lbl_803E566C;
-    if (((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 != lbl_803E566C)
+    placement = *(short**)&((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)state)->unk4, (double)lbl_803DC074);
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
+        *)state)->unk8;
+    minSpeed = lbl_803E566C;
+    if (((FnExplosionReleaseV11UnusedState*)state)->unk8 != lbl_803E566C)
     {
-        ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 *
+        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = ((FnExplosionReleaseV11UnusedState*)state)->unk8 *
             lbl_803E5670;
-        if (((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 < fVar2)
+        if (((FnExplosionReleaseV11UnusedState*)state)->unk8 < minSpeed)
         {
-            fVar2 = ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8;
+            minSpeed = ((FnExplosionReleaseV11UnusedState*)state)->unk8;
         }
-        ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = fVar2;
+        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = minSpeed;
     }
-    if ((('\0' < *pcVar6) || (*psVar7 != 0x338)) || (((GameObject*)param_1)->anim.currentMoveProgress <= lbl_803E5674))
+    if ((('\0' < *state) || (*placement != 0x338)) || (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E5674))
     {
-        bVar3 = false;
-        iVar5 = 0;
-        iVar4 = (int)*(char*)(*(int*)(param_1 + 0x58) + 0x10f);
-        if (0 < iVar4)
+        sequenceDone = false;
+        idx = 0;
+        count = (int)*(char*)(*(int*)(obj + 0x58) + 0x10f);
+        if (0 < count)
         {
             do
             {
-                sVar1 = *(short*)(*(int*)(*(int*)(param_1 + 0x58) + iVar5 + 0x100) + 0x46);
-                if ((sVar1 == 399) || (sVar1 == 0x1d6))
+                moveId = *(short*)(*(int*)(*(int*)(obj + 0x58) + idx + 0x100) + 0x46);
+                if ((moveId == 399) || (moveId == 0x1d6))
                 {
-                    bVar3 = true;
+                    sequenceDone = true;
                     break;
                 }
-                iVar5 = iVar5 + 4;
-                iVar4 = iVar4 + -1;
+                idx = idx + 4;
+                count = count + -1;
             }
-            while (iVar4 != 0);
+            while (count != 0);
         }
-        if (bVar3)
+        if (sequenceDone)
         {
-            ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk4 = lbl_803E5678;
-            ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = lbl_803E567C;
-            *pcVar6 = '\0';
-            GameBit_Set((int)psVar7[0xf], 1);
-            FUN_80006824(param_1, 0x3e1);
+            ((FnExplosionReleaseV11UnusedState*)state)->unk4 = lbl_803E5678;
+            ((FnExplosionReleaseV11UnusedState*)state)->unk8 = lbl_803E567C;
+            *state = '\0';
+            GameBit_Set((int)placement[0xf], 1);
+            FUN_80006824(obj, 0x3e1);
         }
     }
     else
     {
-        iVar4 = (uint)((GameObject*)param_1)->anim.alpha + (uint)DAT_803dc070 * -0x10;
-        if (iVar4 < 0)
+        count = (uint)((GameObject*)obj)->anim.alpha + (uint)DAT_803dc070 * -0x10;
+        if (count < 0)
         {
-            iVar4 = 0;
+            count = 0;
         }
-        hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        ((GameObject*)param_1)->anim.alpha = iVar4;
+        ((GameObject*)obj)->anim.alpha = count;
     }
     return;
 }
