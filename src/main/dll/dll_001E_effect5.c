@@ -1829,7 +1829,6 @@ int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 
-extern f32 mathCosf(f32);
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
