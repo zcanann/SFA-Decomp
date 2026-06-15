@@ -84,7 +84,7 @@ extern f32 lbl_803E4D80;
 void DIMbossspit_updateBurst(int obj)
 {
     int state;
-    s16 v;
+    s16 burstTimer;
     int iVar;
     int n;
     int radius;
@@ -117,10 +117,10 @@ void DIMbossspit_updateBurst(int obj)
         }
     }
     *(s16*)state += (u8)framesThisStep;
-    v = *(s16*)state;
-    if (v > 0x200)
+    burstTimer = *(s16*)state;
+    if (burstTimer > 0x200)
     {
-        if (v > 0x22a)
+        if (burstTimer > 0x22a)
         {
             Obj_FreeObject(obj);
         }
@@ -128,12 +128,12 @@ void DIMbossspit_updateBurst(int obj)
     }
     iVar = (int)
     (lbl_803E4D48 * ((f32)(s32)
-    v * lbl_803E4D4C
+    burstTimer * lbl_803E4D4C
     )
     )
     ;
     n = 0xff - iVar;
-    radius = 0x94 - (v >> 2);
+    radius = 0x94 - (burstTimer >> 2);
     if (n >= 0)
     {
         ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
@@ -194,7 +194,7 @@ void DIMbossspit_update(int obj)
 {
     int state;
     int i;
-    s16 v;
+    s16 glowAlpha;
     ModelLightStruct* p;
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -241,22 +241,22 @@ void DIMbossspit_update(int obj)
     p = ((DIMbossspitState*)state)->light;
     if (p != NULL && p->glowType != 0 && p->enabled != 0)
     {
-        v = (s16)(p->glowAlpha + p->glowAlphaStep);
-        if (v < 0)
+        glowAlpha = (s16)(p->glowAlpha + p->glowAlphaStep);
+        if (glowAlpha < 0)
         {
-            v = 0;
+            glowAlpha = 0;
             p->glowAlphaStep = 0;
         }
-        else if (v > 0xc)
+        else if (glowAlpha > 0xc)
         {
-            v = (s16)(v + randomGetRange(-12, 12));
-            if (v > 0xff)
+            glowAlpha = (s16)(glowAlpha + randomGetRange(-12, 12));
+            if (glowAlpha > 0xff)
             {
-                v = 0xff;
+                glowAlpha = 0xff;
                 ((DIMbossspitState*)state)->light->glowAlphaStep = 0;
             }
         }
-        ((DIMbossspitState*)state)->light->glowAlpha = (u8)v;
+        ((DIMbossspitState*)state)->light->glowAlpha = (u8)glowAlpha;
     }
     return;
 }

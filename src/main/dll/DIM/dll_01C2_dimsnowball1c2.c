@@ -9,9 +9,9 @@
 
 typedef struct Dimsnowball1c2State
 {
-    s8 unk0;
+    s8 countdown;
     u8 pad1[0x2 - 0x1];
-    s16 unk2;
+    s16 spawnPeriod;
     u8 pad4[0x8 - 0x4];
 } Dimsnowball1c2State;
 
@@ -119,7 +119,7 @@ void dimsnowball1c2_update(int* obj)
                     (f32)(u32)((Dimsnowball1c2Placement*)def)->unk1B +
                     (f32)(int)randomGetRange(0, 100) / lbl_803E4864;
                 Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
-                *(s16*)extra = ((Dimsnowball1c2State*)extra)->unk2;
+                *(s16*)extra = ((Dimsnowball1c2State*)extra)->spawnPeriod;
             }
         }
     }

@@ -320,7 +320,6 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
 
 void fn_800E58FC(int obj, CurvesCollisionState* collision)
 {
-    f32* state;
     CurvesTransformScratch transform;
     f32 localX[4];
     f32 localY[4];
@@ -342,7 +341,6 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     f32* outX;
     s16 angle;
 
-    state = (f32*)collision;
     collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
     collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
     collision->surfaceNormalZ = collision->segmentHitPlanes[0][2];
@@ -354,10 +352,11 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
         ((GameObject*)obj)->anim.worldPosY = zero;
         ((GameObject*)obj)->anim.worldPosZ = zero;
 
-        pointX = state;
-        pointYZ = state;
+        pointIndex = 0;
+        pointX = (f32*)collision;
+        pointYZ = (f32*)collision;
         pointLimit = pointCount * 3;
-        for (pointIndex = 0; pointIndex < pointLimit; pointIndex += 3)
+        for (; pointIndex < pointLimit; pointIndex += 3)
         {
             ((GameObject*)obj)->anim.worldPosX += pointX[2];
             ((GameObject*)obj)->anim.worldPosY += pointYZ[3];
@@ -385,7 +384,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             outZ = localZ;
             outY = localY;
             outX = localX;
-            point = state;
+            point = (f32*)collision;
             for (pointIndex = 0; pointIndex < (s32)pointCount; pointIndex++)
             {
                 Matrix_TransformPoint(matrix, point[2], point[3], point[4], outX, outY, outZ);

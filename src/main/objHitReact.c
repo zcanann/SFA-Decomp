@@ -163,8 +163,8 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType,
                                  ObjHitReactState* hitState, int moveId, int async)
 {
-    s16* moveEntryTable;
     int moveEntryWordIndex;
+    s16* moveEntryTable;
     s16* moveEntry;
     s16 entryByteOffset;
 

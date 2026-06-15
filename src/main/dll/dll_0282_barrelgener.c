@@ -433,14 +433,15 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     }
 }
 
+#pragma opt_loop_invariants off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
-    f32 vel[3];
-    f32 step[3];
     f32 pos[3];
-    int gridA[2];
+    f32 step[3];
+    f32 vel[3];
+    int gridOut[2];
     int gridB[2];
-    int gridOut[3];
+    int gridA[2];
     int i;
 
     if ((u32)obj != (u32)Obj_GetPlayerObject())
@@ -470,6 +471,7 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
     voxmaps_worldToGrid(pos, gridB);
     return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
 }
+#pragma opt_loop_invariants reset
 
 int voxmaps_traceWorldLine(void* p1, void* p2)
 {

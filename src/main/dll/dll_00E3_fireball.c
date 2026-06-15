@@ -1797,11 +1797,16 @@ void fireball_hitDetect(int* obj)
     extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a); /* #57 */
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* target;
     if (((GameObject*)obj)->anim.seqId == 0x83e) return;
-    if (((FireballState*)state)->stateFlags & 8) return;
-    target = (int*)hitState->lastHitObject;
+    switch (((FireballState*)state)->stateFlags & 8)
+    {
+    case 0:
+        break;
+    default:
+        return;
+    }
+    target = (int*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (target == NULL) return;
     if (*(s16*)((char*)target + 0x46) == 0x6e8)
     {
@@ -1811,8 +1816,8 @@ void fireball_hitDetect(int* obj)
             ((FireballState*)state)->colorIndex = (u8)idx;
             if (*(void**)state != NULL)
             {
-                u8* pal = (u8*)lbl_80320978;
                 int c = ((FireballState*)state)->colorIndex * 3;
+                u8* pal = (u8*)lbl_80320978;
                 modelLightStruct_setDiffuseColor(*(int**)state, pal[c], pal[c + 1], pal[c + 2], 0);
             }
         }

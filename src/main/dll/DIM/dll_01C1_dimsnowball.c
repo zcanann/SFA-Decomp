@@ -61,7 +61,7 @@ extern u8 framesThisStep;
 typedef struct DimsnowballState
 {
     u8 pad0[0xC - 0x0];
-    s8 unkC;
+    s8 jingleCooldown;
     u8 padD[0x10 - 0xD];
 } DimsnowballState;
 
@@ -175,7 +175,7 @@ void dimsnowball_update(int obj)
     { f32 cc12 = (f32)gDimSnowballCoords[idx[3] + 2]; z[3] = cc12 * lbl_803E484C; }
     dy1 = y[1] - y[0];
     dy2 = y[2] - y[3];
-    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && ((DimsnowballState*)state)->unkC <= 0)
+    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && ((DimsnowballState*)state)->jingleCooldown <= 0)
     {
         sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
             (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.
@@ -184,7 +184,7 @@ void dimsnowball_update(int obj)
         {
             Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
         }
-        ((DimsnowballState*)state)->unkC = 0x1e;
+        ((DimsnowballState*)state)->jingleCooldown = 0x1e;
     }
     ((GameObject*)obj)->anim.localPosX = x[1] + lbl_803E4850 * (x[2] - x[1]);
     ((GameObject*)obj)->anim.localPosY = y[1] + lbl_803E4850 * (y[2] - y[1]);
@@ -202,9 +202,9 @@ void dimsnowball_update(int obj)
     ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->
         anim.previousLocalPosZ);
     state[2] = state[2] + frames;
-    if (((DimsnowballState*)state)->unkC > 0)
+    if (((DimsnowballState*)state)->jingleCooldown > 0)
     {
-        ((DimsnowballState*)state)->unkC -= frames;
+        ((DimsnowballState*)state)->jingleCooldown -= frames;
     }
     v24 = ((GameObject*)obj)->anim.velocityX;
     dy2 = lbl_803E4854;

@@ -146,7 +146,6 @@ void blasted_update(int obj)
             u32 v;
             s8 m;
             int found;
-            int next;
             m = *(u8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorities[i];
             v = ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
             found = 0;
@@ -162,11 +161,12 @@ void blasted_update(int obj)
             if (m == 5)
             {
                 int k = 0;
-                while (k != state->damageStep)
+                int cnt = state->damageStep;
+                while (k != cnt)
                 {
                     if (v == state->destroyedHitObjects[k++])
                     {
-                        k = state->damageStep;
+                        k = cnt;
                         found = 1;
                     }
                 }
@@ -181,8 +181,7 @@ void blasted_update(int obj)
                     GameBit_Set(setup->progressGameBit, state->damageStep + 1);
                 }
                 lbl_803DDB18 = 0x12c;
-                next = state->damageStep + 1;
-                if (next > total)
+                if (state->damageStep + 1 > total)
                 {
                     int n;
                     int lim = total + 1;
@@ -197,7 +196,7 @@ void blasted_update(int obj)
                 }
                 else
                 {
-                    state->damageStep++;
+                    state->damageStep = state->damageStep + 1;
                     Obj_SetActiveModelIndex(obj, state->damageStep);
                 }
             }

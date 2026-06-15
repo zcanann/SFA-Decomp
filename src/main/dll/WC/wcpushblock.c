@@ -198,6 +198,7 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
     f32 baseLift;
     f32 moveX;
     f32 moveZ;
+    f32 liftStep;
 
     (void)obj;
 
@@ -216,11 +217,12 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
     {
         targetLift = lbl_803E5C70;
     }
-    state->liftAmount += (targetLift - state->liftAmount) * timeDelta * lbl_803E5C90;
+    liftStep = (targetLift - state->liftAmount) * timeDelta;
+    state->liftAmount += liftStep * lbl_803E5C90;
 
     baseLift = lbl_803E5C94;
+    moveX = baseLift * angleCos;
     moveZ = baseLift * -angleSin;
-    moveX = angleCos * baseLift;
     moveX += angleSin * -state->liftAmount;
     moveZ += angleCos * -state->liftAmount;
 

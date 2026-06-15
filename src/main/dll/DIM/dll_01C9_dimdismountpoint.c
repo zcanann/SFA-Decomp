@@ -9,12 +9,16 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 
+#define DIMDISMOUNT_GAMEBIT_DONE  0x3e3
+#define DIMDISMOUNT_GROUP         0x13
+#define DIMCONVEYOR_GROUP         0xa
+
 typedef struct DimdismountpointState
 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
+    f32 planeNX; /* plane normal X */
+    f32 planeNY; /* plane normal Y */
+    f32 planeNZ; /* plane normal Z */
+    f32 planeD;  /* plane distance (dot(N, pos)) */
 } DimdismountpointState;
 
 extern uint GameBit_Get(int eventId);
@@ -48,9 +52,9 @@ void dimdismountpoint_update(int* obj)
     f32 d;
 
     d = lbl_803E4910;
-    nearest = (int*)ObjGroup_FindNearestObject(0xa, (u32)obj, &d);
+    nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, (u32)obj, &d);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-    if (GameBit_Get(0x3e3) != 0)
+    if (GameBit_Get(DIMDISMOUNT_GAMEBIT_DONE) != 0)
     {
         ((GameObject*)obj)->unkE4 = 1;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
@@ -82,20 +86,20 @@ void dimdismountpoint_init(u8* obj, u8* params)
 {
     f32* sub;
 
-    ObjGroup_AddObject((u32)obj, 0x13);
+    ObjGroup_AddObject((u32)obj, DIMDISMOUNT_GROUP);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     sub = ((GameObject*)obj)->extra;
-    sub[0] = mathSinf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918);
-    sub[1] = lbl_803E4908;
-    sub[2] = mathCosf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918);
+    sub[0] = mathSinf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918); /* planeNX */
+    sub[1] = lbl_803E4908;                                                     /* planeNY */
+    sub[2] = mathCosf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918); /* planeNZ */
     sub[3] = -(sub[0] * ((GameObject*)obj)->anim.localPosX + sub[1] * ((GameObject*)obj)->anim.localPosY + sub[2] * ((
-        GameObject*)obj)->anim.localPosZ);
+        GameObject*)obj)->anim.localPosZ); /* planeD */
     ((GameObject*)obj)->unkF8 = 1;
 }
 
 int dimdismountpoint_getExtraSize(void) { return 0x10; }
 
-void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
+void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, DIMDISMOUNT_GROUP); }
 
 void dimbridgecogmai_release(void);
 
@@ -128,10 +132,10 @@ int dimdismountpoint_setScale(int obj)
     f32 result;
     int side;
 
-    result = ((DimdismountpointState*)state)->unkC +
-    (((DimdismountpointState*)state)->unk8 * ((GameObject*)player)->anim.localPosZ +
-        (((DimdismountpointState*)state)->unk0 * ((GameObject*)player)->anim.localPosX +
-            ((DimdismountpointState*)state)->unk4 * ((GameObject*)player)->anim.localPosY));
+    result = ((DimdismountpointState*)state)->planeD +
+    (((DimdismountpointState*)state)->planeNZ * ((GameObject*)player)->anim.localPosZ +
+        (((DimdismountpointState*)state)->planeNX * ((GameObject*)player)->anim.localPosX +
+            ((DimdismountpointState*)state)->planeNY * ((GameObject*)player)->anim.localPosY));
 
     if (result >= lbl_803E4908)
     {

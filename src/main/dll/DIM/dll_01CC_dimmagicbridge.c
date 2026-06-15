@@ -21,15 +21,19 @@
 typedef struct DimmagicbridgeFlameSeqFnState
 {
     u8 pad0[0x51 - 0x0];
-    u8 unk51;
+    u8 alpha;
     u8 pad52[0x60 - 0x52];
-    u16 unk60;
+    u16 wavePhaseA;
     u8 pad62[0x64 - 0x62];
-    s16 unk64;
+    s16 seqTimer;
     u8 pad66[0x68 - 0x66];
 } DimmagicbridgeFlameSeqFnState;
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
+
+#define DIMMAGICBRIDGE_GAMEBIT_IGNITED   0x1e9
+#define DIMMAGICBRIDGE_GAMEBIT_TRIGGER   0x1ef
+#define DIMMAGICBRIDGE_GAMEBIT_LATCH     0x1e8
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -129,7 +133,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     sub->segmentCount = 0xa;
     sub->minVertexY = (f32)minY;
 
-    if (GameBit_Get(0x1e9) != 0)
+    if (GameBit_Get(DIMMAGICBRIDGE_GAMEBIT_IGNITED) != 0)
     {
         sub->ignited = 1;
     }
@@ -164,11 +168,11 @@ void dimmagicbridge_update(int obj)
     dimmagicbridge_updateVertexWave(obj, (u8*)sub);
     if (sub->ignited == 0)
     {
-        if (GameBit_Get(0x1ef) != 0)
+        if (GameBit_Get(DIMMAGICBRIDGE_GAMEBIT_TRIGGER) != 0)
         {
             if (EmissionController_IsLingering(player) != 0)
             {
-                GameBit_Set(0x1e8, 1);
+                GameBit_Set(DIMMAGICBRIDGE_GAMEBIT_LATCH, 1);
             }
         }
     }
@@ -178,8 +182,6 @@ void dimmagicbridge_update(int obj)
     }
 }
 
-/* scroll two material channels and keep the bridge wave phases in
- * sub[0x60]/sub[0x62] moving with framesThisStep. */
 #pragma peephole off
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
@@ -213,9 +215,6 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 }
 #pragma dont_inline reset
 
-/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
- * every 16 frames, and ramp each active slot's alpha toward full; then update
- * the animated bridge mesh. */
 #pragma peephole off
 int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -232,10 +231,10 @@ int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdat
     }
     if (sub[0x5f] != 0)
     {
-        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 -= framesThisStep;
-        if (((DimmagicbridgeFlameSeqFnState*)sub)->unk64 <= 0)
+        ((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer -= framesThisStep;
+        if (((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer <= 0)
         {
-            ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = 0x10;
+            ((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer = 0x10;
             for (j = 1; sub[0x40 + j] != 0 && j < sub[0x4f]; j++)
             {
             }

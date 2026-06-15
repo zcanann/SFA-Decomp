@@ -18,6 +18,10 @@
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
+#define DIMWOODDOOR2_MAP_CUE_OPEN  0x338
+#define DIMWOODDOOR2_KEY_MOVE_A    0x18f
+#define DIMWOODDOOR2_KEY_MOVE_B    0x1d6
+
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
@@ -104,7 +108,7 @@ void dimwooddoor2_update(int* obj)
             sub->riseSpeed = (sub->riseSpeed < ceil) ? sub->riseSpeed : ceil;
         }
     }
-    if ((s8)sub->burnState <= 0 && *(s16*)placement == 0x338 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
+    if ((s8)sub->burnState <= 0 && *(s16*)placement == DIMWOODDOOR2_MAP_CUE_OPEN && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
     {
         int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
         if (v < 0) v = 0;
@@ -121,7 +125,7 @@ void dimwooddoor2_update(int* obj)
         for (i = 0; i < (int)*(s8*)(*(int*)(objAddr + 0x58) + 0x10f); i++)
         {
             int o = *(int*)(*(int*)(objAddr + 0x58) + i * 4 + 0x100);
-            if (*(s16*)(o + 0x46) == 0x18f || *(s16*)(o + 0x46) == 0x1d6)
+            if (*(s16*)(o + 0x46) == DIMWOODDOOR2_KEY_MOVE_A || *(s16*)(o + 0x46) == DIMWOODDOOR2_KEY_MOVE_B)
             {
                 found = 1;
                 break;

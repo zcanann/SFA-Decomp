@@ -22,7 +22,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
 
@@ -49,24 +48,6 @@ extern f32 lbl_803E4B54;
 extern f32 lbl_803E4B58;
 extern f32 lbl_803E4B30;
 
-void FUN_801b9cc4(int param_1)
-{
-    char* pcVar1;
-    int iVar2;
-
-    pcVar1 = ((GameObject*)param_1)->extra;
-    if ((pcVar1[2] & 1U) == 0)
-    {
-        iVar2 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if (('\0' < *pcVar1) && (*pcVar1 = *pcVar1 + -1, *pcVar1 == '\0'))
-        {
-            pcVar1[2] = pcVar1[2] | 1;
-            GameBit_Set((int)*(short*)(iVar2 + 0x1e), 1);
-        }
-    }
-    return;
-}
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -87,7 +68,6 @@ void dim2icefloe_initialise(void)
 }
 
 
-/* dim2icefloe: per-frame curve-follow update + path-param init. */
 typedef struct
 {
     u8 finished : 1;

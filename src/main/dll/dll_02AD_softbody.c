@@ -107,8 +107,8 @@ void softbody_update(int obj)
         }
     }
 
-    if (object->anim.seqId >= SOFTBODY_MOVE_PHASE_A_FIRST &&
-        object->anim.seqId < SOFTBODY_MOVE_PHASE_A_END)
+    if (object->anim.seqId < SOFTBODY_MOVE_PHASE_A_END &&
+        object->anim.seqId >= SOFTBODY_MOVE_PHASE_A_FIRST)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDA0, 0);
     }

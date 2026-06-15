@@ -1665,13 +1665,13 @@ int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate
     {
         switch (animUpdate->eventIds[i])
         {
-        case 0:
-            s->enabled = 0;
-            Rcp_DisableBlurFilter();
-            break;
         case 1:
             s->enabled = 1;
             s->field1 = 0;
+            break;
+        case 0:
+            s->enabled = 0;
+            Rcp_DisableBlurFilter();
             break;
         case 2:
             s->enabled = 1;

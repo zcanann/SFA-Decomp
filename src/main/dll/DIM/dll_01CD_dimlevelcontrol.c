@@ -20,26 +20,8 @@
 #include "main/mapEvent.h"
 #include "main/sky_interface.h"
 
-/*
- * Per-object extra state for the dimwooddoor2 burnable door
- * (dimwooddoor2_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
-
-/*
- * Per-object extra state for the dll_1CE hatch door
- * (dll_1CE_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
-
-/*
- * Per-object extra state for the dimmagicbridge flame bridge
- * (dimmagicbridge_getExtraSize == 0x68). init/SeqFn here, dll_199/19A
- * variants in dimmagicbridge.c use their own layout.
- */
-
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
@@ -47,16 +29,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
-
-/*
- * Per-object extra state for the explosion effect
- * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
- * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
- * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
- * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
- * (recipe #36/#77); the layout is documented here for a future pass.
- */
 
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
@@ -75,6 +47,9 @@ STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
+#define DIMLEVELCONTROL_MUSIC_DAY   0xc5
+#define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
+
 extern undefined4 FUN_800067c0();
 extern void getEnvfxActImmediately(int a, int b, int id, int d);
 extern void getEnvfxAct(int a, int b, int id, int d);
@@ -125,8 +100,8 @@ typedef struct DimLevelControlState
     u8 saveState;
     u8 unk9;
     s16 musicTrack;
-    u8 unkC;
-    u8 unkD;
+    u8 dialogueFired;
+    u8 groupStatus;
     u8 b7 : 1;
     u8 b6 : 1;
     u8 b5 : 1;
@@ -186,12 +161,12 @@ void dim_levelcontrol_update(int obj)
         }
         ((GameObject*)obj)->unkF4 = 0;
     }
-    if (st->unkD != 0)
+    if (st->groupStatus != 0)
     {
         if ((u32)GameBit_Get(0x651) == 0)
         {
             (*gMapEventInterface)->setObjGroupStatus(0x13, 0xd, 0);
-            st->unkD = 0;
+            st->groupStatus = 0;
         }
     }
     else
@@ -199,7 +174,7 @@ void dim_levelcontrol_update(int obj)
         if ((u32)GameBit_Get(0x651) != 0)
         {
             (*gMapEventInterface)->setObjGroupStatus(0x13, 0xd, 1);
-            st->unkD = 1;
+            st->groupStatus = 1;
         }
     }
     if (st->timer > lbl_803E4A24)
@@ -212,12 +187,12 @@ void dim_levelcontrol_update(int obj)
             st->timer = lbl_803E4A24;
         }
     }
-    if (st->unkC == 0)
+    if (st->dialogueFired == 0)
     {
         t = GameBit_Get(0x3e2);
         t2 = GameBit_Get(0x3e3);
-        st->unkC = (u8)(t2 & t);
-        if (st->unkC != 0)
+        st->dialogueFired = (u8)(t2 & t);
+        if (st->dialogueFired != 0)
         {
             (*gGameUIInterface)->showNpcDialogue(0x4ba, 0x14, 0x8c, 1);
         }
@@ -239,25 +214,25 @@ void dim_levelcontrol_update(int obj)
     }
     if ((*gSkyInterface)->getSunPosition(0) == 0)
     {
-        if (st->musicTrack != 0xe2)
+        if (st->musicTrack != DIMLEVELCONTROL_MUSIC_NIGHT)
         {
-            st->musicTrack = 0xe2;
+            st->musicTrack = DIMLEVELCONTROL_MUSIC_NIGHT;
             if (st->latch & 4)
             {
-                Music_Trigger(0xc5, 0);
-                Music_Trigger(0xe2, 1);
+                Music_Trigger(DIMLEVELCONTROL_MUSIC_DAY, 0);
+                Music_Trigger(DIMLEVELCONTROL_MUSIC_NIGHT, 1);
             }
         }
     }
     else
     {
-        if (st->musicTrack != 0xc5)
+        if (st->musicTrack != DIMLEVELCONTROL_MUSIC_DAY)
         {
-            st->musicTrack = 0xc5;
+            st->musicTrack = DIMLEVELCONTROL_MUSIC_DAY;
             if (st->latch & 4)
             {
-                Music_Trigger(0xe2, 0);
-                Music_Trigger(0xc5, 1);
+                Music_Trigger(DIMLEVELCONTROL_MUSIC_NIGHT, 0);
+                Music_Trigger(DIMLEVELCONTROL_MUSIC_DAY, 1);
             }
         }
     }
@@ -296,7 +271,7 @@ void dim_levelcontrol_init(int obj)
     {
         gameBitFn_800ea2e0(i);
     }
-    st->unkC = (u8)GameBit_Get(0xdc);
+    st->dialogueFired = (u8)GameBit_Get(0xdc);
     GameBit_Set(0xf0a, 0);
     if ((u32)GameBit_Get(0x89d) != 0 && (u32)GameBit_Get(0x8a5) == 0)
     {

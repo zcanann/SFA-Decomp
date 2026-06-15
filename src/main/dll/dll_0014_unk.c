@@ -2214,7 +2214,6 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
 {
     char* stateBytes;
     int neighborId;
-    int curve;
     int low;
     int high;
     int mid;
@@ -2237,49 +2236,58 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
     memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
 
-    curve = *(s32*)&state->nodeA0;
     if (state->reverse != 0)
     {
         int candA[4];
-        int countA = 0;
-        u32 mask = 1;
+        u32 mask;
+        int countA;
+        int curveA;
+        int nid;
+        curveA = *(s32*)&state->nodeA0;
+        countA = 0;
+        mask = 1;
         for (low = 0; low < 4; low++, mask <<= 1)
         {
-            neighborId = *(s32*)(curve + 0x1c + low * 4);
-            if (neighborId > -1 && (*(s8*)(curve + 0x1b) & mask) != 0 && neighborId != -1)
+            nid = *(s32*)(curveA + 0x1c + low * 4);
+            if (nid > -1 && (*(s8*)(curveA + 0x1b) & mask) != 0 && nid != -1)
             {
-                candA[countA++] = neighborId;
+                candA[countA++] = nid;
             }
         }
-        if (countA == 0)
+        if (countA != 0)
         {
-            neighborId = -1;
+            neighborId = candA[randomGetRange(0, countA - 1)];
         }
         else
         {
-            neighborId = candA[randomGetRange(0, countA - 1)];
+            neighborId = -1;
         }
     }
     else
     {
         int candB[4];
-        int countB = 0;
-        u32 mask = 1;
+        u32 mask;
+        int countB;
+        int curveB;
+        int nid;
+        curveB = *(s32*)&state->nodeA0;
+        countB = 0;
+        mask = 1;
         for (low = 0; low < 4; low++, mask <<= 1)
         {
-            neighborId = *(s32*)(curve + 0x1c + low * 4);
-            if (neighborId > -1 && (*(s8*)(curve + 0x1b) & mask) == 0 && neighborId != -1)
+            nid = *(s32*)(curveB + 0x1c + low * 4);
+            if (nid > -1 && (*(s8*)(curveB + 0x1b) & mask) == 0 && nid != -1)
             {
-                candB[countB++] = neighborId;
+                candB[countB++] = nid;
             }
         }
-        if (countB == 0)
+        if (countB != 0)
         {
-            neighborId = -1;
+            neighborId = candB[randomGetRange(0, countB - 1)];
         }
         else
         {
-            neighborId = candB[randomGetRange(0, countB - 1)];
+            neighborId = -1;
         }
     }
 
@@ -2817,9 +2825,6 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int selectedIndex;
     int i;
     int j;
-    f32 dx;
-    f32 dy;
-    f32 dz;
     f32 distance;
     f32 linkDistance;
     f32 candidateDistances[4];
@@ -2859,10 +2864,13 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             continue;
         }
 
-        dx = *(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10);
-        dy = *(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8);
-        dz = *(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc);
-        queueDistances[0] = dx * dx + dy * dy + dz * dz;
+        queueDistances[0] =
+            (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) *
+                (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) +
+            (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) *
+                (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) +
+            (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) *
+                (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc));
         queueIndices[0] = directIndex;
         visited[directIndex] = 1;
         queueCount = 1;
@@ -2896,10 +2904,13 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                     continue;
                 }
 
-                dx = *(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10);
-                dy = *(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8);
-                dz = *(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc);
-                linkDistance = distance + dx * dx + dy * dy + dz * dz;
+                linkDistance = distance +
+                    (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) *
+                        (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) +
+                    (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) *
+                        (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) +
+                    (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)) *
+                        (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc));
 
                 insertIndex = 0;
                 while (insertIndex < queueCount && queueDistances[insertIndex] > linkDistance)

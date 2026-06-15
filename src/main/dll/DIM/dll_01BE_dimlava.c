@@ -3,6 +3,12 @@
  * both a small debris particle (seqId 0x1FA) and a full physics lava-ball
  * that homes on a target, glows, and triggers explosions on contact.
  */
+
+#define LAVA1BE_SEQID_DEBRIS   0x1fa
+
+#define LAVA1BE_FLAG_HOMING_OFF 0x08
+#define LAVA1BE_FLAG_INACTIVE   0x10
+#define LAVA1BE_FLAG_FALLING    0x20
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -36,8 +42,6 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
 
 extern u32 randomGetRange(int min, int max);
@@ -77,11 +81,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80057690();
-extern undefined8 FUN_80286830();
-extern undefined4 FUN_8028687c();
-extern void Music_Trigger(int id, int p2);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ModelLightStruct_free(void* light);
 extern void queueGlowRender(int* obj);
@@ -111,83 +110,6 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                               undefined8 param_4,
-                                               undefined8 param_5, undefined8 param_6, undefined8 param_7,
-                                               undefined8 param_8,
-                                               int param_9)
-{
-    if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
-    {
-        FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     *(int*)&((GameObject*)param_9)->childObjs[0]);
-    }
-    return;
-}
-
-void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                  undefined4 param_5, char param_6)
-{
-    extern undefined4 FUN_801adca0(); /* #57 */
-    extern undefined4 ObjPath_GetPointWorldPosition(); /* #57 */
-    u8 uVar1;
-    bool bVar2;
-    undefined2* puVar3;
-    uint uVar4;
-    int iVar5;
-    undefined4 uVar6;
-    undefined2* puVar7;
-    undefined4* puVar8;
-    undefined8 uVar9;
-
-    uVar9 = FUN_80286830();
-    puVar3 = (undefined2*)((ulonglong)uVar9 >> 0x20);
-    if (puVar3[0x23] == 0x373)
-    {
-        FUN_8003b818((int)puVar3);
-    }
-    else
-    {
-        uVar4 = GameBit_Get(0x6e);
-        if ((uVar4 == 0) || (uVar4 = GameBit_Get(0x382), uVar4 != 0))
-        {
-            puVar8 = *(undefined4**)(puVar3 + 0x5c);
-            puVar7 = (undefined2*)*puVar8;
-            bVar2 = false;
-            if ((puVar7 != (undefined2*)0x0) &&
-                (iVar5 = (**(code**)(**(int**)(puVar7 + 0x34) + 0x38))(puVar7), iVar5 == 2))
-            {
-                bVar2 = true;
-            }
-            if (bVar2)
-            {
-                puVar3[3] = puVar3[3] | 8;
-                uVar6 = FUN_80057690((int)puVar7);
-                param_6 = (char)uVar6;
-                FUN_801adca0(puVar3, puVar7, (int)uVar9, param_3, param_4, param_5, param_6,
-                             (uint) * (byte*)(puVar8 + 8), 1);
-            }
-            else
-            {
-                puVar3[3] = puVar3[3] & ~0x8;
-            }
-            if ((param_6 != '\0') && (*(char*)(puVar8 + 8) != '\0'))
-            {
-                uVar1 = *(u8*)((int)puVar3 + 0x37);
-                if (bVar2)
-                {
-                    *(char*)((int)puVar3 + 0x37) = *(char*)(puVar8 + 8);
-                }
-                FUN_8003b818((int)puVar3);
-                ObjPath_GetPointWorldPosition(puVar3, 1, (float*)(puVar8 + 5), puVar8 + 6, (float*)(puVar8 + 7), 0);
-                *(u8*)((int)puVar3 + 0x37) = uVar1;
-            }
-        }
-    }
-    FUN_8028687c();
-    return;
-}
-
 void imicepillar_hitDetect(void);
 
 void imicepillar_update(void);
@@ -233,13 +155,13 @@ void lavaball1be_initialise(void)
 
 int lavaball1be_getExtraSize(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x1fa) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS) return 0x0;
     return 0x14;
 }
 
 int lavaball1be_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x1fa) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS) return 0x0;
     return 0x2;
 }
 
@@ -279,7 +201,7 @@ typedef struct
 void lavaball1be_init(s16* obj, u8* p)
 {
     Lavaball1beState* state;
-    if (((GameObject*)obj)->anim.seqId == 0x1fa)
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
         struct
         {
@@ -328,7 +250,7 @@ void lavaball1be_init(s16* obj, u8* p)
             ((GameObject*)obj)->anim.modelState->flags |= 0x810;
         }
         *(int*)&state->targetObj = ObjList_FindObjectById(state->linkedId);
-        state->flags |= 0x10;
+        state->flags |= LAVA1BE_FLAG_INACTIVE;
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->objectFlags |= 0x2000;
         state->light = objCreateLight(obj, 1);
@@ -352,7 +274,7 @@ void lavaball1be_update(s16* obj)
     Lavaball1beState* state;
     int* sub;
 
-    if (((GameObject*)obj)->anim.seqId == 0x1fa)
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
         ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
             localPosX;
@@ -373,7 +295,7 @@ void lavaball1be_update(s16* obj)
     else
     {
         state = ((GameObject*)obj)->extra;
-        if (state->flags & 0x10)
+        if (state->flags & LAVA1BE_FLAG_INACTIVE)
         {
             ObjHits_DisableObject(obj);
         }
@@ -394,15 +316,15 @@ void lavaball1be_update(s16* obj)
                     ((GameObject*)obj)->anim.velocityZ * dt);
             if (((GameObject*)obj)->anim.velocityY < lbl_803E47F8)
             {
-                if (!(state->flags & 0x20))
+                if (!(state->flags & LAVA1BE_FLAG_FALLING))
                 {
                     Sfx_PlayFromObject((int*)obj, 0x3dd);
-                    state->flags |= 0x20;
+                    state->flags |= LAVA1BE_FLAG_FALLING;
                 }
             }
             else
             {
-                state->flags &= ~0x20;
+                state->flags &= ~LAVA1BE_FLAG_FALLING;
             }
             sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
             if (sub != NULL)
@@ -422,24 +344,24 @@ void lavaball1be_update(s16* obj)
                         state->explodeCooldown = 0xa;
                         spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     }
-                    state->flags |= 0x10;
+                    state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= 0x4000;
                 }
                 if (((ObjAnimComponent*)sub)->bankIndex & 1)
                 {
                     spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
-                    state->flags |= 0x10;
+                    state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= 0x4000;
                     return;
                 }
             }
             if (((GameObject*)obj)->anim.localPosY < state->floorY)
             {
-                state->flags |= 0x10;
+                state->flags |= LAVA1BE_FLAG_INACTIVE;
             }
-            if (!(state->flags & 8))
+            if (!(state->flags & LAVA1BE_FLAG_HOMING_OFF))
             {
-                state->flags |= 8;
+                state->flags |= LAVA1BE_FLAG_HOMING_OFF;
             }
             if ((void*)state->light != NULL && modelLightStruct_getActiveState((int*)state->light) != 0)
             {
@@ -485,5 +407,5 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
         lbl_803E47DC * (f32)((GameObject*)obj)->anim.rotX / lbl_803E47E0);
     ((GameObject*)obj)->anim.flags &= ~0x4000;
     ObjHits_EnableObject(obj);
-    state->flags &= ~0x10;
+    state->flags &= ~LAVA1BE_FLAG_INACTIVE;
 }

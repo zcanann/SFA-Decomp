@@ -43,7 +43,7 @@ typedef struct Dll19EState
     s16 delayTimer;
     s16 resetTimer;
     s16 settleTimer;
-    u8 pad0A;
+    u8 losVisible; /* line-of-sight voxmap trace result: 1=visible, 0=blocked */
     u8 mode;
     u8 active;
     u8 needsOpenSfx;
@@ -81,11 +81,11 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
     if (visible == 0)
     {
         state->delayTimer = 0;
-        state->pad0A = 0;
+        state->losVisible = 0;
     }
     else if (state->active != 0)
     {
-        state->pad0A = 1;
+        state->losVisible = 1;
         camera = (u8*)Camera_GetCurrentViewSlot();
         stk.delta[0] = *(f32*)(camera + 0xc) - ((GameObject*)obj)->anim.localPosX;
         stk.delta[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
@@ -122,7 +122,7 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
             voxmaps_worldToGrid(midB, gridB);
             if (voxmaps_traceLine(gridA, gridB, traceOut, 0, 0) == 0)
             {
-                state->pad0A = 0;
+                state->losVisible = 0;
                 (*gExpgfxInterface)->freeSource(obj);
             }
         }
@@ -132,7 +132,7 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
         }
         else
         {
-            if (state->pad0A != 0)
+            if (state->losVisible != 0)
             {
                 stk.args.x = lbl_803E51D8;
                 stk.args.y = lbl_803E51DC;
@@ -172,6 +172,10 @@ typedef struct Dll19EResArgs
     undefined4 c;
     undefined4 d;
 } Dll19EResArgs;
+
+#define TRICKY_EGG_EFFECT_RESOURCE_ID  0x69
+#define GAMEBIT_TRICKY_EGG_SEQUENCE_DONE  0x1d1
+#define GAMEBIT_TRICKY_EGG_CUTSCENE_DONE  0x1d5
 
 void dll_19E_update(void* obj)
 {
@@ -215,7 +219,7 @@ void dll_19E_update(void* obj)
                 state->resetTimer = 300;
                 if (state->sequenceIndex == 2)
                 {
-                    GameBit_Set(0x1d1, 1);
+                    GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 1);
                 }
             }
         }
@@ -240,7 +244,7 @@ void dll_19E_update(void* obj)
         {
             if (state->active != 0)
             {
-                resource = Resource_Acquire(0x69, 1);
+                resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
                 resourceArgs[1] = (u32)state->sequenceIndex * 2 + 0x19d;
                 resourceArgs[2] = (u32)state->sequenceIndex * 2 + 0x19e;
                 (*(void (*)(void*, int, undefined*, int, int, undefined4*))(*(int*)(*(int*)resource + 4)))(
@@ -272,7 +276,7 @@ void dll_19E_update(void* obj)
                 if ((lbl_803DDBE8 == 2) && (state->sequenceIndex == 2) &&
                     (GameBit_Get(state->gameBitId) != 0))
                 {
-                    GameBit_Set(0x1d1, 1);
+                    GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 1);
                     lbl_803DDBE8 = 3;
                 }
                 state->needsOpenSfx = 1;
@@ -296,9 +300,9 @@ void dll_19E_update(void* obj)
                     lbl_803DDBE8 = 0;
                 }
                 if ((lbl_803DDBE8 == 3) && (state->sequenceIndex == 2) &&
-                    (GameBit_Get(0x1d5) == 0))
+                    (GameBit_Get(GAMEBIT_TRICKY_EGG_CUTSCENE_DONE) == 0))
                 {
-                    GameBit_Set(0x1d1, 0);
+                    GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 0);
                     lbl_803DDBE8 = 0;
                 }
             }
@@ -337,7 +341,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     {
     case 0:
         state->active = 1;
-        resource = Resource_Acquire(0x69, 1);
+        resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
         if (setup->sequenceIndex == 0)
         {
             (*(void (**)(u8*, int, undefined*, int, int, int))(*(int*)resource + 4))(

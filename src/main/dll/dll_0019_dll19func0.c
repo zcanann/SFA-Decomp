@@ -482,11 +482,7 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
     if ((s8)p2[838] != 0)
     {
-        if (*(void**)(p2 + 720) != (void*)player)
-        {
-            result = 1;
-        }
-        else if ((s8)p2[852] == 0)
+        if (*(void**)(p2 + 720) != (void*)player || (s8)p2[852] == 0)
         {
             result = 1;
         }

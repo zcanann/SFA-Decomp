@@ -63,24 +63,6 @@ extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
 extern f32 lbl_803E4B68;
 
-void FUN_801b9cc4(int param_1)
-{
-    char* pcVar1;
-    int iVar2;
-
-    pcVar1 = ((GameObject*)param_1)->extra;
-    if ((pcVar1[2] & 1U) == 0)
-    {
-        iVar2 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if (('\0' < *pcVar1) && (*pcVar1 = *pcVar1 + -1, *pcVar1 == '\0'))
-        {
-            pcVar1[2] = pcVar1[2] | 1;
-            GameBit_Set((int)*(short*)(iVar2 + 0x1e), 1);
-        }
-    }
-    return;
-}
-
 
 #pragma scheduling off
 #pragma peephole off

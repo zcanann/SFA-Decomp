@@ -17,26 +17,8 @@
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
 
-/*
- * Per-object extra state for the dimwooddoor2 burnable door
- * (dimwooddoor2_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
-
-/*
- * Per-object extra state for the dll_1CE hatch door
- * (dll_1CE_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
-
-/*
- * Per-object extra state for the dimmagicbridge flame bridge
- * (dimmagicbridge_getExtraSize == 0x68). init/SeqFn here, dll_199/19A
- * variants in dimmagicbridge.c use their own layout.
- */
-
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
@@ -44,16 +26,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
-
-/*
- * Per-object extra state for the explosion effect
- * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
- * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
- * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
- * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
- * (recipe #36/#77); the layout is documented here for a future pass.
- */
 
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
@@ -105,8 +77,6 @@ void dll_1CF_free(void);
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
 int dim2conveyor_getExtraSize(void);
 
-/* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
- * return 1 if the signed result dropped to or below 0. */
 #pragma scheduling off
 #pragma peephole off
 int fn_801B6D40(int* obj, int v)

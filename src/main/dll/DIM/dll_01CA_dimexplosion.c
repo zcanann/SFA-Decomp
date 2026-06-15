@@ -29,16 +29,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 
-/*
- * Per-object extra state for the explosion effect
- * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
- * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
- * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
- * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
- * (recipe #36/#77); the layout is documented here for a future pass.
- */
-
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
@@ -149,7 +139,7 @@ void explosion_hitDetect(void)
 {
 }
 
-int explosion_getExtraSize(void) { return 0xa60; }
+int explosion_getExtraSize(void) { return sizeof(ExplosionState); }
 
 void explosion_free(int obj)
 {

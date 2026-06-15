@@ -302,7 +302,7 @@ void DIMbosstonsil_update(void* obj)
     extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state, DIMbosstonsilState* updateState);
     DIMbosstonsilState* state;
     DIMbosstonsilConfig* config;
-    u8 b1, b2, b3, b4;
+    u8 red, green, blue, alpha;
 
     state = ((GameObject*)obj)->extra;
     config = *(DIMbosstonsilConfig**)&((GameObject*)obj)->anim.placementData;
@@ -334,8 +334,8 @@ void DIMbosstonsil_update(void* obj)
 
     if (gDIMbosstonsilLight == 0) return;
 
-    modelLightStruct_getSpecularColor(gDIMbosstonsilLight, &b1, &b2, &b3, &b4);
-    modelLightStruct_setGlowColor(gDIMbosstonsilLight, b1, b2, b3, 0xc0);
+    modelLightStruct_getSpecularColor(gDIMbosstonsilLight, &red, &green, &blue, &alpha);
+    modelLightStruct_setGlowColor(gDIMbosstonsilLight, red, green, blue, 0xc0);
 
     if (gDIMbosstonsilLight->active == 0) return;
     if (gDIMbosstonsilLight->visible == 0) return;

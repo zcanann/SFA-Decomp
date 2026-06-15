@@ -200,6 +200,11 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
   gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAGS_ICICLE_DUST_AND_BREATH;
 }
 
+#define GAMEBIT_DIM2_ICICLE_ACTIVE     0x25e
+#define GAMEBIT_DIM2_ICICLE_DEFEATED   0x20e
+#define GAMEBIT_DIM2_ICICLE_PHASE1_WIN 0x20b
+#define GAMEBIT_DIM2_ICICLE_PHASE2_WIN 0x266
+
 extern void setShowWorldMapHud(int show);
 extern void warpToMap(int map, int p2);
 extern void getEnvfxAct(int a, int b, int c, int d);
@@ -364,10 +369,10 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
     CameraShake_SetAllMagnitudes(lbl_803E4BD8);
   }
   if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0004) {
-    GameBit_Set(0x25e, 1);
+    GameBit_Set(GAMEBIT_DIM2_ICICLE_ACTIVE, 1);
   }
   else {
-    GameBit_Set(0x25e, 0);
+    GameBit_Set(GAMEBIT_DIM2_ICICLE_ACTIVE, 0);
   }
   gDIMbossSequenceFlags &= DIMBOSS_SEQUENCE_FLAGS_PERSIST_AFTER_EFFECT_UPDATE;
 }
@@ -502,12 +507,12 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         hitState->flags &= ~1;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
-        GameBit_Set(0x20e, 1);
+        GameBit_Set(GAMEBIT_DIM2_ICICLE_DEFEATED, 1);
         if (*(s16 *)((int)state + 0x402) == 1) {
-          GameBit_Set(0x20b, 1);
+          GameBit_Set(GAMEBIT_DIM2_ICICLE_PHASE1_WIN, 1);
         }
         else if (*(s16 *)((int)state + 0x402) == 2) {
-          GameBit_Set(0x266, 1);
+          GameBit_Set(GAMEBIT_DIM2_ICICLE_PHASE2_WIN, 1);
         }
       }
       else if (*(s16 *)((int)state + 0x402) == 1) {
