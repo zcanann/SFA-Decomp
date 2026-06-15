@@ -2528,7 +2528,8 @@ void enemy_init(int obj, u8* setup, int flag)
         if (((GameObject*)obj)->unkF4 != 0)
         {
             ((EnemyState*)state)->controlFlags |= 0x1000;
-            ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
+            *(u32*)&((EnemyState*)state)->initialFlags =
+                *(u32*)&((EnemyState*)state)->initialFlags & ~0x1000LL;
             ObjHits_DisableObject((u32)obj);
         }
         else if ((((EnemyState*)state)->flags2E4 & 1) != 0)
@@ -2537,12 +2538,12 @@ void enemy_init(int obj, u8* setup, int flag)
         }
     }
     ((EnemyState*)state)->unk2D8 = lbl_803E2574;
-    if (lbl_803E25B0 < ((EnemyState*)state)->unk2A8)
+    if (((EnemyState*)state)->unk2A8 > *(f32*)&lbl_803E25B0)
     {
-        ((EnemyState*)state)->unk2A8 = lbl_803E25B0;
+        ((EnemyState*)state)->unk2A8 = *(f32*)&lbl_803E25B0;
     }
-    if (lbl_803E25B0 < ((EnemyState*)state)->unk2AC)
+    if (((EnemyState*)state)->unk2AC > *(f32*)&lbl_803E25B0)
     {
-        ((EnemyState*)state)->unk2AC = lbl_803E25B0;
+        ((EnemyState*)state)->unk2AC = *(f32*)&lbl_803E25B0;
     }
 }
