@@ -9,9 +9,7 @@
  * object still renders. Carved from the sandwormBoss 10-DLL container.
  */
 #include "main/dll/cfprisonunclestate_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
