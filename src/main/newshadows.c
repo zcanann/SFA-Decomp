@@ -422,9 +422,11 @@ void newshadows_captureProjectedShadow(ushort* object)
     float mtx[15];
 
     FUN_80017a50(object, mtx, '\0');
-    FUN_8000693c((double)(*(float*)(object + 6) - lbl_803DDA58), (double)*(float*)(object + 8),
-                 (double)(*(float*)(object + 10) - lbl_803DDA5C),
-                 (double)(lbl_803DF98C * *(float*)(object + 0x54) * *(float*)(object + 4)),
+    FUN_8000693c((double)(((GameObject*)object)->anim.localPosX - lbl_803DDA58),
+                 (double)((GameObject*)object)->anim.localPosY,
+                 (double)(((GameObject*)object)->anim.localPosZ - lbl_803DDA5C),
+                 (double)(lbl_803DF98C * ((GameObject*)object)->anim.hitboxScale *
+                     *(float*)(object + 4)),
                  &projX, &projY, &projZ, &scaleX, &scaleY, &projW);
     scaleX = lbl_803DF994 * scaleX + lbl_803DF990;
     scaleY = lbl_803DF998 * scaleY + lbl_803DF990;
