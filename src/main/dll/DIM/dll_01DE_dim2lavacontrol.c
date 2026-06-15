@@ -31,7 +31,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern void getEnvfxActImmediately(int a, int b, int id, int d);
 extern void getEnvfxAct(int a, int b, int id, int d);
 extern void Music_Trigger(int id, int value);
-extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
@@ -74,24 +73,6 @@ extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 extern void envFxActFn_800887f8(int a);
 extern u8 lbl_803DBF28[8];
 extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
-
-void FUN_801b9cc4(int obj)
-{
-    char* state;
-    int placement;
-
-    state = ((GameObject*)obj)->extra;
-    if ((state[2] & 1U) == 0)
-    {
-        placement = *(int*)&((GameObject*)obj)->anim.placementData;
-        if (('\0' < *state) && (*state = *state + -1, *state == '\0'))
-        {
-            state[2] = state[2] | 1;
-            GameBit_Set((int)*(short*)(placement + 0x1e), 1);
-        }
-    }
-    return;
-}
 
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 
