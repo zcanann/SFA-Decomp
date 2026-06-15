@@ -2,8 +2,6 @@
 #include "main/dll/path_control_interface.h"
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/objhits_types.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/dll_0015_curves.h"
 
