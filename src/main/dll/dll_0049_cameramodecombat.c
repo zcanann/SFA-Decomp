@@ -171,7 +171,7 @@ void CameraModeCombat_update(short* cam)
     {
         if (((CameraObject*)cam)->targetObj != NULL)
         {
-            if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
+            if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
             {
                 return;
             }
@@ -186,7 +186,7 @@ void CameraModeCombat_update(short* cam)
         {
             if (((CameraObject*)cam)->targetObj != NULL)
             {
-                if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags &
+                if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags &
                     2))
                 {
                     return;
@@ -198,11 +198,11 @@ void CameraModeCombat_update(short* cam)
         else
         {
             tgt = (GameObject*)((CameraObject*)cam)->targetObj;
-            if (tgt == NULL || (tgt->objectFlags & 0x40) || (tgt->anim.resetHitboxMode & 0x28))
+            if (tgt == NULL || (tgt->objectFlags & 0x40) || (*(u8*)&tgt->anim.resetHitboxMode & 0x28))
             {
                 if (tgt != NULL)
                 {
-                    if ((tgt->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
+                    if ((*(u8*)&tgt->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
                     {
                         return;
                     }
@@ -220,7 +220,7 @@ void CameraModeCombat_update(short* cam)
                     {
                         if (((CameraObject*)cam)->targetObj != NULL)
                         {
-                            if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)
+                            if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)
                                 ->targetFlags & 2))
                             {
                                 return;
@@ -264,7 +264,7 @@ void CameraModeCombat_update(short* cam)
                         {
                             if (((CameraObject*)cam)->targetObj != NULL)
                             {
-                                if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)
+                                if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)
                                     cam)->targetFlags & 2))
                                 {
                                     return;
