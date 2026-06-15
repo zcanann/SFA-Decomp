@@ -9,11 +9,7 @@ extern uint GameBit_Get(int eventId);
 
 extern void* mapGetBlock(int idx);
 
-#include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
-#include "main/dll/MMP/mmp_barrel.h"
-#include "main/game_object.h"
-#include "global.h"
 
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
  * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
