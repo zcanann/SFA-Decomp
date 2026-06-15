@@ -1,7 +1,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
@@ -66,10 +68,42 @@ extern f32 lbl_803E6478;
 #define SFXPLAYER_RING_SETUP_MODE 5
 #define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
 
+/* Obj_AllocObjectSetup(0x2C,...) ring-visual spawn buffer composed in
+ * sfxplayer_ensureEffectHandlePair. Head is the common ObjPlacement
+ * (the 0x04..0x07 bytes live in ObjPlacement.unk04); tail (0x18..0x2B)
+ * is file-local. */
+typedef struct SfxplayerRingVisualSetup
+{
+    ObjPlacement base; /* 0x00..0x17 */
+    u8 unk18;          /* 0x18 */
+    u8 unk19;          /* 0x19 */
+    u8 unk1A;          /* 0x1A */
+    u8 ringId;         /* 0x1B */
+    u8 unk1C;          /* 0x1C */
+    u8 unk1D;          /* 0x1D */
+    u8 pad1E[2];       /* 0x1E..0x1F */
+    f32 unk20;         /* 0x20 */
+    s16 unk24;         /* 0x24 */
+    u8 unk26;          /* 0x26 */
+    u8 unk27;          /* 0x27 */
+    u8 unk28;          /* 0x28 */
+    u8 unk29;          /* 0x29 */
+    u8 unk2A;          /* 0x2A */
+    u8 pad2B[1];       /* 0x2B */
+} SfxplayerRingVisualSetup;
+
+STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk18) == 0x18);
+STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, ringId) == 0x1B);
+STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk20) == 0x20);
+STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk24) == 0x24);
+STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
+STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
+
 void TrickyCurve_updateBurstTrigger(int obj);
 
 #pragma scheduling on
 #pragma peephole on
+extern void fn_80206C18(int* obj);
 extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
 extern void gameTimerInit(int timerId, int frames);
 extern int isGameTimerDisabled(void);
@@ -470,7 +504,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta));
+            *(s16*)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * lbl_803E645C * timeDelta);
         }
         else
         {
@@ -480,7 +514,8 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     if (state->variantSfxTimer != 0 && flags->bit10 != 0)
     {
-        state->variantSfxTimer -= (s16)timeDelta;
+        state->variantSfxTimer -= (s16)(int)
+        timeDelta;
         if (state->variantSfxTimer <= 0)
         {
             state->variantSfxTimer = 200;
@@ -510,9 +545,9 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 {
     u32 ringIdWords[2];
+    int* handles;
     int* pair;
     int setup;
-    int ri;
     int handleOffset;
     s16* ringIds;
 
@@ -524,54 +559,54 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         return 0;
     }
 
-    ri = ringIndex & 0xff;
-    handleOffset = ri * 2;
-    if (*(void**)&gSfxplayerEffectHandles[handleOffset] == NULL)
+    handleOffset = (ringIndex & 0xff) * 8;
+    handles = gSfxplayerEffectHandles;
+    if (*(int*)((int)handles + handleOffset) == 0)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_VISUAL_SETUP_SIZE, SFXPLAYER_RING_VISUAL_OBJECT_ID);
-        *(u8*)(setup + 6) = 0xff;
-        *(u8*)(setup + 7) = 0xff;
-        *(u8*)(setup + 4) = 2;
-        *(u8*)(setup + 5) = 1;
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s16*)(setup + 0x24) = -1;
-        *(u8*)(setup + 0x1a) = 0;
-        *(u8*)(setup + 0x18) = 0;
-        *(u8*)(setup + 0x19) = 0;
+        ((SfxplayerRingVisualSetup*)setup)->base.unk04[2] = 0xff;
+        ((SfxplayerRingVisualSetup*)setup)->base.unk04[3] = 0xff;
+        ((SfxplayerRingVisualSetup*)setup)->base.unk04[0] = 2;
+        ((SfxplayerRingVisualSetup*)setup)->base.unk04[1] = 1;
+        ((SfxplayerRingVisualSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
+        ((SfxplayerRingVisualSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
+        ((SfxplayerRingVisualSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((SfxplayerRingVisualSetup*)setup)->unk24 = -1;
+        ((SfxplayerRingVisualSetup*)setup)->unk1A = 0;
+        ((SfxplayerRingVisualSetup*)setup)->unk18 = 0;
+        ((SfxplayerRingVisualSetup*)setup)->unk19 = 0;
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
             ringIds = (s16*)ringIdWords;
-            *(u8*)(setup + 0x1b) = (u8)ringIds[ri];
+            ((SfxplayerRingVisualSetup*)setup)->ringId = (u8)ringIds[ringIndex & 0xff];
         }
         else
         {
-            *(u8*)(setup + 0x1b) = (u8) * (s16*)((char*)ringIdWords + 6);
+            ((SfxplayerRingVisualSetup*)setup)->ringId = (u8) * (s16*)((char*)ringIdWords + 6);
         }
-        *(u8*)(setup + 0x1c) = 0;
-        *(u8*)(setup + 0x1d) = 0;
-        *(u8*)(setup + 0x26) = 0x64;
-        *(u8*)(setup + 0x27) = 0;
-        *(u8*)(setup + 0x28) = 0;
-        *(f32*)(setup + 0x20) = lbl_803E6478;
-        *(u8*)(setup + 0x29) = 0xd2;
-        *(u8*)(setup + 0x2a) = 0;
-        gSfxplayerEffectHandles[handleOffset] =
+        ((SfxplayerRingVisualSetup*)setup)->unk1C = 0;
+        ((SfxplayerRingVisualSetup*)setup)->unk1D = 0;
+        ((SfxplayerRingVisualSetup*)setup)->unk26 = 0x64;
+        ((SfxplayerRingVisualSetup*)setup)->unk27 = 0;
+        ((SfxplayerRingVisualSetup*)setup)->unk28 = 0;
+        ((SfxplayerRingVisualSetup*)setup)->unk20 = lbl_803E6478;
+        ((SfxplayerRingVisualSetup*)setup)->unk29 = 0xd2;
+        ((SfxplayerRingVisualSetup*)setup)->unk2A = 0;
+        *(int*)((int)handles + handleOffset) =
             Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
                             ((GameObject*)obj)->anim.mapEventSlot, -1,
                             *(int*)&((GameObject*)obj)->anim.parent);
     }
 
-    pair = &gSfxplayerEffectHandles[handleOffset + 1];
-    if (*(void**)pair == NULL)
+    pair = (int*)((int)gSfxplayerEffectHandles + handleOffset + 4);
+    if (*pair == 0)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_HIT_SETUP_SIZE, SFXPLAYER_RING_HIT_OBJECT_ID);
-        *(u8*)(setup + 6) = 0xff;
-        *(u8*)(setup + 7) = 0xff;
-        *(u8*)(setup + 4) = 2;
-        *(u8*)(setup + 5) = 1;
+        ((ObjPlacement*)setup)->unk04[2] = 0xff;
+        ((ObjPlacement*)setup)->unk04[3] = 0xff;
+        ((ObjPlacement*)setup)->unk04[0] = 2;
+        ((ObjPlacement*)setup)->unk04[1] = 1;
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -619,16 +654,15 @@ void sfxplayer_free(int obj, int arg1)
 
     if (arg1 == 0)
     {
-        i = 0;
         handles = gSfxplayerEffectHandles;
-        for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+        for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
-            if (*(void**)&handles[0] != NULL)
+            if (handles[0] != 0)
             {
                 Obj_FreeObject(handles[0]);
             }
             handles[0] = 0;
-            if (*(void**)&handles[1] != NULL)
+            if (handles[1] != 0)
             {
                 Obj_FreeObject(handles[1]);
             }
