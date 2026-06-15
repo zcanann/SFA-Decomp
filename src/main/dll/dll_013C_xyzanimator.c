@@ -22,13 +22,11 @@ extern void* Shader_getLayer(void* shader, int idx);
 extern f32 lbl_803E4000;
 extern f32 lbl_803E4008;
 
-extern f32 lbl_803E3FF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4004;
 extern int mmAlloc(int size, int pool, int tag);
 extern f32 timeDelta;
 extern f32 lbl_803E4018;
-extern f32 sqrtf(f32);
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
