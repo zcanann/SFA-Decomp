@@ -412,7 +412,7 @@ void dll_109_init(int obj, u8* p)
     *(s16*)obj = (s16)((s32)p[0x1a] << 8);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     (*gCarryableInterface)->initAnim((void*)obj, *(int*)&((GameObject*)obj)->extra, 0x21);
-    (*(void (*)(int*, int))((u8*)*gCarryableInterface + 0x2c))(((GameObject*)obj)->extra, 1);
+    (*(void (*)(int*, int))*(int*)((u8*)*gCarryableInterface + 0x2c))(((GameObject*)obj)->extra, 1);
 }
 
 #pragma dont_inline on
