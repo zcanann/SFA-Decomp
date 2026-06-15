@@ -49,7 +49,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
 extern f32 lbl_803E44C8;
-extern void setDrawLights(int v);
 
 void MMP_levelcontrol_hitDetect(void)
 {
