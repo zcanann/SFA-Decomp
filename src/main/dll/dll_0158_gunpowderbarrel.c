@@ -142,20 +142,20 @@ extern f32 lbl_803E42F0;
 
 void FUN_801a1230(int param_1, char param_2)
 {
-    int iVar2;
+    int extra;
     ObjHitsPriorityState* hitState;
 
-    iVar2 = *(int*)&((GameObject*)param_1)->extra;
+    extra = *(int*)&((GameObject*)param_1)->extra;
     hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
     if (param_2 == '\0')
     {
         hitState->lateralResponseWeight = ((GameObject*)param_1)->anim.modelInstance->lateralResponseWeight;
         hitState->axialResponseWeight = ((GameObject*)param_1)->anim.modelInstance->axialResponseWeight;
-        *(byte*)(iVar2 + 0x4a) = *(byte*)(iVar2 + 0x4a) & 0x7f;
+        *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0x7f;
         *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode &
             0xf7;
         ObjHits_ClearFlags(param_1, 0x400);
-        *(byte*)(iVar2 + 0x49) = *(byte*)(iVar2 + 0x49) | 1;
+        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) | 1;
     }
     else
     {
@@ -163,8 +163,8 @@ void FUN_801a1230(int param_1, char param_2)
         hitState->axialResponseWeight = 1;
         *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode |
             8;
-        *(byte*)(iVar2 + 0x4a) = *(byte*)(iVar2 + 0x4a) & 0x7f | 0x80;
-        *(byte*)(iVar2 + 0x49) = *(byte*)(iVar2 + 0x49) & 0xfd;
+        *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0x7f | 0x80;
+        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) & 0xfd;
         ObjHits_SetFlags(param_1, 0x480);
         ObjHits_ClearSourceMask(param_1, 1);
         ObjHits_EnableObject(param_1);
@@ -176,21 +176,21 @@ void FUN_801a1230(int param_1, char param_2)
 void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
-    uint uVar1;
+    uint obj;
     ObjHitsPriorityState* hitState;
-    int iVar2;
-    uint* piVar3;
-    int iVar4;
-    uint* piVar5;
-    int iVar6;
-    int iVar7;
-    int iVar8;
+    int result;
+    uint* objs;
+    int linkId;
+    uint* p;
+    int def;
+    int i;
+    int extra;
     double in_f29;
-    double dVar9;
+    double savedZ;
     double in_f30;
-    double dVar10;
+    double savedY;
     double in_f31;
-    double dVar11;
+    double savedX;
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
@@ -209,89 +209,89 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
     fStack_14 = (float)in_ps30_1;
     local_28 = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
-    uVar1 = FUN_80286838();
-    iVar8 = *(int*)(uVar1 + 0xb8);
-    hitState = (ObjHitsPriorityState*)((GameObject*)uVar1)->anim.hitReactState;
-    iVar2 = ObjHits_GetPriorityHit(uVar1, &hitObject, (int*)0x0, (uint*)0x0);
-    if ((iVar2 != 0) || ((hitState->contactFlags != 0 && ((*(byte*)(iVar8 + 0x49) & 2) != 0))))
+    obj = FUN_80286838();
+    extra = *(int*)(obj + 0xb8);
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    result = ObjHits_GetPriorityHit(obj, &hitObject, (int*)0x0, (uint*)0x0);
+    if ((result != 0) || ((hitState->contactFlags != 0 && ((*(byte*)(extra + 0x49) & 2) != 0))))
     {
-        *(char*)(iVar8 + 0x16) = *(char*)(iVar8 + 0x16) + '\x01';
-        *(byte*)(iVar8 + 0x49) = *(byte*)(iVar8 + 0x49) | 1;
+        *(char*)(extra + 0x16) = *(char*)(extra + 0x16) + '\x01';
+        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) | 1;
     }
-    if (*(char*)(iVar8 + 0x16) != '\0')
+    if (*(char*)(extra + 0x16) != '\0')
     {
-        if ((*(byte*)(iVar8 + 0x48) >> 6 & 1) != 0)
+        if ((*(byte*)(extra + 0x48) >> 6 & 1) != 0)
         {
-            iVar6 = *(int*)(uVar1 + 0x4c);
-            iVar2 = 0;
-            if (*(short*)(iVar6 + 0x1a) == 0)
+            def = *(int*)(obj + 0x4c);
+            result = 0;
+            if (*(short*)(def + 0x1a) == 0)
             {
-                iVar2 = ObjGroup_FindNearestObject(0x3a, uVar1, (float*)0x0);
+                result = ObjGroup_FindNearestObject(0x3a, obj, (float*)0x0);
             }
             else
             {
-                piVar3 = ObjGroup_GetObjects(0x3a, &local_58);
-                piVar5 = piVar3;
-                for (iVar7 = 0; iVar7 < local_58; iVar7 = iVar7 + 1)
+                objs = ObjGroup_GetObjects(0x3a, &local_58);
+                p = objs;
+                for (i = 0; i < local_58; i = i + 1)
                 {
-                    iVar4 = FUN_8020a468(*piVar5);
-                    if (*(short*)(iVar6 + 0x1a) == iVar4)
+                    linkId = FUN_8020a468(*p);
+                    if (*(short*)(def + 0x1a) == linkId)
                     {
-                        iVar2 = piVar3[iVar7];
+                        result = objs[i];
                         break;
                     }
-                    piVar5 = piVar5 + 1;
+                    p = p + 1;
                 }
             }
-            if (iVar2 != 0)
+            if (result != 0)
             {
-                dVar11 = (double)*(float*)(uVar1 + 0xc);
-                dVar10 = (double)*(float*)(uVar1 + 0x10);
-                dVar9 = (double)*(float*)(uVar1 + 0x14);
-                *(undefined4*)(uVar1 + 0xc) = *(undefined4*)(iVar2 + 0xc);
-                *(undefined4*)(uVar1 + 0x10) = *(undefined4*)(iVar2 + 0x10);
-                *(undefined4*)(uVar1 + 0x14) = *(undefined4*)(iVar2 + 0x14);
-                FUN_800e8630(uVar1);
-                *(float*)(uVar1 + 0xc) = (float)dVar11;
-                *(float*)(uVar1 + 0x10) = (float)dVar10;
-                *(float*)(uVar1 + 0x14) = (float)dVar9;
+                savedX = (double)*(float*)(obj + 0xc);
+                savedY = (double)*(float*)(obj + 0x10);
+                savedZ = (double)*(float*)(obj + 0x14);
+                *(undefined4*)(obj + 0xc) = *(undefined4*)(result + 0xc);
+                *(undefined4*)(obj + 0x10) = *(undefined4*)(result + 0x10);
+                *(undefined4*)(obj + 0x14) = *(undefined4*)(result + 0x14);
+                FUN_800e8630(obj);
+                *(float*)(obj + 0xc) = (float)savedX;
+                *(float*)(obj + 0x10) = (float)savedY;
+                *(float*)(obj + 0x14) = (float)savedZ;
             }
         }
-        ObjHits_ClearFlags(uVar1, 0x80);
-        ObjHits_SetSourceMask(uVar1, 1);
-        ObjHitbox_SetCapsuleBounds(uVar1, 0x14, -5, 0x14);
-        ObjHits_EnableObject(uVar1);
-        ObjHits_MarkObjectPositionDirty(uVar1);
-        ObjHits_SetHitVolumeSlot(uVar1, 5, 4, 0);
-        FUN_80006824(uVar1, SFXsk_bapt11_c);
-        *(float*)(uVar1 + 0x10) = *(float*)(uVar1 + 0x10) + lbl_803E4FA0;
+        ObjHits_ClearFlags(obj, 0x80);
+        ObjHits_SetSourceMask(obj, 1);
+        ObjHitbox_SetCapsuleBounds(obj, 0x14, -5, 0x14);
+        ObjHits_EnableObject(obj);
+        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+        FUN_80006824(obj, SFXsk_bapt11_c);
+        *(float*)(obj + 0x10) = *(float*)(obj + 0x10) + lbl_803E4FA0;
         FUN_8008112c((double)lbl_803E4F58, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     uVar1, 1, 1, 0, 0, 0, 1, 0);
-        if (*(char*)(iVar8 + 0x15) != '\0')
+                     obj, 1, 1, 0, 0, 0, 1, 0);
+        if (*(char*)(extra + 0x15) != '\0')
         {
-            (**(code**)(*DAT_803dd740 + 0x30))(uVar1, iVar8);
-            *(undefined*)(iVar8 + 0x15) = 0;
+            (**(code**)(*DAT_803dd740 + 0x30))(obj, extra);
+            *(undefined*)(extra + 0x15) = 0;
         }
-        *(undefined*)(iVar8 + 0x17) = 1;
-        *(byte*)(iVar8 + 0x4a) = *(byte*)(iVar8 + 0x4a) & 0xdf;
-        ObjGroup_RemoveObject(uVar1, 0x19);
-        if (*(int*)(uVar1 + 0x30) == 0)
+        *(undefined*)(extra + 0x17) = 1;
+        *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0xdf;
+        ObjGroup_RemoveObject(obj, 0x19);
+        if (*(int*)(obj + 0x30) == 0)
         {
-            *(float*)(iVar8 + 0x34) = lbl_803E4F5C;
+            *(float*)(extra + 0x34) = lbl_803E4F5C;
         }
         else
         {
-            *(float*)(iVar8 + 0x34) = lbl_803E4F5C;
+            *(float*)(extra + 0x34) = lbl_803E4F5C;
         }
-        iVar2 = FUN_80017a90();
-        if (iVar2 != 0)
+        result = FUN_80017a90();
+        if (result != 0)
         {
-            FUN_8013651c(iVar2);
+            FUN_8013651c(result);
         }
-        *(byte*)(iVar8 + 0x49) = *(byte*)(iVar8 + 0x49) & 0xfd;
-        if (*(int*)(iVar8 + 0x10) != 0)
+        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) & 0xfd;
+        if (*(int*)(extra + 0x10) != 0)
         {
-            FUN_8020a90c(*(int*)(iVar8 + 0x10));
+            FUN_8020a90c(*(int*)(extra + 0x10));
         }
     }
     FUN_80286884();
