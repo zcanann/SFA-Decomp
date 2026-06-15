@@ -5685,14 +5685,21 @@ int cardLoadFn_8007d72c(void)
     int need_format;
     int res;
     u64 serial;
+    int ok;
 
     need_format = 0;
     if (cardProbe(0) == 0) {
-        return 0;
+        ok = 0;
+    } else {
+        lbl_803DD040 = mmAlloc(0xA000, -1, 0);
+        if (lbl_803DD040 == 0) {
+            lbl_803DB700 = 8;
+            ok = 0;
+        } else {
+            ok = 1;
+        }
     }
-    lbl_803DD040 = mmAlloc(0xA000, -1, 0);
-    if (lbl_803DD040 == 0) {
-        lbl_803DB700 = 8;
+    if (!ok) {
         return 0;
     }
     lbl_803DB700 = 0;
@@ -5708,9 +5715,8 @@ int cardLoadFn_8007d72c(void)
     } else if (res == -13 || res == 0) {
         res = CARDGetSerialNo(0, &serial);
         if (res == 0) {
-            u32* serial_words = (u32*)&serial;
-            if ((lbl_803DD048 | lbl_803DD04C) == 0 ||
-                ((lbl_803DD048 ^ serial_words[0]) | (lbl_803DD04C ^ serial_words[1])) != 0) {
+            u64 cached = *(u64*)&lbl_803DD048;
+            if (cached == 0 || cached != serial) {
                 res = -0x55;
                 lbl_803DB700 = 0xB;
             } else if (need_format) {
@@ -5745,7 +5751,7 @@ int cardLoadFn_8007d72c(void)
             lbl_803DD050 = 0;
             return 1;
         default:
-            return 0;
+            break;
     }
     return 0;
 }
