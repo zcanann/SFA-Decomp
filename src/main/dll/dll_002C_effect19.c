@@ -615,7 +615,6 @@ void Effect19_func05(void)
     lbl_803DD3F8 = mathSinf(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
 }
 
-extern f32 lbl_803DB880;
 
 int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId, f32* extraArgs);
 
