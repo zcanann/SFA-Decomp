@@ -4965,11 +4965,11 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            void** p = lbl_80332ED4;
+            void** p;
             int i;
             inner->animState = -1;
             lbl_803DE42C = 0;
-            for (i = 0; i < 7; i++)
+            for (i = 0, p = lbl_80332ED4; i < 7; i++)
             {
                 if (*p != NULL)
                 {
@@ -5237,9 +5237,7 @@ int fn_8029AF9C(int obj, int state)
                     int i;
                     void** p;
                     lbl_803DE42C = 0;
-                    i = 0;
-                    p = lbl_80332ED4;
-                    for (; i < 7; i++)
+                    for (i = 0, p = lbl_80332ED4; i < 7; i++)
                     {
                         if (*p != NULL)
                         {
@@ -9839,9 +9837,9 @@ int fn_80299E44(int obj, int state, f32 fv)
             getCurSeqNo() != 0)
         {
             int i;
-            void** p = lbl_80332ED4;
+            void** p;
             lbl_803DE42C = 0;
-            for (i = 0; i < 7; i++)
+            for (i = 0, p = lbl_80332ED4; i < 7; i++)
             {
                 if (*p != NULL)
                 {
@@ -10368,8 +10366,7 @@ int fn_802A5048(int obj, int state, f32 fv)
         int i;
         void** p;
         lbl_803DE42C = 0;
-        p = lbl_80332ED4;
-        for (i = 0; i < 7; i++)
+        for (i = 0, p = lbl_80332ED4; i < 7; i++)
         {
             if (*p != NULL)
             {
@@ -11222,8 +11219,7 @@ void fn_8029A4A8(int obj, int p2)
     }
 
     lbl_803DE42C = 0;
-    p = lbl_80332ED4;
-    for (i = 0; i < 7; i++)
+    for (i = 0, p = lbl_80332ED4; i < 7; i++)
     {
         if (*p != NULL)
         {
@@ -12994,8 +12990,7 @@ void fn_802AF7F8(int obj, int state)
         {
             ((PlayerState*)state)->animState = -1;
             lbl_803DE42C = 0;
-            p = lbl_80332ED4;
-            for (i = 0; i < 7; i++)
+            for (i = 0, p = lbl_80332ED4; i < 7; i++)
             {
                 if (*p != NULL)
                 {
