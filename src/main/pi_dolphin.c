@@ -3519,10 +3519,10 @@ void FUN_8004812c(int param_1, int param_2)
     return;
 }
 
-void FUN_80049910(undefined4* param_1)
+void FUN_80049910(undefined4* texPtr)
 {
-    float fVar1;
-    float* pfVar2;
+    float zScale;
+    float* viewMtx;
     undefined4 local_100;
     float local_fc;
     float local_f8;
@@ -3578,23 +3578,23 @@ void FUN_80049910(undefined4* param_1)
     local_e0 = DAT_802c24f4;
     local_dc = DAT_802c24f8;
     local_d8 = DAT_802c24fc;
-    pfVar2 = (float*)FUN_8000697c();
+    viewMtx = (float*)FUN_8000697c();
     local_44 = lbl_803DF74C;
     local_40 = lbl_803DF74C;
     local_3c = lbl_803DF744 / lbl_803DD9BC;
     local_38 = lbl_803DD9B8;
-    fVar1 = lbl_803DF744 / (lbl_803DD9C4 - lbl_803DD9C0);
-    local_34 = fVar1 * pfVar2[4];
-    local_30 = fVar1 * pfVar2[5];
-    local_2c = fVar1 * pfVar2[6];
-    local_28 = fVar1 * pfVar2[7] + -lbl_803DD9C4 * fVar1;
+    zScale = lbl_803DF744 / (lbl_803DD9C4 - lbl_803DD9C0);
+    local_34 = zScale * viewMtx[4];
+    local_30 = zScale * viewMtx[5];
+    local_2c = zScale * viewMtx[6];
+    local_28 = zScale * viewMtx[7] + -lbl_803DD9C4 * zScale;
     local_24 = lbl_803DF74C;
     local_20 = lbl_803DF74C;
     local_1c = lbl_803DF74C;
     local_18 = lbl_803DF748;
     FUN_8025d8c4(&local_44, DAT_803dda00, 0);
     FUN_80258674(DAT_803dda08, 0, 0, 0, 0, DAT_803dda00);
-    local_100 = *param_1;
+    local_100 = *texPtr;
     FUN_8025c510(DAT_803dd9f4, (byte*)&local_100);
     newshadows_getBlankShadowTexture(&local_f0);
     if (local_f0 != 0)
@@ -3647,7 +3647,7 @@ void FUN_80049910(undefined4* param_1)
         local_48 = lbl_803DF748;
         PSVECDotProduct((double)lbl_803DF7A8, afStack_d4, 0x7a);
         FUN_80247618(afStack_d4, &local_74, &local_74);
-        FUN_80247618(&local_74, pfVar2, &local_74);
+        FUN_80247618(&local_74, viewMtx, &local_74);
         FUN_8025d8c4(&local_74, DAT_803dda00 + 3, 0);
         FUN_80258674(DAT_803dda08 + 1, 0, 0, 0, 0, DAT_803dda00 + 3);
         FUN_8025b94c(DAT_803dda10, DAT_803dd9fc, 0, 2, 2, 6, 6, 0, 0, 0);
@@ -3667,7 +3667,7 @@ void FUN_80049910(undefined4* param_1)
         local_78 = lbl_803DF748;
         PSVECDotProduct((double)lbl_803DF7AC, afStack_d4, 0x78);
         FUN_80247618(afStack_d4, &local_a4, &local_a4);
-        FUN_80247618(&local_a4, pfVar2, &local_a4);
+        FUN_80247618(&local_a4, viewMtx, &local_a4);
         FUN_8025d8c4(&local_a4, DAT_803dda00 + 6, 0);
         FUN_80258674(DAT_803dda08 + 2, 0, 0, 0, 0, DAT_803dda00 + 6);
         FUN_8025b94c(DAT_803dda10 + 1, DAT_803dd9fc + 1, 0, 2, 2, 0, 0, 1, 0, 0);
