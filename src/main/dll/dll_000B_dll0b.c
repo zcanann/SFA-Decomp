@@ -2458,15 +2458,15 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             {
                 aligned = 1;
             }
-            if (!aligned)
+        }
+        if ((*(int*)((char*)*p + 0xa4) & 0x4) && !aligned)
+        {
+            if (*(void**)((char*)*p + 4) != NULL)
             {
-                if (*(void**)((char*)*p + 4) != NULL)
-                {
-                    xf.ang[0] = *(s16*)(*(char**)((char*)*p + 4));
-                    xf.ang[1] = *(s16*)(*(char**)((char*)*p + 4) + 2);
-                    xf.ang[2] = *(s16*)(*(char**)((char*)*p + 4) + 4);
-                    vecRotateZXY(&xf.ang[0], &pos[0]);
-                }
+                xf.ang[0] = *(s16*)(*(char**)((char*)*p + 4));
+                xf.ang[1] = *(s16*)(*(char**)((char*)*p + 4) + 2);
+                xf.ang[2] = *(s16*)(*(char**)((char*)*p + 4) + 4);
+                vecRotateZXY(&xf.ang[0], &pos[0]);
             }
         }
         rot[0] = lbl_803DF430;
