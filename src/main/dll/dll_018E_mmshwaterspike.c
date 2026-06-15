@@ -1,8 +1,6 @@
-#include "main/dll/mmshrine/shrine.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
-#include "main/objseq.h"
 
 typedef struct MmshWaterspikePlacement
 {
