@@ -514,7 +514,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     int state;
     char flagsA[4];
     char flagsB[4];
-    undefined4 promptTable[12];
+    undefined4 promptTable[4];
 
     objVal = obj;
     state = *(int*)(objVal + 0xb8);
