@@ -1402,7 +1402,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     int byteOff;
     int i;
     int n;
-    f64 c;
+    f32 c;
     f32* ptsWalk;
     f32* radWalk;
     f32* radWrite;
@@ -1473,7 +1473,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             Matrix_TransformPoint(m, pin[0], pin[1], pin[2], ptsWalk,
                                   pts + (idx3 + 1), pts + (idx3 + 2));
             *radWalk = collision->segmentRadii[i];
-            *radWalk = sqrtf((f32)((f64)(f32)(c * (f64) * radWalk) * (f64) * radWalk));
+            *radWalk = sqrtf(c * *radWalk * *radWalk);
             ptsWalk = ptsWalk + 3;
             byteOff = byteOff + 0xc;
             idx3 = idx3 + 3;
