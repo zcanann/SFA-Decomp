@@ -4526,14 +4526,13 @@ f32 curves_distXZ(f32 x, f32 z, uint curveId)
     f32 dz;
 
     curve = RomCurve_FindByIdInline(curveId);
-    if (curve == NULL)
+    if (curve != NULL)
     {
-        return gFloatNegOne;
+        dx = curve->x - x;
+        dz = curve->z - z;
+        return sqrtf(dx * dx + dz * dz);
     }
-
-    dx = curve->x - x;
-    dz = curve->z - z;
-    return sqrtf(dx * dx + dz * dz);
+    return gFloatNegOne;
 }
 
 f32 curves_distFn0B(int obj, uint curveId)
