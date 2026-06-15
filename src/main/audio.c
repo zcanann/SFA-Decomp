@@ -368,6 +368,7 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
 }
 
 #pragma dont_inline on
+#pragma opt_common_subs off
 f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
 {
     f32 v[3];
@@ -414,6 +415,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
 retDefault:
     return lbl_803DE570;
 }
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 
 void AudioStream_StopAll(void)
