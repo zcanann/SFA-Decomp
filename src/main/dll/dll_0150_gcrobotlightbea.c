@@ -20,14 +20,18 @@
  */
 #include "main/dll/cfguardian_state.h"
 #include "main/dll/bit80_struct.h"
+#include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/cfprisonunclestate_struct.h"
+#include "main/dll/babycloudrunnerflags_struct.h"
 #include "main/dll/gcrobotlightbeastate_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/dll/cfmaincrystalstate_types.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
+#include "main/objseq.h"
 
 extern undefined8 FUN_80006824();
 extern uint FUN_80017690();
@@ -81,6 +85,7 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 lbl_803E4298;
@@ -90,7 +95,7 @@ extern f32 lbl_803E42A4;
 extern f32 lbl_80322C38[];
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
-extern void* modelLightStruct_createPointLight(void* obj, int b, int c, int d, int e);
+extern void* modelLightStruct_createPointLight(int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int* obj, void* out, void* in);
@@ -100,51 +105,51 @@ extern void PSVECScale(void* in, void* out, f32 scale);
 extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
-void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* sfxTable)
+void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
-    uint obj;
-    int tailSfxSlot;
-    int eventIdx;
-    undefined8 retPair;
+    uint uVar1;
+    int iVar2;
+    int iVar3;
+    undefined8 uVar4;
 
-    retPair = FUN_80286840();
-    obj = (uint)((ulonglong)retPair >> 0x20);
-    tailSfxSlot = 0;
-    for (eventIdx = 0; eventIdx < *(char*)((int)retPair + 0x1b); eventIdx = eventIdx + 1)
+    uVar4 = FUN_80286840();
+    uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
+    iVar2 = 0;
+    for (iVar3 = 0; iVar3 < *(char*)((int)uVar4 + 0x1b); iVar3 = iVar3 + 1)
     {
-        switch (*(u8*)((int)retPair + eventIdx + 0x13))
+        switch (*(u8*)((int)uVar4 + iVar3 + 0x13))
         {
         case 0:
-            if (sfxTable != (ushort*)0x0)
+            if (param_3 != (ushort*)0x0)
             {
-                FUN_80006824(obj, *sfxTable);
+                FUN_80006824(uVar1, *param_3);
             }
             break;
         case 1:
-            tailSfxSlot = 1;
+            iVar2 = 1;
             break;
         case 2:
-            tailSfxSlot = 2;
+            iVar2 = 2;
             break;
         case 3:
-            tailSfxSlot = 3;
+            iVar2 = 3;
             break;
         case 4:
-            tailSfxSlot = 4;
+            iVar2 = 4;
             break;
         case 7:
-            if (sfxTable != (ushort*)0x0)
+            if (param_3 != (ushort*)0x0)
             {
-                FUN_80006824(obj, sfxTable[1]);
+                FUN_80006824(uVar1, param_3[1]);
             }
             break;
         case 9:
-            FUN_80006824(obj, SFXsk_trwhin3);
+            FUN_80006824(uVar1, SFXsk_trwhin3);
         }
     }
-    if ((tailSfxSlot != 0) && (sfxTable != (ushort*)0x0))
+    if ((iVar2 != 0) && (param_3 != (ushort*)0x0))
     {
-        FUN_80006824(obj, sfxTable[2]);
+        FUN_80006824(uVar1, param_3[2]);
     }
     FUN_8028688c();
     return;
@@ -154,12 +159,12 @@ undefined4
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
 {
-    int newAng;
-    short angDelta;
-    undefined4 result;
-    double dist;
-    double velZ;
-    double dx;
+    int iVar1;
+    short sVar2;
+    undefined4 uVar3;
+    double dVar4;
+    double dVar5;
+    double dVar6;
     undefined8 in_f5;
     undefined8 in_f6;
     undefined8 in_f7;
@@ -175,62 +180,62 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
 
     if (param_3 == (short*)0x0)
     {
-        result = 0;
+        uVar3 = 0;
     }
     else
     {
         local_50[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
-        dx = (double)local_50[0];
+        dVar6 = (double)local_50[0];
         local_54 = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
         local_58 = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
-        dist = FUN_80293900((double)(local_58 * local_58 + (float)(dx * dx) + local_54 * local_54
+        dVar4 = FUN_80293900((double)(local_58 * local_58 + (float)(dVar6 * dVar6) + local_54 * local_54
         ));
-        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dist)
+        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dVar4)
         {
             FUN_8006f7a0(local_50, &local_54, &local_58);
             *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)local_50[0] * param_1);
             *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)local_54 * param_1);
             *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)local_58 * param_1);
-            angDelta = (*param_3 + -0x8000) - *param_2;
-            if (0x8000 < angDelta)
+            sVar2 = (*param_3 + -0x8000) - *param_2;
+            if (0x8000 < sVar2)
             {
-                angDelta = angDelta + 1;
+                sVar2 = sVar2 + 1;
             }
-            if (angDelta < -0x8000)
+            if (sVar2 < -0x8000)
             {
-                angDelta = angDelta + -1;
+                sVar2 = sVar2 + -1;
             }
             uStack_44 = (int)*param_2 ^ 0x80000000;
             local_48 = 0x43300000;
-            uStack_3c = (int)angDelta ^ 0x80000000;
+            uStack_3c = (int)sVar2 ^ 0x80000000;
             local_40 = 0x43300000;
-            newAng = (int)
+            iVar1 = (int)
             ((f32)(s32)
             uStack_44 +
                 (float)((double)((lbl_803E4DC0 +
                     (float)((double)CONCAT44(0x43300000, uStack_3c) - DOUBLE_803e4db0
-                    )) * (float)(param_1 * (double)lbl_803DC074)) / dist)
+                    )) * (float)(param_1 * (double)lbl_803DC074)) / dVar4)
             )
             ;
-            local_38 = (longlong)newAng;
-            *param_2 = (short)newAng;
-            dist = (double)*(float*)(param_2 + 0x14);
-            velZ = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dist, velZ, (int)param_2);
+            local_38 = (longlong)iVar1;
+            *param_2 = (short)iVar1;
+            dVar4 = (double)*(float*)(param_2 + 0x14);
+            dVar5 = (double)*(float*)(param_2 + 0x16);
+            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, dVar5, (int)param_2);
             if (param_2[0x50] != 0x1a)
             {
-                FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
+                FUN_800305f8((double)lbl_803E4DA8, dVar4, dVar5, dVar6, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
             FUN_8002f6ac(param_1, (int)param_2, param_4);
-            result = 0;
+            uVar3 = 0;
         }
         else
         {
-            result = 1;
+            uVar3 = 1;
         }
     }
-    return result;
+    return uVar3;
 }
 
 undefined4
@@ -248,54 +253,54 @@ FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 para
              , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    undefined4 result;
-    int hitResult;
-    float* state;
-    undefined4* coordPair;
-    undefined4 coordA0;
-    undefined4 coordA1;
-    undefined4 coordB0;
-    undefined4 coordB1;
+    undefined4 uVar1;
+    int iVar2;
+    float* pfVar3;
+    undefined4* puVar4;
+    undefined4 local_28;
+    undefined4 local_24;
+    undefined4 local_20;
+    undefined4 local_1c;
 
-    state = ((GameObject*)param_9)->extra;
-    coordA0 = DAT_802c2a58;
-    coordA1 = DAT_802c2a5c;
-    coordB0 = DAT_802c2a60;
-    coordB1 = DAT_802c2a64;
+    pfVar3 = ((GameObject*)param_9)->extra;
+    local_28 = DAT_802c2a58;
+    local_24 = DAT_802c2a5c;
+    local_20 = DAT_802c2a60;
+    local_1c = DAT_802c2a64;
     if (((GameObject*)param_9)->seqIndex < 0)
     {
         FUN_800e8630(param_9);
-        result = 0;
+        uVar1 = 0;
     }
     else
     {
-        if (*(char*)(state + 0x2a0) == '\x06')
+        if (*(char*)(pfVar3 + 0x2a0) == '\x06')
         {
-            coordPair = &coordB0;
+            puVar4 = &local_20;
         }
         else
         {
-            coordPair = &coordA0;
+            puVar4 = &local_28;
         }
-        hitResult = FUN_8007f924((int)animUpdate);
-        if ((hitResult == 0x283) ||
-            (hitResult = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                  , (int)animUpdate, state, (short)*coordPair, (short)coordPair[1], param_14, param_15,
-                                  param_16), hitResult == 0))
+        iVar2 = FUN_8007f924((int)animUpdate);
+        if ((iVar2 == 0x283) ||
+            (iVar2 = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
+                                  , (int)animUpdate, pfVar3, (short)*puVar4, (short)puVar4[1], param_14, param_15,
+                                  param_16), iVar2 == 0))
         {
             if (animUpdate->triggerCommand == 2)
             {
-                hitResult = FUN_80017a98();
-                FUN_80294d40(hitResult, 10);
+                iVar2 = FUN_80017a98();
+                FUN_80294d40(iVar2, 10);
             }
-            result = 0;
+            uVar1 = 0;
         }
         else
         {
-            result = 1;
+            uVar1 = 1;
         }
     }
-    return result;
+    return uVar1;
 }
 
 undefined4
@@ -304,51 +309,51 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
              , undefined4 param_10, ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    int eventIdx;
-    uint bitSet;
-    short* objType;
-    uint popState;
-    uint msgId;
-    uint msgArgs[4];
+    int iVar1;
+    uint uVar2;
+    short* psVar3;
+    uint local_28;
+    uint local_24;
+    uint local_20[4];
 
-    objType = ((GameObject*)param_9)->extra;
-    popState = 0;
-    while (eventIdx = ObjMsg_Pop(param_9, &msgId, msgArgs, &popState), eventIdx != 0)
+    psVar3 = ((GameObject*)param_9)->extra;
+    local_28 = 0;
+    while (iVar1 = ObjMsg_Pop(param_9, &local_24, local_20, &local_28), iVar1 != 0)
     {
-        if (msgId == 0x110001)
+        if (local_24 == 0x110001)
         {
-            if ((*objType == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
+            if ((*psVar3 == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgArgs[0],
+                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
                                     0x110001, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
-        else if ((int)msgId < 0x110001)
+        else if ((int)local_24 < 0x110001)
         {
-            if (msgId == 0xa0005)
+            if (local_24 == 0xa0005)
             {
-                param_1 = FUN_80017698((int)*objType, 1);
+                param_1 = FUN_80017698((int)*psVar3, 1);
             }
         }
-        else if (msgId == 0x110003)
+        else if (local_24 == 0x110003)
         {
-            if ((*objType == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
+            if ((*psVar3 == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgArgs[0],
+                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
                                     0x110003, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
-        else if ((((int)msgId < 0x110003) && (*objType == 0x55)) &&
+        else if ((((int)local_24 < 0x110003) && (*psVar3 == 0x55)) &&
             (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
-            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgArgs[0],
+            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
                                 0x110002, param_9, 0, param_13, param_14, param_15, param_16);
         }
     }
-    for (eventIdx = 0; eventIdx < (int)(uint)animUpdate->eventCount; eventIdx = eventIdx + 1)
+    for (iVar1 = 0; iVar1 < (int)(uint)animUpdate->eventCount; iVar1 = iVar1 + 1)
     {
-        if (((animUpdate->eventIds[eventIdx] == 1) && (bitSet = FUN_80017690(0x54), bitSet != 0))
-            && ((bitSet = FUN_80017690(0x55), bitSet != 0 && (bitSet = FUN_80017690(0x56), bitSet != 0))))
+        if (((animUpdate->eventIds[iVar1] == 1) && (uVar2 = FUN_80017690(0x54), uVar2 != 0))
+            && ((uVar2 = FUN_80017690(0x55), uVar2 != 0 && (uVar2 = FUN_80017690(0x56), uVar2 != 0))))
         {
             FUN_80017698(0x4e0, 1);
         }
@@ -362,10 +367,10 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    int state;
-    double pitch;
+    int iVar1;
+    double dVar2;
 
-    state = *(int*)&((GameObject*)param_9)->extra;
+    iVar1 = *(int*)&((GameObject*)param_9)->extra;
     if ((((GameObject*)param_9)->anim.currentMove != 5) && (((GameObject*)param_9)->anim.currentMove != 0xd))
     {
         FUN_800305f8((double)((GameObject*)param_9)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
@@ -384,28 +389,28 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
                      param_6, param_7,
                      param_8, param_9, 5, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    pitch = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
-    if (pitch < (double)lbl_803E4EB0)
+    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
+    if (dVar2 < (double)lbl_803E4EB0)
     {
-        pitch = (double)lbl_803E4EB0;
+        dVar2 = (double)lbl_803E4EB0;
     }
-    if ((double)lbl_803E4ECC < pitch)
+    if ((double)lbl_803E4ECC < dVar2)
     {
-        pitch = (double)lbl_803E4ECC;
+        dVar2 = (double)lbl_803E4ECC;
     }
     if (((GameObject*)param_9)->anim.currentMove == 0xd)
     {
         if (((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E4ECC)
         {
-            *(byte*)(state + 0x244) = *(byte*)(state + 0x244) & 0xbf;
+            *(byte*)(iVar1 + 0x244) = *(byte*)(iVar1 + 0x244) & 0xbf;
         }
-        else if ((*(byte*)(state + 0x244) >> 6 & 1) == 0)
+        else if ((*(byte*)(iVar1 + 0x244) >> 6 & 1) == 0)
         {
             FUN_80006824(param_9, SFXand_spitout);
-            *(byte*)(state + 0x244) = *(byte*)(state + 0x244) & 0xbf | 0x40;
+            *(byte*)(iVar1 + 0x244) = *(byte*)(iVar1 + 0x244) & 0xbf | 0x40;
         }
     }
-    FUN_8002fc3c(pitch, (double)lbl_803DC074);
+    FUN_8002fc3c(dVar2, (double)lbl_803DC074);
     return 1;
 }
 
@@ -459,23 +464,23 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 void FUN_8019f1dc(void)
 {
-    uint obj;
-    int childOrTarget;
-    int* objs;
-    int objId;
-    int subObj;
-    int* objIter;
-    int idx;
+    uint uVar1;
+    int iVar2;
+    int* piVar3;
+    int iVar4;
+    int iVar5;
+    int* piVar6;
+    int iVar7;
     double in_f29;
-    double savedX;
+    double dVar8;
     double in_f30;
-    double savedY;
+    double dVar9;
     double in_f31;
-    double savedZ;
+    double dVar10;
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    ulonglong objPair;
+    ulonglong uVar11;
     int local_68;
     ushort local_64[4];
     float local_5c;
@@ -495,21 +500,21 @@ void FUN_8019f1dc(void)
     fStack_14 = (float)in_ps30_1;
     local_28 = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
-    objPair = FUN_8028683c();
-    obj = (uint)(objPair >> 0x20);
-    subObj = *(int *)&((GameObject *)obj)->extra;
-    childOrTarget = FUN_80017a98();
-    childOrTarget = *(int*)(childOrTarget + 0xb8);
-    *(float*)(subObj + 0x20) = lbl_803E4F58;
-    if ((objPair & 0xff) == 0)
+    uVar11 = FUN_8028683c();
+    uVar1 = (uint)(uVar11 >> 0x20);
+    iVar5 = *(int*)(uVar1 + 0xb8);
+    iVar2 = FUN_80017a98();
+    iVar2 = *(int*)(iVar2 + 0xb8);
+    *(float*)(iVar5 + 0x20) = lbl_803E4F58;
+    if ((uVar11 & 0xff) == 0)
     {
-        *(float*)(subObj + 0x24) = lbl_803E4F6C;
-        *(float*)(subObj + 0x28) = lbl_803E4F70;
+        *(float*)(iVar5 + 0x24) = lbl_803E4F6C;
+        *(float*)(iVar5 + 0x28) = lbl_803E4F70;
     }
     else
     {
-        *(float*)(subObj + 0x24) = lbl_803E4F60 * *(float*)(childOrTarget + 0x298) + lbl_803E4F5C;
-        *(float*)(subObj + 0x28) = lbl_803E4F68 * *(float*)(childOrTarget + 0x298) + lbl_803E4F64;
+        *(float*)(iVar5 + 0x24) = lbl_803E4F60 * *(float*)(iVar2 + 0x298) + lbl_803E4F5C;
+        *(float*)(iVar5 + 0x28) = lbl_803E4F68 * *(float*)(iVar2 + 0x298) + lbl_803E4F64;
     }
     local_58 = lbl_803E4F58;
     local_54 = lbl_803E4F58;
@@ -517,46 +522,46 @@ void FUN_8019f1dc(void)
     local_5c = lbl_803E4F74;
     local_64[2] = 0;
     local_64[1] = 0;
-    local_64[0] = *(ushort*)(subObj + 0x50);
-    FUN_80017748(local_64, (float*)(subObj + 0x20));
-    *(byte*)(subObj + 0x49) = *(byte*)(subObj + 0x49) | 1;
-    FUN_80006824(obj, SFXsk_baptr6_c);
-    *(byte*)(subObj + 0x49) = *(byte*)(subObj + 0x49) | 2;
-    if ((*(byte*)(subObj + 0x48) >> 6 & 1) != 0)
+    local_64[0] = *(ushort*)(iVar5 + 0x50);
+    FUN_80017748(local_64, (float*)(iVar5 + 0x20));
+    *(byte*)(iVar5 + 0x49) = *(byte*)(iVar5 + 0x49) | 1;
+    FUN_80006824(uVar1, SFXsk_baptr6_c);
+    *(byte*)(iVar5 + 0x49) = *(byte*)(iVar5 + 0x49) | 2;
+    if ((*(byte*)(iVar5 + 0x48) >> 6 & 1) != 0)
     {
-        subObj = *(int *)&((GameObject *)obj)->anim.placementData;
-        childOrTarget = 0;
-        if (*(short*)(subObj + 0x1a) == 0)
+        iVar5 = *(int*)(uVar1 + 0x4c);
+        iVar2 = 0;
+        if (*(short*)(iVar5 + 0x1a) == 0)
         {
-            childOrTarget = ObjGroup_FindNearestObject(0x3a, obj, (float*)0x0);
+            iVar2 = ObjGroup_FindNearestObject(0x3a, uVar1, (float*)0x0);
         }
         else
         {
-            objs = ObjGroup_GetObjects(0x3a, &local_68);
-            objIter = objs;
-            for (idx = 0; idx < local_68; idx = idx + 1)
+            piVar3 = ObjGroup_GetObjects(0x3a, &local_68);
+            piVar6 = piVar3;
+            for (iVar7 = 0; iVar7 < local_68; iVar7 = iVar7 + 1)
             {
-                objId = FUN_8020a468(*objIter);
-                if (*(short*)(subObj + 0x1a) == objId)
+                iVar4 = FUN_8020a468(*piVar6);
+                if (*(short*)(iVar5 + 0x1a) == iVar4)
                 {
-                    childOrTarget = objs[idx];
+                    iVar2 = piVar3[iVar7];
                     break;
                 }
-                objIter = objIter + 1;
+                piVar6 = piVar6 + 1;
             }
         }
-        if (childOrTarget != 0)
+        if (iVar2 != 0)
         {
-            savedX = (double)((GameObject *)obj)->anim.localPosX;
-            savedY = (double)((GameObject *)obj)->anim.localPosY;
-            savedZ = (double)((GameObject *)obj)->anim.localPosZ;
-            *(undefined4*)(obj + 0xc) = *(undefined4*)(childOrTarget + 0xc);
-            *(undefined4*)(obj + 0x10) = *(undefined4*)(childOrTarget + 0x10);
-            *(undefined4*)(obj + 0x14) = *(undefined4*)(childOrTarget + 0x14);
-            FUN_800e8630(obj);
-            ((GameObject *)obj)->anim.localPosX = (float)savedX;
-            ((GameObject *)obj)->anim.localPosY = (float)savedY;
-            ((GameObject *)obj)->anim.localPosZ = (float)savedZ;
+            dVar10 = (double)*(float*)(uVar1 + 0xc);
+            dVar9 = (double)*(float*)(uVar1 + 0x10);
+            dVar8 = (double)*(float*)(uVar1 + 0x14);
+            *(undefined4*)(uVar1 + 0xc) = *(undefined4*)(iVar2 + 0xc);
+            *(undefined4*)(uVar1 + 0x10) = *(undefined4*)(iVar2 + 0x10);
+            *(undefined4*)(uVar1 + 0x14) = *(undefined4*)(iVar2 + 0x14);
+            FUN_800e8630(uVar1);
+            *(float*)(uVar1 + 0xc) = (float)dVar10;
+            *(float*)(uVar1 + 0x10) = (float)dVar9;
+            *(float*)(uVar1 + 0x14) = (float)dVar8;
         }
     }
     FUN_80286888();
@@ -611,13 +616,10 @@ void gcrobotlightbea_initialise(void)
  * and lands inside the beacon's bounding box. */
 #pragma scheduling off
 #pragma peephole off
-extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* hit, int obj,
-                              int p7, int p8, int p9, int p10);
-extern f32 lbl_803E429C;
 void gcrobotlightbea_hitDetect(int* obj)
 {
+    float out[22];
     f32 vec[3];
-    u8 out[0x58];
     void* hit;
     GcRobotLightBeaState* sub = ((GameObject*)obj)->extra;
     ((Bit80*)&sub->hitFlags)->top = 0;
@@ -634,7 +636,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0) return;
     if (((GameObject*)obj)->unkF4 != 0 ||
-        objBboxFn_800640cc(lbl_803E429C, (void*)((int)obj + 0xc), vec, 0, out, (int)obj, 4, -1, 0, 0) == 0)
+        objBboxFn_800640cc((int)obj + 0xc, vec, 0, out, (int)obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
@@ -666,7 +668,7 @@ void gcrobotlightbea_update(int* obj)
     sub = ((GameObject*)obj)->extra;
     if (sub->light == NULL)
     {
-        sub->light = modelLightStruct_createPointLight(obj, 0xfa, 0xfa, 0xfa, 1);
+        sub->light = modelLightStruct_createPointLight(0xfa, 0xfa, 0xfa, 1);
         if (sub->light != NULL)
         {
             modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
@@ -676,7 +678,7 @@ void gcrobotlightbea_update(int* obj)
     vec[0] = lbl_80322C38[0];
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];
-    Obj_TransformLocalVectorByWorldMatrix(obj, lbl_80322C38, vec);
+    Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
     voxmaps_traceScaledVectorEnd(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
     PSVECDistance((char*)obj + 0xc, vec2);
     PSVECScale(lbl_80322C38, vec2, 0);
