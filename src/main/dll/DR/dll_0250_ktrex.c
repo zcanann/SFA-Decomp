@@ -355,9 +355,9 @@ void ktrex_free(int obj)
 
 int ktrex_shouldAdvanceArenaPhase(void)
 {
-    int* s = gKTRexState;
     u8 a;
     u8 b;
+    int* s = gKTRexState;
     int r6;
     r6 = *(u16*)((char*)s + 0xfa) & 1;
     a = *(u8*)((char*)s + 0xfe);
