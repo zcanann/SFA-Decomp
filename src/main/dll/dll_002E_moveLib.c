@@ -454,16 +454,14 @@ void dll_2E_func06(int obj, char* st, int point)
 
 /* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
  * curve, snapping to ground and easing the yaw toward the path direction. */
-int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32* d, int* flags)
+int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32* d, int* flags)
 {
-    RomCurveWalker* route;
     int moved;
     int hit;
     f32 ground;
     int fl;
     int args[2];
 
-    route = (RomCurveWalker*)curve;
     moved = 1;
     hit = 0;
     ground = lbl_803E1C90;
