@@ -1557,35 +1557,37 @@ void dll_0B_func07(void* p1)
 }
 
 #pragma dont_inline on
+#pragma opt_loop_invariants off
 void fn_800A1040(s16 p1, int p2)
 {
     int i;
     PartfxEffectState** p = (PartfxEffectState**)gPartfxActiveEffects;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++, p++)
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
-        if (*p == NULL) continue;
-        if ((s16)p1 != (*p)->sequenceId && p2 == 0) continue;
-        if ((*p)->auxAllocation != NULL)
+        if (p[i] == NULL) continue;
+        if ((s16)p1 != p[i]->sequenceId && p2 == 0) continue;
+        if (p[i]->auxAllocation != NULL)
         {
-            mm_free((*p)->auxAllocation);
+            mm_free(p[i]->auxAllocation);
         }
-        if ((*p)->instanceObject != NULL)
+        if (p[i]->instanceObject != NULL)
         {
-            Obj_FreeObject((*p)->instanceObject);
+            Obj_FreeObject(p[i]->instanceObject);
         }
-        (*p)->inlineData = NULL;
-        if ((*p)->textureIsBorrowed == 0 && (*p)->textureResource != NULL)
+        p[i]->inlineData = NULL;
+        if (p[i]->textureIsBorrowed == 0 && p[i]->textureResource != NULL)
         {
-            textureFree((*p)->textureResource);
+            textureFree(p[i]->textureResource);
         }
-        if ((*p)->textureIsBorrowed == 0)
+        if (p[i]->textureIsBorrowed == 0)
         {
-            (*p)->textureResource = NULL;
+            p[i]->textureResource = NULL;
         }
-        mm_free(*p);
-        *p = NULL;
+        mm_free(p[i]);
+        p[i] = NULL;
     }
 }
+#pragma opt_loop_invariants reset
 #pragma dont_inline reset
 
 void boneParticleEffect_release(void);
