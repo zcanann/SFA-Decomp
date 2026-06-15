@@ -7554,7 +7554,7 @@ void videoFn_800499e8(void)
 {
     u16* src;
     u16* dst;
-    char peek[8];
+    int peek[3];
     int tok[3];
     int i;
 
@@ -7562,7 +7562,7 @@ void videoFn_800499e8(void)
     {
         THPPlayerPostDrawDone();
     }
-    Queue_Peek(lbl_8035F730, &peek);
+    Queue_Peek(lbl_8035F730, peek);
     i = 0;
     src = (u16*)gDepthReadPendingQueue;
     dst = (u16*)gDepthReadResults;
@@ -7577,7 +7577,7 @@ void videoFn_800499e8(void)
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
-    if (*(void**)(peek + 4) == displayFrameBuffer)
+    if (*(void**)&peek[2] == displayFrameBuffer)
     {
         lbl_803DCCA8 = 1;
         lbl_803DCCA9 = 0;
