@@ -703,15 +703,12 @@ void Link_release(void)
 
 void Link_initialise(void)
 {
-    LinkTextureSlot* slot;
     int i;
 
-    i = 0;
-    slot = (LinkTextureSlot*)linkTextures;
-    for (; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
-        slot->texture = textureLoadAsset(slot->assetId);
-        slot++;
+        ((LinkTextureSlot*)linkTextures)[i].texture =
+            textureLoadAsset(((LinkTextureSlot*)linkTextures)[i].assetId);
     }
 
     padFn_80014b18(10);
