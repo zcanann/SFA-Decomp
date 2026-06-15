@@ -2,10 +2,8 @@
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
-#include "main/dll/dll_01A8_shkillermushroom.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
