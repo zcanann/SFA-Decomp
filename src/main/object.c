@@ -459,14 +459,12 @@ void objSetSlot(u8* obj, s8 slot)
     ((GameObject*)obj)->anim.activeHitboxMode = slot;
 }
 
-#pragma ppc_unroll_speculative off
 void fn_8002B758(void* v)
 {
     int i;
     int count;
 
-    count = lbl_803DCB74;
-    for (i = 0; i < count; i++)
+    for (i = 0; i < (count = lbl_803DCB74); i++)
     {
         if ((void*)lbl_803408A8[i] == v)
         {
@@ -483,7 +481,6 @@ void fn_8002B758(void* v)
     }
     lbl_803DCB74--;
 }
-#pragma ppc_unroll_speculative on
 
 #pragma peephole on
 void fn_8002B860(void* v)
