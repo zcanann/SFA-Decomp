@@ -41,7 +41,6 @@ extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern s16* getTrickyObject(void);
-extern int playerIsDisguised(void* player);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
@@ -49,7 +48,6 @@ extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a
 extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
-extern int getCurMapLayer(void);
 
 static inline int* Transporter_GetActiveModel(void* obj)
 {
