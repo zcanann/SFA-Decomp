@@ -471,17 +471,17 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     return;
 }
 
-#define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep) \
+#define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep) \
     do { \
-        if ((handle) != 0) { \
-            *(f32 *)((handle) + 0xc) = lbl_803E6460; \
-            *(f32 *)((handle) + 0x10) = lbl_803E6464; \
-            *(f32 *)((handle) + 0x14) = lbl_803E6468; \
+        if ((void *)(handleExpr) != NULL) { \
+            *(f32 *)((handleExpr) + 0xc) = lbl_803E6460; \
+            *(f32 *)((handleExpr) + 0x10) = lbl_803E6464; \
+            *(f32 *)((handleExpr) + 0x14) = lbl_803E6468; \
             (rot)[0] = (s16)(*(s16 *)(obj) + (angleStep)); \
-            vecRotateZXY((rot), (f32 *)((handle) + 0xc)); \
-            *(f32 *)((handle) + 0xc) += *(f32 *)((obj) + 0xc); \
-            *(f32 *)((handle) + 0x10) += *(f32 *)((obj) + 0x10); \
-            *(f32 *)((handle) + 0x14) += *(f32 *)((obj) + 0x14); \
+            vecRotateZXY((rot), (f32 *)((handleExpr) + 0xc)); \
+            *(f32 *)((handleExpr) + 0xc) += *(f32 *)((obj) + 0xc); \
+            *(f32 *)((handleExpr) + 0x10) += *(f32 *)((obj) + 0x10); \
+            *(f32 *)((handleExpr) + 0x14) += *(f32 *)((obj) + 0x14); \
         } \
     } while (0)
 
@@ -496,7 +496,6 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     int* handles;
     s16 angleStep;
     s16 i;
-    int handle;
 
     if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32)
     {
@@ -504,18 +503,17 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * lbl_803E645C * timeDelta);
+            *(s16*)obj += (int)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta));
         }
         else
         {
-            *(s16*)obj += (s16)(lbl_803E645C * timeDelta);
+            *(s16*)obj += (int)(lbl_803E645C * timeDelta);
         }
     }
 
     if (state->variantSfxTimer != 0 && flags->bit10 != 0)
     {
-        state->variantSfxTimer -= (s16)(int)
-        timeDelta;
+        state->variantSfxTimer -= (int)timeDelta;
         if (state->variantSfxTimer <= 0)
         {
             state->variantSfxTimer = 200;
@@ -533,10 +531,8 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
-        handle = handles[0];
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
-        handle = handles[1];
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, rotation, angleStep);
         handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
