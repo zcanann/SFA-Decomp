@@ -714,7 +714,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
         dot = plane->distance
             + (plane->normalZ * (center[2] - playerMapOffsetZ)
                 + (center[1] * plane->normalY + plane->normalX * (center[0] - playerMapOffsetX)));
-        if (radius + dot < lbl_803DEBCC) return 0;
+        if (radius + dot < *(f32*)&lbl_803DEBCC) return 0;
     }
     return 1;
 }
