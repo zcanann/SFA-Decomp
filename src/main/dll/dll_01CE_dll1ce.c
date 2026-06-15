@@ -114,97 +114,97 @@ void FUN_801b3de4(undefined4 param_1, uint param_2)
 
 void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double param_4)
 {
-    byte bVar1;
-    char cVar2;
-    int iVar3;
-    uint uVar4;
+    byte slotIdx;
+    char stateByte;
+    int lifetime;
+    uint obj;
     u8 extraout_r4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
-    int iVar8;
+    int sub4c;
+    int state;
+    int slotOff;
+    int slot;
     double extraout_f1;
     double dVar9;
     double dVar10;
 
-    uVar4 = FUN_8028683c();
-    iVar5 = *(int*)(uVar4 + 0x4c);
-    iVar6 = *(int*)(uVar4 + 0xb8);
-    bVar1 = *(byte*)(iVar6 + 0xa58);
-    *(byte*)(iVar6 + 0xa58) = bVar1 + 1;
-    iVar7 = (uint)bVar1 * 0x30;
-    *(float*)(iVar6 + iVar7) = (float)param_2;
-    iVar8 = iVar6 + iVar7;
-    *(float*)(iVar8 + 4) = (float)param_3;
-    *(float*)(iVar8 + 8) = (float)param_4;
-    *(float*)(iVar8 + 0x18) = lbl_803E55C4;
-    *(undefined4*)(iVar8 + 0xc) = *(undefined4*)(iVar6 + 0x18);
-    *(float*)(iVar8 + 0x1c) = (float)extraout_f1;
-    *(u8*)(iVar8 + 0x2d) = extraout_r4;
-    *(undefined4*)(iVar8 + 0x10) = 0;
+    obj = FUN_8028683c();
+    sub4c = *(int*)(obj + 0x4c);
+    state = *(int*)(obj + 0xb8);
+    slotIdx = *(byte*)(state + 0xa58);
+    *(byte*)(state + 0xa58) = slotIdx + 1;
+    slotOff = (uint)slotIdx * 0x30;
+    *(float*)(state + slotOff) = (float)param_2;
+    slot = state + slotOff;
+    *(float*)(slot + 4) = (float)param_3;
+    *(float*)(slot + 8) = (float)param_4;
+    *(float*)(slot + 0x18) = lbl_803E55C4;
+    *(undefined4*)(slot + 0xc) = *(undefined4*)(state + 0x18);
+    *(float*)(slot + 0x1c) = (float)extraout_f1;
+    *(u8*)(slot + 0x2d) = extraout_r4;
+    *(undefined4*)(slot + 0x10) = 0;
     dVar9 = FUN_80293900(extraout_f1);
-    *(int*)(iVar8 + 0x14) = (int)((double)lbl_803E55C8 * dVar9);
-    iVar3 = *(int*)(iVar8 + 0x14);
-    if (iVar3 < 0)
+    *(int*)(slot + 0x14) = (int)((double)lbl_803E55C8 * dVar9);
+    lifetime = *(int*)(slot + 0x14);
+    if (lifetime < 0)
     {
-        iVar3 = 0;
+        lifetime = 0;
     }
-    else if (0x3c < iVar3)
+    else if (0x3c < lifetime)
     {
-        iVar3 = 0x3c;
+        lifetime = 0x3c;
     }
-    *(int*)(iVar8 + 0x14) = iVar3;
-    if ((*(char*)(iVar8 + 0x2d) != '\0') || (cVar2 = *(char*)(iVar5 + 0x19), cVar2 == '\0'))
+    *(int*)(slot + 0x14) = lifetime;
+    if ((*(char*)(slot + 0x2d) != '\0') || (stateByte = *(char*)(sub4c + 0x19), stateByte == '\0'))
         goto LAB_801b44d4;
-    if (cVar2 == '\x02')
+    if (stateByte == '\x02')
     {
-        FUN_80006824(uVar4, 0x4bf);
-        goto LAB_801b44d4;
-    }
-    if (cVar2 == '\x03')
-    {
-        FUN_80006824(uVar4, 0x4c2);
+        FUN_80006824(obj, 0x4bf);
         goto LAB_801b44d4;
     }
-    cVar2 = *(char*)(uVar4 + 0xac);
-    if (cVar2 < ':')
+    if (stateByte == '\x03')
     {
-        if (cVar2 == ',')
+        FUN_80006824(obj, 0x4c2);
+        goto LAB_801b44d4;
+    }
+    stateByte = *(char*)(obj + 0xac);
+    if (stateByte < ':')
+    {
+        if (stateByte == ',')
         {
         LAB_801b44b4:
-            FUN_800067e8(uVar4, 0x4b8, 2);
+            FUN_800067e8(obj, 0x4b8, 2);
             goto LAB_801b44d4;
         }
     }
-    else if (cVar2 < '?') goto LAB_801b44b4;
-    FUN_80006824(uVar4, SFXthorntail_annoyed2);
+    else if (stateByte < '?') goto LAB_801b44b4;
+    FUN_80006824(obj, SFXthorntail_annoyed2);
 LAB_801b44d4:
-    uVar4 = randomGetRange(0, 0xffff);
-    *(short*)(iVar6 + iVar7 + 0x28) = (short)uVar4;
-    uVar4 = randomGetRange(200, 300);
-    iVar3 = iVar6 + iVar7;
-    *(short*)(iVar3 + 0x2a) = (short)uVar4;
-    uVar4 = randomGetRange(0, 1);
-    if (uVar4 != 0)
+    obj = randomGetRange(0, 0xffff);
+    *(short*)(state + slotOff + 0x28) = (short)obj;
+    obj = randomGetRange(200, 300);
+    lifetime = state + slotOff;
+    *(short*)(lifetime + 0x2a) = (short)obj;
+    obj = randomGetRange(0, 1);
+    if (obj != 0)
     {
-        *(short*)(iVar3 + 0x2a) = -*(short*)(iVar3 + 0x2a);
+        *(short*)(lifetime + 0x2a) = -*(short*)(lifetime + 0x2a);
     }
-    uVar4 = randomGetRange(0, 3);
-    *(char*)(iVar6 + iVar7 + 0x2c) = (char)uVar4;
-    dVar10 = (double)*(float*)(iVar8 + 0x1c);
+    obj = randomGetRange(0, 3);
+    *(char*)(state + slotOff + 0x2c) = (char)obj;
+    dVar10 = (double)*(float*)(slot + 0x1c);
     dVar9 = (double)FUN_802924b4();
-    *(float*)(iVar8 + 0xc) =
+    *(float*)(slot + 0xc) =
         -(float)((double)lbl_803DE7F0 *
-            (double)(float)((double)(float)(dVar10 - (double)*(float*)(iVar8 + 0x18)) * dVar9)
+            (double)(float)((double)(float)(dVar10 - (double)*(float*)(slot + 0x18)) * dVar9)
             - dVar10);
     dVar9 = (double)FUN_802924b4();
-    iVar6 = iVar6 + iVar7;
-    *(char*)(iVar6 + 0x2e) =
+    state = state + slotOff;
+    *(char*)(state + 0x2e) =
         (char)(int)-(float)((double)lbl_803DE7EC * (double)(float)((double)lbl_803E55D0 * dVar9)
             - (double)lbl_803E55D0);
-    *(int*)(iVar6 + 0x20) = (int)lbl_803E55D8;
-    *(undefined4*)(iVar6 + 0x24) = *(undefined4*)(iVar6 + 0x20);
-    *(u8*)(iVar6 + 0x2f) = 1;
+    *(int*)(state + 0x20) = (int)lbl_803E55D8;
+    *(undefined4*)(state + 0x24) = *(undefined4*)(state + 0x20);
+    *(u8*)(state + 0x2f) = 1;
     FUN_80286888();
     return;
 }
@@ -213,153 +213,153 @@ void explosion_release(uint obj);
 
 void fn_explosion_release_v11_unused(uint param_1)
 {
-    short sVar1;
-    float fVar2;
-    bool bVar3;
-    int iVar4;
-    int iVar5;
-    char* pcVar6;
-    short* psVar7;
+    short hitShapeId;
+    float clampedSpeed;
+    bool found;
+    int count;
+    int idx;
+    char* state;
+    short* placement;
     ObjHitsPriorityState* hitState;
 
-    psVar7 = *(short**)&((GameObject*)param_1)->anim.placementData;
-    pcVar6 = ((GameObject*)param_1)->extra;
-    FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)pcVar6)->unk4, (double)lbl_803DC074);
+    placement = *(short**)&((GameObject*)param_1)->anim.placementData;
+    state = ((GameObject*)param_1)->extra;
+    FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)state)->unk4, (double)lbl_803DC074);
     ((GameObject*)param_1)->anim.localPosZ = ((GameObject*)param_1)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
-        *)pcVar6)->unk8;
-    fVar2 = lbl_803E566C;
-    if (((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 != lbl_803E566C)
+        *)state)->unk8;
+    clampedSpeed = lbl_803E566C;
+    if (((FnExplosionReleaseV11UnusedState*)state)->unk8 != lbl_803E566C)
     {
-        ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 *
+        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = ((FnExplosionReleaseV11UnusedState*)state)->unk8 *
             lbl_803E5670;
-        if (((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 < fVar2)
+        if (((FnExplosionReleaseV11UnusedState*)state)->unk8 < clampedSpeed)
         {
-            fVar2 = ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8;
+            clampedSpeed = ((FnExplosionReleaseV11UnusedState*)state)->unk8;
         }
-        ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = fVar2;
+        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = clampedSpeed;
     }
-    if ((('\0' < *pcVar6) || (*psVar7 != 0x338)) || (((GameObject*)param_1)->anim.currentMoveProgress <= lbl_803E5674))
+    if ((('\0' < *state) || (*placement != 0x338)) || (((GameObject*)param_1)->anim.currentMoveProgress <= lbl_803E5674))
     {
-        bVar3 = false;
-        iVar5 = 0;
-        iVar4 = (int)*(char*)(*(int*)(param_1 + 0x58) + 0x10f);
-        if (0 < iVar4)
+        found = false;
+        idx = 0;
+        count = (int)*(char*)(*(int*)(param_1 + 0x58) + 0x10f);
+        if (0 < count)
         {
             do
             {
-                sVar1 = *(short*)(*(int*)(*(int*)(param_1 + 0x58) + iVar5 + 0x100) + 0x46);
-                if ((sVar1 == 399) || (sVar1 == 0x1d6))
+                hitShapeId = *(short*)(*(int*)(*(int*)(param_1 + 0x58) + idx + 0x100) + 0x46);
+                if ((hitShapeId == 399) || (hitShapeId == 0x1d6))
                 {
-                    bVar3 = true;
+                    found = true;
                     break;
                 }
-                iVar5 = iVar5 + 4;
-                iVar4 = iVar4 + -1;
+                idx = idx + 4;
+                count = count + -1;
             }
-            while (iVar4 != 0);
+            while (count != 0);
         }
-        if (bVar3)
+        if (found)
         {
-            ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk4 = lbl_803E5678;
-            ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = lbl_803E567C;
-            *pcVar6 = '\0';
-            GameBit_Set((int)psVar7[0xf], 1);
+            ((FnExplosionReleaseV11UnusedState*)state)->unk4 = lbl_803E5678;
+            ((FnExplosionReleaseV11UnusedState*)state)->unk8 = lbl_803E567C;
+            *state = '\0';
+            GameBit_Set((int)placement[0xf], 1);
             FUN_80006824(param_1, 0x3e1);
         }
     }
     else
     {
-        iVar4 = (uint)((GameObject*)param_1)->anim.alpha + (uint)DAT_803dc070 * -0x10;
-        if (iVar4 < 0)
+        count = (uint)((GameObject*)param_1)->anim.alpha + (uint)DAT_803dc070 * -0x10;
+        if (count < 0)
         {
-            iVar4 = 0;
+            count = 0;
         }
         hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
         hitState->flags &= ~1;
-        ((GameObject*)param_1)->anim.alpha = iVar4;
+        ((GameObject*)param_1)->anim.alpha = count;
     }
     return;
 }
 
 void FUN_801b5b8c(void)
 {
-    int iVar1;
-    int* piVar2;
-    undefined2* puVar3;
-    short* psVar4;
-    uint uVar5;
-    int iVar6;
-    int iVar7;
-    uint uVar8;
-    double dVar9;
-    undefined8 uVar10;
+    int obj;
+    int* model;
+    undefined2* outVtx;
+    short* srcVtx;
+    uint fifoArg;
+    int modelData;
+    int i;
+    uint vtxCount;
+    double rnd;
+    undefined8 objHandle;
     undefined8 local_58;
     undefined8 local_50;
 
-    uVar10 = FUN_80286834();
-    iVar1 = (int)((ulonglong)uVar10 >> 0x20);
-    piVar2 = (int*)FUN_80017a54(iVar1);
-    iVar6 = *piVar2;
-    for (iVar7 = 0; uVar8 = (uint) * (ushort*)(iVar6 + 0xe4), iVar7 < (int)uVar8; iVar7 = iVar7 + 1)
+    objHandle = FUN_80286834();
+    obj = (int)((ulonglong)objHandle >> 0x20);
+    model = (int*)FUN_80017a54(obj);
+    modelData = *model;
+    for (i = 0; vtxCount = (uint) * (ushort*)(modelData + 0xe4), i < (int)vtxCount; i = i + 1)
     {
-        puVar3 = (undefined2*)FUN_80017944((int)piVar2, iVar7);
-        psVar4 = (short*)FUN_80017924(iVar6, iVar7);
-        if (*psVar4 < 1)
+        outVtx = (undefined2*)FUN_80017944((int)model, i);
+        srcVtx = (short*)FUN_80017924(modelData, i);
+        if (*srcVtx < 1)
         {
-            dVar9 = (double)FUN_80293f90();
-            local_50 = (double)CONCAT44(0x43300000, (int)*psVar4 ^ 0x80000000);
-            *puVar3 = (short)(int)-(float)((double)lbl_803E569C * dVar9 -
+            rnd = (double)FUN_80293f90();
+            local_50 = (double)CONCAT44(0x43300000, (int)*srcVtx ^ 0x80000000);
+            *outVtx = (short)(int)-(float)((double)lbl_803E569C * rnd -
                 (double)(float)(local_50 - DOUBLE_803e56a8));
         }
         else
         {
-            dVar9 = (double)FUN_80293f90();
-            local_58 = (double)CONCAT44(0x43300000, (int)*psVar4 ^ 0x80000000);
-            *puVar3 = (short)(int)((double)lbl_803E569C * dVar9 +
+            rnd = (double)FUN_80293f90();
+            local_58 = (double)CONCAT44(0x43300000, (int)*srcVtx ^ 0x80000000);
+            *outVtx = (short)(int)((double)lbl_803E569C * rnd +
                 (double)(float)(local_58 - DOUBLE_803e56a8));
         }
     }
-    uVar5 = FUN_80017944((int)piVar2, 0);
-    FUN_80242114(uVar5, uVar8 * 6);
-    ((GameObject*)iVar1)->anim.alpha = *(u8*)((int)uVar10 + 0x51);
+    fifoArg = FUN_80017944((int)model, 0);
+    FUN_80242114(fifoArg, vtxCount * 6);
+    ((GameObject*)obj)->anim.alpha = *(u8*)((int)objHandle + 0x51);
     FUN_80286880();
     return;
 }
 
 void FUN_801b5d00(int param_1, int param_2)
 {
-    int iVar1;
-    uint uVar2;
+    int channel;
+    uint phase;
 
-    iVar1 = FUN_80039520(param_1, 0);
-    *(short*)(iVar1 + 10) = *(short*)(iVar1 + 10) + 0x14;
-    if (10000 < *(short*)(iVar1 + 10))
+    channel = FUN_80039520(param_1, 0);
+    *(short*)(channel + 10) = *(short*)(channel + 10) + 0x14;
+    if (10000 < *(short*)(channel + 10))
     {
-        *(short*)(iVar1 + 10) = *(short*)(iVar1 + 10) + -10000;
+        *(short*)(channel + 10) = *(short*)(channel + 10) + -10000;
     }
-    *(short*)(iVar1 + 8) = *(short*)(iVar1 + 8) + 10;
-    if (10000 < *(short*)(iVar1 + 8))
+    *(short*)(channel + 8) = *(short*)(channel + 8) + 10;
+    if (10000 < *(short*)(channel + 8))
     {
-        *(short*)(iVar1 + 8) = *(short*)(iVar1 + 8) + -10000;
+        *(short*)(channel + 8) = *(short*)(channel + 8) + -10000;
     }
-    iVar1 = FUN_80039520(param_1, 1);
-    *(short*)(iVar1 + 10) = *(short*)(iVar1 + 10) + 0x1e;
-    if (10000 < *(short*)(iVar1 + 10))
+    channel = FUN_80039520(param_1, 1);
+    *(short*)(channel + 10) = *(short*)(channel + 10) + 0x1e;
+    if (10000 < *(short*)(channel + 10))
     {
-        *(short*)(iVar1 + 10) = *(short*)(iVar1 + 10) + -10000;
+        *(short*)(channel + 10) = *(short*)(channel + 10) + -10000;
     }
-    uVar2 = (uint) * (ushort*)(param_2 + 0x60) + (uint)DAT_803dc070 * 0x100;
-    if (0xffff < uVar2)
+    phase = (uint) * (ushort*)(param_2 + 0x60) + (uint)DAT_803dc070 * 0x100;
+    if (0xffff < phase)
     {
-        uVar2 = uVar2 - 0xffff;
+        phase = phase - 0xffff;
     }
-    *(short*)(param_2 + 0x60) = (short)uVar2;
-    uVar2 = (uint) * (ushort*)(param_2 + 0x62) + (uint)DAT_803dc070 * 0x80;
-    if (0xffff < uVar2)
+    *(short*)(param_2 + 0x60) = (short)phase;
+    phase = (uint) * (ushort*)(param_2 + 0x62) + (uint)DAT_803dc070 * 0x80;
+    if (0xffff < phase)
     {
-        uVar2 = uVar2 - 0xffff;
+        phase = phase - 0xffff;
     }
-    *(short*)(param_2 + 0x62) = (short)uVar2;
+    *(short*)(param_2 + 0x62) = (short)phase;
     return;
 }
 
