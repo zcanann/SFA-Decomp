@@ -1,14 +1,11 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx.h"
-#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
 #include "main/dll/path_control_interface.h"
-#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/sky_interface.h"
 
