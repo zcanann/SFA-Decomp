@@ -1860,11 +1860,10 @@ void fireball_hitDetect(int* obj)
     extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a); /* #57 */
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* target;
-    if (((GameObject*)obj)->anim.seqId == 0x83e) return;
-    if (((FireballState*)state)->stateFlags & 8) return;
-    target = (int*)hitState->lastHitObject;
+    if (((GameObject*)obj)->anim.seqId == 0x83e ||
+        (((FireballState*)state)->stateFlags & 8)) return;
+    target = (int*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (target == NULL) return;
     if (*(s16*)((char*)target + 0x46) == 0x6e8)
     {
