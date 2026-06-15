@@ -773,7 +773,7 @@ void fn_801FBAC8(int obj)
             s16 timer = *(s16*)(state + 4);
             if (timer != 0)
             {
-                *(s16*)(state + 4) = timer - (int)timeDelta;
+                *(s16*)(state + 4) -= (s16)timeDelta;
                 if (*(s16*)(state + 4) <= 0)
                 {
                     *(s16*)(state + 4) = 0;
@@ -805,8 +805,8 @@ void fn_801FBAC8(int obj)
         }
     case 2:
         {
-            f32 thr = lbl_803E6108;
-            if (((GameObject*)obj)->anim.localPosZ < thr + ((ObjPlacement*)params)->posZ)
+            f32 thr;
+            if (((GameObject*)obj)->anim.localPosZ < (thr = lbl_803E6108, thr + ((ObjPlacement*)params)->posZ))
             {
                 ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
                 if (((GameObject*)obj)->anim.localPosZ >= thr + ((ObjPlacement*)params)->posZ)
@@ -820,8 +820,8 @@ void fn_801FBAC8(int obj)
         }
     case 3:
         {
-            f32 thr = lbl_803E6108;
-            if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ - thr)
+            f32 thr;
+            if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ - (thr = lbl_803E6108))
             {
                 ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
                 if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ - thr)
