@@ -315,5 +315,5 @@ void dbsh_symbol_init(int* obj)
     ((GameObject*)obj)->anim.localPosY -= lbl_803E5118;
     ((GameObject*)obj)->animEventCallback = (void*)DBSH_Symbol_SeqFn;
 
-    ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+    ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
