@@ -10918,15 +10918,15 @@ void fn_802B19F8(int obj, int state, f32 fv)
     ((PlayerState*)state)->buttonsHeld = 0;
     ((PlayerState*)state)->buttonsJustPressed = 0;
     ((PlayerState*)state)->buttonsJustPressedIfNotBusy = 0;
-    if ((((PlayerState*)state)->flags360 & 0x200000) == 0 &&
+    if ((((PlayerState*)state)->flags360 & 0x200000) == 0u &&
         ((PlayerState*)state)->characterId != -1 &&
         (c = ((PlayerState*)state)->curAnimId) != 0x44 && c != 0x4e)
     {
         *(int*)((char*)state + 0x6d0) = padGetStickX(0);
         *(int*)((char*)state + 0x6d4) = padGetStickY(0);
-        ((PlayerState*)state)->buttonsHeld = getButtonsHeld(0);
-        ((PlayerState*)state)->buttonsJustPressed = getButtonsJustPressed(0);
-        ((PlayerState*)state)->buttonsJustPressedIfNotBusy = getButtonsJustPressedIfNotBusy(0);
+        ((PlayerState*)state)->buttonsHeld = (u16)getButtonsHeld(0);
+        ((PlayerState*)state)->buttonsJustPressed = (u16)getButtonsJustPressed(0);
+        ((PlayerState*)state)->buttonsJustPressedIfNotBusy = (u16)getButtonsJustPressedIfNotBusy(0);
     }
     *(f32*)((char*)state + 0x6dc) = (f32) * (int*)((char*)state + 0x6d0);
     *(f32*)((char*)state + 0x6d8) = (f32) * (int*)((char*)state + 0x6d4);
