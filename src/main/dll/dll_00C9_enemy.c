@@ -1240,15 +1240,15 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
             {
                 if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
                 {
-                    d.x = ((GameObject*)obj)->anim.worldPosX - *(f32*)(out->obj + 0xc);
+                    d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)out->obj)->anim.worldPosX;
                     d.y = lbl_803E2574;
-                    d.z = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(out->obj + 0x10);
+                    d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)out->obj)->anim.worldPosZ;
                 }
                 else
                 {
-                    d.x = ((GameObject*)obj)->anim.worldPosX - *(f32*)(out->obj + 0xc);
-                    d.y = ((GameObject*)obj)->anim.worldPosY - *(f32*)(out->obj + 0xe);
-                    d.z = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(out->obj + 0x10);
+                    d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)out->obj)->anim.worldPosX;
+                    d.y = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)out->obj)->anim.worldPosY;
+                    d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)out->obj)->anim.worldPosZ;
                 }
                 diff = (u16)getAngle(-d.x, -d.z);
                 if (*(short**)(obj + 0x18) != 0)
@@ -1301,15 +1301,15 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                     {
                         if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
                         {
-                            d.x = ((GameObject*)obj)->anim.worldPosX - *(f32*)(cur->obj + 0xc);
+                            d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)cur->obj)->anim.worldPosX;
                             d.y = lbl_803E2574;
-                            d.z = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(cur->obj + 0x10);
+                            d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)cur->obj)->anim.worldPosZ;
                         }
                         else
                         {
-                            d.x = ((GameObject*)obj)->anim.worldPosX - *(f32*)(cur->obj + 0xc);
-                            d.y = ((GameObject*)obj)->anim.worldPosY - *(f32*)(cur->obj + 0xe);
-                            d.z = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(cur->obj + 0x10);
+                            d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)cur->obj)->anim.worldPosX;
+                            d.y = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)cur->obj)->anim.worldPosY;
+                            d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)cur->obj)->anim.worldPosZ;
                         }
                         diff = (u16)getAngle(-d.x, -d.z);
                         if (*(short**)(obj + 0x18) != 0)
