@@ -5197,6 +5197,7 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
     return bestLink[0];
 }
 
+#pragma optimization_level 2
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)
 {
     f32 startX;
@@ -5288,6 +5289,7 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     segment->nearestZ = nearestZ;
     return distance;
 }
+#pragma optimization_level reset
 
 int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId)
 {
