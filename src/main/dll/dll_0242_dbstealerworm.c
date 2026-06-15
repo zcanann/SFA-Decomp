@@ -1970,8 +1970,8 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     sub->flags14 |= 2;
     if (*(void**)&sub->linkedObj == NULL && sub->unk1C != -1)
     {
-        tmpB = sub->unk2C;
         tmpA = sub->unk30;
+        tmpB = sub->unk2C;
         q = sub->msgStack;
         msgA[0] = sub->unk28;
         msgA[1] = tmpB;
