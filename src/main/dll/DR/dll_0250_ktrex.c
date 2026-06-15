@@ -1468,25 +1468,27 @@ int ktrex_stateHandlerA04(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 4);
         ((KTRexArenaState*)gKTRexState)->unk4 =
-            (f32)(u32) * (u16*)((char*)p + ((KTRexArenaState*)gKTRexState)->unkFD * 2 + 0x44);
-        return 0;
+            (f32)(u32) * (u16*)((char*)p + (((KTRexArenaState*)gKTRexState)->unkFD * 2 + 0x44));
     }
-    t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
-    ((KTRexArenaState*)gKTRexState)->unk4 = t;
-    if (t < lbl_803E67B8)
+    else
     {
-        ((KTRexArenaState*)gKTRexState)->unk4 = lbl_803E67B8;
-    }
-    if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
-    {
-        if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
+        t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
+        ((KTRexArenaState*)gKTRexState)->unk4 = t;
+        if (t < lbl_803E67B8)
         {
-            popped = 0;
-            if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
+            ((KTRexArenaState*)gKTRexState)->unk4 = lbl_803E67B8;
+        }
+        if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+        {
+            if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
             {
-                Stack_Pop(((KTRexArenaState*)gKTRexState)->stack, &popped);
+                popped = 0;
+                if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
+                {
+                    Stack_Pop(((KTRexArenaState*)gKTRexState)->stack, &popped);
+                }
+                return popped + 1;
             }
-            return popped + 1;
         }
     }
     return 0;
