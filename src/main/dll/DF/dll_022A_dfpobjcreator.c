@@ -167,8 +167,6 @@ extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
 extern void Obj_FreeObject(int obj);
-extern u8 lbl_80329514[];
-extern f32 lbl_803E6278;
 extern f32 timeDelta;
 extern int dbstealerworm_stateHandlerA02();
 
