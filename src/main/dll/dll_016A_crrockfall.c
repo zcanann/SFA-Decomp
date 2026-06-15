@@ -71,13 +71,11 @@ extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
 extern void* lbl_803DDB40;
-extern f32 lbl_803E46D8;
 extern f32 lbl_803E4708;
 extern void objRenderFn_8003b8f4(f32);
 extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
-extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 extern float Vec_distance(float* a, float* b);
 extern void warpToMap(int mapId, int flags);
 extern void Music_Trigger(int track, int flag);
