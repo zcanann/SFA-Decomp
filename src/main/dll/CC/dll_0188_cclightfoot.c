@@ -119,7 +119,6 @@ void cclightfoot_free(int* obj, int p2)
     }
 }
 
-extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 extern f32 lbl_803E4674;
 extern f32 lbl_803E4678;
@@ -160,7 +159,6 @@ void fn_801AA878(u8* p1, int* p2, f32 v)
 }
 #pragma dont_inline reset
 
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
