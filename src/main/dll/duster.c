@@ -5,8 +5,6 @@
 #include "main/dll/baddie_setmove.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/duster.h"
-#include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/sky_interface.h"
 
