@@ -21,7 +21,6 @@ int sc_totemstrength_getExtraSize(void);
 int paymentkiosk_getExtraSize(void) { return 0x3; }
 int paymentkiosk_getObjectTypeId(void) { return 0x1; }
 
-extern void objRenderFn_8003b8f4(f32);
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void sc_totemstrength_init(int* obj);
@@ -170,7 +169,6 @@ void paymentkiosk_update(int obj)
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
 
 void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
