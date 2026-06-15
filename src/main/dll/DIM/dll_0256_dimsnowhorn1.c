@@ -1105,7 +1105,7 @@ void fn_802BB998(int obj, int pointState, int inputState)
     } args;
 
     flags = 0;
-    inputFlags = *(s32*)(inputState + 0x314);
+    inputFlags = *(s32*)&((BaddieState*)inputState)->eventFlags;
     if ((inputFlags & 2) != 0)
     {
         flags |= 1;
@@ -1134,7 +1134,7 @@ void fn_802BB998(int obj, int pointState, int inputState)
                 count--;
             }
 
-            sfxId = audioPickSoundEffect_8006ed24((u8)(s8) * (u8*)(inputState + 0xbc), 9);
+            sfxId = audioPickSoundEffect_8006ed24((u8)(s8)*(s8*)&((BaddieState*)inputState)->paletteSlot, 9);
             Sfx_PlayFromObject(obj, sfxId);
             doRumble(lbl_803E8244);
         }

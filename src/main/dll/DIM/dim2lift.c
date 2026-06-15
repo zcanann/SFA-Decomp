@@ -843,7 +843,7 @@ FUN_801bbea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-int DIMbossAnim_hasMoveDone(int unused, int* p) { return *(s8*)((char*)p + 0x346) != 0; }
+int DIMbossAnim_hasMoveDone(int unused, int* p) { return *(s8*)&((BaddieState*)p)->moveDone != 0; }
 
 #pragma scheduling off
 #pragma peephole off
