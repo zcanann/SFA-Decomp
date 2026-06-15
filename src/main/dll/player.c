@@ -125,8 +125,9 @@ void fn_802961FC(int a, u8 type)
 {
     if (type > 2)
     {
-        lbl_803DE459 = 0;
+        type = 0;
     }
+    lbl_803DE459 = type;
 }
 
 int fn_8029630C(int obj)
