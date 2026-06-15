@@ -364,7 +364,6 @@ extern int* Obj_GetActiveModel(int obj);
 extern void postRenderSetAlphaBlendState(void);
 extern void ObjModel_SetPostRenderCallback(int* model, void* callback);
 extern int getHudHiddenFrameCount(void);
-extern void mm_free(int* p);
 extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
 extern void vecRotateZXY(int* obj, f32* p);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
@@ -383,8 +382,6 @@ extern s16 lbl_803DBD80[4];
 extern s16 lbl_803DBD88[4];
 extern f32 lbl_803E33D8;
 extern f32 lbl_803E33DC;
-extern void quakeSpellTextureFn_8007366c(int param);
-extern void selectTexture(void* tex, int x);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern f32 lbl_803E33B0;
 extern f32 lbl_803E33B4;
@@ -393,7 +390,6 @@ extern f32 lbl_803E33BC;
 extern f32 lbl_803E33C0;
 extern f32 lbl_803E33C8;
 extern f32 lbl_803E33CC;
-extern int objFn_80296700(int* obj);
 
 void staticCamera_free(int param_1)
 {
