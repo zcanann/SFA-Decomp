@@ -1,14 +1,33 @@
 /* DLL 0x54 - CameraModeNpcSpeak [8010DB7C-8010DD58) */
+#include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/game_object.h"
 #include "main/mm.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 
+#include "ghidra_import.h"
+#include "main/dll/baddieControl.h"
 #include "main/camera_object.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camera_mode_54_state.h"
+#include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
+#include "main/dll/CAM/camcrawl_state.h"
+#include "main/dll/CAM/camera_mode_cannon_state.h"
+#include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/dll/CAM/camperv_state.h"
+#include "main/dll/CAM/camworldmap_state.h"
+#include "main/game_object.h"
+#include "main/obj_placement.h"
+#include "main/mapEvent.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/screen_transition.h"
 
+#include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -46,7 +65,8 @@ extern f32 lbl_803E1B54;
 extern f32 lbl_803E1B58;
 extern f32 lbl_803E1B60;
 extern f32 lbl_803E1B64;
-extern f32 lbl_803E1B68;
+extern const f32 lbl_803E1B68;
+extern int getFocusedNpc(void);
 extern s16 getAngle(f32 x, f32 z);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
@@ -334,10 +354,10 @@ void dll_54_update(u8* obj)
             camera->anim.rotY = (f32)d * t2 + (f32)cur;
 
             lbl_803DD5C0->transitionTimer -= timeDelta;
-            if (lbl_803DD5C0->transitionTimer < (lim = *(f32*)&lbl_803E1B68))
+            if (lbl_803DD5C0->transitionTimer < lbl_803E1B68)
             {
                 lbl_803DD5C0->transitionDone = 1;
-                lbl_803DD5C0->transitionTimer = lim;
+                lbl_803DD5C0->transitionTimer = lbl_803E1B68;
             }
         }
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
