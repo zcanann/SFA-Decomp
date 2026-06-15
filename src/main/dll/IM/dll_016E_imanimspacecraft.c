@@ -1,5 +1,4 @@
 /* DLL 0x016E (imanimspacecraft) - IM animated spacecraft object [0x801AE144-0x801AE508). */
-#include "main/effect_interfaces.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -9,7 +8,6 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/objtexture.h"
-#include "main/objseq.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -107,15 +105,9 @@ extern u8 framesThisStep;
  * height/distance, trigger the fall when the player is in range, integrate the
  * fall, then shatter (sfx + explosion) on impact. */
 
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
