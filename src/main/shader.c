@@ -1424,7 +1424,7 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     }
     if (found != -1)
     {
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].refs += 1;
+        *(s16*)((char*)(lbl_803DCE6C + 12) + found * 16) += 1;
         return found;
     }
     found = -1;
@@ -1441,11 +1441,11 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     }
     if (found != -1)
     {
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].refs = 1;
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].data0 = 0;
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].data1 = value;
+        *(s16*)((char*)(lbl_803DCE6C + 12) + found * 16) = 1;
+        *(int*)((char*)(lbl_803DCE6C + 4) + found * 16) = 0;
+        *(int*)((char*)(lbl_803DCE6C + 8) + found * 16) = value;
         ((TexOverrideEntry*)lbl_803DCE6C)[found].key = key;
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].type = type;
+        *(u8*)((char*)(lbl_803DCE6C + 14) + found * 16) = type;
         return found;
     }
     OSReport(sTrackGlobalTexanimOverflowError);
