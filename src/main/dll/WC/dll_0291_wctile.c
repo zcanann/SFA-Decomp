@@ -245,4 +245,4 @@ void wctile_update(int obj)
         break;
     }
 }
-#pragma opt_common_subs reset
+#pragma reset
