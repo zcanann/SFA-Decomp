@@ -22,7 +22,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
 
@@ -48,24 +47,6 @@ extern f32 lbl_803E4B50;
 extern f32 lbl_803E4B54;
 extern f32 lbl_803E4B58;
 extern f32 lbl_803E4B30;
-
-void FUN_801b9cc4(int obj)
-{
-    char* state;
-    int placement;
-
-    state = ((GameObject*)obj)->extra;
-    if ((state[2] & 1U) == 0)
-    {
-        placement = *(int*)&((GameObject*)obj)->anim.placementData;
-        if (('\0' < *state) && (*state = *state + -1, *state == '\0'))
-        {
-            state[2] = state[2] | 1;
-            GameBit_Set((int)*(short*)(placement + 0x1e), 1);
-        }
-    }
-    return;
-}
 
 
 #pragma scheduling off
