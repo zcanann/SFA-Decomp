@@ -718,15 +718,15 @@ undefined* FUN_800e82d8(void)
     return (undefined*)&DAT_803a4460;
 }
 
-void FUN_800e8630(int param_1)
+void FUN_800e8630(int obj)
 {
-    int iVar1;
-    undefined1* puVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    int objId;
+    undefined1* entry;
+    int slotBase;
+    int slotIdx;
+    int groupsLeft;
 
-    if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
+    if ((*(ushort*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         return;
     }
@@ -734,43 +734,43 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    iVar3 = 0;
-    puVar2 = &DAT_803a3f08;
-    iVar5 = 9;
-    while ((iVar4 = iVar3, *(int*)(puVar2 + 0x168) != 0 &&
-        (iVar1 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), iVar1 != *(int*)(puVar2 + 0x168))))
+    slotBase = 0;
+    entry = &DAT_803a3f08;
+    groupsLeft = 9;
+    while ((slotIdx = slotBase, *(int*)(entry + 0x168) != 0 &&
+        (objId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14), objId != *(int*)(entry + 0x168))))
     {
-        iVar4 = iVar3 + 1;
-        if ((*(int*)(puVar2 + 0x178) == 0) || (iVar1 == *(int*)(puVar2 + 0x178))) break;
-        iVar4 = iVar3 + 2;
-        if ((*(int*)(puVar2 + 0x188) == 0) || (iVar1 == *(int*)(puVar2 + 0x188))) break;
-        iVar4 = iVar3 + 3;
-        if ((*(int*)(puVar2 + 0x198) == 0) || (iVar1 == *(int*)(puVar2 + 0x198))) break;
-        iVar4 = iVar3 + 4;
-        if ((*(int*)(puVar2 + 0x1a8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1a8))) break;
-        iVar4 = iVar3 + 5;
-        if ((*(int*)(puVar2 + 0x1b8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1b8))) break;
-        iVar4 = iVar3 + 6;
-        if ((*(int*)(puVar2 + 0x1c8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1c8))) break;
-        puVar2 = puVar2 + 0x70;
-        iVar3 = iVar3 + 7;
-        iVar5 = iVar5 + -1;
-        iVar4 = iVar3;
-        if (iVar5 == 0) break;
+        slotIdx = slotBase + 1;
+        if ((*(int*)(entry + 0x178) == 0) || (objId == *(int*)(entry + 0x178))) break;
+        slotIdx = slotBase + 2;
+        if ((*(int*)(entry + 0x188) == 0) || (objId == *(int*)(entry + 0x188))) break;
+        slotIdx = slotBase + 3;
+        if ((*(int*)(entry + 0x198) == 0) || (objId == *(int*)(entry + 0x198))) break;
+        slotIdx = slotBase + 4;
+        if ((*(int*)(entry + 0x1a8) == 0) || (objId == *(int*)(entry + 0x1a8))) break;
+        slotIdx = slotBase + 5;
+        if ((*(int*)(entry + 0x1b8) == 0) || (objId == *(int*)(entry + 0x1b8))) break;
+        slotIdx = slotBase + 6;
+        if ((*(int*)(entry + 0x1c8) == 0) || (objId == *(int*)(entry + 0x1c8))) break;
+        entry = entry + 0x70;
+        slotBase = slotBase + 7;
+        groupsLeft = groupsLeft + -1;
+        slotIdx = slotBase;
+        if (groupsLeft == 0) break;
     }
-    if (iVar4 == 0x3f)
+    if (slotIdx == 0x3f)
     {
         return;
     }
-    (&DAT_803a4070)[iVar4 * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
+    (&DAT_803a4070)[slotIdx * 4] = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    (&DAT_803a4074)[slotIdx * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosX;
+    (&DAT_803a4078)[slotIdx * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosY;
+    (&DAT_803a407c)[slotIdx * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosZ;
+    *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = *(undefined4*)&((GameObject*)obj)->anim
         .localPosX;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
+    *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)obj)->
         anim.localPosY;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x10) = *(undefined4*)&((GameObject*)param_1)->
+    *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = *(undefined4*)&((GameObject*)obj)->
         anim.localPosZ;
     return;
 }
