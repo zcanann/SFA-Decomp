@@ -1,3 +1,4 @@
+#include "global.h"
 #include "main/audio/inp_ctrl.h"
 #include "main/dll/synthfade_struct.h"
 #include "main/audio/inp_midi.h"
@@ -12,6 +13,25 @@ typedef struct SynthDelayedNode
 } SynthDelayedNode;
 
 typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
+
+/*
+ * Overlay for the 64-bit update-time stamps that live past the embedded
+ * SynthDelayedNode header inside a voice handle (fn_802712C8 writes these
+ * back-to-back as two hi/lo pairs).
+ */
+typedef struct SynthVoiceTimers
+{
+    u8 pad00[0x24];
+    int updateTimeHi0;
+    int updateTimeLo0;
+    int updateTimeHi1;
+    int updateTimeLo1;
+} SynthVoiceTimers;
+
+STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeHi0) == 0x24);
+STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo0) == 0x28);
+STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeHi1) == 0x2c);
+STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 
 #define SYNTH_FADE_COUNT 0x20
 #define SYNTH_FADE_TABLE_OFFSET 0x5d4
@@ -944,17 +964,18 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
  */
 void fn_802712C8(SynthDelayedNode* fade)
 {
+    SynthVoiceTimers* timers = (SynthVoiceTimers*)fade;
     {
         int a = synthRealTimeHi;
         int b = synthRealTimeLo;
-        *(int*)((u8*)fade + 0x24) = a;
-        *(int*)((u8*)fade + 0x28) = b;
+        timers->updateTimeHi0 = a;
+        timers->updateTimeLo0 = b;
     }
     {
         int a = synthRealTimeHi;
         int b = synthRealTimeLo;
-        *(int*)((u8*)fade + 0x2c) = a;
-        *(int*)((u8*)fade + 0x30) = b;
+        timers->updateTimeHi1 = a;
+        timers->updateTimeLo1 = b;
     }
     synthQueueDelayedUpdate(fade, 0, 0);
     synthQueueDelayedUpdate(fade, 1, 0);

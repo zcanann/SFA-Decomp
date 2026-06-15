@@ -440,7 +440,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
 void fn_800E5CBC(short* obj, int state)
 {
     CurvesCollisionState* collision;
-    float fVar1;
+    float normalZ;
     short pitch;
     int angle;
     float dy;
@@ -492,10 +492,10 @@ void fn_800E5CBC(short* obj, int state)
         collision->tiltRoll =
             collision->tiltRoll -
             ((int)((int)collision->tiltRoll * (uint)framesThisStep) >> 3);
-        fVar1 = lbl_803E0668;
+        normalZ = lbl_803E0668;
         collision->surfaceNormalX = lbl_803E0668;
         collision->surfaceNormalY = lbl_803E068C;
-        collision->surfaceNormalZ = fVar1;
+        collision->surfaceNormalZ = normalZ;
     }
     return;
 }

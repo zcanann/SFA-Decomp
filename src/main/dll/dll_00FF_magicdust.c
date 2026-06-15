@@ -85,7 +85,7 @@ void magicdust_update(int obj)
     extern undefined4 ObjHits_DisableObject(); /* #57 */
     float fval;
     short sVar2;
-    byte byteVal;
+    byte flagsByte;
     int player;
     GameObject* playerObj;
     int ref;
@@ -183,10 +183,10 @@ void magicdust_update(int obj)
             ((GameObject*)obj)->anim.velocityY = -(lbl_803E34C0 * timeDelta - ((GameObject*)obj)->anim.velocityY);
         }
         ((MagicDustState*)state)->burstTimer = ((MagicDustState*)state)->burstTimer - timeDelta;
-        byteVal = ((MagicDustState*)state)->flags27A;
-        if ((byteVal & 1) == 0)
+        flagsByte = ((MagicDustState*)state)->flags27A;
+        if ((flagsByte & 1) == 0)
         {
-            if ((byteVal & 4) == 0)
+            if ((flagsByte & 4) == 0)
             {
                 if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
                 {
@@ -196,7 +196,7 @@ void magicdust_update(int obj)
             }
             if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
             {
-                ((MagicDustState*)state)->flags27A = byteVal & 0xfb;
+                ((MagicDustState*)state)->flags27A = flagsByte & 0xfb;
                 ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
                 ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
                 (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -219,7 +219,7 @@ void magicdust_update(int obj)
         {
             if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
             {
-                ((MagicDustState*)state)->flags27A = byteVal & 0xfe;
+                ((MagicDustState*)state)->flags27A = flagsByte & 0xfe;
                 ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 4;
                 ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
                 ((GameObject*)obj)->anim.alpha = 0xff;
@@ -260,9 +260,9 @@ void magicdust_update(int obj)
                     ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityY;
                     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E34D4;
                 }
-                byteVal = *(char*)&((MagicDustState*)state)->bounceCount + 1;
-                ((MagicDustState*)state)->bounceCount = byteVal;
-                if (5 < byteVal)
+                flagsByte = *(char*)&((MagicDustState*)state)->bounceCount + 1;
+                ((MagicDustState*)state)->bounceCount = flagsByte;
+                if (5 < flagsByte)
                 {
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 2;
                     fval = lbl_803E34C4;

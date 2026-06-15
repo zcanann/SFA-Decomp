@@ -311,7 +311,7 @@ void modgfx_allocExpgfxPools(void)
     return;
 }
 
-void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefined colorLowByte,
+void modgfx_initExpgfxSpawnConfig(undefined4 unused1, undefined4 unused2, undefined colorLowByte,
                                   undefined4 textureWord, undefined4 scaleBits)
 {
     undefined4 setupWord;

@@ -220,7 +220,7 @@ void fn_801554B4(int* obj, int state)
     }
 }
 
-void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
+void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
 {
     if (eventKind == 0x10)
     {
@@ -330,7 +330,7 @@ void fn_80155948(int* obj, int state)
     return;
 }
 
-void rachnopInit(undefined4 param_1, int state)
+void rachnopInit(undefined4 unused, int state)
 {
     float fa;
     float fb;
@@ -455,7 +455,7 @@ void timeOfDayFn_80155cf8(int obj, int state)
     return;
 }
 
-void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 param_11, int eventKind, undefined4 param_13,
+void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 unused1, int eventKind, undefined4 unused2,
                                       int damage)
 {
     if (eventKind == 0x10)
@@ -560,7 +560,7 @@ void fn_80156010(uint obj, int state)
     return;
 }
 
-void baddieInit_80156188(undefined4 param_1, int state)
+void baddieInit_80156188(undefined4 unused, int state)
 {
     float fa;
     float fb;
@@ -584,7 +584,7 @@ void baddieInit_80156188(undefined4 param_1, int state)
     return;
 }
 
-void wbUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
+void wbUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
 {
     if (eventKind != 0x11)
     {
@@ -814,7 +814,7 @@ void fn_8015652C(uint obj, int state)
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
 }
 
-void wbInit(undefined4 param_1, int state)
+void wbInit(undefined4 unused, int state)
 {
     float fa;
     uint ua;
@@ -887,7 +887,7 @@ void fn_80156950(uint obj, int state)
     return;
 }
 
-void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int eventKind)
+void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
 {
     short move;
 
@@ -976,7 +976,7 @@ void fn_80156C34(uint obj, int state)
     return;
 }
 
-void mutatedEbaInit(undefined4 param_1, int state)
+void mutatedEbaInit(undefined4 unused, int state)
 {
     float fa;
 
@@ -997,7 +997,7 @@ void mutatedEbaInit(undefined4 param_1, int state)
     return;
 }
 
-void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
+void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
 {
     if (eventKind == 0x10)
     {

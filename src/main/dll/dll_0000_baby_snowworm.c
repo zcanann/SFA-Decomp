@@ -132,10 +132,10 @@ void fn_8012E050(void)
     }
 }
 
-void fn_8012E0B8(u8 param_1)
+void fn_8012E0B8(u8 active)
 {
-    lbl_803DE3FE = param_1;
-    if (param_1 != 0) return;
+    lbl_803DE3FE = active;
+    if (active != 0) return;
     lbl_803DE3F4 = 0;
     lbl_803DE3F6 = 0;
     lbl_803DC6C4 = -1;

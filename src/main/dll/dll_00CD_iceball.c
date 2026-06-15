@@ -521,11 +521,11 @@ void fn_8015FCCC(int obj)
     }
 }
 
-void iceball_update(undefined2* param_1, int param_2)
+void iceball_update(undefined2* obj, int unused)
 {
     int p;
 
-    p = (int)param_1;
+    p = (int)obj;
     *(int*)(p + 0xf4) = (s32)((f32)(s32) * (int*)(p + 0xf4) - timeDelta);
     if (*(int*)(p + 0xf4) < 0)
     {

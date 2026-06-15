@@ -40,12 +40,12 @@ extern f32 lbl_803E166C;
  */
 void camcontrol_applyState(CamcontrolCameraState *camera)
 {
-  float fVar1;
-  float fVar2;
+  float prog;
+  float clamped;
   CameraViewSlot *view;
-  int iVar4;
-  float fVar5;
-  float fVar6;
+  int itmp;
+  float mag;
+  float blendFactor;
   float delta[3];
 
   Camera_SetCurrentViewIndex(0);
@@ -55,49 +55,49 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
   view->roll = camera->roll;
   if ((camera->smoothingFlags & 0x80) != 0) {
     PSVECSubtract(&camera->localX,&view->x,delta);
-    fVar5 = PSVECMag(delta);
-    if (fVar5 > gCamcontrolNormalizedMin) {
+    mag = PSVECMag(delta);
+    if (mag > gCamcontrolNormalizedMin) {
       PSVECNormalize(delta,delta);
     }
-    fVar6 = interpolate(fVar5,lbl_803E1668,timeDelta);
-    fVar5 = (fVar6 < gCamcontrolNormalizedMin) ? gCamcontrolNormalizedMin : ((fVar6 > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : fVar6);
-    view->x = fVar5 * delta[0] + view->x;
-    view->y = fVar5 * delta[1] + view->y;
-    view->z = fVar5 * delta[2] + view->z;
+    blendFactor = interpolate(mag,lbl_803E1668,timeDelta);
+    mag = (blendFactor < gCamcontrolNormalizedMin) ? gCamcontrolNormalizedMin : ((blendFactor > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : blendFactor);
+    view->x = mag * delta[0] + view->x;
+    view->y = mag * delta[1] + view->y;
+    view->z = mag * delta[2] + view->z;
   }
   else {
     view->x = camera->localX;
     view->y = camera->localY;
     view->z = camera->localZ;
   }
-  fVar2 = gCamcontrolNormalizedMin;
+  clamped = gCamcontrolNormalizedMin;
   lbl_803DD4D0 = camera->fovY;
   if (gCamcontrolNormalizedMin < camera->blendProgress) {
     camera->blendProgress = -(camera->blendStep * timeDelta - camera->blendProgress);
-    fVar1 = camera->blendProgress;
-    fVar2 = (fVar1 < fVar2) ? fVar2 : ((fVar1 > gCamcontrolNormalizedMax) ? gCamcontrolNormalizedMax : fVar1);
-    camera->blendProgress = fVar2;
+    prog = camera->blendProgress;
+    clamped = (prog < clamped) ? clamped : ((prog > gCamcontrolNormalizedMax) ? gCamcontrolNormalizedMax : prog);
+    camera->blendProgress = clamped;
     if (camera->blendCurveMode == 2) {
-      fVar2 = camera->blendProgress;
-      fVar5 = gCamcontrolNormalizedMax - fVar2 * fVar2 * fVar2;
+      clamped = camera->blendProgress;
+      mag = gCamcontrolNormalizedMax - clamped * clamped * clamped;
     }
     else if (camera->blendCurveMode == 1) {
-      fVar5 = gCamcontrolNormalizedMax - camera->blendProgress * camera->blendProgress;
+      mag = gCamcontrolNormalizedMax - camera->blendProgress * camera->blendProgress;
     }
     else {
-      fVar5 = gCamcontrolNormalizedMax - camera->blendProgress;
+      mag = gCamcontrolNormalizedMax - camera->blendProgress;
     }
-    fVar6 = (fVar5 < gCamcontrolNormalizedMin) ? gCamcontrolNormalizedMin : ((fVar5 > gCamcontrolNormalizedMax) ? gCamcontrolNormalizedMax : fVar5);
+    blendFactor = (mag < gCamcontrolNormalizedMin) ? gCamcontrolNormalizedMin : ((mag > gCamcontrolNormalizedMax) ? gCamcontrolNormalizedMax : mag);
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_X) != 0) {
-      view->x = fVar6 * (view->x - camera->blendStartX) + camera->blendStartX;
+      view->x = blendFactor * (view->x - camera->blendStartX) + camera->blendStartX;
     }
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_Y) != 0) {
-      view->y = fVar6 * (view->y - camera->blendStartY) + camera->blendStartY;
+      view->y = blendFactor * (view->y - camera->blendStartY) + camera->blendStartY;
     }
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_Z) != 0) {
-      view->z = fVar6 * (view->z - camera->blendStartZ) + camera->blendStartZ;
+      view->z = blendFactor * (view->z - camera->blendStartZ) + camera->blendStartZ;
     }
-    OSReport(sDllBBTimeDebugFormat,fVar6);
+    OSReport(sDllBBTimeDebugFormat,blendFactor);
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_YAW) != 0) {
       camera->blendDeltaYaw = camera->blendStartYaw - view->yaw;
       if (0x8000 < camera->blendDeltaYaw) {
@@ -106,8 +106,8 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
       if (camera->blendDeltaYaw < -0x8000) {
         camera->blendDeltaYaw = camera->blendDeltaYaw + -1;
       }
-      iVar4 = (int)((float)camera->blendDeltaYaw * fVar6);
-      view->yaw = camera->blendStartYaw - (short)iVar4;
+      itmp = (int)((float)camera->blendDeltaYaw * blendFactor);
+      view->yaw = camera->blendStartYaw - (short)itmp;
     }
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_PITCH) != 0) {
       camera->blendDeltaPitch = camera->blendStartPitch - view->pitch;
@@ -117,8 +117,8 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
       if (camera->blendDeltaPitch < -0x8000) {
         camera->blendDeltaPitch = camera->blendDeltaPitch + -1;
       }
-      iVar4 = (int)((float)camera->blendDeltaPitch * fVar6);
-      view->pitch = camera->blendStartPitch - (short)iVar4;
+      itmp = (int)((float)camera->blendDeltaPitch * blendFactor);
+      view->pitch = camera->blendStartPitch - (short)itmp;
     }
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_ROLL) != 0) {
       camera->blendDeltaRoll = camera->blendStartRoll - view->roll;
@@ -128,15 +128,15 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
       if (camera->blendDeltaRoll < -0x8000) {
         camera->blendDeltaRoll = camera->blendDeltaRoll + -1;
       }
-      iVar4 = (int)((float)camera->blendDeltaRoll * fVar6);
-      view->roll = camera->blendStartRoll - (short)iVar4;
+      itmp = (int)((float)camera->blendDeltaRoll * blendFactor);
+      view->roll = camera->blendStartRoll - (short)itmp;
     }
   }
   Camera_SetFovY(lbl_803DD4D0);
   Obj_UpdateWorldTransform(view);
   loadMapForCameraPos(camera->localX,camera->localY,camera->localZ);
-  iVar4 = Camera_GetViewportYOffset();
-  lbl_803DD4C0 = (short)iVar4;
+  itmp = Camera_GetViewportYOffset();
+  lbl_803DD4C0 = (short)itmp;
   if ((int)lbl_803DD4C0 != (int)camera->letterboxTargetOffset) {
     if ((int)lbl_803DD4C0 < (int)camera->letterboxTargetOffset) {
       lbl_803DD4C0 = lbl_803DD4C0 + (short)camera->letterboxStep * (short)(int)timeDelta;
