@@ -1,21 +1,11 @@
-/* DLL 0x01C2 — dimsnowball1c2. TU: 0x801B13E8–0x801B13F0. */
+/*
+ * dimsnowball1c2 (DLL 0x1C2) — timed snowball spawner for Dinosaur Island
+ * Mission.  On each timer expiry, if loading is not locked and the player
+ * is clear, allocates a rolling-snowball object (kind 36, id 406) seeded
+ * from the placement params and resets the spawn countdown.
+ */
 #include "main/dll/dimicewallstate_struct.h"
 #include "main/game_object.h"
-
-extern u32 randomGetRange(int min, int max);
-extern f32 lbl_803E4860;
-extern void objRenderFn_8003b8f4(f32);
-extern u8 framesThisStep;
-extern u8 Obj_IsLoadingLocked(void);
-extern uint fn_802972A8(int player);
-extern int Obj_AllocObjectSetup(int kind, int id);
-extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-extern f32 lbl_803E4864;
-
-int dimsnowball1c2_getExtraSize(void)
-{
-    return 4;
-}
 
 typedef struct Dimsnowball1c2State
 {
@@ -42,6 +32,21 @@ typedef struct Dimsnowball1c2Placement
     u8 pad1D[0x1E - 0x1D];
     s16 unk1E;
 } Dimsnowball1c2Placement;
+
+extern u32 randomGetRange(int min, int max);
+extern f32 lbl_803E4860;
+extern void objRenderFn_8003b8f4(f32);
+extern u8 framesThisStep;
+extern u8 Obj_IsLoadingLocked(void);
+extern uint fn_802972A8(int player);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern f32 lbl_803E4864;
+
+int dimsnowball1c2_getExtraSize(void)
+{
+    return 4;
+}
 
 void dimsnowball1c2_free(void)
 {
@@ -84,14 +89,6 @@ void dimsnowball1c2_init(int obj, u8* p)
 
 void dimicewall_init(int obj, s8* p);
 
-/* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
- * present in the trigger list, latching the gamebit. */
-
-/* dimbarrier_update: while a live type-470 object is in the list, count down the
- * arm timer; on expiry fade the barrier out and latch its gamebit. */
-
-/* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
- * spawn a rolling snowball seeded from the placement params. */
 void dimsnowball1c2_update(int* obj)
 {
     if (Obj_IsLoadingLocked())
@@ -127,9 +124,3 @@ void dimsnowball1c2_update(int* obj)
         }
     }
 }
-
-/* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
- * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-
-/* dimicewall_update: on shatter, emit two snow particle bursts and latch the
- * gamebit; otherwise let Tricky push through it. */
