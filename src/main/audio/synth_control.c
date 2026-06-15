@@ -1,5 +1,34 @@
 #include "src/main/audio/synth_internal.h"
 
+/*
+ * Scalar fields of the global synth state block (lbl_803BCD90) named for
+ * readability. Only the constant-offset scalars are modelled here; the
+ * fade table, delay-bucket ring, and aux arrays are still addressed raw
+ * off the byte base. Used via inline cast so the base stays a u8*.
+ */
+typedef struct SynthGlobalState
+{
+    u8 pad000[0x200];
+    u32 dspDmaSize;
+    u8 pad204[0x1bc];
+    u32 sampleRate;
+    u8 pad3c4[0x600];
+    f32 auxMixA;
+    u8 pad9c8[0x2c];
+    f32 auxMixB;
+    u8 pad9f8[0x1d9];
+    u8 initialized;
+} SynthGlobalState;
+
+/* global.h is incompatible here (u32 = unsigned long vs unsigned int), so
+ * pin the field offsets with self-contained compile-time checks. */
+#define SYNTH_CTRL_OFFSETOF(t, m) ((u32) & (((t*)0)->m))
+typedef char synth_ctrl_assert_dspDmaSize[SYNTH_CTRL_OFFSETOF(SynthGlobalState, dspDmaSize) == 0x200 ? 1 : -1];
+typedef char synth_ctrl_assert_sampleRate[SYNTH_CTRL_OFFSETOF(SynthGlobalState, sampleRate) == 0x3c0 ? 1 : -1];
+typedef char synth_ctrl_assert_auxMixA[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxMixA) == 0x9c4 ? 1 : -1];
+typedef char synth_ctrl_assert_auxMixB[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxMixB) == 0x9f4 ? 1 : -1];
+typedef char synth_ctrl_assert_initialized[SYNTH_CTRL_OFFSETOF(SynthGlobalState, initialized) == 0xbd1 ? 1 : -1];
+
 #define SYNTH_FADE_SCALE sSynthFadeScale
 #define SYNTH_FADE_ONE sSynthFadeUnit
 #define SYNTH_FADE_TIME_SCALE sSynthFadeTimeScale
@@ -64,8 +93,8 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     state = lbl_803BCD90;
     synthRealTimeLo = 0;
     synthRealTimeHi = 0;
-    *(u32*)(state + 0x3C0) = sampleRate;
-    *(u32*)(state + 0x200) = 0x1800;
+    ((SynthGlobalState*)state)->sampleRate = sampleRate;
+    ((SynthGlobalState*)state)->dspDmaSize = 0x1800;
     synthFlags = 0;
     synthMessageCallback = 0;
 
@@ -178,7 +207,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
 
     synthMasterFaderActiveFlags = 0;
     synthMasterFaderPauseActiveFlags = 0;
-    *(u8*)(state + 0xBD1) = 1;
+    ((SynthGlobalState*)state)->initialized = 1;
     for (fadeIndex = 0; fadeIndex < 8; fadeIndex++)
     {
         *(u8*)(state + 0xA51 + fadeIndex * sizeof(SynthFade)) = 0;
@@ -186,8 +215,8 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     {
         f32 auxCurrent = lbl_803E77A8;
 
-        *(f32*)(state + 0x9C4) = auxCurrent;
-        *(f32*)(state + 0x9F4) = auxCurrent;
+        ((SynthGlobalState*)state)->auxMixA = auxCurrent;
+        ((SynthGlobalState*)state)->auxMixB = auxCurrent;
     }
 
     inpInit();
