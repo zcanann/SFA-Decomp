@@ -90,11 +90,9 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         for (i = 0; i < animUpdate->eventCount; i++)
         {
-            if (animUpdate->eventIds[i] != 1)
+            switch (animUpdate->eventIds[i])
             {
-            }
-            else
-            {
+            case 1:
                 fn_80296518(player, 0x10, 1);
                 GameBit_Set(0x174, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 4, 1);
@@ -102,6 +100,7 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1e, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1f, 1);
                 (*gMapEventInterface)->setMapAct(0xb, 6);
+                break;
             }
         }
     }
