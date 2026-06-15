@@ -4243,12 +4243,11 @@ void* ObjSeq_FindTargetObject(u8* obj)
         return getTrickyObject();
     }
 
-    {
-    f32 zeroRef = lbl_803DEFB0;
     bestDistSq = lbl_803DEFF0;
     bestObj = NULL;
     for (i = 0; i < objectCount; i++)
     {
+        f32 zeroRef = lbl_803DEFB0;
         candidate = objects[i];
         if (((GameObject*)candidate)->anim.seqId == objectType)
         {
@@ -4262,7 +4261,6 @@ void* ObjSeq_FindTargetObject(u8* obj)
                 bestObj = candidate;
             }
         }
-    }
     }
     return bestObj;
 }

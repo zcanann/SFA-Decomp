@@ -1850,14 +1850,12 @@ foundFirst:
 int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey, s16 resourceId)
 {
     ExpgfxTableEntry* entry;
-    ExpgfxTableEntry* freeScan;
     u16* refCount;
     int tableIndex;
     int freeIndex;
 
     tableIndex = 0;
     entry = gExpgfxTableEntries;
-    freeScan = entry;
     for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++)
     {
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
@@ -1874,15 +1872,15 @@ int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey,
         }
     }
 
-    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeScan++, freeIndex++)
+    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++)
     {
-        if (freeScan->refCount == 0)
+        if (gExpgfxTableEntries[freeIndex].refCount == 0)
         {
-            freeScan->refCount = 1;
-            freeScan->resource = resourceHandle;
-            freeScan->sourceId = sourceId;
-            freeScan->attachedTableKey = attachedTableKey;
-            freeScan->resourceId = resourceId;
+            gExpgfxTableEntries[freeIndex].refCount = 1;
+            gExpgfxTableEntries[freeIndex].resource = resourceHandle;
+            gExpgfxTableEntries[freeIndex].sourceId = sourceId;
+            gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
+            gExpgfxTableEntries[freeIndex].resourceId = resourceId;
             return (s16)freeIndex;
         }
     }
