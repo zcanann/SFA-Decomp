@@ -1588,7 +1588,7 @@ int ktrex_stateHandlerA11(int obj, int runtime)
     int phase;
     f32 f4;
     f32 f5;
-    if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
+    if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0u)
     {
         *(s16*)obj += 0x8000;
     }
