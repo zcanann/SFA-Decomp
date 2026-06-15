@@ -1,7 +1,5 @@
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
