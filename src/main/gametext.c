@@ -346,6 +346,7 @@ checked:
     }
 }
 
+#pragma dont_inline on
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH)
 {
     int lineStarts[32];
@@ -581,6 +582,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     *dst = 0;
     return buffer;
 }
+#pragma dont_inline reset
 
 void gameTextRenderStrs(char* str, int boxIdx)
 {
