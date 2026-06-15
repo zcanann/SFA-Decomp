@@ -135,14 +135,14 @@ void fn_801CEE0C(int p1, int p2)
     switch (*(u8*)(p2 + 0x408))
     {
     case 0:
-        *(int*)(p2 + 0x48) = (int)&lbl_803DBF70;
+        *(int*)&state->triggerList = (int)&lbl_803DBF70;
         if (GameBit_Get(211) != 0)
         {
             *(u8*)(p2 + 0x408) = 1;
         }
         break;
     case 1:
-        *(int*)(p2 + 0x48) = (int)&lbl_803DBF74;
+        *(int*)&state->triggerList = (int)&lbl_803DBF74;
         {
             switch (GameBit_Get(1400))
             {
@@ -166,7 +166,7 @@ void fn_801CEE0C(int p1, int p2)
         }
         break;
     case 2:
-        *(int*)(p2 + 0x48) = (int)&lbl_803DBF78;
+        *(int*)&state->triggerList = (int)&lbl_803DBF78;
         if (ObjTrigger_IsSetById(p1, 1398) != 0)
         {
             GameBit_Set(1400, 2);
@@ -177,7 +177,7 @@ void fn_801CEE0C(int p1, int p2)
         }
         break;
     case 3:
-        *(int*)(p2 + 0x48) = (int)&lbl_803DBF7C;
+        *(int*)&state->triggerList = (int)&lbl_803DBF7C;
         break;
     }
 }
@@ -193,7 +193,7 @@ void fn_801CED2C(int p1, int p2)
     switch (*(u8*)(p2 + 0x408))
     {
     case 4:
-        *(int*)(p2 + 0x48) = (int)&lbl_803DBFB4;
+        *(int*)&state->triggerList = (int)&lbl_803DBFB4;
         if (ObjTrigger_IsSetById(p1, 418) != 0)
         {
             *(u8*)(p2 + 0x43c) = (u8)(*(u8*)(p2 + 0x43c) | 0x10);
@@ -205,14 +205,14 @@ void fn_801CED2C(int p1, int p2)
         }
         break;
     case 5:
-        *(int*)(p2 + 0x48) = (int)&lbl_803DBFB8;
+        *(int*)&state->triggerList = (int)&lbl_803DBFB8;
         if (GameBit_Get(415) != 0)
         {
             *(u8*)(p2 + 0x408) = 6;
         }
         break;
     case 6:
-        *(int*)(p2 + 0x48) = (int)&lbl_803DBFBC;
+        *(int*)&state->triggerList = (int)&lbl_803DBFBC;
         break;
     }
 }
@@ -379,46 +379,46 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF90;
+            *(int*)&state->triggerList = (int)&lbl_803DBF90;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF8C;
+            *(int*)&state->triggerList = (int)&lbl_803DBF8C;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF88;
+            *(int*)&state->triggerList = (int)&lbl_803DBF88;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF84;
+            *(int*)&state->triggerList = (int)&lbl_803DBF84;
         }
         else
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF80;
+            *(int*)&state->triggerList = (int)&lbl_803DBF80;
         }
     }
     else
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBFA4;
+            *(int*)&state->triggerList = (int)&lbl_803DBFA4;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBFA0;
+            *(int*)&state->triggerList = (int)&lbl_803DBFA0;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF9C;
+            *(int*)&state->triggerList = (int)&lbl_803DBF9C;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF98;
+            *(int*)&state->triggerList = (int)&lbl_803DBF98;
         }
         else
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBF94;
+            *(int*)&state->triggerList = (int)&lbl_803DBF94;
         }
     }
 }
@@ -494,23 +494,23 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     }
                     {
                         int* o2 = ObjList_FindObjectById(*ids);
-                        if ((int*)Player_GetTargetObject(*(int*)(st + 0x28)) == o2)
+                        if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
                         {
-                            fn_8014C66C(o2, *(int**)(st + 0x28));
+                            fn_8014C66C(o2, *(int**)&state->playerObject);
                         }
                         else
                         {
                             int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
                             if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, (char*)o2 + 0x18) >= lbl_803E522C)
                             {
-                                if (vec3f_distanceSquared(*(char**)(st + 0x28) + 0x18, (char*)o2 + 0x18) >=
+                                if (vec3f_distanceSquared(*(char**)&state->playerObject + 0x18, (char*)o2 + 0x18) >=
                                     lbl_803E522C)
                                 {
                                     fn_8014C66C(o2, obj);
                                 }
                                 else
                                 {
-                                    fn_8014C66C(o2, *(int**)(st + 0x28));
+                                    fn_8014C66C(o2, *(int**)&state->playerObject);
                                 }
                             }
                             else
@@ -531,8 +531,8 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     (**(void (**)(int*, int*, int, int))((char*)(*(int**)*(int*)((char*)tk + 0x68)) + 0x28))(
                         tk, obj, 1, 1);
                 }
-                *(int*)(st + 0x48) = (int)&lbl_803DBFA8;
-                if (*(void**)(st + 0x24) == NULL)
+                *(int*)&state->triggerList = (int)&lbl_803DBFA8;
+                if (*(void**)&state->trackedObject == NULL)
                 {
                     short* cfg = *(short**)&((GameObject*)obj)->anim.placementData;
                     if (tw2 != NULL && *(s16*)((char*)tw2 + 0x46) == 0x3fb)
@@ -547,7 +547,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                             {
                                 (**(void (**)(int*, u8*))((char*)(*(int**)*(int*)((char*)tw2 + 0x68)) + 0x2c))(
                                     tw2, st + 0xc);
-                                *(int**)(st + 0x24) = tw2;
+                                *(int**)&state->trackedObject = tw2;
                                 st[0x408] = 0xe;
                             }
                         }
@@ -562,18 +562,18 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             break;
         }
     case 0xe:
-        if (getXZDistance(st + 0xc, *(char**)(st + 0x24) + 0x18) < lbl_803E5230)
+        if (getXZDistance(st + 0xc, *(char**)&state->trackedObject + 0x18) < lbl_803E5230)
         {
             Sfx_PlayFromObject((u32)obj, 0x38b);
-            fn_80163980(*(int*)(st + 0x24));
+            fn_80163980(*(int*)&state->trackedObject);
             st[0x408] = 0xf;
         }
         break;
     case 0xf:
         if (st[0x43c] & 2)
         {
-            Obj_FreeObject(*(int*)(st + 0x24));
-            *(int*)(st + 0x24) = 0;
+            Obj_FreeObject(*(int*)&state->trackedObject);
+            *(int*)&state->trackedObject = 0;
             state->uiMessageCount += 1;
             if (state->uiMessageCount > 3)
             {
@@ -600,7 +600,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         st[0x408] = 0x13;
         break;
     case 0x11:
-        if (!(*(u16*)(*(char**)(st + 0x28) + 0xb0) & 0x1000) && state->airMeterValue >= lbl_803E5234)
+        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000) && state->airMeterValue >= lbl_803E5234)
         {
             Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -611,7 +611,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0x12:
-        if (!(*(u16*)(*(char**)(st + 0x28) + 0xb0) & 0x1000))
+        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000))
         {
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {
@@ -625,7 +625,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     default:
         if (GameBit_Get(0x224) != 0)
         {
-            *(int*)(st + 0x48) = (int)&lbl_803DBFB0;
+            *(int*)&state->triggerList = (int)&lbl_803DBFB0;
         }
         else
         {
@@ -634,7 +634,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                 GameBit_Set(0xea7, 1);
                 GameBit_Set(0x9d5, 1);
             }
-            *(int*)(st + 0x48) = (int)&lbl_803DBFAC;
+            *(int*)&state->triggerList = (int)&lbl_803DBFAC;
         }
         fn_801CE078(obj, st);
         break;
