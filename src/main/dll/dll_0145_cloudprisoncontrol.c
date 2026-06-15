@@ -755,7 +755,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                   int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     short seqType;
-    bool bVar2;
+    bool allSet;
     bool ok;
     int obj;
     int self;
@@ -769,7 +769,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
     undefined8 extraout_f1;
     undefined8 extraout_f1_00;
     undefined8 extraout_f1_01;
-    undefined8 uVar12;
+    undefined8 seqResult;
     float local_28[10];
 
     obj = FUN_8028683c();
@@ -778,7 +778,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
     local_28[0] = lbl_803E4D9C;
     if ((placement[0x1c] < 1) || (*placement == 0xf4))
     {
-        uVar12 = extraout_f1;
+        seqResult = extraout_f1;
         self = FUN_80017a98();
         if (self == 0)
         {
@@ -822,7 +822,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                         if (mode < 3)
                         {
                             target = (**(code**)(*DAT_803dd6d0 + 0xc))();
-                            uVar12 = extraout_f1_01;
+                            seqResult = extraout_f1_01;
                         }
                     }
                 }
@@ -830,7 +830,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                 {
                     param_11 = local_28;
                     target = ObjGroup_FindNearestObject(mode - 1, obj, param_11);
-                    uVar12 = extraout_f1_00;
+                    seqResult = extraout_f1_00;
                     if (target == 0)
                     {
                         ok = false;
@@ -882,13 +882,13 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                 seqType = *placement;
                 if (seqType == 0x50)
                 {
-                    uVar12 = objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
+                    seqResult = objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6, param_7,
                                                         param_8, obj
                                                         , self, 1, 0, param_13, param_14, param_15, param_16);
                     self = FUN_8001769c();
                     if (self != 0)
                     {
-                        FUN_80017ac8(uVar12, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
+                        FUN_80017ac8(seqResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
                     }
                 }
                 else if (seqType < 0x50)
@@ -904,14 +904,14 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                             {
                                 if (childObj == 0)
                                 {
-                                    objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6,
+                                    objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6,
                                                                param_7, param_8, obj,
                                                                target, 0xfffffffe, 0, param_13, param_14, param_15,
                                                                param_16);
                                 }
                                 else
                                 {
-                                    objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6,
+                                    objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6,
                                                                param_7, param_8, obj,
                                                                target, 0xffffffff, 0, param_13, param_14, param_15,
                                                                param_16);
@@ -919,13 +919,13 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                             }
                             else if (childObj == 0)
                             {
-                                objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
+                                objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6, param_7,
                                                            param_8, obj,
                                                            target, 1, 0, param_13, param_14, param_15, param_16);
                             }
                             else
                             {
-                                objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
+                                objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6, param_7,
                                                            param_8, obj,
                                                            target, 2, 0, param_13, param_14, param_15, param_16);
                             }
@@ -942,13 +942,13 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                         }
                         else if (0x4a < seqType)
                         {
-                            bVar2 = true;
+                            allSet = true;
                             if (((int)*(short*)(state + 0x82) != 0xffffffff) &&
                                 (mode = FUN_80017690((int)*(short*)(state + 0x82)), mode == 0))
                             {
-                                bVar2 = false;
+                                allSet = false;
                             }
-                            if ((bVar2) && (ok))
+                            if ((allSet) && (ok))
                             {
                                 FUN_801991bc();
                             }
@@ -961,7 +961,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                     )
                     )
                     {
-                        objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
+                        objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6, param_7,
                                                    param_8, obj, 0, 1, 0,
                                                    param_13, param_14, param_15, param_16);
                     }
@@ -993,7 +993,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                         if ((ok) && (-1 < (char)state[0x8a]))
                         {
                             state[0x8a] = state[0x8a] & 0x7f | 0x80;
-                            objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7,
+                            objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6, param_7,
                                                        param_8, obj,
                                                        self, 1, 0, param_13, param_14, param_15, param_16);
                         }
@@ -1010,7 +1010,7 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
             }
             else
             {
-                objInterpretSeq_v11_unused(uVar12, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj,
+                objInterpretSeq_v11_unused(seqResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj,
                                            self, 1, 0,
                                            param_13, param_14, param_15, param_16);
                 *state = *state & 0xfb;
