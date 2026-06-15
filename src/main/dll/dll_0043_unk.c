@@ -99,6 +99,7 @@ void CameraModeStaffAnim_copyToCurrent_nop(void)
 {
 }
 
+#pragma dont_inline on
 void camclimb_update(CameraObject* cam)
 {
     extern uint getAngle();
@@ -198,6 +199,7 @@ void camclimb_update(CameraObject* cam)
     }
     return;
 }
+#pragma dont_inline reset
 
 #pragma scheduling on
 #pragma peephole on
