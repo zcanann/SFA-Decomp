@@ -2323,7 +2323,7 @@ extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 * a, f32 * b);
 extern f32 Dev_803DED1C;
 extern u16 lbl_803DCFA0;
-#pragma peephole on
+#pragma peephole off
 void maybeHudFn_8006c91c(void)
 {
     f32 hi, lo;
@@ -2339,7 +2339,7 @@ void maybeHudFn_8006c91c(void)
     lbl_803DCFE8 = Camera_GetCurrentViewSlot();
     lbl_803DCFA0 = (u16)(lbl_803DCFA0 + framesThisStep * 0x28a);
     lbl_803DCFA4 = 0.2f *
-        floor(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
+        (f32)floor(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
     fn_80060BB0();
     lbl_803DCF8C = (lbl_803DCF8C + 1) % 3;
     if (isHeavyFogEnabled())
