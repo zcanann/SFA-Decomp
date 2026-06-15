@@ -77,10 +77,10 @@ void controllight_update(int obj)
             {
                 f32 radius = state->radius;
                 int count;
-                GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
-                GameObject** p = objs;
                 int i;
-                for (i = 0; i < count; i++)
+                GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
+                GameObject** p;
+                for (i = 0, p = objs; i < count; i++)
                 {
                     GameObject* lightObj = *p;
                     if (Vec_distance((int)&((GameObject*)obj)->anim.worldPosX,
@@ -96,16 +96,17 @@ void controllight_update(int obj)
             {
                 f32 radius = state->radius;
                 int count;
-                GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
-                GameObject** p = objs;
                 int i;
-                for (i = 0; i < count; i++)
+                u8 invBit = !bit;
+                GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
+                GameObject** p;
+                for (i = 0, p = objs; i < count; i++)
                 {
                     GameObject* lightObj = *p;
                     if (Vec_distance((int)&((GameObject*)obj)->anim.worldPosX,
                                      (int)&lightObj->anim.worldPosX) < radius)
                     {
-                        pointlight_setEffectState((int)lightObj, !bit);
+                        pointlight_setEffectState((int)lightObj, invBit);
                     }
                     p++;
                 }
