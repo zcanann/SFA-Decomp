@@ -1,4 +1,5 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
+#include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/objseq.h"
@@ -10,15 +11,28 @@ extern float mathCosf(float x);
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
+#include "ghidra_import.h"
+#include "main/dll/baddieControl.h"
+#include "main/camera_object.h"
 #include "main/camera_interface.h"
+#include "main/dll/CAM/camera_mode_54_state.h"
+#include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
+#include "main/dll/CAM/camcrawl_state.h"
+#include "main/dll/CAM/camera_mode_cannon_state.h"
+#include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/dll/CAM/camperv_state.h"
+#include "main/dll/CAM/camworldmap_state.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
+#include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct Dll19Placement
@@ -82,10 +96,13 @@ extern ObjPlacement* Obj_AllocObjectSetup(int size, int id);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 extern int* gPlayerInterface;
+extern f32 lbl_803E1B78;
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
 extern f32 lbl_803E1C48;
 extern f32 lbl_803E1C6C;
+extern f32 lbl_803E1AC0;
+extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern f32 lbl_803E1C64;
@@ -113,6 +130,7 @@ extern u8 lbl_8031A054[];
 extern u8 lbl_8031A048[];
 extern u32 lbl_803DB9E0;
 extern u32 lbl_803DD5E0;
+extern f32 lbl_803E1AD0;
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
@@ -464,36 +482,37 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
     if ((s8)p2[838] != 0)
     {
-        if (*(void**)(p2 + 720) == (void*)player && (s8)p2[852] != 0)
+        if (*(void**)(p2 + 720) != (void*)player)
         {
-            if (*(f32*)(p2 + 704) > f && p4 != 0)
-            {
-                result = 1;
-            }
-            else if (fn_80295A04(player, 1) == 0)
-            {
-                result = 1;
-            }
-            else if (Player_GetCurrentHealth(player) <= 0)
-            {
-                result = 1;
-            }
-            else
-            {
-                f32 pos[3];
-                f32 out[20];
-                pos[0] = ((GameObject*)player)->anim.localPosX;
-                pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
-                pos[2] = ((GameObject*)player)->anim.localPosZ;
-                if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0)
-                {
-                    result = 1;
-                }
-            }
+            result = 1;
+        }
+        else if ((s8)p2[852] == 0)
+        {
+            result = 1;
+        }
+        else if (*(f32*)(p2 + 704) > f && p4 != 0)
+        {
+            result = 1;
+        }
+        else if (fn_80295A04(player, 1) == 0)
+        {
+            result = 1;
+        }
+        else if (Player_GetCurrentHealth(player) <= 0)
+        {
+            result = 1;
         }
         else
         {
-            result = 1;
+            f32 pos[3];
+            f32 out[22];
+            pos[0] = ((GameObject*)player)->anim.localPosX;
+            pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
+            pos[2] = ((GameObject*)player)->anim.localPosZ;
+            if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0)
+            {
+                result = 1;
+            }
         }
     }
     return result;
@@ -507,10 +526,10 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
 
     if (p2[897] != 0)
     {
+        zero = lbl_803E1C2C;
         *(int*)(p2 + 792) = 0;
         *(int*)(p2 + 796) = 0;
         *(s16*)(p2 + 816) = 0;
-        zero = lbl_803E1C2C;
         *(f32*)(p2 + 656) = zero;
         *(f32*)(p2 + 652) = zero;
         *p8 = 1;
@@ -523,12 +542,10 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
         }
         else
         {
-            f32 scale;
             dx /= dist;
             dz /= dist;
-            scale = lbl_803E1C6C;
-            *(f32*)(p2 + 656) = scale * -dx;
-            *(f32*)(p2 + 652) = scale * dz;
+            *(f32*)(p2 + 656) = lbl_803E1C6C * -dx;
+            *(f32*)(p2 + 652) = lbl_803E1C6C * dz;
             *(f32*)(p1 + 12) += dist * dx;
             *(f32*)(p1 + 20) += dist * dz;
             (*(void (**)(int, u8*, f32, f32, int, int))(*(int*)gPlayerInterface + 8))(
@@ -570,7 +587,7 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
             }
             break;
         case 11:
-            *(s8*)(p2 + 846) = (s8)extra;
+            p2[846] = (s8)extra;
             break;
         case 1:
         case 0xA0001:
@@ -719,9 +736,8 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     f32 posX;
     f32 posY;
     f32 posZ;
-    f32 rest = lbl_803E1C2C;
 
-    if (*(f32*)(state + 1000) > rest)
+    if (*(f32*)(state + 1000) > lbl_803E1C2C)
     {
         *(f32*)(state + 1000) = timeDelta * *(f32*)(state + 1004) + *(f32*)(state + 1000);
         if ((*(u16*)(state + 1024) & 0x20) != 0)
@@ -730,7 +746,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
             *(u16*)(state + 1024) = *(u16*)(state + 1024) | 0x40;
             if (*(f32*)(state + 1000) > lbl_803E1C40)
             {
-                *(f32*)(state + 1000) = rest;
+                *(f32*)(state + 1000) = lbl_803E1C2C;
                 *(u16*)(state + 1024) = *(u16*)(state + 1024) & ~0x40;
             }
         }
@@ -739,7 +755,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
             if (*(f32*)(state + 1000) > lbl_803E1C40)
             {
                 int other = *(int*)(p1 + 76);
-                *(f32*)(state + 1000) = rest;
+                *(f32*)(state + 1000) = lbl_803E1C2C;
                 *(u16*)(state + 1024) = *(u16*)(state + 1024) & ~0x40;
                 p2[852] = 0;
                 p1[54] = 0;
@@ -752,9 +768,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
         else
         {
-            if (*(f32*)(state + 1000) < rest)
+            if (*(f32*)(state + 1000) < lbl_803E1C2C)
             {
-                *(f32*)(state + 1000) = rest;
+                *(f32*)(state + 1000) = lbl_803E1C2C;
             }
             else if (*(f32*)(state + 1000) > lbl_803E1C44)
             {
@@ -835,12 +851,12 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     GameObject* source = (GameObject*)p1;
     u8* state = *(u8**)&((GameObject*)p1)->anim.placementData;
     ObjPlacement* setup;
-    f32 savedX, savedY, savedZ;
-    f32 nearDist;
     f32 scale;
     u16 ids1[4];
     u16 ids2[4];
     int idx;
+    f32 savedX, savedY, savedZ;
+    f32 nearDist;
 
     scale = lbl_803E1C2C;
     *(u32*)&ids1[0] = lbl_803E1C18;
@@ -975,12 +991,9 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))(p1, p3, p4, p5);
     *(int*)(p3 + 0) = 0;
     p3[841] = 0;
-    {
-        f32 rest = lbl_803E1C2C;
-        *(f32*)(p3 + 640) = rest;
-        *(f32*)(p3 + 644) = rest;
-    }
-    if (p2[50] != 0)
+    *(f32*)(p3 + 640) = lbl_803E1C2C;
+    *(f32*)(p3 + 644) = lbl_803E1C2C;
+    if ((s8)p2[50] != 0)
     {
         p3[852] = (s8)p2[50];
     }
@@ -1003,10 +1016,10 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     {
         (*gPathControlInterface)->init(path, 0, 0, 0);
     }
-    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void*)&lbl_803DB9E0, 4);
+    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void*)lbl_803DB9E0, 4);
     if ((flags & 4) != 0)
     {
-        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void*)&lbl_803DD5E0, &byteLocal);
+        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void*)lbl_803DD5E0, &byteLocal);
     }
     (*gPathControlInterface)->attachObject((void*)p1, path);
     p3[1028] = p2[43];
