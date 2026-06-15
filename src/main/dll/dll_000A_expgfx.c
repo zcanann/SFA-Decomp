@@ -160,21 +160,17 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
     ExpgfxSlot* slot;
-    ExpgfxTableEntry* expTabEntry;
-    u32* poolActiveMask;
-    s8* poolActiveCountPtr;
     u32 activeBit;
     u32 inactiveBitMask;
-    int expTabIndex;
 
     runtime = EXPGFX_RUNTIME_DATA;
     activeBit = 1 << slotIndex;
-    poolActiveMask = &runtime->poolActiveMasks[poolIndex];
-    if ((activeBit & *poolActiveMask) == 0)
+    if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
     {
         return;
     }
@@ -184,22 +180,20 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
 
     if (skipTextureFree == 0)
     {
-        expTabIndex = Expgfx_GetSlotTableIndex(slot);
-        expTabEntry = Expgfx_GetTableEntry(expTabIndex);
-        if (expTabEntry->resource != 0)
+        if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
         {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree((void*)expTabEntry->resource);
+            textureFree((void*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
             gExpgfxTextureFreeInProgress = 0;
         }
 
-        if (expTabEntry->refCount != 0)
+        if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].refCount != 0)
         {
-            expTabEntry->refCount--;
-            if (expTabEntry->refCount == 0)
+            runtime->expTab[Expgfx_GetSlotTableIndex(slot)].refCount--;
+            if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].refCount == 0)
             {
-                expTabEntry->resource = 0;
-                expTabEntry->sourceId = 0;
+                runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource = 0;
+                runtime->expTab[Expgfx_GetSlotTableIndex(slot)].sourceId = 0;
             }
         }
         else
@@ -215,14 +209,14 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
     }
 
     inactiveBitMask = ~activeBit;
-    *poolActiveMask = *poolActiveMask & inactiveBitMask;
-    poolActiveCountPtr = &runtime->poolActiveCounts[poolIndex];
-    (*poolActiveCountPtr)--;
-    if (*poolActiveCountPtr == 0)
+    runtime->poolActiveMasks[poolIndex] = runtime->poolActiveMasks[poolIndex] & inactiveBitMask;
+    runtime->poolActiveCounts[poolIndex]--;
+    if (runtime->poolActiveCounts[poolIndex] == 0)
     {
         gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
     }
 }
+#pragma dont_inline reset
 
 void expgfxRemoveAll(void)
 {
