@@ -264,6 +264,10 @@ extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
 
 extern f32 lbl_803E3420;
+extern f32 lbl_803E3424;
+extern f32 lbl_803E3428;
+extern f32 lbl_803E342C;
+extern f32 lbl_803E3430;
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
 extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -983,22 +987,23 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     f32 matrix[16];
 
     state = checkpoint->state;
-    radius = (f32)placement->radius;
-    if ((f32)placement->radius < lbl_803E40BC)
+    radius = (f32)(int)placement->radius;
+    if ((f32)(int)placement->radius < *(f32*)&lbl_803E3424)
     {
-        radius = lbl_803E40BC;
+        radius = lbl_803E3424;
     }
-    checkpoint->objAnim.rootMotionScale = radius * lbl_803E40C0;
+    radius = radius * lbl_803E3428;
+    checkpoint->objAnim.rootMotionScale = radius;
     checkpoint->objAnim.rotX = (s16)((s16)placement->rotX << 8);
     transform.rotX = checkpoint->objAnim.rotX;
     transform.rotY = checkpoint->objAnim.rotY;
     transform.rotZ = checkpoint->objAnim.rotZ;
-    transform.scale = lbl_803E40B8;
-    transform.x = lbl_803E40C4;
-    transform.y = lbl_803E40C4;
-    transform.z = lbl_803E40C4;
+    transform.scale = lbl_803E3420;
+    transform.x = lbl_803E342C;
+    transform.y = lbl_803E342C;
+    transform.z = lbl_803E342C;
     setMatrixFromObjectPos(matrix, &transform);
-    Matrix_TransformPoint(matrix, (double)lbl_803E40C4, (double)lbl_803E40C4, (double)lbl_803E40B8,
+    Matrix_TransformPoint(matrix, (double)lbl_803E342C, (double)lbl_803E342C, (double)lbl_803E3420,
                           &state->planeNormalX, &state->planeNormalY, &state->planeNormalZ);
     {
         f32 yy = checkpoint->objAnim.localPosY * state->planeNormalY;
@@ -1006,7 +1011,7 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
             -(yy + checkpoint->objAnim.localPosX * state->planeNormalX +
                 checkpoint->objAnim.localPosZ * state->planeNormalZ);
     }
-    state->triggerRadius = lbl_803E40C8 * checkpoint->objAnim.rootMotionScale;
+    state->triggerRadius = lbl_803E3430 * checkpoint->objAnim.rootMotionScale;
     i = 0;
     do
     {
