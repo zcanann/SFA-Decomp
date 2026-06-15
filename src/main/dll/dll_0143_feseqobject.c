@@ -1,59 +1,17 @@
-/*
- * feseqobject (DLL 0x143) - the front-end sequence-driven prop object.
- *
- * FEseqobject_SeqFn runs the object's animation-event track: event 1 sets
- * game bit 0x75 (sequence-complete latch read in update), events 2..6 spawn
- * partfx 0x85 with effect variant 0..4. It also drains its object message
- * queue, relaying messages 0xF000B/C/D to the seqId-0xF7 control object
- * (found via ObjGroup_GetObjects group 3) as 0x130001/2/3, but only while
- * the sequence-control "suppressed" flag (OBJSEQ_CONTROL_SUPPRESS_MSG) is
- * clear.
- *
- * FEseqobject_update kicks sequence 0 once per frame until bit 0x75 is set.
- * This TU also emits the trailing gFElevControlObjDescriptor (the sibling
- * 0x142 elevator-control descriptor); its FElevControl_* callbacks live in
- * dll_0142_felevcontrol.c.
- */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/gamebits.h"
 #include "main/objseq.h"
 
-extern f32 lbl_803E56B0; /* 0.0f effect-position seed */
-extern f32 lbl_803E56B4; /* 1.0f effect scale / render distance */
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern f32 lbl_803E56B0;
+extern f32 lbl_803E56B4;
 
 #pragma scheduling on
 #pragma peephole on
 extern void objRenderFn_8003b8f4(f32);
-
-/* anim-event opcodes consumed by FEseqobject_SeqFn */
-enum
-{
-    FESEQOBJECT_EVENT_SET_BIT = 1,
-    FESEQOBJECT_EVENT_FX_0 = 2,
-    FESEQOBJECT_EVENT_FX_1 = 3,
-    FESEQOBJECT_EVENT_FX_2 = 4,
-    FESEQOBJECT_EVENT_FX_3 = 5,
-    FESEQOBJECT_EVENT_FX_4 = 6
-};
-
-/* object messages relayed to the seqId-0xF7 control object */
-enum
-{
-    FESEQOBJECT_MSG_IN_1 = 0xf000b,
-    FESEQOBJECT_MSG_IN_2 = 0xf000c,
-    FESEQOBJECT_MSG_IN_3 = 0xf000d,
-    FESEQOBJECT_MSG_OUT_1 = 0x130001,
-    FESEQOBJECT_MSG_OUT_2 = 0x130002,
-    FESEQOBJECT_MSG_OUT_3 = 0x130003
-};
-
-#define FESEQOBJECT_SEQUENCE_BIT 0x75
-#define FESEQOBJECT_CONTROL_SEQ_ID 0xf7
-#define FESEQOBJECT_CONTROL_GROUP 3
-#define OBJSEQ_CONTROL_SUPPRESS_MSG 0x80
 
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params)
 {
@@ -67,12 +25,12 @@ static int FEseqobject_findControlObject(void)
     int found;
     int* objects;
 
-    objects = (int*)ObjGroup_GetObjects(FESEQOBJECT_CONTROL_GROUP, &count);
+    objects = (int*)ObjGroup_GetObjects(3, &count);
     found = 0;
     for (i = 0; i < count; i++)
     {
         int obj = objects[i];
-        if (((GameObject*)obj)->anim.seqId == FESEQOBJECT_CONTROL_SEQ_ID)
+        if (((GameObject*)obj)->anim.seqId == 0xf7)
         {
             found = obj;
             i = count;
@@ -92,8 +50,8 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     uint sender;
     uint param;
     int controlObj;
-    f32 one;
     f32 zero;
+    f32 one;
 
     zero = lbl_803E56B0;
     one = lbl_803E56B4;
@@ -110,26 +68,26 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
         switch (animUpdate->eventIds[i])
         {
-        case FESEQOBJECT_EVENT_SET_BIT:
-            GameBit_Set(FESEQOBJECT_SEQUENCE_BIT, 1);
+        case 1:
+            GameBit_Set(0x75, 1);
             break;
-        case FESEQOBJECT_EVENT_FX_0:
+        case 2:
             effect.variant = 0;
             FEseqobject_spawnEffect(self, &effect);
             break;
-        case FESEQOBJECT_EVENT_FX_1:
+        case 3:
             effect.variant = 1;
             FEseqobject_spawnEffect(self, &effect);
             break;
-        case FESEQOBJECT_EVENT_FX_2:
+        case 4:
             effect.variant = 2;
             FEseqobject_spawnEffect(self, &effect);
             break;
-        case FESEQOBJECT_EVENT_FX_3:
+        case 5:
             effect.variant = 3;
             FEseqobject_spawnEffect(self, &effect);
             break;
-        case FESEQOBJECT_EVENT_FX_4:
+        case 6:
             effect.variant = 4;
             FEseqobject_spawnEffect(self, &effect);
             break;
@@ -138,29 +96,29 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     while (ObjMsg_Pop((void*)self, (uint*)&msg, &sender, &param) != 0)
     {
-        if ((animUpdate->sequenceControlFlags & OBJSEQ_CONTROL_SUPPRESS_MSG) == 0)
+        if ((((u8*)animUpdate)[0x90] & 0x80) == 0)
         {
             switch (msg)
             {
-            case FESEQOBJECT_MSG_IN_1:
+            case 0xf000b:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
-                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_1, (void*)self, 0);
+                    ObjMsg_SendToObject((void*)controlObj, 0x130001, (void*)self, 0);
                 }
                 break;
-            case FESEQOBJECT_MSG_IN_2:
+            case 0xf000c:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
-                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_2, (void*)self, 0);
+                    ObjMsg_SendToObject((void*)controlObj, 0x130002, (void*)self, 0);
                 }
                 break;
-            case FESEQOBJECT_MSG_IN_3:
+            case 0xf000d:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
-                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_3, (void*)self, 0);
+                    ObjMsg_SendToObject((void*)controlObj, 0x130003, (void*)self, 0);
                 }
                 break;
             }
@@ -186,8 +144,20 @@ void FEseqobject_initialise(void)
 {
 }
 
+void FElevControl_free(void);
+
+void FElevControl_hitDetect(void);
+
+void FElevControl_update(void);
+
+void FElevControl_release(void);
+
+void FElevControl_initialise(void);
+
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
+int FElevControl_getExtraSize(void);
+int FElevControl_getObjectTypeId(void);
 
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -195,6 +165,15 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E56B4);
 }
 
+void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void FElevControl_init(int x);
+
+/*
+ * Function: FEseqobject_init
+ * EN v1.0 Address: 0x801DF8F4
+ * EN v1.0 Size: 56b
+ */
 void FEseqobject_init(int obj)
 {
     *(short*)obj = 0;
@@ -202,15 +181,33 @@ void FEseqobject_init(int obj)
     ObjMsg_AllocQueue((void*)obj, 0xa);
 }
 
+/*
+ * Function: FEseqobject_update
+ * EN v1.0 Address: 0x801DF894
+ * EN v1.0 Size: 96b
+ */
 void FEseqobject_update(int obj)
 {
     register int self = obj;
     *(short*)self = 0x2000;
-    if (GameBit_Get(FESEQOBJECT_SEQUENCE_BIT) == 0)
+    if (GameBit_Get(0x75) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)self, -1);
     }
 }
+
+/*
+ * Function: dll_144_SeqFn
+ * EN v1.0 Address: 0x801DF9AC
+ * EN v1.0 Size: 16b
+ */
+int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+/*
+ * Function: dll_144_init
+ * EN v1.0 Address: 0x801DFA08
+ * EN v1.0 Size: 24b
+ */
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
