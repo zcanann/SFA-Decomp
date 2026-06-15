@@ -100,8 +100,10 @@ void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
 void setLinkNotRotated(void) { linkIsRotated = 0; }
 void setLinkIsRotated(void) { linkIsRotated = 1; }
 u8 Link_func0C(void) { return (u8)linkCount_803dd90e; }
+#pragma scheduling off
 void Link_func0A(int idx, int v) { extern LinkMenuItemDB lbl_803A9458[40];  lbl_803A9458[idx].state = (s8)v; }
 s32 Link_func09(int idx) { extern LinkMenuItemDB lbl_803A9458[40];  return lbl_803A9458[idx].state; }
+#pragma scheduling reset
 void Link_setOpacity(u8 v) { linkItemOpacity = v; }
 #pragma peephole off
 void Link_setSelected(int v) { linkSelected = (s8)v; }
