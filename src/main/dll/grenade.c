@@ -727,7 +727,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
         {
             if (((TrickyState*)state)->stateFlags & 0x8000000)
             {
-                ((TrickyState*)state)->stateFlags &= ~0x800;
+                ((TrickyState*)state)->stateFlags &= ~0x800LL;
                 ((TrickyState*)state)->stateFlags |= 0x1000;
                 p = state;
                 for (i = 0; i < 7; i++)
