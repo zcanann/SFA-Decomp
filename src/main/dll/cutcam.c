@@ -1,9 +1,7 @@
 #include "main/dll/CAM/cutCam.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/dll_B8.h"
-#include "main/game_object.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
 
