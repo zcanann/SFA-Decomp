@@ -2304,10 +2304,11 @@ void fn_80128470(int p1)
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     lbl_803DBA8C = lbl_803E20A0;
 
-    if (lbl_803DD7BC <= 0.0f)
+    if (lbl_803DD7BC <= lbl_803E1E3C)
     {
-        int off = 0;
+        int off;
         s8 i = 0;
+        off = 0;
         while (((GridEntry*)((char*)lbl_803DD824 + off))->f18 > -1)
         {
             if (i != lbl_803DD7D8)
@@ -2340,9 +2341,8 @@ void fn_80128470(int p1)
     {
         f32 base = lbl_803DBAC0;
         f32 s = mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
-        fn_80128A7C((u8)lbl_803DD7D8, (int)((base * s + base) * (f32)(s16)p1), 4
-        )
-        ;
+        f32 amp = base * s + base;
+        fn_80128A7C((u8)lbl_803DD7D8, (int)(amp * (f32)(s16)p1), 4);
     }
     gameTextSetColor(0xff, 0xff, 0xff,
                      (int)((double)((s16)p1 * (0x200 - lbl_803DD75C)) * lbl_803E2088));
