@@ -1,14 +1,7 @@
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
 
-#include "main/map_block.h"
-#include "main/dll/MMP/MMP_asteroid.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 
 typedef struct FogcontrolPlacement
