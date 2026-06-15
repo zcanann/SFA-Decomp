@@ -19,7 +19,6 @@ extern void showHelpText(s16 id);
 extern f32 timeDelta;
 extern f32 lbl_803E3C80;
 extern f32 lbl_803E3C84;
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 
 int infotext_getExtraSize(void) { return 0x4; }
 int cctestinfot_getExtraSize(void);
