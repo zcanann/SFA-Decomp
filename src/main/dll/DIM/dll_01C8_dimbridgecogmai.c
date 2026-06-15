@@ -27,7 +27,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern unsigned long GameBit_Set(int eventId, int value);
 extern f32 lbl_803E4900;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E490C;
 
 void dimbridgecogmai_hitDetect(void)
 {
