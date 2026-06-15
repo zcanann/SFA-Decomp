@@ -478,7 +478,7 @@ void drawTrickyHudOverlay(int obj)
 {
     int player;
     int tricky;
-    int local_8;
+    int iconIndex;
     player = (int)Obj_GetPlayerObject();
     tricky = getTrickyObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
@@ -500,10 +500,10 @@ void drawTrickyHudOverlay(int obj)
         (void*)tricky != 0 &&
         getHudHiddenFrameCount() == 0)
     {
-        (*(int (**)(int, int*))(*(int*)(*(int*)(tricky + 0x68)) + 0x48))(tricky, &local_8);
+        (*(int (**)(int, int*))(*(int*)(*(int*)(tricky + 0x68)) + 0x48))(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
-            if (gTrickyHudCachedIconIndex != local_8)
+            if (gTrickyHudCachedIconIndex != iconIndex)
             {
                 ((void (*)(void*))textureFree)(gTrickyHudCachedIconTexture);
                 gTrickyHudCachedIconIndex = -1;
@@ -512,15 +512,15 @@ void drawTrickyHudOverlay(int obj)
         }
         if (gTrickyHudCachedIconTexture == 0)
         {
-            if (local_8 > -1)
+            if (iconIndex > -1)
             {
-                if (gTrickyHudIconTextureIds[local_8] != -1)
+                if (gTrickyHudIconTextureIds[iconIndex] != -1)
                 {
-                    gTrickyHudCachedIconTexture = textureLoadAsset(gTrickyHudIconTextureIds[local_8]);
+                    gTrickyHudCachedIconTexture = textureLoadAsset(gTrickyHudIconTextureIds[iconIndex]);
                 }
             }
         }
-        gTrickyHudCachedIconIndex = (s16)local_8;
+        gTrickyHudCachedIconIndex = (s16)iconIndex;
         if (gTrickyHudCachedIconTexture != 0)
         {
             drawTexture((void*)hudTextures[0x1d], lbl_803E2018, lbl_803E2038, 0xff, 0x100);

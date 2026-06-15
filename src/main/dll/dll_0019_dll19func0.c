@@ -179,11 +179,11 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 
 void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9, int param_10)
+                  int obj, int state)
 {
-    uint uVar1;
-    undefined2* puVar2;
-    undefined4 uVar3;
+    uint spawnActive;
+    undefined2* spawnArgs;
+    undefined4 childObj;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
@@ -195,33 +195,33 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
     local_18 = DAT_802c2910;
     local_14 = DAT_802c2914;
     local_10 = DAT_802c2918;
-    if ((*(char*)(param_10 + 0x407) != *(char*)(param_10 + 0x409)) &&
-        (((GameObject*)param_9)->anim.alpha != 0))
+    if ((*(char*)(state + 0x407) != *(char*)(state + 0x409)) &&
+        (((GameObject*)obj)->anim.alpha != 0))
     {
-        if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
+        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(undefined4*)&((GameObject*)param_9)->childObjs[0] = 0;
+                                   *(int*)&((GameObject*)obj)->childObjs[0]);
+            *(undefined4*)&((GameObject*)obj)->childObjs[0] = 0;
         }
-        uVar1 = FUN_80017ae8();
-        if ((uVar1 & 0xff) == 0)
+        spawnActive = FUN_80017ae8();
+        if ((spawnActive & 0xff) == 0)
         {
-            *(u8*)(param_10 + 0x409) = 0;
+            *(u8*)(state + 0x409) = 0;
         }
         else
         {
-            if (0 < *(char*)(param_10 + 0x407))
+            if (0 < *(char*)(state + 0x407))
             {
-                puVar2 = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(param_10 + 0x407)]);
-                uVar3 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar2,
-                                     4, 0xff, 0xffffffff, *(uint**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
+                spawnArgs = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(state + 0x407)]);
+                childObj = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawnArgs,
+                                     4, 0xff, 0xffffffff, *(uint**)&((GameObject*)obj)->anim.parent, in_r8, in_r9,
                                      in_r10);
-                *(undefined4*)&((GameObject*)param_9)->childObjs[0] = uVar3;
-                *(ushort*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
+                *(undefined4*)&((GameObject*)obj)->childObjs[0] = childObj;
+                *(ushort*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0xb0) = ((GameObject*)obj)->objectFlags &
                     7;
             }
-            *(u8*)(param_10 + 0x409) = *(u8*)(param_10 + 0x407);
+            *(u8*)(state + 0x409) = *(u8*)(state + 0x407);
         }
     }
     return;

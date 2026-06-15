@@ -413,7 +413,7 @@ void firepipe_free(FirePipeObject* obj)
     }
 }
 
-void firepipe_render(FirePipeObject* obj, int param_2, int param_3, int param_4, int param_5, char param_6)
+void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char visible)
 {
     FirePipeExtra* extra;
     int subObj;
@@ -424,9 +424,9 @@ void firepipe_render(FirePipeObject* obj, int param_2, int param_3, int param_4,
     {
         queueGlowRender();
     }
-    if (param_6 != '\0' && (uint)((extra->flags >> 1) & 1) != 0)
+    if (visible != '\0' && (uint)((extra->flags >> 1) & 1) != 0)
     {
-        objRenderFn_8003b8f4((int)obj, param_2, param_3, param_4, param_5, (double)lbl_803E6B78);
+        objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, (double)lbl_803E6B78);
     }
 }
 

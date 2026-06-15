@@ -434,8 +434,7 @@ void arwsquadron_emitEffects(int p1, int p2)
 
     if ((s8)state->health <= 2)
     {
-        int cnt = state->fxFrameCounter;
-        state->fxFrameCounter = cnt + 1;
+        int cnt = state->fxFrameCounter++;
         if (cnt % 2 != 0)
         {
             ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);

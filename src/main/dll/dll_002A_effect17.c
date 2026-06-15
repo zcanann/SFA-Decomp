@@ -412,14 +412,14 @@ FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint s
     return result;
 }
 
-undefined4 FUN_800c9030(uint searchKey, int* outIndex)
+undefined4 FUN_800c9030(uint key, int* outIndex)
 {
     int hi;
     int lo;
     int mid;
 
     *outIndex = -1;
-    if ((int)searchKey < 0)
+    if ((int)key < 0)
     {
         return 0;
     }
@@ -435,10 +435,10 @@ undefined4 FUN_800c9030(uint searchKey, int* outIndex)
                 return 0;
             }
             mid = hi + lo >> 1;
-            if (searchKey <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
+            if (key <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
             lo = mid + 1;
         }
-        if ((uint)(&DAT_8039d0b8)[mid * 2] <= searchKey) break;
+        if ((uint)(&DAT_8039d0b8)[mid * 2] <= key) break;
         hi = mid + -1;
     }
     *outIndex = mid;

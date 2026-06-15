@@ -15,7 +15,7 @@ extern void synthStartHandleFromRequest(int request, u32* outHandle, u8 noLock);
 extern void synthFlushCallbacks(void);
 extern u32* synthAllocCallback(s32 triggerValue, u8 controllerIndex);
 extern int synthStartSound(u32 sampleId, char key, u32 velocity, u32 flags, u32 volume, u32 pan,
-                           u32 param_7, u32 param_8, u8 param_9, u16 param_10, u16 param_11,
+                           u32 midi, u32 midiSet, u8 section, u16 step, u16 trackid,
                            u8 auxIndex, int keyOffset, u8 studio, u32 studioAux);
 
 extern u8 lbl_803AF550[];

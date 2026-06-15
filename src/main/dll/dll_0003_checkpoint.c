@@ -34,48 +34,48 @@ extern f32 lbl_803E0E88;
 extern f32 lbl_803E0E8C;
 
 undefined4
-FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4, u8 param_5,
-             int param_6)
+FUN_800c8110(int sourceObj, undefined4 effectType, undefined2* spawnParams, uint spawnFlags, u8 argByte,
+             int variant)
 {
     undefined4 result;
-    uint rnd;
-    int local_98[3];
-    undefined2 local_8c;
-    undefined2 local_8a;
-    undefined2 local_88;
-    undefined4 local_84;
-    float local_80;
-    float local_7c;
-    float local_78;
-    float local_74;
-    float local_70;
-    float local_6c;
-    float local_68;
-    float local_64;
-    float local_60;
-    float local_5c;
-    undefined2 local_58;
-    undefined2 local_56;
-    uint local_54;
-    undefined4 local_50;
-    undefined4 local_4c;
-    uint local_48;
-    uint local_44;
-    undefined2 local_40;
-    undefined2 local_3e;
-    undefined2 local_3c;
-    u8 local_3a;
-    u8 local_38;
-    u8 local_37;
-    u8 local_36;
-    undefined4 local_30;
-    uint uStack_2c;
-    undefined4 local_28;
-    uint uStack_24;
-    undefined4 local_20;
-    uint uStack_1c;
-    undefined4 local_18;
-    uint uStack_14;
+    uint roll;
+    int desc[3];
+    undefined2 tmplRotX;
+    undefined2 tmplRotY;
+    undefined2 tmplRotZ;
+    undefined4 tmplScale;
+    float tmplPosX;
+    float tmplPosY;
+    float tmplPosZ;
+    float velX;
+    float velY;
+    float velZ;
+    float posX;
+    float posY;
+    float posZ;
+    float scale;
+    undefined2 word58;
+    undefined2 effectId;
+    uint flagsA;
+    undefined4 flagsB;
+    undefined4 word4c;
+    uint word48;
+    uint word44;
+    undefined2 word40;
+    undefined2 word3e;
+    undefined2 word3c;
+    u8 byte3a;
+    u8 alpha;
+    u8 byte37;
+    u8 tmplByte;
+    undefined4 pad30;
+    uint rnd0;
+    undefined4 biasC0;
+    uint rnd1;
+    undefined4 pad20;
+    uint rnd2;
+    undefined4 pad18;
+    uint rnd3;
 
     lbl_803DC4B0 = lbl_803DC4B0 + lbl_803E0E38;
     if (lbl_803E0E40 < lbl_803DC4B0)
@@ -87,339 +87,339 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
     {
         lbl_803DC4B4 = lbl_803E0E48;
     }
-    if (param_1 == 0)
+    if (sourceObj == 0)
     {
         result = 0xffffffff;
     }
     else
     {
-        if ((param_4 & 0x200000) != 0)
+        if ((spawnFlags & 0x200000) != 0)
         {
-            if (param_3 == (undefined2*)0x0)
+            if (spawnParams == (undefined2*)0x0)
             {
                 return 0xffffffff;
             }
-            local_80 = ((PartFxSpawnParams*)param_3)->posX;
-            local_7c = ((PartFxSpawnParams*)param_3)->posY;
-            local_78 = ((PartFxSpawnParams*)param_3)->posZ;
-            local_84 = *(undefined4*)&((PartFxSpawnParams*)param_3)->scale;
-            local_88 = ((PartFxSpawnParams*)param_3)->unk4;
-            local_8a = ((PartFxSpawnParams*)param_3)->unk2;
-            local_8c = *param_3;
-            local_36 = param_5;
+            tmplPosX = ((PartFxSpawnParams*)spawnParams)->posX;
+            tmplPosY = ((PartFxSpawnParams*)spawnParams)->posY;
+            tmplPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
+            tmplScale = *(undefined4*)&((PartFxSpawnParams*)spawnParams)->scale;
+            tmplRotZ = ((PartFxSpawnParams*)spawnParams)->unk4;
+            tmplRotY = ((PartFxSpawnParams*)spawnParams)->unk2;
+            tmplRotX = *spawnParams;
+            tmplByte = argByte;
         }
-        local_54 = 0;
-        local_50 = 0;
-        local_3a = (undefined)param_2;
-        local_68 = lbl_803E0E4C;
-        local_64 = lbl_803E0E4C;
-        local_60 = lbl_803E0E4C;
-        local_74 = lbl_803E0E4C;
-        local_70 = lbl_803E0E4C;
-        local_6c = lbl_803E0E4C;
-        local_5c = lbl_803E0E4C;
-        local_98[2] = 0;
-        local_98[1] = 0xffffffff;
-        local_38 = 0xff;
-        local_37 = 0;
-        local_56 = 0;
-        local_40 = 0xffff;
-        local_3e = 0xffff;
-        local_3c = 0xffff;
-        local_4c = 0xffff;
-        local_48 = 0xffff;
-        local_44 = 0xffff;
-        local_58 = 0;
-        local_98[0] = param_1;
-        switch (param_2)
+        flagsA = 0;
+        flagsB = 0;
+        byte3a = (undefined)effectType;
+        posX = lbl_803E0E4C;
+        posY = lbl_803E0E4C;
+        posZ = lbl_803E0E4C;
+        velX = lbl_803E0E4C;
+        velY = lbl_803E0E4C;
+        velZ = lbl_803E0E4C;
+        scale = lbl_803E0E4C;
+        desc[2] = 0;
+        desc[1] = 0xffffffff;
+        alpha = 0xff;
+        byte37 = 0;
+        effectId = 0;
+        word40 = 0xffff;
+        word3e = 0xffff;
+        word3c = 0xffff;
+        word4c = 0xffff;
+        word48 = 0xffff;
+        word44 = 0xffff;
+        word58 = 0;
+        desc[0] = sourceObj;
+        switch (effectType)
         {
         case 0x73a:
-            uStack_2c = randomGetRange(8, 10);
-            local_70 = lbl_803E0E50 * (f32)(s32)
-            uStack_2c;
-            rnd = randomGetRange(0, 0x28);
-            if (rnd == 0)
+            rnd0 = randomGetRange(8, 10);
+            velY = lbl_803E0E50 * (f32)(s32)
+            rnd0;
+            roll = randomGetRange(0, 0x28);
+            if (roll == 0)
             {
-                uStack_2c = randomGetRange(0x15, 0x29);
-                local_5c = lbl_803E0E38 *
+                rnd0 = randomGetRange(0x15, 0x29);
+                scale = lbl_803E0E38 *
                     (f32)(s32)
-                uStack_2c;
-                local_98[2] = 0x1cc;
+                rnd0;
+                desc[2] = 0x1cc;
             }
             else
             {
-                uStack_2c = randomGetRange(8, 0x14);
-                local_5c = lbl_803E0E38 *
+                rnd0 = randomGetRange(8, 0x14);
+                scale = lbl_803E0E38 *
                     (f32)(s32)
-                uStack_2c;
-                local_98[2] = randomGetRange(0x5a, 0x78);
+                rnd0;
+                desc[2] = randomGetRange(0x5a, 0x78);
             }
-            local_54 = 0x80180200;
-            local_50 = 0x1000020;
-            local_56 = 0xc0b;
-            local_38 = 0x7f;
-            local_3c = 0x3fff;
-            local_3e = 0x3fff;
-            local_40 = 0x3fff;
-            local_44 = 0xffff;
-            local_48 = 0xffff;
-            local_4c = 0xffff;
-            local_64 = lbl_803E0E54;
+            flagsA = 0x80180200;
+            flagsB = 0x1000020;
+            effectId = 0xc0b;
+            alpha = 0x7f;
+            word3c = 0x3fff;
+            word3e = 0x3fff;
+            word40 = 0x3fff;
+            word44 = 0xffff;
+            word48 = 0xffff;
+            word4c = 0xffff;
+            posY = lbl_803E0E54;
             break;
         case 0x73b:
-            uStack_2c = randomGetRange(0xffffffec, 0x14);
-            local_74 = lbl_803E0E50 * (f32)(s32)
-            uStack_2c;
-            uStack_24 = randomGetRange(8, 0x14);
-            local_70 = lbl_803E0E50 * (f32)(s32)
-            uStack_24;
-            uStack_1c = randomGetRange(0xffffffec, 0x14);
-            local_6c = lbl_803E0E50 * (f32)(s32)
-            uStack_1c;
-            local_5c = lbl_803E0E58;
-            local_98[2] = 0x32;
-            local_54 = 0x3000200;
-            local_50 = 0x200020;
-            local_56 = 0x33;
-            local_38 = 0xff;
-            local_40 = 0xffff;
-            local_3e = 0xffff;
-            local_3c = 0xffff;
-            local_4c = 0xffff;
-            local_48 = randomGetRange(0, 0x8000);
-            local_64 = lbl_803E0E5C;
-            local_44 = local_48;
+            rnd0 = randomGetRange(0xffffffec, 0x14);
+            velX = lbl_803E0E50 * (f32)(s32)
+            rnd0;
+            rnd1 = randomGetRange(8, 0x14);
+            velY = lbl_803E0E50 * (f32)(s32)
+            rnd1;
+            rnd2 = randomGetRange(0xffffffec, 0x14);
+            velZ = lbl_803E0E50 * (f32)(s32)
+            rnd2;
+            scale = lbl_803E0E58;
+            desc[2] = 0x32;
+            flagsA = 0x3000200;
+            flagsB = 0x200020;
+            effectId = 0x33;
+            alpha = 0xff;
+            word40 = 0xffff;
+            word3e = 0xffff;
+            word3c = 0xffff;
+            word4c = 0xffff;
+            word48 = randomGetRange(0, 0x8000);
+            posY = lbl_803E0E5C;
+            word44 = word48;
             break;
         default:
             return 0xffffffff;
         case 0x73d:
-            uStack_1c = randomGetRange(0xfffffff6, 10);
-            local_68 = lbl_803E0E3C * (f32)(s32)
-            uStack_1c;
-            uStack_24 = randomGetRange(0xfffffff6, 100);
-            local_64 = lbl_803E0E50 * (f32)(s32)
-            uStack_24;
-            uStack_2c = randomGetRange(0xfffffff6, 10);
-            local_60 = lbl_803E0E3C * (f32)(s32)
-            uStack_2c;
-            uStack_14 = randomGetRange(7, 9);
-            local_5c = lbl_803E0E60 *
+            rnd2 = randomGetRange(0xfffffff6, 10);
+            posX = lbl_803E0E3C * (f32)(s32)
+            rnd2;
+            rnd1 = randomGetRange(0xfffffff6, 100);
+            posY = lbl_803E0E50 * (f32)(s32)
+            rnd1;
+            rnd0 = randomGetRange(0xfffffff6, 10);
+            posZ = lbl_803E0E3C * (f32)(s32)
+            rnd0;
+            rnd3 = randomGetRange(7, 9);
+            scale = lbl_803E0E60 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_14;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xde;
+            rnd3;
+            desc[2] = 0x3c;
+            flagsA = 0x80100;
+            byte37 = 0x10;
+            effectId = 0xde;
             break;
         case 0x73e:
-            uStack_14 = randomGetRange(0xfffffff6, 10);
-            local_68 = lbl_803E0E3C * (f32)(s32)
-            uStack_14;
-            uStack_1c = randomGetRange(0xfffffff6, 100);
-            local_64 = lbl_803E0E50 * (f32)(s32)
-            uStack_1c;
-            uStack_24 = randomGetRange(0xfffffff6, 10);
-            local_60 = lbl_803E0E3C * (f32)(s32)
-            uStack_24;
-            uStack_2c = randomGetRange(7, 9);
-            local_5c = lbl_803E0E60 *
+            rnd3 = randomGetRange(0xfffffff6, 10);
+            posX = lbl_803E0E3C * (f32)(s32)
+            rnd3;
+            rnd2 = randomGetRange(0xfffffff6, 100);
+            posY = lbl_803E0E50 * (f32)(s32)
+            rnd2;
+            rnd1 = randomGetRange(0xfffffff6, 10);
+            posZ = lbl_803E0E3C * (f32)(s32)
+            rnd1;
+            rnd0 = randomGetRange(7, 9);
+            scale = lbl_803E0E60 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_2c;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xdf;
+            rnd0;
+            desc[2] = 0x3c;
+            flagsA = 0x80100;
+            byte37 = 0x10;
+            effectId = 0xdf;
             break;
         case 0x73f:
-            if (param_6 == 0)
+            if (variant == 0)
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rnd3 = randomGetRange(0xfffffff6, 10);
+                posX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rnd3;
+                rnd2 = randomGetRange(0xfffffff6, 100);
+                posY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rnd2;
+                rnd1 = randomGetRange(0xfffffff6, 10);
+                rnd1 = rnd1 ^ 0x80000000;
+                posZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24;
+                rnd1;
             }
             else
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rnd3 = randomGetRange(0xfffffff6, 10);
+                posX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14 +
+                rnd3 +
                     lbl_803E0E68;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rnd2 = randomGetRange(0xfffffff6, 100);
+                posY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c +
+                rnd2 +
                     lbl_803E0E6C;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rnd1 = randomGetRange(0xfffffff6, 10);
+                rnd1 = rnd1 ^ 0x80000000;
+                posZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24 +
+                rnd1 +
                     lbl_803E0E70;
             }
-            local_28 = 0x43300000;
-            uStack_14 = randomGetRange(7, 9);
-            local_5c = lbl_803E0E74 *
+            biasC0 = 0x43300000;
+            rnd3 = randomGetRange(7, 9);
+            scale = lbl_803E0E74 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_14;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xde;
+            rnd3;
+            desc[2] = 0x3c;
+            flagsA = 0x80100;
+            byte37 = 0x10;
+            effectId = 0xde;
             break;
         case 0x740:
-            if (param_6 == 0)
+            if (variant == 0)
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rnd3 = randomGetRange(0xfffffff6, 10);
+                posX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rnd3;
+                rnd2 = randomGetRange(0xfffffff6, 100);
+                posY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rnd2;
+                rnd1 = randomGetRange(0xfffffff6, 10);
+                rnd1 = rnd1 ^ 0x80000000;
+                posZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24;
+                rnd1;
             }
             else
             {
-                uStack_14 = randomGetRange(0xfffffff6, 10);
-                local_68 = lbl_803E0E3C *
+                rnd3 = randomGetRange(0xfffffff6, 10);
+                posX = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_14 +
+                rnd3 +
                     lbl_803E0E68;
-                uStack_1c = randomGetRange(0xfffffff6, 100);
-                local_64 = lbl_803E0E50 *
+                rnd2 = randomGetRange(0xfffffff6, 100);
+                posY = lbl_803E0E50 *
                     (f32)(s32)
-                uStack_1c +
+                rnd2 +
                     lbl_803E0E6C;
-                uStack_24 = randomGetRange(0xfffffff6, 10);
-                uStack_24 = uStack_24 ^ 0x80000000;
-                local_60 = lbl_803E0E3C *
+                rnd1 = randomGetRange(0xfffffff6, 10);
+                rnd1 = rnd1 ^ 0x80000000;
+                posZ = lbl_803E0E3C *
                     (f32)(s32)
-                uStack_24 +
+                rnd1 +
                     lbl_803E0E70;
             }
-            local_28 = 0x43300000;
-            uStack_14 = randomGetRange(7, 9);
-            local_5c = lbl_803E0E74 *
+            biasC0 = 0x43300000;
+            rnd3 = randomGetRange(7, 9);
+            scale = lbl_803E0E74 *
                 lbl_803E0E64 * (f32)(s32)
-            uStack_14;
-            local_98[2] = 0x3c;
-            local_54 = 0x80100;
-            local_37 = 0x10;
-            local_56 = 0xdf;
+            rnd3;
+            desc[2] = 0x3c;
+            flagsA = 0x80100;
+            byte37 = 0x10;
+            effectId = 0xdf;
             break;
         case 0x741:
-            if (param_3 != (undefined2*)0x0)
+            if (spawnParams != (undefined2*)0x0)
             {
-                local_64 = ((PartFxSpawnParams*)param_3)->posY;
+                posY = ((PartFxSpawnParams*)spawnParams)->posY;
             }
-            local_5c = lbl_803E0E78;
-            local_98[2] = randomGetRange(0, 0x1e);
-            local_98[2] = local_98[2] + 0x50;
-            local_38 = 0x60;
-            local_54 = 0x80110;
-            local_56 = 0x7b;
-            local_37 = 0x20;
+            scale = lbl_803E0E78;
+            desc[2] = randomGetRange(0, 0x1e);
+            desc[2] = desc[2] + 0x50;
+            alpha = 0x60;
+            flagsA = 0x80110;
+            effectId = 0x7b;
+            byte37 = 0x20;
             break;
         case 0x742:
-            local_6c = lbl_803E0E7C;
-            uStack_14 = randomGetRange(0xffffffec, 0x14);
-            local_74 = lbl_803E0E80 * (f32)(s32)
-            uStack_14;
-            uStack_1c = randomGetRange(0xffffffec, 0x14);
-            local_70 = lbl_803E0E80 * (f32)(s32)
-            uStack_1c;
-            local_5c = lbl_803E0E84;
-            local_98[2] = randomGetRange(0x46, 0x50);
-            local_38 = 0xff;
-            local_54 = 0x82000104;
-            local_50 = 0x400;
-            local_56 = 0x3f4;
+            velZ = lbl_803E0E7C;
+            rnd3 = randomGetRange(0xffffffec, 0x14);
+            velX = lbl_803E0E80 * (f32)(s32)
+            rnd3;
+            rnd2 = randomGetRange(0xffffffec, 0x14);
+            velY = lbl_803E0E80 * (f32)(s32)
+            rnd2;
+            scale = lbl_803E0E84;
+            desc[2] = randomGetRange(0x46, 0x50);
+            alpha = 0xff;
+            flagsA = 0x82000104;
+            flagsB = 0x400;
+            effectId = 0x3f4;
             break;
         case 0x743:
-            local_6c = lbl_803E0E7C;
-            uStack_14 = randomGetRange(0xffffffec, 0x14);
-            local_74 = lbl_803E0E80 * (f32)(s32)
-            uStack_14;
-            uStack_1c = randomGetRange(0xffffffec, 0x14);
-            local_70 = lbl_803E0E80 * (f32)(s32)
-            uStack_1c;
-            local_5c = lbl_803E0E84;
-            local_98[2] = randomGetRange(0x46, 0x50);
-            local_38 = 0xff;
-            local_54 = 0x82000104;
-            local_50 = 0x400;
-            local_56 = 0x500;
+            velZ = lbl_803E0E7C;
+            rnd3 = randomGetRange(0xffffffec, 0x14);
+            velX = lbl_803E0E80 * (f32)(s32)
+            rnd3;
+            rnd2 = randomGetRange(0xffffffec, 0x14);
+            velY = lbl_803E0E80 * (f32)(s32)
+            rnd2;
+            scale = lbl_803E0E84;
+            desc[2] = randomGetRange(0x46, 0x50);
+            alpha = 0xff;
+            flagsA = 0x82000104;
+            flagsB = 0x400;
+            effectId = 0x500;
             break;
         case 0x744:
-            rnd = randomGetRange(0, 4);
-            if (rnd == 4)
+            roll = randomGetRange(0, 4);
+            if (roll == 4)
             {
-                local_5c = lbl_803E0E88;
-                local_38 = 0x9b;
-                local_54 = 0x480000;
-                local_98[2] = randomGetRange(0x1e, 0x28);
+                scale = lbl_803E0E88;
+                alpha = 0x9b;
+                flagsA = 0x480000;
+                desc[2] = randomGetRange(0x1e, 0x28);
             }
             else
             {
-                local_5c = lbl_803E0E8C;
-                local_38 = 0x7d;
-                local_54 = 0x180000;
-                local_98[2] = 0x50;
+                scale = lbl_803E0E8C;
+                alpha = 0x7d;
+                flagsA = 0x180000;
+                desc[2] = 0x50;
             }
-            local_50 = 0x2000000;
-            local_56 = 0x88;
+            flagsB = 0x2000000;
+            effectId = 0x88;
         }
-        local_54 = local_54 | param_4;
-        if (((local_54 & 1) != 0) && ((local_54 & 2) != 0))
+        flagsA = flagsA | spawnFlags;
+        if (((flagsA & 1) != 0) && ((flagsA & 2) != 0))
         {
-            local_54 = local_54 ^ 2;
+            flagsA = flagsA ^ 2;
         }
-        if ((local_54 & 1) != 0)
+        if ((flagsA & 1) != 0)
         {
-            if ((param_4 & 0x200000) == 0)
+            if ((spawnFlags & 0x200000) == 0)
             {
-                if (local_98[0] != 0)
+                if (desc[0] != 0)
                 {
-                    local_68 = local_68 + *(float*)(local_98[0] + 0x18);
-                    local_64 = local_64 + *(float*)(local_98[0] + 0x1c);
-                    local_60 = local_60 + *(float*)(local_98[0] + 0x20);
+                    posX = posX + *(float*)(desc[0] + 0x18);
+                    posY = posY + *(float*)(desc[0] + 0x1c);
+                    posZ = posZ + *(float*)(desc[0] + 0x20);
                 }
             }
             else
             {
-                local_68 = local_68 + local_80;
-                local_64 = local_64 + local_7c;
-                local_60 = local_60 + local_78;
+                posX = posX + tmplPosX;
+                posY = posY + tmplPosY;
+                posZ = posZ + tmplPosZ;
             }
         }
-        result = (*gExpgfxInterface)->spawnEffect(local_98, 0xffffffff, param_2, 0);
+        result = (*gExpgfxInterface)->spawnEffect(desc, 0xffffffff, effectType, 0);
     }
     return result;
 }
 
-undefined4 FUN_800c9030(uint param_1, int* param_2)
+undefined4 FUN_800c9030(uint key, int* outIndex)
 {
     int hi;
     int lo;
     int mid;
 
-    *param_2 = -1;
-    if ((int)param_1 < 0)
+    *outIndex = -1;
+    if ((int)key < 0)
     {
         return 0;
     }
@@ -431,17 +431,17 @@ undefined4 FUN_800c9030(uint param_1, int* param_2)
         {
             if (hi < lo)
             {
-                *param_2 = -1;
+                *outIndex = -1;
                 return 0;
             }
             mid = hi + lo >> 1;
-            if (param_1 <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
+            if (key <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
             lo = mid + 1;
         }
-        if ((uint)(&DAT_8039d0b8)[mid * 2] <= param_1) break;
+        if ((uint)(&DAT_8039d0b8)[mid * 2] <= key) break;
         hi = mid + -1;
     }
-    *param_2 = mid;
+    *outIndex = mid;
     return (&DAT_8039d0bc)[mid * 2];
 }
 

@@ -179,10 +179,10 @@ undefined* FUN_800e82d8(void)
 
 void FUN_800e8630(int param_1)
 {
-    int placementVal;
-    undefined1* row;
-    int rowBase;
-    int slotIdx;
+    int placementId;
+    undefined1* slot;
+    int baseIndex;
+    int foundIndex;
     int remaining;
 
     if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
@@ -193,38 +193,38 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    rowBase = 0;
-    row = &DAT_803a3f08;
+    baseIndex = 0;
+    slot = &DAT_803a3f08;
     remaining = 9;
-    while ((slotIdx = rowBase, *(int*)(row + 0x168) != 0 &&
-        (placementVal = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), placementVal != *(int*)(row + 0x168))))
+    while ((foundIndex = baseIndex, *(int*)(slot + 0x168) != 0 &&
+        (placementId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), placementId != *(int*)(slot + 0x168))))
     {
-        slotIdx = rowBase + 1;
-        if ((*(int*)(row + 0x178) == 0) || (placementVal == *(int*)(row + 0x178))) break;
-        slotIdx = rowBase + 2;
-        if ((*(int*)(row + 0x188) == 0) || (placementVal == *(int*)(row + 0x188))) break;
-        slotIdx = rowBase + 3;
-        if ((*(int*)(row + 0x198) == 0) || (placementVal == *(int*)(row + 0x198))) break;
-        slotIdx = rowBase + 4;
-        if ((*(int*)(row + 0x1a8) == 0) || (placementVal == *(int*)(row + 0x1a8))) break;
-        slotIdx = rowBase + 5;
-        if ((*(int*)(row + 0x1b8) == 0) || (placementVal == *(int*)(row + 0x1b8))) break;
-        slotIdx = rowBase + 6;
-        if ((*(int*)(row + 0x1c8) == 0) || (placementVal == *(int*)(row + 0x1c8))) break;
-        row = row + 0x70;
-        rowBase = rowBase + 7;
+        foundIndex = baseIndex + 1;
+        if ((*(int*)(slot + 0x178) == 0) || (placementId == *(int*)(slot + 0x178))) break;
+        foundIndex = baseIndex + 2;
+        if ((*(int*)(slot + 0x188) == 0) || (placementId == *(int*)(slot + 0x188))) break;
+        foundIndex = baseIndex + 3;
+        if ((*(int*)(slot + 0x198) == 0) || (placementId == *(int*)(slot + 0x198))) break;
+        foundIndex = baseIndex + 4;
+        if ((*(int*)(slot + 0x1a8) == 0) || (placementId == *(int*)(slot + 0x1a8))) break;
+        foundIndex = baseIndex + 5;
+        if ((*(int*)(slot + 0x1b8) == 0) || (placementId == *(int*)(slot + 0x1b8))) break;
+        foundIndex = baseIndex + 6;
+        if ((*(int*)(slot + 0x1c8) == 0) || (placementId == *(int*)(slot + 0x1c8))) break;
+        slot = slot + 0x70;
+        baseIndex = baseIndex + 7;
         remaining = remaining + -1;
-        slotIdx = rowBase;
+        foundIndex = baseIndex;
         if (remaining == 0) break;
     }
-    if (slotIdx == 0x3f)
+    if (foundIndex == 0x3f)
     {
         return;
     }
-    (&DAT_803a4070)[slotIdx * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
+    (&DAT_803a4070)[foundIndex * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    (&DAT_803a4074)[foundIndex * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
+    (&DAT_803a4078)[foundIndex * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
+    (&DAT_803a407c)[foundIndex * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
         .localPosX;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
@@ -358,128 +358,128 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
 
 void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
 {
-    bool isClearMode;
-    char histIdx;
-    uint bits;
-    char histBase;
-    short* bankPtr;
-    char* histPtr;
-    uint* cachePtr;
-    uint bitIdx;
-    uint newBits;
-    uint taskId;
-    char* histTable;
+    bool keepTransient;
+    char foundIndex;
+    uint flags;
+    char scanIndex;
+    short* eventIds;
+    char* entry;
+    uint* groupStatuses;
+    uint shift;
+    uint newFlags;
+    uint mapId;
+    char* history;
     int i;
     int j;
-    longlong taskRaw;
+    longlong packed;
 
-    taskRaw = FUN_80286830();
-    taskId = (uint)((ulonglong)taskRaw >> 0x20);
-    bitIdx = (uint)taskRaw;
-    histTable = &DAT_803a3be0;
-    if (0x4fffffffff < taskRaw)
+    packed = FUN_80286830();
+    mapId = (uint)((ulonglong)packed >> 0x20);
+    shift = (uint)packed;
+    history = &DAT_803a3be0;
+    if (0x4fffffffff < packed)
     {
-        taskId = (uint)(byte)(&DAT_803a3dac)[taskId];
+        mapId = (uint)(byte)(&DAT_803a3dac)[mapId];
     }
-    if ((int)taskId < 0x78)
+    if ((int)mapId < 0x78)
     {
-        if ((ushort)(&DAT_80312460)[taskId] != 0)
+        if ((ushort)(&DAT_80312460)[mapId] != 0)
         {
             if (param_3 == -1)
             {
                 param_3 = 1;
             }
-            isClearMode = param_3 == -2;
-            if (isClearMode)
+            keepTransient = param_3 == -2;
+            if (keepTransient)
             {
                 param_3 = 0;
             }
-            bits = FUN_80017690((uint)(ushort)(&DAT_80312460)[taskId]);
+            flags = FUN_80017690((uint)(ushort)(&DAT_80312460)[mapId]);
             if (param_3 == 0)
             {
-                newBits = bits & ~(1 << bitIdx);
+                newFlags = flags & ~(1 << shift);
             }
             else
             {
-                newBits = bits | 1 << bitIdx;
+                newFlags = flags | 1 << shift;
             }
-            FUN_80017698((uint)(ushort)(&DAT_80312460)[taskId], newBits);
-            DAT_803de104 = taskId;
-            uRam803de108 = newBits;
+            FUN_80017698((uint)(ushort)(&DAT_80312460)[mapId], newFlags);
+            DAT_803de104 = mapId;
+            uRam803de108 = newFlags;
             if (param_3 == 0)
             {
-                bankPtr = &DAT_80312460;
-                cachePtr = &DAT_803a3c1c;
-                bits = ~(1 << bitIdx);
+                eventIds = &DAT_80312460;
+                groupStatuses = &DAT_803a3c1c;
+                flags = ~(1 << shift);
                 i = 0x14;
                 do
                 {
-                    if (*bankPtr == (&DAT_80312460)[taskId])
+                    if (*eventIds == (&DAT_80312460)[mapId])
                     {
-                        *cachePtr = *cachePtr & bits;
+                        *groupStatuses = *groupStatuses & flags;
                     }
-                    if (bankPtr[1] == (&DAT_80312460)[taskId])
+                    if (eventIds[1] == (&DAT_80312460)[mapId])
                     {
-                        cachePtr[1] = cachePtr[1] & bits;
+                        groupStatuses[1] = groupStatuses[1] & flags;
                     }
-                    if (bankPtr[2] == (&DAT_80312460)[taskId])
+                    if (eventIds[2] == (&DAT_80312460)[mapId])
                     {
-                        cachePtr[2] = cachePtr[2] & bits;
+                        groupStatuses[2] = groupStatuses[2] & flags;
                     }
-                    if (bankPtr[3] == (&DAT_80312460)[taskId])
+                    if (eventIds[3] == (&DAT_80312460)[mapId])
                     {
-                        cachePtr[3] = cachePtr[3] & bits;
+                        groupStatuses[3] = groupStatuses[3] & flags;
                     }
-                    if (bankPtr[4] == (&DAT_80312460)[taskId])
+                    if (eventIds[4] == (&DAT_80312460)[mapId])
                     {
-                        cachePtr[4] = cachePtr[4] & bits;
+                        groupStatuses[4] = groupStatuses[4] & flags;
                     }
-                    if (bankPtr[5] == (&DAT_80312460)[taskId])
+                    if (eventIds[5] == (&DAT_80312460)[mapId])
                     {
-                        cachePtr[5] = cachePtr[5] & bits;
+                        groupStatuses[5] = groupStatuses[5] & flags;
                     }
-                    bankPtr = bankPtr + 6;
-                    cachePtr = cachePtr + 6;
+                    eventIds = eventIds + 6;
+                    groupStatuses = groupStatuses + 6;
                     i = i + -1;
                 }
                 while (i != 0);
-                if (!isClearMode)
+                if (!keepTransient)
                 {
-                    histBase = '\0';
+                    scanIndex = '\0';
                     i = 4;
-                    histPtr = histTable;
+                    entry = history;
                     do
                     {
-                        if ((((((taskId == (int)*histPtr) && (histIdx = histBase, bitIdx == (byte)histPtr[1])) ||
-                                    ((histIdx = histBase + '\x01', taskId == (int)histPtr[3] && (bitIdx == (byte)histPtr[4])))
-                                ) || ((histIdx = histBase + '\x02', taskId == (int)histPtr[6] &&
-                                    (bitIdx == (byte)histPtr[7])))) ||
-                                ((histIdx = histBase + '\x03', taskId == (int)histPtr[9] && (bitIdx == (byte)histPtr[10]))))
-                            || ((taskId == (int)histPtr[0xc] &&
-                                (histIdx = histBase + '\x04', bitIdx == (byte)histPtr[0xd]))))
+                        if ((((((mapId == (int)*entry) && (foundIndex = scanIndex, shift == (byte)entry[1])) ||
+                                    ((foundIndex = scanIndex + '\x01', mapId == (int)entry[3] && (shift == (byte)entry[4])))
+                                ) || ((foundIndex = scanIndex + '\x02', mapId == (int)entry[6] &&
+                                    (shift == (byte)entry[7])))) ||
+                                ((foundIndex = scanIndex + '\x03', mapId == (int)entry[9] && (shift == (byte)entry[10]))))
+                            || ((mapId == (int)entry[0xc] &&
+                                (foundIndex = scanIndex + '\x04', shift == (byte)entry[0xd]))))
                             goto LAB_800e9628;
-                        histPtr = histPtr + 0xf;
-                        histBase = histBase + '\x05';
+                        entry = entry + 0xf;
+                        scanIndex = scanIndex + '\x05';
                         i = i + -1;
                     }
                     while (i != 0);
-                    histIdx = -1;
+                    foundIndex = -1;
                 LAB_800e9628:
-                    if (histIdx == -1)
+                    if (foundIndex == -1)
                     {
                         i = 0;
                         j = 0x14;
                         do
                         {
-                            if (*histTable == -1)
+                            if (*history == -1)
                             {
                                 i = i * 3;
-                                (&DAT_803a3be0)[i] = (char)taskId;
-                                (&DAT_803a3be1)[i] = (char)taskRaw;
+                                (&DAT_803a3be0)[i] = (char)mapId;
+                                (&DAT_803a3be1)[i] = (char)packed;
                                 (&DAT_803a3be2)[i] = 3;
                                 break;
                             }
-                            histTable = histTable + 3;
+                            history = history + 3;
                             i = i + 1;
                             j = j + -1;
                         }
@@ -489,40 +489,40 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
             }
             else
             {
-                bitIdx = 1 << bitIdx;
-                if ((bits & bitIdx) == 0)
+                shift = 1 << shift;
+                if ((flags & shift) == 0)
                 {
-                    bankPtr = &DAT_80312460;
-                    cachePtr = &DAT_803a3c1c;
+                    eventIds = &DAT_80312460;
+                    groupStatuses = &DAT_803a3c1c;
                     i = 0x14;
                     do
                     {
-                        if (*bankPtr == (&DAT_80312460)[taskId])
+                        if (*eventIds == (&DAT_80312460)[mapId])
                         {
-                            *cachePtr = *cachePtr | bitIdx;
+                            *groupStatuses = *groupStatuses | shift;
                         }
-                        if (bankPtr[1] == (&DAT_80312460)[taskId])
+                        if (eventIds[1] == (&DAT_80312460)[mapId])
                         {
-                            cachePtr[1] = cachePtr[1] | bitIdx;
+                            groupStatuses[1] = groupStatuses[1] | shift;
                         }
-                        if (bankPtr[2] == (&DAT_80312460)[taskId])
+                        if (eventIds[2] == (&DAT_80312460)[mapId])
                         {
-                            cachePtr[2] = cachePtr[2] | bitIdx;
+                            groupStatuses[2] = groupStatuses[2] | shift;
                         }
-                        if (bankPtr[3] == (&DAT_80312460)[taskId])
+                        if (eventIds[3] == (&DAT_80312460)[mapId])
                         {
-                            cachePtr[3] = cachePtr[3] | bitIdx;
+                            groupStatuses[3] = groupStatuses[3] | shift;
                         }
-                        if (bankPtr[4] == (&DAT_80312460)[taskId])
+                        if (eventIds[4] == (&DAT_80312460)[mapId])
                         {
-                            cachePtr[4] = cachePtr[4] | bitIdx;
+                            groupStatuses[4] = groupStatuses[4] | shift;
                         }
-                        if (bankPtr[5] == (&DAT_80312460)[taskId])
+                        if (eventIds[5] == (&DAT_80312460)[mapId])
                         {
-                            cachePtr[5] = cachePtr[5] | bitIdx;
+                            groupStatuses[5] = groupStatuses[5] | shift;
                         }
-                        bankPtr = bankPtr + 6;
-                        cachePtr = cachePtr + 6;
+                        eventIds = eventIds + 6;
+                        groupStatuses = groupStatuses + 6;
                         i = i + -1;
                     }
                     while (i != 0);
@@ -580,12 +580,12 @@ FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
     undefined4 result;
-    undefined* saveFile;
+    undefined* state;
 
     result = FUN_80017498();
-    saveFile = FUN_800e82d8();
+    state = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)saveFile[5] * 2)
+                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)state[5] * 2)
     ]
     )
     ;
@@ -594,75 +594,75 @@ FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 undefined FUN_800ea9ac(void)
 {
-    undefined* saveFile;
+    undefined* state;
 
-    saveFile = FUN_800e82d8();
-    return saveFile[5];
+    state = FUN_800e82d8();
+    return state[5];
 }
 
 void FUN_800ea9b8(void)
 {
-    uint taskId;
-    undefined* saveFile;
-    short histIdx;
-    uint bits;
+    uint id;
+    undefined* state;
+    short i;
+    uint flags;
     uint mask;
-    uint bank;
-    uint cachedBits;
-    uint cachedBank;
-    uint i;
-    short* taskPtr;
+    uint bit;
+    uint cachedFlags;
+    uint lastBitWord;
+    uint scanId;
+    short* entry;
 
-    taskId = FUN_80286834();
-    saveFile = FUN_800e82d8();
-    cachedBank = 0xffffffff;
-    if (saveFile[6] == '\0')
+    id = FUN_80286834();
+    state = FUN_800e82d8();
+    lastBitWord = 0xffffffff;
+    if (state[6] == '\0')
     {
-        taskPtr = &DAT_80312632;
-        for (i = 1; (short)i < 0xce; i = i + 1)
+        entry = &DAT_80312632;
+        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
         {
-            if ((*taskPtr == 0xffff) || (*taskPtr == -1))
+            if ((*entry == 0xffff) || (*entry == -1))
             {
-                mask = 1 << (i & 0x1f);
-                bank = (uint)(short)((short)((i & 0xff) >> 5) + 0x12f);
-                bits = FUN_80017690(bank);
-                if ((bits & mask) == 0)
+                mask = 1 << (scanId & 0x1f);
+                bit = (uint)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
+                flags = FUN_80017690(bit);
+                if ((flags & mask) == 0)
                 {
-                    FUN_80017698(bank, bits | mask);
+                    FUN_80017698(bit, flags | mask);
                 }
             }
-            taskPtr = taskPtr + 1;
+            entry = entry + 1;
         }
     }
-    bank = 1 << (taskId & 0x1f);
-    bits = (uint)(short)((short)((taskId & 0xff) >> 5) + 0x12f);
-    i = FUN_80017690(bits);
-    if ((i & bank) == 0)
+    bit = 1 << (id & 0x1f);
+    flags = (uint)(short)((short)((id & 0xff) >> 5) + 0x12f);
+    scanId = FUN_80017690(flags);
+    if ((scanId & bit) == 0)
     {
-        FUN_80017698(bits, i | bank);
-        if (saveFile[6] != '\x05')
+        FUN_80017698(flags, scanId | bit);
+        if (state[6] != '\x05')
         {
-            saveFile[6] = saveFile[6] + '\x01';
+            state[6] = state[6] + '\x01';
         }
-        for (histIdx = 4; histIdx != 0; histIdx = histIdx + -1)
+        for (i = 4; i != 0; i = i + -1)
         {
-            saveFile[histIdx] = saveFile[histIdx + -1];
+            state[i] = state[i + -1];
         }
-        *saveFile = (char)taskId;
-        if ((uint)(byte)saveFile[5] == (taskId & 0xff)
+        *state = (char)id;
+        if ((uint)(byte)state[5] == (id & 0xff)
         )
         {
             do
             {
-                saveFile[5] = saveFile[5] + '\x01';
-                taskId = (uint)(short)(((byte)saveFile[5] >> 5) + 0x12f);
-                if (taskId != (int)(short)cachedBank)
+                state[5] = state[5] + '\x01';
+                id = (uint)(short)(((byte)state[5] >> 5) + 0x12f);
+                if (id != (int)(short)lastBitWord)
                 {
-                    cachedBits = FUN_80017690(taskId);
-                    cachedBank = taskId;
+                    cachedFlags = FUN_80017690(id);
+                    lastBitWord = id;
                 }
             }
-            while ((cachedBits & 1 << ((byte)saveFile[5] & 0x1f)) != 0);
+            while ((cachedFlags & 1 << ((byte)state[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();

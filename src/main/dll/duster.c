@@ -920,15 +920,13 @@ void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int e
 void fn_80156B0C(uint obj, int state)
 {
     int tblOff;
-    ObjHitsPriorityState* hitState;
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 10;
-    hitState->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     if (((((BaddieState*)state)->controlFlags & 0x80000000) != 0) && (((BaddieState*)state)->seqEntryIndex <= 1))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40000000;
+        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40000000LL;
     }
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {

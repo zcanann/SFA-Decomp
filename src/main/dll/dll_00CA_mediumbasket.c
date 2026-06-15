@@ -284,25 +284,25 @@ undefined4
 FUN_8015b7f0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state)
 {
-    short stateMachine;
-    float blend;
-    uint gate;
+    short phase;
+    float zeroVal;
+    uint flagBits;
     undefined4 result;
     int extra;
-    undefined8 copyResult;
+    undefined8 copied;
 
     extra = *(int*)&((GameObject*)obj)->extra;
     if ((*(char*)(state + 0x346) == '\0') ||
-        (gate = (**(code**)(*DAT_803dd738 + 0x18))((double)lbl_803E3998), (gate & 1) != 0))
+        (flagBits = (**(code**)(*DAT_803dd738 + 0x18))((double)lbl_803E3998), (flagBits & 1) != 0))
     {
         if (*(char*)(state + 0x27b) == '\0')
         {
-            stateMachine = *(short*)(extra + 0x402);
-            if (stateMachine == 3)
+            phase = *(short*)(extra + 0x402);
+            if (phase == 3)
             {
                 (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 4);
             }
-            else if (stateMachine == 4)
+            else if (phase == 4)
             {
                 if ((*(float*)(state + 0x2c0) < lbl_803E39A8) && (*(char*)(state + 0x346) != '\0')
                 )
@@ -317,7 +317,7 @@ FUN_8015b7f0(undefined8 param_1, double param_2, double param_3, undefined8 para
                     }
                 }
             }
-            else if (stateMachine == 1)
+            else if (phase == 1)
             {
                 return 8;
             }
@@ -326,12 +326,12 @@ FUN_8015b7f0(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 0xb);
         }
-        blend = lbl_803E39AC;
+        zeroVal = lbl_803E39AC;
         *(float*)(state + 0x290) = lbl_803E39AC;
-        *(float*)(state + 0x28c) = blend;
+        *(float*)(state + 0x28c) = zeroVal;
         FUN_80003494(extra + 0x35c, obj + 0xc, 0xc);
-        copyResult = FUN_80003494(extra + 0x368, *(int*)(state + 0x2d0) + 0xc, 0xc);
-        FUN_80006a54(copyResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+        copied = FUN_80003494(extra + 0x368, *(int*)(state + 0x2d0) + 0xc, 0xc);
+        FUN_80006a54(copied, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
         if (*(char*)(extra + 0x381) == '\0')
         {
             (**(code**)(*DAT_803dd70c + 0x1c))
