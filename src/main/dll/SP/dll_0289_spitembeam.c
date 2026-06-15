@@ -39,7 +39,6 @@ typedef struct SpitembeamPlacement
 
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 extern f32 lbl_803E5AD8;
-extern f32 lbl_803E5AC0;
 
 void spitembeam_init(int obj)
 {
