@@ -721,8 +721,8 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     GfxCmd* e;
     GfxCmd* entries;
     u8* base = lbl_80312BD8;
-    int i;
     s16* p;
+    int i;
     uint flag;
     if (variant == 1)
     {
