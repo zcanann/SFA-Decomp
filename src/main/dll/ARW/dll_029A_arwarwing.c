@@ -1042,7 +1042,7 @@ void arwarwing_handlePathDamage(int obj, int state)
         if ((dmg & 1) && (s8)pathBlock[0xb8] == 8)
             ((ArwingState*)state)->shield = 0;
         else
-            ((ArwingState*)state)->shield = ((ArwingState*)state)->shield - 1;
+            ((ArwingState*)state)->shield--;
         doRumble(lbl_803E6F2C);
         if ((s8)((ArwingState*)state)->shield <= 0)
         {
@@ -1060,7 +1060,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
         }
         Sfx_PlayFromObject(obj, SFXbaddie_rach_bite);
-        ((ArwingState*)state)->flags339 |= 0x80;
+        ((Arw339Flags*)&((ArwingState*)state)->flags339)->scoreFlag = 1;
         Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
         ((ArwingState*)state)->damageFlashTimer = lbl_803E6F34;
         ((ArwingState*)state)->hitShake = 1;
