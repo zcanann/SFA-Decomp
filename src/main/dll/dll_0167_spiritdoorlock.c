@@ -1,6 +1,5 @@
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
