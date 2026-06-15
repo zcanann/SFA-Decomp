@@ -119,6 +119,13 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     *(void**)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
 }
 
+typedef struct Vec3Blob
+{
+    int x;
+    int y;
+    int z;
+} Vec3Blob;
+
 void ktrexfloorswitch_update(int obj)
 {
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -133,12 +140,8 @@ void ktrexfloorswitch_update(int obj)
     f32 mtx[12];
     f32 height;
     f32 xLo, xHi, zLo, zHi, cx, cz, sumX, sumZ;
-    vecA[0] = lbl_802C2560[0];
-    vecA[1] = lbl_802C2560[1];
-    vecA[2] = lbl_802C2560[2];
-    vecB[0] = lbl_802C256C[0];
-    vecB[1] = lbl_802C256C[1];
-    vecB[2] = lbl_802C256C[2];
+    *(Vec3Blob*)vecA = *(Vec3Blob*)lbl_802C2560;
+    *(Vec3Blob*)vecB = *(Vec3Blob*)lbl_802C256C;
     ((GameObject*)obj)->unkF8 = ((GameObject*)obj)->unkF4;
     ((GameObject*)obj)->unkF4 = GameBit_Get(((KtrexfloorswitchPlacement*)sub)->unk1C);
     tex = objFindTexture((void*)obj, 0, 0);
@@ -162,11 +165,11 @@ void ktrexfloorswitch_update(int obj)
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10));
             if (cp != -1)
             {
-                cp = (int)(*gRomCurveInterface)->getById(cp);
-                if (cp != 0)
+                void* res = (*gRomCurveInterface)->getById(cp);
+                if (res != NULL)
                 {
-                    ((GameObject*)obj)->anim.localPosX = *(f32*)(cp + 0x8);
-                    ((GameObject*)obj)->anim.localPosZ = *(f32*)(cp + 0x10);
+                    ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)res + 0x8);
+                    ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)res + 0x10);
                 }
             }
         }
@@ -194,11 +197,11 @@ void ktrexfloorswitch_update(int obj)
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10));
             if (cp != -1)
             {
-                cp = (int)(*gRomCurveInterface)->getById(cp);
-                if (cp != 0)
+                void* res = (*gRomCurveInterface)->getById(cp);
+                if (res != NULL)
                 {
-                    ((GameObject*)obj)->anim.localPosX = *(f32*)(cp + 0x8);
-                    ((GameObject*)obj)->anim.localPosZ = *(f32*)(cp + 0x10);
+                    ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)res + 0x8);
+                    ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)res + 0x10);
                 }
             }
         }
