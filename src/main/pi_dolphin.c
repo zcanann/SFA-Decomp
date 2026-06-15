@@ -6952,7 +6952,7 @@ void loadDataFiles(void)
     if (getButtonsJustPressed(2) & 0x100)
     {
         {
-            volatile int vi;
+            int vi;
             for (vi = 0x50; vi < 0x57; vi++)
             {
             }

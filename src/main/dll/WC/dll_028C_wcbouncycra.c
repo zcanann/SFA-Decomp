@@ -138,7 +138,7 @@ void wcbouncycra_initialise(void)
 {
 }
 
-#pragma scheduling on
+#pragma scheduling off
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     ObjAnimComponent* objAnim;
