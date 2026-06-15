@@ -1,6 +1,11 @@
 /* DIM wood door falling debris updater [801B13E8-801B13F0) */
+#include "ghidra_import.h"
 
+#include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/DIM/DIMExplosion.h"
 
 typedef struct DIMwooddoorUpdateFallingDebrisState
 {
@@ -44,6 +49,7 @@ extern f32 lbl_803DBEF0;
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
+extern int* getTrickyObject(void);
 
 void DIMwooddoor_updateFallingDebris(int* obj)
 {
@@ -54,12 +60,10 @@ void DIMwooddoor_updateFallingDebris(int* obj)
         {
             f32 oldvy = ((GameObject*)obj)->anim.velocityY;
             f32 grav = lbl_803E48A4 * -lbl_803DBEF0;
-            f32 yvel;
             ObjHitsPriorityState* hitState;
             ((GameObject*)obj)->anim.velocityY = grav * timeDelta + oldvy;
-            yvel = lbl_803E48A8 * (oldvy + ((GameObject*)obj)->anim.velocityY);
             objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                    yvel * timeDelta,
+                    lbl_803E48A8 * (oldvy + ((GameObject*)obj)->anim.velocityY) * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
             ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + ((DIMwooddoorUpdateFallingDebrisState*)
                 extra)->rotZRate * 10;
