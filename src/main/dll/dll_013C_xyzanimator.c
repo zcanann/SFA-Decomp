@@ -1,11 +1,6 @@
-#include "main/effect_interfaces.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
-#include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
-#include "main/obj_placement.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/dll/path_control_interface.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
