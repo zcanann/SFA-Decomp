@@ -1428,7 +1428,7 @@ void FUN_8013939c(uint param_1)
     }
     local_34 = hitState->lastHitObject;
     if ((hitState->flags & 8) == 0 ||
-        (*(short*)(local_34 + 0x46) == 0x1f))
+        (((GameObject*)local_34)->anim.seqId == 0x1f))
     {
         local_34 = 0;
     }
@@ -1488,7 +1488,7 @@ void FUN_8013939c(uint param_1)
     case 0xc:
         FUN_800810e8(afStack_20, 8, 0xff, 0x20, 0x20);
         FUN_80081120(param_1, auStack_2c, 4, (int*)0x0);
-        if (*(short*)(local_34 + 0x46) == 0x69)
+        if (((GameObject*)local_34)->anim.seqId == 0x69)
         {
             FUN_80006824(param_1, SFXfox_outofwater122);
         }
