@@ -839,7 +839,7 @@ void wbInit(undefined4 unused, int state)
 
 void fn_80156950(uint obj, int state)
 {
-    switch (*(short*)(obj + 0xa0))
+    switch (((GameObject *)obj)->anim.currentMove)
     {
     case 5:
         if (*(ushort*)(state + 0x2f8) != 0)
@@ -856,7 +856,7 @@ void fn_80156950(uint obj, int state)
     case 7:
         if (*(ushort*)(state + 0x2f8) != 0)
         {
-            if (*(float*)(obj + 0x98) < lbl_803E2AF8)
+            if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2AF8)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
             }
@@ -869,11 +869,11 @@ void fn_80156950(uint obj, int state)
     case 8:
         if (*(ushort*)(state + 0x2f8) != 0)
         {
-            if (*(float*)(obj + 0x98) < lbl_803E2AFC)
+            if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2AFC)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
             }
-            else if (*(float*)(obj + 0x98) < lbl_803E2B00)
+            else if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2B00)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath4);
             }
