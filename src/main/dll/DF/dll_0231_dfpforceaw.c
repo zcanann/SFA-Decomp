@@ -213,9 +213,9 @@ void TrickyCurve_updateBoundsTrigger(int obj)
     state = ((GameObject*)obj)->extra;
     ref = FUN_80017a98();
     insideCount = 0;
-    dx = *(float*)(ref + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dy = *(float*)(ref + 0x10) - ((GameObject*)obj)->anim.localPosY;
-    dz = *(float*)(ref + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    dx = ((GameObject*)ref)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    dy = ((GameObject*)ref)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    dz = ((GameObject*)ref)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     if ((dx <= lbl_803E6438) &&
         (-(float)((double)CONCAT44(0x43300000, (int)*state ^ 0x80000000) - DOUBLE_803e70d8) < dx))
     {

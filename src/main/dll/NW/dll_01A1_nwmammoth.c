@@ -365,19 +365,19 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     case 8:
         {
             u8* cv = st + 0x5c;
-            if (Curve_AdvanceAlongPath((Curve*)cv, *(f32*)(st + 0x54)) != 0 || *(int*)(cv + 0x10) != 0)
+            if (Curve_AdvanceAlongPath((Curve*)cv, *(f32*)(st + 0x54)) != 0 || ((Curve*)cv)->idx != 0)
             {
                 (*gRomCurveInterface)->goNextPoint(cv);
             }
             {
-                f32 dx = *(f32*)(cv + 0x68) - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = *(f32*)(cv + 0x70) - ((GameObject*)obj)->anim.localPosZ;
+                f32 dx = ((Curve*)cv)->sample[0] - ((GameObject*)obj)->anim.localPosX;
+                f32 dz = ((Curve*)cv)->sample[2] - ((GameObject*)obj)->anim.localPosZ;
                 ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
                                              (ObjAnimComponent*)obj, (float*)(st + 0x4c));
             }
-            ((GameObject*)obj)->anim.rotX = (s16)(getAngle(*(f32*)(cv + 0x74), *(f32*)(cv + 0x7c)) + 0x8000);
-            ((GameObject*)obj)->anim.localPosX = *(f32*)(cv + 0x68);
-            ((GameObject*)obj)->anim.localPosZ = *(f32*)(cv + 0x70);
+            ((GameObject*)obj)->anim.rotX = (s16)(getAngle(((Curve*)cv)->tangent[0], ((Curve*)cv)->tangent[2]) + 0x8000);
+            ((GameObject*)obj)->anim.localPosX = ((Curve*)cv)->sample[0];
+            ((GameObject*)obj)->anim.localPosZ = ((Curve*)cv)->sample[2];
             if (*(f32*)(st + 0x54) <= lbl_803E520C)
             {
                 st[0x408] = 7;
