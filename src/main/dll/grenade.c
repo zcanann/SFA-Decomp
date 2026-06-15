@@ -112,7 +112,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     int v;
     int inWater;
     u16 id;
-    f32 vx, vz, spd, z;
+    f32 vz, vx, spd, z;
 
     base = lbl_8031D2E8;
     sfxTable = lbl_803E23D0;
