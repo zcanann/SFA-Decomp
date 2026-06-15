@@ -22,10 +22,7 @@
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/objseq.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
-#include "main/objhits_types.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
