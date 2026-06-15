@@ -289,11 +289,11 @@ void andross_update(int obj)
     f32 zero;
     f32 fc;
     float searchDist;
-    float local_144;
-    float local_140;
-    float local_13c;
-    float local_138;
-    float local_134;
+    float searchDist3;
+    float searchDist2;
+    float searchDist1;
+    float searchDist0;
+    float camActionParam;
     short delayPair[2];
     SunVec3 velCalc0;
     SunVec3 velArg0;
@@ -2050,8 +2050,8 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 0x1f;
         }
     }
-    local_134 = lbl_803E7584 + ((AndrossState*)state)->unkA8;
-    (*gCameraInterface)->releaseAction(&local_134, 4);
+    camActionParam = lbl_803E7584 + ((AndrossState*)state)->unkA8;
+    (*gCameraInterface)->releaseAction(&camActionParam, 4);
     ((GameObject*)obj)->anim.velocityX =
         ((AndrossState*)state)->springStiffness * (((AndrossState*)state)->targetPosX - ((GameObject*)obj)->anim.
             localPosX) +
@@ -2121,8 +2121,8 @@ void andross_update(int obj)
     }
     if (((AndrossState*)state)->fightPhase < 6)
     {
-        local_138 = lbl_803E7490;
-        ref = ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &local_138);
+        searchDist0 = lbl_803E7490;
+        ref = ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &searchDist0);
         if ((u32)ref != 0)
         {
             if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
@@ -2137,8 +2137,8 @@ void andross_update(int obj)
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
-        local_13c = lbl_803E7490;
-        ref = ObjList_FindNearestObjectByDefNo(obj, 0x1e, &local_13c);
+        searchDist1 = lbl_803E7490;
+        ref = ObjList_FindNearestObjectByDefNo(obj, 0x1e, &searchDist1);
         if ((u32)ref != 0)
         {
             if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
@@ -2153,8 +2153,8 @@ void andross_update(int obj)
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
-        local_140 = lbl_803E7490;
-        ref = ObjList_FindNearestObjectByDefNo(obj, 0x76f, &local_140);
+        searchDist2 = lbl_803E7490;
+        ref = ObjList_FindNearestObjectByDefNo(obj, 0x76f, &searchDist2);
         if ((u32)ref != 0)
         {
             if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
@@ -2169,8 +2169,8 @@ void andross_update(int obj)
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
-        local_144 = lbl_803E7490;
-        ref = ObjList_FindNearestObjectByDefNo(obj, 0x814, &local_144);
+        searchDist3 = lbl_803E7490;
+        ref = ObjList_FindNearestObjectByDefNo(obj, 0x814, &searchDist3);
         if ((u32)ref != 0)
         {
             if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
