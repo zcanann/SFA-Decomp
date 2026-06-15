@@ -14,6 +14,7 @@ extern f32 lbl_803E1624;
 
 extern u8 lbl_80319168[];
 
+#pragma scheduling off
 void dll_AA_func03(int sourceObj, int variant, u8* posSource, u8* seqFlags)
 {
     u8* tab = (u8*)(int)lbl_80319168;
@@ -49,6 +50,7 @@ void dll_AA_func03(int sourceObj, int variant, u8* posSource, u8* seqFlags)
         (posSource, (u8*)(int)lbl_80319168, 0x15, &tab[0xd4], 0x18, 0x3e9, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
+#pragma scheduling reset
 
 void dll_9D_func01_nop(void);
 
