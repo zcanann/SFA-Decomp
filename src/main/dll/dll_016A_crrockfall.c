@@ -311,8 +311,8 @@ f32 fn_801ACCFC(int obj)
     int count;
     int i;
     int bestIdx;
-    f32 bestDist;
     f32 limit;
+    f32 bestDist;
     count = hitDetectFn_80065e50(obj, &list, 0, 0,
                                  ((GameObject*)obj)->anim.localPosX,
                                  ((GameObject*)obj)->anim.localPosY,
