@@ -40,7 +40,7 @@ void nw_levcontrol_update(int objArg)
     uint bitVal;
     uint bitVal3;
     byte flag;
-    uint bitVal2;
+    int bitVal2;
     uint bitVal4;
     float* state;
 
@@ -113,7 +113,12 @@ void nw_levcontrol_update(int objArg)
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
     }
-    if (((*((uint*)state + 2) & 2) == 0) || isGameTimerDisabled() == 0)
+    if (((*((int*)state + 2) & 2) != 0) && isGameTimerDisabled() != 0)
+    {
+        Sfx_PlayFromObject(0, SFXsc_clubhit02);
+        (*gMapEventInterface)->gotoRestartPoint();
+    }
+    else
     {
         switch (*(undefined*)(state + 1))
         {
@@ -155,15 +160,15 @@ void nw_levcontrol_update(int objArg)
             }
             break;
         case 9:
-            if ((*(u16*)(player + 0x58) & 0x1000U) != 0)
+            if ((*(u16*)(player + 0x58) & 0x1000) != 0)
             {
                 *(undefined*)(state + 1) = 10;
             }
             break;
         case 10:
-            if ((*(u16*)(player + 0x58) & 0x1000U) == 0)
+            if ((*(u16*)(player + 0x58) & 0x1000) == 0)
             {
-                bitVal2 = *((uint*)state + 2);
+                bitVal2 = *((int*)state + 2);
                 if ((bitVal2 & 1) != 0)
                 {
                     *((uint*)state + 2) = bitVal2 & ~1;
@@ -204,11 +209,6 @@ void nw_levcontrol_update(int objArg)
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 8);
             *(undefined*)(state + 1) = 0xb;
         }
-    }
-    else
-    {
-        Sfx_PlayFromObject(0, SFXsc_clubhit02);
-        (*gMapEventInterface)->gotoRestartPoint();
     }
     return;
 }
