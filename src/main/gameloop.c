@@ -360,7 +360,6 @@ extern void* lbl_803DCAFC;
 void mmInit(void);
 
 extern void* memcpy(void* dst, const void* src, int n);
-extern void LCEnable(void);
 
 void copyToCache(void* dst, void* src, u32 count);
 
@@ -1449,8 +1448,6 @@ extern void AISetStreamVolRight(int vol);
 extern void audioStopAll(void);
 extern void AISetStreamPlayState(int state);
 extern void audioReset(void);
-extern void LCDisable(void);
-extern void OSResetSystem(int reset, u32 resetCode, int forceMenu);
 extern u8 gAudioStreamPlaying;
 extern u8 gAudioStreamDvdState;
 extern u8 gDvdErrorPauseActive;

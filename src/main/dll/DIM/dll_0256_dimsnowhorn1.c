@@ -52,7 +52,6 @@ typedef struct DIMSnowHorn1State
 STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
 STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
-
 void DIMSnowHorn1_func23(void)
 {
 }
@@ -820,7 +819,6 @@ void DIMSnowHorn1_func21(void)
 
 int DIMSnowHorn1_func20(void) { return 0; }
 
-/* returns -moveSpeed in *out when riding (mode 10), zero otherwise */
 f32 DIMSnowHorn1_func19(int obj, f32* out)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;

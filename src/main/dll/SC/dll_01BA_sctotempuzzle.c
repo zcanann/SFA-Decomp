@@ -134,7 +134,6 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
 
     if (solvedThisObject != 0)
     {
-        /* local prototype overrides the file-scope (int obj) form; do not hoist */
         extern void objfx_spawnArcedBurst(SCTotemPuzzleObject* obj, int enabled, f32 radius, int particleKind,
                                           int particleCount, int lifetime, f32 speedA, f32 speedB, f32 scale,
                                           SCTotemPuzzleParticleBox* box, int flags);

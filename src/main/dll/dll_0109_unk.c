@@ -321,7 +321,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-void flammablevine_release(void);
 
 void dll_109_hitDetect_nop(void)
 {
