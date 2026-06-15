@@ -274,7 +274,6 @@ extern f32 lbl_803E31D8;
 extern f32 lbl_803E31DC;
 extern f32 lbl_803E31E0;
 extern f32 lbl_803E31E4;
-extern f32 lbl_803E33F4;
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
 extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -312,7 +311,6 @@ extern void dll_F7_update();
 extern void dll_F7_init();
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
