@@ -1,4 +1,3 @@
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/abort_exit.h"
 #include "stddef.h"
 
 void _ExitProcess(void);
