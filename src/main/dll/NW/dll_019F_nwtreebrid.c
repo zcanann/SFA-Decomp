@@ -127,9 +127,9 @@ void treebird_render(int obj)
     if (state->targetObj != NULL)
     {
         ObjPath_GetPointWorldPosition(obj, 0, &fx, &fy, &fz, 0);
-        *(float*)((u8*)state->targetObj + 0xc) = fx;
-        *(float*)((u8*)state->targetObj + 0x10) = fy;
-        *(float*)((u8*)state->targetObj + 0x14) = fz;
+        ((GameObject*)state->targetObj)->anim.localPosX = fx;
+        ((GameObject*)state->targetObj)->anim.localPosY = fy;
+        ((GameObject*)state->targetObj)->anim.localPosZ = fz;
     }
 }
 
