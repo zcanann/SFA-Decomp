@@ -1,3 +1,6 @@
+/* DLL 0x1D9 — DIM2 Prison Mammoth: mammoth baddie state machine for the
+ * DIM2 prison area.  Handles idle/stomp/charge state transitions, eye
+ * animations, hit-react, and the tail-whip player interaction. */
 #include "main/dll/baddie_state.h"
 #include "main/gamebits.h"
 #include "main/objHitReact.h"
@@ -64,14 +67,8 @@ extern int randomGetRange(int lo, int hi);
 
 
 
-
-
-
 extern int *gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
-
-
-
 
 
 
