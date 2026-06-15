@@ -12,7 +12,7 @@ typedef struct
     u8 layer; /* +0x16 */
 } GfxCmd;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern u8 lbl_80318DF0[];
 extern u8 lbl_80318E10[];
 extern u8 lbl_803DB980;
