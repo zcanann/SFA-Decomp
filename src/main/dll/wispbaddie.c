@@ -725,6 +725,7 @@ void fn_80127F24(s32 alpha)
     f32 baseAdd;
     f32 denom;
     f32 phase;
+    f32 brightness;
     s32 i;
 
     phase = lbl_803E1F18 *
@@ -744,6 +745,7 @@ void fn_80127F24(s32 alpha)
                              (u8)alpha, 0x200, 0);
     }
 
+    brightness = lbl_803E20C4 - phase * lbl_803E1E6C;
     denom = lbl_803E2090;
     baseAdd = lbl_803E20C8;
     baseSub = lbl_803E20D0;
@@ -758,10 +760,10 @@ void fn_80127F24(s32 alpha)
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                              baseAdd + off, lbl_803E20CC,
                              x = (s16)((0xff - (s8)i) - lbl_803DD75C),
-                             (u8)alpha, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
+                             (u8)alpha, (s32)(f64)brightness, 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                              baseSub - off, lbl_803E20CC,
                              x,
-                             (u8)alpha, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
+                             (u8)alpha, (s32)(f64)brightness, 0);
     }
 }

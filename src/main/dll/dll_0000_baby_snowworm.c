@@ -1396,11 +1396,11 @@ void drawWorldMapHud(void)
                 n++;
             }
 
-            if (n >= lbl_8031B074[base[0]].thresh) li_ = (s8)lbl_803DBA94[0];
-            else if (n >= lbl_8031B074[base[1]].thresh) li_ = (s8)lbl_803DBA94[1];
-            else if (n >= lbl_8031B074[base[2]].thresh) li_ = (s8)lbl_803DBA94[2];
-            else if (n >= lbl_8031B074[base[3]].thresh) li_ = (s8)lbl_803DBA94[3];
-            else if (n >= lbl_8031B074[base[4]].thresh) li_ = (s8)lbl_803DBA94[4];
+            if (n >= *(u8*)((u8*)lbl_8031B074 + base[0] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[0];
+            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[1] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[1];
+            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[2] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[2];
+            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[3] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[3];
+            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[4] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[4];
             else li_ = -1;
         }
 
@@ -2293,7 +2293,7 @@ extern f64 lbl_803E2108;
 extern f32 lbl_803E2110;
 extern f32 lbl_803E2114;
 
-void fn_80128A7C(u8 i, s16 p2, int p3);
+void fn_80128A7C(u8 i, int p2, int p3);
 
 /* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
@@ -2538,11 +2538,11 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     n++;
                 }
-                if (n >= lbl_8031B074[base[0]].thresh) li_ = (s8)lbl_803DBA94[0];
-                else if (n >= lbl_8031B074[base[1]].thresh) li_ = (s8)lbl_803DBA94[1];
-                else if (n >= lbl_8031B074[base[2]].thresh) li_ = (s8)lbl_803DBA94[2];
-                else if (n >= lbl_8031B074[base[3]].thresh) li_ = (s8)lbl_803DBA94[3];
-                else if (n >= lbl_8031B074[base[4]].thresh) li_ = (s8)lbl_803DBA94[4];
+                if (n >= *(u8*)((u8*)lbl_8031B074 + base[0] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[0];
+                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[1] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[1];
+                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[2] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[2];
+                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[3] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[3];
+                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[4] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[4];
                 else li_ = -1;
             }
             lv = 0;
@@ -3654,7 +3654,7 @@ extern f64 lbl_803E2128;
  * texture offset along the entry's trail vector, fading via the scaled
  * alpha. The selected cell on the main grid breathes (sin pulse) and slides
  * toward the panel edge while lbl_803DD75C runs. */
-void fn_80128A7C(u8 i, s16 p2, int p3)
+void fn_80128A7C(u8 i, int p2, int p3)
 {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     int div15;
@@ -3670,7 +3670,7 @@ void fn_80128A7C(u8 i, s16 p2, int p3)
     f64 k2108;
     f64 t;
 
-    t = (f64)p2 * (lbl_803E2080 - (f64)lbl_803DD75C);
+    t = (f64)(s16)p2 * (lbl_803E2080 - (f64)lbl_803DD75C);
     scaled = (s32)(t * lbl_803E2088);
     if (lbl_803DD824[i].id < 0)
     {
@@ -4318,13 +4318,13 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        if (g->itemTextures[j] != 0)
+        if (*(void**)(lbl_803A87F0 + 2504 + j * 4) != NULL)
         {
-            textureFree(g->itemTextures[j]);
-            g->itemTextures[j] = 0;
+            textureFree(*(void**)(lbl_803A87F0 + 2504 + j * 4));
+            *(void**)(lbl_803A87F0 + 2504 + j * 4) = NULL;
         }
-        g->itemSlots[j] = -1;
-        g->itemFlags[j] = 1;
+        *(s16*)(lbl_803A87F0 + 2376 + j * 2) = -1;
+        lbl_803A87F0[1096 + j] = 1;
     }
 
     if (lbl_803DD7C8 != 0)
@@ -4341,13 +4341,13 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        if (g->itemTextures[j] != 0)
+        if (*(void**)(lbl_803A87F0 + 2504 + j * 4) != NULL)
         {
-            textureFree(g->itemTextures[j]);
-            g->itemTextures[j] = 0;
+            textureFree(*(void**)(lbl_803A87F0 + 2504 + j * 4));
+            *(void**)(lbl_803A87F0 + 2504 + j * 4) = NULL;
         }
-        g->itemSlots[j] = -1;
-        g->itemFlags[j] = 1;
+        *(s16*)(lbl_803A87F0 + 2376 + j * 2) = -1;
+        lbl_803A87F0[1096 + j] = 1;
     }
 
     textureFree(lbl_803DD8C4);

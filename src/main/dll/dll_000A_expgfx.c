@@ -231,7 +231,6 @@ void expgfxRemoveAll(void)
     ExpgfxTableEntry* expTabEntry;
     u32 activeBit;
     u32 inactiveBitMask;
-    int expTabIndex;
     int poolIndex;
     int slotIndex;
 
@@ -251,15 +250,14 @@ void expgfxRemoveAll(void)
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0)
             {
-                expTabIndex = Expgfx_GetSlotTableIndex(slot);
-                expTabEntry = Expgfx_GetTableEntry(expTabIndex);
-                if (expTabEntry->resource != 0)
+                if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)expTabEntry->resource);
+                    textureFree((void*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
+                expTabEntry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
                 if (expTabEntry->refCount != 0)
                 {
                     expTabEntry->refCount--;
@@ -2012,7 +2010,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
                                                 poolBounds->minY, poolBounds->maxY,
                                                 poolBounds->minZ - playerMapOffsetZ,
                                                 poolBounds->maxZ - playerMapOffsetZ,
-                                                &Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds)->minX) != 0)
+                                                &EXPGFX_STATIC_DATA->boundsTemplates[*poolBoundsTemplateIds].minX) != 0)
             {
                 drawGlow(*slotPoolBases, poolIndex);
             }

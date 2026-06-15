@@ -157,21 +157,15 @@ void saveSelectOpenFile(int sel, int slot)
 
 void SaveSelectScreen_release(void)
 {
-    void** p;
     int i;
     void* zero;
 
-    i = 0;
-    p = lbl_803A8658;
     zero = NULL;
-    do
+    for (i = 0; i < 10; i++)
     {
-        mm_free(*p);
-        *p = zero;
-        p++;
-        i++;
+        mm_free(lbl_803A8658[i]);
+        lbl_803A8658[i] = zero;
     }
-    while (i < 10);
 }
 
 #pragma dont_inline on
@@ -398,7 +392,6 @@ void saveSelectGoToChooseSlot(int arg)
 #pragma dont_inline on
 void saveSelectScreenFree(int param_1)
 {
-    void** p;
     int i;
     void* zero;
 
@@ -424,20 +417,15 @@ void saveSelectScreenFree(int param_1)
         lbl_803DD6AC = NULL;
     }
 
-    i = 0;
-    p = lbl_803A8680;
     zero = NULL;
-    do
+    for (i = 0; i < 4; i++)
     {
-        if (*p != NULL)
+        if (lbl_803A8680[i] != NULL)
         {
-            textureFree(*p);
-            *p = zero;
+            textureFree(lbl_803A8680[i]);
+            lbl_803A8680[i] = zero;
         }
-        p++;
-        i++;
     }
-    while (i < 4);
 
     textureFree(lbl_803DD6C8);
     if (param_1 != 0)
@@ -446,7 +434,7 @@ void saveSelectScreenFree(int param_1)
     }
     if (lbl_803DD6B8 != NULL)
     {
-        ((void (**)(void))gTitleMenuItemInterface->vtable)[4]();
+        ((void (**)(void*))gTitleMenuItemInterface->vtable)[4](lbl_803DD6B8);
         lbl_803DD6B8 = NULL;
     }
 }

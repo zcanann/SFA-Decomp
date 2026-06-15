@@ -178,16 +178,11 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
         }
         else
         {
-            value = state->prevFramePhase;
-            if (value < gObjAnimProgressZero)
-            {
-                value = gObjAnimProgressZero;
-            }
-            else if (value > prevFrameLength)
-            {
-                value = prevFrameLength;
-            }
-            state->prevFramePhase = value;
+            state->prevFramePhase = (state->prevFramePhase < gObjAnimProgressZero)
+                                        ? gObjAnimProgressZero
+                                        : ((state->prevFramePhase > prevFrameLength)
+                                               ? prevFrameLength
+                                               : state->prevFramePhase);
         }
 
         if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN) == 0)
@@ -705,15 +700,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
 
     objAnim = (ObjAnimComponent*)objAnimHandle;
     wrapped = 0;
-    clampedStepScale = gObjAnimMoveStepScaleMin;
-    if (!(moveStepScale < gObjAnimMoveStepScaleMin))
-    {
-        clampedStepScale = gObjAnimProgressOne;
-        if (!(moveStepScale > gObjAnimProgressOne))
-        {
-            clampedStepScale = moveStepScale;
-        }
-    }
+    clampedStepScale = (moveStepScale < gObjAnimMoveStepScaleMin)
+                           ? gObjAnimMoveStepScaleMin
+                           : ((moveStepScale > gObjAnimProgressOne) ? gObjAnimProgressOne
+                                                                    : moveStepScale);
 
     bank = ObjAnim_GetActiveBank(objAnim);
     animDef = bank->animDef;
@@ -750,16 +740,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
         else
         {
-            value = state->prevFramePhase;
-            if (value < gObjAnimProgressZero)
-            {
-                value = gObjAnimProgressZero;
-            }
-            else if (value > prevFrameLength)
-            {
-                value = prevFrameLength;
-            }
-            state->prevFramePhase = value;
+            state->prevFramePhase = (state->prevFramePhase < gObjAnimProgressZero)
+                                        ? gObjAnimProgressZero
+                                        : ((state->prevFramePhase > prevFrameLength)
+                                               ? prevFrameLength
+                                               : state->prevFramePhase);
         }
 
         if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN) == 0)

@@ -985,12 +985,12 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
 
     state = checkpoint->state;
     radius = (f32)placement->radius;
-    if (radius < lbl_803E40BC)
+    if ((f32)placement->radius < lbl_803E40BC)
     {
         radius = lbl_803E40BC;
     }
     checkpoint->objAnim.rootMotionScale = radius * lbl_803E40C0;
-    checkpoint->objAnim.rotX = (s16)(placement->rotX << 8);
+    checkpoint->objAnim.rotX = (s16)((s16)placement->rotX << 8);
     transform.rotX = checkpoint->objAnim.rotX;
     transform.rotY = checkpoint->objAnim.rotY;
     transform.rotZ = checkpoint->objAnim.rotZ;
@@ -1001,10 +1001,12 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     setMatrixFromObjectPos(matrix, &transform);
     Matrix_TransformPoint(matrix, (double)lbl_803E40C4, (double)lbl_803E40C4, (double)lbl_803E40B8,
                           &state->planeNormalX, &state->planeNormalY, &state->planeNormalZ);
-    state->planeDistance =
-        -(checkpoint->objAnim.localPosZ * state->planeNormalZ +
-            checkpoint->objAnim.localPosX * state->planeNormalX +
-            checkpoint->objAnim.localPosY * state->planeNormalY);
+    {
+        f32 yy = checkpoint->objAnim.localPosY * state->planeNormalY;
+        state->planeDistance =
+            -(yy + checkpoint->objAnim.localPosX * state->planeNormalX +
+                checkpoint->objAnim.localPosZ * state->planeNormalZ);
+    }
     state->triggerRadius = lbl_803E40C8 * checkpoint->objAnim.rootMotionScale;
     i = 0;
     do

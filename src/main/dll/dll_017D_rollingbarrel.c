@@ -23,7 +23,7 @@ extern void ObjGroup_AddObject(int obj, int groupId);
 extern void Obj_FreeObject(int obj);
 
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
-extern void CameraShake_Start(int obj, f32 a, f32 b, f32 c);
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 v);
 
 extern void objRenderFn_8003b8f4(f32 v);
@@ -313,21 +313,13 @@ void fn_801A5D88(int obj, int explosionVariant)
     Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (lbl_803DDB20 > 1)
     {
-        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        r2 = randomGetRange(0x32, 0x3c);
-        size = (f32)(int)
-        r2;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, size);
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     else
     {
-        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        r2 = randomGetRange(0x32, 0x3c);
-        size = (f32)(int)
-        r2;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, size);
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
@@ -341,7 +333,7 @@ void fn_801A5D88(int obj, int explosionVariant)
         if (dist <= lbl_803E4470)
         {
             falloff = lbl_803E4474 - dist / lbl_803E4470;
-            CameraShake_Start(obj, lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
+            CameraShake_Start(lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
             doRumble(lbl_803E4484 * falloff);
         }
     }

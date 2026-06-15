@@ -1704,6 +1704,7 @@ extern inline float sqrtf(float x)
 
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
 extern f32 Vdchuff_803DEDC0[2];
+extern float __fabsf(float);
 
 void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
 {
@@ -1723,22 +1724,22 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
             if (t > lbl_803DED2C) t = lbl_803DED2C;
             s0 = sqrtf(t);
 
-            mx = (f32)__fabs(p[1] - a);
-            tmp = (f32)__fabs((lbl_803DED2C + p[1]) - a);
+            mx = __fabsf(p[1] - a);
+            tmp = __fabsf((lbl_803DED2C + p[1]) - a);
             if (tmp < mx) mx = tmp;
-            tmp = (f32)__fabs((p[1] - lbl_803DED2C) - a);
+            tmp = __fabsf((p[1] - lbl_803DED2C) - a);
             if (tmp < mx) mx = tmp;
 
-            mz = (f32)__fabs(p[2] - b);
+            mz = __fabsf(p[2] - b);
             if (b > p[2]) over = b - p[2];
-            tmp = (f32)__fabs((lbl_803DED2C + p[2]) - b);
+            tmp = __fabsf((lbl_803DED2C + p[2]) - b);
             if (tmp < mz)
             {
                 mz = tmp;
                 over = lbl_803DED28;
             }
             p2lo = p[2] - lbl_803DED2C;
-            tmp = (f32)__fabs(p2lo - b);
+            tmp = __fabsf(p2lo - b);
             if (tmp < mz)
             {
                 mz = tmp;
@@ -1809,15 +1810,15 @@ void initFn_8006d020(void)
             while (j < placed && !collide)
             {
                 f32 mx, mz, tmp, d;
-                mx = (f32)__fabs(e[1] - o[1]);
-                tmp = (f32)__fabs((1.0f + e[1]) - o[1]);
+                mx = __fabsf(e[1] - o[1]);
+                tmp = __fabsf((1.0f + e[1]) - o[1]);
                 if (tmp < mx) mx = tmp;
-                tmp = (f32)__fabs((e[1] - 1.0f) - o[1]);
+                tmp = __fabsf((e[1] - 1.0f) - o[1]);
                 if (tmp < mx) mx = tmp;
-                mz = (f32)__fabs(e[2] - o[2]);
-                tmp = (f32)__fabs((1.0f + e[2]) - o[2]);
+                mz = __fabsf(e[2] - o[2]);
+                tmp = __fabsf((1.0f + e[2]) - o[2]);
                 if (tmp < mz) mz = tmp;
-                tmp = (f32)__fabs((e[2] - 1.0f) - o[2]);
+                tmp = __fabsf((e[2] - 1.0f) - o[2]);
                 if (tmp < mz) mz = tmp;
                 d = mx * mx + mz * mz;
                 if (d > 0.0f) d = sqrtf(d);
@@ -2127,12 +2128,12 @@ void allocLotsOfTextures(void)
         cy = (f32)i - 64.0f;
         isum = lowoff + rowoff;
         cy = cy * 0.015625f;
-        cy = (f32)__fabs(cy);
+        cy = __fabsf(cy);
         for (; j < 0x80; j++)
         {
             int base = lbl_803DCFC0;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            f32 cx = (f32)__fabs(((f32)j - 64.0f) * 0.015625f);
+            f32 cx = __fabsf(((f32)j - 64.0f) * 0.015625f);
             f32 d2 = sqrtf(cx * cx + cy * cy);
             f32 v = 1.0f - d2;
             if (v < 0.0f) v = 0.0f;
@@ -2156,7 +2157,7 @@ void allocLotsOfTextures(void)
         c0 = (f32)i - 16.0f;
         isum = lowoff + rowoff;
         c0 = c0 * 0.0625f;
-        c0 = (f32)__fabs(c0);
+        c0 = __fabsf(c0);
         for (; j < 4; j++)
         {
             int base = lbl_803DCFB4;
@@ -2368,7 +2369,7 @@ extern void Camera_ApplyFullViewport(void);
 void shadowRenderFn_8006b558(int* obj)
 {
     f32 mtx[12];
-    f32 vF, vE, vD, vC, vB, vA;
+    f32 vA, vB, vC, vD, vE, vF;
     f32 sc, objScale, nx, ny, m;
     f32* o64;
     Obj_BuildWorldTransformMatrix(obj, mtx, 0);

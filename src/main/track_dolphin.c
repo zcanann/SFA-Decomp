@@ -1327,8 +1327,8 @@ void queueGlowRender(ModelLightStruct* light)
     for (i = 0; i < 5; i++)
     {
         FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-        f32 dot = plane->normalX * (light->worldX - playerMapOffsetX)
-            + light->worldY * plane->normalY
+        f32 dot = light->worldY * plane->normalY
+            + plane->normalX * (light->worldX - playerMapOffsetX)
             + plane->normalZ * (light->worldZ - playerMapOffsetZ)
             + plane->distance;
         if (lbl_803DEBCC + dot < lbl_803DEBCC)
@@ -2292,9 +2292,9 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
     lbl_803DCEDC = c * (f32)(s16)
     param;
     dot = vec[0] * lbl_803879B0[0] + vec[1] * lbl_803879B0[1] + vec[2] * lbl_803879B0[2];
-    mag = (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]) *
-    (lbl_803879B0[0] * lbl_803879B0[0] + lbl_803879B0[1] * lbl_803879B0[1] +
-        lbl_803879B0[2] * lbl_803879B0[2]);
+    mag = (lbl_803879B0[0] * lbl_803879B0[0] + lbl_803879B0[1] * lbl_803879B0[1] +
+        lbl_803879B0[2] * lbl_803879B0[2]) *
+    (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     if (mag != 0.0f)
     {
         mag = sqrtf(mag);
@@ -3883,7 +3883,7 @@ void renderGlows(void)
     GlowGXColor fogCol;
     int sx, sy, sz;
     f32 px, py, pz;
-    f32 sunMtx[20];
+    f32 sunMtx[12];
     f32 dir[3];
     f32 cam[3];
     int alpha = 0xff;

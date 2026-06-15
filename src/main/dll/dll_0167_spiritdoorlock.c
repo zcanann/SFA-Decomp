@@ -81,13 +81,16 @@ void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
 {
     SpiritDoorLockState* state = ((GameObject*)obj)->extra;
     f32 mult;
+    int isLess;
 
     *(s16*)obj = (s16)(params->yaw << 8);
     state->orbitCount = params->orbitCount;
     state->active = 0;
 
     mult = (f32)params->scale * lbl_803E4448;
-    if (mult < lbl_803E4430)
+    isLess = (mult != lbl_803E4430);
+    isLess = !isLess;
+    if (isLess)
     {
         mult = lbl_803E4440;
     }
@@ -95,7 +98,7 @@ void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
     state->spinAngle = 0;
 
     ObjHits_DisableObject(obj);
-    state->flags &= ~0x80;
+    ((struct { u8 bit80:1; } *)&state->flags)->bit80 = 0;
 
     if (mode == 0)
     {

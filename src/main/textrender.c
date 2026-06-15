@@ -1312,9 +1312,9 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
     if (gameTextDrawFunc != NULL)
     {
         s16 sx = x;
-        u8* p = gTextBoxes + idx * 0x20;
-        *(s16*)(p + 0x18) = sx;
-        *(s16*)(p + 0x1a) = y;
+        u8* box = gTextBoxes;
+        *(s16*)(box + idx * 0x20 + 0x18) = sx;
+        *(s16*)(box + idx * 0x20 + 0x1a) = y;
     }
     else
     {

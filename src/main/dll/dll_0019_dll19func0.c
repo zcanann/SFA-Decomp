@@ -464,37 +464,36 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
     if ((s8)p2[838] != 0)
     {
-        if (*(void**)(p2 + 720) != (void*)player)
+        if (*(void**)(p2 + 720) == (void*)player && (s8)p2[852] != 0)
         {
-            result = 1;
-        }
-        else if ((s8)p2[852] == 0)
-        {
-            result = 1;
-        }
-        else if (*(f32*)(p2 + 704) > f && p4 != 0)
-        {
-            result = 1;
-        }
-        else if (fn_80295A04(player, 1) == 0)
-        {
-            result = 1;
-        }
-        else if (Player_GetCurrentHealth(player) <= 0)
-        {
-            result = 1;
-        }
-        else
-        {
-            f32 pos[3];
-            f32 out[20];
-            pos[0] = ((GameObject*)player)->anim.localPosX;
-            pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
-            pos[2] = ((GameObject*)player)->anim.localPosZ;
-            if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0)
+            if (*(f32*)(p2 + 704) > f && p4 != 0)
             {
                 result = 1;
             }
+            else if (fn_80295A04(player, 1) == 0)
+            {
+                result = 1;
+            }
+            else if (Player_GetCurrentHealth(player) <= 0)
+            {
+                result = 1;
+            }
+            else
+            {
+                f32 pos[3];
+                f32 out[20];
+                pos[0] = ((GameObject*)player)->anim.localPosX;
+                pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
+                pos[2] = ((GameObject*)player)->anim.localPosZ;
+                if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0)
+                {
+                    result = 1;
+                }
+            }
+        }
+        else
+        {
+            result = 1;
         }
     }
     return result;

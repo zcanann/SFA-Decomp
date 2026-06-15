@@ -223,9 +223,6 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     int shader;
     uint bitPos;
     uint shaderIdx;
-    undefined b1;
-    undefined b2;
-    undefined b0;
     volatile int colorWord;
     byte colR;
     byte colG;
@@ -236,18 +233,17 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 
     colorWord = lbl_803E8448;
     bitPos = bitReader[4];
-    shader = *bitReader;
     {
-        uint v;
-        v = *(u8*)(shader + ((int)bitPos >> 3));
-        shader = shader + ((int)bitPos >> 3);
-        v |= *(u8*)(shader + 1) << 8;
-        v |= *(u8*)(shader + 2) << 16;
+        int _off = (int)bitPos >> 3;
+        int _base = *bitReader;
+        uint3 _bits = *(undefined*)(_base + _off);
+        _base += _off;
+        _bits |= (uint3) * (undefined*)(_base + 1) << 8;
+        _bits |= (uint3) * (undefined*)(_base + 2) << 16;
         bitReader[4] = bitPos + 6;
-        shader = *(int*)((int)blockData + 0x64);
-        shaderIdx = (v >> (bitPos & 7)) & 0x3f;
+        shaderIdx = (_bits >> (bitPos & 7)) & 0x3f;
+        shader = *(int*)((int)blockData + 0x64) + shaderIdx * 0x44;
     }
-    shader = shader + shaderIdx * 0x44;
     GXSetTevAlphaIn(0, 7, 4, 5, 7);
     selectTexture(*(int*)Shader_getLayer(shader, 0), 0);
     if ((*(uint*)(shader + 0x3c) & 4) != 0)
@@ -478,11 +474,6 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
     u8 g1;
     u8 g0;
     u8* base;
-    u8* pc1;
-    u8* pc2;
-    u8* pc3;
-    int* pd1;
-    u8* pdb;
     int ptr;
     int* p;
     int i;
@@ -493,11 +484,6 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
     int bptr;
 
     base = lbl_8037E0C0;
-    pc1 = &c1;
-    pc2 = &c2;
-    pc3 = &c3;
-    pd1 = &dOut1;
-    pdb = dBig;
     pos = stream[4];
     word = ((u8*)*stream)[pos >> 3];
     bptr = *stream + (pos >> 3);
@@ -554,8 +540,8 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
                     p = &lbl_803DCE28;
                     for (i = 0; i < count; i = i + 1)
                     {
-                        modelLightStruct_getDiffuseColor((void*)*p, &c0, pc1, pc2, pc3);
-                        modelLightStruct_getPosition((void*)*p, &dOut0, pd1, pdb);
+                        modelLightStruct_getDiffuseColor((void*)*p, &c0, &c1, &c2, &c3);
+                        modelLightStruct_getPosition((void*)*p, &dOut0, &dOut1, dBig);
                         modelLightStruct_getRadius((void*)*p);
                         fn_8004FA30(&c0, &dOut0);
                         p = p + 1;
@@ -581,15 +567,15 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
                     }
                     else
                     {
-                        modelLightStruct_getDiffuseColor((void*)lbl_803DCE28, &c0, pc1, pc2, pc3);
-                        modelLightStruct_getPosition((void*)lbl_803DCE28, &dOut0, pd1, pdb);
+                        modelLightStruct_getDiffuseColor((void*)lbl_803DCE28, &c0, &c1, &c2, &c3);
+                        modelLightStruct_getPosition((void*)lbl_803DCE28, &dOut0, &dOut1, dBig);
                         modelLightStruct_getRadius((void*)lbl_803DCE28);
                         fn_8004F6D8(&c0, &dOut0, &g0);
                         p = &lbl_803DCE28 + 1;
                         for (i = 1; i < count; i = i + 1)
                         {
-                            modelLightStruct_getDiffuseColor((void*)*p, &c0, pc1, pc2, pc3);
-                            modelLightStruct_getPosition((void*)*p, &dOut0, pd1, pdb);
+                            modelLightStruct_getDiffuseColor((void*)*p, &c0, &c1, &c2, &c3);
+                            modelLightStruct_getPosition((void*)*p, &dOut0, &dOut1, dBig);
                             modelLightStruct_getRadius((void*)*p);
                             fn_8004F380(&c0, &dOut0);
                             p = p + 1;
@@ -669,36 +655,36 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
 
     colorWord = lbl_803DEBB0;
     if ((*(byte*)(shader + 0x41) == 2) &&
-        (texId = Shader_getLayer(shader, 1), (int)(*(byte*)(texId + 4) & 0x7f) == 9))
+        (texId = Shader_getLayer(shader, 1), (*(byte*)(texId + 4) & 0x7f) == 9u))
     {
         layer = (int*)Shader_getLayer(shader, 0);
         layerByte = *(byte*)((int)layer + 5);
-        if (layerByte == '\0')
+        if (layerByte != '\0')
         {
-            texId = *layer;
-        }
-        else
-        {
-            texId = *layer;
+            int texVal = *layer;
+            TexOverride* base;
             overrideIdx = 0;
-            pE = (TexOverride*)lbl_803DCE6C;
+            base = (TexOverride*)lbl_803DCE6C;
+            pE = base;
             for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && (pE->id == texId)) &&
+                if (((0 < pE->count) && ((uint)pE->id == (uint)texVal)) &&
                     ((int)layerByte == pE->layerByte))
                 {
-                    texId = textureCrazyPointerFollowFn_80054c30(texId, ((TexOverride*)lbl_803DCE6C)[overrideIdx].ptr);
-                    break;
+                    texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
+                    goto layer0_done;
                 }
                 pE = pE + 1;
                 overrideIdx = overrideIdx + 1;
             }
-        }
-        if (*(byte*)((int)layer + 6) == 0xff)
-        {
-            texMtx = (float*)0x0;
+            texId = texVal;
         }
         else
+        {
+            texId = *layer;
+        }
+    layer0_done:
+        if (*(byte*)((int)layer + 6) != 0xff)
         {
             layerIdx = (uint) * (byte*)((int)layer + 6) * 0x10;
             PSMTXTrans(afStack_44,
@@ -706,6 +692,10 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                        *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
             texMtx = (float*)afStack_44;
+        }
+        else
+        {
+            texMtx = (float*)0x0;
         }
         fn_80051B00(texId, texMtx, 0, (char*)&colorWord);
         if ((*(uint*)(shader + 0x3c) & 0x100) != 0)
@@ -714,32 +704,32 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         }
         layer = (int*)Shader_getLayer(shader, 1);
         layerByte = *(byte*)((int)layer + 5);
-        if (layerByte == '\0')
+        if (layerByte != '\0')
         {
-            texId = *layer;
-        }
-        else
-        {
-            texId = *layer;
+            int texVal = *layer;
+            TexOverride* base;
             overrideIdx = 0;
-            pE = (TexOverride*)lbl_803DCE6C;
+            base = (TexOverride*)lbl_803DCE6C;
+            pE = base;
             for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && (pE->id == texId)) &&
+                if (((0 < pE->count) && ((uint)pE->id == (uint)texVal)) &&
                     ((int)layerByte == pE->layerByte))
                 {
-                    texId = textureCrazyPointerFollowFn_80054c30(texId, ((TexOverride*)lbl_803DCE6C)[overrideIdx].ptr);
-                    break;
+                    texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
+                    goto layer1_done;
                 }
                 pE = pE + 1;
                 overrideIdx = overrideIdx + 1;
             }
-        }
-        if (*(byte*)((int)layer + 6) == 0xff)
-        {
-            texMtx = (float*)0x0;
+            texId = texVal;
         }
         else
+        {
+            texId = *layer;
+        }
+    layer1_done:
+        if (*(byte*)((int)layer + 6) != 0xff)
         {
             layerIdx = (uint) * (byte*)((int)layer + 6) * 0x10;
             PSMTXTrans(afStack_44,
@@ -747,6 +737,10 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                        *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
             texMtx = (float*)afStack_44;
+        }
+        else
+        {
+            texMtx = (float*)0x0;
         }
         fn_80051868(texId, texMtx, 9);
         textureFn_800524ec((char*)&colorWord);
@@ -757,12 +751,9 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         {
             layer = (int*)Shader_getLayer(shader, layerIdx);
             texId = *layer;
-            if (texId == 0)
+            if (texId != 0)
             {
-                gxColorFn_800523d0();
-            }
-            else
-            {
+                int texVal = texId;
                 layerByte = *(byte*)((int)layer + 5);
                 if (layerByte != '\0')
                 {
@@ -770,34 +761,42 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                     ovr = (int*)lbl_803DCE6C;
                     for (remain = 0x50; remain != 0; remain--)
                     {
-                        if (((0 < *(short*)(ovr + 3)) && (*ovr == texId)) &&
-                            (layerByte == *(byte*)((int)ovr + 0xe)))
+                        if (((0 < *(short*)(ovr + 3)) && ((uint)*ovr == (uint)texVal)) &&
+                            ((int)layerByte == (int)*(byte*)((int)ovr + 0xe)))
                         {
-                            texId = textureCrazyPointerFollowFn_80054c30(texId, ((int*)lbl_803DCE6C)[overrideIdx * 4 + 1]);
+                            texId = textureCrazyPointerFollowFn_80054c30(texVal, ((int*)lbl_803DCE6C)[overrideIdx * 4 + 1]);
                             break;
                         }
                         ovr = ovr + 4;
                         overrideIdx = overrideIdx + 1;
                     }
                 }
-                if (*(byte*)((int)layer + 6) == 0xff)
+                if (*(byte*)((int)layer + 6) != 0xff)
+                {
+                    int mtxOff = (uint) * (byte*)((int)layer + 6) * 0x10;
+                    PSMTXTrans(afStack_44,
+                               *(float*)(lbl_803DCE68 + mtxOff) / lbl_803DEBC8,
+                               *(float*)(lbl_803DCE68 + mtxOff + 4) / lbl_803DEBC8,
+                               lbl_803DEBCC);
+                    texMtx = (float*)afStack_44;
+                }
+                else
                 {
                     texMtx = (float*)0x0;
                 }
-                else
-                {
-                    texMtx = (float*)(lbl_803DCE68 + (uint) * (byte*)((int)layer + 6) * 0x10);
-                    PSMTXTrans(afStack_44, *texMtx / lbl_803DEBC8, texMtx[1] / lbl_803DEBC8, lbl_803DEBCC);
-                    texMtx = (float*)afStack_44;
-                }
-                if ((*(uint*)(shader + 0x3c) & 0x40000) == 0)
-                {
-                    fn_80051868(texId, texMtx, *(byte*)(layer + 1) & 0x7f);
-                }
-                else
+                layerByte = *(byte*)(layer + 1) & 0x7f;
+                if ((*(uint*)(shader + 0x3c) & 0x40000) != 0)
                 {
                     fn_80051528(texId, texMtx);
                 }
+                else
+                {
+                    fn_80051868(texId, texMtx, layerByte);
+                }
+            }
+            else
+            {
+                gxColorFn_800523d0();
             }
         }
         if ((*(uint*)(shader + 0x3c) & 0x100) != 0)

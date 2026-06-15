@@ -1486,7 +1486,7 @@ void objModelClearVecFn_8003aa40(int obj)
             {
                 u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(obj);
-                if (data[(offset + i) + 1] != 0xff && (int)data[i] == slot)
+                if ((int)data[(offset + i) + 1] != 0xff && (int)data[i] == slot)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }

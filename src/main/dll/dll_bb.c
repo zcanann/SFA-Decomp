@@ -164,42 +164,41 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
  * EN v1.0 Address: 0x80101EBC
  * EN v1.0 Size: 400b
  */
+#pragma opt_common_subs off
 void camcontrol_applyQueuedAction(void)
 {
-  CamcontrolCameraState *camera;
   CameraViewSlot *view;
   float blendStep;
 
   if (gCamcontrolQueuedActionPending != '\0') {
-    camera = CAMCONTROL_CAMERA;
     if (gCamcontrolQueuedActionBlendFrames > 1) {
       blendStep = gCamcontrolNormalizedMax / (float)gCamcontrolQueuedActionBlendFrames;
       if ((blendStep <= gCamcontrolNormalizedMin) || (blendStep > gCamcontrolNormalizedMax)) {
         blendStep = gCamcontrolNormalizedMax;
       }
-      camera->blendProgress = gCamcontrolNormalizedMax;
-      camera->blendStep = blendStep;
-      camera->queuedBlendFlags = gCamcontrolQueuedActionMode;
+      CAMCONTROL_CAMERA->blendProgress = gCamcontrolNormalizedMax;
+      CAMCONTROL_CAMERA->blendStep = blendStep;
+      CAMCONTROL_CAMERA->queuedBlendFlags = gCamcontrolQueuedActionMode;
     }
     else {
-      camera->blendProgress = gCamcontrolNormalizedMin;
-      camera->queuedBlendFlags = 0;
+      CAMCONTROL_CAMERA->blendProgress = gCamcontrolNormalizedMin;
+      CAMCONTROL_CAMERA->queuedBlendFlags = 0;
     }
     view = Camera_GetCurrentViewSlot();
-    if (gCamcontrolNormalizedMax == camera->blendProgress) {
-      camera->blendStartX = view->x;
-      camera->blendStartY = view->y;
-      camera->blendStartZ = view->z;
-      camera->blendStartYaw = view->yaw;
-      camera->blendStartPitch = view->pitch;
-      camera->blendStartRoll = view->roll;
-      camera->blendStartFovY = Camera_GetFovY();
+    if (gCamcontrolNormalizedMax == CAMCONTROL_CAMERA->blendProgress) {
+      CAMCONTROL_CAMERA->blendStartX = view->x;
+      CAMCONTROL_CAMERA->blendStartY = view->y;
+      CAMCONTROL_CAMERA->blendStartZ = view->z;
+      CAMCONTROL_CAMERA->blendStartYaw = view->yaw;
+      CAMCONTROL_CAMERA->blendStartPitch = view->pitch;
+      CAMCONTROL_CAMERA->blendStartRoll = view->roll;
+      CAMCONTROL_CAMERA->blendStartFovY = Camera_GetFovY();
     }
     else {
-      camera->yaw = view->yaw;
-      camera->pitch = view->pitch;
-      camera->roll = view->roll;
-      camera->fovY = Camera_GetFovY();
+      CAMCONTROL_CAMERA->yaw = view->yaw;
+      CAMCONTROL_CAMERA->pitch = view->pitch;
+      CAMCONTROL_CAMERA->roll = view->roll;
+      CAMCONTROL_CAMERA->fovY = Camera_GetFovY();
     }
     gCamcontrolSavedActionId = gCamcontrolActiveActionId;
     gCamcontrolSavedActionPriority = gCamcontrolActiveActionPriority;
@@ -213,6 +212,7 @@ void camcontrol_applyQueuedAction(void)
   }
   return;
 }
+#pragma opt_common_subs reset
 
 void Camera_func1D(int targetFlagMode)
 {

@@ -54,14 +54,15 @@ void fastCastFloatToU16(s16* p, float x)
 float fastCastS16ToFloat(s16* p);
 void fastCastFloatToS16(s16* p, float x);
 
+#pragma optimization_level 0
+#pragma optimize_for_size on
 float exp2f(float x)
 {
     s16 exponent;
-    register float input = x;
-    register float integer_part;
-    register float fraction;
+    float input = x;
+    float integer_part;
+    float fraction;
     float result;
-    u32 bits;
 
     if (input < lbl_803E7978) {
         return lbl_803E797C;
@@ -83,10 +84,11 @@ float exp2f(float x)
         result = lbl_803E7980;
     }
 
-    bits = *(u32*)&result + ((u32)exponent << 23);
-    *(u32*)&result = bits;
+    *(u32*)&result = *(u32*)&result + ((u32)exponent << 23);
     return result;
 }
+#pragma optimize_for_size reset
+#pragma optimization_level reset
 
 float expf(float x)
 {
@@ -118,6 +120,7 @@ void fastCastFloatToS16(s16* p, float x)
 }
 
 #pragma optimization_level 0
+#pragma optimize_for_size on
 float fastFloorf(float x)
 {
     register float input = x;
@@ -159,4 +162,5 @@ float fastFloorf(float x)
 
     return input;
 }
+#pragma optimize_for_size reset
 #pragma optimization_level reset
