@@ -1,9 +1,7 @@
 /* DLL 0x47 - CameraModeTestStrength [8010AEA8-8010B424) */
-#include "main/dll/CAM/camcannon.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcannon_state.h"
 #include "main/camera_object.h"
-#include "main/dll/CAM/camcombat_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/mm.h"
