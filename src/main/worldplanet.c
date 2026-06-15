@@ -176,8 +176,8 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
     WorldPlanetState* state = ((GameObject*)obj)->extra;
     int stickX;
     int stickY;
-    int resX;
-    int resY;
+    s8 resX;
+    s8 resY;
 
     stickX = padGetStickX(0);
     stickY = padGetStickY(0);
@@ -232,8 +232,8 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
             state->prevStickX = 0;
             state->stickXRepeatFrames = 0;
         }
-        *outX = resX;
-        *outY = resY;
+        *(s8*)outX = resX;
+        *(s8*)outY = resY;
     }
     else
     {
