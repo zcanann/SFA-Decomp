@@ -6175,15 +6175,15 @@ void fn_80296124(int obj, void* p2, void* p3)
 int fn_8029605C(int obj, f32* p2, f32* p3)
 {
     void* inner = ((GameObject*)obj)->extra;
-    if (inner != NULL && getCurSeqNo() == 0)
+    if (inner == NULL || getCurSeqNo() != 0)
     {
-        if ((*(int*)((char*)inner + 0x360) & 0x400) != 0)
-        {
-            *p2 = *(f32*)((char*)inner + 0x788);
-            *p3 = *(f32*)((char*)inner + 0x78c);
-            return 1;
-        }
         return 0;
+    }
+    if ((*(u32*)((char*)inner + 0x360) & 0x400) != 0u)
+    {
+        *p2 = *(f32*)((char*)inner + 0x788);
+        *p3 = *(f32*)((char*)inner + 0x78c);
+        return 1;
     }
     return 0;
 }
