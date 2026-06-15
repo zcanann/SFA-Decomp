@@ -130,7 +130,7 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
 
 void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
 
-#pragma peephole on
+#pragma peephole off
 void RollingBarrel_update(int obj)
 {
     RollingBarrelState* state;
@@ -152,22 +152,9 @@ void RollingBarrel_update(int obj)
     dist_sq = lbl_803E4468;
     bVar1 = state->state;
 
-    if (bVar1 == ROLLINGBARREL_STATE_RESPAWN_WAIT)
+    switch (bVar1)
     {
-        state->timer += timeDelta;
-        if (state->timer >= lbl_803E44B0)
-        {
-            state->hitVolumeSlot = 0;
-            state->state = ROLLINGBARREL_STATE_CLEANUP;
-            state->timer -= lbl_803E44B0;
-            ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
-            lbl_803DDB20 -= 1;
-        }
-    }
-    else if (bVar1 < ROLLINGBARREL_STATE_RESPAWN_WAIT)
-    {
-        if (bVar1 == ROLLINGBARREL_STATE_ROLLING)
-        {
+        case ROLLINGBARREL_STATE_ROLLING:
             if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
             {
                 f32 vmax = lbl_803E446C;
@@ -253,7 +240,7 @@ void RollingBarrel_update(int obj)
                     (f32)(int)((GameObject*)obj)->anim.rotY);
             hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
 
-            if (blocked != 0 || hitInfo == Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||
+            if (blocked != 0 || (u32)hitInfo == (u32)Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||
                 hitResult == 0x13)
             {
                 if (blocked == 0)
@@ -267,25 +254,34 @@ void RollingBarrel_update(int obj)
                 r = randomGetRange(0, 2);
                 fn_801A5D88(obj, (int)r);
             }
-        }
-        else
-        {
+            break;
+        case ROLLINGBARREL_STATE_EXPLODED_WAIT:
             state->timer += timeDelta;
             if (state->timer >= lbl_803E44B0)
             {
                 state->state = ROLLINGBARREL_STATE_RESPAWN_WAIT;
                 state->timer -= lbl_803E44B0;
             }
-        }
-    }
-    else if (bVar1 < 4)
-    {
-        state->timer += timeDelta;
-        if (state->timer >= lbl_803E44B4)
-        {
-            Obj_FreeObject(obj);
-            return;
-        }
+            break;
+        case ROLLINGBARREL_STATE_RESPAWN_WAIT:
+            state->timer += timeDelta;
+            if (state->timer >= lbl_803E44B0)
+            {
+                state->hitVolumeSlot = 0;
+                state->state = ROLLINGBARREL_STATE_CLEANUP;
+                state->timer -= lbl_803E44B0;
+                ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
+                lbl_803DDB20 -= 1;
+            }
+            break;
+        case ROLLINGBARREL_STATE_CLEANUP:
+            state->timer += timeDelta;
+            if (state->timer >= lbl_803E44B4)
+            {
+                Obj_FreeObject(obj);
+                return;
+            }
+            break;
     }
 
     if (state->hitVolumeSlot != 0)
