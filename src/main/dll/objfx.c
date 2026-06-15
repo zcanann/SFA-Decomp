@@ -1,6 +1,4 @@
 #include "main/dll/fx_800944A0_shared.h"
-#include "main/game_object.h"
-#include "main/objfx.h"
 
 extern f32 lbl_8030F9D8[];
 extern s16 lbl_803DB788[4];
