@@ -150,7 +150,7 @@ void vfpminifire_update(int obj)
 
     if (state->burstStarted != 0)
     {
-        s16 alpha = ((GameObject*)obj)->anim.alpha - (s16)(int)timeDelta;
+        s16 alpha = ((GameObject*)obj)->anim.alpha - (s16)timeDelta;
         if (alpha < 0)
         {
             alpha = 0;
