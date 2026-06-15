@@ -8,7 +8,6 @@
 
 #include "main/dll/bit80_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
