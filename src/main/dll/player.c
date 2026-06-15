@@ -5985,14 +5985,16 @@ int fn_8029F108(int obj, int state)
     {
         (*(void (*)(int, void*, void*, void*))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x28)))(
             sub, (char*)obj + 0xc, (char*)obj + 0x10, (char*)obj + 0x14);
-        if (*(s16*)((char*)sub + 0x46) == 0x38c || *(s16*)((char*)sub + 0x46) == 0x72)
+        switch (*(s16*)((char*)sub + 0x46))
         {
+        case 0x38c:
+        case 0x72:
             (*gCameraInterface)->setMode(
                 0x42, 0, 1, 0, NULL, 0x64, 0xff);
-        }
-        else
-        {
+            break;
+        default:
             (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
+            break;
         }
         kind = (*(int (*)(int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x30)))(sub);
         (*(void (*)(int, int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 3);
