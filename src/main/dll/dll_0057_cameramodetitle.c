@@ -56,7 +56,6 @@ extern u8 lbl_803DD5D1;
 extern u8 lbl_803DD5D0;
 extern f32 lbl_803E1BE0;
 extern f32 titleScreenCamProgress;
-extern CameraMode54State* lbl_803DD5C0;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BE4;
 extern void Movie_SetVolumeFade(int p1, int p2);
@@ -69,7 +68,6 @@ extern f32 lbl_803E1BF4;
 extern f32 lbl_803E1BF8;
 extern f32 lbl_803E1BFC;
 extern f32 lbl_803E1C00;
-extern int arwarwing_isDead(int state);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
