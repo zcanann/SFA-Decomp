@@ -11717,14 +11717,16 @@ int fn_80298380(int obj, int state, f32 fv)
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
+        f32 z;
         ObjAnim_SetCurrentMove(obj, 0xfb, lbl_803E7EA4, 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F28;
-        ((PlayerState*)state)->baddie.animSpeedC = lbl_803E7EA4;
-        ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
-        ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
-        ((GameObject*)obj)->anim.velocityX = lbl_803E7EA4;
-        ((GameObject*)obj)->anim.velocityY = lbl_803E7EA4;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E7EA4;
+        z = lbl_803E7EA4;
+        ((PlayerState*)state)->baddie.animSpeedC = z;
+        ((PlayerState*)state)->baddie.animSpeedB = z;
+        ((PlayerState*)state)->baddie.animSpeedA = z;
+        ((GameObject*)obj)->anim.velocityX = z;
+        ((GameObject*)obj)->anim.velocityY = z;
+        ((GameObject*)obj)->anim.velocityZ = z;
     }
 
     r = fn_8029B9FC(obj, state, fv);
@@ -11734,8 +11736,11 @@ int fn_80298380(int obj, int state, f32 fv)
     }
 
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x30)))(obj, state, fv, 1);
-    inner->yaw = *(s16*)((char*)obj);
-    inner->targetYaw = *(s16*)((char*)obj);
+    {
+        s16 h = *(s16*)((char*)obj);
+        inner->yaw = h;
+        inner->targetYaw = h;
+    }
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 2);
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
