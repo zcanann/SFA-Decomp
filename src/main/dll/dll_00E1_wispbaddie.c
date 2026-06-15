@@ -357,7 +357,7 @@ void wispbaddie_update(int obj)
         if (state->cryTimer < lbl_803E2714)
         {
             Sfx_PlayFromObject(obj, 0x23d);
-            state->cryTimer = (f32)(u32)(int)randomGetRange(0x3c, 0x78);
+            state->cryTimer = (f32)(int)randomGetRange(0x3c, 0x78);
         }
         state->particleId = 0x338;
     }
