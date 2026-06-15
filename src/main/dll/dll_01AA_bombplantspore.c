@@ -1,4 +1,4 @@
-/* DLL 0x01AA (bombplantspore) - Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
+/* DLL 0x01AA (bombplantspore) — Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -252,19 +252,19 @@ void bombplantspore_update(void* obj)
     void* hitObj;
     int hitObject;
     void* playerObj;
-    int poppedMessage;
+    u32 poppedMessage;
     u32 poppedSender;
-    int detonateMessage;
+    u32 detonateMessage;
     int i;
 
     state = ((GameObject*)obj)->extra;
     if ((state->stateFlags >> 6 & 1) != 0)
     {
-        while (ObjMsg_Pop(obj, (u32*)&poppedMessage, &poppedSender, NULL) != 0)
+        detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
+        while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0)
         {
-            switch (poppedMessage)
+            if (poppedMessage == detonateMessage)
             {
-            case BOMBPLANTSPORE_MSG_DETONATE:
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
                 Sfx_PlayFromObject(obj, SFXmv_totem_slide);
                 (*gExpgfxInterface)->freeSource((u32)obj);
@@ -278,7 +278,6 @@ void bombplantspore_update(void* obj)
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject((u32)obj);
                 BOMBPLANTSPORE_FLAGS(state)->waitingForDetonateAck = 0;
-                break;
             }
         }
         if ((state->stateFlags >> 6 & 1) != 0)
@@ -311,18 +310,18 @@ void bombplantspore_update(void* obj)
     if (BOMBPLANTSPORE_FLAGS(state)->hitSurface == 0)
     {
         state->driftTimer -= timeDelta;
-        if (state->driftTimer < *(f32*)&lbl_803E5394)
+        if (state->driftTimer < lbl_803E5394)
         {
             state->driftTimer = lbl_803E5394;
         }
         state->unk2a0 -= timeDelta;
-        if (state->unk2a0 < *(f32*)&lbl_803E5394)
+        if (state->unk2a0 < lbl_803E5394)
         {
             state->unk2a0 = lbl_803E5394;
         }
-        *(s16*)obj += state->yawStep;
+        *(s16*)obj += *(u16*)&state->yawStep;
         ((GameObject*)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject*)obj)->anim.velocityY;
-        if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E53E4)
+        if (lbl_803E53E4 > ((GameObject*)obj)->anim.velocityY)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E53E4;
         }
@@ -364,16 +363,16 @@ void bombplantspore_update(void* obj)
         objMove(((GameObject*)obj)->anim.velocityX * timeDelta,
                 ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
-        (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
-        (*gPathControlInterface)->apply(obj, state->pathState);
-        (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
+        (*gPathControlInterface)->update(obj, (u8*)state + 4, timeDelta);
+        (*gPathControlInterface)->apply(obj, (u8*)state + 4);
+        (*gPathControlInterface)->advance(obj, (u8*)state + 4, timeDelta);
         if (hitObj != NULL &&
             (hitId = *(s16*)((u8*)hitObj + 0x46), hitId != 0x36d) &&
             hitId != 0x198 && hitId != 0x63c)
         {
             Sfx_PlayFromObject(obj, SFXen_tiles_lightup);
             BOMBPLANTSPORE_FLAGS(state)->hitSurface = 1;
-            if (state->fuseTimer > *(f32*)&lbl_803E53C0)
+            if (lbl_803E53C0 < state->fuseTimer)
             {
                 state->fuseTimer = lbl_803E53C0;
             }
@@ -381,7 +380,7 @@ void bombplantspore_update(void* obj)
         if ((*(u8*)((u8*)state + 0x268) & 0x11) != 0)
         {
             BOMBPLANTSPORE_FLAGS(state)->hitSurface = 1;
-            if (state->fuseTimer > *(f32*)&lbl_803E53C0)
+            if (lbl_803E53C0 < state->fuseTimer)
             {
                 state->fuseTimer = lbl_803E53C0;
             }
