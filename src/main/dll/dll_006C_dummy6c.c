@@ -107,7 +107,6 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-extern int maybeTryLoadSave(int a);
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
