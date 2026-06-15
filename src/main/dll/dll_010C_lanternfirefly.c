@@ -307,7 +307,7 @@ void LanternFireFly_update(int obj)
 
             worldZ = *(f32*)(player + 0x20);
             worldY = lbl_803E3AA8 + *(f32*)(player + 0x1c);
-            st = (LanternFireFlyState*)*(int*)(obj + 0xb8);
+            st = (LanternFireFlyState*)*(int *)&((GameObject *)obj)->extra;
             st->anchorX = *(f32*)(player + 0x18);
             st->anchorY = worldY;
             st->anchorZ = worldZ;
