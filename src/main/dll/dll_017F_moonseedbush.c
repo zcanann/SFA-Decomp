@@ -79,8 +79,6 @@ extern f32 lbl_803E5180;
 extern f32 lbl_803E44D0;
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
-extern int mapGetDirIdx(int);
-extern void saveGame_saveObjectPos(int obj);
 
 undefined4
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
