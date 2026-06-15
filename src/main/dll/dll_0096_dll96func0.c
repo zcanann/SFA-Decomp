@@ -60,7 +60,7 @@ typedef struct
 int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     GfxBuf buf;
-    u8* base = lbl_803175E8;
+    u8* base = (u8*)(int)lbl_803175E8;
     GfxCmd* e;
 
     if (GameBit_Get(0x63c) != 0)
@@ -166,7 +166,7 @@ int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
             buf.pos[2] = lbl_803E12C0 + *(f32*)(posSource + 0x14);
         }
     }
-    return (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, 0x89, 0);
+    return (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803175E8, 0x18, base + 0xd4, 0x89, 0);
 }
 
 void dll_97_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
