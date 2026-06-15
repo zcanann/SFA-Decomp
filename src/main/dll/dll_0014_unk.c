@@ -3711,9 +3711,45 @@ static inline u32 RomCurve_GetId(RomCurveDef* curve)
     return curve->id;
 }
 
-static inline int RomCurve_IsLinkIdValid(int linkId);
+static inline int RomCurve_IsLinkIdValid(int linkId)
+{
+    return -1 < linkId;
+}
 
-static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId);
+static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
+{
+    RomCurveDef* curve;
+    int high;
+    int low;
+    int mid;
+
+    if ((s32)curveId < 0)
+    {
+        return NULL;
+    }
+
+    high = nRomCurves - 1;
+    low = 0;
+    while (high >= low)
+    {
+        mid = (high + low) >> 1;
+        curve = romCurves[mid];
+        if (curveId > curve->id)
+        {
+            low = mid + 1;
+        }
+        else if (curveId < curve->id)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            return curve;
+        }
+    }
+
+    return NULL;
+}
 
 int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY,
                                           f32 z, f32 unusedW);
