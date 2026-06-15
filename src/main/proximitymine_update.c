@@ -70,8 +70,8 @@ void proximitymine_free(ProximityMineObject* obj)
     return;
 }
 
-void proximitymine_render(ProximityMineObject* obj, undefined4 param_2, undefined4 param_3,
-                          undefined4 param_4, undefined4 param_5)
+void proximitymine_render(ProximityMineObject* obj, undefined4 p2, undefined4 p3,
+                          undefined4 p4, undefined4 p5)
 {
     int mapBlock;
     ProximityMineEffect* effect;
@@ -93,7 +93,7 @@ void proximitymine_render(ProximityMineObject* obj, undefined4 param_2, undefine
             {
                 queueGlowRender(effect);
             }
-            objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, (double)lbl_803E6778);
+            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6778);
         }
     }
     return;
