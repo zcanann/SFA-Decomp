@@ -961,9 +961,10 @@ f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
     RomCurvePoint* points;
 
     points = curves_getCurves(obj, x, z, &hitCount, 1);
-    maxY = baseY + height;
+    i = 0;
     point = points;
-    for (i = 0; i < (int)hitCount; i++)
+    maxY = baseY + height;
+    for (; i < (int)hitCount; i++)
     {
         if ((point->x < maxY) && (point->z > *(f32*)&lbl_803E0668))
         {
