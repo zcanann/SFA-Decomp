@@ -58,12 +58,10 @@ extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* 
 extern f32 lbl_803E558C;
 extern void GameBit_Set(int bit, int val);
 extern void Sfx_PlayFromObject(int a, int b);
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 lbl_803E5588;
-extern u16 lbl_803DC060[4];
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
