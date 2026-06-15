@@ -5,10 +5,7 @@
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/DIM/DIM2projrock.h"
-#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
