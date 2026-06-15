@@ -597,7 +597,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         ((ArwArwingProjectileSetup*)setup)->field05 = 1;
     }
     proj = loadObjectAtObject(obj);
-    if (proj == 0)
+    if ((void*)proj == NULL)
         return;
     if (level == 0)
     {
@@ -612,7 +612,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         Sfx_PlayFromObject(proj, SFXbaddie_eba_bigswipe);
         Obj_SetActiveModelIndex(proj, 1);
     }
-    if (linkEffect != 0)
+    if ((u8)linkEffect != 0)
         arwprojectile_createLinkedEffect(proj, 1);
     arwprojectile_setLifetime(proj, ((ArwingState*)state)->projLifetime);
     arwprojectile_placeForward(proj, ((ArwingState*)state)->projSpeed);
