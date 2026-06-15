@@ -1,4 +1,3 @@
-#include "main/dll/LGT/LGTcontrollight.h"
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
 #include "main/game_object.h"
 
