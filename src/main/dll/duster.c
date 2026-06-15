@@ -891,7 +891,7 @@ void fn_80156950(uint obj, int state)
 
 void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
 {
-    short move;
+    int move;
 
     if (eventKind != 0x11)
     {

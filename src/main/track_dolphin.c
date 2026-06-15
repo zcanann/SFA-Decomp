@@ -2321,7 +2321,7 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
     lbl_803DB658 = 1;
 }
 
-#pragma opt_strength_reduction off
+#pragma opt_strength_reduction on
 int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
 {
     ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
