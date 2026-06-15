@@ -7,14 +7,9 @@
  * SeqFn handles the few types with anim-event work.
  */
 #include "main/dll_000A_expgfx.h"
-#include "main/screen_transition.h"
 #include "main/game_object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
-#include "main/effect_interfaces.h"
-#include "main/dll/CF/dll_012A_cfcrate.h"
 #include "main/objseq.h"
-#include "main/dll/CF/dll_179.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 
 typedef struct CfccratePlacement
