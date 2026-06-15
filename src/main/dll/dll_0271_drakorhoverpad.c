@@ -706,22 +706,16 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             GameBit_Set(0x660, 1);
         }
-        else if (GameBit_Get(0x661) != 0)
-        {
-            if (*(f32*)p < lbl_803E6A3C)
-            {
-                ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 += lbl_803E6A74;
-            }
-            else
-            {
-                ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 += lbl_803E6A38;
-            }
-        }
-        else
+        else if (GameBit_Get(0x661) == 0)
         {
             GameBit_Set(0x788, 1);
             f->state = 1;
             *(f32*)p = lbl_803E6A3C;
+        }
+        else
+        {
+            ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 +=
+                (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
         }
         break;
     case 9:
@@ -729,21 +723,15 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        if (GameBit_Get(0x661) != 0)
-        {
-            if (*(f32*)p < lbl_803E6A3C)
-            {
-                ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 += lbl_803E6A74;
-            }
-            else
-            {
-                ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 += lbl_803E6A38;
-            }
-        }
-        else
+        if (GameBit_Get(0x661) == 0)
         {
             f->state = 1;
             *(f32*)p = lbl_803E6A3C;
+        }
+        else
+        {
+            ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 +=
+                (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
         }
         break;
     case 5:
@@ -758,32 +746,24 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        if (*(f32*)p < lbl_803E6A3C)
-        {
-            ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 += lbl_803E6A7C;
-        }
-        else
-        {
-            ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 += lbl_803E6A80;
-        }
+        ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 +=
+            (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A7C : lbl_803E6A80;
         break;
     case 7:
-        if (*(f32*)p > lbl_803E6A3C)
+        if (*(f32*)p <= lbl_803E6A3C)
         {
-            break;
+            f->state = 3;
+            *(f32*)p = lbl_803E6A3C;
+            Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         }
-        f->state = 3;
-        *(f32*)p = lbl_803E6A3C;
-        Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         break;
     case 17:
-        if (*(f32*)p < lbl_803E6A3C)
+        if (*(f32*)p >= lbl_803E6A3C)
         {
-            break;
+            f->state = 4;
+            *(f32*)p = lbl_803E6A3C;
+            Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         }
-        f->state = 4;
-        *(f32*)p = lbl_803E6A3C;
-        Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         break;
     case 10:
         if (g->p1 == 0)
