@@ -7938,11 +7938,10 @@ int fn_802A6694(int obj, int state, f32 fv)
         {
             if (((PlayerState*)state)->baddie.unk276 == 2)
             {
-                int mA = *(s16*)(*(int*)((char*)inner + 0x3f8) + 0x30);
+                int mA;
                 int mB;
-                if (((GameObject*)obj)->anim.currentMove != mA &&
-                    (mB = *(s16*)(*(int*)((char*)inner + 0x3f8) + 0x32),
-                        ((GameObject*)obj)->anim.currentMove != mB) &&
+                if (((GameObject*)obj)->anim.currentMove != (mA = *(s16*)(*(int*)((char*)inner + 0x3f8) + 0x30)) &&
+                    ((GameObject*)obj)->anim.currentMove != (mB = *(s16*)(*(int*)((char*)inner + 0x3f8) + 0x32)) &&
                     ((ByteFlags*)((char*)inner + 0x3f3))->b40 == 0)
                 {
                     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E98)
