@@ -1837,7 +1837,6 @@ void dll_F7_update(int* obj)
     extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
     extern undefined4 ObjGroup_FindNearestObject(); /* #57 */
     DllF7State* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     f32 pz;
     f32 py;
     f32 px;
@@ -1856,7 +1855,7 @@ void dll_F7_update(int* obj)
             state->byte9 = 0;
             state->byte8 = 1;
             state->hitsRemaining = 2;
-            hitState->flags |= 1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
         }
         else
@@ -1896,7 +1895,7 @@ void dll_F7_update(int* obj)
         state->byte9 = 1;
         state->byte8 = 0;
         Sfx_PlayFromObject(obj, 74);
-        hitState->flags &= ~1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
         if ((int)((DllF7Placement*)params)->unk1E != -1)
         {
             GameBit_Set((int)((DllF7Placement*)params)->unk1E, 1);
