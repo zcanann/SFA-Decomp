@@ -5,7 +5,6 @@
 #include "main/model.h"
 #include "main/object_transform.h"
 #include "main/objprint_dolphin.h"
-#include "main/objanim_internal.h"
 #include "main/vecmath.h"
 
 typedef struct ObjModelRenderOp
