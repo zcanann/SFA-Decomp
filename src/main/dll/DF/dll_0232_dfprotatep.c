@@ -620,8 +620,9 @@ void sfxplayer_free(int obj, int arg1)
 
     if (arg1 == 0)
     {
+        i = 0;
         handles = gSfxplayerEffectHandles;
-        for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+        for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
             if (*(void**)&handles[0] != NULL)
             {
