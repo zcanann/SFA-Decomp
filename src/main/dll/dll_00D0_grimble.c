@@ -191,20 +191,21 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     char* sub;
 
     sub = *(char**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    if (*(s8*)(state + 0x27a) != 0)
+    if (*(s8*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2EB8, 0);
-        *(u8*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     (*(void (**)(int, char*, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, state, arg, 0);
-    if ((*(int*)(state + 0x314) & 1) != 0)
+    if ((*(int*)&((GroundBaddieState*)state)->baddie.eventFlags & 1) != 0)
     {
-        *(int*)(state + 0x314) = *(int*)(state + 0x314) & ~1;
+        *(int*)&((GroundBaddieState*)state)->baddie.eventFlags = *(int*)&((GroundBaddieState*)state)->baddie.eventFlags
+            & ~1;
         Sfx_PlayFromObject(obj, SFXsc_death01);
     }
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
-        lbl_803E2F18 * (*(f32*)(state + 0x2a0) * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1))));
+        lbl_803E2F18 * (((GroundBaddieState*)state)->baddie.moveSpeed * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1))));
     if (((GrimbleControl*)sub)->unk48 < lbl_803E2EF4)
     {
         ((GrimbleControl*)sub)->unk48 = lbl_803E2EF4;
