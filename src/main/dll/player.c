@@ -5591,12 +5591,8 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         f32 t = *(f32*)(slot + 0xa0);
         if (t >= lbl_803E7EA4)
         {
-            if (t >= ((GameObject*)obj)->anim.currentMoveProgress ||
-                ((GameObject*)obj)->anim.currentMoveProgress >= *(f32*)(slot + 0xa4))
-            {
-                inner->unk7D8 = lbl_803E7EA4;
-            }
-            else
+            if (((GameObject*)obj)->anim.currentMoveProgress > t &&
+                ((GameObject*)obj)->anim.currentMoveProgress < *(f32*)(slot + 0xa4))
             {
                 if (inner->unk7D8 == lbl_803E7EA4)
                 {
@@ -5608,6 +5604,10 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                 {
                     inner->unk7D8 = lbl_803E7FBC;
                 }
+            }
+            else
+            {
+                inner->unk7D8 = lbl_803E7EA4;
             }
         }
     }
