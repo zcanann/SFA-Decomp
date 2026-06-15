@@ -129,6 +129,7 @@ extern f32 lbl_803E094C;
 extern f32 lbl_803E0950;
 extern f32 lbl_803E0954;
 extern f32 lbl_803E0958;
+extern f32 lbl_803E095C;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
@@ -728,12 +729,12 @@ void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
     u8* base = lbl_80312E58;
     GfxCmd* e = buf.entries;
     int ctx;
-    u8 count;
+    uint flag;
     if (variant == 1)
     {
         *(s16*)&base[274] = 0;
     }
-    count = *(u8*)(*(int*)(sourceObj + 0x4c) + 0x1a);
+    flag = *(u8*)(*(int*)(sourceObj + 0x4c) + 0x1a);
     e[0].layer = 0;
     e[0].flags = 7;
     e[0].tex = &base[240];
@@ -835,13 +836,20 @@ void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.col[0] = lbl_803E0938;
     buf.col[1] = lbl_803E0938;
     buf.col[2] = lbl_803E0938;
-    buf.scale = lbl_803E0948;
+    if (flag != 0)
+    {
+        buf.scale = lbl_803E095C * (f32)flag;
+    }
+    else
+    {
+        buf.scale = lbl_803E0948;
+    }
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    buf.count = count;
+    buf.count = 13;
     buf.hw[0] = *(s16*)&base[272];
     buf.hw[1] = *(s16*)&base[274];
     buf.hw[2] = *(s16*)&base[276];
