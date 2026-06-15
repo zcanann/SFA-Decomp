@@ -723,21 +723,21 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
     lbl_803DD450 = 0;
     lbl_803DD440 = 0;
 
-    if (*(s16*)(state + 0x274) != *(s16*)(state + 0x276))
+    if (((BaddieState*)state)->controlMode != ((BaddieState*)state)->unk276)
     {
-        *(u8*)(state + 0x27a) = 1;
+        ((BaddieState*)state)->moveJustStartedA = 1;
         *(s16*)(state + 0x338) = 0;
     }
 
     do
     {
         done = 0;
-        currentState = *(s16*)(state + 0x274);
+        currentState = ((BaddieState*)state)->controlMode;
         result = (*(int (**)(char*, char*, f32))(stateFns + currentState * 4))(pos, state, dt);
         if (result > 0)
         {
-            *(s16*)(state + 0x276) = *(s16*)(state + 0x274);
-            *(s16*)(state + 0x274) = (s16)(result - 1);
+            ((BaddieState*)state)->unk276 = ((BaddieState*)state)->controlMode;
+            ((BaddieState*)state)->controlMode = (s16)(result - 1);
             exitFn = *(void (**)(char*, char*))(state + 0x304);
             if (exitFn != NULL)
             {
@@ -745,11 +745,11 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
                 *(void**)(state + 0x304) = 0;
             }
             *(void**)(state + 0x304) = *(void**)(state + 0x308);
-            *(u8*)(state + 0x27a) = 1;
+            ((BaddieState*)state)->moveJustStartedA = 1;
             *(s16*)(state + 0x338) = 0;
-            *(u8*)(state + 0x34d) = 0;
+            ((BaddieState*)state)->unk34D = 0;
             *(u8*)(state + 0x34c) = 0;
-            *(u8*)(state + 0x356) = 0;
+            ((BaddieState*)state)->moveEventFlags = 0;
             *(s16*)(state + 0x278) = 0;
             if (*(void**)(pos + 0x54) != NULL)
             {
@@ -759,10 +759,10 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         else if (result < 0)
         {
             result = -result;
-            *(s16*)(state + 0x274) = (s16)result;
+            ((BaddieState*)state)->controlMode = (s16)result;
             if (result != currentState)
             {
-                *(s16*)(state + 0x276) = (s16)currentState;
+                ((BaddieState*)state)->unk276 = (s16)currentState;
                 exitFn = *(void (**)(char*, char*))(state + 0x304);
                 if (exitFn != NULL)
                 {
@@ -770,11 +770,11 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
                     *(void**)(state + 0x304) = 0;
                 }
                 *(void**)(state + 0x304) = *(void**)(state + 0x308);
-                *(u8*)(state + 0x27a) = 1;
+                ((BaddieState*)state)->moveJustStartedA = 1;
                 *(s16*)(state + 0x338) = 0;
-                *(u8*)(state + 0x34d) = 0;
+                ((BaddieState*)state)->unk34D = 0;
                 *(u8*)(state + 0x34c) = 0;
-                *(u8*)(state + 0x356) = 0;
+                ((BaddieState*)state)->moveEventFlags = 0;
                 *(s16*)(state + 0x278) = 0;
                 if (*(int*)(pos + 0x54) != 0)
                 {
@@ -799,9 +799,9 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 
     if (changed == 0)
     {
-        *(u8*)(state + 0x27a) = 0;
+        ((BaddieState*)state)->moveJustStartedA = 0;
     }
-    *(s16*)(state + 0x276) = *(s16*)(state + 0x274);
+    ((BaddieState*)state)->unk276 = ((BaddieState*)state)->controlMode;
 
     if ((s8)lbl_803DD440 == 0 && ((s32) * (s8*)(state + 0x34c) & 1) == 0)
     {
@@ -809,12 +809,12 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         int i;
 
         animEvents[0x1b] = 0;
-        *(s8*)(state + 0x346) = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
-            (int)pos, *(f32*)(state + 0x2a0), dt, (ObjAnimEventList*)animEvents);
-        *(u32*)(state + 0x314) = 0;
+        *(s8*)&((BaddieState*)state)->moveDone = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
+            (int)pos, ((BaddieState*)state)->moveSpeed, dt, (ObjAnimEventList*)animEvents);
+        ((BaddieState*)state)->eventFlags = 0;
         for (i = 0; i < (s8)animEvents[0x1b]; i++)
         {
-            *(u32*)(state + 0x314) |= 1 << (s32)(s8)
+            ((BaddieState*)state)->eventFlags |= 1 << (s32)(s8)
             animEvents[0x13 + i];
         }
         *(u32*)state &= 0xfffeffff;
@@ -866,20 +866,20 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     {
         dx = *(f32*)(attachment + 0xc) - *(f32*)(pos + 0xc);
         dz = *(f32*)(attachment + 0x14) - *(f32*)(pos + 0x14);
-        *(f32*)(state + 0x2c0) = sqrtf(dx * dx + dz * dz);
+        ((BaddieState*)state)->targetDistance = sqrtf(dx * dx + dz * dz);
     }
     else
     {
-        *(f32*)(state + 0x2c0) = lbl_803E0570;
+        ((BaddieState*)state)->targetDistance = lbl_803E0570;
     }
 
     if ((*(u32*)state & 0x8000) != 0 && *(int*)(pos + 0xc0) == 0)
     {
         fn_800D915C((int)pos, (int*)state, (void*)auxStateFns, dt);
-        *(s16*)(state + 0x32e) = (s16)((f32) * (s16*)(state + 0x32e) + dt);
+        ((BaddieState*)state)->unk32E = (s16)((f32) * (s16*)(state + 0x32e) + dt);
         if ((f32) * (s16*)(state + 0x32e) > lbl_803E05C4)
         {
-            *(s16*)(state + 0x32e) = 10000;
+            ((BaddieState*)state)->unk32E = 10000;
         }
     }
 
@@ -913,7 +913,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     }
 
     *(u32*)state &= 0xffdfffff;
-    *(u8*)(state + 0x34d) = 0;
+    ((BaddieState*)state)->unk34D = 0;
     lbl_803DD434 = 0;
     *(u32*)state &= 0xfff7ffff;
     *(u8*)(state + 0x34c) = 0;
