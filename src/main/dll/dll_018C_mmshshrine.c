@@ -97,7 +97,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int objGetAnimStateFlags(int obj, u32 mask);
 extern void audioStopByMask(int mask);
 extern int objCreateLight(int param_1, int param_2);
-extern u8 lbl_803DB411;
 
 int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* seq)
 {
