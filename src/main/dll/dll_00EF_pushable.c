@@ -348,9 +348,9 @@ undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate
         (*gCameraInterface)->setTargetReticleOverride((int)obj);
     }
     animUpdate->activeHitVolumePair = -1;
-    if (animUpdate->movementState != 0)
+    if ((s8)animUpdate->movementState != 0)
     {
-        if (animUpdate->movementState != 2)
+        if ((s8)animUpdate->movementState != 2)
         {
             animUpdate->posOffsetScale = lbl_803E3588;
             animUpdate->posOffsetX = *(float*)(obj + 6) - *(float*)(refObj + 6);

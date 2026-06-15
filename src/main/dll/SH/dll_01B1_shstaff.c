@@ -507,10 +507,10 @@ void sh_staff_update(int obj)
     if (mode == 0)
     {
         if (player == NULL) goto end;
-        if (Player_GetStaffObject((int)player) == 0) goto end;
+        if ((void*)Player_GetStaffObject((int)player) == NULL) goto end;
         if (GameBit_Get(0x18b) != 0)
         {
-            fn_801DA4A8(obj, state, 0);
+            fn_801DA4A8(obj, ((GameObject*)obj)->extra, 0);
         }
         else
         {

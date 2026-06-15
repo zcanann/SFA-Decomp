@@ -608,7 +608,7 @@ int dfplevelcontrol_SeqFn(int p1)
     s16 v = p_b8->timer;
     if (v > 0)
     {
-        p_b8->timer = v - (int)timeDelta;
+        p_b8->timer -= (s16)timeDelta;
         fn_802960E8(player, 0x51e);
     }
     return 0;
@@ -733,8 +733,6 @@ void dfplevelcontrol_update(int obj)
         break;
     case 4:
         break;
-    case 0:
-        break;
     }
     SCGameBitLatch_Update((void*)state->unk08, 2, -1, -1, 0xdce, 0x95);
     SCGameBitLatch_UpdateInverted((void*)state->unk08, 4, -1, -1, 0xdce, 0x37);
@@ -811,7 +809,7 @@ void fn_80204098(int obj)
     }
     if (GameBit_Get(0x7a1) != 0)
     {
-        if ((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6) == 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6) == 0)
         {
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
         }

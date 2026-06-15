@@ -72,8 +72,7 @@ SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex)
     callback = gSynthFreeCallbacks;
     if (callback != 0)
     {
-        next = callback->next;
-        gSynthFreeCallbacks = next;
+        gSynthFreeCallbacks = next = callback->next;
         if (next != 0)
         {
             gSynthFreeCallbacks->prev = 0;

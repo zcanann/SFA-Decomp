@@ -56,15 +56,13 @@ void arwbombcoll_initialise(void)
 void arwbombcoll_updateMovingAxis(int obj, RingState* state)
 {
     u8 mode = state->route;
-    u16 raw = state->linkId;
     if (mode == 1 || mode == 3)
     {
-        f32 cur, lim, edge;
+        f32 edge, cur, lim;
         ((GameObject*)obj)->anim.localPosX = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosX;
         cur = ((GameObject*)obj)->anim.localPosX;
         lim = state->origX;
-        edge = lim + (f32)(u32)
-        raw;
+        edge = lim + (f32)(u32)state->linkId;
         if (cur > edge)
         {
             ((GameObject*)obj)->anim.localPosX = edge - (cur - edge);
@@ -72,8 +70,7 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
         }
         else
         {
-            edge = lim - (f32)(u32)
-            raw;
+            edge = lim - (f32)(u32)state->linkId;
             if (cur < edge)
             {
                 ((GameObject*)obj)->anim.localPosX = edge - (cur - edge);
@@ -83,12 +80,11 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     }
     else if (mode == 4 || mode == 5)
     {
-        f32 cur, lim, edge;
+        f32 edge, cur, lim;
         ((GameObject*)obj)->anim.localPosY = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosY;
         cur = ((GameObject*)obj)->anim.localPosY;
         lim = state->origY;
-        edge = lim + (f32)(u32)
-        raw;
+        edge = lim + (f32)(u32)state->linkId;
         if (cur > edge)
         {
             ((GameObject*)obj)->anim.localPosY = edge - (cur - edge);
@@ -96,8 +92,7 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
         }
         else
         {
-            edge = lim - (f32)(u32)
-            raw;
+            edge = lim - (f32)(u32)state->linkId;
             if (cur < edge)
             {
                 ((GameObject*)obj)->anim.localPosY = edge - (cur - edge);
@@ -107,7 +102,6 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     }
 }
 
-#pragma peephole on
 void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
 {
     GameObject* arwingObj = (GameObject*)arwing;
@@ -142,11 +136,13 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
         if (arwingObj->anim.seqId == 0x601)
         {
             int seg;
+            int got;
             arwarwing_incrementCollectedRingCount(arwing);
             arwarwing_addShield(arwing, 1);
             arwarwing_addScore(arwing, 0x14);
             seg = arwarwing_getRequiredRingCount(arwing);
-            if (arwarwing_getCollectedRingCount(arwing) == seg)
+            got = arwarwing_getCollectedRingCount(arwing);
+            if (got == seg)
             {
                 if (state->flags.bit20)
                     gameTextFn_80125ba4(7);

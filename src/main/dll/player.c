@@ -17901,6 +17901,7 @@ int fn_802985FC(int obj, int state, f32 fv)
             int amt;
             int r35c;
             int v;
+            int hi;
             Sfx_PlayFromObject(obj, SFXmammoth_breath2);
             amt = -*(u8*)((char*)inner + 0x41c);
             r35c = *(int*)((char*)(*(int*)&((GameObject*)obj)->extra) + 0x35c);
@@ -17909,9 +17910,9 @@ int fn_802985FC(int obj, int state, f32 fv)
             {
                 v = 0;
             }
-            else if (v > *(s16*)((char*)r35c + 6))
+            else if (v > (hi = *(s16*)((char*)r35c + 6)))
             {
-                v = *(s16*)((char*)r35c + 6);
+                v = hi;
             }
             *(s16*)((char*)r35c + 4) = v;
             if (amt > 0)

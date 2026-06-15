@@ -34,7 +34,7 @@ extern f32 lbl_803E649C;
 extern f32 lbl_803E64A0;
 extern f32 lbl_803E64A4;
 extern f32 lbl_803E64A8;
-extern f32 lbl_803E64AC;
+extern const f32 lbl_803E64AC;
 extern f32 lbl_803E64B0;
 extern f32 lbl_803E64B4;
 extern f32 lbl_803E64B8;
@@ -261,7 +261,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
             effect.rotY = 0;
             effect.rotX = 0;
 
-            for (i = 0; i < DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i++)
+            for (i = DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i != 0; i--)
             {
                 (*gPartfxInterface)->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID,
                                                  &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1, NULL);

@@ -971,7 +971,7 @@ void fn_8013351C(void)
     col = lbl_803E2200;
     ((u8*)&col)[3] = (u8)lbl_803DD930;
     lbl_803DD94C = -(lbl_803E2260 * timeDelta - lbl_803DD94C);
-    if (lbl_803DD94C > lbl_803E2224)
+    if (lbl_803DD94C > *(f32*)&lbl_803E2224)
     {
         lbl_803DD94C = lbl_803DD94C - lbl_803E2264;
     }
@@ -1112,27 +1112,13 @@ void fn_8013396C(void)
                 {
                     lbl_803DBBE4 = lbl_803E2298;
                 }
-                t = lbl_803DBBDC;
-                if (!(lbl_803DBBE4 < lbl_803DBBDC))
-                {
-                    t = lbl_803DBBE0;
-                    if (!(lbl_803DBBE4 > lbl_803DBBE0))
-                    {
-                        t = lbl_803DBBE4;
-                    }
-                }
+                t = (lbl_803DBBE4 < lbl_803DBBDC) ? lbl_803DBBDC
+                    : ((lbl_803DBBE4 > lbl_803DBBE0) ? lbl_803DBBE0 : lbl_803DBBE4);
                 lbl_803DBBE4 = t;
                 old = lbl_803DBBB4;
                 lbl_803DBBB4 = old * t;
-                t = lbl_803DBBB8;
-                if (!(lbl_803DBBB4 < lbl_803DBBB8))
-                {
-                    t = lbl_803DBBBC;
-                    if (!(lbl_803DBBB4 > lbl_803DBBBC))
-                    {
-                        t = lbl_803DBBB4;
-                    }
-                }
+                t = (lbl_803DBBB4 < lbl_803DBBB8) ? lbl_803DBBB8
+                    : ((lbl_803DBBB4 > lbl_803DBBBC) ? lbl_803DBBBC : lbl_803DBBB4);
                 lbl_803DBBB4 = t;
                 if (t != old)
                 {

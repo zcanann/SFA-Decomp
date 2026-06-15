@@ -109,14 +109,14 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
         s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk4;
         if (p != NULL)
         {
-            *p += (int)(lbl_803E748C * timeDelta);
+            *p += (s16)(lbl_803E748C * timeDelta);
         }
     }
     {
         s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk8;
         if (p != NULL)
         {
-            *p -= (int)(lbl_803E748C * timeDelta);
+            *p -= (s16)(lbl_803E748C * timeDelta);
         }
     }
     return 0;
@@ -245,7 +245,7 @@ void fn_80239EAC(int p1, int p2)
             dx = *(f32*)(p2 + 0xc0) - ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.rotX = (s16)getAngle(dx, dz);
             ((GameObject*)obj)->anim.rotY = -(s16)getAngle(dy, dz);
-            arwprojectile_placeForward(obj, (f32)(u32)lbl_803DC4E8);
+            arwprojectile_placeForward(obj, (f32)lbl_803DC4E8);
         }
         objs++;
     }
@@ -256,7 +256,6 @@ void fn_8023A168(int p1, int p2)
     int yawRnd;
     int pitchRnd;
     int newObj;
-    int proj;
 
     if (Obj_IsLoadingLocked())
     {
@@ -271,12 +270,12 @@ void fn_8023A168(int p1, int p2)
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if (proj != 0)
+        yawRnd = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if ((void*)yawRnd != NULL)
         {
-            *(f32*)(proj + 8) = lbl_803E74B0;
-            arwprojectile_setLifetime(proj, 0x6e);
-            arwprojectile_placeForward(proj, lbl_803E74AC);
+            *(f32*)(yawRnd + 8) = lbl_803E74B0;
+            arwprojectile_setLifetime(yawRnd, 0x6e);
+            arwprojectile_placeForward(yawRnd, lbl_803E74AC);
         }
     }
 }

@@ -140,9 +140,13 @@ void mcmdStartSample(McmdVoiceState* svoice, McmdCommandArgs* cstep)
         break;
     }
 
-    if (newsmp->offset >= newsmp->length)
     {
-        newsmp->offset = newsmp->length - 1;
+        u32* offset = &newsmp->offset;
+        u32 length = newsmp->length;
+        if (*offset >= length)
+        {
+            *offset = length - 1;
+        }
     }
 
     hwInitSamplePlayback(svoice->voiceHandle & 0xFF, smp, newsmp,

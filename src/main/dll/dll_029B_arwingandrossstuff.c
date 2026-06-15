@@ -228,10 +228,9 @@ void arwingandrossstuff_init(int obj, u8* setup)
 void arwingandrossstuff_update(int obj)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int arwing = getArwing();
 
-    if (arwing != 0 && (((GameObject*)arwing)->objectFlags & 0x1000) != 0)
+    if ((void*)arwing != NULL && (((GameObject*)arwing)->objectFlags & 0x1000) != 0)
     {
         Obj_FreeObject(obj);
         return;
@@ -256,7 +255,7 @@ void arwingandrossstuff_update(int obj)
             Obj_FreeObject(obj);
             return;
         }
-        if (hitState->contactFlags != 0)
+        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
             if (((GameObject*)obj)->anim.seqId != 0x6ae)
             {
@@ -332,7 +331,7 @@ void fn_8022ED74(int obj, int v)
 void fn_8022ECE0(int obj, f32 param)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
-    f32 mtx[12];
+    f32 mtx[16];
     ArwProjPosSrc src;
 
     state->lifetime = param;
@@ -344,7 +343,7 @@ void fn_8022ECE0(int obj, f32 param)
     src.rot[2] = 0;
     src.scale = lbl_803E704C;
     setMatrixFromObjectPos(mtx, &src);
-    Matrix_TransformPoint(mtx, lbl_803E7044, lbl_803E7044, state->lifetime,
+    Matrix_TransformPoint(mtx, *(f32*)&lbl_803E7044, lbl_803E7044, state->lifetime,
                           &((GameObject*)obj)->anim.velocityX, &((GameObject*)obj)->anim.velocityY,
                           &((GameObject*)obj)->anim.velocityZ);
 }
