@@ -22,7 +22,6 @@ extern f32 lbl_803E3E98;
 
 extern void objRenderFn_80041018(int obj);
 extern short lbl_803DCEB8;
-extern f32 lbl_803E3EE8;
 
 int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
