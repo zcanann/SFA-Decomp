@@ -101,8 +101,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                         if (peer == obj)
                         {
                             state->angleTarget = lbl_803E55F0 * (f32)(state->step + 1);
-                            obj->angle = (s16)(s32)
-                            state->angleTarget;
+                            obj->angle = (s16)(s32)state->angleTarget;
                             solvedThisObject = 1;
                         }
                     }
@@ -117,8 +116,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                     if (peer == obj)
                     {
                         state->angleTarget = lbl_803E55F0 * (f32)state->step;
-                        obj->angle = (s16)(s32)
-                        state->angleTarget;
+                        obj->angle = (s16)(s32)state->angleTarget;
                         solvedThisObject = 1;
                     }
                 }
@@ -221,13 +219,6 @@ extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 
-#define SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE 0x3c1
-
-#define SC_TOTEMPUZZLE_STATE_READY_FLAG 0x2
-#define SC_TOTEMPUZZLE_STATE_REVERSED_FLAG 0x1
-#define SC_TOTEMPUZZLE_FORWARD_STEP 4
-#define SC_TOTEMPUZZLE_SOLVED_COUNT 5
-
 void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 {
     ScTotemPuzzleState* state;
@@ -261,8 +252,8 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         lightArgs[3] += playerMapOffsetX;
         lightArgs[5] += playerMapOffsetZ;
         objLightFn_8009a1dc((void*)obj, lbl_803E5618, lightArgs, 1, 0);
-        state->flags ^= SC_TOTEMPUZZLE_STATE_READY_FLAG;
-        if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0)
+        state->flags ^= SC_TOTEMPUZZLE_READY_FLAG;
+        if ((state->flags & SC_TOTEMPUZZLE_READY_FLAG) != 0)
         {
             if (state->pulseTimer != lbl_803E55F4)
             {
@@ -272,7 +263,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
             while (startA < countA)
             {
                 other = objects[startA];
-                if ((((ScTotemPuzzleObject*)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+                if ((((ScTotemPuzzleObject*)other)->objectType == SC_TOTEMPUZZLE_OBJECT_TYPE) &&
                     ((ScTotemPuzzleObject*)other != obj))
                 {
                     ((ScTotemPuzzleObject*)other)->state->peerPhaseOffset += lbl_803E561C;
@@ -286,7 +277,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
             while (startB < countB)
             {
                 other = objects[startB];
-                if ((((ScTotemPuzzleObject*)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+                if ((((ScTotemPuzzleObject*)other)->objectType == SC_TOTEMPUZZLE_OBJECT_TYPE) &&
                     ((ScTotemPuzzleObject*)other != obj))
                 {
                     ((ScTotemPuzzleObject*)other)->state->peerPhaseOffset += lbl_803E5620;
@@ -301,7 +292,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         }
     }
 
-    if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0)
+    if ((state->flags & SC_TOTEMPUZZLE_READY_FLAG) != 0)
     {
         return;
     }
@@ -313,7 +304,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         {
             state->flags &= ~4;
             Sfx_PlayFromObjectLimited((int)obj, SFXtr_jbike_whine2, 2);
-            if ((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0)
+            if ((state->flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0)
             {
                 if (--state->stepIndex < 0)
                 {
@@ -333,15 +324,13 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     }
     else
     {
-        if (((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) &&
+        if (((state->flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0) &&
             (state->angle > (lbl_803E55F0 * (f32)(s32)(state->stepIndex + 1))))
         {
             f32 step = lbl_803E5628 * state->peerPhaseOffset;
             state->angle -= step * timeDelta;
         }
-        else if (state->angle < (lbl_803E55F0 * (f32)(s32)state->stepIndex
-        )
-        )
+        else if (state->angle < (lbl_803E55F0 * (f32)(s32)state->stepIndex))
         {
             f32 step = lbl_803E5628 * state->peerPhaseOffset;
             state->angle += step * timeDelta;
@@ -353,8 +342,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         }
     }
 
-    obj->yaw = (s16)(s32)
-    state->angle;
+    obj->yaw = (s16)(s32)state->angle;
 }
 
 void sc_totempuzzle_release(void)
@@ -395,8 +383,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     state->stepIndex = (s16)obj->puzzleIndex;
     if (GameBit_Get(0x639) == 0)
     {
-        state->angle = (f32)(s32)
-        lbl_80327A18[state->stepIndex];
+        state->angle = (f32)(s32)lbl_80327A18[state->stepIndex];
     }
     else
     {
@@ -407,8 +394,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
             tex->textureId = 0x100;
         }
     }
-    obj->yaw = (s16)(s32)
-    state->angle;
+    obj->yaw = (s16)(s32)state->angle;
     r = randomGetRange(7, 10);
     fz = (f32)r;
     fz = lbl_803E5630 * fz;
