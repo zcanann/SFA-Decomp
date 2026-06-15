@@ -79,7 +79,6 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 lbl_802C2308[];
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
@@ -96,7 +95,6 @@ extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, in
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
 
-extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -126,7 +124,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
@@ -139,9 +136,6 @@ extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
 extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
 extern void envFxActFn_800887f8(int id);
 extern u8 lbl_803239F0[];
-extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
-extern u8 lbl_803238D8[];
-extern int ObjList_FindObjectById(int id);
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
