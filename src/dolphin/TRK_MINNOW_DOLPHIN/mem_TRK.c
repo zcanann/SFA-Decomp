@@ -1,4 +1,3 @@
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
 
 void TRK_fill_mem(void *dest, int value, unsigned long length)
 {
