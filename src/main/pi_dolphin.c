@@ -5120,13 +5120,14 @@ void fn_80051528(void* p1, void* mtx)
         int id = lbl_803DCD8C;
         if (p1 != 0)
         {
+            char* obj = (char*)p1 + 0x20;
             if (*(u8*)((char*)p1 + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded((char*)p1 + 0x20, *(void**)((char*)p1 + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, *(void**)((char*)p1 + 0x40), id);
             }
             else
             {
-                GXLoadTexObj((char*)p1 + 0x20, id);
+                GXLoadTexObj(obj, id);
             }
         }
     }
