@@ -1668,7 +1668,6 @@ void boneParticleEffect_initialise(void)
     }
 }
 
-extern f32 lbl_803DF438;
 
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
@@ -1834,4 +1833,3 @@ void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8
     }
 }
 
-extern void* Camera_GetCurrentViewSlot(void);
