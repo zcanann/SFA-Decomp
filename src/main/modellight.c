@@ -1637,6 +1637,7 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f
     u8* lightObj;
     f32 zero;
     f32 atten;
+    f32 one;
 
     obj->specularAttenuationScale = scale;
     obj->specularBrightness = brightness;
