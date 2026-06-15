@@ -249,10 +249,10 @@ void bombplantspore_update(void* obj)
     s32 particleAlpha;
     s16 hitId;
     void* hitObj;
-    int hitObject;
     void* playerObj;
     u32 poppedMessage;
     u32 poppedSender;
+    int hitObject;
     int i;
 
     state = ((GameObject*)obj)->extra;
