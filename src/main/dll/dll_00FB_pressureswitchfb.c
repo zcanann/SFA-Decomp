@@ -4,10 +4,6 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/effect_interfaces.h"
-#include "main/dll/cfguardian.h"
-#include "main/objseq.h"
-#include "main/dll/alphaanim.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 
 extern undefined8 ObjGroup_RemoveObject();
