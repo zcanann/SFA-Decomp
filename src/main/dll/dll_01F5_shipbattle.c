@@ -235,7 +235,7 @@ void ShipBattle_update(int obj)
         triggerResult++;
     }
 
-    if (sameGroupCount <= 1 && linkedObject != 0 && *(s16*)(linkedObject + 0xb4) != -1)
+    if (sameGroupCount <= 1 && (void*)linkedObject != NULL && *(s16*)(linkedObject + 0xb4) != -1)
     {
         *(s16*)(linkedObject + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(groupId);
