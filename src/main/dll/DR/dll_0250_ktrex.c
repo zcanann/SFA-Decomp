@@ -1614,14 +1614,15 @@ int ktrex_stateHandlerA11(int obj, int runtime)
         ->rowAZ)[phase];
     if (__fabs(f5) > __fabs(f4))
     {
-        ((KTRexArenaState*)gKTRexState)->unk8 =
+        f4 =
             (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) / f5;
     }
     else
     {
-        ((KTRexArenaState*)gKTRexState)->unk8 =
+        f4 =
             (((GameObject*)obj)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) / f4;
     }
+    ((KTRexArenaState*)gKTRexState)->unk8 = f4;
     ((KTRexArenaState*)gKTRexState)->timerFA |= 0x40;
     return 3;
 }
