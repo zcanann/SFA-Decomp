@@ -2445,8 +2445,14 @@ u32 objCallback_80074d04(int handle, void* model)
         pz = mtx_8c[2][3];
         dist = px*px + py*py + pz*pz;
         if (dist > lbl_803DEEDC) {
-            f32 e = (f32)(1.0 / __frsqrte((double)dist));
-            dist = dist * e;
+            extern double lbl_803DEF10, lbl_803DEF18;
+            volatile f32 y;
+            double guess = __frsqrte((double)dist);
+            guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * dist);
+            guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * dist);
+            guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * dist);
+            y = (f32)(dist * guess);
+            dist = y;
         }
         f31_val = lbl_803DEF3C / dist;
         if (f31_val > lbl_803DEEE4) f31_val = lbl_803DEEE4;
