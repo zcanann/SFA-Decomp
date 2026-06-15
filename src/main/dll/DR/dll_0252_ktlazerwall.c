@@ -148,14 +148,14 @@ void ktlazerwall_render(int obj)
         {
             f32 t = lbl_803E68B0 * ((KtlazerwallState*)p)->unkC;
             m = ((KtlazerwallState*)p)->unk10;
-            *(f32*)(m + 0x10) = *(f32*)(m + 0x10) - t * lbl_803E68B4;
+            *(f32*)(m + 0x10) -= t * lbl_803E68B4;
             ((KtlazerwallState*)p)->unk8 = (f32)(int)
             randomGetRange(0xa, 0x78);
         }
         else
         {
             m = ((KtlazerwallState*)p)->unk10;
-            *(f32*)(m + 0x10) = ((KtlazerwallState*)p)->unkC * timeDelta + *(f32*)(m + 0x10);
+            *(f32*)(m + 0x10) += ((KtlazerwallState*)p)->unkC * timeDelta;
         }
         lightningRender(*(void**)&((KtlazerwallState*)p)->unk10);
         *(u16*)(((KtlazerwallState*)p)->unk10 + 0x20) += framesThisStep;
