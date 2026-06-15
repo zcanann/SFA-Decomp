@@ -842,11 +842,9 @@ int Carryable_updateHeld(u8* obj)
             if (hit != 0)
             {
                 u8* q = *(u8**)(hit + 0x58);
-                u8* q2;
                 u8 c = *(u8*)(q + 0x10f);
                 *(u8*)(q + 0x10f) = c + 1;
-                q2 = q + (s8)c * 4;
-                *(u8**)(q2 + 0x100) = obj;
+                ((void**)(q + 0x100))[(s8)c] = obj;
             }
         }
     }
