@@ -263,6 +263,26 @@ void SH_LevelControl_setMusic(short* obj)
 }
 #pragma dont_inline reset
 
+typedef struct ShLevelcontrolState
+{
+    u32 unk0; /* flag word; bit 2 cleared on substate transitions */
+    u8 unk4; /* counter incremented while waiting */
+    u8 unk5;
+    u8 eventState; /* bloop-event substate machine 0..7 */
+    u8 pad7;
+    f32 timer8; /* air-meter countdown */
+    f32 unkC;
+    s16 unk10;
+    s16 unk12; /* music/anim id latch (0xcc/0xf2/0xdb/-1) */
+    u8 pad14[0x18 - 0x14];
+} ShLevelcontrolState;
+
+STATIC_ASSERT(offsetof(ShLevelcontrolState, unk4) == 0x4);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, eventState) == 0x6);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, timer8) == 0x8);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, unkC) == 0xC);
+STATIC_ASSERT(offsetof(ShLevelcontrolState, unk12) == 0x12);
+
 #pragma dont_inline on
 void SH_LevelControl_runBloopEvent(int obj, int state)
 {
@@ -278,7 +298,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     if (((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0) &&
         (GameBit_Get(0x13f) == 0))
     {
-        *(u8*)(state + 6) = 0;
+        ((ShLevelcontrolState*)state)->eventState = 0;
         (*gGameUIInterface)->airMeterShutdown();
         for (j = 0; j < 0x12; j++)
         {
@@ -287,25 +307,25 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     }
 
     player = (int)Obj_GetPlayerObject();
-    switch (*(u8*)(state + 6))
+    switch (((ShLevelcontrolState*)state)->eventState)
     {
     case 0:
         if (GameBit_Get(0x13f) != 0)
         {
-            *(u8*)(state + 6) = 7;
+            ((ShLevelcontrolState*)state)->eventState = 7;
         }
         else
         {
-            *(u8*)(state + 6) = 1;
+            ((ShLevelcontrolState*)state)->eventState = 1;
         }
         break;
     case 1:
         if (GameBit_Get(0x124) != 0)
         {
-            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
-            *(f32*)(state + 8) = lbl_803E54B0;
+            (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
+            ((ShLevelcontrolState*)state)->timer8 = lbl_803E54B0;
             (*gGameUIInterface)->initAirMeter(100000, 0x5db);
-            *(u8*)(state + 6) = 2;
+            ((ShLevelcontrolState*)state)->eventState = 2;
         }
         break;
     case 2:
@@ -322,47 +342,47 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         {
             (*gGameUIInterface)->airMeterShutdown();
             (*gScreenTransitionInterface)->start(0x14, 1);
-            *(u8*)(state + 6) = 3;
+            ((ShLevelcontrolState*)state)->eventState = 3;
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
         }
         else
         {
-            *(f32*)(state + 8) -= (f32)bloopsRemaining * timeDelta;
-            if (*(f32*)(state + 8) >= lbl_803E54B4)
+            ((ShLevelcontrolState*)state)->timer8 -= (f32)bloopsRemaining * timeDelta;
+            if (((ShLevelcontrolState*)state)->timer8 >= lbl_803E54B4)
             {
-                (*gGameUIInterface)->runAirMeter((int)*(f32*)(state + 8));
+                (*gGameUIInterface)->runAirMeter((int)((ShLevelcontrolState*)state)->timer8);
             }
             else if ((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) != 0)
             {
                 (*gGameUIInterface)->airMeterShutdown();
                 (*gScreenTransitionInterface)->start(0x14, 1);
-                *(u8*)(state + 6) = 5;
+                ((ShLevelcontrolState*)state)->eventState = 5;
             }
             else
             {
-                *(f32*)(state + 8) = lbl_803E54B4;
+                ((ShLevelcontrolState*)state)->timer8 = lbl_803E54B4;
                 (*gGameUIInterface)->runAirMeter(1);
             }
         }
         break;
     case 3:
         if (((*gScreenTransitionInterface)->isFinished() != 0) &&
-            ((*(u16*)((int)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0))
+            ((((GameObject*)Obj_GetPlayerObject())->objectFlags & 0x1000) == 0))
         {
             GameBit_Set(0x13f, 1);
             (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
-            *(u8*)(state + 6) = 4;
+            ((ShLevelcontrolState*)state)->eventState = 4;
         }
         break;
     case 4:
-        *(u8*)(state + 6) = 7;
+        ((ShLevelcontrolState*)state)->eventState = 7;
         break;
     case 5:
         if (((*gScreenTransitionInterface)->isFinished() != 0) &&
-            ((*(u16*)((int)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0))
+            ((((GameObject*)Obj_GetPlayerObject())->objectFlags & 0x1000) == 0))
         {
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-            *(u8*)(state + 6) = 6;
+            ((ShLevelcontrolState*)state)->eventState = 6;
         }
         break;
     case 6:
@@ -380,20 +400,20 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         break;
     }
 
-    if (*(u8*)(state + 6) == 2)
+    if (((ShLevelcontrolState*)state)->eventState == 2)
     {
-        if (*(s16*)(state + 0x12) != 0xf2)
+        if (((ShLevelcontrolState*)state)->unk12 != 0xf2)
         {
-            *(s16*)(state + 0x12) = 0xf2;
+            ((ShLevelcontrolState*)state)->unk12 = 0xf2;
             GameBit_Set(0xc0, 1);
-            *(u32*)state &= ~2;
+            ((ShLevelcontrolState*)state)->unk0 &= ~2;
         }
     }
-    else if (*(s16*)(state + 0x12) != 0xcc)
+    else if (((ShLevelcontrolState*)state)->unk12 != 0xcc)
     {
-        *(s16*)(state + 0x12) = 0xcc;
+        ((ShLevelcontrolState*)state)->unk12 = 0xcc;
         GameBit_Set(0xc0, 1);
-        *(u32*)state &= ~2;
+        ((ShLevelcontrolState*)state)->unk0 &= ~2;
     }
 
     if ((GameBit_Get(0xea8) == 0) && (GameBit_Get(0x91b) != 0))
@@ -412,20 +432,20 @@ void FUN_801d8480(undefined4 param_1, undefined4 param_2, short param_3, short p
     extern uint GameBit_Get(int eventId); /* #57 */
     extern void SCGameBitLatch_Update(int state, int mask, int clearIfSetBit, int clearIfClearBit, int setBit, int textId); /* #57 */
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
-    uint bitVal;
-    uint latchBit;
-    undefined8 packedArgs;
+    uint uVar1;
+    uint uVar2;
+    undefined8 uVar3;
 
-    packedArgs = FUN_80286838();
-    latchBit = (uint)param_5;
-    bitVal = GameBit_Get(latchBit);
-    bitVal = countLeadingZeros(bitVal);
-    GameBit_Set(latchBit, bitVal >> 5);
-    SCGameBitLatch_Update((int)((ulonglong)packedArgs >> 0x20), (int)packedArgs, param_3, param_4,
+    uVar3 = FUN_80286838();
+    uVar2 = (uint)param_5;
+    uVar1 = GameBit_Get(uVar2);
+    uVar1 = countLeadingZeros(uVar1);
+    GameBit_Set(uVar2, uVar1 >> 5);
+    SCGameBitLatch_Update((int)((ulonglong)uVar3 >> 0x20), (int)uVar3, param_3, param_4,
                           param_5, (int)param_6);
-    bitVal = GameBit_Get(latchBit);
-    bitVal = countLeadingZeros(bitVal);
-    GameBit_Set(latchBit, bitVal >> 5);
+    uVar1 = GameBit_Get(uVar2);
+    uVar1 = countLeadingZeros(uVar1);
+    GameBit_Set(uVar2, uVar1 >> 5);
     FUN_80286884();
     return;
 }
@@ -620,17 +640,6 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
     }
 }
 
-typedef struct ShLevelcontrolState
-{
-    u8 pad0[0x5 - 0x0];
-    u8 unk5;
-    u8 pad6[0xC - 0x6];
-    f32 unkC;
-    s16 unk10;
-    s16 unk12;
-    u8 pad14[0x18 - 0x14];
-} ShLevelcontrolState;
-
 void sh_levelcontrol_update(int obj)
 {
     extern u8 lbl_80327618[0x104]; /* #57 */
@@ -649,13 +658,13 @@ void sh_levelcontrol_update(int obj)
     u8* base = lbl_80327618;
 
     state = ((GameObject*)obj)->extra;
-    if (*(f32*)((int)state + 0xc) > lbl_803E54B4)
+    if (((ShLevelcontrolState*)state)->unkC > lbl_803E54B4)
     {
         gameTextShow(0x3f6);
-        *(f32*)((int)state + 0xc) = *(f32*)((int)state + 0xc) - timeDelta;
-        if (*(f32*)((int)state + 0xc) < *(f32*)&lbl_803E54B4)
+        ((ShLevelcontrolState*)state)->unkC = ((ShLevelcontrolState*)state)->unkC - timeDelta;
+        if (((ShLevelcontrolState*)state)->unkC < *(f32*)&lbl_803E54B4)
         {
-            *(f32*)((int)state + 0xc) = lbl_803E54B4;
+            ((ShLevelcontrolState*)state)->unkC = lbl_803E54B4;
         }
     }
     SH_LevelControl_setMusic(state);
@@ -720,7 +729,7 @@ void sh_levelcontrol_update(int obj)
             (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a, 0);
         }
     }
-    switch (*(undefined*)((int)state + 5))
+    switch (((ShLevelcontrolState*)state)->unk5)
     {
     case 1:
         SH_LevelControl_doEarlyScenes(obj, state);
@@ -729,21 +738,21 @@ void sh_levelcontrol_update(int obj)
         val = GameBit_Get(0xbf);
         if ((val != 0) && (val3 = GameBit_Get(0xc2), val3 < 6))
         {
-            if (*(short*)((int)state + 0x12) != 0xdb)
+            if (((ShLevelcontrolState*)state)->unk12 != 0xdb)
             {
-                *(undefined2*)((int)state + 0x12) = 0xdb;
+                ((ShLevelcontrolState*)state)->unk12 = 0xdb;
                 GameBit_Set(0xc0, 1);
-                *state = *state & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->unk0 = ((ShLevelcontrolState*)state)->unk0 & 0xfffffffd;
             }
         }
         else
         {
             val = GameBit_Get(0xc2);
-            if ((val == 6) && (*(short*)((int)state + 0x12) != 0xcc))
+            if ((val == 6) && (((ShLevelcontrolState*)state)->unk12 != 0xcc))
             {
-                *(undefined2*)((int)state + 0x12) = 0xcc;
+                ((ShLevelcontrolState*)state)->unk12 = 0xcc;
                 GameBit_Set(0xc0, 1);
-                *state = *state & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->unk0 = ((ShLevelcontrolState*)state)->unk0 & 0xfffffffd;
             }
         }
         val = GameBit_Get(0xc2);
@@ -758,13 +767,13 @@ void sh_levelcontrol_update(int obj)
         SH_LevelControl_doThornTailEvents(obj, state);
         break;
     case 4:
-        if (*(short*)((int)state + 0x12) != 0xcc)
+        if (((ShLevelcontrolState*)state)->unk12 != 0xcc)
         {
-            *(undefined2*)((int)state + 0x12) = 0xcc;
+            ((ShLevelcontrolState*)state)->unk12 = 0xcc;
             GameBit_Set(0xc0, 1);
-            *state = *state & 0xfffffffd;
+            ((ShLevelcontrolState*)state)->unk0 = ((ShLevelcontrolState*)state)->unk0 & 0xfffffffd;
         }
-        if (*(byte*)(state + 1) >= 2)
+        if (((ShLevelcontrolState*)state)->unk4 >= 2)
         {
             val = GameBit_Get(0xdff);
             if (val == 0)
@@ -775,7 +784,7 @@ void sh_levelcontrol_update(int obj)
                 buttonDisable(0, 0x200);
                 buttonDisable(0, 0x1000);
                 val = Obj_GetPlayerObject();
-                if ((*(ushort*)(val + 0xb0) & 0x1000) == 0)
+                if ((((GameObject*)val)->objectFlags & 0x1000) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(7, (void*)obj, 0xffffffff);
                     GameBit_Set(0xdff, 1);
@@ -793,27 +802,27 @@ void sh_levelcontrol_update(int obj)
         }
         else
         {
-            *(byte*)(state + 1) += 1;
+            ((ShLevelcontrolState*)state)->unk4 += 1;
         }
         break;
     case 5:
         val = GameBit_Get(0x23c);
         if (val != 0)
         {
-            if (*(short*)((int)state + 0x12) != 0xcc)
+            if (((ShLevelcontrolState*)state)->unk12 != 0xcc)
             {
-                *(undefined2*)((int)state + 0x12) = 0xcc;
+                ((ShLevelcontrolState*)state)->unk12 = 0xcc;
                 GameBit_Set(0xc0, 1);
-                *state = *state & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->unk0 = ((ShLevelcontrolState*)state)->unk0 & 0xfffffffd;
             }
         }
-        else if (*(short*)((int)state + 0x12) == 0xcc)
+        else if (((ShLevelcontrolState*)state)->unk12 == 0xcc)
         {
-            *(s16*)((int)state + 0x12) = -1;
+            ((ShLevelcontrolState*)state)->unk12 = -1;
         }
         val = GameBit_Get(0x90);
         if (((val != 0) && (val = GameBit_Get(0xeb3), val == 0)) &&
-            (val = Obj_GetPlayerObject(), (*(ushort*)(val + 0xb0) & 0x1000) == 0))
+            (val = Obj_GetPlayerObject(), (((GameObject*)val)->objectFlags & 0x1000) == 0))
         {
             GameBit_Set(0xeb3, 1);
         }
@@ -825,18 +834,18 @@ void sh_levelcontrol_update(int obj)
         val = GameBit_Get(0x1a0);
         if (val != 0)
         {
-            if (*(short*)((int)state + 0x12) != 0xcc)
+            if (((ShLevelcontrolState*)state)->unk12 != 0xcc)
             {
-                *(undefined2*)((int)state + 0x12) = 0xcc;
+                ((ShLevelcontrolState*)state)->unk12 = 0xcc;
                 GameBit_Set(0xc0, 1);
-                *state = *state & 0xfffffffd;
+                ((ShLevelcontrolState*)state)->unk0 = ((ShLevelcontrolState*)state)->unk0 & 0xfffffffd;
             }
         }
-        else if (*(short*)((int)state + 0x12) == 0xcc)
+        else if (((ShLevelcontrolState*)state)->unk12 == 0xcc)
         {
-            *(s16*)((int)state + 0x12) = -1;
+            ((ShLevelcontrolState*)state)->unk12 = -1;
         }
-        if (*(byte*)(state + 1) >= 2)
+        if (((ShLevelcontrolState*)state)->unk4 >= 2)
         {
             val = GameBit_Get(0x177);
             if (val == 0)
@@ -847,7 +856,7 @@ void sh_levelcontrol_update(int obj)
                 buttonDisable(0, 0x200);
                 buttonDisable(0, 0x1000);
                 val = Obj_GetPlayerObject();
-                if ((*(ushort*)(val + 0xb0) & 0x1000) == 0)
+                if ((((GameObject*)val)->objectFlags & 0x1000) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(4, (void*)obj, 0xffffffff);
                     GameBit_Set(0x177, 1);
@@ -856,15 +865,15 @@ void sh_levelcontrol_update(int obj)
         }
         else
         {
-            *(byte*)(state + 1) += 1;
+            ((ShLevelcontrolState*)state)->unk4 += 1;
         }
         break;
     case 8:
-        if (*(short*)((int)state + 0x12) != 0xcc)
+        if (((ShLevelcontrolState*)state)->unk12 != 0xcc)
         {
-            *(undefined2*)((int)state + 0x12) = 0xcc;
+            ((ShLevelcontrolState*)state)->unk12 = 0xcc;
             GameBit_Set(0xc0, 1);
-            *state = *state & 0xfffffffd;
+            ((ShLevelcontrolState*)state)->unk0 = ((ShLevelcontrolState*)state)->unk0 & 0xfffffffd;
         }
         val = GameBit_Get(0x19c);
         if ((val != 0) && (val = GameBit_Get(0xf3e), val == 0))
