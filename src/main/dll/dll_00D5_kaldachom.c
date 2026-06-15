@@ -141,15 +141,15 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
             spd = lbl_803E30AC * (((GroundBaddieState*)state)->baddie.targetDistance / (f32)(u32)(
                 (GroundBaddieState*)state)->aggroRange);
             *(f32*)(setup + 0x24) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosX - *(f32*)(ref + 8)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX - *(f32*)(ref + 8)) /
                 spd;
             r = (f32)(s32)
             randomGetRange(-0xa, 0xa);
             *(f32*)(setup + 0x28) =
-            (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosY + r - *
+            (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY + r - *
                 (f32*)(ref + 0xc)) / spd;
             *(f32*)(setup + 0x2c) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosZ - *(f32*)(ref + 0x10)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ - *(f32*)(ref + 0x10)) /
                 spd;
         }
     }
