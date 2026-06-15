@@ -1,12 +1,9 @@
 #include "main/dll/baddie_state.h"
-#include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/objHitReact.h"
 #include "main/game_object.h"
-#include "main/model.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 #include "main/vecmath.h"
 
 typedef struct Dim2prisonmammothPlacement
@@ -64,78 +61,22 @@ extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
 
-extern f32 lbl_803E83F4;
-extern f32 lbl_803E83F8;
-extern f32 lbl_803E83BC;
-extern f32 lbl_803E8408;
-extern f32 lbl_803E840C;
-extern s16 lbl_803DC79A;
 extern void fn_802BF0C8(int obj, int p2, int mode);
-extern f32 lbl_803E8304;
-extern f32 GX_F32_256;
-extern f32 lbl_803DC76C;
-extern f32 lbl_803E8338;
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 m);
-extern void playerAddHealth(int obj, int amt);
-
-extern void dll_2E_func06();
-extern f32 lbl_803E83A8;
-extern f32 lbl_803E8360;
-extern f32 lbl_803E8354;
-extern f32 lbl_803E8364;
-
-extern int Obj_FreeObject(int obj);
-
-extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);
-extern void textureFree(int handle);
-extern f32 lbl_803E82E8;
-extern int lbl_8033527C[];
-extern void *gDIMSnowHorn1Texture;
 
 
-extern f32 lbl_803E8410;
+
+
+
 
 extern int *gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
 
 
-extern f32 lbl_803DC78C;
-extern f32 lbl_803DC790;
 
-extern void mtx44_mult(void *lhs, void *rhs, void *out);
-extern f32 lbl_803DB170[];
 
-extern void DIMSnowHorn1_stateHandler00();
-extern void DIMSnowHorn1_stateHandler01();
-extern void DIMSnowHorn1_stateHandler02();
-extern void DIMSnowHorn1_stateHandler03();
-extern void DIMSnowHorn1_stateHandler04();
-extern void DIMSnowHorn1_stateHandler05();
-extern void DIMSnowHorn1_stateHandler06();
-extern void DIMSnowHorn1_stateHandler07();
-extern void DIMSnowHorn1_stateHandler08();
-extern void DIMSnowHorn1_stateHandler09();
-extern void DIMSnowHorn1_stateHandler0A();
-extern void DIMSnowHorn1_stateHandler0B();
-extern void DIMSnowHorn1_defaultStateHandler();
-extern int gDIMSnowHorn1StateHandlers[];
-extern void *gDIMSnowHorn1DefaultStateHandler;
-extern s16 gDIMSnowHorn1TextureId;
-extern int textureLoad(int id, int p2);
 
-extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
-extern int lbl_803E8230;
-extern int lbl_803DC734;
-extern f32 lbl_803E82B8;
-extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 
-extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
 
-extern int dll_2E_func0A(int a, void *out);
-extern void dll_2E_func08(int q, int a, int b);
-extern f32 lbl_803E8414;
-extern f32 lbl_803E8424;
 void fn_802BF0C8(int obj, int inner, int bit);
 
 extern u8 lbl_803DC750;
