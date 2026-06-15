@@ -13,13 +13,9 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern void Stack_Free();
 
 extern void Sfx_RemoveLoopedObjectSound(int x, int y);
-extern f32 lbl_803E5A30;
 extern f32 timeDelta;
-extern void gameTextShow(int);
-extern void characterDoEyeAnims(int obj, int p2);
 extern f32 sqrtf(f32 x);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern f32 mathCosf(double x);
