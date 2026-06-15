@@ -4317,14 +4317,16 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        void** tex = (void**)((u8*)g + j * 4);
-        if (*(void**)((u8*)tex + 2504) != NULL)
+        u8* tex = (u8*)g + j * 4;
+        u8* base2 = (u8*)g + j * 2;
+        u8* base1 = (u8*)g + j;
+        if (*(void**)(tex + 2504) != NULL)
         {
-            textureFree(*(void**)((u8*)tex + 2504));
-            *(void**)((u8*)tex + 2504) = NULL;
+            textureFree(*(void**)(tex + 2504));
+            *(void**)(tex + 2504) = NULL;
         }
-        g->itemSlots[j] = -1;
-        g->itemFlags[j] = 1;
+        *(s16*)(base2 + 2376) = -1;
+        *(base1 + 1096) = 1;
     }
 
     if (lbl_803DD7C8 != 0)
@@ -4341,14 +4343,16 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        void** tex = (void**)((u8*)g + j * 4);
-        if (*(void**)((u8*)tex + 2504) != NULL)
+        u8* tex = (u8*)g + j * 4;
+        u8* base2 = (u8*)g + j * 2;
+        u8* base1 = (u8*)g + j;
+        if (*(void**)(tex + 2504) != NULL)
         {
-            textureFree(*(void**)((u8*)tex + 2504));
-            *(void**)((u8*)tex + 2504) = NULL;
+            textureFree(*(void**)(tex + 2504));
+            *(void**)(tex + 2504) = NULL;
         }
-        g->itemSlots[j] = -1;
-        g->itemFlags[j] = 1;
+        *(s16*)(base2 + 2376) = -1;
+        *(base1 + 1096) = 1;
     }
 
     textureFree(lbl_803DD8C4);
