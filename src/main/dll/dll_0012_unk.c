@@ -176,66 +176,66 @@ FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
              float* param_9, float param_10, undefined4 param_11, undefined4 param_12,
              undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    float prevVal;
-    undefined4 result;
+    float fVar1;
+    undefined4 uVar2;
     undefined4 extraout_r4;
     undefined4 extraout_r4_00;
-    double conv;
-    double conv2;
+    double dVar3;
+    double dVar4;
 
-    prevVal = param_9[0x28];
-    if (((prevVal == 0.0) || (param_9[0x29] == 0.0)) || (param_10 == 0.0))
+    fVar1 = param_9[0x28];
+    if (((fVar1 == 0.0) || (param_9[0x29] == 0.0)) || (param_10 == 0.0))
     {
-        result = 1;
+        uVar2 = 1;
     }
     else
     {
         if (param_9[0x20] == 0.0)
         {
-            param_9[0x27] = prevVal;
+            param_9[0x27] = fVar1;
             param_9[0x28] = param_9[0x29];
             param_9[0x29] = param_10;
             FUN_80003494((uint)(param_9 + 0x2a), (uint)(param_9 + 0x2e), 0x10);
             FUN_80003494((uint)(param_9 + 0x32), (uint)(param_9 + 0x36), 0x10);
-            result = 0x10;
+            uVar2 = 0x10;
             FUN_80003494((uint)(param_9 + 0x3a), (uint)(param_9 + 0x3e), 0x10);
             param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
             param_9[0x2f] = *(float*)((int)param_9[0x29] + 8);
-            conv = (double)FUN_80293f90();
+            dVar3 = (double)FUN_80293f90();
             param_9[0x30] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
             param_9[0x31] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * conv);
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
             param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
             param_9[0x37] = *(float*)((int)param_9[0x29] + 0xc);
-            conv = (double)FUN_80293f90();
+            dVar3 = (double)FUN_80293f90();
             param_9[0x38] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
             param_9[0x39] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * conv);
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
             param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
             param_9[0x3f] = *(float*)((int)param_9[0x29] + 0x10);
-            conv = (double)FUN_80294964();
+            dVar3 = (double)FUN_80294964();
             param_9[0x40] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * conv);
-            conv2 = (double)FUN_80294964();
-            conv = DOUBLE_803e1268;
-            conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            dVar4 = (double)FUN_80294964();
+            dVar3 = DOUBLE_803e1268;
+            dVar4 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
                                                                      (uint) * (byte*)((int)param_9[0x29] +
                                                                          0x2e)) -
-                DOUBLE_803e1268) * conv2);
-            param_9[0x41] = (float)((double)lbl_803E1250 * conv2);
+                DOUBLE_803e1268) * dVar4);
+            param_9[0x41] = (float)((double)lbl_803E1250 * dVar4);
             if (param_9[0x24] != 0.0)
             {
-                FUN_80006a18(conv2, conv, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
-                             extraout_r4_00, result, param_12, param_13, param_14, param_15, param_16);
+                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                             extraout_r4_00, uVar2, param_12, param_13, param_14, param_15, param_16);
                 if (lbl_803E1248 <= *param_9)
                 {
                     *param_9 = lbl_803E124C;
@@ -244,75 +244,75 @@ FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         }
         else
         {
-            param_9[0x27] = prevVal;
+            param_9[0x27] = fVar1;
             param_9[0x28] = param_9[0x29];
             param_9[0x29] = param_10;
             FUN_80003494((uint)(param_9 + 0x2e), (uint)(param_9 + 0x2a), 0x10);
             FUN_80003494((uint)(param_9 + 0x36), (uint)(param_9 + 0x32), 0x10);
-            result = 0x10;
+            uVar2 = 0x10;
             FUN_80003494((uint)(param_9 + 0x3e), (uint)(param_9 + 0x3a), 0x10);
             param_9[0x2a] = *(float*)((int)param_9[0x29] + 8);
             param_9[0x2b] = *(float*)((int)param_9[0x28] + 8);
-            conv = (double)FUN_80293f90();
+            dVar3 = (double)FUN_80293f90();
             param_9[0x2c] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
             param_9[0x2d] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * conv);
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
             param_9[0x32] = *(float*)((int)param_9[0x29] + 0xc);
             param_9[0x33] = *(float*)((int)param_9[0x28] + 0xc);
-            conv = (double)FUN_80293f90();
+            dVar3 = (double)FUN_80293f90();
             param_9[0x34] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
             param_9[0x35] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * conv);
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
             param_9[0x3a] = *(float*)((int)param_9[0x29] + 0x10);
             param_9[0x3b] = *(float*)((int)param_9[0x28] + 0x10);
-            conv = (double)FUN_80294964();
+            dVar3 = (double)FUN_80294964();
             param_9[0x3c] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * conv);
-            conv2 = (double)FUN_80294964();
-            conv = DOUBLE_803e1268;
-            conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            dVar4 = (double)FUN_80294964();
+            dVar3 = DOUBLE_803e1268;
+            dVar4 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
                                                                      (uint) * (byte*)((int)param_9[0x28] +
                                                                          0x2e)) -
-                DOUBLE_803e1268) * conv2);
-            param_9[0x3d] = (float)((double)lbl_803E1250 * conv2);
+                DOUBLE_803e1268) * dVar4);
+            param_9[0x3d] = (float)((double)lbl_803E1250 * dVar4);
             if (param_9[0x24] != 0.0)
             {
-                FUN_80006a18(conv2, conv, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
-                             extraout_r4, result, param_12, param_13, param_14, param_15, param_16);
+                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                             extraout_r4, uVar2, param_12, param_13, param_14, param_15, param_16);
                 if (*param_9 <= lbl_803E1270)
                 {
                     *param_9 = lbl_803E1274;
                 }
             }
         }
-        result = 0;
+        uVar2 = 0;
     }
-    return result;
+    return uVar2;
 }
 
-void FUN_800da594(double param_1, float* param_2)
+void FUN_800da594(double param_1, float* pValue)
 {
-    if (lbl_803E1270 < *param_2)
+    if (lbl_803E1270 < *pValue)
     {
-        if (lbl_803E1248 <= *param_2)
+        if (lbl_803E1248 <= *pValue)
         {
-            *param_2 = lbl_803E124C;
+            *pValue = lbl_803E124C;
         }
     }
     else
     {
-        *param_2 = lbl_803E1274;
+        *pValue = lbl_803E1274;
     }
-    FUN_80006a10(param_1, param_2);
+    FUN_80006a10(param_1, pValue);
     return;
 }
 
@@ -324,48 +324,48 @@ bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return 0;
 }
 
-void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
+void FUN_800da700(undefined4 param_1, undefined4 param_2, int actFilter)
 {
     float dx;
     float dy;
     float dz;
-    float* pos;
-    int* objPtr;
-    uint bit;
+    float* refPos;
+    int* pObj;
+    uint bitVal;
     int obj;
     int i;
     double distSq;
     double in_f31;
-    double bestSq;
+    double bestDistSq;
     double in_ps31_1;
-    undefined8 uVar11;
-    int local_38[12];
+    undefined8 packed;
+    int objList[12];
     float local_8;
     float fStack_4;
 
     local_8 = (float)in_f31;
     fStack_4 = (float)in_ps31_1;
-    uVar11 = FUN_80286838();
-    pos = (float*)((ulonglong)uVar11 >> 0x20);
-    objPtr = (int*)(**(code**)(*DAT_803dd71c + 0x10))(local_38);
-    bestSq = (double)lbl_803E1278;
-    for (i = 0; i < local_38[0]; i = i + 1)
+    packed = FUN_80286838();
+    refPos = (float*)((ulonglong)packed >> 0x20);
+    pObj = (int*)(**(code**)(*DAT_803dd71c + 0x10))(objList);
+    bestDistSq = (double)lbl_803E1278;
+    for (i = 0; i < objList[0]; i = i + 1)
     {
-        obj = *objPtr;
+        obj = *pObj;
         if ((((((obj != 0) && (*(char*)(obj + 0x19) == '$')) &&
-                        (((uint)uVar11 == 0xffffffff || ((uint) * (byte*)(obj + 3) == (uint)uVar11)))) &&
-                    ((param_3 == -1 || (*(char*)(obj + 0x1a) == param_3)))) &&
+                        (((uint)packed == 0xffffffff || ((uint) * (byte*)(obj + 3) == (uint)packed)))) &&
+                    ((actFilter == -1 || (*(char*)(obj + 0x1a) == actFilter)))) &&
                 (((int)*(short*)(obj + 0x30) == 0xffffffff ||
-                    (bit = GameBit_Get((int)*(short*)(obj + 0x30)), bit != 0)))) &&
+                    (bitVal = GameBit_Get((int)*(short*)(obj + 0x30)), bitVal != 0)))) &&
             ((((int)*(short*)(obj + 0x32) == 0xffffffff ||
-                    (bit = GameBit_Get((int)*(short*)(obj + 0x32)), bit == 0)) &&
-                (dx = *pos - *(float*)(obj + 8), dy = pos[1] - *(float*)(obj + 0xc),
-                    dz = pos[2] - *(float*)(obj + 0x10),
-                    distSq = (double)(dz * dz + dx * dx + dy * dy), distSq < bestSq))))
+                    (bitVal = GameBit_Get((int)*(short*)(obj + 0x32)), bitVal == 0)) &&
+                (dx = *refPos - *(float*)(obj + 8), dy = refPos[1] - *(float*)(obj + 0xc),
+                    dz = refPos[2] - *(float*)(obj + 0x10),
+                    distSq = (double)(dz * dz + dx * dx + dy * dy), distSq < bestDistSq))))
         {
-            bestSq = distSq;
+            bestDistSq = distSq;
         }
-        objPtr = objPtr + 1;
+        pObj = pObj + 1;
     }
     FUN_80286884();
     return;
@@ -381,116 +381,116 @@ void FUN_800da850(uint param_1, undefined* param_2)
 undefined2
 FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4, byte param_5)
 {
-    byte i;
-    uint sectorIdx;
-    uint off;
+    byte bVar1;
+    uint uVar2;
+    uint uVar3;
 
-    i = 0;
+    bVar1 = 0;
     do
     {
-        if (3 < i)
+        if (3 < bVar1)
         {
             return 0;
         }
         if (((&DAT_803a2390)[param_2] != '\0') &&
-            (sectorIdx = (uint)(byte)(&DAT_803a076c)[param_2 * 0x28 + (uint)i], sectorIdx != 0))
+            (uVar2 = (uint)(byte)(&DAT_803a076c)[param_2 * 0x28 + (uint)bVar1], uVar2 != 0))
         {
             if ((param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_8039d768)[sectorIdx * 0x18] ^ 0x80000000) -
+                                             (int)(short)(&DAT_8039d768)[uVar2 * 0x18] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_8039d76a)[sectorIdx * 0x18] ^ 0x80000000
+                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_8039d76a)[uVar2 * 0x18] ^ 0x80000000
                 ) - DOUBLE_803e1260) < param_1[1]))
             {
                 param_5 = 0;
-                off = 0;
+                uVar3 = 0;
                 while ((param_5 < 4 &&
-                    (*(float*)(&DAT_8039d748 + sectorIdx * 0x18 + (uint)param_5 * 2 + 8) +
+                    (*(float*)(&DAT_8039d748 + uVar2 * 0x18 + (uint)param_5 * 2 + 8) +
                         *param_1 *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_8039d748)[sectorIdx * 0x18 + (off & 0xff)]
+                                                 (int)(short)(&DAT_8039d748)[uVar2 * 0x18 + (uVar3 & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
                         param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_8039d748)
-                                                 [sectorIdx * 0x18 + (off & 0xff) + 1] ^
+                                                 [uVar2 * 0x18 + (uVar3 & 0xff) + 1] ^
                                                  0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                 {
                     param_5 = param_5 + 1;
-                    off = off + 2;
+                    uVar3 = uVar3 + 2;
                 }
             }
             if (param_5 == 4)
             {
-                return (&DAT_8039d76c)[sectorIdx * 0x18];
+                return (&DAT_8039d76c)[uVar2 * 0x18];
             }
         }
-        i = i + 1;
+        bVar1 = bVar1 + 1;
     }
     while (true);
 }
 
 void FUN_800db47c(float* param_1, undefined* param_2)
 {
-    uint bitMask;
-    uint sectorIdx;
-    byte i;
-    uint childIdx;
-    uint off;
-    byte k;
+    uint uVar1;
+    uint uVar2;
+    byte bVar3;
+    uint uVar4;
+    uint uVar5;
+    byte unaff_r31;
 
-    sectorIdx = FUN_800db820(param_1);
-    if ((param_2 != (undefined*)0x0) && ((sectorIdx & 0xff) != 0))
+    uVar2 = FUN_800db820(param_1);
+    if ((param_2 != (undefined*)0x0) && ((uVar2 & 0xff) != 0))
     {
-        *param_2 = (char)sectorIdx;
+        *param_2 = (char)uVar2;
         param_2[1] = 0;
-        bitMask = 1;
-        for (i = 0; i < 4; i = i + 1)
+        uVar1 = 1;
+        for (bVar3 = 0; bVar3 < 4; bVar3 = bVar3 + 1)
         {
-            off = (uint)i;
-            childIdx = (uint)(byte)(&DAT_803a076c)[(sectorIdx & 0xff) * 0x28 + off];
-            if (childIdx == 0)
+            uVar5 = (uint)bVar3;
+            uVar4 = (uint)(byte)(&DAT_803a076c)[(uVar2 & 0xff) * 0x28 + uVar5];
+            if (uVar4 == 0)
             {
-                *(undefined2*)(param_2 + off * 2 + 2) = 0;
+                *(undefined2*)(param_2 + uVar5 * 2 + 2) = 0;
             }
             else
             {
-                *(undefined2*)(param_2 + off * 2 + 2) = (&DAT_8039d76c)[childIdx * 0x18];
+                *(undefined2*)(param_2 + uVar5 * 2 + 2) = (&DAT_8039d76c)[uVar4 * 0x18];
                 if (param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_8039d768)[childIdx * 0x18] ^ 0x80000000) -
+                                             (int)(short)(&DAT_8039d768)[uVar4 * 0x18] ^ 0x80000000) -
                         DOUBLE_803e1260))
                 {
                     if ((float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_8039d76a)[childIdx * 0x18] ^ 0x80000000) -
+                                                 (int)(short)(&DAT_8039d76a)[uVar4 * 0x18] ^ 0x80000000) -
                         DOUBLE_803e1260) < param_1[1])
                     {
-                        off = 0;
-                        for (k = 0; k < 4; k = k + 1)
+                        uVar5 = 0;
+                        for (unaff_r31 = 0; unaff_r31 < 4; unaff_r31 = unaff_r31 + 1)
                         {
                             if (lbl_803E1270 <
-                                *(float*)(&DAT_8039d748 + childIdx * 0x18 + (uint)k * 2 + 8) +
+                                *(float*)(&DAT_8039d748 + uVar4 * 0x18 + (uint)unaff_r31 * 2 + 8) +
                                 *param_1 *
                                 (float)((double)CONCAT44(0x43300000,
                                                          (int)(short)(&DAT_8039d748)
-                                                         [childIdx * 0x18 + (off & 0xff)] ^ 0x80000000)
+                                                         [uVar4 * 0x18 + (uVar5 & 0xff)] ^ 0x80000000)
                                     - DOUBLE_803e1260) +
                                 param_1[2] *
                                 (float)((double)CONCAT44(0x43300000,
                                                          (int)(short)(&DAT_8039d748)
-                                                         [childIdx * 0x18 + (off & 0xff) + 1] ^
+                                                         [uVar4 * 0x18 + (uVar5 & 0xff) + 1] ^
                                                          0x80000000) - DOUBLE_803e1260))
                                 break;
-                            off = off + 2;
+                            uVar5 = uVar5 + 2;
                         }
                     }
                 }
-                if (k == 4)
+                if (unaff_r31 == 4)
                 {
-                    param_2[1] = param_2[1] | (byte)bitMask;
+                    param_2[1] = param_2[1] | (byte)uVar1;
                 }
             }
-            bitMask = (bitMask & 0x7f) << 1;
+            uVar1 = (uVar1 & 0x7f) << 1;
         }
     }
     return;
@@ -498,187 +498,187 @@ void FUN_800db47c(float* param_1, undefined* param_2)
 
 ushort FUN_800db690(float* param_1)
 {
-    uint off;
-    byte i;
-    undefined2* sector;
-    int remaining;
+    uint uVar1;
+    byte bVar2;
+    undefined2* puVar3;
+    int iVar4;
 
-    sector = &DAT_8039d748;
-    remaining = DAT_803de0e4;
+    puVar3 = &DAT_8039d748;
+    iVar4 = DAT_803de0e4;
     if (0 < DAT_803de0e4)
     {
         do
         {
             if ((param_1[1] <
-                    (float)((double)CONCAT44(0x43300000, (int)(short)sector[0x10] ^ 0x80000000) -
+                    (float)((double)CONCAT44(0x43300000, (int)(short)puVar3[0x10] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)sector[0x11] ^ 0x80000000) -
+                ((float)((double)CONCAT44(0x43300000, (int)(short)puVar3[0x11] ^ 0x80000000) -
                     DOUBLE_803e1260) < param_1[1]))
             {
-                i = 0;
-                off = 0;
-                while ((i < 4 &&
-                    (*(float*)(sector + (uint)i * 2 + 8) +
+                bVar2 = 0;
+                uVar1 = 0;
+                while ((bVar2 < 4 &&
+                    (*(float*)(puVar3 + (uint)bVar2 * 2 + 8) +
                         *param_1 *
-                        (float)((double)CONCAT44(0x43300000, (int)(short)sector[off & 0xff] ^ 0x80000000) -
+                        (float)((double)CONCAT44(0x43300000, (int)(short)puVar3[uVar1 & 0xff] ^ 0x80000000) -
                             DOUBLE_803e1260) +
                         param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)sector[(off & 0xff) + 1] ^ 0x80000000) -
+                                                 (int)(short)puVar3[(uVar1 & 0xff) + 1] ^ 0x80000000) -
                             DOUBLE_803e1260) <= lbl_803E1270)))
                 {
-                    i = i + 1;
-                    off = off + 2;
+                    bVar2 = bVar2 + 1;
+                    uVar1 = uVar1 + 2;
                 }
-                if (i == 4)
+                if (bVar2 == 4)
                 {
-                    return sector[0x12];
+                    return puVar3[0x12];
                 }
             }
-            sector = sector + 0x18;
-            remaining = remaining + -1;
+            puVar3 = puVar3 + 0x18;
+            iVar4 = iVar4 + -1;
         }
-        while (remaining != 0);
+        while (iVar4 != 0);
     }
     return 0;
 }
 
 int FUN_800db820(float* param_1)
 {
-    short next;
-    short cur;
-    uint off;
-    int idx;
-    byte i;
+    short sVar1;
+    short sVar2;
+    uint uVar3;
+    int iVar4;
+    byte bVar5;
 
-    cur = (short)DAT_803de0e0;
+    sVar2 = (short)DAT_803de0e0;
     if (DAT_803de0e0 == 0xb4)
     {
-        next = 0;
+        sVar1 = 0;
     }
     else
     {
-        next = cur + 1;
+        sVar1 = sVar2 + 1;
     }
     do
     {
-        idx = (int)cur;
-        if (idx == next)
+        iVar4 = (int)sVar2;
+        if (iVar4 == sVar1)
         {
-            if ((&DAT_803a2390)[idx] != '\0')
+            if ((&DAT_803a2390)[iVar4] != '\0')
             {
                 if ((param_1[1] <
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
+                                                 (int)(short)(&DAT_803a0768)[iVar4 * 0x14] ^ 0x80000000) -
                             DOUBLE_803e1260)) &&
                     ((float)((double)CONCAT44(0x43300000,
-                                              (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000) -
+                                              (int)(short)(&DAT_803a076a)[iVar4 * 0x14] ^ 0x80000000) -
                         DOUBLE_803e1260) < param_1[1]))
                 {
-                    i = 0;
-                    off = 0;
-                    while ((i < 4 &&
-                        (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
+                    bVar5 = 0;
+                    uVar3 = 0;
+                    while ((bVar5 < 4 &&
+                        (*(float*)(&DAT_803a0748 + iVar4 * 0x14 + (uint)bVar5 * 2 + 8) +
                             *param_1 *
                             (float)((double)CONCAT44(0x43300000,
                                                      (int)(short)(&DAT_803a0748)
-                                                     [idx * 0x14 + (off & 0xff)] ^ 0x80000000)
+                                                     [iVar4 * 0x14 + (uVar3 & 0xff)] ^ 0x80000000)
                                 - DOUBLE_803e1260) +
                             param_1[2] *
                             (float)((double)CONCAT44(0x43300000,
                                                      (int)(short)(&DAT_803a0748)
-                                                     [idx * 0x14 + (off & 0xff) + 1] ^
+                                                     [iVar4 * 0x14 + (uVar3 & 0xff) + 1] ^
                                                      0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                     {
-                        i = i + 1;
-                        off = off + 2;
+                        bVar5 = bVar5 + 1;
+                        uVar3 = uVar3 + 2;
                     }
-                    if (i == 4)
+                    if (bVar5 == 4)
                     {
-                        DAT_803de0e0 = (int)cur;
-                        return (int)cur;
+                        DAT_803de0e0 = (int)sVar2;
+                        return (int)sVar2;
                     }
                 }
             }
             return 0;
         }
-        idx = (int)cur;
-        if ((&DAT_803a2390)[idx] != '\0')
+        iVar4 = (int)sVar2;
+        if ((&DAT_803a2390)[iVar4] != '\0')
         {
             if ((param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
+                                             (int)(short)(&DAT_803a0768)[iVar4 * 0x14] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000
+                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[iVar4 * 0x14] ^ 0x80000000
                 ) - DOUBLE_803e1260) < param_1[1]))
             {
-                i = 0;
-                off = 0;
-                while ((i < 4 &&
-                    (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
+                bVar5 = 0;
+                uVar3 = 0;
+                while ((bVar5 < 4 &&
+                    (*(float*)(&DAT_803a0748 + iVar4 * 0x14 + (uint)bVar5 * 2 + 8) +
                         *param_1 *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_803a0748)[idx * 0x14 + (off & 0xff)]
+                                                 (int)(short)(&DAT_803a0748)[iVar4 * 0x14 + (uVar3 & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
                         param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)
-                                                 [idx * 0x14 + (off & 0xff) + 1] ^
+                                                 [iVar4 * 0x14 + (uVar3 & 0xff) + 1] ^
                                                  0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                 {
-                    i = i + 1;
-                    off = off + 2;
+                    bVar5 = bVar5 + 1;
+                    uVar3 = uVar3 + 2;
                 }
-                if (i == 4)
+                if (bVar5 == 4)
                 {
-                    DAT_803de0e0 = (int)cur;
-                    return (int)cur;
+                    DAT_803de0e0 = (int)sVar2;
+                    return (int)sVar2;
                 }
             }
         }
-        idx = (int)next;
-        if ((&DAT_803a2390)[idx] != '\0')
+        iVar4 = (int)sVar1;
+        if ((&DAT_803a2390)[iVar4] != '\0')
         {
             if ((param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
+                                             (int)(short)(&DAT_803a0768)[iVar4 * 0x14] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000
+                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[iVar4 * 0x14] ^ 0x80000000
                 ) - DOUBLE_803e1260) < param_1[1]))
             {
-                i = 0;
-                off = 0;
-                while ((i < 4 &&
-                    (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
+                bVar5 = 0;
+                uVar3 = 0;
+                while ((bVar5 < 4 &&
+                    (*(float*)(&DAT_803a0748 + iVar4 * 0x14 + (uint)bVar5 * 2 + 8) +
                         *param_1 *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_803a0748)[idx * 0x14 + (off & 0xff)]
+                                                 (int)(short)(&DAT_803a0748)[iVar4 * 0x14 + (uVar3 & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
                         param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)
-                                                 [idx * 0x14 + (off & 0xff) + 1] ^
+                                                 [iVar4 * 0x14 + (uVar3 & 0xff) + 1] ^
                                                  0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                 {
-                    i = i + 1;
-                    off = off + 2;
+                    bVar5 = bVar5 + 1;
+                    uVar3 = uVar3 + 2;
                 }
-                if (i == 4)
+                if (bVar5 == 4)
                 {
-                    DAT_803de0e0 = (int)next;
-                    return (int)next;
+                    DAT_803de0e0 = (int)sVar1;
+                    return (int)sVar1;
                 }
             }
         }
-        cur = cur + -1;
-        if (cur == -1)
+        sVar2 = sVar2 + -1;
+        if (sVar2 == -1)
         {
-            cur = 0xb4;
+            sVar2 = 0xb4;
         }
-        next = next + 1;
-        if (next == 0xb5)
+        sVar1 = sVar1 + 1;
+        if (sVar1 == 0xb5)
         {
-            next = 0;
+            sVar1 = 0;
         }
     }
     while (true);
