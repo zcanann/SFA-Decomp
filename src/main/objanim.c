@@ -407,12 +407,14 @@ Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveC
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
+        moveData =
+            (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] +
+                OBJANIM_CACHED_MOVE_DATA_OFFSET);
     }
     else
     {
         state->moveCacheSlot = (u16)moveId;
-        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
+        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
     state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
@@ -505,6 +507,8 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     int segmentCount;
     int sampleIndex;
     int lastSample;
+    int hasFirstAxis;
+    s16 axisFirstSample;
 
     bank = ObjAnim_GetActiveBank(objAnim);
     animDef = bank->animDef;
@@ -527,7 +531,19 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         {
             blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
             blendScale = blendCurve->scale * objAnim->rootMotionScale;
-            blendSamples = ObjAnim_FindFirstRootTranslationAxis(blendCurve);
+            blendSamples = ObjAnim_GetRootCurveAxisData(blendCurve);
+            if (*blendSamples == 0)
+            {
+                blendSamples++;
+                if (*blendSamples == 0)
+                {
+                    blendSamples++;
+                    if (*blendSamples == 0)
+                    {
+                        blendSamples = NULL;
+                    }
+                }
+            }
             if (blendSamples != NULL)
             {
                 blendSamples++;
@@ -544,8 +560,27 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     rootScale = curve->scale * objAnim->rootMotionScale;
     segmentCount = curve->sampleCount - 1;
-    axis = ObjAnim_FindFirstRootTranslationAxis(curve);
-    if (axis == NULL)
+    axis = ObjAnim_GetRootCurveAxisData(curve);
+    hasFirstAxis = 0;
+    axisFirstSample = *axis;
+    if (axisFirstSample != 0)
+    {
+        hasFirstAxis = 1;
+    }
+    if (axisFirstSample == 0)
+    {
+        axis++;
+    }
+    if (hasFirstAxis == 0)
+    {
+        axisFirstSample = *axis;
+        if (axisFirstSample == 0)
+        {
+            axis++;
+        }
+    }
+    axisFirstSample = *axis;
+    if (axisFirstSample == 0)
     {
         return 0;
     }
@@ -1087,12 +1122,14 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
+        moveData =
+            (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] +
+                OBJANIM_CACHED_MOVE_DATA_OFFSET);
     }
     else
     {
         state->moveCacheSlot = (u16)moveId;
-        moveData = ObjAnim_GetCurrentMoveData(animDef, state);
+        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
     state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
