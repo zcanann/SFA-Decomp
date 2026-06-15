@@ -741,20 +741,20 @@ void* gameTextGetStr(int textId)
         lbl_803DC974 = entry;
         gCurTextBuffer = *(int*)*(int**)(entry + 8);
         *(u16*)entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)gCurTextBuffer, strings + 0xec4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)gCurTextBuffer, strings + 0xed4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)gCurTextBuffer, strings + 0xee0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)gCurTextBuffer, strings + 0xef0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -1221,7 +1221,8 @@ void gameTextLoadTaskText(int taskId)
         if (lbl_803DCA00 == 0)
         {
             taskList = lbl_802C9EE8;
-            for (count = 0xb; count != 0; count--)
+            count = 0xb;
+            do
             {
                 if (taskId == *taskList)
                 {
@@ -1229,7 +1230,7 @@ void gameTextLoadTaskText(int taskId)
                     goto checkAllowed;
                 }
                 taskList++;
-            }
+            } while (--count != 0);
             allowed = 0;
         checkAllowed:
             if (allowed == 0)

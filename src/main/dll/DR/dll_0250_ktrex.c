@@ -1400,13 +1400,13 @@ int ktrex_stateHandlerA03(int obj, int runtime)
     int phase;
     f32 f4;
     f32 f5;
+    f32 result;
     int popped;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
-        return 0;
     }
-    if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+    else if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
     {
         phase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
         f5 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)
@@ -1415,16 +1415,17 @@ int ktrex_stateHandlerA03(int obj, int runtime)
             gKTRexState)->rowAZ)[phase];
         if (__fabs(f5) > __fabs(f4))
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 =
+            result =
                 (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
                 f5;
         }
         else
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 =
+            result =
                 (((GameObject*)obj)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
                 f4;
         }
+        ((KTRexArenaState*)gKTRexState)->unk8 = result;
         popped = 0;
         if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
         {
@@ -1468,25 +1469,27 @@ int ktrex_stateHandlerA04(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 4);
         ((KTRexArenaState*)gKTRexState)->unk4 =
-            (f32)(u32) * (u16*)((char*)p + ((KTRexArenaState*)gKTRexState)->unkFD * 2 + 0x44);
-        return 0;
+            (f32)(u32) * (u16*)((char*)p + (((KTRexArenaState*)gKTRexState)->unkFD * 2 + 0x44));
     }
-    t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
-    ((KTRexArenaState*)gKTRexState)->unk4 = t;
-    if (t < lbl_803E67B8)
+    else
     {
-        ((KTRexArenaState*)gKTRexState)->unk4 = lbl_803E67B8;
-    }
-    if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
-    {
-        if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
+        t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
+        ((KTRexArenaState*)gKTRexState)->unk4 = t;
+        if (t < lbl_803E67B8)
         {
-            popped = 0;
-            if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
+            ((KTRexArenaState*)gKTRexState)->unk4 = lbl_803E67B8;
+        }
+        if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+        {
+            if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
             {
-                Stack_Pop(((KTRexArenaState*)gKTRexState)->stack, &popped);
+                popped = 0;
+                if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
+                {
+                    Stack_Pop(((KTRexArenaState*)gKTRexState)->stack, &popped);
+                }
+                return popped + 1;
             }
-            return popped + 1;
         }
     }
     return 0;

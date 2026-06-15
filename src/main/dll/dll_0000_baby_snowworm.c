@@ -4939,11 +4939,11 @@ void GameUI_initialise(void)
     lbl_803DD8B8 = 0;
     gTrickyHudCachedIconIndex = -1;
     res = getScreenResolution();
-    lbl_803DD744 = res;
+    *(volatile int*)&lbl_803DD744 = res;
     height = res >> 16;
-    lbl_803DD740 = height;
+    *(volatile int*)&lbl_803DD740 = height;
     width = res & 0xffff;
-    lbl_803DD744 = width;
+    *(volatile int*)&lbl_803DD744 = width;
     lbl_803DD744 = width - 320;
     lbl_803DD740 = height - 240;
     for (i = 0; i < 102; i++)

@@ -257,6 +257,7 @@ void* Resource_Acquire(u32 id, int unused)
 }
 #pragma dont_inline reset
 
+#pragma ppc_unroll_speculative on
 void Resource_ResetRefCounts(void)
 {
     u32 i;
@@ -266,6 +267,7 @@ void Resource_ResetRefCounts(void)
         gResourceRefCounts[i] = 0;
     }
 }
+#pragma ppc_unroll_speculative off
 
 void fn_8001404C(s32 value)
 {

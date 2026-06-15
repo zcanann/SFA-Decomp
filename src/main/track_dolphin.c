@@ -2228,6 +2228,7 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
     f64 ax;
     f64 az;
     int i;
+    int rotY;
 
     xf.tx = 0.0f;
     xf.ty = 0.0f;
@@ -2238,12 +2239,13 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
     az = __fabs(vec[2]);
     if (ax > az)
     {
-        xf.rotY = (u16)getAngle(ax, vec[1]);
+        rotY = (u16)getAngle(ax, vec[1]);
     }
     else
     {
-        xf.rotY = (u16)getAngle(az, vec[1]);
+        rotY = (u16)getAngle(az, vec[1]);
     }
+    xf.rotY = rotY;
     if (xf.rotY > 0x2000)
     {
         xf.rotY = 0x2000;

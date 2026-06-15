@@ -260,7 +260,7 @@ void arwarwing_addShield(int arwing, int p2)
     ArwingState* state = ((GameObject*)arwing)->extra;
     s8 v;
 
-    *(s8*)&state->shield = state->shield + p2;
+    *(s8*)&state->shield = (s8)(*(s8*)&state->shield + p2);
     v = *(s8*)&state->shield;
     *(s8*)&state->shield = (v < 0)
         ? 0

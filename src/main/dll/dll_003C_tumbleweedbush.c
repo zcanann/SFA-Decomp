@@ -167,8 +167,7 @@ void linkInitTextures(LinkMenuItemDB* item)
         budget -= linkTextures[item->slots[i] * 8 + 6];
         i++;
     }
-    item->slots[i] = 1;
-    i++;
+    item->slots[i++] = 1;
     if (i >= 25)
     {
         OSReport(lbl_8031C234);

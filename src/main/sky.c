@@ -535,6 +535,7 @@ void fn_8008B88C(int* outTimer)
     *outTimer = ((SkyState*)sky)->unk218;
 }
 
+#pragma opt_loop_invariants off
 void skyFn_80089710(int flags, u32 enabled, int startComplete)
 {
     u8* sky;
@@ -554,8 +555,7 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         {
             sky = lbl_803DD12C;
             stateActive = ((SkyBlendStateFlags*)(sky + flagBit * 0xa4 + 0xc1))->active;
-            requestedActive = (u8)enabled;
-            if (stateActive != requestedActive)
+            if (stateActive != (u8)enabled)
             {
                 if (startComplete != 0)
                 {
@@ -571,6 +571,7 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 void fn_800897D4(int slot, f32* x, f32* y, f32* z)
 {
@@ -975,11 +976,12 @@ void fn_8008DAE8(int obj)
     }
 }
 
+#pragma optimization_level 2
 void playerEnvFxFn_80088ad4(u8 idx)
 {
     void* player;
-    int alt;
-    s16 val;
+    s8 alt;
+    int val;
 
     player = Obj_GetPlayerObject();
     if ((void*)lbl_803DD134 == NULL)
@@ -1023,6 +1025,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
         }
     }
 }
+#pragma optimization_level reset
 
 void dll_06_func09(s32* x, s32* y, s32* z)
 {
@@ -1564,6 +1567,7 @@ void skyFn_80088e54(int mode, f32 brightness)
     int bit;
     f32 unset;
     f32 fullBlend;
+    int idx;
 
     env = saveGameGetEnvState();
     if (((SkyState*)lbl_803DD12C)->currentLightIndex != mode)
@@ -1582,15 +1586,16 @@ void skyFn_80088e54(int mode, f32 brightness)
             ((SkyState*)lbl_803DD12C)->unk248 = fullBlend;
             ((SkyState*)lbl_803DD12C)->lightBlendFactor = fullBlend;
         }
-        cloudMode = ((SkyBlendStateFlags*)(lbl_803DD12C + mode * 0xa4 + 0xc1))->cloud;
+        idx = mode * 0xa4;
+        cloudMode = ((SkyBlendStateFlags*)(lbl_803DD12C + idx + 0xc1))->cloud;
         if (cloudMode != 0)
         {
             setDrawCloudsAndLights(cloudMode - 1);
         }
         ((SkyBlendStateFlags*)(lbl_803DD12C + 0x209))->unused80 =
-            ((SkyBlendStateFlags*)(lbl_803DD12C + mode * 0xa4 + 0xc1))->unused80;
+            ((SkyBlendStateFlags*)(lbl_803DD12C + idx + 0xc1))->unused80;
         ((SkyBlendStateFlags*)(lbl_803DD12C + 0x209))->bit20 =
-            ((SkyBlendStateFlags*)(lbl_803DD12C + mode * 0xa4 + 0xc1))->bit20;
+            ((SkyBlendStateFlags*)(lbl_803DD12C + idx + 0xc1))->bit20;
         env2 = saveGameGetEnvState();
         if (getSaveGameLoadStatus() == 0)
         {

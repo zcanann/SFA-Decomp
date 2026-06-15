@@ -1056,6 +1056,7 @@ typedef struct F32Pair
 extern F32Pair LastReadIssued_803DEB58;
 extern f32 lbl_803DEB7C;
 #pragma dont_inline on
+#pragma opt_common_subs off
 void gxFn_80052dc0(void)
 {
     f32 omtx[4][4];
@@ -1084,6 +1085,7 @@ void gxFn_80052dc0(void)
     GXLoadNrmMtxImm(pmtx, 0);
     GXSetCurrentMtx(0);
 }
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 void gxTextureFn_80052638(int* param)
 {
@@ -1295,37 +1297,20 @@ void textureFree(u8* tex)
 #pragma peephole reset
 
 #pragma scheduling on
-#pragma peephole on
-#pragma ppc_unroll_speculative off
+#pragma peephole off
 int textureCrazyPointerFollowFn_80054c30(int* p, int n)
 {
     int limit = *(u16*)((char*)p + 16);
-    int q;
+    int i;
     if (n >= limit) n = limit - 1;
     n >>= 8;
-    if (n <= 0) return (int)p;
-    for (q = (u32)n >> 3; q != 0; q--)
-    {
-        p = *(int**)p;
-        p = *(int**)p;
-        p = *(int**)p;
-        p = *(int**)p;
-        p = *(int**)p;
-        p = *(int**)p;
-        p = *(int**)p;
-        p = *(int**)p;
-    }
-    n = n & 7;
-    if (n == 0) return (int)p;
-    do
+    for (i = 0; i < n; i++)
     {
         p = *(int**)p;
     }
-    while (--n != 0);
     return (int)p;
 }
 
-#pragma ppc_unroll_speculative on
 #pragma scheduling off
 #pragma peephole off
 void shaderInit(u8* def, void** out, u8* obj)

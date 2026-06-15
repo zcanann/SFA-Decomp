@@ -601,7 +601,7 @@ typedef struct PlayerMoveBuf
     s8 count;
 } PlayerMoveBuf;
 
-void player_setScale(f32 dt, short* moveState, uint* obj, int flags)
+void player_setScale(short* moveState, uint* obj, f32 dt, int flags)
 {
     PlayerMoveBuf buf;
     s8* ptr;
