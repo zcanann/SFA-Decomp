@@ -1325,7 +1325,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
         f32 x;
         f32 y;
         f32 z;
-    } pfx;
+    } pfx2;
     struct
     {
         u8 pad[6];
@@ -1334,7 +1334,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
         f32 x;
         f32 y;
         f32 z;
-    } pfx2;
+    } pfx;
 
     if (((PlayerState*)state)->baddie.targetObj == NULL)
     {
