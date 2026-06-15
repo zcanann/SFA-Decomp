@@ -526,10 +526,10 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
 
     if (p2[897] != 0)
     {
-        zero = lbl_803E1C2C;
         *(int*)(p2 + 792) = 0;
         *(int*)(p2 + 796) = 0;
         *(s16*)(p2 + 816) = 0;
+        zero = lbl_803E1C2C;
         *(f32*)(p2 + 656) = zero;
         *(f32*)(p2 + 652) = zero;
         *p8 = 1;
@@ -542,10 +542,12 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
         }
         else
         {
+            f32 scale;
             dx /= dist;
             dz /= dist;
-            *(f32*)(p2 + 656) = lbl_803E1C6C * -dx;
-            *(f32*)(p2 + 652) = lbl_803E1C6C * dz;
+            scale = lbl_803E1C6C;
+            *(f32*)(p2 + 656) = scale * -dx;
+            *(f32*)(p2 + 652) = scale * dz;
             *(f32*)(p1 + 12) += dist * dx;
             *(f32*)(p1 + 20) += dist * dz;
             (*(void (**)(int, u8*, f32, f32, int, int))(*(int*)gPlayerInterface + 8))(
