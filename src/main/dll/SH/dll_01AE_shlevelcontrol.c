@@ -628,7 +628,7 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
         }
     }
 
-    if (MAP_EVENT_GET_ANIM(((ShopkeeperObject *)obj)->mapId, 6) == 0)
+    if ((u8)MAP_EVENT_GET_ANIM(((ShopkeeperObject *)obj)->mapId, 6) == 0)
     {
         playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
         if (playerHasSpell((int)playerObj, 0) != 0)
