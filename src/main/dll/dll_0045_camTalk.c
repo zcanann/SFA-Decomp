@@ -5,7 +5,6 @@
 #include "main/dll/CAM/cutCam.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/viewfinder_state.h"
-#include "main/game_object.h"
 #include "main/object_transform.h"
 
 extern int getAngle(f32 dx, f32 dz);
