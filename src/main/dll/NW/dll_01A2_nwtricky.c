@@ -1,10 +1,7 @@
 /* DLL 0x01A2 (nwtricky) — NW Tricky and mammoth objects [0x801CF78C-0x801CFB24). */
-#include "main/dll/dim2conveyor.h"
 #include "main/gameplay_runtime.h"
-#include "main/dll/creator1D6.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/audio/sfx.h"
 
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 
