@@ -250,7 +250,7 @@ extern void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 #pragma peephole on
 void* loadAsset(void* reqVoid)
 {
-    u8 tmp[0x14];
+    u8 tmp[0x10];
     AssetReq* req;
 
     req = reqVoid;
