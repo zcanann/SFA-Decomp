@@ -2230,11 +2230,11 @@ void staffDrawSwipe(int* obj, int* swipe)
             f32 v1, v0, u;
             j = swp->startIndex;
             vp = swp->vertexData + j * 20;
-            u = lbl_803E3294;
-            v0 = lbl_803E32B4;
-            v1 = lbl_803E3288;
             for (; j < swp->endIndex - 2; j += 2)
             {
+                u = lbl_803E3294;
+                v0 = lbl_803E32B4;
+                v1 = lbl_803E3288;
                 GXBegin(128, 2, 4);
                 swipePos3f32(*(f32*)(vp + 0) - playerMapOffsetX, *(f32*)(vp + 4), *(f32*)(vp + 8) - playerMapOffsetZ);
                 swipeColor4u8(255, 255, 255, (u8) * (s16*)(vp + 0x10));
