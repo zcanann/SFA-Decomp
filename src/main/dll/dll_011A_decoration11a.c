@@ -352,7 +352,6 @@ void decoration11a_hitDetect(int obj)
     f32 sum;
     f32 delta;
     f32 term;
-    ObjHitsPriorityState* hitState;
 
     modelId = ((GameObject*)obj)->anim.seqId;
     if (modelId == 0x7a1)
@@ -438,9 +437,8 @@ check_decor_objects:
 
                 if (sum < radius * radius)
                 {
-                    hitState = (ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState;
-                    hitState->lastHitObject = obj;
-                    hitState->contactFlags = 1;
+                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->lastHitObject = obj;
+                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->contactFlags = 1;
                 }
             }
         }
