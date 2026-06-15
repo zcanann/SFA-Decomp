@@ -815,7 +815,7 @@ void fn_8015039C(int obj, int animState)
     }
 }
 
-#pragma scheduling on
+#pragma scheduling off
 void fn_801504BC(int obj, int delta)
 {
     u8* inner = ((GameObject*)obj)->extra;
