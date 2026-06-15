@@ -190,19 +190,24 @@ int arwarwing_incrementPickup6D8Count(int arwing)
     return ((*(ArwingState**)&((GameObject*)arwing)->extra)->pickup6D8Count)++;
 }
 
+#pragma peephole off
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
     if (state->collectedRings == 9)
     {
-        state->score = state->score + 0x64;
-        if (state->score > 0x270f)
+        int v;
+        state->score += 0x64;
+        v = state->score;
+        if ((u32)v > 0x270f)
         {
-            state->score = 0x270f;
+            v = 0x270f;
         }
+        state->score = v;
     }
     return (state->collectedRings)++;
 }
+#pragma peephole reset
 
 #pragma peephole off
 void arwarwing_addMaxShield(int arwing, int p2)
