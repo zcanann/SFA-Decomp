@@ -86,7 +86,6 @@ extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
 extern f32 lbl_803E4810;
-extern void Music_Trigger(int id, int p2);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern f32 lbl_803E4814;
 
