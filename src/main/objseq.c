@@ -3709,10 +3709,12 @@ int objRunSeq(int seqIdx, u8* obj, int flags)
 
     for (i = 0x19; i < 0x55; i++)
     {
-        if (st->modes[i] == 0)
+        s16* modePtr = (s16*)(base + i * 2);
+        modePtr = (s16*)((u8*)modePtr + 0x3a98);
+        if (*modePtr == 0)
         {
             slot = i;
-            st->modes[i] = 1;
+            *modePtr = 1;
             blk = base + i * 0x80;
             for (j = 0; j < 16; j++)
             {
