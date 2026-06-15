@@ -498,17 +498,17 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             createTransient = 1;
         }
 
-        oldStatus = GameBit_Get(eventIds[idx]);
-        newStatus = oldStatus;
+        newStatus = GameBit_Get(eventIds[idx]);
+        oldStatus = newStatus;
         if (value != 0)
         {
             bit = 1 << shift;
-            newStatus = oldStatus | bit;
+            newStatus = newStatus | bit;
         }
         else
         {
             bit = 1 << shift;
-            newStatus = oldStatus & ~bit;
+            newStatus = newStatus & ~bit;
         }
 
         GameBit_Set(eventIds[idx], newStatus);
