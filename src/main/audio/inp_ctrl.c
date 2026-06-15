@@ -1,5 +1,4 @@
 #include "main/audio/inp_ctrl.h"
-#include "main/audio/inp_midi.h"
 extern int synthGetVoiceSlotChannelScale(int x);
 
 extern u32 sndRandSeed;
