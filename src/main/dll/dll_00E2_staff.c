@@ -483,7 +483,7 @@ void FUN_8016d188(int param_1, int param_2)
                 {
                     local_34 = 0xc75;
                 }
-                fVar1 = *(float*)(param_2 + 0x98);
+                fVar1 = ((GameObject*)param_2)->anim.currentMoveProgress;
                 if (lbl_803E3F68 <= fVar1)
                 {
                     if (fVar1 < lbl_803E3F70)
@@ -2416,7 +2416,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
     obj = (u8*)p4;
     if (*(int**)(swipe + 0x48) != NULL && swipe[0xbc] == 0)
     {
-        ang = *(s16*)obj;
+        ang = ((GameObject*)obj)->anim.rotX;
         if (*(s16**)&((GameObject*)obj)->anim.parent != NULL)
         {
             ang += **(s16**)&((GameObject*)obj)->anim.parent;
@@ -2851,7 +2851,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                     idv = 0xc0e;
                 }
                 fxB.id = idv;
-                h = *(f32*)((char*)obj2 + 0x98);
+                h = ((GameObject*)obj2)->anim.currentMoveProgress;
                 if (h < lbl_803E32D0)
                 {
                     fxB.f1 = lbl_803E32D4;
