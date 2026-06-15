@@ -29,8 +29,8 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     short endX;
     short endY;
     short endZ;
-    int i;
     short* vertex;
+    int i;
     float angleRadians;
     f32 vertexX;
 

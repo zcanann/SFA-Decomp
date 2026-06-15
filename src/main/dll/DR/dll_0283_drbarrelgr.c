@@ -196,7 +196,7 @@ void drbarrelgr_update(int obj)
     case 5:
         {
             int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
-                                                     lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->unk128 * timeDelta,
+                                                     (lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->unk128) * timeDelta,
                                                      lbl_803E6CBC, lbl_803E6CB4, 1);
             objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                     ((GameObject*)obj)->anim.velocityZ);
@@ -205,9 +205,8 @@ void drbarrelgr_update(int obj)
                 newMode = r - 1;
                 storeZeroToFloatParam((void*)(state + 12));
                 s16toFloat((void*)(state + 12), ((DrbarrelgrPlacement*)setup)->unk1A);
-                ((GameObject*)obj)->anim.velocityX = lbl_803E6CA4;
-                ((GameObject*)obj)->anim.velocityY = lbl_803E6CA4;
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E6CA4;
+                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityY =
+                    ((GameObject*)obj)->anim.velocityZ = lbl_803E6CA4;
             }
             break;
         }

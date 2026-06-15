@@ -2309,6 +2309,7 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
     return 1;
 }
 
+#pragma opt_common_subs off
 int fn_8003BB84(f32* m, f32* out)
 {
     extern void PSVECNormalize(f32 * src, f32 * dst);
@@ -2354,6 +2355,7 @@ int fn_8003BB84(f32* m, f32* out)
     out[11] = zero;
     return 1;
 }
+#pragma opt_common_subs reset
 
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {
