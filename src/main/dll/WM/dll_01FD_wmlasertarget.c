@@ -5,7 +5,6 @@
  * target flips its model bank and its two game bits together, then
  * rearms the cooldown from the placement.
  */
-#include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
