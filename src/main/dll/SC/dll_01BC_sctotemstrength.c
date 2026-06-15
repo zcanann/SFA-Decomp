@@ -30,7 +30,6 @@ extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(int n);
 extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int lbl_803DDC10;
 extern int lbl_803DC070;
