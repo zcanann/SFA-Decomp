@@ -63,6 +63,20 @@ typedef struct DrLaserCannonSetup
     s16 warningOffGameBit;
 } DrLaserCannonSetup;
 
+typedef struct DrLaserCannonBeamSetup
+{
+    s16 objectType;
+    u8 field02;
+    u8 pad03;
+    u8 field04;
+    u8 field05;
+    u8 field06;
+    u8 field07;
+    f32 spawnX;
+    f32 spawnY;
+    f32 spawnZ;
+} DrLaserCannonBeamSetup;
+
 typedef struct DrLaserCannonAim
 {
     u8 pad00[DR_LASERCANNON_AIM_YAW];
@@ -108,6 +122,15 @@ STATIC_ASSERT(offsetof(DrLaserCannonSetup, targetRange) == DR_LASERCANNON_SETUP_
 STATIC_ASSERT(offsetof(DrLaserCannonSetup, beamSpeed) == DR_LASERCANNON_SETUP_BEAM_SPEED);
 STATIC_ASSERT(offsetof(DrLaserCannonSetup, destroyedGameBit) == DR_LASERCANNON_SETUP_DESTROYED_GAMEBIT);
 STATIC_ASSERT(offsetof(DrLaserCannonSetup, warningOffGameBit) == DR_LASERCANNON_SETUP_WARNING_OFF_GAMEBIT);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, objectType) == 0x0);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field02) == 0x2);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field04) == 0x4);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field05) == 0x5);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field06) == 0x6);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, field07) == 0x7);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, spawnX) == 0x8);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, spawnY) == 0xc);
+STATIC_ASSERT(offsetof(DrLaserCannonBeamSetup, spawnZ) == 0x10);
 STATIC_ASSERT(offsetof(DrLaserCannonAim, yaw) == DR_LASERCANNON_AIM_YAW);
 STATIC_ASSERT(offsetof(DrLaserCannonAim, pitch) == DR_LASERCANNON_AIM_PITCH);
 STATIC_ASSERT(offsetof(DrLaserCannonState, beamObject) == DR_LASERCANNON_STATE_BEAM_OBJECT);
@@ -555,15 +578,15 @@ void drlasercannon_update(int obj)
                         {
                             int o =
                                 Obj_AllocObjectSetup(DR_LASERCANNON_SETUP_SIZE, DR_LASERCANNON_BEAM_OBJECT_TYPE);
-                            *(s16*)o = DR_LASERCANNON_BEAM_OBJECT_TYPE;
-                            *(u8*)(o + 0x2) = 8;
-                            *(u8*)(o + 0x4) = 1;
-                            *(u8*)(o + 0x6) = 0xff;
-                            *(u8*)(o + 0x5) = 1;
-                            *(u8*)(o + 0x7) = 0xff;
-                            *(f32*)(o + 0x8) = state->muzzleX;
-                            *(f32*)(o + 0xc) = state->muzzleY;
-                            *(f32*)(o + 0x10) = state->muzzleZ;
+                            ((DrLaserCannonBeamSetup*)o)->objectType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
+                            ((DrLaserCannonBeamSetup*)o)->field02 = 8;
+                            ((DrLaserCannonBeamSetup*)o)->field04 = 1;
+                            ((DrLaserCannonBeamSetup*)o)->field06 = 0xff;
+                            ((DrLaserCannonBeamSetup*)o)->field05 = 1;
+                            ((DrLaserCannonBeamSetup*)o)->field07 = 0xff;
+                            ((DrLaserCannonBeamSetup*)o)->spawnX = state->muzzleX;
+                            ((DrLaserCannonBeamSetup*)o)->spawnY = state->muzzleY;
+                            ((DrLaserCannonBeamSetup*)o)->spawnZ = state->muzzleZ;
                             spawned = Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
                         }
                         if (spawned != 0)
