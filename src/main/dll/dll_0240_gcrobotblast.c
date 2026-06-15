@@ -560,11 +560,9 @@ void GCRobotBlast_initialise(void)
 {
 }
 
-void DrakorEnergy_func0B_nop(void);
 
 int GCRobotBlast_getExtraSize(void) { return 0x8; }
 int GCRobotBlast_getObjectTypeId(void) { return 0x0; }
-int drakorenergy_getExtraSize(void);
 
 void GCRobotBlast_init(int obj, s8* p)
 {
@@ -575,7 +573,6 @@ void GCRobotBlast_init(int obj, s8* p)
     ((GameObject*)obj)->animEventCallback = (void*)GCRobotBlast_SeqFn;
 }
 
-void dbholecontrol1_free(int x);
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

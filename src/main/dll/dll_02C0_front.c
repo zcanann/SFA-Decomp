@@ -133,7 +133,6 @@ extern u8 showCredits;
 u8 shouldShowCredits(void) { return showCredits; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
-u16 getMinimapY(void);
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
 void fn_80135814(u32 a, u32 b)

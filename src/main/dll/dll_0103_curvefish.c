@@ -39,11 +39,7 @@ extern f32 lbl_803E3910;
 extern f32 lbl_803E3914;
 extern f32 timeDelta;
 
-void MagicPlant_update(int obj);
 
-int MagicPlant_getExtraSize(void);
-int trickywarp_getExtraSize(void);
-int duster_getExtraSize(void);
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
 STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
@@ -64,29 +60,17 @@ extern const f32 lbl_803E3928;
 
 int curvefish_getExtraSize(void) { return 0x120; }
 
-u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 
-void StayPoint_init(u16* obj);
 
-void MagicPlant_free(int obj, int param_2);
 
-void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void trickywarp_free(int obj);
 
-void trickywarp_init(s16* obj, u8* param_2);
 
-void trickyguard_init(s16* obj, u8* param_2);
 
-void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void duster_hitDetect(int param_1);
 
-void duster_init(int obj, u8* params);
 
-void duster_update(int obj);
 
-void MagicPlant_init(int obj, MagicPlantSetup* setup);
 
 typedef struct CurveFishSetup
 {
@@ -122,7 +106,6 @@ typedef struct CurveFishState
     f32 phaseTimer;
 } CurveFishState;
 
-void trickywarp_update(int param_1);
 
 void curvefish_update(int obj)
 {
@@ -370,7 +353,6 @@ void curvefish_init(int obj, u8* param_2)
 
 void trickyguard_update(int* obj);
 
-void StayPoint_update(int obj);
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

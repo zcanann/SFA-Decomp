@@ -265,7 +265,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void imicemountain_free(void);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
@@ -282,11 +281,9 @@ void crrockfall_hitDetect(void)
 {
 }
 
-void magiclight_hitDetect(void);
 
 int crrockfall_getExtraSize(void) { return 0x14; }
 int crrockfall_getObjectTypeId(void) { return 0x0; }
-int magiclight_getObjectTypeId(void);
 
 void crrockfall_initialise(void) { lbl_803DDB40 = NULL; }
 
@@ -300,7 +297,6 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -338,7 +334,6 @@ f32 fn_801ACCFC(int obj)
 }
 #pragma dont_inline reset
 
-void magiclight_free(int obj);
 
 #pragma scheduling on
 #pragma peephole on

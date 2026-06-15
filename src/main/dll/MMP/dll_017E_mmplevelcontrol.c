@@ -13,7 +13,6 @@ extern void objRenderFn_8003b8f4(f32 v);
 extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
 extern int getEnvfxAct(int obj, int player, int id, int p);
-extern void MMP_levelcontrol_update(int obj);
 
 extern f32 timeDelta;
 
@@ -312,7 +311,6 @@ void MMP_levelcontrol_initialise(void)
 {
 }
 
-void MoonSeedBush_free(void);
 
 #pragma scheduling off
 #pragma peephole off

@@ -153,7 +153,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void MMP_levelcontrol_release(void);
 
 void mmp_trenchfx_hitDetect(void)
 {
@@ -167,11 +166,9 @@ void mmp_trenchfx_initialise(void)
 {
 }
 
-void mmp_gyservent_free(void);
 
 int mmp_trenchfx_getExtraSize(void) { return 0x30; }
 int mmp_trenchfx_getObjectTypeId(void) { return 0x0; }
-int mmp_gyservent_getExtraSize(void);
 
 void mmp_trenchfx_free(int obj)
 {

@@ -280,7 +280,6 @@ void seqObj2_init(short* param_1, int param_2)
 {
 }
 
-void seqobj2_render(void);
 
 void immultiseq_hitDetect(void)
 {
@@ -294,7 +293,6 @@ void immultiseq_initialise(void)
 {
 }
 
-void seqobject_init(int* obj, SeqObjectPlacement* params);
 
 void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
 {
@@ -381,7 +379,6 @@ int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void fn_8017C294(int* obj);
 
 void immultiseq_update(int* obj)
 {

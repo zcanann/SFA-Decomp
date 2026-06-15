@@ -99,21 +99,12 @@ void dfpstatue1_initialise(void)
 {
 }
 
-int dfperchwitch_getExtraSize(void);
-int dfperchwitch_getObjectTypeId(void);
 
-void dfperchwitch_free(void);
 
-void dfperchwitch_render(void);
 
-void dfperchwitch_hitDetect(void);
 
-void dfperchwitch_update(void);
-void dfperchwitch_init(void);
 
-void dfperchwitch_release(void);
 
-void dfperchwitch_initialise(void);
 
 ObjectDescriptor gDfpstatue1ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

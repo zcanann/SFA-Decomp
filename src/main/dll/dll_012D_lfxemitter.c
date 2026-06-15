@@ -259,7 +259,6 @@ void FUN_8018f650(void)
     return;
 }
 
-void warpPadFn_8019042c(int obj);
 
 #pragma scheduling off
 #pragma peephole off
@@ -303,7 +302,6 @@ void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 
 int lfxemitter_setScale(void) { return -1; }
 
-void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void lfxemitter_initialise(void)
 {
@@ -421,7 +419,6 @@ void lfxemitter_update(LfxEmitterObject* obj)
     }
 }
 
-void warpPadPlayerStandingOn(int obj);
 
 void lfxemitter_free(LfxEmitterObject* obj)
 {
@@ -448,6 +445,5 @@ void lfxemitter_release(void)
 {
 }
 
-int areafxemit_getExtraSize(void);
 int lfxemitter_getExtraSize(void) { return 0x124; }
 int lfxemitter_getObjectTypeId(void) { return 0x0; }

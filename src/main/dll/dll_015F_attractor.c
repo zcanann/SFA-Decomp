@@ -49,7 +49,6 @@ void FUN_801a45cc(short* param_1, int param_2)
 {
 }
 
-void cflevelcontrol_free(int param_1);
 
 undefined4
 FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -75,7 +74,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-void cfforcefield_release(void);
 
 void attractor_hitDetect(void)
 {
@@ -93,11 +91,9 @@ void attractor_initialise(void)
 {
 }
 
-void cfmagicwall_free(void);
 
 int attractor_getExtraSize(void) { return 0x0; }
 int attractor_getObjectTypeId(void) { return 0x0; }
-int cfmagicwall_getExtraSize(void);
 
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -105,11 +101,9 @@ void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E43D0);
 }
 
-void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void attractor_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 
-u32 exploded_getObjectTypeId(ExplodedObject* obj);
 
 int attractor_setScale(int* obj)
 {
@@ -135,7 +129,6 @@ void attractor_init(s16* obj, void* data)
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
  * (state[0] bits 5..7) through the door's open/close machine. Returns 1
  * while in the static states (0/1) and 0 while in transition (2/3). */
-int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
  * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
@@ -179,7 +172,6 @@ void attractor_func0B(u8* obj, void** out)
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
-void slidingdoor_init(u8* obj, u8* data);
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

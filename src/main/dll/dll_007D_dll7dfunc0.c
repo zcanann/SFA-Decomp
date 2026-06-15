@@ -147,7 +147,6 @@ int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefin
     return ret;
 }
 
-void dll_7E_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* arg6 );
 
 void dll_7D_func01_nop(void)
 {

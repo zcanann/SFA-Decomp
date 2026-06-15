@@ -300,7 +300,6 @@ void FUN_8018f650(void)
     return;
 }
 
-void warpPadFn_8019042c(int obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
@@ -585,18 +584,15 @@ void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
     }
 }
 
-void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup);
 
 void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-void lfxemitter_initialise(void);
 
 void areafxemit_free(AreaFxEmitObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void lfxemitter_free(LfxEmitterObject* obj);
 
 void areafxemit_hitDetect(void)
 {
@@ -610,8 +606,6 @@ void areafxemit_initialise(void)
 {
 }
 
-void lfxemitter_render(void);
 
 int areafxemit_getExtraSize(void) { return 0x20; }
 int areafxemit_getObjectTypeId(void) { return 0x0; }
-int lfxemitter_getExtraSize(void);

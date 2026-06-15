@@ -132,7 +132,6 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-void invhit_hitDetect(void);
 
 int flameblast_getExtraSize(void) { return 0x14; }
 

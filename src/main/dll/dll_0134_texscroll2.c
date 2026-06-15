@@ -188,7 +188,6 @@ void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int l
     state->previousGameBitValue = -1;
 }
 
-void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags);
 
 void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

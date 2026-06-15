@@ -248,7 +248,6 @@ undefined4* FUN_800e87a8(void)
     return &DAT_803a45b0;
 }
 
-int saveFn_800e8508(void);
 
 undefined FUN_800e8b98(void)
 {
@@ -902,7 +901,6 @@ void objSaveFn_800ea774(int* obj)
     }
 }
 
-void saveGame_saveObjectPos(int* obj);
 
 void Carryable_stopCarrying(int* obj, u8* param2)
 {

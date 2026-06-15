@@ -167,7 +167,6 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x156, 0);
 }
 
-void dll_9C_func03(int a, int b, int p, uint flags);
 
 void dll_9B_func01_nop(void)
 {

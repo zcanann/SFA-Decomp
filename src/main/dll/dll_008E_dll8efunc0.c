@@ -196,7 +196,6 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
 }
 #pragma opt_propagation reset
 
-void dll_8F_func03(int sourceObj, int variant, int posSource, uint flags);
 
 void dll_8E_func01_nop(void)
 {

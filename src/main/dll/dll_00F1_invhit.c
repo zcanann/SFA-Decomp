@@ -151,14 +151,11 @@ void invhit_initialise(void)
 {
 }
 
-void iceblast_free(void);
 
 int invhit_getExtraSize(void) { return 0xc; }
 int invhit_getObjectTypeId(void) { return 0x0; }
-int iceblast_getExtraSize(void);
 
 void invhit_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
-void iceblast_render(int* obj, int a, int b, int c, int d);
 
 #pragma scheduling off
 #pragma peephole off

@@ -80,7 +80,6 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-void dll_1DA_release(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -240,7 +239,6 @@ void dll_1DB_update(int obj);
 
 int dim2icicle_getExtraSize(void) { return 0xc; }
 int dim2icicle_getObjectTypeId(void) { return 0x0; }
-int dim2lavacontrol_getExtraSize(void);
 
 void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -248,7 +246,6 @@ void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4B68);
 }
 
-void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
  *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the

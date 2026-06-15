@@ -13,8 +13,6 @@ extern undefined4 FUN_80006a10();
 extern undefined4 FUN_80006a18();
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern RomCurveDef *romCurves[0x514];
-extern int nRomCurves;
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80293f90();
@@ -1195,7 +1193,6 @@ FUN_800de998(double param_1, undefined8 param_2, double param_3, undefined8 para
     return 0;
 }
 
-int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode);
 
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
@@ -1234,7 +1231,6 @@ static inline int Objfsa_FindRomCurveById(int curveId)
     return 0;
 }
 
-f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
 
 void UIController_release(void)
 {
@@ -1267,7 +1263,6 @@ static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, in
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 
-int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 
 void UIController_frameStart(void)
 {

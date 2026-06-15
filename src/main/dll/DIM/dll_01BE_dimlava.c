@@ -283,9 +283,7 @@ void lavaball1be_initialise(void)
 {
 }
 
-void lavaball1bf_hitDetect(void);
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int lavaball1be_getExtraSize(int* obj)
 {
@@ -299,7 +297,6 @@ int lavaball1be_getObjectTypeId(int* obj)
     return 0x2;
 }
 
-u32 imanimspacecraft_func0B(int* obj);
 u32 lavaball1be_func11(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x10) & 0x10; }
 
 int fn_801B0784(int obj, int delta);
@@ -314,7 +311,6 @@ void lavaball1be_free(int obj)
     }
 }
 
-void imspacethruster_free(int obj);
 
 void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 {

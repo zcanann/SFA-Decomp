@@ -95,7 +95,6 @@ void SB_ShipMast_update(GameObject* obj)
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, speed, (f32)(u32)framesThisStep, NULL);
 }
 
-int SB_Galleon_getExtraSize(void);
 int SB_ShipMast_getExtraSize(void) { return 0x0; }
 int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
 int SB_ShipGun_getExtraSize(void);
@@ -109,4 +108,3 @@ void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void SB_ShipHead_free(int x);

@@ -593,11 +593,9 @@ void dbholecontrol1_init(int* obj, u8* params)
     sub->gameBitB = *(s16*)(params + 0x1c);
 }
 
-void dfplevelcontrol_render(void);
 
 int dbholecontrol1_getExtraSize(void) { return 0xc; }
 int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
-int dfplevelcontrol_getExtraSize(void);
 
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -605,10 +603,8 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6390);
 }
 
-void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dbholecontrol1_free(int x) { extern undefined8 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x1e); }
-void dfplevelcontrol_free(int x);
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 

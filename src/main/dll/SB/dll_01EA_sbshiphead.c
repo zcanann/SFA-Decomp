@@ -287,17 +287,14 @@ void SB_ShipHead_update(int obj)
         lbl_803DDC48 = galleonPhase;
 }
 
-void SB_Galleon_release(void);
 
 int SB_ShipHead_getExtraSize(void) { return sizeof(SBShipHeadState); }
 int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
-int SB_ShipMast_getExtraSize(void);
 
 u32 getSbGalleon(void);
 
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, 0x3); }
 
-void SB_Propeller_hitDetect(GameObject* obj);
 
 void SB_ShipHead_init(int obj)
 {

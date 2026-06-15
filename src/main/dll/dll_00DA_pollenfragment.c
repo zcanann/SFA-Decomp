@@ -171,17 +171,11 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-void pinponspike_render(void);
 
-void pinponspike_hitDetect(void);
 
-void pinponspike_release(void);
 
-void pinponspike_initialise(void);
 
-void pollen_release(void);
 
-void pollen_initialise(void);
 
 void pollenfragment_release(void)
 {
@@ -193,13 +187,9 @@ void pollenfragment_initialise(void)
 
 void mikabomb_hitDetect(void);
 
-void pinponspike_free(int obj);
 
-void pollen_free(int obj);
 
-void pinponspike_init(int obj);
 
-void pollen_hitDetect(int obj);
 
 void pollenfragment_free(int obj)
 {
@@ -214,15 +204,10 @@ void pollenfragment_free(int obj)
 
 void mikabomb_free(int obj, int mode);
 
-int pinponspike_getExtraSize(void);
-int pinponspike_getObjectTypeId(void);
-int pollen_getExtraSize(void);
-int pollen_getObjectTypeId(void);
 int pollenfragment_getExtraSize(void) { return 0x28; }
 int pollenfragment_getObjectTypeId(void) { return 0x0; }
 int mikabomb_getExtraSize(void);
 
-void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -367,7 +352,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-void pollen_init(int obj);
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -376,9 +360,7 @@ typedef struct
     f32 x, y, z;
 } XyzVec;
 
-void pinponspike_update(int obj);
 
-void pollen_update(int obj);
 
 void pollenfragment_hitDetect(int obj)
 {

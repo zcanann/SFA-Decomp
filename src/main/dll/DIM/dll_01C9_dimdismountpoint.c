@@ -88,7 +88,6 @@ void dimdismountpoint_init(u8* obj, u8* params)
     ((GameObject*)obj)->unkF8 = 1;
 }
 
-int dimbridgecogmai_getExtraSize(void);
 int dimdismountpoint_getExtraSize(void) { return 0x10; }
 
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
@@ -97,7 +96,6 @@ void dimbridgecogmai_release(void);
 
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
-void dimbridgecogmai_init(int* obj, int* def);
 
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -114,7 +112,6 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
     }
 }
 
-int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void dimdismountpoint_func11(int obj, int flag)
 {

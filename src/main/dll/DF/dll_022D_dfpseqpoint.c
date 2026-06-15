@@ -549,11 +549,9 @@ void dfpseqpoint_init(int* obj, u8* init)
     ((DfpFlags7*)&sub->flags0F)->b80 = 0;
 }
 
-void DFP_Torch_hitDetect(void);
 
 int dfpseqpoint_getExtraSize(void) { return 0x10; }
 int dfpseqpoint_getObjectTypeId(void) { return 0x0; }
-int DFP_Torch_getExtraSize(void);
 
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -561,7 +559,6 @@ void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E63B8);
 }
 
-void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {

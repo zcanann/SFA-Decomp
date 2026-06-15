@@ -16,7 +16,6 @@
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
 
-extern uint GameBit_Get(int eventId);
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003a1c4();

@@ -45,6 +45,5 @@ void projlightning7_initialise(void)
 {
 }
 
-int projlightning6_doUnsupported(void);
 
 

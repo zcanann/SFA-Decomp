@@ -92,7 +92,6 @@ void fn_8016A660(int obj)
 }
 #pragma dont_inline reset
 
-void pollenfragment_init(int obj, int config);
 
 void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -137,13 +136,9 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-void pinponspike_render(void);
 
-void pinponspike_hitDetect(void);
 
-void pinponspike_release(void);
 
-void pinponspike_initialise(void);
 
 void pollen_release(void)
 {
@@ -153,18 +148,14 @@ void pollen_initialise(void)
 {
 }
 
-void pollenfragment_release(void);
 
-void pollenfragment_initialise(void);
 
-void pinponspike_free(int obj);
 
 void pollen_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void pinponspike_init(int obj);
 
 void pollen_hitDetect(int obj)
 {
@@ -183,14 +174,9 @@ void pollen_hitDetect(int obj)
     }
 }
 
-void pollenfragment_free(int obj);
 
-int pinponspike_getExtraSize(void);
-int pinponspike_getObjectTypeId(void);
 int pollen_getExtraSize(void) { return 0x14; }
 int pollen_getObjectTypeId(void) { return 0x0; }
-int pollenfragment_getExtraSize(void);
-int pollenfragment_getObjectTypeId(void);
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -319,7 +305,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
@@ -360,7 +345,6 @@ void pollen_init(int obj)
     }
 }
 
-void pinponspike_update(int obj);
 
 void pollen_update(int obj)
 {
@@ -414,6 +398,4 @@ void pollen_update(int obj)
     }
 }
 
-void pollenfragment_hitDetect(int obj);
 
-void pollenfragment_update(int obj);

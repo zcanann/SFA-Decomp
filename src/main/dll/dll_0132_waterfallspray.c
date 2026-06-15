@@ -165,7 +165,6 @@ void WaterFallSpray_init(u8* obj, u8* data)
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 
-void sfxplayerObj_init(u8* obj, u8* data);
 
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
@@ -176,7 +175,6 @@ void WaterFallSpray_render(void)
 }
 
 int WaterFallSpray_getExtraSize(void) { return 0x8; }
-int sfxplayerObj_getExtraSize(void);
 
 int WaterFallSpray_SeqFn(int* obj)
 {

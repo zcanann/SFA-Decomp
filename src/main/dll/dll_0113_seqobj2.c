@@ -308,14 +308,11 @@ void SeqObj2_initialise(void)
 {
 }
 
-void immultiseq_hitDetect(void);
 
 int seqobj2_getExtraSize(void) { return 0x1; }
 int seqobj2_getObjectTypeId(void) { return 0x0; }
-int immultiseq_getExtraSize(void);
 
 void seqobj2_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-void immultiseq_free(int x);
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
@@ -365,7 +362,6 @@ int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int seqobject_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
 
 void seqobj2_update(int* obj)
 {
@@ -431,4 +427,3 @@ void seqobj2_update(int* obj)
     }
 }
 
-void immultiseq_update(int* obj);

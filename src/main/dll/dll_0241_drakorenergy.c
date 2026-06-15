@@ -561,11 +561,9 @@ void drakorenergy_init(int* obj, u8* init)
     }
 }
 
-void dbstealerworm_release(void);
 
 int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_getObjectTypeId(void) { return 0x0; }
-int dbstealerworm_getExtraSize(void);
 
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -700,7 +698,6 @@ void drakorenergy_update(int obj)
     ((DrakorEnergyState*)blob)->phase += framesThisStep * 0x500;
 }
 
-int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

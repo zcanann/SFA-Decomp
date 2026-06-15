@@ -247,24 +247,19 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-void kaldachompspit_hitDetect(void);
 
 int kaldachompspit_getExtraSize(void);
 int kaldachompspit_getObjectTypeId(void);
 
 void kaldachompspit_free(int* obj);
 
-void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void kaldachompspit_update(int obj);
 
 /* segment pragma-stack balance (re-split): */
 
-void kaldachompspit_init(int obj);
 
-void kaldachompspit_release(void);
 
-void kaldachompspit_initialise(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,

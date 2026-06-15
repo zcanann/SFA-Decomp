@@ -162,7 +162,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void MMP_levelcontrol_release(void);
 
 void MoonSeedBush_free(void)
 {
@@ -180,11 +179,9 @@ void MoonSeedBush_initialise(void)
 {
 }
 
-void mmp_asteroid_re_free(void);
 
 int MoonSeedBush_getExtraSize(void) { return 0x2; }
 int MoonSeedBush_getObjectTypeId(void) { return 0x0; }
-int mmp_asteroid_re_getExtraSize(void);
 
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
@@ -194,7 +191,6 @@ void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E44D0);
 }
 
-void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #pragma scheduling off
 void MoonSeedBush_update(int obj)

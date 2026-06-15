@@ -82,4 +82,3 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
     return;
 }
 
-void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out);

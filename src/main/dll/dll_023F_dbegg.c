@@ -946,7 +946,6 @@ void dbegg_initialise(void)
 {
 }
 
-void GCRobotBlast_free(void);
 
 void dbegg_init(int obj)
 {
@@ -962,7 +961,6 @@ void dbegg_init(int obj)
     }
 }
 
-void DFP_Torch_free(int obj);
 
 void dbegg_update(int obj)
 {

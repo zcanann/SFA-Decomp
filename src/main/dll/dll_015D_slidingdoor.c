@@ -66,7 +66,6 @@ void FUN_801a45cc(short* param_1, int param_2)
 {
 }
 
-void cflevelcontrol_free(int param_1);
 
 undefined4
 FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -92,7 +91,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-void cfforcefield_release(void);
 
 void slidingdoor_free(void)
 {
@@ -110,11 +108,9 @@ void slidingdoor_initialise(void)
 {
 }
 
-void attractor_hitDetect(void);
 
 int slidingdoor_getExtraSize(void) { return 0x1; }
 int slidingdoor_getObjectTypeId(void) { return 0x0; }
-int attractor_getExtraSize(void);
 
 void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -122,7 +118,6 @@ void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E43BC);
 }
 
-void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
@@ -255,7 +250,6 @@ void slidingdoor_update(u8* obj)
 
 /* exploded_init: store the map object tag, scale the model using the map
  * byte, then enable physics if any initial velocity/acceleration is present. */
-void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra);
 
 /* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
  * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas

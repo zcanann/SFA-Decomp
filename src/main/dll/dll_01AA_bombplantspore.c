@@ -449,4 +449,3 @@ void bombplantspore_init(void* obj, void* param2)
     state->yawStep = (s16)randomGetRange(-0x200, 0x200);
 }
 
-void bombplantingspot_update(void* obj);

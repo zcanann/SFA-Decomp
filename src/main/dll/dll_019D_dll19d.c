@@ -62,7 +62,6 @@ void dll_19D_initialise(void)
 {
 }
 
-int dll_19C_getExtraSize(void);
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
 

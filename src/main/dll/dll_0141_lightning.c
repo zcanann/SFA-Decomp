@@ -216,7 +216,6 @@ void lightning_init(u8* obj, u8* data)
     ((MmpMoonrockState*)state)->homeX = (f32)(s32)((u32)data[0x22] * 0x3c);
 }
 
-void WaterFallSpray_free(u8* obj);
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then

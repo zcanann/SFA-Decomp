@@ -162,7 +162,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void MMP_levelcontrol_release(void);
 
 void mmp_moonrock_hitDetect(void)
 {
@@ -176,11 +175,9 @@ void mmp_moonrock_initialise(void)
 {
 }
 
-void mmp_trenchfx_hitDetect(void);
 
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
-int mmp_trenchfx_getExtraSize(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -340,7 +337,6 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
     saveGame_saveObjectPos(obj);
 }
 
-void mmp_trenchfx_free(int obj);
 
 #pragma scheduling off
 void mmp_moonrock_free(int obj)

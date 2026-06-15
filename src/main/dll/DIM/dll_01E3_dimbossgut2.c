@@ -354,7 +354,6 @@ void dimbossgut2_init(int obj, int def, int p3)
     }
 }
 
-void DIMbossspit_updateBurst(int obj);
 
 void dimbossgut2_func11(void)
 {

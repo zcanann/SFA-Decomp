@@ -514,4 +514,3 @@ void gpsh_shrine_initialise(void)
 {
 }
 
-void gpsh_objcreator_free(void);

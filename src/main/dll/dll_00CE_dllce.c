@@ -1252,7 +1252,6 @@ extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
 
-void iceball_update(undefined2* param_1, int param_2);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1612,7 +1611,6 @@ int fn_8015E00C(int p1, u8* obj)
 }
 
 extern void GameBit_Set(int eventId, int value);
-int grimble_stateHandlerB05(int* obj, u8* obj2);
 
 extern undefined4* gBaddieControlInterface;
 
@@ -1698,7 +1696,6 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int grimble_stateHandlerB04(int* obj, GroundBaddieState* state);
 
 extern void* lbl_803AC5B0[];
 extern void* lbl_803AC598[];

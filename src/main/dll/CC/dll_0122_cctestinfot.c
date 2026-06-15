@@ -19,7 +19,6 @@ extern f32 lbl_803E3C8C;
 
 int cctestinfot_getExtraSize(void) { return 0x8; }
 
-void trickyguardspot_free(TrickyGuardSpotObject* obj);
 
 void cctestinfot_init(int obj, s8* def)
 {

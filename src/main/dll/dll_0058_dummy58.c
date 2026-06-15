@@ -219,7 +219,6 @@ undefined4* FUN_800e87a8(void)
     return &DAT_803a45b0;
 }
 
-int saveFn_800e8508(void);
 
 undefined FUN_800e8b98(void)
 {

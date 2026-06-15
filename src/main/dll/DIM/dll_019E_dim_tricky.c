@@ -11,7 +11,6 @@ extern u8 framesThisStep;
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern float sqrtf(float x);
-extern int randomGetRange(int min, int max);
 extern void voxmaps_worldToGrid(void* world, void* grid);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int param4, int param5);
 extern f32 lbl_803E51C8;

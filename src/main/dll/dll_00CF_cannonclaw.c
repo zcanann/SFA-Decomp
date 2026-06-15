@@ -36,17 +36,11 @@ extern void* gGrimbleStateHandlersA[11];
 extern void* gGrimbleStateHandlersB[6];
 int grimble_animEventCallback(void);
 
-int grimble_stateHandlerA02(int obj, char* state, f32 arg);
 
-int grimble_stateHandlerA01(int obj, char* state, f32 arg);
 
-int grimble_stateHandlerA00(int obj, char* state, f32 arg);
 
-void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void grimble_update(int obj);
 
-void grimble_init(int obj, int p2, int p3);
 
 extern f32 lbl_803E2F30;
 extern uint GameBit_Get(int eventId);
@@ -400,7 +394,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-void grimble_release(void);
 
 void cannonclaw_free(void)
 {
@@ -410,9 +403,6 @@ void cannonclaw_hitDetect(void)
 {
 }
 
-int grimble_animEventCallback(void);
-int grimble_getExtraSize(void);
-int grimble_getObjectTypeId(void);
 int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_getObjectTypeId(void) { return 0x0; }
 
@@ -438,11 +428,8 @@ void grimble_initialiseStateHandlerTables(void)
     gGrimbleStateHandlersB[5] = (void*)grimble_stateHandlerB05;
 }
 #pragma dont_inline reset
-void grimble_initialise(void);
 
-void grimble_free(int obj);
 
-void grimble_hitDetect(int obj);
 
 #pragma peephole off
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)

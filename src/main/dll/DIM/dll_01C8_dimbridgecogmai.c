@@ -36,11 +36,9 @@ void dimbridgecogmai_initialise(void)
 {
 }
 
-void dimdismountpoint_hitDetect(void);
 
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
 int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
-int dimdismountpoint_getExtraSize(void);
 
 void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -49,7 +47,6 @@ void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dimbridgecogmai_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-void dimdismountpoint_free(int x);
 
 void dimbridgecogmai_release(void)
 {
@@ -148,4 +145,3 @@ void dimbridgecogmai_update(int* obj)
     }
 }
 
-void dimdismountpoint_func11(int obj, int flag);

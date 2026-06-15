@@ -71,4 +71,3 @@ void bombplantingspot_init(void* obj, BombPlantingSpotMapData* mapData)
     *(s16*)obj = (s16)(mapData->yawByte << 8);
 }
 
-int sh_queenearthwalker_processAnimEvents(void* obj, void* unused, ObjAnimUpdateState* animUpdate);

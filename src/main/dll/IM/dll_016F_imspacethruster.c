@@ -254,13 +254,10 @@ void imspacethruster_initialise(void)
 {
 }
 
-void imspacering_free(void);
 
 int imspacethruster_getExtraSize(void) { return 0xc; }
 int imspacethruster_getObjectTypeId(void) { return 0x0; }
-int imspacering_getExtraSize(void);
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -268,7 +265,6 @@ void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4788);
 }
 
-void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void imspacethruster_init(int* obj, u8* param2)
 {
@@ -314,7 +310,6 @@ void imspacethruster_init(int* obj, u8* param2)
     ((GameObject*)obj)->anim.alpha = 0;
 }
 
-void link_levcontrol_init(int* obj);
 
 void imspacethruster_free(int obj)
 {
@@ -412,4 +407,3 @@ void imspacethruster_update(int* obj)
     }
 }
 
-void lavaball1bf_update(int* obj);

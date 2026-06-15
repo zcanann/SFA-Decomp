@@ -158,7 +158,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void MMP_levelcontrol_release(void);
 
 void mmp_gyservent_free(void)
 {
@@ -180,7 +179,6 @@ void mmp_gyservent_initialise(void)
 {
 }
 
-int MoonSeedBush_getExtraSize(void);
 int mmp_gyservent_getExtraSize(void) { return 0x0; }
 int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
 
@@ -219,4 +217,3 @@ void mmp_gyservent_init(int obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
 }
 
-void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

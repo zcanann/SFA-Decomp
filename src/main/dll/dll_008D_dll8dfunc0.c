@@ -412,7 +412,6 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     return ret;
 }
 
-void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags);
 
 void dll_8D_func01_nop(void)
 {

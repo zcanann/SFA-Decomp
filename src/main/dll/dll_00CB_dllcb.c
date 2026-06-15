@@ -464,7 +464,6 @@ extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
 
-void iceball_update(undefined2* param_1, int param_2);
 
 int fn_801601C4(int obj, GroundBaddieState* p)
 {
@@ -1149,7 +1148,6 @@ int fn_8016050C(int p1, u8* obj)
     return 6;
 }
 
-int grimble_stateHandlerB03(int p1, u8* obj);
 
 extern void GameBit_Set(int eventId, int value);
 
@@ -1314,7 +1312,6 @@ int fn_80160534(int* obj)
     return 0;
 }
 
-int grimble_stateHandlerB01(int* obj, GroundBaddieState* state);
 
 #pragma peephole off
 void dll_CB_free(int* obj)

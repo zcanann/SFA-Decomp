@@ -153,7 +153,6 @@ void dll_8F_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 18, (u8*)(int)lbl_80316C90, 16, base + 0xb4, 0x2e, 0);
 }
 
-void dll_90_func03(int sourceObj, int variant, int posSource, uint flags);
 
 void dll_8F_func01_nop(void)
 {
