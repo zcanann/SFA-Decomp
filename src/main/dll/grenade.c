@@ -727,7 +727,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
         {
             if (((TrickyState*)state)->stateFlags & 0x8000000)
             {
-                ((TrickyState*)state)->stateFlags &= ~0x800;
+                ((TrickyState*)state)->stateFlags &= ~0x800LL;
                 ((TrickyState*)state)->stateFlags |= 0x1000;
                 p = state;
                 for (i = 0; i < 7; i++)
@@ -907,13 +907,13 @@ int trickyFn_801430e0(u8* obj, u8* state)
         else
         {
             ret = randomGetRange(0, 6);
-            if (ret < 5 && ret >= 0)
+            if (ret >= 5 || ret < 0)
             {
-                tricky_startRandomIdleMove((int)obj, (int)state);
+                objAnimFn_801441c0(obj, state);
             }
             else
             {
-                objAnimFn_801441c0(obj, state);
+                tricky_startRandomIdleMove((int)obj, (int)state);
             }
         }
     }

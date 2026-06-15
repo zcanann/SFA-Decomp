@@ -362,18 +362,18 @@ void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
         s16 sv4 = ((GameObject*)obj)->anim.rotZ;
         s16 sv2 = ((GameObject*)obj)->anim.rotY;
         f32 sv8 = ((GameObject*)obj)->anim.rootMotionScale;
+        int i;
         int* model;
         char* m;
-        int i;
         objAnim->bankIndex = 1;
         model = Obj_GetActiveModel();
         m = p;
         for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
         {
-            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) =
-                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) + *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP);
-            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) =
-                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) + *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP);
+            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) +=
+                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP);
+            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) +=
+                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP);
             ((GameObject*)obj)->anim.rotZ = *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW);
             ((GameObject*)obj)->anim.rotY = *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH);
             *(u16*)((char*)model + 0x18) &= ~8;

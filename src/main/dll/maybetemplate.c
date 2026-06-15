@@ -729,7 +729,7 @@ void minimapFn_8012310c(void)
     if ((lbl_803DD7A0 != '\0') && (lbl_803DD7A2 == 0xff))
     {
         lbl_803DD8D2 = lbl_803DD8D2 + framesThisStep * 4;
-        if (lbl_803DBA68 < lbl_803DD8D2)
+        if (lbl_803DD8D2 > lbl_803DBA68)
         {
             lbl_803DD8D2 = lbl_803DBA68;
         }
@@ -1186,7 +1186,7 @@ void cMenuUpdateAnims(void)
     if ((sbyte)b != 0 && cMenuFadeCounter > 0x40)
     {
         lbl_803DD8D6 = lbl_803DD8D6 + framesThisStep * 16;
-        if (lbl_803DBA66 < lbl_803DD8D6)
+        if (lbl_803DD8D6 > lbl_803DBA66)
         {
             lbl_803DD8D6 = lbl_803DBA66;
         }
@@ -1198,6 +1198,10 @@ void cMenuUpdateAnims(void)
         {
             lbl_803DD8D6 = 0;
         }
+    }
+    if (cMenuFadeCounter != 0)
+    {
+        return;
     }
 }
 
@@ -1241,14 +1245,13 @@ int trickyBitFn_801241cc(short* arr, sbyte flag)
         mask = gTrickyHudItemMask;
         if (mask > 0)
         {
-            entry = arr;
-            while (entry[0] > -1)
+            while (arr[0] > -1)
             {
-                if (mask != -1 && (mask & (int)entry[0]) != 0)
+                if (mask != -1 && (mask & (int)arr[0]) != 0)
                 {
                     count++;
                 }
-                entry += 8;
+                arr += 8;
             }
         }
     }

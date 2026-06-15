@@ -54,7 +54,7 @@ extern u32 lbl_803DD674;
 extern u32 lbl_803DD678;
 extern f32 lbl_803E1D50;
 extern char lbl_803A57C0[0x50C];
-extern OSMessageQueue lbl_803A5CCC;
+extern OSMessageQueue lbl_803A5CCC[1];
 
 void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, uint width, uint height)
 {
@@ -398,16 +398,14 @@ void AttractMovieAudio_DmaCallback(void)
 
 void THPPlayerPostDrawDone(void)
 {
-    OSMessageQueue* queue;
     OSMessage msg;
     OSMessage textureSet;
 
     if (lbl_803DD660 != 0)
     {
-        queue = &lbl_803A5CCC;
         while (TRUE)
         {
-            if (OSReceiveMessage(queue, &msg, OS_MESSAGE_NOBLOCK) == TRUE)
+            if (OSReceiveMessage(lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE)
             {
                 textureSet = msg;
             }
@@ -480,7 +478,7 @@ int ProperTimingForGettingNextFrame(void)
     {
         if (VIGetNextField() != 0)
         {
-            return FALSE;
+            goto returnFalse;
         }
         return TRUE;
     }
@@ -489,7 +487,7 @@ int ProperTimingForGettingNextFrame(void)
     {
         if (VIGetNextField() != 1)
         {
-            return FALSE;
+            goto returnFalse;
         }
         return TRUE;
     }
@@ -511,5 +509,6 @@ int ProperTimingForGettingNextFrame(void)
         lbl_803A5D60.prevCount = lbl_803A5D60.curCount;
         return TRUE;
     }
+returnFalse:
     return FALSE;
 }

@@ -226,9 +226,9 @@ test:
     return 0;
 }
 
-int fn_80056800(int param_1)
+int fn_80056800(int index)
 {
-    return (int)(DAT_803ddaec + param_1 * 4);
+    return (int)(DAT_803ddaec + index * 4);
 }
 
 void FUN_80056418(int param_1, int param_2, int param_3, int param_4, int param_5)
@@ -724,9 +724,9 @@ extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 extern void mm_free(void* p);
 
-void fn_80059A50(int param_1)
+void fn_80059A50(int pageIndex)
 {
-    int idx = param_1;
+    int idx = pageIndex;
     void* p = gLoadedRomListPages[idx];
     if (p != 0)
     {

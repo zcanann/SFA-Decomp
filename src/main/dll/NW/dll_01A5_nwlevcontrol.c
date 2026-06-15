@@ -33,7 +33,7 @@ extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 extern void gameTimerStop(void);
 
-void nw_levcontrol_update(int param_1)
+void nw_levcontrol_update(int objArg)
 {
     int obj;
     short* player;
@@ -46,7 +46,7 @@ void nw_levcontrol_update(int param_1)
     uint bitVal4;
     float* state;
 
-    obj = param_1;
+    obj = objArg;
     state = *(float**)(obj + 0xb8);
     player = (short*)Obj_GetPlayerObject();
     if (*state > lbl_803E5F10)

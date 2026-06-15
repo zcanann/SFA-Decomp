@@ -2321,7 +2321,7 @@ extern u8 framesThisStep;
 extern f32 Udchuff_803DEDA0[2];
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
-extern int isHeavyFogEnabled(void);
+extern u8 isHeavyFogEnabled(void);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 * a, f32 * b);
 extern f32 Dev_803DED1C;
@@ -2329,7 +2329,7 @@ extern u16 lbl_803DCFA0;
 #pragma peephole on
 void maybeHudFn_8006c91c(void)
 {
-    f32 lo, hi;
+    f32 hi, lo;
     if (getHudHiddenFrameCount() == 0)
     {
         f32 d = timeDelta;

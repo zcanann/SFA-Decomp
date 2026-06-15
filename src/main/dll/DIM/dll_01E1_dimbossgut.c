@@ -24,8 +24,8 @@ void DIMbossgut_free(void)
 {
 }
 
-void DIMbossgut_render(int obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                       undefined4 param_5, char shouldRender)
+void DIMbossgut_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                       undefined4 p5, char shouldRender)
 {
     int visible;
 
@@ -33,7 +33,7 @@ void DIMbossgut_render(int obj, undefined4 param_2, undefined4 param_3, undefine
     if (visible != 0)
     {
         ObjAnim_AdvanceCurrentMove(lbl_803E4C80, timeDelta, obj, NULL);
-        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, (double)lbl_803E4C84);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4C84);
     }
 }
 

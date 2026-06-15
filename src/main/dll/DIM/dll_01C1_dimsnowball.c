@@ -258,10 +258,10 @@ typedef struct DimSnowballDef
     int targetId;
 } DimSnowballDef;
 
-void dimsnowball_init(DimSnowballObject* param_1, DimSnowballDef* def)
+void dimsnowball_init(DimSnowballObject* objArg, DimSnowballDef* def)
 {
     extern u8* ObjList_FindObjectById(int objectId); /* #57 */
-    DimSnowballObject* obj = param_1;
+    DimSnowballObject* obj = objArg;
     DimSnowballState* state;
 
     state = obj->state;

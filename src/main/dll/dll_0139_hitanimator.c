@@ -247,10 +247,10 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
             {
                 if (vstate->activeBit != 0)
                 {
-                    *(int*)(m + 0x10) &= ~2;
+                    *(u32*)(m + 0x10) &= ~2LL;
                     if ((desc->flags & 0x2) != 0)
                     {
-                        *(int*)(m + 0x10) &= ~1;
+                        *(u32*)(m + 0x10) &= ~1LL;
                     }
                 }
                 else
@@ -274,7 +274,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
             {
                 if (vstate->activeBit != 0)
                 {
-                    *(int*)(s + 0x3c) &= ~2;
+                    *(u32*)(s + 0x3c) &= ~2LL;
                 }
                 else
                 {

@@ -395,9 +395,8 @@ void SnowBike_setType(int obj, int type)
         }
         if (((GameObject*)obj)->anim.seqId == 0x72)
         {
-            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            hitState->lateralResponseWeight = 0x14;
-            hitState->axialResponseWeight = 0x14;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lateralResponseWeight = 0x14;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->axialResponseWeight = 0x14;
         }
     }
 }

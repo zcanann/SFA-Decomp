@@ -313,7 +313,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         f32 fk;
         f32 dx, dy, dz;
     } stk;
-    u8 i;
+    u8 i = 0x14;
     u32 flags = *(u32*)(b + 0x54);
     if ((flags & 0x1800) == 0) return;
     stk.dx = *(f32*)(b + 0x408) - *(f32*)(a + 0x18);
@@ -323,13 +323,14 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     stk.hx = *(s16*)(a + 0);
     stk.hy = *(s16*)(a + 2);
     stk.hz = *(s16*)(a + 4);
-    if ((flags & 0x800) != 0) return;
-    i = 0x14;
-    while (i-- != 0)
+    if ((flags & 0x800) == 0)
     {
-        (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
+        while (i-- != 0)
+        {
+            (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
+        }
+        *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000LL;
     }
-    *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000;
 }
 
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
@@ -729,7 +730,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 }
 
 #pragma peephole off
-int fn_80138D7C(int obj, int p2)
+void fn_80138D7C(int obj, int p2)
 {
     extern void*Obj_GetActiveModel(int);
     extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
@@ -739,7 +740,7 @@ int fn_80138D7C(int obj, int p2)
     extern f32 lbl_803E23E8;
     extern f32 lbl_803E2408;
     extern f32 lbl_803E240C;
-    u8 ratio = (u8)((s32)(s8) * (u8*)(*(int*)(p2 + 0) + 2) / 5);
+    u8 ratio = (u8)((s32) * (u8*)(*(int*)(p2 + 0) + 2) / 10);
 
     if (*(u8*)(p2 + 0x82c) != ratio)
     {
@@ -753,7 +754,7 @@ int fn_80138D7C(int obj, int p2)
         }
         *(f32*)(p2 + 0x828) = *(f32*)(p2 + 0x828) - timeDelta;
         t = *(f32*)(p2 + 0x828);
-        if (t <= lbl_803E2408)
+        if (!(t > lbl_803E2408))
         {
             if (t > lbl_803E23DC)
             {
@@ -776,7 +777,7 @@ int fn_80138D7C(int obj, int p2)
             }
         }
     }
-    return 0;
+    return;
 }
 
 #define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e

@@ -1057,11 +1057,11 @@ void dll_224_hitDetect(void* obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dll_224_update(void* param_1)
+void dll_224_update(void* objArg)
 {
     extern void spellStoneUseFn_801fd270(void* obj); /* #57 */
     extern int lbl_803DDCC8; /* #57 */
-    void* obj = param_1;
+    void* obj = objArg;
     int v;
     v = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     v = (u8)v;

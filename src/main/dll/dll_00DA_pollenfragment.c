@@ -103,14 +103,7 @@ void pollenfragment_init(int obj, int config)
         *(float*)(state + 2) = (float)(int)randomValue;
     }
     pollenType = *(s8*)(config + 0x19);
-    if ((s8)pollenType < 0)
-    {
-        pollenType = 0;
-    }
-    else if (pollenType > 5u)
-    {
-        pollenType = 5;
-    }
+    pollenType = (pollenType < 0) ? 0 : ((pollenType > 5u) ? 5 : pollenType);
     *(s8*)(config + 0x19) = pollenType;
     state[7] = (u32)lbl_8032059C[*(char*)(config + 0x19)];
     if ((int)*(short*)state[7] != 0)
@@ -392,12 +385,10 @@ void pollen_update(int obj);
 void pollenfragment_hitDetect(int obj)
 {
     u8* extra;
-    ObjHitsPriorityState* hitState;
     int hitType;
     int hitObject;
 
     extra = *(u8**)&((GameObject*)obj)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (fn_80080150((int)(extra + 0x20)) == 0)
     {
         hitType = ObjHits_GetPriorityHit(obj, &hitObject, 0, 0);
@@ -411,7 +402,7 @@ void pollenfragment_hitDetect(int obj)
             ObjHits_DisableObject((u32)obj);
             s16toFloat(extra + 0x20, 0x78);
         }
-        if (hitState->contactFlags != 0)
+        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
             ObjHits_DisableObject((u32)obj);
             *(f32*)(extra + 8) = lbl_803E3160;

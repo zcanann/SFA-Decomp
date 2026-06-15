@@ -168,14 +168,14 @@ void dimbossgut2_free(int arg9)
     return;
 }
 
-void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void dimbossgut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8* light;
 
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, param_2, param_3, param_4, param_5,
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
                                                                       lbl_803E4CF0);
         light = *(u8**)(((Dimbossgut2State*)light)->unk40C + 0x18);
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
@@ -192,7 +192,7 @@ void dimbossgut2_update(int obj)
     int iVar;
     uint uval;
     uint n;
-    float* pfVar4;
+    float* posData;
     int val;
     f32 fdiff;
     f32 fscale;
@@ -222,19 +222,19 @@ void dimbossgut2_update(int obj)
             iVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
         }
         while (iVar != 0);
-        pfVar4 = *(float**)&((Dimbossgut2State*)state)->unk40C;
-        if ((*pfVar4 < lbl_803E4CD0) && (pfVar4[4] < lbl_803E4CD4))
+        posData = *(float**)&((Dimbossgut2State*)state)->unk40C;
+        if ((*posData < lbl_803E4CD0) && (posData[4] < lbl_803E4CD4))
         {
-            fdiff = pfVar4[3] - ((GameObject*)obj)->anim.localPosY;
+            fdiff = posData[3] - ((GameObject*)obj)->anim.localPosY;
             if (fdiff < lbl_803E4CD8)
             {
                 fdiff = -fdiff;
             }
             if ((fdiff < lbl_803E4CDC) &&
-                (stk.f4c = pfVar4[3], uval = randomGetRange(0x1e, 0x3c),
-                    (int)(uint) * (u16*)((int)pfVar4 + 0x16) > (int)uval))
+                (stk.f4c = posData[3], uval = randomGetRange(0x1e, 0x3c),
+                    (int)(uint) * (u16*)((int)posData + 0x16) > (int)uval))
             {
-                fscale = lbl_803E4CE0 * pfVar4[4];
+                fscale = lbl_803E4CE0 * posData[4];
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -
                     fscale * mathSinf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
                 stk.f48 = ((GameObject*)obj)->anim.localPosZ -
@@ -242,10 +242,10 @@ void dimbossgut2_update(int obj)
                 stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x32b, &stk, 1, -1,
                                                  NULL);
-                *(u16*)((int)pfVar4 + 0x16) = 0;
+                *(u16*)((int)posData + 0x16) = 0;
             }
         }
-        *(u16*)((int)pfVar4 + 0x16) += (u8)framesThisStep;
+        *(u16*)((int)posData + 0x16) += (u8)framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);

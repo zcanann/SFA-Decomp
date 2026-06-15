@@ -536,7 +536,7 @@ typedef struct IcicleHitFx {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIM2icicle_updateHitResponse(int obj, int param_2)
+void DIM2icicle_updateHitResponse(int obj, int playerObj)
 {
   int *state;
   u8 hit;
@@ -592,39 +592,39 @@ void DIM2icicle_updateHitResponse(int obj, int param_2)
       }
     }
     else {
-      if (*(void **)(param_2 + 0x2d0) == NULL) {
+      if (*(void **)(playerObj + 0x2d0) == NULL) {
         player = Obj_GetPlayerObject();
         if (fn_80295A04(player, 1) != 0) {
           ((void (*)(int, int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x28))
-                    (obj, param_2, (int)state + 0x35c, (int)*(s16 *)((int)state + 0x3f4), 0, 2, 10, -1, -1);
-          *(int *)(param_2 + 0x2d0) = player;
-          *(u8 *)(param_2 + 0x349) = 0;
+                    (obj, playerObj, (int)state + 0x35c, (int)*(s16 *)((int)state + 0x3f4), 0, 2, 10, -1, -1);
+          *(int *)(playerObj + 0x2d0) = player;
+          *(u8 *)(playerObj + 0x349) = 0;
         }
       }
       if (*(s16 *)((int)state + 0x402) == 1) {
-        if (*(s8 *)(param_2 + 0x354) == 3) {
+        if (*(s8 *)(playerObj + 0x354) == 3) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x68, 0, 0, 0);
         }
-        else if (*(s8 *)(param_2 + 0x354) == 2) {
+        else if (*(s8 *)(playerObj + 0x354) == 2) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x6c, 0, 0, 0);
         }
       }
       else if (*(s16 *)((int)state + 0x402) == 2) {
-        if (*(s8 *)(param_2 + 0x354) == 3) {
+        if (*(s8 *)(playerObj + 0x354) == 3) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x77, 0, 0, 0);
         }
-        else if (*(s8 *)(param_2 + 0x354) == 2) {
+        else if (*(s8 *)(playerObj + 0x354) == 2) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x78, 0, 0, 0);
         }
       }
-      *(u8 *)(param_2 + 0x346) = 0;
-      *(s8 *)(param_2 + 0x34f) = hitResult;
-      *(u8 *)(param_2 + 0x354) -= 1;
+      *(u8 *)(playerObj + 0x346) = 0;
+      *(s8 *)(playerObj + 0x34f) = hitResult;
+      *(u8 *)(playerObj + 0x354) -= 1;
       Sfx_PlayFromObject(obj, 0x4b1);
-      if (*(s8 *)(param_2 + 0x354) <= 0) {
-        *(u8 *)(param_2 + 0x354) = 0;
-        *(u8 *)(param_2 + 0x349) = 0;
-        (*gPlayerInterface)->setState((void*)obj, (void*)param_2, 0);
+      if (*(s8 *)(playerObj + 0x354) <= 0) {
+        *(u8 *)(playerObj + 0x354) = 0;
+        *(u8 *)(playerObj + 0x349) = 0;
+        (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0);
         hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -638,10 +638,10 @@ void DIM2icicle_updateHitResponse(int obj, int param_2)
         }
       }
       else if (*(s16 *)((int)state + 0x402) == 1) {
-        (*gPlayerInterface)->setState((void*)obj, (void*)param_2, 10);
+        (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 10);
       }
       else {
-        (*gPlayerInterface)->setState((void*)obj, (void*)param_2, 0xb);
+        (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0xb);
       }
       ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
     }

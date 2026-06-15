@@ -538,12 +538,13 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
     int idx;
     if ((s8)lbl_803DD434 != 0)
     {
-        if (((BaddieState*)ctx)->animSpeedA > lbl_803E0570 && ((GameObject*)obj)->anim.currentMove != (int)lbl_803DD43C)
+        f32 speedA = ((BaddieState*)ctx)->animSpeedA;
+        if (speedA > lbl_803E0570 && ((GameObject*)obj)->anim.currentMove != (int)lbl_803DD43C)
         {
             ObjAnim_SetCurrentMove((int)obj, lbl_803DD43C, ((GameObject*)obj)->anim.currentMoveProgress, 0);
             ((BaddieState*)ctx)->moveDone = 0;
         }
-        else if (((BaddieState*)ctx)->animSpeedA < lbl_803E0570 && ((GameObject*)obj)->anim.currentMove != (int)
+        else if (speedA < lbl_803E0570 && ((GameObject*)obj)->anim.currentMove != (int)
             lbl_803DD438)
         {
             ObjAnim_SetCurrentMove((int)obj, lbl_803DD438, ((GameObject*)obj)->anim.currentMoveProgress, 0);

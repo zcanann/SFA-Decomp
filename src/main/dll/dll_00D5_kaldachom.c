@@ -360,8 +360,11 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     KaldaChomControl* control;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    if ((visible != 0) && (((GameObject*)obj)->unkF4 == 0))
+    if (visible != 0)
     {
+        switch (((GameObject*)obj)->unkF4)
+        {
+        case 0:
         if (((KaldachomState*)state)->unk3E8 != lbl_803E3060)
         {
             fn_8003B5E0(200, 0, 0, (int)((KaldachomState*)state)->unk3E8);
@@ -377,6 +380,8 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                                       &control->upperMouthPosZ, 0);
         ObjPath_GetPointWorldPosition(obj, 1, &control->lowerMouthPosX, &control->lowerMouthPosY,
                                       &control->lowerMouthPosZ, 0);
+        break;
+        }
     }
     return;
 }
@@ -482,23 +487,24 @@ void kaldachom_update(int obj)
 void kaldachom_init(int obj, int data, int skip_alloc)
 {
     int initMode;
-    KaldaChomControl* control;
     int state;
+    KaldaChomControl* control;
     int player;
 
     state = *(int*)&((GameObject*)obj)->extra;
     initMode = 6;
     if (skip_alloc != 0)
     {
-        initMode = 7;
+        initMode |= 1;
     }
-    (**(code**)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, initMode);
+    (*(void (**)(double, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x58))(
+        (double)lbl_803E30C8, obj, data, state, 8, 6, 0, (u8)initMode);
     ((GameObject*)obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
     ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E307C;
     *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
-    (**(code**)(*gPlayerInterface + 0x14))(obj, state, 0);
+    (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 0);
     *(undefined2*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060;

@@ -39,8 +39,8 @@ void worldasteroids_free(void)
     return;
 }
 
-void worldasteroids_render(undefined4 param_1, undefined4 param_2, undefined4 param_3,
-                           undefined4 param_4, undefined4 param_5, s8 visible)
+void worldasteroids_render(undefined4 obj, undefined4 p2, undefined4 p3,
+                           undefined4 p4, undefined4 p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)

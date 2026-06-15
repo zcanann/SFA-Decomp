@@ -867,27 +867,30 @@ void fn_80133718(void)
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
 #pragma scheduling on
-#pragma peephole on
+#pragma peephole off
 void Minimap_release(void)
 {
     u8 i;
     void** slots;
+    void* null;
     if (minimapTexture != NULL) textureFree(minimapTexture);
     textureFree(lbl_803DD940);
-    slots = lbl_803DBBC8;
     i = 0;
+    slots = lbl_803DBBC8;
+    null = NULL;
     while ((u32)i < 2)
     {
         if (slots[i] != NULL)
         {
             Obj_FreeObject(slots[i]);
-            slots[i] = NULL;
+            slots[i] = null;
         }
         i++;
     }
     minimapTexture = NULL;
     lbl_803DD940 = NULL;
 }
+#pragma peephole on
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
  * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */

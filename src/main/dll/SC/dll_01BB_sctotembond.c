@@ -107,7 +107,7 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
     }
 }
 
-undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
+undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
 {
     ScTotemBondState* state;
     int countForEvent2;

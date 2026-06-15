@@ -49,46 +49,46 @@ extern void gameTextShow(int textId);
 extern f32 lbl_803E4680;
 extern int Obj_FreeObject(int o);
 
-void FUN_801aaa6c(double param_1, int param_2, int param_3)
+void FUN_801aaa6c(double value, int state, int obj)
 {
-    if ((double)lbl_803E530C == param_1)
+    if ((double)lbl_803E530C == value)
     {
-        *(u8*)(param_2 + 0x10) = 0xc;
+        *(u8*)(state + 0x10) = 0xc;
         return;
     }
-    if ((*(byte*)(param_2 + 0x11) & 2) != 0)
+    if ((*(byte*)(state + 0x11) & 2) != 0)
     {
-        *(u8*)(param_2 + 0x10) = 1;
+        *(u8*)(state + 0x10) = 1;
         return;
     }
-    if ((double)lbl_803E5310 <= param_1)
+    if ((double)lbl_803E5310 <= value)
     {
-        *(u8*)(param_2 + 0x10) = 2;
+        *(u8*)(state + 0x10) = 2;
         return;
     }
-    if ((*(short*)(param_3 + 0xa0) == 0x18) && (lbl_803E5314 < *(float*)(param_3 + 0x98)))
+    if ((*(short*)(obj + 0xa0) == 0x18) && (lbl_803E5314 < *(float*)(obj + 0x98)))
     {
-        *(u8*)(param_2 + 0x10) = 8;
+        *(u8*)(state + 0x10) = 8;
         return;
     }
-    if (*(short*)(param_3 + 0xa0) == 0x19)
+    if (*(short*)(obj + 0xa0) == 0x19)
     {
-        *(u8*)(param_2 + 0x10) = 5;
+        *(u8*)(state + 0x10) = 5;
         return;
     }
-    *(u8*)(param_2 + 0x10) = 0xb;
+    *(u8*)(state + 0x10) = 0xb;
     return;
 }
 
 undefined4
 FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 obj,
              undefined4 param_10, ObjAnimUpdateState* animUpdate)
 {
     if (animUpdate->eventCount != 0)
     {
         FUN_8008112c((double)lbl_803E5360, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 1, 1, 0, 1, 1, 1, 0);
+                     obj, 1, 1, 0, 1, 1, 1, 0);
     }
     return 0;
 }

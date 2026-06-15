@@ -1954,7 +1954,7 @@ int wclevelcont_getObjectTypeId(void);
 void wclevelcont_free(int obj);
 void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wclevelcont_hitDetect(void);
-void wclevelcont_syncProgressBits(WcLevelControlState *state);
+void wclevelcont_syncProgressBits(int state);
 void wclevelcont_update(int obj);
 void fn_802251B4(int obj, WcLevelControlState *state);
 int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy);

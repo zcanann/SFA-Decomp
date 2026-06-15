@@ -179,7 +179,7 @@ typedef struct DFSHLaserBeamObject
 #define RESOURCE_SPAWN(obj,id,a,flags,owner,unk) \
   ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*(int *)lbl_803DDBB8 + 0x4)))(obj,id,a,flags,owner,unk)
 
-void DFSH_LaserBeam_update(uint param_1)
+void DFSH_LaserBeam_update(uint objAddr)
 {
     extern int Sfx_PlayFromObject(void* obj, int sfxId);
     DFSHLaserBeamObject* obj;
@@ -198,7 +198,7 @@ void DFSH_LaserBeam_update(uint param_1)
     f32 damageDistance;
     f32 pushDistance;
 
-    obj = (DFSHLaserBeamObject*)param_1;
+    obj = (DFSHLaserBeamObject*)objAddr;
     config = obj->config;
     runtime = obj->runtime;
 

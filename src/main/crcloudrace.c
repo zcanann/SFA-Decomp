@@ -28,8 +28,8 @@ void crcloudrace_free(void)
   return;
 }
 
-void crcloudrace_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
-                        undefined4 param_4,undefined4 param_5,char visible)
+void crcloudrace_render(undefined4 obj,undefined4 p2,undefined4 p3,
+                        undefined4 p4,undefined4 p5,char visible)
 {
   int draw;
 

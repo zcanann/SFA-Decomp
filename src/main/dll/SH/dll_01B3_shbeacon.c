@@ -73,11 +73,11 @@ int fn_801DA9CC(int obj)
     return 1;
 }
 
-void sh_beacon_free(int obj, int param_2)
+void sh_beacon_free(int obj, int keepChild)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    if (param_2 == 0)
+    if (keepChild == 0)
     {
         void* p = *(void**)&((ShBeaconState*)extra)->childObj;
         if (p != NULL && (*(unsigned short*)((char*)p + 0xb0) & 0x40) == 0)

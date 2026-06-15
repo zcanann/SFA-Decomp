@@ -929,7 +929,7 @@ int Carryable_updateRenderState(int* obj, int flag)
     {
         if (((GameObject*)obj)->seqIndex == -1)
         {
-            ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+            ((GameObject*)obj)->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
         else
         {
