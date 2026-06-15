@@ -1,10 +1,6 @@
 /* DLL 0x0124 — death-gas objects [8018BC48-8018BC50) */
-#include "main/objseq.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/dll/CF/CFforcecontrol.h"
-#include "main/screen_transition.h"
 
 extern uint GameBit_Get(int eventId);
 
