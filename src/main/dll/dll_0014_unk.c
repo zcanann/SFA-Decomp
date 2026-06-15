@@ -3542,10 +3542,10 @@ void walkgroupFindExitPointFn_800dc398(void)
     }
 }
 
-int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighborId)
+int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
 {
-    float bestDistances[2];
     int bestNeighborIds[2];
+    float bestDistances[2];
     RomCurveSegmentProjection segment;
     int i;
     int neighborId;
@@ -3565,9 +3565,9 @@ int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighb
     segment.startY = *(f32*)(curve + 0xc);
     segment.startZ = *(f32*)(curve + 0x10);
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++, curve += 4)
     {
-        neighborId = *(int*)(curve + 0x1c + i * 4);
+        neighborId = *(int*)(curve + 0x1c);
         if (neighborId > -1)
         {
             neighborCurve = Objfsa_FindRomCurveById(neighborId);
@@ -3586,7 +3586,7 @@ int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighb
                 if (distance < bestDistances[slot])
                 {
                     bestDistances[slot] = distance;
-                    bestNeighborIds[slot] = neighborId;
+                    bestNeighborIds[slot] = *(int*)(curve + 0x1c);
                 }
             }
         }
