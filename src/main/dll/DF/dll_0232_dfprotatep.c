@@ -763,8 +763,9 @@ void sfxplayer_update(int obj)
             }
             if (isGameTimerDisabled() != 0)
             {
+                i = 0;
                 handles = (uint*)gSfxplayerEffectHandles;
-                for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+                for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
                 {
                     if (handles[0] != 0)
                     {
@@ -785,8 +786,9 @@ void sfxplayer_update(int obj)
                 GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 0);
             }
             TrickyCurve_updateEffectHandleRing(obj);
+            i = 0;
             handles = (uint*)gSfxplayerEffectHandles;
-            for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+            for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
             {
                 if (handles[0] != 0)
                 {
