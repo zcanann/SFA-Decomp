@@ -1201,9 +1201,9 @@ void mapGetBlocks(void** outPtr, u32* outVal)
  * its u32 at +0x30. */
 void playerShadowFn_80062a30(int* obj)
 {
-    int* p = *(int**)((char*)obj + 0x64);
+    ObjModelState* p = ((GameObject*)obj)->anim.modelState;
     if (p == NULL) return;
-    *(u32*)((char*)p + 0x30) &= ~0x2020;
+    p->flags &= ~0x2020;
 }
 
 /* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte
@@ -1735,7 +1735,7 @@ void MapBlock_initHits(int obj, int index)
         }
         off += 0x14;
     }
-    *(int*)(obj + 0x74) = 0;
+    *(int*)&((GameObject*)obj)->anim.hitVolumeTransforms = 0;
     *(u16*)(obj + 0x9e) = 0;
     *(u16*)&((GameObject*)obj)->anim.rotZ = *(u16*)&((GameObject*)obj)->anim.rotZ & ~0x40;
 }
