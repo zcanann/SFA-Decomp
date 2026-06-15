@@ -1,5 +1,4 @@
 #include "main/sky_state.h"
-#include "main/game_object.h"
 #include "main/sky_80080E58_shared.h"
 
 int getEnvFxBit2BA(void)
