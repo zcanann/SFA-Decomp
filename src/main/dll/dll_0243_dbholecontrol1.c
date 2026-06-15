@@ -636,19 +636,23 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         void* res;
         int newObj;
-        if (animUpdate->eventIds[i] != 1) continue;
-        if (GameBit_Get((s32)(s8) * (u8*)(data + 0x19) + 2601) != 0) continue;
-        if (Obj_IsLoadingLocked() == 0) continue;
-        res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
-        if (res == NULL) continue;
-        newObj = Obj_AllocObjectSetup(56, 1337);
-        memcpy(newObj, res, 56);
-        ((GameObject*)newObj)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)newObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)newObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
-        *(int*)&((GameObject*)newObj)->anim.localPosZ = -1;
-        *(s16*)(newObj + 26) = 149;
-        loadObjectAtObject(obj, newObj);
+        switch (animUpdate->eventIds[i])
+        {
+        case 1:
+            if (GameBit_Get((s32)(s8) * (u8*)(data + 0x19) + 2601) != 0) continue;
+            if (Obj_IsLoadingLocked() == 0) continue;
+            res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
+            if (res == NULL) continue;
+            newObj = Obj_AllocObjectSetup(56, 1337);
+            memcpy(newObj, res, 56);
+            ((GameObject*)newObj)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
+            ((GameObject*)newObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)newObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
+            *(int*)&((GameObject*)newObj)->anim.localPosZ = -1;
+            *(s16*)(newObj + 26) = 149;
+            loadObjectAtObject(obj, newObj);
+            break;
+        }
     }
 
     if (GameBit_Get(((Dbholecontrol1Placement*)data)->unk1E) != 0 || lbl_803DDCE0 != 0)
