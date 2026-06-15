@@ -71,6 +71,7 @@ extern f32 lbl_803E52EC;
 extern f32 lbl_803E52F0;
 extern f32 lbl_803E52F4;
 
+#pragma optimization_level 2
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
@@ -348,7 +349,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         if (t <= lbl_803E5288)
         {
             ObjHits_SetSourceMask((int)obj, 1);
-            (*gExpgfxInterface)->freeSource((u32)obj);
+            (*gExpgfxInterface)->freeSource((int)obj);
             ((EdibleMushroomState*)state)->animState = 0;
             ((EdibleMushroomState*)state)->flags &= ~0x10;
         }
@@ -374,7 +375,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                     if (Vec_xzDistance((f32*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX) <
                         lbl_803E52A4)
                     {
-                        (*gExpgfxInterface)->freeSource((u32)obj);
+                        (*gExpgfxInterface)->freeSource((int)obj);
                         if (((GameObject*)obj)->anim.seqId == 0x658)
                         {
                             ((EdibleMushroomState*)state)->pickupMsgBitId = 0x18a;
@@ -459,6 +460,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E5288,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
+#pragma optimization_level reset
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
 {
