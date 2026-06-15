@@ -4245,10 +4245,11 @@ void* ObjSeq_FindTargetObject(u8* obj)
 
     bestDistSq = lbl_803DEFF0;
     bestObj = NULL;
-    for (i = 0; i < objectCount; i++)
     {
         f32 zeroRef = lbl_803DEFB0;
-        candidate = objects[i];
+        for (i = 0; i < objectCount; i++)
+        {
+            candidate = objects[i];
         if (((GameObject*)candidate)->anim.seqId == objectType)
         {
             dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)candidate)->anim.localPosX;
@@ -4260,6 +4261,7 @@ void* ObjSeq_FindTargetObject(u8* obj)
                 bestDistSq = distSq;
                 bestObj = candidate;
             }
+        }
         }
     }
     return bestObj;

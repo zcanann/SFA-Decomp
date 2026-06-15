@@ -523,8 +523,8 @@ void fn_80155F20(int obj, int state)
 
 void fn_80156010(uint obj, int state)
 {
-    u8 timerExpired;
     short move;
+    u8 timerExpired;
 
     timerExpired = 0;
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
