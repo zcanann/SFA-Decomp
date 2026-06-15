@@ -487,7 +487,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                 }
                 else
                 {
-                    boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
+                    boneEntry = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
                     boneIndex = 0;
                     for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
                          boneCount = boneCount - 1)
@@ -500,7 +500,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                         boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
                         boneIndex = boneIndex + 1;
                     }
-                    boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
+                    boneEntry = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
                     boneIndex = 0;
                     for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
                          boneCount = boneCount - 1)
@@ -760,9 +760,9 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         if ((*(uint*)(subNode + 0x3c) & 0x100000) != 0)
         {
             decalEntry = (uint*)FUN_800480a0(subNode, 1);
-            light = *(int*)(*(int*)(modelData + 0x28) + 0xc);
+            light = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
             lightSlot = 0;
-            for (texMaterial = (uint) * (byte*)(*(int*)(modelData + 0x28) + 0x59); texMaterial != 0;
+            for (texMaterial = (uint) * (byte*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0x59); texMaterial != 0;
                  texMaterial = texMaterial - 1)
             {
                 if (*(char*)((int)decalEntry + 5) == *(char*)(light + 1))
