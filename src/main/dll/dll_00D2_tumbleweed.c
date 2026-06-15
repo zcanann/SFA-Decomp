@@ -253,7 +253,7 @@ void tumbleweed_free(int* obj)
     while (counter < limit)
     {
         int* o = (int*)items[counter];
-        if (target_id == *(s16*)((int)o + 0x46))
+        if (target_id == ((GameObject*)o)->anim.seqId)
         {
             (*(code*)(**(int**)((int)o + 0x68) + 0x20))(o, obj);
         }
