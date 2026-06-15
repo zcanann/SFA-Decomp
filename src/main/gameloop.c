@@ -1278,6 +1278,7 @@ void cutsceneEnterExit(int entering, int affectSounds)
 }
 
 #pragma peephole on
+#pragma peephole off
 void removeButtonObject(u32 h)
 {
     int* p;
@@ -1304,6 +1305,7 @@ void removeButtonObject(u32 h)
     }
     lbl_803DCA48--;
 }
+#pragma peephole reset
 
 extern u8* gameTextGetBox(int boxId);
 extern int padGetStickX(int pad);
