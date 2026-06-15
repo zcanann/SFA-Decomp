@@ -42,12 +42,9 @@ extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flag
 extern void getEnvfxAct(int obj, int target, int id, int p);
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
-extern f32 lbl_803E4674;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
-extern f32 lbl_803E4680;
-extern int Obj_FreeObject(int o);
 
 void FUN_801aaa6c(double value, int state, int obj)
 {
