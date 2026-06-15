@@ -2607,6 +2607,7 @@ void texRestructRefs(int mode)
     int done;
     int pass;
     int i;
+    int off;
     u32 size;
     int d;
 
@@ -2619,9 +2620,10 @@ void texRestructRefs(int mode)
     OSReport(strs + 0x1194);
     testAndSet_onlyUseHeaps1and2(1);
     i = 0;
-    entry = gLoadedTextures;
-    for (; i < gLoadedTextureCount; i++, entry++)
+    off = 0;
+    for (; i < gLoadedTextureCount; i++, off += 16)
     {
+        entry = (LoadedTextureEntry*)((u8*)gLoadedTextures + off);
         tex = entry->texture;
         if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && (int)entry->size != -1 &&
             mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL)
@@ -2654,9 +2656,10 @@ void texRestructRefs(int mode)
     {
         done = 1;
         i = 0;
-        entry = gLoadedTextures;
-        for (; i < gLoadedTextureCount; i++, entry++)
+        off = 0;
+        for (; i < gLoadedTextureCount; i++, off += 16)
         {
+            entry = (LoadedTextureEntry*)((u8*)gLoadedTextures + off);
             tex = entry->texture;
             if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && (int)entry->size != -1)
             {
