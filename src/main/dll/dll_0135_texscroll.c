@@ -1,4 +1,3 @@
-#include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
 
 extern void objRenderFn_8003b8f4(f32);
