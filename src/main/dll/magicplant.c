@@ -540,20 +540,20 @@ void fn_80153040(int obj, int state)
                 }
             }
         }
-    }
 
-    fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0xf, 0);
+        fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0xf, 0);
 
-    vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
-    vec[1] = curve->posY - ((GameObject*)obj)->anim.localPosY;
-    vec[2] = curve->posZ - ((GameObject*)obj)->anim.localPosZ;
-    fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
+        vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
+        vec[1] = curve->posY - ((GameObject*)obj)->anim.localPosY;
+        vec[2] = curve->posZ - ((GameObject*)obj)->anim.localPosZ;
+        fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
 
-    *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
-    if (*(f32*)(state + 0x324) > lbl_803E28C8)
-    {
-        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~(u64)0x10000;
-        *(f32*)(state + 0x324) = lbl_803E28B0;
+        *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
+        if (*(f32*)(state + 0x324) > lbl_803E28C8)
+        {
+            *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~(u64)0x10000;
+            *(f32*)(state + 0x324) = lbl_803E28B0;
+        }
     }
 
     fn_8014CD1C(obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
