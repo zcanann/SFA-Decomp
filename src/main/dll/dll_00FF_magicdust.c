@@ -2,14 +2,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/magicduststate_struct.h"
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/obj_placement.h"
-#include "main/dll/lightning.h"
 #include "main/dll/path_control_interface.h"
-#include "main/dll/pushable.h"
-#include "main/objanim_internal.h"
 #include "main/game_object.h"
-#include "main/resource.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
