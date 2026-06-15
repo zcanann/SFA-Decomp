@@ -159,12 +159,12 @@ void vfpobjcreator_update(int* obj)
             {
                 break;
             }
-            *(f32*)(n + 0x28) =
+            ((GameObject*)n)->anim.velocityY =
                 lbl_803E606C * (f32)(int)
             randomGetRange(0, 10) + lbl_803E6068;
-            *(f32*)(n + 0x24) = lbl_803E6070 * (f32)(int)
+            ((GameObject*)n)->anim.velocityX = lbl_803E6070 * (f32)(int)
             randomGetRange(-10, 10);
-            *(f32*)(n + 0x2c) = lbl_803E6070 * (f32)(int)
+            ((GameObject*)n)->anim.velocityZ = lbl_803E6070 * (f32)(int)
             randomGetRange(-10, 10);
         }
         break;
@@ -196,14 +196,14 @@ void vfpobjcreator_update(int* obj)
             {
                 break;
             }
-            *(int*)(n + 0xf8) = 0x1f4;
+            ((GameObject*)n)->unkF8 = 0x1f4;
             {
                 f32 b;
                 f32 a = *(f32*)&lbl_803E6074;
-                *(f32*)(n + 0x28) = a;
-                *(f32*)(n + 0x24) = a;
+                ((GameObject*)n)->anim.velocityY = a;
+                ((GameObject*)n)->anim.velocityX = a;
                 b = lbl_803E6078;
-                *(f32*)(n + 0x2c) = b;
+                ((GameObject*)n)->anim.velocityZ = b;
                 m.v[1] = a;
                 m.v[2] = a;
                 m.v[3] = a;
