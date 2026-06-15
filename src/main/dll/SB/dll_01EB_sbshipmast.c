@@ -6,16 +6,9 @@
  * unkF4 phase counter. The remaining handlers (free/hitDetect/init/release/
  * initialise) are stubs - the mast is purely cosmetic.
  */
-#include "main/obj_placement.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 #include "main/dll/DB/DBstealerworm.h"
-#include "main/dll/DB/sbgalleon_state.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
