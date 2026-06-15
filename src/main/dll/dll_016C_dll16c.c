@@ -1,15 +1,9 @@
-#include "main/audio/sfx_ids.h"
 #include "main/dll/blob10_struct.h"
-#include "main/dll/crrockfallplacement_struct.h"
 #include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objseq.h"
 #include "main/dll/DIM/DIMboulder.h"
-#include "main/resource.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
