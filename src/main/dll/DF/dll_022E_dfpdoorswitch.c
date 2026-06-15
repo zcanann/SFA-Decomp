@@ -107,9 +107,7 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
-extern u8 lbl_80329514[];
 extern void OSReport(const char* fmt, ...);
-extern f32 timeDelta;
 
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
