@@ -8,7 +8,6 @@
  * fools the beam. ("GC" = GameCube; see the dll_0150 header.)
  */
 #include "main/camera_interface.h"
-#include "main/dll/baddie_state.h"
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/objseq.h"
