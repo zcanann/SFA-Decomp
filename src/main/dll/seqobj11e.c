@@ -103,15 +103,15 @@ void FUN_80152040(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80152440(int obj, int p, int p3, int msg)
+void fn_80152440(GameObject* obj, int p, int p3, int msg)
 {
-    extern void fn_8014D08C(int obj, int p, int type, f32 t, int a, int b);
+    extern void fn_8014D08C(GameObject* obj, int p, int type, f32 t, int a, int b);
     extern f32 lbl_803E2810;
     extern f32 lbl_803E2814;
     int sub;
     f32 fz;
 
-    sub = *(int*)&((GameObject*)obj)->anim.placementData;
+    sub = *(int*)&obj->anim.placementData;
     if (msg == 16 || msg == 17)
     {
         return;
@@ -121,11 +121,11 @@ void fn_80152440(int obj, int p, int p3, int msg)
     ((BaddieState*)p)->reactionFlags |= 0x8;
     *(f32*)(p + 0x32c) = (f32)(u32)(u16) * (s16*)(sub + 0x2c);
     fn_8014D08C(obj, p, 1, lbl_803E2810, 0, 0);
-    *(u32*)&((BaddieState*)p)->unk2E4 &= 0xffffffdf;
+    *(u32*)&((BaddieState*)p)->unk2E4 &= ~0x20LL;
     fz = lbl_803E2814;
-    ((GameObject*)obj)->anim.velocityZ = lbl_803E2814;
-    ((GameObject*)obj)->anim.velocityY = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
+    obj->anim.velocityZ = lbl_803E2814;
+    obj->anim.velocityY = fz;
+    obj->anim.velocityX = fz;
 }
 
 /* EN v1.0 0x80152514  size: 1408b  main update: child-zap timer, curve
