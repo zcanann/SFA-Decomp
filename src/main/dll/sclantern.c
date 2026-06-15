@@ -1,7 +1,6 @@
 #include "main/dll/SC/SClantern.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
-#include "main/objanim_internal.h"
 
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
