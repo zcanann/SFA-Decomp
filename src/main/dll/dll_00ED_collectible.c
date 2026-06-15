@@ -564,7 +564,7 @@ extern f32 lbl_803E3498;
 extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
 
-u8 collectible_func0F(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e); }
+u8 collectible_func0F(int* obj) { return *(u8*)((char*)((GameObject*)obj)->extra + 0x1e); }
 
 s32 staff_func16(int* obj);
 
@@ -578,13 +578,13 @@ void flamethrowerspe_func0B(int* obj);
 
 void collectible_func0E(int* obj, u32 v)
 {
-    *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e) = (u8)v;
+    *(u8*)((char*)((GameObject*)obj)->extra + 0x1e) = (u8)v;
 }
 
 void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3)
 {
     s32 v = 0x8;
-    *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1d) = (u8)v;
+    *(u8*)((char*)((GameObject*)obj)->extra + 0x1d) = (u8)v;
     ((GameObject*)obj)->anim.velocityX = f1;
     ((GameObject*)obj)->anim.velocityY = f2;
     ((GameObject*)obj)->anim.velocityZ = f3;
@@ -592,7 +592,7 @@ void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3)
 
 void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 {
-    char* inner = (char*)((int**)obj)[0xb8 / 4];
+    char* inner = (char*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.localPosX = f1;
     *(f32*)(inner + 0x24) = f1;
     ((GameObject*)obj)->anim.localPosY = f2;
@@ -607,7 +607,7 @@ void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 
 void collectible_func0B(int* obj, int flag)
 {
-    char* inner = (char*)((int**)obj)[0xb8 / 4];
+    char* inner = (char*)((GameObject*)obj)->extra;
     *(u8*)(inner + 0xf) = (u8)flag;
     if (flag != 0)
     {
@@ -1323,10 +1323,10 @@ void fn_801723DC(int obj)
     case 0x137:
     case 0x156:
     case 0x246:
-        *(s16*)obj = lbl_803E347C * timeDelta + (f32) * (s16*)obj;
+        ((GameObject*)obj)->anim.rotX = lbl_803E347C * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
         break;
     case 0x22:
-        *(s16*)obj = lbl_803E347C * timeDelta + (f32) * (s16*)obj;
+        ((GameObject*)obj)->anim.rotX = lbl_803E347C * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
         itemPickupDoParticleFx(obj, lbl_803E3454, 10, 1);
         break;
     case 0x27f:
@@ -1337,11 +1337,11 @@ void fn_801723DC(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x423, NULL, 2,
                                                  -1, NULL);
             }
-            *(s16*)obj += (s16)(lbl_803E3480 * timeDelta);
+            ((GameObject*)obj)->anim.rotX += (s16)(lbl_803E3480 * timeDelta);
         }
         break;
     case 0x5e8:
-        *(s16*)obj = lbl_803E347C * timeDelta + (f32) * (s16*)obj;
+        ((GameObject*)obj)->anim.rotX = lbl_803E347C * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
         itemPickupDoParticleFx(obj, lbl_803E3454, 9, 1);
         break;
     }
