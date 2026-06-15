@@ -306,7 +306,7 @@ void vfpcoreplat_free(int obj)
 void vfpblock1_init(int obj, int data)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     *(s16*)state = *(s16*)(data + 0x1e);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
@@ -314,7 +314,7 @@ void vfpblock1_init(int obj, int data)
 void vfpplatform_init(int obj, int data)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     *(s16*)state = *(s16*)(data + 0x20);
     *(u8*)(state + 2) = 0;
     *(u8*)(state + 3) = *(u8*)(data + 0x19);
@@ -324,7 +324,7 @@ void vfpplatform_init(int obj, int data)
 void vfpcoreplat_init(int obj, int data)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     *(s16*)state = *(s16*)(data + 0x20);
     *(int (**)(void))(obj + 0xBC) = return0_801FD13C;
     if (((GameObject*)obj)->anim.seqId == 0x3cb)
@@ -413,7 +413,7 @@ void vfpdraghead_init(int obj, int data)
     }
     else
     {
-        *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     }
     state->gameBitA = *(s16*)(data + 0x1e);
     state->gameBitB = *(s16*)(data + 0x20);
@@ -432,7 +432,7 @@ void seqpoint_init(int obj, int data)
 {
     SeqPointState* state = ((GameObject*)obj)->extra;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801FC6F4;
-    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     state->triggerRadius = (f32) * (s16*)(data + 0x1a);
     state->sequenceId = *(s16*)(data + 0x1c);
     state->mode = *(u8*)(data + 0x19);
@@ -489,7 +489,7 @@ void vfpdoorswitch_update(int obj)
 void vfpdoorswitch_init(int obj, int data)
 {
     VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)(((s32) * (s8*)(data + 0x19)) << 8);
     ((GameObject*)obj)->anim.rotY = *(s16*)(data + 0x1c);
     state->gameBitId = *(s16*)(data + 0x1e);
@@ -1089,7 +1089,7 @@ void dll_224_init(void* obj, void* other)
     s16* extra = ((GameObject*)obj)->extra;
     s16 v = (s16)((s8) * ((s8*)other + 0x18) << 8);
     u8 t;
-    *(s16*)obj = v;
+    ((GameObject*)obj)->anim.rotX = v;
     *(s16*)((char*)extra + 0) = *(s16*)((char*)other + 0x1e);
     *(s16*)((char*)extra + 2) = *(s16*)((char*)other + 0x20);
     t = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
