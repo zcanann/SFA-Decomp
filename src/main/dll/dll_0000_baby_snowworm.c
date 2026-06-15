@@ -30,7 +30,6 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
-#include "main/dll/baddie/dll_0000_baby_snowworm.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 
@@ -3914,9 +3913,6 @@ void fn_8012C000(void)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
-#include "main/camera_interface.h"
 
 extern undefined4 FUN_80006948();
 extern int FUN_80006c54();
