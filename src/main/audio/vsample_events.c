@@ -16,10 +16,10 @@ extern u8 synthVirtualSampleState[];
 void synthHandleVirtualSampleDone(u32 packed)
 {
     SynthVirtualSampleState* state;
-    u8* slots;
-    u8 vid;
     u8* entry;
     u32 entryOffset;
+    u8* slots;
+    u8 vid;
     u32 generation;
 
     state = (SynthVirtualSampleState*)synthVirtualSampleState;
