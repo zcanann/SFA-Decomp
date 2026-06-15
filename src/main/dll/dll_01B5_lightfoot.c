@@ -64,9 +64,11 @@ void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        if (*(int*)(p1 + 0xf4) == 0)
+        switch (*(int*)(p1 + 0xf4))
         {
+        case 0:
             objRenderFn_8003b8f4(lbl_803E8188);
+            break;
         }
     }
 }
