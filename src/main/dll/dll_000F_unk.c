@@ -1,5 +1,6 @@
 #include "main/dll/df_partfx.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/objfsa_romcurve.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -200,7 +201,7 @@ void player_updateCurve(int* obj, int* state, f32 t)
         }
         else
         {
-            player_followCurve(obj, state, *(f32*)((char*)curve + 8), *(f32*)((char*)curve + 16), t, 1);
+            player_followCurve(obj, state, ((ObjfsaRomCurveDef*)curve)->x, ((ObjfsaRomCurveDef*)curve)->z, t, 1);
         }
     }
 }
