@@ -370,7 +370,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     arwarwing_clampToFlightBounds(obj, state);
 }
 
-#pragma peephole on
+#pragma peephole off
 void arwarwing_updateBombFire(int obj, int state)
 {
     ArwingState* arwing = (ArwingState*)state;
@@ -378,12 +378,18 @@ void arwarwing_updateBombFire(int obj, int state)
         return;
     {
         f32 t = arwing->bombCooldown;
-        if (t > lbl_803E6ECC)
+        f32 zero = lbl_803E6ECC;
+        if (t > zero)
         {
             arwing->bombCooldown = t - timeDelta;
-            if (arwing->bombCooldown >= lbl_803E6ECC)
+            if (arwing->bombCooldown < zero)
+            {
+                arwing->bombCooldown = zero;
+            }
+            else
+            {
                 return;
-            arwing->bombCooldown = lbl_803E6ECC;
+            }
         }
     }
     if (arwing->inputFlags & 0x200)
