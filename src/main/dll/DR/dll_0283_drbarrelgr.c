@@ -104,20 +104,23 @@ void drbarrelgr_update(int obj)
     f32 vec[3];
     f32 tmp[3];
 
-    if (*(void**)&((DrbarrelgrState*)state)->unk8 != 0)
+    {
+        int held = ((DrbarrelgrState*)state)->unk8;
+    if (held != 0)
     {
         nearest = ObjGroup_FindNearestObject(25, obj, 0);
         match = 0;
-        if ((u32)nearest != 0 && *(u32*)&((DrbarrelgrState*)state)->unk8 == (u32)nearest)
+        if ((u32)nearest != 0 && (u32)held == (u32)nearest)
         {
             match = 1;
         }
         if (match == 0 ||
-            (flags->bit80 != 0 && gunpowderbarrel_isHeld(((DrbarrelgrState*)state)->unk8) == 0))
+            (flags->bit80 != 0 && gunpowderbarrel_isHeld(held) == 0))
         {
             ((DrbarrelgrState*)state)->unk8 = 0;
             flags->bit80 = 0;
         }
+    }
     }
 
     gbId = ((DrbarrelgrPlacement*)setup)->unk20;

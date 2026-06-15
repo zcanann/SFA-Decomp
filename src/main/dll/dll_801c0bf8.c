@@ -23,12 +23,12 @@ extern f32 lbl_803E4DE8;
 
 void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out)
 {
-    int startX;
-    int startY;
-    int startZ;
-    int endX;
-    int endY;
-    int endZ;
+    short startX;
+    short startY;
+    short startZ;
+    short endX;
+    short endY;
+    short endZ;
     int i;
     short* vertex;
     float angleRadians;
