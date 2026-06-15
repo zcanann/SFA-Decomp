@@ -698,40 +698,38 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         }
         return 1;
     case 4:
-        if (((DrakorhoverpadHandlePathPointEventState*)p)->unk110 <= lbl_803E6A3C)
+        if (((DrakorhoverpadHandlePathPointEventState*)p)->unk110 > lbl_803E6A3C)
         {
-            break;
-        }
-        if (f->b40 != 0)
-        {
-            GameBit_Set(0x660, 1);
-        }
-        else if (GameBit_Get(0x661) == 0)
-        {
-            GameBit_Set(0x788, 1);
-            f->state = 1;
-            *(f32*)p = lbl_803E6A3C;
-        }
-        else
-        {
-            ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 +=
-                (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
+            if (f->b40 != 0)
+            {
+                GameBit_Set(0x660, 1);
+            }
+            else if (GameBit_Get(0x661) == 0)
+            {
+                GameBit_Set(0x788, 1);
+                f->state = 1;
+                *(f32*)p = lbl_803E6A3C;
+            }
+            else
+            {
+                ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 +=
+                    (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
+            }
         }
         break;
     case 9:
-        if (((DrakorhoverpadHandlePathPointEventState*)p)->unk110 >= lbl_803E6A3C)
+        if (((DrakorhoverpadHandlePathPointEventState*)p)->unk110 < lbl_803E6A3C)
         {
-            break;
-        }
-        if (GameBit_Get(0x661) == 0)
-        {
-            f->state = 1;
-            *(f32*)p = lbl_803E6A3C;
-        }
-        else
-        {
-            ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 +=
-                (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
+            if (GameBit_Get(0x661) == 0)
+            {
+                f->state = 1;
+                *(f32*)p = lbl_803E6A3C;
+            }
+            else
+            {
+                ((DrakorhoverpadHandlePathPointEventState*)p)->unk114 +=
+                    (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A74 : lbl_803E6A38;
+            }
         }
         break;
     case 5:
