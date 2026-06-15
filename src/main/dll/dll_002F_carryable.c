@@ -771,8 +771,8 @@ int Carryable_updateHeld(u8* obj)
             u8 a, b, c, d, e;
         } * t;
         int v = 0;
-        t = (void*)(*(u8**)(obj + 0x78) + ((GameObject*)obj)->unkE4 * 5);
-        if ((t->e & 0xf) == 6
+        t = (void*)*(u8**)(obj + 0x78);
+        if ((t[((GameObject*)obj)->unkE4].e & 0xf) == 6
             && (buttonGetDisabled(0) & 0x100) == 0
             && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0
             && ((GameObject*)obj)->unkF8 == 0)
