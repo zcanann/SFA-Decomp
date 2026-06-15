@@ -407,46 +407,46 @@ void renderMapBlock(void* objp, u8 type)
 
 void FUN_8005fe14(int param_1)
 {
-    bool bVar1;
-    uint uVar2;
-    byte bVar3;
+    bool insideFrustum;
+    uint planeIdx;
+    byte plane;
 
     if (99 < DAT_803dda86)
     {
         return;
     }
-    bVar3 = 0;
+    plane = 0;
     do
     {
-        if (4 < bVar3)
+        if (4 < plane)
         {
-            bVar1 = true;
+            insideFrustum = true;
         LAB_800606c0:
-            if ((!bVar1) && (*(char*)(param_1 + 0x2f9) == '\0'))
+            if ((!insideFrustum) && (*(char*)(param_1 + 0x2f9) == '\0'))
             {
                 return;
             }
-            if (!bVar1)
+            if (!insideFrustum)
             {
                 *(undefined*)(param_1 + 0x2fa) = 0xf0;
             }
-            uVar2 = (uint)DAT_803dda86;
+            planeIdx = (uint)DAT_803dda86;
             DAT_803dda86 = DAT_803dda86 + 1;
-            (&DAT_80382c98)[uVar2] = param_1;
+            (&DAT_80382c98)[planeIdx] = param_1;
             return;
         }
-        uVar2 = (uint)bVar3;
+        planeIdx = (uint)plane;
         if (lbl_803DF84C +
-            (float)(&DAT_803885a8)[uVar2 * 5] +
-            (float)(&DAT_803885a4)[uVar2 * 5] * (*(float*)(param_1 + 0x18) - lbl_803DDA5C) +
-            *(float*)(param_1 + 0x14) * (float)(&DAT_803885a0)[uVar2 * 5] +
-            (float)(&DAT_8038859c)[uVar2 * 5] * (*(float*)(param_1 + 0x10) - lbl_803DDA58) <
+            (float)(&DAT_803885a8)[planeIdx * 5] +
+            (float)(&DAT_803885a4)[planeIdx * 5] * (*(float*)(param_1 + 0x18) - lbl_803DDA5C) +
+            *(float*)(param_1 + 0x14) * (float)(&DAT_803885a0)[planeIdx * 5] +
+            (float)(&DAT_8038859c)[planeIdx * 5] * (*(float*)(param_1 + 0x10) - lbl_803DDA58) <
             lbl_803DF84C)
         {
-            bVar1 = false;
+            insideFrustum = false;
             goto LAB_800606c0;
         }
-        bVar3 = bVar3 + 1;
+        plane = plane + 1;
     }
     while (true);
 }
@@ -516,17 +516,17 @@ void FUN_800614d0(undefined param_1)
 
 void FUN_80061a80(short* param_1, short* param_2, int param_3)
 {
-    int iVar1;
-    short* psVar2;
-    int iVar3;
+    int outObj;
+    short* prevParent;
+    int angle;
     float local_28;
     float local_24;
     float afStack_20[4];
 
-    psVar2 = *(short**)(param_1 + 0x18);
-    if (psVar2 != param_2)
+    prevParent = *(short**)(param_1 + 0x18);
+    if (prevParent != param_2)
     {
-        if (psVar2 != (short*)0x0)
+        if (prevParent != (short*)0x0)
         {
             FUN_80006904();
         }
@@ -541,24 +541,24 @@ void FUN_80061a80(short* param_1, short* param_2, int param_3)
         else
         {
             *(short**)(param_1 + 0x18) = param_2;
-            iVar1 = *(int*)(param_1 + 0x2a);
-            if (psVar2 == (short*)0x0)
+            outObj = *(int*)(param_1 + 0x2a);
+            if (prevParent == (short*)0x0)
             {
                 local_24 = *(float*)(param_1 + 0x12);
                 local_28 = *(float*)(param_1 + 0x16);
-                iVar3 = (int)*param_1;
+                angle = (int)*param_1;
             }
             else
             {
                 FUN_800068f8((double)*(float*)(param_1 + 6), (double)*(float*)(param_1 + 8),
                              (double)*(float*)(param_1 + 10), (float*)(param_1 + 0xc),
-                             (float*)(param_1 + 0xe), (float*)(param_1 + 0x10), (int)psVar2);
+                             (float*)(param_1 + 0xe), (float*)(param_1 + 0x10), (int)prevParent);
                 FUN_800068f8((double)*(float*)(param_1 + 0x40), (double)*(float*)(param_1 + 0x42),
                              (double)*(float*)(param_1 + 0x44), (float*)(param_1 + 0x46),
-                             (float*)(param_1 + 0x48), (float*)(param_1 + 0x4a), (int)psVar2);
+                             (float*)(param_1 + 0x48), (float*)(param_1 + 0x4a), (int)prevParent);
                 FUN_800068ec((double)*(float*)(param_1 + 0x12), (double)lbl_803DF934,
-                             (double)*(float*)(param_1 + 0x16), &local_24, afStack_20, &local_28, (int)psVar2);
-                iVar3 = (int)*psVar2 + (int)*param_1;
+                             (double)*(float*)(param_1 + 0x16), &local_24, afStack_20, &local_28, (int)prevParent);
+                angle = (int)*prevParent + (int)*param_1;
             }
             if (param_3 != 0)
             {
@@ -572,7 +572,7 @@ void FUN_80061a80(short* param_1, short* param_2, int param_3)
                     *(undefined4*)(param_1 + 0x44) = *(undefined4*)(param_1 + 0x4a);
                     *(float*)(param_1 + 0x12) = local_24;
                     *(float*)(param_1 + 0x16) = local_28;
-                    *param_1 = (short)iVar3;
+                    *param_1 = (short)angle;
                 }
                 else
                 {
@@ -585,26 +585,26 @@ void FUN_80061a80(short* param_1, short* param_2, int param_3)
                     FUN_800068f0((double)local_24, (double)lbl_803DF934, (double)local_28,
                                  (float*)(param_1 + 0x12), afStack_20, (float*)(param_1 + 0x16),
                                  *(int*)(param_1 + 0x18));
-                    iVar3 = iVar3 - **(short**)(param_1 + 0x18);
-                    if (0x8000 < iVar3)
+                    angle = angle - **(short**)(param_1 + 0x18);
+                    if (0x8000 < angle)
                     {
-                        iVar3 = iVar3 + -0xffff;
+                        angle = angle + -0xffff;
                     }
-                    if (iVar3 < -0x8000)
+                    if (angle < -0x8000)
                     {
-                        iVar3 = iVar3 + 0xffff;
+                        angle = angle + 0xffff;
                     }
-                    *param_1 = (short)iVar3;
+                    *param_1 = (short)angle;
                 }
             }
-            if (iVar1 != 0)
+            if (outObj != 0)
             {
-                *(undefined4*)(iVar1 + 0x10) = *(undefined4*)(param_1 + 6);
-                *(undefined4*)(iVar1 + 0x14) = *(undefined4*)(param_1 + 8);
-                *(undefined4*)(iVar1 + 0x18) = *(undefined4*)(param_1 + 10);
-                *(undefined4*)(iVar1 + 0x1c) = *(undefined4*)(param_1 + 0xc);
-                *(undefined4*)(iVar1 + 0x20) = *(undefined4*)(param_1 + 0xe);
-                *(undefined4*)(iVar1 + 0x24) = *(undefined4*)(param_1 + 0x10);
+                *(undefined4*)(outObj + 0x10) = *(undefined4*)(param_1 + 6);
+                *(undefined4*)(outObj + 0x14) = *(undefined4*)(param_1 + 8);
+                *(undefined4*)(outObj + 0x18) = *(undefined4*)(param_1 + 10);
+                *(undefined4*)(outObj + 0x1c) = *(undefined4*)(param_1 + 0xc);
+                *(undefined4*)(outObj + 0x20) = *(undefined4*)(param_1 + 0xe);
+                *(undefined4*)(outObj + 0x24) = *(undefined4*)(param_1 + 0x10);
             }
         }
     }
@@ -698,32 +698,32 @@ FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, flo
 
 int FUN_80062010(double param_1, double param_2, double param_3, undefined2 param_4, int param_5)
 {
-    int iVar1;
-    float* pfVar2;
-    int iVar3;
-    int iVar4;
+    int vtxCount;
+    float* vtxPtr;
+    int idx;
+    int remaining;
 
-    iVar3 = 0;
-    iVar1 = (int)DAT_803ddbdc;
-    pfVar2 = DAT_803ddbb8;
-    iVar4 = iVar1;
-    if (0 < iVar1)
+    idx = 0;
+    vtxCount = (int)DAT_803ddbdc;
+    vtxPtr = DAT_803ddbb8;
+    remaining = vtxCount;
+    if (0 < vtxCount)
     {
         do
         {
-            if (((param_1 == (double)*pfVar2) && (param_2 == (double)pfVar2[1])) &&
-                (param_3 == (double)pfVar2[2]))
+            if (((param_1 == (double)*vtxPtr) && (param_2 == (double)vtxPtr[1])) &&
+                (param_3 == (double)vtxPtr[2]))
             {
-                *(undefined2*)(param_5 + iVar3 * 4 + 2) = param_4;
-                return iVar3;
+                *(undefined2*)(param_5 + idx * 4 + 2) = param_4;
+                return idx;
             }
-            pfVar2 = pfVar2 + 3;
-            iVar3 = iVar3 + 1;
-            iVar4 = iVar4 + -1;
+            vtxPtr = vtxPtr + 3;
+            idx = idx + 1;
+            remaining = remaining + -1;
         }
-        while (iVar4 != 0);
+        while (remaining != 0);
     }
-    DAT_803ddbb8[iVar1 * 3] = (float)param_1;
+    DAT_803ddbb8[vtxCount * 3] = (float)param_1;
     DAT_803ddbb8[DAT_803ddbdc * 3 + 1] = (float)param_2;
     DAT_803ddbb8[DAT_803ddbdc * 3 + 2] = (float)param_3;
     *(undefined2*)(param_5 + DAT_803ddbdc * 4) = param_4;
