@@ -40,6 +40,8 @@ extern f32 lbl_803E4450;
 extern f32 lbl_803E4454;
 extern f32 lbl_803E4458;
 
+typedef struct { int a, b, c; } Vec3i;
+
 void SpiritDoorLock_hitDetect(void)
 {
 }
@@ -107,6 +109,7 @@ void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
     }
 }
 
+#pragma opt_loop_invariants off
 void SpiritDoorLock_update(int obj)
 {
     SpiritDoorLockState* state;
@@ -116,9 +119,7 @@ void SpiritDoorLock_update(int obj)
     f32 local_58[3];
     f32 local_5c[3];
 
-    ((int*)local_58)[0] = lbl_802C22F8[0];
-    ((int*)local_58)[1] = lbl_802C22F8[1];
-    ((int*)local_58)[2] = lbl_802C22F8[2];
+    *(Vec3i*)local_58 = *(Vec3i*)lbl_802C22F8;
 
     state = ((GameObject*)obj)->extra;
     descriptor = *(SpiritDoorLockMapData**)&((GameObject*)obj)->anim.placementData;
@@ -157,29 +158,29 @@ void SpiritDoorLock_update(int obj)
         }
         else
         {
-            if ((s8)((GameObject*)obj)->anim.alpha == -1)
+            if (((GameObject*)obj)->anim.alpha == 255)
             {
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
-            if (((GameObject*)obj)->anim.alpha == 0)
-            {
-                if (state->light != 0)
-                {
-                    modelLightStruct_freeSlot(state);
-                }
-            }
-            else
+            if (((GameObject*)obj)->anim.alpha != 0)
             {
                 ((GameObject*)obj)->anim.alpha -= 1;
                 if (state->light != 0)
                 {
-                    u32 b = ((GameObject*)obj)->anim.alpha >> 2;
+                    u32 b = (u32)((GameObject*)obj)->anim.alpha >> 2;
                     modelLightStruct_setDistanceAttenuation((void*)state->light, (f32)(int)b,
                                                             (f32)(int)(b + 10));
                 }
                 ((GameObject*)obj)->anim.rootMotionScale *= lbl_803E444C;
                 ((GameObject*)obj)->anim.rotZ =
                     (s16)(s32)((f32)(int)((GameObject*)obj)->anim.rotZ - lbl_803E4450 * timeDelta);
+            }
+            else
+            {
+                if (state->light != 0)
+                {
+                    modelLightStruct_freeSlot(state);
+                }
             }
         }
     }
@@ -189,8 +190,8 @@ void SpiritDoorLock_update(int obj)
         int* list_ptr;
         ObjTextureRuntimeSlot* piTex;
         int i;
-        s16 angle;
-        s16 stride;
+        int angle;
+        int stride;
         f32 max_dist;
         cam_state = (*gCameraInterface)->getMode();
         if (cam_state != 0x51)
@@ -204,16 +205,17 @@ void SpiritDoorLock_update(int obj)
         max_dist = lbl_803E4458;
         for (i = 0; i < local_68; i++)
         {
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)list_ptr[i] + 0x18)) <= max_dist)
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)list_ptr[i] + 0x18)) > max_dist)
             {
-                ((GameObject*)obj)->anim.rotZ = angle;
-                Obj_TransformLocalVectorByWorldMatrix(obj, local_58, local_5c);
-                PSVECAdd(&((GameObject*)obj)->anim.localPosX, local_5c, (f32*)((char*)list_ptr[i] + 0xc));
-                *(s16*)list_ptr[i] = *(s16*)obj;
-                *(s16*)((char*)list_ptr[i] + 4) = (s16)(angle + 0x8000);
-                *(f32*)((char*)list_ptr[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
-                angle = (s16)(angle + stride);
+                continue;
             }
+            ((GameObject*)obj)->anim.rotZ = (s16)angle;
+            Obj_TransformLocalVectorByWorldMatrix(obj, local_58, local_5c);
+            PSVECAdd(&((GameObject*)obj)->anim.localPosX, local_5c, (f32*)((char*)list_ptr[i] + 0xc));
+            *(s16*)list_ptr[i] = *(s16*)obj;
+            *(s16*)((char*)list_ptr[i] + 4) = (s16)(angle + 0x8000);
+            *(f32*)((char*)list_ptr[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
+            angle += stride;
         }
         state->spinAngle += (int)lbl_803DBED0;
         ((GameObject*)obj)->anim.rotZ = 0;
@@ -243,5 +245,6 @@ void SpiritDoorLock_update(int obj)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 void RollingBarrel_update(int obj);
