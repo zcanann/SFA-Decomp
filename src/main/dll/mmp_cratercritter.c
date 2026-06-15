@@ -1,4 +1,5 @@
 #include "main/dll/baddie/MMP_cratercritter.h"
+#include "main/dll/tricky_state.h"
 
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E2410;
@@ -40,13 +41,13 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         state[0x8] = 1;
         state[0xA] = 0;
         zero = lbl_803E23DC;
-        *(f32*)(state + 0x71C) = zero;
-        *(f32*)(state + 0x720) = zero;
-        *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & ~(u64)0x10;
-        *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & ~(u64)0x10000;
-        *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & ~(u64)0x20000;
-        *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & ~(u64)0x40000;
-        *(s8*)(state + 0xD) = -1;
+        ((TrickyState*)state)->unk71C = zero;
+        ((TrickyState*)state)->unk720 = zero;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x10;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x10000;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x20000;
+        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x40000;
+        ((TrickyState*)state)->unkD = -1;
         return;
     }
 
@@ -54,7 +55,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     rejectDist = lbl_803E24C4;
     for (i = 0; i < count; i++)
     {
-        dist = getXZDistance((f32*)((u8*)*(int*)(state + 4) + 0x18),
+        dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->playerObj + 0x18),
                              (f32*)(*objs + 0x18));
         if (dist > rejectDist)
         {
@@ -70,25 +71,25 @@ void trickyFn_8013d8f0(u8* self, u8* state)
 
     if (nearest != NULL)
     {
-        *(u8**)(state + 0x24) = nearest;
+        ((TrickyState*)state)->followObj = nearest;
         if (*(u32*)(state + 0x28) != (u32)(nearest + 0x18))
         {
             *(u32*)(state + 0x28) = (u32)(nearest + 0x18);
-            *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & 0xFFFFFBFF;
-            *(s16*)(state + 0xD2) = 0;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0xFFFFFBFF;
+            ((TrickyState*)state)->unkD2 = 0;
         }
         if (trickyFn_8013b368(self, state, lbl_803E247C) == 1) return;
     }
 
-    if (lbl_803E23DC == *(f32*)(state + 0x2AC))
+    if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
     {
         waterFlag = 0;
     }
-    else if (lbl_803E2410 == *(f32*)(state + 0x2B0))
+    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
     {
         waterFlag = 1;
     }
-    else if (*(f32*)(state + 0x2B4) - *(f32*)(state + 0x2B0) > lbl_803E2414)
+    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
     {
         waterFlag = 1;
     }
@@ -100,8 +101,8 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     if (waterFlag != 0)
     {
         objAnimFn_8013a3f0(self, 8, 0, lbl_803E243C);
-        *(f32*)(state + 0x79C) = lbl_803E2440;
-        *(f32*)(state + 0x838) = lbl_803E23DC;
+        ((TrickyState*)state)->unk79C = lbl_803E2440;
+        ((TrickyState*)state)->unk838 = lbl_803E23DC;
         trickyDebugPrint(sInWaterMessage);
     }
     else
