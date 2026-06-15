@@ -11,6 +11,12 @@ typedef struct ArwarwingState
     u8 pad47E[0x498 - 0x47E];
 } ArwarwingState;
 
+typedef struct ArwInitCfgAB
+{
+    int a;
+    int b;
+} ArwInitCfgAB;
+
 typedef struct ArwArwingProjectileSetup
 {
     s16 objectId;
@@ -1318,8 +1324,7 @@ void arwarwing_init(int obj)
     u8* pathBlock;
     ArwInitCfg cfg;
 
-    cfg.a = lbl_802C25E8.a;
-    cfg.b = lbl_802C25E8.b;
+    *(ArwInitCfgAB*)&cfg = *(ArwInitCfgAB*)&lbl_802C25E8;
     cfg.c = lbl_802C25E8.c;
     state = *(int*)&((GameObject*)obj)->extra;
     pathBlock = ((ArwingState*)state)->pathBlock;
