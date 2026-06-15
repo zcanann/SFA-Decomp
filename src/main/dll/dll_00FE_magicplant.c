@@ -84,7 +84,6 @@ STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 extern void* gCameraInterface;
 extern void objRenderFn_8003b8f4(int obj, float arg);
-extern f32 lbl_803E3928;
 
 void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
 {
