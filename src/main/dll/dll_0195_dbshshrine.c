@@ -154,7 +154,6 @@ void dbsh_shrine_update(DbshShrineObject* obj)
 
 #include "main/game_object.h"
 
-extern undefined4 FUN_80017710();
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ModelLightStruct_free(int light);
 extern void gameTimerStop(void);
