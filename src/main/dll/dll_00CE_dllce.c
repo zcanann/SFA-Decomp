@@ -1474,12 +1474,12 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     int sub;
     double mag;
     ObjHitsPriorityState* hitState;
-    float local_48;
-    float local_44;
-    float local_40;
-    float local_3c;
-    float local_38;
-    float local_34[2];
+    float aX;
+    float aY;
+    float aZ;
+    float bX;
+    float bY;
+    float bZ[2];
     uint dir;
 
     sub = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
@@ -1506,7 +1506,7 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     *(float*)(state + 0x2a0) = lbl_803E3B88;
     (**(code**)(*DAT_803dd70c + 0x20))(param_1, obj, state, 1);
     dir = *(char*)(sub + 0x45) * -2 + 1U ^ 0x80000000;
-    local_34[1] = 176.0;
+    bZ[1] = 176.0;
     (**(code**)(**(int**)(*(int*)(sub + 0x38) + 0x68) + 0x28))
         ((double)(*(float*)(state + 0x280) *
              (f32)(s32)dir),
@@ -1525,16 +1525,16 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(float*)(sub + 0x48) = lbl_803E3B8C;
     }
     (**(code**)(**(int**)(*(int*)(sub + 0x38) + 0x68) + 0x24))
-    ((double)(*(float*)(sub + 0x48) - lbl_803E3B94), *(int*)(sub + 0x38), &local_48,
-     &local_44, &local_40);
+    ((double)(*(float*)(sub + 0x48) - lbl_803E3B94), *(int*)(sub + 0x38), &aX,
+     &aY, &aZ);
     (**(code**)(**(int**)(*(int*)(sub + 0x38) + 0x68) + 0x24))
-    ((double)(lbl_803E3B94 + *(float*)(sub + 0x48)), *(int*)(sub + 0x38), &local_3c,
-     &local_38, local_34);
-    local_48 = local_48 - local_3c;
-    local_44 = local_44 - local_38;
-    local_40 = local_40 - local_34[0];
-    mag = FUN_80293900((double)(local_48 * local_48 + local_40 * local_40));
-    local_48 = (float)mag;
+    ((double)(lbl_803E3B94 + *(float*)(sub + 0x48)), *(int*)(sub + 0x38), &bX,
+     &bY, bZ);
+    aX = aX - bX;
+    aY = aY - bY;
+    aZ = aZ - bZ[0];
+    mag = FUN_80293900((double)(aX * aX + aZ * aZ));
+    aX = (float)mag;
     angle = FUN_80017730();
     ((GameObject*)obj)->anim.rotY = (short)angle * ((short)((int)*(char*)(sub + 0x45) << 1) + -1);
     if (*(char*)(state + 0x346) == '\0')
