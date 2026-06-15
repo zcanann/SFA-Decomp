@@ -88,24 +88,24 @@ FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 para
              , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    byte bVar1;
-    undefined4 uVar2;
-    int iVar3;
+    byte eventId;
+    undefined4 obj;
+    int i;
 
-    uVar2 = FUN_80017a98();
+    obj = FUN_80017a98();
     animUpdate->sequenceEventActive = 0;
-    for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1)
+    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
     {
-        bVar1 = animUpdate->eventIds[iVar3];
-        if (bVar1 == 2)
+        eventId = animUpdate->eventIds[i];
+        if (eventId == 2)
         {
             param_1 = FUN_80006728(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                   , uVar2, 0x138, 0, param_13, param_14, param_15, param_16);
+                                   , obj, 0x138, 0, param_13, param_14, param_15, param_16);
         }
-        else if ((bVar1 < 2) && (bVar1 != 0))
+        else if ((eventId < 2) && (eventId != 0))
         {
             param_1 = FUN_80006728(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                   , uVar2, 0x13b, 0, param_13, param_14, param_15, param_16);
+                                   , obj, 0x13b, 0, param_13, param_14, param_15, param_16);
         }
     }
     FUN_801a6b10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
@@ -118,53 +118,53 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_10, ObjAnimUpdateState* animUpdate)
 {
     extern undefined4 GameBit_Set(int eventId, int value);
-    byte bVar1;
-    uint uVar2;
-    int iVar3;
-    byte* pbVar4;
+    byte eventId;
+    uint randVal;
+    int i;
+    byte* flags;
 
-    pbVar4 = ((GameObject*)param_9)->extra;
+    flags = ((GameObject*)param_9)->extra;
     animUpdate->sequenceEventActive = 0;
-    for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1)
+    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
     {
-        bVar1 = animUpdate->eventIds[iVar3];
-        if (bVar1 == 2)
+        eventId = animUpdate->eventIds[i];
+        if (eventId == 2)
         {
-            *pbVar4 = *pbVar4 & 0xf6;
-            *pbVar4 = *pbVar4 | 0x30;
+            *flags = *flags & 0xf6;
+            *flags = *flags | 0x30;
             ((ObjAnimComponent*)param_9)->bankIndex = 1;
         }
-        else if (bVar1 < 2)
+        else if (eventId < 2)
         {
-            if (bVar1 == 0)
+            if (eventId == 0)
             {
                 param_1 = FUN_8005d0ac(0);
             }
             else
             {
-                *pbVar4 = 0xd;
-                pbVar4[1] = 1;
-                param_1 = GameBit_Set(0x87b, (uint)pbVar4[1]);
+                *flags = 0xd;
+                flags[1] = 1;
+                param_1 = GameBit_Set(0x87b, (uint)flags[1]);
                 ((GameObject*)param_9)->anim.alpha = 0xff;
             }
         }
-        else if (bVar1 == 4)
+        else if (eventId == 4)
         {
-            *(float*)(pbVar4 + 4) = lbl_803E5180;
+            *(float*)(flags + 4) = lbl_803E5180;
             param_1 = FUN_8005d0ac(1);
         }
-        else if (bVar1 < 4)
+        else if (eventId < 4)
         {
-            *pbVar4 = *pbVar4 & 0xdf;
-            *pbVar4 = *pbVar4 | 0x50;
-            uVar2 = randomGetRange(10, 0x3c);
-            *(float*)(pbVar4 + 8) =
-                (f32)(s32)(uVar2);
-            pbVar4[1] = 1;
-            param_1 = GameBit_Set(0x87b, (uint)pbVar4[1]);
+            *flags = *flags & 0xdf;
+            *flags = *flags | 0x50;
+            randVal = randomGetRange(10, 0x3c);
+            *(float*)(flags + 8) =
+                (f32)(s32)(randVal);
+            flags[1] = 1;
+            param_1 = GameBit_Set(0x87b, (uint)flags[1]);
         }
     }
-    *pbVar4 = *pbVar4 | 0x80;
+    *flags = *flags | 0x80;
     FUN_801a7a94(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
     return 0;
 }
