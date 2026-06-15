@@ -228,11 +228,11 @@ void CameraModeCannon_update(u8* obj)
     delta = (s16)((0x8000 - lbl_803DD5A0->target->anim.rotX) - vec[1] - yaw);
     camera->anim.rotX = (s16)(s32)((f32)(s32)yaw + (f32)(s32)delta / lbl_803E1AE0);
     camera->anim.localPosX =
-        lbl_803DD5A0->target->anim.worldPosX -
+        lbl_803DD5A0->target->anim.localPosX -
         lbl_803E1AE4 * mathSinf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
-    camera->anim.localPosY = lbl_803E1AF0 + lbl_803DD5A0->target->anim.worldPosY;
+    camera->anim.localPosY = lbl_803E1AF0 + lbl_803DD5A0->target->anim.localPosY;
     camera->anim.localPosZ =
-        lbl_803DD5A0->target->anim.worldPosZ -
+        lbl_803DD5A0->target->anim.localPosZ -
         lbl_803E1AE4 * mathCosf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
 }
 
