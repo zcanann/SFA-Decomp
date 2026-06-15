@@ -87,125 +87,125 @@ extern f32 lbl_803E27E8;
 void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
-    float fVar1;
-    int iVar2;
-    short* psVar3;
-    char cVar4;
-    int iVar5;
-    uint uVar6;
+    float animDefault;
+    int entryOff;
+    short* obj;
+    char handled;
+    int state;
+    uint typeIdx;
     undefined4 in_r6;
     undefined4 in_r7;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    undefined* puVar7;
-    undefined* puVar8;
-    undefined* puVar9;
-    double dVar10;
-    double dVar11;
-    undefined8 uVar12;
+    undefined* tbl28;
+    undefined* tbl24;
+    undefined* tbl20;
+    double animDefaultD;
+    double animTimer;
+    undefined8 ctx;
 
-    uVar12 = FUN_8028683c();
-    psVar3 = (short*)((ulonglong)uVar12 >> 0x20);
-    iVar5 = (int)uVar12;
-    uVar6 = (uint) * (byte*)(iVar5 + 0x33b);
-    puVar9 = (&PTR_DAT_8031fdbc)[uVar6 * 10];
-    puVar8 = (&PTR_DAT_8031fdd4)[uVar6 * 10];
-    puVar7 = (&PTR_DAT_8031fdd8)[uVar6 * 10];
-    if ((uVar6 == 5) && ((*(uint*)(iVar5 + 0x2dc) & 0x800000) != 0))
+    ctx = FUN_8028683c();
+    obj = (short*)((ulonglong)ctx >> 0x20);
+    state = (int)ctx;
+    typeIdx = (uint) * (byte*)(state + 0x33b);
+    tbl20 = (&PTR_DAT_8031fdbc)[typeIdx * 10];
+    tbl24 = (&PTR_DAT_8031fdd4)[typeIdx * 10];
+    tbl28 = (&PTR_DAT_8031fdd8)[typeIdx * 10];
+    if ((typeIdx == 5) && ((*(uint*)(state + 0x2dc) & 0x800000) != 0))
     {
         GameBit_Set(0x1c8, 1);
     }
-    if ((*(int*)(iVar5 + 0x29c) != 0) && (*(short*)(*(int*)(iVar5 + 0x29c) + 0x44) == 1))
+    if ((*(int*)(state + 0x29c) != 0) && (*(short*)(*(int*)(state + 0x29c) + 0x44) == 1))
     {
         FUN_8001766c();
     }
-    FUN_801504f8((uint)psVar3, iVar5);
-    fVar1 = lbl_803E33D8;
-    dVar11 = (double)*(float*)(iVar5 + 0x328);
-    dVar10 = (double)lbl_803E33D8;
-    if ((dVar11 != dVar10) && (*(short*)(iVar5 + 0x338) != 0))
+    FUN_801504f8((uint)obj, state);
+    animDefault = lbl_803E33D8;
+    animTimer = (double)*(float*)(state + 0x328);
+    animDefaultD = (double)lbl_803E33D8;
+    if ((animTimer != animDefaultD) && (*(short*)(state + 0x338) != 0))
     {
-        *(float*)(iVar5 + 0x328) = (float)(dVar11 - (double)lbl_803DC074);
-        if ((double)*(float*)(iVar5 + 0x328) <= dVar10)
+        *(float*)(state + 0x328) = (float)(animTimer - (double)lbl_803DC074);
+        if ((double)*(float*)(state + 0x328) <= animDefaultD)
         {
-            *(float*)(iVar5 + 0x328) = fVar1;
-            *(uint*)(iVar5 + 0x2dc) = *(uint*)(iVar5 + 0x2dc) | 0x40000000;
-            *(ushort*)(iVar5 + 0x338) =
+            *(float*)(state + 0x328) = animDefault;
+            *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) | 0x40000000;
+            *(ushort*)(state + 0x338) =
                 (ushort)(byte)
-            puVar7[(uint) * (ushort*)(iVar5 + 0x338) * 0x10 + 10];
+            tbl28[(uint) * (ushort*)(state + 0x338) * 0x10 + 10];
         }
     }
-    cVar4 = FUN_8014ffa8(dVar10, dVar11, param_3, param_4, param_5, param_6, param_7, param_8, psVar3, iVar5, 0,
+    handled = FUN_8014ffa8(animDefaultD, animTimer, param_3, param_4, param_5, param_6, param_7, param_8, obj, state, 0,
                          in_r6, in_r7, in_r8, in_r9, in_r10);
-    if (cVar4 == '\0')
+    if (handled == '\0')
     {
-        if (((*(uint*)(iVar5 + 0x2dc) & 0x20000000) != 0) &&
-            ((*(uint*)(iVar5 + 0x2e0) & 0x20000000) == 0))
+        if (((*(uint*)(state + 0x2dc) & 0x20000000) != 0) &&
+            ((*(uint*)(state + 0x2e0) & 0x20000000) == 0))
         {
-            FUN_80006824((uint)psVar3, SFXdn_boar5_c);
-            *(uint*)(iVar5 + 0x2dc) = *(uint*)(iVar5 + 0x2dc) | 0x40000000;
+            FUN_80006824((uint)obj, SFXdn_boar5_c);
+            *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) | 0x40000000;
         }
-        if ((*(uint*)(iVar5 + 0x2dc) & 0x40000000) != 0)
+        if ((*(uint*)(state + 0x2dc) & 0x40000000) != 0)
         {
-            if (*(ushort*)(iVar5 + 0x338) == 0)
+            if (*(ushort*)(state + 0x338) == 0)
             {
-                *(u8*)(iVar5 + 0x2f2) = 0;
-                *(u8*)(iVar5 + 0x2f3) = 0;
-                *(u8*)(iVar5 + 0x2f4) = 0;
-                iVar2 = (uint) * (ushort*)(iVar5 + 0x2a0) * 0xc;
-                if ((byte)puVar8[iVar2 + 8] == 0)
+                *(u8*)(state + 0x2f2) = 0;
+                *(u8*)(state + 0x2f3) = 0;
+                *(u8*)(state + 0x2f4) = 0;
+                entryOff = (uint) * (ushort*)(state + 0x2a0) * 0xc;
+                if ((byte)tbl24[entryOff + 8] == 0)
                 {
-                    *(u8*)(iVar5 + 0x323) = 3;
-                    FUN_800305f8((double)lbl_803E33D8, dVar11, param_3, param_4, param_5, param_6, param_7, param_8
-                                 , psVar3, (uint)(byte)puVar9[0x2c], 0, in_r6, in_r7, in_r8, in_r9, in_r10);
+                    *(u8*)(state + 0x323) = 3;
+                    FUN_800305f8((double)lbl_803E33D8, animTimer, param_3, param_4, param_5, param_6, param_7, param_8
+                                 , obj, (uint)(byte)tbl20[0x2c], 0, in_r6, in_r7, in_r8, in_r9, in_r10);
                 }
                 else
                 {
-                    FUN_8014d4c8((double)*(float*)(puVar8 + iVar2), dVar11, param_3, param_4, param_5, param_6,
-                                 param_7, param_8, (int)psVar3, iVar5, (uint)(byte)puVar8[iVar2 + 8], 0, 0xb, in_r8,
+                    FUN_8014d4c8((double)*(float*)(tbl24 + entryOff), animTimer, param_3, param_4, param_5, param_6,
+                                 param_7, param_8, (int)obj, state, (uint)(byte)tbl24[entryOff + 8], 0, 0xb, in_r8,
                                  in_r9, in_r10);
                     FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                                     (uint)(byte)puVar8[(uint) * (ushort*)(iVar5 + 0x2a0) * 0xc +
-                                     8] * 4), (int)psVar3
+                                     (uint)(byte)tbl24[(uint) * (ushort*)(state + 0x2a0) * 0xc +
+                                     8] * 4), (int)obj
                     )
                     ;
                 }
             }
             else
             {
-                *(char*)(iVar5 + 0x2f2) =
-                    (char)*(undefined4*)(puVar7 + (uint) * (ushort*)(iVar5 + 0x338) * 0x10 + 0xc);
-                iVar2 = (uint) * (ushort*)(iVar5 + 0x338) * 0x10;
-                FUN_8014d4c8((double)*(float*)(puVar7 + iVar2), dVar11, param_3, param_4, param_5, param_6,
-                             param_7, param_8, (int)psVar3, iVar5, (uint)(byte)puVar7[iVar2 + 8], 0,
-                             *(uint*)(puVar7 + iVar2 + 4) & 0xff, in_r8, in_r9, in_r10);
+                *(char*)(state + 0x2f2) =
+                    (char)*(undefined4*)(tbl28 + (uint) * (ushort*)(state + 0x338) * 0x10 + 0xc);
+                entryOff = (uint) * (ushort*)(state + 0x338) * 0x10;
+                FUN_8014d4c8((double)*(float*)(tbl28 + entryOff), animTimer, param_3, param_4, param_5, param_6,
+                             param_7, param_8, (int)obj, state, (uint)(byte)tbl28[entryOff + 8], 0,
+                             *(uint*)(tbl28 + entryOff + 4) & 0xff, in_r8, in_r9, in_r10);
                 FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                                 (uint)(byte)puVar7[(uint) * (ushort*)(iVar5 + 0x338) * 0x10 +
-                                 8] * 4), (int)psVar3
+                                 (uint)(byte)tbl28[(uint) * (ushort*)(state + 0x338) * 0x10 +
+                                 8] * 4), (int)obj
                 )
                 ;
-                *(ushort*)(iVar5 + 0x338) =
+                *(ushort*)(state + 0x338) =
                     (ushort)(byte)
-                puVar7[(uint) * (ushort*)(iVar5 + 0x338) * 0x10 + 9];
+                tbl28[(uint) * (ushort*)(state + 0x338) * 0x10 + 9];
             }
         }
-        if (psVar3[0x50] == (ushort)(byte)puVar9[0x2c]
+        if (obj[0x50] == (ushort)(byte)tbl20[0x2c]
         )
         {
-            *(float*)(iVar5 + 0x308) =
-                *(float*)(iVar5 + 0x2fc) *
-                (((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(iVar5 + 0x2a4)) - DOUBLE_803e3408
-                ) / *(float*)(iVar5 + 0x2a8)) / lbl_803E33E4) *
-                *(float*)(&DAT_8031feb8 + (uint) * (byte*)(iVar5 + 0x33b) * 4);
-            if (*(float*)(iVar5 + 0x308) < lbl_803E3438)
+            *(float*)(state + 0x308) =
+                *(float*)(state + 0x2fc) *
+                (((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(state + 0x2a4)) - DOUBLE_803e3408
+                ) / *(float*)(state + 0x2a8)) / lbl_803E33E4) *
+                *(float*)(&DAT_8031feb8 + (uint) * (byte*)(state + 0x33b) * 4);
+            if (*(float*)(state + 0x308) < lbl_803E3438)
             {
-                *(float*)(iVar5 + 0x308) = lbl_803E3438;
+                *(float*)(state + 0x308) = lbl_803E3438;
             }
         }
-        if ((*(byte*)(iVar5 + 0x323) & 8) == 0)
+        if ((*(byte*)(state + 0x323) & 8) == 0)
         {
-            FUN_8014d3d0(psVar3, iVar5, 0xf, 0);
+            FUN_8014d3d0(obj, state, 0xf, 0);
         }
     }
     FUN_80286888();
@@ -216,79 +216,79 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   short* param_9, int param_10)
 {
-    short sVar1;
-    int iVar2;
-    uint uVar3;
+    short angleDelta;
+    int entryOff;
+    uint angle;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    undefined* puVar4;
-    double dVar5;
+    undefined* entry;
+    double speed;
 
-    puVar4 = (&PTR_DAT_8031fdc8)[(uint) * (byte*)(param_10 + 0x33b) * 10];
-    iVar2 = FUN_8014c78c(param_9, 1, 0x10, &DAT_803ad088);
-    if (0 < iVar2)
+    entry = (&PTR_DAT_8031fdc8)[(uint) * (byte*)(param_10 + 0x33b) * 10];
+    entryOff = FUN_8014c78c(param_9, 1, 0x10, &DAT_803ad088);
+    if (0 < entryOff)
     {
         if (((DAT_803ad08c < 0x29) && (*(short*)(param_10 + 0x2a0) != 3)) &&
             (*(short*)(param_10 + 0x2a0) != 4))
         {
-            iVar2 = FUN_80017730();
-            sVar1 = (short)iVar2 - *param_9;
-            uVar3 = (uint)sVar1;
-            if (0x8000 < (int)uVar3)
+            entryOff = FUN_80017730();
+            angleDelta = (short)entryOff - *param_9;
+            angle = (uint)angleDelta;
+            if (0x8000 < (int)angle)
             {
-                uVar3 = (uint)(short)(sVar1 + 1);
+                angle = (uint)(short)(angleDelta + 1);
             }
-            if ((short)uVar3 < -0x8000)
+            if ((short)angle < -0x8000)
             {
-                uVar3 = (uint)(short)((short)uVar3 + -1);
+                angle = (uint)(short)((short)angle + -1);
             }
             *(u8*)(param_10 + 0x33a) =
-                puVar4[8] + (&DAT_803dc8f0)[(short)((uVar3 & 0xffff) >> 0xd)];
+                entry[8] + (&DAT_803dc8f0)[(short)((angle & 0xffff) >> 0xd)];
         }
         else if (DAT_803ad08c < 0x47)
         {
-            while ((puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10] & 1) != 0)
+            while ((entry[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10] & 1) != 0)
             {
                 *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
-                if ((byte)puVar4[8] < *(byte*)(param_10 + 0x33a))
+                if ((byte)entry[8] < *(byte*)(param_10 + 0x33a))
                 {
                     *(u8*)(param_10 + 0x33a) = 1;
                 }
             }
         }
     }
-    dVar5 = (double)(float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(param_10 + 0x2a4)) -
+    speed = (double)(float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(param_10 + 0x2a4)) -
         DOUBLE_803e3408);
-    if (dVar5 < (double)(lbl_803E3440 * *(float*)(param_10 + 0x2ac)))
+    if (speed < (double)(lbl_803E3440 * *(float*)(param_10 + 0x2ac)))
     {
-        *(char*)(param_10 + 0x33a) = puVar4[8] + '\x01';
+        *(char*)(param_10 + 0x33a) = entry[8] + '\x01';
     }
     while (true)
     {
-        if ((*(uint*)(puVar4 + (uint) * (byte*)(param_10 + 0x33a) * 0x10 + 4) == 0) ||
+        if ((*(uint*)(entry + (uint) * (byte*)(param_10 + 0x33a) * 0x10 + 4) == 0) ||
             ((*(uint*)(param_10 + 0x2dc) &
-                *(uint*)(puVar4 + (uint) * (byte*)(param_10 + 0x33a) * 0x10 + 4)) != 0))
+                *(uint*)(entry + (uint) * (byte*)(param_10 + 0x33a) * 0x10 + 4)) != 0))
             break;
         *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
-        if ((byte)puVar4[8] < *(byte*)(param_10 + 0x33a))
+        if ((byte)entry[8] < *(byte*)(param_10 + 0x33a))
         {
             *(u8*)(param_10 + 0x33a) = 1;
         }
     }
-    *(u8*)(param_10 + 0x2f2) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10];
-    *(u8*)(param_10 + 0x2f3) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xb];
-    *(u8*)(param_10 + 0x2f4) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xc];
-    iVar2 = (uint) * (byte*)(param_10 + 0x33a) * 0x10;
-    FUN_8014d4c8((double)*(float*)(puVar4 + iVar2), dVar5, param_3, param_4, param_5, param_6, param_7,
-                 param_8, (int)param_9, param_10, (uint)(byte)puVar4[iVar2 + 8], 0, 3, in_r8, in_r9, in_r10);
+    *(u8*)(param_10 + 0x2f2) = entry[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10];
+    *(u8*)(param_10 + 0x2f3) = entry[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xb];
+    *(u8*)(param_10 + 0x2f4) = entry[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xc];
+    entryOff = (uint) * (byte*)(param_10 + 0x33a) * 0x10;
+    FUN_8014d4c8((double)*(float*)(entry + entryOff), speed, param_3, param_4, param_5, param_6, param_7,
+                 param_8, (int)param_9, param_10, (uint)(byte)entry[entryOff + 8], 0, 3, in_r8, in_r9, in_r10);
     FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                     (uint)(byte)puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 8] *
+                     (uint)(byte)entry[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 8] *
                  4), (int)param_9
     )
     ;
     *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
-    if ((byte)puVar4[8] < *(byte*)(param_10 + 0x33a))
+    if ((byte)entry[8] < *(byte*)(param_10 + 0x33a))
     {
         *(u8*)(param_10 + 0x33a) = 1;
     }
