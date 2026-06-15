@@ -6,7 +6,7 @@ extern f32 lbl_803E608C;
 extern f32 lbl_803E6094;
 extern f32 lbl_803E6098;
 extern f32 lbl_803E60A0;
-extern void hitDetectFn_800658a4(int obj, f32* out, int flags, f32 x, f32 y, f32 z);
+extern void hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flags);
 
 #define VFPMINIFIRE_SMOKE_EFFECT 0x38a
 #define VFPMINIFIRE_SPARK_EFFECT 0x38b
@@ -78,9 +78,9 @@ void vfpminifire_update(int obj)
 
     if (lbl_803E608C == state->baseY)
     {
-        hitDetectFn_800658a4(obj, (f32*)state, 0, ((GameObject*)obj)->anim.localPosX,
+        hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX,
                              ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ);
+                             ((GameObject*)obj)->anim.localPosZ, (f32*)state, 0);
         state->baseY = ((GameObject*)obj)->anim.localPosY - state->baseY;
     }
 
