@@ -3250,7 +3250,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         int cn = lbl_803DCDEC;
         for (k = 0; k < cn; k++)
         {
-            if (*(int*)q2 != 0 && id == *(s16*)(q2 + 4))
+            if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
                 goto found1;
             q2 += 8;
             i2++;
@@ -3275,7 +3275,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
             int cn3 = lbl_803DCDEC;
             for (k = 0; k < cn3; k++)
             {
-                if (*(int*)q3 != 0 && cv3 == *(s16*)(q3 + 4))
+                if (*(void**)q3 != NULL && cv3 == *(s16*)(q3 + 4))
                     goto found2;
                 q3 += 8;
                 i3++;
@@ -3292,7 +3292,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
             int cn4 = lbl_803DCDEC;
             for (k = 0; k < cn4; k++)
             {
-                if (*(int*)p2 != 0 && cv4 == *(s16*)(p2 + 4))
+                if (*(void**)p2 != NULL && cv4 == *(s16*)(p2 + 4))
                     goto found3;
                 p2 += 8;
                 i4++;
