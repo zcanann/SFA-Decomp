@@ -6,7 +6,6 @@
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/objlib.h"
-#include "main/dll/baddie/chuka.h"
 
 extern f32 lbl_803E6408;
 extern void objRenderFn_8003b8f4(f32);
