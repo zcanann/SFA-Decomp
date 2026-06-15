@@ -21,7 +21,6 @@ extern void showHelpText(s16 id);
 extern f32 timeDelta;
 extern f32 lbl_803E3C88;
 extern f32 lbl_803E3C8C;
-extern int Obj_GetActiveModel(int* obj);
 
 int cctestinfot_getExtraSize(void) { return 0x8; }
 
