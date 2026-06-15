@@ -279,7 +279,7 @@ void fn_80155884(int* obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
     }
     return;
 }
@@ -325,7 +325,7 @@ void fn_80155948(int* obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
     }
     return;
 }
@@ -508,7 +508,7 @@ void fn_80155F20(int obj, int state)
             else if (((GameObject*)obj)->anim.currentMove == 3)
             {
                 ((BaddieState*)state)->seqEntryIndex = 0;
-                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
                 Baddie_SetMove(obj, state, 0, lbl_803E2A54, 0, 0);
             }
         }
@@ -650,7 +650,7 @@ void fn_8015625C(uint obj, int state)
         if (*(float*)(state + 0x324) <= zero)
         {
             *(float*)(state + 0x324) = lbl_803E2AB0;
-            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x400) != 0)
