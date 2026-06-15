@@ -78,8 +78,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
              , ObjAnimUpdateState* animUpdate, int param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    undefined4 uVar1;
-    char cVar2;
+    undefined4 eventHandle;
+    char mapAct;
     int mapId;
     int scratch;
     int state;
@@ -112,32 +112,32 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x26);
                 scratch = 1;
                 FUN_80042b9c(0, 0, 1);
-                uVar1 = FUN_80044404(0x26);
-                FUN_80042bec(uVar1, 0);
-                uVar1 = FUN_80044404(0xb);
-                FUN_80042bec(uVar1, 1);
+                eventHandle = FUN_80044404(0x26);
+                FUN_80042bec(eventHandle, 0);
+                eventHandle = FUN_80044404(0xb);
+                FUN_80042bec(eventHandle, 1);
             }
             else if (scratch < 0x49f5a)
             {
                 if (scratch == 0x451b9)
                 {
-                    cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                    mapAct = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1;
-                    if (cVar2 == '\x02')
+                    if (mapAct == '\x02')
                     {
                         FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0xb);
                         scratch = 1;
                         FUN_80042b9c(0, 0, 1);
-                        uVar1 = FUN_80044404(0xb);
-                        FUN_80042bec(uVar1, 0);
+                        eventHandle = FUN_80044404(0xb);
+                        FUN_80042bec(eventHandle, 0);
                     }
                     else
                     {
                         FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
                         scratch = 1;
                         FUN_80042b9c(0, 0, 1);
-                        uVar1 = FUN_80044404(0x29);
-                        FUN_80042bec(uVar1, 0);
+                        eventHandle = FUN_80044404(0x29);
+                        FUN_80042bec(eventHandle, 0);
                     }
                 }
                 else
@@ -146,8 +146,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                     FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
                     scratch = 1;
                     FUN_80042b9c(0, 0, 1);
-                    uVar1 = FUN_80044404(0x29);
-                    FUN_80042bec(uVar1, 0);
+                    eventHandle = FUN_80044404(0x29);
+                    FUN_80042bec(eventHandle, 0);
                 }
             }
             else if (scratch == 0x4cd65)
@@ -155,10 +155,10 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x41);
                 scratch = 1;
                 FUN_80042b9c(0, 0, 1);
-                uVar1 = FUN_80044404(0x41);
-                FUN_80042bec(uVar1, 0);
-                uVar1 = FUN_80044404(0xb);
-                FUN_80042bec(uVar1, 1);
+                eventHandle = FUN_80044404(0x41);
+                FUN_80042bec(eventHandle, 0);
+                eventHandle = FUN_80044404(0xb);
+                FUN_80042bec(eventHandle, 1);
             }
             else
             {
@@ -166,8 +166,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
                 scratch = 1;
                 FUN_80042b9c(0, 0, 1);
-                uVar1 = FUN_80044404(0x29);
-                FUN_80042bec(uVar1, 0);
+                eventHandle = FUN_80044404(0x29);
+                FUN_80042bec(eventHandle, 0);
             }
             break;
         case 3:
@@ -183,9 +183,9 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 if (mapId == 0x451b9)
                 {
-                    cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                    mapAct = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1_00;
-                    if (cVar2 == '\x02')
+                    if (mapAct == '\x02')
                     {
                         uVar8 = extraout_f1_00;
                         FUN_80042b9c(0, 0, 1);
@@ -218,9 +218,9 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             mapId = *(int*)(def + 0x14);
             if (mapId == 0x451b9)
             {
-                cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                mapAct = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_01;
-                if (cVar2 == '\x02')
+                if (mapAct == '\x02')
                 {
                     param_1 = FUN_80042800();
                 }
@@ -239,9 +239,9 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             mapId = *(int*)(def + 0x14);
             if (mapId == 0x451b9)
             {
-                cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                mapAct = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_02;
-                if (cVar2 == '\x02')
+                if (mapAct == '\x02')
                 {
                     param_1 = FUN_800427c8();
                 }
@@ -267,8 +267,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             else if (mapId < 0x49f5a)
             {
                 if ((mapId == 0x451b9) &&
-                    (cVar2 = (*gMapEventInterface)->getMapAct(0xd), param_1 = extraout_f1_03,
-                        cVar2 == '\x02'))
+                    (mapAct = (*gMapEventInterface)->getMapAct(0xd), param_1 = extraout_f1_03,
+                        mapAct == '\x02'))
                 {
                     scratch = (int)*gMapEventInterface;
                     uVar8 = (**(code**)(scratch + 0x44))(0xb, 5);
