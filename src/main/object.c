@@ -1576,7 +1576,7 @@ void objFreeObjDef(void* objp, int flag)
             for (i = 0; i < lbl_803DCB84; i++)
             {
                 o = ((u8**)lbl_803DCB88)[i];
-                if (((GameObject*)o)->anim.parent == obj)
+                if (*(int*)&((GameObject*)o)->anim.parent == (int)obj)
                 {
                     *(int*)&((GameObject*)o)->anim.parent = 0;
                     if (*(int*)&((GameObject*)o)->anim.placementData != 0)
