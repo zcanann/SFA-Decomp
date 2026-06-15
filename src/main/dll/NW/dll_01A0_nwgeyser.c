@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objtexture.h"
-#include "main/objseq.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/dll/dim2conveyor.h"
 
