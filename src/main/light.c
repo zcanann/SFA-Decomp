@@ -361,8 +361,7 @@ void spellStoneUseFn_801fd270(int obj)
     {
         cond = (s16)GameBit_Get(state->requiredGameBit);
     }
-    if ((s16)GameBit_Get(state->completeGameBit) != 0) return;
-    if (state->used != 0) return;
+    if ((s16)GameBit_Get(state->completeGameBit) != 0 || state->used != 0) return;
     if ((s16)cond == 0) return;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
     if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0)
