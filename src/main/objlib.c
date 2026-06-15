@@ -737,7 +737,7 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
         hitState->hitPosX[hitState->priorityHitCount] = sourceObj->localPosX;
         hitState->hitPosY[hitState->priorityHitCount] = sourceObj->localPosY;
         hitState->hitPosZ[hitState->priorityHitCount] = sourceObj->localPosZ;
-        hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
+        hitState->priorityHitCount++;
     }
     return 1;
 }
