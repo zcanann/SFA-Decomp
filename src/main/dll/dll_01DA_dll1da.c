@@ -147,8 +147,8 @@ void dll_1DA_update(int obj)
     f32 vz;
     f32 len;
     f32 k;
-    f32 hi;
     f32 lo;
+    f32 hi;
     f32 e;
     f32 d;
     int n;
