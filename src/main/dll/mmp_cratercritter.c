@@ -1,4 +1,3 @@
-#include "main/dll/baddie/MMP_cratercritter.h"
 #include "main/dll/tricky_state.h"
 
 extern f32 lbl_803E23DC;
