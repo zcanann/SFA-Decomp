@@ -340,9 +340,9 @@ void animsharpclaw_update(int* obj)
             matchCount++;
         }
     }
-    if (matchCount <= 1 && found != NULL && *(s16*)((char*)found + 0xb4) != -1)
+    if (matchCount <= 1 && found != NULL && ((GameObject*)found)->seqIndex != -1)
     {
-        *(s16*)((char*)found + 0xb4) = -1;
+        ((GameObject*)found)->seqIndex = -1;
         (*gObjectTriggerInterface)->endSequence(kind);
     }
     ((GameObject*)obj)->seqIndex = -1;
