@@ -54,7 +54,7 @@ void wcfloortile_init(int obj)
 {
     WcFloorTileState* state = ((GameObject*)obj)->extra;
 
-    *(s16*)obj = -0x4000;
+    ((GameObject*)obj)->anim.rotX = -0x4000;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
     state->flags |= 2;
 }
@@ -452,7 +452,7 @@ void arwarwing_updateThrusters(int obj, int state)
     src.pos[0] = ((GameObject*)obj)->anim.localPosX;
     src.pos[1] = ((GameObject*)obj)->anim.localPosY;
     src.pos[2] = ((GameObject*)obj)->anim.localPosZ;
-    src.rot[0] = *(s16*)obj;
+    src.rot[0] = ((GameObject*)obj)->anim.rotX;
     src.rot[1] = ((GameObject*)obj)->anim.rotY;
     src.rot[2] = 0;
     src.scale = lbl_803E6ED0;
