@@ -212,7 +212,7 @@ void drbarrelgr_update(int obj)
         if (((DrbarrelgrState*)state)->unk128 == ((DrbarrelgrPlacement*)setup)->unk19)
         {
             ((DrbarrelgrState*)state)->unk128 =
-                (s16)((f32)((DrbarrelgrState*)state)->unk128 * lbl_803E6CA8);
+                (int)((f32)((DrbarrelgrState*)state)->unk128 * lbl_803E6CA8);
         }
         else
         {
@@ -280,17 +280,17 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     dval = lbl_803E6CA4;
     for (i = 0; i < 4; i++)
     {
-        ObjPath_GetPointWorldPosition(obj, i + 1, vec, &vec[1], &vec[2], 0);
-        PSVECSubtract(vec, (void*)(obj + 0xc), vec);
+        ObjPath_GetPointWorldPosition(obj, i + 1, &vec[0], &vec[1], &vec[2], 0);
+        PSVECSubtract(&vec[0], (void*)(obj + 0xc), &vec[0]);
         params.d = dval;
         objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
     }
-    objRef = (int)*(void**)&((DrbarrelgrState*)state)->unk8;
-    if ((void*)objRef != NULL)
+    objRef = *(u32*)&((DrbarrelgrState*)state)->unk8;
+    if ((u32)objRef != 0)
     {
-        match = 0;
         nearest = ObjGroup_FindNearestObject(0x19, obj, 0);
-        if ((void*)nearest != NULL && (void*)objRef == (void*)nearest)
+        match = 0;
+        if ((u32)nearest != 0 && (u32)objRef == (u32)nearest)
         {
             match = 1;
         }
