@@ -1,5 +1,4 @@
 #include "main/game_object.h"
-#include "main/dll/mmsh_waterspike.h"
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
