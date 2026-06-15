@@ -1,9 +1,12 @@
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
+#include "main/dll/FRONT/dll_39.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "stdarg.h"
@@ -51,18 +54,25 @@ extern u32 GameBit_Get(int eventId);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
+extern u8 lbl_803DBBB0;
+extern u8 lbl_803DD928;
 extern void* minimapTexture;
 extern void* lbl_803DD940;
+extern s8 lbl_803DD944;
 
 #pragma scheduling on
 #pragma peephole on
+extern u8 warpstoneUIState;
+extern u8 showCredits;
 extern void titlescreen_free(u8 * obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);
 extern void titlescreen_init(u8 * obj, u8 * p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
+extern f32 lbl_803DD968;
 extern f32 lbl_803E23E8;
+extern f32 lbl_803E2344;
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(void*);
 extern f32 lbl_803E23B8;
@@ -80,19 +90,23 @@ extern int vsprintf(char* s, const char* format, va_list arg);
 extern int lbl_803DD9E4;
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
+extern int Obj_AllocObjectSetup(int a, int b);
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
 extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
+extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern int* Obj_GetActiveModel(void* obj);
 extern f32 lbl_803E2408;
+extern void* lbl_803DD984;
 extern f32 timeDelta;
 extern u32 lbl_803DDA00;
 extern u32 lbl_803DDA08;
 extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
+extern void Music_Trigger(s32 triggerId, s32 mode);
 extern u8 lbl_803AB118[];
-extern u16 lbl_803DDA40;
+extern s16 lbl_803DDA40;
 extern u32 lbl_803DDA3C;
 extern u32 lbl_803DDA38;
 extern u32 lbl_803DDA34;
@@ -110,6 +124,8 @@ extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
+extern f32 lbl_803DD99C;
+extern u16 lbl_803DBC0A;
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
 extern void DCStoreRange(void* p, u32 nBytes);
@@ -130,6 +146,7 @@ extern f32 lbl_803E2398;
 extern f32 lbl_803E239C;
 extern f32 lbl_803E23A0;
 extern f32 lbl_803E23A4;
+extern int getButtonsHeld(int p);
 extern void GXSetTevColor(int id, int* color);
 extern void setTextColor(int p);
 extern u16 lbl_803DDA14;
@@ -141,6 +158,7 @@ extern u8 lbl_803DD9F2;
 extern u8 lbl_803DD9F3;
 extern u16 lbl_803DD9F6;
 extern int lbl_803DDA10;
+extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern u16* debugFrameBuffer;
 extern char lbl_803DBC18;
 extern char lbl_803DBC1C;
@@ -314,6 +332,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000LL;
     }
 }
+
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
 {
     extern f32 getXZDistance(f32 * a, f32 * b);
@@ -369,10 +388,11 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 
     {
         u8* targetPos = ((TrickyState*)state)->followObj + 0x18;
+        u32 pathMask = 0xfffffbff;
         if (((TrickyState*)state)->unk28 != targetPos)
         {
             ((TrickyState*)state)->unk28 = targetPos;
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0xfffffbff;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & pathMask;
             ((TrickyState*)state)->unkD2 = 0;
         }
     }
@@ -460,7 +480,10 @@ int fn_80138920(u8* obj, int arg1, int arg2)
     v = ((GameObject*)obj)->anim.currentMove;
     if (v < 48)
     {
-        if (v >= 41) return 0;
+        if (v >= 41)
+        {
+            return 0;
+        }
     }
     if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
     objAudioFn_800393f8(obj, b + 936, arg1, arg2, -1, 0);
@@ -576,9 +599,8 @@ void fn_801375A0(void)
 }
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
- * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides under peephole on
- * (needed for rlwimi). The global nopeephole expands the expression too much.
- * Best C approximation with peephole on (missing only the leading clrlwi). */
+ * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
+ * the rlwimi only uses bit 0 of r4. No C form found to force it. */
 #pragma scheduling on
 #pragma peephole on
 void fn_80138908(int* obj, u8 v)
@@ -761,12 +783,8 @@ void fn_80138D7C(int obj, int p2)
 #define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e
 #define TUMBLEWEED_BLEND_WEIGHT_OFFSET 0x830
 #define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
-
-typedef struct TumbleweedBlendFlags {
-    u8 pending : 1;
-    u8 active : 1;
-    u8 rest : 6;
-} TumbleweedBlendFlags;
+#define TUMBLEWEED_BLEND_FLAG_PENDING 0x80
+#define TUMBLEWEED_BLEND_FLAG_ACTIVE 0x40
 
 /* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
@@ -786,8 +804,10 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
         *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
         ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
-        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->pending = 0;
-        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->active = 1;
+        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
+            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] & ~TUMBLEWEED_BLEND_FLAG_PENDING;
+        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
+            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] | TUMBLEWEED_BLEND_FLAG_ACTIVE;
     }
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 6) & 1) != 0)
     {
@@ -830,8 +850,8 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
                 *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < lbl_803E23DC)
             {
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
                 *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23DC;
             }
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < target)
             {
@@ -916,7 +936,6 @@ void objAnimFreeChildren(int a, int b, void** c)
     }
 }
 
-#pragma opt_strength_reduction off
 void fn_80137A00(int p1, int p2, u8* grid, int p4)
 {
     int i;
@@ -966,7 +985,6 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
         }
     }
 }
-#pragma opt_strength_reduction reset
 
 #pragma peephole on
 void debugPrintfxy(int x, int y, char* fmt, ...)
@@ -1083,7 +1101,7 @@ int fn_80136A40(int p1, int c)
         gxDebugTextureFn_80078c1c();
         sc = lbl_803DD9EC;
         textRenderChar(px << 2, py << 2,
-                       (int)(*(f32*)&lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + (f32)lbl_803DD9E0) + (f32)px)),
+                       (int)(lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + (f32)lbl_803DD9E0) + (f32)px)),
                        (int)(lbl_803E2398 * (lbl_803E239C * (lbl_803DD9DC + (f32)lbl_803DD9E1) + (f32)py)),
                        (f32)(first << 5) * sc,
                        lbl_803E23A0,
@@ -1346,14 +1364,14 @@ void fn_80137DF8(void)
                     row = 0;
                     for (n = 0; n < 60; n++)
                     {
-                        *(u16*)((char*)debugDrawFrameBuffer + row + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x500) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xA00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xF00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1400) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1900) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x2300) + col) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x500)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xA00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xF00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1400)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1900)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1E00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x2300)) = 0x1080;
                         row += 0x2800;
                     }
                     col += 2;
