@@ -528,7 +528,6 @@ extern f32 lbl_803E3460;
 extern f32 lbl_803E3464;
 extern f32 lbl_803E3468;
 extern f32 lbl_803E346C;
-extern f32 fastFloorf(f32 v);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
 extern undefined4 ObjMsg_SendToObject();
@@ -568,7 +567,6 @@ extern f32 lbl_803E3494;
 extern f32 lbl_803E3498;
 extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
-extern f32 lbl_803E34B0;
 
 u8 collectible_func0F(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e); }
 
