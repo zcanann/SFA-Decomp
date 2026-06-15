@@ -6,7 +6,6 @@
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
-#include "main/objseq.h"
 
 typedef struct ScMusictreePlacement
 {
