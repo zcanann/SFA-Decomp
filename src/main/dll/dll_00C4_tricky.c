@@ -1925,10 +1925,12 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     {
         switch (spawnBits)
         {
+        case 1:
+            setup = Obj_AllocObjectSetup(0x30, 0x2cd);
+            break;
         case 3:
             setup = Obj_AllocObjectSetup(0x30, 0xb);
             break;
-        case 1:
         case 4:
             setup = Obj_AllocObjectSetup(0x30, 0x2cd);
             break;
@@ -1976,7 +1978,7 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
         {
             return 0;
         }
-        setup = Obj_AllocObjectSetup(0x30, ((u16*)&rewardTail.pair)[index - 1]);
+        setup = Obj_AllocObjectSetup(0x30, ((u16*)((u8*)&rewardTail.pair - 2))[index]);
     }
     *(u8*)(setup + 0x1a) = 0x14;
     *(s16*)(setup + 0x2c) = -1;
