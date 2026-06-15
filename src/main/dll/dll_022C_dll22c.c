@@ -1,5 +1,4 @@
 /* DLL 0x22C — dll22c objects [801FE118-801FEB30) */
-#include "main/game_object.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
@@ -9,8 +8,6 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
-#include "main/dll/anim_internal.h"
-#include "main/main.h"
 #include "main/objlib.h"
 
 extern uint GameBit_Get(int eventId);
@@ -22,14 +19,9 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/anim.h"
 #include "main/dll/baddie_state.h"
-#include "main/objseq.h"
-#include "main/objfx.h"
-#include "main/resource.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -55,7 +47,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* chuka extra block (extraSize 0xC). */
-#include "main/dll/baddie/chuka.h"
 
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
