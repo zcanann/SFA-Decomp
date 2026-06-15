@@ -6,19 +6,18 @@
 #include "main/sky_interface.h"
 
 extern undefined4 Music_Trigger();
-extern undefined4 FUN_80006824();
 extern byte gameTimerIsRunning();
-extern double FUN_80006b3c();
-extern undefined4 FUN_80006b4c();
-extern undefined4 FUN_80006b50();
-extern undefined4 FUN_80006b54();
+extern f32 fn_80014668(void);
+extern void timerSetToCountUp(void);
+extern void gameTimerInit(s8 flags, int minutes);
 extern uint GameBit_Get();
 extern undefined4 GameBit_Set();
 extern undefined4 SCGameBitLatch_Update();
 extern u8* Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
 extern f32 lbl_803E5278;
-extern f32 lbl_803E5F14;
+extern f32 lbl_803E527C;
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
 
@@ -169,24 +168,24 @@ void nw_levcontrol_update(int objArg)
                 {
                     *((uint*)state + 2) = bitVal2 & ~1;
                     *((uint*)state + 2) = *((uint*)state + 2) | 2;
-                    FUN_80006b54(0x15, (uint) * (byte*)((int)state + 5));
-                    FUN_80006b50();
+                    gameTimerInit(0x15, (uint) * (byte*)((int)state + 5));
+                    timerSetToCountUp();
                     (*gMapEventInterface)->savePoint((int)(player + 6), (int)*player, 0, 0);
                 }
                 else if ((bitVal2 & 4) != 0)
                 {
                     *((uint*)state + 2) = bitVal2 & 0xfffffffd;
                     *((uint*)state + 2) = *((uint*)state + 2) & 0xfffffffb;
-                    FUN_80006b4c();
+                    gameTimerStop();
                     Music_Trigger((int*)0xaf, 0);
                     GameBit_Set(0x19f, 1);
                 }
                 else
                 {
-                    val = (int)(FUN_80006b3c() / (double)lbl_803E5F14);
-                    FUN_80006b4c();
-                    FUN_80006b54(0x15, (uint) * (byte*)((int)state + 5) + val);
-                    FUN_80006b50();
+                    val = (int)(fn_80014668() / lbl_803E527C);
+                    gameTimerStop();
+                    gameTimerInit(0x15, (uint) * (byte*)((int)state + 5) + val);
+                    timerSetToCountUp();
                 }
                 (*gObjectTriggerInterface)->runSequence(*(u8*)(state + 3), (void*)obj,
                                                         -1);
@@ -208,7 +207,7 @@ void nw_levcontrol_update(int objArg)
     }
     else
     {
-        FUN_80006824(0, SFXsc_clubhit02);
+        Sfx_PlayFromObject(0, SFXsc_clubhit02);
         (*gMapEventInterface)->gotoRestartPoint();
     }
     return;
