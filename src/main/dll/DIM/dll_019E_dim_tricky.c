@@ -73,10 +73,24 @@ void dll_19E_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
+typedef struct Dll19EState
+{
+    s32 gameBitId;
+    s16 delayTimer;
+    s16 resetTimer;
+    s16 settleTimer;
+    u8 pad0A;
+    u8 mode;
+    u8 active;
+    u8 needsOpenSfx;
+    u8 previousActive;
+    u8 sequenceIndex;
+} Dll19EState;
+
 void dll_19E_render(int obj, int param_2, int param_3, int param_4,
                     int param_5, s8 visible)
 {
-    int state;
+    Dll19EState* state;
     u8* camera;
     f32 dist;
     f32 invDist;
@@ -99,15 +113,15 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
     f32 gridB[2];
     int traceOut[2];
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     if (visible == 0)
     {
-        *(s16*)(state + 4) = 0;
-        *(u8*)(state + 0xa) = 0;
+        state->delayTimer = 0;
+        state->pad0A = 0;
     }
-    else if (*(u8*)(state + 0xc) != 0)
+    else if (state->active != 0)
     {
-        *(u8*)(state + 0xa) = 1;
+        state->pad0A = 1;
         camera = (u8*)Camera_GetCurrentViewSlot();
         stk.delta[0] = *(f32*)(camera + 0xc) - ((GameObject*)obj)->anim.localPosX;
         stk.delta[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
@@ -144,24 +158,24 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
             voxmaps_worldToGrid(midB, gridB);
             if (voxmaps_traceLine(gridA, gridB, traceOut, 0, 0) == 0)
             {
-                *(u8*)(state + 0xa) = 0;
+                state->pad0A = 0;
                 (*gExpgfxInterface)->freeSource(obj);
             }
         }
-        if (*(s16*)(state + 4) > 0)
+        if (state->delayTimer > 0)
         {
-            *(s16*)(state + 4) -= framesThisStep;
+            state->delayTimer -= framesThisStep;
         }
         else
         {
-            if (*(u8*)(state + 0xa) != 0)
+            if (state->pad0A != 0)
             {
                 stk.args.x = lbl_803E51D8;
                 stk.args.y = lbl_803E51DC;
                 stk.args.z = lbl_803E51D8;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &stk.args, 0x12, -1, NULL);
             }
-            *(s16*)(state + 4) = (s16)(randomGetRange(-10, 10) + 0x3c);
+            state->delayTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
         }
     }
 }
@@ -169,20 +183,6 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
 void dll_19E_hitDetect(void)
 {
 }
-
-typedef struct Dll19EState
-{
-    s32 gameBitId;
-    s16 delayTimer;
-    s16 resetTimer;
-    s16 settleTimer;
-    u8 pad0A;
-    u8 mode;
-    u8 active;
-    u8 needsOpenSfx;
-    u8 previousActive;
-    u8 sequenceIndex;
-} Dll19EState;
 
 typedef struct Dll19ESetup
 {
