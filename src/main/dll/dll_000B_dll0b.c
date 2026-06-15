@@ -2759,7 +2759,7 @@ void fn_800A0524(void* state, void* p, int mode)
 {
     extern f32 lbl_803DF430;
     extern f32 lbl_803DF43C;
-    u8* buf = *(u8**)((char*)state + *(u8*)((char*)state + 0x130) * 4 + 0x78);
+    u8* buf = (u8*)((ModgfxState*)state)->vertexBuffers[((ModgfxState*)state)->activeVertexBufferIndex];
     int j;
 
     if (mode == 1)
@@ -2799,9 +2799,8 @@ void fn_800A0524(void* state, void* p, int mode)
             *(f32*)((char*)state + 0xbc) = tr;
             *(f32*)((char*)state + 0xc0) = tg;
             *(f32*)((char*)state + 0xc4) = tb;
-            *(f32*)((char*)state + 0xc8) = lbl_803DF430;
-            *(f32*)((char*)state + 0xcc) = lbl_803DF430;
-            *(f32*)((char*)state + 0xd0) = lbl_803DF430;
+            *(f32*)((char*)state + 0xd0) = *(f32*)((char*)state + 0xcc) =
+                *(f32*)((char*)state + 0xc8) = lbl_803DF430;
         }
     }
     *(f32*)((char*)state + 0xbc) += *(f32*)((char*)state + 0xc8);
