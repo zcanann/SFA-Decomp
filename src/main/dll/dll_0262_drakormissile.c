@@ -114,7 +114,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
         dir[1] = dir[1] / mag;
         dir[2] = dir[2] / mag;
     }
-    *(f32*)((char*)obj + 0xc) = *(f32*)((char*)from + 0xc);
+    ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)from + 0xc);
     ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)from + 0x10);
     ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)from + 0x14);
     ((GameObject*)obj)->anim.velocityX = dir[0];
@@ -130,7 +130,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     endPos[0] = lbl_803E6960 * ((GameObject*)obj)->anim.velocityX;
     endPos[1] = lbl_803E6960 * ((GameObject*)obj)->anim.velocityY;
     endPos[2] = lbl_803E6960 * ((GameObject*)obj)->anim.velocityZ;
-    endPos[0] = *(f32*)((char*)obj + 0xc) + endPos[0];
+    endPos[0] = ((GameObject*)obj)->anim.localPosX + endPos[0];
     endPos[1] = ((GameObject*)obj)->anim.localPosY + endPos[1];
     endPos[2] = ((GameObject*)obj)->anim.localPosZ + endPos[2];
     voxmaps_worldToGrid((f32*)((char*)obj + 0xc), startGrid);
@@ -138,7 +138,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     if (voxmaps_traceLine(startGrid, endGrid, hitGrid, 0, 0) == 0)
     {
         voxmaps_gridToWorld(endPos, hitGrid);
-        hitDir[0] = endPos[0] - *(f32*)((char*)obj + 0xc);
+        hitDir[0] = endPos[0] - ((GameObject*)obj)->anim.localPosX;
         hitDir[1] = endPos[1] - ((GameObject*)obj)->anim.localPosY;
         hitDir[2] = endPos[2] - ((GameObject*)obj)->anim.localPosZ;
         *(int*)(p + DRAKORMISSILE_FIELD_TIMER) =
