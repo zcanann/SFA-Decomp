@@ -437,8 +437,8 @@ void mmFreeTick(int arg)
         if (d->delay == 0)
         {
             mmFree(d->ptr);
-            d->ptr = g->deferred[gMmDeferredFreeCount - 1].ptr;
-            d->delay = g->deferred[gMmDeferredFreeCount - 1].delay;
+            d->ptr = g->deferred[*(volatile s16*)&gMmDeferredFreeCount - 1].ptr;
+            d->delay = g->deferred[*(volatile s16*)&gMmDeferredFreeCount - 1].delay;
             gMmDeferredFreeCount--;
         }
         else
