@@ -622,7 +622,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
-            *(s16*)spawned = (s16)(int)((f32) * (s16*)obj + lbl_803DDD68);
+            *(s16*)spawned = (s16)((f32) * (s16*)obj + lbl_803DDD68);
             ((GameObject*)spawned)->anim.rotY = v[0];
         }
     }
