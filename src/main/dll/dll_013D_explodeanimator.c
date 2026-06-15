@@ -76,12 +76,14 @@ void explodeanimator_update(int* obj)
     if (GameBit_Get(((ExplodeanimatorPlacement*)def)->unk34) == 0) return;
     GameBit_Set(((ExplodeanimatorPlacement*)def)->unk32, 1);
     sub[2] = (u8)(sub[2] | 1);
+    {
+    f32 mult = lbl_803E4020;
     for (i = 0; i < def[0x2c]; i++)
     {
-        vel[0] = (f32)(s32)
-        randomGetRange(((ExplodeanimatorPlacement*)def)->unk2E, ((ExplodeanimatorPlacement*)def)->unk28) * lbl_803E4020;
-        vel[1] = (f32)(s32)
-        randomGetRange(((ExplodeanimatorPlacement*)def)->unk30, ((ExplodeanimatorPlacement*)def)->unk2A) * lbl_803E4020;
+        vel[0] = mult * (f32)(s32)
+        randomGetRange(((ExplodeanimatorPlacement*)def)->unk2E, ((ExplodeanimatorPlacement*)def)->unk28);
+        vel[1] = mult * (f32)(s32)
+        randomGetRange(((ExplodeanimatorPlacement*)def)->unk30, ((ExplodeanimatorPlacement*)def)->unk2A);
         buf[3] = (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->unk18, ((ExplodeanimatorPlacement*)def)->unk1E);
         buf[4] = (f32)(s32)
@@ -89,6 +91,7 @@ void explodeanimator_update(int* obj)
         buf[5] = (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->unk1C, ((ExplodeanimatorPlacement*)def)->unk22);
         (*gPartfxInterface)->spawnObject(obj, ((ExplodeanimatorPlacement*)def)->unk24, buf, 2, -1, vel);
+    }
     }
 }
 
