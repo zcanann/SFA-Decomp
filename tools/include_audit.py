@@ -48,6 +48,9 @@ def discover_tus():
         text = f.read()
     # unwrap ninja '$\n' line continuations (and their leading indent)
     text = re.sub(r'\$\n\s*', '', text)
+    # build.ninja uses OS-native path separators (backslashes on Windows);
+    # normalize to forward slashes so BUILD_LINE matches on every platform.
+    text = text.replace('\\', '/')
     for line in text.splitlines():
         m = BUILD_LINE.match(line)
         if m:
