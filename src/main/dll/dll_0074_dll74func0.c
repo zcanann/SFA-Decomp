@@ -720,35 +720,34 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     } buf;
     u8* base = lbl_803146D8;
     GfxCmd* e;
-    GfxCmd* entries = buf.entries;
-    entries[0].layer = 0;
-    entries[0].flags = 0x15;
-    entries[0].tex = &base[0x1b0];
-    entries[0].mode = 4;
-    entries[0].x = lbl_803E0BB8;
-    entries[0].y = lbl_803E0BB8;
-    entries[0].z = lbl_803E0BB8;
+    buf.entries[0].layer = 0;
+    buf.entries[0].flags = 0x15;
+    buf.entries[0].tex = &base[0x1b0];
+    buf.entries[0].mode = 4;
+    buf.entries[0].x = lbl_803E0BB8;
+    buf.entries[0].y = lbl_803E0BB8;
+    buf.entries[0].z = lbl_803E0BB8;
     if (variant == 0)
     {
-        entries[1].layer = 0;
-        entries[1].flags = 0x15;
-        entries[1].tex = &base[0x1b0];
-        entries[1].mode = 2;
-        entries[1].x = lbl_803E0BBC;
-        entries[1].y = lbl_803E0BC0;
-        entries[1].z = lbl_803E0BBC;
-        e = &entries[2];
+        buf.entries[1].layer = 0;
+        buf.entries[1].flags = 0x15;
+        buf.entries[1].tex = &base[0x1b0];
+        buf.entries[1].mode = 2;
+        buf.entries[1].x = lbl_803E0BBC;
+        buf.entries[1].y = lbl_803E0BC0;
+        buf.entries[1].z = lbl_803E0BBC;
+        e = &buf.entries[2];
     }
     else
     {
-        entries[1].layer = 0;
-        entries[1].flags = 0x15;
-        entries[1].tex = &base[0x1b0];
-        entries[1].mode = 2;
-        entries[1].x = lbl_803E0BBC;
-        entries[1].y = lbl_803E0BC4;
-        entries[1].z = lbl_803E0BBC;
-        e = &entries[2];
+        buf.entries[1].layer = 0;
+        buf.entries[1].flags = 0x15;
+        buf.entries[1].tex = &base[0x1b0];
+        buf.entries[1].mode = 2;
+        buf.entries[1].x = lbl_803E0BBC;
+        buf.entries[1].y = lbl_803E0BC4;
+        buf.entries[1].z = lbl_803E0BBC;
+        e = &buf.entries[2];
     }
     if (variant == 0)
     {
@@ -866,7 +865,7 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    buf.count = (e + 1) - entries;
+    buf.count = (e + 1) - buf.entries;
     buf.hw[0] = *(s16*)&base[0x214];
     buf.hw[1] = *(s16*)&base[0x216];
     buf.hw[2] = *(s16*)&base[0x218];
