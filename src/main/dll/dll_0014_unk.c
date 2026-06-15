@@ -3918,29 +3918,31 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
     RomCurveDef* curve;
     int i;
     float distance;
-    double nearestCurveId;
-    double nearestDistance;
+    f32 nearestDistance;
+    f32 nearestCurveId;
     int startIndex;
     int objectCount;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
-    nearestCurveId = (double)gFloatNegOne;
-    nearestDistance = (double)gFloatZero;
+    nearestCurveId = gFloatNegOne;
+    nearestDistance = gFloatZero;
     for (i = 0; i < objectCount; i = i + 1)
     {
         obj = objects[i];
         if ((((((GameObject*)obj)->anim.classId == 0x2c) &&
                     (((GameObject*)obj)->anim.mapEventSlot != queryAll)) &&
                 (curve = (RomCurveDef*)((GameObject*)obj)->anim.placementData, curve != NULL)) &&
-            ((curve->type == 0x16 &&
-                ((dx = ((GameObject*)obj)->anim.worldPosX - x,
+            (curve->type == 0x16 &&
+                (dx = ((GameObject*)obj)->anim.worldPosX - x,
                     dy = ((GameObject*)obj)->anim.worldPosY - y,
                     dz = ((GameObject*)obj)->anim.worldPosZ - z,
-                    distance = sqrtf(dz * dz + (dx * dx + dy * dy)),
-                    (double)gFloatNegOne == nearestCurveId || (distance < nearestDistance))))))
+                    distance = sqrtf(dz * dz + (dx * dx + dy * dy)), 1)))
         {
-            nearestCurveId = (double)curve->id;
-            nearestDistance = distance;
+            if (gFloatNegOne == nearestCurveId || distance < nearestDistance)
+            {
+                nearestCurveId = (f32)(u32)curve->id;
+                nearestDistance = distance;
+            }
         }
     }
     return (int)nearestCurveId;
