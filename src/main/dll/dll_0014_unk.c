@@ -4543,15 +4543,14 @@ f32 curves_distFn0B(int obj, uint curveId)
     f32 dz;
 
     curve = RomCurve_FindByIdInline(curveId);
-    if (curve == NULL || obj == 0)
+    if (curve != NULL && (u32)obj != 0)
     {
-        return gFloatNegOne;
+        dx = curve->x - ((GameObject*)obj)->anim.localPosX;
+        dy = curve->y - ((GameObject*)obj)->anim.localPosY;
+        dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
+        return sqrtf(dx * dx + dy * dy + dz * dz);
     }
-
-    dx = curve->x - ((GameObject*)obj)->anim.localPosX;
-    dy = curve->y - ((GameObject*)obj)->anim.localPosY;
-    dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
-    return sqrtf(dx * dx + dy * dy + dz * dz);
+    return gFloatNegOne;
 }
 
 int curves_isNotPoint(RomCurveDef* curve)
