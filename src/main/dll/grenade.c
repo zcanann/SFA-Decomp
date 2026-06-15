@@ -7,7 +7,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/dll/tricky_state.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
