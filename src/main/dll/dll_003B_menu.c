@@ -13,7 +13,6 @@ extern undefined4 DAT_803de3fe;
 extern undefined4 DAT_803de413;
 extern undefined4 DAT_803de445;
 
-extern u8 pauseDisabled;
 extern s8 lbl_803DD8F0;
 extern s16 lbl_803DD8F2;
 extern s8 lbl_803DD8F4;
