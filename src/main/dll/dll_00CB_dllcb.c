@@ -399,7 +399,7 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    int unaff_r29;
+    int subObj;
     int sub;
 
     sub = *(int*)&((GameObject*)param_9)->extra;
@@ -411,8 +411,8 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     if (lbl_803E3A7C < ((GameObject*)param_9)->anim.currentMoveProgress)
     {
-        unaff_r29 = *(int*)(sub + 0x40c);
-        *(byte*)(unaff_r29 + 8) = *(byte*)(unaff_r29 + 8) | 2;
+        subObj = *(int*)(sub + 0x40c);
+        *(byte*)(subObj + 8) = *(byte*)(subObj + 8) | 2;
     }
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -429,7 +429,7 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(undefined*)(param_10 + 0x25f) = 0;
         *(undefined*)(param_10 + 0x349) = 0;
         *(undefined2*)(sub + 0x402) = 0;
-        if ((*(byte*)(unaff_r29 + 9) & 2) == 0)
+        if ((*(byte*)(subObj + 9) & 2) == 0)
         {
             *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.
                 resetHitboxMode | 8;
