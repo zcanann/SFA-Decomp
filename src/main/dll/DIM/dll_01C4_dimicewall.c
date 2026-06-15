@@ -1,12 +1,8 @@
 /* DLL 0x01C4 (dimicewall) — DIM ice wall and gate objects [0x801B17F4-0x801B1B40). */
-#include "ghidra_import.h"
 #include "main/dll/dimicewallstate_struct.h"
 
-#include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIMExplosion.h"
 
 typedef struct DimicewallPlacement
 {
