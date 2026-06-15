@@ -5,7 +5,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/FRONT/POST.h"
-#include "main/objanim.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80017748();
