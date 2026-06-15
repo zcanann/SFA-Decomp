@@ -1,8 +1,6 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -164,18 +162,12 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 timeDelta;
 
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
-#include "main/mapEvent.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct AnimatedobjPlacement
 {
