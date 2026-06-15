@@ -1134,13 +1134,13 @@ void gameTextResetCursor(int flags)
 
 extern void* gCurTextBox;
 
-void gameTextSetWindow(u8* param_1)
+void gameTextSetWindow(u8* textBox)
 {
     int i;
     GameTextSlot* s;
     int idx;
 
-    if (param_1 == NULL)
+    if (textBox == NULL)
     {
         i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
@@ -1154,7 +1154,7 @@ void gameTextSetWindow(u8* param_1)
         i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        idx = (param_1 - gTextBoxes) / 0x20;
+        idx = (textBox - gTextBoxes) / 0x20;
         if (idx == 0xff)
         {
             gCurTextBox = NULL;
