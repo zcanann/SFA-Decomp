@@ -139,17 +139,16 @@ void blasted_update(int obj)
         return;
     }
     {
-        ObjHitsPriorityState* hitState;
         int i;
 
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        for (i = 0; i < hitState->priorityHitCount; i++)
+        for (i = 0; i < ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorityHitCount; i++)
         {
             u32 v;
             s8 m;
             int found;
-            m = *(u8*)&hitState->priorities[i];
-            v = hitState->hitObjects[i];
+            int next;
+            m = *(u8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorities[i];
+            v = ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
             found = 0;
             if (m != 5)
             {
@@ -183,11 +182,11 @@ void blasted_update(int obj)
                     GameBit_Set(setup->progressGameBit, state->damageStep + 1);
                 }
                 lbl_803DDB18 = 0x12c;
-                if (state->damageStep + 1 > total)
+                next = state->damageStep + 1;
+                if (next > total)
                 {
                     int n;
-                    int lim;
-                    lim = total + 1;
+                    int lim = total + 1;
                     for (n = 0; n < lim; n++)
                     {
                         GameBit_Set(n + 0x2de, 0);
@@ -199,7 +198,7 @@ void blasted_update(int obj)
                 }
                 else
                 {
-                    state->damageStep = state->damageStep + 1;
+                    state->damageStep++;
                     Obj_SetActiveModelIndex(obj, state->damageStep);
                 }
             }
