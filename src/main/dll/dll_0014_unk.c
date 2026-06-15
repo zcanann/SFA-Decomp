@@ -3706,7 +3706,10 @@ void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 
 /* segment pragma-stack balance (re-split): */
 
-static inline u32 RomCurve_GetId(RomCurveDef* curve);
+static inline u32 RomCurve_GetId(RomCurveDef* curve)
+{
+    return curve->id;
+}
 
 static inline int RomCurve_IsLinkIdValid(int linkId);
 
