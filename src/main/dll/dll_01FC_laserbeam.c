@@ -618,7 +618,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-extern f32 lbl_803E5D78;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
@@ -701,7 +700,6 @@ void LaserBeam_free(s16* obj, char* arg)
     }
 }
 
-extern ObjHitReactEntry lbl_80328898[];
 
 typedef struct LightSourceFlagByte
 {
