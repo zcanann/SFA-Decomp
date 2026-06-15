@@ -385,9 +385,10 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
             ((SnowBikeState*)state)->stickY = 0x46;
         }
 
-        fn_801EA240(((SnowBikeState*)state)->distanceScale, (int)obj, state,
-                    (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430),
-                    state + 0x461, 4);
+        ((void (*)(int, int, f32, int, int, u8))fn_801EA240)(
+            (int)obj, state, ((SnowBikeState*)state)->distanceScale,
+            (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430),
+            state + 0x461, 4);
     }
 
     ((HightopFlags3*)&((SnowBikeState*)state)->flags428)->active = 0;
