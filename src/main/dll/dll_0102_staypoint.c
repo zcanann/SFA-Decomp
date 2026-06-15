@@ -45,8 +45,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
 u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 
-extern void objRenderFn_8003b8f4(int obj, float arg);
-
 void StayPoint_init(u16* obj)
 {
     u32 v;
