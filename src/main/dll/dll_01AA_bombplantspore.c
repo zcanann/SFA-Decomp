@@ -163,8 +163,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
         }
-        ((BombPlantSporeState*)state)->spinAngle =
-            ((BombPlantSporeState*)state)->spinAngle + ((BombPlantSporeState*)state)->unk2a8;
+        ((BombPlantSporeState*)state)->spinAngle += ((BombPlantSporeState*)state)->unk2a8;
         angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
         if (0x8000 < angleDelta)
         {
@@ -174,7 +173,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             angleDelta += 0xffff;
         }
-        if (((BombplantsporeUpdateDriftPlacement*)params)->unk1A < angleDelta)
+        if (angleDelta > ((BombplantsporeUpdateDriftPlacement*)params)->unk1A)
         {
             ((BombPlantSporeState*)state)->spinAngle = (s16)(
                 baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->unk1A);
