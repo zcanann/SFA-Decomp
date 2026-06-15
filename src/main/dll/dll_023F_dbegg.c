@@ -95,9 +95,7 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 extern void Obj_RemoveFromUpdateList(int* obj);
-extern u8 lbl_80329514[];
 extern f32 timeDelta;
-extern u8 gChukaModeTable[9];
 
 void dbegg_processMessages(int obj)
 {
