@@ -84,7 +84,7 @@ extern int lbl_803DC0D4;
 extern int lbl_8032852C[];
 extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
-extern void setMotionBlur(double amount, int p2);
+extern void setMotionBlur(int mode, f32 amount);
 extern void fn_8009A8C8();
 extern int arrayIndexOf();
 extern f32 lbl_803E5BB4;
@@ -233,13 +233,12 @@ void fn_801EB0D4(uint obj, int stateRaw)
                     (cur < lim)
                         ? lim
                         : ((cur > lbl_803E5B80) ? lbl_803E5B80 : cur);
-                cur = st->airMeterCurrent;
                 st->airMeterCurrent =
-                    (cur < lbl_803E5AE8)
+                    (st->airMeterCurrent < lbl_803E5AE8)
                         ? lbl_803E5AE8
-                        : ((cur > st->airMeterMax)
+                        : ((st->airMeterCurrent > st->airMeterMax)
                                ? st->airMeterMax
-                               : cur);
+                               : st->airMeterCurrent);
             }
             if (st->airMeterCurrent < lbl_803E5B84)
             {
@@ -252,7 +251,7 @@ void fn_801EB0D4(uint obj, int stateRaw)
             Sfx_StopObjectChannel((u32)obj, 0x7f);
             if (st->unk464 > lbl_803E5B20)
             {
-                if ((u32)randomGetRange(0, 10) == 0)
+                if ((int)randomGetRange(0, 10) == 0)
                 {
                     Sfx_PlayFromObject(0, SFXsp_lfoot_taunt7);
                 }
@@ -304,15 +303,12 @@ void fn_801EB334(int* obj)
     }
     ObjHits_EnableObject((u32)obj);
     (*gPathControlInterface)->attachObject((void*)obj, (char*)state + 0x178);
-    {
-        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->localPosX = ((GameObject*)obj)->anim.localPosX;
-        hitState->localPosY = ((GameObject*)obj)->anim.localPosY;
-        hitState->localPosZ = ((GameObject*)obj)->anim.localPosZ;
-        hitState->worldPosX = ((GameObject*)obj)->anim.worldPosX;
-        hitState->worldPosY = ((GameObject*)obj)->anim.worldPosY;
-        hitState->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
-    }
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosX = ((GameObject*)obj)->anim.worldPosX;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosY = ((GameObject*)obj)->anim.worldPosY;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
 }
 
 undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* seq)
@@ -396,6 +392,7 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
 
 void fn_801EB634(int obj, int stateRaw)
 {
+    extern int ObjHits_IsObjectEnabled(int obj);
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     int hitKind;
     int hitReact;
@@ -444,7 +441,7 @@ void fn_801EB634(int obj, int stateRaw)
         case 0x1d:
             if ((u32)(st->flags428 >> 1 & 1) == 0)
             {
-                setMotionBlur(lbl_803E5BAC, 1);
+                setMotionBlur(1, lbl_803E5BAC);
                 st->collisionFxTimer = (f32)(s32)
                 lbl_803DC0D0;
                 st->collisionFxDamping = lbl_803DC0C8;
@@ -458,7 +455,7 @@ void fn_801EB634(int obj, int stateRaw)
                 (hitObj = hit, *(u32*)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
             (hitKind = arrayIndexOf(lbl_8032852C, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
         {
-            fn_8009A8C8((double)lbl_803E5BB0, obj);
+            fn_8009A8C8(obj, lbl_803E5BB0);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x551, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x552, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x554, NULL, 4, -1, NULL);

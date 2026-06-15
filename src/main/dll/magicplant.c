@@ -85,7 +85,7 @@ extern f32 lbl_803E28CC;
 extern int lbl_803DBCB8;
 extern f32 timeDelta;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
-extern void fn_8014CF7C(int obj, int state, int p3, int p4, f32 f1, f32 f2);
+extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 extern f32 lbl_803E28A0;
@@ -537,13 +537,13 @@ void fn_80153040(int obj, int state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
                                                      &lbl_803DBCB8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
                 }
             }
         }
     }
 
-    fn_8014CF7C(obj, state, 0xf, 0, curve->posX, curve->posZ);
+    fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0xf, 0);
 
     vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
     vec[1] = curve->posY - ((GameObject*)obj)->anim.localPosY;
@@ -703,8 +703,8 @@ void fn_80153248(int obj, int state)
     RomCurveWalker* curve;
     f32 vec[3];
     f32 worldPos[3];
-    int gridB[3];
-    int gridA[3];
+    int gridB[2];
+    int gridA[2];
     u8 hitOut;
     int p29c;
 
@@ -727,7 +727,7 @@ void fn_80153248(int obj, int state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
                                                      &lbl_803DBCB8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
                 }
             }
         }
@@ -741,7 +741,7 @@ void fn_80153248(int obj, int state)
     *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) + timeDelta;
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8)
     {
-        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         *(f32*)(state + 0x324) = lbl_803E28B0;
         *(f32*)(state + 0x32c) = lbl_803E28B0;
     }
@@ -755,11 +755,11 @@ void fn_80153248(int obj, int state)
         worldPos[1] = curve->posY;
         worldPos[2] = curve->posZ;
         voxmaps_worldToGrid(worldPos, gridB);
-        if (((countLeadingZeros(((BaddieState*)state)->controlFlags) >> 5) & 0x01000000) != 0)
+        if (((int)((u32)__cntlzw(((BaddieState*)state)->controlFlags) >> 5) & 0x01000000) != 0)
         {
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0)
             {
-                *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000;
+                *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
                 *(f32*)(state + 0x324) = lbl_803E28B0;
                 *(f32*)(state + 0x32c) = lbl_803E28B0;
             }
@@ -788,23 +788,22 @@ void fn_80153640(int obj, int state)
         *(u8*)(fx + 0x6) = 0xff;
         *(u8*)(fx + 0x7) = 0xff;
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
-        if (newObj != 0)
+        if ((void*)newObj != NULL)
         {
             p29c = *(int*)&((BaddieState*)state)->trackedObj;
             ((GameObject*)newObj)->anim.velocityX = lbl_803E28F4 * (((GameObject*)p29c)->anim.localPosX - ((GameObject*)
                 fx)->anim.rootMotionScale);
             rnd = randomGetRange(-10, 10);
-            p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            ((GameObject*)newObj)->anim.velocityY = lbl_803E28F4 *
-                ((lbl_803E28F0 + ((GameObject*)p29c)->anim.localPosY + (f32)(s32)
-            rnd
-            )
-            -((GameObject*)fx)->anim.localPosX
-            )
-            ;
-            p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            ((GameObject*)newObj)->anim.velocityZ = lbl_803E28F4 * (((GameObject*)p29c)->anim.localPosZ - ((GameObject*)
-                fx)->anim.localPosY);
+            {
+                f32 mul = lbl_803E28F4;
+                p29c = *(int*)&((BaddieState*)state)->trackedObj;
+                ((GameObject*)newObj)->anim.velocityY = mul *
+                    ((lbl_803E28F0 + ((GameObject*)p29c)->anim.localPosY + (f32)(s32)rnd) -
+                     ((GameObject*)fx)->anim.localPosX);
+                p29c = *(int*)&((BaddieState*)state)->trackedObj;
+                ((GameObject*)newObj)->anim.velocityZ = mul * (((GameObject*)p29c)->anim.localPosZ -
+                    ((GameObject*)fx)->anim.localPosY);
+            }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
         }
         Sfx_PlayFromObject(obj, 0x49a);
@@ -851,10 +850,10 @@ void fn_8015383C(int obj, int state)
         if (hit != 0)
         {
             int p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            fn_8014CF7C(obj, state, 0x14, 0, ((GameObject*)p29c)->anim.localPosX, ((GameObject*)p29c)->anim.localPosZ);
+            fn_8014CF7C(obj, state, ((GameObject*)p29c)->anim.localPosX, ((GameObject*)p29c)->anim.localPosZ, 0x14, 0);
             angle = (s16)(getAngle(vec[0], vec[2]) - ((GameObject*)obj)->anim.rotX);
-            if (angle > 0x8000) angle = angle + 1;
-            if (angle < -0x8000) angle = angle - 1;
+            if (angle > 0x8000) angle = (angle - 0x10000) + 1;
+            if (angle < -0x8000) angle = (angle + 0x10000) - 1;
             if (angle < 0) angle = -angle;
             if (angle < 1000) losDetected = 1;
         }
@@ -934,7 +933,7 @@ void fn_8015383C(int obj, int state)
 
 void fn_80153CF8(int obj, int state, int p3, int msgFlag)
 {
-    int cond = 0;
+    u8 cond = 0;
     int kind = ((GameObject*)obj)->anim.currentMove;
     if (kind == 5)
     {
@@ -963,14 +962,16 @@ void fn_80153CF8(int obj, int state, int p3, int msgFlag)
     }
 
 checkedKind:
+    {
+    u32 condV = cond;
     if (msgFlag == 0x10)
     {
-        if (cond != 0)
+        if (condV != 0)
         {
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
         }
     }
-    else if (cond != 0)
+    else if (condV != 0)
     {
         if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
@@ -984,12 +985,13 @@ checkedKind:
         *(f32*)(state + 0x32c) = lbl_803E2940;
         *(f32*)(state + 0x324) = lbl_803E2944;
         Baddie_SetMove(obj, state, 4, lbl_803E2948, 0, 3);
-        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         ((BaddieState*)state)->inWhirlpoolGroup = 0x3c;
     }
     else
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
+    }
     }
 }
 
@@ -1011,7 +1013,7 @@ void fn_80153E0C(int obj, int state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950,
                                                      &lbl_803DBCC8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
                 }
             }
         }
@@ -1019,23 +1021,25 @@ void fn_80153E0C(int obj, int state)
         {
             if (((GameObject*)obj)->anim.currentMove == 0)
             {
-                fn_8014CF7C(obj, state, 0x3c, 0, curve->posX, curve->posZ);
+                fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0x3c, 0);
             }
             if (*(f32*)(state + 0x324) > lbl_803E294C)
             {
+                f32 zero = lbl_803E294C;
                 *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
-                if (*(f32*)(state + 0x324) <= lbl_803E294C)
+                if (*(f32*)(state + 0x324) <= zero)
                 {
                     *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~(u64)0x10000;
-                    *(f32*)(state + 0x324) = lbl_803E294C;
+                    *(f32*)(state + 0x324) = zero;
                 }
             }
         }
     }
     if (*(f32*)(state + 0x32c) > lbl_803E294C)
     {
+        f32 zero = lbl_803E294C;
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
-        if (*(f32*)(state + 0x32c) <= lbl_803E294C)
+        if (*(f32*)(state + 0x32c) <= zero)
         {
             Baddie_SetMove(obj, state, 6, lbl_803E2948, 0, 3);
             *(f32*)(state + 0x32c) = lbl_803E294C;

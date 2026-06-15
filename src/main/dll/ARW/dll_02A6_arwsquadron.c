@@ -160,6 +160,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
 {
     f32 pz, py, px;
     int proj;
+    int setup;
     if (Obj_IsLoadingLocked() == 0)
         return;
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
@@ -176,7 +177,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
         ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
     }
     proj = loadObjectAtObject(obj);
-    if (proj == 0)
+    if ((u32)proj == 0)
         return;
     if (flag != 0)
         arwprojectile_createLinkedEffect(proj, 1);
@@ -429,7 +430,7 @@ void arwsquadron_updateVolley(int p1, int p2, int p3)
             flags->f20 = 1;
             storeZeroToFloatParam(&state->shotIntervalTimer);
             s16toFloat(&state->shotIntervalTimer, setup->shotInterval);
-            state->volleyShotsRemaining = (s8)setup->shotsPerVolley;
+            *(s8*)&state->volleyShotsRemaining = setup->shotsPerVolley;
             state->volleyAngle = -setup->volleyAngleSpread;
         }
     }
@@ -460,12 +461,14 @@ void arwsquadron_emitEffects(int p1, int p2)
 
     if ((s8)state->health <= 2)
     {
-        int cnt = state->fxFrameCounter++;
-        if (cnt % 2 != 0)
+        if (state->fxFrameCounter++ % 2 != 0)
         {
             ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);
             pfx.f8 = state->damageSmokeScale;
-            pfx.s6 = ((s8)state->health <= 1) ? 0x61a8 : -0x63c0;
+            if ((s8)state->health <= 1)
+                pfx.s6 = 0x61a8;
+            else
+                pfx.s6 = -0x63c0;
             (*gPartfxInterface)->spawnObject((void*)p1, 0x7d0, &pfx, 4, -1, &flag);
         }
     }
@@ -496,14 +499,12 @@ void arwsquadron_handleDamage(int obj, int state)
 {
     ArwSquadronState* squad = (ArwSquadronState*)state;
     SquadCmdFlags* flags = &squad->flags.cmd;
-    ObjHitsPriorityState* hitState;
     int hitObj;
     uint hitVol;
     int arwing;
 
     if (((GameObject*)obj)->anim.hitReactState == NULL)
         return;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (squad->hitFlashActive != 0)
     {
         squad->hitFlashTimer -= timeDelta;
@@ -516,7 +517,7 @@ void arwsquadron_handleDamage(int obj, int state)
         }
     }
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
-        hitState->lastHitObject != 0)
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
     {
         if (flags->f10)
         {
@@ -527,7 +528,7 @@ void arwsquadron_handleDamage(int obj, int state)
             squad->hitFlashActive = 1;
             squad->hitFadeRed = 0;
             squad->hitFadeGreen = 0;
-            squad->health = squad->health - hitVol;
+            *(s8*)&squad->health = squad->health - hitVol;
             if ((s8)squad->health <= 0)
             {
                 storeZeroToFloatParam(&squad->deathTimer);
@@ -550,19 +551,22 @@ void arwsquadron_handleDamage(int obj, int state)
                     squad->phase = ARW_SQUADRON_STATE_DEAD;
                 }
                 arwing = getArwing();
-                if (arwing != 0)
+                if ((u32)arwing != 0)
                     arwarwing_addScore(arwing, squad->deathScore);
             }
             else
             {
                 arwing = getArwing();
-                if (arwing != 0)
+                if ((u32)arwing != 0)
                     arwarwing_addScore(arwing, squad->hitScore);
             }
         }
-        else if (squad->hitFlashActive == 0)
+        else
         {
-            Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
+            if (squad->hitFlashActive == 0)
+                Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
+            squad->hitFlashTimer = lbl_803E71B4;
+            squad->hitFlashActive = 1;
         }
     }
 }
@@ -635,7 +639,7 @@ void arwsquadron_update(int obj)
         int aim = getArwing();
         f32 d;
         int inRange;
-        if (aim == 0)
+        if ((u32)aim == 0)
             aim = Obj_GetPlayerObject();
         d = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
         inRange = (d < lbl_803E71B8 && d > lbl_803E7164);
@@ -659,11 +663,11 @@ void arwsquadron_update(int obj)
             getArwing();
             if (setupL->leaderObjectId > 0)
             {
-                if (state->leaderObj == 0)
+                if ((u32)state->leaderObj == 0)
                     state->leaderObj = ObjList_FindObjectById(setupL->leaderObjectId);
                 leader = state->leaderObj;
             }
-            if (leader == 0)
+            if ((u32)leader == 0)
             {
                 enable = 0;
             }
@@ -673,7 +677,7 @@ void arwsquadron_update(int obj)
                 int aim = getArwing();
                 f32 d;
                 int inRange;
-                if (aim == 0)
+                if ((u32)aim == 0)
                     aim = Obj_GetPlayerObject();
                 d = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
                 inRange = (d < thr && d > lbl_803E7164);
@@ -691,7 +695,7 @@ void arwsquadron_update(int obj)
                     int aim2 = getArwing();
                     f32 d2;
                     int inRange2;
-                    if (aim2 == 0)
+                    if ((u32)aim2 == 0)
                         aim2 = Obj_GetPlayerObject();
                     d2 = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim2)->anim.localPosZ;
                     inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
@@ -725,7 +729,7 @@ void arwsquadron_update(int obj)
             getArwing();
             if (state->leaderObj != 0)
                 leader = state->leaderObj;
-            if (leader == 0)
+            if ((u32)leader == 0)
             {
                 disable = 0;
             }
@@ -735,7 +739,7 @@ void arwsquadron_update(int obj)
                 int aim = getArwing();
                 f32 d;
                 int inRange;
-                if (aim == 0)
+                if ((u32)aim == 0)
                     aim = Obj_GetPlayerObject();
                 d = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim)->anim.localPosZ;
                 inRange = (d < thr && d > lbl_803E7164);
@@ -753,7 +757,7 @@ void arwsquadron_update(int obj)
                     int aim2 = getArwing();
                     f32 d2;
                     int inRange2;
-                    if (aim2 == 0)
+                    if ((u32)aim2 == 0)
                         aim2 = Obj_GetPlayerObject();
                     d2 = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim2)->anim.localPosZ;
                     inRange2 = (d2 < thr2 && d2 > lbl_803E7164);

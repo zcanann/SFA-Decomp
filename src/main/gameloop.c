@@ -521,7 +521,7 @@ void GameBit_Set(int eventId, int value)
     }
     if (eventId & 0x8000)
     {
-        value = (value & 1) ^ 1;
+        value = (value & 1LL) ^ 1LL;
     }
     id = (s16)eventId & 0xfff;
     if (id == 0x95)
@@ -1470,11 +1470,7 @@ void checkReset(void)
     int status;
 
     msg = lbl_802CA460;
-    if (lbl_803DCCA6 == 0)
-    {
-        return;
-    }
-    if (gDvdCoverOpenErrorActive != 0)
+    if (lbl_803DCCA6 == 0 || gDvdCoverOpenErrorActive != 0)
     {
         return;
     }

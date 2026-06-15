@@ -577,7 +577,7 @@ int SaveSelectScreen_run(void)
     int prev;
     char* data;
     SaveSelectPanel* panel;
-    uint btn;
+    int btn;
 
     timer = lbl_803DD6CF;
     n = framesThisStep;
@@ -596,14 +596,14 @@ int SaveSelectScreen_run(void)
     }
     if (lbl_803DD6CD != 0 || lbl_803DD6CC != 0)
     {
-        if ((timer < 13 || lbl_803DD6CF > 12) && lbl_803DD6CF < 1)
+        if ((timer <= 12 || lbl_803DD6CF > 12) && lbl_803DD6CF <= 0)
         {
             if (lbl_803DD6CD != 0)
             {
                 n_attractmode_releaseMovieBuffers();
                 if (lbl_803DB424 != 0)
                 {
-                    trySaveGame(saveFileSelect_currentSlotIndex);
+                    trySaveGame((u8)saveFileSelect_currentSlotIndex);
                 }
                 else
                 {
@@ -618,9 +618,10 @@ int SaveSelectScreen_run(void)
                 Music_Trigger(0xc1, 0);
                 if (lbl_803DD6C4 != 0)
                 {
-                    gplayNewGame(&sFrontendFoxName, saveFileSelect_currentSlotIndex);
+                    gplayNewGame(&sFrontendFoxName, (u8)saveFileSelect_currentSlotIndex);
                     ((void (**)(int))gMapEventInterface->vtable)[30](1);
-                    *((u8*)((int (**)(void))gMapEventInterface->vtable)[36]() + 0xe) = 0xff;
+                    data = (char*)((int (**)(void))gMapEventInterface->vtable)[36]();
+                    *(s8*)(data + 0xe) = -1;
                 }
                 if (lbl_803DD6C4 > 1)
                 {

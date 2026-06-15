@@ -946,7 +946,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     {
         absd = -d336;
     }
-    if (state->unkC16 < absd)
+    if (absd > state->unkC16)
     {
         conv = (int)(lbl_803E6B08 * ((f32)d336 * t));
         *(s16*)obj = (s16)(*(s16*)obj + ((s16)conv >> 5));

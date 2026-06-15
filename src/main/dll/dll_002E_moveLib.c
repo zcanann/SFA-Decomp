@@ -607,10 +607,10 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
 int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
 {
-    f32 ground;
-    f32 dx;
-    f32 dy;
     f32 dz;
+    f32 dy;
+    f32 dx;
+    f32 ground;
     f32 dist;
     s16 delta;
 
@@ -786,17 +786,7 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
                         blendA = (dist - lbl_803E1CD8) / lbl_803E1CD0;
                         blendMax = lbl_803E1CA4;
                         blendB = lbl_803E1C90;
-                        if (blendA < blendB)
-                        {
-                        }
-                        else if (blendA > blendMax)
-                        {
-                            blendB = blendMax;
-                        }
-                        else
-                        {
-                            blendB = blendA;
-                        }
+                        blendB = (blendA < blendB) ? blendB : ((blendA > blendMax) ? blendMax : blendA);
                         blendB = lbl_803E1CA4 - blendB;
                         blendA = lbl_803E1CA4 - blendB;
                         *(float*)(state + 0x10) =
