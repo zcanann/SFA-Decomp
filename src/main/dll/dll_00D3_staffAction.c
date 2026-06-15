@@ -63,191 +63,191 @@ undefined4
 #pragma scheduling on
 #pragma peephole on
 FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9, uint* param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* obj, uint* params,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    int iVar1;
-    uint uVar2;
-    int iVar3;
-    double dVar4;
-    double in_f28;
-    double in_f29;
-    double in_f30;
-    double in_f31;
+    int target;
+    uint mode;
+    int state;
+    double trig;
+    double targetX;
+    double targetZ;
+    double targetY;
+    double speed;
 
-    iVar3 = *(int*)(*(int*)(param_9 + 0x5c) + 0x40c);
-    iVar1 = FUN_80017a98();
-    *(undefined*)((int)param_10 + 0x34d) = 1;
-    if (*(char*)((int)param_10 + 0x27a) != '\0')
+    state = *(int*)(*(int*)(obj + 0x5c) + 0x40c);
+    target = FUN_80017a98();
+    *(undefined*)((int)params + 0x34d) = 1;
+    if (*(char*)((int)params + 0x27a) != '\0')
     {
-        *(float*)(iVar3 + 0x60) = lbl_803E3C9C;
-        ObjHits_EnableObject((u32)param_9);
-        dVar4 = (double)FUN_80293bc4();
-        *(float*)(param_9 + 0x12) = (float)(-(double)*(float*)(iVar3 + 0x60) * dVar4);
-        *(float*)(param_9 + 0x14) = lbl_803E3C74;
-        dVar4 = (double)FUN_80293f80();
-        *(float*)(param_9 + 0x16) = (float)(-(double)*(float*)(iVar3 + 0x60) * dVar4);
-        *param_10 = *param_10 | 0x2004000;
+        *(float*)(state + 0x60) = lbl_803E3C9C;
+        ObjHits_EnableObject((u32)obj);
+        trig = (double)FUN_80293bc4();
+        *(float*)(obj + 0x12) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *(float*)(obj + 0x14) = lbl_803E3C74;
+        trig = (double)FUN_80293f80();
+        *(float*)(obj + 0x16) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *params = *params | 0x2004000;
         FUN_800305f8((double)lbl_803E3C74, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(float*)(iVar3 + 0x44) = lbl_803E3CA0;
+                     obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
+        *(float*)(state + 0x44) = lbl_803E3CA0;
     }
-    ObjHits_SetHitVolumeSlot((u32)param_9, 9, 1, -1);
-    *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6c) = 9;
-    *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)param_9);
-    (*gPathControlInterface)->advance(param_9, param_10 + 1, lbl_803DC074);
-    if (*(char*)(iVar3 + 0x90) == '\x06')
+    ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6c) = 9;
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    (*gPathControlInterface)->advance(obj, params + 1, lbl_803DC074);
+    if (*(char*)(state + 0x90) == '\x06')
     {
-        if ((*(byte*)(iVar3 + 0x92) & 1) == 0)
+        if ((*(byte*)(state + 0x92) & 1) == 0)
         {
-            uVar2 = 0;
+            mode = 0;
         }
         else
         {
-            uVar2 = 2;
-            if ((ushort)DAT_803dc070 < *(ushort*)(iVar3 + 0x8e))
+            mode = 2;
+            if ((ushort)DAT_803dc070 < *(ushort*)(state + 0x8e))
             {
-                *(ushort*)(iVar3 + 0x8e) = *(ushort*)(iVar3 + 0x8e) - (ushort)DAT_803dc070;
+                *(ushort*)(state + 0x8e) = *(ushort*)(state + 0x8e) - (ushort)DAT_803dc070;
             }
             else
             {
-                *(byte*)(iVar3 + 0x92) = *(byte*)(iVar3 + 0x92) & 0xfe;
+                *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xfe;
             }
         }
     }
-    else if ((((iVar1 == 0) || (*(float*)(iVar1 + 0x18) < *(float*)(iVar3 + 0x48))) ||
-            (*(float*)(iVar3 + 0x4c) < *(float*)(iVar1 + 0x18))) ||
-        (((*(float*)(iVar1 + 0x1c) < *(float*)(iVar3 + 0x5c) ||
-                (*(float*)(iVar3 + 0x58) < *(float*)(iVar1 + 0x1c))) ||
-            ((*(float*)(iVar1 + 0x20) < *(float*)(iVar3 + 0x54) ||
-                (*(float*)(iVar3 + 0x50) < *(float*)(iVar1 + 0x20)))))))
+    else if ((((target == 0) || (*(float*)(target + 0x18) < *(float*)(state + 0x48))) ||
+            (*(float*)(state + 0x4c) < *(float*)(target + 0x18))) ||
+        (((*(float*)(target + 0x1c) < *(float*)(state + 0x5c) ||
+                (*(float*)(state + 0x58) < *(float*)(target + 0x1c))) ||
+            ((*(float*)(target + 0x20) < *(float*)(state + 0x54) ||
+                (*(float*)(state + 0x50) < *(float*)(target + 0x20)))))))
     {
-        uVar2 = 1;
+        mode = 1;
     }
     else
     {
-        uVar2 = 0;
+        mode = 0;
     }
-    if (uVar2 == 1)
+    if (mode == 1)
     {
-        if ((ushort)DAT_803dc070 < *(ushort*)(iVar3 + 0x8c))
+        if ((ushort)DAT_803dc070 < *(ushort*)(state + 0x8c))
         {
-            *(ushort*)(iVar3 + 0x8c) = *(ushort*)(iVar3 + 0x8c) - (ushort)DAT_803dc070;
+            *(ushort*)(state + 0x8c) = *(ushort*)(state + 0x8c) - (ushort)DAT_803dc070;
         }
         else
         {
-            uVar2 = randomGetRange((int)*(float*)(iVar3 + 0x48), (int)*(float*)(iVar3 + 0x4c));
-            *(float*)(iVar3 + 100) =
-                (f32)(s32)(uVar2);
-            uVar2 = randomGetRange((int)*(float*)(iVar3 + 0x5c), (int)*(float*)(iVar3 + 0x58));
-            *(float*)(iVar3 + 0x68) =
-                (f32)(s32)(uVar2);
-            uVar2 = randomGetRange((int)*(float*)(iVar3 + 0x54), (int)*(float*)(iVar3 + 0x50));
-            *(float*)(iVar3 + 0x6c) =
-                (f32)(s32)(uVar2);
-            uVar2 = randomGetRange(300, 600);
-            *(short*)(iVar3 + 0x8c) = (short)uVar2;
+            mode = randomGetRange((int)*(float*)(state + 0x48), (int)*(float*)(state + 0x4c));
+            *(float*)(state + 100) =
+                (f32)(s32)(mode);
+            mode = randomGetRange((int)*(float*)(state + 0x5c), (int)*(float*)(state + 0x58));
+            *(float*)(state + 0x68) =
+                (f32)(s32)(mode);
+            mode = randomGetRange((int)*(float*)(state + 0x54), (int)*(float*)(state + 0x50));
+            *(float*)(state + 0x6c) =
+                (f32)(s32)(mode);
+            mode = randomGetRange(300, 600);
+            *(short*)(state + 0x8c) = (short)mode;
         }
-        in_f31 = (double)*(float*)(iVar3 + 100);
-        in_f30 = (double)*(float*)(iVar3 + 0x68);
-        in_f29 = (double)*(float*)(iVar3 + 0x6c);
-        in_f28 = (double)lbl_803E3CA8;
+        targetX = (double)*(float*)(state + 100);
+        targetZ = (double)*(float*)(state + 0x68);
+        targetY = (double)*(float*)(state + 0x6c);
+        speed = (double)lbl_803E3CA8;
     }
-    else if (uVar2 == 0)
+    else if (mode == 0)
     {
-        in_f31 = (double)*(float*)(iVar1 + 0xc);
-        in_f30 = (double)(*(float*)(iVar1 + 0x10) - lbl_803E3C70);
-        in_f29 = (double)*(float*)(iVar1 + 0x14);
-        in_f28 = (double)lbl_803E3CA4;
-        uVar2 = GameBit_Get(0x698);
-        if (uVar2 != 0)
+        targetX = (double)*(float*)(target + 0xc);
+        targetZ = (double)(*(float*)(target + 0x10) - lbl_803E3C70);
+        targetY = (double)*(float*)(target + 0x14);
+        speed = (double)lbl_803E3CA4;
+        mode = GameBit_Get(0x698);
+        if (mode != 0)
         {
-            in_f28 = -(double)lbl_803E3CA4;
+            speed = -(double)lbl_803E3CA4;
         }
     }
-    else if (uVar2 < 3)
+    else if (mode < 3)
     {
-        in_f31 = (double)*(float*)(iVar3 + 0x70);
-        in_f30 = (double)*(float*)(iVar3 + 0x74);
-        in_f29 = (double)*(float*)(iVar3 + 0x78);
-        in_f28 = (double)lbl_803E3CA4;
+        targetX = (double)*(float*)(state + 0x70);
+        targetZ = (double)*(float*)(state + 0x74);
+        targetY = (double)*(float*)(state + 0x78);
+        speed = (double)lbl_803E3CA4;
     }
-    FUN_80166e9c(in_f31, in_f30, in_f29, in_f28, (int)param_9);
-    if (*(char*)(iVar3 + 0x90) == '\x06')
+    FUN_80166e9c(targetX, targetZ, targetY, speed, (int)obj);
+    if (*(char*)(state + 0x90) == '\x06')
     {
-        if ((*(byte*)(iVar3 + 0x92) >> 2 & 1) == 0)
+        if ((*(byte*)(state + 0x92) >> 2 & 1) == 0)
         {
-            FUN_8016693c((int)param_9, iVar3);
+            FUN_8016693c((int)obj, state);
         }
         else
         {
-            FUN_801660c0((int)param_9, iVar3);
+            FUN_801660c0((int)obj, state);
         }
     }
     else
     {
-        FUN_801661ec(param_9, iVar3);
+        FUN_801661ec(obj, state);
     }
     return 0;
 }
 
 undefined4
 FUN_80165e74(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9, uint* param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* obj, uint* params,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    int iVar1;
-    double dVar2;
+    int state;
+    double trig;
 
-    iVar1 = *(int*)(*(int*)(param_9 + 0x5c) + 0x40c);
-    *(undefined*)((int)param_10 + 0x34d) = 1;
-    if (*(char*)((int)param_10 + 0x27a) != '\0')
+    state = *(int*)(*(int*)(obj + 0x5c) + 0x40c);
+    *(undefined*)((int)params + 0x34d) = 1;
+    if (*(char*)((int)params + 0x27a) != '\0')
     {
-        *(float*)(iVar1 + 0x60) = lbl_803E3C9C;
-        ObjHits_EnableObject((u32)param_9);
-        dVar2 = (double)FUN_80293bc4();
-        *(float*)(param_9 + 0x12) = (float)(-(double)*(float*)(iVar1 + 0x60) * dVar2);
-        *(float*)(param_9 + 0x14) = lbl_803E3C74;
-        dVar2 = (double)FUN_80293f80();
-        *(float*)(param_9 + 0x16) = (float)(-(double)*(float*)(iVar1 + 0x60) * dVar2);
-        *param_10 = *param_10 | 0x2004000;
+        *(float*)(state + 0x60) = lbl_803E3C9C;
+        ObjHits_EnableObject((u32)obj);
+        trig = (double)FUN_80293bc4();
+        *(float*)(obj + 0x12) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *(float*)(obj + 0x14) = lbl_803E3C74;
+        trig = (double)FUN_80293f80();
+        *(float*)(obj + 0x16) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *params = *params | 0x2004000;
         FUN_800305f8((double)lbl_803E3C74, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(float*)(iVar1 + 0x44) = lbl_803E3C74;
+                     obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
+        *(float*)(state + 0x44) = lbl_803E3C74;
     }
-    ObjHits_SetHitVolumeSlot((u32)param_9, 9, 1, -1);
-    *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6c) = 9;
-    *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)param_9);
-    (*gPathControlInterface)->advance(param_9, param_10 + 1, lbl_803DC074);
-    if (*(char*)((int)param_10 + 0x27a) != '\0')
+    ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6c) = 9;
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    (*gPathControlInterface)->advance(obj, params + 1, lbl_803DC074);
+    if (*(char*)((int)params + 0x27a) != '\0')
     {
-        if (*(char*)(iVar1 + 0x90) == '\x06')
+        if (*(char*)(state + 0x90) == '\x06')
         {
-            if ((*(byte*)(iVar1 + 0x92) >> 2 & 1) == 0)
+            if ((*(byte*)(state + 0x92) >> 2 & 1) == 0)
             {
-                FUN_8016693c((int)param_9, iVar1);
+                FUN_8016693c((int)obj, state);
             }
             else
             {
-                FUN_801660c0((int)param_9, iVar1);
+                FUN_801660c0((int)obj, state);
             }
         }
         else
         {
-            FUN_801661ec(param_9, iVar1);
+            FUN_801661ec(obj, state);
         }
     }
     return 0;
 }
 
-void FUN_801660c0(int param_1, int param_2)
+void FUN_801660c0(int obj, int state)
 {
-    float fVar1;
-    int iVar2;
+    float damping;
+    int hitFound;
     float local_b8;
     float local_b4;
     float local_b0;
@@ -261,32 +261,32 @@ void FUN_801660c0(int param_1, int param_2)
     undefined local_30;
 
     local_b8 = lbl_803E3CB8;
-    ((GameObject*)param_1)->anim.velocityY = ((GameObject*)param_1)->anim.velocityY - lbl_803E3C8C;
-    fVar1 = lbl_803E3CBC;
-    ((GameObject*)param_1)->anim.velocityX = ((GameObject*)param_1)->anim.velocityX * lbl_803E3CBC;
-    ((GameObject*)param_1)->anim.velocityY = ((GameObject*)param_1)->anim.velocityY * fVar1;
-    ((GameObject*)param_1)->anim.velocityZ = ((GameObject*)param_1)->anim.velocityZ * fVar1;
-    local_a8 = ((GameObject*)param_1)->anim.localPosX;
-    local_a4 = ((GameObject*)param_1)->anim.localPosY;
-    local_a0 = ((GameObject*)param_1)->anim.localPosZ;
-    local_b4 = local_a8 + ((GameObject*)param_1)->anim.velocityX;
-    local_b0 = local_a4 + ((GameObject*)param_1)->anim.velocityY;
-    local_ac = local_a0 + ((GameObject*)param_1)->anim.velocityZ;
+    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E3C8C;
+    damping = lbl_803E3CBC;
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E3CBC;
+    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * damping;
+    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * damping;
+    local_a8 = ((GameObject*)obj)->anim.localPosX;
+    local_a4 = ((GameObject*)obj)->anim.localPosY;
+    local_a0 = ((GameObject*)obj)->anim.localPosZ;
+    local_b4 = local_a8 + ((GameObject*)obj)->anim.velocityX;
+    local_b0 = local_a4 + ((GameObject*)obj)->anim.velocityY;
+    local_ac = local_a0 + ((GameObject*)obj)->anim.velocityZ;
     local_44 = lbl_803E3C74;
     local_30 = 3;
     trackDolphin_buildSweptBounds(auStack_9c, &local_a8, &local_b4, &local_b8, 1);
-    FUN_80063a74(param_1, auStack_9c, 0, '\x01');
-    iVar2 = FUN_80063a68();
-    if (iVar2 == 0)
+    FUN_80063a74(obj, auStack_9c, 0, '\x01');
+    hitFound = FUN_80063a68();
+    if (hitFound == 0)
     {
-        ((GameObject*)param_1)->anim.localPosX = local_b4;
-        ((GameObject*)param_1)->anim.localPosY = local_b0;
-        ((GameObject*)param_1)->anim.localPosZ = local_ac;
+        ((GameObject*)obj)->anim.localPosX = local_b4;
+        ((GameObject*)obj)->anim.localPosY = local_b0;
+        ((GameObject*)obj)->anim.localPosZ = local_ac;
     }
     else
     {
-        *(byte*)(param_2 + 0x92) = *(byte*)(param_2 + 0x92) & 0xfb;
-        FUN_80166c6c(param_1, param_2, afStack_84, &local_b4);
+        *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xfb;
+        FUN_80166c6c(obj, state, afStack_84, &local_b4);
     }
     return;
 }
@@ -604,15 +604,15 @@ void FUN_801661ec(short* param_1, int param_2)
     landedarwing_moveSurfaceCrawler(param_1, (LandedArwingState*)param_2);
 }
 
-void FUN_8016693c(int param_1, int param_2)
+void FUN_8016693c(int obj, int state)
 {
-    float fVar1;
-    int iVar2;
-    int iVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
+    float stepScale;
+    int hitFound;
+    int stepCount;
+    double distanceRemaining;
+    double segmentLen;
+    double traveled;
+    double one;
     float local_e8;
     float local_e4;
     float local_e0;
@@ -628,114 +628,114 @@ void FUN_8016693c(int param_1, int param_2)
     float local_74;
     undefined local_60;
 
-    dVar4 = FUN_80293900((double)(((GameObject*)param_1)->anim.velocityZ * ((GameObject*)param_1)->anim.velocityZ +
-        ((GameObject*)param_1)->anim.velocityX * ((GameObject*)param_1)->anim.velocityX +
-        ((GameObject*)param_1)->anim.velocityY * ((GameObject*)param_1)->anim.velocityY));
-    dVar6 = (double)lbl_803E3C74;
-    iVar3 = 0;
+    distanceRemaining = FUN_80293900((double)(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
+        ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+        ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
+    traveled = (double)lbl_803E3C74;
+    stepCount = 0;
     local_74 = lbl_803E3C74;
     local_60 = 3;
-    local_d8 = ((GameObject*)param_1)->anim.localPosX;
-    local_d4 = ((GameObject*)param_1)->anim.localPosY;
-    local_d0 = ((GameObject*)param_1)->anim.localPosZ;
-    local_e4 = local_d8 + ((GameObject*)param_1)->anim.velocityX;
-    local_e0 = local_d4 + ((GameObject*)param_1)->anim.velocityY;
-    local_dc = local_d0 + ((GameObject*)param_1)->anim.velocityZ;
+    local_d8 = ((GameObject*)obj)->anim.localPosX;
+    local_d4 = ((GameObject*)obj)->anim.localPosY;
+    local_d0 = ((GameObject*)obj)->anim.localPosZ;
+    local_e4 = local_d8 + ((GameObject*)obj)->anim.velocityX;
+    local_e0 = local_d4 + ((GameObject*)obj)->anim.velocityY;
+    local_dc = local_d0 + ((GameObject*)obj)->anim.velocityZ;
     local_e8 = lbl_803E3CB8;
     trackDolphin_buildSweptBounds(auStack_cc, &local_d8, &local_e4, &local_e8, 1);
-    FUN_80063a74(param_1, auStack_cc, 0, '\x01');
-    dVar7 = (double)lbl_803E3C8C;
-    while ((dVar6 < dVar4 && (iVar3 = iVar3 + 1, iVar3 < 10)))
+    FUN_80063a74(obj, auStack_cc, 0, '\x01');
+    one = (double)lbl_803E3C8C;
+    while ((traveled < distanceRemaining && (stepCount = stepCount + 1, stepCount < 10)))
     {
-        local_d8 = ((GameObject*)param_1)->anim.localPosX;
-        local_d4 = ((GameObject*)param_1)->anim.localPosY;
-        local_d0 = ((GameObject*)param_1)->anim.localPosZ;
-        fVar1 = (float)(dVar7 - (double)(float)(dVar6 / dVar4));
-        local_e4 = ((GameObject*)param_1)->anim.velocityX * fVar1 + local_d8;
-        local_e0 = ((GameObject*)param_1)->anim.velocityY * fVar1 + local_d4;
-        local_dc = ((GameObject*)param_1)->anim.velocityZ * fVar1 + local_d0;
-        iVar2 = FUN_80063a68();
-        if (iVar2 == 0)
+        local_d8 = ((GameObject*)obj)->anim.localPosX;
+        local_d4 = ((GameObject*)obj)->anim.localPosY;
+        local_d0 = ((GameObject*)obj)->anim.localPosZ;
+        stepScale = (float)(one - (double)(float)(traveled / distanceRemaining));
+        local_e4 = ((GameObject*)obj)->anim.velocityX * stepScale + local_d8;
+        local_e0 = ((GameObject*)obj)->anim.velocityY * stepScale + local_d4;
+        local_dc = ((GameObject*)obj)->anim.velocityZ * stepScale + local_d0;
+        hitFound = FUN_80063a68();
+        if (hitFound == 0)
         {
-            ((GameObject*)param_1)->anim.localPosX = local_e4;
-            ((GameObject*)param_1)->anim.localPosY = local_e0;
-            ((GameObject*)param_1)->anim.localPosZ = local_dc;
-            dVar6 = dVar4;
+            ((GameObject*)obj)->anim.localPosX = local_e4;
+            ((GameObject*)obj)->anim.localPosY = local_e0;
+            ((GameObject*)obj)->anim.localPosZ = local_dc;
+            traveled = distanceRemaining;
         }
         else
         {
-            dVar5 = FUN_80293900((double)((local_dc - local_d0) * (local_dc - local_d0) +
+            segmentLen = FUN_80293900((double)((local_dc - local_d0) * (local_dc - local_d0) +
                 (local_e4 - local_d8) * (local_e4 - local_d8) +
                 (local_e0 - local_d4) * (local_e0 - local_d4)));
-            dVar6 = (double)(float)(dVar6 + dVar5);
-            FUN_80166c6c(param_1, param_2, &local_b4, &local_e4);
+            traveled = (double)(float)(traveled + segmentLen);
+            FUN_80166c6c(obj, state, &local_b4, &local_e4);
         }
     }
-    local_d8 = ((GameObject*)param_1)->anim.localPosX;
-    local_d4 = ((GameObject*)param_1)->anim.localPosY;
-    local_d0 = ((GameObject*)param_1)->anim.localPosZ;
-    local_e4 = -(lbl_803E3CC0 * *(float*)(param_2 + 0x7c) - local_d8);
-    local_e0 = -(lbl_803E3CC0 * *(float*)(param_2 + 0x80) - local_d4);
-    local_dc = -(lbl_803E3CC0 * *(float*)(param_2 + 0x84) - local_d0);
+    local_d8 = ((GameObject*)obj)->anim.localPosX;
+    local_d4 = ((GameObject*)obj)->anim.localPosY;
+    local_d0 = ((GameObject*)obj)->anim.localPosZ;
+    local_e4 = -(lbl_803E3CC0 * *(float*)(state + 0x7c) - local_d8);
+    local_e0 = -(lbl_803E3CC0 * *(float*)(state + 0x80) - local_d4);
+    local_dc = -(lbl_803E3CC0 * *(float*)(state + 0x84) - local_d0);
     local_74 = lbl_803E3C74;
     local_60 = 3;
-    iVar3 = FUN_80063a68();
-    if (iVar3 == 0)
+    stepCount = FUN_80063a68();
+    if (stepCount == 0)
     {
         local_d8 = local_e4;
         local_d4 = local_e0;
         local_d0 = local_dc;
-        local_e4 = -((GameObject*)param_1)->anim.velocityX;
-        local_e0 = -((GameObject*)param_1)->anim.velocityY;
-        local_dc = -((GameObject*)param_1)->anim.velocityZ;
+        local_e4 = -((GameObject*)obj)->anim.velocityX;
+        local_e0 = -((GameObject*)obj)->anim.velocityY;
+        local_dc = -((GameObject*)obj)->anim.velocityZ;
         FUN_80017784(&local_e4);
         local_e4 = lbl_803E3CC4 * local_e4 + local_d8;
         local_e0 = lbl_803E3CC4 * local_e0 + local_d4;
         local_dc = lbl_803E3CC4 * local_dc + local_d0;
         local_74 = lbl_803E3C74;
         local_60 = 3;
-        iVar3 = FUN_80063a68();
-        fVar1 = lbl_803E3CC8;
-        if (iVar3 == 0)
+        stepCount = FUN_80063a68();
+        stepScale = lbl_803E3CC8;
+        if (stepCount == 0)
         {
-            ((GameObject*)param_1)->anim.velocityX = lbl_803E3CC8 * *(float*)(param_2 + 0x7c);
-            ((GameObject*)param_1)->anim.velocityY = fVar1 * *(float*)(param_2 + 0x80);
-            ((GameObject*)param_1)->anim.velocityZ = fVar1 * *(float*)(param_2 + 0x84);
-            *(byte*)(param_2 + 0x92) = *(byte*)(param_2 + 0x92) & 0xfb | 4;
+            ((GameObject*)obj)->anim.velocityX = lbl_803E3CC8 * *(float*)(state + 0x7c);
+            ((GameObject*)obj)->anim.velocityY = stepScale * *(float*)(state + 0x80);
+            ((GameObject*)obj)->anim.velocityZ = stepScale * *(float*)(state + 0x84);
+            *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xfb | 4;
         }
         else
         {
-            FUN_80166c6c(param_1, param_2, &local_b4, &local_e4);
+            FUN_80166c6c(obj, state, &local_b4, &local_e4);
         }
     }
-    else if ((((local_b4 == *(float*)(param_2 + 0x7c)) && (local_b0 == *(float*)(param_2 + 0x80)))
-        && (local_ac == *(float*)(param_2 + 0x84))) && (local_a8 == *(float*)(param_2 + 0x88)))
+    else if ((((local_b4 == *(float*)(state + 0x7c)) && (local_b0 == *(float*)(state + 0x80)))
+        && (local_ac == *(float*)(state + 0x84))) && (local_a8 == *(float*)(state + 0x88)))
     {
-        ((GameObject*)param_1)->anim.localPosX = local_e4;
-        ((GameObject*)param_1)->anim.localPosY = local_e0;
-        ((GameObject*)param_1)->anim.localPosZ = local_dc;
+        ((GameObject*)obj)->anim.localPosX = local_e4;
+        ((GameObject*)obj)->anim.localPosY = local_e0;
+        ((GameObject*)obj)->anim.localPosZ = local_dc;
     }
     else
     {
-        FUN_80166c6c(param_1, param_2, &local_b4, &local_e4);
+        FUN_80166c6c(obj, state, &local_b4, &local_e4);
     }
-    *(byte*)(param_2 + 0x92) = *(byte*)(param_2 + 0x92) & 0xf7 | 8;
+    *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xf7 | 8;
     return;
 }
 
-void FUN_80166c6c(int param_1, int param_2, float* param_3, float* param_4)
+void FUN_80166c6c(int obj, int state, float* plane, float* offset)
 {
-    float fVar1;
-    double dVar2;
-    double dVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
-    double dVar8;
-    double dVar9;
-    double dVar10;
-    double dVar11;
+    float scale;
+    double k;
+    double surfX;
+    double velX;
+    double posX;
+    double posY;
+    double posZ;
+    double surfZ;
+    double surfY;
+    double velZ;
+    double velY;
     float local_98;
     float local_94;
     float local_90;
@@ -744,53 +744,53 @@ void FUN_80166c6c(int param_1, int param_2, float* param_3, float* param_4)
     float local_84;
     float local_80;
 
-    dVar2 = (double)lbl_803E3CB8;
-    dVar5 = (double)((GameObject*)param_1)->anim.localPosX;
-    dVar10 = (double)(float)(dVar2 * (double)*(float*)(param_2 + 0x7c) + dVar5);
-    dVar6 = (double)((GameObject*)param_1)->anim.localPosY;
-    dVar9 = (double)(float)(dVar2 * (double)*(float*)(param_2 + 0x80) + dVar6);
-    dVar7 = (double)((GameObject*)param_1)->anim.localPosZ;
-    dVar8 = (double)(float)(dVar2 * (double)*(float*)(param_2 + 0x84) + dVar7);
-    dVar3 = (double)(float)(dVar2 * (double)((GameObject*)param_1)->anim.velocityX + dVar5);
-    dVar4 = (double)(float)(dVar2 * (double)((GameObject*)param_1)->anim.velocityY + dVar6);
-    dVar2 = (double)(float)(dVar2 * (double)((GameObject*)param_1)->anim.velocityZ + dVar7);
-    dVar11 = (double)(float)(dVar6 * (double)(float)(dVar8 - dVar2) +
-        (double)(float)(dVar9 * (double)(float)(dVar2 - dVar7) +
-            (double)(float)(dVar4 * (double)(float)(dVar7 - dVar8))));
-    dVar7 = (double)(float)(dVar7 * (double)(float)(dVar10 - dVar3) +
-        (double)(float)(dVar8 * (double)(float)(dVar3 - dVar5) +
-            (double)(float)(dVar2 * (double)(float)(dVar5 - dVar10))));
-    dVar3 = (double)(float)(dVar5 * (double)(float)(dVar9 - dVar4) +
-        (double)(float)(dVar10 * (double)(float)(dVar4 - dVar6) +
-            (double)(float)(dVar3 * (double)(float)(dVar6 - dVar9))));
-    dVar2 = FUN_80293900((double)(float)(dVar3 * dVar3 +
-        (double)(float)(dVar11 * dVar11 +
-            (double)(float)(dVar7 * dVar7))));
-    if ((double)lbl_803E3C74 < dVar2)
+    k = (double)lbl_803E3CB8;
+    posX = (double)((GameObject*)obj)->anim.localPosX;
+    surfX = (double)(float)(k * (double)*(float*)(state + 0x7c) + posX);
+    posY = (double)((GameObject*)obj)->anim.localPosY;
+    surfY = (double)(float)(k * (double)*(float*)(state + 0x80) + posY);
+    posZ = (double)((GameObject*)obj)->anim.localPosZ;
+    surfZ = (double)(float)(k * (double)*(float*)(state + 0x84) + posZ);
+    velX = (double)(float)(k * (double)((GameObject*)obj)->anim.velocityX + posX);
+    velY = (double)(float)(k * (double)((GameObject*)obj)->anim.velocityY + posY);
+    k = (double)(float)(k * (double)((GameObject*)obj)->anim.velocityZ + posZ);
+    velZ = (double)(float)(posY * (double)(float)(surfZ - k) +
+        (double)(float)(surfY * (double)(float)(k - posZ) +
+            (double)(float)(velY * (double)(float)(posZ - surfZ))));
+    posZ = (double)(float)(posZ * (double)(float)(surfX - velX) +
+        (double)(float)(surfZ * (double)(float)(velX - posX) +
+            (double)(float)(k * (double)(float)(posX - surfX))));
+    velX = (double)(float)(posX * (double)(float)(surfY - velY) +
+        (double)(float)(surfX * (double)(float)(velY - posY) +
+            (double)(float)(velX * (double)(float)(posY - surfY))));
+    k = FUN_80293900((double)(float)(velX * velX +
+        (double)(float)(velZ * velZ +
+            (double)(float)(posZ * posZ))));
+    if ((double)lbl_803E3C74 < k)
     {
-        dVar2 = (double)(float)((double)lbl_803E3C8C / dVar2);
-        dVar11 = (double)(float)(dVar11 * dVar2);
-        dVar7 = (double)(float)(dVar7 * dVar2);
-        dVar3 = (double)(float)(dVar3 * dVar2);
+        k = (double)(float)((double)lbl_803E3C8C / k);
+        velZ = (double)(float)(velZ * k);
+        posZ = (double)(float)(posZ * k);
+        velX = (double)(float)(velX * k);
     }
-    local_98 = (float)dVar11;
-    local_94 = (float)dVar7;
-    local_90 = (float)dVar3;
-    local_8c = -(float)(dVar8 * dVar3 +
-        (double)(float)(dVar10 * dVar11 + (double)(float)(dVar9 * dVar7)));
-    FUN_80017788(&local_98, param_3, &local_88);
+    local_98 = (float)velZ;
+    local_94 = (float)posZ;
+    local_90 = (float)velX;
+    local_8c = -(float)(surfZ * velX +
+        (double)(float)(surfX * velZ + (double)(float)(surfY * posZ)));
+    FUN_80017788(&local_98, plane, &local_88);
     FUN_80017784(&local_88);
-    fVar1 = lbl_803E3C9C;
-    ((GameObject*)param_1)->anim.velocityX = lbl_803E3C9C * local_88;
-    ((GameObject*)param_1)->anim.velocityY = fVar1 * local_84;
-    ((GameObject*)param_1)->anim.velocityZ = fVar1 * local_80;
-    *(float*)(param_2 + 0x7c) = *param_3;
-    *(float*)(param_2 + 0x80) = param_3[1];
-    *(float*)(param_2 + 0x84) = param_3[2];
-    *(float*)(param_2 + 0x88) = param_3[3];
-    ((GameObject*)param_1)->anim.localPosX = *param_4 + *(float*)(param_2 + 0x7c);
-    ((GameObject*)param_1)->anim.localPosY = param_4[1] + *(float*)(param_2 + 0x80);
-    ((GameObject*)param_1)->anim.localPosZ = param_4[2] + *(float*)(param_2 + 0x84);
+    scale = lbl_803E3C9C;
+    ((GameObject*)obj)->anim.velocityX = lbl_803E3C9C * local_88;
+    ((GameObject*)obj)->anim.velocityY = scale * local_84;
+    ((GameObject*)obj)->anim.velocityZ = scale * local_80;
+    *(float*)(state + 0x7c) = *plane;
+    *(float*)(state + 0x80) = plane[1];
+    *(float*)(state + 0x84) = plane[2];
+    *(float*)(state + 0x88) = plane[3];
+    ((GameObject*)obj)->anim.localPosX = *offset + *(float*)(state + 0x7c);
+    ((GameObject*)obj)->anim.localPosY = offset[1] + *(float*)(state + 0x80);
+    ((GameObject*)obj)->anim.localPosZ = offset[2] + *(float*)(state + 0x84);
     return;
 }
 
@@ -1318,28 +1318,28 @@ void dll_D3_update(int* obj)
     int* state;
     LandedArwingState* extra;
     int* player;
-    int iVar3;
+    int hitCount;
     int rc;
     int hits;
-    f32 local_90;
-    f32 local_8c;
-    f32 local_88;
-    f32 local_84;
+    f32 searchRadius;
+    f32 dx;
+    f32 dy;
+    f32 dz;
     int aiStack_80[24];
-    char local_30;
+    char hitType;
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     extra = *(LandedArwingState**)((char*)state + 0x40c);
     player = (int*)Obj_GetPlayerObject();
-    local_90 = lbl_803E3034;
+    searchRadius = lbl_803E3034;
 
     if (extra->boundsObj == NULL)
     {
         extra->surfaceMode = 6;
         if (((u32)extra->flags92 >> 4 & 0xF) != 0u)
         {
-            *(int*)&extra->boundsObj = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &local_90);
+            *(int*)&extra->boundsObj = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &searchRadius);
             if (extra->boundsObj != NULL)
             {
                 (*(void (**)(int, int, int))(*(int**)(*(int*)&extra->boundsObj + 0x68) + 0x20 / 4))(
@@ -1412,14 +1412,14 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
-        local_8c = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
+        dx = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
             ((GameObject*)obj)->anim.worldPosX;
-        local_88 = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
+        dy = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
             ((GameObject*)obj)->anim.worldPosY;
-        local_84 = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
+        dz = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
-            sqrtf(local_8c * local_8c + local_88 * local_88 + local_84 * local_84);
+            sqrtf(dx * dx + dy * dy + dz * dz);
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
@@ -1460,12 +1460,12 @@ void dll_D3_update(int* obj)
     if ((extra->flags92 & 1) == 0 &&
         extra->surfaceMode == 6)
     {
-        iVar3 = objBboxFn_800640cc(
+        hitCount = objBboxFn_800640cc(
             (int)((char*)obj + 0x80),
             &((GameObject*)obj)->anim.localPosX,
             lbl_803E3030, 0,
             aiStack_80, obj, -0x7c, -1, 0xff, 0);
-        if (iVar3 != 0 && local_30 == 13)
+        if (hitCount != 0 && hitType == 13)
         {
             extra->flags92 =
                 (u8)((extra->flags92 & 0xfe) | 1);
