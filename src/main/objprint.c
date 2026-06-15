@@ -1994,7 +1994,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     if (*(s32*)((char*)p2 + 0) < 0) return;
     t = *(f32*)((char*)p2 + 8) - timeDelta;
     *(f32*)((char*)p2 + 8) = t;
-    if (t >= lbl_803DE9A4) return;
+    if (!(t < lbl_803DE9A4)) return;
     frame = *(int*)((char*)p2 + 0);
     if (frame >= *(int*)((char*)p2 + 4))
     {
