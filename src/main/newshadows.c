@@ -1529,10 +1529,9 @@ extern NewShadowEntry lbl_8038DF48[0x25];
 void findSomething(void* needle)
 {
     int i;
-    NewShadowEntry* entry;
-    for (i = 0, entry = lbl_8038DF48; i < 0x25; entry++, ++i)
+    for (i = 0; i < 0x25; ++i)
     {
-        if (entry->isActive != 0 && (void*)entry == needle)
+        if (lbl_8038DF48[i].isActive != 0 && (void*)&lbl_8038DF48[i] == needle)
         {
             lbl_8038DF48[i].isActive = 0;
             return;
