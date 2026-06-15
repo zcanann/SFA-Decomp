@@ -30,7 +30,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
-extern void disableHeavyFog(void);
 extern f32 lbl_803E4610;
 extern f32 lbl_803E4614;
 
