@@ -2771,7 +2771,7 @@ void* textureLoad(int texId, u8 flag)
     int restore;
     int disabled;
     int n;
-    int m;
+    u16 m;
     int bank;
     int file;
     int id16;
@@ -2797,14 +2797,13 @@ void* textureLoad(int texId, u8 flag)
         }
     }
     n = 0;
-    entry = gLoadedTextures;
-    for (; n < gLoadedTextureCount; n++, entry++)
+    for (; n < gLoadedTextureCount; n++)
     {
-        if (entry->key == texId)
+        if (gLoadedTextures[n].key == texId)
         {
-            tex = entry->texture;
+            tex = gLoadedTextures[n].texture;
             ((Texture*)tex)->refCount += 1;
-            if (flag != 0 && entry->flag != 0)
+            if (flag != 0 && gLoadedTextures[n].flag != 0)
             {
                 return (void*)(n + 1);
             }
