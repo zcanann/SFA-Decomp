@@ -147,16 +147,14 @@ void dfpfloorbar_update(int obj)
     state->requiredScore = gDfpfloorbarModeTable[state->modeIndex];
 
     active = state->active;
-    if (active != 0)
+    if (active != 0 &&
+        ((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
     {
-        if (((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXfoot_water_walk_2);
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - timeDelta / lbl_803E6410;
+        if (((GameObject*)obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
         {
-            Sfx_KeepAliveLoopedObjectSound(obj, SFXfoot_water_walk_2);
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - timeDelta / lbl_803E6410;
-            if (((GameObject*)obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
-            {
-                ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
-            }
+            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
         }
         return;
     }
