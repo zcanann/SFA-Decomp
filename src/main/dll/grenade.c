@@ -1292,7 +1292,7 @@ int trickyFn_80143c04(int obj, int state)
     if (*(u32*)&((TrickyState*)state)->unk28 != iVar4)
     {
         *(int*)&((TrickyState*)state)->unk28 = iVar4;
-        *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~(u64)0x400;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x400LL;
         *(short*)&((TrickyState*)state)->unkD2 = 0;
     }
     if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
@@ -1302,58 +1302,58 @@ int trickyFn_80143c04(int obj, int state)
     }
     else
     {
-        threshold = lbl_803E2408;
         if ((*(u32*)&((TrickyState*)state)->stateFlags & 0x20000) != 0)
         {
             ((TrickyState*)state)->unkD = 0;
-            *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~(u64)0x20000;
+            *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x20000LL;
         }
+        threshold = lbl_803E2408;
     }
-    result = trickyFn_8013b368(threshold, obj, state);
-    if (result == 1)
+    result = trickyFn_8013b368((int)obj, threshold, (int)state);
+    if (result != 1)
     {
-        ((FlagByte728*)(state + 0x728))->bf7 = 1;
-        return 1;
-    }
-    if (result == 2)
-    {
-        if ((*(u32*)&((TrickyState*)state)->stateFlags & 2) != 0)
+        if (result == 2)
         {
-            tex = *(int*)&((GameObject*)obj)->extra;
-            if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0)
+            if ((*(u32*)&((TrickyState*)state)->stateFlags & 2) != 0)
             {
-                move = ((GameObject*)obj)->anim.currentMove;
-                if (move >= 48 || move < 41)
+                tex = *(int*)&((GameObject*)obj)->extra;
+                if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0u)
                 {
-                    if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                    move = ((GameObject*)obj)->anim.currentMove;
+                    if (move >= 48 || move < 41)
                     {
-                        objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
+                        if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                        {
+                            objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
+                        }
                     }
                 }
             }
         }
+        if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+        {
+            iVar4 = 0;
+        }
+        else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+        {
+            iVar4 = 1;
+        }
+        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+        {
+            iVar4 = 1;
+        }
+        else
+        {
+            iVar4 = 0;
+        }
+        if (iVar4 != 0)
+        {
+            return 0;
+        }
+        return fn_80143DD4(obj, (int*)state);
     }
-    if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
-    {
-        iVar4 = 0;
-    }
-    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
-    {
-        iVar4 = 1;
-    }
-    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
-    {
-        iVar4 = 1;
-    }
-    else
-    {
-        iVar4 = 0;
-    }
-    if (iVar4 != 0)
-    {
-        return 0;
-    }
-    return fn_80143DD4(obj, (int*)state);
+    ((FlagByte728*)(state + 0x728))->bf7 = 1;
+    return 1;
 }
 
 
