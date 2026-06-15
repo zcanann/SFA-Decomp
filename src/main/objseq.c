@@ -1099,8 +1099,8 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
 {
     u8* base = lbl_80396918;
     ObjAnimComponent* sourceAnim = (ObjAnimComponent*)sourceObj;
-    u32 cmdByte = cmd & 0xff;
-    int cmdArg = (cmd >> 8) & 0xff;
+    u32 cmdByte;
+    int cmdArg;
     u8* slotPtr;
     int pair[2];
     u8* player;
@@ -1112,6 +1112,8 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
     f32 dist;
     f32 strength;
 
+    cmdArg = (cmd >> 8) & 0xff;
+    cmdByte = cmd & 0xff;
     switch (cmdByte)
     {
     case 2:
