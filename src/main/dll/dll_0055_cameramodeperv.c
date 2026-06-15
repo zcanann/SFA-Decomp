@@ -61,7 +61,6 @@ extern f32 lbl_803E1B7C;
 extern f32 lbl_803E1B80;
 extern f32 lbl_803E1B84;
 extern f32 lbl_803E1B88;
-extern f32 lbl_803E1B00;
 extern f32 mathCosf(f32 x);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
