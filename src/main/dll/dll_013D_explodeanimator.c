@@ -64,9 +64,9 @@ void explodeanimator_initialise(void)
 
 void explodeanimator_update(int* obj)
 {
+    int i;
     u8* sub;
     u8* def;
-    int i;
     f32 buf[6];
     f32 vel[2];
 
