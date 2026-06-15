@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/barrelgener_state.h"
+#include "main/dll/curve_walker.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -174,10 +175,8 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     PSVECCrossProduct(n1, n2, cross);
     if (PSVECMag(cross) > lbl_803E6C38)
     {
-        f32 cmpFlag;
         ang = fn_80291FF4(PSVECDotProduct(n1, n2));
-        cmpFlag = (f32)(ang > c);
-        if (cmpFlag != lbl_803E6C38)
+        if (ang > c)
         {
             PSMTXRotAxisRad(mtx, cross, c * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
             PSMTXMultVecSR(mtx, n1, n2);
@@ -222,7 +221,7 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
     d[0] = route->posX - ((GameObject*)obj)->anim.localPosX;
     d[1] = route->posY - ((GameObject*)obj)->anim.localPosY;
     d[2] = route->posZ - ((GameObject*)obj)->anim.localPosZ;
-    if ((u8)flag == 0)
+    if (flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
@@ -267,7 +266,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
     d[0] = route->posX - ((GameObject*)obj)->anim.localPosX;
     d[1] = route->posY - ((GameObject*)obj)->anim.localPosY;
     d[2] = route->posZ - ((GameObject*)obj)->anim.localPosZ;
-    if ((u8)flag == 0)
+    if (flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
@@ -301,7 +300,6 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
 
 int fn_80221978(int obj, void** entries, int count, void** light, f32 intensity)
 {
-    extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, int angle, int c, int d);
     int i;
     int spawned;
     void** p;
@@ -311,7 +309,7 @@ int fn_80221978(int obj, void** entries, int count, void** light, f32 intensity)
     if (lbl_803E6C38 == intensity)
     {
         spawned = 0;
-        for (i = 0, p = entries; i < count; i++, p++)
+        for (i = 0, p = entries; i < count; p++, i++)
         {
             if (*p != 0)
             {
@@ -326,7 +324,7 @@ int fn_80221978(int obj, void** entries, int count, void** light, f32 intensity)
         return 0;
     }
 
-    for (i = 0, p = entries; i < count; i++, p++)
+    for (i = 0, p = entries; i < count; p++, i++)
     {
         if (*p != 0)
         {
@@ -389,13 +387,24 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         delta = lbl_803E6C88 + delta;
     }
     delta *= rate;
-    clamped = (delta < lbl_803E6C90) ? lbl_803E6C90 : ((delta > lbl_803E6C94) ? lbl_803E6C94 : delta);
-    *(s16*)(a + 0) = *(volatile s16*)(a + 0) + (int)clamped;
+    if (delta < lbl_803E6C90)
+    {
+        clamped = lbl_803E6C90;
+    }
+    else if (delta > lbl_803E6C94)
+    {
+        clamped = lbl_803E6C94;
+    }
+    else
+    {
+        clamped = delta;
+    }
+    *(s16*)(a + 0) = *(s16*)(a + 0) + (int)clamped;
 
     if (d != lbl_803E6C38)
     {
-        *(s16*)(a + 4) = (s16)(lbl_803E6C98 * (f32)(int) * (s16*)(a + 4));
-        *(s16*)(a + 4) = (s16)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32)(int) * (s16*)(a + 4));
+        *(s16*)(a + 4) = (int)(lbl_803E6C98 * (f32) * (s16*)(a + 4));
+        *(s16*)(a + 4) = (int)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32) * (s16*)(a + 4));
         tmp = *(s16*)(a + 4);
         if (tmp < -0x2000)
         {
@@ -420,19 +429,18 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         {
             delta = lbl_803E6C88 + delta;
         }
-        *(s16*)(a + 2) = *(volatile s16*)(a + 2) + (int)(delta * rate);
+        *(s16*)(a + 2) = *(s16*)(a + 2) + (int)(delta * rate);
     }
 }
 
-#pragma opt_loop_invariants off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
-    f32 pos[3];
-    f32 step[3];
     f32 vel[3];
-    int gridOut[2];
-    int gridB[2];
+    f32 step[3];
+    f32 pos[3];
     int gridA[2];
+    int gridB[2];
+    int gridOut[3];
     int i;
 
     if ((u32)obj != (u32)Obj_GetPlayerObject())
@@ -462,7 +470,6 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
     voxmaps_worldToGrid(pos, gridB);
     return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
 }
-#pragma opt_loop_invariants reset
 
 int voxmaps_traceWorldLine(void* p1, void* p2)
 {
@@ -482,7 +489,8 @@ void voxmaps_traceScaledVectorEnd(f32* p1, void* p2, f32* p3, f32 scale)
     int gridA[2];
     int gridB[2];
     int gridOut[2];
-    struct TwoWords { int a; int b; };
+    int e0;
+    int e1;
 
     PSVECNormalize(p3, p3);
     PSVECScale(p3, scaled, scale);
@@ -491,6 +499,5 @@ void voxmaps_traceScaledVectorEnd(f32* p1, void* p2, f32* p3, f32 scale)
     voxmaps_worldToGrid(endPos, gridB);
     if (voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) == 0)
         voxmaps_gridToWorld(endPos, gridOut);
-    *(struct TwoWords*)&p1[0] = *(struct TwoWords*)&endPos[0];
-    *(int*)&p1[2] = *(int*)&endPos[2];
+    *(SunVec3*)p1 = *(SunVec3*)endPos;
 }
