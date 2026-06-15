@@ -1157,19 +1157,24 @@ void ktrex_updateAttackEffects(int obj)
     }
 }
 
+typedef struct KTRexQuad
+{
+    int a;
+    int b;
+    int c;
+    int d;
+} KTRexQuad;
+
 void ktrex_updateContactEffects(int obj, void* runtime)
 {
-    int hitA;
-    uint hitC;
     int hitType;
+    uint hitC;
+    int hitA;
     int msg[4];
     int hit;
     f32* contactPoints;
     f32* pt;
-    msg[0] = lbl_802C2550[0];
-    msg[1] = lbl_802C2550[1];
-    msg[2] = lbl_802C2550[2];
-    msg[3] = lbl_802C2550[3];
+    *(KTRexQuad*)msg = *(KTRexQuad*)lbl_802C2550;
     if (lbl_803DDD4C != 0)
     {
         lbl_803DDD4C -= 1;
