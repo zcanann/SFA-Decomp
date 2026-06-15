@@ -150,9 +150,9 @@ void DIMbossspit_updateBurst(int obj)
                                      &radius);
 }
 
-void DIMbossspit_free(int param_1)
+void DIMbossspit_free(int objArg)
 {
-    int obj = param_1;
+    int obj = objArg;
     uint state;
 
     state = *(uint*)(*(int*)&((GameObject*)obj)->extra + 4);
@@ -164,14 +164,14 @@ void DIMbossspit_free(int param_1)
     return;
 }
 
-void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void DIMbossspit_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     ModelLightStruct* light;
 
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, param_2, param_3, param_4, param_5,
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
                                                                       lbl_803E4D44);
         light = ((DIMbossspitState*)light)->light;
         if (((light != 0) && (light->glowType != 0)) && (light->enabled != 0))
