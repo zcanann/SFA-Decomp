@@ -6,13 +6,9 @@
 #include "main/dll/dll1cestate_struct.h"
 #include "main/dll/explosionpartfxsource_struct.h"
 #include "main/dll/explosion_state.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2flameburst.h"
-#include "main/objhits.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -90,7 +86,6 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
-extern void textureFree(int tex);
 extern f32 lbl_803E49D0;
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49D4;
@@ -101,7 +96,6 @@ extern f32 lbl_803E49D8;
 extern f32 lbl_803E49DC;
 extern f32 lbl_803E49E0;
 extern f32 lbl_803E49E4;
-extern int Obj_IsLoadingLocked(void);
 
 void FUN_801b3de4(undefined4 param_1, uint param_2)
 {
