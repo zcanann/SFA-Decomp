@@ -2,7 +2,6 @@
 #include "dolphin/os.h"
 #include "dolphin/vi.h"
 #include "main/dll/FRONT/attract_movie.h"
-#include "main/dll/FRONT/n_options.h"
 
 extern void* memset(void* dst, int value, uint size);
 extern void* memcpy(void* dst, const void* src, uint size);
