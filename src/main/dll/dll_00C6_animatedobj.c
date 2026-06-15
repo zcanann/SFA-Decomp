@@ -369,11 +369,9 @@ extern void dll_F7_update();
 extern void dll_F7_init();
 extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
 extern void clearCurSeqNo(void);
-extern int mmAlloc(int size, int a, int b);
 extern void objSetSlot(int* obj, int slot);
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern f32 lbl_803E3228;
-extern void vecRotateZXY(int* obj, f32* p);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 lbl_803E322C;
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
@@ -385,7 +383,6 @@ extern void objSetMtxFn_800412d4(f32 * m);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3230;
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
