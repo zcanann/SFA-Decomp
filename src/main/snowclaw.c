@@ -231,8 +231,8 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
         spawned = loadObjectAtObject(obj, obj2);
         if (spawned != NULL)
         {
-            *(int*)(spawned + 0xf4) = (u8)c;
-            *(int*)(spawned + 0xc4) = a;
+            ((GameObject*)spawned)->unkF4 = (u8)c;
+            ((GameObject*)spawned)->ownerObj = (void*)a;
         }
     }
 }
