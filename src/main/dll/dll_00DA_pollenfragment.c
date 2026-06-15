@@ -418,7 +418,6 @@ void pollenfragment_update(int obj)
 {
     u8* extra;
     u8* nearObj;
-    ObjHitsPriorityState* hitState;
     void* hit;
     int i;
     f32 w;
@@ -428,7 +427,6 @@ void pollenfragment_update(int obj)
     XyzVec pos;
 
     extra = *(u8**)&((GameObject*)obj)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (getCurSeqNo() != 0)
     {
         Obj_FreeObject(obj);
@@ -546,7 +544,7 @@ void pollenfragment_update(int obj)
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((u32)obj, 0x16, 1, 0);
     ObjHits_EnableObject((u32)obj);
-    hit = (void*)hitState->lastHitObject;
+    hit = (void*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (hit != NULL && *(s16*)((u8*)hit + 0x46) != ((GameObject*)obj)->anim.seqId && hit != *(void**)extra)
     {
         *(f32*)(extra + 8) = lbl_803E3160;
