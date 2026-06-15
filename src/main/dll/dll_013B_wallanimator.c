@@ -27,7 +27,6 @@ extern undefined4 ObjGroup_AddObject();
 
 extern void mm_free(void* p);
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3F98;
 extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
 extern void mm_free(void* ptr);
