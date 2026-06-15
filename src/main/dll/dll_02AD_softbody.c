@@ -1,7 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/objhits.h"
-#include "main/obj_placement.h"
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
 #define SOFTBODY_MOVE_PHASE_A_FIRST 0x6af
