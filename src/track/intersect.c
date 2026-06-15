@@ -1721,8 +1721,8 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    Mtx mtx_24;
     Mtx mtx_54;
+    Mtx mtx_24;
     void* renderOp;
     void* tex;
     void* model;
