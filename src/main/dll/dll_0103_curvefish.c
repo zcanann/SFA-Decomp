@@ -65,7 +65,7 @@ STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
 STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
-extern f32 lbl_803E3928;
+extern const f32 lbl_803E3928;
 
 int curvefish_getExtraSize(void) { return 0x120; }
 
