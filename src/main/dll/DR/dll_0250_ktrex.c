@@ -548,6 +548,7 @@ void ktrex_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefi
     *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x100000LL;
 }
 
+#pragma fp_contract off
 void ktrex_update(int obj)
 {
     void* runtime;
@@ -635,6 +636,7 @@ void ktrex_update(int obj)
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     ((GameObject*)obj)->anim.localPosY = ((KTRexArenaState*)gKTRexState)->unkEC;
 }
+#pragma fp_contract reset
 
 int ktrex_stateHandlerB05(int obj, int runtime)
 {
