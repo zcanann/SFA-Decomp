@@ -3,11 +3,8 @@
 
 extern f32 timeDelta;
 
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
-#include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
 
 extern s16* Camera_GetCurrentViewSlot(void);
