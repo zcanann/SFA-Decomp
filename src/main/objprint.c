@@ -137,22 +137,22 @@ void objAnimFn_80038f38(int obj, char* p2)
 void FUN_80039468(undefined4 param_1, undefined4 param_2, ushort param_3, short param_4, uint param_5,
                   uint param_6)
 {
-    uint uVar1;
-    bool bVar2;
-    undefined* puVar3;
-    undefined8 uVar4;
+    uint obj;
+    bool playing;
+    undefined* state;
+    undefined8 ctx;
 
-    uVar4 = FUN_80286840();
-    uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
-    puVar3 = (undefined*)uVar4;
-    if (((param_6 & 0xff) != 0) || (bVar2 = FUN_800067f0(uVar1, 0x10), !bVar2))
+    ctx = FUN_80286840();
+    obj = (uint)((ulonglong)ctx >> 0x20);
+    state = (undefined*)ctx;
+    if (((param_6 & 0xff) != 0) || (playing = FUN_800067f0(obj, 0x10), !playing))
     {
-        FUN_8000681c(uVar1, 0x10, param_3);
-        *(float*)(puVar3 + 0xc) =
+        FUN_8000681c(obj, 0x10, param_3);
+        *(float*)(state + 0xc) =
             (f32)(s32)(param_5);
-        *(short*)(puVar3 + 0x14) = -param_4;
-        *puVar3 = 1;
-        *(float*)(puVar3 + 4) = lbl_803DF61C;
+        *(short*)(state + 0x14) = -param_4;
+        *state = 1;
+        *(float*)(state + 4) = lbl_803DF61C;
     }
     FUN_8028688c();
     return;
@@ -163,63 +163,63 @@ undefined4* FUN_80039518(void)
     return &DAT_802cba60;
 }
 
-int FUN_80039520(int param_1, uint param_2)
+int FUN_80039520(int param_1, uint tag)
 {
-    uint uVar1;
-    int iVar2;
-    byte* pbVar3;
-    int iVar4;
-    int iVar5;
+    uint remaining;
+    int hitDef;
+    byte* entry;
+    int offset;
+    int found;
 
-    iVar5 = 0;
-    iVar2 = *(int*)(param_1 + 0x50);
-    if (iVar2 != 0)
+    found = 0;
+    hitDef = *(int*)(param_1 + 0x50);
+    if (hitDef != 0)
     {
-        pbVar3 = *(byte**)(iVar2 + 0xc);
-        if (pbVar3 == (byte*)0x0)
+        entry = *(byte**)(hitDef + 0xc);
+        if (entry == (byte*)0x0)
         {
             return 0;
         }
-        iVar4 = 0;
-        for (uVar1 = (uint) * (byte*)(iVar2 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1)
+        offset = 0;
+        for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
         {
-            if (param_2 == *pbVar3)
+            if (tag == *entry)
             {
-                iVar5 = *(int*)(param_1 + 0x70) + iVar4;
+                found = *(int*)(param_1 + 0x70) + offset;
             }
-            pbVar3 = pbVar3 + 2;
-            iVar4 = iVar4 + 0x10;
+            entry = entry + 2;
+            offset = offset + 0x10;
         }
     }
-    return iVar5;
+    return found;
 }
 
-int FUN_8003964c(int param_1, uint param_2)
+int FUN_8003964c(int param_1, uint key)
 {
-    uint uVar1;
-    int iVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    uint remaining;
+    int vecOffset;
+    int entryIdx;
+    int model;
+    int found;
 
-    iVar5 = 0;
-    iVar4 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
-    if (iVar4 != 0)
+    found = 0;
+    model = (int)OBJPRINT_MODEL_INSTANCE(param_1);
+    if (model != 0)
     {
-        iVar3 = 0;
-        iVar2 = 0;
-        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar4); uVar1 != 0; uVar1 = uVar1 - 1)
+        entryIdx = 0;
+        vecOffset = 0;
+        for (remaining = (uint)OBJPRINT_JOINT_COUNT(model); remaining != 0; remaining = remaining - 1)
         {
-            if ((*(char*)(*(int*)(iVar4 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar3 + 1) != -1) &&
-                (param_2 == *(byte*)(*(int*)(iVar4 + 0x10) + iVar3)))
+            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + entryIdx + 1) != -1) &&
+                (key == *(byte*)(*(int*)(model + 0x10) + entryIdx)))
             {
-                iVar5 = *(int*)(param_1 + 0x6c) + iVar2;
+                found = *(int*)(param_1 + 0x6c) + vecOffset;
             }
-            iVar3 = OBJPRINT_MODEL_COUNT(iVar4) + iVar3 + 1;
-            iVar2 = iVar2 + 0x12;
+            entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
+            vecOffset = vecOffset + 0x12;
         }
     }
-    return iVar5;
+    return found;
 }
 
 undefined4 FUN_8003988c(double param_1, double param_2, int param_3, short* param_4)
@@ -511,40 +511,40 @@ void FUN_80039e6c(double param_1, short* param_2, char* param_3, int param_4)
 
 void FUN_8003a1c4(int param_1, int param_2)
 {
-    uint uVar1;
-    short* psVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    uint scaled;
+    short* found;
+    int model;
+    int entryIdx;
+    int vecOffset;
 
-    psVar2 = (short*)0x0;
-    iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
-    if (iVar3 != 0)
+    found = (short*)0x0;
+    model = (int)OBJPRINT_MODEL_INSTANCE(param_1);
+    if (model != 0)
     {
-        iVar4 = 0;
-        iVar5 = 0;
-        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1)
+        entryIdx = 0;
+        vecOffset = 0;
+        for (scaled = (uint)OBJPRINT_JOINT_COUNT(model); scaled != 0; scaled = scaled - 1)
         {
-            if ((*(char*)(*(int*)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar4 + 1) != -1) &&
-                (*(char*)(*(int*)(iVar3 + 0x10) + iVar4) == '\0'))
+            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + entryIdx + 1) != -1) &&
+                (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
             {
-                psVar2 = (short*)(*(int*)(param_1 + 0x6c) + iVar5);
+                found = (short*)(*(int*)(param_1 + 0x6c) + vecOffset);
             }
-            iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
-            iVar5 = iVar5 + 0x12;
+            entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
+            vecOffset = vecOffset + 0x12;
         }
     }
-    if (psVar2 != (short*)0x0)
+    if (found != (short*)0x0)
     {
-        if (*psVar2 != 0)
+        if (*found != 0)
         {
-            uVar1 = *psVar2 * 3;
-            *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+            scaled = *found * 3;
+            *found = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
         }
-        if (psVar2[1] != 0)
+        if (found[1] != 0)
         {
-            uVar1 = psVar2[1] * 3;
-            psVar2[1] = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+            scaled = found[1] * 3;
+            found[1] = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
         }
         *(undefined2*)(param_2 + 0x1a) = 0;
         return;
@@ -652,80 +652,80 @@ void FUN_8003a9c8(int param_1, uint param_2, undefined2 param_3, undefined2 para
     return;
 }
 
-void FUN_8003ac24(int param_1, uint* param_2, int param_3)
+void FUN_8003ac24(int param_1, uint* keys, int count)
 {
-    uint uVar1;
-    int iVar2;
-    short* psVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
+    uint remaining;
+    int idx;
+    short* found;
+    int hitDef;
+    int entryIdx;
+    int vecOffset;
 
-    for (iVar2 = 0; iVar2 < param_3; iVar2 = iVar2 + 1)
+    for (idx = 0; idx < count; idx = idx + 1)
     {
-        psVar3 = (short*)0x0;
-        iVar4 = *(int*)(param_1 + 0x50);
-        if (iVar4 != 0)
+        found = (short*)0x0;
+        hitDef = *(int*)(param_1 + 0x50);
+        if (hitDef != 0)
         {
-            iVar5 = 0;
-            iVar6 = 0;
-            for (uVar1 = (uint) * (byte*)(iVar4 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1)
+            entryIdx = 0;
+            vecOffset = 0;
+            for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
-                if ((*(char*)(*(int*)(iVar4 + 0x10) + *(char*)(param_1 + 0xad) + iVar5 + 1) != -1) &&
-                    (*param_2 == (uint) * (byte*)(*(int*)(iVar4 + 0x10) + iVar5)))
+                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(param_1 + 0xad) + entryIdx + 1) != -1) &&
+                    (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
-                    psVar3 = (short*)(*(int*)(param_1 + 0x6c) + iVar6);
+                    found = (short*)(*(int*)(param_1 + 0x6c) + vecOffset);
                 }
-                iVar5 = *(char*)(iVar4 + 0x55) + iVar5 + 1;
-                iVar6 = iVar6 + 0x12;
+                entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
+                vecOffset = vecOffset + 0x12;
             }
         }
-        if (psVar3 != (short*)0x0)
+        if (found != (short*)0x0)
         {
-            psVar3[1] = (short)(psVar3[1] * 3 >> 2);
-            *psVar3 = (short)(*psVar3 * 3 >> 2);
-            psVar3[2] = (short)(psVar3[2] * 3 >> 2);
+            found[1] = (short)(found[1] * 3 >> 2);
+            *found = (short)(*found * 3 >> 2);
+            found[2] = (short)(found[2] * 3 >> 2);
         }
-        param_2 = param_2 + 1;
+        keys = keys + 1;
     }
     return;
 }
 
-void FUN_8003ad08(int param_1, uint* param_2, int param_3, int param_4)
+void FUN_8003ad08(int param_1, uint* keys, int count, int out)
 {
-    uint uVar1;
-    undefined2* puVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
+    uint remaining;
+    undefined2* found;
+    int hitDef;
+    int entryIdx;
+    int vecOffset;
+    int idx;
 
-    for (iVar6 = 0; iVar6 < param_3; iVar6 = iVar6 + 1)
+    for (idx = 0; idx < count; idx = idx + 1)
     {
-        puVar2 = (undefined2*)0x0;
-        iVar3 = *(int*)(param_1 + 0x50);
-        if (iVar3 != 0)
+        found = (undefined2*)0x0;
+        hitDef = *(int*)(param_1 + 0x50);
+        if (hitDef != 0)
         {
-            iVar4 = 0;
-            iVar5 = 0;
-            for (uVar1 = (uint) * (byte*)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1)
+            entryIdx = 0;
+            vecOffset = 0;
+            for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
-                if ((*(char*)(*(int*)(iVar3 + 0x10) + *(char*)(param_1 + 0xad) + iVar4 + 1) != -1) &&
-                    (*param_2 == (uint) * (byte*)(*(int*)(iVar3 + 0x10) + iVar4)))
+                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(param_1 + 0xad) + entryIdx + 1) != -1) &&
+                    (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
-                    puVar2 = (undefined2*)(*(int*)(param_1 + 0x6c) + iVar5);
+                    found = (undefined2*)(*(int*)(param_1 + 0x6c) + vecOffset);
                 }
-                iVar4 = *(char*)(iVar3 + 0x55) + iVar4 + 1;
-                iVar5 = iVar5 + 0x12;
+                entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
+                vecOffset = vecOffset + 0x12;
             }
         }
-        if (puVar2 != (undefined2*)0x0)
+        if (found != (undefined2*)0x0)
         {
-            *(undefined2*)(param_4 + 0x16) = puVar2[1];
-            *(undefined2*)(param_4 + 0x46) = *puVar2;
+            *(undefined2*)(out + 0x16) = found[1];
+            *(undefined2*)(out + 0x46) = *found;
         }
-        param_2 = param_2 + 1;
-        param_4 = param_4 + 0x60;
+        keys = keys + 1;
+        out = out + 0x60;
     }
     return;
 }
@@ -882,117 +882,117 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int param_3, uint para
 
 void FUN_8003b1a4(int param_1, int param_2)
 {
-    uint uVar1;
-    int* piVar2;
-    char* pcVar3;
-    int* piVar4;
-    int iVar5;
-    int iVar6;
+    uint remaining;
+    int* found5;
+    char* entry;
+    int* found4;
+    int hitDef;
+    int offset;
 
-    piVar2 = (int*)0x0;
-    iVar5 = *(int*)(param_1 + 0x50);
-    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    found5 = (int*)0x0;
+    hitDef = *(int*)(param_1 + 0x50);
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
-        iVar6 = 0;
-        for (uVar1 = (uint) * (byte*)(iVar5 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1)
+        offset = 0;
+        for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
         {
-            if (*pcVar3 == '\x05')
+            if (*entry == '\x05')
             {
-                piVar2 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+                found5 = (int*)(*(int*)(param_1 + 0x70) + offset);
             }
-            pcVar3 = pcVar3 + 2;
-            iVar6 = iVar6 + 0x10;
+            entry = entry + 2;
+            offset = offset + 0x10;
         }
     }
-    piVar4 = (int*)0x0;
-    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    found4 = (int*)0x0;
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
-        iVar6 = 0;
-        for (uVar1 = (uint) * (byte*)(iVar5 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1)
+        offset = 0;
+        for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
         {
-            if (*pcVar3 == '\x04')
+            if (*entry == '\x04')
             {
-                piVar4 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+                found4 = (int*)(*(int*)(param_1 + 0x70) + offset);
             }
-            pcVar3 = pcVar3 + 2;
-            iVar6 = iVar6 + 0x10;
+            entry = entry + 2;
+            offset = offset + 0x10;
         }
     }
-    if (piVar2 == (int*)0x0)
+    if (found5 == (int*)0x0)
     {
         return;
     }
-    if (piVar4 == (int*)0x0)
+    if (found4 == (int*)0x0)
     {
         return;
     }
-    iVar5 = *piVar4 + (uint)DAT_803dc070 * 0x30;
-    if (0x1ff < iVar5)
+    hitDef = *found4 + (uint)DAT_803dc070 * 0x30;
+    if (0x1ff < hitDef)
     {
-        iVar5 = 0x200;
+        hitDef = 0x200;
     }
-    *piVar2 = iVar5;
-    *piVar4 = iVar5;
+    *found5 = hitDef;
+    *found4 = hitDef;
     *(undefined*)(param_2 + 0x1e) = 1;
     return;
 }
 
 void FUN_8003b280(int param_1, int param_2)
 {
-    int* piVar1;
-    uint uVar2;
-    char* pcVar3;
-    int* piVar4;
-    int iVar5;
-    int iVar6;
+    int* found5;
+    uint state;
+    char* entry;
+    int* found4;
+    int hitDef;
+    int offset;
 
-    piVar1 = (int*)0x0;
-    iVar5 = *(int*)(param_1 + 0x50);
-    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    found5 = (int*)0x0;
+    hitDef = *(int*)(param_1 + 0x50);
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
-        iVar6 = 0;
-        for (uVar2 = (uint) * (byte*)(iVar5 + 0x59); uVar2 != 0; uVar2 = uVar2 - 1)
+        offset = 0;
+        for (state = (uint) * (byte*)(hitDef + 0x59); state != 0; state = state - 1)
         {
-            if (*pcVar3 == '\x05')
+            if (*entry == '\x05')
             {
-                piVar1 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+                found5 = (int*)(*(int*)(param_1 + 0x70) + offset);
             }
-            pcVar3 = pcVar3 + 2;
-            iVar6 = iVar6 + 0x10;
+            entry = entry + 2;
+            offset = offset + 0x10;
         }
     }
-    piVar4 = (int*)0x0;
-    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    found4 = (int*)0x0;
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
-        iVar6 = 0;
-        for (uVar2 = (uint) * (byte*)(iVar5 + 0x59); uVar2 != 0; uVar2 = uVar2 - 1)
+        offset = 0;
+        for (state = (uint) * (byte*)(hitDef + 0x59); state != 0; state = state - 1)
         {
-            if (*pcVar3 == '\x04')
+            if (*entry == '\x04')
             {
-                piVar4 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+                found4 = (int*)(*(int*)(param_1 + 0x70) + offset);
             }
-            pcVar3 = pcVar3 + 2;
-            iVar6 = iVar6 + 0x10;
+            entry = entry + 2;
+            offset = offset + 0x10;
         }
     }
-    if ((piVar1 != (int*)0x0) && (piVar4 != (int*)0x0))
+    if ((found5 != (int*)0x0) && (found4 != (int*)0x0))
     {
-        uVar2 = (int)*(char*)(param_2 + 0x1e) & 0xf;
-        if (uVar2 == 1)
+        state = (int)*(char*)(param_2 + 0x1e) & 0xf;
+        if (state == 1)
         {
             if (((int)*(char*)(param_2 + 0x1e) & 0x80U) == 0)
             {
-                iVar5 = *piVar4 + (uint)DAT_803dc070 * 0x60;
-                if (0x200 < iVar5)
+                hitDef = *found4 + (uint)DAT_803dc070 * 0x60;
+                if (0x200 < hitDef)
                 {
-                    if (iVar5 + -0x200 < 0)
+                    if (hitDef + -0x200 < 0)
                     {
-                        iVar5 = 0;
+                        hitDef = 0;
                         *(undefined*)(param_2 + 0x1e) = 0;
                     }
                     else
                     {
-                        iVar5 = 0x2ff;
+                        hitDef = 0x2ff;
                         *(undefined*)(param_2 + 0x1e) = 0x81;
                     }
                     *(undefined*)(param_2 + 0x1f) = 0x28;
@@ -1000,23 +1000,23 @@ void FUN_8003b280(int param_1, int param_2)
             }
             else
             {
-                iVar5 = *piVar4 + (uint)DAT_803dc070 * -0x60;
-                if (iVar5 < 0)
+                hitDef = *found4 + (uint)DAT_803dc070 * -0x60;
+                if (hitDef < 0)
                 {
-                    iVar5 = 0;
+                    hitDef = 0;
                     *(undefined*)(param_2 + 0x1e) = 0;
                     *(undefined*)(param_2 + 0x1f) = 0;
                 }
             }
-            *piVar1 = iVar5;
-            *piVar4 = iVar5;
+            *found5 = hitDef;
+            *found4 = hitDef;
         }
-        else if (uVar2 == 0)
+        else if (state == 0)
         {
             if (*(char*)(param_2 + 0x1f) < '\x01')
             {
-                uVar2 = randomGetRange(0, 1000);
-                if (0x3de < (int)uVar2)
+                state = randomGetRange(0, 1000);
+                if (0x3de < (int)state)
                 {
                     *(undefined*)(param_2 + 0x1e) = 1;
                     *(undefined*)(param_2 + 0x1f) = 0;
@@ -1034,37 +1034,37 @@ void FUN_8003b280(int param_1, int param_2)
 
 void FUN_8003b444(short* param_1, char* param_2)
 {
-    uint uVar1;
-    short* psVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    uint scaled;
+    short* found;
+    int model;
+    int entryIdx;
+    int vecOffset;
 
-    psVar2 = (short*)0x0;
-    iVar3 = *(int*)(param_1 + 0x28);
-    if (iVar3 != 0)
+    found = (short*)0x0;
+    model = *(int*)(param_1 + 0x28);
+    if (model != 0)
     {
-        iVar4 = 0;
-        iVar5 = 0;
-        for (uVar1 = (uint) * (byte*)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1)
+        entryIdx = 0;
+        vecOffset = 0;
+        for (scaled = (uint) * (byte*)(model + 0x5a); scaled != 0; scaled = scaled - 1)
         {
-            if ((*(char*)(*(int*)(iVar3 + 0x10) + *(char*)((int)param_1 + 0xad) + iVar4 + 1) != -1) &&
-                (*(char*)(*(int*)(iVar3 + 0x10) + iVar4) == '\0'))
+            if ((*(char*)(*(int*)(model + 0x10) + *(char*)((int)param_1 + 0xad) + entryIdx + 1) != -1) &&
+                (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
             {
-                psVar2 = (short*)(*(int*)(param_1 + 0x36) + iVar5);
+                found = (short*)(*(int*)(param_1 + 0x36) + vecOffset);
             }
-            iVar4 = *(char*)(iVar3 + 0x55) + iVar4 + 1;
-            iVar5 = iVar5 + 0x12;
+            entryIdx = *(char*)(model + 0x55) + entryIdx + 1;
+            vecOffset = vecOffset + 0x12;
         }
     }
-    if (psVar2 != (short*)0x0)
+    if (found != (short*)0x0)
     {
-        if (*psVar2 != 0)
+        if (*found != 0)
         {
-            uVar1 = *psVar2 * 3;
-            *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+            scaled = *found * 3;
+            *found = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
         }
-        FUN_80039e6c((double)lbl_803DF624, param_1, param_2, (int)psVar2);
+        FUN_80039e6c((double)lbl_803DF624, param_1, param_2, (int)found);
         *(ushort*)(param_2 + 0x1a) = *(ushort*)(param_2 + 0x1a) & 0xff;
     }
     return;
@@ -1108,17 +1108,17 @@ void FUN_8003b870(undefined4 param_1)
 void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                   int param_5, undefined4 param_6)
 {
-    short sVar1;
-    undefined4 uVar2;
-    int iVar3;
-    code* pcVar4;
-    int iVar5;
-    char cVar7;
-    int iVar6;
-    undefined8 uVar8;
+    short seqId;
+    undefined4 ctxHi;
+    int child;
+    code* vfn;
+    int walk;
+    char flag;
+    int i;
+    undefined8 ctx;
 
-    uVar8 = FUN_8028683c();
-    uVar2 = (undefined4)((ulonglong)uVar8 >> 0x20);
+    ctx = FUN_8028683c();
+    ctxHi = (undefined4)((ulonglong)ctx >> 0x20);
     if (((((*(ushort*)(param_5 + 0xb0) & 0x40) == 0) && (*(int*)(param_5 + 0xc4) == 0)) &&
             ((*(ushort*)(param_5 + 6) & 0x4000) == 0)) &&
         ((*(int*)(param_5 + 0x30) == 0 || ((*(ushort*)(*(int*)(param_5 + 0x30) + 6) & 0x4000) == 0))
@@ -1126,15 +1126,15 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
     {
         FUN_80017a04();
         *(ushort*)(param_5 + 0xb0) = *(ushort*)(param_5 + 0xb0) | 0x800;
-        cVar7 = (char)param_6;
+        flag = (char)param_6;
         if (*(int**)(param_5 + 0x68) == (int*)0x0)
         {
-            if (cVar7 != '\0')
+            if (flag != '\0')
             {
-                sVar1 = *(short*)(param_5 + 0x46);
-                if ((sVar1 == 0x1f) || ((sVar1 < 0x1f && (sVar1 == 0))))
+                seqId = *(short*)(param_5 + 0x46);
+                if ((seqId == 0x1f) || ((seqId < 0x1f && (seqId == 0))))
                 {
-                    FUN_802950c8(param_5, uVar2, (int)uVar8, param_3, param_4, cVar7);
+                    FUN_802950c8(param_5, ctxHi, (int)ctx, param_3, param_4, flag);
                 }
                 else if ((OBJPRINT_ACTIVE_BANK(param_5) != 0) &&
                     (FUN_80040a88(param_5), *(int*)(param_5 + 0x74) != 0))
@@ -1145,28 +1145,28 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
         }
         else if ((*(ushort*)(param_5 + 0xb0) & 0x4000) == 0)
         {
-            pcVar4 = *(code**)(**(int**)(param_5 + 0x68) + 0x10);
-            if (pcVar4 != (code*)0x0)
+            vfn = *(code**)(**(int**)(param_5 + 0x68) + 0x10);
+            if (vfn != (code*)0x0)
             {
-                (*pcVar4)(param_5, uVar2, (int)uVar8, param_3, param_4, param_6);
+                (*vfn)(param_5, ctxHi, (int)ctx, param_3, param_4, param_6);
             }
         }
-        else if (((cVar7 != '\0') &&
+        else if (((flag != '\0') &&
                 (OBJPRINT_ACTIVE_BANK(param_5) != 0)) &&
             (FUN_80040a88(param_5), *(int*)(param_5 + 0x74) != 0))
         {
             FUN_800400b0();
         }
         FUN_80017a00();
-        iVar5 = param_5;
-        for (iVar6 = 0; iVar6 < (int)(uint) * (byte*)(param_5 + 0xeb); iVar6 = iVar6 + 1)
+        walk = param_5;
+        for (i = 0; i < (int)(uint) * (byte*)(param_5 + 0xeb); i = i + 1)
         {
-            iVar3 = *(int*)(iVar5 + 200);
-            if (*(short*)(iVar3 + 0x44) == 0x2d)
+            child = *(int*)(walk + 200);
+            if (*(short*)(child + 0x44) == 0x2d)
             {
-                FUN_8003b590(iVar3, param_5,OBJPRINT_ACTIVE_BANK(iVar3));
+                FUN_8003b590(child, param_5,OBJPRINT_ACTIVE_BANK(child));
             }
-            iVar5 = iVar5 + 4;
+            walk = walk + 4;
         }
     }
     FUN_80286888();
@@ -1175,36 +1175,36 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
 
 void FUN_8003c10c(int param_1, int* param_2)
 {
-    uint uVar1;
-    int iVar2;
-    uint uVar3;
-    uint uVar4;
-    uint uVar5;
+    uint rem;
+    int cache;
+    uint mtx;
+    uint count;
+    uint dst;
 
-    iVar2 = FUN_8001779c();
+    cache = FUN_8001779c();
     if (*(char*)(param_1 + 0xf4) != '\0')
     {
         FUN_8003be6c();
     }
-    uVar4 = (uint) * (byte*)(param_1 + 0xf3) + (uint) * (byte*)(param_1 + 0xf4);
-    if ((uVar4 < 2) || (100 < uVar4))
+    count = (uint) * (byte*)(param_1 + 0xf3) + (uint) * (byte*)(param_1 + 0xf4);
+    if ((count < 2) || (100 < count))
     {
         DAT_803dd8c8 = 3;
     }
     else
     {
-        uVar3 = FUN_80017970(param_2, 0);
-        FUN_802420e0(uVar3, uVar4 * 0x40);
-        uVar5 = iVar2 + 0x2700;
-        for (uVar4 = uVar4 * 2 & 0xfe; uVar1 = uVar4 & 0xff, 0x7f < uVar1; uVar4 = uVar4 - 0x80)
+        mtx = FUN_80017970(param_2, 0);
+        FUN_802420e0(mtx, count * 0x40);
+        dst = cache + 0x2700;
+        for (count = count * 2 & 0xfe; rem = count & 0xff, 0x7f < rem; count = count - 0x80)
         {
-            FUN_80017798(uVar5, uVar3, 0);
-            uVar3 = uVar3 + 0x1000;
-            uVar5 = uVar5 + 0x1000;
+            FUN_80017798(dst, mtx, 0);
+            mtx = mtx + 0x1000;
+            dst = dst + 0x1000;
         }
-        if (uVar1 != 0)
+        if (rem != 0)
         {
-            FUN_80017798(uVar5, uVar3, uVar1);
+            FUN_80017798(dst, mtx, rem);
         }
         DAT_803dd8c8 = 1;
     }
