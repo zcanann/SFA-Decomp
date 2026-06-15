@@ -1456,19 +1456,7 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
     }
     if (*(f32*)((int)trickyState + 0x71c) <= lbl_803E23DC)
     {
-        if (trickyState[0x1ec] == 0)
-        {
-            bitVal = randomGetRange(0, 6);
-            if (((int)bitVal < 5) && (-1 < (int)bitVal))
-            {
-                tricky_startRandomIdleMove(obj, (int)trickyState);
-            }
-            else
-            {
-                objAnimFn_801441c0((u8*)obj, (u8*)trickyState);
-            }
-        }
-        else
+        if (trickyState[0x1ec] != 0)
         {
             done = *(int*)&((GameObject*)obj)->extra;
             if ((((*(byte*)(done + 0x58) >> 6 & 1) == 0U) &&
@@ -1479,6 +1467,18 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
             }
             objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
             *(undefined*)((int)trickyState + 10) = 5;
+        }
+        else
+        {
+            bitVal = randomGetRange(0, 6);
+            if (((int)bitVal < 5) && (-1 < (int)bitVal))
+            {
+                tricky_startRandomIdleMove(obj, (int)trickyState);
+            }
+            else
+            {
+                objAnimFn_801441c0((u8*)obj, (u8*)trickyState);
+            }
         }
     }
     else
