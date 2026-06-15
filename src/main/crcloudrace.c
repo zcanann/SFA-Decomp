@@ -1,7 +1,6 @@
 #include "main/crcloudrace.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gameplay_runtime.h"
-#include "main/mapEvent.h"
 #include "main/objlib.h"
 
 void crcloudrace_updateRaceState(int obj);
