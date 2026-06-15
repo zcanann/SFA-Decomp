@@ -187,8 +187,8 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
     int objList;
     uint other;
     int player;
-    int local_18;
-    int local_14;
+    int objIdx;
+    int objCount;
 
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -198,10 +198,10 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
-        objList = FUN_80017b00(&local_18, &local_14);
-        for (; local_18 < local_14; local_18 = local_18 + 1)
+        objList = FUN_80017b00(&objIdx, &objCount);
+        for (; objIdx < objCount; objIdx = objIdx + 1)
         {
-            other = *(uint*)(objList + local_18 * 4);
+            other = *(uint*)(objList + objIdx * 4);
             if ((other != param_9) && (*(short*)(other + 0x46) == 0x306))
             {
                 (**(code**)(**(int**)(other + 0x68) + 0x24))(other, 0x81, 0);
@@ -250,8 +250,8 @@ FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 para
     uint other;
     int vtbl;
     int extra;
-    int local_18;
-    int local_14;
+    int objIdx;
+    int objCount;
     ObjHitsPriorityState* hitState;
 
     extra = *(int*)&((GameObject*)param_9)->extra;
@@ -267,10 +267,10 @@ FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 para
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
-        objList = FUN_80017b00(&local_18, &local_14);
-        for (; local_18 < local_14; local_18 = local_18 + 1)
+        objList = FUN_80017b00(&objIdx, &objCount);
+        for (; objIdx < objCount; objIdx = objIdx + 1)
         {
-            other = *(uint*)(objList + local_18 * 4);
+            other = *(uint*)(objList + objIdx * 4);
             if ((other != param_9) && (*(short*)(other + 0x46) == 0x306))
             {
                 vtbl = **(int**)(other + 0x68);
@@ -337,8 +337,8 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
     uint roll;
     int vtbl;
     int extra;
-    int local_28;
-    int local_24[5];
+    int objIdx;
+    int objCount[5];
     ObjHitsPriorityState* hitState;
 
     extra = *(int*)&((GameObject*)param_9)->extra;
@@ -354,10 +354,10 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
-        objList = FUN_80017b00(&local_28, local_24);
-        for (; local_28 < local_24[0]; local_28 = local_28 + 1)
+        objList = FUN_80017b00(&objIdx, objCount);
+        for (; objIdx < objCount[0]; objIdx = objIdx + 1)
         {
-            other = *(int*)(objList + local_28 * 4);
+            other = *(int*)(objList + objIdx * 4);
             if ((other != param_9) && (*(short*)(other + 0x46) == 0x306))
             {
                 vtbl = **(int**)(other + 0x68);
@@ -679,13 +679,13 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     int hit;
     double dist;
     ObjHitsPriorityState* hitState;
-    float local_48;
-    float local_44;
-    float local_40;
-    float local_3c;
-    float local_38;
-    float local_34[2];
-    uint uStack_2c;
+    float aX;
+    float aY;
+    float aZ;
+    float bX;
+    float bY;
+    float bZ[2];
+    uint flip;
 
     hit = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
     hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
@@ -710,11 +710,11 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     *(float*)(param_10 + 0x2a0) = lbl_803E3B88;
     (**(code**)(*DAT_803dd70c + 0x20))(param_1, param_9, param_10, 1);
-    uStack_2c = *(char*)(hit + 0x45) * -2 + 1U ^ 0x80000000;
-    local_34[1] = 176.0;
+    flip = *(char*)(hit + 0x45) * -2 + 1U ^ 0x80000000;
+    bZ[1] = 176.0;
     (**(code**)(**(int**)(*(int*)(hit + 0x38) + 0x68) + 0x28))
         ((double)(*(float*)(param_10 + 0x280) *
-             (f32)(s32)uStack_2c),
+             (f32)(s32)flip),
         *(int*)(hit + 0x38), hit + 0x48
     )
     ;
@@ -730,16 +730,16 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(float*)(hit + 0x48) = lbl_803E3B8C;
     }
     (**(code**)(**(int**)(*(int*)(hit + 0x38) + 0x68) + 0x24))
-    ((double)(*(float*)(hit + 0x48) - lbl_803E3B94), *(int*)(hit + 0x38), &local_48,
-     &local_44, &local_40);
+    ((double)(*(float*)(hit + 0x48) - lbl_803E3B94), *(int*)(hit + 0x38), &aX,
+     &aY, &aZ);
     (**(code**)(**(int**)(*(int*)(hit + 0x38) + 0x68) + 0x24))
-    ((double)(lbl_803E3B94 + *(float*)(hit + 0x48)), *(int*)(hit + 0x38), &local_3c,
-     &local_38, local_34);
-    local_48 = local_48 - local_3c;
-    local_44 = local_44 - local_38;
-    local_40 = local_40 - local_34[0];
-    dist = FUN_80293900((double)(local_48 * local_48 + local_40 * local_40));
-    local_48 = (float)dist;
+    ((double)(lbl_803E3B94 + *(float*)(hit + 0x48)), *(int*)(hit + 0x38), &bX,
+     &bY, bZ);
+    aX = aX - bX;
+    aY = aY - bY;
+    aZ = aZ - bZ[0];
+    dist = FUN_80293900((double)(aX * aX + aZ * aZ));
+    aX = (float)dist;
     angle = FUN_80017730();
     ((GameObject*)param_9)->anim.rotY = (short)angle * ((short)((int)*(char*)(hit + 0x45) << 1) + -1);
     if (*(char*)(param_10 + 0x346) == '\0')
