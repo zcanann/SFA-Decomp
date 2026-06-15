@@ -73,7 +73,6 @@ extern f32 lbl_803E5950;
 extern void fn_80053ED0(int);
 extern void fn_80053EBC(int);
 extern f32 lbl_803E5928;
-extern f64 lbl_803E5940;
 extern f32 lbl_803E5930;
 extern f32 lbl_803E5934;
 extern f32 lbl_803E5938;
