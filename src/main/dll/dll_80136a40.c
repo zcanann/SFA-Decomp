@@ -786,12 +786,6 @@ void fn_80138D7C(int obj, int p2)
 #define TUMBLEWEED_BLEND_FLAG_PENDING 0x80
 #define TUMBLEWEED_BLEND_FLAG_ACTIVE 0x40
 
-typedef struct {
-    u8 pending : 1; /* 0x80 */
-    u8 active : 1;  /* 0x40 */
-    u8 rest : 6;
-} TumbleweedBlendFlags;
-
 /* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
@@ -810,8 +804,10 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
         *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
         ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
-        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->pending = 0;
-        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->active = 1;
+        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
+            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] & ~TUMBLEWEED_BLEND_FLAG_PENDING;
+        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
+            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] | TUMBLEWEED_BLEND_FLAG_ACTIVE;
     }
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 6) & 1) != 0)
     {
@@ -952,10 +948,6 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
     int a1;
     int a2;
     int a3;
-    int b0;
-    int b1;
-    int b2;
-    int b3;
 
     if (enableDebugText != 0)
     {
@@ -971,27 +963,19 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
             c1 = p1 + row1;
             a2 = c1;
             a3 = c1 + 1;
-            b0 = c0 * 2;
-            b1 = a1 * 2;
-            b2 = c1 * 2;
-            b3 = a3 * 2;
             for (; bit < 8; bit++)
             {
                 if (((1 << bit) & *grid) != 0)
                 {
-                    *(u16*)((char*)debugDrawFrameBuffer + b0) = 0xC080;
-                    *(u16*)((char*)debugDrawFrameBuffer + b1) = 0xC080;
-                    *(u16*)((char*)debugDrawFrameBuffer + b2) = 0xC080;
-                    *(u16*)((char*)debugDrawFrameBuffer + b3) = 0xC080;
+                    debugDrawFrameBuffer[a0] = 0xC080;
+                    debugDrawFrameBuffer[a1] = 0xC080;
+                    debugDrawFrameBuffer[a2] = 0xC080;
+                    debugDrawFrameBuffer[a3] = 0xC080;
                 }
                 a0++;
                 a1++;
                 a2++;
                 a3++;
-                b0 += 2;
-                b1 += 2;
-                b2 += 2;
-                b3 += 2;
             }
             DCStoreRange((char*)debugDrawFrameBuffer + c0 * 2, 0x10);
             DCStoreRange((char*)debugDrawFrameBuffer + c1 * 2, 0x10);
@@ -1380,14 +1364,14 @@ void fn_80137DF8(void)
                     row = 0;
                     for (n = 0; n < 60; n++)
                     {
-                        *(u16*)((char*)debugDrawFrameBuffer + row + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x500) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xA00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xF00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1400) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1900) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x2300) + col) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x500)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xA00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xF00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1400)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1900)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1E00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x2300)) = 0x1080;
                         row += 0x2800;
                     }
                     col += 2;
