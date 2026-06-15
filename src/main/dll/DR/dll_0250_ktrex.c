@@ -1582,11 +1582,11 @@ int ktrex_stateHandlerA11(int obj, int runtime)
     f32 f5;
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
     {
-        *(s16*)obj += 0x8000;
+        *(s16*)obj = (s16)(*(s16*)obj + 0x8000);
     }
     else
     {
-        *(s16*)obj -= 0x8000;
+        *(s16*)obj = (s16)(*(s16*)obj - 0x8000);
     }
     ((KTRexArenaState*)gKTRexState)->timerFA ^= 1;
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
