@@ -4317,11 +4317,11 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        void** q = &g->itemTextures[j];
-        if (*q != NULL)
+        void** tex = (void**)((u8*)g + j * 4);
+        if (*(void**)((u8*)tex + 2504) != NULL)
         {
-            textureFree(*q);
-            *q = NULL;
+            textureFree(*(void**)((u8*)tex + 2504));
+            *(void**)((u8*)tex + 2504) = NULL;
         }
         g->itemSlots[j] = -1;
         g->itemFlags[j] = 1;
@@ -4341,11 +4341,11 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        void** q = &g->itemTextures[j];
-        if (*q != NULL)
+        void** tex = (void**)((u8*)g + j * 4);
+        if (*(void**)((u8*)tex + 2504) != NULL)
         {
-            textureFree(*q);
-            *q = NULL;
+            textureFree(*(void**)((u8*)tex + 2504));
+            *(void**)((u8*)tex + 2504) = NULL;
         }
         g->itemSlots[j] = -1;
         g->itemFlags[j] = 1;
