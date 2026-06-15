@@ -97,7 +97,8 @@ int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
 
     {
         f32 cs = state->currentSpeed;
-        state->currentSpeed = lbl_803E6E48 * -cs * timeDelta + cs;
+        f32 scaled = lbl_803E6E48 * -cs;
+        state->currentSpeed = scaled * timeDelta + cs;
     }
     ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
     animUpdate->sequenceEventActive = 0;
