@@ -1,20 +1,11 @@
 /* DLL 0x19C — torch / flame controller objects [801CBA98-801CBD88) */
-#include "main/dll/torch1CD.h"
 #include "main/dll/dll19cstate_struct.h"
-#include "main/game_object.h"
-#include "main/dll/torch1cd_state.h"
-#include "main/effect_interfaces.h"
 
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/shrine1CE.h"
-#include "main/dll/torch1CD.h"
-#include "main/objseq.h"
 #include "main/resource.h"
 
 typedef struct Dll19CPlacement
