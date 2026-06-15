@@ -1118,10 +1118,10 @@ int fn_80136E00(int p1, u8* p)
 {
     u8 c;
     int w;
-    u16 x2;
+    int x2;
     u16 y;
     u16 y0;
-    u16 y1;
+    int y1;
     u16 x0;
     u32 ca;
     u32 cb;
@@ -1134,10 +1134,12 @@ int fn_80136E00(int p1, u8* p)
     u8 c3;
     u8 colb1[4];
     u32 colw1;
-    u8 colb2[4];
     u32 colw2;
-    u8 colb3[4];
+    u8 colb2[4];
     u32 colw3;
+    u8 colb3[4];
+    u32 colw4;
+    u8 colb4[4];
     u8* start = p;
 
     while ((c = *p++) != 0)
@@ -1194,7 +1196,7 @@ int fn_80136E00(int p1, u8* p)
                 y = debugPrintYpos;
                 x0 = lbl_803DDA14;
                 y0 = lbl_803DDA16;
-                if ((((int)(u16)(y - y0) == 0) | ((int)(u16)(x2 - x0) == 0)) == 0)
+                if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
                     if (y0 >= 2)
                     {
@@ -1203,15 +1205,15 @@ int fn_80136E00(int p1, u8* p)
                     y1 = y + 2;
                     sc = lbl_803DD9D8 + (f32)lbl_803DD9E0;
                     ca = (u32)((f32)y0 * sc);
-                    cb = (u32)((f32)y1 * sc);
+                    cb = (u32)((f32)(u32)y1 * sc);
                     sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
                     cc = (u32)((f32)x0 * sc);
-                    colb1[0] = lbl_803DD9F3;
-                    colb1[1] = lbl_803DD9F2;
-                    colb1[2] = lbl_803DD9F1;
-                    colb1[3] = lbl_803DD9F0;
-                    colw1 = *(u32*)colb1;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)x2 * sc), &colw1);
+                    colb4[0] = lbl_803DD9F3;
+                    colb4[1] = lbl_803DD9F2;
+                    colb4[2] = lbl_803DD9F1;
+                    colb4[3] = lbl_803DD9F0;
+                    colw4 = *(u32*)colb4;
+                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw4);
                 }
             }
             debugPrintYpos = p[0];
@@ -1237,7 +1239,7 @@ int fn_80136E00(int p1, u8* p)
                 y = debugPrintYpos;
                 x0 = lbl_803DDA14;
                 y0 = lbl_803DDA16;
-                if ((((int)(u16)(y - y0) == 0) | ((int)(u16)(x2 - x0) == 0)) == 0)
+                if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
                     if (y0 >= 2)
                     {
@@ -1246,7 +1248,7 @@ int fn_80136E00(int p1, u8* p)
                     y1 = y + 2;
                     sc = lbl_803DD9D8 + (f32)lbl_803DD9E0;
                     ca = (u32)((f32)y0 * sc);
-                    cb = (u32)((f32)y1 * sc);
+                    cb = (u32)((f32)(u32)y1 * sc);
                     sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
                     cc = (u32)((f32)x0 * sc);
                     colb2[0] = lbl_803DD9F3;
@@ -1254,7 +1256,7 @@ int fn_80136E00(int p1, u8* p)
                     colb2[2] = lbl_803DD9F1;
                     colb2[3] = lbl_803DD9F0;
                     colw2 = *(u32*)colb2;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)x2 * sc), &colw2);
+                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw2);
                 }
             }
             debugPrintYpos = (u16)lbl_803DDA08;
@@ -1291,7 +1293,7 @@ int fn_80136E00(int p1, u8* p)
                 y = debugPrintYpos;
                 x0 = lbl_803DDA14;
                 y0 = lbl_803DDA16;
-                if ((((int)(u16)(y - y0) == 0) | ((int)(u16)(x2 - x0) == 0)) == 0)
+                if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
                     if (y0 >= 2)
                     {
@@ -1299,7 +1301,7 @@ int fn_80136E00(int p1, u8* p)
                     }
                     y1 = y + 2;
                     ca = (u32)((f32)y0 * sc);
-                    cb = (u32)((f32)y1 * sc);
+                    cb = (u32)((f32)(u32)y1 * sc);
                     sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
                     cc = (u32)((f32)x0 * sc);
                     colb3[0] = lbl_803DD9F3;
@@ -1307,7 +1309,7 @@ int fn_80136E00(int p1, u8* p)
                     colb3[2] = lbl_803DD9F1;
                     colb3[3] = lbl_803DD9F0;
                     colw3 = *(u32*)colb3;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)x2 * sc), &colw3);
+                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw3);
                 }
             }
             debugPrintYpos = (u16)lbl_803DDA08;
