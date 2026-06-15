@@ -90,13 +90,11 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
-extern void textureFree(int tex);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
 extern void* lbl_803DDB78;
 extern f32 lbl_803E49D4;
 extern f32 lbl_803E49F0;
-extern void ModelLightStruct_free(void*);
 extern f32 timeDelta;
 extern int Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
