@@ -37,7 +37,6 @@ extern f32 lbl_803DFF1C;
 extern f32 lbl_803DFF20;
 extern f32 lbl_803DFF24;
 
-extern EffectSrcParams lbl_8039C3C8;
 extern f32 lbl_803DB838;
 extern f32 lbl_803DB83C;
 extern s32 lbl_803DD3B0;
