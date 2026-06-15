@@ -725,7 +725,7 @@ void dfplevelcontrol_update(int obj)
     {
         GameBit_Set(0x5e8, 1);
     }
-    coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14));
+    coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
     mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     switch (mode)
     {

@@ -74,9 +74,9 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
         if (((DrlightbeaPlacement*)setup)->unk19 == 0)
         {
             player = Obj_GetPlayerObject();
-            *(f32*)(*(int*)state + 0xc) = *(f32*)(player + 0xc);
-            *(f32*)(*(int*)state + 0x10) = lbl_803E6BB8 + *(f32*)(player + 0x10);
-            *(f32*)(*(int*)state + 0x14) = *(f32*)(player + 0x14);
+            *(f32*)(*(int*)state + 0xc) = ((GameObject*)player)->anim.localPosX;
+            *(f32*)(*(int*)state + 0x10) = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
+            *(f32*)(*(int*)state + 0x14) = ((GameObject*)player)->anim.localPosZ;
         }
         lightningRender(*(void**)state);
         *(u16*)(*(int*)state + 0x20) += 1;
@@ -115,9 +115,9 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
             else
             {
                 player = Obj_GetPlayerObject();
-                vecB[0] = *(f32*)(player + 0xc);
-                vecB[1] = lbl_803E6BB8 + *(f32*)(player + 0x10);
-                vecB[2] = *(f32*)(player + 0x14);
+                vecB[0] = ((GameObject*)player)->anim.localPosX;
+                vecB[1] = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
+                vecB[2] = ((GameObject*)player)->anim.localPosZ;
             }
             *(void**)state = lightningCreate(vecA, vecB, lbl_803E6BBC, lbl_803E6BC0,
                                              (u16)randomGetRange(5, 0xf), 0x60, 0);
