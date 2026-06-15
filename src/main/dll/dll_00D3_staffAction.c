@@ -1350,9 +1350,7 @@ void dll_D3_update(int* obj)
                     (int)&extra->bounceFlags);
                 extra->surfaceMode = 5;
             }
-            extra->flags92 =
-                (u8)((((extra->flags92 >> 4 & 0xF) - 1) << 4) |
-                    (extra->flags92 & 0xf));
+            ((StaffBits*)&extra->flags92)->hi -= 1;
         }
     }
 
