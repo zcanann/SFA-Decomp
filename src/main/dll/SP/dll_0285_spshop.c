@@ -80,7 +80,6 @@ extern void skyFn_80088c94(int skyId, int enable);
 extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 
-extern f32 lbl_803E58E8;
 extern f32 lbl_803E59C8;
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
