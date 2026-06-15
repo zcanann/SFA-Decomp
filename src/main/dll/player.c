@@ -1038,9 +1038,9 @@ int fn_802A3B04(int obj, int state)
                                        (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                        *(int*)&((GameObject*)obj)->anim.parent);
         objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->unk4C4, 1);
-        ((PlayerState*)inner)->unk5B4 = *(f32*)((char*)obj + 0xc);
-        ((PlayerState*)inner)->unk5B8 = *(f32*)((char*)obj + 0x10);
-        ((PlayerState*)inner)->unk5BC = *(f32*)((char*)obj + 0x14);
+        ((PlayerState*)inner)->unk5B4 = ((GameObject*)obj)->anim.localPosX;
+        ((PlayerState*)inner)->unk5B8 = ((GameObject*)obj)->anim.localPosY;
+        ((PlayerState*)inner)->unk5BC = ((GameObject*)obj)->anim.localPosZ;
         ObjAnim_SetCurrentMove(obj, lbl_80332EF0[m], lbl_803E7EA4, 4);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
         if (((PlayerState*)inner)->curAnimId != 0x48 && ((PlayerState*)inner)->curAnimId != 0x47)
@@ -17620,7 +17620,7 @@ int fn_8029E568(int obj, int state, f32 fv)
             {
                 int pt = (int)(*gRomCurveInterface)->getById(found);
                 int pt2;
-                *(f32*)((char*)inner + 0x61c) = *(f32*)((char*)pt + 0x8);
+                *(f32*)((int)inner + 0x61c) = *(f32*)((char*)pt + 0x8);
                 inner->unk620 = *(f32*)((char*)pt + 0xc);
                 inner->unk624 = *(f32*)((char*)pt + 0x10);
                 ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)pt + 0x8);
