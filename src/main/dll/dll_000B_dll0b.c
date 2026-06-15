@@ -1,7 +1,9 @@
+#include "main/audio/sfx_ids.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
@@ -1463,28 +1465,29 @@ void dll_0B_initialise(void)
     }
 }
 
-void dll_0B_func0F(int p1, u8 p2, u8 p3, int p4, int p5)
+void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
+    ModgfxSpawnContext* context = &gModgfxSpawnContext;
     f32 fz;
     f32 fz2;
-    memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
-    gModgfxSpawnContext.modeByte = p2;
-    gModgfxSpawnContext.attachedSource = (void*)p1;
-    gModgfxSpawnContext.sourceModeCopy = (u8)p2;
+    memset(context, 0, sizeof(*context));
+    context->modeByte = p2;
+    context->attachedSource = (void*)p1;
+    context->sourceModeCopy = (u8)p2;
     fz = lbl_803DF430;
-    gModgfxSpawnContext.posX = fz;
-    gModgfxSpawnContext.posY = fz;
-    gModgfxSpawnContext.posZ = fz;
-    gModgfxSpawnContext.vecX = fz;
-    gModgfxSpawnContext.vecY = fz;
-    gModgfxSpawnContext.vecZ = fz;
+    context->posX = fz;
+    context->posY = fz;
+    context->posZ = fz;
+    context->vecX = fz;
+    context->vecY = fz;
+    context->vecZ = fz;
     fz2 = lbl_803DF434;
-    gModgfxSpawnContext.scale = fz2;
-    gModgfxSpawnContext.word40 = p4;
-    gModgfxSpawnContext.word3C = p5;
-    gModgfxSpawnContext.byte59 = p3;
-    gModgfxSpawnContext.byte5A = 0;
-    gModgfxSpawnContext.byte5B = 0;
+    context->scale = fz2;
+    context->word40 = p4;
+    context->word3C = p5;
+    context->byte59 = p3;
+    context->byte5A = 0;
+    context->byte5B = 0;
 }
 
 void dll_0B_func0A(s16* p)
@@ -1556,31 +1559,31 @@ void dll_0B_func07(void* p1)
 #pragma dont_inline on
 void fn_800A1040(s16 p1, int p2)
 {
-    PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
+    PartfxEffectState** p = (PartfxEffectState**)gPartfxActiveEffects;
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++, p++)
     {
-        if (arr[i] == NULL) continue;
-        if (p1 != arr[i]->sequenceId && p2 == 0) continue;
-        if (arr[i]->auxAllocation != NULL)
+        if (*p == NULL) continue;
+        if ((s16)p1 != (*p)->sequenceId && p2 == 0) continue;
+        if ((*p)->auxAllocation != NULL)
         {
-            mm_free(arr[i]->auxAllocation);
+            mm_free((*p)->auxAllocation);
         }
-        if (arr[i]->instanceObject != NULL)
+        if ((*p)->instanceObject != NULL)
         {
-            Obj_FreeObject(arr[i]->instanceObject);
+            Obj_FreeObject((*p)->instanceObject);
         }
-        arr[i]->inlineData = NULL;
-        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
+        (*p)->inlineData = NULL;
+        if ((*p)->textureIsBorrowed == 0 && (*p)->textureResource != NULL)
         {
-            textureFree(arr[i]->textureResource);
+            textureFree((*p)->textureResource);
         }
-        if (arr[i]->textureIsBorrowed == 0)
+        if ((*p)->textureIsBorrowed == 0)
         {
-            arr[i]->textureResource = NULL;
+            (*p)->textureResource = NULL;
         }
-        mm_free(arr[i]);
-        arr[i] = NULL;
+        mm_free(*p);
+        *p = NULL;
     }
 }
 #pragma dont_inline reset
@@ -2014,35 +2017,34 @@ extern int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int 
 
 void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 {
-    gModgfxSpawnContext.pendingSpawns = gModgfxPendingSpawnQueue;
-    gModgfxSpawnContext.pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
+    ModgfxSpawnContext* context = &gModgfxSpawnContext;
+
+    context->pendingSpawns = gModgfxPendingSpawnQueue;
+    context->pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
     if (g == NULL && f == 0)
     {
-        gModgfxSpawnContext.flags |= 0x2000000LL;
+        context->flags |= 0x2000000;
     }
     else
     {
-        gModgfxSpawnContext.flags |= 0x4000000LL;
+        context->flags |= 0x4000000;
     }
-    if (gModgfxSpawnContext.flags & 1)
+    if (context->flags & 1)
     {
-        if (gModgfxSpawnContext.attachedSource != NULL)
+        if (context->attachedSource != NULL)
         {
-            gModgfxSpawnContext.posX += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosX;
-            gModgfxSpawnContext.posY += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosY;
-            gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosZ;
+            context->posX += ((ExpgfxSourceObject*)context->attachedSource)->worldPosX;
+            context->posY += ((ExpgfxSourceObject*)context->attachedSource)->worldPosY;
+            context->posZ += ((ExpgfxSourceObject*)context->attachedSource)->worldPosZ;
         }
         else
         {
-            gModgfxSpawnContext.posX += ((ExpgfxSourceObject*)a)->localPosX;
-            gModgfxSpawnContext.posY += ((ExpgfxSourceObject*)a)->localPosY;
-            gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)a)->localPosZ;
+            context->posX += ((ExpgfxSourceObject*)a)->localPosX;
+            context->posY += ((ExpgfxSourceObject*)a)->localPosY;
+            context->posZ += ((ExpgfxSourceObject*)a)->localPosZ;
         }
     }
-    {
-        extern s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
-        gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
-    }
+    gModgfxLastSpawnHandle = dll_0B_func04(context, 0, (int)c, b, (int)e, d, f, g);
 }
 
 extern f32 lbl_803DF460;
