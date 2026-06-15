@@ -5,10 +5,8 @@
 #include "main/mm.h"
 #include "main/model_light.h"
 #include "main/objHitReact.h"
-#include "main/objanim_internal.h"
 #include "main/objhits.h"
 #include "main/object_transform.h"
-#include "main/track_dolphin.h"
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
 
