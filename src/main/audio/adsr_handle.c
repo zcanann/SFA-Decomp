@@ -1,5 +1,4 @@
 #include "main/audio/adsr.h"
-#include "ghidra_import.h"
 
 extern int adsrStartRelease(int state, u32 divisor);
 extern int fn_8027A660(int state);
