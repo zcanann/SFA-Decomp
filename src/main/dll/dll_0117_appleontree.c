@@ -6,10 +6,8 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/dll_0117_appleontree.h"
 #include "main/sky_interface.h"
 
 extern u32 randomGetRange(int min, int max);
