@@ -2652,7 +2652,6 @@ int Effect2_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
 }
 #undef FILL338
 
-extern void* Obj_GetPlayerObject();
 extern FxNode9 lbl_8039C368;
 extern f32 lbl_803DFCEC;
 
