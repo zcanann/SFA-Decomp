@@ -2,7 +2,6 @@
 
 extern undefined4 DAT_803de0af;
 
-
 void FUN_800d7780(undefined param_1)
 {
     DAT_803de0af = param_1;
@@ -133,10 +132,6 @@ int Dummy04_func0A_ret_0(void) { return 0x0; }
 int Dummy04_func05_ret_0(void) { return 0x0; }
 
 int Dummy04_func03_ret_m1(void) { return -0x1; }
-
-/* fcmp-eq-to-bool. */
-
-/* multi-store leaf (single float broadcast). */
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */

@@ -127,7 +127,6 @@ enum
 #define GUARDIAN_SFX_FLAP 0xe1
 #define GUARDIAN_SFX_CHATTER 0xdf
 
-/* All file-scope externs in one block. */
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int p6);
 extern f32 lbl_803E4110;
@@ -489,7 +488,6 @@ int cfguardian_updateMain(int obj)
             sub->questState = CFGUARDIAN_RELEASE_SEQ;
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             ((GameObject*)obj)->unkF4 = 0;
-            /* 0x48: broken out - the prison guard stands down on it */
             GameBit_Set(GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN, 1);
             sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED;
         }

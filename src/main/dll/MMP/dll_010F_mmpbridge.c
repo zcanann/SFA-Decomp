@@ -91,8 +91,6 @@ void mmp_bridge_update(int* obj)
     }
 }
 
-/* segment pragma-stack balance (re-split): */
-
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
  * its GameBit, compare against the def[0x30] mask bit for that slot, and

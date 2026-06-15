@@ -516,12 +516,6 @@ void pressureswitchfb_init(u8* obj, u8* params)
 
 int Door_getExtraSize(void);
 
-/* render-with-fn(lbl) (no visibility check). */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* segment pragma-stack balance (re-split): */
-
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
  * its GameBit, compare against the def[0x30] mask bit for that slot, and

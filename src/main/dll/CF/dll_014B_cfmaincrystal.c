@@ -262,7 +262,6 @@ void fn_8019D9F0(int* obj)
         }
         if (count == 3)
         {
-            /* all three beams landed: start (or continue) charging */
             if (sub->charge == 0)
             {
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -287,7 +286,6 @@ void fn_8019D9F0(int* obj)
             sl->fc = -(lbl_803E41F4 * fr - sl->f8);
             sl->f14 = sl->f10;
         }
-        /* spin faster for every landed beam */
         *(s16*)obj += framesThisStep * (count * 0x7e);
     }
     if (count != 0)
@@ -330,7 +328,6 @@ void fn_8019D9F0(int* obj)
         i++;
     }
     while (i < 3);
-    /* idle spin */
     *(s16*)obj += framesThisStep * 0x2a;
 }
 

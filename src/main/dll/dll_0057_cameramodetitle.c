@@ -5,7 +5,6 @@
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 
-
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -357,14 +356,6 @@ void CameraModeTitle_update(CameraObject* camera)
         }
     }
 }
-
-/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-
-/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */

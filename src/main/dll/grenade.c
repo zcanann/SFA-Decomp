@@ -30,19 +30,6 @@ extern f32 lbl_803E2518;
 extern f32 lbl_803E251C;
 extern f32 lbl_803E2524;
 
-/*
- * --INFO--
- *
- * Function: trickyDigTunnel
- * EN v1.0 Address: 0x80141880
- * EN v1.0 Size: 1900b
- * EN v1.1 Address: 0x80141C08
- * EN v1.1 Size: 1900b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void trickyDebugPrint(const char *fmt, ...);
 extern void getYButtonItem(s16 *out);
 extern void buttonDisable(int a, int b);
@@ -1368,7 +1355,6 @@ int trickyFn_80143c04(int obj, int state)
     ((FlagByte728*)(state + 0x728))->bf7 = 1;
     return 1;
 }
-
 
 undefined4 fn_80143DD4(int obj, int* trickyState)
 {

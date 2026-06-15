@@ -71,7 +71,6 @@ void cfmagicwall_update(int obj)
         }
 
         {
-            /* fade on the nearer of player distance and camera distance */
             f32 playerDistance;
             f32 range;
             f32 fadeDistance;

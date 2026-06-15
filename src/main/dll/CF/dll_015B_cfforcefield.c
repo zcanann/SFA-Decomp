@@ -135,7 +135,6 @@ void cfforcefield_update(u8* obj)
             }
             else
             {
-                /* ring shrinks with the collapse time left (1/60s) */
                 strength = 0.016666668f * val;
             }
 
@@ -168,7 +167,6 @@ void cfforcefield_update(u8* obj)
                 }
             }
 
-            /* collapse: spin while the timer runs, then switch off */
             if (fn_80080150(&state->timer) != 0)
             {
                 ((GameObject*)obj)->anim.rotY = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotY);
@@ -190,7 +188,6 @@ void cfforcefield_update(u8* obj)
         }
         else
         {
-            /* a collapsed field re-arms once its collapse bit is cleared */
             state->flags.disabled = (u8)GameBit_Get(data->collapseEvent);
         }
     }
@@ -200,7 +197,6 @@ void cfforcefield_init(GameObject* obj, CfForceFieldMapData* data)
 {
     register CfForceFieldState* state = obj->extra;
     {
-        /* placement angle byte -> 1/65536-turn units */
         s8 v = data->rotXByte;
         s16 t = v << 8;
         obj->anim.rotX = t;

@@ -2311,8 +2311,6 @@ return0:
     return 0;
 }
 
-/* segment pragma-stack balance (re-split): */
-
 void dll_CA_update(int obj, int p2, int p3)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);

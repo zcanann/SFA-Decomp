@@ -87,7 +87,6 @@ void wm_column_update(int obj)
     nearest = lbl_803E37BC;
     if ((*gCarryableInterface)->getAnimState(obj, *(int*)&((GameObject*)obj)->extra) != 0)
     {
-        /* just picked up: release any scene spot we were sitting on */
         if ((((GameObject*)obj)->unkF4 & 2) != 0)
         {
             objects = ObjList_GetObjects(&i, &count);

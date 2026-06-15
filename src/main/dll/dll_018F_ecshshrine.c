@@ -336,8 +336,6 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
     lbl_80326208[v].b = b;
 }
 
-/* segment pragma-stack balance (re-split): */
-
 void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 {
     extern u8 lbl_80326208[]; /* #57 */

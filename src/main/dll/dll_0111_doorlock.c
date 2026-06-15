@@ -78,7 +78,6 @@ render_basic:
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-
 int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int GameBit_Set(int eventId, int value); /* #57 */
@@ -213,8 +212,6 @@ void doorlock_update(int obj)
         }
     }
 }
-
-/* segment pragma-stack balance (re-split): */
 
 void doorlock_init(short* obj, DoorLockPlacement* config)
 {

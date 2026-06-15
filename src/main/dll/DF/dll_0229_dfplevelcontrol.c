@@ -59,8 +59,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
-/* chuka extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);

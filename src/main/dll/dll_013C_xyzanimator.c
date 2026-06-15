@@ -272,8 +272,6 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4004);
 }
 
-/* segment pragma-stack balance (re-split): */
-
 void xyzanimator_update(int obj)
 {
     extern void fn_80194C40(u8* setup, u8* state, int block); /* #57 */

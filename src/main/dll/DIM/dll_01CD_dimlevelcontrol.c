@@ -124,8 +124,6 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-/* segment pragma-stack balance (re-split): */
-
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
 

@@ -246,7 +246,6 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     f32 vd[3], vc[3], vb[3], va[3];
     u8 traceWork[CAMCONTROL_TRACE_WORK_SIZE];
 
-
     if (lbl_803DD584 == NULL)
     {
         lbl_803DD584 = (CameraModeNpcSpeakState*)mmAlloc(sizeof(CameraModeNpcSpeakState), 15, 0);
@@ -481,8 +480,6 @@ void CameraModeNpcSpeak_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
-
-/* segment pragma-stack balance (re-split): */
 
 int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6);
 

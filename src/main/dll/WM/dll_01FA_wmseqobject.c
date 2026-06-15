@@ -2,7 +2,6 @@
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/obj_placement.h"
 
-/* WM_ObjCreator per-object extra state (four s16 slots). */
 /* TU-boundary copies of the WM_ObjCreator records (canonical copies
    in dll_01F9_wmobjcreator.c) */
 typedef struct WmObjCreatorState
@@ -249,5 +248,4 @@ void WM_seqobject_initialise(void)
 {
 }
 
-/* cross-TU: defined in dll_01FB_dll1fb.c (shared SeqFn) */
 int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);

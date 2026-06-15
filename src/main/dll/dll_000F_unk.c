@@ -581,8 +581,6 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-/* segment pragma-stack balance (re-split): */
-
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
 

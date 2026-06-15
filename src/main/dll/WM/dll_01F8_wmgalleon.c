@@ -385,5 +385,4 @@ void WM_Galleon_initialise(void)
 {
 }
 
-/* cross-TU: defined in dll_01FA_wmseqobject.c */
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);

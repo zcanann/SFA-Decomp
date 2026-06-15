@@ -1033,8 +1033,6 @@ void vfpplatform_update(int obj)
     }
 }
 
-/* segment pragma-stack balance (re-split): */
-
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
 #pragma scheduling on

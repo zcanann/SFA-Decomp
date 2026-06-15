@@ -9,7 +9,6 @@ extern float mathCosf(float x);
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 
-
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -259,48 +258,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-/* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
-
-/* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
-
-/* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
-
-/* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
-
-/* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
-
-/* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
-
-/* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
-
-/* dll_19_func14  addr=0x80112E94  size=0x2A8  linkage=global */
-
-/* dll_19_func16  addr=0x801126E0  size=0x348  linkage=global */
-
-/* dll_19_func15  addr=0x80112A28  size=0x358  linkage=global */
-
-/* dll_19_func18  addr=0x80112098  size=0x47C  linkage=global */
-
-/* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
-
-/* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
-
-/* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
-
-/* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
-
-/* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-
-/* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
-
-/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-
-/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */

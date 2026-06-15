@@ -336,7 +336,6 @@ void WM_ObjCreator_update(int obj)
                                               *(int*)&((GameObject*)obj)->anim.parent);
                     if ((u32)spawned != 0)
                     {
-                        /* LfxEmitterState flag byte at +0x120 */
                         *(u8*)(*(int*)&((GameObject*)spawned)->extra + 0x120) |= 2;
                         ((GameObject*)spawned)->anim.velocityX = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
                         ((GameObject*)spawned)->anim.velocityZ = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);

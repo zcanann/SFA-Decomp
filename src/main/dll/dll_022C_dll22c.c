@@ -46,8 +46,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
-/* chuka extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
@@ -536,7 +534,6 @@ void dll_22C_init(int obj, char* p)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
 }
 
-
 void dll_22C_hitDetect_nop(void)
 {
 }
@@ -549,7 +546,6 @@ void dll_22C_initialise_nop(void)
 {
 }
 
-
 int dll_22C_SeqFn(void) { return 0x0; }
 int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
 int dll_22C_getObjectTypeId(void) { return 0x0; }
@@ -559,7 +555,6 @@ void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6398);
 }
-
 
 void fn_80204B6C(int p1)
 {

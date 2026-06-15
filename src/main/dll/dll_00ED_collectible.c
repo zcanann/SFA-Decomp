@@ -1347,8 +1347,6 @@ void fn_801723DC(int obj)
     }
 }
 
-/* segment pragma-stack balance (re-split): */
-
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */

@@ -99,10 +99,6 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
 }
 
-/* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
-
-/* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
-
 /* The cannonball setup block (SBShipGunPlacement) doubles as the spawn-
    position scratch the gun writes before Obj_SetupObject, then as the
    live CloudRunner placement the gun reads its target world position from

@@ -322,7 +322,6 @@ void fn_801EE668(s16 *obj, u8 *state)
     }
     ((SBCloudRunnerState *)state)->unk2C -= (((SBCloudRunnerState *)state)->unk2C * framesThisStep) >> 5;
 
-    /* shortest-arc wrap to (-0x8000, 0x8000); the two-op form is load-bearing */
     d = yawTarget - (u16)((GameObject *)obj)->anim.rotY;
     if (d > 0x8000)
     {

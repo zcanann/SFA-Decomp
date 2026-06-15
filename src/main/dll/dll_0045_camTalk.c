@@ -60,8 +60,6 @@ void CameraModeBike_free(void)
     lbl_803DD540 = 0;
 }
 
-/* segment pragma-stack balance (re-split): */
-
 #pragma peephole on
 void CameraModeBike_update(CameraObject* camera)
 {

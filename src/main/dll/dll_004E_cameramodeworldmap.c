@@ -11,7 +11,6 @@ extern float mathCosf(float x);
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 
-
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -564,10 +563,6 @@ void CameraModeWorldMap_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */

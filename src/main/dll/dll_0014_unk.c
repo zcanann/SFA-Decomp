@@ -3720,8 +3720,6 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
 
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 
-/* segment pragma-stack balance (re-split): */
-
 static inline u32 RomCurve_GetId(RomCurveDef* curve)
 {
     return curve->id;

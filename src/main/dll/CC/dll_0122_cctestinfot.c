@@ -1,4 +1,3 @@
-/* DLL 0x122 — CC test infot / tricky guard spot / treasure chest objects [8018ADB4-8018ADF0) */
 
 extern void* Obj_GetPlayerObject(void);
 
@@ -18,7 +17,6 @@ extern f32 lbl_803E3C88;
 extern f32 lbl_803E3C8C;
 
 int cctestinfot_getExtraSize(void) { return 0x8; }
-
 
 void cctestinfot_init(int obj, s8* def)
 {

@@ -36,12 +36,6 @@ extern void* gGrimbleStateHandlersA[11];
 extern void* gGrimbleStateHandlersB[6];
 int grimble_animEventCallback(void);
 
-
-
-
-
-
-
 extern f32 lbl_803E2F30;
 extern uint GameBit_Get(int eventId);
 extern undefined4 ObjHits_DisableObject();
@@ -394,7 +388,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
     return result;
 }
 
-
 void cannonclaw_free(void)
 {
 }
@@ -429,8 +422,6 @@ void grimble_initialiseStateHandlerTables(void)
 }
 #pragma dont_inline reset
 
-
-
 #pragma peephole off
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -463,8 +454,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     (ObjectDescriptorCallback)grimble_getObjectTypeId,
     grimble_getExtraSize,
 };
-
-/* segment pragma-stack balance (re-split): */
 
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */

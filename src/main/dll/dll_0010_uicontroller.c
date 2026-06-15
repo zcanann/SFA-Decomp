@@ -1193,7 +1193,6 @@ FUN_800de998(double param_1, undefined8 param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
     int lo;
@@ -1231,7 +1230,6 @@ static inline int Objfsa_FindRomCurveById(int curveId)
     return 0;
 }
 
-
 void UIController_release(void)
 {
 }
@@ -1263,7 +1261,6 @@ static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, in
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 
-
 void UIController_frameStart(void)
 {
     (*gGameUIInterface)->frameStart();
@@ -1286,12 +1283,6 @@ void UIController_render(void* p, int a, int b)
 }
 
 void player_setState(void* ctx, void* p, int new_state);
-
-/* walkPath_writeU16LE: split a path id into two little-endian bytes. */
-
-/* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
-
-/* segment pragma-stack balance (re-split): */
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve);
 

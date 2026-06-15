@@ -15,18 +15,6 @@ extern f32 lbl_803E1644;
 extern f32 lbl_803E1648;
 extern f32 lbl_803E1658;
 
-/*
- * --INFO--
- *
- * Function: camcontrol_findBestTarget
- * EN v1.0 Address: 0x801010B4
- * EN v1.0 Size: 1268b
- * EN v1.1 Address: 0x80101350
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState, ObjAnimComponent *focus)
 {
     int objIndex;
@@ -164,18 +152,6 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
     return NULL;
 }
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updateMoveAverage
- * EN v1.0 Address: 0x801015A8
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801018A4
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus) {
     f32 mag;
     f32 minMove;

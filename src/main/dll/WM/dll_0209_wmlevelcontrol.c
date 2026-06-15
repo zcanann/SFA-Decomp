@@ -246,7 +246,6 @@ void wmlevelcontrol_update(int obj)
     }
     if (state->latchesDisabled == 0)
     {
-        /* mode6 = (map-event mode == 6), via the cntlzw idiom (#23) */
         mode6 = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
         mode6 = __cntlzw(6 - (mode6 & 0xff));
         mode6 = mode6 >> 5;

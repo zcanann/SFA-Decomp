@@ -302,8 +302,6 @@ void kaldachompspit_burst(int obj)
     }
 }
 
-/* segment pragma-stack balance (re-split): */
-
 void kaldachompspit_init(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */

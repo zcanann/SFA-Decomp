@@ -90,8 +90,6 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* segment pragma-stack balance (re-split): */
-
 /*
  * Per-object extra state for the MoonSeedBush plant spot
  * (MoonSeedBush_getExtraSize == 0x2).
@@ -310,7 +308,6 @@ void MMP_levelcontrol_release(void)
 void MMP_levelcontrol_initialise(void)
 {
 }
-
 
 #pragma scheduling off
 #pragma peephole off
