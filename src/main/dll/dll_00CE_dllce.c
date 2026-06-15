@@ -1680,16 +1680,13 @@ extern f32 lbl_803E2DD8;
 
 int fn_8015E520(int* obj, GroundBaddieState* state)
 {
-    ObjHitsPriorityState* hitState;
-
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->objectPairPriority = 10;
-    hitState->objectPairHitVolume = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     state->baddie.moveSpeed = lbl_803E2DD8;
     if ((s8)state->baddie.moveJustStartedA != 0)
