@@ -122,7 +122,7 @@ void arwarwing_hitDetect(int obj)
         PSMTXMultVec(mtx, &state->aimOffsetX, pos);
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
-        fn_8008020C((s16)(0x8000 - *(s16*)obj + state->aimYaw),
+        fn_8008020C((s16)(0x8000 - ((GameObject*)obj)->anim.rotX + state->aimYaw),
                     (s16)(((GameObject*)obj)->anim.rotY + state->aimPitch),
                     (s16)(((GameObject*)obj)->anim.rotZ + state->aimRoll),
                     pos[0], pos[1], pos[2], lbl_803E6FF8);
