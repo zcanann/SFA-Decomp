@@ -4798,9 +4798,9 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     RomCurveNode* node;
     f32 outPos[3];
     f32 offset[3];
-    f32 dz;
-    f32 dy;
     f32 dx;
+    f32 dy;
+    f32 dz;
     f32 angleSin;
     f32 angleCos;
     f32 x;
