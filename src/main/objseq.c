@@ -268,9 +268,9 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.previousWorldPosX = *(f32*)((int)obj + 0x18);
-    ((GameObject*)obj)->anim.previousWorldPosY = *(f32*)((int)obj + 0x1c);
-    ((GameObject*)obj)->anim.previousWorldPosZ = *(f32*)((int)obj + 0x20);
+    ((GameObject*)obj)->anim.previousWorldPosX = ((GameObject*)obj)->anim.worldPosX;
+    ((GameObject*)obj)->anim.previousWorldPosY = ((GameObject*)obj)->anim.worldPosY;
+    ((GameObject*)obj)->anim.previousWorldPosZ = ((GameObject*)obj)->anim.worldPosZ;
 
     if (((GameObject*)obj)->animEventCallback != NULL)
     {

@@ -123,9 +123,9 @@ extern f32 lbl_803DF944;
 extern f32 lbl_803DF948;
 extern f32 lbl_803DF96C;
 
-void mapBlockRender_setVtxDcrs(flag, param_2, sh, bs)
+void mapBlockRender_setVtxDcrs(flag, obj, sh, bs)
 u8 flag;
-int* param_2;
+int* obj;
 int sh;
 
 int* bs;
@@ -201,26 +201,26 @@ int* bs;
     }
 }
 
-void FUN_8005fab0(int param_1, float* param_2)
+void FUN_8005fab0(int block, float* posMtx)
 {
-    float afStack_68[3];
+    float nrmMtx[3];
     float local_5c;
     float local_4c;
     float local_3c;
-    float afStack_38[12];
+    float texMtx[12];
 
-    FUN_8025d80c(param_2, 0);
-    FUN_802475e4(param_2, afStack_68);
+    FUN_8025d80c(posMtx, 0);
+    FUN_802475e4(posMtx, nrmMtx);
     local_5c = lbl_803DF84C;
     local_4c = lbl_803DF84C;
     local_3c = lbl_803DF84C;
-    FUN_8025d848(afStack_68, 0);
-    FUN_80247618((float*)&DAT_80397450, param_2, afStack_38);
-    FUN_8025d8c4(afStack_38, 0x24, 0);
-    FUN_802585d8(9, *(uint*)(param_1 + 0x58), 6);
-    FUN_802585d8(0xb, *(uint*)(param_1 + 0x5c), 2);
-    FUN_802585d8(0xd, *(uint*)(param_1 + 0x60), 4);
-    FUN_802585d8(0xe, *(uint*)(param_1 + 0x60), 4);
+    FUN_8025d848(nrmMtx, 0);
+    FUN_80247618((float*)&DAT_80397450, posMtx, texMtx);
+    FUN_8025d8c4(texMtx, 0x24, 0);
+    FUN_802585d8(9, *(uint*)(block + 0x58), 6);
+    FUN_802585d8(0xb, *(uint*)(block + 0x5c), 2);
+    FUN_802585d8(0xd, *(uint*)(block + 0x60), 4);
+    FUN_802585d8(0xe, *(uint*)(block + 0x60), 4);
     return;
 }
 
@@ -348,7 +348,7 @@ void renderMapBlock(void* objp, u8 type)
 }
 #pragma pop
 
-void FUN_8005fe14(int param_1)
+void FUN_8005fe14(int obj)
 {
     bool insideFrustum;
     uint planeIdx;
@@ -365,25 +365,25 @@ void FUN_8005fe14(int param_1)
         {
             insideFrustum = true;
         LAB_800606c0:
-            if ((!insideFrustum) && (*(char*)(param_1 + 0x2f9) == '\0'))
+            if ((!insideFrustum) && (*(char*)(obj + 0x2f9) == '\0'))
             {
                 return;
             }
             if (!insideFrustum)
             {
-                *(undefined*)(param_1 + 0x2fa) = 0xf0;
+                *(undefined*)(obj + 0x2fa) = 0xf0;
             }
             planeIdx = (uint)DAT_803dda86;
             DAT_803dda86 = DAT_803dda86 + 1;
-            (&DAT_80382c98)[planeIdx] = param_1;
+            (&DAT_80382c98)[planeIdx] = obj;
             return;
         }
         planeIdx = (uint)plane;
         if (lbl_803DF84C +
             (float)(&DAT_803885a8)[planeIdx * 5] +
-            (float)(&DAT_803885a4)[planeIdx * 5] * (*(float*)(param_1 + 0x18) - lbl_803DDA5C) +
-            *(float*)(param_1 + 0x14) * (float)(&DAT_803885a0)[planeIdx * 5] +
-            (float)(&DAT_8038859c)[planeIdx * 5] * (*(float*)(param_1 + 0x10) - lbl_803DDA58) <
+            (float)(&DAT_803885a4)[planeIdx * 5] * (*(float*)(obj + 0x18) - lbl_803DDA5C) +
+            *(float*)(obj + 0x14) * (float)(&DAT_803885a0)[planeIdx * 5] +
+            (float)(&DAT_8038859c)[planeIdx * 5] * (*(float*)(obj + 0x10) - lbl_803DDA58) <
             lbl_803DF84C)
         {
             insideFrustum = false;
@@ -394,43 +394,43 @@ void FUN_8005fe14(int param_1)
     while (true);
 }
 
-void FUN_8005ff90(short* param_1, float* param_2)
+void FUN_8005ff90(short* in, float* out)
 {
     double bias;
     float scale;
 
     scale = lbl_803DF8A0;
     bias = DOUBLE_803df840;
-    *param_2 = (float)((double)CONCAT44(0x43300000, (int)*param_1 ^ 0x80000000) - DOUBLE_803df840) *
+    *out = (float)((double)CONCAT44(0x43300000, (int)*in ^ 0x80000000) - DOUBLE_803df840) *
         lbl_803DF8A0;
-    param_2[1] = (float)((double)CONCAT44(0x43300000, (int)param_1[1] ^ 0x80000000) - bias) * scale;
-    param_2[2] = (float)((double)CONCAT44(0x43300000, (int)param_1[2] ^ 0x80000000) - bias) * scale;
+    out[1] = (float)((double)CONCAT44(0x43300000, (int)in[1] ^ 0x80000000) - bias) * scale;
+    out[2] = (float)((double)CONCAT44(0x43300000, (int)in[2] ^ 0x80000000) - bias) * scale;
     return;
 }
 
-uint FUN_80060058(int param_1)
+uint FUN_80060058(int obj)
 {
-    return *(uint*)(param_1 + 0x10) >> 0x18;
+    return *(uint*)(obj + 0x10) >> 0x18;
 }
 
-int FUN_800600b4(int param_1, int param_2)
+int FUN_800600b4(int obj, int idx)
 {
-    return *(int*)(param_1 + 0x4c) + param_2 * 8;
+    return *(int*)(obj + 0x4c) + idx * 8;
 }
 
-int FUN_800600c4(int param_1, int param_2)
+int FUN_800600c4(int obj, int idx)
 {
-    return *(int*)(param_1 + 0x50) + param_2 * 0x14;
+    return *(int*)(obj + 0x50) + idx * 0x14;
 }
 
-int FUN_800600d4(int param_1, int param_2)
+int FUN_800600d4(int obj, int idx)
 {
-    return *(int*)(param_1 + 0x68) + param_2 * 0x1c;
+    return *(int*)(obj + 0x68) + idx * 0x1c;
 }
 
-int FUN_800600e4(int param_1, int param_2)
+int FUN_800600e4(int obj, int idx)
 {
-    return *(int*)(param_1 + 100) + param_2 * 0x44;
+    return *(int*)(obj + 100) + idx * 0x44;
 }
 
 undefined4 FUN_8006069c(void)
@@ -451,13 +451,13 @@ void FUN_80061194(void)
 {
 }
 
-void FUN_800614d0(undefined param_1)
+void FUN_800614d0(undefined value)
 {
-    DAT_803dc2b8 = param_1;
+    DAT_803dc2b8 = value;
     return;
 }
 
-void FUN_80061a80(short* param_1, short* param_2, int param_3)
+void FUN_80061a80(short* obj, short* newParent, int mode)
 {
     int outObj;
     short* prevParent;
@@ -466,69 +466,69 @@ void FUN_80061a80(short* param_1, short* param_2, int param_3)
     float local_24;
     float afStack_20[4];
 
-    prevParent = *(short**)(param_1 + 0x18);
-    if (prevParent != param_2)
+    prevParent = *(short**)(obj + 0x18);
+    if (prevParent != newParent)
     {
         if (prevParent != (short*)0x0)
         {
             FUN_80006904();
         }
-        if (param_2 != (short*)0x0)
+        if (newParent != (short*)0x0)
         {
             FUN_80006904();
         }
-        if (param_1[0x22] == 1)
+        if (obj[0x22] == 1)
         {
             FUN_80294da4();
         }
         else
         {
-            *(short**)(param_1 + 0x18) = param_2;
-            outObj = *(int*)(param_1 + 0x2a);
+            *(short**)(obj + 0x18) = newParent;
+            outObj = *(int*)(obj + 0x2a);
             if (prevParent == (short*)0x0)
             {
-                local_24 = *(float*)(param_1 + 0x12);
-                local_28 = *(float*)(param_1 + 0x16);
-                angle = (int)*param_1;
+                local_24 = *(float*)(obj + 0x12);
+                local_28 = *(float*)(obj + 0x16);
+                angle = (int)*obj;
             }
             else
             {
-                FUN_800068f8((double)*(float*)(param_1 + 6), (double)*(float*)(param_1 + 8),
-                             (double)*(float*)(param_1 + 10), (float*)(param_1 + 0xc),
-                             (float*)(param_1 + 0xe), (float*)(param_1 + 0x10), (int)prevParent);
-                FUN_800068f8((double)*(float*)(param_1 + 0x40), (double)*(float*)(param_1 + 0x42),
-                             (double)*(float*)(param_1 + 0x44), (float*)(param_1 + 0x46),
-                             (float*)(param_1 + 0x48), (float*)(param_1 + 0x4a), (int)prevParent);
-                FUN_800068ec((double)*(float*)(param_1 + 0x12), (double)lbl_803DF934,
-                             (double)*(float*)(param_1 + 0x16), &local_24, afStack_20, &local_28, (int)prevParent);
-                angle = (int)*prevParent + (int)*param_1;
+                FUN_800068f8((double)*(float*)(obj + 6), (double)*(float*)(obj + 8),
+                             (double)*(float*)(obj + 10), (float*)(obj + 0xc),
+                             (float*)(obj + 0xe), (float*)(obj + 0x10), (int)prevParent);
+                FUN_800068f8((double)*(float*)(obj + 0x40), (double)*(float*)(obj + 0x42),
+                             (double)*(float*)(obj + 0x44), (float*)(obj + 0x46),
+                             (float*)(obj + 0x48), (float*)(obj + 0x4a), (int)prevParent);
+                FUN_800068ec((double)*(float*)(obj + 0x12), (double)lbl_803DF934,
+                             (double)*(float*)(obj + 0x16), &local_24, afStack_20, &local_28, (int)prevParent);
+                angle = (int)*prevParent + (int)*obj;
             }
-            if (param_3 != 0)
+            if (mode != 0)
             {
-                if (*(int*)(param_1 + 0x18) == 0)
+                if (*(int*)(obj + 0x18) == 0)
                 {
-                    *(undefined4*)(param_1 + 6) = *(undefined4*)(param_1 + 0xc);
-                    *(undefined4*)(param_1 + 8) = *(undefined4*)(param_1 + 0xe);
-                    *(undefined4*)(param_1 + 10) = *(undefined4*)(param_1 + 0x10);
-                    *(undefined4*)(param_1 + 0x40) = *(undefined4*)(param_1 + 0x46);
-                    *(undefined4*)(param_1 + 0x42) = *(undefined4*)(param_1 + 0x48);
-                    *(undefined4*)(param_1 + 0x44) = *(undefined4*)(param_1 + 0x4a);
-                    *(float*)(param_1 + 0x12) = local_24;
-                    *(float*)(param_1 + 0x16) = local_28;
-                    *param_1 = (short)angle;
+                    *(undefined4*)(obj + 6) = *(undefined4*)(obj + 0xc);
+                    *(undefined4*)(obj + 8) = *(undefined4*)(obj + 0xe);
+                    *(undefined4*)(obj + 10) = *(undefined4*)(obj + 0x10);
+                    *(undefined4*)(obj + 0x40) = *(undefined4*)(obj + 0x46);
+                    *(undefined4*)(obj + 0x42) = *(undefined4*)(obj + 0x48);
+                    *(undefined4*)(obj + 0x44) = *(undefined4*)(obj + 0x4a);
+                    *(float*)(obj + 0x12) = local_24;
+                    *(float*)(obj + 0x16) = local_28;
+                    *obj = (short)angle;
                 }
                 else
                 {
-                    FUN_800068f4((double)*(float*)(param_1 + 0xc), (double)*(float*)(param_1 + 0xe),
-                                 (double)*(float*)(param_1 + 0x10), (float*)(param_1 + 6),
-                                 (float*)(param_1 + 8), (float*)(param_1 + 10), *(int*)(param_1 + 0x18));
-                    FUN_800068f4((double)*(float*)(param_1 + 0x46), (double)*(float*)(param_1 + 0x48),
-                                 (double)*(float*)(param_1 + 0x4a), (float*)(param_1 + 0x40),
-                                 (float*)(param_1 + 0x42), (float*)(param_1 + 0x44), *(int*)(param_1 + 0x18));
+                    FUN_800068f4((double)*(float*)(obj + 0xc), (double)*(float*)(obj + 0xe),
+                                 (double)*(float*)(obj + 0x10), (float*)(obj + 6),
+                                 (float*)(obj + 8), (float*)(obj + 10), *(int*)(obj + 0x18));
+                    FUN_800068f4((double)*(float*)(obj + 0x46), (double)*(float*)(obj + 0x48),
+                                 (double)*(float*)(obj + 0x4a), (float*)(obj + 0x40),
+                                 (float*)(obj + 0x42), (float*)(obj + 0x44), *(int*)(obj + 0x18));
                     FUN_800068f0((double)local_24, (double)lbl_803DF934, (double)local_28,
-                                 (float*)(param_1 + 0x12), afStack_20, (float*)(param_1 + 0x16),
-                                 *(int*)(param_1 + 0x18));
-                    angle = angle - **(short**)(param_1 + 0x18);
+                                 (float*)(obj + 0x12), afStack_20, (float*)(obj + 0x16),
+                                 *(int*)(obj + 0x18));
+                    angle = angle - **(short**)(obj + 0x18);
                     if (0x8000 < angle)
                     {
                         angle = angle + -0xffff;
@@ -537,17 +537,17 @@ void FUN_80061a80(short* param_1, short* param_2, int param_3)
                     {
                         angle = angle + 0xffff;
                     }
-                    *param_1 = (short)angle;
+                    *obj = (short)angle;
                 }
             }
             if (outObj != 0)
             {
-                *(undefined4*)(outObj + 0x10) = *(undefined4*)(param_1 + 6);
-                *(undefined4*)(outObj + 0x14) = *(undefined4*)(param_1 + 8);
-                *(undefined4*)(outObj + 0x18) = *(undefined4*)(param_1 + 10);
-                *(undefined4*)(outObj + 0x1c) = *(undefined4*)(param_1 + 0xc);
-                *(undefined4*)(outObj + 0x20) = *(undefined4*)(param_1 + 0xe);
-                *(undefined4*)(outObj + 0x24) = *(undefined4*)(param_1 + 0x10);
+                *(undefined4*)(outObj + 0x10) = *(undefined4*)(obj + 6);
+                *(undefined4*)(outObj + 0x14) = *(undefined4*)(obj + 8);
+                *(undefined4*)(outObj + 0x18) = *(undefined4*)(obj + 10);
+                *(undefined4*)(outObj + 0x1c) = *(undefined4*)(obj + 0xc);
+                *(undefined4*)(outObj + 0x20) = *(undefined4*)(obj + 0xe);
+                *(undefined4*)(outObj + 0x24) = *(undefined4*)(obj + 0x10);
             }
         }
     }
@@ -555,7 +555,7 @@ void FUN_80061a80(short* param_1, short* param_2, int param_3)
 }
 
 undefined4
-FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, float* param_5, char param_6
+FUN_80061cbc(double cx, double cy, double r, float* px, float* py, char resolve
 )
 {
     float fVar1;
@@ -568,17 +568,17 @@ FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, flo
     double dVar8;
 
     dVar2 = (double)lbl_803DF934;
-    if (dVar2 != param_3)
+    if (dVar2 != r)
     {
-        dVar5 = (double)*param_4;
-        dVar4 = (double)(float)(dVar5 - param_1);
-        dVar3 = (double)(float)((double)*param_5 - param_2);
-        dVar6 = -(double)(float)(param_3 * param_3 -
+        dVar5 = (double)*px;
+        dVar4 = (double)(float)(dVar5 - cx);
+        dVar3 = (double)(float)((double)*py - cy);
+        dVar6 = -(double)(float)(r * r -
             (double)((float)(dVar4 * dVar4) + (float)(dVar3 * dVar3)));
         if (dVar2 <= dVar6)
         {
-            dVar8 = (double)(float)((double)param_4[1] - dVar5);
-            dVar7 = (double)(float)((double)param_5[1] - (double)*param_5);
+            dVar8 = (double)(float)((double)px[1] - dVar5);
+            dVar7 = (double)(float)((double)py[1] - (double)*py);
             dVar5 = (double)(float)(dVar8 * dVar8 + (double)(float)(dVar7 * dVar7));
             if (dVar2 < dVar5)
             {
@@ -606,23 +606,23 @@ FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, flo
                     if (((double)lbl_803DF934 <= dVar2) && (dVar2 <= (double)lbl_803DF944))
                     {
                         lbl_803DDBD8 = (float)dVar2;
-                        if (param_6 != '\0')
+                        if (resolve != '\0')
                         {
-                            dVar3 = (double)(float)(dVar2 * dVar8 + (double)*param_4);
-                            dVar2 = (double)(float)(dVar2 * dVar7 + (double)*param_5);
-                            dVar4 = (double)(float)((double)(float)(dVar3 - param_1) / param_3);
-                            dVar5 = (double)(float)((double)(float)(dVar2 - param_2) / param_3);
+                            dVar3 = (double)(float)(dVar2 * dVar8 + (double)*px);
+                            dVar2 = (double)(float)(dVar2 * dVar7 + (double)*py);
+                            dVar4 = (double)(float)((double)(float)(dVar3 - cx) / r);
+                            dVar5 = (double)(float)((double)(float)(dVar2 - cy) / r);
                             fVar1 = -(float)(dVar3 * dVar4 + (double)(float)(dVar2 * dVar5));
-                            dVar2 = (double)(fVar1 + (float)(dVar4 * (double)param_4[1] +
-                                (double)(float)(dVar5 * (double)param_5[1])));
-                            param_4[1] = -(float)(dVar2 * dVar4 - (double)param_4[1]);
-                            param_5[1] = -(float)(dVar2 * dVar5 - (double)param_5[1]);
+                            dVar2 = (double)(fVar1 + (float)(dVar4 * (double)px[1] +
+                                (double)(float)(dVar5 * (double)py[1])));
+                            px[1] = -(float)(dVar2 * dVar4 - (double)px[1]);
+                            py[1] = -(float)(dVar2 * dVar5 - (double)py[1]);
                             dVar2 = (double)lbl_803DF948;
-                            while ((double)(fVar1 + (float)((double)param_4[1] * dVar4 +
-                                (double)(float)((double)param_5[1] * dVar5))) < dVar2)
+                            while ((double)(fVar1 + (float)((double)px[1] * dVar4 +
+                                (double)(float)((double)py[1] * dVar5))) < dVar2)
                             {
-                                param_4[1] = param_4[1] + (float)(dVar2 * dVar4);
-                                param_5[1] = param_5[1] + (float)(dVar2 * dVar5);
+                                px[1] = px[1] + (float)(dVar2 * dVar4);
+                                py[1] = py[1] + (float)(dVar2 * dVar5);
                             }
                         }
                         return 1;
@@ -630,16 +630,16 @@ FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, flo
                 }
             }
         }
-        else if (param_6 != '\0')
+        else if (resolve != '\0')
         {
-            param_4[1] = (float)(dVar5 + (double)lbl_803DDBD4);
-            param_5[1] = *param_5 + lbl_803DDBD0;
+            px[1] = (float)(dVar5 + (double)lbl_803DDBD4);
+            py[1] = *py + lbl_803DDBD0;
         }
     }
     return 0;
 }
 
-int FUN_80062010(double param_1, double param_2, double param_3, undefined2 param_4, int param_5)
+int FUN_80062010(double x, double y, double z, undefined2 tag, int linkArr)
 {
     int vtxCount;
     float* vtxPtr;
@@ -654,10 +654,10 @@ int FUN_80062010(double param_1, double param_2, double param_3, undefined2 para
     {
         do
         {
-            if (((param_1 == (double)*vtxPtr) && (param_2 == (double)vtxPtr[1])) &&
-                (param_3 == (double)vtxPtr[2]))
+            if (((x == (double)*vtxPtr) && (y == (double)vtxPtr[1])) &&
+                (z == (double)vtxPtr[2]))
             {
-                *(undefined2*)(param_5 + idx * 4 + 2) = param_4;
+                *(undefined2*)(linkArr + idx * 4 + 2) = tag;
                 return idx;
             }
             vtxPtr = vtxPtr + 3;
@@ -666,11 +666,11 @@ int FUN_80062010(double param_1, double param_2, double param_3, undefined2 para
         }
         while (remaining != 0);
     }
-    DAT_803ddbb8[vtxCount * 3] = (float)param_1;
-    DAT_803ddbb8[DAT_803ddbdc * 3 + 1] = (float)param_2;
-    DAT_803ddbb8[DAT_803ddbdc * 3 + 2] = (float)param_3;
-    *(undefined2*)(param_5 + DAT_803ddbdc * 4) = param_4;
-    *(undefined2*)(param_5 + DAT_803ddbdc * 4 + 2) = 0xffff;
+    DAT_803ddbb8[vtxCount * 3] = (float)x;
+    DAT_803ddbb8[DAT_803ddbdc * 3 + 1] = (float)y;
+    DAT_803ddbb8[DAT_803ddbdc * 3 + 2] = (float)z;
+    *(undefined2*)(linkArr + DAT_803ddbdc * 4) = tag;
+    *(undefined2*)(linkArr + DAT_803ddbdc * 4 + 2) = 0xffff;
     DAT_803ddbdc = DAT_803ddbdc + 1;
     return DAT_803ddbdc + -1;
 }
@@ -680,22 +680,22 @@ void FUN_800620e8(undefined4 param_1, undefined4 param_2, float* param_3, int* p
 {
 }
 
-void FUN_800631d4(int param_1, int param_2, int param_3)
+void FUN_800631d4(int tag, int obj, int clear)
 {
     uint hitCount;
     int hitEntry;
 
-    if (param_2 == 0)
+    if (obj == 0)
     {
         hitCount = (uint)DAT_803ddbde;
         hitEntry = DAT_803ddbb4;
     }
     else
     {
-        hitCount = (uint) * (byte*)(*(int*)(param_2 + 0x50) + 0x5c);
-        hitEntry = *(int*)(*(int*)(param_2 + 0x50) + 0x34);
+        hitCount = (uint) * (byte*)(*(int*)(obj + 0x50) + 0x5c);
+        hitEntry = *(int*)(*(int*)(obj + 0x50) + 0x34);
     }
-    if (param_3 != 0)
+    if (clear != 0)
     {
         if ((int)hitCount < 1)
         {
@@ -703,7 +703,7 @@ void FUN_800631d4(int param_1, int param_2, int param_3)
         }
         do
         {
-            if (*(short*)(hitEntry + 0xc) == param_1)
+            if (*(short*)(hitEntry + 0xc) == tag)
             {
                 *(byte*)(hitEntry + 3) = *(byte*)(hitEntry + 3) & 0xbf;
             }
@@ -719,7 +719,7 @@ void FUN_800631d4(int param_1, int param_2, int param_3)
     }
     do
     {
-        if (*(short*)(hitEntry + 0xc) == param_1)
+        if (*(short*)(hitEntry + 0xc) == tag)
         {
             *(byte*)(hitEntry + 3) = *(byte*)(hitEntry + 3) | 0x40;
         }
@@ -1045,7 +1045,7 @@ void trackDolphin_initIntersectionBuffers(void)
     return;
 }
 
-void FUN_80064384(int param_1)
+void FUN_80064384(int param)
 {
     int rowBase;
     int colBase;
@@ -1064,7 +1064,7 @@ void FUN_80064384(int param_1)
         col = 0;
         rowBase = (row >> 2) * 0x100;
         colBase = (row & 3) * 8;
-        scale = (row + param_1) * 0xff;
+        scale = (row + param) * 0xff;
         blockCount = 0x10;
         do
         {
@@ -1107,7 +1107,7 @@ void FUN_80064384(int param_1)
     }
     while (row < 0x40);
     FUN_80017790(DAT_803ddc38 + 0x60, texAddr, 0);
-    DAT_803ddc00 = (char)param_1;
+    DAT_803ddc00 = (char)param;
     return;
 }
 

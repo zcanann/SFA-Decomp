@@ -234,21 +234,13 @@ void dll_115_initialise_nop(void)
 {
 }
 
-int wm_column_getExtraSize(void);
 
-int wm_column_getObjectTypeId(void);
 
-void wm_column_free(int obj);
 
-void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
-void wm_column_hitDetect(void);
 
-void wm_column_update(int obj);
 
-void wm_column_release(void);
 
-void wm_column_initialise(void);
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

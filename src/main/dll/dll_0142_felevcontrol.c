@@ -35,7 +35,6 @@ static int FEseqobject_findControlObject(void)
     return found;
 }
 
-int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #pragma scheduling off
 #pragma peephole off
@@ -80,7 +79,6 @@ void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
  * EN v1.0 Address: 0x801DF8F4
  * EN v1.0 Size: 56b
  */
-void FEseqobject_init(int obj);
 
 /*
  * Function: FEseqobject_update

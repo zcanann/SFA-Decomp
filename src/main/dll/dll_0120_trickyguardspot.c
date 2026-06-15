@@ -74,9 +74,7 @@ void trickyguardspot_update(TrickyGuardSpotObject* obj)
     GameBit_Set(((TrickyguardspotPlacement*)def)->unk1E, flags->trickyInRange);
 }
 
-int magiccavetop_getExtraSize(void);
 int trickyguardspot_getExtraSize(void) { return 0x8; }
-int infotext_getExtraSize(void);
 
 void trickyguardspot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
 

@@ -380,7 +380,6 @@ void fn_801E1588(int obj, int state)
     }
 }
 
-void SB_Propeller_update(int obj);
 
 void SB_Galleon_release(void)
 {
@@ -390,11 +389,9 @@ void SB_Galleon_initialise(void)
 {
 }
 
-void SB_ShipMast_free(void);
 
 int SB_Galleon_getExtraSize(void) { return sizeof(SBGalleonState); }
 int SB_Galleon_getObjectTypeId(void) { return 0x0; }
-int SB_Propeller_getExtraSize(void);
 
 u32 getSbGalleon(void) { return gSbGalleon; }
 u32 fn_801E2570(void);
@@ -596,7 +593,6 @@ void SB_Galleon_free(GameObject* obj, int p2)
     GameBit_Set(SBGALLEON_GAMEBIT_DEFEATED, 1);
 }
 
-void SB_ShipHead_init(int obj);
 
 int SB_Galleon_modelMtxFn(int* obj)
 {

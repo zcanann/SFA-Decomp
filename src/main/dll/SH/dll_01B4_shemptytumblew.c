@@ -144,7 +144,6 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
     return;
 }
 
-void sc_levelcontrol_hitDetect(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset

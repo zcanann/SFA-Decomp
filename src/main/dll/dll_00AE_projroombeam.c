@@ -27,7 +27,6 @@ void projroombeam_initialise(void)
 {
 }
 
-int projlightning1_doUnsupported(void);
 
 
 

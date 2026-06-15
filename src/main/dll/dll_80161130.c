@@ -459,7 +459,6 @@ static inline u8 scarab_isObjectInList(void* o)
 
 void fn_8015FCCC(int obj);
 
-void iceball_update(undefined2* param_1, int param_2);
 
 #pragma dont_inline on
 #pragma dont_inline reset

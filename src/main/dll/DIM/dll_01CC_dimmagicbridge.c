@@ -220,7 +220,6 @@ LAB_801b44d4:
     return;
 }
 
-void explosion_release(uint obj);
 
 void fn_explosion_release_v11_unused(uint obj)
 {
@@ -374,7 +373,6 @@ void FUN_801b5d00(int param_1, int param_2)
     return;
 }
 
-void explosion_hitDetect(void);
 
 void dimmagicbridge_free(void)
 {
@@ -469,7 +467,6 @@ void dimmagicbridge_init(u8* obj, u8* params)
     }
 }
 
-int explosion_getExtraSize(void);
 int dimmagicbridge_getExtraSize(void) { return 0x68; }
 int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
 int dim_levelcontrol_getExtraSize(void);
@@ -516,7 +513,6 @@ void dimmagicbridge_update(int obj)
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-void dimwooddoor2_init(u8* obj, u8* params);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */

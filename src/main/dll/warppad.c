@@ -518,4 +518,3 @@ updateTimer:
     }
 }
 
-void areafxemit_free(AreaFxEmitObject* obj);

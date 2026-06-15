@@ -266,11 +266,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
     ctrl = (AttractMovieControl*)base;
     gAttractMovieLoopCompleted = 0;
 
-    if (ctrl->enabled == 0)
-    {
-        return FALSE;
-    }
-    if (ctrl->isPrepared != 0)
+    if (ctrl->enabled == 0 || ctrl->isPrepared != 0)
     {
         return FALSE;
     }

@@ -214,4 +214,3 @@ void fn_80198DE8(u8* obj, int seqArg)
     }
 }
 
-void WaterFallSpray_render(void);

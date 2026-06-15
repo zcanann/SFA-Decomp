@@ -262,11 +262,9 @@ void imanimspacecraft_initialise(void)
 {
 }
 
-void imspacethruster_hitDetect(void);
 
 int imanimspacecraft_getExtraSize(void) { return 0x4; }
 int imanimspacecraft_getObjectTypeId(void) { return 0x0; }
-int imspacethruster_getExtraSize(void);
 
 void imanimspacecraft_update(int* obj)
 {
@@ -307,9 +305,7 @@ int imanimspacecraft_setScale(int* obj, int bitIdx)
     }
 }
 
-void lavaball1bf_func11(int* obj);
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -317,10 +313,8 @@ void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4780);
 }
 
-void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 u32 imanimspacecraft_func0B(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x3) & 0x4; }
-u32 lavaball1be_func11(int* obj);
 
 int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

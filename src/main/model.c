@@ -482,27 +482,27 @@ extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, i
 #pragma dont_inline on
 void* ObjModel_LoadModelData(int id)
 {
-    int a18, a14, a10, aC, a8;
+    int fileOffset, dataLen, jointCount, headerSize, amapFlag;
     void* model;
-    if (getTableFileEntry(0x2a, id, &a18) == 0)
+    if (getTableFileEntry(0x2a, id, &fileOffset) == 0)
     {
         return NULL;
     }
-    ((void (*)(int, int*, int*, int*, int*, int))loadModelsBin)(a18, &a10, &aC, &a8, &a14, id);
-    aC = roundUpTo8(aC);
-    aC += 0xb0;
-    model = (void*)roundUpTo16((int)mmAlloc(a14 + modelGetAmapSize(id, a8, a10) + 0x1f4, 9, 0));
-    loadAndDecompressDataFile(0x2b, model, a18, a14, 0, id, 0);
-    *(s16*)((u8*)model + 0x84) = aC;
+    ((void (*)(int, int*, int*, int*, int*, int))loadModelsBin)(fileOffset, &jointCount, &headerSize, &amapFlag, &dataLen, id);
+    headerSize = roundUpTo8(headerSize);
+    headerSize += 0xb0;
+    model = (void*)roundUpTo16((int)mmAlloc(dataLen + modelGetAmapSize(id, amapFlag, jointCount) + 0x1f4, 9, 0));
+    loadAndDecompressDataFile(0x2b, model, fileOffset, dataLen, 0, id, 0);
+    *(s16*)((u8*)model + 0x84) = headerSize;
     *(u16*)((u8*)model + 0x4) = id;
-    *(u16*)((u8*)model + 0xec) = a10;
+    *(u16*)((u8*)model + 0xec) = jointCount;
     *(u16*)((u8*)model + 0x2) &= ~0x40;
     *(u8*)model = 1;
     if (*(u16*)((u8*)model + 0xec) == 0)
     {
         *(u16*)((u8*)model + 0x2) |= 2;
     }
-    if (a8 != 0)
+    if (amapFlag != 0)
     {
         *(u16*)((u8*)model + 0x2) |= 0x40;
     }

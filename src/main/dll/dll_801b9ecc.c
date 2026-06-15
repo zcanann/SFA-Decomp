@@ -56,7 +56,6 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-void dll_1DA_release(void);
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
@@ -184,7 +183,6 @@ int fn_801B9ECC(int a, int obj)
     return 0;
 }
 
-void dll_1DF_free(void);
 
 /* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
  *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the

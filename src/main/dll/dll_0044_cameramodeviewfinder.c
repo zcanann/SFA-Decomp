@@ -581,7 +581,6 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->clampedPosY = lbl_803DD548->camPosY;
 }
 
-void CameraModeDebug_update(short* camObj);
 
 void CameraModeViewfinder_release(void)
 {
@@ -591,4 +590,3 @@ void CameraModeViewfinder_initialise(void)
 {
 }
 
-void CameraModeDebug_copyToCurrent_nop(void);

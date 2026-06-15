@@ -1,21 +1,12 @@
 #include "main/dll/crate2.h"
 
-int dfpstatue1_getExtraSize(void);
-int dfpstatue1_getObjectTypeId(void);
 
-void dfpstatue1_free(void);
 
-void dfpstatue1_render(void);
 
-void dfpstatue1_hitDetect(void);
 
-void dfpstatue1_update(DfpStatue1Object* obj);
 
-void dfpstatue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData);
 
-void dfpstatue1_release(void);
 
-void dfpstatue1_initialise(void);
 
 extern void OSReport(const char* fmt, ...);
 

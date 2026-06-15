@@ -241,7 +241,6 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
                                      base16[variant * 2 + (int)randomGetRange(0, 1) + 0x22], 0);
 }
 
-void dll_86_func03(int sourceObj, int variant, int posSource, uint flags);
 
 void dll_85_func01_nop(void)
 {

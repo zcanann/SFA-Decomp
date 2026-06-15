@@ -21,7 +21,6 @@ void projmagicstream_initialise(void)
 {
 }
 
-int projmagicemmit1_doUnsupported(void);
 
 
 

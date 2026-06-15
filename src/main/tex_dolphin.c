@@ -227,9 +227,6 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     byte colR;
     byte colG;
     byte colB;
-    int ia;
-    int ib;
-    int ic;
 
     colorWord = lbl_803E8448;
     bitPos = bitReader[4];
@@ -251,8 +248,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         _gxSetFogParams();
         goto LAB_8005E630;
     }
-    ia = colorWord;
-    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&ia);
+    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&colorWord);
 LAB_8005E630:
     if ((*(uint*)(shader + 0x3c) & 1) == 0)
     {
@@ -264,8 +260,7 @@ LAB_8005E630:
             }
         }
     }
-    ib = lbl_803DB640;
-    GXSetChanAmbColor(0, *(GXColor*)&ib);
+    GXSetChanAmbColor(0, *(GXColor*)&lbl_803DB640);
     if ((*(uint*)(shader + 0x3c) & 0x40000) != 0)
     {
         GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
@@ -276,8 +271,7 @@ LAB_8005E630:
 LAB_8005E6D0:
     objGetColor(0, &colB, &colG, &colR);
     GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-    ic = *(int*)&colB;
-    GXSetChanAmbColor(0, *(GXColor*)&ic);
+    GXSetChanAmbColor(0, *(GXColor*)&colB);
 LAB_8005E718:
     return shader;
 }

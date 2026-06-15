@@ -793,6 +793,11 @@ void arwarwing_initAttachments(int obj, int state)
     int found;
     int mev;
     f32 radius;
+    f32 c6F7C;
+    f32 c6F78;
+    f32 c6F74;
+    f32 c6FB0;
+    f32 c6F5C;
 
     radius = lbl_803E6FC0;
     mev = (int)(*gMapEventInterface)->getCurCharacterState();
@@ -884,18 +889,18 @@ void arwarwing_initAttachments(int obj, int state)
         (*gCameraInterface)->setFocus((void*)obj, 0);
         ((ArwingState*)state)->flags477 |= 1;
         ((ArwingState*)state)->maxSpeedX = lbl_803E6F70;
-        ((ArwingState*)state)->accelX = lbl_803E6F74;
-        ((ArwingState*)state)->maxSpeedY = lbl_803E6F78;
-        ((ArwingState*)state)->accelY = lbl_803E6F7C;
-        ((ArwingState*)state)->maxSpeedZ = lbl_803E6F78;
-        ((ArwingState*)state)->accelZ = lbl_803E6F7C;
+        ((ArwingState*)state)->accelX = (c6F74 = lbl_803E6F74);
+        ((ArwingState*)state)->maxSpeedY = (c6F78 = lbl_803E6F78);
+        ((ArwingState*)state)->accelY = (c6F7C = lbl_803E6F7C);
+        ((ArwingState*)state)->maxSpeedZ = c6F78;
+        ((ArwingState*)state)->accelZ = c6F7C;
         ((ArwingState*)state)->maxAccelZ = lbl_803E6F80;
         ((ArwingState*)state)->minAccelZ = lbl_803E6F84;
         ((ArwingState*)state)->speedScaleZ = lbl_803E6ED0;
         ((ArwingState*)state)->rotXRange = lbl_803E6F88;
-        ((ArwingState*)state)->rotXGain = lbl_803E6F74;
+        ((ArwingState*)state)->rotXGain = c6F74;
         ((ArwingState*)state)->rotYRange = lbl_803E6F8C;
-        ((ArwingState*)state)->rotYGain = lbl_803E6F7C;
+        ((ArwingState*)state)->rotYGain = c6F7C;
         ((ArwingState*)state)->rotZRange = lbl_803E6F90;
         ((ArwingState*)state)->rotZGain = lbl_803E6F94;
         ((ArwingState*)state)->rotZTrimRange = lbl_803E6F98;
@@ -905,22 +910,22 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->barrelRollSpeed = lbl_803E6FA8;
         ((ArwingState*)state)->unk3FA = 0x19;
         ((ArwingState*)state)->barrelRollDecelRange = lbl_803E6FAC;
-        ((ArwingState*)state)->rootMotionScale = lbl_803E6FB0;
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6FB0;
+        ((ArwingState*)state)->rootMotionScale = (c6FB0 = lbl_803E6FB0);
+        ((GameObject*)obj)->anim.rootMotionScale = c6FB0;
         ((ArwingState*)state)->barrelRollMaxSpeedScale = lbl_803E6FB4;
         ((ArwingState*)state)->barrelRollAccelScale = lbl_803E6FB8;
         ((ArwingState*)state)->speedScaleRollL = lbl_803E6FBC;
         ((ArwingState*)state)->speedScaleRollR = lbl_803E6F64;
         ((ArwingState*)state)->accelZRollL = lbl_803E6FD4;
-        ((ArwingState*)state)->accelZRollR = lbl_803E6F74;
+        ((ArwingState*)state)->accelZRollR = c6F74;
         ((ArwingState*)state)->accelZNeutral = lbl_803E6FD8;
         ((ArwingState*)state)->rollCooldownInit = lbl_803E6FDC;
         ((ArwingState*)state)->rollEnergyMax = lbl_803E6FE0;
         ((ArwingState*)state)->unkA8 = lbl_803E6F2C;
         ((ArwingState*)state)->rollEnergy = ((ArwingState*)state)->rollEnergyMax;
         ((ArwingState*)state)->unkA4 = ((ArwingState*)state)->unkA8;
-        ((ArwingState*)state)->wingFlexCur = lbl_803E6F5C;
-        ((ArwingState*)state)->wingFlexTarget = lbl_803E6F5C;
+        ((ArwingState*)state)->wingFlexCur = (c6F5C = lbl_803E6F5C);
+        ((ArwingState*)state)->wingFlexTarget = c6F5C;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
         {
             ((ArwingState*)state)->velZ = lbl_803E6ECC;
@@ -1060,7 +1065,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
         }
         Sfx_PlayFromObject(obj, SFXbaddie_rach_bite);
-        ((Arw339Flags*)(state + 0x339))->scoreFlag = 1;
+        ((Arw339Flags*)&((ArwingState*)state)->flags339)->scoreFlag = 1;
         Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
         ((ArwingState*)state)->damageFlashTimer = lbl_803E6F34;
         ((ArwingState*)state)->hitShake = 1;

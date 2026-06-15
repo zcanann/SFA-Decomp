@@ -240,7 +240,6 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, 0x2e, 0);
 }
 
-int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* arg6);
 
 void dll_7C_func01_nop(void)
 {

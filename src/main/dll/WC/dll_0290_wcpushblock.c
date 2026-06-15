@@ -936,7 +936,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
         if (dx == -1)
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+            mapGetBlockOriginForPos(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             *outX = (k6db4 = lbl_803E6DB4) + (lbl_803E6DB8 + px + (kc = lbl_803E6DBC));
@@ -947,7 +947,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
         else
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+            mapGetBlockOriginForPos(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             *outX = (k6db4 = lbl_803E6DB4) + (lbl_803E6DB8 + px + (kc = lbl_803E6DA8));
@@ -963,7 +963,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
                 {
                     f32 pz, px;
                     i += dx;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+                    mapGetBlockOriginForPos(
                         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                         ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)((s16)i * 48));
@@ -971,7 +971,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
                 }
                 {
                     f32 pz, px;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+                    mapGetBlockOriginForPos(
                         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                         ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)((s16)i * 48));
@@ -986,7 +986,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
         if (dy == -1)
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+            mapGetBlockOriginForPos(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             *outX = (k6db4 = lbl_803E6DB4) + (lbl_803E6DB8 + px + (f32)(ai * 48));
@@ -997,7 +997,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
         else
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+            mapGetBlockOriginForPos(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             *outX = (k6db4 = lbl_803E6DB4) + (lbl_803E6DB8 + px + (f32)(ai * 48));
@@ -1013,7 +1013,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
                 {
                     f32 pz, px;
                     i += dy;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+                    mapGetBlockOriginForPos(
                         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                         ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)((s16)i * 48));
@@ -1021,7 +1021,7 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
                 }
                 {
                     f32 pz, px;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+                    mapGetBlockOriginForPos(
                         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                         ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)((s16)i * 48));

@@ -242,7 +242,6 @@ void dll_9A_func03(int a, int b, int p, uint flags)
 }
 #pragma opt_propagation reset
 
-void dll_9B_func03(int a, int b, int p, uint flags);
 
 void dll_9A_func01_nop(void)
 {

@@ -344,11 +344,9 @@ void imicemountain_init(int* obj)
 #undef MEVT_SET
 #undef MEVT_QUERY
 #pragma peephole on
-void crrockfall_free(void);
 
 int imicemountain_getExtraSize(void) { return 0x14; }
 int imicemountain_getObjectTypeId(void) { return 0x0; }
-int crrockfall_getExtraSize(void);
 
 #pragma scheduling on
 #pragma peephole off

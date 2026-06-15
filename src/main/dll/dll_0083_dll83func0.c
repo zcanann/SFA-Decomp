@@ -214,7 +214,6 @@ void dll_83_func03(int sourceObj, int variant, int posSource, uint flags)
                                      0);
 }
 
-void dll_84_func03(int sourceObj, int variant, int posSource, uint flags);
 
 void dll_83_func01_nop(void)
 {

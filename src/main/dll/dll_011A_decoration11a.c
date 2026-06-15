@@ -300,7 +300,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-void flammablevine_release(void);
 
 void decoration11a_free(void)
 {
@@ -310,7 +309,6 @@ void decoration11a_update(void)
 {
 }
 
-int flammablevine_getExtraSize(void);
 int decoration11a_getExtraSize(void) { return 0x1c; }
 int landed_arwing_getExtraSize(void);
 
@@ -322,7 +320,6 @@ void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3B78);
 }
 
-void flammablevine_free(int x);
 
 #pragma dont_inline on
 #pragma peephole on
@@ -341,7 +338,6 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 }
 #pragma dont_inline reset
 
-int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #pragma peephole off
 void decoration11a_hitDetect(int obj)

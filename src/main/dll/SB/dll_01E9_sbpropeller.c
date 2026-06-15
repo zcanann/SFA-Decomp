@@ -203,14 +203,11 @@ void SB_Propeller_init(GameObject* obj, int placement)
     return;
 }
 
-void SB_ShipHead_render(GameObject* p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int SB_Propeller_getExtraSize(void) { return sizeof(SBPropellerState); }
-int SB_ShipHead_getExtraSize(void);
 
 u32 fn_801E2570(void) { return lbl_803DDC40; }
 
-u8 SB_Galleon_render2(int* obj);
 
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -218,7 +215,6 @@ void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5810);
 }
 
-void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void SB_Propeller_hitDetect(GameObject* obj)
 {

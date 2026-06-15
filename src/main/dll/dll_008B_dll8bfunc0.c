@@ -245,7 +245,6 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, uint flags, undefi
     }
 }
 
-void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags);
 
 void dll_8B_func01_nop(void)
 {

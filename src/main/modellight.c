@@ -1598,10 +1598,10 @@ int randomGetRange(int lo, int hi);
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
-void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f32 b)
+void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY, f32 aspect)
 {
-    obj->projectionFovY = a;
-    obj->projectionAspect = b;
+    obj->projectionFovY = fovY;
+    obj->projectionAspect = aspect;
     obj->projectionType = 1;
     C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect,
                           lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
@@ -1612,35 +1612,35 @@ void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
                             f32 transS, f32 transT);
 
-void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f)
+void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 bottom, f32 left, f32 right, f32 scaleS, f32 scaleT)
 {
-    f32 fScale;
-    f32 eScale;
+    f32 scaledT;
+    f32 scaledS;
 
-    obj->projectionTop = a;
-    obj->projectionBottom = b;
-    obj->projectionLeft = c;
-    obj->projectionRight = d;
+    obj->projectionTop = top;
+    obj->projectionBottom = bottom;
+    obj->projectionLeft = left;
+    obj->projectionRight = right;
     obj->projectionType = 0;
-    fScale = f * lbl_803DE790;
-    eScale = e * lbl_803DE790;
+    scaledT = scaleT * lbl_803DE790;
+    scaledS = scaleS * lbl_803DE790;
     C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom,
-                    obj->projectionLeft, obj->projectionRight, fScale, eScale, fScale,
-                    eScale);
+                    obj->projectionLeft, obj->projectionRight, scaledT, scaledS, scaledT,
+                    scaledS);
     C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
                     obj->projectionLeft, obj->projectionRight, lbl_803DE790, lbl_803DE790,
                     lbl_803DE790, lbl_803DE790);
 }
 
-void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b)
+void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness)
 {
     u8* lightObj;
     f32 zero;
-    f32 one;
     f32 atten;
+    f32 one;
 
-    obj->specularAttenuationScale = a;
-    obj->specularBrightness = b;
+    obj->specularAttenuationScale = scale;
+    obj->specularBrightness = brightness;
     atten = obj->specularAttenuationScale * lbl_803DE790;
     lightObj = (u8*)obj + 0xc0;
     zero = lbl_803DE75C;

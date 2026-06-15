@@ -150,4 +150,3 @@ int fn_8010A47C(int curve, int* count, int tag)
     return curve;
 }
 
-void CameraModeViewfinder_release(void);

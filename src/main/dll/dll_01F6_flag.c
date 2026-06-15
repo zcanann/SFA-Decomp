@@ -83,7 +83,6 @@ void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E59A8);
 }
 
-void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src

@@ -245,7 +245,7 @@ void fn_80239EAC(int p1, int p2)
             dx = *(f32*)(p2 + 0xc0) - ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.rotX = (s16)getAngle(dx, dz);
             ((GameObject*)obj)->anim.rotY = -(s16)getAngle(dy, dz);
-            arwprojectile_placeForward(obj, (f32)(u32)lbl_803DC4E8);
+            arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4E8);
         }
         objs++;
     }

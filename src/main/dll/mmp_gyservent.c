@@ -41,7 +41,7 @@ void objFn_80198fa4(s16* obj, void* arg2)
     f32 out_x;
     f32 out_y;
     f32 out_z;
-    f32 tmp[20];
+    f32 tmp[24];
 
     state = ((GameObject*)obj)->extra;
     obj[0] = (s16)((*(u8*)((char*)arg2 + 0x3d) & 0x3f) << 10);
@@ -110,19 +110,13 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     dx = *(f32*)(state + 4);
     if (dz2 < dx)
     {
-        if (dy2 < lbl_803E40D8)
-        {
-            dy2 = -dy2;
-        }
+        dy2 = (dy2 < lbl_803E40D8) ? -dy2 : dy2;
         if (dy2 < speed)
         {
             nearEnd = false;
             if (dz < dx)
             {
-                if (dy < lbl_803E40D8)
-                {
-                    dy = -dy;
-                }
+                dy = (dy < lbl_803E40D8) ? -dy : dy;
                 if (dy < speed)
                 {
                     nearEnd = true;
@@ -142,10 +136,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     nearEnd = false;
     if (dz < dx)
     {
-        if (dy < lbl_803E40D8)
-        {
-            dy = -dy;
-        }
+        dy = (dy < lbl_803E40D8) ? -dy : dy;
         if (dy < speed)
         {
             nearEnd = true;

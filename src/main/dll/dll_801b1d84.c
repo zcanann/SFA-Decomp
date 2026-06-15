@@ -13,8 +13,8 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
     u8 unk1;
     s16 unk2;
     u8 pad4[0x5 - 0x4];
-    s8 hitboxRadius;
-    s8 hitVolumeSlot;
+    u8 hitboxRadius;
+    u8 hitVolumeSlot;
     u8 unk7;
     u8 state;
     s8 rotZRate;
@@ -37,8 +37,8 @@ extern u8 framesThisStep;
  * spawn a rolling snowball seeded from the placement params. */
 
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void ObjHits_SetHitVolumeSlot(int* obj, int a, int b, int c);
-extern void ObjHitbox_SetSphereRadius(int* obj, int radius);
+extern void ObjHits_SetHitVolumeSlot(int* obj, int a, u8 b, int c);
+extern void ObjHitbox_SetSphereRadius(int* obj, u8 radius);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
@@ -59,8 +59,9 @@ void DIMwooddoor_updateFallingDebris(int* obj)
     case 0:
         {
             f32 oldvy = ((GameObject*)obj)->anim.velocityY;
+            f32 grav = lbl_803E48A4 * -lbl_803DBEF0;
             ObjHitsPriorityState* hitState;
-            ((GameObject*)obj)->anim.velocityY = lbl_803E48A4 * -lbl_803DBEF0 * timeDelta + oldvy;
+            ((GameObject*)obj)->anim.velocityY = grav * timeDelta + oldvy;
             objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                     lbl_803E48A8 * (oldvy + ((GameObject*)obj)->anim.velocityY) * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
@@ -89,7 +90,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
             {
                 ((GameObject*)obj)->unkF4 = 1200;
             }
-            if (hitState->contactFlags != 0)
+            if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
             {
                 ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);

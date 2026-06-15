@@ -259,13 +259,10 @@ void imspacering_initialise(void)
 {
 }
 
-void imspaceringgen_hitDetect(void);
 
 int imspacering_getExtraSize(void) { return 0x0; }
 int imspacering_getObjectTypeId(void) { return 0x0; }
-int imspaceringgen_getExtraSize(void);
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -273,7 +270,6 @@ void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E47B8);
 }
 
-void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void imspacering_init(s16* obj, s8* p)
 {
@@ -303,4 +299,3 @@ void imspacering_update(s16* obj)
     }
 }
 
-void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible);

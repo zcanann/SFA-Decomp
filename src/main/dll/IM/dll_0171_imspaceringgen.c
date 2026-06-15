@@ -277,11 +277,9 @@ void imspaceringgen_initialise(void)
 {
 }
 
-void lavaball1be_hitDetect(void);
 
 int imspaceringgen_getExtraSize(void) { return 0xc; }
 int imspaceringgen_getObjectTypeId(void) { return 0x0; }
-int linkb_levcontrol_getExtraSize(void);
 
 void imspaceringgen_free(void) { lbl_803DDB48 = 0x0; }
 
@@ -291,9 +289,7 @@ void imspaceringgen_init(int* obj)
     lbl_803DDB48 = (u32)obj;
 }
 
-void imanimspacecraft_update(int* obj);
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 typedef struct
 {

@@ -287,7 +287,6 @@ void seqObj2_init(short* param_1, int param_2)
 {
 }
 
-void seqobj2_render(void);
 
 void seqobject_init(int* obj, SeqObjectPlacement* params)
 {
@@ -317,11 +316,9 @@ void seqobject_init(int* obj, SeqObjectPlacement* params)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-void immultiseq_init(int* obj, IMMultiSeqPlacement* params);
 
 int seqobject_getExtraSize(void) { return 0x3; }
 int seqobject_getObjectTypeId(void) { return 0x0; }
-int seqobj2_getExtraSize(void);
 
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -329,10 +326,8 @@ void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E37A0);
 }
 
-void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void seqobject_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-void seqobj2_free(int x);
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
@@ -349,7 +344,6 @@ void fn_8017C294(int* obj)
     }
 }
 
-void seqobj2_init(int* obj, SeqObjectPlacement* def);
 
 int seqobject_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
@@ -475,4 +469,3 @@ void seqobject_update(int* obj)
     }
 }
 
-void seqobj2_update(int* obj);

@@ -30,7 +30,6 @@ void projlightning1_initialise(void)
 {
 }
 
-int projlightning2_doUnsupported(void);
 
 
 

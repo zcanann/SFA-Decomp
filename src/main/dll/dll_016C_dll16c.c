@@ -254,7 +254,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void imicemountain_free(void);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
@@ -272,7 +271,6 @@ void dll_16C_initialise(void)
 {
 }
 
-int imicemountain_getExtraSize(void);
 int dll_16C_getExtraSize(void) { return 0x24; }
 int dll_16C_getObjectTypeId(void) { return 0x3; }
 
@@ -282,7 +280,6 @@ void dll_16C_free(int* obj)
     if (p != NULL) Obj_FreeObject(p);
 }
 
-void crrockfall_release(void);
 
 #pragma scheduling off
 #pragma peephole off

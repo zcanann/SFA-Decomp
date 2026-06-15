@@ -55,7 +55,6 @@ int mmp_bridge_getExtraSize(void);
 
 void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
 
-void doorlock_free(int x);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
@@ -275,7 +274,6 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return ret;
 }
 
-int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* segment pragma-stack balance (re-split): */
 

@@ -66,7 +66,6 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-void dll_1DA_release(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -86,7 +85,6 @@ void dim2icefloe_initialise(void)
 {
 }
 
-void dim2icicle_free(void);
 
 /* dim2icefloe: per-frame curve-follow update + path-param init. */
 typedef struct
@@ -199,7 +197,6 @@ void dim2icefloe_init(int obj, int p)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-void dim2icicle_update(int obj);
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
@@ -209,7 +206,6 @@ void dim2icicle_update(int obj);
 
 int dim2icefloe_getExtraSize(void) { return 0xbc; }
 int dim2icefloe_getObjectTypeId(void) { return 0x0; }
-int dim2icicle_getExtraSize(void);
 
 void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -217,7 +213,6 @@ void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4B30);
 }
 
-void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
  *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the

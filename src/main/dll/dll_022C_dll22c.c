@@ -536,7 +536,6 @@ void dll_22C_init(int obj, char* p)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
 }
 
-void dbegg_release(void);
 
 void dll_22C_hitDetect_nop(void)
 {
@@ -550,12 +549,10 @@ void dll_22C_initialise_nop(void)
 {
 }
 
-void doorswitch_render(void);
 
 int dll_22C_SeqFn(void) { return 0x0; }
 int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
 int dll_22C_getObjectTypeId(void) { return 0x0; }
-int doorswitch_getExtraSize(void);
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -563,7 +560,6 @@ void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6398);
 }
 
-void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void fn_80204B6C(int p1)
 {

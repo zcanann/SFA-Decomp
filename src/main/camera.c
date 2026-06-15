@@ -858,14 +858,12 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
 void Camera_UpdateViewMatrices(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
-    int off = gCameraCurrentViewIndex * 96;
     CameraViewSlot* slot;
     CameraMatrixTransform transform;
     f32 rotationMatrix[16];
 
-    slot = (CameraViewSlot*)(base + off);
+    slot = (CameraViewSlot*)(base + gCameraCurrentViewIndex * 96);
     slot = (CameraViewSlot*)((u8*)slot + 4416);
-
     transform.x = -(slot->x - playerMapOffsetX);
     transform.y = -slot->y;
     transform.z = -(slot->z - playerMapOffsetZ);

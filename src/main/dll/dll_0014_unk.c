@@ -3901,7 +3901,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         nextCurveId = ROMCURVE_LINK_ID_NONE;
         linkIndex = 0;
         nextCurve = curve;
-        while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == -1))
+        while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == (int)ROMCURVE_LINK_ID_NONE))
         {
             if ((curve->blockedLinkMask & (1 << linkIndex)) == 0)
             {
@@ -3912,7 +3912,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         }
 
         nextCurve = curve;
-        if (nextCurveId != -1)
+        if (nextCurveId != (int)ROMCURVE_LINK_ID_NONE)
         {
             nextCurve = RomCurve_FindByIdInline(nextCurveId);
             if (RomCurve_segmentIntersectsOriginRayXZ(curve, nextCurve, x, y, z, lbl_803E0660) != 0)
@@ -3920,7 +3920,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
                 dx = curve->x - x;
                 dy = curve->y - y;
                 dz = curve->z - z;
-                distance = sqrtf(dy * dy + dx * dx + dz * dz);
+                distance = sqrtf(dx * dx + dy * dy + dz * dz);
                 if (distance < *outDistance)
                 {
                     *outDistance = distance;
@@ -3931,7 +3931,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         previousCurveId = nextCurveId;
         curve = nextCurve;
     }
-    while ((previousCurveId != (int)curveId) && (nextCurveId != -1));
+    while ((previousCurveId != (int)curveId) && (nextCurveId != (int)ROMCURVE_LINK_ID_NONE));
 
     return hitCount & 1;
 }
@@ -4529,6 +4529,7 @@ f32 curves_distXZ(f32 x, f32 z, uint curveId)
         dz = curve->z - z;
         return sqrtf(dx * dx + dz * dz);
     }
+
     return gFloatNegOne;
 }
 
@@ -4540,13 +4541,14 @@ f32 curves_distFn0B(int obj, uint curveId)
     f32 dz;
 
     curve = RomCurve_FindByIdInline(curveId);
-    if (curve != NULL && (u32)obj != 0)
+    if (curve != NULL && (void*)obj != NULL)
     {
         dx = curve->x - ((GameObject*)obj)->anim.localPosX;
         dy = curve->y - ((GameObject*)obj)->anim.localPosY;
         dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
         return sqrtf(dx * dx + dy * dy + dz * dz);
     }
+
     return gFloatNegOne;
 }
 
@@ -5192,7 +5194,6 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
     return bestLink[0];
 }
 
-#pragma optimization_level 2
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)
 {
     f32 startX;
@@ -5284,7 +5285,6 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     segment->nearestZ = nearestZ;
     return distance;
 }
-#pragma optimization_level reset
 
 int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId)
 {

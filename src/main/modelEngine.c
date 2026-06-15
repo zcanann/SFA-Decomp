@@ -510,12 +510,11 @@ void gameTimerRun(void)
     f32 dt = timeDelta;
     u8 colorFlag = 0;
     void* box = gameTextGetBox(0xD);
-    int A;
-    int B;
-    int C;
-    u16 y;
+    int hours;
+    int minutes;
+    int hundredths;
+    u16 boxY;
     char clamped;
-    f32 ratio;
     int totalSecs;
     int mins;
 
@@ -587,16 +586,16 @@ void gameTimerRun(void)
 
     totalSecs = (int)lbl_803DC900;
     mins = totalSecs / 60;
-    A = mins / 60;
-    B = mins - A * 60;
-    C = (int)(lbl_803DE6D0 * (lbl_803DC900 / lbl_803DE6D4));
-    C = C - C / 100 * 100;
+    hours = mins / 60;
+    minutes = mins - hours * 60;
+    hundredths = (int)(lbl_803DE6D0 * (lbl_803DC900 / lbl_803DE6D4));
+    hundredths = hundredths - hundredths / 100 * 100;
 
-    y = getMinimapY() - 0x28;
-    drawHudBox(0x32, (s16)(y - 4), 0x78, 0x28, 0xFF, 1);
-    *(s16*)((char*)box + 0x16) = (s16)y;
+    boxY = getMinimapY() - 0x28;
+    drawHudBox(0x32, (s16)(boxY - 4), 0x78, 0x28, 0xFF, 1);
+    *(s16*)((char*)box + 0x16) = (s16)boxY;
 
-    if (colorFlag && C < 0x32)
+    if (colorFlag && hundredths < 0x32)
     {
         gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
     }
@@ -605,19 +604,19 @@ void gameTimerRun(void)
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
     }
 
-    sprintf(lbl_803398A0, lbl_803DB294, A / 10);
+    sprintf(lbl_803398A0, lbl_803DB294, hours / 10);
     gameTextShowStr(lbl_803398A0, 0xD, 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, A % 10);
+    sprintf(lbl_803398A0, lbl_803DB294, hours % 10);
     gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, B / 10);
+    sprintf(lbl_803398A0, lbl_803DB294, minutes / 10);
     gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, B % 10);
+    sprintf(lbl_803398A0, lbl_803DB294, minutes % 10);
     gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, C / 10);
+    sprintf(lbl_803398A0, lbl_803DB294, hundredths / 10);
     gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 * 2 + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, C % 10);
+    sprintf(lbl_803398A0, lbl_803DB294, hundredths % 10);
     gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
-    if (B & 1)
+    if (minutes & 1)
     {
         gameTextShowStr(lbl_803DB29C, 0xD, lbl_803DB284, 3);
         gameTextShowStr(lbl_803DB2A0, 0xD, lbl_803DB288, 3);

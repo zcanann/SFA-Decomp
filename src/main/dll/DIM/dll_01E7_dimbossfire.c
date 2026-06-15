@@ -255,4 +255,3 @@ void dimbossfire_initialise(void)
 {
 }
 
-int ccriverflow_getExtraSize(void);

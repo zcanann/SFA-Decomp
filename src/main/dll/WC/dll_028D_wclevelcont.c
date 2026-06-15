@@ -59,7 +59,7 @@ void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+    mapGetBlockOriginForPos(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DB8) / 48);
@@ -70,7 +70,7 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+    mapGetBlockOriginForPos(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outXp = lbl_803E6DB4 + (lbl_803E6DB8 + outX + (f32)(col * 48));
@@ -135,7 +135,7 @@ void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+    mapGetBlockOriginForPos(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DD0) / 48);
@@ -146,7 +146,7 @@ void wclevelcont_setScale(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+    mapGetBlockOriginForPos(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outXp = lbl_803E6DB4 + (lbl_803E6DD0 + outX + (f32)(col * 48));
@@ -291,8 +291,8 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         if (dx == -1)
         {
             f32 pz, px, fr;
-            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ);
+            mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             fr = lbl_803E6DD0 + px;
             *outX = lbl_803E6DB4 + (fr + lbl_803E6DBC);
             fr = lbl_803E6DD4 + pz;
@@ -303,8 +303,8 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         else
         {
             f32 pz, px, fr;
-            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ);
+            mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             fr = lbl_803E6DD0 + px;
             *outX = lbl_803E6DB4 + (fr + lbl_803E6DA8);
             fr = lbl_803E6DD4 + pz;
@@ -320,16 +320,16 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
                 {
                     f32 pz, px, fr;
                     i += dx;
-                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+                    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     fr = lbl_803E6DD0 + px;
                     *outX = lbl_803E6DB4 + (fr + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px, fr;
-                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+                    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     fr = lbl_803E6DD0 + px;
                     *outX = lbl_803E6DB4 + (fr + (f32)((s16)i * 48));
                     return 2;
@@ -344,8 +344,8 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         if (dy == -1)
         {
             f32 pz, px, fr;
-            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ);
+            mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             fr = lbl_803E6DD0 + px;
             *outX = lbl_803E6DB4 + (fr + (f32)(ai * 48));
             fr = lbl_803E6DD4 + pz;
@@ -356,8 +356,8 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         else
         {
             f32 pz, px, fr;
-            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ);
+            mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
             fr = lbl_803E6DD0 + px;
             *outX = lbl_803E6DB4 + (fr + (f32)(ai * 48));
             fr = lbl_803E6DD4 + pz;
@@ -373,16 +373,16 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
                 {
                     f32 pz, px, fr;
                     i += dy;
-                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+                    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     fr = lbl_803E6DD4 + pz;
                     *outZ = lbl_803E6DB4 + (fr + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px, fr;
-                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+                    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
                     fr = lbl_803E6DD4 + pz;
                     *outZ = lbl_803E6DB4 + (fr + (f32)((s16)i * 48));
                     return 2;

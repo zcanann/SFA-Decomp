@@ -111,7 +111,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 extern undefined4 FUN_800067c0();
 extern f32 lbl_803E4AA0;
 extern int ObjList_FindObjectById(int id);
-extern int Curve_AdvanceAlongPath(Curve* curve, f32 t);
 extern int** ObjList_GetObjects(int* startOut, int* countOut);
 extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);

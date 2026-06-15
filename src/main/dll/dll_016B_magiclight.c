@@ -243,7 +243,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void imicemountain_free(void);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
@@ -316,10 +315,8 @@ void magiclight_init(int* obj, u8* params)
         sub->unk10 = 0x12d;
     }
 }
-void dll_16C_release(void);
 
 int magiclight_getObjectTypeId(void) { return 0x0; }
-int dll_16C_getExtraSize(void);
 
 #pragma scheduling on
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)

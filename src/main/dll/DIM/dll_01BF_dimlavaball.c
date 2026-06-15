@@ -267,7 +267,6 @@ void lavaball1bf_initialise(void)
 {
 }
 
-int imanimspacecraft_getExtraSize(void);
 int lavaball1bf_getExtraSize(void) { return 0x1c; }
 int lavaball1bf_getObjectTypeId(void) { return 0x0; }
 int dimlogfire_getExtraSize(void);
@@ -294,7 +293,6 @@ int lavaball1bf_setScale(int* obj)
     return 0;
 }
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -302,7 +300,6 @@ void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4810);
 }
 
-int lavaball1be_getExtraSize(int* obj);
 
 void lavaball1bf_init(s16* obj, u8* p)
 {
@@ -330,7 +327,6 @@ void lavaball1bf_free(int obj, int mode)
     }
 }
 
-void lavaball1be_free(int obj);
 
 void lavaball1bf_update(int* obj)
 {
@@ -398,4 +394,3 @@ void lavaball1bf_update(int* obj)
     }
 }
 
-void lavaball1be_setScale(s16* obj, int p2, int p3);

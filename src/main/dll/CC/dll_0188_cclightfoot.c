@@ -83,7 +83,6 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
 }
 
 int cclightfoot_getExtraSize(void) { return 0x18; }
-int ccsharpclawpad_getExtraSize(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -94,7 +93,6 @@ void cclightfoot_init(int* obj, int* def)
     ((GameObject*)obj)->animEventCallback = (void*)ccqueen_SeqFn;
 }
 
-int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void cclightfoot_free(int* obj, int p2)
 {
@@ -204,7 +202,6 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void ccpedstal_update(int obj);
 
 extern int playerIsDisguised(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);

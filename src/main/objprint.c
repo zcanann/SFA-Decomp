@@ -133,8 +133,8 @@ void objAnimFn_80038f38(int obj, char* p2)
     }
 }
 
-void FUN_80039468(undefined4 param_1, undefined4 param_2, ushort param_3, short param_4, uint param_5,
-                  uint param_6)
+void FUN_80039468(undefined4 param_1, undefined4 param_2, ushort sfxId, short pitch, uint frame,
+                  uint force)
 {
     uint obj;
     bool playing;
@@ -144,12 +144,12 @@ void FUN_80039468(undefined4 param_1, undefined4 param_2, ushort param_3, short 
     ctx = FUN_80286840();
     obj = (uint)((ulonglong)ctx >> 0x20);
     state = (undefined*)ctx;
-    if (((param_6 & 0xff) != 0) || (playing = FUN_800067f0(obj, 0x10), !playing))
+    if (((force & 0xff) != 0) || (playing = FUN_800067f0(obj, 0x10), !playing))
     {
-        FUN_8000681c(obj, 0x10, param_3);
+        FUN_8000681c(obj, 0x10, sfxId);
         *(float*)(state + 0xc) =
-            (f32)(s32)(param_5);
-        *(short*)(state + 0x14) = -param_4;
+            (f32)(s32)(frame);
+        *(short*)(state + 0x14) = -pitch;
         *state = 1;
         *(float*)(state + 4) = lbl_803DF61C;
     }
@@ -162,7 +162,7 @@ undefined4* FUN_80039518(void)
     return &DAT_802cba60;
 }
 
-int FUN_80039520(int param_1, uint tag)
+int FUN_80039520(int obj, uint tag)
 {
     uint remaining;
     int hitDef;
@@ -171,7 +171,7 @@ int FUN_80039520(int param_1, uint tag)
     int found;
 
     found = 0;
-    hitDef = *(int*)(param_1 + 0x50);
+    hitDef = *(int*)(obj + 0x50);
     if (hitDef != 0)
     {
         entry = *(byte**)(hitDef + 0xc);
@@ -184,7 +184,7 @@ int FUN_80039520(int param_1, uint tag)
         {
             if (tag == *entry)
             {
-                found = *(int*)(param_1 + 0x70) + offset;
+                found = *(int*)(obj + 0x70) + offset;
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -193,7 +193,7 @@ int FUN_80039520(int param_1, uint tag)
     return found;
 }
 
-int FUN_8003964c(int param_1, uint key)
+int FUN_8003964c(int obj, uint key)
 {
     uint remaining;
     int vecOffset;
@@ -202,17 +202,17 @@ int FUN_8003964c(int param_1, uint key)
     int found;
 
     found = 0;
-    model = (int)OBJPRINT_MODEL_INSTANCE(param_1);
+    model = (int)OBJPRINT_MODEL_INSTANCE(obj);
     if (model != 0)
     {
         entryIdx = 0;
         vecOffset = 0;
         for (remaining = (uint)OBJPRINT_JOINT_COUNT(model); remaining != 0; remaining = remaining - 1)
         {
-            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + entryIdx + 1) != -1) &&
+            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (key == *(byte*)(*(int*)(model + 0x10) + entryIdx)))
             {
-                found = *(int*)(param_1 + 0x6c) + vecOffset;
+                found = *(int*)(obj + 0x6c) + vecOffset;
             }
             entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
             vecOffset = vecOffset + 0x12;
@@ -221,7 +221,7 @@ int FUN_8003964c(int param_1, uint key)
     return found;
 }
 
-undefined4 FUN_8003988c(double param_1, double param_2, int param_3, short* param_4)
+undefined4 FUN_8003988c(double a, double b, int curve, short* outAngle)
 {
     undefined4 uVar1;
     double dVar2;
@@ -238,19 +238,19 @@ undefined4 FUN_8003988c(double param_1, double param_2, int param_3, short* para
     undefined4 local_20;
     uint uStack_1c;
 
-    local_48 = (float)param_1;
-    local_44 = (float)param_1;
-    local_40 = (float)param_2;
-    local_3c = (float)-param_2;
-    if ((int)*(short*)(param_3 + 0x14) == (int)*(short*)(param_3 + 0x16))
+    local_48 = (float)a;
+    local_44 = (float)a;
+    local_40 = (float)b;
+    local_3c = (float)-b;
+    if ((int)*(short*)(curve + 0x14) == (int)*(short*)(curve + 0x16))
     {
         uVar1 = 1;
     }
     else
     {
-        uStack_34 = (int)*param_4 ^ 0x80000000;
+        uStack_34 = (int)*outAngle ^ 0x80000000;
         local_38 = 0x43300000;
-        uStack_2c = (int)*(short*)(param_3 + 0x16) ^ 0x80000000;
+        uStack_2c = (int)*(short*)(curve + 0x16) ^ 0x80000000;
         local_30 = 0x43300000;
         local_20 = 0x43300000;
         dVar3 = (double)
@@ -260,7 +260,7 @@ undefined4 FUN_8003988c(double param_1, double param_2, int param_3, short* para
         uStack_2c
         )
         /
-        ((f32)(s32)((int)*(short*)(param_3 + 0x14)) -
+        ((f32)(s32)((int)*(short*)(curve + 0x14)) -
             (f32)(s32)
         uStack_2c
         )
@@ -273,16 +273,16 @@ undefined4 FUN_8003988c(double param_1, double param_2, int param_3, short* para
         }
         uStack_1c = uStack_2c;
         dVar3 = FUN_80006a30(dVar2, &local_48, (float*)0x0);
-        if (*(short*)(param_3 + 0x14) < *(short*)(param_3 + 0x16))
+        if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
             dVar3 = -dVar3;
         }
-        *param_4 = (short)(int)(dVar3 * (double)lbl_803DC074 +
-            (double)(float)((double)CONCAT44(0x43300000, (int)*param_4 ^ 0x80000000) -
+        *outAngle = (short)(int)(dVar3 * (double)lbl_803DC074 +
+            (double)(float)((double)CONCAT44(0x43300000, (int)*outAngle ^ 0x80000000) -
                 DOUBLE_803df650));
-        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *param_4)) || (*param_4 < -0x1ffe))
+        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *outAngle)) || (*outAngle < -0x1ffe))
         {
-            *param_4 = *(short*)(param_3 + 0x14);
+            *outAngle = *(short*)(curve + 0x14);
             uVar1 = 1;
         }
         else
@@ -293,7 +293,7 @@ undefined4 FUN_8003988c(double param_1, double param_2, int param_3, short* para
     return uVar1;
 }
 
-undefined4 FUN_80039a28(int param_1, int param_2)
+undefined4 FUN_80039a28(int curve, int state)
 {
     undefined4 uVar1;
     double dVar2;
@@ -314,15 +314,15 @@ undefined4 FUN_80039a28(int param_1, int param_2)
     local_44 = lbl_803DF658;
     local_40 = lbl_803DF65C;
     local_3c = lbl_803DF660;
-    if ((int)*(short*)(param_1 + 0x14) == (int)*(short*)(param_1 + 0x16))
+    if ((int)*(short*)(curve + 0x14) == (int)*(short*)(curve + 0x16))
     {
         uVar1 = 1;
     }
     else
     {
-        uStack_34 = (int)*(short*)(param_2 + 2) ^ 0x80000000;
+        uStack_34 = (int)*(short*)(state + 2) ^ 0x80000000;
         local_38 = 0x43300000;
-        uStack_2c = (int)*(short*)(param_1 + 0x16) ^ 0x80000000;
+        uStack_2c = (int)*(short*)(curve + 0x16) ^ 0x80000000;
         local_30 = 0x43300000;
         local_20 = 0x43300000;
         dVar3 = (double)
@@ -332,7 +332,7 @@ undefined4 FUN_80039a28(int param_1, int param_2)
         uStack_2c
         )
         /
-        ((f32)(s32)((int)*(short*)(param_1 + 0x14)) -
+        ((f32)(s32)((int)*(short*)(curve + 0x14)) -
             (f32)(s32)
         uStack_2c
         )
@@ -345,19 +345,19 @@ undefined4 FUN_80039a28(int param_1, int param_2)
         }
         uStack_1c = uStack_2c;
         dVar3 = FUN_80006a30(dVar2, &local_48, (float*)0x0);
-        if (*(short*)(param_1 + 0x14) < *(short*)(param_1 + 0x16))
+        if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
             dVar3 = -dVar3;
         }
-        *(short*)(param_2 + 2) =
+        *(short*)(state + 2) =
             (short)(int)(dVar3 * (double)lbl_803DC074 +
                 (double)(float)((double)CONCAT44(0x43300000,
-                                                 (int)*(short*)(param_2 + 2) ^ 0x80000000) -
+                                                 (int)*(short*)(state + 2) ^ 0x80000000) -
                     DOUBLE_803df650));
-        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *(short*)(param_2 + 2))) ||
-            (*(short*)(param_2 + 2) < -0x1ffe))
+        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *(short*)(state + 2))) ||
+            (*(short*)(state + 2) < -0x1ffe))
         {
-            *(undefined2*)(param_2 + 2) = *(undefined2*)(param_1 + 0x14);
+            *(undefined2*)(state + 2) = *(undefined2*)(curve + 0x14);
             uVar1 = 1;
         }
         else
@@ -368,7 +368,7 @@ undefined4 FUN_80039a28(int param_1, int param_2)
     return uVar1;
 }
 
-void FUN_80039e6c(double param_1, short* param_2, char* param_3, int param_4)
+void FUN_80039e6c(double val, short* obj, char* curve, int state)
 {
     float fVar1;
     ushort uVar2;
@@ -377,138 +377,138 @@ void FUN_80039e6c(double param_1, short* param_2, char* param_3, int param_4)
     int iVar5;
     bool bVar6;
 
-    bVar6 = (double)lbl_803DF664 < param_1;
-    if (((uint)(int) * (short*)(param_3 + 0x1a) >> 8 & 0xff) != (uint)bVar6)
+    bVar6 = (double)lbl_803DF664 < val;
+    if (((uint)(int) * (short*)(curve + 0x1a) >> 8 & 0xff) != (uint)bVar6)
     {
-        *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
+        *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
     }
-    uVar2 = *(ushort*)(param_3 + 0x1a) & 0xff;
+    uVar2 = *(ushort*)(curve + 0x1a) & 0xff;
     if (uVar2 == 2)
     {
-        if ((*param_3 != '\0') || (iVar5 = FUN_80039a28((int)param_3, param_4), iVar5 != 0))
+        if ((*curve != '\0') || (iVar5 = FUN_80039a28((int)curve, state), iVar5 != 0))
         {
-            *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
+            *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
         }
     }
     else if (uVar2 < 2)
     {
         if (uVar2 == 0)
         {
-            if (*param_3 == '\0')
+            if (*curve == '\0')
             {
-                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 1;
+                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8 | 1;
                 uVar4 = randomGetRange(100, 400);
-                *(short*)(param_3 + 0x1c) = (short)uVar4;
-                *(undefined2*)(param_3 + 0x14) = *(undefined2*)(param_4 + 2);
+                *(short*)(curve + 0x1c) = (short)uVar4;
+                *(undefined2*)(curve + 0x14) = *(undefined2*)(state + 2);
             }
             else
             {
-                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 3;
-                *(undefined2*)(param_3 + 0x16) = *(undefined2*)(param_4 + 2);
-                *(float*)(param_3 + 0x10) = lbl_803DF61C;
+                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8 | 3;
+                *(undefined2*)(curve + 0x16) = *(undefined2*)(state + 2);
+                *(float*)(curve + 0x10) = lbl_803DF61C;
             }
         }
         else
         {
-            *(ushort*)(param_3 + 0x1c) = *(short*)(param_3 + 0x1c) - (ushort)DAT_803dc070;
-            if (*(short*)(param_3 + 0x1c) < 0)
+            *(ushort*)(curve + 0x1c) = *(short*)(curve + 0x1c) - (ushort)DAT_803dc070;
+            if (*(short*)(curve + 0x1c) < 0)
             {
-                iVar5 = (int)*(short*)(param_3 + 0x14);
+                iVar5 = (int)*(short*)(curve + 0x14);
                 uVar4 = randomGetRange(0, 0x1fff);
-                *(short*)(param_3 + 0x14) = (short)uVar4;
+                *(short*)(curve + 0x14) = (short)uVar4;
                 if (iVar5 < 1)
                 {
-                    if (*(short*)(param_3 + 0x14) - iVar5 < 0xe38)
+                    if (*(short*)(curve + 0x14) - iVar5 < 0xe38)
                     {
-                        *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + 0xe38;
+                        *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + 0xe38;
                     }
-                    if (0x1fff < *(short*)(param_3 + 0x14))
+                    if (0x1fff < *(short*)(curve + 0x14))
                     {
-                        param_3[0x14] = '\x1f';
-                        param_3[0x15] = -1;
+                        curve[0x14] = '\x1f';
+                        curve[0x15] = -1;
                     }
                 }
                 else
                 {
-                    if (iVar5 - *(short*)(param_3 + 0x14) < 0xe38)
+                    if (iVar5 - *(short*)(curve + 0x14) < 0xe38)
                     {
-                        *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + 0xe38;
+                        *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + 0xe38;
                     }
-                    if (0x1fff < *(short*)(param_3 + 0x14))
+                    if (0x1fff < *(short*)(curve + 0x14))
                     {
-                        param_3[0x14] = '\x1f';
-                        param_3[0x15] = -1;
+                        curve[0x14] = '\x1f';
+                        curve[0x15] = -1;
                     }
-                    *(short*)(param_3 + 0x14) = -*(short*)(param_3 + 0x14);
+                    *(short*)(curve + 0x14) = -*(short*)(curve + 0x14);
                 }
-                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 2;
-                param_3[0x1c] = '\0';
-                param_3[0x1d] = '\0';
-                *(undefined2*)(param_3 + 0x16) = *(undefined2*)(param_4 + 2);
+                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8 | 2;
+                curve[0x1c] = '\0';
+                curve[0x1d] = '\0';
+                *(undefined2*)(curve + 0x16) = *(undefined2*)(state + 2);
             }
         }
     }
     else if (uVar2 < 4)
     {
-        if (*param_3 == '\0')
+        if (*curve == '\0')
         {
-            *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
+            *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
         }
         else
         {
             iVar5 = FUN_80017730();
-            *(short*)(param_3 + 0x14) = (short)iVar5 - *param_2;
-            if (0x8000 < *(short*)(param_3 + 0x14))
+            *(short*)(curve + 0x14) = (short)iVar5 - *obj;
+            if (0x8000 < *(short*)(curve + 0x14))
             {
-                *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + 1;
+                *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + 1;
             }
-            if (*(short*)(param_3 + 0x14) < -0x8000)
+            if (*(short*)(curve + 0x14) < -0x8000)
             {
-                *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + -1;
+                *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + -1;
             }
             fVar3 = lbl_803DF624;
-            uVar4 = (uint) * (short*)(param_3 + 0x14);
+            uVar4 = (uint) * (short*)(curve + 0x14);
             if (((int)uVar4 < 0x2000) && (-0x2000 < (int)uVar4))
             {
-                if (*(float*)(param_3 + 0x10) <= lbl_803DF624)
+                if (*(float*)(curve + 0x10) <= lbl_803DF624)
                 {
-                    *(short*)(param_4 + 2) = *(short*)(param_3 + 0x14);
+                    *(short*)(state + 2) = *(short*)(curve + 0x14);
                 }
                 else
                 {
-                    *(short*)(param_4 + 2) =
-                        (short)(int)(*(float*)(param_3 + 0x10) *
+                    *(short*)(state + 2) =
+                        (short)(int)(*(float*)(curve + 0x10) *
                             (float)((double)CONCAT44(0x43300000,
-                                                     (int)*(short*)(param_3 + 0x16) - uVar4 ^
+                                                     (int)*(short*)(curve + 0x16) - uVar4 ^
                                                      0x80000000) - DOUBLE_803df650) +
                             (float)((double)CONCAT44(0x43300000, uVar4 ^ 0x80000000) - DOUBLE_803df650
                             ));
-                    fVar1 = -(lbl_803DF668 * lbl_803DC074 - *(float*)(param_3 + 0x10));
-                    *(float*)(param_3 + 0x10) = fVar1;
+                    fVar1 = -(lbl_803DF668 * lbl_803DC074 - *(float*)(curve + 0x10));
+                    *(float*)(curve + 0x10) = fVar1;
                     if (fVar1 < fVar3)
                     {
-                        *(float*)(param_3 + 0x10) = fVar3;
+                        *(float*)(curve + 0x10) = fVar3;
                     }
                 }
             }
             else
             {
-                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
+                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
             }
         }
     }
-    if (*(short*)(param_4 + 2) < -0x1fff)
+    if (*(short*)(state + 2) < -0x1fff)
     {
-        *(undefined2*)(param_4 + 2) = 0xe001;
+        *(undefined2*)(state + 2) = 0xe001;
     }
-    else if (0x1fff < *(short*)(param_4 + 2))
+    else if (0x1fff < *(short*)(state + 2))
     {
-        *(undefined2*)(param_4 + 2) = 0x1fff;
+        *(undefined2*)(state + 2) = 0x1fff;
     }
     return;
 }
 
-void FUN_8003a1c4(int param_1, int param_2)
+void FUN_8003a1c4(int obj, int ctx)
 {
     uint scaled;
     short* found;
@@ -517,17 +517,17 @@ void FUN_8003a1c4(int param_1, int param_2)
     int vecOffset;
 
     found = (short*)0x0;
-    model = (int)OBJPRINT_MODEL_INSTANCE(param_1);
+    model = (int)OBJPRINT_MODEL_INSTANCE(obj);
     if (model != 0)
     {
         entryIdx = 0;
         vecOffset = 0;
         for (scaled = (uint)OBJPRINT_JOINT_COUNT(model); scaled != 0; scaled = scaled - 1)
         {
-            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + entryIdx + 1) != -1) &&
+            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
             {
-                found = (short*)(*(int*)(param_1 + 0x6c) + vecOffset);
+                found = (short*)(*(int*)(obj + 0x6c) + vecOffset);
             }
             entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
             vecOffset = vecOffset + 0x12;
@@ -545,7 +545,7 @@ void FUN_8003a1c4(int param_1, int param_2)
             scaled = found[1] * 3;
             found[1] = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
         }
-        *(undefined2*)(param_2 + 0x1a) = 0;
+        *(undefined2*)(ctx + 0x1a) = 0;
         return;
     }
     return;
@@ -601,57 +601,57 @@ void fn_8003A328(double amount, short* obj, char* ctx)
     }
 }
 
-void FUN_8003a9c8(int param_1, uint param_2, undefined2 param_3, undefined2 param_4)
+void FUN_8003a9c8(int base, uint count, undefined2 a, undefined2 b)
 {
-    uint uVar1;
+    uint blocks;
 
-    if ((int)param_2 < 1)
+    if ((int)count < 1)
     {
         return;
     }
-    uVar1 = param_2 >> 3;
-    if (uVar1 != 0)
+    blocks = count >> 3;
+    if (blocks != 0)
     {
         do
         {
-            *(undefined2*)(param_1 + 0x14) = param_3;
-            *(undefined2*)(param_1 + 0x44) = param_4;
-            *(undefined2*)(param_1 + 0x74) = param_3;
-            *(undefined2*)(param_1 + 0xa4) = param_4;
-            *(undefined2*)(param_1 + 0xd4) = param_3;
-            *(undefined2*)(param_1 + 0x104) = param_4;
-            *(undefined2*)(param_1 + 0x134) = param_3;
-            *(undefined2*)(param_1 + 0x164) = param_4;
-            *(undefined2*)(param_1 + 0x194) = param_3;
-            *(undefined2*)(param_1 + 0x1c4) = param_4;
-            *(undefined2*)(param_1 + 500) = param_3;
-            *(undefined2*)(param_1 + 0x224) = param_4;
-            *(undefined2*)(param_1 + 0x254) = param_3;
-            *(undefined2*)(param_1 + 0x284) = param_4;
-            *(undefined2*)(param_1 + 0x2b4) = param_3;
-            *(undefined2*)(param_1 + 0x2e4) = param_4;
-            param_1 = param_1 + 0x300;
-            uVar1 = uVar1 - 1;
+            *(undefined2*)(base + 0x14) = a;
+            *(undefined2*)(base + 0x44) = b;
+            *(undefined2*)(base + 0x74) = a;
+            *(undefined2*)(base + 0xa4) = b;
+            *(undefined2*)(base + 0xd4) = a;
+            *(undefined2*)(base + 0x104) = b;
+            *(undefined2*)(base + 0x134) = a;
+            *(undefined2*)(base + 0x164) = b;
+            *(undefined2*)(base + 0x194) = a;
+            *(undefined2*)(base + 0x1c4) = b;
+            *(undefined2*)(base + 500) = a;
+            *(undefined2*)(base + 0x224) = b;
+            *(undefined2*)(base + 0x254) = a;
+            *(undefined2*)(base + 0x284) = b;
+            *(undefined2*)(base + 0x2b4) = a;
+            *(undefined2*)(base + 0x2e4) = b;
+            base = base + 0x300;
+            blocks = blocks - 1;
         }
-        while (uVar1 != 0);
-        param_2 = param_2 & 7;
-        if (param_2 == 0)
+        while (blocks != 0);
+        count = count & 7;
+        if (count == 0)
         {
             return;
         }
     }
     do
     {
-        *(undefined2*)(param_1 + 0x14) = param_3;
-        *(undefined2*)(param_1 + 0x44) = param_4;
-        param_1 = param_1 + 0x60;
-        param_2 = param_2 - 1;
+        *(undefined2*)(base + 0x14) = a;
+        *(undefined2*)(base + 0x44) = b;
+        base = base + 0x60;
+        count = count - 1;
     }
-    while (param_2 != 0);
+    while (count != 0);
     return;
 }
 
-void FUN_8003ac24(int param_1, uint* keys, int count)
+void FUN_8003ac24(int obj, uint* keys, int count)
 {
     uint remaining;
     int idx;
@@ -663,17 +663,17 @@ void FUN_8003ac24(int param_1, uint* keys, int count)
     for (idx = 0; idx < count; idx = idx + 1)
     {
         found = (short*)0x0;
-        hitDef = *(int*)(param_1 + 0x50);
+        hitDef = *(int*)(obj + 0x50);
         if (hitDef != 0)
         {
             entryIdx = 0;
             vecOffset = 0;
             for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
-                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(param_1 + 0xad) + entryIdx + 1) != -1) &&
+                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(obj + 0xad) + entryIdx + 1) != -1) &&
                     (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
-                    found = (short*)(*(int*)(param_1 + 0x6c) + vecOffset);
+                    found = (short*)(*(int*)(obj + 0x6c) + vecOffset);
                 }
                 entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
                 vecOffset = vecOffset + 0x12;
@@ -690,7 +690,7 @@ void FUN_8003ac24(int param_1, uint* keys, int count)
     return;
 }
 
-void FUN_8003ad08(int param_1, uint* keys, int count, int out)
+void FUN_8003ad08(int obj, uint* keys, int count, int out)
 {
     uint remaining;
     undefined2* found;
@@ -702,17 +702,17 @@ void FUN_8003ad08(int param_1, uint* keys, int count, int out)
     for (idx = 0; idx < count; idx = idx + 1)
     {
         found = (undefined2*)0x0;
-        hitDef = *(int*)(param_1 + 0x50);
+        hitDef = *(int*)(obj + 0x50);
         if (hitDef != 0)
         {
             entryIdx = 0;
             vecOffset = 0;
             for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
-                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(param_1 + 0xad) + entryIdx + 1) != -1) &&
+                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(obj + 0xad) + entryIdx + 1) != -1) &&
                     (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
-                    found = (undefined2*)(*(int*)(param_1 + 0x6c) + vecOffset);
+                    found = (undefined2*)(*(int*)(obj + 0x6c) + vecOffset);
                 }
                 entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
                 vecOffset = vecOffset + 0x12;
@@ -729,7 +729,7 @@ void FUN_8003ad08(int param_1, uint* keys, int count, int out)
     return;
 }
 
-void FUN_8003add8(undefined4 param_1, undefined4 param_2, int param_3, uint param_4, uint param_5,
+void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_4, uint flag,
                   uint param_6)
 {
     int iVar1;
@@ -818,7 +818,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int param_3, uint para
             {
                 local_88[0] = local_88[0] + -1;
             }
-            if ((param_5 & 0xff) != 0)
+            if ((flag & 0xff) != 0)
             {
                 local_88[0] = local_88[0] + -0x8000;
             }
@@ -837,7 +837,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int param_3, uint para
             iVar8 = -(int)(short)iVar7;
             iVar10 = -(int)sVar5;
             iVar11 = 2;
-            iVar7 = param_3;
+            iVar7 = state;
             do
             {
                 *psVar9 = *psVar9 - *(short*)(iVar7 + 0x14);
@@ -871,15 +871,15 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int param_3, uint para
                 iVar11 = iVar11 + -1;
             }
             while (iVar11 != 0);
-            psVar12[1] = *(short*)(param_3 + 0x14);
-            *psVar12 = *(short*)(param_3 + 0x44);
+            psVar12[1] = *(short*)(state + 0x14);
+            *psVar12 = *(short*)(state + 0x44);
         }
     }
     FUN_80286888();
     return;
 }
 
-void FUN_8003b1a4(int param_1, int param_2)
+void FUN_8003b1a4(int obj, int ctx)
 {
     uint remaining;
     int* found5;
@@ -889,7 +889,7 @@ void FUN_8003b1a4(int param_1, int param_2)
     int offset;
 
     found5 = (int*)0x0;
-    hitDef = *(int*)(param_1 + 0x50);
+    hitDef = *(int*)(obj + 0x50);
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
         offset = 0;
@@ -897,7 +897,7 @@ void FUN_8003b1a4(int param_1, int param_2)
         {
             if (*entry == '\x05')
             {
-                found5 = (int*)(*(int*)(param_1 + 0x70) + offset);
+                found5 = (int*)(*(int*)(obj + 0x70) + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -911,7 +911,7 @@ void FUN_8003b1a4(int param_1, int param_2)
         {
             if (*entry == '\x04')
             {
-                found4 = (int*)(*(int*)(param_1 + 0x70) + offset);
+                found4 = (int*)(*(int*)(obj + 0x70) + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -932,11 +932,11 @@ void FUN_8003b1a4(int param_1, int param_2)
     }
     *found5 = hitDef;
     *found4 = hitDef;
-    *(undefined*)(param_2 + 0x1e) = 1;
+    *(undefined*)(ctx + 0x1e) = 1;
     return;
 }
 
-void FUN_8003b280(int param_1, int param_2)
+void FUN_8003b280(int obj, int ctx)
 {
     int* found5;
     uint state;
@@ -946,7 +946,7 @@ void FUN_8003b280(int param_1, int param_2)
     int offset;
 
     found5 = (int*)0x0;
-    hitDef = *(int*)(param_1 + 0x50);
+    hitDef = *(int*)(obj + 0x50);
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
         offset = 0;
@@ -954,7 +954,7 @@ void FUN_8003b280(int param_1, int param_2)
         {
             if (*entry == '\x05')
             {
-                found5 = (int*)(*(int*)(param_1 + 0x70) + offset);
+                found5 = (int*)(*(int*)(obj + 0x70) + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -968,7 +968,7 @@ void FUN_8003b280(int param_1, int param_2)
         {
             if (*entry == '\x04')
             {
-                found4 = (int*)(*(int*)(param_1 + 0x70) + offset);
+                found4 = (int*)(*(int*)(obj + 0x70) + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -976,10 +976,10 @@ void FUN_8003b280(int param_1, int param_2)
     }
     if ((found5 != (int*)0x0) && (found4 != (int*)0x0))
     {
-        state = (int)*(char*)(param_2 + 0x1e) & 0xf;
+        state = (int)*(char*)(ctx + 0x1e) & 0xf;
         if (state == 1)
         {
-            if (((int)*(char*)(param_2 + 0x1e) & 0x80U) == 0)
+            if (((int)*(char*)(ctx + 0x1e) & 0x80U) == 0)
             {
                 hitDef = *found4 + (uint)DAT_803dc070 * 0x60;
                 if (0x200 < hitDef)
@@ -987,14 +987,14 @@ void FUN_8003b280(int param_1, int param_2)
                     if (hitDef + -0x200 < 0)
                     {
                         hitDef = 0;
-                        *(undefined*)(param_2 + 0x1e) = 0;
+                        *(undefined*)(ctx + 0x1e) = 0;
                     }
                     else
                     {
                         hitDef = 0x2ff;
-                        *(undefined*)(param_2 + 0x1e) = 0x81;
+                        *(undefined*)(ctx + 0x1e) = 0x81;
                     }
-                    *(undefined*)(param_2 + 0x1f) = 0x28;
+                    *(undefined*)(ctx + 0x1f) = 0x28;
                 }
             }
             else
@@ -1003,8 +1003,8 @@ void FUN_8003b280(int param_1, int param_2)
                 if (hitDef < 0)
                 {
                     hitDef = 0;
-                    *(undefined*)(param_2 + 0x1e) = 0;
-                    *(undefined*)(param_2 + 0x1f) = 0;
+                    *(undefined*)(ctx + 0x1e) = 0;
+                    *(undefined*)(ctx + 0x1f) = 0;
                 }
             }
             *found5 = hitDef;
@@ -1012,26 +1012,26 @@ void FUN_8003b280(int param_1, int param_2)
         }
         else if (state == 0)
         {
-            if (*(char*)(param_2 + 0x1f) < '\x01')
+            if (*(char*)(ctx + 0x1f) < '\x01')
             {
                 state = randomGetRange(0, 1000);
                 if (0x3de < (int)state)
                 {
-                    *(undefined*)(param_2 + 0x1e) = 1;
-                    *(undefined*)(param_2 + 0x1f) = 0;
+                    *(undefined*)(ctx + 0x1e) = 1;
+                    *(undefined*)(ctx + 0x1f) = 0;
                 }
             }
             else
             {
-                *(byte*)(param_2 + 0x1f) = *(char*)(param_2 + 0x1f) - DAT_803dc070;
+                *(byte*)(ctx + 0x1f) = *(char*)(ctx + 0x1f) - DAT_803dc070;
             }
         }
-        FUN_800396cc(param_1, param_2);
+        FUN_800396cc(obj, ctx);
     }
     return;
 }
 
-void FUN_8003b444(short* param_1, char* param_2)
+void FUN_8003b444(short* obj, char* ctx)
 {
     uint scaled;
     short* found;
@@ -1040,17 +1040,17 @@ void FUN_8003b444(short* param_1, char* param_2)
     int vecOffset;
 
     found = (short*)0x0;
-    model = *(int*)(param_1 + 0x28);
+    model = *(int*)(obj + 0x28);
     if (model != 0)
     {
         entryIdx = 0;
         vecOffset = 0;
         for (scaled = (uint) * (byte*)(model + 0x5a); scaled != 0; scaled = scaled - 1)
         {
-            if ((*(char*)(*(int*)(model + 0x10) + *(char*)((int)param_1 + 0xad) + entryIdx + 1) != -1) &&
+            if ((*(char*)(*(int*)(model + 0x10) + *(char*)((int)obj + 0xad) + entryIdx + 1) != -1) &&
                 (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
             {
-                found = (short*)(*(int*)(param_1 + 0x36) + vecOffset);
+                found = (short*)(*(int*)(obj + 0x36) + vecOffset);
             }
             entryIdx = *(char*)(model + 0x55) + entryIdx + 1;
             vecOffset = vecOffset + 0x12;
@@ -1063,8 +1063,8 @@ void FUN_8003b444(short* param_1, char* param_2)
             scaled = *found * 3;
             *found = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
         }
-        FUN_80039e6c((double)lbl_803DF624, param_1, param_2, (int)found);
-        *(ushort*)(param_2 + 0x1a) = *(ushort*)(param_2 + 0x1a) & 0xff;
+        FUN_80039e6c((double)lbl_803DF624, obj, ctx, (int)found);
+        *(ushort*)(ctx + 0x1a) = *(ushort*)(ctx + 0x1a) & 0xff;
     }
     return;
 }
@@ -1088,10 +1088,10 @@ void FUN_8003b56c(undefined2 param_1, undefined2 param_2, undefined2 param_3)
     return;
 }
 
-void FUN_8003b818(int param_1)
+void FUN_8003b818(int obj)
 {
-    if ((OBJPRINT_ACTIVE_BANK(param_1) != 0) &&
-        (FUN_80040a88(param_1), *(int*)(param_1 + 0x74) != 0))
+    if ((OBJPRINT_ACTIVE_BANK(obj) != 0) &&
+        (FUN_80040a88(obj), *(int*)(obj + 0x74) != 0))
     {
         FUN_800400b0();
     }
@@ -1105,7 +1105,7 @@ void FUN_8003b870(undefined4 param_1)
 }
 
 void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                  int param_5, undefined4 param_6)
+                  int obj, undefined4 renderFlag)
 {
     short seqId;
     undefined4 ctxHi;
@@ -1118,52 +1118,52 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
 
     ctx = FUN_8028683c();
     ctxHi = (undefined4)((ulonglong)ctx >> 0x20);
-    if (((((*(ushort*)(param_5 + 0xb0) & 0x40) == 0) && (*(int*)(param_5 + 0xc4) == 0)) &&
-            ((*(ushort*)(param_5 + 6) & 0x4000) == 0)) &&
-        ((*(int*)(param_5 + 0x30) == 0 || ((*(ushort*)(*(int*)(param_5 + 0x30) + 6) & 0x4000) == 0))
+    if (((((*(ushort*)(obj + 0xb0) & 0x40) == 0) && (*(int*)(obj + 0xc4) == 0)) &&
+            ((*(ushort*)(obj + 6) & 0x4000) == 0)) &&
+        ((*(int*)(obj + 0x30) == 0 || ((*(ushort*)(*(int*)(obj + 0x30) + 6) & 0x4000) == 0))
         ))
     {
         FUN_80017a04();
-        *(ushort*)(param_5 + 0xb0) = *(ushort*)(param_5 + 0xb0) | 0x800;
-        flag = (char)param_6;
-        if (*(int**)(param_5 + 0x68) == (int*)0x0)
+        *(ushort*)(obj + 0xb0) = *(ushort*)(obj + 0xb0) | 0x800;
+        flag = (char)renderFlag;
+        if (*(int**)(obj + 0x68) == (int*)0x0)
         {
             if (flag != '\0')
             {
-                seqId = *(short*)(param_5 + 0x46);
+                seqId = *(short*)(obj + 0x46);
                 if ((seqId == 0x1f) || ((seqId < 0x1f && (seqId == 0))))
                 {
-                    FUN_802950c8(param_5, ctxHi, (int)ctx, param_3, param_4, flag);
+                    FUN_802950c8(obj, ctxHi, (int)ctx, param_3, param_4, flag);
                 }
-                else if ((OBJPRINT_ACTIVE_BANK(param_5) != 0) &&
-                    (FUN_80040a88(param_5), *(int*)(param_5 + 0x74) != 0))
+                else if ((OBJPRINT_ACTIVE_BANK(obj) != 0) &&
+                    (FUN_80040a88(obj), *(int*)(obj + 0x74) != 0))
                 {
                     FUN_800400b0();
                 }
             }
         }
-        else if ((*(ushort*)(param_5 + 0xb0) & 0x4000) == 0)
+        else if ((*(ushort*)(obj + 0xb0) & 0x4000) == 0)
         {
-            vfn = *(code**)(**(int**)(param_5 + 0x68) + 0x10);
+            vfn = *(code**)(**(int**)(obj + 0x68) + 0x10);
             if (vfn != (code*)0x0)
             {
-                (*vfn)(param_5, ctxHi, (int)ctx, param_3, param_4, param_6);
+                (*vfn)(obj, ctxHi, (int)ctx, param_3, param_4, renderFlag);
             }
         }
         else if (((flag != '\0') &&
-                (OBJPRINT_ACTIVE_BANK(param_5) != 0)) &&
-            (FUN_80040a88(param_5), *(int*)(param_5 + 0x74) != 0))
+                (OBJPRINT_ACTIVE_BANK(obj) != 0)) &&
+            (FUN_80040a88(obj), *(int*)(obj + 0x74) != 0))
         {
             FUN_800400b0();
         }
         FUN_80017a00();
-        walk = param_5;
-        for (i = 0; i < (int)(uint) * (byte*)(param_5 + 0xeb); i = i + 1)
+        walk = obj;
+        for (i = 0; i < (int)(uint) * (byte*)(obj + 0xeb); i = i + 1)
         {
             child = *(int*)(walk + 200);
             if (*(short*)(child + 0x44) == 0x2d)
             {
-                FUN_8003b590(child, param_5,OBJPRINT_ACTIVE_BANK(child));
+                FUN_8003b590(child, obj,OBJPRINT_ACTIVE_BANK(child));
             }
             walk = walk + 4;
         }
@@ -1172,7 +1172,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
     return;
 }
 
-void FUN_8003c10c(int param_1, int* param_2)
+void FUN_8003c10c(int model, int* mtxArr)
 {
     uint rem;
     int cache;
@@ -1181,18 +1181,18 @@ void FUN_8003c10c(int param_1, int* param_2)
     uint dst;
 
     cache = FUN_8001779c();
-    if (*(char*)(param_1 + 0xf4) != '\0')
+    if (*(char*)(model + 0xf4) != '\0')
     {
         FUN_8003be6c();
     }
-    count = (uint) * (byte*)(param_1 + 0xf3) + (uint) * (byte*)(param_1 + 0xf4);
+    count = (uint) * (byte*)(model + 0xf3) + (uint) * (byte*)(model + 0xf4);
     if ((count < 2) || (100 < count))
     {
         DAT_803dd8c8 = 3;
     }
     else
     {
-        mtx = FUN_80017970(param_2, 0);
+        mtx = FUN_80017970(mtxArr, 0);
         FUN_802420e0(mtx, count * 0x40);
         dst = cache + 0x2700;
         for (count = count * 2 & 0xfe; rem = count & 0xff, 0x7f < rem; count = count - 0x80)
@@ -1284,11 +1284,11 @@ void fn_8003A9C0(char* p, int count, s16 a, s16 b)
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
 
-void objAudioFn_80039270(int obj, void* p, int sfxId)
+void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
 {
-    if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
     {
-        Sfx_PlayFromObjectChannel((u32)obj, 0x10, (u16)sfxId);
+        Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
         *(f32*)((char*)p + 0xc) = lbl_803DE9C8;
         *(s16*)((char*)p + 0x14) = -0x500;
         *(u8*)p = 1;
@@ -1738,13 +1738,13 @@ void modelInitMtxs(int p1, int p2)
 extern void fn_80039DF8(int obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DE9A4;
 
-void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
+void objAudioFn_800393f8(u32 p1, int p2, u16 p3, int p4, int p5, u8 p6)
 {
-    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel((u32)p1, 0x10) != 0)
+    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0)
     {
         return;
     }
-    ((void (*)(u32, u32, int))Sfx_PlayFromObjectChannel)((u32)p1, 0x10, p3);
+    Sfx_PlayFromObjectChannel(p1, 0x10, p3);
     *(f32*)((char*)p2 + 0xc) = (f32)p5;
     *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
     *(u8*)((char*)p2 + 0) = 1;
@@ -1785,7 +1785,7 @@ void fn_8003B500(int obj, int p4)
             found[0] = (s16)(found[0] * 3 / 4);
         }
         fn_80039DF8(obj, (s16*)p4, found, lbl_803DE9A4);
-        *(s16*)(p4 + 0x1a) = (s16)(u16) * (s16*)(p4 + 0x1a);
+        *(s16*)(p4 + 0x1a) = (s16)(u16)(u8) * (s16*)(p4 + 0x1a);
     }
 }
 
@@ -1994,7 +1994,8 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     if (*(s32*)((char*)p2 + 0) < 0) return;
     t = *(f32*)((char*)p2 + 8) - timeDelta;
     *(f32*)((char*)p2 + 8) = t;
-    if (!(t < lbl_803DE9A4)) return;
+    if (t < lbl_803DE9A4)
+    {
     frame = *(int*)((char*)p2 + 0);
     if (frame >= *(int*)((char*)p2 + 4))
     {
@@ -2025,6 +2026,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
                                             kfval - 1, lbl_803DE99C / lbl_803DB464, 0);
         }
         *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
+    }
     }
 }
 
@@ -2307,6 +2309,7 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
     return 1;
 }
 
+#pragma opt_common_subs off
 int fn_8003BB84(f32* m, f32* out)
 {
     extern void PSVECNormalize(f32 * src, f32 * dst);
@@ -2352,6 +2355,7 @@ int fn_8003BB84(f32* m, f32* out)
     out[11] = zero;
     return 1;
 }
+#pragma opt_common_subs reset
 
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {

@@ -245,9 +245,7 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 };
 
 int linkb_levcontrol_getExtraSize(void) { return 0x10; }
-int link_levcontrol_getExtraSize(void);
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 typedef struct
 {

@@ -96,8 +96,8 @@ int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
 
     {
-        f32 cs = state->currentSpeed;
-        f32 scaled = lbl_803E6E48 * -cs;
+        f32 cs;
+        f32 scaled = lbl_803E6E48 * -(cs = state->currentSpeed);
         state->currentSpeed = scaled * timeDelta + cs;
     }
     ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);

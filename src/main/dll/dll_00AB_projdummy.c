@@ -18,7 +18,6 @@ void projdummy_initialise(void)
 {
 }
 
-int projmagicstream_doUnsupported(void);
 
 
 

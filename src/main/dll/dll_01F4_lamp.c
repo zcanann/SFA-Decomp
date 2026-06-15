@@ -79,7 +79,6 @@ void SB_FireBall_release(void);
 int Lamp_getExtraSize(void) { return 0x1; }
 int Flag_getExtraSize(void);
 
-int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

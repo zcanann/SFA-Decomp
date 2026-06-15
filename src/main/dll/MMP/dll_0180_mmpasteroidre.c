@@ -178,7 +178,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void MMP_levelcontrol_release(void);
 
 void mmp_asteroid_re_free(void)
 {
@@ -196,11 +195,9 @@ void mmp_asteroid_re_initialise(void)
 {
 }
 
-void mmp_moonrock_hitDetect(void);
 
 int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
 int mmp_asteroid_re_getObjectTypeId(void) { return 0x0; }
-int mmp_moonrock_getExtraSize(void);
 
 extern void objRenderFn_8003b8f4(f32);
 

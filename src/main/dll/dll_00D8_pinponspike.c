@@ -15,7 +15,6 @@ extern f32 lbl_803E3DF8;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-void pollenfragment_init(int obj, int config);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -95,20 +94,15 @@ void pinponspike_initialise(void)
 {
 }
 
-void pollen_release(void);
 
-void pollen_initialise(void);
 
-void pollenfragment_release(void);
 
-void pollenfragment_initialise(void);
 
 void pinponspike_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void pollen_free(int obj);
 
 void pinponspike_init(int obj)
 {
@@ -119,18 +113,11 @@ void pinponspike_init(int obj)
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
 
-void pollen_hitDetect(int obj);
 
-void pollenfragment_free(int obj);
 
 int pinponspike_getExtraSize(void) { return 0x0; }
 int pinponspike_getObjectTypeId(void) { return 0x0; }
-int pollen_getExtraSize(void);
-int pollen_getObjectTypeId(void);
-int pollenfragment_getExtraSize(void);
-int pollenfragment_getObjectTypeId(void);
 
-void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -251,7 +238,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
@@ -368,8 +354,5 @@ void pinponspike_update(int obj)
     }
 }
 
-void pollen_update(int obj);
 
-void pollenfragment_hitDetect(int obj);
 
-void pollenfragment_update(int obj);

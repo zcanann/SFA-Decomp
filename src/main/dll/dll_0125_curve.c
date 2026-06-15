@@ -17,7 +17,6 @@ int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
-void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -967,9 +966,7 @@ void FUN_80170048(void)
     return;
 }
 
-void checkpoint4_render(int param_1);
 
-void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement);
 
 void mikabombshadow_update(int* obj);
 
@@ -1124,47 +1121,27 @@ LAB_801725bc:
     return;
 }
 
-void mikabomb_release(void);
 
-void mikabomb_initialise(void);
 
-void mikabombshadow_free(void);
 
-void mikabombshadow_hitDetect(void);
 
-void mikabombshadow_release(void);
 
-void mikabombshadow_initialise(void);
 
-void StaticCamera_hitDetect(void);
 
-void StaticCamera_update(void);
 
-void StaticCamera_release(void);
 
-void StaticCamera_initialise(void);
 
-void gcbaddieshield_free(void);
 
-void gcbaddieshield_hitDetect(void);
 
-void gcbaddieshield_release(void);
 
-void gcbaddieshield_initialise(void);
 
-void baddieinterestp_free(void);
 
-void baddieinterestp_hitDetect(void);
 
-void baddieinterestp_init(void);
 
-void baddieinterestp_release(void);
 
-void baddieinterestp_initialise(void);
 
 void staff_func0F(void);
 
-void staff_func0E(void);
 
 void staff_func0B(void);
 
@@ -1204,32 +1181,15 @@ void curve_free(void)
 {
 }
 
-void dll_F7_hitDetect(void);
 
-void dll_F7_release(void);
 
-void dll_F7_initialise(void);
 
-void checkpoint4_setScale(void);
 
-void checkpoint4_free(void);
 
-void checkpoint4_hitDetect(void);
 
-void checkpoint4_update(void);
 
-void checkpoint4_release(void);
 
-void checkpoint4_initialise(void);
 
-int mikabombshadow_getExtraSize(void);
-int mikabombshadow_getObjectTypeId(void);
-int StaticCamera_getExtraSize(void);
-int StaticCamera_getObjectTypeId(void);
-int gcbaddieshield_getExtraSize(void);
-int gcbaddieshield_getObjectTypeId(void);
-int baddieinterestp_getExtraSize(void);
-int baddieinterestp_getObjectTypeId(void);
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -1244,15 +1204,11 @@ int shield_getObjectTypeId(void);
 int curve_func11(void) { return 0x0; }
 int curve_getExtraSize(void) { return 0x0; }
 int curve_getObjectTypeId(void) { return 0x0; }
-int dll_F7_getExtraSize(void);
-int dll_F7_getObjectTypeId(void);
 
 void dll_F7_free(int obj);
 
 void dim2roofrub_free(int* obj);
 
-int checkpoint4_getExtraSize(void);
-int checkpoint4_getObjectTypeId(void);
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1657,9 +1613,7 @@ s16 staff_getHitReactValue(int* obj);
 
 s32 staff_func16(int* obj);
 
-void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -1667,32 +1621,22 @@ void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E33F0);
 }
 
-void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void flamethrowerspe_render(void);
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
-void StaticCamera_free(int x);
 
 void flamethrowerspe_func0B(int* obj);
 
-void staff_func10(int* obj, s32 v);
 
-void staff_setHitReactValue(int* obj, s32 v);
 
 void staff_modelMtxFn(int* obj, int p4, int p5);
 
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
-void staff_addHitReactValue(int* obj, s32 delta);
 
-void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 
-void gcbaddieshield_init(int* obj, void* initData);
 
-void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 
 void gcbaddieshield_update(int* obj);
 
@@ -1728,7 +1672,6 @@ void animatedobj_init(int* obj, int* params);
 
 void flamethrowerspe_update(int* obj);
 
-void mikabomb_update(int* obj);
 
 void mikabomb_init(int* obj);
 
@@ -1782,4 +1725,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 
 void staff_update(int* obj);
 
-void staffFn_80170380(int* obj, int cmd);

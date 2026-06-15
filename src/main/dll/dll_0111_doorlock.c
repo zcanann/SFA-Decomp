@@ -78,7 +78,6 @@ render_basic:
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

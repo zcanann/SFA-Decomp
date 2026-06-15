@@ -54,11 +54,9 @@ void SpiritDoorLock_initialise(void)
 {
 }
 
-void RollingBarrel_hitDetect(void);
 
 int SpiritDoorLock_getExtraSize(void) { return SPIRITDOORLOCK_EXTRA_SIZE; }
 int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
-int RollingBarrel_getExtraSize(void);
 
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -66,7 +64,6 @@ void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4440);
 }
 
-void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
 void SpiritDoorLock_free(int obj)
 {
@@ -77,7 +74,6 @@ void SpiritDoorLock_free(int obj)
     }
 }
 
-void RollingBarrel_free(int obj);
 
 void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
 {
@@ -247,4 +243,3 @@ void SpiritDoorLock_update(int obj)
 }
 #pragma opt_loop_invariants reset
 
-void RollingBarrel_update(int obj);

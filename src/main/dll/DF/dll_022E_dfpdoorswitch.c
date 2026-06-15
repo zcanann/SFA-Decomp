@@ -525,17 +525,14 @@ void doorswitch_initialise(void)
 {
 }
 
-void dfpseqpoint_free(void);
 
 int doorswitch_getExtraSize(void) { return 0x0; }
 int doorswitch_getObjectTypeId(void) { return 0x0; }
-int dfpseqpoint_getExtraSize(void);
 
 void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 
-int DrakorEnergy_setScale(int* obj);
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

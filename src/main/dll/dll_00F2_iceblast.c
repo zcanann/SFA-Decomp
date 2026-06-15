@@ -127,7 +127,6 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-void invhit_hitDetect(void);
 
 void iceblast_free(void)
 {
@@ -147,7 +146,6 @@ void iceblast_initialise(void)
 
 int iceblast_getExtraSize(void) { return 0x4; }
 int iceblast_getObjectTypeId(void) { return 0x0; }
-int flameblast_getExtraSize(void);
 
 void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
 

@@ -120,7 +120,6 @@ void FUN_80192488(void)
     return;
 }
 
-void waveanimator_update(void);
 
 int hitanimator_getExtraSize(void) { return 0x4; }
 int visanimator_getExtraSize(void);

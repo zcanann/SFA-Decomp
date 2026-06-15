@@ -1500,4 +1500,3 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
 
-void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);

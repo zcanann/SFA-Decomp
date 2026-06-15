@@ -24,7 +24,6 @@ void projmagicemmit1_initialise(void)
 {
 }
 
-int projroombeam_doUnsupported(void);
 
 
 

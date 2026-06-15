@@ -92,6 +92,7 @@ void drbarrelgr_init(int obj, int setup)
     ((GameObject*)obj)->anim.localPosY = ((DrbarrelgrState*)state)->startPosY;
 }
 
+#pragma scheduling off
 void drbarrelgr_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -104,11 +105,13 @@ void drbarrelgr_update(int obj)
     f32 vec[3];
     f32 tmp[3];
 
-    if (*(void**)&((DrbarrelgrState*)state)->unk8 != 0)
+    {
+        int held = ((DrbarrelgrState*)state)->unk8;
+    if ((void*)held != NULL)
     {
         nearest = ObjGroup_FindNearestObject(25, obj, 0);
         match = 0;
-        if ((u32)nearest != 0 && *(u32*)&((DrbarrelgrState*)state)->unk8 == (u32)nearest)
+        if ((u32)nearest != 0 && (u32)held == (u32)nearest)
         {
             match = 1;
         }
@@ -118,6 +121,7 @@ void drbarrelgr_update(int obj)
             ((DrbarrelgrState*)state)->unk8 = 0;
             flags->bit80 = 0;
         }
+    }
     }
 
     gbId = ((DrbarrelgrPlacement*)setup)->unk20;
@@ -193,7 +197,7 @@ void drbarrelgr_update(int obj)
     case 5:
         {
             int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
-                                                     lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->unk128 * timeDelta,
+                                                     (lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->unk128) * timeDelta,
                                                      lbl_803E6CBC, lbl_803E6CB4, 1);
             objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                     ((GameObject*)obj)->anim.velocityZ);
@@ -202,9 +206,12 @@ void drbarrelgr_update(int obj)
                 newMode = r - 1;
                 storeZeroToFloatParam((void*)(state + 12));
                 s16toFloat((void*)(state + 12), ((DrbarrelgrPlacement*)setup)->unk1A);
-                ((GameObject*)obj)->anim.velocityX = lbl_803E6CA4;
-                ((GameObject*)obj)->anim.velocityY = lbl_803E6CA4;
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E6CA4;
+                {
+                    f32 z = lbl_803E6CA4;
+                    ((GameObject*)obj)->anim.velocityX = z;
+                    ((GameObject*)obj)->anim.velocityY = z;
+                    ((GameObject*)obj)->anim.velocityZ = z;
+                }
             }
             break;
         }
@@ -259,6 +266,7 @@ void drbarrelgr_update(int obj)
         *(f32*)(((DrbarrelgrState*)state)->unk8 + 20) = ((DrbarrelgrState*)state)->unk1C;
     }
 }
+#pragma scheduling reset
 
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
 {
