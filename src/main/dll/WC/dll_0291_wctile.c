@@ -118,6 +118,7 @@ void wctile_initialise(void)
 {
 }
 
+#pragma opt_common_subs off
 void wctile_update(int obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -244,3 +245,4 @@ void wctile_update(int obj)
         break;
     }
 }
+#pragma opt_common_subs reset
