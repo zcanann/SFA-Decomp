@@ -58,7 +58,6 @@ extern void setAButtonIcon(int iconId);
 
 #pragma scheduling on
 #pragma peephole on
-extern u8 lbl_803AC7B0[];
 
 void FUN_8018f650(void)
 {
