@@ -396,6 +396,8 @@ void dimcannon_free(int* obj)
     ObjGroup_RemoveObject(obj, 3);
 }
 
+#define DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED 0x13
+
 void dimcannon_init(int* obj, int* arg)
 {
     ObjMsg_AllocQueue(obj, 4);
@@ -429,7 +431,7 @@ void dimcannon_init(int* obj, int* arg)
         void* state = ((GameObject*)obj)->extra;
         u8 i;
 
-        if (((GameObject*)obj)->anim.mapEventSlot == 0x13)
+        if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED)
         {
             int v = 0;
             if (GameBit_Get(0xc17) && GameBit_Get(0xa21))
@@ -755,7 +757,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 }
             }
             DIMwooddoor_spawnShard(obj, 1);
-            if (((GameObject*)obj)->anim.mapEventSlot == 0x13 && ((DimCannonState*)state)->unkB2 == 0 &&
+            if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED && ((DimCannonState*)state)->unkB2 == 0 &&
                 GameBit_Get(0xc17) && GameBit_Get(0xa21))
             {
                 ((DimCannonState*)state)->unkB2 = 1;
