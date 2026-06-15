@@ -1946,6 +1946,7 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
     }
 }
 
+#pragma opt_propagation off
 int dbstealerworm_stateHandlerA0A(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
@@ -2017,7 +2018,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     else
     {
         sub->flags15 |= 4;
-        if (sub->linkedObj != 0 && (((BaddieState*)p2)->eventFlags & 0x200) != 0)
+        if (*(void**)&sub->linkedObj != NULL && (int)(((BaddieState*)p2)->eventFlags & 0x200) != 0)
         {
             t = *(int*)&((BaddieState*)p2)->targetObj;
             stk.v[0] = *(f32*)(t + 0xc) - ((GameObject*)obj)->anim.localPosX;
@@ -2049,6 +2050,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
         return 0;
     }
 }
+#pragma opt_propagation reset
 
 int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
 {
