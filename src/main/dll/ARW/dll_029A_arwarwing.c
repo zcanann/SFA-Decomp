@@ -876,21 +876,24 @@ void arwarwing_initAttachments(int obj, int state)
 
     if (found != 0)
     {
+        f32 c7C;
+        f32 c78;
+        f32 c74;
         (*gCameraInterface)->setFocus((void*)obj, 0);
         ((ArwingState*)state)->flags477 |= 1;
         ((ArwingState*)state)->maxSpeedX = lbl_803E6F70;
-        ((ArwingState*)state)->accelX = lbl_803E6F74;
-        ((ArwingState*)state)->maxSpeedY = lbl_803E6F78;
-        ((ArwingState*)state)->accelY = lbl_803E6F7C;
-        ((ArwingState*)state)->maxSpeedZ = lbl_803E6F78;
-        ((ArwingState*)state)->accelZ = lbl_803E6F7C;
+        ((ArwingState*)state)->accelX = c74 = lbl_803E6F74;
+        ((ArwingState*)state)->maxSpeedY = c78 = lbl_803E6F78;
+        ((ArwingState*)state)->accelY = c7C = lbl_803E6F7C;
+        ((ArwingState*)state)->maxSpeedZ = c78;
+        ((ArwingState*)state)->accelZ = c7C;
         ((ArwingState*)state)->maxAccelZ = lbl_803E6F80;
         ((ArwingState*)state)->minAccelZ = lbl_803E6F84;
         ((ArwingState*)state)->speedScaleZ = lbl_803E6ED0;
         ((ArwingState*)state)->rotXRange = lbl_803E6F88;
-        ((ArwingState*)state)->rotXGain = lbl_803E6F74;
+        ((ArwingState*)state)->rotXGain = c74;
         ((ArwingState*)state)->rotYRange = lbl_803E6F8C;
-        ((ArwingState*)state)->rotYGain = lbl_803E6F7C;
+        ((ArwingState*)state)->rotYGain = c7C;
         ((ArwingState*)state)->rotZRange = lbl_803E6F90;
         ((ArwingState*)state)->rotZGain = lbl_803E6F94;
         ((ArwingState*)state)->rotZTrimRange = lbl_803E6F98;
@@ -907,7 +910,7 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->speedScaleRollL = lbl_803E6FBC;
         ((ArwingState*)state)->speedScaleRollR = lbl_803E6F64;
         ((ArwingState*)state)->accelZRollL = lbl_803E6FD4;
-        ((ArwingState*)state)->accelZRollR = lbl_803E6F74;
+        ((ArwingState*)state)->accelZRollR = c74;
         ((ArwingState*)state)->accelZNeutral = lbl_803E6FD8;
         ((ArwingState*)state)->rollCooldownInit = lbl_803E6FDC;
         ((ArwingState*)state)->rollEnergyMax = lbl_803E6FE0;
@@ -922,7 +925,7 @@ void arwarwing_initAttachments(int obj, int state)
         }
         else
         {
-            ((ArwingState*)state)->velZ = lbl_803E6F78;
+            ((ArwingState*)state)->velZ = c78;
         }
         *(s16*)&((ArwingState*)state)->projLifetime = 0x28;
         ((ArwingState*)state)->projSpeed = lbl_803E6FE0;
