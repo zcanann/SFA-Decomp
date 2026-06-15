@@ -265,8 +265,8 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
 
 void saveGame_unsaveObjectPos(u8* obj)
 {
-    int i;
     u8* saveBase;
+    int i;
     SaveGameObjectPosition* slot;
     u32 objectId;
 
@@ -276,10 +276,11 @@ void saveGame_unsaveObjectPos(u8* obj)
     }
     if (saveGameLoadStatus == 0)
     {
-        objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
+        i = 0;
         saveBase = gSaveGameData;
-        for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
+        for (; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
         {
+            objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
             if (objectId == ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
             {
                 break;
