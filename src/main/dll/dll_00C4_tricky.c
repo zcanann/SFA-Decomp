@@ -2974,10 +2974,10 @@ int trickyFn_801451d8(int obj, int state)
 
 void Tricky_func11(int* obj)
 {
-    register int* p = (int*)obj[0xb8 / 4];
+    register u32* p = (u32*)obj[0xb8 / 4];
     if (GameBit_Get(0x4e4))
     {
-        p[0x54 / 4] |= 0x10000;
+        p[0x54 / 4] |= 0x10000LL;
     }
 }
 
