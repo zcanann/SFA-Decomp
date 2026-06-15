@@ -18,9 +18,7 @@ extern f32 sqrtf(f32 x);
 #pragma peephole on
 extern u32 lbl_803DD43C;
 extern u32 lbl_803DD438;
-extern f32 screenTransitionAlpha;
 extern f32 lbl_803E0570;
-extern u32 lbl_8039CA98[];
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern f32 lbl_803E0588;
 extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
@@ -61,7 +59,6 @@ extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
 extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
 extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern f32 lbl_803E0610;
 
 void FUN_800d7780(undefined param_1)
 {
