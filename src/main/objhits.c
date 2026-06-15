@@ -2346,7 +2346,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                 {
                     pointCount = 3;
                 }
-                stateB->contactHitVolume = hb.ids[pointCount];
+                stateB->contactHitVolume = ((s8*)hb.ids)[pointCount];
                 stateB->contactPosX = endPoints[pointCount * 3];
                 stateB->contactPosY = endPoints[pointCount * 3 + 1];
                 stateB->contactPosZ = endPoints[pointCount * 3 + 2];
