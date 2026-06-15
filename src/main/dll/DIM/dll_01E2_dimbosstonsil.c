@@ -1,3 +1,10 @@
+/*
+ * dimbosstonsil (DLL 0x1E2) - the DIM boss tonsil/uvula combat object.
+ * Handles the tonsil's state machine (idle, hit-react, defeat), steam-effect
+ * anim events, a dynamic point light that flickers in sync with the glowIntensity,
+ * and the hit-count route-phase tracking (gDIMbosstonsilRoutePhase) that controls
+ * which health phase the tonsil starts in across attempts.
+ */
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -32,8 +39,6 @@ extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* p);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void* Obj_GetPlayerObject(void);
-extern void modelLightStruct_getSpecularColor(void* light, void* p1, void* p2, void* p3, void* p4);
-extern void modelLightStruct_setGlowColor(void* p1, u8 a, u8 b, u8 c, int d);
 extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
 extern void* objCreateLight(int param_1, int param_2);
