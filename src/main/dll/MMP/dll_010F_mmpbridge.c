@@ -1,15 +1,6 @@
 /* DLL 0x010F — mmpbridge (MoonMountain Pass bridge object). TU: 0x8017BB80–0x8017BCF8. */
-#include "main/game_object.h"
 
-#include "main/dll/cfguardian_state.h"
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/cfguardian.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-#include "main/dll/alphaanim.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 
 typedef struct MmpBridgePlacement
