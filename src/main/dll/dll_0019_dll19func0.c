@@ -100,7 +100,7 @@ extern f32 lbl_803E1B78;
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
 extern f32 lbl_803E1C48;
-extern f32 lbl_803E1C6C;
+extern const f32 lbl_803E1C6C;
 extern f32 lbl_803E1AC0;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 fn_8029610C(int obj);
@@ -526,10 +526,10 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
 
     if (p2[897] != 0)
     {
-        zero = lbl_803E1C2C;
         *(int*)(p2 + 792) = 0;
         *(int*)(p2 + 796) = 0;
         *(s16*)(p2 + 816) = 0;
+        zero = lbl_803E1C2C;
         *(f32*)(p2 + 656) = zero;
         *(f32*)(p2 + 652) = zero;
         *p8 = 1;
@@ -1132,7 +1132,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
     extern f32 lbl_803E1C2C;
     extern f32 lbl_803E1C70;
     extern f32 lbl_803E1C74;
-    extern f32 lbl_803E1C6C;
+    extern const f32 lbl_803E1C6C;
     extern f32 lbl_803E1C5C;
     extern f32 timeDelta;
     extern f32 sqrtf(f32 x);
