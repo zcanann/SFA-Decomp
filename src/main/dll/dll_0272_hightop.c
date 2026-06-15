@@ -699,7 +699,7 @@ void hightop_update(int obj)
             }
             else
             {
-                GameBit_Set(*(s16*)((char*)&lbl_803DC314 + v * 2 - 0x14), 1);
+                GameBit_Set(((s16*)((char*)&lbl_803DC314 - 0x14))[v], 1);
             }
         }
     }
