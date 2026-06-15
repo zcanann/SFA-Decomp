@@ -567,7 +567,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
         (int)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
             (f32)((ArwingState*)state)->barrelRollAngle);
     ((GameObject*)obj)->anim.rotZ =
-        (s16)(int)(
+        (s16)(
             timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
             (f32) * &((GameObject*)obj)->anim.rotZ);
     if (((ArwingState*)state)->barrelRollDirection > lbl_803E6ECC)
