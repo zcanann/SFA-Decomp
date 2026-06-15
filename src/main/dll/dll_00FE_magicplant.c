@@ -220,7 +220,6 @@ void MagicPlant_update(int obj)
     MagicPlantObject* plant;
     MagicPlantSetup* setup;
     MagicPlantState* state;
-    ObjHitsPriorityState* hitState;
     int hitObj;
     int hitB;
     int hitA;
@@ -235,7 +234,6 @@ void MagicPlant_update(int obj)
     plant = (MagicPlantObject*)obj;
     setup = (MagicPlantSetup*)plant->objAnim.placementData;
     state = plant->state;
-    hitState = (ObjHitsPriorityState*)plant->objAnim.hitReactState;
 
     if ((state->childObject != 0) && (plant->childLinkActive == 0))
     {
@@ -244,7 +242,7 @@ void MagicPlant_update(int obj)
         return;
     }
 
-    plant->objAnim.resetHitboxMode |= 8;
+    *(u8*)&plant->objAnim.resetHitboxMode |= 8;
     if (objIsFrozen(obj) != 0)
     {
         hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &hitA, &hitB, &hitPos[0], &hitPos[1], &hitPos[2]);
@@ -315,7 +313,7 @@ void MagicPlant_update(int obj)
             }
             plant->objAnim.alpha = (u8)alpha;
         }
-        hitState->flags &= ~1;
+        ((ObjHitsPriorityState*)plant->objAnim.hitReactState)->flags &= ~1;
         break;
 
     case MAGICPLANT_MODE_FADE_IN:
@@ -328,7 +326,7 @@ void MagicPlant_update(int obj)
             (*gMapEventInterface)->addTime(setup->eventId, (f32)setup->eventDuration);
         }
         plant->objAnim.alpha = (u8)alpha;
-        hitState->flags |= 1;
+        ((ObjHitsPriorityState*)plant->objAnim.hitReactState)->flags |= 1;
         break;
 
     case MAGICPLANT_MODE_HIT_REACT:
