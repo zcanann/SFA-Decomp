@@ -2161,7 +2161,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
             {
                 if (hitEffects != 0)
                 {
-                    if (*(s16*)(attacker + 0x44) == 1 || *(s16*)(attacker + 0x44) == 0x2d)
+                    if (((GameObject*)attacker)->anim.classId == 1 || ((GameObject*)attacker)->anim.classId == 0x2d)
                     {
                         if ((((TrickyState*)state)->controlFlags & 0x200) != 0)
                         {
@@ -2348,7 +2348,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 4, (void*)((TrickyState*)state)->light);
             }
             proj = *(u8**)&((TrickyState*)state)->actionTargetObj;
-            if (proj != NULL && *(s16*)(proj + 0x44) == 1)
+            if (proj != NULL && ((GameObject*)proj)->anim.classId == 1)
             {
                 fn_802961FC(proj, result);
             }
