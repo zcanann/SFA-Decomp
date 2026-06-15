@@ -390,37 +390,13 @@ int ktrex_shouldAdvanceArenaPhase(void)
     }
     if (r6 != 0)
     {
-        if (a == 8 && (b & 1))
-        {
-            return 1;
-        }
-        if (a == 2 && (b & 8))
-        {
-            return 1;
-        }
-        if (a == 4 && (b & 2))
-        {
-            return 1;
-        }
-        if (a == 1 && (b & 4))
+        if ((a == 8 && (b & 1)) || (a == 2 && (b & 8)) || (a == 4 && (b & 2)) || (a == 1 && (b & 4)))
         {
             return 1;
         }
         return 0;
     }
-    if (a == 1 && (b & 8))
-    {
-        return 1;
-    }
-    if (a == 4 && (b & 1))
-    {
-        return 1;
-    }
-    if (a == 2 && (b & 4))
-    {
-        return 1;
-    }
-    if (a == 8 && (b & 2))
+    if ((a == 1 && (b & 8)) || (a == 4 && (b & 1)) || (a == 2 && (b & 4)) || (a == 8 && (b & 2)))
     {
         return 1;
     }
