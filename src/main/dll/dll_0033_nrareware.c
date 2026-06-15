@@ -1,6 +1,4 @@
 /* DLL 0x0033 (nrareware) — Rareware logo / loading screen front-end [0x80115F20-0x8011611C). */
-#include "main/dll/FRONT/dll_0032_n_rareware.h"
-#include "main/dll/FRONT/dll_39.h"
 #include "main/screen_transition.h"
 
 extern int lbl_803DD5F8;
