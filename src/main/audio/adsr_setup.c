@@ -1,5 +1,4 @@
 #include "main/audio/adsr.h"
-#include "ghidra_import.h"
 
 extern int fn_8027A660(int state);
 
