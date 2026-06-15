@@ -269,13 +269,14 @@ void bombplant_update(void* obj)
     f32 dist;
     s16 bitId;
     int hitType;
-    int outA;
+    f32 hit[3];
+    f32 lightVec[3];
     int outB;
     int outC;
-    f32 hitX;
-    f32 hitY;
-    f32 hitZ;
-    f32 lightVec[3];
+    int outA;
+#define hitX hit[0]
+#define hitY hit[1]
+#define hitZ hit[2]
 
     Obj_GetPlayerObject();
     if (objIsFrozen(obj) != 0)
@@ -477,3 +478,6 @@ void bombplant_update(void* obj)
 epilogue:
     return;
 }
+#undef hitX
+#undef hitY
+#undef hitZ
