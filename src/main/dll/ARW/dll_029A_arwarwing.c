@@ -798,6 +798,7 @@ void arwarwing_initAttachments(int obj, int state)
     f32 c6F74;
     f32 c6FB0;
     f32 c6F5C;
+    f32 c6EF0;
 
     radius = lbl_803E6FC0;
     mev = (int)(*gMapEventInterface)->getCurCharacterState();
@@ -932,7 +933,7 @@ void arwarwing_initAttachments(int obj, int state)
         }
         else
         {
-            ((ArwingState*)state)->velZ = lbl_803E6F78;
+            ((ArwingState*)state)->velZ = c6F78;
         }
         *(s16*)&((ArwingState*)state)->projLifetime = 0x28;
         ((ArwingState*)state)->projSpeed = lbl_803E6FE0;
@@ -950,7 +951,7 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->maxShield = *(u8*)(mev + 0x1);
         ((ArwingState*)state)->shield = ((ArwingState*)state)->maxShield;
         ((ArwingState*)state)->bobSpeedThreshold = lbl_803E6EF8;
-        ((ArwingState*)state)->bobRotZRate = lbl_803E6EF0;
+        ((ArwingState*)state)->bobRotZRate = (c6EF0 = lbl_803E6EF0);
         ((ArwingState*)state)->bobRotZAmp = lbl_803E6FE4;
         ((ArwingState*)state)->bobXRate = lbl_803E6EF4;
         ((ArwingState*)state)->bobXAmp = lbl_803E6FD4;
@@ -962,7 +963,7 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->homeZ = ((GameObject*)obj)->anim.localPosZ;
         ((ArwingState*)state)->flightHalfWidth = lbl_803E6FEC;
         ((ArwingState*)state)->flightUpperHeight = lbl_803E6FF0;
-        ((ArwingState*)state)->flightLowerHeight = lbl_803E6EF0;
+        ((ArwingState*)state)->flightLowerHeight = c6EF0;
     }
 }
 #pragma scheduling reset
