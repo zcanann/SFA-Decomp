@@ -366,20 +366,20 @@ FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return result;
 }
 
-void FUN_800da594(double param_1, float* param_2)
+void FUN_800da594(double param_1, float* value)
 {
-    if (lbl_803E1270 < *param_2)
+    if (lbl_803E1270 < *value)
     {
-        if (lbl_803E1248 <= *param_2)
+        if (lbl_803E1248 <= *value)
         {
-            *param_2 = lbl_803E124C;
+            *value = lbl_803E124C;
         }
     }
     else
     {
-        *param_2 = lbl_803E1274;
+        *value = lbl_803E1274;
     }
-    FUN_80006a10(param_1, param_2);
+    FUN_80006a10(param_1, value);
     return;
 }
 
@@ -397,13 +397,13 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
     float dy;
     float dz;
     float* pos;
-    int* objPtr;
+    int* objList;
     uint bit;
     int obj;
     int i;
     double distSq;
     double in_f31;
-    double bestSq;
+    double bestDistSq;
     double in_ps31_1;
     undefined8 uVar11;
     int local_38[12];
@@ -414,11 +414,11 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
     fStack_4 = (float)in_ps31_1;
     uVar11 = FUN_80286838();
     pos = (float*)((ulonglong)uVar11 >> 0x20);
-    objPtr = (int*)(**(code**)(*DAT_803dd71c + 0x10))(local_38);
-    bestSq = (double)lbl_803E1278;
+    objList = (int*)(**(code**)(*DAT_803dd71c + 0x10))(local_38);
+    bestDistSq = (double)lbl_803E1278;
     for (i = 0; i < local_38[0]; i = i + 1)
     {
-        obj = *objPtr;
+        obj = *objList;
         if ((((((obj != 0) && (*(char*)(obj + 0x19) == '$')) &&
                         (((uint)uVar11 == 0xffffffff || ((uint) * (byte*)(obj + 3) == (uint)uVar11)))) &&
                     ((param_3 == -1 || (*(char*)(obj + 0x1a) == param_3)))) &&
@@ -428,11 +428,11 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
                     (bit = GameBit_Get((int)*(short*)(obj + 0x32)), bit == 0)) &&
                 (dx = *pos - *(float*)(obj + 8), dy = pos[1] - *(float*)(obj + 0xc),
                     dz = pos[2] - *(float*)(obj + 0x10),
-                    distSq = (double)(dz * dz + dx * dx + dy * dy), distSq < bestSq))))
+                    distSq = (double)(dz * dz + dx * dx + dy * dy), distSq < bestDistSq))))
         {
-            bestSq = distSq;
+            bestDistSq = distSq;
         }
-        objPtr = objPtr + 1;
+        objList = objList + 1;
     }
     FUN_80286884();
     return;
