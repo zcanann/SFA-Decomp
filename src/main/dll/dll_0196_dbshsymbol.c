@@ -1,12 +1,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dbshsymbol_types.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
-#include "main/resource.h"
-#include "main/effect_interfaces.h"
 
 #define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
