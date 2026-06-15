@@ -3439,11 +3439,14 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
 
     shortIndex = index;
     shortYrot = yrot;
-    lbl_80399398[count * 3] = shortIndex;
-    lbl_80399398[count * 3 + 2] = shortYrot;
-    shortXrot = xrot;
-    lbl_803DD0BC++;
-    lbl_80399398[count * 3 + 1] = shortXrot;
+    {
+        s16* p = &lbl_80399398[count * 3];
+        p[0] = shortIndex;
+        p[2] = shortYrot;
+        shortXrot = xrot;
+        lbl_803DD0BC++;
+        p[1] = shortXrot;
+    }
 }
 
 void ObjSeq_objLoadAnimData(u8* seq, u8* obj)

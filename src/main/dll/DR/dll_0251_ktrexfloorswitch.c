@@ -74,11 +74,11 @@ void ktrexfloorswitch_init(int obj, char* arg)
     ((KtrexfloorswitchState*)p)->unk8 = (f32)(u32)((u8*)arg)[0x19];
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->unkF8 = 1;
-    r = (*gRomCurveInterface)->find(
-        &lbl_803DC2A0, 1, 0,
-        ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->unk8,
-        ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->unkC,
-        ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->unk10);
+    {
+        KtrexfloorswitchPlacement* pl =
+            (KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
+        r = (*gRomCurveInterface)->find(&lbl_803DC2A0, 1, 0, pl->unk8, pl->unkC, pl->unk10);
+    }
     if (r != -1)
     {
         r = (int)(*gRomCurveInterface)->getById(r);

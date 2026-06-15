@@ -519,13 +519,13 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         groupStatuses = gMapObjGroupStatuses;
         if (value != 0)
         {
-            if ((oldStatus & bit) == 0)
+            if ((oldStatus & (u32)(1 << shift)) == 0)
             {
                 for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
                 {
                     if (eventIds[i] == eventIds[idx])
                     {
-                        groupStatuses[i] |= bit;
+                        groupStatuses[i] |= (u32)(1 << shift);
                     }
                 }
             }
@@ -536,7 +536,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             {
                 if (eventIds[i] == eventIds[idx])
                 {
-                    groupStatuses[i] &= ~bit;
+                    groupStatuses[i] &= ~(u32)(1 << shift);
                 }
             }
 
