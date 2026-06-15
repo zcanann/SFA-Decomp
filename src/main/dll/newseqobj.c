@@ -237,7 +237,7 @@ void fn_80150EDC(void* p1, void* p2)
         if (*(f32*)((u8*)p2 + 0x328) <= lbl_803E2740)
         {
             *(f32*)((u8*)p2 + 0x328) = lbl_803E2740;
-            ((BaddieState*)p2)->controlFlags |= 0x40000000;
+            ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
             {
                 SeqRow16* arow = (SeqRow16*)r28 + *(u16*)((u8*)p2 + 0x338);
                 *(u16*)((u8*)p2 + 0x338) = arow->alt;
@@ -254,7 +254,7 @@ void fn_80150EDC(void* p1, void* p2)
         (*(u32*)((u8*)p2 + 0x2e0) & 0x20000000) == 0)
     {
         Sfx_PlayFromObject(p1, SFXdn_boar5_c);
-        ((BaddieState*)p2)->controlFlags |= 0x40000000;
+        ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
     }
 
     if ((((BaddieState*)p2)->controlFlags & 0x40000000) != 0)
@@ -342,7 +342,7 @@ void fn_80150910(int* obj, u8* state)
             if (*(f32*)(state + 0x328) <= z)
             {
                 *(f32*)(state + 0x328) = z;
-                ((BaddieState*)state)->controlFlags |= 0x40000000;
+                ((BaddieState*)state)->controlFlags |= 0x40000000LL;
                 *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 0xa];
             }
         }
