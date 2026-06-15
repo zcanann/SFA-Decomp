@@ -655,7 +655,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
     case 10:
     case 11:
     case 12:
-        if (((BossDrakorState*)state)->airMeterHandle < *(int*)((char*)tbl + action * 4 + 0x74))
+        if (((BossDrakorState*)state)->airMeterHandle < (tbl + action)[0x1d])
         {
             ((BossDrakorState*)state)->curveFollowState = 1;
         }
@@ -666,7 +666,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
     case 17:
     case 18:
     case 19:
-        ((BossDrakorState*)state)->unk190 = ((BossDrakorState*)state)->unk190 + 1;
+        ((BossDrakorState*)state)->unk190++;
         if (((BossDrakorState*)state)->unk190 > action - 0xd)
         {
             ((BossDrakorState*)state)->unk190 = 0;
@@ -683,7 +683,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         }
     case 24:
         found = ObjGroup_FindNearestObject(0x46, obj, 0);
-        if (found != 0)
+        if ((void*)found != NULL)
         {
             drakorhoverpad_resetPendingMotion(found);
         }
