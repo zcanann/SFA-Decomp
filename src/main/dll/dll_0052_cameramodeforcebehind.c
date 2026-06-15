@@ -1,35 +1,15 @@
 /* DLL 0x0052 (cameramodeforcebehind) — Camera mode force-behind handlers [0x8010FC74-0x801101E4). */
-#include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/game_object.h"
 #include "main/mm.h"
 
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern float mathCosf(float x);
 
-#include "ghidra_import.h"
-#include "main/dll/baddieControl.h"
 #include "main/camera_object.h"
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camera_mode_54_state.h"
-#include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
-#include "main/dll/CAM/camcrawl_state.h"
-#include "main/dll/CAM/camera_mode_cannon_state.h"
-#include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/dll/CAM/camperv_state.h"
-#include "main/dll/CAM/camworldmap_state.h"
 #include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/mapEvent.h"
-#include "main/dll/path_control_interface.h"
 #include "main/dll/player_motion.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/screen_transition.h"
 
-#include "main/dll/dll19_state.h"
-#include "main/objanim.h"
-#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
