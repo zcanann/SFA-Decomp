@@ -403,8 +403,8 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 
     if (d != lbl_803E6C38)
     {
-        *(s16*)(a + 4) = (int)(lbl_803E6C98 * (f32) * (s16*)(a + 4));
-        *(s16*)(a + 4) = (int)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32) * (s16*)(a + 4));
+        *(s16*)(a + 4) = (s16)(lbl_803E6C98 * (f32) * (s16*)(a + 4));
+        *(s16*)(a + 4) = (s16)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32) * (s16*)(a + 4));
         tmp = *(s16*)(a + 4);
         if (tmp < -0x2000)
         {
