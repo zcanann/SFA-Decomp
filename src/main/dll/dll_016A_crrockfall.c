@@ -461,10 +461,11 @@ void crrockfall_update(int* obj)
                 dist = lbl_803E470C;
             }
             dist = (dist - lbl_803E4710) / lbl_803E4714;
+            dist = lbl_803E4708 - dist;
             n = (int)(lbl_803E4718 * height) + 0x40;
             modelState->shadowAlpha =
                 (int)(((f32)(u32) * (u8*)((char*)obj + 0x37) / lbl_803E471C) *
-                    ((f32)n * (lbl_803E4708 - dist)));
+                    ((f32)n * dist));
         }
 
         if (((CrrockfallPlacement*)p4c)->unk1C == -1 ||
