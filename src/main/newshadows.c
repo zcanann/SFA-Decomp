@@ -1,6 +1,4 @@
-#include "main/newshadows.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
