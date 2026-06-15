@@ -9,10 +9,8 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/baddie/skeetla.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
-#include "ghidra_import.h"
 
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
