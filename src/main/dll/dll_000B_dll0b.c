@@ -2042,7 +2042,10 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
             gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)a)->localPosZ;
         }
     }
-    gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
+    {
+        extern s16 dll_0B_func04();
+        gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
+    }
 }
 
 extern f32 lbl_803DF460;
