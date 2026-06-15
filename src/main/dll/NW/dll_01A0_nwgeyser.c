@@ -90,14 +90,14 @@ int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate)
     void* audioScratch;
 
     state = ((GameObject*)obj)->extra;
-    if ((state[0x43c] & 0x20) == 0)
+    if ((((NwMammothState*)state)->runtimeFlags & 0x20) == 0)
     {
         Sfx_StopObjectChannel(obj, 0x7f);
         ((NwMammothState*)state)->pathSpeed = lbl_803E520C;
-        state[0x43c] = (u8)(state[0x43c] & ~0x10);
-        state[0x43c] = (u8)(state[0x43c] | 0x20);
+        ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags & ~0x10);
+        ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags | 0x20);
     }
-    if ((state[0x43c] & 4) != 0)
+    if ((((NwMammothState*)state)->runtimeFlags & 4) != 0)
     {
         ((NwMammothState*)state)->playerDistanceSq = lbl_803E520C;
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
@@ -130,7 +130,7 @@ void fn_801CDF94(int obj, int state, int flag)
     {
         *(u8*)(state + 0x40c) = 0;
     }
-    if ((lbl_803268B4[*(u8*)(state + 0x408)] & 0x2) != 0)
+    if ((lbl_803268B4[((NwMammothState*)state)->stateIndex] & 0x2) != 0)
     {
         fn_8003A168(obj, (void*)(state + 0x40c));
         fn_8003B228(obj, (void*)(state + 0x40c));
