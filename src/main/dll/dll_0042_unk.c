@@ -970,8 +970,8 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
                                        *(int*)&cam->anim.parent);
-        ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-            (int)cam, &vOutA, &vOutB, &vOutC, &vOutD, 0, gCamcontrolModeSettings->targetHeight);
+        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+            (int)cam, &vOutA, &vOutB, &vOutC, &vOutD, gCamcontrolModeSettings->targetHeight, 0);
         vOutB = cam->anim.localPosY - (target->anim.localPosY + gCamcontrolModeSettings->targetHeight);
         cam->anim.rotY = getAngle(vOutB, vOutD);
         cam->anim.rotZ = 0;
