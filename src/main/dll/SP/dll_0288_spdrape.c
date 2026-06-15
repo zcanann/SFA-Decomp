@@ -1,9 +1,7 @@
 /* DLL 0x288 — SP drape object [801E9328-801E9344) */
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/dll/shwgpipe_struct.h"
-#include "main/objanim_internal.h"
 #include "main/game_object.h"
-#include "main/dll/DR/DRsimplehuman.h"
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
