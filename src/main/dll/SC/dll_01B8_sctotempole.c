@@ -5,18 +5,14 @@
  * fanfare; the test is timed (beat MuscleFoot's record). */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
-#include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(f32);
 extern void GameBit_Set(int bit, int val);
 extern void Sfx_PlayFromObject(int a, int b);
 
-#include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/objfx.h"
 #include "main/objlib.h"
-#include "main/objseq.h"
 
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
