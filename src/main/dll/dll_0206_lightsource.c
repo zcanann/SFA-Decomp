@@ -43,17 +43,14 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
-extern f32 lbl_803E5D78;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
-extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
 extern int GameBit_Get(int id);
 extern int Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void* light);
-extern f32 lbl_803E5D80;
 extern void GameBit_Set(int slot, int val);
 extern void* objCreateLight(void* obj, int);
 extern void modelLightStruct_setLightKind(void*, int);
