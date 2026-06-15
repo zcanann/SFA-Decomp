@@ -65,11 +65,11 @@ void CameraModeStatic_update(short* camObj)
 {
     int angle;
     uint pitch;
-    int viewObj;
     int placement;
-    double dz;
-    double dx;
-    double dy;
+    int viewObj;
+    f32 dx;
+    f32 dy;
+    f32 dz;
 
     if (lbl_803DD558->missingObject != 0)
     {
@@ -81,7 +81,7 @@ void CameraModeStatic_update(short* camObj)
         placement = (int)lbl_803DD558->staticObject->anim.placementData;
         if ((*(byte*)(placement + 0x1b) & 1) == 0)
         {
-            *camObj = ((CameraModeStaticPlacement*)placement)->unk1C + -0x8000;
+            *camObj = ((CameraModeStaticPlacement*)placement)->unk1C + 0x8000;
         }
         if ((*(byte*)(placement + 0x1b) & 2) == 0)
         {
@@ -95,17 +95,17 @@ void CameraModeStatic_update(short* camObj)
         ((CameraObject*)camObj)->anim.worldPosY = lbl_803DD558->staticObject->anim.worldPosY;
         ((CameraObject*)camObj)->anim.worldPosZ = lbl_803DD558->staticObject->anim.worldPosZ;
         *(float*)(camObj + 0x5a) = (float)(uint) * (byte*)(placement + 0x1a);
-        dx = (double)(*(float*)(camObj + 0xc) - *(float*)(viewObj + 0x18));
-        dy = (double)(*(float*)(camObj + 0xe) - *(float*)(viewObj + 0x1c));
-        dz = (double)(*(float*)(camObj + 0x10) - *(float*)(viewObj + 0x20));
+        dx = *(float*)(camObj + 0xc) - *(float*)(viewObj + 0x18);
+        dy = *(float*)(camObj + 0xe) - *(float*)(viewObj + 0x1c);
+        dz = *(float*)(camObj + 0x10) - *(float*)(viewObj + 0x20);
         if ((*(byte*)(placement + 0x1b) & 1) != 0)
         {
             angle = getAngle(dx, dz);
-            *camObj = -0x8000 - (short)angle;
+            *camObj = 0x8000 - angle;
         }
         if ((*(byte*)(placement + 0x1b) & 2) != 0)
         {
-            pitch = getAngle(dy, sqrtf((float)(dx * dx + (double)(float)(dz * dz))));
+            pitch = getAngle(dy, sqrtf(dx * dx + dz * dz));
             angle = ((pitch & 0xffff) - (int)((CameraModeStaticPlacement*)placement)->unk1E) - (uint)(ushort)
             camObj[1];
             if (0x8000 < angle)
