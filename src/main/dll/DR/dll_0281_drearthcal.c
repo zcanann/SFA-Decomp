@@ -53,14 +53,11 @@ void drearthcal_update(int obj)
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
-        if (*(s8*)(*(int*)(obj + 0x58) + 0x10f) > 0)
+        for (i = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
         {
-            for (i = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
+            if (*(int*)(0x100 + i * 4 + *(int*)(obj + 0x58)) == player)
             {
-                if (*(void**)(*(int*)(obj + 0x58) + i * 4 + 0x100) == (void*)player)
-                {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-                }
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
             }
         }
         if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0)
@@ -90,13 +87,12 @@ void drearthcal_update(int obj)
     }
 }
 
-#pragma scheduling on
-#pragma peephole off
 void drearthcal_init(int obj, int setup)
 {
     *(s16*)obj = (s16)((s8) * (u8*)(setup + DREARTHCAL_SETUP_YAW) << 8);
     *(u16*)(obj + DREARTHCAL_OBJECT_FLAGS_B0) |= DREARTHCAL_INIT_FLAGS;
 }
+#pragma scheduling on
 #pragma peephole on
 
 void drearthcal_release(void)
