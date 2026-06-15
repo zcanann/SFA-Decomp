@@ -36,6 +36,17 @@ STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotX) == 0x18);
 STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotY) == 0x19);
 STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotZ) == 0x1a);
 
+typedef struct ArwArwingVec3
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} ArwArwingVec3;
+
+STATIC_ASSERT(offsetof(ArwArwingVec3, x) == 0x0);
+STATIC_ASSERT(offsetof(ArwArwingVec3, y) == 0x4);
+STATIC_ASSERT(offsetof(ArwArwingVec3, z) == 0x8);
+
 
 int getArwing(void) { return gArwing; }
 
@@ -133,9 +144,9 @@ void arwarwing_getVelocity(int out, int arwing)
 void arwarwing_setVelocity(int arwing, int in)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    state->velX = *(f32*)(in + 0);
-    state->velY = *(f32*)(in + 4);
-    state->velZ = *(f32*)(in + 8);
+    state->velX = ((ArwArwingVec3*)in)->x;
+    state->velY = ((ArwArwingVec3*)in)->y;
+    state->velZ = ((ArwArwingVec3*)in)->z;
 }
 
 void arwarwing_addVelocity(int arwing, int in)
