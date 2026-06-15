@@ -1877,8 +1877,9 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
             entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->unk24 * 8];
             n = *(s16*)(entry + 4);
             off = n * 12;
-            for (; n != 0; n--)
+            while (n != 0)
             {
+                n--;
                 Stack_Push(sub->msgStack, (int*)(*(int*)entry + (off -= 12)));
             }
             sub->unk34 = 1;
