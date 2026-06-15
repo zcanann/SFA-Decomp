@@ -408,7 +408,7 @@ void groundanimator_update(int* obj)
     int inner;
     int foff;
     int hoff;
-    int oldbit;
+    u8 oldbit;
     u8 allow;
     void* tricky;
     f32 nd;
