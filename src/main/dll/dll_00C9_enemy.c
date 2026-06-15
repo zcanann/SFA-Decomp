@@ -1573,7 +1573,7 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 f
     f32 stk_20[3];
     f32 stk_2c[12];
 
-    mag1 = PSVECMag((f32*)((char*)obj2 + 0x2b8));
+    mag1 = PSVECMag((f32*)((int)obj2 + 0x2b8));
     if (mag1 > lbl_803E2574)
     {
         f32 inv = lbl_803E256C / mag1;
