@@ -344,15 +344,15 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     ((GameObject*)obj)->anim.localPosX = va;
     ((GameObject*)obj)->anim.localPosY = vb;
     ((GameObject*)obj)->anim.localPosZ = vc;
-    ((GameObject*)obj)->anim.rotX = *(s16*)(sub + 0x0);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(sub + 0x2);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(sub + 0x4);
+    ((GameObject*)obj)->anim.rotX = ((GameObject*)sub)->anim.rotX;
+    ((GameObject*)obj)->anim.rotY = ((GameObject*)sub)->anim.rotY;
+    ((GameObject*)obj)->anim.rotZ = ((GameObject*)sub)->anim.rotZ;
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.velocityX = *(f32*)(sub + 0x24);
-    ((GameObject*)obj)->anim.velocityY = *(f32*)(sub + 0x28);
-    ((GameObject*)obj)->anim.velocityZ = *(f32*)(sub + 0x2c);
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)sub)->anim.velocityX;
+    ((GameObject*)obj)->anim.velocityY = ((GameObject*)sub)->anim.velocityY;
+    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)sub)->anim.velocityZ;
 }
 #pragma dont_inline reset
 
