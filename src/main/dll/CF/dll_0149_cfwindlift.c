@@ -10,12 +10,8 @@
  * CloudRunner sends you off to do. TU = 0x8019C784..0x8019D578.
  */
 
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/player_motion.h"
-#include "main/objseq.h"
 
 typedef struct WindliftPlacement
 {
