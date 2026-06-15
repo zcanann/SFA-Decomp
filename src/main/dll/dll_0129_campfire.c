@@ -46,7 +46,6 @@ extern f32 lbl_803E3D8C;
 extern f32 lbl_803E3D90;
 extern f32 lbl_803E3D94;
 extern f32 lbl_803E3D98;
-extern f32 lbl_803E3DC0;
 
 void campfire_update(int obj)
 {
