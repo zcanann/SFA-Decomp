@@ -103,14 +103,7 @@ void pollenfragment_init(int obj, int config)
         *(float*)(state + 2) = (float)(int)randomValue;
     }
     pollenType = *(s8*)(config + 0x19);
-    if ((s8)pollenType < 0)
-    {
-        pollenType = 0;
-    }
-    else if (pollenType > 5u)
-    {
-        pollenType = 5;
-    }
+    pollenType = (pollenType < 0) ? 0 : ((pollenType > 5u) ? 5 : pollenType);
     *(s8*)(config + 0x19) = pollenType;
     state[7] = (u32)lbl_8032059C[*(char*)(config + 0x19)];
     if ((int)*(short*)state[7] != 0)
