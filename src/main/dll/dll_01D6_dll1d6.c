@@ -349,7 +349,8 @@ void dll_1D6_update(int* obj)
     }
     tex = objFindTexture(obj, 0, 0);
     {
-        s16 v = -tex->offsetT + 256;
+        s16 t = -tex->offsetT;
+        s16 v = t + 256;
         if (v > 2048)
         {
             v = v - 2048;
@@ -358,7 +359,8 @@ void dll_1D6_update(int* obj)
     }
     tex = objFindTexture(obj, 1, 0);
     {
-        s16 v = -tex->offsetT + 160;
+        s16 t = -tex->offsetT;
+        s16 v = t + 160;
         if (v > 2048)
         {
             v = v - 2048;
