@@ -6,10 +6,12 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+#define DIMBARRIER_TRIGGER_OBJ_TYPE 470
+
 typedef struct DimbarrierPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E;
+    s16 barrierGameBit;
 } DimbarrierPlacement;
 
 typedef struct DimbarrierState
@@ -63,7 +65,7 @@ void dimbarrier_init(int obj, s8* p)
     inner = ((GameObject*)obj)->extra;
     inner[3] = 1;
     inner[2] = 0;
-    if (GameBit_Get(*(s16*)(p + 0x1e)) != 0)
+    if (GameBit_Get(((DimbarrierPlacement*)p)->barrierGameBit) != 0)
     {
         ObjHitsPriorityState* hitState;
         inner[3] = 0;
@@ -93,7 +95,7 @@ void dimbarrier_update(int obj)
             {
                 entry = *(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100);
                 ex = *(int*)(entry + 0xb8);
-                if (*(s16*)(entry + 0x46) == 470 && *(u8*)(ex + 4) != 0)
+                if (*(s16*)(entry + 0x46) == DIMBARRIER_TRIGGER_OBJ_TYPE && *(u8*)(ex + 4) != 0)
                 {
                     found = 1;
                     break;
@@ -129,7 +131,7 @@ void dimbarrier_update(int obj)
             *(s16*)extra -= framesThisStep;
             if (*(s16*)extra <= 0)
             {
-                GameBit_Set(((DimbarrierPlacement*)def)->unk1E, 1);
+                GameBit_Set(((DimbarrierPlacement*)def)->barrierGameBit, 1);
                 *(s8*)((char*)extra + 2) = 2;
             }
             break;
