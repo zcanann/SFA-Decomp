@@ -2,7 +2,7 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
-extern f32 lbl_803E60D8;
+extern const f32 lbl_803E60D8;
 extern f32 lbl_803E60DC;
 
 typedef struct VfpLaddersState
@@ -47,9 +47,12 @@ void vfpladders_hitDetect(void)
 
 void vfpladders_update(int obj)
 {
-    VfpLaddersState* state = ((GameObject*)obj)->extra;
-    VfpLaddersSetup* setup = (VfpLaddersSetup*)((GameObject*)obj)->anim.placementData;
+    VfpLaddersState* state;
+    VfpLaddersSetup* setup;
     int countdown;
+
+    setup = (VfpLaddersSetup*)((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
 
     if (((GameObject*)obj)->anim.seqId == 0x548)
     {
