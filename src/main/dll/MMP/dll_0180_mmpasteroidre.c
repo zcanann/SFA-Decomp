@@ -1,8 +1,6 @@
 /* DLL 0x0180 (mmpasteroidre) — MMP asteroid re-entry object [0x801A6F4C-0x801A78C8). */
-#include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
-#include "main/dll/IM/IMspacecraft.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
@@ -26,13 +24,9 @@ extern f32 timeDelta;
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavaball.h"
-#include "main/dll/IM/IMspacecraft.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 /*
  * Per-object extra state for the MoonSeedBush plant spot
