@@ -342,19 +342,24 @@ void androsshand_handleDamage(int obj, int hand)
     }
     state->hitCooldown = (u8)t;
     if (ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol) != 0 &&
-        state->hitCooldown == 0 && sphereIdx == 0)
+        state->hitCooldown == 0)
     {
-        state->health -= 1;
-        state->hitCooldown = 6;
-        state->zSpringVelocity = (f32)lbl_803DC508;
-        Sfx_PlayFromObject(obj, 0x484);
-        if (state->health == 0)
+        switch (sphereIdx)
         {
-            state->handState = 9;
-            andross_setPartSignal(state->androssObj, 1);
-            Sfx_PlayFromObject(obj, 0x485);
-            ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
-            DIMexplosionFn_8009a96c(obj, x, y, z, lbl_803E75A8, 1, 1, 1, 1, 0, 1, 0);
+        case 0:
+            state->health -= 1;
+            state->hitCooldown = 6;
+            state->zSpringVelocity = (f32)lbl_803DC508;
+            Sfx_PlayFromObject(obj, 0x484);
+            if (state->health == 0)
+            {
+                state->handState = 9;
+                andross_setPartSignal(state->androssObj, 1);
+                Sfx_PlayFromObject(obj, 0x485);
+                ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
+                DIMexplosionFn_8009a96c(obj, x, y, z, lbl_803E75A8, 1, 1, 1, 1, 0, 1, 0);
+            }
+            break;
         }
     }
     if (state->health != 0)
