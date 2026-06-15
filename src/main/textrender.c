@@ -2226,7 +2226,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         {
             gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
         }
-        else if (boxId != 0)
+        else if ((u32)boxId != 0)
         {
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
         }
@@ -2254,7 +2254,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         {
             gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
         }
-        else if (boxId != 0)
+        else if ((u32)boxId != 0)
         {
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
