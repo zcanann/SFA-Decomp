@@ -92,6 +92,7 @@ void drbarrelgr_init(int obj, int setup)
     ((GameObject*)obj)->anim.localPosY = ((DrbarrelgrState*)state)->startPosY;
 }
 
+#pragma scheduling off
 void drbarrelgr_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -265,6 +266,7 @@ void drbarrelgr_update(int obj)
         *(f32*)(((DrbarrelgrState*)state)->unk8 + 20) = ((DrbarrelgrState*)state)->unk1C;
     }
 }
+#pragma scheduling reset
 
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
 {

@@ -89,7 +89,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
             {
                 ((GameObject*)obj)->unkF4 = 1200;
             }
-            if (hitState->contactFlags != 0)
+            if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
             {
                 ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
