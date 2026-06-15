@@ -835,8 +835,8 @@ void gplaySaveGame(int param)
 void titleDoLoadSave(void)
 {
     OSSetSaveRegion(0, 0);
-    DAT_803dc4f0 = (undefined)((int)(*((byte*)DAT_803de110 + 0x21) & 0x60) >> 5);
-    *((byte*)DAT_803de110 + 0x21) = *((byte*)DAT_803de110 + 0x21) & 0x1f;
+    lbl_803DB890 = (s8)((lbl_803DD498[0x21] & 0x60) >> 5);
+    lbl_803DD498[0x21] = lbl_803DD498[0x21] & ~0xE0;
     (*gMapEventInterface)->gotoSavegame();
     return;
 }
