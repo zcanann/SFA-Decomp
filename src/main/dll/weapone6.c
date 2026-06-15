@@ -1,4 +1,3 @@
-#include "main/dll/weaponE6.h"
 #include "main/audio/sfx.h"
 #include "main/frustum.h"
 #include "main/gamebits.h"
