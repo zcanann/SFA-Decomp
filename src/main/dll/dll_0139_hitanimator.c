@@ -42,7 +42,6 @@ extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnima
                                    HitAnimatorPlacement* desc);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
-extern f32 lbl_803E3FB8;
 extern void* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern u8* Shader_getLayer(char* s, int layer);
