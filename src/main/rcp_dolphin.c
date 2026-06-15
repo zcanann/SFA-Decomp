@@ -1056,6 +1056,7 @@ typedef struct F32Pair
 extern F32Pair LastReadIssued_803DEB58;
 extern f32 lbl_803DEB7C;
 #pragma dont_inline on
+#pragma opt_common_subs off
 void gxFn_80052dc0(void)
 {
     f32 omtx[4][4];
@@ -1084,6 +1085,7 @@ void gxFn_80052dc0(void)
     GXLoadNrmMtxImm(pmtx, 0);
     GXSetCurrentMtx(0);
 }
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 void gxTextureFn_80052638(int* param)
 {
