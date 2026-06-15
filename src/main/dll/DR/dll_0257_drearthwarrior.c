@@ -1118,10 +1118,10 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
 
 void DR_EarthWarrior_hitDetect(int obj)
 {
-    void* hitObj;
-    f32 hx;
-    f32 hy;
     f32 hz;
+    f32 hy;
+    f32 hx;
+    void* hitObj;
     struct
     {
         s16 angles[4];
@@ -1136,14 +1136,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         if (hitState->contactFlags != 0)
         {
             int i = hitState->contactHitVolume;
-            if (i < 0)
-            {
-                i = 0;
-            }
-            else if (i > 0x23)
-            {
-                i = 0x23;
-            }
+            i = (i < 0) ? 0 : ((i > 0x23) ? 0x23 : i);
             v.mat[0] = lbl_803E8338;
             v.angles[2] = 0;
             v.angles[1] = 0;
@@ -1153,7 +1146,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             v.mat[3] = hitState->contactPosZ;
             (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)lbl_803DE4D0 + 0x4)))(
                 0, 1, &v, 0x401, -1, rows.m[gDREarthWarriorRowIndices[i]]);
-            hitState->suppressOutgoingHits = 1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
             doRumble(lbl_803E8330);
         }
         if (hitState->lastHitObject != 0)
