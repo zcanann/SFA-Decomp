@@ -89,7 +89,6 @@ extern f32 lbl_803E2F20;
 extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
 
-extern f32 lbl_803E2F30;
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
