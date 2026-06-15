@@ -1279,7 +1279,7 @@ void ObjGroup_AddObject(uint obj, int group)
         }
         entries++;
     }
-    if (limit != insertIndex)
+    if (limit - insertIndex != 0)
     {
         insertIndex = limit - 1;
     }
