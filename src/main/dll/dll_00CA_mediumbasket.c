@@ -2396,7 +2396,6 @@ void dll_CA_init(int obj, u8* params, int flags)
 {
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
-    extern f64 lbl_803E2D08;
     extern f32 lbl_803E2D14;
     extern f32 lbl_803E2D24;
     extern f32 lbl_803E2D54;
