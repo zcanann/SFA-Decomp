@@ -494,7 +494,9 @@ void trickyFn_80142524(u8* obj, u8* state)
     {
         if (state[0x7d0] != 0)
         {
-            if ((int)state[0x7d0] == 1)
+            switch ((int)state[0x7d0])
+            {
+            case 1:
             {
                 target = ((TrickyState*)state)->unk7D4;
                 other = ((GameObject*)obj)->extra;
@@ -577,6 +579,10 @@ void trickyFn_80142524(u8* obj, u8* state)
                         trickyDebugPrint((char*)(base + 0x190));
                     }
                 }
+            }
+                break;
+            default:
+                break;
             }
             state[0x7d0] = 0;
             return;
