@@ -298,24 +298,24 @@ u32 jumptable_803214DC[] = {
 #pragma peephole on
 void FUN_8017db40(uint param_1, int param_2)
 {
-    undefined2 uVar1;
-    uint uVar2;
-    int iVar3;
-    int iVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
+    undefined2 mode;
+    uint rnd;
+    int groundResult;
+    int state;
+    double px;
+    double py;
+    double pz;
     undefined8 in_f4;
-    double dVar8;
+    double tmp;
     undefined8 in_f5;
     undefined8 in_f6;
     undefined8 in_f7;
     undefined8 in_f8;
 
-    iVar4 = *(int*)&((GameObject*)param_1)->extra;
+    state = *(int*)&((GameObject*)param_1)->extra;
     if (param_2 == 1)
     {
-        uVar1 = 2;
+        mode = 2;
     }
     else
     {
@@ -323,89 +323,89 @@ void FUN_8017db40(uint param_1, int param_2)
         {
             if (-1 < param_2)
             {
-                uVar1 = 2;
+                mode = 2;
                 goto LAB_8017de10;
             }
         }
         else if (param_2 < 3)
         {
-            uVar1 = 2;
+            mode = 2;
             goto LAB_8017de10;
         }
-        uVar1 = 0;
+        mode = 0;
     }
 LAB_8017de10:
-    *(undefined2*)(iVar4 + 0x38) = uVar1;
-    *(u8*)(iVar4 + 0x3a) = 4;
-    *(float*)&((GroundAnimatorState*)iVar4)->linkedObj = lbl_803DC074;
-    ((GroundAnimatorState*)iVar4)->sinkDepth = lbl_803DC074;
-    uVar2 = randomGetRange(0xffff8000, 0x7fff);
-    *(short*)(iVar4 + 0x48) = (short)uVar2;
-    uVar2 = randomGetRange(0xffff8000, 0x7fff);
-    *(short*)(iVar4 + 0x4a) = (short)uVar2;
-    *(undefined2*)(iVar4 + 0x4c) = 0x2000;
-    dVar5 = (double)((GameObject*)param_1)->anim.localPosX;
-    dVar6 = (double)((GameObject*)param_1)->anim.localPosY;
-    dVar7 = (double)((GameObject*)param_1)->anim.localPosZ;
-    iVar3 = FUN_800632d8(dVar5, dVar6, dVar7, param_1, (float*)(iVar4 + 0x30), 0);
-    if (iVar3 == 0)
+    *(undefined2*)(state + 0x38) = mode;
+    *(u8*)(state + 0x3a) = 4;
+    *(float*)&((GroundAnimatorState*)state)->linkedObj = lbl_803DC074;
+    ((GroundAnimatorState*)state)->sinkDepth = lbl_803DC074;
+    rnd = randomGetRange(0xffff8000, 0x7fff);
+    *(short*)(state + 0x48) = (short)rnd;
+    rnd = randomGetRange(0xffff8000, 0x7fff);
+    *(short*)(state + 0x4a) = (short)rnd;
+    *(undefined2*)(state + 0x4c) = 0x2000;
+    px = (double)((GameObject*)param_1)->anim.localPosX;
+    py = (double)((GameObject*)param_1)->anim.localPosY;
+    pz = (double)((GameObject*)param_1)->anim.localPosZ;
+    groundResult = FUN_800632d8(px, py, pz, param_1, (float*)(state + 0x30), 0);
+    if (groundResult == 0)
     {
-        iVar4 = *(int*)&((GameObject*)param_1)->extra;
+        state = *(int*)&((GameObject*)param_1)->extra;
         if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) == 0)
         {
             if (*(int*)&((GameObject*)param_1)->anim.hitReactState != 0)
             {
                 ObjHits_DisableObject(param_1);
             }
-            *(byte*)(iVar4 + 0x5a) = *(byte*)(iVar4 + 0x5a) | 2;
+            *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 2;
         }
         else
         {
-            FUN_80017ac8(dVar5, dVar6, dVar7, in_f4, in_f5, in_f6, in_f7, in_f8, param_1);
+            FUN_80017ac8(px, py, pz, in_f4, in_f5, in_f6, in_f7, in_f8, param_1);
         }
     }
     else
     {
-        dVar5 = (double)*(float*)(iVar4 + 0x40);
-        dVar6 = FUN_80293900(-(double)((float)((double)lbl_803E4470 * dVar5) *
-            *(float*)(iVar4 + 0x30) - lbl_803E446C));
-        dVar7 = (double)(float)((double)lbl_803E4474 * dVar5);
-        dVar5 = dVar7;
-        if (dVar7 < (double)lbl_803E446C)
+        px = (double)*(float*)(state + 0x40);
+        py = FUN_80293900(-(double)((float)((double)lbl_803E4470 * px) *
+            *(float*)(state + 0x30) - lbl_803E446C));
+        pz = (double)(float)((double)lbl_803E4474 * px);
+        px = pz;
+        if (pz < (double)lbl_803E446C)
         {
-            dVar5 = -dVar7;
+            px = -pz;
         }
-        if ((double)lbl_803E4478 < dVar5)
+        if ((double)lbl_803E4478 < px)
         {
-            dVar8 = (double)(float)((double)(float)((double)lbl_803E447C - dVar6) / dVar7);
-            dVar5 = (double)(float)((double)(float)((double)lbl_803E447C + dVar6) / dVar7);
-            if ((double)lbl_803E446C < dVar8)
+            tmp = (double)(float)((double)(float)((double)lbl_803E447C - py) / pz);
+            px = (double)(float)((double)(float)((double)lbl_803E447C + py) / pz);
+            if ((double)lbl_803E446C < tmp)
             {
-                dVar5 = dVar8;
+                px = tmp;
             }
         }
         else
         {
-            dVar5 = (double)lbl_803E4460;
+            px = (double)lbl_803E4460;
         }
-        *(float*)(iVar4 + 0x50) = (float)dVar5;
-        if (lbl_803E446C <= *(float*)(iVar4 + 0x28))
+        *(float*)(state + 0x50) = (float)px;
+        if (lbl_803E446C <= *(float*)(state + 0x28))
         {
-            dVar6 = (double)lbl_803E4480;
-            *(float*)(iVar4 + 0x30) =
-                (float)(dVar6 * (double)(lbl_803E4470 * *(float*)(iVar4 + 0x24)) +
-                    (double)*(float*)(iVar4 + 0x30));
+            py = (double)lbl_803E4480;
+            *(float*)(state + 0x30) =
+                (float)(py * (double)(lbl_803E4470 * *(float*)(state + 0x24)) +
+                    (double)*(float*)(state + 0x30));
         }
         else
         {
-            dVar6 = (double)lbl_803E4470;
-            *(float*)(iVar4 + 0x30) =
-                -(float)(dVar6 * (double)*(float*)(iVar4 + 0x24) - (double)*(float*)(iVar4 + 0x30));
+            py = (double)lbl_803E4470;
+            *(float*)(state + 0x30) =
+                -(float)(py * (double)*(float*)(state + 0x24) - (double)*(float*)(state + 0x30));
         }
-        if ((double)lbl_803E446C < (double)*(float*)(iVar4 + 0x30))
+        if ((double)lbl_803E446C < (double)*(float*)(state + 0x30))
         {
-            *(undefined4*)(iVar4 + 0x2c) = *(undefined4*)(param_1 + 0x10);
-            *(float*)(iVar4 + 0x34) = ((GameObject*)param_1)->anim.localPosY - *(float*)(iVar4 + 0x30);
+            *(undefined4*)(state + 0x2c) = *(undefined4*)(param_1 + 0x10);
+            *(float*)(state + 0x34) = ((GameObject*)param_1)->anim.localPosY - *(float*)(state + 0x30);
             if (*(int*)&((GameObject*)param_1)->anim.hitReactState != 0)
             {
                 ObjHits_DisableObject(param_1);
@@ -414,18 +414,18 @@ LAB_8017de10:
         }
         else
         {
-            iVar3 = *(int*)&((GameObject*)param_1)->extra;
+            groundResult = *(int*)&((GameObject*)param_1)->extra;
             if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) == 0)
             {
                 if (*(int*)&((GameObject*)param_1)->anim.hitReactState != 0)
                 {
                     ObjHits_DisableObject(param_1);
                 }
-                *(byte*)(iVar3 + 0x5a) = *(byte*)(iVar3 + 0x5a) | 2;
+                *(byte*)(groundResult + 0x5a) = *(byte*)(groundResult + 0x5a) | 2;
             }
             else
             {
-                FUN_80017ac8((double)*(float*)(iVar4 + 0x30), dVar6, dVar7, dVar5, in_f5, in_f6, in_f7, in_f8,
+                FUN_80017ac8((double)*(float*)(state + 0x30), py, pz, px, in_f5, in_f6, in_f7, in_f8,
                              param_1);
             }
         }
@@ -437,53 +437,53 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
 {
-    int iVar1;
-    uint uVar2;
+    int player;
+    uint bit;
     undefined4 in_r7;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    int iVar3;
-    double dVar4;
-    undefined8 uVar5;
+    int state;
+    double dist;
+    undefined8 msgTarget;
 
-    iVar3 = *(int*)&((GameObject*)param_9)->extra;
-    iVar1 = FUN_80017a98();
-    dVar4 = (double)FUN_80017710((float*)(iVar1 + 0x18), (float*)(param_9 + 0x18));
-    if ((dVar4 < (double)lbl_803E4484) &&
-        (dVar4 = (double)FUN_8001771c((float*)(iVar1 + 0x18), (float*)(param_9 + 0x18)),
-            dVar4 < (double)lbl_803E4488))
+    state = *(int*)&((GameObject*)param_9)->extra;
+    player = FUN_80017a98();
+    dist = (double)FUN_80017710((float*)(player + 0x18), (float*)(param_9 + 0x18));
+    if ((dist < (double)lbl_803E4484) &&
+        (dist = (double)FUN_8001771c((float*)(player + 0x18), (float*)(param_9 + 0x18)),
+            dist < (double)lbl_803E4488))
     {
-        uVar2 = GameBit_Get(0x90f);
-        if (uVar2 == 0)
+        bit = GameBit_Get(0x90f);
+        if (bit == 0)
         {
-            uVar5 = (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
-            *(undefined2*)(iVar3 + 0x5c) = 0xffff;
-            *(undefined2*)(iVar3 + 0x5e) = 0;
-            *(float*)(iVar3 + 0x60) = lbl_803E4460;
-            ObjMsg_SendToObject(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, 0x7000a,
-                                param_9, iVar3 + 0x5c, in_r7, in_r8, in_r9, in_r10);
+            msgTarget = (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
+            *(undefined2*)(state + 0x5c) = 0xffff;
+            *(undefined2*)(state + 0x5e) = 0;
+            *(float*)(state + 0x60) = lbl_803E4460;
+            ObjMsg_SendToObject(msgTarget, param_2, param_3, param_4, param_5, param_6, param_7, param_8, player, 0x7000a,
+                                param_9, state + 0x5c, in_r7, in_r8, in_r9, in_r10);
             GameBit_Set(0x90f, 1);
-            *(byte*)(iVar3 + 0x5a) = *(byte*)(iVar3 + 0x5a) | 4;
+            *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 4;
         }
         else
         {
-            FUN_80294d60(dVar4, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1,
-                         (uint) * (ushort*)(iVar3 + 0x38));
+            FUN_80294d60(dist, param_2, param_3, param_4, param_5, param_6, param_7, param_8, player,
+                         (uint) * (ushort*)(state + 0x38));
             FUN_80081118((double)lbl_803E4460, param_9, 0xff, 0x28);
-            uVar5 = FUN_80006824(param_9, SFXen_waterblock_stop);
-            iVar1 = *(int*)&((GameObject*)param_9)->extra;
+            msgTarget = FUN_80006824(param_9, SFXen_waterblock_stop);
+            player = *(int*)&((GameObject*)param_9)->extra;
             if ((*(ushort*)&((GameObject*)param_9)->anim.flags & 0x2000) == 0)
             {
                 if (*(int*)&((GameObject*)param_9)->anim.hitReactState != 0)
                 {
                     ObjHits_DisableObject(param_9);
                 }
-                *(byte*)(iVar1 + 0x5a) = *(byte*)(iVar1 + 0x5a) | 2;
+                *(byte*)(player + 0x5a) = *(byte*)(player + 0x5a) | 2;
             }
             else
             {
-                FUN_80017ac8(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
+                FUN_80017ac8(msgTarget, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
             }
         }
     }
@@ -497,54 +497,54 @@ void appleontree_handleCollectableHit(int obj);
 
 undefined4 FUN_8017e15c(double param_1, undefined2* param_2, int param_3)
 {
-    float fVar1;
-    float fVar2;
-    float fVar3;
-    undefined4 uVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
+    float fzero;
+    float fa;
+    float fb;
+    undefined4 result;
+    double disc;
+    double depth;
+    double amp;
 
-    fVar1 = lbl_803E446C;
-    dVar5 = (double)lbl_803E446C;
-    dVar6 = (double)*(float*)(param_3 + 0x40);
-    if (dVar5 == dVar6)
+    fzero = lbl_803E446C;
+    disc = (double)lbl_803E446C;
+    depth = (double)*(float*)(param_3 + 0x40);
+    if (disc == depth)
     {
-        uVar4 = 1;
+        result = 1;
     }
     else
     {
-        fVar2 = *(float*)(param_3 + 0x30);
-        if (dVar5 <= (double)(fVar2 - (float)((double)*(float*)(param_3 + 0x2c) - param_1)))
+        fa = *(float*)(param_3 + 0x30);
+        if (disc <= (double)(fa - (float)((double)*(float*)(param_3 + 0x2c) - param_1)))
         {
             *(float*)(param_2 + 8) = (float)param_1;
-            uVar4 = 1;
+            result = 1;
         }
         else
         {
-            dVar7 = (double)*(float*)(param_3 + 0x44);
-            if (dVar5 == dVar7)
+            amp = (double)*(float*)(param_3 + 0x44);
+            if (disc == amp)
             {
-                dVar5 = FUN_80293900((double)(float)(dVar7 * dVar7 -
-                    (double)((float)((double)lbl_803E4470 * dVar6) * fVar2
+                disc = FUN_80293900((double)(float)(amp * amp -
+                    (double)((float)((double)lbl_803E4470 * depth) * fa
                     )));
-                fVar1 = (float)((double)lbl_803E4474 * dVar6);
-                fVar2 = fVar1;
-                if (fVar1 < lbl_803E446C)
+                fzero = (float)((double)lbl_803E4474 * depth);
+                fa = fzero;
+                if (fzero < lbl_803E446C)
                 {
-                    fVar2 = -fVar1;
+                    fa = -fzero;
                 }
-                fVar3 = lbl_803E4460;
-                if (lbl_803E4478 < fVar2)
+                fb = lbl_803E4460;
+                if (lbl_803E4478 < fa)
                 {
-                    fVar2 = (float)(-dVar7 - dVar5) / fVar1;
-                    fVar3 = (float)(-dVar7 + dVar5) / fVar1;
-                    if (lbl_803E446C < fVar2)
+                    fa = (float)(-amp - disc) / fzero;
+                    fb = (float)(-amp + disc) / fzero;
+                    if (lbl_803E446C < fa)
                     {
-                        fVar3 = fVar2;
+                        fb = fa;
                     }
                 }
-                *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fVar3;
+                *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fb;
                 *(float*)(param_3 + 0x2c) = *(float*)(param_3 + 0x2c) - *(float*)(param_3 + 0x30);
                 *(float*)(param_3 + 0x30) = lbl_803E446C;
                 *(undefined4*)(param_2 + 8) = *(undefined4*)(param_3 + 0x2c);
@@ -557,56 +557,56 @@ undefined4 FUN_8017e15c(double param_1, undefined2* param_2, int param_3)
                     FUN_80006824((uint)param_2, 0x407);
                     *(byte*)(param_3 + 0x5a) = *(byte*)(param_3 + 0x5a) | 8;
                 }
-                uVar4 = 1;
+                result = 1;
             }
-            else if ((double)lbl_803E448C <= dVar7)
+            else if ((double)lbl_803E448C <= amp)
             {
-                dVar6 = (double)(float)(dVar6 + (double)*(float*)(param_3 + 0x3c));
-                dVar5 = FUN_80293900((double)(float)(dVar7 * dVar7 -
-                    (double)((float)((double)lbl_803E4470 * dVar6) * fVar2
+                depth = (double)(float)(depth + (double)*(float*)(param_3 + 0x3c));
+                disc = FUN_80293900((double)(float)(amp * amp -
+                    (double)((float)((double)lbl_803E4470 * depth) * fa
                     )));
-                fVar1 = (float)((double)lbl_803E4474 * dVar6);
-                fVar2 = fVar1;
-                if (fVar1 < lbl_803E446C)
+                fzero = (float)((double)lbl_803E4474 * depth);
+                fa = fzero;
+                if (fzero < lbl_803E446C)
                 {
-                    fVar2 = -fVar1;
+                    fa = -fzero;
                 }
-                fVar3 = lbl_803E4460;
-                if (lbl_803E4478 < fVar2)
+                fb = lbl_803E4460;
+                if (lbl_803E4478 < fa)
                 {
-                    fVar2 = (float)(-dVar7 - dVar5) / fVar1;
-                    fVar3 = (float)(-dVar7 + dVar5) / fVar1;
-                    if (lbl_803E446C < fVar2)
+                    fa = (float)(-amp - disc) / fzero;
+                    fb = (float)(-amp + disc) / fzero;
+                    if (lbl_803E446C < fa)
                     {
-                        fVar3 = fVar2;
+                        fb = fa;
                     }
                 }
-                *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fVar3;
+                *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fb;
                 *(undefined4*)(param_2 + 8) = *(undefined4*)(param_3 + 0x2c);
                 *(float*)(param_3 + 0x44) = *(float*)(param_3 + 0x44) * lbl_803E4490;
-                uVar4 = 0;
+                result = 0;
             }
             else
             {
                 *(float*)(param_2 + 8) = *(float*)(param_3 + 0x2c);
-                *(float*)(param_3 + 0x40) = fVar1;
-                *(float*)(param_3 + 0x44) = fVar1;
-                uVar4 = 1;
+                *(float*)(param_3 + 0x40) = fzero;
+                *(float*)(param_3 + 0x44) = fzero;
+                result = 1;
             }
         }
     }
-    return uVar4;
+    return result;
 }
 
 undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
 {
-    float fVar1;
-    float fVar2;
-    float fVar3;
-    undefined4 uVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
+    float fa;
+    float fb;
+    float fc;
+    undefined4 result;
+    double disc;
+    double depth;
+    double amp;
 
     if (lbl_803E446C == *(float*)(param_3 + 0x3c))
     {
@@ -614,32 +614,32 @@ undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
             *(float*)(param_3 + 0x30) - (float)((double)*(float*)(param_3 + 0x2c) - param_1))
         {
             *(float*)(param_2 + 8) = (float)param_1;
-            uVar4 = 1;
+            result = 1;
         }
         else
         {
-            dVar6 = (double)*(float*)(param_3 + 0x40);
-            dVar7 = (double)*(float*)(param_3 + 0x44);
-            dVar5 = FUN_80293900((double)(float)(dVar7 * dVar7 -
-                (double)((float)((double)lbl_803E4470 * dVar6) *
+            depth = (double)*(float*)(param_3 + 0x40);
+            amp = (double)*(float*)(param_3 + 0x44);
+            disc = FUN_80293900((double)(float)(amp * amp -
+                (double)((float)((double)lbl_803E4470 * depth) *
                     *(float*)(param_3 + 0x30))));
-            fVar1 = (float)((double)lbl_803E4474 * dVar6);
-            fVar2 = fVar1;
-            if (fVar1 < lbl_803E446C)
+            fa = (float)((double)lbl_803E4474 * depth);
+            fb = fa;
+            if (fa < lbl_803E446C)
             {
-                fVar2 = -fVar1;
+                fb = -fa;
             }
-            fVar3 = lbl_803E4460;
-            if (lbl_803E4478 < fVar2)
+            fc = lbl_803E4460;
+            if (lbl_803E4478 < fb)
             {
-                fVar2 = (float)(-dVar7 - dVar5) / fVar1;
-                fVar3 = (float)(-dVar7 + dVar5) / fVar1;
-                if (lbl_803E446C < fVar2)
+                fb = (float)(-amp - disc) / fa;
+                fc = (float)(-amp + disc) / fa;
+                if (lbl_803E446C < fb)
                 {
-                    fVar3 = fVar2;
+                    fc = fb;
                 }
             }
-            *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fVar3;
+            *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fc;
             *(float*)(param_3 + 0x2c) = *(float*)(param_3 + 0x2c) - *(float*)(param_3 + 0x30);
             *(float*)(param_3 + 0x30) = lbl_803E446C;
             *(undefined4*)(param_2 + 8) = *(undefined4*)(param_3 + 0x2c);
@@ -647,49 +647,49 @@ undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
             param_2[1] = *(undefined2*)(param_3 + 0x4a);
             param_2[2] = *(undefined2*)(param_3 + 0x4c);
             *(float*)(param_3 + 0x44) =
-                lbl_803E4474 * *(float*)(param_3 + 0x40) * fVar3 + *(float*)(param_3 + 0x44);
+                lbl_803E4474 * *(float*)(param_3 + 0x40) * fc + *(float*)(param_3 + 0x44);
             *(undefined4*)(param_3 + 0x3c) = *(undefined4*)(param_3 + 0x28);
             (**(code**)(*DAT_803dd718 + 0x10))
             ((double)*(float*)(param_2 + 6), (double)*(float*)(param_3 + 0x34),
              (double)*(float*)(param_2 + 10), param_2);
-            uVar4 = 0;
+            result = 0;
         }
     }
     else if ((float)(param_1 - (double)*(float*)(param_3 + 0x2c)) < lbl_803E446C)
     {
         *(float*)(param_2 + 8) = (float)param_1;
-        uVar4 = 1;
+        result = 1;
     }
     else
     {
-        dVar7 = (double)(*(float*)(param_3 + 0x40) + *(float*)(param_3 + 0x3c));
-        dVar6 = (double)*(float*)(param_3 + 0x44);
-        dVar5 = FUN_80293900((double)(float)(dVar6 * dVar6 -
-            (double)((float)((double)lbl_803E4470 * dVar7) *
+        amp = (double)(*(float*)(param_3 + 0x40) + *(float*)(param_3 + 0x3c));
+        depth = (double)*(float*)(param_3 + 0x44);
+        disc = FUN_80293900((double)(float)(depth * depth -
+            (double)((float)((double)lbl_803E4470 * amp) *
                 *(float*)(param_3 + 0x30))));
-        fVar1 = (float)((double)lbl_803E4474 * dVar7);
-        fVar2 = fVar1;
-        if (fVar1 < lbl_803E446C)
+        fa = (float)((double)lbl_803E4474 * amp);
+        fb = fa;
+        if (fa < lbl_803E446C)
         {
-            fVar2 = -fVar1;
+            fb = -fa;
         }
-        fVar3 = lbl_803E4460;
-        if (lbl_803E4478 < fVar2)
+        fc = lbl_803E4460;
+        if (lbl_803E4478 < fb)
         {
-            fVar2 = (float)(-dVar6 - dVar5) / fVar1;
-            fVar3 = (float)(-dVar6 + dVar5) / fVar1;
-            if (lbl_803E446C < fVar2)
+            fb = (float)(-depth - disc) / fa;
+            fc = (float)(-depth + disc) / fa;
+            if (lbl_803E446C < fb)
             {
-                fVar3 = fVar2;
+                fc = fb;
             }
         }
-        *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fVar3;
+        *(float*)(param_3 + 0xc) = *(float*)(param_3 + 0xc) - fc;
         *(undefined4*)(param_2 + 8) = *(undefined4*)(param_3 + 0x2c);
         *(float*)(param_3 + 0x3c) = lbl_803E4494;
         *(float*)(param_3 + 0x44) = lbl_803E4498;
-        uVar4 = 0;
+        result = 0;
     }
-    return uVar4;
+    return result;
 }
 
 void appleontree_setScale(void);
