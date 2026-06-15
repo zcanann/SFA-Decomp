@@ -1170,7 +1170,7 @@ void fn_80159284(int* obj, u8* state)
             }
             else
             {
-                ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & -65;
+                ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
             }
             break;
         }
