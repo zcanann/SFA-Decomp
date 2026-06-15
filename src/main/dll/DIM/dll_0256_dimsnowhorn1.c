@@ -11,6 +11,12 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
+#define OBJGROUP_SNOWHORN_PUZZLE   0x13  /* puzzle-target object group for nearest-object search */
+#define GAMEBIT_SNOWHORN_RIDING    0x3e3 /* set while Fox is mounted on the SnowHorn */
+#define GAMEBIT_SNOWHORN_AIR_DRAIN 0x3e2 /* set to drain the air meter each frame */
+#define GAMEBIT_SNOWHORN_AIR_RESET 0x3e9 /* set to reset the air meter to full */
+#define GAMEBIT_SNOWHORN_PUZZLE    0x170 /* puzzle-step trigger, counts pushes */
+
 /* Per-object extra state (getExtraSize == 0xD0C); BaddieState is the prefix. */
 typedef struct DIMSnowHorn1State
 {
@@ -31,7 +37,7 @@ typedef struct DIMSnowHorn1State
     s16 countdownTimer;
     s16 unkA86;
     s16 airMeterValue;
-    u8 unkA8A;
+    u8 mountMode; /* 0=unmounted, 2=riding */
     u8 padA8B;
     u8 mode;
     u8 triggerMode;
@@ -293,7 +299,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     f32 sp = lbl_803E8240;
     s16 d;
 
-    near = ObjGroup_FindNearestObject(0x13, obj, &sp);
+    near = ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &sp);
     inner = ((GameObject*)obj)->extra;
     *(u32*)((char*)state) |= 0x200000;
 
@@ -401,7 +407,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     f32 sp = lbl_803E8240;
     f32 fz;
 
-    near = (void*)ObjGroup_FindNearestObject(0x13, obj, &sp);
+    near = (void*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &sp);
     inner = ((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
     fz = lbl_803E8234;
@@ -459,7 +465,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
             return 0xc;
         }
     }
-    if (GameBit_Get(0x3e3) != 0)
+    if (GameBit_Get(GAMEBIT_SNOWHORN_RIDING) != 0)
     {
         if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
@@ -484,7 +490,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     *(u32*)((char*)state) |= 0x200000;
     inner = ((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    ((GameObject*)obj)->unkE4 = GameBit_Get(0x170) != 0;
+    ((GameObject*)obj)->unkE4 = GameBit_Get(GAMEBIT_SNOWHORN_PUZZLE) != 0;
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
@@ -495,9 +501,9 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     }
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4)
     {
-        if ((*gGameUIInterface)->isEventReady(0x170) != 0)
+        if ((*gGameUIInterface)->isEventReady(GAMEBIT_SNOWHORN_PUZZLE) != 0)
         {
-            u8 bit170 = GameBit_Get(0x170);
+            u8 bit170 = GameBit_Get(GAMEBIT_SNOWHORN_PUZZLE);
             if (GameBit_Get(0x28) == 0)
             {
                 switch (bit170)
@@ -519,7 +525,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
             }
             (*gObjectTriggerInterface)->runSequence(
                 inner->triggerMode, (void*)obj, -1);
-            GameBit_Set(0x170, GameBit_Get(0x170) - bit170);
+            GameBit_Set(GAMEBIT_SNOWHORN_PUZZLE, GameBit_Get(GAMEBIT_SNOWHORN_PUZZLE) - bit170);
             buttonDisable(0, 0x100);
         }
         else
@@ -671,9 +677,9 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     f32 nearDist;
 
     nearDist = lbl_803E8240;
-    near = ObjGroup_FindNearestObject(0x13, obj, &nearDist);
+    near = ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &nearDist);
     inner = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x3e3) != 0)
+    if (GameBit_Get(GAMEBIT_SNOWHORN_RIDING) != 0)
     {
         if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
@@ -887,7 +893,7 @@ int DIMSnowHorn1_render2(int obj)
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
     if ((state->unkA8E & 0x2) != 0)
     {
-        GameBit_Set(0x3e3, 0);
+        GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 0);
         state->unkA8E = (u8)(state->unkA8E & ~0x2);
         return 1;
     }
@@ -1044,7 +1050,7 @@ int DIMSnowHorn1_setScale(int obj)
         return 0;
     }
 
-    nearest = (void*)ObjGroup_FindNearestObject(0x13, obj, &range);
+    nearest = (void*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &range);
     if ((nearest != NULL) && ((*(u8*)((int)nearest + 0xaf) & 4) != 0))
     {
         buttonDisable(0, 0x100);
@@ -1134,7 +1140,7 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32*)((char*)state + 0x9b0));
     }
 
-    if ((state->unkA8A != 2) && (visible != 0))
+    if ((state->mountMode != 2) && (visible != 0))
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E8258);
         ObjPath_GetPointWorldPosition(obj, 1, &state->unk9E8, &state->unk9EC,
@@ -1158,9 +1164,9 @@ void fn_802BB4B4(int obj, int a, int slot)
     state->baddie.hitPoints = 0;
     *(u32*)state &= ~0x8000;
 
-    if (state->unkA8A == 2)
+    if (state->mountMode == 2)
     {
-        if (GameBit_Get(0x3e2) != 0)
+        if (GameBit_Get(GAMEBIT_SNOWHORN_AIR_DRAIN) != 0)
         {
             state->airMeterValue -= 1;
         }
@@ -1169,9 +1175,9 @@ void fn_802BB4B4(int obj, int a, int slot)
             state->airMeterValue = 0x3e8;
         }
         (*gGameUIInterface)->runAirMeter(state->airMeterValue);
-        if (GameBit_Get(0x3e9) != 0)
+        if (GameBit_Get(GAMEBIT_SNOWHORN_AIR_RESET) != 0)
         {
-            GameBit_Set(0x3e9, 0);
+            GameBit_Set(GAMEBIT_SNOWHORN_AIR_RESET, 0);
             state->airMeterValue = 0x3e8;
         }
         if (state->airMeterValue < 0)
@@ -1324,7 +1330,7 @@ void DIMSnowHorn1_update(int obj)
     case 3:
     case 4:
         nearDist = lbl_803E8240;
-        found = (char*)ObjGroup_FindNearestObject(0x13, obj, &nearDist);
+        found = (char*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &nearDist);
         if (*(u8*)((char*)data + 0xa8a) == 0 && *(s16*)((char*)data + 0x274) == 7
             && getXZDistance(player + 0x18, obj + 0x18) < lbl_803E82B4)
         {
@@ -1336,7 +1342,7 @@ void DIMSnowHorn1_update(int obj)
                     int layer = getCurMapLayer();
                     (*gMapEventInterface)->restartPoint((void*)(player + 0xc), 0x584, layer, 0);
                     buttonDisable(0, 0x100);
-                    GameBit_Set(0x3e3, 1);
+                    GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 1);
                     d = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)found;
                     if (d > 0x8000)
                     {
@@ -1370,7 +1376,7 @@ void DIMSnowHorn1_update(int obj)
                 if (*(u8*)(found + 0xaf) & 1)
                 {
                     buttonDisable(0, 0x100);
-                    GameBit_Set(0x3e3, 0);
+                    GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 0);
                     switch (*(u8*)((char*)data + 0xa8c))
                     {
                     case 1:
