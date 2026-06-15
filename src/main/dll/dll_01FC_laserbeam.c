@@ -1,14 +1,10 @@
 /* DLL 0x01FC (laserbeam) — WC laser beam and related objects [0x801F0AE4-0x801F160C). */
-#include "main/dll/WC/WClaser.h"
 #include "main/dll/dll1fbstate_struct.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
-#include "main/objhits.h"
 #include "main/objlib.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
 
 extern int Obj_GetPlayerObject(void);
 extern void textureFree(void* resource);
@@ -95,7 +91,6 @@ void LaserBeam_hitDetect(void)
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 #include "main/resource.h"
 
 typedef struct LaserBeamPlacement
