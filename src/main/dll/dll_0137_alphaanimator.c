@@ -12,9 +12,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
-#include "main/dll/MMP/mmp_barrel.h"
-#include "main/game_object.h"
-#include "global.h"
 
 typedef struct AlphaanimatorPlacement
 {
