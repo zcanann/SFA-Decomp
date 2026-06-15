@@ -3294,8 +3294,11 @@ void walkgroupFindExitPointFn_800dc398(void)
     if ((u32)checksum != (u32)lbl_803DD460)
     {
         lbl_803DD460 = checksum;
-        scale = lbl_803E0600;
-        if (blockFlags[2] == 0 && blockFlags[0x34] == 0)
+        if (blockFlags[2] != 0 || blockFlags[0x34] != 0)
+        {
+            scale = lbl_803E0600;
+        }
+        else
         {
             scale = lbl_803E0604;
         }
