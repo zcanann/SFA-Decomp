@@ -110,7 +110,6 @@ void aramInitStreamBuffers(void)
         i += 8;
     }
 
-    node = (AramStreamBufferEntry*)(base + 0x508) + i;
     while (i < 64)
     {
         node[-1].next = node;
