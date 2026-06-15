@@ -27,7 +27,6 @@ extern void hitDetectFn_80097070(char* obj, f32 f, int a, int b, int c, int d);
 extern u16 lbl_80325CE8[];
 extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
-extern f32 lbl_803E4D98;
 
 void magicmaker_free(void)
 {
