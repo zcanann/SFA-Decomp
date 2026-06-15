@@ -48,8 +48,8 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     for (; i < 6; i++)
     {
         vertexX = (float)(int)*vertex;
-        *vertex = (int)(vertexX * mathCosf(angleRadians));
-        vertex[2] = (int)(-vertexX * mathSinf(angleRadians));
+        *vertex = (short)(vertexX * mathCosf(angleRadians));
+        vertex[2] = (short)(-vertexX * mathSinf(angleRadians));
         vertex += 8;
     }
 
