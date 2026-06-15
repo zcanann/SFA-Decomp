@@ -1387,7 +1387,6 @@ void Effect1_func05(void)
     lbl_803DD330 = mathSinf(lbl_803DF868 * (f32)(s16)lbl_803DD32C / lbl_803DF86C);
 }
 
-extern f32 lbl_803DB7C8;
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
