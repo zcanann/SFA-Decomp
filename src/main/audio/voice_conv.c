@@ -162,15 +162,6 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     u8 baseNote;
     u8 inputNote;
     f32 freq;
-    union
-    {
-        struct
-        {
-            u32 hi, lo;
-        } w;
-
-        f64 d;
-    } conv;
 
     if (packed == 0xffffffffU)
     {
@@ -210,15 +201,6 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
  */
 u32 voiceConvertDbToLinear(u32 dbCents)
 {
-    union
-    {
-        struct
-        {
-            u32 hi, lo;
-        } w;
-
-        f64 d;
-    } conv;
     f32 scaledDb;
     f32 base;
     f32 result;

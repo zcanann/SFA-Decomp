@@ -346,8 +346,7 @@ int gameBitDecrement(int bit)
     int val = GameBit_Get(bit);
     if (val != 0)
     {
-        val--;
-        GameBit_Set(bit, val);
+        GameBit_Set(bit, val = val - 1);
         return val;
     }
     return 0;

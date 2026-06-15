@@ -163,6 +163,7 @@ void exploded_update(int* obj)
             o->alpha = 0;
             o->flags06 = (s16)(o->flags06 | 0x4000);
             flag = 1;
+            goto check;
         }
         else
         {
@@ -171,12 +172,13 @@ void exploded_update(int* obj)
             {
                 o->alpha = (u8)remainingFrames;
             }
-            flag = 0;
         }
-        if (flag != 0)
-        {
-            state->explodePhase = 2;
-        }
+    }
+    flag = 0;
+check:
+    if (flag != 0)
+    {
+        state->explodePhase = 2;
     }
 }
 
