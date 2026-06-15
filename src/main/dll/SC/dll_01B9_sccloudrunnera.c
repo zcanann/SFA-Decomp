@@ -23,6 +23,29 @@ typedef struct ScCloudrunneraPlacement
     u8 pad1A[0x20 - 0x1A];
 } ScCloudrunneraPlacement;
 
+/* Obj_AllocObjectSetup buffer filled in sc_cloudrunnera_update (case 0).
+ * File-local layout recovered from constant-offset stores. */
+typedef struct ScCloudrunneraSetup
+{
+    u8 pad00[0x04];   /* 0x00 */
+    u8 unk04;         /* 0x04 */
+    u8 unk05;         /* 0x05 */
+    u8 unk06;         /* 0x06 */
+    u8 unk07;         /* 0x07 */
+    u8 pad08[0x1B - 0x08];
+    u8 unk1B;         /* 0x1B */
+    u8 unk1C;         /* 0x1C */
+    u8 unk1D;         /* 0x1D */
+    u8 pad1E[0x20 - 0x1E];
+    f32 unk20;        /* 0x20 */
+    s16 unk24;        /* 0x24 */
+    u8 unk26;         /* 0x26 */
+    u8 unk27;         /* 0x27 */
+    u8 unk28;         /* 0x28 */
+    u8 unk29;         /* 0x29 */
+    u8 unk2A;         /* 0x2A */
+} ScCloudrunneraSetup;
+
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_SetupObject(int s, int a, int b, int c, int d);
 extern void cmbsrc_setExternalActive(int obj, int active);
@@ -130,20 +153,20 @@ void sc_cloudrunnera_update(int obj)
                     break;
                 }
                 setup = Obj_AllocObjectSetup(0x30, 0x6e8);
-                *(u8*)(setup + 0x1b) = 0x9;
-                *(u8*)(setup + 0x1c) = 0;
-                *(u8*)(setup + 0x1d) = 0;
-                *(f32*)(setup + 0x20) = lbl_803E55E0;
-                *(u8*)(setup + 0x26) = 0xff;
-                *(u8*)(setup + 0x27) = 0xff;
-                *(u8*)(setup + 0x28) = 0xff;
-                *(s16*)(setup + 0x24) = -1;
-                *(u8*)(setup + 0x4) = 2;
-                *(u8*)(setup + 0x5) = 1;
-                *(u8*)(setup + 0x6) = 0xff;
-                *(u8*)(setup + 0x7) = 0xff;
-                *(u8*)(setup + 0x29) = 1;
-                *(u8*)(setup + 0x2a) = 0;
+                ((ScCloudrunneraSetup*)setup)->unk1B = 0x9;
+                ((ScCloudrunneraSetup*)setup)->unk1C = 0;
+                ((ScCloudrunneraSetup*)setup)->unk1D = 0;
+                ((ScCloudrunneraSetup*)setup)->unk20 = lbl_803E55E0;
+                ((ScCloudrunneraSetup*)setup)->unk26 = 0xff;
+                ((ScCloudrunneraSetup*)setup)->unk27 = 0xff;
+                ((ScCloudrunneraSetup*)setup)->unk28 = 0xff;
+                ((ScCloudrunneraSetup*)setup)->unk24 = -1;
+                ((ScCloudrunneraSetup*)setup)->unk04 = 2;
+                ((ScCloudrunneraSetup*)setup)->unk05 = 1;
+                ((ScCloudrunneraSetup*)setup)->unk06 = 0xff;
+                ((ScCloudrunneraSetup*)setup)->unk07 = 0xff;
+                ((ScCloudrunneraSetup*)setup)->unk29 = 1;
+                ((ScCloudrunneraSetup*)setup)->unk2A = 0;
                 newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                          *(int*)&((GameObject*)obj)->anim.parent);
                 ((GameObject*)newObj)->anim.flags = (s16)(((GameObject*)newObj)->anim.flags | 0x4000);
