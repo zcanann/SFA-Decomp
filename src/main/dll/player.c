@@ -11610,14 +11610,14 @@ void fn_80295CF4(int obj, int a)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
 
-    if ((int)lbl_803DE44C == 0 || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
+    if (lbl_803DE44C == NULL || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
     {
         return;
     }
     if (a == 0)
     {
         *(s16*)((char*)lbl_803DE44C + 6) |= 0x4000;
-        if ((int)lbl_803DE44C != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+        if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
             inner->unk8B4 = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
