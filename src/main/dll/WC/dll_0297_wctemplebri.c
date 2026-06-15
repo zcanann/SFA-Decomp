@@ -208,17 +208,19 @@ void wctemplebri_update(int obj)
     int model;
     int modelBase;
     int i;
+    f32 waveScale;
 
     Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
     wctemplebri_updateModelWarp(obj, (int)state);
     model = Obj_GetActiveModel(obj);
     modelBase = *(int*)model;
+    waveScale = *(f32*)&lbl_803E6E70;
     for (i = 0; i < *(u16*)(modelBase + 0xe4); i++)
     {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int idx = (u16)(int)(lbl_803E6E70 * ((f32) * (s16*)(curr + 4) / state->maxY)) +
+        int idx = (u16)(int)(waveScale * ((f32) * (s16*)(curr + 4) / state->maxY)) +
             state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
