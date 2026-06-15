@@ -1,5 +1,4 @@
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
