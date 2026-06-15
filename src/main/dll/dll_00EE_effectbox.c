@@ -7,16 +7,8 @@ extern uint GameBit_Get(int eventId);
 
 extern void objRenderFn_8003b8f4(f32);
 
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/obj_placement.h"
-#include "main/dll/lightning.h"
-#include "main/dll/path_control_interface.h"
 #include "main/dll/pushable.h"
-#include "main/objanim_internal.h"
 #include "main/game_object.h"
-#include "main/resource.h"
 
 typedef struct EffectboxPlacement
 {
