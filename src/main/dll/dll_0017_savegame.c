@@ -269,7 +269,7 @@ void saveGame_unsaveObjectPos(u8* obj)
         saveBase = gSaveGameData;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
         {
-            if (((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId == objectId)
+            if (objectId == ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
             {
                 break;
             }
@@ -280,9 +280,9 @@ void saveGame_unsaveObjectPos(u8* obj)
             return;
         }
 
-        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, saveBase += sizeof(SaveGameObjectPosition))
+        slot = (SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET);
+        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++)
         {
-            slot = (SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET);
             slot[0].objectId = slot[1].objectId;
             slot[0].x = slot[1].x;
             slot[0].y = slot[1].y;
