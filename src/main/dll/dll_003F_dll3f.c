@@ -27,7 +27,6 @@ extern f32 FLOAT_803e3098;
 
 extern void* Obj_GetPlayerObject(void);
 
-extern u8 warpstoneUIState;
 extern void titlescreen_free(u8 * obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);
@@ -39,7 +38,6 @@ extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
 extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void* lbl_803DD960;
 
 void FUN_80132034(void)
