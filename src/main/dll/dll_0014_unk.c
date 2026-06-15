@@ -3415,21 +3415,15 @@ void walkgroupFindExitPointFn_800dc398(void)
 
                         found = 1;
                         sp = &patchBase[1];
-                        searchCount = lbl_803DD468 - 1;
-                        if (lbl_803DD468 > 1)
+                        for (searchCount = lbl_803DD468 - 1; searchCount != 0; searchCount--)
                         {
-                            do
+                            if (pairId == sp->groupId)
                             {
-                                if (pairId == sp->groupId)
-                                {
-                                    wg->patchIndices[slot] = found;
-                                    break;
-                                }
-                                sp++;
-                                found++;
-                                searchCount--;
+                                wg->patchIndices[slot] = (u8)found;
+                                break;
                             }
-                            while (searchCount != 0);
+                            sp++;
+                            found++;
                         }
 
                         npi = lbl_803DD468;
