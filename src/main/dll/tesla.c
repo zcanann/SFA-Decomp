@@ -1,5 +1,3 @@
-#include "main/dll/tesla.h"
-#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
