@@ -23,7 +23,6 @@ typedef struct WaveanimatorState
 
 extern uint GameBit_Get(int eventId);
 
-extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
@@ -42,7 +41,6 @@ extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 extern void mm_free(void* p);
 extern f32 lbl_803E3F70;
-extern f32 lbl_803E3F98;
 extern void fn_801923F8(int* cfg);
 extern u8 lbl_803DDAE8;
 extern void* lbl_803DDAEC;
@@ -50,7 +48,6 @@ extern void* lbl_803DDAF0;
 extern void* lbl_803DDAF4;
 extern u8 lbl_803DDAF8;
 extern u8 framesThisStep;
-extern void* mapBlockFn_800606ec(void* block, int idx);
 extern void* mmAlloc(int size, int align, int tag);
 extern f32 lbl_803E3F40;
 extern f32 lbl_803E3F44;
@@ -63,7 +60,6 @@ extern f32 lbl_803E3F5C;
 extern f32 lbl_803E3F60;
 extern f32 lbl_803E3F64;
 extern f32 mathSinf(f32);
-extern u8* Shader_getLayer(char* s, int layer);
 
 void waveanimator_modelMtxFn(int obj, int a, int b, int c)
 {
