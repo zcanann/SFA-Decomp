@@ -1,4 +1,3 @@
-#include "main/dll/MMP/MMP_gyservent.h"
 #include "main/game_object.h"
 
 typedef struct MmpGyserventState
