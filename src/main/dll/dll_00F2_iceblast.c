@@ -29,17 +29,14 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-extern unsigned long GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 lbl_803E3600;
-extern void warpToMap(int mapId, int flag);
 extern f32 timeDelta;
 extern f32 lbl_803E3604;
 extern f32 lbl_803E3608;
 extern f32 lbl_803E360C;
 extern void* Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void* in, void* out);
-extern s16* getTrickyObject(void);
 
 static inline int* Transporter_GetActiveModel(void* obj)
 {
