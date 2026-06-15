@@ -419,7 +419,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
             }
             if ((((ObjSeqState*)seq)->flags & 2) != 0)
             {
-                *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
+                *(s16*)obj += ((ObjSeqState*)seq)->heading;
             }
             ((GameObject*)obj)->pendingParentObj = NULL;
             ((GameObject*)obj)->objectFlags &= ~0x1000;
@@ -3042,7 +3042,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 ((GameObject*)obj)->anim.localPosY +
                 ((((GameObject*)obj)->anim.localPosY - scratch[0]) - *(f32*)(model + 0xc));
         }
-        *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
+        *(s16*)obj += ((ObjSeqState*)seq)->heading;
         ObjSeq_ApplyLinkedObjectTransform(obj, activeObj, seq);
         objSeqDoBgCmds0D(seq, activeObj, 0);
 
