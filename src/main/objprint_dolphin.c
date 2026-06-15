@@ -309,72 +309,72 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
 
 void FUN_8003df64(undefined4 param_1, undefined4 param_2, int* param_3, float* param_4)
 {
-    byte bVar1;
-    byte bVar2;
-    undefined uVar3;
-    undefined uVar4;
-    undefined uVar5;
-    undefined uVar6;
-    undefined uVar7;
-    undefined uVar8;
-    int iVar9;
-    float* pfVar10;
-    uint uVar11;
-    uint uVar12;
-    undefined* puVar13;
-    float* pfVar14;
+    byte boneCount0;
+    byte boneCount1;
+    undefined cmdByte1;
+    undefined cmdByte2;
+    undefined b0;
+    undefined b1;
+    undefined b2;
+    undefined cmdByte0;
+    int cache;
+    float* srcMtx;
+    uint idx;
+    uint cmd;
+    undefined* cmdPtr;
+    float* dstMtx;
     int iVar15;
-    byte* pbVar16;
-    undefined8 uVar17;
-    float afStack_58[22];
+    byte* tag;
+    undefined8 ctx;
+    float localMtx[22];
 
-    uVar17 = FUN_80286834();
-    iVar15 = (int)((ulonglong)uVar17 >> 0x20);
-    iVar9 = FUN_8001779c();
+    ctx = FUN_80286834();
+    iVar15 = (int)((ulonglong)ctx >> 0x20);
+    cache = FUN_8001779c();
     if (DAT_803dd8c8 == 1)
     {
-        pfVar10 = (float*)FUN_8001779c();
-        bVar1 = *(byte*)(iVar15 + 0xf3);
-        bVar2 = *(byte*)(iVar15 + 0xf4);
-        pfVar14 = pfVar10 + 0x9c0;
+        srcMtx = (float*)FUN_8001779c();
+        boneCount0 = *(byte*)(iVar15 + 0xf3);
+        boneCount1 = *(byte*)(iVar15 + 0xf4);
+        dstMtx = srcMtx + 0x9c0;
         FUN_80017794(0);
-        for (iVar15 = 0; iVar15 < (int)((uint)bVar1 + (uint)bVar2); iVar15 = iVar15 + 1)
+        for (iVar15 = 0; iVar15 < (int)((uint)boneCount0 + (uint)boneCount1); iVar15 = iVar15 + 1)
         {
-            FUN_80247618(param_4, pfVar14, pfVar10);
-            pfVar14 = pfVar14 + 0x10;
-            pfVar10 = pfVar10 + 0xc;
+            FUN_80247618(param_4, dstMtx, srcMtx);
+            dstMtx = dstMtx + 0x10;
+            srcMtx = srcMtx + 0xc;
         }
         DAT_803dd8c8 = 2;
     }
-    uVar12 = param_3[4];
-    uVar8 = *(undefined*)(*param_3 + ((int)uVar12 >> 3));
-    iVar15 = *param_3 + ((int)uVar12 >> 3);
-    uVar3 = *(undefined*)(iVar15 + 1);
-    uVar4 = *(undefined*)(iVar15 + 2);
-    param_3[4] = uVar12 + 4;
-    pbVar16 = &DAT_802cbaa8;
+    cmd = param_3[4];
+    cmdByte0 = *(undefined*)(*param_3 + ((int)cmd >> 3));
+    iVar15 = *param_3 + ((int)cmd >> 3);
+    cmdByte1 = *(undefined*)(iVar15 + 1);
+    cmdByte2 = *(undefined*)(iVar15 + 2);
+    param_3[4] = cmd + 4;
+    tag = &DAT_802cbaa8;
     for (iVar15 = 0;
-         iVar15 < (int)((uint3)(CONCAT12(uVar4, CONCAT11(uVar3, uVar8)) >> (uVar12 & 7)) & 0xf);
+         iVar15 < (int)((uint3)(CONCAT12(cmdByte2, CONCAT11(cmdByte1, cmdByte0)) >> (cmd & 7)) & 0xf);
          iVar15 = iVar15 + 1)
     {
-        uVar11 = param_3[4];
-        puVar13 = (undefined*)(*param_3 + ((int)uVar11 >> 3));
-        uVar5 = *puVar13;
-        uVar6 = puVar13[1];
-        uVar7 = puVar13[2];
-        param_3[4] = uVar11 + 8;
-        uVar11 = (uint3)(CONCAT12(uVar7, CONCAT11(uVar6, uVar5)) >> (uVar11 & 7)) & 0xff;
+        idx = param_3[4];
+        cmdPtr = (undefined*)(*param_3 + ((int)idx >> 3));
+        b0 = *cmdPtr;
+        b1 = cmdPtr[1];
+        b2 = cmdPtr[2];
+        param_3[4] = idx + 8;
+        idx = (uint3)(CONCAT12(b2, CONCAT11(b1, b0)) >> (idx & 7)) & 0xff;
         if (DAT_803dd8c8 == 2)
         {
-            FUN_8025d80c((float*)(iVar9 + uVar11 * 0x30), (uint) * pbVar16);
+            FUN_8025d80c((float*)(cache + idx * 0x30), (uint) * tag);
         }
         else
         {
-            pfVar10 = (float*)FUN_80017970((int*)uVar17, uVar11);
-            FUN_80247618(param_4, pfVar10, afStack_58);
-            FUN_8025d80c(afStack_58, (uint) * pbVar16);
+            srcMtx = (float*)FUN_80017970((int*)ctx, idx);
+            FUN_80247618(param_4, srcMtx, localMtx);
+            FUN_8025d80c(localMtx, (uint) * tag);
         }
-        pbVar16 = pbVar16 + 1;
+        tag = tag + 1;
     }
     FUN_80286880();
     return;
