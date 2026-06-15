@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/inp_ctrl.h"
 
 int inpGetSurPanning(McmdVoiceState* state)
