@@ -1,11 +1,7 @@
 /* DLL 0x01A4 - NW ice objects [801CF78C-801CF7E8) */
-#include "main/dll/dim2conveyor.h"
-#include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 
-#include "main/dll/creator1D6.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 
 typedef struct NwIcePlacement
 {
