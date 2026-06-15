@@ -1,6 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
-#include "main/objhits.h"
 #include "main/obj_placement.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
