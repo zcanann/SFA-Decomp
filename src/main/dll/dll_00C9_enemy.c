@@ -2540,10 +2540,10 @@ void enemy_init(int obj, u8* setup, int flag)
     ((EnemyState*)state)->unk2D8 = lbl_803E2574;
     if (((EnemyState*)state)->unk2A8 > *(f32*)&lbl_803E25B0)
     {
-        ((EnemyState*)state)->unk2A8 = *(f32*)&lbl_803E25B0;
+        ((EnemyState*)state)->unk2A8 = lbl_803E25B0;
     }
     if (((EnemyState*)state)->unk2AC > *(f32*)&lbl_803E25B0)
     {
-        ((EnemyState*)state)->unk2AC = *(f32*)&lbl_803E25B0;
+        ((EnemyState*)state)->unk2AC = lbl_803E25B0;
     }
 }
