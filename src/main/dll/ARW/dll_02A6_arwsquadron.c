@@ -464,7 +464,7 @@ void arwsquadron_emitEffects(int p1, int p2)
     {
         if (state->fxFrameCounter++ % 2 != 0)
         {
-            ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);
+            ObjPath_GetPointLocalPosition(p1, 4, &pfx.fx, &pfx.fy, &pfx.fz);
             pfx.f8 = state->damageSmokeScale;
             if ((s8)state->health <= 1)
                 pfx.s6 = 0x61a8;
@@ -476,7 +476,7 @@ void arwsquadron_emitEffects(int p1, int p2)
     if ((s8)state->health <= 1)
     {
         pfx.s6 = 0xc0a;
-        ObjPath_GetPointLocalPosition(p2, 5, &pfx.fx, &pfx.fy, &pfx.fz);
+        ObjPath_GetPointLocalPosition(p1, 5, &pfx.fx, &pfx.fy, &pfx.fz);
         pfx.f8 = state->fireFxScale;
         (*gPartfxInterface)->spawnObject((void*)p1, 0x7d1, &pfx, 4, -1, &flag);
     }
@@ -486,12 +486,12 @@ void arwsquadron_emitEffects(int p1, int p2)
         pfx.s2 = 0;
         pfx.s4 = 0;
         pfx.f8 = lbl_803E7168;
-        ObjPath_GetPointLocalPosition(p2, 2, &pfx.fx, &pfx.fy, &pfx.fz);
+        ObjPath_GetPointLocalPosition(p1, 2, &pfx.fx, &pfx.fy, &pfx.fz);
         objfx_spawnLightPulse(p1, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, (int)&pfx);
     }
     if (state->muzzleCount > 1 && (s8)state->health > 1)
     {
-        ObjPath_GetPointLocalPosition(p2, 3, &pfx.fx, &pfx.fy, &pfx.fz);
+        ObjPath_GetPointLocalPosition(p1, 3, &pfx.fx, &pfx.fy, &pfx.fz);
         objfx_spawnLightPulse(p1, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, (int)&pfx);
     }
 }
