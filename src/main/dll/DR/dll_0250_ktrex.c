@@ -1524,8 +1524,11 @@ int ktrex_stateHandlerA08(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 7);
-        ((KTRexArenaState*)gKTRexState)->unk4 =
-            (f32)(u32) * (u16*)((char*)p + (((KTRexArenaState*)gKTRexState)->unk101 & ~1) + 0x4a);
+        {
+            char* pK = (char*)p + 0x4a;
+            ((KTRexArenaState*)gKTRexState)->unk4 =
+                (f32)(u32) * (u16*)(pK + (((KTRexArenaState*)gKTRexState)->unk101 & ~1));
+        }
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
         goto ret0;
     }
