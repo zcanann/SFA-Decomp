@@ -1,7 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
-#include "main/dll/SC/dll_01B0_shswapston.h"
 #include "main/objanim_update.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
@@ -380,7 +379,6 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SClantern.h"
-#include "main/objanim.h"
 
 typedef struct WarpstoneState
 {
