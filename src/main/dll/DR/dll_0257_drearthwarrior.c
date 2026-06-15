@@ -1271,7 +1271,7 @@ void DR_EarthWarrior_hitDetect(int obj)
 void DR_EarthWarrior_update(int obj)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+#define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     Obj_GetPlayerObject();
     hitState->hitVolumePriority = 0;
     hitState->hitVolumeId = 0;
@@ -1360,14 +1360,12 @@ void DR_EarthWarrior_update(int obj)
         int i;
         int j;
         int p;
-        f32 c835c;
         f32 c8338;
+        f32 c835c;
         vecA[0] = lbl_803E833C * ((GameObject*)obj)->anim.velocityX;
         vecA[1] = lbl_803E8304;
         vecA[2] = lbl_803E833C * ((GameObject*)obj)->anim.velocityZ;
-        c835c = lbl_803E835C;
-        c8338 = lbl_803E8338;
-        for (i = 0, p = (int)inner; i < 4; i++)
+        for (i = 0, p = (int)inner, c835c = lbl_803E835C, c8338 = lbl_803E8338; i < 4; i++)
         {
             w.mat[1] = c835c * ((GameObject*)obj)->anim.velocityX + *(f32*)((char*)p + 0xb18);
             w.mat[2] = *(f32*)((char*)p + 0xb1c);
@@ -1382,6 +1380,7 @@ void DR_EarthWarrior_update(int obj)
         }
         inner->sub.flags8D8 &= ~8;
     }
+#undef hitState
 }
 
 #pragma opt_propagation off
