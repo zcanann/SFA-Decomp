@@ -4860,8 +4860,8 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
 
     angleCos = mathSinf((lbl_803DEFE8 * (f32)((ObjSeqState*)seq)->heading) / lbl_803DEFEC);
     angleSin = mathCosf((lbl_803DEFE8 * (f32)((ObjSeqState*)seq)->heading) / lbl_803DEFEC);
-    ((GameObject*)obj)->anim.localPosX = angleCos * offset[2] + (angleSin * offset[0] + *(f32*)(base + 0x08));
-    ((GameObject*)obj)->anim.localPosZ = -(angleCos * offset[0] - (angleSin * offset[2] + *(f32*)(base + 0x10)));
+    ((GameObject*)obj)->anim.localPosX = angleCos * dz + (angleSin * dx + *(f32*)(base + 0x08));
+    ((GameObject*)obj)->anim.localPosZ = -(angleCos * dx - (angleSin * dz + *(f32*)(base + 0x10)));
 }
 
 void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
