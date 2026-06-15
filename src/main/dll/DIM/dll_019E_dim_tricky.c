@@ -1,11 +1,7 @@
 /* DLL 0x19E - DIM Tricky [801CCFA4-801CCFB4) */
-#include "main/effect_interfaces.h"
-#include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx.h"
-#include "main/dll/dll_019E_dim_tricky.h"
 #include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
@@ -13,7 +9,6 @@
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 
-extern f32 lbl_803E51B0;
 extern void* Camera_GetCurrentViewSlot(void);
 extern float sqrtf(float x);
 extern int randomGetRange(int min, int max);
