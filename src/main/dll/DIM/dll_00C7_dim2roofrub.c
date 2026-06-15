@@ -1,8 +1,6 @@
 /* DLL 0xC7 - DIM2RoofRub [8016B230-8016B2E0) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -164,18 +162,12 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 timeDelta;
 
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
-#include "main/mapEvent.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dim2roofrubPlacement
 {
@@ -362,7 +354,6 @@ extern void dll_F7_init();
 extern int* Obj_GetActiveModel(int obj);
 extern void objSetSlot(int* obj, int slot);
 extern f32 lbl_803E3270;
-extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
@@ -390,8 +381,6 @@ extern f32 lbl_803E326C;
 extern f32 lbl_803E3274;
 extern f32 lbl_803E3278;
 extern f32 lbl_803E327C;
-extern void lightSetFieldBC_8001db14(int light, int v);
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int obj)
 {
