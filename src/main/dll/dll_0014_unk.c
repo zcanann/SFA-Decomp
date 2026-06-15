@@ -5503,10 +5503,6 @@ void curves_remove(RomCurveDef* curve)
     nRomCurves = sortedCurveCount;
     tableSlot = romCurves + removeIndex;
     remaining = sortedCurveCount - removeIndex;
-    if (removeIndex >= sortedCurveCount)
-    {
-        return;
-    }
     for (; remaining != 0; remaining--)
     {
         tableSlot[0] = tableSlot[1];
