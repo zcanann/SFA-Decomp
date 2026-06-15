@@ -13,7 +13,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
 extern void textureFree(void* tex);
 
-extern undefined4 FUN_8000680c();
 extern undefined4 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* Obj_GetPlayerObject(void);
