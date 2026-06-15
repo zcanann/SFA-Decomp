@@ -25,7 +25,6 @@ extern f32 lbl_803E122C;
 extern f32 lbl_803E1230;
 extern f32 lbl_803E1234;
 extern f32 lbl_803E1238;
-extern u8 lbl_80317260[];
 
 void dll_92_func01_nop(void)
 {
