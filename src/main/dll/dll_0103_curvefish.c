@@ -144,15 +144,12 @@ void curvefish_update(int obj)
         {
             f32 waitTime = lbl_803E38EC * (f32)(u32)
             setup->waitFrames;
-            if (state->phaseTimer >= waitTime)
-            {
-                state->phaseTimer -= waitTime;
-                state->mode = 1;
-            }
-            else
+            if (!(state->phaseTimer >= waitTime))
             {
                 return;
             }
+            state->phaseTimer -= waitTime;
+            state->mode = 1;
         }
     case 1:
         ((GameObject*)obj)->anim.localPosX = setup2->spawnX;
