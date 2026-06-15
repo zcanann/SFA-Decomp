@@ -1467,27 +1467,26 @@ void dll_0B_initialise(void)
 
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
-    ModgfxSpawnContext* context = &gModgfxSpawnContext;
     f32 fz;
     f32 fz2;
-    memset(context, 0, sizeof(*context));
-    context->modeByte = p2;
-    context->attachedSource = (void*)p1;
-    context->sourceModeCopy = (u8)p2;
+    memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
+    gModgfxSpawnContext.modeByte = p2;
+    gModgfxSpawnContext.attachedSource = (void*)p1;
+    gModgfxSpawnContext.sourceModeCopy = (u8)p2;
     fz = lbl_803DF430;
-    context->posX = fz;
-    context->posY = fz;
-    context->posZ = fz;
-    context->vecX = fz;
-    context->vecY = fz;
-    context->vecZ = fz;
+    gModgfxSpawnContext.posX = fz;
+    gModgfxSpawnContext.posY = fz;
+    gModgfxSpawnContext.posZ = fz;
+    gModgfxSpawnContext.vecX = fz;
+    gModgfxSpawnContext.vecY = fz;
+    gModgfxSpawnContext.vecZ = fz;
     fz2 = lbl_803DF434;
-    context->scale = fz2;
-    context->word40 = p4;
-    context->word3C = p5;
-    context->byte59 = p3;
-    context->byte5A = 0;
-    context->byte5B = 0;
+    gModgfxSpawnContext.scale = fz2;
+    gModgfxSpawnContext.word40 = p4;
+    gModgfxSpawnContext.word3C = p5;
+    gModgfxSpawnContext.byte59 = p3;
+    gModgfxSpawnContext.byte5A = 0;
+    gModgfxSpawnContext.byte5B = 0;
 }
 
 void dll_0B_func0A(s16* p)
