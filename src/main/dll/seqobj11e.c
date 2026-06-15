@@ -211,7 +211,7 @@ void fn_80152514(int* obj, u8* state)
                 if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2824,
                                                      (int*)&lbl_803DBCA8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags &= ~0x2000;
+                    ((BaddieState*)state)->controlFlags &= ~0x2000LL;
                 }
             }
         }
