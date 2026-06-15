@@ -1,4 +1,3 @@
-#include <dolphin/vi.h>
 
 #include "dolphin/gx/__gx.h"
 #include "dolphin/os/__os.h"
