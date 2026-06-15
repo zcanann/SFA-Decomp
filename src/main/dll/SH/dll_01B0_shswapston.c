@@ -492,7 +492,13 @@ void warpstone_update(int obj)
         ((WarpstoneFlags*)(state + 0xd5))->b4 = 0;
         yawDelta = Obj_GetYawDeltaToObject(obj, target, 0);
         yawDelta = yawDelta - lbl_803DDBF0;
-        if (ABS((s16)(yawDelta - 0x8000)) > 0x18e3)
+        {
+            int mag = yawDelta - 0x8000;
+            if (mag < 0)
+            {
+                mag = -mag;
+            }
+            if (mag > 0x18e3)
         {
             if (yawDelta > 0)
             {
@@ -536,6 +542,7 @@ void warpstone_update(int obj)
             Sfx_PlayFromObject(obj, 0x2f1);
             ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                 (obj, 0x1a, lbl_803E5460, 0);
+        }
         }
     }
 
