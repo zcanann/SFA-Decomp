@@ -76,7 +76,7 @@ void arwspeedstr_update(int obj)
             (f32)(int)
         randomGetRange((int)-state->spreadY, (int)state->spreadY);
         local[2] = state->viewZ;
-        PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32*)(obj + 0xc));
+        PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32*)((char*)obj + 12));
         ((GameObject*)obj)->anim.localPosX += playerMapOffsetX;
         ((GameObject*)obj)->anim.localPosZ += playerMapOffsetZ;
         state->flags = (state->flags | 1) & 0xff;
@@ -95,7 +95,7 @@ void arwspeedstr_update(int obj)
             }
             else
             {
-                objMove(obj, lbl_803E7104, lbl_803E7104, state->speed * timeDelta);
+                objMove(obj, zero, zero, state->speed * timeDelta);
                 state->alpha = lbl_803E7108 * timeDelta + state->alpha;
                 if (state->alpha > *(f32*)&lbl_803E710C)
                     state->alpha = lbl_803E710C;
