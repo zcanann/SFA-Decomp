@@ -97,7 +97,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             ((GameObject*)obj)->anim.rootMotionScale = ((f32)setup->radiusParam / lbl_803E73DC) * state->alpha *
                 (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
-                (int)(state->alpha * state->alphaScale[i] * (f32)(u32)objAlpha);
+                state->alpha * state->alphaScale[i] * (f32)(u32)objAlpha;
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
@@ -130,7 +130,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             state->angles[i] = (f32)state->angles[i] + dt * (f32)lbl_803DC3E8[i];
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
-                (int)(state->alpha * state->alphaScale[i] * (f32)(u32)objAlpha);
+                state->alpha * state->alphaScale[i] * (f32)(u32)objAlpha;
             ((GameObject*)obj)->anim.localPosY = objZ - lbl_803E73E8 * state->radiusScale[i] * state->alpha;
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
@@ -170,7 +170,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             state->angles[i] = (f32)state->angles[i] + dt * (f32)lbl_803DC3F0[i];
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
-                (int)(state->alpha * state->alphaScale[i] * (f32)(u32)objAlpha);
+                state->alpha * state->alphaScale[i] * (f32)(u32)objAlpha;
             ((GameObject*)obj)->anim.localPosY = lbl_803E73EC * state->radiusScale[i] * state->alpha + objZ;
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
