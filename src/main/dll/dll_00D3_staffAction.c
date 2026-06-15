@@ -1266,10 +1266,7 @@ void fn_80166444(int obj, int state)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/dll/landedArwing.h"
-#include "main/game_object.h"
 #include "main/dll/treasurechest_state.h"
-#include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/objfx.h"
 #include "main/object_descriptor.h"
