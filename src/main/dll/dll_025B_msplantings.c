@@ -1,10 +1,8 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/obj_placement.h"
-#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
 typedef struct MoonSeedPlantingSpotPlacement
