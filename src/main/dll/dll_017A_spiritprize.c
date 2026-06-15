@@ -1,6 +1,3 @@
-#include "main/mapEvent.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
 
 extern void objRenderFn_8003b8f4(f32);
@@ -12,7 +9,6 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"
-#include "main/screen_transition.h"
 
 typedef struct SpiritPrizePlacement
 {
