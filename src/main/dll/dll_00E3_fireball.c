@@ -1865,6 +1865,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
 void dim2roofrub_update(int* obj);
 
+#pragma opt_common_subs off
 void fireball_init(int* obj)
 {
     extern int objCreateLight(int* obj, int arg); /* #57 */
@@ -1928,6 +1929,7 @@ void fireball_init(int* obj)
         }
     }
 }
+#pragma opt_common_subs reset
 
 void fireball_update(int* obj)
 {
