@@ -2519,11 +2519,12 @@ u8* loadObjectFile(int id)
         lbl_803DCBA4[id]++;
         return *(u8**)((int)lbl_803DCBA8 + (id << 2));
     }
-    off = id << 2;
     base = ((int*)lbl_803DCBBC)[id];
+    off = id << 2;
     {
-        int* t = (int*)((int)lbl_803DCBBC + off);
-        size = t[1] - base;
+        int* t = (int*)((u8*)((int*)lbl_803DCBBC) + off);
+        t = (int*)((u8*)t + 4);
+        size = *t - base;
     }
     buf = (u8*)mmAlloc(size, 0xe, 0);
     if (buf != 0)
@@ -2568,9 +2569,12 @@ u8* loadObjectFile(int id)
         }
         *(u8**)((int)lbl_803DCBA8 + off) = buf;
         lbl_803DCBA4[id] = 1;
-        return buf;
     }
-    return 0;
+    else
+    {
+        return 0;
+    }
+    return buf;
 }
 
 int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
