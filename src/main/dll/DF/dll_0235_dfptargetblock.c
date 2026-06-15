@@ -73,15 +73,8 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     state = ((GameObject*)obj)->extra;
     if (state->completionSfxReady != 0) return;
-    if (state->stateSfxReady == 0) return;
-    if (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED)
-    {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E6490);
-    }
-    else
-    {
-        return;
-    }
+    if (state->stateSfxReady == 0 || state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) return;
+    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E6490);
 }
 
 typedef struct DfpTargetBlockPartfxArgs
