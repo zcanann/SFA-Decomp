@@ -1792,7 +1792,7 @@ int mediumbasket_stateHandlerB07(int obj, int state)
 
 void fn_8015CE68(int obj, int state)
 {
-    int control = *(int*)(state + 0x40c);
+    int control = (int)((GroundBaddieState*)state)->control;
     f32 transformedX;
     f32 transformedY;
     f32 transformedZ;
@@ -1855,7 +1855,7 @@ void fn_8015CE68(int obj, int state)
 
 void mediumbasket_updateControlEffects(int obj, int state)
 {
-    int control = *(int*)(state + 0x40c);
+    int control = (int)((GroundBaddieState*)state)->control;
     int paletteIndex;
     u8* particleArgs;
     int i;
