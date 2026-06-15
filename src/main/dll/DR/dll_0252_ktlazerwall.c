@@ -120,13 +120,17 @@ void ktlazerwall_update(int obj)
     {
         Sfx_PlayFromObject(obj, SFXmv_blkhit_c);
     }
-    if (((KtlazerwallState*)runtime)->unk4 > lbl_803E6898)
     {
-        ((KtlazerwallState*)runtime)->unk4 -= timeDelta;
-        if (((KtlazerwallState*)runtime)->unk4 <= lbl_803E6898)
+        f32 timer = ((KtlazerwallState*)runtime)->unk4;
+        f32 limit = lbl_803E6898;
+        if (timer > limit)
         {
-            Sfx_PlayFromObject(obj, SFXmv_bflconc1);
-            ((KtlazerwallState*)runtime)->unk4 = lbl_803E6898;
+            ((KtlazerwallState*)runtime)->unk4 = timer - timeDelta;
+            if (((KtlazerwallState*)runtime)->unk4 <= limit)
+            {
+                Sfx_PlayFromObject(obj, SFXmv_bflconc1);
+                ((KtlazerwallState*)runtime)->unk4 = lbl_803E6898;
+            }
         }
     }
 }
