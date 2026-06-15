@@ -49,72 +49,72 @@ extern u8* Shader_getLayer(char* s, int layer);
 
 void FUN_80192488(void)
 {
-    int iVar1;
-    int iVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
-    uint uVar6;
-    int iVar7;
-    int iVar8;
-    int iVar9;
-    int iVar10;
-    int iVar11;
-    int iVar12;
-    undefined8 uVar13;
+    int texV;
+    int ctxHi;
+    int block;
+    int polyIdx;
+    int cell;
+    uint gameBit;
+    int texU;
+    int ctxLo;
+    int mapId;
+    int placement;
+    int vtxIdx;
+    int vtx;
+    undefined8 pair;
 
-    uVar13 = FUN_8028682c();
-    iVar2 = (int)((ulonglong)uVar13 >> 0x20);
-    iVar8 = (int)uVar13;
-    iVar10 = *(int*)(iVar2 + 0x4c);
-    iVar3 = FUN_8005b398((double)*(float*)(iVar2 + 0xc), (double)*(float*)(iVar2 + 0x10));
-    iVar3 = FUN_8005af70(iVar3);
-    if (iVar3 == 0)
+    pair = FUN_8028682c();
+    ctxHi = (int)((ulonglong)pair >> 0x20);
+    ctxLo = (int)pair;
+    placement = *(int*)(ctxHi + 0x4c);
+    block = FUN_8005b398((double)*(float*)(ctxHi + 0xc), (double)*(float*)(ctxHi + 0x10));
+    block = FUN_8005af70(block);
+    if (block == 0)
     {
-        *(undefined*)(iVar8 + 0x10) = 1;
+        *(undefined*)(ctxLo + 0x10) = 1;
     }
     else
     {
-        iVar4 = FUN_80017af0(0xe);
-        if ((iVar4 != 0) &&
-            (iVar10 = FUN_8005337c(-*(int*)(iVar4 + *(short*)(iVar10 + 0x18) * 4)), iVar10 != 0))
+        polyIdx = FUN_80017af0(0xe);
+        if ((polyIdx != 0) &&
+            (placement = FUN_8005337c(-*(int*)(polyIdx + *(short*)(placement + 0x18) * 4)), placement != 0))
         {
-            for (iVar4 = 0; iVar4 < (int)(uint) * (byte*)(iVar3 + 0xa2); iVar4 = iVar4 + 1)
+            for (polyIdx = 0; polyIdx < (int)(uint) * (byte*)(block + 0xa2); polyIdx = polyIdx + 1)
             {
-                iVar5 = FUN_800600e4(iVar3, iVar4);
-                iVar12 = iVar5;
-                for (iVar11 = 0; iVar11 < (int)(uint) * (byte*)(iVar5 + 0x41); iVar11 = iVar11 + 1)
+                cell = FUN_800600e4(block, polyIdx);
+                vtx = cell;
+                for (vtxIdx = 0; vtxIdx < (int)(uint) * (byte*)(cell + 0x41); vtxIdx = vtxIdx + 1)
                 {
-                    if (*(int*)(iVar12 + 0x24) == iVar10)
+                    if (*(int*)(vtx + 0x24) == placement)
                     {
-                        iVar7 = (uint) * (ushort*)(iVar10 + 10) << 6;
-                        iVar1 = (uint) * (ushort*)(iVar10 + 0xc) << 6;
-                        if (*(byte*)(iVar12 + 0x2a) == 0xff)
+                        texU = (uint) * (ushort*)(placement + 10) << 6;
+                        texV = (uint) * (ushort*)(placement + 0xc) << 6;
+                        if (*(byte*)(vtx + 0x2a) == 0xff)
                         {
-                            iVar7 = FUN_80056448((int)*(char*)(iVar8 + 0x11), (int)*(char*)(iVar8 + 0x12), iVar7,
-                                                 iVar1);
-                            *(char*)(iVar12 + 0x2a) = (char)iVar7;
+                            texU = FUN_80056448((int)*(char*)(ctxLo + 0x11), (int)*(char*)(ctxLo + 0x12), texU,
+                                                 texV);
+                            *(char*)(vtx + 0x2a) = (char)texU;
                         }
                         else
                         {
-                            iVar9 = *(int*)(*(int*)(iVar2 + 0x4c) + 0x14);
-                            if ((iVar9 == 0x49b2f) || (iVar9 == 0x49b67))
+                            mapId = *(int*)(*(int*)(ctxHi + 0x4c) + 0x14);
+                            if ((mapId == 0x49b2f) || (mapId == 0x49b67))
                             {
-                                uVar6 = GameBit_Get(*(uint*)(iVar8 + 8));
-                                if (uVar6 != 0)
+                                gameBit = GameBit_Get(*(uint*)(ctxLo + 8));
+                                if (gameBit != 0)
                                 {
-                                    FUN_80056418((uint) * (byte*)(iVar12 + 0x2a), (int)*(char*)(iVar8 + 0x11),
-                                                 (int)*(char*)(iVar8 + 0x12), iVar7, iVar1);
+                                    FUN_80056418((uint) * (byte*)(vtx + 0x2a), (int)*(char*)(ctxLo + 0x11),
+                                                 (int)*(char*)(ctxLo + 0x12), texU, texV);
                                 }
                             }
                             else
                             {
-                                FUN_80056418((uint) * (byte*)(iVar12 + 0x2a), (int)*(char*)(iVar8 + 0x11),
-                                             (int)*(char*)(iVar8 + 0x12), iVar7, iVar1);
+                                FUN_80056418((uint) * (byte*)(vtx + 0x2a), (int)*(char*)(ctxLo + 0x11),
+                                             (int)*(char*)(ctxLo + 0x12), texU, texV);
                             }
                         }
                     }
-                    iVar12 = iVar12 + 8;
+                    vtx = vtx + 8;
                 }
             }
         }
