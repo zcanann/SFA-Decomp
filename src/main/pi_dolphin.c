@@ -2766,13 +2766,13 @@ void FUN_80044400(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 {
 }
 
-undefined4 FUN_80044404(int param_1)
+undefined4 FUN_80044404(int idx)
 {
-    if (0x4a < param_1)
+    if (0x4a < idx)
     {
         return 5;
     }
-    return (&DAT_802cc8a8)[param_1];
+    return (&DAT_802cc8a8)[idx];
 }
 
 void FUN_80044424(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -3108,7 +3108,7 @@ void FUN_80046270(int base, int count, int idx)
     return;
 }
 
-void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
+void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined nodeIdx)
 {
     int sel;
     uint mask;
@@ -3154,7 +3154,7 @@ void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
                 fval = FUN_80017714((float*)(ent + 8), (float*)(found + 8));
                 uval = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000, ctx[2]) -
                     DOUBLE_803df728) + fval));
-                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, param_3, uval, found);
+                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, nodeIdx, uval, found);
                 sel = DAT_803dd988;
             }
         }
@@ -3234,7 +3234,7 @@ void fn_8004B394(void)
     return;
 }
 
-undefined4 FUN_80046cd0(int* ctx, int startNode, int param_3, int goal, byte param_5)
+undefined4 FUN_80046cd0(int* ctx, int startNode, int targetPos, int goal, byte flag)
 {
     undefined2 holeTag;
     short num;
@@ -3293,9 +3293,9 @@ undefined4 FUN_80046cd0(int* ctx, int startNode, int param_3, int goal, byte par
         while (blocksLeft != 0);
     }
     ctx[6] = startNode;
-    ctx[3] = param_3;
+    ctx[3] = targetPos;
     ctx[4] = goal;
-    *(byte*)(ctx + 10) = param_5 & 1;
+    *(byte*)(ctx + 10) = flag & 1;
     ctx[9] = 10000;
     num = *(short*)(ctx + 8);
     if (num == 0xfe)
@@ -3462,11 +3462,11 @@ void FUN_80047d88(char* texel, char doFirst, char doSecond, undefined4* outFirst
     return;
 }
 
-void FUN_80047fdc(double param_1, undefined param_2)
+void FUN_80047fdc(double value, undefined flag)
 {
-    uRam803dc24f = param_2;
-    lbl_803DC250 = (float)param_1;
-    if (param_1 <= (double)lbl_803DF748)
+    uRam803dc24f = flag;
+    lbl_803DC250 = (float)value;
+    if (value <= (double)lbl_803DF748)
     {
         return;
     }
@@ -3480,16 +3480,16 @@ void FUN_80048000(void)
     return;
 }
 
-void FUN_8004800c(double param_1, double param_2, double param_3, double param_4, double param_5,
-                  undefined param_6)
+void FUN_8004800c(double far, double near, double a, double b, double c,
+                  undefined flag)
 {
     DAT_803dd9a8 = 1;
-    lbl_803DD9C4 = (float)param_1;
-    lbl_803DD9C0 = (float)param_2;
-    lbl_803DD9BC = (float)param_3;
-    lbl_803DD9B8 = (float)param_4;
-    lbl_803DD9B4 = (float)param_5;
-    DAT_803dd9b1 = param_6;
+    lbl_803DD9C4 = (float)far;
+    lbl_803DD9C0 = (float)near;
+    lbl_803DD9BC = (float)a;
+    lbl_803DD9B8 = (float)b;
+    lbl_803DD9B4 = (float)c;
+    DAT_803dd9b1 = flag;
     return;
 }
 
@@ -3498,22 +3498,22 @@ undefined FUN_80048094(void)
     return DAT_803dd9a8;
 }
 
-int FUN_800480a0(int param_1, int param_2)
+int FUN_800480a0(int base, int idx)
 {
-    return param_1 + param_2 * 8 + 0x24;
+    return base + idx * 8 + 0x24;
 }
 
-void FUN_8004812c(int param_1, int param_2)
+void FUN_8004812c(int tex, int stage)
 {
-    if (param_1 != 0)
+    if (tex != 0)
     {
-        if (*(char*)(param_1 + 0x48) == '\0')
+        if (*(char*)(tex + 0x48) == '\0')
         {
-            FUN_8025b054((uint*)(param_1 + 0x20), param_2);
+            FUN_8025b054((uint*)(tex + 0x20), stage);
         }
         else
         {
-            FUN_8025aeac((uint*)(param_1 + 0x20), *(uint**)(param_1 + 0x40), param_2);
+            FUN_8025aeac((uint*)(tex + 0x20), *(uint**)(tex + 0x40), stage);
         }
     }
     return;
@@ -3713,12 +3713,12 @@ void FUN_80049910(undefined4* texPtr)
     return;
 }
 
-void FUN_8004bc68(char param_1)
+void FUN_8004bc68(char variant)
 {
     FUN_8025be80(DAT_803dda10);
     FUN_8025c828(DAT_803dda10, 0xff, 0xff, 4);
     FUN_8025c65c(DAT_803dda10, 0, 0);
-    if (param_1 == '\0')
+    if (variant == '\0')
     {
         FUN_8025c1a4(DAT_803dda10, 0xf, 0, 10, 6);
     }
