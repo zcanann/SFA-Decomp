@@ -50,7 +50,6 @@ extern f32 lbl_803DCB70;
 extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
 extern void* lbl_803DDB50;
 extern void ObjMsg_AllocQueue(int* obj, int n);
 extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
