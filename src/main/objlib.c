@@ -1079,6 +1079,7 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     return nearest;
 }
 
+#pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
 {
     uint nearest;
@@ -1087,7 +1088,6 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
     uint* entry;
     float distanceSq;
     float bestDistanceSq;
-    u8* off;
 
     nearest = 0;
     if ((group < 0) || (group >= OBJGROUP_COUNT))
@@ -1102,9 +1102,8 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
-    off = &gObjGroupOffsets[group];
-    index = (uint)off[0];
-    limit = (uint)off[1];
+    index = (uint)gObjGroupOffsets[group];
+    limit = (uint)(&gObjGroupOffsets[group])[1];
     entry = (uint*)gObjGroupObjects + index;
     while ((int)index < (int)limit)
     {
@@ -1136,7 +1135,6 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     uint* entry;
     float distanceSq;
     float bestDistanceSq;
-    u8* off;
 
     nearest = 0;
     if ((group < 0) || (group >= OBJGROUP_COUNT))
@@ -1151,9 +1149,8 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
-    off = &gObjGroupOffsets[group];
-    index = (uint)off[0];
-    limit = (uint)off[1];
+    index = (uint)gObjGroupOffsets[group];
+    limit = (uint)(&gObjGroupOffsets[group])[1];
     entry = (uint*)gObjGroupObjects + index;
     while ((int)index < (int)limit)
     {
@@ -1176,6 +1173,7 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     }
     return nearest;
 }
+#pragma opt_loop_invariants reset
 
 uint* ObjGroup_GetObjects(int group, int* countOut)
 {
@@ -1859,6 +1857,7 @@ undefined4 ObjTrigger_IsSet(int obj)
     return 0;
 }
 
+#pragma opt_loop_invariants off
 int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
 {
     int startIndex;
@@ -1912,6 +1911,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     }
     return foundObj;
 }
+#pragma opt_loop_invariants reset
 
 undefined4 ObjList_ContainsObject(int obj)
 {

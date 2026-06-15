@@ -679,17 +679,17 @@ void mapBlockFn_80059c2c(u8* outFlags)
     for (outer = 0; outer < 0x78; outer++)
     {
         int i;
-        int found = -1;
         s8 limit = lbl_803DCDEC;
         for (i = 0; i < limit; i++)
         {
             if (lbl_8038224C[i].field_0 != 0 && lbl_8038224C[i].field_4 == outer)
             {
-                found = i;
-                break;
+                goto checked;
             }
         }
-        if (found == -1)
+        i = -1;
+    checked:
+        if (i == -1)
         {
             outFlags[outer] = 0;
         }
@@ -1285,22 +1285,25 @@ int mapGetRomListAndOffsets(int p1, int flag)
     lbl_803DCEA0 = mmAlloc(tailLen + ((v0 + 7 >> 3) + 0x401 + v2), 5, 0);
     fileLoadToBufferOffset(0x1d, lbl_803DCEA0, offset0, tailLen);
 
-    *(int*)((char*)lbl_803DCEA0 + 0xc) = (int)lbl_803DCEA0 + *(int*)(lbl_803DCE7C + tabOff + 4) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x14) = (int)lbl_803DCEA0 + *(int*)(lbl_803DCE7C + tabOff + 8) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x30) = (int)lbl_803DCEA0 + *(int*)(lbl_803DCE7C + tabOff + 0xc) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x2c) = (int)lbl_803DCEA0 + *(int*)(lbl_803DCE7C + tabOff + 0x10) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x34) = (int)lbl_803DCEA0 + *(int*)(lbl_803DCE7C + tabOff + 0x14) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x20) = (int)lbl_803DCEA0 + *(int*)(lbl_803DCE7C + tabOff + 0x18) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0xc) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 4) + tabOff) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x14) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x30) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0xc) + tabOff) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x2c) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x10) + tabOff) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x34) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x14) + tabOff) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x20) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x18) + tabOff) - offset0;
 
-    piRomLoadSection(*(int*)(lbl_803DCE7C + tabOff + 0x18), p1, *(int*)((char*)lbl_803DCEA0 + 0x20));
-    *(int*)((char*)lbl_803DCEA0 + 0x10) = v2 + (*(int*)(lbl_803DCE7C + tabOff + 0x1c) + (int)lbl_803DCEA0) - offset0;
+    piRomLoadSection(*(int*)((lbl_803DCE7C + 0x18) + tabOff), p1, *(int*)((char*)lbl_803DCEA0 + 0x20));
+    *(int*)((char*)lbl_803DCEA0 + 0x10) = v2 + (*(int*)((lbl_803DCE7C + 0x1c) + tabOff) + (int)lbl_803DCEA0) - offset0;
 
     for (i = 0; i < (v0 + 7 >> 3) + 1; i++)
     {
         *(u8*)(*(int*)((char*)lbl_803DCEA0 + 0x10) + i) = 0;
     }
-    *(f32*)((char*)lbl_803DCEA0 + 0x24) = lbl_803DEBCC;
-    *(f32*)((char*)lbl_803DCEA0 + 0x28) = lbl_803DEBCC;
+    {
+        f32 fillVal = lbl_803DEBCC;
+        *(f32*)((char*)lbl_803DCEA0 + 0x24) = fillVal;
+        *(f32*)((char*)lbl_803DCEA0 + 0x28) = fillVal;
+    }
     *(u8*)((char*)lbl_803DCEA0 + 0x18) = 0;
     *(u8*)((char*)lbl_803DCEA0 + 0x19) = 0;
     if (flag == 0)
@@ -2812,14 +2815,14 @@ void doPendingMapLoads(void)
         }
         else
         {
-            renderFlags &= ~2;
+            renderFlags &= ~2LL;
             dz = lbl_803DCE5C - playerMapOffsetZ;
             gx = (int)fastFloorf((lbl_803DCE64 - playerMapOffsetX) / gMapBlockWorldSize);
             gz = (int)fastFloorf(dz / gMapBlockWorldSize);
             {
                 u32 t = renderFlags;
                 doLoad = t & 0x800;
-                renderFlags = t & ~0x800;
+                renderFlags = t & ~0x800LL;
             }
             {
                 u32 ff = getLoadedFileFlags(0);
@@ -3137,7 +3140,7 @@ void doPendingMapLoads(void)
                     {
                         if (*(s8*)(p4 + 6) == 0)
                         {
-                            if (*(int*)p4 != 0)
+                            if (*(void**)p4 != NULL)
                             {
                                 s16 sl = *(s16*)(p4 + 4);
                                 defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208),
@@ -3150,7 +3153,7 @@ void doPendingMapLoads(void)
                         }
                         if (first)
                         {
-                            if (*(int*)p4 == 0)
+                            if (*(void**)p4 == NULL)
                                 lbl_803DCDEC--;
                             else
                                 first = 0;
@@ -3202,9 +3205,9 @@ void doPendingMapLoads(void)
                                         o2 += 4;
                                     }
                                 }
-                                if (*(int*)(blk + 0x74) != 0)
+                                if (*(void**)(blk + 0x74) != NULL)
                                     mm_free(*(void**)(blk + 0x74));
-                                if (*(int*)(blk + 0x70) != 0)
+                                if (*(void**)(blk + 0x70) != NULL)
                                     mm_free(*(void**)(blk + 0x70));
                                 setMapBlockFlag();
                                 mm_free(blk);
@@ -3218,7 +3221,7 @@ void doPendingMapLoads(void)
             }
             mapLoadUnloadObjects(doLoad);
             lbl_803DCE1C = getLoadedFileFlags(0);
-            renderFlags &= ~0x4000;
+            renderFlags &= ~0x4000LL;
         }
     }
 }
@@ -3256,11 +3259,11 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         slot = i2;
         if (slot == -1)
             slot = mapProcessRomList(id);
-        ((BlockEntry*)lbl_8038224C)[slot].field_6 = (((BlockEntry*)lbl_8038224C)[slot].field_6 & 0xFF) | 0x100;
+        *(s8*)&((BlockEntry*)lbl_8038224C)[slot].field_6 = 1;
         entry = (char*)lbl_8038224C[slot].field_0;
         pairs = (s16*)lbl_80382238[2];
-        cv3 = *(s8*)&pairs[id * 2];
-        cv4 = *(s8*)&pairs[id * 2 + 1];
+        cv3 = (s8)pairs[id * 2];
+        cv4 = (s8)pairs[id * 2 + 1];
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
@@ -3304,7 +3307,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         z = z - rects[2];
         v = *(u32*)(*(int*)(entry + 0xc) + (x + z * *(s16*)entry) * 4);
         *(s8*)((char*)out + 8) = (v >> 0x11) & 0x3f;
-        *(s8*)((char*)out + 9) = v >> 0x17;
+        *(s8*)((char*)out + 9) = (v >> 0x17) & 0xff;
         if (*(s8*)((char*)out + 9) == 0xFF)
             *(s8*)((char*)out + 9) = -1;
         if (*(s8*)((char*)out + 9) == -1)

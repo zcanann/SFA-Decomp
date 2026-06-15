@@ -1486,10 +1486,11 @@ void sky2_onMapSetup(void)
 
     lbl_803DB610 = -1;
     (&lbl_803DB610)[1] = -1;
+    i = 0;
     slot = (void**)&lbl_803DD184;
     a = lbl_803DF190;
     b = lbl_803DF194;
-    for (i = 0; i < 2; i++)
+    for (; i < 2; i++)
     {
         if (slot[i] == NULL)
         {

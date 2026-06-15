@@ -1695,7 +1695,7 @@ int musicInitMidiWad(void)
     MusicTrackSlot* found;
     MusicChannel* ch;
     int track, j;
-    int size;
+    u32 size;
     int arenaOffset;
     int saved;
     int i;
@@ -1734,17 +1734,18 @@ int musicInitMidiWad(void)
         gMidiWadPayloadSize = size - 0x1a0;
         gMidiWadArenaSize = 0x1000000 - gMidiWadPayloadSize;
         arenaOffset = gMidiWadArenaSize;
-        table = (MusicTrackSlot*)sMusicTrackTable;
         for (track = 0; track <= 0x63; track++)
         {
             found = NULL;
+            table = (MusicTrackSlot*)sMusicTrackTable;
             for (j = 0; j < 0x64; j++)
             {
-                if (track == table[j].id)
+                if (track == table->id)
                 {
-                    found = &table[j];
+                    found = (MusicTrackSlot*)sMusicTrackTable + j;
                     break;
                 }
+                table++;
             }
             if (found != NULL)
             {

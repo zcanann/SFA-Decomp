@@ -236,8 +236,8 @@ void* Obj_GetActiveModel(u8* obj)
 
 void Obj_ClearModelColorFadeRecursive(u8* obj)
 {
-    int i;
     u8* childScan;
+    int i;
 
     ((GameObject*)obj)->colorFadeFrames = 0;
     ((GameObject*)obj)->colorFadeFlags &= ~0x6;
@@ -254,8 +254,8 @@ void Obj_ClearModelColorFadeRecursive(u8* obj)
 void Obj_TickModelColorFadeRecursive(u8* obj)
 {
     f32 alpha;
-    int i;
     u8* childScan;
+    int i;
 
     if ((((GameObject*)obj)->colorFadeFlags & 4) != 0)
     {
@@ -277,7 +277,7 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
         ((GameObject*)obj)->colorFadeFlags ^= 4;
     }
 
-    ((GameObject*)obj)->colorFadeAlpha = (int)alpha;
+    ((GameObject*)obj)->colorFadeAlpha = (s8)alpha;
     if ((((GameObject*)obj)->colorFadeFlags & 8) == 0)
     {
         ((GameObject*)obj)->colorFadeFrames -= framesThisStep;
@@ -339,8 +339,8 @@ void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 bl
 #pragma dont_inline off
 void Obj_SetModelColorOverrideRecursive(u8* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled)
 {
-    int i;
     u8* childScan;
+    int i;
 
     if (enabled != 0)
     {
@@ -1919,10 +1919,10 @@ void Obj_UpdateAllObjects(u8 flags)
     {
         obj2 = 0;
     }
-    if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
+    if (obj2 != 0 && (u8*)(child = *(int*)&((GameObject*)obj2)->childObjs[0]) != NULL)
     {
-        *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
-        Obj_UpdateObject(((GameObject*)obj2)->childObjs[0]);
+        *(int*)((u8*)child + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
+        Obj_UpdateObject((u8*)*(int*)&((GameObject*)obj2)->childObjs[0]);
     }
     if (timeStop == 0)
     {
@@ -1964,9 +1964,9 @@ void Obj_UpdateAllObjects(u8 flags)
         {
             obj2 = 0;
         }
-        if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
+        if (obj2 != 0 && (u8*)(child = *(int*)&((GameObject*)obj2)->childObjs[0]) != NULL)
         {
-            *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
+            *(int*)((u8*)child + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
             child = *(int*)&((GameObject*)obj2)->childObjs[0];
             if ((((GameObject*)child)->objectFlags & 0x2000) == 0)
             {
