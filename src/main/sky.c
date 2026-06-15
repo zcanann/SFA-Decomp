@@ -976,11 +976,12 @@ void fn_8008DAE8(int obj)
     }
 }
 
+#pragma optimization_level 2
 void playerEnvFxFn_80088ad4(u8 idx)
 {
     void* player;
-    int alt;
-    s16 val;
+    s8 alt;
+    int val;
 
     player = Obj_GetPlayerObject();
     if ((void*)lbl_803DD134 == NULL)
@@ -1024,6 +1025,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
         }
     }
 }
+#pragma optimization_level reset
 
 void dll_06_func09(s32* x, s32* y, s32* z)
 {
