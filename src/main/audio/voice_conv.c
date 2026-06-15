@@ -1,4 +1,3 @@
-#include "main/audio/voice_conv.h"
 #include "main/audio/voice_manage.h"
 
 extern u32 __cvt_fp2unsigned(double x);
