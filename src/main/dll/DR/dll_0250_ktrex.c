@@ -542,7 +542,7 @@ void ktrex_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefi
     ((KTRexArenaState*)gKTRexState)->unk174 = lbl_803E6848 * (f32)(int)
     randomGetRange(100, 150);
     PSMTXMultVecSR(m, &((KTRexArenaState*)gKTRexState)->unk16C, &((KTRexArenaState*)gKTRexState)->unk16C);
-    *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x100000;
+    *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x100000LL;
 }
 
 void ktrex_update(int obj)
