@@ -189,47 +189,47 @@ void wclevelcont_hitDetect(void)
 {
 }
 
-void wclevelcont_syncProgressBits(WcLevelControlState* state)
+void wclevelcont_syncProgressBits(int state)
 {
     int flag;
 
     if ((*gSkyInterface)->getSunPosition(0))
     {
-        if (state->thorntailMusicId != 0x2d)
+        if (((WcLevelControlState*)state)->thorntailMusicId != 0x2d)
         {
-            state->thorntailMusicId = 0x2d;
+            ((WcLevelControlState*)state)->thorntailMusicId = 0x2d;
             Music_Trigger(0x2d, 1);
         }
-        if (state->ambientMusicId != -1)
+        if (((WcLevelControlState*)state)->ambientMusicId != -1)
         {
-            state->ambientMusicId = 0xffff;
+            ((WcLevelControlState*)state)->ambientMusicId = 0xffff;
             Music_Trigger(0x22, 0);
         }
     }
     else
     {
-        if (state->thorntailMusicId != 0x39)
+        if (((WcLevelControlState*)state)->thorntailMusicId != 0x39)
         {
-            state->thorntailMusicId = 0x39;
+            ((WcLevelControlState*)state)->thorntailMusicId = 0x39;
             Music_Trigger(0x39, 1);
         }
-        if (state->ambientMusicId != 0x22)
+        if (((WcLevelControlState*)state)->ambientMusicId != 0x22)
         {
-            state->ambientMusicId = 0x22;
+            ((WcLevelControlState*)state)->ambientMusicId = 0x22;
             Music_Trigger(0x22, 1);
         }
     }
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x4, -1, -1, 0xcce, 0x36);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update(state + 0x10, 0x8, -1, -1, 0xba6, 0xd2);
+    SCGameBitLatch_Update(state + 0x10, 0x4, -1, -1, 0xcce, 0x36);
+    SCGameBitLatch_Update(state + 0x10, 0x10, -1, -1, 0xcd0, 0xd4);
+    SCGameBitLatch_Update(state + 0x10, 0x40, -1, -1, 0xcbb, 0xc4);
     flag = 0;
     if ((u32)GameBit_Get(0xba6) == 0 && ((u32)GameBit_Get(0xda9) != 0 || gameTimerIsRunning() != 0))
     {
         flag = 1;
     }
     GameBit_Set(0xf31, flag);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
+    SCGameBitLatch_Update(state + 0x10, 0x80, -1, -1, 0xf31, 0xaf);
 }
 
 void wclevelcont_update(int obj)
@@ -260,7 +260,7 @@ void wclevelcont_update(int obj)
         fn_802251B4(obj, state);
         break;
     }
-    wclevelcont_syncProgressBits(state);
+    wclevelcont_syncProgressBits((int)state);
     if ((*gSkyInterface)->getSunPosition(&sunTime))
     {
         GameBit_Set(0x7f3, 1);
