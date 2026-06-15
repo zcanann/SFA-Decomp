@@ -81,7 +81,6 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 lbl_802C2308[];
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
@@ -99,7 +98,6 @@ extern u8 framesThisStep;
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
 
-extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -129,7 +127,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
@@ -140,7 +137,6 @@ extern f32 lbl_803E4780;
 extern f32 lbl_803E4788;
 extern void Music_Trigger(int id, int p2);
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
-extern int ObjList_FindObjectById(int id);
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
