@@ -162,11 +162,11 @@ undefined* FUN_800e82d8(void)
 
 void FUN_800e8630(int param_1)
 {
-    int iVar1;
-    undefined1* puVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    int key;
+    undefined1* entry;
+    int base;
+    int slot;
+    int remaining;
 
     if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
     {
@@ -176,38 +176,38 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    iVar3 = 0;
-    puVar2 = &DAT_803a3f08;
-    iVar5 = 9;
-    while ((iVar4 = iVar3, *(int*)(puVar2 + 0x168) != 0 &&
-        (iVar1 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), iVar1 != *(int*)(puVar2 + 0x168))))
+    base = 0;
+    entry = &DAT_803a3f08;
+    remaining = 9;
+    while ((slot = base, *(int*)(entry + 0x168) != 0 &&
+        (key = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), key != *(int*)(entry + 0x168))))
     {
-        iVar4 = iVar3 + 1;
-        if ((*(int*)(puVar2 + 0x178) == 0) || (iVar1 == *(int*)(puVar2 + 0x178))) break;
-        iVar4 = iVar3 + 2;
-        if ((*(int*)(puVar2 + 0x188) == 0) || (iVar1 == *(int*)(puVar2 + 0x188))) break;
-        iVar4 = iVar3 + 3;
-        if ((*(int*)(puVar2 + 0x198) == 0) || (iVar1 == *(int*)(puVar2 + 0x198))) break;
-        iVar4 = iVar3 + 4;
-        if ((*(int*)(puVar2 + 0x1a8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1a8))) break;
-        iVar4 = iVar3 + 5;
-        if ((*(int*)(puVar2 + 0x1b8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1b8))) break;
-        iVar4 = iVar3 + 6;
-        if ((*(int*)(puVar2 + 0x1c8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1c8))) break;
-        puVar2 = puVar2 + 0x70;
-        iVar3 = iVar3 + 7;
-        iVar5 = iVar5 + -1;
-        iVar4 = iVar3;
-        if (iVar5 == 0) break;
+        slot = base + 1;
+        if ((*(int*)(entry + 0x178) == 0) || (key == *(int*)(entry + 0x178))) break;
+        slot = base + 2;
+        if ((*(int*)(entry + 0x188) == 0) || (key == *(int*)(entry + 0x188))) break;
+        slot = base + 3;
+        if ((*(int*)(entry + 0x198) == 0) || (key == *(int*)(entry + 0x198))) break;
+        slot = base + 4;
+        if ((*(int*)(entry + 0x1a8) == 0) || (key == *(int*)(entry + 0x1a8))) break;
+        slot = base + 5;
+        if ((*(int*)(entry + 0x1b8) == 0) || (key == *(int*)(entry + 0x1b8))) break;
+        slot = base + 6;
+        if ((*(int*)(entry + 0x1c8) == 0) || (key == *(int*)(entry + 0x1c8))) break;
+        entry = entry + 0x70;
+        base = base + 7;
+        remaining = remaining + -1;
+        slot = base;
+        if (remaining == 0) break;
     }
-    if (iVar4 == 0x3f)
+    if (slot == 0x3f)
     {
         return;
     }
-    (&DAT_803a4070)[iVar4 * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
+    (&DAT_803a4070)[slot * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    (&DAT_803a4074)[slot * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
+    (&DAT_803a4078)[slot * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
+    (&DAT_803a407c)[slot * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
         .localPosX;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
@@ -339,131 +339,131 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     return;
 }
 
-void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
+void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int mode)
 {
     bool bVar1;
     char cVar2;
-    uint uVar3;
+    uint flags;
     char cVar4;
-    short* psVar5;
+    short* evtWalk;
     char* pcVar6;
-    uint* puVar7;
-    uint uVar8;
-    uint uVar9;
-    uint uVar10;
+    uint* flagWalk;
+    uint bit;
+    uint newFlags;
+    uint eventId;
     char* pcVar11;
-    int iVar12;
+    int cnt;
     int iVar13;
     longlong lVar14;
 
     lVar14 = FUN_80286830();
-    uVar10 = (uint)((ulonglong)lVar14 >> 0x20);
-    uVar8 = (uint)lVar14;
+    eventId = (uint)((ulonglong)lVar14 >> 0x20);
+    bit = (uint)lVar14;
     pcVar11 = &DAT_803a3be0;
     if (0x4fffffffff < lVar14)
     {
-        uVar10 = (uint)(byte)(&DAT_803a3dac)[uVar10];
+        eventId = (uint)(byte)(&DAT_803a3dac)[eventId];
     }
-    if ((int)uVar10 < 0x78)
+    if ((int)eventId < 0x78)
     {
-        if ((ushort)(&DAT_80312460)[uVar10] != 0)
+        if ((ushort)(&DAT_80312460)[eventId] != 0)
         {
-            if (param_3 == -1)
+            if (mode == -1)
             {
-                param_3 = 1;
+                mode = 1;
             }
-            bVar1 = param_3 == -2;
+            bVar1 = mode == -2;
             if (bVar1)
             {
-                param_3 = 0;
+                mode = 0;
             }
-            uVar3 = FUN_80017690((uint)(ushort)(&DAT_80312460)[uVar10]);
-            if (param_3 == 0)
+            flags = FUN_80017690((uint)(ushort)(&DAT_80312460)[eventId]);
+            if (mode == 0)
             {
-                uVar9 = uVar3 & ~(1 << uVar8);
+                newFlags = flags & ~(1 << bit);
             }
             else
             {
-                uVar9 = uVar3 | 1 << uVar8;
+                newFlags = flags | 1 << bit;
             }
-            FUN_80017698((uint)(ushort)(&DAT_80312460)[uVar10], uVar9);
-            DAT_803de104 = uVar10;
-            uRam803de108 = uVar9;
-            if (param_3 == 0)
+            FUN_80017698((uint)(ushort)(&DAT_80312460)[eventId], newFlags);
+            DAT_803de104 = eventId;
+            uRam803de108 = newFlags;
+            if (mode == 0)
             {
-                psVar5 = &DAT_80312460;
-                puVar7 = &DAT_803a3c1c;
-                uVar3 = ~(1 << uVar8);
-                iVar12 = 0x14;
+                evtWalk = &DAT_80312460;
+                flagWalk = &DAT_803a3c1c;
+                flags = ~(1 << bit);
+                cnt = 0x14;
                 do
                 {
-                    if (*psVar5 == (&DAT_80312460)[uVar10])
+                    if (*evtWalk == (&DAT_80312460)[eventId])
                     {
-                        *puVar7 = *puVar7 & uVar3;
+                        *flagWalk = *flagWalk & flags;
                     }
-                    if (psVar5[1] == (&DAT_80312460)[uVar10])
+                    if (evtWalk[1] == (&DAT_80312460)[eventId])
                     {
-                        puVar7[1] = puVar7[1] & uVar3;
+                        flagWalk[1] = flagWalk[1] & flags;
                     }
-                    if (psVar5[2] == (&DAT_80312460)[uVar10])
+                    if (evtWalk[2] == (&DAT_80312460)[eventId])
                     {
-                        puVar7[2] = puVar7[2] & uVar3;
+                        flagWalk[2] = flagWalk[2] & flags;
                     }
-                    if (psVar5[3] == (&DAT_80312460)[uVar10])
+                    if (evtWalk[3] == (&DAT_80312460)[eventId])
                     {
-                        puVar7[3] = puVar7[3] & uVar3;
+                        flagWalk[3] = flagWalk[3] & flags;
                     }
-                    if (psVar5[4] == (&DAT_80312460)[uVar10])
+                    if (evtWalk[4] == (&DAT_80312460)[eventId])
                     {
-                        puVar7[4] = puVar7[4] & uVar3;
+                        flagWalk[4] = flagWalk[4] & flags;
                     }
-                    if (psVar5[5] == (&DAT_80312460)[uVar10])
+                    if (evtWalk[5] == (&DAT_80312460)[eventId])
                     {
-                        puVar7[5] = puVar7[5] & uVar3;
+                        flagWalk[5] = flagWalk[5] & flags;
                     }
-                    psVar5 = psVar5 + 6;
-                    puVar7 = puVar7 + 6;
-                    iVar12 = iVar12 + -1;
+                    evtWalk = evtWalk + 6;
+                    flagWalk = flagWalk + 6;
+                    cnt = cnt + -1;
                 }
-                while (iVar12 != 0);
+                while (cnt != 0);
                 if (!bVar1)
                 {
                     cVar4 = '\0';
-                    iVar12 = 4;
+                    cnt = 4;
                     pcVar6 = pcVar11;
                     do
                     {
-                        if ((((((uVar10 == (int)*pcVar6) && (cVar2 = cVar4, uVar8 == (byte)pcVar6[1])) ||
-                                    ((cVar2 = cVar4 + '\x01', uVar10 == (int)pcVar6[3] && (uVar8 == (byte)pcVar6[4])))
-                                ) || ((cVar2 = cVar4 + '\x02', uVar10 == (int)pcVar6[6] &&
-                                    (uVar8 == (byte)pcVar6[7])))) ||
-                                ((cVar2 = cVar4 + '\x03', uVar10 == (int)pcVar6[9] && (uVar8 == (byte)pcVar6[10]))))
-                            || ((uVar10 == (int)pcVar6[0xc] &&
-                                (cVar2 = cVar4 + '\x04', uVar8 == (byte)pcVar6[0xd]))))
+                        if ((((((eventId == (int)*pcVar6) && (cVar2 = cVar4, bit == (byte)pcVar6[1])) ||
+                                    ((cVar2 = cVar4 + '\x01', eventId == (int)pcVar6[3] && (bit == (byte)pcVar6[4])))
+                                ) || ((cVar2 = cVar4 + '\x02', eventId == (int)pcVar6[6] &&
+                                    (bit == (byte)pcVar6[7])))) ||
+                                ((cVar2 = cVar4 + '\x03', eventId == (int)pcVar6[9] && (bit == (byte)pcVar6[10]))))
+                            || ((eventId == (int)pcVar6[0xc] &&
+                                (cVar2 = cVar4 + '\x04', bit == (byte)pcVar6[0xd]))))
                             goto LAB_800e9628;
                         pcVar6 = pcVar6 + 0xf;
                         cVar4 = cVar4 + '\x05';
-                        iVar12 = iVar12 + -1;
+                        cnt = cnt + -1;
                     }
-                    while (iVar12 != 0);
+                    while (cnt != 0);
                     cVar2 = -1;
                 LAB_800e9628:
                     if (cVar2 == -1)
                     {
-                        iVar12 = 0;
+                        cnt = 0;
                         iVar13 = 0x14;
                         do
                         {
                             if (*pcVar11 == -1)
                             {
-                                iVar12 = iVar12 * 3;
-                                (&DAT_803a3be0)[iVar12] = (char)uVar10;
-                                (&DAT_803a3be1)[iVar12] = (char)lVar14;
-                                (&DAT_803a3be2)[iVar12] = 3;
+                                cnt = cnt * 3;
+                                (&DAT_803a3be0)[cnt] = (char)eventId;
+                                (&DAT_803a3be1)[cnt] = (char)lVar14;
+                                (&DAT_803a3be2)[cnt] = 3;
                                 break;
                             }
                             pcVar11 = pcVar11 + 3;
-                            iVar12 = iVar12 + 1;
+                            cnt = cnt + 1;
                             iVar13 = iVar13 + -1;
                         }
                         while (iVar13 != 0);
@@ -472,43 +472,43 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
             }
             else
             {
-                uVar8 = 1 << uVar8;
-                if ((uVar3 & uVar8) == 0)
+                bit = 1 << bit;
+                if ((flags & bit) == 0)
                 {
-                    psVar5 = &DAT_80312460;
-                    puVar7 = &DAT_803a3c1c;
-                    iVar12 = 0x14;
+                    evtWalk = &DAT_80312460;
+                    flagWalk = &DAT_803a3c1c;
+                    cnt = 0x14;
                     do
                     {
-                        if (*psVar5 == (&DAT_80312460)[uVar10])
+                        if (*evtWalk == (&DAT_80312460)[eventId])
                         {
-                            *puVar7 = *puVar7 | uVar8;
+                            *flagWalk = *flagWalk | bit;
                         }
-                        if (psVar5[1] == (&DAT_80312460)[uVar10])
+                        if (evtWalk[1] == (&DAT_80312460)[eventId])
                         {
-                            puVar7[1] = puVar7[1] | uVar8;
+                            flagWalk[1] = flagWalk[1] | bit;
                         }
-                        if (psVar5[2] == (&DAT_80312460)[uVar10])
+                        if (evtWalk[2] == (&DAT_80312460)[eventId])
                         {
-                            puVar7[2] = puVar7[2] | uVar8;
+                            flagWalk[2] = flagWalk[2] | bit;
                         }
-                        if (psVar5[3] == (&DAT_80312460)[uVar10])
+                        if (evtWalk[3] == (&DAT_80312460)[eventId])
                         {
-                            puVar7[3] = puVar7[3] | uVar8;
+                            flagWalk[3] = flagWalk[3] | bit;
                         }
-                        if (psVar5[4] == (&DAT_80312460)[uVar10])
+                        if (evtWalk[4] == (&DAT_80312460)[eventId])
                         {
-                            puVar7[4] = puVar7[4] | uVar8;
+                            flagWalk[4] = flagWalk[4] | bit;
                         }
-                        if (psVar5[5] == (&DAT_80312460)[uVar10])
+                        if (evtWalk[5] == (&DAT_80312460)[eventId])
                         {
-                            puVar7[5] = puVar7[5] | uVar8;
+                            flagWalk[5] = flagWalk[5] | bit;
                         }
-                        psVar5 = psVar5 + 6;
-                        puVar7 = puVar7 + 6;
-                        iVar12 = iVar12 + -1;
+                        evtWalk = evtWalk + 6;
+                        flagWalk = flagWalk + 6;
+                        cnt = cnt + -1;
                     }
-                    while (iVar12 != 0);
+                    while (cnt != 0);
                 }
             }
         }
@@ -586,20 +586,20 @@ undefined FUN_800ea9ac(void)
 void FUN_800ea9b8(void)
 {
     uint uVar1;
-    undefined* puVar2;
+    undefined* hist;
     short sVar3;
-    uint uVar4;
+    uint flags;
     uint uVar5;
-    uint uVar6;
+    uint bit;
     uint unaff_r27;
     uint uVar7;
     uint uVar8;
     short* psVar9;
 
     uVar1 = FUN_80286834();
-    puVar2 = FUN_800e82d8();
+    hist = FUN_800e82d8();
     uVar7 = 0xffffffff;
-    if (puVar2[6] == '\0')
+    if (hist[6] == '\0')
     {
         psVar9 = &DAT_80312632;
         for (uVar8 = 1; (short)uVar8 < 0xce; uVar8 = uVar8 + 1)
@@ -607,45 +607,45 @@ void FUN_800ea9b8(void)
             if ((*psVar9 == 0xffff) || (*psVar9 == -1))
             {
                 uVar5 = 1 << (uVar8 & 0x1f);
-                uVar6 = (uint)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
-                uVar4 = FUN_80017690(uVar6);
-                if ((uVar4 & uVar5) == 0)
+                bit = (uint)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
+                flags = FUN_80017690(bit);
+                if ((flags & uVar5) == 0)
                 {
-                    FUN_80017698(uVar6, uVar4 | uVar5);
+                    FUN_80017698(bit, flags | uVar5);
                 }
             }
             psVar9 = psVar9 + 1;
         }
     }
-    uVar6 = 1 << (uVar1 & 0x1f);
-    uVar4 = (uint)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
-    uVar8 = FUN_80017690(uVar4);
-    if ((uVar8 & uVar6) == 0)
+    bit = 1 << (uVar1 & 0x1f);
+    flags = (uint)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
+    uVar8 = FUN_80017690(flags);
+    if ((uVar8 & bit) == 0)
     {
-        FUN_80017698(uVar4, uVar8 | uVar6);
-        if (puVar2[6] != '\x05')
+        FUN_80017698(flags, uVar8 | bit);
+        if (hist[6] != '\x05')
         {
-            puVar2[6] = puVar2[6] + '\x01';
+            hist[6] = hist[6] + '\x01';
         }
         for (sVar3 = 4; sVar3 != 0; sVar3 = sVar3 + -1)
         {
-            puVar2[sVar3] = puVar2[sVar3 + -1];
+            hist[sVar3] = hist[sVar3 + -1];
         }
-        *puVar2 = (char)uVar1;
-        if ((uint)(byte)puVar2[5] == (uVar1 & 0xff)
+        *hist = (char)uVar1;
+        if ((uint)(byte)hist[5] == (uVar1 & 0xff)
         )
         {
             do
             {
-                puVar2[5] = puVar2[5] + '\x01';
-                uVar1 = (uint)(short)(((byte)puVar2[5] >> 5) + 0x12f);
+                hist[5] = hist[5] + '\x01';
+                uVar1 = (uint)(short)(((byte)hist[5] >> 5) + 0x12f);
                 if (uVar1 != (int)(short)uVar7)
                 {
                     unaff_r27 = FUN_80017690(uVar1);
                     uVar7 = uVar1;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)puVar2[5] & 0x1f)) != 0);
+            while ((unaff_r27 & 1 << ((byte)hist[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
