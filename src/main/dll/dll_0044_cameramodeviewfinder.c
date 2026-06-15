@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle5C.h"
+#include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camdebug_state.h"
