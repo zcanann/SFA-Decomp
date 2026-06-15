@@ -173,7 +173,7 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
 undefined4
 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             float* param_9, float param_10, undefined4 param_11, undefined4 param_12,
+             float* state, float param_10, undefined4 param_11, undefined4 param_12,
              undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     float fVar1;
@@ -183,114 +183,114 @@ FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     double dVar3;
     double dVar4;
 
-    fVar1 = param_9[0x28];
-    if (((fVar1 == 0.0) || (param_9[0x29] == 0.0)) || (param_10 == 0.0))
+    fVar1 = state[0x28];
+    if (((fVar1 == 0.0) || (state[0x29] == 0.0)) || (param_10 == 0.0))
     {
         uVar2 = 1;
     }
     else
     {
-        if (param_9[0x20] == 0.0)
+        if (state[0x20] == 0.0)
         {
-            param_9[0x27] = fVar1;
-            param_9[0x28] = param_9[0x29];
-            param_9[0x29] = param_10;
-            FUN_80003494((uint)(param_9 + 0x2a), (uint)(param_9 + 0x2e), 0x10);
-            FUN_80003494((uint)(param_9 + 0x32), (uint)(param_9 + 0x36), 0x10);
+            state[0x27] = fVar1;
+            state[0x28] = state[0x29];
+            state[0x29] = param_10;
+            FUN_80003494((uint)(state + 0x2a), (uint)(state + 0x2e), 0x10);
+            FUN_80003494((uint)(state + 0x32), (uint)(state + 0x36), 0x10);
             uVar2 = 0x10;
-            FUN_80003494((uint)(param_9 + 0x3a), (uint)(param_9 + 0x3e), 0x10);
-            param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
-            param_9[0x2f] = *(float*)((int)param_9[0x29] + 8);
+            FUN_80003494((uint)(state + 0x3a), (uint)(state + 0x3e), 0x10);
+            state[0x2e] = *(float*)((int)state[0x28] + 8);
+            state[0x2f] = *(float*)((int)state[0x29] + 8);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x30] =
+            state[0x30] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * dVar3);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x31] =
+            state[0x31] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
-            param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
-            param_9[0x37] = *(float*)((int)param_9[0x29] + 0xc);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * dVar3);
+            state[0x36] = *(float*)((int)state[0x28] + 0xc);
+            state[0x37] = *(float*)((int)state[0x29] + 0xc);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x38] =
+            state[0x38] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * dVar3);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x39] =
+            state[0x39] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
-            param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
-            param_9[0x3f] = *(float*)((int)param_9[0x29] + 0x10);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * dVar3);
+            state[0x3e] = *(float*)((int)state[0x28] + 0x10);
+            state[0x3f] = *(float*)((int)state[0x29] + 0x10);
             dVar3 = (double)FUN_80294964();
-            param_9[0x40] =
+            state[0x40] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * dVar3);
             dVar4 = (double)FUN_80294964();
             dVar3 = DOUBLE_803e1268;
             dVar4 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                     (uint) * (byte*)((int)param_9[0x29] +
+                                                                     (uint) * (byte*)((int)state[0x29] +
                                                                          0x2e)) -
                 DOUBLE_803e1268) * dVar4);
-            param_9[0x41] = (float)((double)lbl_803E1250 * dVar4);
-            if (param_9[0x24] != 0.0)
+            state[0x41] = (float)((double)lbl_803E1250 * dVar4);
+            if (state[0x24] != 0.0)
             {
-                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
                              extraout_r4_00, uVar2, param_12, param_13, param_14, param_15, param_16);
-                if (lbl_803E1248 <= *param_9)
+                if (lbl_803E1248 <= *state)
                 {
-                    *param_9 = lbl_803E124C;
+                    *state = lbl_803E124C;
                 }
             }
         }
         else
         {
-            param_9[0x27] = fVar1;
-            param_9[0x28] = param_9[0x29];
-            param_9[0x29] = param_10;
-            FUN_80003494((uint)(param_9 + 0x2e), (uint)(param_9 + 0x2a), 0x10);
-            FUN_80003494((uint)(param_9 + 0x36), (uint)(param_9 + 0x32), 0x10);
+            state[0x27] = fVar1;
+            state[0x28] = state[0x29];
+            state[0x29] = param_10;
+            FUN_80003494((uint)(state + 0x2e), (uint)(state + 0x2a), 0x10);
+            FUN_80003494((uint)(state + 0x36), (uint)(state + 0x32), 0x10);
             uVar2 = 0x10;
-            FUN_80003494((uint)(param_9 + 0x3e), (uint)(param_9 + 0x3a), 0x10);
-            param_9[0x2a] = *(float*)((int)param_9[0x29] + 8);
-            param_9[0x2b] = *(float*)((int)param_9[0x28] + 8);
+            FUN_80003494((uint)(state + 0x3e), (uint)(state + 0x3a), 0x10);
+            state[0x2a] = *(float*)((int)state[0x29] + 8);
+            state[0x2b] = *(float*)((int)state[0x28] + 8);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x2c] =
+            state[0x2c] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * dVar3);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x2d] =
+            state[0x2d] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
-            param_9[0x32] = *(float*)((int)param_9[0x29] + 0xc);
-            param_9[0x33] = *(float*)((int)param_9[0x28] + 0xc);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * dVar3);
+            state[0x32] = *(float*)((int)state[0x29] + 0xc);
+            state[0x33] = *(float*)((int)state[0x28] + 0xc);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x34] =
+            state[0x34] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * dVar3);
             dVar3 = (double)FUN_80293f90();
-            param_9[0x35] =
+            state[0x35] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
-            param_9[0x3a] = *(float*)((int)param_9[0x29] + 0x10);
-            param_9[0x3b] = *(float*)((int)param_9[0x28] + 0x10);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * dVar3);
+            state[0x3a] = *(float*)((int)state[0x29] + 0x10);
+            state[0x3b] = *(float*)((int)state[0x28] + 0x10);
             dVar3 = (double)FUN_80294964();
-            param_9[0x3c] =
+            state[0x3c] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * dVar3);
             dVar4 = (double)FUN_80294964();
             dVar3 = DOUBLE_803e1268;
             dVar4 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                     (uint) * (byte*)((int)param_9[0x28] +
+                                                                     (uint) * (byte*)((int)state[0x28] +
                                                                          0x2e)) -
                 DOUBLE_803e1268) * dVar4);
-            param_9[0x3d] = (float)((double)lbl_803E1250 * dVar4);
-            if (param_9[0x24] != 0.0)
+            state[0x3d] = (float)((double)lbl_803E1250 * dVar4);
+            if (state[0x24] != 0.0)
             {
-                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
                              extraout_r4, uVar2, param_12, param_13, param_14, param_15, param_16);
-                if (*param_9 <= lbl_803E1270)
+                if (*state <= lbl_803E1270)
                 {
-                    *param_9 = lbl_803E1274;
+                    *state = lbl_803E1274;
                 }
             }
         }
@@ -695,7 +695,7 @@ FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 undefined4
 FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             float* param_9, uint param_10, undefined4 param_11, int param_12, int param_13,
+             float* state, uint param_10, undefined4 param_11, int param_12, int param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     uint uVar1;
@@ -706,24 +706,24 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     double dVar4;
     double dVar5;
 
-    if (((param_9 != (float*)0x0) && (param_9[0x28] != 0.0)) && (param_9[0x29] != 0.0))
+    if (((state != (float*)0x0) && (state[0x28] != 0.0)) && (state[0x29] != 0.0))
     {
-        param_9[0x27] = param_9[0x28];
-        param_9[0x28] = param_9[0x29];
-        FUN_80003494((uint)(param_9 + 0x2a), (uint)(param_9 + 0x2e), 0x10);
-        FUN_80003494((uint)(param_9 + 0x32), (uint)(param_9 + 0x36), 0x10);
-        FUN_80003494((uint)(param_9 + 0x3a), (uint)(param_9 + 0x3e), 0x10);
-        if (param_9[0x20] == 0.0)
+        state[0x27] = state[0x28];
+        state[0x28] = state[0x29];
+        FUN_80003494((uint)(state + 0x2a), (uint)(state + 0x2e), 0x10);
+        FUN_80003494((uint)(state + 0x32), (uint)(state + 0x36), 0x10);
+        FUN_80003494((uint)(state + 0x3a), (uint)(state + 0x3e), 0x10);
+        if (state[0x20] == 0.0)
         {
-            uVar1 = FUN_800dd50c((int)param_9[0x28], -1, param_10);
+            uVar1 = FUN_800dd50c((int)state[0x28], -1, param_10);
         }
         else
         {
-            uVar1 = FUN_800dd3ec((int)param_9[0x28], -1, param_10);
+            uVar1 = FUN_800dd3ec((int)state[0x28], -1, param_10);
         }
         if (uVar1 == 0xffffffff)
         {
-            param_9[0x29] = 0.0;
+            state[0x29] = 0.0;
         }
         else
         {
@@ -752,113 +752,113 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                 fVar3 = 0.0;
             }
         LAB_800de544:
-            param_9[0x29] = fVar3;
-            if (param_9[0x29] != 0.0)
+            state[0x29] = fVar3;
+            if (state[0x29] != 0.0)
             {
-                if (param_9[0x20] == 0.0)
+                if (state[0x20] == 0.0)
                 {
-                    param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
-                    param_9[0x2f] = *(float*)((int)param_9[0x29] + 8);
+                    state[0x2e] = *(float*)((int)state[0x28] + 8);
+                    state[0x2f] = *(float*)((int)state[0x29] + 8);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x30] =
+                    state[0x30] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x31] =
+                    state[0x31] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x29] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x29] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
-                    param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
-                    param_9[0x37] = *(float*)((int)param_9[0x29] + 0xc);
+                    state[0x36] = *(float*)((int)state[0x28] + 0xc);
+                    state[0x37] = *(float*)((int)state[0x29] + 0xc);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x38] =
+                    state[0x38] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x39] =
+                    state[0x39] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x29] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x29] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
-                    param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
-                    param_9[0x3f] = *(float*)((int)param_9[0x29] + 0x10);
+                    state[0x3e] = *(float*)((int)state[0x28] + 0x10);
+                    state[0x3f] = *(float*)((int)state[0x29] + 0x10);
                     dVar4 = (double)FUN_80294964();
-                    param_9[0x40] =
+                    state[0x40] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
                     dVar5 = (double)FUN_80294964();
                     dVar4 = DOUBLE_803e12a8;
                     dVar5 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                             (uint) * (byte*)((int)param_9[0x29
+                                                                             (uint) * (byte*)((int)state[0x29
                                                                              ] + 0x2e)) - DOUBLE_803e12a8) * dVar5);
-                    param_9[0x41] = (float)((double)lbl_803E1290 * dVar5);
+                    state[0x41] = (float)((double)lbl_803E1290 * dVar5);
                     uVar2 = extraout_r4_00;
                 }
                 else
                 {
-                    param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
-                    param_9[0x2f] = *(float*)((int)param_9[0x27] + 8);
+                    state[0x2e] = *(float*)((int)state[0x28] + 8);
+                    state[0x2f] = *(float*)((int)state[0x27] + 8);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x30] =
+                    state[0x30] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x31] =
+                    state[0x31] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x27] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x27] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
-                    param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
-                    param_9[0x37] = *(float*)((int)param_9[0x27] + 0xc);
+                    state[0x36] = *(float*)((int)state[0x28] + 0xc);
+                    state[0x37] = *(float*)((int)state[0x27] + 0xc);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x38] =
+                    state[0x38] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
                     dVar4 = (double)FUN_80293f90();
-                    param_9[0x39] =
+                    state[0x39] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x27] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x27] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
-                    param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
-                    param_9[0x3f] = *(float*)((int)param_9[0x27] + 0x10);
+                    state[0x3e] = *(float*)((int)state[0x28] + 0x10);
+                    state[0x3f] = *(float*)((int)state[0x27] + 0x10);
                     dVar4 = (double)FUN_80294964();
-                    param_9[0x40] =
+                    state[0x40] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
                             - DOUBLE_803e12a8) * dVar4);
                     dVar5 = (double)FUN_80294964();
                     dVar4 = DOUBLE_803e12a8;
                     dVar5 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                             (uint) * (byte*)((int)param_9[0x27
+                                                                             (uint) * (byte*)((int)state[0x27
                                                                              ] + 0x2e)) - DOUBLE_803e12a8) * dVar5);
-                    param_9[0x41] = (float)((double)lbl_803E1290 * dVar5);
+                    state[0x41] = (float)((double)lbl_803E1290 * dVar5);
                     uVar2 = extraout_r4;
                 }
-                if (param_9[0x24] != 0.0)
+                if (state[0x24] != 0.0)
                 {
-                    FUN_80006a18(dVar5, dVar4, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                    FUN_80006a18(dVar5, dVar4, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
                                  uVar2, param_10, param_12, param_13, fVar3, param_15, param_16);
                 }
-                if (param_9[0x20] == 0.0)
+                if (state[0x20] == 0.0)
                 {
-                    FUN_80006a10((double)lbl_803E12B4, param_9);
+                    FUN_80006a10((double)lbl_803E12B4, state);
                 }
                 else
                 {
-                    FUN_80006a10((double)lbl_803E12B0, param_9);
+                    FUN_80006a10((double)lbl_803E12B0, state);
                 }
                 return 0;
             }
