@@ -2540,7 +2540,8 @@ void dbstealerworm_update(u8* objp)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
     {
-        entry = (char*)((int)(tbl + *(s16*)(data + 0x24) * 8) + 0x15c);
+        entry = tbl + *(s16*)(data + 0x24) * 8;
+        entry += 0x15c;
         ((DbStealerwormControl*)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
         n = *(s16*)(entry + 4);
         off = n * 0xc;
