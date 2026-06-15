@@ -90,8 +90,10 @@ void androssligh_update(int obj)
     }
 }
 
+#pragma opt_common_subs off
 void androssligh_updateBeam(int obj, int beam)
 {
+    extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, int angle, int c, int d);
     f32 start[3];
     f32 end[3];
     f32 tmp[3];
@@ -99,7 +101,7 @@ void androssligh_updateBeam(int obj, int beam)
     start[0] = ((GameObject*)obj)->anim.localPosX - lbl_803DC528;
     start[1] = ((GameObject*)obj)->anim.localPosY;
     start[2] = ((GameObject*)obj)->anim.localPosZ;
-    end[0] = ((GameObject*)obj)->anim.localPosX + lbl_803DC528;
+    end[0] = lbl_803DC528 + ((GameObject*)obj)->anim.localPosX;
     end[1] = start[1];
     end[2] = start[2];
     tmp[0] = start[0] - playerMapOffsetX;
@@ -139,3 +141,4 @@ void androssligh_updateBeam(int obj, int beam)
         }
     }
 }
+#pragma opt_common_subs reset
