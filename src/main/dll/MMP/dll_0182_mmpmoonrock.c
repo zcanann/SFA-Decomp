@@ -627,7 +627,6 @@ void fn_801A7D74(int obj, u8 a, u8 b)
     }
 }
 
-extern char lbl_803AC930[];
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern f32 mathSinf(f32);
