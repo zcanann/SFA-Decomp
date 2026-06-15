@@ -66,8 +66,6 @@ extern f32 lbl_803DD5B0;
 extern f32 lbl_803DD5A8;
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E1B18;
-extern int Obj_GetPlayerObject(void);
-extern int ObjList_GetObjects(int* idx, int* count);
 extern f32 mathCosf(f32 x);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
