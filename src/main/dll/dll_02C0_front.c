@@ -416,13 +416,15 @@ extern f32 lbl_803E2408;
 
 /* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
  * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
-#pragma scheduling on
+#pragma scheduling off
 void titleScreenFn_801368a4(s8 arg)
 {
-    if (arg == (s8)lbl_803DD991) return;
-    lbl_803DBC09 = lbl_803DD991;
+    u8 cur;
+    if (arg == (s8)(cur = lbl_803DD991)) return;
+    lbl_803DBC09 = cur;
     lbl_803DD991 = arg;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x801368C4  size: 16b  Two-byte state push (no equality
  * check): copy lbl_803DD990 to lbl_803DBC08 and write new value. */

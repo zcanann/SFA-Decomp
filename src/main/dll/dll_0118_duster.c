@@ -86,16 +86,11 @@ void trickyguard_init(s16* obj, u8* param_2);
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DusterState* state = ((GameObject*)obj)->extra;
-    if (visible != 0)
+    if (visible == 0 || state->active == 0 || state->complete != 0)
     {
-        if (state->active != 0)
-        {
-            if (state->complete == 0)
-            {
-                ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E38B0);
-            }
-        }
+        return;
     }
+    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E38B0);
 }
 
 void duster_hitDetect(int param_1)

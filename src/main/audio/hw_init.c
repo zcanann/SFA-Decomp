@@ -181,9 +181,10 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
     {
         entry = dspVoice;
         entry += inputOffset;
+        entry += 0x24;
         entry += offset;
-        flags |= *(u32*)(entry + 0x24) & 0x20;
-        *(u32*)(entry + 0x24) = zero;
+        flags |= *(u32*)entry & 0x20;
+        *(u32*)entry = zero;
         inputOffset += 4;
         i++;
     }

@@ -376,7 +376,7 @@ void shopitem_update(int obj)
                         v = ((ShopItemState*)state)->segCounter;
                         if (v >= 4)
                         {
-                            ((ShopItemState*)state)->segCounter = v + 1;
+                            ((ShopItemState*)state)->segCounter++;
                         }
                         else
                         {

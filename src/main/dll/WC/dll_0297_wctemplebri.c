@@ -106,6 +106,7 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     int model;
     int modelBase;
     int i;
+    f32 warpScale;
 
     animUpdate->sequenceEventActive = 0;
     animUpdate->activeHitVolumePair &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
@@ -137,11 +138,12 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     }
     model = Obj_GetActiveModel(obj);
     modelBase = *(int*)model;
+    warpScale = lbl_803E6E70;
     for (i = 0; i < *(u16*)(modelBase + 0xe4); i++)
     {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int idx = (u16)(int)(lbl_803E6E70 * ((f32) * (s16*)(curr + 4) / state->maxY)) +
+        int idx = (u16)(int)(warpScale * ((f32) * (s16*)(curr + 4) / state->maxY)) +
             state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
@@ -205,17 +207,19 @@ void wctemplebri_update(int obj)
     int model;
     int modelBase;
     int i;
+    f32 warpScale;
 
     Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
     wctemplebri_updateModelWarp(obj, (int)state);
     model = Obj_GetActiveModel(obj);
     modelBase = *(int*)model;
+    warpScale = lbl_803E6E70;
     for (i = 0; i < *(u16*)(modelBase + 0xe4); i++)
     {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int idx = (u16)(int)(lbl_803E6E70 * ((f32) * (s16*)(curr + 4) / state->maxY)) +
+        int idx = (u16)(int)(warpScale * ((f32) * (s16*)(curr + 4) / state->maxY)) +
             state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =

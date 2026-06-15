@@ -623,12 +623,12 @@ void sfxplayer_free(int obj, int arg1)
         handles = gSfxplayerEffectHandles;
         for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
-            if (handles[0] != 0)
+            if (*(void**)&handles[0] != NULL)
             {
                 Obj_FreeObject(handles[0]);
             }
             handles[0] = 0;
-            if (handles[1] != 0)
+            if (*(void**)&handles[1] != NULL)
             {
                 Obj_FreeObject(handles[1]);
             }

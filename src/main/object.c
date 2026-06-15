@@ -186,13 +186,13 @@ void ObjModel_SetRenderCallback(u8* model, void* callback);
 
 #pragma scheduling off
 #pragma peephole off
-void Obj_SetModelRenderOpAlpha(u8* obj, int alpha)
+void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
 {
     ObjAnimComponent* objAnim;
-    int renderOpAlpha;
-    int renderOpIndex;
+    s8 renderOpAlpha;
     ObjModelFileHeaderLite* modelFile;
     ObjModelInstanceLite* model;
+    int renderOpIndex;
 
     objAnim = (ObjAnimComponent*)obj;
     renderOpAlpha = alpha;

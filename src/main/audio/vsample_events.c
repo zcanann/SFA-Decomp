@@ -35,8 +35,7 @@ void synthHandleVirtualSampleDone(u32 packed)
     }
     entryOffset = vid * SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
     generation = (packed >> 8) & 0xffff;
-    if (*(u16*)((u8*)state + entryOffset + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-        VIRTUAL_SAMPLE_GENERATION_OFFSET) != generation)
+    if (state->entries[vid].callbackData.generation != generation)
     {
         return;
     }

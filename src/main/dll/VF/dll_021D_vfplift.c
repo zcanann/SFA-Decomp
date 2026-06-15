@@ -112,9 +112,9 @@ void vfplift23_updateState(int obj)
     VFPLiftState* state;
     f32 raisedOffset;
 
-    raisedOffset = vfplift23_getRaisedOffset(((GameObject*)obj)->anim.seqId);
     setup = *(VFPLiftPlacement**)&((GameObject*)obj)->anim.placementData;
     state = vfplift_getState(obj);
+    raisedOffset = vfplift23_getRaisedOffset(((GameObject*)obj)->anim.seqId);
     if (state->applyHeight != 0)
     {
         ((GameObject*)obj)->anim.localPosY = setup->base.posY + raisedOffset;

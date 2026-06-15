@@ -285,12 +285,12 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
         params.d = dval;
         objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
     }
-    objRef = ((DrbarrelgrState*)state)->unk8;
-    if (objRef != 0)
+    objRef = (int)*(void**)&((DrbarrelgrState*)state)->unk8;
+    if ((void*)objRef != NULL)
     {
         match = 0;
         nearest = ObjGroup_FindNearestObject(0x19, obj, 0);
-        if (nearest != 0 && nearest == objRef)
+        if ((void*)nearest != NULL && (void*)objRef == (void*)nearest)
         {
             match = 1;
         }

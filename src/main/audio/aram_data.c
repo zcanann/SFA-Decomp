@@ -80,19 +80,21 @@ void aramRemoveData(void* unused, u32 size)
  * EN v1.1 Address: 0x80284570
  * EN v1.1 Size: 196b
  */
+#pragma ppc_unroll_speculative off
 void aramInitStreamBuffers(void)
 {
     u8* base = lbl_803D3F60;
-    AramStreamBufferEntry* buffers = (AramStreamBufferEntry*)(base + 0x508);
+    AramStreamBufferEntry* buffers;
     AramStreamBufferEntry* node;
     int batchCount;
     int i;
 
     aramQueueWrite = 0;
     aramQueueValid = 0;
+    buffers = (AramStreamBufferEntry*)(base + 0x508);
     aramStreamFreeList = buffers;
 
-    node = &buffers[1];
+    node = (AramStreamBufferEntry*)(base + 0x518);
     i = 1;
     for (batchCount = 7; batchCount != 0; batchCount--)
     {
@@ -108,17 +110,17 @@ void aramInitStreamBuffers(void)
         i += 8;
     }
 
-tail_loop:
-    if (i < 64)
+    node = &buffers[i];
+    while (i < 64)
     {
         node[-1].next = node;
         node++;
         i++;
-        goto tail_loop;
     }
     buffers[i - 1].next = NULL;
     aramStream = aramTop;
 }
+#pragma ppc_unroll_speculative on
 
 void fn_80284634(void)
 {
