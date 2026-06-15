@@ -24,7 +24,6 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern undefined4 ObjGroup_FindNearestObject();
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int FUN_80286840();
@@ -64,7 +63,6 @@ extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
 extern f32 lbl_803E461C;
-extern int getTrickyObject(void);
 
 void FUN_801a8f88(void)
 {
