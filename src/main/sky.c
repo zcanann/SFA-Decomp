@@ -3167,14 +3167,14 @@ void Sky_func03(int a, int b, u8* cfg)
                     p4[0x75] = lbl_803DD12C[iofs + 0x79];
                     p4[0x76] = lbl_803DD12C[iofs + 0x7a];
                 }
-                if (((Sky2Config*)cfg)->unk5D == 0)
-                {
-                    ((SkyBlendStateFlags*)(lbl_803DD12C + iofs + 0xc1))->cloud = 0;
-                }
-                else
+                if (((Sky2Config*)cfg)->unk5D != 0)
                 {
                     ((SkyBlendStateFlags*)(lbl_803DD12C + iofs + 0xc1))->cloud =
                         (((Sky2Config*)cfg)->unk5D & 1) + 1;
+                }
+                else
+                {
+                    ((SkyBlendStateFlags*)(lbl_803DD12C + iofs + 0xc1))->cloud = 0;
                 }
             }
             envp++;
