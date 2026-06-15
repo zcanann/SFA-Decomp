@@ -8,11 +8,9 @@
 
 extern uint GameBit_Get(int eventId);
 
-extern void objSetHintTextIdx(int obj, int idx);
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
 extern undefined4 ObjHits_RecordObjectHit();
-extern undefined8 ObjGroup_RemoveObject();
 extern f32 lbl_803E3CC0;
 extern void disableHeavyFog(void);
 extern f32 Vec_distance(void* a, void* b);
@@ -27,7 +25,6 @@ extern f32 lbl_803E3CA8;
 extern f32 lbl_803E3CAC;
 extern f32 lbl_803E3CB0;
 extern f32 lbl_803E3CB4;
-extern void gameBitIncrement(int eventId);
 
 int deathgas_getExtraSize(void) { return 0x10; }
 
