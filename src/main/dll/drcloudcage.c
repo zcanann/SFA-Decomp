@@ -492,7 +492,8 @@ f32 fn_801EA678(int obj, int state)
         if (lbl_803DC0BC == -1)
         {
             player = Obj_GetPlayerObject();
-            d = Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX, (int*)(player + 0x18)) * lbl_803E5AF8;
+            d = Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX, (int*)(player + 0x18));
+            d = d * lbl_803E5AF8;
         }
         else
         {
