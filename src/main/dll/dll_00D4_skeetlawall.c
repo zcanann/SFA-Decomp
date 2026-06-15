@@ -1,5 +1,4 @@
 #include "main/game_object.h"
-#include "main/objseq.h"
 #include "main/object_descriptor.h"
 
 extern void objRenderFn_8003b8f4(f32);
