@@ -7,11 +7,7 @@ extern f32 timeDelta;
 
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/dll/CF/CFforcecontrol.h"
-#include "main/screen_transition.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void* ObjGroup_GetObjects();
