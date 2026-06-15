@@ -459,7 +459,7 @@ extern f32 lbl_803E7124;
 
 
 extern f32 lbl_803E7138;
-extern f32 lbl_803E713C;
+extern const f32 lbl_803E713C;
 
 
 
