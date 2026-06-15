@@ -981,8 +981,8 @@ extern f32 PSVECDotProduct(_Vec3 * a, f32 * b);
 
 void playerVecFn_8005a9b0(void)
 {
-    _Vec3 camPos;
     _Vec3 tmp;
+    _Vec3 camPos;
     _ScalePack scales;
     _PlaneDirPack planes;
     int* player;
