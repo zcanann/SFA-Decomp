@@ -142,8 +142,8 @@ void fn_801AA878(u8* p1, int* p2, f32 v)
     }
     if (v < lbl_803E4678)
     {
-        t = *(s16*)((char*)p2 + 160);
-        if (t == 24 && *(f32*)((char*)p2 + 152) > lbl_803E467C)
+        t = ((GameObject*)p2)->anim.currentMove;
+        if (t == 24 && ((GameObject*)p2)->anim.currentMoveProgress > lbl_803E467C)
         {
             p1[16] = 8;
             return;
