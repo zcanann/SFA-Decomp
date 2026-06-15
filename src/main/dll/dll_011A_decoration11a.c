@@ -8,7 +8,6 @@
 #include "main/dll/CF/CFBaby.h"
 
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_800427c8();
 extern undefined4 FUN_80042800();
