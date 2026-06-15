@@ -83,7 +83,7 @@ void nw_ice_update(int* obj)
                 (((NwIcePlacement*)setup)->unk1B ==
                     *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
             {
-                state->linkedObj = candidate;
+                state->linkedObj = objects[i];
                 break;
             }
         }
