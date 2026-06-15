@@ -97,7 +97,7 @@ undefined4 FUN_801e76a0(int obj)
 void fn_801E7DC8(int p1, int p2, int count)
 {
     extern u8 Obj_IsLoadingLocked(void);
-    extern void hitDetectFn_800658a4(int, int*, int, f32, f32, f32);
+    extern void hitDetectFn_800658a4(int, f32, f32, f32, int*, int);
     extern int Obj_AllocObjectSetup(int, int);
     extern void Obj_SetupObject(int, int, int, int, int);
     extern MapEventInterface** gMapEventInterface;
@@ -109,8 +109,8 @@ void fn_801E7DC8(int p1, int p2, int count)
 
     (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)p1)->anim.mapEventSlot, 6, 1);
 
-    hitDetectFn_800658a4(p1, &local, 0, ((GameObject*)p1)->anim.localPosX, ((GameObject*)p1)->anim.localPosY,
-                         ((GameObject*)p1)->anim.localPosZ);
+    hitDetectFn_800658a4(p1, ((GameObject*)p1)->anim.localPosX, ((GameObject*)p1)->anim.localPosY,
+                         ((GameObject*)p1)->anim.localPosZ, &local, 0);
 
     for (i = 0; i < count; i++)
     {
@@ -118,9 +118,8 @@ void fn_801E7DC8(int p1, int p2, int count)
         *(f32*)(o + 8) = ((GameObject*)p1)->anim.localPosX;
         *(f32*)(o + 12) = ((GameObject*)p1)->anim.localPosY;
         *(f32*)(o + 16) = ((GameObject*)p1)->anim.localPosZ;
-        *(u8*)(o + 24) = (u8)(s8)
-        randomGetRange(-128, 127);
-        *(s16*)(o + 26) = (s16)(s32)(((GameObject*)p1)->anim.localPosY - *(f32*)&local);
+        *(s8*)(o + 24) = randomGetRange(-128, 127);
+        *(s16*)(o + 26) = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
         *(u8*)(o + 5) = 1;
         *(u8*)(o + 7) = 255;
         *(u8*)(o + 4) = 16;
@@ -135,9 +134,8 @@ void fn_801E7DC8(int p1, int p2, int count)
         *(f32*)(o + 8) = ((GameObject*)p1)->anim.localPosX;
         *(f32*)(o + 12) = ((GameObject*)p1)->anim.localPosY;
         *(f32*)(o + 16) = ((GameObject*)p1)->anim.localPosZ;
-        *(u8*)(o + 24) = (u8)(s8)
-        randomGetRange(-128, 127);
-        *(s16*)(o + 26) = (s16)(s32)(((GameObject*)p1)->anim.localPosY - *(f32*)&local);
+        *(s8*)(o + 24) = randomGetRange(-128, 127);
+        *(s16*)(o + 26) = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
         *(u8*)(o + 5) = 1;
         *(u8*)(o + 7) = 255;
         *(u8*)(o + 4) = 16;
