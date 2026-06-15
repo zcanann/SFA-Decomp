@@ -1225,67 +1225,67 @@ undefined FUN_800ea9ac(void)
 
 void FUN_800ea9b8(void)
 {
-    uint uVar1;
-    undefined* puVar2;
-    short sVar3;
-    uint uVar4;
-    uint uVar5;
-    uint uVar6;
+    uint mapId;
+    undefined* history;
+    short i;
+    uint flagWord;
+    uint bit;
+    uint flagId;
     uint unaff_r27;
-    uint uVar7;
-    uint uVar8;
-    short* psVar9;
+    uint cachedFlagId;
+    uint scanId;
+    short* mapFlags;
 
-    uVar1 = FUN_80286834();
-    puVar2 = FUN_800e82d8();
-    uVar7 = 0xffffffff;
-    if (puVar2[6] == '\0')
+    mapId = FUN_80286834();
+    history = FUN_800e82d8();
+    cachedFlagId = 0xffffffff;
+    if (history[6] == '\0')
     {
-        psVar9 = &DAT_80312632;
-        for (uVar8 = 1; (short)uVar8 < 0xce; uVar8 = uVar8 + 1)
+        mapFlags = &DAT_80312632;
+        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
         {
-            if ((*psVar9 == 0xffff) || (*psVar9 == -1))
+            if ((*mapFlags == 0xffff) || (*mapFlags == -1))
             {
-                uVar5 = 1 << (uVar8 & 0x1f);
-                uVar6 = (uint)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
-                uVar4 = FUN_80017690(uVar6);
-                if ((uVar4 & uVar5) == 0)
+                bit = 1 << (scanId & 0x1f);
+                flagId = (uint)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
+                flagWord = FUN_80017690(flagId);
+                if ((flagWord & bit) == 0)
                 {
-                    FUN_80017698(uVar6, uVar4 | uVar5);
+                    FUN_80017698(flagId, flagWord | bit);
                 }
             }
-            psVar9 = psVar9 + 1;
+            mapFlags = mapFlags + 1;
         }
     }
-    uVar6 = 1 << (uVar1 & 0x1f);
-    uVar4 = (uint)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
-    uVar8 = FUN_80017690(uVar4);
-    if ((uVar8 & uVar6) == 0)
+    flagId = 1 << (mapId & 0x1f);
+    flagWord = (uint)(short)((short)((mapId & 0xff) >> 5) + 0x12f);
+    scanId = FUN_80017690(flagWord);
+    if ((scanId & flagId) == 0)
     {
-        FUN_80017698(uVar4, uVar8 | uVar6);
-        if (puVar2[6] != '\x05')
+        FUN_80017698(flagWord, scanId | flagId);
+        if (history[6] != '\x05')
         {
-            puVar2[6] = puVar2[6] + '\x01';
+            history[6] = history[6] + '\x01';
         }
-        for (sVar3 = 4; sVar3 != 0; sVar3 = sVar3 + -1)
+        for (i = 4; i != 0; i = i + -1)
         {
-            puVar2[sVar3] = puVar2[sVar3 + -1];
+            history[i] = history[i + -1];
         }
-        *puVar2 = (char)uVar1;
-        if ((uint)(byte)puVar2[5] == (uVar1 & 0xff)
+        *history = (char)mapId;
+        if ((uint)(byte)history[5] == (mapId & 0xff)
         )
         {
             do
             {
-                puVar2[5] = puVar2[5] + '\x01';
-                uVar1 = (uint)(short)(((byte)puVar2[5] >> 5) + 0x12f);
-                if (uVar1 != (int)(short)uVar7)
+                history[5] = history[5] + '\x01';
+                mapId = (uint)(short)(((byte)history[5] >> 5) + 0x12f);
+                if (mapId != (int)(short)cachedFlagId)
                 {
-                    unaff_r27 = FUN_80017690(uVar1);
-                    uVar7 = uVar1;
+                    unaff_r27 = FUN_80017690(mapId);
+                    cachedFlagId = mapId;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)puVar2[5] & 0x1f)) != 0);
+            while ((unaff_r27 & 1 << ((byte)history[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
