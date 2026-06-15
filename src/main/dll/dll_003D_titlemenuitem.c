@@ -137,14 +137,8 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
                     (f32)item->x, (f32)item->y, 0x100);
         break;
     case 2:
-        if ((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0)
-        {
-            phrase = gameTextGetPhrase(item->extra.window.phraseId, 0);
-        }
-        else
-        {
-            phrase = gameTextGetPhrase(item->extra.window.phraseId, item->value);
-        }
+        phrase = gameTextGetPhrase(item->extra.window.phraseId,
+                                   (item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0 ? 0 : item->value);
         gameTextSetColor(0, 0, 0, (u8)((alpha * 0x96) >> 8));
         gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
         gameTextAppendStr(phrase, item->extra.window.windowId);
