@@ -307,7 +307,6 @@ int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
 
 void pinponspike_update(int obj)
 {
-    ObjHitsPriorityState* hitState;
     f32 vx;
     f32 vy;
     f32 vz;
@@ -336,26 +335,26 @@ void pinponspike_update(int obj)
         ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
         ObjHits_EnableObject(obj);
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        if (hitState->lastHitObject != 0 &&
-            (hitState->lastHitObject == (int)Obj_GetPlayerObject() || hitState->lastHitObject == (int)getTrickyObject()))
+        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
+            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject() ||
+             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject()))
         {
             int i;
             ((GameObject*)obj)->anim.alpha = 0;
             ((GameObject*)obj)->unkF4 = 0x78;
-            hitState->flags &= ~1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
             }
             Sfx_PlayFromObject(obj, 0x279);
         }
-        else if (hitState->contactFlags != 0)
+        else if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
             int i;
             ((GameObject*)obj)->anim.alpha = 0;
             ((GameObject*)obj)->unkF4 = 0x78;
-            hitState->flags &= ~1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
