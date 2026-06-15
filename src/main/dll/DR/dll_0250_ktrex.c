@@ -1449,9 +1449,9 @@ int ktrex_stateHandlerA07(int obj, int runtime)
         Music_Trigger(148, 0);
         Music_Trigger(40, 0);
         Music_Trigger(147, 1);
-        return 0;
     }
-    if ((s8)((KTRexRuntime*)runtime)->unk346 != 0 || (((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
+    else if ((s8)((KTRexRuntime*)runtime)->unk346 != 0 ||
+             (((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
     {
         return 9;
     }
