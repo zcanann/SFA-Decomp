@@ -2404,13 +2404,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
         player = Obj_GetPlayerObject();
         d = (s16)Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
-        if (d >= 0)
-        {
-        }
-        else
-        {
-            d = -d;
-        }
+        d = (d >= 0) ? d : -d;
         if (d < 0x1c71 && yawf < lbl_803E62D0)
         {
             flag = 1;
@@ -2759,13 +2753,7 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
         player = Obj_GetPlayerObject();
         d = (s16)Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
-        if (d >= 0)
-        {
-        }
-        else
-        {
-            d = -d;
-        }
+        d = (d >= 0) ? d : -d;
         if (d < 0x1c71 && yawf < lbl_803E62D0)
         {
             flag = 1;
