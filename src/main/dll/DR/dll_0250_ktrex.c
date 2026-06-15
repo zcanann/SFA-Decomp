@@ -1778,35 +1778,37 @@ int ktrex_stateHandlerA01(int obj, int runtime)
         ((KTRexRuntime*)runtime)->unk349 = 0;
         ((KTRexRuntime*)runtime)->unk25F = 0;
         *(f32*)((char*)gKTRexState + 4) = lbl_803E67EC;
-        return 0;
     }
-    *(f32*)((char*)gKTRexState + 4) -= timeDelta;
-    if (*(f32*)((char*)gKTRexState + 4) <= lbl_803E67F0)
+    else
     {
-        if (((GameObject*)obj)->unkF8 != 3)
+        *(f32*)((char*)gKTRexState + 4) -= timeDelta;
+        if (*(f32*)((char*)gKTRexState + 4) <= lbl_803E67F0)
         {
-            (*gScreenTransitionInterface)->start(30, 1);
-            ((GameObject*)obj)->unkF8 = 3;
+            if (((GameObject*)obj)->unkF8 != 3)
+            {
+                (*gScreenTransitionInterface)->start(30, 1);
+                ((GameObject*)obj)->unkF8 = 3;
+            }
         }
-    }
-    if (*(f32*)((char*)gKTRexState + 4) <= lbl_803E67B8)
-    {
-        Obj_SetModelColorFadeRecursive((int)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
-        Music_Trigger(40, 0);
-        Music_Trigger(147, 0);
-        Music_Trigger(148, 0);
-        ((ObjAnimComponent*)obj)->bankIndex = 1;
-        GameBit_Set(1380, 1);
-        GameBit_Set(874, 0);
-        (*gMapEventInterface)->setObjGroupStatus(13, 0, 1);
-        (*gMapEventInterface)->setObjGroupStatus(13, 1, 1);
-        (*gMapEventInterface)->setObjGroupStatus(13, 5, 1);
-        (*gMapEventInterface)->setObjGroupStatus(13, 10, 1);
-        (*gMapEventInterface)->setObjGroupStatus(13, 11, 1);
-        GameBit_Set(3589, 0);
-        unlockLevel(53, 1, 0);
-        GameBit_Set(2107, 1);
-        (*gMapEventInterface)->setMapAct(4, 2);
+        if (*(f32*)((char*)gKTRexState + 4) <= lbl_803E67B8)
+        {
+            Obj_SetModelColorFadeRecursive((int)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
+            Music_Trigger(40, 0);
+            Music_Trigger(147, 0);
+            Music_Trigger(148, 0);
+            ((ObjAnimComponent*)obj)->bankIndex = 1;
+            GameBit_Set(1380, 1);
+            GameBit_Set(874, 0);
+            (*gMapEventInterface)->setObjGroupStatus(13, 0, 1);
+            (*gMapEventInterface)->setObjGroupStatus(13, 1, 1);
+            (*gMapEventInterface)->setObjGroupStatus(13, 5, 1);
+            (*gMapEventInterface)->setObjGroupStatus(13, 10, 1);
+            (*gMapEventInterface)->setObjGroupStatus(13, 11, 1);
+            GameBit_Set(3589, 0);
+            unlockLevel(53, 1, 0);
+            GameBit_Set(2107, 1);
+            (*gMapEventInterface)->setMapAct(4, 2);
+        }
     }
     return 0;
 }
