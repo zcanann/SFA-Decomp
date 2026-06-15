@@ -2818,10 +2818,10 @@ void Tricky_hitDetect(int obj)
                 }
                 if (dy < lbl_803E24B8)
                 {
-                    ((TrickyState*)state)->heightTrackObjId = *(u32*)(*(int*)(*objects + 0x4c) + 0x14);
+                    ((TrickyState*)state)->heightTrackObjId = *(u32*)(*(int*)&((GameObject*)*objects)->anim.placementData + 0x14);
                 }
             }
-            if (((TrickyState*)state)->heightTrackObjId == *(u32*)(*(int*)(*objects + 0x4c) + 0x14))
+            if (((TrickyState*)state)->heightTrackObjId == *(u32*)(*(int*)&((GameObject*)*objects)->anim.placementData + 0x14))
             {
                 if ((((TrickyState*)state)->trackedHeight == lbl_803E23DC) ||
                     (((TrickyState*)state)->trackedHeight != height))
