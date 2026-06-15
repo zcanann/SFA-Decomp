@@ -105,20 +105,20 @@ void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, un
     return;
 }
 
-void FUN_80135c84(int param_1, uint param_2)
+void FUN_80135c84(int obj, uint flag)
 {
-    *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) =
-        (byte)((param_2 & 0xff) << 6) & 0x40 | *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) & 0xbf;
+    *(byte*)(*(int*)&((GameObject*)obj)->extra + 0x58) =
+        (byte)((flag & 0xff) << 6) & 0x40 | *(byte*)(*(int*)&((GameObject*)obj)->extra + 0x58) & 0xbf;
     return;
 }
 
-void FUN_8013651c(int param_1)
+void FUN_8013651c(int obj)
 {
-    int iVar1;
+    int sub;
 
-    iVar1 = *(int*)&((GameObject*)param_1)->extra;
-    *(uint*)(iVar1 + 0x54) = *(uint*)(iVar1 + 0x54) | 0x80000000;
-    *(float*)(iVar1 + 0x808) = FLOAT_803e3098;
+    sub = *(int*)&((GameObject*)obj)->extra;
+    *(uint*)(sub + 0x54) = *(uint*)(sub + 0x54) | 0x80000000;
+    *(float*)(sub + 0x808) = FLOAT_803e3098;
     return;
 }
 
