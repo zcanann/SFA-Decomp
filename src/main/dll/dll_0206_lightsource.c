@@ -3,13 +3,8 @@
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
-#include "main/objHitReact.h"
 #include "main/objhits.h"
-#include "main/objseq.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
 
 typedef struct LightsourceState
 {
