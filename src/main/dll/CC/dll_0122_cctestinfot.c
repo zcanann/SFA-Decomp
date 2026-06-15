@@ -1,14 +1,9 @@
 /* DLL 0x122 — CC test infot / tricky guard spot / treasure chest objects [8018ADB4-8018ADF0) */
-#include "main/objseq.h"
 
 extern void* Obj_GetPlayerObject(void);
 
 #include "main/dll/CF/CFtoggleswitch.h"
-#include "main/camera_interface.h"
-#include "main/dll/cannon.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
 extern int ObjTrigger_IsSet();

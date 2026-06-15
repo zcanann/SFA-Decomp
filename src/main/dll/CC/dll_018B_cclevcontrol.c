@@ -1,8 +1,5 @@
 /* DLL 0x018B — CC level-control objects [801AA558-801AA560) */
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/effect_interfaces.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 #include "main/sky_interface.h"
 
 extern uint GameBit_Get(int eventId);
@@ -15,11 +12,8 @@ extern void Sfx_PlayFromObject(int obj, int id);
 
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objfx.h"
 #include "main/objseq.h"
-#include "main/dll/DIM/DIMsnowball.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern undefined4 FUN_8008112c();

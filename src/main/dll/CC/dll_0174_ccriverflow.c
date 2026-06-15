@@ -1,4 +1,3 @@
-#include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -7,10 +6,8 @@
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-#include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
-#include "main/effect_interfaces.h"
 
 extern uint GameBit_Get(int eventId);
 

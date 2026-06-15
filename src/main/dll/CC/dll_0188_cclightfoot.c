@@ -6,9 +6,6 @@
  * set despawns immediately (state 0 -> 0xe). GameBit 0x24 marks full
  * completion. Nothing else in the game writes GameBit 9. */
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/effect_interfaces.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -22,9 +19,7 @@ extern void Sfx_PlayFromObject(int obj, int id);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
-#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
@@ -214,7 +209,6 @@ void ccpedstal_update(int obj);
 extern int playerIsDisguised(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;

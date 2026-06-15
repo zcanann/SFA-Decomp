@@ -1,22 +1,14 @@
 /* DLL 0x018A - ccpedstal (Crystal Caves pedestal gate). TU: 0x801AB6F8-0x801ABA84. */
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/effect_interfaces.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
 /* 8b "li r3, N; blr" returners. */
 
-#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objfx.h"
 #include "main/objseq.h"
-#include "main/dll/DIM/DIMsnowball.h"
-#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();

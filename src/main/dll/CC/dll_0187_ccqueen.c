@@ -1,8 +1,5 @@
 /* DLL 0x0187 (ccqueen) — CloudRunner Queen object [0x801AA558-0x801AA734). */
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/effect_interfaces.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -13,13 +10,9 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern f32 timeDelta;
 
-#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objfx.h"
 #include "main/objseq.h"
-#include "main/dll/DIM/DIMsnowball.h"
 
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8008112c();
@@ -172,4 +165,3 @@ void ccqueen_update(int* obj)
 
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-#include "main/dll/SC/SCtotemlogpuz.h"
