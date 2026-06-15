@@ -5230,19 +5230,19 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     {
         if ((s8)seg != -1)
         {
-            u8* tbl = *(u8**)(*(int*)((int)obj + 0x50) + 0x38);
+            u8* tbl = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x38);
             start = tbl[(s8)seg * 2];
             end = *(u8*)(tbl + (s8)seg * 2 + 1);
         }
         else
         {
             start = 0;
-            end = *(u8*)(*(int*)((int)obj + 0x50) + 0x5c);
+            end = *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x5c);
         }
         lineIdx = 0;
-        vt = *(int*)(*(int*)((int)obj + 0x50) + 0x34);
-        vp = *(int*)(*(int*)((int)obj + 0x50) + 0x3c);
-        if (*(u16*)((int)obj + 0xb0) & 0x100)
+        vt = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x34);
+        vp = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x3c);
+        if (((GameObject*)obj)->objectFlags & 0x100)
         {
             end = 0;
         }
