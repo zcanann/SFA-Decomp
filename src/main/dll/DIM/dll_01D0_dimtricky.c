@@ -10,7 +10,6 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
-#include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
 /*
@@ -76,15 +75,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/asset_load.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/dll/DIM/DIM2snowball.h"
-#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -100,13 +91,8 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern undefined4 FUN_800067c0();
-extern undefined8 ObjGroup_RemoveObject();
-extern f32 lbl_803E4A30;
 extern f32 lbl_803E4A38;
-extern u8 lbl_803DBF20;
 extern int* getTrickyObject(void);
-extern f32 mathCosf(f32 x);
-extern void* mmAlloc(int size, int a, int b);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
