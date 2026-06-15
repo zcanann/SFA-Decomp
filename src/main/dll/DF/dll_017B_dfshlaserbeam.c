@@ -180,14 +180,15 @@ typedef struct DFSHLaserBeamObject
 void DFSH_LaserBeam_update(uint objAddr)
 {
     extern int Sfx_PlayFromObject(void* obj, int sfxId);
-    DFSHLaserBeamObject* obj;
     DFSHLaserBeamConfig* config;
     DFSHLaserBeamRuntime* runtime;
     void* playerObj;
+    DFSHLaserBeamObject* obj;
     f32 range;
     f32 rangeSq;
     f32 yawSin;
     f32 yawCos;
+    f32 heightThreshold;
     f32 beamPlane;
     f32 heightDelta;
     f32 xDelta;
@@ -195,7 +196,6 @@ void DFSH_LaserBeam_update(uint objAddr)
     f32 lateralAbs;
     f32 damageDistance;
     f32 pushDistance;
-    f32 heightWindow;
 
     obj = (DFSHLaserBeamObject*)objAddr;
     config = obj->config;
@@ -266,7 +266,7 @@ void DFSH_LaserBeam_update(uint objAddr)
                                    lbl_803E4ED4);
     }
 
-    range = (f32)config->rangeAngle;
+    range = (f32)(int)config->rangeAngle;
     rangeSq = range * range;
     yawSin = mathCosf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
     yawCos = mathSinf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
@@ -325,9 +325,9 @@ void DFSH_LaserBeam_update(uint objAddr)
         (DFSH_LASER_ACTIVE(runtime) != 0))
     {
         heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->localPosY;
-        heightWindow = lbl_803E4EE0 + (f32)DFSH_LASER_HEIGHT_WINDOW(runtime);
-        if ((heightDelta < heightWindow) &&
-            (-(lbl_803E4EE4 + heightWindow) < heightDelta))
+        heightThreshold = lbl_803E4EE0 + (f32)(int)DFSH_LASER_HEIGHT_WINDOW(runtime);
+        if ((heightDelta < heightThreshold) &&
+            (-(lbl_803E4EE4 + heightThreshold) < heightDelta))
         {
             xDelta = ((GameObject*)playerObj)->anim.localPosX - obj->localPosX;
             zDelta = ((GameObject*)playerObj)->anim.localPosZ - obj->localPosZ;
@@ -351,8 +351,8 @@ void DFSH_LaserBeam_update(uint objAddr)
                     MODGFX_DETACH(obj);
                     DFSH_LASER_MODGFX_ATTACHED(runtime) = 0;
                 }
-                if ((damageDistance < heightWindow) &&
-                    (-heightWindow < damageDistance))
+                if ((damageDistance < heightThreshold) &&
+                    (-heightThreshold < damageDistance))
                 {
                     pushDistance = lbl_803E4EF4;
                     if ((beamPlane + (yawSin * ((GameObject*)playerObj)->anim.previousLocalPosX +
@@ -399,7 +399,7 @@ void DFSH_LaserBeam_update(uint objAddr)
     runtime->swayVelocity = runtime->swayPhase;
     runtime->swayTarget = runtime->swayAccel;
     DFSH_LASER_RANGE_VALUE(runtime) =
-        *(f32*)((u8*)runtime + 0x14) + (f32)config->rangeAngle;
+        *(f32*)((u8*)runtime + 0x14) + range;
     DFSH_LASER_HEIGHT_WINDOW(runtime) = 8;
     ((GameObject*)obj)->anim.currentMoveProgress += lbl_803E4EF8 * timeDelta;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E4EC8)
