@@ -359,23 +359,17 @@ int fn_8007FE04(int* arr, int* count_ptr, int target)
     int i;
     int* p;
     int n;
-    int v;
     int j;
     n = *count_ptr;
     p = arr;
     i = 0;
     for (j = 0; j < n; j++)
     {
-        v = *p;
-        p++;
-        if (v == target)
+        if (*p++ == target)
         {
             goto found;
         }
-        else
-        {
-            i++;
-        }
+        i++;
     }
     i = -1;
 found:

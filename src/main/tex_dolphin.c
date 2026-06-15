@@ -344,8 +344,8 @@ undefined4
 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ,
                                 f32 maxZ, f32* planeOffsets)
 {
-    byte cornerIndex;
     FrustumPlane* plane;
+    int cornerIndex;
     int i;
     float nearY;
     float nearX;
@@ -354,8 +354,7 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
     float farX;
     float farZ;
 
-    plane = gViewFrustumPlanes;
-    for (i = 5; i != 0; i--, plane++, planeOffsets++)
+    for (i = 5, plane = gViewFrustumPlanes; i != 0; i--, plane++, planeOffsets++)
     {
         cornerIndex = plane->aabbCornerIndex;
         if ((cornerIndex & 1) != 0)
@@ -835,9 +834,8 @@ int mapBlockRender_setShader(byte doSetup, int blockData, int* bitReader)
         _bits |= (uint3) * (undefined*)(_base + 1) << 8;
         _bits |= (uint3) * (undefined*)(_base + 2) << 16;
         bitReader[4] = uPos + 6;
-        shader = *(int*)((int)blockData + 0x64);
         shaderIdx = (_bits >> (uPos & 7)) & 0x3f;
-        shader = shader + shaderIdx * 0x44;
+        shader = *(int*)((int)blockData + 0x64) + shaderIdx * 0x44;
     }
 
     if (doSetup == 0)

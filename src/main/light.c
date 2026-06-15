@@ -28,7 +28,7 @@ extern f32 lbl_803E6150;
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDCC0;
 extern f32 lbl_803E6138;
-extern void fn_801FC6F4(int, int, ObjAnimUpdateState*);
+extern int fn_801FC6F4(int, int, ObjAnimUpdateState*);
 extern f32 lbl_803E6128;
 extern f32 lbl_803E610C;
 extern f32 lbl_803E611C;
@@ -359,8 +359,7 @@ void spellStoneUseFn_801fd270(int obj)
     {
         cond = (s16)GameBit_Get(state->requiredGameBit);
     }
-    if ((s16)GameBit_Get(state->completeGameBit) != 0) return;
-    if (state->used != 0) return;
+    if ((s16)GameBit_Get(state->completeGameBit) != 0 || state->used != 0) return;
     if ((s16)cond == 0) return;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
     if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0)
@@ -572,7 +571,7 @@ void seqpoint_update(int* obj)
     switch (self->mode)
     {
     case 0:
-        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
@@ -583,14 +582,14 @@ void seqpoint_update(int* obj)
         self->done = 1;
         break;
     case 2:
-        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case 3:
-        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
@@ -616,7 +615,8 @@ void seqpoint_update(int* obj)
 void vfpdraghead_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj); /* #57 */
-    int state = *(s8*)(*(char**)&((GameObject*)obj)->anim.placementData + 0x19);
+    extern int randomGetRange(int min, int max); /* #57: signed return -> cmpwi */
+    int state = (s8)(*(char**)&((GameObject*)obj)->anim.placementData)[0x19];
     VfpDragHeadState* self2;
 
     if (state == 2)
@@ -671,7 +671,7 @@ void vfpdraghead_update(int* obj)
     }
 }
 
-void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
+int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
     extern undefined4 loadMapAndParent(int); /* #57 */
     extern undefined4 lockLevel(undefined4, int); /* #57 */
@@ -687,8 +687,9 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
         case 0:
             break;
         case 13:
-            if ((int)ctx->eventIds[i] == 20)
+            switch ((int)ctx->eventIds[i])
             {
+            case 20:
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
@@ -714,11 +715,13 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
                     (*gMapEventInterface)->setMapAct(8, 6);
                     warpToMap(124, 0);
                 }
+                break;
             }
             break;
         }
         ctx->eventIds[i] = 0;
     }
+    return 0;
 }
 
 void fn_801FBAC8(int obj)

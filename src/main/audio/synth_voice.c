@@ -883,9 +883,10 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
     SynthDelayedNode** root;
     u8 jobTabIndex;
     SynthJobTab* jobTab;
+    SynthJobTabBlock* block = (SynthJobTabBlock*)lbl_803BCD90;
 
     jobTabIndex = ((delay / 256) + gSynthDelayBucketCursor) & 0x1F;
-    jobTab = &SYNTH_JOB_TABLE[jobTabIndex];
+    jobTab = &block->table[jobTabIndex];
 
     switch (mode)
     {
@@ -907,7 +908,7 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
             }
             else
             {
-                SYNTH_JOB_TABLE[newJq->bucketIndex].lowPrecision = newJq->next;
+                block->table[newJq->bucketIndex].lowPrecision = newJq->next;
             }
         }
         root = &jobTab->lowPrecision;
@@ -930,7 +931,7 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
             }
             else
             {
-                SYNTH_JOB_TABLE[newJq->bucketIndex].zeroOffset = newJq->next;
+                block->table[newJq->bucketIndex].zeroOffset = newJq->next;
             }
         }
         root = &jobTab->zeroOffset;
@@ -1086,13 +1087,12 @@ void audioFn_80271498(u32 delta)
                     {
                         fadeDelta = fade[3] * (fade[1] - fade[2]);
                         fade[0] = fade[1] - fadeDelta;
-                        fade[3] = fade[3] - fade[4];
-                        if (fade[3] <= zeroThreshold)
+                        fade[3] = fadeDelta = fade[3] - fade[4];
+                        if (fadeDelta <= zeroThreshold)
                         {
                             fade[0] = fade[1];
                             synthDispatchFadeAction((SynthFade*)fade);
-                            synthMasterFaderActiveFlags &= ~mask;
-                            if ((synthMasterFaderActiveFlags == 0) && (synthMasterFaderPauseActiveFlags == 0))
+                            if (((synthMasterFaderActiveFlags &= ~mask) == 0) && (synthMasterFaderPauseActiveFlags == 0))
                             {
                                 break;
                             }
@@ -1102,8 +1102,8 @@ void audioFn_80271498(u32 delta)
                     {
                         fadeDelta = fade[8] * (fade[6] - fade[7]);
                         fade[5] = fade[6] - fadeDelta;
-                        fade[8] = fade[8] - fade[9];
-                        if (fade[8] <= zeroThreshold)
+                        fade[8] = fadeDelta = fade[8] - fade[9];
+                        if (fadeDelta <= zeroThreshold)
                         {
                             fade[5] = fade[6];
                             synthMasterFaderPauseActiveFlags &= ~mask;

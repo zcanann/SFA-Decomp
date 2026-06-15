@@ -1693,14 +1693,14 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                 if ((sub->configFlags & 0x10) != 0)
                 {
                     int attackIndex = *(s16*)(control + 4);
-                    *(u16*)(control + 4) = attackIndex + 1;
+                    *(s16*)(control + 4) += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
                     int attackIndex = *(s16*)(control + 4);
-                    *(u16*)(control + 4) = attackIndex + 1;
+                    *(s16*)(control + 4) += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD80[attackIndex]);
                 }
@@ -1746,14 +1746,14 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                 if ((sub->configFlags & 0x10) != 0)
                 {
                     int attackIndex = *(s16*)(control + 4);
-                    *(u16*)(control + 4) = attackIndex + 1;
+                    *(s16*)(control + 4) += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
                     int attackIndex = *(s16*)(control + 4);
-                    *(u16*)(control + 4) = attackIndex + 1;
+                    *(s16*)(control + 4) += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD80[attackIndex]);
                 }
@@ -1975,10 +1975,8 @@ void fn_8015D3C0(int obj, int sub, int state)
         targetDelta[0] = ((GameObject*)target)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
         targetDelta[1] = ((GameObject*)target)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         targetDelta[2] = ((GameObject*)target)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        distSq = targetDelta[2] * targetDelta[2];
-        distSq += targetDelta[0] * targetDelta[0];
-        distSq += targetDelta[1] * targetDelta[1];
-        ((GroundBaddieState*)state)->baddie.targetDistance = sqrtf(distSq);
+        ((GroundBaddieState*)state)->baddie.targetDistance =
+            sqrtf(targetDelta[2] * targetDelta[2] + targetDelta[0] * targetDelta[0] + targetDelta[1] * targetDelta[1]);
     }
     if ((((GroundBaddieState*)sub)->configFlags & 0x20) == 0)
     {

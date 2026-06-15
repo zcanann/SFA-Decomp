@@ -103,7 +103,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     if ((mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) == 0x10)
     {
         f32 zero = lbl_803E7360;
-        if (sourceState->inactiveTimer != zero)
+        if (zero != sourceState->inactiveTimer)
         {
             sourceState->inactiveTimer -= timeDelta;
             if (sourceState->inactiveTimer <= zero)
@@ -162,7 +162,7 @@ void cmbsrc_hitDetect(int obj)
         }
         {
         f32 zero = lbl_803E7360;
-        if (state->hitRecoverTimer != zero)
+        if (zero != state->hitRecoverTimer)
         {
             state->hitRecoverTimer -= timeDelta;
             if (state->hitRecoverTimer <= zero)
@@ -251,6 +251,7 @@ int cmbsrc_cycleColor(int obj, int state)
 
 void cmbsrc_updateVisuals(int obj, int state)
 {
+    extern u8 cmbsrc_cycleColor(int obj, int state);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -269,11 +270,12 @@ void cmbsrc_updateVisuals(int obj, int state)
     }
     else
     {
+        f32 ratio = (f32)sourceState->hitCharge / lbl_803E7378;
+        f32 baseRadius = setup->radius * lbl_803E737C;
+        f32 fullRadius = lbl_803E7374 * setup->radius;
         sourceState->radius += interpolate(
-            (f32)sourceState->hitCharge / lbl_803E7378 *
-            (lbl_803E7374 * setup->radius -
-                setup->radius * lbl_803E737C) +
-            setup->radius * lbl_803E737C - sourceState->radius,
+            ratio * (fullRadius - baseRadius) +
+            baseRadius - sourceState->radius,
             lbl_803E7380, timeDelta);
     }
     dist = Vec_distance(viewSlot + 0x44, obj + 0x18);
@@ -283,7 +285,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         {
             if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
             {
-                colorIdx = (u8)cmbsrc_cycleColor(obj, state);
+                colorIdx = cmbsrc_cycleColor(obj, state);
             }
             else
             {
@@ -404,6 +406,8 @@ void cmbsrc_updateVisuals(int obj, int state)
 
 int cmbsrc_update(int obj)
 {
+    extern u8 cmbsrc_shouldDeactivate(int obj, int state, int setup);
+    extern u8 cmbsrc_shouldActivate(int obj, int state, int setup);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* state = cmbsrc->state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;

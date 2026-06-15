@@ -142,7 +142,7 @@ BOOL movieLoad(const char* fileName, void* param2)
     ((AttractMoviePlayer*)&lbl_803A5D60)->internalState = 0;
     ((AttractMoviePlayer*)&lbl_803A5D60)->state = 0;
     ((AttractMoviePlayer*)&lbl_803A5D60)->playFlags = 0;
-    ((AttractMoviePlayer*)&lbl_803A5D60)->movieData = param2;
+    ((AttractMoviePlayer*)&lbl_803A5D60)->isOnMemory = (s32)param2;
     ((AttractMoviePlayer*)pb)->isOpen = 1;
     ((AttractMoviePlayer*)&lbl_803A5D60)->curVolume = lbl_803E1D54;
     ((AttractMoviePlayer*)&lbl_803A5D60)->targetVolume = lbl_803E1D54;
@@ -366,18 +366,20 @@ void AttractMovieVideo_Decode(void* param)
     {
         AttractMoviePlayer* player2; /* block-local → r25 */
         void** readMsg; /* block-local → r24 */
-        char* componentKind; /* block-local → r23 */
+        u8* componentKind; /* block-local → r23 */
         OSMessage tmpBuf;
 
         OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
         readMsg = (void**)tmpBuf;
         i = 0;
-        player2 = player;
-        componentKind = (char*)player2;
+        player2 = &lbl_803A5D60;
+        componentKind = (u8*)player2;
 
         while (i < player->compInfo.mNumComponents)
         {
-            if (componentKind[0x70] == 0)
+            switch (componentKind[0x70])
+            {
+            case 0:
             {
                 s32 dec = THPVideoDecode(dvdData,
                                          ((AttractMovieTextureSet*)readMsg)->yTexture,
@@ -403,6 +405,8 @@ void AttractMovieVideo_Decode(void* param)
                     OSRestoreInterrupts(intr);
                 }
                 gAttractMovieIdleFrameCount = 0;
+                break;
+            }
             }
             dvdData += *compSizes;
             compSizes++;

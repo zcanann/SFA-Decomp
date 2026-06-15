@@ -569,11 +569,11 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 int saveSelect_getInfo(void* outPtr)
 {
     u8 save[SAVEGAME_ACTIVE_SIZE];
+    SaveSelectInfo* info;
     int slot;
     int i;
-    SaveSelectInfo* info;
-    u8 completion;
     u8* taskIds;
+    u8 valid;
 
     slot = 0;
     info = (SaveSelectInfo*)outPtr;
@@ -584,63 +584,58 @@ int saveSelect_getInfo(void* outPtr)
             return 0;
         }
 
-        info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
-        if (info->valid == 0)
-        {
-            memset(info, 0, sizeof(SaveSelectInfo));
-        }
-        else
+        info->valid = valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+        if (valid != 0)
         {
             memcpy(info, save + SAVEGAME_PLAYER_NAME_OFFSET, sizeof(info->name));
 
-            completion = save[0x55d];
-            info->percentComplete = (u8)((completion * 100) / 0xbb);
-            if (completion > 0xb3)
+            info->percentComplete = (u8)((save[0x55d] * 100) / 0xbb);
+            if (save[0x55d] > 0xb3)
             {
                 info->rankA = 6;
                 info->rankB = 4;
             }
-            else if (completion > 0xb0)
+            else if (save[0x55d] > 0xb0)
             {
                 info->rankA = 5;
                 info->rankB = 4;
             }
-            else if (completion > 0xa1)
+            else if (save[0x55d] > 0xa1)
             {
                 info->rankA = 4;
                 info->rankB = 4;
             }
-            else if (completion > 0x8a)
+            else if (save[0x55d] > 0x8a)
             {
                 info->rankA = 4;
                 info->rankB = 3;
             }
-            else if (completion > 0x81)
+            else if (save[0x55d] > 0x81)
             {
                 info->rankA = 3;
                 info->rankB = 3;
             }
-            else if (completion > 0x71)
+            else if (save[0x55d] > 0x71)
             {
                 info->rankA = 3;
                 info->rankB = 2;
             }
-            else if (completion > 0x62)
+            else if (save[0x55d] > 0x62)
             {
                 info->rankA = 2;
                 info->rankB = 2;
             }
-            else if (completion > 0x48)
+            else if (save[0x55d] > 0x48)
             {
                 info->rankA = 2;
                 info->rankB = 1;
             }
-            else if (completion > 0x3d)
+            else if (save[0x55d] > 0x3d)
             {
                 info->rankA = 1;
                 info->rankB = 1;
             }
-            else if (completion > 8)
+            else if (save[0x55d] > 8)
             {
                 info->rankA = 1;
                 info->rankB = 0;
@@ -664,6 +659,10 @@ int saveSelect_getInfo(void* outPtr)
             }
             info->active = 0;
             info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+        }
+        else
+        {
+            memset(info, 0, sizeof(SaveSelectInfo));
         }
 
         info++;
@@ -834,8 +833,8 @@ void gplaySaveGame(int param)
 void titleDoLoadSave(void)
 {
     OSSetSaveRegion(0, 0);
-    DAT_803dc4f0 = (undefined)((int)(*((byte*)DAT_803de110 + 0x21) & 0x60) >> 5);
-    *((byte*)DAT_803de110 + 0x21) = *((byte*)DAT_803de110 + 0x21) & 0x1f;
+    lbl_803DB890 = (s8)((lbl_803DD498[0x21] & 0x60) >> 5);
+    lbl_803DD498[0x21] &= ~0xe0;
     (*gMapEventInterface)->gotoSavegame();
     return;
 }

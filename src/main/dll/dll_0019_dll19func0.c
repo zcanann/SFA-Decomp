@@ -478,7 +478,7 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
     if ((s8)p2[838] != 0)
     {
-        if (*(int*)(p2 + 720) != player)
+        if (*(void**)(p2 + 720) != (void*)player)
         {
             result = 1;
         }
@@ -501,7 +501,7 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
         else
         {
             f32 pos[3];
-            f32 out[2];
+            f32 out[20];
             pos[0] = ((GameObject*)player)->anim.localPosX;
             pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
             pos[2] = ((GameObject*)player)->anim.localPosZ;
@@ -734,8 +734,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     f32 posX;
     f32 posY;
     f32 posZ;
+    f32 rest = lbl_803E1C2C;
 
-    if (*(f32*)(state + 1000) > lbl_803E1C2C)
+    if (*(f32*)(state + 1000) > rest)
     {
         *(f32*)(state + 1000) = timeDelta * *(f32*)(state + 1004) + *(f32*)(state + 1000);
         if ((*(u16*)(state + 1024) & 0x20) != 0)
@@ -744,7 +745,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
             *(u16*)(state + 1024) = *(u16*)(state + 1024) | 0x40;
             if (*(f32*)(state + 1000) > lbl_803E1C40)
             {
-                *(f32*)(state + 1000) = lbl_803E1C2C;
+                *(f32*)(state + 1000) = rest;
                 *(u16*)(state + 1024) = *(u16*)(state + 1024) & ~0x40;
             }
         }
@@ -753,7 +754,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
             if (*(f32*)(state + 1000) > lbl_803E1C40)
             {
                 int other = *(int*)(p1 + 76);
-                *(f32*)(state + 1000) = lbl_803E1C2C;
+                *(f32*)(state + 1000) = rest;
                 *(u16*)(state + 1024) = *(u16*)(state + 1024) & ~0x40;
                 p2[852] = 0;
                 p1[54] = 0;
@@ -766,9 +767,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
         else
         {
-            if (*(f32*)(state + 1000) < lbl_803E1C2C)
+            if (*(f32*)(state + 1000) < rest)
             {
-                *(f32*)(state + 1000) = lbl_803E1C2C;
+                *(f32*)(state + 1000) = rest;
             }
             else if (*(f32*)(state + 1000) > lbl_803E1C44)
             {
@@ -849,12 +850,12 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     GameObject* source = (GameObject*)p1;
     u8* state = *(u8**)&((GameObject*)p1)->anim.placementData;
     ObjPlacement* setup;
+    f32 savedX, savedY, savedZ;
+    f32 nearDist;
     f32 scale;
     u16 ids1[4];
     u16 ids2[4];
     int idx;
-    f32 savedX, savedY, savedZ;
-    f32 nearDist;
 
     scale = lbl_803E1C2C;
     *(u32*)&ids1[0] = lbl_803E1C18;
@@ -989,9 +990,12 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))(p1, p3, p4, p5);
     *(int*)(p3 + 0) = 0;
     p3[841] = 0;
-    *(f32*)(p3 + 640) = lbl_803E1C2C;
-    *(f32*)(p3 + 644) = lbl_803E1C2C;
-    if ((s8)p2[50] != 0)
+    {
+        f32 rest = lbl_803E1C2C;
+        *(f32*)(p3 + 640) = rest;
+        *(f32*)(p3 + 644) = rest;
+    }
+    if (p2[50] != 0)
     {
         p3[852] = (s8)p2[50];
     }
@@ -1014,10 +1018,10 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     {
         (*gPathControlInterface)->init(path, 0, 0, 0);
     }
-    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void*)lbl_803DB9E0, 4);
+    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void*)&lbl_803DB9E0, 4);
     if ((flags & 4) != 0)
     {
-        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void*)lbl_803DD5E0, &byteLocal);
+        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void*)&lbl_803DD5E0, &byteLocal);
     }
     (*gPathControlInterface)->attachObject((void*)p1, path);
     p3[1028] = p2[43];
