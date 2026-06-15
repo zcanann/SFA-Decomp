@@ -90,7 +90,7 @@ void FUN_8018f650(void)
     local_8 = (float)in_f31;
     fStack_4 = (float)in_ps31_1;
     obj = FUN_8028683c();
-    data = *(int*)(obj + 0xb8);
+    data = *(int *)&((GameObject *)obj)->extra;
     local_58 = FLOAT_803e4b00;
     mode = *(byte*)(data + 8);
     if (mode == 0)
@@ -109,9 +109,9 @@ void FUN_8018f650(void)
             local_68 = *(ushort*)(data + 0x1a);
             local_66 = *(undefined2*)(data + 0x1c);
             local_64 = *(short*)(data + 0x1e);
-            if (*(int*)(obj + 0x30) != 0)
+            if (*(int *)&((GameObject *)obj)->anim.parent != 0)
             {
-                local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
+                local_64 = local_64 + *(short*)(*(int *)&((GameObject *)obj)->anim.parent + 4);
             }
             FUN_80017748(&local_68, &local_54);
             local_54 = local_54 + ((GameObject*)obj)->anim.localPosX;
@@ -134,9 +134,9 @@ void FUN_8018f650(void)
                 local_68 = *(ushort*)(data + 0x1a);
                 local_66 = *(undefined2*)(data + 0x1c);
                 local_64 = *(short*)(data + 0x1e);
-                if (*(int*)(obj + 0x30) != 0)
+                if (*(int *)&((GameObject *)obj)->anim.parent != 0)
                 {
-                    local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
+                    local_64 = local_64 + *(short*)(*(int *)&((GameObject *)obj)->anim.parent + 4);
                 }
                 FUN_80017748(&local_68, &local_54);
                 local_54 = local_54 + ((GameObject*)obj)->anim.localPosX;
@@ -195,9 +195,9 @@ void FUN_8018f650(void)
             local_68 = *(ushort*)(data + 0x1a);
             local_66 = *(undefined2*)(data + 0x1c);
             local_64 = *(short*)(data + 0x1e);
-            if (*(int*)(obj + 0x30) != 0)
+            if (*(int *)&((GameObject *)obj)->anim.parent != 0)
             {
-                local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
+                local_64 = local_64 + *(short*)(*(int *)&((GameObject *)obj)->anim.parent + 4);
             }
             FUN_80017748(&local_68, &local_54);
             (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
@@ -217,9 +217,9 @@ void FUN_8018f650(void)
                 local_68 = *(ushort*)(data + 0x1a);
                 local_66 = *(undefined2*)(data + 0x1c);
                 local_64 = *(short*)(data + 0x1e);
-                if (*(int*)(obj + 0x30) != 0)
+                if (*(int *)&((GameObject *)obj)->anim.parent != 0)
                 {
-                    local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
+                    local_64 = local_64 + *(short*)(*(int *)&((GameObject *)obj)->anim.parent + 4);
                 }
                 FUN_80017748(&local_68, &local_54);
                 (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
