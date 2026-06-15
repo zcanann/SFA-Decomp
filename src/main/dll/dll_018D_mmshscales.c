@@ -67,7 +67,7 @@ void mmsh_scales_update(int objArg)
             found = 0;
             list = (int*)ObjList_GetObjects(&i, &count);
             n = 0;
-            for (i = 0, id = typeId; i < count; i++)
+            for (i = 0, id = (int)(s8)typeId; i < count; i++)
             {
                 obj = *list;
                 if (((GameObject*)obj)->seqIndex == typeId)
