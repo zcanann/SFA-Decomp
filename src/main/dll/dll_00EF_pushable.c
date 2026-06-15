@@ -47,7 +47,6 @@ extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
 extern int lbl_803DDAB8;
 extern int lbl_803AC6E0[];
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern int playerIsDisguised(void* player);
 extern u32 GameBit_Get(int eventId);
