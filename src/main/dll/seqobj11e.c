@@ -500,98 +500,98 @@ int fn_80152370(int obj, int p2)
 #pragma peephole on
 void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9, int param_10)
+                  uint obj, int state)
 {
-    ushort uVar1;
-    uint uVar2;
+    ushort nextMove;
+    uint cur;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    int iVar3;
+    int rowOff;
 
-    iVar3 = *(int*)(param_9 + 0x4c);
-    if ((*(char*)(param_10 + 0x33a) == '\x02') &&
-        (uVar2 = GameBit_Get((int)*(short*)(iVar3 + 0x1c)), uVar2 == 0))
+    rowOff = *(int*)(obj + 0x4c);
+    if ((*(char*)(state + 0x33a) == '\x02') &&
+        (cur = GameBit_Get((int)*(short*)(rowOff + 0x1c)), cur == 0))
     {
-        *(byte*)(param_9 + 0xaf) = *(byte*)(param_9 + 0xaf) & 0xf7;
-        if ((*(byte*)(param_9 + 0xaf) & 4) != 0)
+        *(byte*)(obj + 0xaf) = *(byte*)(obj + 0xaf) & 0xf7;
+        if ((*(byte*)(obj + 0xaf) & 4) != 0)
         {
             FUN_8011e868(7);
         }
-        if ((*(byte*)(param_9 + 0xaf) & 1) != 0)
+        if ((*(byte*)(obj + 0xaf) & 1) != 0)
         {
-            FUN_80152040(param_9, param_10);
+            FUN_80152040(obj, state);
         }
     }
     else
     {
-        *(byte*)(param_9 + 0xaf) = *(byte*)(param_9 + 0xaf) | 8;
+        *(byte*)(obj + 0xaf) = *(byte*)(obj + 0xaf) | 8;
     }
-    if (((*(uint*)(param_10 + 0x2dc) & 0x80000000) != 0) &&
-        (*(int*)(&DAT_8031fee4 + (uint) * (byte*)(param_10 + 0x33a) * 0xc) != 0))
+    if (((*(uint*)(state + 0x2dc) & 0x80000000) != 0) &&
+        (*(int*)(&DAT_8031fee4 + (uint) * (byte*)(state + 0x33a) * 0xc) != 0))
     {
-        *(uint*)(param_10 + 0x2dc) = *(uint*)(param_10 + 0x2dc) | 0x40000000;
+        *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) | 0x40000000;
     }
-    if ((*(uint*)(param_10 + 0x2dc) & 0x40000000) != 0)
+    if ((*(uint*)(state + 0x2dc) & 0x40000000) != 0)
     {
-        uVar2 = (uint) * (byte*)(param_10 + 0x33a);
-        if (uVar2 == 0)
+        cur = (uint) * (byte*)(state + 0x33a);
+        if (cur == 0)
         {
-            if ((*(uint*)(param_10 + 0x2dc) & 0x20000000) != 0)
+            if ((*(uint*)(state + 0x2dc) & 0x20000000) != 0)
             {
-                uVar2 = GameBit_Get((int)*(short*)(iVar3 + 0x1c));
-                if (uVar2 == 0)
+                cur = GameBit_Get((int)*(short*)(rowOff + 0x1c));
+                if (cur == 0)
                 {
-                    *(u8*)(param_10 + 0x33a) =
-                        (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                    *(u8*)(state + 0x33a) =
+                        (&DAT_8031fee9)[(uint) * (byte*)(state + 0x33a) * 0xc];
                 }
                 else
                 {
-                    *(u8*)(param_10 + 0x33a) =
-                        (&DAT_8031feea)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                    *(u8*)(state + 0x33a) =
+                        (&DAT_8031feea)[(uint) * (byte*)(state + 0x33a) * 0xc];
                 }
             }
         }
-        else if (uVar2 == 2)
+        else if (cur == 2)
         {
-            uVar2 = GameBit_Get((int)*(short*)(iVar3 + 0x1c));
-            if ((uVar2 != 0) || ((*(uint*)(param_10 + 0x2dc) & 0x20000000) == 0))
+            cur = GameBit_Get((int)*(short*)(rowOff + 0x1c));
+            if ((cur != 0) || ((*(uint*)(state + 0x2dc) & 0x20000000) == 0))
             {
-                *(u8*)(param_10 + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                *(u8*)(state + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(state + 0x33a) * 0xc];
             }
         }
-        else if (uVar2 == 3)
+        else if (cur == 3)
         {
-            uVar2 = GameBit_Get((int)*(short*)(iVar3 + 0x1c));
-            if (uVar2 == 0)
+            cur = GameBit_Get((int)*(short*)(rowOff + 0x1c));
+            if (cur == 0)
             {
-                *(u8*)(param_10 + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                *(u8*)(state + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(state + 0x33a) * 0xc];
             }
             else
             {
-                *(u8*)(param_10 + 0x33a) = (&DAT_8031feea)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                *(u8*)(state + 0x33a) = (&DAT_8031feea)[(uint) * (byte*)(state + 0x33a) * 0xc];
             }
         }
         else
         {
-            *(u8*)(param_10 + 0x33a) = (&DAT_8031fee9)[uVar2 * 0xc];
+            *(u8*)(state + 0x33a) = (&DAT_8031fee9)[cur * 0xc];
         }
-        uVar1 = (ushort)(byte)(&DAT_8031fee8)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
-        if (*(ushort*)(param_9 + 0xa0) != uVar1)
+        nextMove = (ushort)(byte)(&DAT_8031fee8)[(uint) * (byte*)(state + 0x33a) * 0xc];
+        if (*(ushort*)(obj + 0xa0) != nextMove)
         {
-            if ((uVar1 != 0) && (uVar1 != 4))
+            if ((nextMove != 0) && (nextMove != 4))
             {
-                FUN_80006824(param_9, 0x4a8);
+                FUN_80006824(obj, 0x4a8);
             }
-            iVar3 = (uint) * (byte*)(param_10 + 0x33a) * 0xc;
-            FUN_8014d4c8((double)*(float*)(&DAT_8031fee0 + iVar3), param_2, param_3, param_4, param_5, param_6
-                         , param_7, param_8, param_9, param_10, (uint)(byte)(&DAT_8031fee8)[iVar3], 0, 0xf, in_r8,
+            rowOff = (uint) * (byte*)(state + 0x33a) * 0xc;
+            FUN_8014d4c8((double)*(float*)(&DAT_8031fee0 + rowOff), param_2, param_3, param_4, param_5, param_6
+                         , param_7, param_8, obj, state, (uint)(byte)(&DAT_8031fee8)[rowOff], 0, 0xf, in_r8,
                          in_r9, in_r10);
         }
     }
-    if ((&DAT_8031feeb)[(uint) * (byte*)(param_10 + 0x33a) * 0xc] != '\0')
+    if ((&DAT_8031feeb)[(uint) * (byte*)(state + 0x33a) * 0xc] != '\0')
     {
-        FUN_80152194(param_9, param_10);
+        FUN_80152194(obj, state);
     }
     return;
 }
