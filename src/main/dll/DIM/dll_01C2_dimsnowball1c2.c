@@ -1,10 +1,6 @@
 /* DLL 0x01C2 — dimsnowball1c2. TU: 0x801B13E8–0x801B13F0. */
-#include "ghidra_import.h"
 #include "main/dll/dimicewallstate_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIMExplosion.h"
 
 extern u32 randomGetRange(int min, int max);
 extern f32 lbl_803E4860;
@@ -15,7 +11,6 @@ extern uint fn_802972A8(int player);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern f32 lbl_803E4864;
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
 
 int dimsnowball1c2_getExtraSize(void)
 {
