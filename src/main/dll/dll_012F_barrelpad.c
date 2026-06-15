@@ -64,7 +64,7 @@ void barrelpad_update(s16* obj)
         particleArgs.offset[1] = lbl_803E3F08;
         particleArgs.offset[2] = lbl_803E3F04;
         objfx_spawnArcedBurst((int)obj, 5, lbl_803E3F0C, 5, 2, 0x19, lbl_803E3F10,
-                              lbl_803E3F10, lbl_803E3F14, &particleArgs, 0);
+                              *(f32*)&lbl_803E3F10, lbl_803E3F14, &particleArgs, 0);
     }
     else if (((GameObject*)obj)->anim.seqId == 0x748)
     {
@@ -72,7 +72,7 @@ void barrelpad_update(s16* obj)
         particleArgs.offset[1] = lbl_803E3F18;
         particleArgs.offset[2] = lbl_803E3F04;
         objfx_spawnArcedBurst((int)obj, 5, lbl_803E3F1C, 5, 2, 5, lbl_803E3F20,
-                              lbl_803E3F20, lbl_803E3F14, &particleArgs, 0);
+                              *(f32*)&lbl_803E3F20, lbl_803E3F14, &particleArgs, 0);
     }
 }
 
