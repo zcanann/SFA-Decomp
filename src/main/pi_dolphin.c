@@ -7070,7 +7070,7 @@ int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
         return size;
     }
     DVDOpen(sResourceFileNameTable[id], fileInfo);
-    if (((int)buffer & 0x1fu) != 0 || (size & 0x1fu) != 0)
+    if (((int)buffer & 0x1fu) != 0 || (size & 0x1f) != 0)
     {
         asize = (size + 0x1f) & ~0x1f;
         tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
