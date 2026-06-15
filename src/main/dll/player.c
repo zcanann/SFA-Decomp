@@ -17434,9 +17434,9 @@ int fn_802994D0(int obj, int state, f32 fv)
             staffactivated_calcInteractionTargetXZ(lbl_803DE434, (f32*)((char*)obj + 0xc), (f32*)((char*)obj + 0x14));
             fn_802AB5A4(obj, (int)inner, 7);
             *(int*)((char*)state + 0x4) |= 0x8000000;
-            fromVec[0] = *(f32*)((char*)obj + 0xc);
+            fromVec[0] = ((GameObject*)obj)->anim.localPosX;
             fromVec[1] = lbl_803E7ED8 + ((GameObject*)obj)->anim.localPosY;
-            fromVec[2] = *(f32*)((char*)obj + 0x14);
+            fromVec[2] = ((GameObject*)obj)->anim.localPosZ;
             toVec[0] = fromVec[0] -
                 lbl_803E7F5C * mathSinf(lbl_803E7F94 * (f32)(int)inner->targetYaw /
                                         lbl_803E7F98);
