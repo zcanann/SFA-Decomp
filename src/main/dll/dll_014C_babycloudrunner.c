@@ -12,7 +12,6 @@
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/dll/cfmaincrystalstate_types.h"
-#include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
