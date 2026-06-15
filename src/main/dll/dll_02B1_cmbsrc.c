@@ -405,6 +405,8 @@ void cmbsrc_updateVisuals(int obj, int state)
 
 int cmbsrc_update(int obj)
 {
+    extern u8 cmbsrc_shouldDeactivate(int obj, int state, int setup); /* #57 */
+    extern u8 cmbsrc_shouldActivate(int obj, int state, int setup); /* #57 */
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* state = cmbsrc->state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
