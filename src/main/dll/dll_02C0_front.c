@@ -425,9 +425,8 @@ extern f32 lbl_803E2408;
 #pragma scheduling on
 void titleScreenFn_801368a4(s8 arg)
 {
-    u8 cur = lbl_803DD991;
-    if (arg == (s8)cur) return;
-    lbl_803DBC09 = cur;
+    if (arg == (s8)lbl_803DD991) return;
+    lbl_803DBC09 = lbl_803DD991;
     lbl_803DD991 = arg;
 }
 

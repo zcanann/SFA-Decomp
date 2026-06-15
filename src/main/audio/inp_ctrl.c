@@ -322,13 +322,14 @@ u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
     case MCMD_CTRL_EX_A1:
         return state->exCtrlA1Value * 2 + 0x2000;
     default:
-        if (state->midiSlot == 0xff)
+        if (state->midiSlot != 0xff)
         {
-            value = 0;
+            extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
+            value = inpGetMidiCtrl(ctrl, state->midiSlot, state->midiEvent) & 0xffff;
         }
         else
         {
-            value = inpGetMidiCtrl(ctrl, state->midiSlot, state->midiEvent);
+            value = 0;
         }
         return value & 0xffff;
     }
