@@ -448,7 +448,7 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
             {
                 diff = 0;
             }
-            *obj = (s16)(int)((f32)(diff >> 3) * timeDelta + (f32) * obj);
+            *obj = (s16)((f32)(diff >> 3) * timeDelta + (f32) * obj);
         }
     }
     return dist;
