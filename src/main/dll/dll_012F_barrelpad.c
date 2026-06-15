@@ -1,4 +1,3 @@
-#include "main/dll/mmp_asteroid_re.h"
 #include "main/game_object.h"
 
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
