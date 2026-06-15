@@ -7,14 +7,10 @@
  * a hit bursts a cloud of impact particles before being freed.
  */
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/TREX/TREX_trex.h"
-#include "main/effect_interfaces.h"
-#include "main/objhits_types.h"
 
 extern u8 framesThisStep;
 
