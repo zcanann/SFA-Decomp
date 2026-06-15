@@ -5062,8 +5062,8 @@ foundAdjacent:
 
 int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int excludeLinkId)
 {
-    f32 bestDistance[2];
     int bestLink[2];
+    f32 bestDistance[2];
     RomCurveSegmentProjection segment;
     f32 dx;
     f32 dy;
@@ -5128,9 +5128,9 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
                 dz = segment.nearestZ - z;
                 dx = segment.nearestX - x;
                 dy = segment.nearestY - y;
-                distance = dz * dz + dx * dx + dy * dy;
+                distance = dy * dy + dx * dx + dz * dz;
                 slot = (u32)__cntlzw(excludeLinkId - linkId) >> 5;
-                if (bestDistance[slot] < distance)
+                if (distance > bestDistance[slot])
                 {
                     bestDistance[slot] = distance;
                     bestLink[slot] = curve->linkIds[linkIndex];
@@ -5139,12 +5139,15 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
         }
     }
 
-    if ((bestLink[0] == ROMCURVE_LINK_ID_NONE) &&
-        (bestLink[0] = bestLink[1], bestLink[1] == ROMCURVE_LINK_ID_NONE))
+    if (bestLink[0] != -1)
     {
-        bestLink[0] = ROMCURVE_LINK_ID_NONE;
+        return bestLink[0];
     }
-    return bestLink[0];
+    if (bestLink[1] != -1)
+    {
+        return bestLink[1];
+    }
+    return -1;
 }
 
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)
