@@ -2265,14 +2265,10 @@ void allocLotsOfTextures(void)
 #pragma ppc_unroll_speculative on
 void shadowCreate(int* obj)
 {
-    ObjAnimComponent* objAnim;
-    ObjModelInstance* modelDef;
     int* cam;
     f32 dx, dy, dz, dist;
     if (lbl_803DCF78 < 0x12c)
     {
-        objAnim = (ObjAnimComponent*)obj;
-        modelDef = objAnim->modelInstance;
         *(int**)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
         cam = lbl_803DCFE8;
         dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)((char*)cam + 0xc);
@@ -2281,10 +2277,10 @@ void shadowCreate(int* obj)
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         *(f32*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
             ((GameObject*)obj)->anim.modelState->shadowScale / dist;
-        if (modelDef->shadowType == 2)
+        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 2)
         {
             *(u8*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
-            if (modelDef->renderFlags & 4)
+            if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
             {
                 *(u8*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
                 *(f32*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
