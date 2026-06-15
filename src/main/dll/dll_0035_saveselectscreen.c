@@ -157,21 +157,15 @@ void saveSelectOpenFile(int sel, int slot)
 
 void SaveSelectScreen_release(void)
 {
-    void** p;
     int i;
     void* zero;
 
-    i = 0;
-    p = lbl_803A8658;
     zero = NULL;
-    do
+    for (i = 0; i < 10; i++)
     {
-        mm_free(*p);
-        *p = zero;
-        p++;
-        i++;
+        mm_free(lbl_803A8658[i]);
+        lbl_803A8658[i] = zero;
     }
-    while (i < 10);
 }
 
 #pragma dont_inline on
