@@ -16594,7 +16594,7 @@ void fn_802B0920(int obj, int state)
 {
     s16* vec9 = objModelGetVecFn_800395d8(obj, 9);
     s16* vec0 = objModelGetVecFn_800395d8(obj, 0);
-    int doBlink = 0;
+    u8 doBlink = 0;
     PlayerState* inner = ((GameObject*)obj)->extra;
     f32 f31v;
     f32 f30v;
