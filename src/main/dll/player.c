@@ -15305,7 +15305,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     int sub = inner->unk7F0;
     f32 wpos[3];
 
-    inner->flags360 &= ~0x2LL;
+    inner->flags360 &= ~0x2;
     inner->flags360 |= 0x2000;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
@@ -15328,9 +15328,9 @@ int fn_8029FA24(int obj, int state, f32 fv)
     {
         int sel;
         int joint;
-        f32 scratch;
-        f32 j1[3];
         f32 j0[3];
+        f32 j1[3];
+        f32 scratch;
 
         if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
@@ -15386,8 +15386,6 @@ int fn_8029FA24(int obj, int state, f32 fv)
                 sel = 6;
                 break;
             case 2:
-                sel = 7;
-                break;
             default:
                 sel = 7;
                 break;
