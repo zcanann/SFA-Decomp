@@ -451,7 +451,6 @@ extern s16 lbl_803DD416;
 extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
 
-extern f32 timeDelta;
 extern f32 mathSinf(f32 x);
 
 extern f32 sqrtf(f32);
