@@ -1,7 +1,6 @@
 #include "main/dll/DR/DRlaserturret.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
-#include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
