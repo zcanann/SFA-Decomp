@@ -27,7 +27,6 @@ extern void gxSetZMode_();
 extern void objRenderFn_8003b8f4(f32);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern void mm_free_(void* ptr);
-extern void disableHeavyFog(void);
 extern f32 Vec_distance(void* a, void* b);
 extern void gameBitIncrement(int eventId);
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
