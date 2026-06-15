@@ -19,7 +19,6 @@ extern undefined4 objAudioFn_800393f8(int obj, void* audio, int soundId, int vol
 extern int trickyFn_8013b368();
 extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
 
-extern undefined4* DAT_803dd6d8;
 extern f32 timeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23EC;
