@@ -10,16 +10,10 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
-#include "main/effect_interfaces.h"
-#include "main/objseq.h"
 #include "main/audio/sfx_ids.h"
-#include "main/asset_load.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
-#include "main/dll/DIM/DIM2snowball.h"
-#include "main/objanim_internal.h"
 #include "main/sky_interface.h"
 
 /*
@@ -67,9 +61,7 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
-extern f32 lbl_803E49D0;
 extern f32 lbl_803E4A20;
-extern void* lbl_803DDB78;
 extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 extern void timeOfDayFn_80055000(void);
 extern u8 framesThisStep;
@@ -86,12 +78,10 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
 extern f32 lbl_803E4A24;
-extern u8 lbl_803DBF20;
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(u8 n);
 extern void unlockLevel(int a, int b, int c);
-extern void* mmAlloc(int size, int a, int b);
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
