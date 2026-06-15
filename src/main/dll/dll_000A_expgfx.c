@@ -3137,16 +3137,13 @@ void expgfx_onMapSetup(void)
 
 void expgfx_release(void)
 {
-    u32* slotPoolBases;
     int poolIndex;
 
     expgfxRemoveAll();
     poolIndex = 0;
-    slotPoolBases = gExpgfxSlotPoolBases;
     do
     {
-        mm_free((void*)*slotPoolBases);
-        slotPoolBases = slotPoolBases + 1;
+        mm_free((void*)gExpgfxSlotPoolBases[poolIndex]);
         poolIndex = poolIndex + 1;
     }
     while (poolIndex < EXPGFX_POOL_COUNT);
