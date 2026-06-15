@@ -1,22 +1,15 @@
 #include "main/dll/dimmagicbridge_state.h"
-#include "main/dll/explosiondebris_struct.h"
-#include "main/dll/fbtextbl_struct.h"
-#include "main/dll/dimwooddoor2placement_struct.h"
-#include "main/dll/dll1ceplacement_struct.h"
 #include "main/dll/fnexplosionreleasev11unusedstate_struct.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
 #include "main/dll/explosionpartfxsource_struct.h"
 #include "main/dll/explosion_state.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
-#include "main/objhits.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct DimmagicbridgeFlameSeqFnState
 {
@@ -105,7 +98,6 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
-extern void textureFree(int tex);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
@@ -117,7 +109,6 @@ extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 extern int EmissionController_IsLingering(void* player);
 extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
