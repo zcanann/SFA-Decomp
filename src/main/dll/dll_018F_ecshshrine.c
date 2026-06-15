@@ -107,55 +107,55 @@ void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefi
                   int param_9, int param_10)
 {
     extern undefined4 FUN_80017ae4(); /* #57 */
-    uint uVar1;
-    undefined2* puVar2;
-    undefined4 uVar3;
-    int iVar4;
+    uint spawnFlag;
+    undefined2* lightObj;
+    undefined4 light;
+    int animSlot;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    int iVar5;
-    double dVar6;
-    double dVar7;
+    int state;
+    double tmpColor;
+    double baseColor;
 
-    iVar5 = *(int*)&((GameObject*)param_9)->extra;
-    *(undefined2*)(iVar5 + 0x6a) = *(undefined2*)(param_10 + 0x1a);
-    *(undefined2*)(iVar5 + 0x6e) = 0xffff;
-    dVar6 = DOUBLE_803e5c08;
-    dVar7 = (double)lbl_803E5C00;
-    *(float*)(iVar5 + 0x24) =
-        (float)(dVar7 / (double)(float)(dVar7 + (double)(float)((double)CONCAT44(0x43300000,
+    state = *(int*)&((GameObject*)param_9)->extra;
+    *(undefined2*)(state + 0x6a) = *(undefined2*)(param_10 + 0x1a);
+    *(undefined2*)(state + 0x6e) = 0xffff;
+    tmpColor = DOUBLE_803e5c08;
+    baseColor = (double)lbl_803E5C00;
+    *(float*)(state + 0x24) =
+        (float)(baseColor / (double)(float)(baseColor + (double)(float)((double)CONCAT44(0x43300000,
             (uint) * (byte*)(
                 param_10 + 0x24)) - DOUBLE_803e5c08)));
-    *(undefined4*)(iVar5 + 0x28) = 0xffffffff;
-    iVar4 = ((GameObject*)param_9)->unkF4;
-    if ((iVar4 == 0) && (*(short*)(param_10 + 0x18) != 1))
+    *(undefined4*)(state + 0x28) = 0xffffffff;
+    animSlot = ((GameObject*)param_9)->unkF4;
+    if ((animSlot == 0) && (*(short*)(param_10 + 0x18) != 1))
     {
-        (*gObjectTriggerInterface)->loadAnimData((u8*)iVar5, (u8*)param_10);
+        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)param_10);
         ((GameObject*)param_9)->unkF4 = *(short*)(param_10 + 0x18) + 1;
     }
-    else if ((iVar4 != 0) && ((int)*(short*)(param_10 + 0x18) != iVar4 + -1))
+    else if ((animSlot != 0) && ((int)*(short*)(param_10 + 0x18) != animSlot + -1))
     {
-        (*gObjectTriggerInterface)->freeState((u8*)iVar5);
+        (*gObjectTriggerInterface)->freeState((u8*)state);
         if (*(short*)(param_10 + 0x18) != -1)
         {
-            (*gObjectTriggerInterface)->loadAnimData((u8*)iVar5, (u8*)param_10);
+            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)param_10);
         }
         ((GameObject*)param_9)->unkF4 = *(short*)(param_10 + 0x18) + 1;
     }
-    uVar1 = FUN_80017ae8();
-    if ((uVar1 & 0xff) != 0)
+    spawnFlag = FUN_80017ae8();
+    if ((spawnFlag & 0xff) != 0)
     {
-        puVar2 = FUN_80017aa4(0x24, 0x1b8);
-        *(undefined4*)(puVar2 + 4) = *(undefined4*)&((GameObject*)param_9)->anim.localPosX;
-        *(undefined4*)(puVar2 + 6) = *(undefined4*)&((GameObject*)param_9)->anim.localPosY;
-        *(undefined4*)(puVar2 + 8) = *(undefined4*)&((GameObject*)param_9)->anim.localPosZ;
-        *(undefined*)(puVar2 + 2) = 0x20;
-        *(undefined*)((int)puVar2 + 5) = 4;
-        *(undefined*)((int)puVar2 + 7) = 0xff;
-        uVar3 = FUN_80017ae4(dVar6, dVar7, param_3, param_4, param_5, param_6, param_7, param_8, puVar2, 5, 0xff,
+        lightObj = FUN_80017aa4(0x24, 0x1b8);
+        *(undefined4*)(lightObj + 4) = *(undefined4*)&((GameObject*)param_9)->anim.localPosX;
+        *(undefined4*)(lightObj + 6) = *(undefined4*)&((GameObject*)param_9)->anim.localPosY;
+        *(undefined4*)(lightObj + 8) = *(undefined4*)&((GameObject*)param_9)->anim.localPosZ;
+        *(undefined*)(lightObj + 2) = 0x20;
+        *(undefined*)((int)lightObj + 5) = 4;
+        *(undefined*)((int)lightObj + 7) = 0xff;
+        light = FUN_80017ae4(tmpColor, baseColor, param_3, param_4, param_5, param_6, param_7, param_8, lightObj, 5, 0xff,
                              0xffffffff, (uint*)0x0, in_r8, in_r9, in_r10);
-        *(undefined4*)&((GameObject*)param_9)->childObjs[0] = uVar3;
+        *(undefined4*)&((GameObject*)param_9)->childObjs[0] = light;
         *(float*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 8) =
             *(float*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 8) * lbl_803E5C10;
     }
@@ -856,71 +856,71 @@ void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8
                   undefined2* param_9)
 {
     extern int FUN_80017ae4(); /* #57 */
-    uint uVar1;
-    int* piVar2;
-    undefined2* puVar3;
+    uint spawnFlag;
+    int* iface;
+    undefined2* spawn;
     undefined4 in_r8;
     int in_r9;
     undefined4 in_r10;
-    short* psVar4;
-    int iVar5;
+    short* state;
+    int anim;
 
-    iVar5 = *(int*)(param_9 + 0x26);
-    psVar4 = *(short**)(param_9 + 0x5c);
-    if ((*(int*)(param_9 + 0x7c) == '\0') && (uVar1 = FUN_80017690((int)psVar4[2]), uVar1 != 0))
+    anim = *(int*)(param_9 + 0x26);
+    state = *(short**)(param_9 + 0x5c);
+    if ((*(int*)(param_9 + 0x7c) == '\0') && (spawnFlag = FUN_80017690((int)state[2]), spawnFlag != 0))
     {
-        piVar2 = (int*)FUN_80006b14(0x82);
-        (*(code*)(*piVar2 + 4))(param_9, 0, 0, 1, 0xffffffff, 0);
+        iface = (int*)FUN_80006b14(0x82);
+        (*(code*)(*iface + 4))(param_9, 0, 0, 1, 0xffffffff, 0);
         in_r8 = 0;
-        in_r9 = *piVar2;
+        in_r9 = *iface;
         (*(code*)(in_r9 + 4))(param_9, 1, 0, 1, 0xffffffff);
         param_1 = FUN_80006824((uint)param_9, SFXwp_mflop7_c);
-        FUN_80006b0c((undefined*)piVar2);
-        psVar4[1] = 1;
+        FUN_80006b0c((undefined*)iface);
+        state[1] = 1;
         *(undefined4*)(param_9 + 0x7c) = 1;
     }
-    if (psVar4[1] != 0)
+    if (state[1] != 0)
     {
-        *psVar4 = *psVar4 - psVar4[1] * (ushort)DAT_803dc070;
+        *state = *state - state[1] * (ushort)DAT_803dc070;
     }
-    uVar1 = FUN_80017ae8();
-    if (((uVar1 & 0xff) != 0) && (*psVar4 < 1))
+    spawnFlag = FUN_80017ae8();
+    if (((spawnFlag & 0xff) != 0) && (*state < 1))
     {
-        puVar3 = (undefined2*)FUN_80017830(0x38, 0xe);
-        *(undefined4*)(puVar3 + 4) = *(undefined4*)(iVar5 + 8);
-        *(undefined4*)(puVar3 + 6) = *(undefined4*)(iVar5 + 0xc);
-        *(undefined4*)(puVar3 + 8) = *(undefined4*)(iVar5 + 0x10);
-        *puVar3 = 0x11;
-        *(undefined4*)(puVar3 + 10) = 0xffffffff;
-        *(u8*)(puVar3 + 2) = *(u8*)(iVar5 + 4);
-        *(u8*)((int)puVar3 + 5) = *(u8*)(iVar5 + 5);
-        *(u8*)(puVar3 + 3) = *(u8*)(iVar5 + 6);
-        *(u8*)((int)puVar3 + 7) = *(u8*)(iVar5 + 7);
-        *(u8*)((int)puVar3 + 0x27) = 3;
-        *(u8*)(puVar3 + 0x14) = 0;
-        puVar3[0xc] = psVar4[2] + (short)*(char*)(iVar5 + 0x1f);
-        puVar3[0x18] = 0xffff;
-        *(char*)(puVar3 + 0x15) = (char)((ushort) * param_9 >> 8);
-        *(u8*)((int)puVar3 + 0x2b) = 2;
-        puVar3[0x10] = 0;
-        puVar3[0xf] = 0;
-        puVar3[0x11] = 0xffff;
-        *(u8*)((int)puVar3 + 0x29) = 0xff;
-        *(u8*)(puVar3 + 0x17) = 0xff;
-        puVar3[0x12] = 0;
-        puVar3[0x16] = 0;
-        puVar3[0x1a] = 0xffff;
-        puVar3[0xd] = 0;
-        *(char*)(puVar3 + 0x19) = (char)psVar4[4];
-        iVar5 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar3, 5,
+        spawn = (undefined2*)FUN_80017830(0x38, 0xe);
+        *(undefined4*)(spawn + 4) = *(undefined4*)(anim + 8);
+        *(undefined4*)(spawn + 6) = *(undefined4*)(anim + 0xc);
+        *(undefined4*)(spawn + 8) = *(undefined4*)(anim + 0x10);
+        *spawn = 0x11;
+        *(undefined4*)(spawn + 10) = 0xffffffff;
+        *(u8*)(spawn + 2) = *(u8*)(anim + 4);
+        *(u8*)((int)spawn + 5) = *(u8*)(anim + 5);
+        *(u8*)(spawn + 3) = *(u8*)(anim + 6);
+        *(u8*)((int)spawn + 7) = *(u8*)(anim + 7);
+        *(u8*)((int)spawn + 0x27) = 3;
+        *(u8*)(spawn + 0x14) = 0;
+        spawn[0xc] = state[2] + (short)*(char*)(anim + 0x1f);
+        spawn[0x18] = 0xffff;
+        *(char*)(spawn + 0x15) = (char)((ushort) * param_9 >> 8);
+        *(u8*)((int)spawn + 0x2b) = 2;
+        spawn[0x10] = 0;
+        spawn[0xf] = 0;
+        spawn[0x11] = 0xffff;
+        *(u8*)((int)spawn + 0x29) = 0xff;
+        *(u8*)(spawn + 0x17) = 0xff;
+        spawn[0x12] = 0;
+        spawn[0x16] = 0;
+        spawn[0x1a] = 0xffff;
+        spawn[0xd] = 0;
+        *(char*)(spawn + 0x19) = (char)state[4];
+        anim = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawn, 5,
                              *(u8*)(param_9 + 0x56), 0xffffffff, *(uint**)(param_9 + 0x18), in_r8,
                              in_r9, in_r10);
-        if (iVar5 != 0)
+        if (anim != 0)
         {
-            *(u8*)(*(int*)(iVar5 + 0xb8) + 0x404) = 0x20;
+            *(u8*)(*(int*)(anim + 0xb8) + 0x404) = 0x20;
         }
-        *psVar4 = 100;
-        psVar4[1] = 0;
+        *state = 100;
+        state[1] = 0;
     }
     return;
 }
