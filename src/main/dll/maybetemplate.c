@@ -1186,7 +1186,7 @@ void cMenuUpdateAnims(void)
     if ((sbyte)b != 0 && cMenuFadeCounter > 0x40)
     {
         lbl_803DD8D6 = lbl_803DD8D6 + framesThisStep * 16;
-        if (lbl_803DBA66 < lbl_803DD8D6)
+        if (lbl_803DD8D6 > lbl_803DBA66)
         {
             lbl_803DD8D6 = lbl_803DBA66;
         }
