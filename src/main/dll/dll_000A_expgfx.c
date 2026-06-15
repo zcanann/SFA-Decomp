@@ -131,7 +131,7 @@ static inline ExpgfxSlot* Expgfx_GetSlot(int poolIndex, int slotIndex)
 
 static inline ExpgfxBounds* Expgfx_GetBoundsTemplate(int templateIndex)
 {
-    return &gExpgfxBoundsTemplates[templateIndex];
+    return &EXPGFX_STATIC_DATA->boundsTemplates[templateIndex];
 }
 
 static inline ExpgfxBounds* Expgfx_GetPoolBounds(int poolIndex)
@@ -1986,6 +1986,7 @@ int expgfx_func09(void)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma optimization_level 2
 void expgfx_renderSourcePools(int sourceId, int sourceMode)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -1998,6 +1999,8 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     u32* slotPoolBases;
     int poolIndex;
 
+    extern u8 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ,
+                                              f32 maxZ, f32* planeOffsets);
     runtime = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
     poolActiveCounts = runtime->poolActiveCounts;
@@ -2007,18 +2010,17 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     poolBounds = runtime->poolBounds;
     slotPoolBases = runtime->slotPoolBases;
 
-    while (poolIndex < EXPGFX_POOL_COUNT)
+    do
     {
         if ((*poolActiveCounts != 0) && (*poolSourceIds == (u32)sourceId) &&
             (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET))
         {
-            boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
             if (frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
                                                 poolBounds->maxX - playerMapOffsetX,
                                                 poolBounds->minY, poolBounds->maxY,
                                                 poolBounds->minZ - playerMapOffsetZ,
                                                 poolBounds->maxZ - playerMapOffsetZ,
-                                                &boundsTemplate->minX) != 0)
+                                                &Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds)->minX) != 0)
             {
                 drawGlow(*slotPoolBases, poolIndex);
             }
@@ -2030,8 +2032,9 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
         poolBounds++;
         slotPoolBases++;
         poolIndex++;
-    }
+    } while (poolIndex < EXPGFX_POOL_COUNT);
 }
+#pragma optimization_level reset
 
 void drawGlow(uint slotPoolBase, int poolIndex)
 {
