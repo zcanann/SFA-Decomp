@@ -66,7 +66,6 @@ extern f32 lbl_803E1B58;
 extern f32 lbl_803E1B60;
 extern f32 lbl_803E1B64;
 extern f32 lbl_803E1B68;
-extern int getFocusedNpc(void);
 extern s16 getAngle(f32 x, f32 z);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
