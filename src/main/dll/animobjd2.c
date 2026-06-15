@@ -1,5 +1,4 @@
 #include "main/dll/tricky_state.h"
-#include "main/dll/animobjD2.h"
 #include "main/dll/player_target.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
