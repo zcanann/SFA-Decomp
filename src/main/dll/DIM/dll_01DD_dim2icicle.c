@@ -63,24 +63,6 @@ extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
 extern f32 lbl_803E4B68;
 
-void FUN_801b9cc4(int obj)
-{
-    char* state;
-    int placement;
-
-    state = ((GameObject*)obj)->extra;
-    if ((state[2] & 1U) == 0)
-    {
-        placement = *(int*)&((GameObject*)obj)->anim.placementData;
-        if (('\0' < *state) && (*state = *state + -1, *state == '\0'))
-        {
-            state[2] = state[2] | 1;
-            GameBit_Set((int)*(short*)(placement + 0x1e), 1);
-        }
-    }
-    return;
-}
-
 
 #pragma scheduling off
 #pragma peephole off
