@@ -1,4 +1,3 @@
-#include "main/dll/CF/dll_012C_transporter.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/audio/sfx.h"
