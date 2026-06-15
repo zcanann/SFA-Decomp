@@ -65,7 +65,7 @@ typedef struct CurvesTransformScratch
 
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern f32 lbl_803E06C0;
-extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
+extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
 extern SaveData saveData;
 extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
