@@ -55,7 +55,7 @@ void wclevelcont_func13(int value, s16 i, s16 j)
     lbl_803AD298[i][j] = (u8)value;
 }
 
-void wclevelcont_func12(int obj, s16* outRow, s16* outCol, f32 px, f32 pz)
+void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
     f32 outX, outZ;
@@ -134,7 +134,7 @@ void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
     lbl_803AD2D8[i][j] = (u8)value;
 }
 
-void wclevelcont_func0B(int obj, s16* outRow, s16* outCol, f32 px, f32 pz)
+void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
     f32 outX, outZ;
