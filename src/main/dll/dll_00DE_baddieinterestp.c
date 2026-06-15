@@ -327,8 +327,6 @@ extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void GameBit_Set(int eventId, int value);
 extern void fn_801504BC(int* obj, int kind);
 extern f32 lbl_803E3224;
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
