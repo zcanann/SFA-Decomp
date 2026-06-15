@@ -1,5 +1,3 @@
-#include "main/audio/sfx_ids.h"
-#include "main/checkpoint_route.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/dim_partfx.h"
 
@@ -968,7 +966,6 @@ void Checkpoint_onGameLoop(void)
 #pragma dont_inline reset
 #pragma dont_inline reset
 
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern f32 sqrtf(f32 x);
