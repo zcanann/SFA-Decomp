@@ -92,6 +92,7 @@ void arwarwingbo_update(int obj)
     ArwingBombState* state = ((GameObject*)obj)->extra;
     int arwing = getArwing();
     f32 zero = lbl_803E7044;
+    extern u32 getButtonsJustPressed(int); /* #57 unsigned -> cmplwi */
 
     if (((GameObject*)arwing)->objectFlags & 0x1000)
     {
