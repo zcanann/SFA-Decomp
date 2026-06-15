@@ -24,7 +24,6 @@ extern void trickyImpress(void* trickyObj);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void fn_801D29E4(int* obj, int* p2);
 extern f32 lbl_803E5378;
-extern void ObjGroup_AddObject(int* obj, int group);
 extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
 extern void setMatrixFromObjectPos(void* mtx, void* build);
