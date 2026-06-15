@@ -834,7 +834,7 @@ void dll_5D_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (ctx == 0)
+        if ((void*)ctx == NULL)
         {
             buf.pos[0] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->posX;
             buf.pos[1] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->posY;
