@@ -155,12 +155,11 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
 
 void player_findCurve(int* obj, int* state, int p3)
 {
-    f32 px = ((GameObject*)obj)->anim.localPosX;
-    f32 py = ((GameObject*)obj)->anim.localPosY;
-    f32 pz = ((GameObject*)obj)->anim.localPosZ;
     *(int*)((char*)state + 0x33c) =
         (*gRomCurveInterface)->find(&p3, 1, *(s8*)((char*)state + 0x344),
-                                    px, py, pz);
+                                    ((GameObject*)obj)->anim.localPosX,
+                                    ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ);
 }
 
 void screenTransitionFn_800d7b04(int duration, int type);

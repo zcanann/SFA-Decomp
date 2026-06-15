@@ -10333,20 +10333,19 @@ void fn_802AB5A4(int obj, int p2, int flags)
     }
     if (f & 2)
     {
-        curves_preparePointCollisionFrame(obj, (CurvesCollisionState*)q);
+        curves_preparePointCollisionFrame(obj, (CurvesCollisionState*)((char*)p2 + 4));
         *(f32*)(q + 0x20) = ((GameObject*)obj)->anim.worldPosX;
         *(f32*)(q + 0x24) = lbl_803E80EC + ((GameObject*)obj)->anim.worldPosY;
         *(f32*)(q + 0x28) = ((GameObject*)obj)->anim.worldPosZ;
     }
     if (f & 4)
     {
-        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->localPosX = ((GameObject*)obj)->anim.localPosX;
-        hitState->localPosY = ((GameObject*)obj)->anim.localPosY;
-        hitState->localPosZ = ((GameObject*)obj)->anim.localPosZ;
-        hitState->worldPosX = ((GameObject*)obj)->anim.worldPosX;
-        hitState->worldPosY = ((GameObject*)obj)->anim.worldPosY;
-        hitState->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosX = ((GameObject*)obj)->anim.worldPosX;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosY = ((GameObject*)obj)->anim.worldPosY;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
     }
 }
 #pragma dont_inline reset
