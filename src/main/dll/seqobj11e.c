@@ -75,7 +75,7 @@ void FUN_80152040(int param_1, int param_2)
     int iVar3;
 
     iVar1 = FUN_80017a98();
-    iVar3 = *(int*)(param_1 + 0x4c);
+    iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
     iVar2 = (**(code**)(*DAT_803dd6e8 + 0x20))(0x1be);
     if (iVar2 == 0)
     {
@@ -94,7 +94,7 @@ void FUN_80152040(int param_1, int param_2)
         FUN_80294d28(iVar1, -0x19);
         GameBit_Set((int)*(short*)(iVar3 + 0x1c), 1);
         *(undefined2*)(param_2 + 0x338) = uRam803dc90c;
-        *(byte*)(param_1 + 0xaf) = *(byte*)(param_1 + 0xaf) | 8;
+        *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
         FUN_8011e800(2);
         (*gObjectTriggerInterface)->runSequence(2, (void*)param_1, -1);
     }
