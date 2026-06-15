@@ -287,31 +287,30 @@ void wcpushblock_update(int obj)
         }
         if (fn_80296414((int)player, obj, (int)&state->pushDir) != 0)
         {
-            u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
             {
-                if (dir == WCPUSHBLOCK_DIR_POS_X)
+                if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveA(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                             &state->targetX, &state->targetZ, -1, 0, WCPUSHBLOCK_IFACE);
                 }
-                else if (dir == WCPUSHBLOCK_DIR_NEG_X)
+                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveA(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                             &state->targetX, &state->targetZ, 1, 0, WCPUSHBLOCK_IFACE);
                 }
-                else if (dir == WCPUSHBLOCK_DIR_POS_Z)
+                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveA(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                             &state->targetX, &state->targetZ, 0, -1, WCPUSHBLOCK_IFACE);
                 }
-                else if (dir == WCPUSHBLOCK_DIR_NEG_Z)
+                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveA(
@@ -321,28 +320,28 @@ void wcpushblock_update(int obj)
             }
             else
             {
-                if (dir == WCPUSHBLOCK_DIR_POS_X)
+                if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveB(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                             &state->targetX, &state->targetZ, -1, 0, WCPUSHBLOCK_IFACE);
                 }
-                else if (dir == WCPUSHBLOCK_DIR_NEG_X)
+                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveB(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                             &state->targetX, &state->targetZ, 1, 0, WCPUSHBLOCK_IFACE);
                 }
-                else if (dir == WCPUSHBLOCK_DIR_POS_Z)
+                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveB(
                             obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                             &state->targetX, &state->targetZ, 0, -1, WCPUSHBLOCK_IFACE);
                 }
-                else if (dir == WCPUSHBLOCK_DIR_NEG_Z)
+                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z)
                 {
                     WCPUSHBLOCK_MOVE_RESULT(state) =
                         WCPUSHBLOCK_IFACE->traceMoveB(
