@@ -179,11 +179,11 @@ undefined* FUN_800e82d8(void)
 
 void FUN_800e8630(int param_1)
 {
-    int iVar1;
-    undefined1* puVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    int placementVal;
+    undefined1* row;
+    int rowBase;
+    int slotIdx;
+    int remaining;
 
     if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
     {
@@ -193,38 +193,38 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    iVar3 = 0;
-    puVar2 = &DAT_803a3f08;
-    iVar5 = 9;
-    while ((iVar4 = iVar3, *(int*)(puVar2 + 0x168) != 0 &&
-        (iVar1 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), iVar1 != *(int*)(puVar2 + 0x168))))
+    rowBase = 0;
+    row = &DAT_803a3f08;
+    remaining = 9;
+    while ((slotIdx = rowBase, *(int*)(row + 0x168) != 0 &&
+        (placementVal = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), placementVal != *(int*)(row + 0x168))))
     {
-        iVar4 = iVar3 + 1;
-        if ((*(int*)(puVar2 + 0x178) == 0) || (iVar1 == *(int*)(puVar2 + 0x178))) break;
-        iVar4 = iVar3 + 2;
-        if ((*(int*)(puVar2 + 0x188) == 0) || (iVar1 == *(int*)(puVar2 + 0x188))) break;
-        iVar4 = iVar3 + 3;
-        if ((*(int*)(puVar2 + 0x198) == 0) || (iVar1 == *(int*)(puVar2 + 0x198))) break;
-        iVar4 = iVar3 + 4;
-        if ((*(int*)(puVar2 + 0x1a8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1a8))) break;
-        iVar4 = iVar3 + 5;
-        if ((*(int*)(puVar2 + 0x1b8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1b8))) break;
-        iVar4 = iVar3 + 6;
-        if ((*(int*)(puVar2 + 0x1c8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1c8))) break;
-        puVar2 = puVar2 + 0x70;
-        iVar3 = iVar3 + 7;
-        iVar5 = iVar5 + -1;
-        iVar4 = iVar3;
-        if (iVar5 == 0) break;
+        slotIdx = rowBase + 1;
+        if ((*(int*)(row + 0x178) == 0) || (placementVal == *(int*)(row + 0x178))) break;
+        slotIdx = rowBase + 2;
+        if ((*(int*)(row + 0x188) == 0) || (placementVal == *(int*)(row + 0x188))) break;
+        slotIdx = rowBase + 3;
+        if ((*(int*)(row + 0x198) == 0) || (placementVal == *(int*)(row + 0x198))) break;
+        slotIdx = rowBase + 4;
+        if ((*(int*)(row + 0x1a8) == 0) || (placementVal == *(int*)(row + 0x1a8))) break;
+        slotIdx = rowBase + 5;
+        if ((*(int*)(row + 0x1b8) == 0) || (placementVal == *(int*)(row + 0x1b8))) break;
+        slotIdx = rowBase + 6;
+        if ((*(int*)(row + 0x1c8) == 0) || (placementVal == *(int*)(row + 0x1c8))) break;
+        row = row + 0x70;
+        rowBase = rowBase + 7;
+        remaining = remaining + -1;
+        slotIdx = rowBase;
+        if (remaining == 0) break;
     }
-    if (iVar4 == 0x3f)
+    if (slotIdx == 0x3f)
     {
         return;
     }
-    (&DAT_803a4070)[iVar4 * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
+    (&DAT_803a4070)[slotIdx * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    (&DAT_803a4074)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
+    (&DAT_803a4078)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
+    (&DAT_803a407c)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
         .localPosX;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
@@ -249,22 +249,22 @@ undefined FUN_800e8b98(void)
 void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
-    undefined4 uVar1;
-    undefined4 uVar2;
-    undefined4 uVar3;
-    char* pcVar4;
-    int iVar5;
-    short* psVar6;
-    char* pcVar7;
-    char cVar8;
-    undefined8 uVar9;
-    undefined8 uVar10;
+    undefined4 colorR;
+    undefined4 colorG;
+    undefined4 colorB;
+    char* dst;
+    int mapIdx;
+    short* actPtr;
+    char* nameSrc;
+    char ch;
+    undefined8 cfgHandle;
+    undefined8 taskInfo;
 
-    uVar10 = FUN_80286840();
-    uVar3 = DAT_802c28f8;
-    uVar2 = DAT_802c28f4;
-    uVar1 = DAT_802c28f0;
-    pcVar7 = (char*)((ulonglong)uVar10 >> 0x20);
+    taskInfo = FUN_80286840();
+    colorB = DAT_802c28f8;
+    colorG = DAT_802c28f4;
+    colorR = DAT_802c28f0;
+    nameSrc = (char*)((ulonglong)taskInfo >> 0x20);
     FUN_800033a8(-0x7fc5c0f8, 0, 0xf70);
     if ((*(byte*)(DAT_803de110 + 0x21) & 0x80) == 0)
     {
@@ -299,18 +299,18 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     DAT_803a45f0 = 9;
     DAT_803a3f2b = 0;
     DAT_803a3f29 = 1;
-    iVar5 = 0;
-    psVar6 = &DAT_80312370;
+    mapIdx = 0;
+    actPtr = &DAT_80312370;
     do
     {
-        if (*psVar6 != 0)
+        if (*actPtr != 0)
         {
-            (*gMapEventInterface)->setMapAct(iVar5, 1);
+            (*gMapEventInterface)->setMapAct(mapIdx, 1);
         }
-        psVar6 = psVar6 + 1;
-        iVar5 = iVar5 + 1;
+        actPtr = actPtr + 1;
+        mapIdx = mapIdx + 1;
     }
-    while (iVar5 < 0x78);
+    while (mapIdx < 0x78);
     FUN_800e95e8(7, 0, 1);
     FUN_800e95e8(7, 2, 1);
     FUN_800e95e8(7, 3, 1);
@@ -321,35 +321,35 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(uint)DAT_803a3f28 * 4] = uVar1;
-    (&DAT_803a4590)[(uint)DAT_803a3f28 * 4] = uVar2;
-    (&DAT_803a4594)[(uint)DAT_803a3f28 * 4] = uVar3;
+    (&DAT_803a458c)[(uint)DAT_803a3f28 * 4] = colorR;
+    (&DAT_803a4590)[(uint)DAT_803a3f28 * 4] = colorG;
+    (&DAT_803a4594)[(uint)DAT_803a3f28 * 4] = colorB;
     DAT_803a4465 = 1;
-    if (pcVar7 == (char*)0x0)
+    if (nameSrc == (char*)0x0)
     {
         DAT_803a3f24 = 0x46;
         DAT_803a3f25 = 0x4f;
         DAT_803a3f26 = 0x58;
         DAT_803a3f27 = 0;
-        pcVar7 = (char*)0x0;
+        nameSrc = (char*)0x0;
     }
     else
     {
-        pcVar4 = &DAT_803a3f24;
+        dst = &DAT_803a3f24;
         do
         {
-            cVar8 = *pcVar7;
-            pcVar7 = pcVar7 + 1;
-            *pcVar4 = cVar8;
-            pcVar4 = pcVar4 + 1;
+            ch = *nameSrc;
+            nameSrc = nameSrc + 1;
+            *dst = ch;
+            dst = dst + 1;
         }
-        while (cVar8 != '\0');
+        while (ch != '\0');
     }
-    uVar9 = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
-    cVar8 = (char)uVar10;
-    if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, pcVar7 != (char*)0x0))
+    cfgHandle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
+    ch = (char)taskInfo;
+    if ((ch != -1) && (DAT_803dc4f0 = ch, nameSrc != (char*)0x0))
     {
-        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)uVar10 & 0xff,
+        FUN_80072564(cfgHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)taskInfo & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
@@ -358,174 +358,174 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
 
 void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
 {
-    bool bVar1;
-    char cVar2;
-    uint uVar3;
-    char cVar4;
-    short* psVar5;
-    char* pcVar6;
-    uint* puVar7;
-    uint uVar8;
-    uint uVar9;
-    uint uVar10;
-    char* pcVar11;
-    int iVar12;
-    int iVar13;
-    longlong lVar14;
+    bool isClearMode;
+    char histIdx;
+    uint bits;
+    char histBase;
+    short* bankPtr;
+    char* histPtr;
+    uint* cachePtr;
+    uint bitIdx;
+    uint newBits;
+    uint taskId;
+    char* histTable;
+    int i;
+    int j;
+    longlong taskRaw;
 
-    lVar14 = FUN_80286830();
-    uVar10 = (uint)((ulonglong)lVar14 >> 0x20);
-    uVar8 = (uint)lVar14;
-    pcVar11 = &DAT_803a3be0;
-    if (0x4fffffffff < lVar14)
+    taskRaw = FUN_80286830();
+    taskId = (uint)((ulonglong)taskRaw >> 0x20);
+    bitIdx = (uint)taskRaw;
+    histTable = &DAT_803a3be0;
+    if (0x4fffffffff < taskRaw)
     {
-        uVar10 = (uint)(byte)(&DAT_803a3dac)[uVar10];
+        taskId = (uint)(byte)(&DAT_803a3dac)[taskId];
     }
-    if ((int)uVar10 < 0x78)
+    if ((int)taskId < 0x78)
     {
-        if ((ushort)(&DAT_80312460)[uVar10] != 0)
+        if ((ushort)(&DAT_80312460)[taskId] != 0)
         {
             if (param_3 == -1)
             {
                 param_3 = 1;
             }
-            bVar1 = param_3 == -2;
-            if (bVar1)
+            isClearMode = param_3 == -2;
+            if (isClearMode)
             {
                 param_3 = 0;
             }
-            uVar3 = FUN_80017690((uint)(ushort)(&DAT_80312460)[uVar10]);
+            bits = FUN_80017690((uint)(ushort)(&DAT_80312460)[taskId]);
             if (param_3 == 0)
             {
-                uVar9 = uVar3 & ~(1 << uVar8);
+                newBits = bits & ~(1 << bitIdx);
             }
             else
             {
-                uVar9 = uVar3 | 1 << uVar8;
+                newBits = bits | 1 << bitIdx;
             }
-            FUN_80017698((uint)(ushort)(&DAT_80312460)[uVar10], uVar9);
-            DAT_803de104 = uVar10;
-            uRam803de108 = uVar9;
+            FUN_80017698((uint)(ushort)(&DAT_80312460)[taskId], newBits);
+            DAT_803de104 = taskId;
+            uRam803de108 = newBits;
             if (param_3 == 0)
             {
-                psVar5 = &DAT_80312460;
-                puVar7 = &DAT_803a3c1c;
-                uVar3 = ~(1 << uVar8);
-                iVar12 = 0x14;
+                bankPtr = &DAT_80312460;
+                cachePtr = &DAT_803a3c1c;
+                bits = ~(1 << bitIdx);
+                i = 0x14;
                 do
                 {
-                    if (*psVar5 == (&DAT_80312460)[uVar10])
+                    if (*bankPtr == (&DAT_80312460)[taskId])
                     {
-                        *puVar7 = *puVar7 & uVar3;
+                        *cachePtr = *cachePtr & bits;
                     }
-                    if (psVar5[1] == (&DAT_80312460)[uVar10])
+                    if (bankPtr[1] == (&DAT_80312460)[taskId])
                     {
-                        puVar7[1] = puVar7[1] & uVar3;
+                        cachePtr[1] = cachePtr[1] & bits;
                     }
-                    if (psVar5[2] == (&DAT_80312460)[uVar10])
+                    if (bankPtr[2] == (&DAT_80312460)[taskId])
                     {
-                        puVar7[2] = puVar7[2] & uVar3;
+                        cachePtr[2] = cachePtr[2] & bits;
                     }
-                    if (psVar5[3] == (&DAT_80312460)[uVar10])
+                    if (bankPtr[3] == (&DAT_80312460)[taskId])
                     {
-                        puVar7[3] = puVar7[3] & uVar3;
+                        cachePtr[3] = cachePtr[3] & bits;
                     }
-                    if (psVar5[4] == (&DAT_80312460)[uVar10])
+                    if (bankPtr[4] == (&DAT_80312460)[taskId])
                     {
-                        puVar7[4] = puVar7[4] & uVar3;
+                        cachePtr[4] = cachePtr[4] & bits;
                     }
-                    if (psVar5[5] == (&DAT_80312460)[uVar10])
+                    if (bankPtr[5] == (&DAT_80312460)[taskId])
                     {
-                        puVar7[5] = puVar7[5] & uVar3;
+                        cachePtr[5] = cachePtr[5] & bits;
                     }
-                    psVar5 = psVar5 + 6;
-                    puVar7 = puVar7 + 6;
-                    iVar12 = iVar12 + -1;
+                    bankPtr = bankPtr + 6;
+                    cachePtr = cachePtr + 6;
+                    i = i + -1;
                 }
-                while (iVar12 != 0);
-                if (!bVar1)
+                while (i != 0);
+                if (!isClearMode)
                 {
-                    cVar4 = '\0';
-                    iVar12 = 4;
-                    pcVar6 = pcVar11;
+                    histBase = '\0';
+                    i = 4;
+                    histPtr = histTable;
                     do
                     {
-                        if ((((((uVar10 == (int)*pcVar6) && (cVar2 = cVar4, uVar8 == (byte)pcVar6[1])) ||
-                                    ((cVar2 = cVar4 + '\x01', uVar10 == (int)pcVar6[3] && (uVar8 == (byte)pcVar6[4])))
-                                ) || ((cVar2 = cVar4 + '\x02', uVar10 == (int)pcVar6[6] &&
-                                    (uVar8 == (byte)pcVar6[7])))) ||
-                                ((cVar2 = cVar4 + '\x03', uVar10 == (int)pcVar6[9] && (uVar8 == (byte)pcVar6[10]))))
-                            || ((uVar10 == (int)pcVar6[0xc] &&
-                                (cVar2 = cVar4 + '\x04', uVar8 == (byte)pcVar6[0xd]))))
+                        if ((((((taskId == (int)*histPtr) && (histIdx = histBase, bitIdx == (byte)histPtr[1])) ||
+                                    ((histIdx = histBase + '\x01', taskId == (int)histPtr[3] && (bitIdx == (byte)histPtr[4])))
+                                ) || ((histIdx = histBase + '\x02', taskId == (int)histPtr[6] &&
+                                    (bitIdx == (byte)histPtr[7])))) ||
+                                ((histIdx = histBase + '\x03', taskId == (int)histPtr[9] && (bitIdx == (byte)histPtr[10]))))
+                            || ((taskId == (int)histPtr[0xc] &&
+                                (histIdx = histBase + '\x04', bitIdx == (byte)histPtr[0xd]))))
                             goto LAB_800e9628;
-                        pcVar6 = pcVar6 + 0xf;
-                        cVar4 = cVar4 + '\x05';
-                        iVar12 = iVar12 + -1;
+                        histPtr = histPtr + 0xf;
+                        histBase = histBase + '\x05';
+                        i = i + -1;
                     }
-                    while (iVar12 != 0);
-                    cVar2 = -1;
+                    while (i != 0);
+                    histIdx = -1;
                 LAB_800e9628:
-                    if (cVar2 == -1)
+                    if (histIdx == -1)
                     {
-                        iVar12 = 0;
-                        iVar13 = 0x14;
+                        i = 0;
+                        j = 0x14;
                         do
                         {
-                            if (*pcVar11 == -1)
+                            if (*histTable == -1)
                             {
-                                iVar12 = iVar12 * 3;
-                                (&DAT_803a3be0)[iVar12] = (char)uVar10;
-                                (&DAT_803a3be1)[iVar12] = (char)lVar14;
-                                (&DAT_803a3be2)[iVar12] = 3;
+                                i = i * 3;
+                                (&DAT_803a3be0)[i] = (char)taskId;
+                                (&DAT_803a3be1)[i] = (char)taskRaw;
+                                (&DAT_803a3be2)[i] = 3;
                                 break;
                             }
-                            pcVar11 = pcVar11 + 3;
-                            iVar12 = iVar12 + 1;
-                            iVar13 = iVar13 + -1;
+                            histTable = histTable + 3;
+                            i = i + 1;
+                            j = j + -1;
                         }
-                        while (iVar13 != 0);
+                        while (j != 0);
                     }
                 }
             }
             else
             {
-                uVar8 = 1 << uVar8;
-                if ((uVar3 & uVar8) == 0)
+                bitIdx = 1 << bitIdx;
+                if ((bits & bitIdx) == 0)
                 {
-                    psVar5 = &DAT_80312460;
-                    puVar7 = &DAT_803a3c1c;
-                    iVar12 = 0x14;
+                    bankPtr = &DAT_80312460;
+                    cachePtr = &DAT_803a3c1c;
+                    i = 0x14;
                     do
                     {
-                        if (*psVar5 == (&DAT_80312460)[uVar10])
+                        if (*bankPtr == (&DAT_80312460)[taskId])
                         {
-                            *puVar7 = *puVar7 | uVar8;
+                            *cachePtr = *cachePtr | bitIdx;
                         }
-                        if (psVar5[1] == (&DAT_80312460)[uVar10])
+                        if (bankPtr[1] == (&DAT_80312460)[taskId])
                         {
-                            puVar7[1] = puVar7[1] | uVar8;
+                            cachePtr[1] = cachePtr[1] | bitIdx;
                         }
-                        if (psVar5[2] == (&DAT_80312460)[uVar10])
+                        if (bankPtr[2] == (&DAT_80312460)[taskId])
                         {
-                            puVar7[2] = puVar7[2] | uVar8;
+                            cachePtr[2] = cachePtr[2] | bitIdx;
                         }
-                        if (psVar5[3] == (&DAT_80312460)[uVar10])
+                        if (bankPtr[3] == (&DAT_80312460)[taskId])
                         {
-                            puVar7[3] = puVar7[3] | uVar8;
+                            cachePtr[3] = cachePtr[3] | bitIdx;
                         }
-                        if (psVar5[4] == (&DAT_80312460)[uVar10])
+                        if (bankPtr[4] == (&DAT_80312460)[taskId])
                         {
-                            puVar7[4] = puVar7[4] | uVar8;
+                            cachePtr[4] = cachePtr[4] | bitIdx;
                         }
-                        if (psVar5[5] == (&DAT_80312460)[uVar10])
+                        if (bankPtr[5] == (&DAT_80312460)[taskId])
                         {
-                            puVar7[5] = puVar7[5] | uVar8;
+                            cachePtr[5] = cachePtr[5] | bitIdx;
                         }
-                        psVar5 = psVar5 + 6;
-                        puVar7 = puVar7 + 6;
-                        iVar12 = iVar12 + -1;
+                        bankPtr = bankPtr + 6;
+                        cachePtr = cachePtr + 6;
+                        i = i + -1;
                     }
-                    while (iVar12 != 0);
+                    while (i != 0);
                 }
             }
         }
@@ -536,8 +536,8 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
 
 void FUN_800e9e9c(void)
 {
-    uint uVar1;
-    int iVar2;
+    uint colorIdx;
+    int mode;
     undefined4 extraout_r4;
     undefined4 uVar3;
     undefined4 in_r6;
@@ -560,13 +560,13 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    uVar1 = (uint)DAT_803a3f28;
-    FUN_800176dc((double)(float)(&DAT_803a458c)[uVar1 * 4], (double)(float)(&DAT_803a4590)[uVar1 * 4],
-                 (double)(float)(&DAT_803a4594)[uVar1 * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
-                 (int)(char)(&DAT_803a4599)[uVar1 * 0x10], extraout_r4, uVar3, in_r6, in_r7, in_r8, in_r9,
+    colorIdx = (uint)DAT_803a3f28;
+    FUN_800176dc((double)(float)(&DAT_803a458c)[colorIdx * 4], (double)(float)(&DAT_803a4590)[colorIdx * 4],
+                 (double)(float)(&DAT_803a4594)[colorIdx * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
+                 (int)(char)(&DAT_803a4599)[colorIdx * 0x10], extraout_r4, uVar3, in_r6, in_r7, in_r8, in_r9,
                  in_r10);
-    iVar2 = FUN_80006b7c();
-    if (iVar2 != 4)
+    mode = FUN_80006b7c();
+    if (mode != 4)
     {
         FUN_80006b84(1);
     }
@@ -579,90 +579,90 @@ undefined4
 FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
-    undefined4 uVar1;
-    undefined* puVar2;
+    undefined4 result;
+    undefined* saveFile;
 
-    uVar1 = FUN_80017498();
-    puVar2 = FUN_800e82d8();
+    result = FUN_80017498();
+    saveFile = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)puVar2[5] * 2)
+                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)saveFile[5] * 2)
     ]
     )
     ;
-    return uVar1;
+    return result;
 }
 
 undefined FUN_800ea9ac(void)
 {
-    undefined* puVar1;
+    undefined* saveFile;
 
-    puVar1 = FUN_800e82d8();
-    return puVar1[5];
+    saveFile = FUN_800e82d8();
+    return saveFile[5];
 }
 
 void FUN_800ea9b8(void)
 {
-    uint uVar1;
-    undefined* puVar2;
-    short sVar3;
-    uint uVar4;
-    uint uVar5;
-    uint uVar6;
-    uint unaff_r27;
-    uint uVar7;
-    uint uVar8;
-    short* psVar9;
+    uint taskId;
+    undefined* saveFile;
+    short histIdx;
+    uint bits;
+    uint mask;
+    uint bank;
+    uint cachedBits;
+    uint cachedBank;
+    uint i;
+    short* taskPtr;
 
-    uVar1 = FUN_80286834();
-    puVar2 = FUN_800e82d8();
-    uVar7 = 0xffffffff;
-    if (puVar2[6] == '\0')
+    taskId = FUN_80286834();
+    saveFile = FUN_800e82d8();
+    cachedBank = 0xffffffff;
+    if (saveFile[6] == '\0')
     {
-        psVar9 = &DAT_80312632;
-        for (uVar8 = 1; (short)uVar8 < 0xce; uVar8 = uVar8 + 1)
+        taskPtr = &DAT_80312632;
+        for (i = 1; (short)i < 0xce; i = i + 1)
         {
-            if ((*psVar9 == 0xffff) || (*psVar9 == -1))
+            if ((*taskPtr == 0xffff) || (*taskPtr == -1))
             {
-                uVar5 = 1 << (uVar8 & 0x1f);
-                uVar6 = (uint)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
-                uVar4 = FUN_80017690(uVar6);
-                if ((uVar4 & uVar5) == 0)
+                mask = 1 << (i & 0x1f);
+                bank = (uint)(short)((short)((i & 0xff) >> 5) + 0x12f);
+                bits = FUN_80017690(bank);
+                if ((bits & mask) == 0)
                 {
-                    FUN_80017698(uVar6, uVar4 | uVar5);
+                    FUN_80017698(bank, bits | mask);
                 }
             }
-            psVar9 = psVar9 + 1;
+            taskPtr = taskPtr + 1;
         }
     }
-    uVar6 = 1 << (uVar1 & 0x1f);
-    uVar4 = (uint)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
-    uVar8 = FUN_80017690(uVar4);
-    if ((uVar8 & uVar6) == 0)
+    bank = 1 << (taskId & 0x1f);
+    bits = (uint)(short)((short)((taskId & 0xff) >> 5) + 0x12f);
+    i = FUN_80017690(bits);
+    if ((i & bank) == 0)
     {
-        FUN_80017698(uVar4, uVar8 | uVar6);
-        if (puVar2[6] != '\x05')
+        FUN_80017698(bits, i | bank);
+        if (saveFile[6] != '\x05')
         {
-            puVar2[6] = puVar2[6] + '\x01';
+            saveFile[6] = saveFile[6] + '\x01';
         }
-        for (sVar3 = 4; sVar3 != 0; sVar3 = sVar3 + -1)
+        for (histIdx = 4; histIdx != 0; histIdx = histIdx + -1)
         {
-            puVar2[sVar3] = puVar2[sVar3 + -1];
+            saveFile[histIdx] = saveFile[histIdx + -1];
         }
-        *puVar2 = (char)uVar1;
-        if ((uint)(byte)puVar2[5] == (uVar1 & 0xff)
+        *saveFile = (char)taskId;
+        if ((uint)(byte)saveFile[5] == (taskId & 0xff)
         )
         {
             do
             {
-                puVar2[5] = puVar2[5] + '\x01';
-                uVar1 = (uint)(short)(((byte)puVar2[5] >> 5) + 0x12f);
-                if (uVar1 != (int)(short)uVar7)
+                saveFile[5] = saveFile[5] + '\x01';
+                taskId = (uint)(short)(((byte)saveFile[5] >> 5) + 0x12f);
+                if (taskId != (int)(short)cachedBank)
                 {
-                    unaff_r27 = FUN_80017690(uVar1);
-                    uVar7 = uVar1;
+                    cachedBits = FUN_80017690(taskId);
+                    cachedBank = taskId;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)puVar2[5] & 0x1f)) != 0);
+            while ((cachedBits & 1 << ((byte)saveFile[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
