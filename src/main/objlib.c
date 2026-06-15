@@ -1828,7 +1828,7 @@ undefined4 ObjTrigger_IsSet(int obj)
     int flagEnabled;
     int flagBlocked;
 
-    if (*(uint*)(*(int*)(obj + 0x50) + 0x40) == 0)
+    if (*(uint*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) == 0)
     {
         return 0;
     }
@@ -2085,8 +2085,8 @@ int Obj_GetYawDeltaToObject(ushort* obj, int target, float* distOut)
     float dx;
     float dz;
 
-    dx = *(float*)(obj + 6) - *(float*)(target + 0xc);
-    dz = *(float*)(obj + 10) - *(float*)(target + 0x14);
+    dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX;
+    dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ;
     yawDelta = getAngle(dx, dz);
     if (distOut != (float*)0x0)
     {
