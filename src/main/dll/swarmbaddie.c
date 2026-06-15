@@ -295,13 +295,15 @@ void gameTextFn_80125ba4(int idx)
         }
         lbl_803DD85A = 1;
         lbl_803DD85B = idx;
-        idx = idx * 0xc;
-        if (*(int*)(lbl_8031AF34 + idx) != -1 && AudioStream_IsPreparing() == 0)
         {
-            AudioStream_Play(*(int*)(lbl_8031AF34 + idx), AudioStream_StartPrepared);
+        int off = idx * 0xc;
+        u8* base = lbl_8031AF34;
+        if (*(int*)(base + off) != -1 && AudioStream_IsPreparing() == 0)
+        {
+            AudioStream_Play(*(int*)(base + off), AudioStream_StartPrepared);
         }
         {
-            u8* e = &lbl_8031AF34[idx];
+            u8* e = &lbl_8031AF34[off];
             if (e[7] != 0)
             {
                 (*gGameUIInterface)->showNpcDialogue(*(u16*)(e + 4), 0, 0, 0);
@@ -324,6 +326,7 @@ void gameTextFn_80125ba4(int idx)
                     lbl_803DD7A9 = 0;
                 }
             }
+        }
         }
         lbl_803DD858 = 0x159;
         lbl_803DD856 = 0;
