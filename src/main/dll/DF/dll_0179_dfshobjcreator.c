@@ -1,8 +1,5 @@
 #include "main/obj_placement.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/resource.h"
 
