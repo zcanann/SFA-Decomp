@@ -160,7 +160,6 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -180,20 +179,22 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
 
     if (skipTextureFree == 0)
     {
-        if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
+        ExpgfxTableEntry* expTab = runtime->expTab;
+
+        if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource != 0)
         {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree((void*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
+            textureFree((void*)expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource);
             gExpgfxTextureFreeInProgress = 0;
         }
 
-        if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].refCount != 0)
+        if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount != 0)
         {
-            runtime->expTab[Expgfx_GetSlotTableIndex(slot)].refCount--;
-            if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].refCount == 0)
+            expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount--;
+            if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount == 0)
             {
-                runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource = 0;
-                runtime->expTab[Expgfx_GetSlotTableIndex(slot)].sourceId = 0;
+                expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource = 0;
+                expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].sourceId = 0;
             }
         }
         else
@@ -216,7 +217,6 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
         gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
     }
 }
-#pragma dont_inline reset
 
 void expgfxRemoveAll(void)
 {
