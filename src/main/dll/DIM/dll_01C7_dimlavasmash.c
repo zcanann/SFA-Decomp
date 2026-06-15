@@ -299,19 +299,19 @@ void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimlavasmash_update(int* obj)
 {
-    u8* sub;
+    u8* state;
     ObjHitsPriorityState* hitState;
-    sub = ((GameObject*)obj)->extra;
-    if (sub[2] == 1)
+    state = ((GameObject*)obj)->extra;
+    if (state[2] == 1)
     {
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
     }
     else if (((GameObject*)obj)->unkF4 == 0)
     {
-        if ((s8)sub[0] != -1)
+        if ((s8)state[0] != -1)
         {
-            (*gObjectTriggerInterface)->runSequence((s8)sub[0], obj, -1);
+            (*gObjectTriggerInterface)->runSequence((s8)state[0], obj, -1);
         }
         ((GameObject*)obj)->unkF4 = 1;
     }
@@ -388,6 +388,8 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 #pragma opt_propagation reset
 #pragma dont_inline reset
 
+#define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397  /* dimlavaball cannonball (0x18d) */
+
 int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int mapGetBlock(void);
@@ -406,7 +408,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             hitState->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             {
-                if (*(s16*)((char*)hit + 0x46) == 397)
+                if (*(s16*)((char*)hit + 0x46) == DIMLAVASMASH_HIT_SEQID_CANNONBALL)
                 {
                     ((DimlavasmashState*)state)->state = 2;
                     Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
