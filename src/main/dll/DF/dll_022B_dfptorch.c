@@ -45,6 +45,8 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
+/* chuka extra block (extraSize 0xC). */
+
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
@@ -531,11 +533,7 @@ void DFP_Torch_init(int obj, int def)
 {
     DfpTorchState* state = ((GameObject*)obj)->extra;
     void* res;
-    struct
-    {
-        u8 pad[16];
-        f32 arg;
-    } spawnArg;
+    f32 spawnArg;
     int motionRate;
     *(s16*)obj = (s16)((*(s8*)(def + 0x18) & 0x3f) << 10);
     motionRate = *(s16*)(def + 0x1a);
@@ -549,7 +547,7 @@ void DFP_Torch_init(int obj, int def)
     }
     state->mode = *(u8*)(def + 0x19);
     state->gameBit = *(s16*)(def + 0x1e);
-    spawnArg.arg = lbl_803E63E0;
+    spawnArg = lbl_803E63E0;
     switch (state->mode)
     {
     case 0:
