@@ -302,7 +302,6 @@ void fn_801A5D88(int obj, int explosionVariant)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
     u32 r;
-    u32 r2;
     int player;
     f32 dist;
     f32 falloff;
@@ -312,18 +311,14 @@ void fn_801A5D88(int obj, int explosionVariant)
     {
         f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        r2 = randomGetRange(0x32, 0x3c);
-        size = (f32)(int)
-        r2;
+        size = (f32)(s32)randomGetRange(0x32, 0x3c);
         spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, size);
     }
     else
     {
         f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        r2 = randomGetRange(0x32, 0x3c);
-        size = (f32)(int)
-        r2;
+        size = (f32)(s32)randomGetRange(0x32, 0x3c);
         spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, size);
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
