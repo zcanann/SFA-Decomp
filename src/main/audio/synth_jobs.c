@@ -1,6 +1,5 @@
 #include "main/audio/data_ref.h"
 #include "main/audio/synth_job.h"
-#include "main/audio/synth_jobs.h"
 
 extern void sndBegin(void);
 extern void sndEnd(void);
