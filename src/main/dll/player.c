@@ -6043,8 +6043,8 @@ int fn_8029F108(int obj, int state)
     vec = objModelGetVecFn_800395d8(obj, 5);
     if (vec != NULL)
     {
-        *(s16*)vec = (int)((f32) * (s16*)((char*)sub + 0x2) * t);
-        *(s16*)((char*)vec + 0x4) = (int)((f32) * (s16*)((char*)sub + 0x4) * t);
+        *(s16*)vec = (s16)((f32) * (s16*)((char*)sub + 0x2) * t);
+        *(s16*)((char*)vec + 0x4) = (s16)((f32) * (s16*)((char*)sub + 0x4) * t);
     }
     (*(void (*)(int, f32*, f32*, f32*))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x34)))(
         sub, &cam[0], &cam[1], &cam[2]);
