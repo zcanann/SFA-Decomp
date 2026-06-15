@@ -189,7 +189,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.hw[4] = *(s16*)(base + 0x21c);
     buf.hw[5] = *(s16*)(base + 0x21e);
     buf.hw[6] = *(s16*)(base + 0x220);
-    buf.cmds = buf.entries;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {

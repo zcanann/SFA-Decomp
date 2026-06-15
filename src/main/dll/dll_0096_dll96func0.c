@@ -148,7 +148,7 @@ int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.hw[4] = *(s16*)(base + 0x200);
     buf.hw[5] = *(s16*)(base + 0x202);
     buf.hw[6] = *(s16*)(base + 0x204);
-    buf.cmds = buf.entries;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0xc0104c0;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
