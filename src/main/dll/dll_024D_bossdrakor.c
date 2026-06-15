@@ -435,10 +435,10 @@ int bossdrakor_chooseNextMove(int obj, f32* speedOut)
         {
             d += 0xffff;
         }
-        v = (d < 0) ? -d : d;
+        v = (d >= 0) ? d : -d;
         if (v > 0x2000)
         {
-            v = (d < 0) ? -d : d;
+            v = (d >= 0) ? d : -d;
             if (v < 0x6000)
             {
                 if (d > 0)
