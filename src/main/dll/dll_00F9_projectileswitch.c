@@ -1,11 +1,8 @@
 /* DLL 0x00F9 (projectileswitch) — Projectile switch object [0x8017A350-0x8017A8EC). */
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
-#include "main/objlib.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/screenOverlay.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 
 extern void GameBit_Set(int gameBit, int value);
