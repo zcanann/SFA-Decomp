@@ -1,4 +1,5 @@
 #include "main/dll/LGT/LGTcontrollight.h"
+#include "main/dll/LGT/lgtcontrollightrec_struct.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void* params, void* outVec);
@@ -22,34 +23,34 @@ int fn_801F4C04(int* obj)
 
 void fn_801F4C28(u8* obj, u8* rec)
 {
-    *(f32*)(rec + 0x04) = *(f32*)(obj + 0x0c);
-    *(f32*)(rec + 0x14) = *(f32*)(obj + 0x10);
-    *(f32*)(rec + 0x24) = *(f32*)(obj + 0x14);
-    *(f32*)(rec + 0x08) = *(f32*)(obj + 0x0c);
-    *(f32*)(rec + 0x18) = *(f32*)(obj + 0x10);
-    *(f32*)(rec + 0x28) = *(f32*)(obj + 0x14);
-    *(f32*)(rec + 0x0c) = *(f32*)(obj + 0x0c);
-    *(f32*)(rec + 0x1c) = *(f32*)(obj + 0x10);
-    *(f32*)(rec + 0x2c) = *(f32*)(obj + 0x14);
-    *(f32*)(rec + 0x10) = *(f32*)(obj + 0x0c);
-    *(f32*)(rec + 0x20) = *(f32*)(obj + 0x10);
-    *(f32*)(rec + 0x30) = *(f32*)(obj + 0x14);
-    *(f32*)(rec + 0x44) = lbl_803E5EAC;
-    *(f32*)(rec + 0x48) = lbl_803E5EB0;
-    *(f32*)(rec + 0x40) = lbl_803E5EB4;
-    rec[0x68] = 0;
-    rec[0x67] = 0;
-    *(s16*)(rec + 0x62) = (s16)randomGetRange(0x1f4, 0x5dc);
-    *(s16*)(rec + 0x60) = (s16)randomGetRange(0, 0xfde8);
-    *(s16*)(rec + 0x64) = 0x3c;
-    rec[0x66] = 4;
-    *(f32*)(rec + 0x4c) = lbl_803E5EB8;
-    *(f32*)(rec + 0x50) = lbl_803E5EBC;
-    *(f32*)(rec + 0x54) = *(f32*)(obj + 0x0c);
-    *(f32*)(rec + 0x58) = *(f32*)(obj + 0x10);
-    *(f32*)(rec + 0x5c) = *(f32*)(obj + 0x14);
-    rec[0x6b] = 1;
-    *(f32*)(rec + 0x78) = lbl_803E5EC0;
+    ((LgtFireFlyRec*)rec)->src0X = *(f32*)(obj + 0x0c);
+    ((LgtFireFlyRec*)rec)->src0Y = *(f32*)(obj + 0x10);
+    ((LgtFireFlyRec*)rec)->src0Z = *(f32*)(obj + 0x14);
+    ((LgtFireFlyRec*)rec)->src1X = *(f32*)(obj + 0x0c);
+    ((LgtFireFlyRec*)rec)->src1Y = *(f32*)(obj + 0x10);
+    ((LgtFireFlyRec*)rec)->src1Z = *(f32*)(obj + 0x14);
+    ((LgtFireFlyRec*)rec)->src2X = *(f32*)(obj + 0x0c);
+    ((LgtFireFlyRec*)rec)->src2Y = *(f32*)(obj + 0x10);
+    ((LgtFireFlyRec*)rec)->src2Z = *(f32*)(obj + 0x14);
+    ((LgtFireFlyRec*)rec)->src3X = *(f32*)(obj + 0x0c);
+    ((LgtFireFlyRec*)rec)->src3Y = *(f32*)(obj + 0x10);
+    ((LgtFireFlyRec*)rec)->src3Z = *(f32*)(obj + 0x14);
+    ((LgtFireFlyRec*)rec)->baseX = lbl_803E5EAC;
+    ((LgtFireFlyRec*)rec)->baseY = lbl_803E5EB0;
+    ((LgtFireFlyRec*)rec)->baseZ = lbl_803E5EB4;
+    ((LgtFireFlyRec*)rec)->unk68 = 0;
+    ((LgtFireFlyRec*)rec)->unk67 = 0;
+    ((LgtFireFlyRec*)rec)->angleStep = (s16)randomGetRange(0x1f4, 0x5dc);
+    ((LgtFireFlyRec*)rec)->angle = (s16)randomGetRange(0, 0xfde8);
+    ((LgtFireFlyRec*)rec)->ampMax = 0x3c;
+    ((LgtFireFlyRec*)rec)->unk66 = 4;
+    ((LgtFireFlyRec*)rec)->radiusMin = lbl_803E5EB8;
+    ((LgtFireFlyRec*)rec)->radius = lbl_803E5EBC;
+    ((LgtFireFlyRec*)rec)->posX = *(f32*)(obj + 0x0c);
+    ((LgtFireFlyRec*)rec)->posY = *(f32*)(obj + 0x10);
+    ((LgtFireFlyRec*)rec)->posZ = *(f32*)(obj + 0x14);
+    ((LgtFireFlyRec*)rec)->firstFrame = 1;
+    ((LgtFireFlyRec*)rec)->unk78 = lbl_803E5EC0;
 }
 
 void fn_801F4D54(int obj, u8* rec)
@@ -66,40 +67,40 @@ void fn_801F4D54(int obj, u8* rec)
         f32 z2;
     } locals;
 
-    *(f32*)(rec + 0x34) = lbl_803E5EC4;
-    if (rec[0x6b] != 0)
+    ((LgtFireFlyRec*)rec)->offX = lbl_803E5EC4;
+    if (((LgtFireFlyRec*)rec)->firstFrame != 0)
     {
-        *(f32*)(rec + 0x38) = (f32)(s32)(*(s16*)(rec + 0x64));
-        rec[0x6b] = 0;
+        ((LgtFireFlyRec*)rec)->offY = (f32)(s32)(((LgtFireFlyRec*)rec)->ampMax);
+        ((LgtFireFlyRec*)rec)->firstFrame = 0;
     }
     else
     {
-        *(f32*)(rec + 0x38) =
-            (f32)(s32)(randomGetRange(0, *(s16*)(rec + 0x64)));
+        ((LgtFireFlyRec*)rec)->offY =
+            (f32)(s32)(randomGetRange(0, ((LgtFireFlyRec*)rec)->ampMax));
     }
-    if (*(f32*)(rec + 0x50) < lbl_803E5EC8)
+    if (((LgtFireFlyRec*)rec)->radius < lbl_803E5EC8)
     {
-        *(f32*)(rec + 0x3c) = lbl_803E5EC4;
+        ((LgtFireFlyRec*)rec)->offZ = lbl_803E5EC4;
     }
     else
     {
-        *(f32*)(rec + 0x3c) =
-            *(f32*)(rec + 0x50) -
+        ((LgtFireFlyRec*)rec)->offZ =
+            ((LgtFireFlyRec*)rec)->radius -
             (f32)(s32)(randomGetRange(0x14, (s16)(s32) * (f32*)(rec + 0x50)));
     }
-    *(s16*)(rec + 0x60) += (s16)randomGetRange(0xbb8, 0x1388);
+    ((LgtFireFlyRec*)rec)->angle += (s16)randomGetRange(0xbb8, 0x1388);
     locals.z0 = lbl_803E5EC4;
     locals.z1 = lbl_803E5EC4;
     locals.z2 = lbl_803E5EC4;
     locals.m = lbl_803E5EB4;
     locals.b = 0;
     locals.a = 0;
-    locals.angle = *(s16*)(rec + 0x60);
+    locals.angle = ((LgtFireFlyRec*)rec)->angle;
     vecRotateZXY(&locals, rec + 0x34);
-    *(f32*)(rec + 0x34) =
-        *(f32*)(rec + 0x34) + *(f32*)(rec + 0x54);
-    *(f32*)(rec + 0x38) =
-        *(f32*)(rec + 0x38) + *(f32*)(rec + 0x58);
-    *(f32*)(rec + 0x3c) =
-        *(f32*)(rec + 0x3c) + *(f32*)(rec + 0x5c);
+    ((LgtFireFlyRec*)rec)->offX =
+        ((LgtFireFlyRec*)rec)->offX + ((LgtFireFlyRec*)rec)->posX;
+    ((LgtFireFlyRec*)rec)->offY =
+        ((LgtFireFlyRec*)rec)->offY + ((LgtFireFlyRec*)rec)->posY;
+    ((LgtFireFlyRec*)rec)->offZ =
+        ((LgtFireFlyRec*)rec)->offZ + ((LgtFireFlyRec*)rec)->posZ;
 }
