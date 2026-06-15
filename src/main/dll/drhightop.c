@@ -3,10 +3,12 @@
 #include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
+#include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
+#include "main/dll/DR/DRhightop.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 
@@ -82,7 +84,7 @@ extern int lbl_803DC0D4;
 extern int lbl_8032852C[];
 extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
-extern void setMotionBlur(int mode, f32 amount);
+extern void setMotionBlur(double amount, int p2);
 extern void fn_8009A8C8();
 extern int arrayIndexOf();
 extern f32 lbl_803E5BB4;
@@ -231,12 +233,13 @@ void fn_801EB0D4(uint obj, int stateRaw)
                     (cur < lim)
                         ? lim
                         : ((cur > lbl_803E5B80) ? lbl_803E5B80 : cur);
+                cur = st->airMeterCurrent;
                 st->airMeterCurrent =
-                    (st->airMeterCurrent < lbl_803E5AE8)
+                    (cur < lbl_803E5AE8)
                         ? lbl_803E5AE8
-                        : ((st->airMeterCurrent > st->airMeterMax)
+                        : ((cur > st->airMeterMax)
                                ? st->airMeterMax
-                               : st->airMeterCurrent);
+                               : cur);
             }
             if (st->airMeterCurrent < lbl_803E5B84)
             {
@@ -249,7 +252,7 @@ void fn_801EB0D4(uint obj, int stateRaw)
             Sfx_StopObjectChannel((u32)obj, 0x7f);
             if (st->unk464 > lbl_803E5B20)
             {
-                if ((int)randomGetRange(0, 10) == 0)
+                if ((u32)randomGetRange(0, 10) == 0)
                 {
                     Sfx_PlayFromObject(0, SFXsp_lfoot_taunt7);
                 }
@@ -301,12 +304,15 @@ void fn_801EB334(int* obj)
     }
     ObjHits_EnableObject((u32)obj);
     (*gPathControlInterface)->attachObject((void*)obj, (char*)state + 0x178);
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosX = ((GameObject*)obj)->anim.worldPosX;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosY = ((GameObject*)obj)->anim.worldPosY;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
+    {
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->localPosX = ((GameObject*)obj)->anim.localPosX;
+        hitState->localPosY = ((GameObject*)obj)->anim.localPosY;
+        hitState->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+        hitState->worldPosX = ((GameObject*)obj)->anim.worldPosX;
+        hitState->worldPosY = ((GameObject*)obj)->anim.worldPosY;
+        hitState->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
+    }
 }
 
 undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* seq)
@@ -390,7 +396,6 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
 
 void fn_801EB634(int obj, int stateRaw)
 {
-    extern int ObjHits_IsObjectEnabled(int obj);
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     int hitKind;
     int hitReact;
@@ -402,7 +407,7 @@ void fn_801EB634(int obj, int stateRaw)
     int hitObj;
     float velNrm[3];
 
-    hitReact = *(int *)&((GameObject *)obj)->anim.hitReactState;
+    hitReact = *(int*)(obj + 0x54);
     if (ObjHits_IsObjectEnabled(obj) != 0)
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
@@ -439,7 +444,7 @@ void fn_801EB634(int obj, int stateRaw)
         case 0x1d:
             if ((u32)(st->flags428 >> 1 & 1) == 0)
             {
-                setMotionBlur(1, lbl_803E5BAC);
+                setMotionBlur(lbl_803E5BAC, 1);
                 st->collisionFxTimer = (f32)(s32)
                 lbl_803DC0D0;
                 st->collisionFxDamping = lbl_803DC0C8;
@@ -453,7 +458,7 @@ void fn_801EB634(int obj, int stateRaw)
                 (hitObj = hit, *(u32*)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
             (hitKind = arrayIndexOf(lbl_8032852C, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
         {
-            fn_8009A8C8(obj, lbl_803E5BB0);
+            fn_8009A8C8((double)lbl_803E5BB0, obj);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x551, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x552, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x554, NULL, 4, -1, NULL);
@@ -688,9 +693,9 @@ void fn_801EBD60(int obj, int stateRaw)
                 effect.rotZ = 0;
                 effect.rotY = 0;
                 effect.rotX = 0;
-                effect.x = ((GameObject *)obj)->anim.localPosX;
-                effect.y = lbl_803E5C10 + ((GameObject *)obj)->anim.localPosY;
-                effect.z = ((GameObject *)obj)->anim.localPosZ;
+                effect.x = ((GameObject*)obj)->anim.localPosX;
+                effect.y = lbl_803E5C10 + ((GameObject*)obj)->anim.localPosY;
+                effect.z = ((GameObject*)obj)->anim.localPosZ;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x80a, &effect, 1, -1, NULL);
             }
             break;
