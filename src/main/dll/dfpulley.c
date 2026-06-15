@@ -1,4 +1,5 @@
 #include "main/dll/DF/DFpulley.h"
+#include "main/game_object.h"
 #include "dolphin/mtx.h"
 
 extern f32 lbl_803E4DFC;
@@ -40,18 +41,18 @@ void DFPulley_integrateLinks(u8* self)
                 linkPtr += 4;
             }
             mag = PSVECMag(&accel);
-            if (mag > *(f32*)(self + 0x2C))
+            if (mag > ((GameObject *)self)->anim.velocityZ)
             {
-                PSVECScale(&accel, &accel, *(f32*)(self + 0x2C) / mag);
+                PSVECScale(&accel, &accel, ((GameObject *)self)->anim.velocityZ / mag);
             }
             PSVECScale(&accel, &accel, *(f32*)(self + 0x40));
             PSVECAdd(&accel, (Vec*)(part + 0x18), &accel);
             PSVECAdd((Vec*)(part + 0xC), &accel, (Vec*)(part + 0xC));
             PSVECScale((Vec*)(part + 0xC), &velscaled, *(f32*)(self + 0x38));
             PSVECSubtract((Vec*)(part + 0xC), &velscaled, (Vec*)(part + 0xC));
-            *(f32*)(part + 0x10) = *(f32*)(self + 0x30) * *(f32*)(self + 0x3C)
+            *(f32*)(part + 0x10) = *(f32 *)&((GameObject *)self)->anim.parent * *(f32*)(self + 0x3C)
                 + *(f32*)(part + 0x10);
-            PSVECScale((Vec*)(part + 0xC), &scaled, *(f32*)(self + 0x30));
+            PSVECScale((Vec*)(part + 0xC), &scaled, *(f32 *)&((GameObject *)self)->anim.parent);
             PSVECAdd((Vec*)part, &scaled, (Vec*)part);
         }
     }
