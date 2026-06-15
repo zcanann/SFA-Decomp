@@ -988,4 +988,3 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, uint flags)
 
 void dll_70_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);

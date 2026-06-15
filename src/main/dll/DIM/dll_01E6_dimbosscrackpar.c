@@ -15,7 +15,6 @@ typedef struct DimbosscrackparPlacement
     s16 unk1E;
 } DimbosscrackparPlacement;
 
-extern u8 Obj_IsLoadingLocked(void);
 extern f32 lbl_803E4D98;
 
 void dimbosscrackpar_hitDetect(void)

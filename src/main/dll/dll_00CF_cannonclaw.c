@@ -34,7 +34,6 @@ extern f32 lbl_803E3BB4;
 extern void objRenderFn_8003b8f4(f32);
 extern void* gGrimbleStateHandlersA[11];
 extern void* gGrimbleStateHandlersB[6];
-int grimble_animEventCallback(void);
 
 extern f32 lbl_803E2F30;
 extern uint GameBit_Get(int eventId);

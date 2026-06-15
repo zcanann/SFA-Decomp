@@ -90,7 +90,6 @@ extern f32 lbl_803E569C;
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
 extern void* lbl_803DDB78;
-extern f32 lbl_803E49D4;
 extern f32 lbl_803E49F0;
 extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);

@@ -49,7 +49,6 @@ extern f32 lbl_803DBEF0;
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-extern int* getTrickyObject(void);
 
 void DIMwooddoor_updateFallingDebris(int* obj)
 {

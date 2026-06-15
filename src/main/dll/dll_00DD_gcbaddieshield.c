@@ -304,15 +304,12 @@ extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern f32 lbl_803E31F8;
-extern f32 lbl_803E3388;
-extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
 extern f32 lbl_803E3204;
 extern f32 lbl_803E3208;
 extern f32 lbl_803E320C;
 extern f32 lbl_803E3210;
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int obj)
 {

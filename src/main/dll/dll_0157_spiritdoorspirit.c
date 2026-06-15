@@ -71,10 +71,8 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
-extern f32 lbl_803E422C;
 extern uint GameBit_Get(int eventId);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-extern f32 lbl_803E4190;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803DBE78;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);

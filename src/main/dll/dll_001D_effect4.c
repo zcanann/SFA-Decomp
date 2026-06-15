@@ -2620,5 +2620,4 @@ extern FxNode9 lbl_8039C320;
     spawnParams = (PartFxSpawnParams *)&lbl_8039C320;             \
   } while (0)
 
-int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 #undef FILL320

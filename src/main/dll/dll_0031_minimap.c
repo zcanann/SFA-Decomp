@@ -115,7 +115,6 @@ extern f32 lbl_803E224C;
 
 #pragma scheduling off
 #pragma peephole off
-extern u8 warpstoneUIState;
 extern void titlescreen_free(u8 * obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);

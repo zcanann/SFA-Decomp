@@ -118,7 +118,6 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-extern int maybeTryLoadSave(int a);
 extern u8 lbl_80312E58[];
 extern f32 lbl_803E0930;
 extern f32 lbl_803E0934;
@@ -881,4 +880,3 @@ void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
 
 void dll_66_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);

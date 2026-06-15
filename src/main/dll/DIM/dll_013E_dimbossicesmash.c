@@ -49,7 +49,6 @@ extern f32 timeDelta;
 
 extern u8 framesThisStep;
 extern f32 lbl_803E4048;
-extern void disableHeavyFog(void);
 extern f32 sqrtf(f32);
 extern void Obj_FreeObject(u8 * obj);
 extern u8 lbl_803DDB00;
@@ -60,11 +59,8 @@ extern f32 lbl_803E4054;
 extern f32 lbl_803E4058;
 extern const f32 lbl_803E405C;
 extern f32 lbl_803E4030;
-extern f32 lbl_803E4038;
-extern f32 lbl_803E403C;
 extern u8 lbl_80322368[0xC];
 extern u8 lbl_803DBDF8[8];
-extern f32 lbl_803E4068;
 
 void dimbossicesmash_hitDetect(void)
 {

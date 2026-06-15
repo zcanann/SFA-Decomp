@@ -75,7 +75,6 @@ extern undefined4* gBaddieControlInterface;
 extern undefined4* gPlayerInterface;
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
-extern void* lbl_803AC5D0[];
 extern f32 sqrtf(f32);
 extern f32 lbl_803E2EB0;
 extern f32 lbl_803E2EB4;

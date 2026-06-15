@@ -5,9 +5,7 @@
 #include "main/dll/projball1D8.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get();
 
-extern uint GameBit_Get(int id);
 
 int EdibleMushroom_SeqFn(int* obj)
 {

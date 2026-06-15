@@ -95,7 +95,6 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-extern undefined4 getLActions();
 extern undefined4 FUN_80006824();
 extern uint FUN_80006ab8();
 extern undefined8 FUN_80006ac4();
@@ -139,13 +138,10 @@ extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
 extern void* memset(void* dst, int v, int n);
-extern f32 lbl_803E6390;
 extern int gDBStealerWormStateHandlersA[];
 extern void DBstealerwo_setFuncPtrs_80203c78(void);
-extern void OSReport(const char* fmt, ...);
 extern f32 lbl_803E62BC;
 extern f32 timeDelta;
-extern int gDBStealerWormStateHandlersB[];
 extern int dbstealerworm_stateHandlerA02();
 extern int dbstealerworm_stateHandlerA04();
 extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
@@ -159,11 +155,9 @@ extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerB06();
 extern void fn_80202EF0(int obj, int p2);
-extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E62F4;
 extern f32 lbl_803E62E8;
 extern f32 lbl_803E62EC;
-extern f64 lbl_803E63F0;
 
 int dbstealerworm_stateHandlerB04(int obj, int p)
 {

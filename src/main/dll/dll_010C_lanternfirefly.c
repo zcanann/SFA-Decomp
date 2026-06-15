@@ -49,7 +49,6 @@ extern f32 Vec_distance(void* a, void* b);
 
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
-extern undefined4 FUN_800068c4();
 extern void gameBitDecrement(int eventId);
 extern f32 lbl_803E3A98;
 extern f32 lbl_803E3A9C;

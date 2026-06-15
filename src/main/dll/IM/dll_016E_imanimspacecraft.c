@@ -126,11 +126,8 @@ extern undefined4 FUN_8028687c();
 extern f32 lbl_803E4784;
 extern char lbl_803AC948[];
 extern f32 lbl_803E4780;
-extern f32 lbl_803E4788;
 extern void Music_Trigger(int id, int p2);
-extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
-extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {

@@ -19,7 +19,6 @@ extern void mm_free(void *ptr);
 
 extern s16 lbl_803DD4C0;
 extern char sDllBBTimeDebugFormat[];
-extern f64 lbl_803E1650;
 extern f32 timeDelta;
 extern f32 lbl_803DD4D0;
 extern f32 lbl_803E1668;

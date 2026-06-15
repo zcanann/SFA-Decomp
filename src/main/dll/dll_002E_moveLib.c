@@ -40,8 +40,6 @@ extern f32 lbl_803E1CB0;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern u8 framesThisStep;
 extern f32 lbl_803E1CC4;
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ,
-                                           u32 obj);
 extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 lbl_803E1CB4;

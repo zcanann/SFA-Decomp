@@ -120,15 +120,6 @@ typedef struct Dll115Placement
     u8 pad3E[0x40 - 0x3E];
 } Dll115Placement;
 
-typedef struct
-{
-    s16 pad0[12];
-    s16 ev18;
-    s16 pad1a[7];
-    s16 ev28;
-    u8 pad2a[0x16];
-    u8 id40;
-} Dll115MapRow;
 
 void dll_115_update(int obj)
 {

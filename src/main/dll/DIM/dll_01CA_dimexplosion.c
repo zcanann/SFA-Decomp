@@ -501,7 +501,6 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out);
-typedef void (*Fn801B40B8IntFirst)(u8 mode, u8* out, f32 a, f32 b);
 typedef void (*Fn801B3DE4SpdFirst)(int obj, f32 spd, int b, f32 x, f32 y, f32 z);
 typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
