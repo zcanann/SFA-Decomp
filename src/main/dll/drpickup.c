@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRpickup.h"
+#include "main/game_object.h"
 #include "main/camera_interface.h"
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -160,7 +161,7 @@ void fn_801EC1AC(int obj, int state)
                                          ? lbl_803E5C30
                                          : ((v > lbl_803E5B48) ? lbl_803E5B48 : v);
         }
-        *(s16*)(obj + 0x2) = (f32)(s32) * (s16*)(obj + 0x2) +
+        ((GameObject *)obj)->anim.rotY = (f32)(s32) * (s16*)(obj + 0x2) +
             *(f32*)(state + 0x584) * timeDelta;
     }
 
