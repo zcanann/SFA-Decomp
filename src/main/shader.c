@@ -1326,8 +1326,8 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     int x, y;
 
     getTabEntry(self, 0x1d, *(int*)(lbl_803DCE7C + tabOff),
-                *(int*)(lbl_803DCE7C + tabOff + 8) - *(int*)(lbl_803DCE7C + tabOff));
-    *(int*)(self + 0xc) = (int)self + *(int*)(lbl_803DCE7C + tabOff + 4) - *(int*)(lbl_803DCE7C + tabOff);
+                *(int*)((lbl_803DCE7C + 8) + tabOff) - *(int*)(lbl_803DCE7C + tabOff));
+    *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
     rect[0] = p3 - *(s16*)(self + 4);
     rect[2] = p4 - *(s16*)(self + 6);
     rect[1] = rect[0] + *(s16*)(self + 0) - 1;
