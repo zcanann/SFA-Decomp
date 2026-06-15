@@ -46,16 +46,6 @@ typedef struct ObjHitsVec3
 extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803DF590;
-extern f32 lbl_803DF598;
-extern f32 lbl_803DF59C;
-extern f32 lbl_803DF5A0;
-extern f32 lbl_803DF5B0;
-extern f32 lbl_803DF5B4;
-extern f32 lbl_803DF5B8;
-extern f32 lbl_803DF5D8;
-extern f32 lbl_803DF5DC;
-extern f32 lbl_803DF5E0;
 
 static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
 {
