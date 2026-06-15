@@ -1,5 +1,4 @@
 #include "main/effect_interfaces.h"
-#include "main/dll/pickup.h"
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E1600;
