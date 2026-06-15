@@ -266,7 +266,7 @@ extern void gameTimerStop(void);
 extern u8 gameTimerIsRunning(void);
 extern void Music_Trigger(int id, int p2);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern f32 lbl_803E6DA8;
+extern const f32 lbl_803E6DA8;
 typedef struct WcLevelControlState WcLevelControlState;
 extern void wcpushblock_updateLevelControlState(int obj, WcLevelControlState *state);
 extern void fn_802251B4(int obj, WcLevelControlState *state);
