@@ -1363,7 +1363,6 @@ void SaveGame_initialise(void)
     base[0x39] = SAVEGAME_EMPTY_TASK_HINT;
 }
 
-extern void* getLastSavedGameTexts(void);
 
 void SaveGame_gplayClearRestartPoint(void)
 {
@@ -1594,7 +1593,6 @@ void SaveGame_setMapActLut(int val, int idx)
     *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD) = (u8)val;
 }
 
-extern u32 lbl_803DD4A0;
 
 void updateSavedHealth(void)
 {
@@ -1602,7 +1600,6 @@ void updateSavedHealth(void)
     *((u8*)gSaveGameData + idx) = lbl_803DD498[idx];
 }
 
-extern void* gameTextGet(int idx);
 
 u32 SaveGame_mapGetObjGroups(int idx)
 {
@@ -1772,7 +1769,6 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     }
 }
 
-extern char* sMapDirectoryNameTable[];
 
 void SaveGame_updateTransientMapBits(void)
 {
@@ -1790,7 +1786,6 @@ void SaveGame_updateTransientMapBits(void)
     }
 }
 
-extern s16 lbl_803119E0[];
 
 void* fn_800E888C(u8 a, u8 b) { return (char*)saveData + a * 40 + b * 8 + 28; }
 
