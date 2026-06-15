@@ -179,11 +179,11 @@ undefined* FUN_800e82d8(void)
 
 void FUN_800e8630(int param_1)
 {
-    int iVar1;
-    undefined1* puVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    int placementId;
+    undefined1* slot;
+    int baseIndex;
+    int foundIndex;
+    int remaining;
 
     if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
     {
@@ -193,38 +193,38 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    iVar3 = 0;
-    puVar2 = &DAT_803a3f08;
-    iVar5 = 9;
-    while ((iVar4 = iVar3, *(int*)(puVar2 + 0x168) != 0 &&
-        (iVar1 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), iVar1 != *(int*)(puVar2 + 0x168))))
+    baseIndex = 0;
+    slot = &DAT_803a3f08;
+    remaining = 9;
+    while ((foundIndex = baseIndex, *(int*)(slot + 0x168) != 0 &&
+        (placementId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), placementId != *(int*)(slot + 0x168))))
     {
-        iVar4 = iVar3 + 1;
-        if ((*(int*)(puVar2 + 0x178) == 0) || (iVar1 == *(int*)(puVar2 + 0x178))) break;
-        iVar4 = iVar3 + 2;
-        if ((*(int*)(puVar2 + 0x188) == 0) || (iVar1 == *(int*)(puVar2 + 0x188))) break;
-        iVar4 = iVar3 + 3;
-        if ((*(int*)(puVar2 + 0x198) == 0) || (iVar1 == *(int*)(puVar2 + 0x198))) break;
-        iVar4 = iVar3 + 4;
-        if ((*(int*)(puVar2 + 0x1a8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1a8))) break;
-        iVar4 = iVar3 + 5;
-        if ((*(int*)(puVar2 + 0x1b8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1b8))) break;
-        iVar4 = iVar3 + 6;
-        if ((*(int*)(puVar2 + 0x1c8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1c8))) break;
-        puVar2 = puVar2 + 0x70;
-        iVar3 = iVar3 + 7;
-        iVar5 = iVar5 + -1;
-        iVar4 = iVar3;
-        if (iVar5 == 0) break;
+        foundIndex = baseIndex + 1;
+        if ((*(int*)(slot + 0x178) == 0) || (placementId == *(int*)(slot + 0x178))) break;
+        foundIndex = baseIndex + 2;
+        if ((*(int*)(slot + 0x188) == 0) || (placementId == *(int*)(slot + 0x188))) break;
+        foundIndex = baseIndex + 3;
+        if ((*(int*)(slot + 0x198) == 0) || (placementId == *(int*)(slot + 0x198))) break;
+        foundIndex = baseIndex + 4;
+        if ((*(int*)(slot + 0x1a8) == 0) || (placementId == *(int*)(slot + 0x1a8))) break;
+        foundIndex = baseIndex + 5;
+        if ((*(int*)(slot + 0x1b8) == 0) || (placementId == *(int*)(slot + 0x1b8))) break;
+        foundIndex = baseIndex + 6;
+        if ((*(int*)(slot + 0x1c8) == 0) || (placementId == *(int*)(slot + 0x1c8))) break;
+        slot = slot + 0x70;
+        baseIndex = baseIndex + 7;
+        remaining = remaining + -1;
+        foundIndex = baseIndex;
+        if (remaining == 0) break;
     }
-    if (iVar4 == 0x3f)
+    if (foundIndex == 0x3f)
     {
         return;
     }
-    (&DAT_803a4070)[iVar4 * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
+    (&DAT_803a4070)[foundIndex * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    (&DAT_803a4074)[foundIndex * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
+    (&DAT_803a4078)[foundIndex * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
+    (&DAT_803a407c)[foundIndex * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
         .localPosX;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
@@ -579,90 +579,90 @@ undefined4
 FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
-    undefined4 uVar1;
-    undefined* puVar2;
+    undefined4 result;
+    undefined* state;
 
-    uVar1 = FUN_80017498();
-    puVar2 = FUN_800e82d8();
+    result = FUN_80017498();
+    state = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)puVar2[5] * 2)
+                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)state[5] * 2)
     ]
     )
     ;
-    return uVar1;
+    return result;
 }
 
 undefined FUN_800ea9ac(void)
 {
-    undefined* puVar1;
+    undefined* state;
 
-    puVar1 = FUN_800e82d8();
-    return puVar1[5];
+    state = FUN_800e82d8();
+    return state[5];
 }
 
 void FUN_800ea9b8(void)
 {
-    uint uVar1;
-    undefined* puVar2;
-    short sVar3;
-    uint uVar4;
-    uint uVar5;
-    uint uVar6;
-    uint unaff_r27;
-    uint uVar7;
-    uint uVar8;
-    short* psVar9;
+    uint id;
+    undefined* state;
+    short i;
+    uint flags;
+    uint mask;
+    uint bit;
+    uint cachedFlags;
+    uint lastBitWord;
+    uint scanId;
+    short* entry;
 
-    uVar1 = FUN_80286834();
-    puVar2 = FUN_800e82d8();
-    uVar7 = 0xffffffff;
-    if (puVar2[6] == '\0')
+    id = FUN_80286834();
+    state = FUN_800e82d8();
+    lastBitWord = 0xffffffff;
+    if (state[6] == '\0')
     {
-        psVar9 = &DAT_80312632;
-        for (uVar8 = 1; (short)uVar8 < 0xce; uVar8 = uVar8 + 1)
+        entry = &DAT_80312632;
+        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
         {
-            if ((*psVar9 == 0xffff) || (*psVar9 == -1))
+            if ((*entry == 0xffff) || (*entry == -1))
             {
-                uVar5 = 1 << (uVar8 & 0x1f);
-                uVar6 = (uint)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
-                uVar4 = FUN_80017690(uVar6);
-                if ((uVar4 & uVar5) == 0)
+                mask = 1 << (scanId & 0x1f);
+                bit = (uint)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
+                flags = FUN_80017690(bit);
+                if ((flags & mask) == 0)
                 {
-                    FUN_80017698(uVar6, uVar4 | uVar5);
+                    FUN_80017698(bit, flags | mask);
                 }
             }
-            psVar9 = psVar9 + 1;
+            entry = entry + 1;
         }
     }
-    uVar6 = 1 << (uVar1 & 0x1f);
-    uVar4 = (uint)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
-    uVar8 = FUN_80017690(uVar4);
-    if ((uVar8 & uVar6) == 0)
+    bit = 1 << (id & 0x1f);
+    flags = (uint)(short)((short)((id & 0xff) >> 5) + 0x12f);
+    scanId = FUN_80017690(flags);
+    if ((scanId & bit) == 0)
     {
-        FUN_80017698(uVar4, uVar8 | uVar6);
-        if (puVar2[6] != '\x05')
+        FUN_80017698(flags, scanId | bit);
+        if (state[6] != '\x05')
         {
-            puVar2[6] = puVar2[6] + '\x01';
+            state[6] = state[6] + '\x01';
         }
-        for (sVar3 = 4; sVar3 != 0; sVar3 = sVar3 + -1)
+        for (i = 4; i != 0; i = i + -1)
         {
-            puVar2[sVar3] = puVar2[sVar3 + -1];
+            state[i] = state[i + -1];
         }
-        *puVar2 = (char)uVar1;
-        if ((uint)(byte)puVar2[5] == (uVar1 & 0xff)
+        *state = (char)id;
+        if ((uint)(byte)state[5] == (id & 0xff)
         )
         {
             do
             {
-                puVar2[5] = puVar2[5] + '\x01';
-                uVar1 = (uint)(short)(((byte)puVar2[5] >> 5) + 0x12f);
-                if (uVar1 != (int)(short)uVar7)
+                state[5] = state[5] + '\x01';
+                id = (uint)(short)(((byte)state[5] >> 5) + 0x12f);
+                if (id != (int)(short)lastBitWord)
                 {
-                    unaff_r27 = FUN_80017690(uVar1);
-                    uVar7 = uVar1;
+                    cachedFlags = FUN_80017690(id);
+                    lastBitWord = id;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)puVar2[5] & 0x1f)) != 0);
+            while ((cachedFlags & 1 << ((byte)state[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
