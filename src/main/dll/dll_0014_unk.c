@@ -3887,8 +3887,8 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
     extern int curves_distFn15(); /* #57 */
     RomCurveDef* curve;
     RomCurveDef* nextCurve;
-    u32 nextCurveId;
-    u32 previousCurveId;
+    int nextCurveId;
+    int previousCurveId;
     int linkIndex;
     int hitCount;
     f32 dx;
@@ -3904,7 +3904,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         nextCurveId = ROMCURVE_LINK_ID_NONE;
         linkIndex = 0;
         nextCurve = curve;
-        while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == ROMCURVE_LINK_ID_NONE))
+        while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == -1))
         {
             if ((curve->blockedLinkMask & (1 << linkIndex)) == 0)
             {
@@ -3915,7 +3915,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         }
 
         nextCurve = curve;
-        if (nextCurveId != ROMCURVE_LINK_ID_NONE)
+        if (nextCurveId != -1)
         {
             nextCurve = RomCurve_FindByIdInline(nextCurveId);
             if (RomCurve_segmentIntersectsOriginRayXZ(curve, nextCurve, x, y, z, lbl_803E0660) != 0)
@@ -3934,7 +3934,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         previousCurveId = nextCurveId;
         curve = nextCurve;
     }
-    while ((previousCurveId != curveId) && (nextCurveId != ROMCURVE_LINK_ID_NONE));
+    while ((previousCurveId != (int)curveId) && (nextCurveId != -1));
 
     return hitCount & 1;
 }

@@ -232,8 +232,8 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (mode == 1)
     {
-        if ((lbl_803E649C < dx) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
-            (lbl_803E64A8 < dz))
+        if ((dx > lbl_803E649C) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
+            (dz > lbl_803E64A8))
         {
             dfptargetblock_resetToHome(obj, home, state);
         }
@@ -241,8 +241,8 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     }
     else if (mode == 2)
     {
-        if ((lbl_803E64B4 < dx) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) ||
-            (lbl_803E64BC < dz))
+        if ((dx > lbl_803E64B4) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) ||
+            (dz > lbl_803E64BC))
         {
             dfptargetblock_resetToHome(obj, home, state);
 
