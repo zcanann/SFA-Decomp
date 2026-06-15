@@ -1,14 +1,10 @@
 /* DLL 0x136 - WaveAnimator [80192394-801923C4) */
-#include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-#include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
-#include "main/dll/MMP/mmp_barrel.h"
 #include "main/game_object.h"
-#include "global.h"
 
 typedef struct WaveanimatorState
 {
