@@ -2336,8 +2336,8 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
     for (n = 0; n < count; n++)
     {
         int vis = 1;
-        f32 dot = modelState->shadowOffsetY * input[1] +
-            modelState->shadowOffsetX * input[0] +
+        f32 dot = modelState->shadowOffsetX * input[0] +
+            modelState->shadowOffsetY * input[1] +
             modelState->shadowOffsetZ * input[2];
         if (dot < 0.0f)
         {
