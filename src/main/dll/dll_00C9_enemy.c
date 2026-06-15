@@ -669,92 +669,92 @@ void objAnimFn_8014a9f0(short* obj, int state)
 void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* param_4)
 {
     extern double FUN_80293900();
-    ushort baseAngle;
-    ushort* self;
-    uint angle;
-    undefined4* objs;
-    int target;
-    int i;
-    int found;
-    int state;
+    ushort uVar1;
+    ushort* puVar2;
+    uint uVar3;
+    undefined4* puVar4;
+    int iVar5;
+    int iVar6;
+    int iVar7;
+    int iVar8;
     double extraout_f1;
-    double dist;
-    ulonglong flags;
-    float radiusSq;
-    int count;
-    float dx;
-    float dy;
-    float dz;
-    longlong distScratch;
+    double dVar9;
+    ulonglong uVar10;
+    float local_48;
+    int local_44;
+    float local_40;
+    float local_3c;
+    float local_38;
+    longlong local_30;
 
-    flags = FUN_8028682c();
-    self = (ushort*)(flags >> 0x20);
-    radiusSq = (float)extraout_f1;
-    state = *(int*)(self + 0x5c);
-    count = 0;
-    found = 0;
-    if ((flags & 1) == 0)
+    uVar10 = FUN_8028682c();
+    puVar2 = (ushort*)(uVar10 >> 0x20);
+    local_48 = (float)extraout_f1;
+    iVar8 = *(int*)(puVar2 + 0x5c);
+    local_44 = 0;
+    iVar7 = 0;
+    if ((uVar10 & 1) == 0)
     {
-        radiusSq = (float)extraout_f1 * (float)extraout_f1;
-        objs = ObjGroup_GetObjects(3, &count);
-        if (count != 0)
+        local_48 = (float)extraout_f1 * (float)extraout_f1;
+        puVar4 = ObjGroup_GetObjects(3, &local_44);
+        if (local_44 != 0)
         {
-            for (i = 0; i < count; i = i + 1)
+            for (iVar6 = 0; iVar6 < local_44; iVar6 = iVar6 + 1)
             {
-                dist = FUN_80017714((float*)(self + 0xc), (float*)(objs[i] + 0x18));
-                if ((dist < (double)radiusSq) && ((ushort*)objs[i] != self))
+                dVar9 = FUN_80017714((float*)(puVar2 + 0xc), (float*)(puVar4[iVar6] + 0x18));
+                if ((dVar9 < (double)local_48) && ((ushort*)puVar4[iVar6] != puVar2))
                 {
-                    *param_4 = (int)objs[i];
-                    dist = FUN_80293900(dist);
-                    distScratch = (longlong)(int)
-                    dist;
-                    *(short*)(param_4 + 1) = (short)(int)dist;
-                    if ((flags & 2) != 0)
+                    *param_4 = (int)puVar4[iVar6];
+                    dVar9 = FUN_80293900(dVar9);
+                    local_30 = (longlong)(int)
+                    dVar9;
+                    *(short*)(param_4 + 1) = (short)(int)dVar9;
+                    if ((uVar10 & 2) != 0)
                     {
-                        if ((*(uint*)(state + 0x2e4) & 0x8000) == 0)
+                        if ((*(uint*)(iVar8 + 0x2e4) & 0x8000) == 0)
                         {
-                            target = *param_4;
-                            dx = *(float*)(self + 0xc) - *(float*)(target + 0x18);
-                            dy = *(float*)(self + 0xe) - *(float*)(target + 0x1c);
-                            dz = *(float*)(self + 0x10) - *(float*)(target + 0x20);
+                            iVar5 = *param_4;
+                            local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar5 + 0x18);
+                            local_3c = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar5 + 0x1c);
+                            local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar5 + 0x20);
                         }
                         else
                         {
-                            dx = *(float*)(self + 0xc) - *(float*)(*param_4 + 0x18);
-                            dy = lbl_803E31FC;
-                            dz = *(float*)(self + 0x10) - *(float*)(*param_4 + 0x20);
+                            local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                            local_3c = lbl_803E31FC;
+                            local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                         }
-                        angle = FUN_80017730();
-                        if (*(short**)(self + 0x18) == (short*)0x0)
+                        uVar3 = FUN_80017730();
+                        if (*(short**)(puVar2 + 0x18) == (short*)0x0)
                         {
-                            baseAngle = *self;
+                            uVar1 = *puVar2;
                         }
                         else
                         {
-                            baseAngle = *self + **(short**)(self + 0x18);
+                            uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
                         }
-                        angle = (angle & 0xffff) - (uint)baseAngle;
-                        if (0x8000 < (int)angle)
+                        uVar3 = (uVar3 & 0xffff) - (uint)uVar1;
+                        if (0x8000 < (int)uVar3)
                         {
-                            angle = angle - 0xffff;
+                            uVar3 = uVar3 - 0xffff;
                         }
-                        if ((int)angle < -0x8000)
+                        if ((int)uVar3 < -0x8000)
                         {
-                            angle = angle + 0xffff;
+                            uVar3 = uVar3 + 0xffff;
                         }
-                        target = (short)((angle & 0xffff) >> 0xd) * 4;
-                        *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) & ~*(uint*)(&DAT_8031e840 + target);
-                        if ((flags & 4) != 0)
+                        iVar5 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
+                        *(uint*)(iVar8 + 0x2dc) = *(uint*)(iVar8 + 0x2dc) & ~*(uint*)(&DAT_8031e840 + iVar5);
+                        if ((uVar10 & 4) != 0)
                         {
                             *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                                *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + target);
+                                *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + iVar5);
                         }
                     }
                     param_4 = param_4 + 2;
-                    found = found + 1;
-                    if (param_3 <= found)
+                    iVar7 = iVar7 + 1;
+                    if (param_3 <= iVar7)
                     {
-                        i = count;
+                        iVar6 = local_44;
                     }
                 }
             }
@@ -762,52 +762,52 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
     }
     else
     {
-        found = ObjGroup_FindNearestObject(3, self, &radiusSq);
-        *param_4 = found;
-        if (found != 0)
+        iVar7 = ObjGroup_FindNearestObject(3, puVar2, &local_48);
+        *param_4 = iVar7;
+        if (iVar7 != 0)
         {
-            distScratch = (longlong)(int)
-            radiusSq;
-            *(short*)(param_4 + 1) = (short)(int)radiusSq;
-            if ((flags & 2) != 0)
+            local_30 = (longlong)(int)
+            local_48;
+            *(short*)(param_4 + 1) = (short)(int)local_48;
+            if ((uVar10 & 2) != 0)
             {
-                if ((*(uint*)(state + 0x2e4) & 0x8000) == 0)
+                if ((*(uint*)(iVar8 + 0x2e4) & 0x8000) == 0)
                 {
-                    found = *param_4;
-                    dx = *(float*)(self + 0xc) - *(float*)(found + 0x18);
-                    dy = *(float*)(self + 0xe) - *(float*)(found + 0x1c);
-                    dz = *(float*)(self + 0x10) - *(float*)(found + 0x20);
+                    iVar7 = *param_4;
+                    local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar7 + 0x18);
+                    local_3c = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar7 + 0x1c);
+                    local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar7 + 0x20);
                 }
                 else
                 {
-                    dx = *(float*)(self + 0xc) - *(float*)(*param_4 + 0x18);
-                    dy = lbl_803E31FC;
-                    dz = *(float*)(self + 0x10) - *(float*)(*param_4 + 0x20);
+                    local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                    local_3c = lbl_803E31FC;
+                    local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                 }
-                angle = FUN_80017730();
-                if (*(short**)(self + 0x18) == (short*)0x0)
+                uVar3 = FUN_80017730();
+                if (*(short**)(puVar2 + 0x18) == (short*)0x0)
                 {
-                    baseAngle = *self;
+                    uVar1 = *puVar2;
                 }
                 else
                 {
-                    baseAngle = *self + **(short**)(self + 0x18);
+                    uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
                 }
-                angle = (angle & 0xffff) - (uint)baseAngle;
-                if (0x8000 < (int)angle)
+                uVar3 = (uVar3 & 0xffff) - (uint)uVar1;
+                if (0x8000 < (int)uVar3)
                 {
-                    angle = angle - 0xffff;
+                    uVar3 = uVar3 - 0xffff;
                 }
-                if ((int)angle < -0x8000)
+                if ((int)uVar3 < -0x8000)
                 {
-                    angle = angle + 0xffff;
+                    uVar3 = uVar3 + 0xffff;
                 }
-                found = (short)((angle & 0xffff) >> 0xd) * 4;
-                *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) & ~*(uint*)(&DAT_8031e840 + found);
-                if ((flags & 4) != 0)
+                iVar7 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
+                *(uint*)(iVar8 + 0x2dc) = *(uint*)(iVar8 + 0x2dc) & ~*(uint*)(&DAT_8031e840 + iVar7);
+                if ((uVar10 & 4) != 0)
                 {
                     *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                        *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + found);
+                        *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + iVar7);
                 }
             }
         }
@@ -818,26 +818,26 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
 
 double FUN_8014cbcc(int param_1)
 {
-    int state;
-    double ratio;
+    int iVar1;
+    double dVar2;
 
-    state = *(int*)&((GameObject*)param_1)->extra;
-    if (state == 0)
+    iVar1 = *(int*)&((GameObject*)param_1)->extra;
+    if (iVar1 == 0)
     {
-        ratio = (double)lbl_803E31FC;
+        dVar2 = (double)lbl_803E31FC;
     }
-    else if ((*(ushort*)(state + 0x2b2) == 0) || (*(ushort*)(state + 0x2b0) == 0))
+    else if ((*(ushort*)(iVar1 + 0x2b2) == 0) || (*(ushort*)(iVar1 + 0x2b0) == 0))
     {
-        ratio = (double)lbl_803E31FC;
+        dVar2 = (double)lbl_803E31FC;
     }
     else
     {
-        ratio = (double)((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(state + 0x2b0)) -
+        dVar2 = (double)((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(iVar1 + 0x2b0)) -
                 DOUBLE_803e3278) /
-            (float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(state + 0x2b2)) -
+            (float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(iVar1 + 0x2b2)) -
                 DOUBLE_803e3278));
     }
-    return ratio;
+    return dVar2;
 }
 
 #pragma scheduling off
@@ -853,91 +853,91 @@ void FUN_8014ccac(int param_1, undefined4 param_2)
 void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, int param_5,
                   float* param_6, char param_7)
 {
-    float fscratch;
-    double mag0;
-    double mag1;
-    double mag2;
-    float cross[3];
-    float b0x;
-    float b0y;
-    float b0z;
-    float a0x;
-    float a0y;
-    float a0z;
-    float rotated[13];
-    undefined4 cvtHi;
-    uint cvtLo;
+    float fVar1;
+    double dVar2;
+    double dVar3;
+    double dVar4;
+    float afStack_c8[3];
+    float local_bc;
+    float local_b8;
+    float local_b4;
+    float local_b0;
+    float local_ac;
+    float local_a8;
+    float afStack_a4[13];
+    undefined4 local_70;
+    uint uStack_6c;
 
-    mag0 = SeekTwiceBeforeRead((float*)(param_5 + 0x2b8));
-    if (mag0 <= (double)lbl_803E31FC)
+    dVar2 = SeekTwiceBeforeRead((float*)(param_5 + 0x2b8));
+    if (dVar2 <= (double)lbl_803E31FC)
     {
-        a0x = lbl_803E31FC;
-        a0y = lbl_803E31FC;
-        a0z = lbl_803E31FC;
+        local_b0 = lbl_803E31FC;
+        local_ac = lbl_803E31FC;
+        local_a8 = lbl_803E31FC;
     }
     else
     {
-        a0z = (float)((double)lbl_803E3200 / mag0);
-        a0x = *(float*)(param_5 + 0x2b8) * a0z;
-        a0y = *(float*)(param_5 + 700) * a0z;
-        a0z = *(float*)(param_5 + 0x2c0) * a0z;
-        FUN_80247ef8(&a0x, &a0x);
+        local_a8 = (float)((double)lbl_803E3200 / dVar2);
+        local_b0 = *(float*)(param_5 + 0x2b8) * local_a8;
+        local_ac = *(float*)(param_5 + 700) * local_a8;
+        local_a8 = *(float*)(param_5 + 0x2c0) * local_a8;
+        FUN_80247ef8(&local_b0, &local_b0);
     }
-    mag1 = SeekTwiceBeforeRead(param_6);
-    if (mag1 <= (double)lbl_803E31FC)
+    dVar3 = SeekTwiceBeforeRead(param_6);
+    if (dVar3 <= (double)lbl_803E31FC)
     {
-        b0x = lbl_803E31FC;
-        b0y = lbl_803E31FC;
-        b0z = lbl_803E31FC;
+        local_bc = lbl_803E31FC;
+        local_b8 = lbl_803E31FC;
+        local_b4 = lbl_803E31FC;
     }
     else
     {
-        b0z = (float)((double)lbl_803E3200 / mag1);
-        b0x = *param_6 * b0z;
-        b0y = param_6[1] * b0z;
-        b0z = param_6[2] * b0z;
+        local_b4 = (float)((double)lbl_803E3200 / dVar3);
+        local_bc = *param_6 * local_b4;
+        local_b8 = param_6[1] * local_b4;
+        local_b4 = param_6[2] * local_b4;
     }
-    FUN_80247fb0(&a0x, &b0x, cross);
-    mag2 = SeekTwiceBeforeRead(cross);
-    if ((double)lbl_803E31FC < mag2)
+    FUN_80247fb0(&local_b0, &local_bc, afStack_c8);
+    dVar4 = SeekTwiceBeforeRead(afStack_c8);
+    if ((double)lbl_803E31FC < dVar4)
     {
-        FUN_80247f90(&a0x, &b0x);
-        mag2 = (double)FUN_80292754();
-        cvtLo = ((uint)(byte)((param_3 < mag2) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
-        cvtHi = 0x43300000;
-        if (ABS((double)(float)((double)CONCAT44(0x43300000, cvtLo) - DOUBLE_803e3218)) !=
+        FUN_80247f90(&local_b0, &local_bc);
+        dVar4 = (double)FUN_80292754();
+        uStack_6c = ((uint)(byte)((param_3 < dVar4) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
+        local_70 = 0x43300000;
+        if (ABS((double)(float)((double)CONCAT44(0x43300000, uStack_6c) - DOUBLE_803e3218)) !=
             (double)lbl_803E31FC)
         {
-            fscratch = lbl_803E3258;
-            if ((double)lbl_803E31FC < mag2)
+            fVar1 = lbl_803E3258;
+            if ((double)lbl_803E31FC < dVar4)
             {
-                fscratch = lbl_803E3200;
+                fVar1 = lbl_803E3200;
             }
-            FUN_80247944((double)(float)(param_3 * (double)fscratch), rotated, cross);
-            FUN_80247cd8(rotated, &a0x, &b0x);
+            FUN_80247944((double)(float)(param_3 * (double)fVar1), afStack_a4, afStack_c8);
+            FUN_80247cd8(afStack_a4, &local_b0, &local_bc);
         }
     }
-    mag2 = (double)(float)(mag1 * (double)lbl_803E3280);
-    mag1 = (double)(float)(mag0 + param_2);
-    if ((mag2 <= mag1) && (mag1 = mag2, mag2 < (double)(float)(mag0 - param_2)))
+    dVar4 = (double)(float)(dVar3 * (double)lbl_803E3280);
+    dVar3 = (double)(float)(dVar2 + param_2);
+    if ((dVar4 <= dVar3) && (dVar3 = dVar4, dVar4 < (double)(float)(dVar2 - param_2)))
     {
-        mag1 = (double)(float)(mag0 - param_2);
+        dVar3 = (double)(float)(dVar2 - param_2);
     }
-    if (param_1 < mag1)
+    if (param_1 < dVar3)
     {
-        mag1 = param_1;
+        dVar3 = param_1;
     }
-    *(float*)(param_4 + 0x24) = (float)((double)b0x * mag1);
-    *(float*)(param_4 + 0x28) = (float)((double)b0y * mag1);
-    *(float*)(param_4 + 0x2c) = (float)((double)b0z * mag1);
+    *(float*)(param_4 + 0x24) = (float)((double)local_bc * dVar3);
+    *(float*)(param_4 + 0x28) = (float)((double)local_b8 * dVar3);
+    *(float*)(param_4 + 0x2c) = (float)((double)local_b4 * dVar3);
     if ((param_7 != '\0') && (*(float*)(param_4 + 0x28) < lbl_803E31FC))
     {
-        fscratch = lbl_803E3264 + *(float*)(*(int*)(param_5 + 0x29c) + 0x10);
-        if (*(float*)(param_4 + 0x10) < fscratch)
+        fVar1 = lbl_803E3264 + *(float*)(*(int*)(param_5 + 0x29c) + 0x10);
+        if (*(float*)(param_4 + 0x10) < fVar1)
         {
             *(float*)(param_4 + 0x28) =
                 *(float*)(param_4 + 0x28) *
-                (lbl_803E3200 - (fscratch - *(float*)(param_4 + 0x10)) / lbl_803E3264);
+                (lbl_803E3200 - (fVar1 - *(float*)(param_4 + 0x10)) / lbl_803E3264);
         }
     }
     return;
@@ -1178,7 +1178,7 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     extern u8 lbl_803DBC58;
     u8* state = ((GameObject*)obj)->extra;
     u8* data = *(u8**)state;
-    if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
+    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0)
     {
         if ((u8)baddieTargetFn_8014a150(obj, state, &((GameObject*)obj)->anim.worldPosX, data + 0x68) != 0)
         {
@@ -1188,11 +1188,11 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     if ((*gRomCurveInterface)->initCurve(*(u8**)state, (void*)obj, lbl_803E25DC,
                                          (int*)&lbl_803DBC58, -1) != 0)
     {
-        ((BaddieState*)state)->controlFlags &= ~0x2000LL;
+        *(u32*)(state + 0x2dc) &= ~0x2000LL;
     }
     else
     {
-        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x2000;
+        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
     }
 }
 
@@ -1364,7 +1364,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
 
     if (((GameObject*)node)->unkF4 != 0)
         return 0;
-    ((TrickyState*)sub)->flags2DC |= 0x8000LL;
+    ((TrickyState*)sub)->flags2DC |= 0x8000;
     memcpy(sub + 0x2c4, sub + 0x2b8, 0xc);
     memcpy(sub + 0x2b8, (char*)node + 0x24, 0xc);
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -1377,7 +1377,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             {
                 (*(void (*)(int*, int, int*))(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.dll) + 0x34)))(
                     obj, 1, node);
-                ((TrickyState*)sub)->flags2DC |= 0x200000LL;
+                ((TrickyState*)sub)->flags2DC |= 0x200000;
                 *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
             }
             break;
@@ -1385,7 +1385,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             obj = Obj_GetPlayerObject();
             if (obj != NULL)
             {
-                ((TrickyState*)sub)->flags2DC &= ~0x200000LL;
+                ((TrickyState*)sub)->flags2DC &= ~0x200000;
                 *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
             }
             break;
@@ -1411,7 +1411,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     baddieInstantiateWeapon(node, (int*)sub);
     if (((GameObject*)node)->seqIndex == -1)
     {
-        ((TrickyState*)sub)->unk2E8 &= ~3LL;
+        ((TrickyState*)sub)->unk2E8 &= ~3;
         ObjHits_DisableObject((u32)node);
         return 0;
     }
@@ -1447,19 +1447,19 @@ void fn_8014B878(int* arg1, int* sub)
     if (target != NULL && (((TrickyState*)sub)->controlFlags & 0x10000) == 0 &&
         (target != player || (((GameObject*)player)->objectFlags & 0x1000) == 0))
     {
-        ((TrickyState*)sub)->flags2DC &= ~0x800000LL;
+        ((TrickyState*)sub)->flags2DC &= 0xff7fffff;
         camTarget = (int*)(*gCameraInterface)->getOverrideTarget();
         if (camTarget == arg1)
         {
-            ((TrickyState*)sub)->flags2DC |= 0x800200LL;
+            ((TrickyState*)sub)->flags2DC |= 0x800200;
         }
         {
             u16 dist = ((TrickyState*)sub)->unk2A4;
             u16 near = (u16)(int)((TrickyState*)sub)->waterLevel;
             if (dist < near)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x400LL;
-                ((TrickyState*)sub)->flags2DC &= ~0x200LL;
+                ((TrickyState*)sub)->flags2DC |= 0x400;
+                ((TrickyState*)sub)->flags2DC &= 0xfffffdff;
             }
             else
             {
@@ -1467,15 +1467,15 @@ void fn_8014B878(int* arg1, int* sub)
                 u16 mid = (u16)(int)midf;
                 if (dist < mid)
                 {
-                    ((TrickyState*)sub)->flags2DC |= 0x200LL;
-                    ((TrickyState*)sub)->flags2DC &= ~0x400LL;
+                    ((TrickyState*)sub)->flags2DC |= 0x200;
+                    ((TrickyState*)sub)->flags2DC &= 0xfffffbff;
                 }
                 else
                 {
                     u16 far = (u16)(int)(lbl_803E25D8 * midf);
                     if (dist > far)
                     {
-                        ((TrickyState*)sub)->flags2DC &= ~0x20000600LL;
+                        ((TrickyState*)sub)->flags2DC &= 0xdffff9ff;
                     }
                 }
             }
@@ -1483,28 +1483,28 @@ void fn_8014B878(int* arg1, int* sub)
     }
     else
     {
-        ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
+        ((TrickyState*)sub)->flags2DC &= 0xff7ff9ff;
         if ((((TrickyState*)sub)->controlFlags & 0x10000) != 0 ||
             (*(int**)&((TrickyState*)sub)->actionTargetObj == player && (((GameObject*)player)->objectFlags & 0x1000) !=
                 0))
         {
-            ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
+            ((TrickyState*)sub)->flags2DC &= 0xdfffffff;
         }
     }
-    ((TrickyState*)sub)->flags2DC &= ~0x076f0008LL;
+    ((TrickyState*)sub)->flags2DC &= 0xf890fff7;
     if (tricky != NULL)
     {
         u8 r = (*(u8(**)(int*))(*(int*)*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
-        if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000LL;
+        if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000;
     }
     if (*(int**)&((TrickyState*)sub)->actionTargetObj == player)
     {
         if (playerIsDisguised(player) != 0)
         {
-            ((TrickyState*)sub)->flags2DC |= 8LL;
+            ((TrickyState*)sub)->flags2DC |= 8;
             if ((((TrickyState*)sub)->controlFlags & 0x2000) != 0)
             {
-                ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
+                ((TrickyState*)sub)->flags2DC &= 0xff7ff9ff;
             }
         }
     }
@@ -1514,38 +1514,38 @@ void fn_8014B878(int* arg1, int* sub)
         {
             u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
                                            (void*)(*(char**)&((TrickyState*)sub)->actionTargetObj + 0x18));
-            if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
+            if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000;
             if ((((TrickyState*)sub)->flags2DC & 0x1000000) == 0)
             {
-                ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
+                ((TrickyState*)sub)->flags2DC &= 0xdfffffff;
             }
         }
         else
         {
-            ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
+            ((TrickyState*)sub)->flags2DC |= 0x1000000;
         }
         {
             u16 mode = ((TrickyState*)sub)->unk2A0;
             if (mode < 2 || mode > 5)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x400000LL;
+                ((TrickyState*)sub)->flags2DC |= 0x400000;
             }
             else if ((((TrickyState*)sub)->flags2DC & 0x1000000) != 0)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x2000000LL;
+                ((TrickyState*)sub)->flags2DC |= 0x2000000;
             }
         }
         if ((((TrickyState*)sub)->controlFlags & 0x4000) == 0)
         {
             f32* t = (f32*)*(int**)&((TrickyState*)sub)->actionTargetObj;
             f32 mag = sqrtf(t[11] * t[11] + (t[9] * t[9] + t[10] * t[10]));
-            if (mag > lbl_803E25D4) ((TrickyState*)sub)->flags2DC |= 0x4000000LL;
+            if (mag > lbl_803E25D4) ((TrickyState*)sub)->flags2DC |= 0x4000000;
         }
         if ((((TrickyState*)sub)->flags2DC & 0x600) != 0 &&
             (((TrickyState*)sub)->flags2DC & 0x6800000) != 0 &&
             (((TrickyState*)sub)->flags2DC & 0x1000000) != 0)
         {
-            ((TrickyState*)sub)->flags2DC |= 0x20000000LL;
+            ((TrickyState*)sub)->flags2DC |= 0x20000000;
         }
         if ((((TrickyState*)sub)->flags2DC & 0x20000000) != 0)
         {
@@ -1555,13 +1555,13 @@ void fn_8014B878(int* arg1, int* sub)
             }
             else
             {
-                ((TrickyState*)sub)->flags2DC |= 0xf0000LL;
+                ((TrickyState*)sub)->flags2DC |= 0xf0000;
             }
         }
     }
     if (((BaddieState*)sub)->hitCounter == 0)
     {
-        ((TrickyState*)sub)->flags2DC |= 0x800LL;
+        ((TrickyState*)sub)->flags2DC |= 0x800;
     }
 }
 
@@ -1711,7 +1711,6 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
     }
 }
 
-#pragma fp_contract off
 void fn_8014BC98(int* node, int* sub)
 {
     extern void fn_8014BC98(int* node, int* sub);
@@ -1719,7 +1718,7 @@ void fn_8014BC98(int* node, int* sub)
     if (target != NULL)
     {
         volatile f32 d[3];
-        u16 angle;
+        int angle;
         int raw;
         s32 delta;
         f32 dist;
@@ -1737,7 +1736,7 @@ void fn_8014BC98(int* node, int* sub)
             d[1] = ((GameObject*)node)->anim.worldPosY - *(f32*)((char*)target + 0x1c);
             d[2] = ((GameObject*)node)->anim.worldPosZ - *(f32*)((char*)target + 0x20);
         }
-        angle = (u16)getAngle(-d[0], -d[2]);
+        angle = getAngle(-d[0], -d[2]);
         if (*(int**)&((GameObject*)node)->anim.parent != NULL)
         {
             raw = (s16)(*(s16*)node + **(s16**)&((GameObject*)node)->anim.parent);
@@ -1746,20 +1745,17 @@ void fn_8014BC98(int* node, int* sub)
         {
             raw = *(s16*)node;
         }
-        delta = (u16)angle - (u16)(s16)raw;
+        delta = (u16)angle - (u16)(s16)
+        raw;
         if (delta > 0x8000) delta -= 0xFFFF;
         if (delta < -0x8000) delta += 0xFFFF;
         d16 = (u16)delta;
         ((TrickyState*)sub)->unk2A2 = d16;
-        ((TrickyState*)sub)->unk2A0 = (u32)d16 >> 13;
+        ((TrickyState*)sub)->unk2A0 = d16 >> 13;
 
-        {
-            f32 dz = d[2];
-            f32 dx = d[0];
-            f32 dy = d[1];
-            dist = sqrtf(dz * dz + (dx * dx + dy * dy));
-        }
-        *(s16*)&((TrickyState*)sub)->unk2A4 = (s16)(s32)dist;
+        dist = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
+        *(s16*)&((TrickyState*)sub)->unk2A4 = (s16)(s32)
+        dist;
 
         {
             int* t = *(int**)&((TrickyState*)sub)->actionTargetObj;
@@ -1768,7 +1764,6 @@ void fn_8014BC98(int* node, int* sub)
         }
     }
 }
-#pragma fp_contract on
 
 void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
 {
@@ -1814,37 +1809,37 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
                   char param_6)
 {
     extern undefined4 FUN_80293900();
-    uint randAngle;
-    double delta;
-    double step;
-    double turnRate;
-    undefined8 cvtYaw;
-    undefined8 cvtPitch;
+    uint uVar1;
+    double dVar2;
+    double dVar3;
+    double dVar4;
+    undefined8 local_50;
+    undefined8 local_48;
 
-    turnRate = (double)(lbl_803DC074 /
+    dVar4 = (double)(lbl_803DC074 /
         (float)((double)CONCAT44(0x43300000, param_5 & 0xffff) - DOUBLE_803e3278));
-    if ((double)lbl_803E3200 < turnRate)
+    if ((double)lbl_803E3200 < dVar4)
     {
-        turnRate = (double)lbl_803E3200;
+        dVar4 = (double)lbl_803E3200;
     }
-    randAngle = FUN_80017730();
-    cvtYaw = (double)CONCAT44(0x43300000, (randAngle & 0xffff) - (uint) * param_3 ^ 0x80000000);
-    delta = (double)(float)(cvtYaw - DOUBLE_803e3218);
-    if ((double)lbl_803E324C < delta)
+    uVar1 = FUN_80017730();
+    local_50 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - (uint) * param_3 ^ 0x80000000);
+    dVar2 = (double)(float)(local_50 - DOUBLE_803e3218);
+    if ((double)lbl_803E324C < dVar2)
     {
-        delta = (double)(float)((double)lbl_803E3284 + delta);
+        dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);
     }
-    if (delta < (double)lbl_803E328C)
+    if (dVar2 < (double)lbl_803E328C)
     {
-        delta = (double)(float)((double)lbl_803E3288 + delta);
+        dVar2 = (double)(float)((double)lbl_803E3288 + dVar2);
     }
-    step = (double)(float)(delta * turnRate);
-    *param_3 = *param_3 + (short)(int)(delta * turnRate);
+    dVar3 = (double)(float)(dVar2 * dVar4);
+    *param_3 = *param_3 + (short)(int)(dVar2 * dVar4);
     if (param_1 != (double)lbl_803E31FC)
     {
         if (param_6 == '\0')
         {
-            param_3[2] = (ushort)(int)(lbl_803DC078 * (float)(step * param_1));
+            param_3[2] = (ushort)(int)(lbl_803DC078 * (float)(dVar3 * param_1));
             if ((short)param_3[2] < 0x2001)
             {
                 if ((short)param_3[2] < -0x2000)
@@ -1859,54 +1854,54 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
         }
         else
         {
-            param_3[2] = param_3[2] + (short)(int)(param_1 * (double)(float)(step * turnRate));
+            param_3[2] = param_3[2] + (short)(int)(param_1 * (double)(float)(dVar3 * dVar4));
         }
     }
     if ((double)lbl_803E31FC != param_2)
     {
         FUN_80293900((double)(*(float*)(param_4 + 0x2c0) * *(float*)(param_4 + 0x2c0) +
             *(float*)(param_4 + 0x2b8) * *(float*)(param_4 + 0x2b8)));
-        randAngle = FUN_80017730();
-        cvtPitch = (double)CONCAT44(0x43300000, (randAngle & 0xffff) - (uint)param_3[1] ^ 0x80000000);
-        delta = (double)(float)(cvtPitch - DOUBLE_803e3218);
-        if ((double)lbl_803E324C < delta)
+        uVar1 = FUN_80017730();
+        local_48 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - (uint)param_3[1] ^ 0x80000000);
+        dVar2 = (double)(float)(local_48 - DOUBLE_803e3218);
+        if ((double)lbl_803E324C < dVar2)
         {
-            delta = (double)(float)((double)lbl_803E3284 + delta);
+            dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);
         }
-        if (delta < (double)lbl_803E328C)
+        if (dVar2 < (double)lbl_803E328C)
         {
-            delta = (double)(float)((double)lbl_803E3288 + delta);
+            dVar2 = (double)(float)((double)lbl_803E3288 + dVar2);
         }
-        param_3[1] = param_3[1] + (short)(int)(delta * turnRate);
+        param_3[1] = param_3[1] + (short)(int)(dVar2 * dVar4);
     }
     return;
 }
 
 void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_4)
 {
-    float turnRate;
-    short delta;
-    int randAngle;
+    float fVar1;
+    short sVar2;
+    int iVar3;
 
-    randAngle = FUN_80017730();
-    delta = (short)randAngle - *param_1;
-    if (0x8000 < delta)
+    iVar3 = FUN_80017730();
+    sVar2 = (short)iVar3 - *param_1;
+    if (0x8000 < sVar2)
     {
-        delta = delta + 1;
+        sVar2 = sVar2 + 1;
     }
-    if (delta < -0x8000)
+    if (sVar2 < -0x8000)
     {
-        delta = delta + -1;
+        sVar2 = sVar2 + -1;
     }
-    turnRate = lbl_803DC074 / (float)((double)CONCAT44(0x43300000, param_3 & 0xffff) - DOUBLE_803e3278);
-    if (lbl_803E3200 < turnRate)
+    fVar1 = lbl_803DC074 / (float)((double)CONCAT44(0x43300000, param_3 & 0xffff) - DOUBLE_803e3278);
+    if (lbl_803E3200 < fVar1)
     {
-        turnRate = lbl_803E3200;
+        fVar1 = lbl_803E3200;
     }
     *param_1 = *param_1 +
         (short)(int)((float)((double)CONCAT44(0x43300000,
-                                              (int)(short)(delta + param_4) ^ 0x80000000) -
-            DOUBLE_803e3218) * turnRate);
+                                              (int)(short)(sVar2 + param_4) ^ 0x80000000) -
+            DOUBLE_803e3218) * fVar1);
     return;
 }
 
@@ -1954,9 +1949,8 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        if (((GameObject*)obj)->unkF4 == 0)
         {
-        case 0:
             ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
             {
                 u32 flags = *(u32*)&((EnemyState*)state)->unk2E8;
@@ -1964,7 +1958,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     if ((flags & 1) != 0)
                     {
-                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1LL;
+                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1;
                         *(u32*)&((EnemyState*)state)->unk2E8 = *(u32*)&((EnemyState*)state)->unk2E8 | 2;
                     }
                     if (*(void**)&((EnemyState*)state)->modelLight == NULL)
@@ -1998,7 +1992,6 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
             }
-            break;
         }
     }
 }
@@ -2015,17 +2008,17 @@ void enemy_hitDetect(int obj)
         ModelLightStruct_free(((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
-    ((EnemyState*)state)->lastHitObject =
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
-    if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    ((EnemyState*)state)->lastHitObject = hitState->lastHitObject;
+    if (hitState->lastHitObject != 0)
     {
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+        hitState->suppressOutgoingHits = 1;
     }
     if (((GameObject*)obj)->childObjs[0] != NULL && *(void**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54) != NULL
-        && (*(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject
+        && (childHitState = *(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject
             != 0)
     {
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+        hitState->suppressOutgoingHits = 1;
     }
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {
@@ -2075,7 +2068,7 @@ void enemy_free(int obj, int flag)
         if (child != NULL)
         {
             ObjLink_DetachChild(obj, child);
-            if (flag == 0 || (((GameObject*)child)->objectFlags & 0x10) == 0)
+            if (flag == 0 || (*(u16*)(child + 0xb0) & 0x10) == 0)
             {
                 Obj_FreeObject((int)child);
             }
@@ -2154,7 +2147,7 @@ void enemy_update(int obj)
         }
         (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->unk2E, (void*)obj, -1);
         ((EnemyState*)state)->controlFlags |= 2;
-        *(u32*)&((EnemyState*)state)->controlFlags &= ~1LL;
+        *(int*)&((EnemyState*)state)->controlFlags = *(int*)&((EnemyState*)state)->controlFlags & -2;
         return;
     }
     if (((GameObject*)obj)->unkF4 != 0)
@@ -2187,7 +2180,7 @@ void enemy_update(int obj)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
-                    *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
+                    ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
                 }
                 else
                 {
@@ -2216,7 +2209,7 @@ void enemy_update(int obj)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
-                    *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
+                    *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
                 }
                 else
                 {
@@ -2249,7 +2242,7 @@ void enemy_update(int obj)
                         {
                             enemy_init(obj, setup, 0);
                             ((EnemyState*)state)->controlFlags |= 0x1000;
-                            *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
+                            *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
                         }
                         else
                         {
@@ -2535,7 +2528,7 @@ void enemy_init(int obj, u8* setup, int flag)
         if (((GameObject*)obj)->unkF4 != 0)
         {
             ((EnemyState*)state)->controlFlags |= 0x1000;
-            *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
+            ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
             ObjHits_DisableObject((u32)obj);
         }
         else if ((((EnemyState*)state)->flags2E4 & 1) != 0)
@@ -2544,11 +2537,11 @@ void enemy_init(int obj, u8* setup, int flag)
         }
     }
     ((EnemyState*)state)->unk2D8 = lbl_803E2574;
-    if (((EnemyState*)state)->unk2A8 > *(f32*)&lbl_803E25B0)
+    if (lbl_803E25B0 < ((EnemyState*)state)->unk2A8)
     {
         ((EnemyState*)state)->unk2A8 = lbl_803E25B0;
     }
-    if (((EnemyState*)state)->unk2AC > *(f32*)&lbl_803E25B0)
+    if (lbl_803E25B0 < ((EnemyState*)state)->unk2AC)
     {
         ((EnemyState*)state)->unk2AC = lbl_803E25B0;
     }
