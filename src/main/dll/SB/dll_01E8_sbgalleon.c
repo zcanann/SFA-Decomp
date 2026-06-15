@@ -89,7 +89,6 @@ extern f32 lbl_803E57B4;
 extern f32 lbl_803E57E0;
 extern f32 lbl_803E57F0;
 extern f32 lbl_803E5724;
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u8 framesThisStep;
 extern u32 getSbGalleon(void);
 extern u32 gSbGalleon;
