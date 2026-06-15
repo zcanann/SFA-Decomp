@@ -115,7 +115,7 @@ void camcontrol_updateTargetFeedback(void)
     }
     if (gCamcontrolTargetState == '\0')
     {
-        if (reticle->currentMoveProgress <= gCamcontrolNormalizedMin)
+        if (gCamcontrolNormalizedMin >= reticle->currentMoveProgress)
         {
             if (target != NULL)
             {
@@ -613,6 +613,7 @@ void Camera_setMode(s32 actionId, int priority, int startFlags, int dataSize, vo
     return;
 }
 
+#define camera CAMCONTROL_CAMERA
 void Camera_update(void)
 {
     ObjAnimComponent* focus;
@@ -627,11 +628,11 @@ void Camera_update(void)
     {
         textActive = 0;
     }
-    focus = CAMCONTROL_CAMERA->focusObj;
+    focus = camera->focusObj;
     if (focus == (ObjAnimComponent*)0x0)
     {
-        CAMCONTROL_CAMERA->currentTarget = 0;
-        CAMCONTROL_CAMERA->overrideTarget = 0;
+        camera->currentTarget = 0;
+        camera->overrideTarget = 0;
     }
     else
     {
@@ -641,32 +642,32 @@ void Camera_update(void)
         gCamcontrolSavedFocusWorldX = focus->worldPosX;
         gCamcontrolSavedFocusWorldY = focus->worldPosY;
         gCamcontrolSavedFocusWorldZ = focus->worldPosZ;
-        camcontrol_updateMoveAverage(CAMCONTROL_CAMERA, focus);
-        if (CAMCONTROL_CAMERA->overrideWorldPosPending != 0)
+        camcontrol_updateMoveAverage(camera, focus);
+        if (camera->overrideWorldPosPending != 0)
         {
-            focus->worldPosX = CAMCONTROL_CAMERA->overrideWorldX;
-            focus->worldPosY = CAMCONTROL_CAMERA->overrideWorldY;
-            focus->worldPosZ = CAMCONTROL_CAMERA->overrideWorldZ;
+            focus->worldPosX = camera->overrideWorldX;
+            focus->worldPosY = camera->overrideWorldY;
+            focus->worldPosZ = camera->overrideWorldZ;
             Obj_TransformWorldPointToLocal(focus->worldPosX, focus->worldPosY, focus->worldPosZ,
                                            &focus->localPosX, &focus->localPosY, &focus->localPosZ,
                                            (u32)focus->parent);
-            CAMCONTROL_CAMERA->overrideWorldPosPending = 0;
+            camera->overrideWorldPosPending = 0;
         }
-        if (CAMCONTROL_CAMERA->localFrameObj != focus->parent)
+        if (camera->localFrameObj != focus->parent)
         {
-            Obj_TransformLocalPointToWorld(CAMCONTROL_CAMERA->localX, CAMCONTROL_CAMERA->localY, CAMCONTROL_CAMERA->localZ,
-                                           &CAMCONTROL_CAMERA->worldX, &CAMCONTROL_CAMERA->worldY, &CAMCONTROL_CAMERA->worldZ,
-                                           (u32)CAMCONTROL_CAMERA->localFrameObj);
-            Obj_TransformLocalPointToWorld(CAMCONTROL_CAMERA->prevLocalX, CAMCONTROL_CAMERA->prevLocalY, CAMCONTROL_CAMERA->prevLocalZ,
-                                           &CAMCONTROL_CAMERA->prevWorldX, &CAMCONTROL_CAMERA->prevWorldY, &CAMCONTROL_CAMERA->prevWorldZ,
-                                           (u32)CAMCONTROL_CAMERA->localFrameObj);
-            Obj_TransformWorldPointToLocal(CAMCONTROL_CAMERA->worldX, CAMCONTROL_CAMERA->worldY, CAMCONTROL_CAMERA->worldZ,
-                                           &CAMCONTROL_CAMERA->localX, &CAMCONTROL_CAMERA->localY, &CAMCONTROL_CAMERA->localZ,
+            Obj_TransformLocalPointToWorld(camera->localX, camera->localY, camera->localZ,
+                                           &camera->worldX, &camera->worldY, &camera->worldZ,
+                                           (u32)camera->localFrameObj);
+            Obj_TransformLocalPointToWorld(camera->prevLocalX, camera->prevLocalY, camera->prevLocalZ,
+                                           &camera->prevWorldX, &camera->prevWorldY, &camera->prevWorldZ,
+                                           (u32)camera->localFrameObj);
+            Obj_TransformWorldPointToLocal(camera->worldX, camera->worldY, camera->worldZ,
+                                           &camera->localX, &camera->localY, &camera->localZ,
                                            (u32)focus->parent);
-            Obj_TransformWorldPointToLocal(CAMCONTROL_CAMERA->prevWorldX, CAMCONTROL_CAMERA->prevWorldY, CAMCONTROL_CAMERA->prevWorldZ,
-                                           &CAMCONTROL_CAMERA->prevLocalX, &CAMCONTROL_CAMERA->prevLocalY, &CAMCONTROL_CAMERA->prevLocalZ,
+            Obj_TransformWorldPointToLocal(camera->prevWorldX, camera->prevWorldY, camera->prevWorldZ,
+                                           &camera->prevLocalX, &camera->prevLocalY, &camera->prevLocalZ,
                                            (u32)focus->parent);
-            CAMCONTROL_CAMERA->localFrameObj = focus->parent;
+            camera->localFrameObj = focus->parent;
         }
         if (focus->parent != (void*)0x0)
         {
@@ -676,31 +677,31 @@ void Camera_update(void)
         if (gCamcontrolCurrentHandler != 0)
         {
             gCamcontrolCurrentHandler->handler->vtable->update((void*)pCamera);
-            Obj_TransformLocalPointToWorld(CAMCONTROL_CAMERA->localX, CAMCONTROL_CAMERA->localY, CAMCONTROL_CAMERA->localZ,
-                                           &CAMCONTROL_CAMERA->worldX, &CAMCONTROL_CAMERA->worldY, &CAMCONTROL_CAMERA->worldZ,
-                                           (u32)CAMCONTROL_CAMERA->localFrameObj);
-            camcontrol_applyState(CAMCONTROL_CAMERA);
+            Obj_TransformLocalPointToWorld(camera->localX, camera->localY, camera->localZ,
+                                           &camera->worldX, &camera->worldY, &camera->worldZ,
+                                           (u32)camera->localFrameObj);
+            camcontrol_applyState(camera);
         }
         camcontrol_applyQueuedAction();
         if (textActive == 0)
         {
-            if (CAMCONTROL_CAMERA->overrideTarget == 0u)
+            if (camera->overrideTarget == 0)
             {
-                target = camcontrol_findBestTarget(CAMCONTROL_CAMERA, focus);
-                CAMCONTROL_CAMERA->currentTarget = (int)target;
+                target = camcontrol_findBestTarget(camera, focus);
+                camera->currentTarget = (int)target;
             }
             else
             {
-                CAMCONTROL_CAMERA->currentTarget = CAMCONTROL_CAMERA->overrideTarget;
+                camera->currentTarget = camera->overrideTarget;
             }
         }
-        CAMCONTROL_CAMERA->prevLocalX = CAMCONTROL_CAMERA->localX;
-        CAMCONTROL_CAMERA->prevLocalY = CAMCONTROL_CAMERA->localY;
-        CAMCONTROL_CAMERA->prevLocalZ = CAMCONTROL_CAMERA->localZ;
-        CAMCONTROL_CAMERA->prevWorldX = CAMCONTROL_CAMERA->worldX;
-        CAMCONTROL_CAMERA->prevWorldY = CAMCONTROL_CAMERA->worldY;
-        CAMCONTROL_CAMERA->prevWorldZ = CAMCONTROL_CAMERA->worldZ;
-        CAMCONTROL_CAMERA->frameFlags = 0;
+        camera->prevLocalX = camera->localX;
+        camera->prevLocalY = camera->localY;
+        camera->prevLocalZ = camera->localZ;
+        camera->prevWorldX = camera->worldX;
+        camera->prevWorldY = camera->worldY;
+        camera->prevWorldZ = camera->worldZ;
+        camera->frameFlags = 0;
         focus->localPosX = gCamcontrolSavedFocusLocalX;
         focus->localPosY = gCamcontrolSavedFocusLocalY;
         focus->localPosZ = gCamcontrolSavedFocusLocalZ;
@@ -714,6 +715,7 @@ void Camera_update(void)
     }
     return;
 }
+#undef camera
 
 void* Camera_getDefaultHandlerEntry(void)
 {
