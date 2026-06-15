@@ -568,7 +568,7 @@ void ktrex_update(int obj)
     {
         return;
     }
-    gKTRexRuntime = runtime = ((GameObject*)obj)->extra;
+    runtime = gKTRexRuntime = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->unkF8 == 1)
     {
         Music_Trigger(40, 1);
