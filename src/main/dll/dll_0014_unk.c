@@ -5239,33 +5239,51 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     }
     if (projection < gFloatZero)
     {
+        f32 sqZ;
+        f32 sqX;
+        f32 sqY;
         nearestX = startX;
         nearestY = startY;
         nearestZ = startZ;
         diffZ = startZ - z;
+        sqZ = diffZ * diffZ;
         diffX = startX - x;
         diffY = startY - y;
-        distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
+        sqX = diffX * diffX;
+        sqY = diffY * diffY;
+        distance = -((sqX + sqY) + sqZ);
     }
     else if (projection > gFloatOne)
     {
+        f32 sqZ;
+        f32 sqX;
+        f32 sqY;
         nearestX = endX;
         nearestY = endY;
         nearestZ = endZ;
         diffZ = endZ - z;
+        sqZ = diffZ * diffZ;
         diffX = endX - x;
         diffY = endY - y;
-        distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
+        sqX = diffX * diffX;
+        sqY = diffY * diffY;
+        distance = -((sqX + sqY) + sqZ);
     }
     else
     {
+        f32 sqZ;
+        f32 sqX;
+        f32 sqY;
         nearestX = projection * deltaX + startX;
         nearestY = projection * deltaY + startY;
         nearestZ = projection * deltaZ + startZ;
         diffZ = nearestZ - z;
+        sqZ = diffZ * diffZ;
         diffX = nearestX - x;
         diffY = nearestY - y;
-        distance = diffZ * diffZ + diffX * diffX + diffY * diffY;
+        sqX = diffX * diffX;
+        sqY = diffY * diffY;
+        distance = (sqX + sqY) + sqZ;
     }
     segment->nearestX = nearestX;
     segment->nearestY = nearestY;
