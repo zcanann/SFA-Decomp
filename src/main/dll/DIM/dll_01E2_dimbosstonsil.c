@@ -56,7 +56,7 @@ extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;
 
-int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
+int dll_DIM_BossGutSpik_update(void* obj, undefined4 p2, ObjAnimUpdateState* animUpdate)
 {
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
@@ -360,10 +360,10 @@ void DIMbosstonsil_update(void* obj)
 }
 
 #pragma opt_propagation off
-void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
+void DIMbosstonsil_init(int obj, undefined4 p2, int isAltVariant)
 {
     extern undefined4* gBaddieControlInterface;
-    extern void modelLightStruct_setEnabled(void* handle, int param_2, f32 param_3);
+    extern void modelLightStruct_setEnabled(void* handle, int p2, f32 param_3);
     extern int GameBit_Get(int eventId);
     u8 variant;
     int state;
@@ -374,7 +374,7 @@ void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
     {
         variant = variant | 1;
     }
-    (*(void (**)(int, undefined4, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, param_2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
+    (*(void (**)(int, undefined4, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, p2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
     ((GameObject*)obj)->animEventCallback = (void*)dll_DIM_BossGutSpik_update;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
     *(s16*)(state + 0x270) = 0;
