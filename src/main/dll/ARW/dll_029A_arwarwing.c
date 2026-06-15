@@ -170,20 +170,23 @@ int arwarwing_getCollectedRingCount(int arwing)
 }
 
 #pragma scheduling off
+#pragma peephole off
 void arwarwing_addScore(int arwing, u8 amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    u16 v;
-    state->score = state->score + amount;
+    int v;
+    state->score += amount;
     v = state->score;
-    if (v > 0x270f)
+    if ((u32)v > 0x270f)
     {
         v = 0x270f;
     }
     state->score = v;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
+#pragma peephole off
 int arwarwing_getScore(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
@@ -195,6 +198,7 @@ int arwarwing_getScore(int arwing)
     state->score = v;
     return state->score;
 }
+#pragma peephole reset
 
 int arwarwing_getBombCount(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->bombCount; }
 
@@ -222,19 +226,24 @@ int arwarwing_incrementPickup6D8Count(int arwing)
     return ((*(ArwingState**)&((GameObject*)arwing)->extra)->pickup6D8Count)++;
 }
 
+#pragma peephole off
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
+    int v;
     if (state->collectedRings == 9)
     {
-        state->score = state->score + 0x64;
-        if (state->score > 0x270f)
+        state->score += 0x64;
+        v = state->score;
+        if ((u32)v > 0x270f)
         {
-            state->score = 0x270f;
+            v = 0x270f;
         }
+        state->score = v;
     }
     return (state->collectedRings)++;
 }
+#pragma peephole reset
 
 #pragma peephole off
 void arwarwing_addMaxShield(int arwing, int p2)
@@ -249,17 +258,16 @@ void arwarwing_addMaxShield(int arwing, int p2)
 void arwarwing_addShield(int arwing, int p2)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    s8 v;
+    int v;
 
     *(s8*)&state->shield = state->shield + p2;
-    v = *(s8*)&state->shield;
-    if (v < 0)
+    if (*(s8*)&state->shield < 0)
     {
         v = 0;
     }
     else
     {
-        v = (v > *(s8*)&state->maxShield) ? *(s8*)&state->maxShield : v;
+        v = (*(s8*)&state->shield > *(s8*)&state->maxShield) ? *(s8*)&state->maxShield : *(s8*)&state->shield;
     }
     *(s8*)&state->shield = v;
     if (*(s8*)&state->shield > 3)
