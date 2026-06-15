@@ -20,27 +20,27 @@ void sh_staff_free(int* obj, int p2)
         child = *(int**)(p + 56);
         if (child != NULL)
         {
-            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
         }
         child = *(int**)(p + 60);
         if (child != NULL)
         {
-            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
         }
         child = *(int**)(p + 64);
         if (child != NULL)
         {
-            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
         }
         child = *(int**)(p + 68);
         if (child != NULL)
         {
-            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
         }
         child = *(int**)(p + 72);
         if (child != NULL)
         {
-            *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
         }
         p += 20;
     }
@@ -201,7 +201,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     o = *slotPtr;
                     if ((uint)o != 0)
                     {
-                        *(s16*)(o + 6) |= 0x4000;
+                        ((GameObject*)o)->anim.flags |= 0x4000;
                         *slotPtr = 0;
                     }
                     slotPtr++;
@@ -236,13 +236,13 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     {
                         o = *slotPtr;
                         t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
-                        bx = *(f32*)(state->slots[4] + 0xc);
-                        *(f32*)(o + 0xc) = t * (x0 - bx) + bx;
-                        *(f32*)(o + 0x10) =
-                            t * (y0 - *(f32*)(state->slots[4] + 0x10)) + *(f32*)(state->slots[4] + 0x10);
-                        *(f32*)(o + 0x14) =
-                            t * (z0 - *(f32*)(state->slots[4] + 0x14)) + *(f32*)(state->slots[4] + 0x14);
-                        *(f32*)(o + 8) = spd;
+                        bx = ((GameObject*)state->slots[4])->anim.localPosX;
+                        ((GameObject*)o)->anim.localPosX = t * (x0 - bx) + bx;
+                        ((GameObject*)o)->anim.localPosY =
+                            t * (y0 - ((GameObject*)state->slots[4])->anim.localPosY) + ((GameObject*)state->slots[4])->anim.localPosY;
+                        ((GameObject*)o)->anim.localPosZ =
+                            t * (z0 - ((GameObject*)state->slots[4])->anim.localPosZ) + ((GameObject*)state->slots[4])->anim.localPosZ;
+                        ((GameObject*)o)->anim.rootMotionScale = spd;
                     }
                     slotPtr++;
                 }
@@ -254,13 +254,13 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     {
                         o = *slotPtr;
                         t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
-                        bx = *(f32*)(state->slots[5] + 0xc);
-                        *(f32*)(o + 0xc) = t * (x1 - bx) + bx;
-                        *(f32*)(o + 0x10) =
-                            t * (y1 - *(f32*)(state->slots[5] + 0x10)) + *(f32*)(state->slots[5] + 0x10);
-                        *(f32*)(o + 0x14) =
-                            t * (z1 - *(f32*)(state->slots[5] + 0x14)) + *(f32*)(state->slots[5] + 0x14);
-                        *(f32*)(o + 8) = spd;
+                        bx = ((GameObject*)state->slots[5])->anim.localPosX;
+                        ((GameObject*)o)->anim.localPosX = t * (x1 - bx) + bx;
+                        ((GameObject*)o)->anim.localPosY =
+                            t * (y1 - ((GameObject*)state->slots[5])->anim.localPosY) + ((GameObject*)state->slots[5])->anim.localPosY;
+                        ((GameObject*)o)->anim.localPosZ =
+                            t * (z1 - ((GameObject*)state->slots[5])->anim.localPosZ) + ((GameObject*)state->slots[5])->anim.localPosZ;
+                        ((GameObject*)o)->anim.rootMotionScale = spd;
                     }
                     slotPtr--;
                 }
@@ -288,10 +288,10 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                         t = lbl_803E54F0 * (f32)j;
                         t = t + (f32)(int)
                         randomGetRange(-0x32, 0x32) / lbl_803E54F4;
-                        *(f32*)(o + 0xc) = dx * t + x0;
-                        *(f32*)(o + 0x10) = dy * t + y0;
-                        *(f32*)(o + 0x14) = dz * t + z0;
-                        *(f32*)(o + 8) = spd;
+                        ((GameObject*)o)->anim.localPosX = dx * t + x0;
+                        ((GameObject*)o)->anim.localPosY = dy * t + y0;
+                        ((GameObject*)o)->anim.localPosZ = dz * t + z0;
+                        ((GameObject*)o)->anim.rootMotionScale = spd;
                     }
                 }
             }
@@ -309,7 +309,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     o = state->slots[0];
                     if ((uint)o != 0)
                     {
-                        *(s16*)(o + 6) |= 0x4000;
+                        ((GameObject*)o)->anim.flags |= 0x4000;
                         state->slots[0] = 0;
                         state->fadeTimer = bx;
                     }
@@ -322,10 +322,10 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             if ((u32)state->slots[0] != 0)
             {
                 o = state->slots[0];
-                *(f32*)(o + 0xc) = dx * state->pulseTimer + x0;
-                *(f32*)(o + 0x10) = dy * state->pulseTimer + y0;
-                *(f32*)(o + 0x14) = dz * state->pulseTimer + z0;
-                *(f32*)(o + 8) = scale;
+                ((GameObject*)o)->anim.localPosX = dx * state->pulseTimer + x0;
+                ((GameObject*)o)->anim.localPosY = dy * state->pulseTimer + y0;
+                ((GameObject*)o)->anim.localPosZ = dz * state->pulseTimer + z0;
+                ((GameObject*)o)->anim.rootMotionScale = scale;
             }
         }
     }
@@ -464,31 +464,31 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
             child = (void*)childSlots[0];
             if (child != NULL)
             {
-                *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
                 childSlots[0] = zero;
             }
             child = (void*)childSlots[1];
             if (child != NULL)
             {
-                *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
                 childSlots[1] = zero;
             }
             child = (void*)childSlots[2];
             if (child != NULL)
             {
-                *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
                 childSlots[2] = zero;
             }
             child = (void*)childSlots[3];
             if (child != NULL)
             {
-                *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
                 childSlots[3] = zero;
             }
             child = (void*)childSlots[4];
             if (child != NULL)
             {
-                *(s16*)((char*)child + 6) = (s16)(*(s16*)((char*)child + 6) | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
                 childSlots[4] = zero;
             }
             childSlots += 5;
