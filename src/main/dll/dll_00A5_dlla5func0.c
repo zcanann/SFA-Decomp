@@ -157,7 +157,7 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 8;
     buf.v5a = 0;
     buf.v5b = 0x3c;
-    end = e + 13;
+    end = (GfxCmd*)((u8*)e + 0x138);
     buf.count = end - e;
     buf.hw[0] = *(s16*)&tab[0x78];
     buf.hw[1] = *(s16*)&tab[0x7a];
