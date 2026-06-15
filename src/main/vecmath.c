@@ -86,7 +86,7 @@ f32 vec3f_distanceSquared(f32* a, f32* b)
     return dx * dx + dy * dy + dz * dz;
 }
 
-void Vec3_ScaleAdd(f32* a, f32 s, f32* b, f32* out)
+void Vec3_ScaleAdd(f32* a, f32* b, f32 s, f32* out)
 {
     out[0] = s * b[0] + a[0];
     out[1] = s * b[1] + a[1];
