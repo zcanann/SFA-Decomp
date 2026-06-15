@@ -147,11 +147,11 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
             state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
-                (int)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
                     (f32) * (s16*)(base + 0));
         else
             *(s16*)(curr + 0) =
-                (int)((f32) * (s16*)(base + 0) -
+                (s16)((f32) * (s16*)(base + 0) -
                     lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
     }
     return 0;
@@ -223,11 +223,11 @@ void wctemplebri_update(int obj)
             state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
-                (int)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
                     (f32) * (s16*)(base + 0));
         else
             *(s16*)(curr + 0) =
-                (int)((f32) * (s16*)(base + 0) -
+                (s16)((f32) * (s16*)(base + 0) -
                     lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
     }
     if (state->active != 0)
