@@ -10,9 +10,7 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
-#include "main/effect_interfaces.h"
 #include "main/objtexture.h"
-#include "main/objseq.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -88,13 +86,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/asset_load.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/dll/DIM/DIM2snowball.h"
-#include "main/objanim_internal.h"
 #include "main/objhits.h"
 
 typedef struct Dll1D6Placement
