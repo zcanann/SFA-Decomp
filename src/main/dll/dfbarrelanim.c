@@ -1,4 +1,3 @@
-#include "main/dll/DF/DFbarrelanim.h"
 #include "main/game_object.h"
 #include "main/dll/DF/dfropenode.h"
 
