@@ -62,7 +62,7 @@ extern f32 fastFloorf(f32 v);
 extern int* Obj_GetPlayerObject(void);
 extern void OSReport(const char* fmt, ...);
 
-int objShouldLoad(int obj, int param_2, int param_3)
+int objShouldLoad(int obj, int viewSlot, int mapEventGroup)
 {
     char* strs;
     int verbose;
@@ -94,7 +94,7 @@ int objShouldLoad(int obj, int param_2, int param_3)
     {
         verbose = 0;
     }
-    t = (*gMapEventInterface)->getMapAct(param_3);
+    t = (*gMapEventInterface)->getMapAct(mapEventGroup);
     if (t == -1)
     {
         ok = 0;
@@ -141,7 +141,7 @@ test:
         }
         return 0;
     }
-    if ((s8)param_2 == 0)
+    if ((s8)viewSlot == 0)
     {
         bx = (int)fastFloorf((((GameObject*)obj)->anim.rootMotionScale - playerMapOffsetX) / gMapBlockWorldSize);
         bz = (int)fastFloorf((((GameObject*)obj)->anim.localPosY - playerMapOffsetZ) / gMapBlockWorldSize);
@@ -180,7 +180,7 @@ test:
         return 1;
     }
     useObj = 0;
-    if ((*(u8*)(obj + 4) & 4) && (s8)param_2 == 0)
+    if ((*(u8*)(obj + 4) & 4) && (s8)viewSlot == 0)
     {
         player = Obj_GetPlayerObject();
         if (player != NULL)
@@ -200,7 +200,7 @@ test:
     }
     if (useObj != 0)
     {
-        off = (s8)param_2 << 4;
+        off = (s8)viewSlot << 4;
         x = *(f32*)(lbl_80386648 + off);
         p = (f32*)(lbl_80386648 + off);
         y = p[1];
