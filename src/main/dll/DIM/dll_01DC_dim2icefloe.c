@@ -114,10 +114,9 @@ void dim2icefloe_update(int obj)
     {
         int v;
         int reached;
-        if ((int)((Dim2IceFloeState*)sub)->paused != 0)
+        switch ((int)((Dim2IceFloeState*)sub)->paused)
         {
-            return;
-        }
+        case 0:
         v = ((GameObject*)obj)->anim.alpha + framesThisStep * 4;
         if (v > 0xff)
         {
@@ -162,6 +161,10 @@ void dim2icefloe_update(int obj)
             {
                 Obj_FreeObject(obj);
             }
+        }
+        break;
+        default:
+            break;
         }
     }
 }

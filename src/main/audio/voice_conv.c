@@ -162,15 +162,6 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     u8 baseNote;
     u8 inputNote;
     f32 freq;
-    union
-    {
-        struct
-        {
-            u32 hi, lo;
-        } w;
-
-        f64 d;
-    } conv;
 
     if (packed == 0xffffffffU)
     {
