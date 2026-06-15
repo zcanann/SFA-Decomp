@@ -1,11 +1,7 @@
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
 #include "main/dll/dll_00EF_pushable.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 #include "main/dll/player_target.h"
 
 typedef struct InvhitState
