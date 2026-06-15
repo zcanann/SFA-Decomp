@@ -339,9 +339,9 @@ void wispbaddie_update(int obj)
     }
     if (curve != 0)
     {
-        d[0] = *(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = *(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = *(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        d[0] = *(f32*)((u8*)curve + 0x68) - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = *(f32*)((u8*)curve + 0x6c) - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = *(f32*)((u8*)curve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
         state->curveDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
 
@@ -357,7 +357,7 @@ void wispbaddie_update(int obj)
         if (state->cryTimer < lbl_803E2714)
         {
             Sfx_PlayFromObject(obj, 0x23d);
-            state->cryTimer = (f32)randomGetRange(0x3c, 0x78);
+            state->cryTimer = (f32)(u32)(int)randomGetRange(0x3c, 0x78);
         }
         state->particleId = 0x338;
     }
@@ -372,7 +372,7 @@ void wispbaddie_update(int obj)
     }
     if ((state->flags & 6) == 0)
     {
-        if ((state->maxHitRadius <= state->hitRadius) && (state->playerObj != 0) &&
+        if ((state->hitRadius >= state->maxHitRadius) && (state->playerObj != 0) &&
             (state->playerDistance < state->triggerDistance))
         {
             state->flags = (u8)(state->flags | 2);
