@@ -1383,6 +1383,7 @@ undefined4 ObjMsg_Pop(void* obj, uint* outMessage, uint* outSender, uint* outPar
     return 0;
 }
 
+#pragma opt_loop_invariants off
 void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* sender, uint message, uint param)
 {
     int* objects;
@@ -1393,15 +1394,19 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
     int objectIndex;
     int objectCount;
     void* obj;
+    int includeSender;
+    int matchAny;
 
     objects = (int*)ObjList_GetObjects(&objectIndex, &objectCount);
     maskedFlags = flags & 0xffff;
+    includeSender = maskedFlags & OBJMSG_SEND_INCLUDE_SENDER;
+    matchAny = maskedFlags & OBJMSG_SEND_MATCH_ANY;
     for (; objectIndex < objectCount; objectIndex = objectIndex + 1)
     {
         obj = (void*)objects[objectIndex];
-        if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
+        if (((obj != sender) || (includeSender == 0)) &&
             ((((GameObject*)obj)->anim.seqId == (short)targetId ||
-                ((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0))) &&
+                (matchAny != 0))) &&
             ((Vec_distance(&((GameObject*)sender)->anim.worldPosX,
                            &((GameObject*)obj)->anim.worldPosX) < radius &&
                     (obj != (void*)0x0)) &&
@@ -1427,6 +1432,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
     }
     return;
 }
+#pragma opt_loop_invariants reset
 
 void ObjMsg_SendToObjects(int targetId, uint flags, void* sender, uint message, uint param)
 {
