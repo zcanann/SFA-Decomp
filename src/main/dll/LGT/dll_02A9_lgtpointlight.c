@@ -158,6 +158,7 @@ void pointlight_update(int obj)
     }
 }
 
+#pragma scheduling off
 void pointlight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
@@ -242,6 +243,7 @@ void pointlight_init(int obj, int setup)
 
     ObjGroup_AddObject(obj, LGT_POINTLIGHT_GROUP);
 }
+#pragma scheduling reset
 
 void pointlight_release(void)
 {
