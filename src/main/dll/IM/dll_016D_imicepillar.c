@@ -71,25 +71,20 @@ extern undefined4 FUN_80017ac8();
 #undef MEVT_QUERY
 
 #pragma scheduling on
-extern void* lbl_803DDB40;
 extern void objRenderFn_8003b8f4(f32);
 extern void warpToMap(int mapId, int flags);
-extern u8 lbl_802C2308[];
 extern void Music_Trigger(int track, int flag);
-extern u8 lbl_803236B8[];
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
 extern f32 lbl_803E4768;
 extern void Music_Trigger(int id, int p2);
-extern int ObjList_FindObjectById(int id);
 
 void imicepillar_free(void)
 {
