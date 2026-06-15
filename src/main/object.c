@@ -1522,7 +1522,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 void objFreeObjDef(void* objp, int flag)
 {
     u8* obj = (u8*)objp;
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)objp;
+
     int defs[46];
     void(*fp)(u8 *, int);
     void(*cb)(u8 *);
@@ -1540,7 +1540,7 @@ void objFreeObjDef(void* objp, int flag)
     int group;
     int type;
 
-    if (((GameObject*)obj)->unkE9 != 0)
+    if (*(u8*)((u8*)obj + 0xE9) != 0)
     {
         ObjContact_RemoveObjectCallbacks((int)obj);
     }
@@ -1617,10 +1617,10 @@ void objFreeObjDef(void* objp, int flag)
     {
         ObjGroup_RemoveObject((uint)obj, 8);
     }
-    modelState = objAnim->modelState;
+    modelState = ((ObjAnimComponent*)obj)->modelState;
     if (modelState != NULL)
     {
-        if (objAnim->modelInstance->shadowType == 1)
+        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 1)
         {
             setShadowFlag_803db658(1);
         }
@@ -1630,7 +1630,7 @@ void objFreeObjDef(void* objp, int flag)
             tex = modelState->shadowTexture;
             if (tex != curTex)
             {
-                if ((objAnim->modelInstance->renderFlags & 4) == 0)
+                if ((((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4) == 0)
                 {
                     textureFree(tex);
                 }
@@ -1655,12 +1655,12 @@ void objFreeObjDef(void* objp, int flag)
         mm_free(((GameObject*)obj)->unkDC);
         *(int*)&((GameObject*)obj)->unkDC = 0;
     }
-    modelCount = objAnim->modelInstance->modelCount;
+    modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
     for (i = 0; i < modelCount; i++)
     {
-        if (objAnim->banks[i] != NULL)
+        if (((ObjAnimComponent*)obj)->banks[i] != NULL)
         {
-            ObjModel_Release((u8*)objAnim->banks[i]);
+            ObjModel_Release((u8*)((ObjAnimComponent*)obj)->banks[i]);
         }
     }
     if (((GameObject*)obj)->colorFadeFlags & 1)
@@ -1668,7 +1668,7 @@ void objFreeObjDef(void* objp, int flag)
         *(u16*)&((GameObject*)obj)->colorFadeFrames = 0;
         ((GameObject*)obj)->colorFadeFlags = ((GameObject*)obj)->colorFadeFlags & ~1;
         ((GameObject*)obj)->fadeCounter = 0;
-        ObjModel_ClearRenderAttachment((u8*)objAnim->banks[objAnim->bankIndex]);
+        ObjModel_ClearRenderAttachment((u8*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex]);
         cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
         cb2(obj, 0x7fb, NULL, 0x50, NULL);
         cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
