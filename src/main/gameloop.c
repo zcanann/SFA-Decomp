@@ -705,7 +705,7 @@ extern void* gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 
 #pragma dont_inline on
-#pragma peephole on
+#pragma peephole off
 void init(void)
 {
     u8 audioDone;
