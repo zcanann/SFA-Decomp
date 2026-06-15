@@ -5852,7 +5852,7 @@ int fn_8029EBCC(int obj, int state)
     inner->unk418 = inner->unk418 - timeDelta;
     if (inner->unk418 < lbl_803E7EA4)
     {
-        inner->unk418 = lbl_803E7EA4;
+        inner->unk418 = *(f32*)&lbl_803E7EA4;
     }
     if ((inner->buttonsJustPressed & 0x100) != 0)
     {
@@ -5906,7 +5906,7 @@ int fn_8029EBCC(int obj, int state)
             }
         }
         inner->targetYaw =
-            (int)(lbl_803E7FB4 * d * lbl_803DC6DC + (f32)inner->targetYaw);
+            (s16)(lbl_803E7FB4 * d * lbl_803DC6DC + (f32)inner->targetYaw);
         inner->yaw = inner->targetYaw;
     }
     if (inner->unk7BC > lbl_803E7EA4)
@@ -5922,10 +5922,10 @@ int fn_8029EBCC(int obj, int state)
     inner->headPitch =
         (f32)inner->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
     inner->headYaw =
-        (int)((f32)inner->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta));
-    inner->bodyLeanHalf = (int)(lbl_803E7FB0 * inner->unk7B8);
+        (s16)((f32)inner->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta));
+    inner->bodyLeanHalf = (s16)(lbl_803E7FB0 * inner->unk7B8);
     inner->bodyLeanAngle = (s16)(inner->bodyLeanHalf >> 1);
-    inner->flags360 &= 0xFFFFFBFF;
+    *(u32*)&inner->flags360 &= ~0x400LL;
     v7bc = inner->unk7BC;
     v7b8 = inner->unk7B8;
     res = getScreenResolution();
