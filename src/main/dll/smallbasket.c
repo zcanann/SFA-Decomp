@@ -769,9 +769,9 @@ void smallbasket_checkNearbyActiveBasket(int obj, u8* state)
         {
             u32 objectIndex = (u8)i;
             int e = lbl_803AC4A8[objectIndex * 2];
-            if (*(s16*)((char*)e + 0x46) == 0x6a3)
+            if (((GameObject*)e)->anim.seqId == 0x6a3)
             {
-                u32 flags = *(u32*)((char*)*(int**)((char*)e + 0xb8) + 0x2dc);
+                u32 flags = *(u32*)((char*)((GameObject*)e)->extra + 0x2dc);
                 if ((flags & 0x20000000) != 0 && (flags & 0x1800) == 0)
                 {
                     i = count;
