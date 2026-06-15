@@ -25,8 +25,9 @@ extern f32 lbl_803E1870;
 
 void CameraModeDebug_update(short* camObj)
 {
+    extern u16 getButtonsJustPressed(int port); /* #57 */
     u8* cam = (u8*)camObj;
-    u8* state = *(u8**)(cam + 164);
+    u8* state;
     u16 held;
     f32 move;
     f32 absMove;
@@ -34,13 +35,14 @@ void CameraModeDebug_update(short* camObj)
     f32 factor;
     f32 radius;
 
+    move = lbl_803E1840;
+    state = *(u8**)(cam + 164);
+    held = getButtonsHeld(0);
     if ((getButtonsJustPressed(0) & 2) != 0)
     {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
         return;
     }
-    move = lbl_803E1840;
-    held = getButtonsHeld(0);
     if ((held & 8) != 0)
     {
         move = lbl_803E1844 * lbl_803DD550->orbitRadius;
