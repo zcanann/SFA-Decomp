@@ -2068,11 +2068,9 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 
     total = 0;
     found = 0;
-    scan = (void**)gPartfxActiveEffects;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
     {
-        if (*scan == NULL) found = 1;
-        scan++;
+        if (((void**)gPartfxActiveEffects)[i] == NULL) found = 1;
     }
     if (found)
     {
