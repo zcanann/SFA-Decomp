@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
-#include "main/effect_interfaces.h"
 
 typedef struct MmshShrineState
 {
