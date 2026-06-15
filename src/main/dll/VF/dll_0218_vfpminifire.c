@@ -54,12 +54,13 @@ void vfpminifire_initialise(void)
 
 void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    if (vis != 0 && ((GameObject*)p1)->anim.alpha != 0)
+    if (vis == 0 || ((GameObject*)p1)->anim.alpha == 0)
     {
-        fn_80053ED0(8);
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6088);
-        fn_80053EBC(8);
+        return;
     }
+    fn_80053ED0(8);
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6088);
+    fn_80053EBC(8);
 }
 
 void vfpminifire_free(int obj)
