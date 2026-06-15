@@ -570,8 +570,7 @@ void fn_80204320(int obj)
             s16 i;
             s16* arr;
             Sfx_PlayFromObject(0, 1095);
-            arr = lbl_80329848;
-            for (i = 0; i < 6; i++)
+            for (i = 0, arr = lbl_80329848; i < 6; i++)
             {
                 *arr = (s16)randomGetRange(1, 4);
                 arr++;
