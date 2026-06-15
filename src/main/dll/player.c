@@ -1380,14 +1380,14 @@ int fn_8029A76C(int obj, int state, f32 fv)
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject(
             (void*)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
-        if (((u16) * (s16*)((char*)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
+        if ((*(u16*)((char*)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            void** p = lbl_80332ED4;
+            void** p;
             int i;
             lbl_803DE42C = 0;
-            for (i = 0; i < 7; i++)
+            for (i = 0, p = lbl_80332ED4; i < 7; i++)
             {
                 if (*p != NULL)
                 {
@@ -1486,7 +1486,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
     }
     if (((PlayerState*)state)->baddie.targetObj == NULL)
     {
-        if (((u16) * (s16*)((char*)inner + 0x6e2) & 0x200) != 0 ||
+        if ((*(u16*)((char*)inner + 0x6e2) & 0x200) != 0 ||
             inner->curAnimId != 0x52)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
