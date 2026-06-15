@@ -145,35 +145,35 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    float fVar1;
-    uint uVar2;
+    float slowFactor;
+    uint pending;
     GameObject* targetObj;
-    short* psVar4;
+    short* msgQueue;
     BaddieState* state;
     GroundBaddieState* groundState;
     DbStealerwormControl* control;
-    double dVar6;
-    undefined4 local_48;
-    undefined4 local_44;
-    undefined4 local_40;
-    undefined4 local_3c;
-    undefined4 local_38;
-    undefined4 local_34;
-    undefined4 local_30;
-    undefined4 local_2c;
-    undefined4 local_28;
-    float local_24;
-    float local_20;
-    float local_1c;
+    double dist;
+    undefined4 msgA0;
+    undefined4 msgA1;
+    undefined4 msgA2;
+    undefined4 msgC0;
+    undefined4 msgC1;
+    undefined4 msgC2;
+    undefined4 msgB0;
+    undefined4 msgB1;
+    undefined4 msgB2;
+    float dx;
+    float dy;
+    float dz;
 
     state = (BaddieState*)param_10;
     groundState = ((GameObject*)param_9)->extra;
     control = (DbStealerwormControl*)groundState->control;
     control->flags14 |= 2;
     control->flags15 &= 0xfb;
-    fVar1 = lbl_803E6F88;
+    slowFactor = lbl_803E6F88;
     state->animSpeedA = state->animSpeedA / lbl_803E6F88;
-    state->animSpeedB = state->animSpeedB / fVar1;
+    state->animSpeedB = state->animSpeedB / slowFactor;
     state->moveSpeed = lbl_803E6F8C;
     if (state->moveJustStartedA != '\0')
     {
@@ -186,44 +186,44 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
         (((GameObject*)param_9)->anim.localPosY < targetObj->anim.localPosY - lbl_803E6F90))
     {
-        local_24 = targetObj->anim.localPosX - ((GameObject*)param_9)->anim.localPosX;
-        local_20 = targetObj->anim.localPosY - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
-        local_1c = targetObj->anim.localPosZ - ((GameObject*)param_9)->anim.localPosZ;
-        dVar6 = FUN_80293900((double)(local_1c * local_1c + local_24 * local_24 + local_20 * local_20));
-        if (dVar6 < (double)lbl_803E6F50)
+        dx = targetObj->anim.localPosX - ((GameObject*)param_9)->anim.localPosX;
+        dy = targetObj->anim.localPosY - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
+        dz = targetObj->anim.localPosZ - ((GameObject*)param_9)->anim.localPosZ;
+        dist = FUN_80293900((double)(dz * dz + dx * dx + dy * dy));
+        if (dist < (double)lbl_803E6F50)
         {
-            local_40 = (undefined4)state->targetObj;
-            psVar4 = (short*)control->msgStack;
-            local_48 = 0xe;
-            local_44 = 1;
-            uVar2 = FUN_80006ab8(psVar4);
-            if (uVar2 == 0)
+            msgA2 = (undefined4)state->targetObj;
+            msgQueue = (short*)control->msgStack;
+            msgA0 = 0xe;
+            msgA1 = 1;
+            pending = FUN_80006ab8(msgQueue);
+            if (pending == 0)
             {
-                FUN_80006ac4(psVar4, (uint) & local_48);
+                FUN_80006ac4(msgQueue, (uint) & msgA0);
             }
             control->unk34 = 1;
         }
     }
     else
     {
-        psVar4 = (short*)control->msgStack;
-        local_30 = 9;
-        local_2c = 0;
-        local_28 = 0x24;
-        uVar2 = FUN_80006ab8(psVar4);
-        if (uVar2 == 0)
+        msgQueue = (short*)control->msgStack;
+        msgB0 = 9;
+        msgB1 = 0;
+        msgB2 = 0x24;
+        pending = FUN_80006ab8(msgQueue);
+        if (pending == 0)
         {
-            FUN_80006ac4(psVar4, (uint) & local_30);
+            FUN_80006ac4(msgQueue, (uint) & msgB0);
         }
         control->unk34 = 1;
-        local_34 = (undefined4)state->targetObj;
-        psVar4 = (short*)control->msgStack;
-        local_3c = 7;
-        local_38 = 1;
-        uVar2 = FUN_80006ab8(psVar4);
-        if (uVar2 == 0)
+        msgC2 = (undefined4)state->targetObj;
+        msgQueue = (short*)control->msgStack;
+        msgC0 = 7;
+        msgC1 = 1;
+        pending = FUN_80006ab8(msgQueue);
+        if (pending == 0)
         {
-            FUN_80006ac4(psVar4, (uint) & local_3c);
+            FUN_80006ac4(msgQueue, (uint) & msgC0);
         }
         control->unk34 = 1;
     }
@@ -236,15 +236,15 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    int iVar1;
-    uint uVar2;
-    short* psVar3;
+    int inWater;
+    uint rnd;
+    short* msgQueue;
     BaddieState* state;
     GroundBaddieState* groundState;
     DbStealerwormControl* control;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined4 local_20;
+    undefined4 msg0;
+    undefined4 msg1;
+    undefined4 msg2;
 
     state = (BaddieState*)param_10;
     groundState = ((GameObject*)param_9)->extra;
@@ -264,26 +264,26 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
                                 control->linkedObj, 0x11, param_9, 0x10, param_13, param_14, param_15, param_16);
             control->linkedObj = 0;
         }
-        iVar1 = FUN_80017a98();
-        iVar1 = (**(code**)(**(int**)(*(int*)(iVar1 + 200) + 0x68) + 0x44))();
-        if (iVar1 == 0)
+        inWater = FUN_80017a98();
+        inWater = (**(code**)(**(int**)(*(int*)(inWater + 200) + 0x68) + 0x44))();
+        if (inWater == 0)
         {
-            uVar2 = randomGetRange(0, 2);
-            FUN_80006824(param_9, (ushort) * (undefined4*)(&DAT_8032a290 + uVar2 * 4));
+            rnd = randomGetRange(0, 2);
+            FUN_80006824(param_9, (ushort) * (undefined4*)(&DAT_8032a290 + rnd * 4));
         }
         else
         {
-            uVar2 = randomGetRange(3, 4);
-            FUN_80006824(param_9, (ushort) * (undefined4*)(&DAT_8032a290 + uVar2 * 4));
+            rnd = randomGetRange(3, 4);
+            FUN_80006824(param_9, (ushort) * (undefined4*)(&DAT_8032a290 + rnd * 4));
         }
-        local_20 = control->unk30;
-        local_24 = control->unk2C;
-        psVar3 = (short*)control->msgStack;
-        local_28 = control->unk28;
-        uVar2 = FUN_80006ab8(psVar3);
-        if (uVar2 == 0)
+        msg2 = control->unk30;
+        msg1 = control->unk2C;
+        msgQueue = (short*)control->msgStack;
+        msg0 = control->unk28;
+        rnd = FUN_80006ab8(msgQueue);
+        if (rnd == 0)
         {
-            FUN_80006ac4(psVar3, (uint) & local_28);
+            FUN_80006ac4(msgQueue, (uint) & msg0);
         }
         control->unk3C = 0;
     }
@@ -305,7 +305,7 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    undefined4 uVar1;
+    undefined4 flagsArg;
     BaddieState* state;
     GroundBaddieState* groundState;
     DbStealerwormControl* control;
@@ -316,13 +316,13 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         ObjHits_EnableObject(param_9);
     }
-    uVar1 = 0xffffffff;
+    flagsArg = 0xffffffff;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
     state->moveSpeed = lbl_803E6F8C;
     if (state->moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 10, 0, uVar1, param_13, param_14, param_15, param_16);
+                     param_9, 10, 0, flagsArg, param_13, param_14, param_15, param_16);
         state->moveDone = 0;
     }
     state->unk34D = 1;
@@ -350,7 +350,7 @@ FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    undefined4 uVar1;
+    undefined4 flagsArg;
     BaddieState* state;
 
     state = (BaddieState*)param_10;
@@ -358,13 +358,13 @@ FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         ObjHits_EnableObject(param_9);
     }
-    uVar1 = 0xffffffff;
+    flagsArg = 0xffffffff;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
     state->moveSpeed = lbl_803E6F8C;
     if (state->moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 5, 0, uVar1, param_13, param_14, param_15, param_16);
+                     param_9, 5, 0, flagsArg, param_13, param_14, param_15, param_16);
         state->moveDone = 0;
     }
     state->unk34D = 1;
@@ -379,8 +379,8 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    uint uVar1;
-    undefined4 uVar2;
+    uint rnd;
+    undefined4 flagsArg;
     BaddieState* state;
     GroundBaddieState* groundState;
     DbStealerwormControl* control;
@@ -392,24 +392,24 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         ObjHits_EnableObject(param_9);
     }
-    uVar2 = 0xffffffff;
+    flagsArg = 0xffffffff;
     ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
     if (state->moveJustStartedA != '\0')
     {
-        uVar1 = randomGetRange(0, 1);
-        if (uVar1 == 0)
+        rnd = randomGetRange(0, 1);
+        if (rnd == 0)
         {
             if (state->moveJustStartedA != '\0')
             {
                 FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 7, 0, uVar2, param_13, param_14, param_15, param_16);
+                             param_9, 7, 0, flagsArg, param_13, param_14, param_15, param_16);
                 state->moveDone = 0;
             }
         }
         else if (state->moveJustStartedA != '\0')
         {
             FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         param_9, 6, 0, uVar2, param_13, param_14, param_15, param_16);
+                         param_9, 6, 0, flagsArg, param_13, param_14, param_15, param_16);
             state->moveDone = 0;
         }
         state->unk34D = 1;
@@ -430,49 +430,49 @@ undefined4
 FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
              int param_6)
 {
-    int iVar1;
-    undefined4 uVar2;
-    int iVar3;
-    double dVar4;
-    double dVar5;
-    float local_48[5];
+    int yawDelta;
+    undefined4 result;
+    int sub;
+    double absRatio;
+    double ratio;
+    float yawOut[5];
 
-    iVar3 = *(int*)(param_5 + 0x5c);
-    iVar1 = Obj_GetYawDeltaToObject(param_5, param_6, local_48);
+    sub = *(int*)(param_5 + 0x5c);
+    yawDelta = Obj_GetYawDeltaToObject(param_5, param_6, yawOut);
     if ((double)lbl_803E6F40 == param_4)
     {
-        uVar2 = 0;
+        result = 0;
     }
     else
     {
-        dVar5 = (double)(float)((double)(float)((double)local_48[0] - param_1) / param_4);
-        dVar4 = dVar5;
-        if (dVar5 < (double)lbl_803E6F40)
+        ratio = (double)(float)((double)(float)((double)yawOut[0] - param_1) / param_4);
+        absRatio = ratio;
+        if (ratio < (double)lbl_803E6F40)
         {
-            dVar4 = -dVar5;
+            absRatio = -ratio;
         }
-        if ((double)lbl_803E7008 <= dVar4)
+        if ((double)lbl_803E7008 <= absRatio)
         {
-            if (dVar5 < (double)lbl_803E6F40)
+            if (ratio < (double)lbl_803E6F40)
             {
                 param_2 = -param_2;
             }
-            *(float*)(iVar3 + 0x280) =
+            *(float*)(sub + 0x280) =
                 lbl_803DC074 * lbl_803E6FE4 *
                 ((float)(param_2 *
                     (double)(lbl_803E6F60 -
-                        (float)((double)CONCAT44(0x43300000, (int)(short)iVar1 ^ 0x80000000) -
-                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(iVar3 + 0x280)) +
-                *(float*)(iVar3 + 0x280);
-            *(float*)(iVar3 + 0x284) = lbl_803E6F40;
-            uVar2 = 0;
+                        (float)((double)CONCAT44(0x43300000, (int)(short)yawDelta ^ 0x80000000) -
+                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(sub + 0x280)) +
+                *(float*)(sub + 0x280);
+            *(float*)(sub + 0x284) = lbl_803E6F40;
+            result = 0;
         }
         else
         {
-            uVar2 = 1;
+            result = 1;
         }
     }
-    return uVar2;
+    return result;
 }
 
 int dbstealerworm_stateHandlerA06(int obj, int p2);
@@ -481,37 +481,37 @@ undefined4
 FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
              int param_6)
 {
-    int iVar1;
-    int iVar2;
-    double dVar3;
-    float local_58[7];
+    int yawDelta;
+    int sub;
+    double heightDiff;
+    float yawOut[7];
 
-    iVar2 = *(int*)(param_5 + 0x5c);
+    sub = *(int*)(param_5 + 0x5c);
     if ((param_5 != (ushort*)0x0) && (param_6 != 0))
     {
-        iVar1 = Obj_GetYawDeltaToObject(param_5, param_6, local_58);
+        yawDelta = Obj_GetYawDeltaToObject(param_5, param_6, yawOut);
         if ((double)lbl_803E6F40 != param_4)
         {
-            if ((double)local_58[0] < param_1)
+            if ((double)yawOut[0] < param_1)
             {
-                dVar3 = (double)(*(float*)(param_5 + 8) - *(float*)(param_6 + 0x10));
-                if (dVar3 < (double)lbl_803E6F40)
+                heightDiff = (double)(*(float*)(param_5 + 8) - *(float*)(param_6 + 0x10));
+                if (heightDiff < (double)lbl_803E6F40)
                 {
-                    dVar3 = -dVar3;
+                    heightDiff = -heightDiff;
                 }
-                if (dVar3 < (double)lbl_803E7010)
+                if (heightDiff < (double)lbl_803E7010)
                 {
                     return 1;
                 }
             }
-            *(float*)(iVar2 + 0x280) =
+            *(float*)(sub + 0x280) =
                 lbl_803DC074 * lbl_803E6FE4 *
                 ((float)(param_2 *
                     (double)(lbl_803E6F60 -
-                        (float)((double)CONCAT44(0x43300000, (int)(short)iVar1 ^ 0x80000000) -
-                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(iVar2 + 0x280)) +
-                *(float*)(iVar2 + 0x280);
-            *(float*)(iVar2 + 0x284) = lbl_803E6F40;
+                        (float)((double)CONCAT44(0x43300000, (int)(short)yawDelta ^ 0x80000000) -
+                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(sub + 0x280)) +
+                *(float*)(sub + 0x280);
+            *(float*)(sub + 0x284) = lbl_803E6F40;
         }
     }
     return 0;
