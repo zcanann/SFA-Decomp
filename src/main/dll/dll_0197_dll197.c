@@ -1,13 +1,8 @@
-#include "main/audio/sfx_ids.h"
 #include "main/dll/dll197state_struct.h"
 #include "main/dll/dbshsymbol_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/cup1C3.h"
-#include "main/objlib.h"
-#include "main/objseq.h"
 #include "main/resource.h"
-#include "main/effect_interfaces.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
