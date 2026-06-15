@@ -6,7 +6,6 @@
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/fall_ladders.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
 
