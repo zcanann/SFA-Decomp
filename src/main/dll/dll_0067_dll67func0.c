@@ -180,11 +180,11 @@ undefined* FUN_800e82d8(void)
 
 void FUN_800e8630(int param_1)
 {
-    int iVar1;
-    undefined1* puVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    int objId;
+    undefined1* entry;
+    int slotBase;
+    int slotIdx;
+    int groupsLeft;
 
     if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
     {
@@ -194,38 +194,38 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    iVar3 = 0;
-    puVar2 = &DAT_803a3f08;
-    iVar5 = 9;
-    while ((iVar4 = iVar3, *(int*)(puVar2 + 0x168) != 0 &&
-        (iVar1 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), iVar1 != *(int*)(puVar2 + 0x168))))
+    slotBase = 0;
+    entry = &DAT_803a3f08;
+    groupsLeft = 9;
+    while ((slotIdx = slotBase, *(int*)(entry + 0x168) != 0 &&
+        (objId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), objId != *(int*)(entry + 0x168))))
     {
-        iVar4 = iVar3 + 1;
-        if ((*(int*)(puVar2 + 0x178) == 0) || (iVar1 == *(int*)(puVar2 + 0x178))) break;
-        iVar4 = iVar3 + 2;
-        if ((*(int*)(puVar2 + 0x188) == 0) || (iVar1 == *(int*)(puVar2 + 0x188))) break;
-        iVar4 = iVar3 + 3;
-        if ((*(int*)(puVar2 + 0x198) == 0) || (iVar1 == *(int*)(puVar2 + 0x198))) break;
-        iVar4 = iVar3 + 4;
-        if ((*(int*)(puVar2 + 0x1a8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1a8))) break;
-        iVar4 = iVar3 + 5;
-        if ((*(int*)(puVar2 + 0x1b8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1b8))) break;
-        iVar4 = iVar3 + 6;
-        if ((*(int*)(puVar2 + 0x1c8) == 0) || (iVar1 == *(int*)(puVar2 + 0x1c8))) break;
-        puVar2 = puVar2 + 0x70;
-        iVar3 = iVar3 + 7;
-        iVar5 = iVar5 + -1;
-        iVar4 = iVar3;
-        if (iVar5 == 0) break;
+        slotIdx = slotBase + 1;
+        if ((*(int*)(entry + 0x178) == 0) || (objId == *(int*)(entry + 0x178))) break;
+        slotIdx = slotBase + 2;
+        if ((*(int*)(entry + 0x188) == 0) || (objId == *(int*)(entry + 0x188))) break;
+        slotIdx = slotBase + 3;
+        if ((*(int*)(entry + 0x198) == 0) || (objId == *(int*)(entry + 0x198))) break;
+        slotIdx = slotBase + 4;
+        if ((*(int*)(entry + 0x1a8) == 0) || (objId == *(int*)(entry + 0x1a8))) break;
+        slotIdx = slotBase + 5;
+        if ((*(int*)(entry + 0x1b8) == 0) || (objId == *(int*)(entry + 0x1b8))) break;
+        slotIdx = slotBase + 6;
+        if ((*(int*)(entry + 0x1c8) == 0) || (objId == *(int*)(entry + 0x1c8))) break;
+        entry = entry + 0x70;
+        slotBase = slotBase + 7;
+        groupsLeft = groupsLeft + -1;
+        slotIdx = slotBase;
+        if (groupsLeft == 0) break;
     }
-    if (iVar4 == 0x3f)
+    if (slotIdx == 0x3f)
     {
         return;
     }
-    (&DAT_803a4070)[iVar4 * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
+    (&DAT_803a4070)[slotIdx * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    (&DAT_803a4074)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
+    (&DAT_803a4078)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
+    (&DAT_803a407c)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
         .localPosX;
     *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
@@ -603,67 +603,67 @@ undefined FUN_800ea9ac(void)
 
 void FUN_800ea9b8(void)
 {
-    uint uVar1;
-    undefined* puVar2;
-    short sVar3;
-    uint uVar4;
-    uint uVar5;
-    uint uVar6;
+    uint mapId;
+    undefined* history;
+    short i;
+    uint flagWord;
+    uint bit;
+    uint flagId;
     uint unaff_r27;
-    uint uVar7;
-    uint uVar8;
-    short* psVar9;
+    uint cachedFlagId;
+    uint scanId;
+    short* mapFlags;
 
-    uVar1 = FUN_80286834();
-    puVar2 = FUN_800e82d8();
-    uVar7 = 0xffffffff;
-    if (puVar2[6] == '\0')
+    mapId = FUN_80286834();
+    history = FUN_800e82d8();
+    cachedFlagId = 0xffffffff;
+    if (history[6] == '\0')
     {
-        psVar9 = &DAT_80312632;
-        for (uVar8 = 1; (short)uVar8 < 0xce; uVar8 = uVar8 + 1)
+        mapFlags = &DAT_80312632;
+        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
         {
-            if ((*psVar9 == 0xffff) || (*psVar9 == -1))
+            if ((*mapFlags == 0xffff) || (*mapFlags == -1))
             {
-                uVar5 = 1 << (uVar8 & 0x1f);
-                uVar6 = (uint)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
-                uVar4 = FUN_80017690(uVar6);
-                if ((uVar4 & uVar5) == 0)
+                bit = 1 << (scanId & 0x1f);
+                flagId = (uint)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
+                flagWord = FUN_80017690(flagId);
+                if ((flagWord & bit) == 0)
                 {
-                    FUN_80017698(uVar6, uVar4 | uVar5);
+                    FUN_80017698(flagId, flagWord | bit);
                 }
             }
-            psVar9 = psVar9 + 1;
+            mapFlags = mapFlags + 1;
         }
     }
-    uVar6 = 1 << (uVar1 & 0x1f);
-    uVar4 = (uint)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
-    uVar8 = FUN_80017690(uVar4);
-    if ((uVar8 & uVar6) == 0)
+    flagId = 1 << (mapId & 0x1f);
+    flagWord = (uint)(short)((short)((mapId & 0xff) >> 5) + 0x12f);
+    scanId = FUN_80017690(flagWord);
+    if ((scanId & flagId) == 0)
     {
-        FUN_80017698(uVar4, uVar8 | uVar6);
-        if (puVar2[6] != '\x05')
+        FUN_80017698(flagWord, scanId | flagId);
+        if (history[6] != '\x05')
         {
-            puVar2[6] = puVar2[6] + '\x01';
+            history[6] = history[6] + '\x01';
         }
-        for (sVar3 = 4; sVar3 != 0; sVar3 = sVar3 + -1)
+        for (i = 4; i != 0; i = i + -1)
         {
-            puVar2[sVar3] = puVar2[sVar3 + -1];
+            history[i] = history[i + -1];
         }
-        *puVar2 = (char)uVar1;
-        if ((uint)(byte)puVar2[5] == (uVar1 & 0xff)
+        *history = (char)mapId;
+        if ((uint)(byte)history[5] == (mapId & 0xff)
         )
         {
             do
             {
-                puVar2[5] = puVar2[5] + '\x01';
-                uVar1 = (uint)(short)(((byte)puVar2[5] >> 5) + 0x12f);
-                if (uVar1 != (int)(short)uVar7)
+                history[5] = history[5] + '\x01';
+                mapId = (uint)(short)(((byte)history[5] >> 5) + 0x12f);
+                if (mapId != (int)(short)cachedFlagId)
                 {
-                    unaff_r27 = FUN_80017690(uVar1);
-                    uVar7 = uVar1;
+                    unaff_r27 = FUN_80017690(mapId);
+                    cachedFlagId = mapId;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)puVar2[5] & 0x1f)) != 0);
+            while ((unaff_r27 & 1 << ((byte)history[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
