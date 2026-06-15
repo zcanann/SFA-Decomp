@@ -26,6 +26,15 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
 - **Pragma wrappers reproduce per-fn optimizer STATE**, not original source. Byte-verify
   (`md5sum` the .o) any pragma change. `reset` POPS a stack (restores surrounding state, not
   default) — model nested regions as a stack and emit each fn's *effective* state.
+- **A config that DROPS the headline % but introduces a needed STRUCTURAL feature (extra saved
+  reg, surviving `mr`/`fmr` copy, an un-coalesced web) is worth a FULL per-region diff before
+  rejecting — don't bail on the number alone.** Reject ONLY when the residual is provably
+  config-INHERENT and not merely larger. Worked example: fn_801B3DE4 (dimexplosion) —
+  `#pragma optimization_level 1` yields the target's 6th saved reg (`_savegpr_26`) + the `mr
+  r29,r31` base copy that O4 value-numbering folds away, but caps BELOW O4's 97.07% because the
+  +34 instrs are O1-inherent (per-conversion `lis 17200`, expf-chain f1/f2 coloring) — a real
+  trade-down, confirmed only by reading every region. Contrast: O1/O2 creation-order alloc (#108)
+  and O1≈O4 small-loop fns (#110) ARE genuine climbs — measure, don't assume.
 
 ## High-impact one-liners (try first at 80-95%)
 1. **`#pragma peephole off` + `scheduling off`** (matched with `reset`) around the fn — unfuses
