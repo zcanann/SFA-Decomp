@@ -53,11 +53,12 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
+    GfxCmd* p;
     GfxCmd* e = buf.entries;
-    GfxCmd* p = e;
     f32 zr;
     f32 yr;
     u32 fl;
+    p = e;
 
     if (variant == 0)
     {
