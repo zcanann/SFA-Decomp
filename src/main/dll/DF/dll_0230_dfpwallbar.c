@@ -527,7 +527,6 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-extern u8 lbl_80329514[];
 
 void chuka_render(void)
 {
@@ -557,7 +556,6 @@ void chuka_hitDetect(int obj)
 
 void dbstealerworm_hitDetect(int obj);
 
-extern f32 timeDelta;
 
 void chuka_update(int obj)
 {
