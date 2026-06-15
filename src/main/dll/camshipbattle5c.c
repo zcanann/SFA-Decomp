@@ -210,19 +210,19 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
     idx = out[2];
     if (idx > -1)
     {
-        node = (u8*)(*gRomCurveInterface)->getById(idx);
-        if (node != NULL)
+        u8* node2 = (u8*)(*gRomCurveInterface)->getById(idx);
+        if (node2 != NULL)
         {
-            if (node[0x31] == tag || node[0x32] == tag || node[0x33] == tag)
+            if (node2[0x31] == tag || node2[0x32] == tag || node2[0x33] == tag)
             {
                 i = 0;
-                cur = node;
+                cur = node2;
                 for (; i < 5; i++)
                 {
                     idx = *(int*)(cur + 0x1c);
                     if (idx > -1)
                     {
-                        m = (s8)node[0x1b] & (1 << i);
+                        m = (s8)node2[0x1b] & (1 << i);
                         if (m == 0)
                         {
                             p = (u8*)(*gRomCurveInterface)->getById(idx);
