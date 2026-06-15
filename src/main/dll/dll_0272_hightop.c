@@ -672,8 +672,9 @@ void hightop_update(int obj)
     }
     else
     {
-        ((BaddieState*)p)->moveInputX = lbl_803E6AA8;
-        ((BaddieState*)p)->moveInputZ = lbl_803E6AA8;
+        f32 v = lbl_803E6AA8;
+        ((BaddieState*)p)->moveInputX = v;
+        ((BaddieState*)p)->moveInputZ = v;
     }
     *(int*)&((BaddieState*)p)->unk31C = 0;
     *(int*)&((BaddieState*)p)->unk318 = 0;
