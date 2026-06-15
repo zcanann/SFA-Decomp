@@ -179,12 +179,12 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    float fVar1;
-    uint uVar2;
-    int iVar3;
-    short* psVar4;
-    int iVar5;
-    double dVar6;
+    float divisor;
+    uint busy;
+    int dest;
+    short* hits;
+    int control;
+    double dist;
     undefined4 local_48;
     undefined4 local_44;
     undefined4 local_40;
@@ -194,16 +194,16 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 local_30;
     undefined4 local_2c;
     undefined4 local_28;
-    float local_24;
-    float local_20;
-    float local_1c;
+    float dx;
+    float dy;
+    float dz;
 
-    iVar5 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    *(byte*)(iVar5 + 0x14) = *(byte*)(iVar5 + 0x14) | 2;
-    *(byte*)(iVar5 + 0x15) = *(byte*)(iVar5 + 0x15) & 0xfb;
-    fVar1 = lbl_803E6F88;
+    control = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
+    *(byte*)(control + 0x15) = *(byte*)(control + 0x15) & 0xfb;
+    divisor = lbl_803E6F88;
     *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
-    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / fVar1;
+    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / divisor;
     *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -215,47 +215,47 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
         (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)(param_10 + 0x2d0) + 0x10) - lbl_803E6F90))
     {
-        iVar3 = *(int*)(param_10 + 0x2d0);
-        local_24 = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
-        local_20 = *(float*)(iVar3 + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
-        local_1c = *(float*)(iVar3 + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
-        dVar6 = FUN_80293900((double)(local_1c * local_1c + local_24 * local_24 + local_20 * local_20));
-        if (dVar6 < (double)lbl_803E6F50)
+        dest = *(int*)(param_10 + 0x2d0);
+        dx = *(float*)(dest + 0xc) - ((GameObject*)param_9)->anim.localPosX;
+        dy = *(float*)(dest + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
+        dz = *(float*)(dest + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
+        dist = FUN_80293900((double)(dz * dz + dx * dx + dy * dy));
+        if (dist < (double)lbl_803E6F50)
         {
             local_40 = *(undefined4*)(param_10 + 0x2d0);
-            psVar4 = *(short**)(iVar5 + 0x24);
+            hits = *(short**)(control + 0x24);
             local_48 = 0xe;
             local_44 = 1;
-            uVar2 = FUN_80006ab8(psVar4);
-            if (uVar2 == 0)
+            busy = FUN_80006ab8(hits);
+            if (busy == 0)
             {
-                FUN_80006ac4(psVar4, (uint) & local_48);
+                FUN_80006ac4(hits, (uint) & local_48);
             }
-            *(undefined*)(iVar5 + 0x34) = 1;
+            *(undefined*)(control + 0x34) = 1;
         }
     }
     else
     {
-        psVar4 = *(short**)(iVar5 + 0x24);
+        hits = *(short**)(control + 0x24);
         local_30 = 9;
         local_2c = 0;
         local_28 = 0x24;
-        uVar2 = FUN_80006ab8(psVar4);
-        if (uVar2 == 0)
+        busy = FUN_80006ab8(hits);
+        if (busy == 0)
         {
-            FUN_80006ac4(psVar4, (uint) & local_30);
+            FUN_80006ac4(hits, (uint) & local_30);
         }
-        *(undefined*)(iVar5 + 0x34) = 1;
+        *(undefined*)(control + 0x34) = 1;
         local_34 = *(undefined4*)(param_10 + 0x2d0);
-        psVar4 = *(short**)(iVar5 + 0x24);
+        hits = *(short**)(control + 0x24);
         local_3c = 7;
         local_38 = 1;
-        uVar2 = FUN_80006ab8(psVar4);
-        if (uVar2 == 0)
+        busy = FUN_80006ab8(hits);
+        if (busy == 0)
         {
-            FUN_80006ac4(psVar4, (uint) & local_3c);
+            FUN_80006ac4(hits, (uint) & local_3c);
         }
-        *(undefined*)(iVar5 + 0x34) = 1;
+        *(undefined*)(control + 0x34) = 1;
     }
     return 0;
 }
