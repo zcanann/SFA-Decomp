@@ -13,10 +13,7 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
-#include "main/objanim.h"
 #include "main/objanim_update.h"
 
 extern f32 timeDelta;
