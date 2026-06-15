@@ -7518,7 +7518,7 @@ void videoSwapFrameBuffers(void)
         lbl_803DCCA0 = 0;
     }
     lbl_803DCCAC = lbl_803DCCAC + 1;
-    if (lbl_803DCCB0 != 0 && (u32)lbl_803DCCAC > 18000)
+    if (lbl_803DCCB0 != 0 && (u32) * (volatile int*)&lbl_803DCCAC > 18000)
     {
         logGpuHang();
         gxErrorFn_80060b40();
