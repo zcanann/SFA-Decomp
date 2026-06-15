@@ -1,11 +1,9 @@
 /* DLL 0x1DB — DIM2 snowball / conveyor / crusher-platform objects [801B8798-801B8860) */
-#include "main/audio/sfx_ids.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
@@ -31,11 +29,8 @@ extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2projrock.h"
-#include "main/objanim_internal.h"
 
 typedef struct Dll1DBPlacement
 {
