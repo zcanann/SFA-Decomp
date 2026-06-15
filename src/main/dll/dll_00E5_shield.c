@@ -1,8 +1,6 @@
 /* DLL 0x00E5 — shield / kaldachompspit / pollenfragment group. TU: 0x8016B230–0x8016B2E0. */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
 #include "main/dll/player_objects.h"
 
 extern u32 randomGetRange(int min, int max);
@@ -174,18 +172,10 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/camera_interface.h"
-#include "main/mapEvent.h"
-#include "main/objhits_types.h"
-#include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct ShieldState
 {
