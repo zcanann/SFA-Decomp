@@ -16597,7 +16597,7 @@ void fn_802B0920(int obj, int state)
             t4->textureId = 0x200;
         }
     }
-    if ((((PlayerState*)state)->flags360 & 0x2000000) == 0)
+    if ((((PlayerState*)state)->flags360 & 0x2000000) == 0u)
     {
         ((PlayerState*)state)->headPitch =
             (f32)((PlayerState*)state)->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
