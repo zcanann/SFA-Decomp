@@ -106,7 +106,7 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
 {
     GameObject* arwingObj = (GameObject*)arwing;
@@ -141,11 +141,13 @@ void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
         if (arwingObj->anim.seqId == 0x601)
         {
             int seg;
+            int got;
             arwarwing_incrementCollectedRingCount(arwing);
             arwarwing_addShield(arwing, 1);
             arwarwing_addScore(arwing, 0x14);
             seg = arwarwing_getRequiredRingCount(arwing);
-            if (arwarwing_getCollectedRingCount(arwing) == seg)
+            got = arwarwing_getCollectedRingCount(arwing);
+            if (got == seg)
             {
                 if (state->flags.bit20)
                     gameTextFn_80125ba4(7);
