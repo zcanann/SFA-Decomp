@@ -93,7 +93,7 @@ extern void* lbl_803DDB78;
 extern f32 lbl_803E49D4;
 extern f32 lbl_803E49F0;
 extern f32 timeDelta;
-extern int Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern f32 lbl_803E49EC;
@@ -480,7 +480,7 @@ void dll_1CE_update(int* obj)
         int n = (s8) * (s8*)((char*)list + 0x10f);
         for (i = 0; i < n; i++)
         {
-            int* o = *(int**)((char*)list + 0x100 + i * 4);
+            int* o = *(int**)((char*)list + (i * 4 + 0x100));
             if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6)
             {
                 found = 1;
@@ -493,7 +493,7 @@ void dll_1CE_update(int* obj)
     if ((s8)sub->igniteCountdown > 0) return;
     GameBit_Set(((Dll1CEPlacement*)q)->gameBitId, 1);
     sub->opened = 1;
-    if ((s16)((Dll1CEPlacement*)q)->unk1A != (int)GameBit_Get(0x46d)) return;
+    if ((u32)(s16)((Dll1CEPlacement*)q)->unk1A != GameBit_Get(0x46d)) return;
     if (Obj_IsLoadingLocked() == 0) return;
     {
         int* no = Obj_AllocObjectSetup(0x30, 0x246);
