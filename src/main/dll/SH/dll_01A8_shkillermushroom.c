@@ -24,9 +24,7 @@ extern f32 lbl_803E5304;
 #pragma dont_inline on
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern f32 lbl_803E5310;
-extern f32 lbl_803E5370;
 extern f32 lbl_803E5350;
-extern u8 Obj_IsLoadingLocked(void);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int objIsFrozen(int* obj);
 extern int EmissionController_IsLingering(u8 * player);
