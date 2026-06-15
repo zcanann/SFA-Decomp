@@ -64,7 +64,6 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
-extern f32 lbl_803E5D78;
 extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern int GameBit_Get(int id);
@@ -74,7 +73,6 @@ extern f32 lbl_803E5D98;
 extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
 extern void GameBit_Set(int slot, int val);
-extern int textureLoadAsset(int id);
 extern ObjHitReactEntry lbl_80328898[];
 
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
