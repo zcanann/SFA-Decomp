@@ -1364,7 +1364,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
 
     if (((GameObject*)node)->unkF4 != 0)
         return 0;
-    ((TrickyState*)sub)->flags2DC |= 0x8000;
+    ((TrickyState*)sub)->flags2DC |= 0x8000LL;
     memcpy(sub + 0x2c4, sub + 0x2b8, 0xc);
     memcpy(sub + 0x2b8, (char*)node + 0x24, 0xc);
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -1377,7 +1377,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             {
                 (*(void (*)(int*, int, int*))(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.dll) + 0x34)))(
                     obj, 1, node);
-                ((TrickyState*)sub)->flags2DC |= 0x200000;
+                ((TrickyState*)sub)->flags2DC |= 0x200000LL;
                 *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
             }
             break;
@@ -1385,7 +1385,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             obj = Obj_GetPlayerObject();
             if (obj != NULL)
             {
-                ((TrickyState*)sub)->flags2DC &= ~0x200000;
+                ((TrickyState*)sub)->flags2DC &= ~0x200000LL;
                 *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
             }
             break;
@@ -1411,7 +1411,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     baddieInstantiateWeapon(node, (int*)sub);
     if (((GameObject*)node)->seqIndex == -1)
     {
-        ((TrickyState*)sub)->unk2E8 &= ~3;
+        ((TrickyState*)sub)->unk2E8 &= ~3LL;
         ObjHits_DisableObject((u32)node);
         return 0;
     }
@@ -1447,19 +1447,19 @@ void fn_8014B878(int* arg1, int* sub)
     if (target != NULL && (((TrickyState*)sub)->controlFlags & 0x10000) == 0 &&
         (target != player || (((GameObject*)player)->objectFlags & 0x1000) == 0))
     {
-        ((TrickyState*)sub)->flags2DC &= 0xff7fffff;
+        ((TrickyState*)sub)->flags2DC &= ~0x800000LL;
         camTarget = (int*)(*gCameraInterface)->getOverrideTarget();
         if (camTarget == arg1)
         {
-            ((TrickyState*)sub)->flags2DC |= 0x800200;
+            ((TrickyState*)sub)->flags2DC |= 0x800200LL;
         }
         {
             u16 dist = ((TrickyState*)sub)->unk2A4;
             u16 near = (u16)(int)((TrickyState*)sub)->waterLevel;
             if (dist < near)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x400;
-                ((TrickyState*)sub)->flags2DC &= 0xfffffdff;
+                ((TrickyState*)sub)->flags2DC |= 0x400LL;
+                ((TrickyState*)sub)->flags2DC &= ~0x200LL;
             }
             else
             {
@@ -1467,15 +1467,15 @@ void fn_8014B878(int* arg1, int* sub)
                 u16 mid = (u16)(int)midf;
                 if (dist < mid)
                 {
-                    ((TrickyState*)sub)->flags2DC |= 0x200;
-                    ((TrickyState*)sub)->flags2DC &= 0xfffffbff;
+                    ((TrickyState*)sub)->flags2DC |= 0x200LL;
+                    ((TrickyState*)sub)->flags2DC &= ~0x400LL;
                 }
                 else
                 {
                     u16 far = (u16)(int)(lbl_803E25D8 * midf);
                     if (dist > far)
                     {
-                        ((TrickyState*)sub)->flags2DC &= 0xdffff9ff;
+                        ((TrickyState*)sub)->flags2DC &= ~0x20000600LL;
                     }
                 }
             }
@@ -1483,28 +1483,28 @@ void fn_8014B878(int* arg1, int* sub)
     }
     else
     {
-        ((TrickyState*)sub)->flags2DC &= 0xff7ff9ff;
+        ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
         if ((((TrickyState*)sub)->controlFlags & 0x10000) != 0 ||
             (*(int**)&((TrickyState*)sub)->actionTargetObj == player && (((GameObject*)player)->objectFlags & 0x1000) !=
                 0))
         {
-            ((TrickyState*)sub)->flags2DC &= 0xdfffffff;
+            ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
         }
     }
-    ((TrickyState*)sub)->flags2DC &= 0xf890fff7;
+    ((TrickyState*)sub)->flags2DC &= ~0x76f0008LL;
     if (tricky != NULL)
     {
         u8 r = (*(u8(**)(int*))(*(int*)*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
-        if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000;
+        if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000LL;
     }
     if (*(int**)&((TrickyState*)sub)->actionTargetObj == player)
     {
         if (playerIsDisguised(player) != 0)
         {
-            ((TrickyState*)sub)->flags2DC |= 8;
+            ((TrickyState*)sub)->flags2DC |= 8LL;
             if ((((TrickyState*)sub)->controlFlags & 0x2000) != 0)
             {
-                ((TrickyState*)sub)->flags2DC &= 0xff7ff9ff;
+                ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
             }
         }
     }
@@ -1514,38 +1514,38 @@ void fn_8014B878(int* arg1, int* sub)
         {
             u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
                                            (void*)(*(char**)&((TrickyState*)sub)->actionTargetObj + 0x18));
-            if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000;
+            if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
             if ((((TrickyState*)sub)->flags2DC & 0x1000000) == 0)
             {
-                ((TrickyState*)sub)->flags2DC &= 0xdfffffff;
+                ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
             }
         }
         else
         {
-            ((TrickyState*)sub)->flags2DC |= 0x1000000;
+            ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
         }
         {
             u16 mode = ((TrickyState*)sub)->unk2A0;
             if (mode < 2 || mode > 5)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x400000;
+                ((TrickyState*)sub)->flags2DC |= 0x400000LL;
             }
             else if ((((TrickyState*)sub)->flags2DC & 0x1000000) != 0)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x2000000;
+                ((TrickyState*)sub)->flags2DC |= 0x2000000LL;
             }
         }
         if ((((TrickyState*)sub)->controlFlags & 0x4000) == 0)
         {
             f32* t = (f32*)*(int**)&((TrickyState*)sub)->actionTargetObj;
             f32 mag = sqrtf(t[11] * t[11] + (t[9] * t[9] + t[10] * t[10]));
-            if (mag > lbl_803E25D4) ((TrickyState*)sub)->flags2DC |= 0x4000000;
+            if (mag > lbl_803E25D4) ((TrickyState*)sub)->flags2DC |= 0x4000000LL;
         }
         if ((((TrickyState*)sub)->flags2DC & 0x600) != 0 &&
             (((TrickyState*)sub)->flags2DC & 0x6800000) != 0 &&
             (((TrickyState*)sub)->flags2DC & 0x1000000) != 0)
         {
-            ((TrickyState*)sub)->flags2DC |= 0x20000000;
+            ((TrickyState*)sub)->flags2DC |= 0x20000000LL;
         }
         if ((((TrickyState*)sub)->flags2DC & 0x20000000) != 0)
         {
@@ -1555,13 +1555,13 @@ void fn_8014B878(int* arg1, int* sub)
             }
             else
             {
-                ((TrickyState*)sub)->flags2DC |= 0xf0000;
+                ((TrickyState*)sub)->flags2DC |= 0xf0000LL;
             }
         }
     }
     if (((BaddieState*)sub)->hitCounter == 0)
     {
-        ((TrickyState*)sub)->flags2DC |= 0x800;
+        ((TrickyState*)sub)->flags2DC |= 0x800LL;
     }
 }
 
