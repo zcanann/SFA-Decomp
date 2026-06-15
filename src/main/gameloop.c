@@ -1232,9 +1232,11 @@ void cardShowMessage(void)
             hudHiddenFrameCount = 0;
             timeStop = 0;
             Sfx_SetObjectSoundsPaused(0);
-            if (st == 0xa)
+            switch (st)
             {
+            case 0xa:
                 cardDeleteFn_8007d99c();
+                break;
             }
         }
         else if (ok && (held & 0x200))
