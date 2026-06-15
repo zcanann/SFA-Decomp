@@ -168,6 +168,7 @@ void linkDrawFn_801302c0(void);
 void linkDrawFn_80130484(void);
 #pragma scheduling reset
 #pragma scheduling off
+#pragma peephole off
 void Link_func0F(void)
 {
     extern u8 lbl_803DD911; /* #57 */
@@ -179,6 +180,7 @@ void Link_func0F(void)
         lbl_803A9458[i].field38 = 4;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
