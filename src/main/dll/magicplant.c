@@ -1,6 +1,5 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
-#include "main/dll/magicPlant.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/effect_interfaces.h"
