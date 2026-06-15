@@ -2608,7 +2608,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
         {
             u8* entries = *(u8**)&((ObjDef*)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && entries[entryIdx] == 0)
+            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
@@ -2659,7 +2659,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             for (i = 0; i < 2; i++)
             {
                 s16 v;
-                *ap = *ap - *(s16*)(p + 0x14);
+                *ap -= *(s16*)(p + 0x14);
                 v = *ap;
                 if (v < minB)
                 {
@@ -2670,7 +2670,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                     v = (s16)(s32)(lbl_803DE9EC * (f32)b);
                 }
                 *ap = v;
-                *(s16*)(p + 0x14) = *(s16*)(p + 0x14) + *ap;
+                *(s16*)(p + 0x14) += *ap;
                 if (*(s16*)(p + 0x14) > limA)
                 {
                     *(s16*)(p + 0x14) = limA;
