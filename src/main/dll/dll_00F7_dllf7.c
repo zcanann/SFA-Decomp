@@ -1233,7 +1233,6 @@ void dll_F7_free(int obj)
     ObjGroup_RemoveObject(obj, 0x3E);
 }
 
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 void dim2roofrub_free(int* obj);
 
@@ -1751,7 +1750,6 @@ void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern f32 lbl_803E32B4;
 
 void dll_F7_init(int* obj, int* params)
 {
@@ -1959,7 +1957,6 @@ void dll_F7_update(int* obj)
     }
 }
 
-extern s16 lbl_803DBD50[4];
 
 void staff_initialise(void);
 
@@ -1991,7 +1988,6 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-extern void selectTexture(void* tex, int x);
 
 #pragma opt_common_subs off
 
