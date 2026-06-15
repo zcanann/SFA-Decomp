@@ -1329,12 +1329,10 @@ void doColorFilter(u8* mod)
     *(u32*)&c2 = lbl_803DEED0;
     *(u32*)&c3 = lbl_803DEED4;
     {
-        int s0 = mod[0] >> 3;
-        int s1 = mod[1] >> 3;
-        int s2 = mod[2] >> 3;
-        c0.r = (u8)(c0.r + s0);
-        c0.g = (u8)(c0.g + s1);
-        c0.b = (u8)(c0.b + s2);
+        int s0, s1, s2;
+        c0.r = (u8)(c0.r + (s0 = mod[0] >> 3));
+        c0.g = (u8)(c0.g + (s1 = mod[1] >> 3));
+        c0.b = (u8)(c0.b + (s2 = mod[2] >> 3));
         c1.r = (u8)(c1.r + s0);
         c1.g = (u8)(c1.g + s1);
         c1.b = (u8)(c1.b + s2);
