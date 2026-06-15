@@ -406,7 +406,7 @@ typedef struct CounterText
     u32 b;
 } CounterText;
 
-void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yPos, u8 showTarget)
+void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget)
 {
     int prevCharset;
     int tex;
@@ -416,7 +416,7 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yP
 
     buf1 = *(CounterText*)&lbl_803E1E1C;
     buf2 = *(CounterText*)&lbl_803E1E24;
-    if (alpha != 0)
+    if ((u8)alpha != 0)
     {
         if (((f32)timer < lbl_803E1F9C) || ((f32)timer > lbl_803E1FA8) || ((timer & 8) != 0) ||
             (idx == 30))
@@ -542,7 +542,7 @@ void pauseMenuDrawStatus(void)
     statuses[10] = GameBit_Get(0x13D);
     if (statuses[10] != ((PauseMenuHud*)base)->spiritBitState)
     {
-        u8 flag = statuses[10] == 0;
+        u8 flag = statuses[10] == 0 ? 1 : 0;
         GameBit_Set(0x967, flag);
     }
     statuses[11] = GameBit_Get(0x86A);
@@ -556,7 +556,7 @@ void pauseMenuDrawStatus(void)
         (pauseMenuState == 0))
     {
         lbl_803DD83C = lbl_803E1FA0 * timeDelta + lbl_803DD83C;
-        if (lbl_803DD83C > hudElementOpacity)
+        if (lbl_803DD83C > *(f32*)&hudElementOpacity)
         {
             lbl_803DD83C = hudElementOpacity;
         }
@@ -591,8 +591,9 @@ void pauseMenuDrawStatus(void)
                 ((i == 3) && ((lbl_803DD792 & 2) != 0)))
             {
                 op = (f32*)(base + 0xAC8) + i;
-                *op = lbl_803E1FA0 * timeDelta + *op;
-                if (*op > hudElementOpacity)
+                thresh = lbl_803E1FA0 * timeDelta + *op;
+                *op = thresh;
+                if (thresh > hudElementOpacity)
                 {
                     *op = hudElementOpacity;
                 }
@@ -600,8 +601,9 @@ void pauseMenuDrawStatus(void)
             else
             {
                 op = (f32*)(base + 0xAC8) + i;
-                *op = -(lbl_803E1FA0 * timeDelta - *op);
-                if (*op < lbl_803E1E3C)
+                thresh = -(lbl_803E1FA0 * timeDelta - *op);
+                *op = thresh;
+                if (thresh < lbl_803E1E3C)
                 {
                     *op = *(f32 *)&lbl_803E1E3C;
                 }

@@ -231,11 +231,9 @@ void THPPlayerStop(void)
             AudioDecodeThreadCancel();
         }
 
-        do
+        while (((OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE) ? msg : NULL) != NULL)
         {
-            msg = (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE) ? msg : NULL;
         }
-        while (msg != NULL);
 
         lbl_803A5D60.curVolume = lbl_803A5D60.targetVolume;
         lbl_803A5D60.rampCount = 0;

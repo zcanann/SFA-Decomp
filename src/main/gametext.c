@@ -686,18 +686,20 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
             byteOffset += charLen;
             if (ch >= 0xe000 && ch <= 0xf8ff)
             {
-                SpecialGlyph* g = lbl_802C86F0;
-                int val = 0;
                 int n;
+                SpecialGlyph* g = lbl_802C86F0;
+                int val;
                 for (n = 46; n != 0; n--)
                 {
                     if (g->key == ch)
                     {
                         val = g->val;
-                        break;
+                        goto haveVal;
                     }
                     g++;
                 }
+                val = 0;
+            haveVal:
                 byteOffset += val * 2;
             }
             else
@@ -768,18 +770,18 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
             }
             if (state->charIndex == def->count - 1)
             {
-                state->fC = 1;
-                if (lbl_803DC994 >= (f32)charCount)
+                if ((state->fC = 1) != 0 && lbl_803DC994 >= (f32)charCount)
                 {
                     state->f8 = 1;
                 }
                 else
                 {
-                    state->f8 = 0;
+                    goto setF8Zero;
                 }
             }
             else
             {
+            setF8Zero:
                 state->f8 = 0;
             }
             state->fC = 0;

@@ -277,14 +277,14 @@ void groundanimator_free(int* obj, int flag)
 
 f32 groundanimator_setScale(int* obj, int* target)
 {
-    GroundAnimatorState * g;
     int* r31;
+    GroundAnimatorState * g;
     f32 dy;
     f32 dx;
     f32 dz;
     f32 r;
-    g = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     r31 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
+    g = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     dy = *(f32*)((char*)target + 0x10) - ((GameObject*)obj)->anim.localPosY;
     if (dy < lbl_803E3FA8 || dy > lbl_803E3FAC)
     {
@@ -293,23 +293,26 @@ f32 groundanimator_setScale(int* obj, int* target)
     dx = *(f32*)((char*)target + 0xc) - ((GameObject*)obj)->anim.localPosX;
     dz = *(f32*)((char*)target + 0x14) - ((GameObject*)obj)->anim.localPosZ;
     r = lbl_803E3FB4 + g->radius;
-    if (dx * dx + dz * dz > r * r)
+    r = r * r;
+    if (dx * dx + dz * dz > r)
     {
         return lbl_803E3FB8;
     }
     if (g->sinkDepth >= lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->unk20)
     {
-        if (g->linkedObj != 0)
+        if (*(void**)&g->linkedObj != NULL)
         {
-            int* e = (int*)g->linkedObj;
+            int* e;
             g->sinkDepth = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->unk20;
-            if (*(s16*)((char*)e + 0x46) == 0x519)
+            e = (int*)g->linkedObj;
+            switch (*(s16*)((char*)e + 0x46))
             {
+            case 0x519:
                 fn_801A80F0(e, 0);
-            }
-            else
-            {
+                break;
+            default:
                 (*(code*)(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
+                break;
             }
         }
     }
@@ -406,7 +409,7 @@ void groundanimator_update(int* obj)
     int foff;
     int hoff;
     int oldbit;
-    int allow;
+    u8 allow;
     void* tricky;
     f32 nd;
     f32 vbuf[2];
@@ -461,7 +464,7 @@ void groundanimator_update(int* obj)
             nd = lbl_803E3F98;
             g->linkedObj = (int)ObjGroup_FindNearestObject(4, obj, &nd);
             near = (void*)g->linkedObj;
-            if (g->linkedObj != 0)
+            if (near != NULL)
             {
                 if (*(s16*)((char*)near + 0x46) == 0x519)
                 {
@@ -528,7 +531,7 @@ void groundanimator_update(int* obj)
             {
                 g->lastDepth = lim;
                 g->sinkDepth = lim;
-                if (g->linkedObj != 0 && *(int*)((char*)g->linkedObj + 0xb8) != 0)
+                if (*(void**)&g->linkedObj != NULL && *(void**)((char*)g->linkedObj + 0xb8) != NULL)
                 {
                     if (*(s16*)((char*)g->linkedObj + 0x46) == 0x519)
                     {

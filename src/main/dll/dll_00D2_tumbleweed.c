@@ -47,7 +47,7 @@ extern f32 lbl_803E2FB0;
 extern f32 lbl_803E2FB8;
 extern f32 lbl_803E2FBC;
 extern f32 lbl_803E2FC0;
-extern f32 lbl_803E2FC4;
+extern const f32 lbl_803E2FC4;
 extern f32 sqrtf(f32 x);
 
 void tumbleweed_updateRollingMotion(short* obj, int state)

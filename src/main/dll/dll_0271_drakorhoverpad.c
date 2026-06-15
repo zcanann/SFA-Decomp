@@ -250,24 +250,23 @@ int drakorhoverpad_pickUnmaskedNextPoint(int* pad, int exclude, int maxIndex)
         pt = pad[7 + i];
         if (pt > -1 && (*(s8*)((char*)pad + 0x1b) & bit) == 0 && pt != exclude)
         {
-            collected[count] = pt;
-            count++;
+            collected[count++] = pt;
         }
         bit <<= 1;
     }
-    if (count == 0)
+    if (count != 0)
     {
-        return -1;
+        if (maxIndex != -1 && maxIndex > count - 1)
+        {
+            maxIndex = count - 1;
+        }
+        if (maxIndex == -1)
+        {
+            maxIndex = randomGetRange(0, count - 1);
+        }
+        return collected[maxIndex];
     }
-    if (maxIndex != -1 && maxIndex > count - 1)
-    {
-        maxIndex = count - 1;
-    }
-    if (maxIndex == -1)
-    {
-        maxIndex = randomGetRange(0, count - 1);
-    }
-    return collected[maxIndex];
+    return -1;
 }
 #pragma dont_inline reset
 
@@ -287,24 +286,23 @@ int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex)
         pt = pad[7 + i];
         if (pt > -1 && (*(s8*)((char*)pad + 0x1b) & bit) != 0 && pt != exclude)
         {
-            collected[count] = pt;
-            count++;
+            collected[count++] = pt;
         }
         bit <<= 1;
     }
-    if (count == 0)
+    if (count != 0)
     {
-        return -1;
+        if (maxIndex != -1 && maxIndex > count - 1)
+        {
+            maxIndex = count - 1;
+        }
+        if (maxIndex == -1)
+        {
+            maxIndex = randomGetRange(0, count - 1);
+        }
+        return collected[maxIndex];
     }
-    if (maxIndex != -1 && maxIndex > count - 1)
-    {
-        maxIndex = count - 1;
-    }
-    if (maxIndex == -1)
-    {
-        maxIndex = randomGetRange(0, count - 1);
-    }
-    return collected[maxIndex];
+    return -1;
 }
 #pragma dont_inline reset
 

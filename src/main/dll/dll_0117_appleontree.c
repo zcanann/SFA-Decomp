@@ -832,7 +832,7 @@ void appleontree_update(int objArg)
             else
             {
                 placement = (int)(lbl_803E3818 * fb / frac);
-                *(char*)(obj + 0x1b) = -1 - (char)placement;
+                *(u8*)(obj + 0x1b) = 0xff - placement;
                 FUN_8017de58((uint)obj);
             }
         }

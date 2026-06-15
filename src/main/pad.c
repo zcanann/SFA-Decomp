@@ -60,11 +60,7 @@ void doRumble(f32 duration)
 
         PADControlMotor(0, 1);
         rumbleTimer = lbl_803DC90C;
-        if (rumbleTimer <= duration)
-        {
-            rumbleTimer = duration;
-        }
-        lbl_803DC90C = rumbleTimer;
+        lbl_803DC90C = (rumbleTimer > duration) ? rumbleTimer : duration;
     }
 }
 
@@ -254,16 +250,16 @@ u32 getButtonsHeld(int port)
 int initControllers(void)
 {
     s32 i;
-    u32* padStateBlock;
-    u32* heldButtons;
-    u32* buttonsPressed;
-    u32* buttonsReleased;
     u8* prevStickY;
     u8* prevStickX;
     u8* repeatY;
     u8* repeatX;
     u8* analogY;
     u8* analogX;
+    u32* padStateBlock;
+    u32* heldButtons;
+    u32* buttonsPressed;
+    u32* buttonsReleased;
     u16* prevTriggers;
     u16* triggers;
     u16* triggersReleased;
@@ -289,6 +285,7 @@ int initControllers(void)
     heldButtons = padStateBlock;
     buttonsPressed = padStateBlock + 4;
     buttonsReleased = padStateBlock + 8;
+    padStateBlock = padStateBlock + 12;
     prevTriggers = &lbl_803DC914;
     triggers = &lbl_803DC91C;
     triggersReleased = &lbl_803DC924;
@@ -311,7 +308,7 @@ int initControllers(void)
         *triggersReleased = 0;
         *triggersPressed = 0;
         memset(statuses, 0, sizeof(PadStatusLite));
-        memset(statuses + 4, 0, sizeof(PadStatusLite));
+        memset((u8*)lbl_803398B0 + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
 
         prevStickY++;
         prevStickX++;
@@ -444,19 +441,19 @@ void padUpdate(void)
             *curBtn = readPad->buttons;
             if (readPad->substickY < -40)
             {
-                *curBtn |= 0x20000;
+                *curBtn |= 0x20000LL;
             }
             if (readPad->substickY > 40)
             {
-                *curBtn |= 0x10000;
+                *curBtn |= 0x10000LL;
             }
             if (readPad->substickX < -40)
             {
-                *curBtn |= 0x40000;
+                *curBtn |= 0x40000LL;
             }
             if (readPad->substickX > 40)
             {
-                *curBtn |= 0x80000;
+                *curBtn |= 0x80000LL;
             }
             *pressed = *curBtn & (*curBtn ^ *heldRaw);
             *released = *heldRaw & (*curBtn ^ *heldRaw);

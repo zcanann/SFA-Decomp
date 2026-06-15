@@ -306,15 +306,14 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
         ctrl = emitter->ctrlList->entries;
         for (i = 0; i < emitter->ctrlList->count; i++)
         {
-            controller = ctrl->controller;
-            if (((controller < 0x40) || (controller == 0x80)) ||
-                (controller == S3D_CTRL_SPATIAL_PITCH))
+            if (((ctrl->controller < 0x40) || (ctrl->controller == 0x80)) ||
+                (ctrl->controller == S3D_CTRL_SPATIAL_PITCH))
             {
-                synthFXSetCtrl14(handle, controller, ctrl->value);
+                synthFXSetCtrl14(handle, ctrl->controller, ctrl->value);
             }
             else
             {
-                synthFXSetCtrl(handle, controller, *(u8*)&ctrl->value);
+                synthFXSetCtrl(handle, ctrl->controller, *(u8*)&ctrl->value);
             }
             ctrl++;
         }

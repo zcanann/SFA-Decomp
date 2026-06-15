@@ -90,6 +90,7 @@ void drakormissile_startActiveLaunch(int obj)
     Sfx_PlayFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_B);
 }
 
+#pragma fp_contract off
 void drakormissile_func0B(int obj, int from, int target, f32 speed)
 {
     u8* p = ((GameObject*)obj)->extra;
@@ -168,6 +169,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
         lbl_803E6958 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
 }
+#pragma fp_contract reset
 
 void drakormissile_update(int obj)
 {
@@ -395,11 +397,10 @@ void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
 void drakormissile_init(int obj, char* arg)
 {
     char* p = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int i;
-    hitState->hitVolumePriority = 0x13;
-    hitState->hitVolumeId = 1;
-    hitState->flags &= ~1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0x13;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
     ((GameObject*)obj)->anim.localPosX = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_X);
     ((GameObject*)obj)->anim.localPosY = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_Y);
     ((GameObject*)obj)->anim.localPosZ = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_Z);
@@ -409,9 +410,9 @@ void drakormissile_init(int obj, char* arg)
     arg[DRAKORMISSILE_SETUP_VEL_Y];
     ((GameObject*)obj)->anim.velocityZ = (f32)(u32)(u8)
     arg[DRAKORMISSILE_SETUP_VEL_Z];
-    if (hitState != NULL)
+    if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        hitState->trackContactMask = 1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 1;
     }
     ObjGroup_AddObject(obj, DRAKORMISSILE_GROUP_ID);
     *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_IDLE;

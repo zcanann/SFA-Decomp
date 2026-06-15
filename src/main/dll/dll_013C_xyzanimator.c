@@ -241,10 +241,10 @@ void xyzanimator_free(int obj, int param_2)
     undefined4 def;
     f32 zero;
 
-    zero = lbl_803E4000;
     state = *(int*)&((GameObject*)obj)->extra;
     def = *(undefined4*)&((GameObject*)obj)->anim.placementData;
-    ((XyzAnimatorState*)state)->unk40 = lbl_803E4000;
+    zero = lbl_803E4000;
+    ((XyzAnimatorState*)state)->unk40 = zero;
     ((XyzAnimatorState*)state)->unk44 = zero;
     ((XyzAnimatorState*)state)->unk48 = zero;
     if (param_2 == 0)
@@ -253,12 +253,12 @@ void xyzanimator_free(int obj, int param_2)
                                     (double)((GameObject*)obj)->anim.localPosY,
                                     (double)((GameObject*)obj)->anim.localPosZ);
         block = mapGetBlock(block);
-        if ((block != 0) && (((XyzAnimatorState*)state)->unk4 != 0))
+        if (((void*)block != NULL) && (((XyzAnimatorState*)state)->unk4 != 0))
         {
             fn_80194C40(def, state, block);
         }
     }
-    if (((XyzAnimatorState*)state)->dataBuffer != 0)
+    if (*(void**)&((XyzAnimatorState*)state)->dataBuffer != NULL)
     {
         mm_free(*(void**)(state + 0xc));
     }
