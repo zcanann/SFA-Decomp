@@ -463,11 +463,11 @@ void fn_801FE774(int cam, f32* vel)
     {
         f32 dy;
         o = (u8*)*objs;
-        dy = *(f32*)(o + 0x10) - *(f32*)(cam + 0x10);
+        dy = ((GameObject*)o)->anim.localPosY - *(f32*)(cam + 0x10);
         if (dy <= limit && dy >= lbl_803E61EC)
         {
-            f32 dx = *(f32*)(o + 0xc) - *(f32*)(cam + 0xc);
-            f32 dz = *(f32*)(o + 0x14) - *(f32*)(cam + 0x14);
+            f32 dx = ((GameObject*)o)->anim.localPosX - *(f32*)(cam + 0xc);
+            f32 dz = ((GameObject*)o)->anim.localPosZ - *(f32*)(cam + 0x14);
             f32 dist = sqrtf(dx * dx + dz * dz);
             f32 radius = lbl_803E61F0 * (f32)(u32) * (u8*)(*(int*)(o + 0x4c) + 0x19);
             if (dist < radius)
