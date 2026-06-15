@@ -480,8 +480,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     if (state->variantSfxTimer != 0 && flags->bit10 != 0)
     {
-        state->variantSfxTimer -= (s16)(int)
-        timeDelta;
+        state->variantSfxTimer -= (s16)timeDelta;
         if (state->variantSfxTimer <= 0)
         {
             state->variantSfxTimer = 200;
