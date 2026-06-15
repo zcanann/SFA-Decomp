@@ -508,8 +508,8 @@ void initGameTimer(void)
 void gameTimerRun(void)
 {
     f32 dt = timeDelta;
-    void* box = gameTextGetBox(0xD);
     u8 colorFlag = 0;
+    void* box = gameTextGetBox(0xD);
     int A;
     int B;
     int C;
