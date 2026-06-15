@@ -154,6 +154,7 @@ void arwsquadron_hitDetect(void)
 {
 }
 
+#pragma optimization_level 2
 void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
 {
     f32 pz, py, px;
@@ -183,6 +184,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
     arwprojectile_placeForward(proj, lbl_803E71A8);
     Sfx_PlayFromObjectLimited(proj, SFXbaddie_eba_smallswipe1, 4);
 }
+#pragma optimization_level reset
 
 void arwsquadron_init(int obj, int setup)
 {
