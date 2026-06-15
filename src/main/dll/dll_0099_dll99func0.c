@@ -12,7 +12,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u8 lbl_803171C0[];
 extern u8 lbl_803DB950[8];
 extern f32 lbl_803E1340;
 extern f32 lbl_803E1344;
