@@ -1,6 +1,7 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
+#include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int a, int b);
@@ -8,8 +9,10 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 
+#include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/objfx.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 
@@ -209,7 +212,7 @@ void sc_cloudrunnera_init(int obj, int p2)
 {
     ObjSeqState* seq;
     f32 base;
-    int phase;
+    s32 objF4;
 
     objSetSlot(obj, 0x64);
     seq = ((GameObject*)obj)->extra;
@@ -220,14 +223,14 @@ void sc_cloudrunnera_init(int obj, int p2)
     seq->curveId = -1;
     ((GameObject*)obj)->unkF8 = 0;
 
-    phase = ((GameObject*)obj)->unkF4;
-    if (phase == 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != 1)
+    objF4 = ((GameObject*)obj)->unkF4;
+    if (objF4 == 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)seq, (u8*)p2);
         ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->unk18 + 1;
     }
-    else if (phase != 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != phase - 1)
+    else if (objF4 != 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != objF4 - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)seq);
         if (((ScCloudrunneraPlacement*)p2)->unk18 != -1)
