@@ -11,12 +11,10 @@
  * (FireBall / KyteCage / SeqDoor / ShipBattle stubs) so every v1.0 asm
  * symbol has a source definition.
  */
-#include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
-#include "main/dll/TREX/TREX_levelcontrol.h"
 
 extern u32 randomGetRange(int min, int max);
 
@@ -27,16 +25,9 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern f32 timeDelta;
 
-#include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/mapEvent.h"
-#include "main/dll/TREX/TREX_trex.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/objhits_types.h"
-#include "main/objseq.h"
-#include "main/resource.h"
 
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
