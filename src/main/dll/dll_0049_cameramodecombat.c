@@ -141,9 +141,7 @@ void CameraModeCombat_free(CameraObject* camera)
 void CameraModeCombat_update(short* cam)
 {
     extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
-    f32 nz;
-    f32 ny;
-    f32 nx;
+    f32 n[3];
     f32 prevZ;
     f32 prevY;
     f32 prevX;
@@ -356,15 +354,15 @@ void CameraModeCombat_update(short* cam)
                             c = mathSinf((lbl_803E18FC * (f32)(s32) * cam) / lbl_803E1900);
                             sn = mathCosf((lbl_803E18FC * (f32)(s32) * cam) / lbl_803E1900);
                             t = lbl_803DD568->followDistance * c;
-                            nx = px + t;
+                            n[0] = px + t;
                             t = lbl_803DD568->followDistance * sn;
-                            nz = pz - t;
+                            n[2] = pz - t;
                             dy = dy * lbl_803E1904;
                             dy = ty - dy;
                             dy = dy + lbl_803DD568->heightOffset;
                             step = interpolate(((CameraObject*)cam)->anim.worldPosY - dy, lbl_803E1908, timeDelta);
-                            ny = ((CameraObject*)cam)->anim.worldPosY - step;
-                            PSVECSubtract(&nx, (f32*)((char*)cam + 0x18), vec);
+                            n[1] = ((CameraObject*)cam)->anim.worldPosY - step;
+                            PSVECSubtract(n, (f32*)((char*)cam + 0x18), vec);
                             mag = PSVECMag(vec);
                             if (lbl_803E18C4 < mag)
                             {
