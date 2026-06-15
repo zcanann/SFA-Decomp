@@ -1380,7 +1380,7 @@ int ktrex_stateHandlerA03(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
-        return 0;
+        goto ret0;
     }
     if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
     {
@@ -1391,16 +1391,17 @@ int ktrex_stateHandlerA03(int obj, int runtime)
             gKTRexState)->rowAZ)[phase];
         if (__fabs(f5) > __fabs(f4))
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 =
-                (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
+            f4 = (((GameObject*)obj)->anim.localPosX -
+                  ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
                 f5;
         }
         else
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 =
-                (((GameObject*)obj)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
+            f4 = (((GameObject*)obj)->anim.localPosZ -
+                  ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
                 f4;
         }
+        ((KTRexArenaState*)gKTRexState)->unk8 = f4;
         popped = 0;
         if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
         {
@@ -1408,6 +1409,7 @@ int ktrex_stateHandlerA03(int obj, int runtime)
         }
         return popped + 1;
     }
+ret0:
     return 0;
 }
 
