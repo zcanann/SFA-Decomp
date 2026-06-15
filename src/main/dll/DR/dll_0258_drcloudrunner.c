@@ -276,6 +276,8 @@ int DR_CloudRunner_stateHandler00(int obj)
     {
     case 0:
         return 2;
+    default:
+        break;
     }
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
