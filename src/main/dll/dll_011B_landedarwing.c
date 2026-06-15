@@ -801,7 +801,6 @@ void landed_arwing_update(int obj)
     }
 }
 
-extern void buttonDisable(int p1, int mask);
 
 void infopoint_update(int obj);
 
