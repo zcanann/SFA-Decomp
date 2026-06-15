@@ -5,7 +5,6 @@
  * at the Ocean Force Point), mode 2->6 when 0x2d0 is set (totem-bond ceremony
  * complete). Chief/MuscleFoot/throne require mode >=3. Also resets the four
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
-#include "main/dll/DR/DRearthwalk.h"
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 
@@ -13,14 +12,12 @@
  * state-machine and animation logic; filling them is a follow-up task. */
 
 #include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
 
-#include "global.h"
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
