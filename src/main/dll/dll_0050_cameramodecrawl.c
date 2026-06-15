@@ -55,7 +55,6 @@ extern CameraModeCrawlState* lbl_803DD598;
 extern f32 mathCosf(f32);
 extern f32 mathSinf(f32);
 extern f32 timeDelta;
-extern CameraModeCannonState* lbl_803DD5A0;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E1AC0;
@@ -64,7 +63,6 @@ extern f32 lbl_803E1AD0;
 extern f32 lbl_803E1AD4;
 extern f32 lbl_803E1AD8;
 extern f32 lbl_803E1ADC;
-extern int fn_802972A8(int state);
 extern s16 getAngle(f32 x, f32 z);
 extern f32 mathCosf(f32 x);
 
