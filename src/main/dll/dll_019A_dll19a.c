@@ -1,17 +1,9 @@
-#include "main/dll/dll_0198_nwshlevcon.h"
 #include "main/dll/dll199state_struct.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
 
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/dimmagicbridge.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 #include "main/resource.h"
 
 typedef struct Dll19APlacement
