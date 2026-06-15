@@ -4,9 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/wallanimator.h"
-#include "main/objanim.h"
 #include "main/objhits.h"
-#include "main/dll/texscroll2.h"
 
 typedef struct KaldachomState
 {
