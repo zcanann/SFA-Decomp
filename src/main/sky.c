@@ -3081,7 +3081,7 @@ void Sky_func03(int a, int b, u8* cfg)
 {
     s16* envp;
     u8* env2;
-    u32 mask;
+    u8 mask;
     int i;
     int iofs;
     u8* p4;
@@ -3090,7 +3090,7 @@ void Sky_func03(int a, int b, u8* cfg)
     int tmp;
 
     envp = (s16*)saveGameGetEnvState();
-    if (cfg != NULL && (((Sky2Config*)cfg)->unk58 & 2) != 0)
+    if (cfg != NULL && ((int)((Sky2Config*)cfg)->unk58 & 2) != 0)
     {
         switch (((Sky2Config*)cfg)->cloudMode)
         {
