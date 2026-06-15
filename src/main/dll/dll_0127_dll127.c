@@ -6,7 +6,6 @@
 
 extern f32 lbl_803E3D60;
 extern void objRenderFn_8003b8f4(f32);
-extern void setPendingMapLoad(int v);
 extern u8 framesThisStep;
 extern f32 lbl_803E3D64;
 extern f32 lbl_803E3D68;
