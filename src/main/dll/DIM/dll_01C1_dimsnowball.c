@@ -1,15 +1,10 @@
 /* DLL 0x01C1 (dimsnowball) — DIM snowball object [0x801B0DD4-0x801B13E8). */
-#include "main/audio/sfx_ids.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/dll/lavaball1bestate_struct.h"
 #include "main/dll/imanimspacecraftstate_struct.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
-#include "main/dll/DIM/dimlogfire.h"
-#include "main/objseq.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -61,12 +56,7 @@ extern u8 framesThisStep;
 /* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/DIM/DIMlavasmash.h"
-#include "main/dll/DIM/dimlogfire.h"
-#include "main/objanim_internal.h"
 
 typedef struct DimsnowballState
 {
