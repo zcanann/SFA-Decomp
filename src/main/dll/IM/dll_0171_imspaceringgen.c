@@ -128,6 +128,24 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
+/* Obj_AllocObjectSetup(0x24,...) ring spawn buffer composed in
+ * imspaceringgen_update. Head is the common ObjPlacement; tail
+ * (0x18..0x1D) is file-local. */
+typedef struct ImSpaceRingSetup
+{
+    ObjPlacement base; /* 0x00..0x17 */
+    s8 unk18;          /* 0x18 */
+    u8 pad19;          /* 0x19 */
+    s16 unk1A;         /* 0x1A */
+    s16 unk1C;         /* 0x1C */
+    u8 pad1E[0x24 - 0x1E];
+} ImSpaceRingSetup;
+
+STATIC_ASSERT(offsetof(ImSpaceRingSetup, unk18) == 0x18);
+STATIC_ASSERT(offsetof(ImSpaceRingSetup, unk1A) == 0x1A);
+STATIC_ASSERT(offsetof(ImSpaceRingSetup, unk1C) == 0x1C);
+STATIC_ASSERT(sizeof(ImSpaceRingSetup) == 0x24);
+
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
@@ -356,24 +374,24 @@ void imspaceringgen_update(s16* obj)
             for (i = 0; i < 10; i++)
             {
                 ring = Obj_AllocObjectSetup(0x24, 0x301);
-                *(f32*)(ring + 8) = ((GameObject*)obj)->anim.localPosX;
-                *(f32*)(ring + 0xc) = ((GameObject*)obj)->anim.localPosY;
-                *(f32*)(ring + 0x10) = ((GameObject*)obj)->anim.localPosZ;
-                *(s8*)(ring + 0x18) = (s8)randomGetRange(0, 0xffff);
-                *(s16*)(ring + 0x1a) = (s16)randomGetRange(200, 400);
+                ((ImSpaceRingSetup*)ring)->base.posX = ((GameObject*)obj)->anim.localPosX;
+                ((ImSpaceRingSetup*)ring)->base.posY = ((GameObject*)obj)->anim.localPosY;
+                ((ImSpaceRingSetup*)ring)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+                ((ImSpaceRingSetup*)ring)->unk18 = (s8)randomGetRange(0, 0xffff);
+                ((ImSpaceRingSetup*)ring)->unk1A = (s16)randomGetRange(200, 400);
                 if ((int)randomGetRange(0, 1) == 0)
                 {
-                    *(s16*)(ring + 0x1a) = -*(s16*)(ring + 0x1a);
+                    ((ImSpaceRingSetup*)ring)->unk1A = -((ImSpaceRingSetup*)ring)->unk1A;
                 }
-                *(s16*)(ring + 0x1c) = (s16)randomGetRange(200, 400);
+                ((ImSpaceRingSetup*)ring)->unk1C = (s16)randomGetRange(200, 400);
                 if ((int)randomGetRange(0, 1) == 0)
                 {
-                    *(s16*)(ring + 0x1c) = -*(s16*)(ring + 0x1c);
+                    ((ImSpaceRingSetup*)ring)->unk1C = -((ImSpaceRingSetup*)ring)->unk1C;
                 }
-                *(u8*)(ring + 4) = setup[4];
-                *(u8*)(ring + 6) = setup[6];
-                *(u8*)(ring + 5) = 1;
-                *(u8*)(ring + 7) = 0xff;
+                ((ImSpaceRingSetup*)ring)->base.unk04[0] = setup[4];
+                ((ImSpaceRingSetup*)ring)->base.unk04[2] = setup[6];
+                ((ImSpaceRingSetup*)ring)->base.unk04[1] = 1;
+                ((ImSpaceRingSetup*)ring)->base.unk04[3] = 0xff;
                 Obj_SetupObject(ring, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
             }
