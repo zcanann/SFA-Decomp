@@ -146,7 +146,7 @@ void FUN_80152ec0(uint obj, int state)
     *(u8*)(state + 0x322) = 0;
     *(float*)(state + 0x31c) = spinVal;
     *(float*)(state + 0x32c) = lbl_803E34AC;
-    *(float*)(obj + 0xa8) = lbl_803E34F8;
+    ((GameObject *)obj)->anim.hitboxScale = lbl_803E34F8;
     FUN_800068d0(obj, 0xe8);
     return;
 }
@@ -293,7 +293,7 @@ void FUN_801534d8(ushort* param_1, undefined4* param_2)
         }
         FUN_8014d3d0((short*)param_1, param_2, 0xf, 0);
         local_28 = pfVar3[0x1a] - *(float*)(param_1 + 6);
-        local_24 = pfVar3[0x1b] - *(float*)(param_1 + 8);
+        local_24 = pfVar3[0x1b] - ((GameObject *)param_1)->anim.rootMotionScale;
         local_20 = pfVar3[0x1c] - *(float*)(param_1 + 10);
         FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)param_1,
                      (int)param_2, &local_28, '\x01');
