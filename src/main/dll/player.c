@@ -10021,14 +10021,14 @@ int fn_80299BB0(int obj, int p2)
     if (*(u8*)((char*)p2 + 0x34b) == 2 && *(f32*)((char*)p2 + 0x298) > lbl_803E7EAC)
     {
         ObjAnim_SetCurrentMove(
-            obj, lbl_803336BC[((MoveSlot*)(inner->moveSlots))[(u8)state30].moveIdx],
+            obj, lbl_803336BC[((s16*)((char*)inner->moveSlots + 2))[(u8)state30 * 88]],
             lbl_803E7EA4, 0);
         inner->moveSlotIndex = state30;
         *(int*)&((PlayerState*)p2)->baddie.unk308 = (int)fn_8029BC08;
         return 0x27;
     }
     ObjAnim_SetCurrentMove(
-        obj, lbl_803336BC[((MoveSlot*)(inner->moveSlots))[(u8)state29].moveIdx],
+        obj, lbl_803336BC[((s16*)((char*)inner->moveSlots + 2))[(u8)state29 * 88]],
         lbl_803E7EA4, 0);
     inner->moveSlotIndex = state29;
     *(int*)&((PlayerState*)p2)->baddie.unk308 = (int)fn_8029BC08;
