@@ -5804,7 +5804,7 @@ int fn_8029EBCC(int obj, int state)
     f32 v7b8, v7bc;
     int res, halfW, halfH;
 
-    inner->flags360 &= 0xFFFFFFFD;
+    *(u32*)((char*)inner + 0x360) &= ~2LL;
     ObjHits_EnableObject(obj);
     sub = *(void**)((char*)inner + 0x7f0);
     if (sub == NULL)
