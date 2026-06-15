@@ -925,26 +925,25 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     }
 
     blk = MapBlock_loadFromFile(blockId);
-    if (blk == NULL)
+    if (blk != NULL)
     {
-        return 1;
+        MapBlock_init(blk);
+        i = 0;
+        byteOff = 0;
+        while (i < *(u8*)((char*)blk + 0xa0))
+        {
+            int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
+            v = -(int)((u32)v | 0x8000);
+            *(int*)(*(int*)((char*)blk + 0x54) + byteOff) = textureLoad(v, 0);
+            byteOff += 4;
+            i++;
+        }
+        MapBlock_initHits(blk, blockId);
+        MapBlock_initShaders(blk);
+        trackLoadBlockEnd(blk, blockId, slotIdx, layer);
+        *(int*)blk = return0_80060B90(blk);
+        DCStoreRange(blk, *(int*)((char*)blk + 0x8));
     }
-    MapBlock_init(blk);
-    i = 0;
-    byteOff = 0;
-    while (i < *(u8*)((char*)blk + 0xa0))
-    {
-        int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
-        v = -(int)((u32)v | 0x8000);
-        *(int*)(*(int*)((char*)blk + 0x54) + byteOff) = textureLoad(v, 0);
-        byteOff += 4;
-        i++;
-    }
-    MapBlock_initHits(blk, blockId);
-    MapBlock_initShaders(blk);
-    trackLoadBlockEnd(blk, blockId, slotIdx, layer);
-    *(int*)blk = return0_80060B90(blk);
-    DCStoreRange(blk, *(int*)((char*)blk + 0x8));
     return 1;
 }
 
