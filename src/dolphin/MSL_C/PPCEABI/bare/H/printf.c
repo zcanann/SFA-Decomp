@@ -1,4 +1,3 @@
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_fp.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ctype.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/scanf.h"
