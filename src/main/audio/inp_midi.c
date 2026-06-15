@@ -232,7 +232,7 @@ void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
         {
             d |= 0x10;
         }
-        *(u8*)(obj + counter * 8) = (u8)b;
+        ((u8*)obj)[counter * 8] = (u8)b;
         *(u8*)(obj + counter * 8 + 1) = (u8)d;
         *(int*)(obj + counter * 8 + 4) = c;
     }
