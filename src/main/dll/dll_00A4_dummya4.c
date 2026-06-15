@@ -1,5 +1,3 @@
-#include "main/effect_interfaces.h"
-#include "main/dll/pickup.h"
 
 void DummyA4_release(void)
 {
