@@ -9,7 +9,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
-#include "main/dll/smallbasket.h"
 #include "main/objhits.h"
 
 extern undefined4 FUN_800067e8();
