@@ -233,11 +233,7 @@ void THPPlayerStop(void)
 
         do
         {
-            if (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE)
-            {
-                continue;
-            }
-            msg = NULL;
+            msg = (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE) ? msg : NULL;
         }
         while (msg != NULL);
 
