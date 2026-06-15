@@ -16,7 +16,6 @@
  * back to its recorded home position.
  */
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/WM/dll_0207_wmworm.h"
 
 extern void* Obj_GetPlayerObject(void);
