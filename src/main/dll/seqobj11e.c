@@ -509,23 +509,23 @@ void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8
     undefined4 in_r10;
     int rowOff;
 
-    rowOff = *(int*)(obj + 0x4c);
+    rowOff = *(int *)&((GameObject *)obj)->anim.placementData;
     if ((*(char*)(state + 0x33a) == '\x02') &&
         (cur = GameBit_Get((int)*(short*)(rowOff + 0x1c)), cur == 0))
     {
-        *(byte*)(obj + 0xaf) = *(byte*)(obj + 0xaf) & 0xf7;
-        if ((*(byte*)(obj + 0xaf) & 4) != 0)
+        *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode & 0xf7;
+        if ((*(byte *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0)
         {
             FUN_8011e868(7);
         }
-        if ((*(byte*)(obj + 0xaf) & 1) != 0)
+        if ((*(byte *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0)
         {
             FUN_80152040(obj, state);
         }
     }
     else
     {
-        *(byte*)(obj + 0xaf) = *(byte*)(obj + 0xaf) | 8;
+        *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
     }
     if (((*(uint*)(state + 0x2dc) & 0x80000000) != 0) &&
         (*(int*)(&DAT_8031fee4 + (uint) * (byte*)(state + 0x33a) * 0xc) != 0))
@@ -577,7 +577,7 @@ void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8
             *(u8*)(state + 0x33a) = (&DAT_8031fee9)[cur * 0xc];
         }
         nextMove = (ushort)(byte)(&DAT_8031fee8)[(uint) * (byte*)(state + 0x33a) * 0xc];
-        if (*(ushort*)(obj + 0xa0) != nextMove)
+        if (*(ushort *)&((GameObject *)obj)->anim.currentMove != nextMove)
         {
             if ((nextMove != 0) && (nextMove != 4))
             {
@@ -609,7 +609,7 @@ FUN_80152a30(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 in_r10;
     int def;
 
-    def = *(int*)(obj + 0x4c);
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
     FUN_80017a98();
     loadingLocked = FUN_80017ae8();
     if ((loadingLocked & 0xff) == 0)
@@ -630,7 +630,7 @@ FUN_80152a30(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(u8*)((int)setup + 0x19) = 0;
         setup[0x10] = 0x95;
         result = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup, 5,
-                             ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff, *(uint**)(obj + 0x30), in_r8,
+                             ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff, *(uint**)&((GameObject *)obj)->anim.parent, in_r8,
                              in_r9, in_r10);
     }
     return result;
