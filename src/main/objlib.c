@@ -772,7 +772,7 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                hitState->sphereIndices[hitSlot] = sphereIndex;
+                *(u8*)&hitState->sphereIndices[hitSlot] = sphereIndex;
                 hitState->priorities[hitSlot] = priority;
                 hitState->hitVolumes[hitSlot] = hitVolume;
                 hitState->hitPosX[hitSlot] = hitPosX;
@@ -786,14 +786,14 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
     if ((hitSlot == hitState->priorityHitCount) &&
         (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
-        hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
+        *(u8*)&hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
         hitState->priorities[hitState->priorityHitCount] = priority;
         hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
         hitState->hitObjects[hitState->priorityHitCount] = hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = hitPosX;
         hitState->hitPosY[hitState->priorityHitCount] = hitPosY;
         hitState->hitPosZ[hitState->priorityHitCount] = hitPosZ;
-        hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
+        hitState->priorityHitCount++;
     }
     return 1;
 }
