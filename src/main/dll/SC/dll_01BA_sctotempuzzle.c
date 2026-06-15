@@ -205,8 +205,6 @@ void sc_totempuzzle_hitDetect(void)
 #include "main/dll/SC/sctotembond.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
 
 extern int ObjHits_GetPriorityHitWithPosition();
 
