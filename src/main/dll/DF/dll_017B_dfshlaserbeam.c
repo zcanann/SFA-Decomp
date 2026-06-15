@@ -285,8 +285,7 @@ void DFSH_LaserBeam_update(uint objAddr)
                 yawCos * ((GameObject*)playerObj)->anim.localPosZ))) &&
             (DFSH_LASER_PROXIMITY_MODE(runtime) != 0)))
     {
-        DFSH_LASER_BLOCK_TIMER(runtime) =
-            (s16)(DFSH_LASER_BLOCK_TIMER(runtime) - framesThisStep);
+        DFSH_LASER_BLOCK_TIMER(runtime) -= (s16)framesThisStep;
         if (DFSH_LASER_BLOCK_TIMER(runtime) < 0)
         {
             DFSH_LASER_BLOCK_TIMER(runtime) = 0;
@@ -295,8 +294,7 @@ void DFSH_LaserBeam_update(uint objAddr)
     }
     else
     {
-        DFSH_LASER_BLOCK_TIMER(runtime) =
-            (s16)(DFSH_LASER_BLOCK_TIMER(runtime) + framesThisStep);
+        DFSH_LASER_BLOCK_TIMER(runtime) += (s16)framesThisStep;
         if (DFSH_LASER_BLOCK_TIMER(runtime) > 0x3C)
         {
             DFSH_LASER_BLOCK_TIMER(runtime) = 0x3C;
@@ -361,11 +359,7 @@ void DFSH_LaserBeam_update(uint objAddr)
                     {
                         pushDistance = lbl_803E4EF0;
                     }
-                    if (objGetAnimState80A(playerObj) == 0x1D7)
-                    {
-                        GameBit_Set(0x468, 1);
-                    }
-                    else
+                    if (objGetAnimState80A(playerObj) != 0x1D7)
                     {
                         int i;
                         Sfx_PlayFromObject(obj, SFXmn_spithit6);
@@ -381,6 +375,10 @@ void DFSH_LaserBeam_update(uint objAddr)
                             ObjMsg_SendToObject(playerObj, 0x60003,DFSH_LASER_HIT_POS(runtime), 0);
                         }
                         DFSH_LASER_DAMAGE_COOLDOWN(runtime) = 0x14;
+                    }
+                    else
+                    {
+                        GameBit_Set(0x468, 1);
                     }
                 }
             }
