@@ -2226,7 +2226,6 @@ void getVisibleObjects(s8* opacity)
     int j;
     u8* s54;
     int* model;
-    ObjModelInstance* modelDef;
     u32 tf;
     u32 mode;
     s16 t;
@@ -2244,7 +2243,6 @@ void getVisibleObjects(s8* opacity)
     for (; i < count; i++)
     {
         o = (u8*)*p;
-        modelDef = ((ObjAnimComponent*)o)->modelInstance;
         ((GameObject*)o)->objectFlags &= ~0x800;
         j = 0;
         sub = o;
@@ -2260,9 +2258,9 @@ void getVisibleObjects(s8* opacity)
         if (i >= part)
         {
             *cur = (s8)objUpdateOpacity(o);
-            if (*cur != 0 || (modelDef->flags & 0x200000) != 0)
+            if (*cur != 0 || (((ObjAnimComponent*)o)->modelInstance->flags & 0x200000) != 0)
             {
-                if ((modelDef->flags & 0x80000) != 0)
+                if ((((ObjAnimComponent*)o)->modelInstance->flags & 0x80000) != 0)
                 {
                     *(f32*)&((GameObject*)o)->anim.targetObj =
                         (f32)(((GameObject*)o)->anim.modelInstance->fixedSortDepth * 100);
@@ -2289,7 +2287,7 @@ void getVisibleObjects(s8* opacity)
                     ((GameObject*)o)->anim.modelState != NULL &&
                     (((GameObject*)o)->anim.modelState->flags & OBJ_MODEL_STATE_SHADOW_VISIBLE) != 0)
                 {
-                    t = modelDef->shadowType;
+                    t = ((ObjAnimComponent*)o)->modelInstance->shadowType;
                     if (t == 2 || t == 1)
                     {
                         shadowCreate(o);
@@ -2304,7 +2302,7 @@ void getVisibleObjects(s8* opacity)
                     key = 0;
                     model = Obj_GetActiveModel((int*)o);
                     if (*(u8*)(o + 0x37) == 0xff && (((GameObject*)o)->anim.flags & 0x80) == 0 &&
-                        ((tf = modelDef->flags) & 0x40000) == 0 &&
+                        ((tf = ((ObjAnimComponent*)o)->modelInstance->flags) & 0x40000) == 0 &&
                         *(void**)(model + 0x16) == NULL)
                     {
                         key |= 0x80000000;
@@ -2317,7 +2315,7 @@ void getVisibleObjects(s8* opacity)
                         gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
                             (i & 0x3ff) | (((t1000 & 0x3ff) << 10) | key);
                         gVisibleObjectSortKeyCount++;
-                        if ((modelDef->renderFlags & 0x20) != 0 &&
+                        if ((((ObjAnimComponent*)o)->modelInstance->renderFlags & 0x20) != 0 &&
                             (((GameObject*)o)->objectFlags & 0x400) == 0 &&
                             (((GameObject*)o)->anim.flags & OBJANIM_FLAG_HIDDEN) == 0)
                         {
@@ -2328,8 +2326,8 @@ void getVisibleObjects(s8* opacity)
                     }
                     else
                     {
-                        if ((modelDef->flags & 0x800) != 0 ||
-                            (modelDef->renderFlags & 0x10) != 0)
+                        if ((((ObjAnimComponent*)o)->modelInstance->flags & 0x800) != 0 ||
+                            (((ObjAnimComponent*)o)->modelInstance->renderFlags & 0x10) != 0)
                         {
                             mode = 0x1f;
                         }
@@ -2340,7 +2338,7 @@ void getVisibleObjects(s8* opacity)
                         renderShadowType3(o, mode, 0);
                         lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 0;
                         lbl_803DCE30++;
-                        if ((modelDef->renderFlags & 0x20) != 0 &&
+                        if ((((ObjAnimComponent*)o)->modelInstance->renderFlags & 0x20) != 0 &&
                             (((GameObject*)o)->anim.flags & OBJANIM_FLAG_HIDDEN) == 0)
                         {
                             renderShadowType3(o, 7, 0x50);
