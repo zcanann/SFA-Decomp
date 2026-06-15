@@ -743,9 +743,9 @@ void dll_6A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[2].flags = 9;
     e[2].tex = &lbl_803138A0[276];
     e[2].mode = 8;
-    e[2].x = lbl_803E0A30;
-    e[2].y = lbl_803E0A30;
-    e[2].z = lbl_803E0A30;
+    e[2].x = (f32)(u32)lbl_803138A0[variant * 3 + 368];
+    e[2].y = (f32)(u32)lbl_803138A0[variant * 3 + 369];
+    e[2].z = (f32)(u32)lbl_803138A0[variant * 3 + 370];
     e[3].layer = 1;
     e[3].flags = 0x12;
     e[3].tex = &lbl_803138A0[296];
