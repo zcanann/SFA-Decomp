@@ -455,7 +455,7 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
     f32 xx;
     f32 dz;
     f32 zz;
-    s16 yaw;
+    int yaw;
 
     dx = ((TrickyState*)state)->dirX;
     xx = dx * dx;
@@ -464,7 +464,7 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
     if ((xx + zz) > lbl_803E23EC)
     {
         yaw = getAngle(-dx, -dz);
-        *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
+        *turnDeltaOut = trickyTurnTowardYaw(obj, (s16)yaw);
         ((TrickyState*)state)->dirX = -mathSinf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
         ((TrickyState*)state)->dirZ = -mathCosf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
     }
