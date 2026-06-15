@@ -173,8 +173,8 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
     short classId;
     int buttons;
     int cond;
-    CamcontrolAction43Payload local_28;
-    CamcontrolAction44Payload local_24;
+    CamcontrolAction43Payload action43Payload;
+    CamcontrolAction44Payload action44Payload;
     longlong convHeight;
 
     if (target->pendingParentObj == NULL)
@@ -205,13 +205,13 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
             (cond = objFn_802962b4((int)target), cond != 0))
         {
-            local_24.distance = cameraMtxVar57->minDistance;
-            local_24.yOffset = cameraMtxVar57->lowerHeightOffset;
+            action44Payload.distance = cameraMtxVar57->minDistance;
+            action44Payload.yOffset = cameraMtxVar57->lowerHeightOffset;
             convHeight = (longlong)(int)
             cameraMtxVar57->targetHeight;
-            local_24.height = (int)cameraMtxVar57->targetHeight;
+            action44Payload.height = (int)cameraMtxVar57->targetHeight;
             cameraSetInterpMode(0);
-            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &local_24, 0xf, 0xfe);
+            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &action44Payload, 0xf, 0xfe);
         }
         else
         {
@@ -219,10 +219,10 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
             if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & 0x40) != 0)) &&
                 ((camera->anim.flags & 4) == 0))
             {
-                local_28.action = 5;
-                local_28.enabled = 1;
-                local_28.immediate = 1;
-                (*gCameraInterface)->setMode(0x43, 1, 0, 4, &local_28, 0, 0xff);
+                action43Payload.action = 5;
+                action43Payload.enabled = 1;
+                action43Payload.immediate = 1;
+                (*gCameraInterface)->setMode(0x43, 1, 0, 4, &action43Payload, 0, 0xff);
             }
         }
         goto done;
