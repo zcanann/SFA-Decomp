@@ -1,6 +1,9 @@
 /* DLL 0xE3 — fireball / kaldachom spit / pollen-fragment objects [8016984C-801713AC) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -172,10 +175,18 @@ extern u8 framesThisStep;
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 
+#include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
+#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/camera_interface.h"
+#include "main/mapEvent.h"
+#include "main/objhits_types.h"
+#include "main/objseq.h"
+#include "main/resource.h"
 
 typedef struct FireballPlacement
 {
@@ -371,11 +382,12 @@ extern void dll_F7_update();
 extern void dll_F7_init();
 extern int* Obj_GetActiveModel(int obj);
 extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-extern const f32 lbl_803E3330;
+extern f32 lbl_803E3330;
 extern int cmbsrc_getColorIndex(int* p);
 extern void projectileParticleFxFn_80099660(int* obj, f32 v, int kind);
 extern f32 lbl_803E3354;
 extern f32 lbl_803E3358;
+extern void objSetSlot(int* obj, int slot);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
@@ -402,6 +414,8 @@ extern u8 lbl_803DBD58[8];
 extern void queueGlowRender(int light);
 extern f32 lbl_803E3350;
 extern f32 lbl_803E3340;
+extern f32 fcos16(u16 angle);
+extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
@@ -1846,10 +1860,11 @@ void fireball_hitDetect(int* obj)
     extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a); /* #57 */
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* target;
-    if (((GameObject*)obj)->anim.seqId == 0x83e ||
-        (((FireballState*)state)->stateFlags & 8)) return;
-    target = (int*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
+    if (((GameObject*)obj)->anim.seqId == 0x83e) return;
+    if (((FireballState*)state)->stateFlags & 8) return;
+    target = (int*)hitState->lastHitObject;
     if (target == NULL) return;
     if (*(s16*)((char*)target + 0x46) == 0x6e8)
     {
@@ -1859,8 +1874,8 @@ void fireball_hitDetect(int* obj)
             ((FireballState*)state)->colorIndex = (u8)idx;
             if (*(void**)state != NULL)
             {
-                int c = ((FireballState*)state)->colorIndex * 3;
                 u8* pal = (u8*)lbl_80320978;
+                int c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setDiffuseColor(*(int**)state, pal[c], pal[c + 1], pal[c + 2], 0);
             }
         }
@@ -1979,6 +1994,7 @@ void fireball_update(int* obj)
     extern void Obj_FreeObject(int* obj); /* #57 */
     extern undefined8 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
+#define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     int* other = *(int**)&((GameObject*)obj)->unkF8;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
@@ -2017,9 +2033,9 @@ void fireball_update(int* obj)
         ((FireballState*)state)->stateFlags |= 1;
     }
     {
-        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+        if (hitState->contactFlags != 0)
         {
-            if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactHitVolume != 14)
+            if (hitState->contactHitVolume != 14)
             {
                 Sfx_PlayFromObject(obj, 179);
             }
@@ -2122,6 +2138,7 @@ void fireball_update(int* obj)
             Obj_FreeObject(obj);
         }
     }
+#undef hitState
 }
 
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -2221,7 +2238,7 @@ void fn_8016F260(int* obj, int* state, int* other)
         difY = targY - (u16)angY;
         if (difY > 0x8000)
         {
-            difY = (s16)(difY - 0xffff);
+            difY -= 0xffff;
         }
         if (difY < -0x8000)
         {
@@ -2230,7 +2247,7 @@ void fn_8016F260(int* obj, int* state, int* other)
         difP = targP - (u16)angP;
         if (difP > 0x8000)
         {
-            difP = (s16)(difP - 0xffff);
+            difP -= 0xffff;
         }
         if (difP < -0x8000)
         {
@@ -2262,10 +2279,9 @@ void fn_8016F260(int* obj, int* state, int* other)
         ((GameObject*)obj)->anim.velocityZ = mathCosf(f);
         f = lbl_803E3338 * (f32)angP / lbl_803E333C;
         c = mathSinf(f);
-        t1 = mathCosf(f);
-        if (lbl_803E3330 != t1)
+        if (lbl_803E3330 != mathCosf(f))
         {
-            c = c / t1;
+            c = c / mathCosf(f);
         }
         ((GameObject*)obj)->anim.velocityY = c;
 
