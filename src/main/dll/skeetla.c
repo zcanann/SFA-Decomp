@@ -164,7 +164,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
 
     if ((s8)state->unk353 != 0)
     {
-        if ((state->statusFlags & 0x20) == 0)
+        if (((state->statusFlags >> 5) & 1) == 0)
         {
             if (state->waterLevel == lbl_803E23DC)
             {
