@@ -1078,10 +1078,10 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
 #pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
 {
+    uint* entry;
     uint nearest;
     uint index;
     uint limit;
-    uint* entry;
     float distanceSq;
     float bestDistanceSq;
 
@@ -1125,10 +1125,10 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
 
 int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
 {
+    uint* entry;
     uint nearest;
     uint index;
     uint limit;
-    uint* entry;
     float distanceSq;
     float bestDistanceSq;
 
