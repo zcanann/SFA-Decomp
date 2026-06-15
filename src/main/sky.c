@@ -559,8 +559,7 @@ void skyFn_80089710(int flags, int enabled, int startComplete)
         {
             sky = lbl_803DD12C;
             stateActive = ((SkyBlendStateFlags*)(sky + flagBit * 0xa4 + 0xc1))->active;
-            requestedActive = (u8)enabled;
-            if (stateActive != requestedActive)
+            if (stateActive != (requestedActive = (u8)enabled))
             {
                 if (startComplete != 0)
                 {
