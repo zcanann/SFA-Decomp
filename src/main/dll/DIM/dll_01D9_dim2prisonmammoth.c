@@ -64,14 +64,8 @@ extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
 
-
-
-
 extern int *gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
-
-
-
 
 
 extern u8 lbl_803DC750;
