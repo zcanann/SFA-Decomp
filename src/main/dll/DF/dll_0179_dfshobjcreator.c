@@ -27,7 +27,6 @@ extern f32 lbl_803E4EB8;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int objectId);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
-extern ModgfxInterface** gModgfxInterface;
 
 /* Obj_AllocObjectSetup(0x38,...) buffer composed in dfsh_objcreator_update.
  * Head is the common ObjPlacement; tail (0x18..0x37) is file-local. */
