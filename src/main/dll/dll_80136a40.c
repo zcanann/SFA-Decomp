@@ -1362,7 +1362,7 @@ void fn_80137DF8(void)
             }
             debugPrintfxy(0x10, 0x15, strs + 0x140, fn_80137DF8);
             debugPrintfxy(0x10, 0x2a, strs + 0x154);
-            switch ((u16)lbl_803DDA40)
+            switch (*(u16*)&lbl_803DDA40)
             {
             case 0:
                 debugPrintfxy(0xa0, 0x2a, strs + 0x160);
