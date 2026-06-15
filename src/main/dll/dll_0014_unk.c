@@ -2217,8 +2217,6 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
 u8 RomCurve_goNextPoint(RomCurveWalker* state)
 {
     char* stateBytes;
-    int candidateIds[4];
-    int candidateCount;
     int neighborId;
     int curve;
     int low;
@@ -2244,30 +2242,51 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
 
     curve = *(s32*)&state->nodeA0;
-    candidateCount = 0;
-    if (state->reverse == 0)
+    if (state->reverse != 0)
     {
-        ROMCURVE_ADD_LINK(0x1c, 1, 0);
-        ROMCURVE_ADD_LINK(0x20, 2, 0);
-        ROMCURVE_ADD_LINK(0x24, 4, 0);
-        ROMCURVE_ADD_LINK(0x28, 8, 0);
+        int candA[4];
+        int countA = 0;
+        u32 mask = 1;
+        for (low = 0; low < 4; low++, mask <<= 1)
+        {
+            neighborId = *(s32*)(curve + 0x1c + low * 4);
+            if (neighborId > -1 && (*(s8*)(curve + 0x1b) & mask) != 0 && neighborId != -1)
+            {
+                candA[countA++] = neighborId;
+            }
+        }
+        if (countA == 0)
+        {
+            neighborId = -1;
+        }
+        else
+        {
+            neighborId = candA[randomGetRange(0, countA - 1)];
+        }
     }
     else
     {
-        ROMCURVE_ADD_LINK(0x1c, 1, 1);
-        ROMCURVE_ADD_LINK(0x20, 2, 1);
-        ROMCURVE_ADD_LINK(0x24, 4, 1);
-        ROMCURVE_ADD_LINK(0x28, 8, 1);
+        int candB[4];
+        int countB = 0;
+        u32 mask = 1;
+        for (low = 0; low < 4; low++, mask <<= 1)
+        {
+            neighborId = *(s32*)(curve + 0x1c + low * 4);
+            if (neighborId > -1 && (*(s8*)(curve + 0x1b) & mask) == 0 && neighborId != -1)
+            {
+                candB[countB++] = neighborId;
+            }
+        }
+        if (countB == 0)
+        {
+            neighborId = -1;
+        }
+        else
+        {
+            neighborId = candB[randomGetRange(0, countB - 1)];
+        }
     }
 
-    if (candidateCount == 0)
-    {
-        neighborId = -1;
-    }
-    else
-    {
-        neighborId = candidateIds[randomGetRange(0, candidateCount - 1)];
-    }
     if (neighborId == -1)
     {
         state->nodeA4 = NULL;
@@ -2287,11 +2306,11 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         {
             mid = (low + high) >> 1;
             nextCurve = (s32)romCurves[mid];
-            if (*(u32*)(nextCurve + 0x14) < (u32)neighborId)
+            if ((u32)neighborId > *(u32*)(nextCurve + 0x14))
             {
                 low = mid + 1;
             }
-            else if (*(u32*)(nextCurve + 0x14) <= (u32)neighborId)
+            else if ((u32)neighborId >= *(u32*)(nextCurve + 0x14))
             {
                 break;
             }
