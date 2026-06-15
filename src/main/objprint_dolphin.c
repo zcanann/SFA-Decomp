@@ -1325,7 +1325,7 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
     return;
 }
 
-void FUN_800400ac(undefined4 param_1, undefined4 param_2, int param_3, uint param_4)
+void FUN_800400ac(undefined4 obj, undefined4 owner, int model, uint shadowMode)
 {
 }
 
@@ -1368,8 +1368,8 @@ void FUN_800400b0(void)
     return;
 }
 
-void FUN_800401a0(float* param_1, float* param_2, short* param_3, int param_4, ushort* param_5,
-                  int param_6)
+void FUN_800401a0(float* mtx, float* out, short* in, int flag, ushort* obj,
+                  int e)
 {
     float local_98;
     float local_94;
@@ -1392,34 +1392,34 @@ void FUN_800401a0(float* param_1, float* param_2, short* param_3, int param_4, u
     undefined4 local_18;
     uint uStack_14;
 
-    uStack_24 = (int)*param_3 ^ 0x80000000;
+    uStack_24 = (int)*in ^ 0x80000000;
     local_28 = 0x43300000;
     local_8c = (f32)(s32)
     uStack_24;
-    uStack_1c = (int)param_3[1] ^ 0x80000000;
+    uStack_1c = (int)in[1] ^ 0x80000000;
     local_20 = 0x43300000;
     local_88 = (f32)(s32)
     uStack_1c;
-    uStack_14 = (int)param_3[2] ^ 0x80000000;
+    uStack_14 = (int)in[2] ^ 0x80000000;
     local_18 = 0x43300000;
     local_84 = (f32)(s32)
     uStack_14;
-    if (param_6 != 0)
+    if (e != 0)
     {
         local_8c = local_8c * lbl_803DF6D8;
         local_88 = local_88 * lbl_803DF6D8;
         local_84 = local_84 * lbl_803DF6D8;
     }
-    if (param_1 == (float*)0x0)
+    if (mtx == (float*)0x0)
     {
-        local_74 = *(undefined4*)(param_5 + 0xc);
-        local_70 = *(undefined4*)(param_5 + 0xe);
-        local_6c = *(undefined4*)(param_5 + 0x10);
-        if (param_4 == 0)
+        local_74 = *(undefined4*)(obj + 0xc);
+        local_70 = *(undefined4*)(obj + 0xe);
+        local_6c = *(undefined4*)(obj + 0x10);
+        if (flag == 0)
         {
-            local_80 = *param_5;
-            local_7e = param_5[1];
-            local_7c = param_5[2];
+            local_80 = *obj;
+            local_7e = obj[1];
+            local_7c = obj[2];
         }
         else
         {
@@ -1429,26 +1429,26 @@ void FUN_800401a0(float* param_1, float* param_2, short* param_3, int param_4, u
         }
         local_78 = lbl_803DF69C;
         FUN_80017754(afStack_68, &local_80);
-        FUN_80017778((double)local_8c, (double)local_88, (double)local_84, afStack_68, param_2, param_2 + 1,
-                     param_2 + 2);
+        FUN_80017778((double)local_8c, (double)local_88, (double)local_84, afStack_68, out, out + 1,
+                     out + 2);
     }
     else
     {
-        if (param_4 == 0)
+        if (flag == 0)
         {
-            FUN_80247bf8(param_1, &local_8c, &local_98);
-            *param_2 = local_98;
-            param_2[1] = local_94;
-            param_2[2] = local_90;
+            FUN_80247bf8(mtx, &local_8c, &local_98);
+            *out = local_98;
+            out[1] = local_94;
+            out[2] = local_90;
         }
         else
         {
-            *param_2 = param_1[3] + local_8c;
-            param_2[1] = param_1[7] + local_88;
-            param_2[2] = param_1[0xb] + local_84;
+            *out = mtx[3] + local_8c;
+            out[1] = mtx[7] + local_88;
+            out[2] = mtx[0xb] + local_84;
         }
-        *param_2 = *param_2 + lbl_803DDA58;
-        param_2[2] = param_2[2] + lbl_803DDA5C;
+        *out = *out + lbl_803DDA58;
+        out[2] = out[2] + lbl_803DDA5C;
     }
     return;
 }
