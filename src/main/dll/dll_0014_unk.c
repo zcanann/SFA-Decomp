@@ -4466,7 +4466,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
             {
                 high = top;
                 low = 0;
-                while (low <= high)
+                while (high >= low)
                 {
                     mid = (high + low) >> 1;
                     linkedCurve = romCurves[mid];
@@ -4639,7 +4639,7 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                     {
                         high = nRomCurves - 1;
                         low = 0;
-                        while (low <= high)
+                        while (high >= low)
                         {
                             mid = (high + low) >> 1;
                             linkedCurve = romCurves[mid];
@@ -4959,7 +4959,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
         {
             high = nRomCurves + -1;
             low = 0;
-            while (low <= high)
+            while (high >= low)
             {
                 mid = high + low >> 1;
                 resolvedCurve = romCurves[mid];
@@ -5078,7 +5078,7 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
     {
         high = nRomCurves - 1;
         low = 0;
-        while (low <= high)
+        while (high >= low)
         {
             mid = (high + low) >> 1;
             adjacent = romCurves[mid];
@@ -5155,7 +5155,7 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
             {
                 high = nRomCurves - 1;
                 low = 0;
-                while (low <= high)
+                while (high >= low)
                 {
                     mid = (high + low) >> 1;
                     linkedCurve = romCurves[mid];
