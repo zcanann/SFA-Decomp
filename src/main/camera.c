@@ -1096,6 +1096,9 @@ void Camera_SetFovY(f32 fovY)
     gCameraFovY = fovY;
 }
 
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_factor_limit 3
+#pragma ppc_unroll_instructions_limit 80
 void Camera_InitState(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
