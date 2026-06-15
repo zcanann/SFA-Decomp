@@ -40,7 +40,6 @@ extern f32 lbl_803E61E8;
 #pragma peephole on
 extern f32 lbl_803E5554;
 extern void objRenderFn_8003b8f4(f32);
-extern void fn_8003B608(int a, int b, int c);
 extern void gameTimerStop(void);
 extern void disableHeavyFog(void);
 extern void Music_Trigger(int track, int param);
@@ -63,7 +62,6 @@ extern f32 lbl_803E5570;
 extern f32 lbl_803E5574;
 extern f32 lbl_803E5578;
 extern f32 lbl_803E557C;
-extern u8 Obj_IsLoadingLocked(void);
 extern void skyFn_80088c94(int a, int b);
 extern void envFxActFn_800887f8(int arg);
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
