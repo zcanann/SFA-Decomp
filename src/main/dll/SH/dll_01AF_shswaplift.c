@@ -76,7 +76,7 @@ void warpstonelift_update(u8* obj)
         for (i = 0; i < count; i++)
         {
             char* o = *(char**)((int)p + (off + 0x100));
-            if (*(s16*)(o + 0x44) == 1)
+            if (((GameObject*)o)->anim.classId == 1)
             {
                 found = 1;
             }
