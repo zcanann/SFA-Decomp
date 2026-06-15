@@ -1,13 +1,17 @@
+/*
+ * dll_0256_dimsnowhorn1 (DLL 0x256) - the rideable SnowHorn mammoth found in
+ * DIM (Dinosaur InfernoMountain).  Fox can mount the mammoth and use it to
+ * clear puzzle obstacles.  The object runs a 12-state BaddieState machine
+ * (stateHandler00–0B); the riding sub-loop (fn_802BB4B4) handles stick/button
+ * input and the air-meter while mounted, and DIMSnowHorn1_update coordinates
+ * the full per-frame tick.
+ */
 #include "types.h"
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
-/*
- * Per-object extra state for the DIM SnowHorn (DIMSnowHorn1_getExtraSize
- * == 0xD0C). Embeds the engine BaddieState as its prefix; the tail is
- * family-private.
- */
+/* Per-object extra state (getExtraSize == 0xD0C); BaddieState is the prefix. */
 typedef struct DIMSnowHorn1State
 {
     BaddieState baddie;
@@ -804,22 +808,13 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     return 0;
 }
 
-/*
- * Empty stub.
- */
 void DIMSnowHorn1_func21(void)
 {
 }
 
-/*
- * Returns 0.
- */
 int DIMSnowHorn1_func20(void) { return 0; }
 
-/*
- * Returns floored neg-velocity-Y in *out, or a constant if mode != 10;
- * also returns f1 = constant.
- */
+/* returns -moveSpeed in *out when riding (mode 10), zero otherwise */
 f32 DIMSnowHorn1_func19(int obj, f32* out)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
@@ -834,9 +829,6 @@ f32 DIMSnowHorn1_func19(int obj, f32* out)
     return lbl_803E8234;
 }
 
-/*
- * Sets *out_f = 0.0f, *out_i = 0.
- */
 void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i)
 {
     (void)unused;
@@ -844,18 +836,12 @@ void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i)
     *out_i = 0;
 }
 
-/*
- * Stores arg at obj->state[0xa8a] (low byte).
- */
 void DIMSnowHorn1_func17(int obj, int value)
 {
     u8 mode = (u8)value;
     *(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa8a) = mode;
 }
 
-/*
- * Returns 0.
- */
 int DIMSnowHorn1_func16(void) { return 0; }
 
 void DIMSnowHorn1_func15(s16* packed, undefined4 outX, undefined4 outY, undefined4 outZ)
@@ -887,9 +873,6 @@ void DIMSnowHorn1_func15(s16* packed, undefined4 outX, undefined4 outY, undefine
     Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E8298, lbl_803E829C, outX, outY, outZ);
 }
 
-/*
- * Returns 2 if state->[0xa8f] != 0, else 1.
- */
 int DIMSnowHorn1_func14(int obj)
 {
     if (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa8f) != 0)
@@ -899,10 +882,6 @@ int DIMSnowHorn1_func14(int obj)
     return 1;
 }
 
-/*
- * If bit 1 of state->[0xa8e] is set, set GameBit 0x3e3 to 0, clear
- * the bit, and return 1. Otherwise return 0.
- */
 int DIMSnowHorn1_render2(int obj)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
@@ -915,9 +894,6 @@ int DIMSnowHorn1_render2(int obj)
     return 0;
 }
 
-/*
- * Read 3 floats from state into the 3 output pointers.
- */
 void DIMSnowHorn1_modelMtxFn(int obj, f32* out_x, f32* out_y, f32* out_z)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
@@ -926,9 +902,6 @@ void DIMSnowHorn1_modelMtxFn(int obj, f32* out_x, f32* out_y, f32* out_z)
     *out_z = state->unk9F0;
 }
 
-/*
- * Returns 1 if state->[0xa90] != 0, else 2.
- */
 int DIMSnowHorn1_func11(int obj)
 {
     if (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa90) != 0)
@@ -1140,19 +1113,10 @@ void fn_802BB998(int obj, int pointState, int inputState)
 }
 #pragma dont_inline reset
 
-/*
- * Returns 0xd0c.
- */
 int DIMSnowHorn1_getExtraSize(void) { return 0xd0c; }
 
-/*
- * Returns 0x43.
- */
 int DIMSnowHorn1_getObjectTypeId(void) { return 0x43; }
 
-/*
- * Wrapper for ObjGroup_RemoveObject(obj, 0xa).
- */
 void DIMSnowHorn1_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0xa);
@@ -1179,11 +1143,6 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/*
- * Empty stub.
- *
- * EN v1.1 Address: 0x802BB4B0, size 4b
- */
 void DIMSnowHorn1_hitDetect(void)
 {
 }
