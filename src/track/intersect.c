@@ -1742,20 +1742,20 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 
     if (model == 0 || ((ModelFileHeader *)model)->normalCount == 0) {
         PSMTXScale(mtx_54, lbl_803DB6B8, lbl_803DB6B8, lbl_803DEEDC);
-        mtx_54[2][0] = lbl_803DEEE4;
+        mtx_54[2][3] = lbl_803DEEE4;
         PSMTXTrans(mtx_24, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
         PSMTXConcat(mtx_24, mtx_54, mtx_54);
     } else {
         PSMTXScale(mtx_54, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC);
         mtx_54[0][3] = gSynthDelayedActionWord0;
         mtx_54[1][3] = gSynthDelayedActionWord0;
-        mtx_54[2][0] = lbl_803DEEE4;
+        mtx_54[2][3] = lbl_803DEEE4;
     }
     GXLoadTexMtxImm(mtx_54, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 1, 0x1e, 1, 0x52);
 
     PSMTXScale(mtx_54, lbl_803DB6C0, lbl_803DB6C0, lbl_803DEEDC);
-    mtx_54[2][0] = lbl_803DEEE4;
+    mtx_54[2][3] = lbl_803DEEE4;
     GXLoadTexMtxImm(mtx_54, 0x4f, 0);
     GXSetTexCoordGen2(2, 0, 4, 0x3c, 0, 0x4f);
 
@@ -1838,7 +1838,6 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                 ref1 = fn_8003BB74();
                 GXSetAlphaCompare(4, ref1, 0, 4, ref0);
             } else {
-                GXSetBlendMode(1, 4, 5, 5);
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
                     GXSetZMode(1, 3, 0);
