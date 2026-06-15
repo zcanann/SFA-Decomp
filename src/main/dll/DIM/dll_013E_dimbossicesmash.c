@@ -15,10 +15,8 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/path_control_interface.h"
-#include "main/game_object.h"
 
 typedef struct DimbossicesmashPlacement
 {
@@ -108,11 +106,11 @@ void dimbossicesmash_update(u8* obj)
     u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[0x29e];
     u8* setup;
-    uint t;
-    int a;
+    uint triggerBit;
+    int alphaVal;
     s16 cnt;
-    int t1;
-    int u29;
+    int fadeDuration;
+    int frameCount;
     f32 nx, nz, ny;
     f32 len, inv, dot;
     f32 fx, fy, fz, ff;
@@ -140,8 +138,8 @@ void dimbossicesmash_update(u8* obj)
         {
             if (((ObjAnimComponent*)obj)->bankIndex == 0)
             {
-                t = GameBit_Get(((DimbossicesmashPlacement*)setup)->unk40);
-                if (t != 0 || ((DimbossicesmashPlacement*)setup)->unk40 == -1)
+                triggerBit = GameBit_Get(((DimbossicesmashPlacement*)setup)->unk40);
+                if (triggerBit != 0 || ((DimbossicesmashPlacement*)setup)->unk40 == -1)
                 {
                     state[0x29e] = state[0x29e] | 1;
                     GameBit_Set(((DimbossicesmashPlacement*)setup)->unk3E, 1);
@@ -162,23 +160,23 @@ void dimbossicesmash_update(u8* obj)
             {
                 state[0x29e] = state[0x29e] | 2;
             }
-            u29 = ((DimBossIceSmashState*)state)->unk29C;
-            if (u29 > ((DimbossicesmashPlacement*)setup)->unk3A &&
-                (t1 = ((DimbossicesmashPlacement*)setup)->unk38 - ((DimbossicesmashPlacement*)setup)->unk3A) != 0)
+            frameCount = ((DimBossIceSmashState*)state)->unk29C;
+            if (frameCount > ((DimbossicesmashPlacement*)setup)->unk3A &&
+                (fadeDuration = ((DimbossicesmashPlacement*)setup)->unk38 - ((DimbossicesmashPlacement*)setup)->unk3A) != 0)
             {
-                a = (int)(lbl_803E404C *
+                alphaVal = (int)(lbl_803E404C *
                     (lbl_803E4048 -
-                        (f32)(u29 - ((DimbossicesmashPlacement*)setup)->unk3A) / (
-                            f32)t1));
-                if (a > 0xff)
+                        (f32)(frameCount - ((DimbossicesmashPlacement*)setup)->unk3A) / (
+                            f32)fadeDuration));
+                if (alphaVal > 0xff)
                 {
-                    a = 0xff;
+                    alphaVal = 0xff;
                 }
-                else if (a < 0)
+                else if (alphaVal < 0)
                 {
-                    a = 0;
+                    alphaVal = 0;
                 }
-                ((GameObject*)obj)->anim.alpha = (u8)a;
+                ((GameObject*)obj)->anim.alpha = (u8)alphaVal;
             }
             ((GameObject*)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState*)state)->unk290 + ((GameObject*)obj)
                 ->anim.velocityX;
