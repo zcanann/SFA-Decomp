@@ -1520,8 +1520,11 @@ f32 SaveGame_gplayGetTime(int id)
     {
         if (*(int*)(p + 0x6f0) == id)
         {
+            u8* slot;
             p = gSaveGameData;
-            return *(f32*)(p + i * 8 + 0x6f4) - ((SaveGameData*)p)->playTime;
+            slot = p;
+            slot += i * 8;
+            return *(f32*)(slot + 0x6f4) - ((SaveGameData*)p)->playTime;
         }
         p += 8;
     }
