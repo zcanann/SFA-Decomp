@@ -1,9 +1,5 @@
 /* DLL 0x01FB — WCLaser render object (WarpZone cannon laser). TU: 0x801F0900–0x801F0AE4. */
-#include "main/dll/WC/dll_01F9_wmobjcreator.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/resource.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
@@ -55,15 +51,11 @@ extern u32 randomGetRange(int min, int max);
 
 /* 8b "li r3, N; blr" returners. */
 
-#include "main/dll/WC/WClaser.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
-#include "main/screen_transition.h"
 
 extern void buttonDisable(int controller, int mask);
 
