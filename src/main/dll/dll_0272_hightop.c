@@ -737,16 +737,16 @@ int hightop_stateHandler01(int obj, int p)
         ((BaddieState*)p)->velSmoothTime = lbl_803E6B28;
         if (((GameObject*)obj)->anim.currentMove != lbl_803DC32C)
         {
-            ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
+            ObjAnim_SetCurrentMove(obj, lbl_803DC32C, v, 0);
         }
     }
     if (((BaddieState*)p)->inputMagnitude < lbl_803E6B2C)
     {
         *(s16*)((char*)p + 0x334) = 0;
         ((BaddieState*)p)->turnRate = 0;
-        ((BaddieState*)p)->inputMagnitude = lbl_803E6AA8;
+        ((BaddieState*)p)->inputMagnitude = *(f32*)&lbl_803E6AA8;
     }
-    if (*(f32*)&((BaddieState*)p)->trackedObj > lbl_803E6AA8 && ((BaddieState*)p)->inputMagnitude > lbl_803E6AA8)
+    if (*(f32*)&((BaddieState*)p)->trackedObj > *(f32*)&lbl_803E6AA8 && ((BaddieState*)p)->inputMagnitude > *(f32*)&lbl_803E6AA8)
     {
         return 3;
     }
