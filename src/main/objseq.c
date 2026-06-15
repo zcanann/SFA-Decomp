@@ -4341,10 +4341,10 @@ void objSeq_onMapSetup(void)
     u8* counts = base + 0x3590;
     int* handles = (int*)(base + 0x33e4);
     u8* marks = base + 0x338c;
-    int i = 0;
+    int i;
 
     {
-        for (; i < 0x50; i += 8)
+        for (i = 0; i < 0x50; i += 8)
         {
             flagsB[0] = 0;
             flagsA[0] = 0;
@@ -4457,7 +4457,7 @@ void objSeq_onMapSetup(void)
         }
     }
 
-    for (; i < 0x55; i++)
+    for (i = 0x50; i < 0x55; i++)
     {
         base[i + 0x3b9c] = 0;
         base[i + 0x3b44] = 0;
