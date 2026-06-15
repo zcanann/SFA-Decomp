@@ -804,7 +804,7 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* node, int* cmdStre
         }
         fn_8003EA84((undefined4)(u32)modelData, (undefined4)subNode, hitList, 0, lightIdx, lightCount);
         callbackResult = FUN_80048094();
-        if ((callbackResult != '\0') && ((*(ushort*)(obj + 2) & 0x100) == 0))
+        if ((callbackResult != '\0') && ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x100) == 0))
         {
             trackIntersect_getColorRgb((undefined*)&litColor);
             FUN_80049910(&litColor);
@@ -840,9 +840,9 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* node, int* cmdStre
                 || (needsAlpha))
             {
                 FUN_8025cce8(1, 4, 5, 5);
-                if ((*(ushort*)(obj + 2) & 0x400) == 0)
+                if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
                 {
-                    if ((*(ushort*)(obj + 2) & 0x2000) == 0)
+                    if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x2000) == 0)
                     {
                         gxSetZMode_(1, 3, 0);
                         FUN_8025c754(7, 0, 0, 7, 0);
@@ -863,7 +863,7 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* node, int* cmdStre
             else if ((*(uint*)(subNode + 0x3c) & 0x400) == 0)
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(ushort*)(obj + 2) & 0x400) == 0)
+                if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -876,7 +876,7 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* node, int* cmdStre
             else
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(ushort*)(obj + 2) & 0x400) == 0)
+                if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -944,7 +944,7 @@ void fn_8003F8EC(undefined4 param_1, undefined4 param_2, int obj)
     if ((*(ushort*)(renderNode + 6) & 8) == 0)
     {
         *(undefined*)(renderNode + 0x18) = 0;
-        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort*)(obj + 2) & 2) != 0)) ||
+        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
             (*(char*)(obj + 0xf3) == '\0'))
         {
             FUN_8001796c((int)renderNode);
@@ -1121,7 +1121,7 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
         done = false;
         *(undefined*)(renderNode + 0x18) = 0;
         FUN_80017968((int)renderNode);
-        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort*)(obj + 2) & 2) != 0)) ||
+        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
             (*(char*)(obj + 0xf3) == '\0'))
         {
             FUN_8001796c((int)renderNode);
@@ -1130,7 +1130,7 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
         }
         else
         {
-            done = *(int*)(obj + 0xa4) == 0;
+            done = *(int *)&((GameObject *)obj)->anim.targetObj == 0;
             if (done)
             {
                 FUN_80017988(renderNode, obj, (int)modelData, localMtx);
@@ -1155,7 +1155,7 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
         {
             if (*(char*)(renderNode + 0x18) == '\0')
             {
-                node = *(int*)(obj + 0x28);
+                node = *(int *)&((GameObject *)obj)->anim.velocityY;
             }
             else
             {
@@ -1163,7 +1163,7 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
             }
             FUN_800179cc(&DAT_80343a70, obj + 0x88, node, (int*)renderNode[0x10],
                          renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7]);
-            FUN_800179c8(&DAT_80343a70, obj + 0xac, *(int*)(obj + 0x2c), (uint*)renderNode[0x11],
+            FUN_800179c8(&DAT_80343a70, obj + 0xac, *(int *)&((GameObject *)obj)->anim.velocityZ, (uint*)renderNode[0x11],
                          *(byte*)(obj + 0x24) & 8);
         }
         if (*(char*)(obj + 0xf7) == '\0')
@@ -1188,7 +1188,7 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
     fadeLevel = (uint) * (ushort*)(obj + 0xd8) << 3;
     FUN_80006adc(cmdDesc, *(undefined4*)(obj + 0xd4), fadeLevel, fadeLevel);
     childNode = modelData;
-    if (*(int*)(obj + 0xa4) != 0)
+    if (*(int *)&((GameObject *)obj)->anim.targetObj != 0)
     {
         FUN_80247618(viewMtx, localMtx, worldMtx);
         FUN_8025d80c(worldMtx, (uint)DAT_802cbab1);
