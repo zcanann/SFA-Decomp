@@ -677,12 +677,9 @@ int trickyFn_80142a14(int obj, int state)
             return 0;
         }
         tricky_startRandomIdleMove(obj, state);
-        return 1;
     }
-    if ((u8)trickyFn_8013b368(lbl_803E24C8, obj, state) == 1)
+    else if ((u8)trickyFn_8013b368((int)obj, lbl_803E24C8, (int)state) != 1)
     {
-        return 1;
-    }
     ((FlagByte728*)(state + 0x728))->bf5 = 1;
     sfxId = randomGetRange(862, 863);
     tex = *(int*)&((GameObject*)obj)->extra;
@@ -698,6 +695,8 @@ int trickyFn_80142a14(int obj, int state)
         }
     }
     return 0;
+    }
+    return 1;
 }
 
 int trickyFlameFn_80142b6c(u8* obj, u8* state)
