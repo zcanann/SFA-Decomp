@@ -1,4 +1,3 @@
-#include "dolphin/types.h"
 #include "dolphin/os/OSFastCast.h"
 
 extern double __fabs(double);
