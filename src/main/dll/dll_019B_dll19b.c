@@ -3,11 +3,7 @@
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
 #include "main/dll/torch1cd_state.h"
-#include "main/effect_interfaces.h"
-#include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/shrine1CE.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
