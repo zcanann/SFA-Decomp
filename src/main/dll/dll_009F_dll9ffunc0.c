@@ -28,7 +28,6 @@ extern f32 lbl_803E1474;
 extern f32 lbl_803E1478;
 extern f32 lbl_803E147C;
 
-extern u8 lbl_803186B0[];
 
 void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
 {
