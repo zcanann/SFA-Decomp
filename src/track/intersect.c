@@ -2602,14 +2602,15 @@ u32 objCallback_80074d04(int handle, void* model)
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
+    GXSetBlendMode(1, 4, 5, 5);
     if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
         GXSetZCompLoc(1);
         lbl_803DD011 = 1;
         lbl_803DD019 = 1;
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetBlendMode(1, 4, 5, 5);
-    return 0;
+    GXSetCullMode(2);
+    return 1;
 }
 
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
