@@ -2298,8 +2298,8 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
         z = lbl_803DEA04;
     }
     {
-        f32 s = lbl_803DEA10;
         f32 d = lbl_803DEA14;
+        f32 s = lbl_803DEA10;
         *outC = (s16)(s32)(s * z / d);
         *outB = (s16)(s32)(s * x / d);
         *outA = (s16)(s32)(s * y / d);
