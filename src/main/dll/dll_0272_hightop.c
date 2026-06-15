@@ -1177,6 +1177,7 @@ int hightop_stateHandler09(int obj, int p)
     return 0;
 }
 
+#pragma opt_strength_reduction off
 int hightop_stateHandler10(int obj, int p)
 {
     HighTopRuntime* rt = ((GameObject*)obj)->extra;
@@ -1225,3 +1226,4 @@ int hightop_stateHandler10(int obj, int p)
     }
     return 0;
 }
+#pragma opt_strength_reduction reset
