@@ -453,15 +453,15 @@ void FUN_8005fe14(int param_1)
 
 void FUN_8005ff90(short* param_1, float* param_2)
 {
-    double dVar1;
-    float fVar2;
+    double bias;
+    float scale;
 
-    fVar2 = lbl_803DF8A0;
-    dVar1 = DOUBLE_803df840;
+    scale = lbl_803DF8A0;
+    bias = DOUBLE_803df840;
     *param_2 = (float)((double)CONCAT44(0x43300000, (int)*param_1 ^ 0x80000000) - DOUBLE_803df840) *
         lbl_803DF8A0;
-    param_2[1] = (float)((double)CONCAT44(0x43300000, (int)param_1[1] ^ 0x80000000) - dVar1) * fVar2;
-    param_2[2] = (float)((double)CONCAT44(0x43300000, (int)param_1[2] ^ 0x80000000) - dVar1) * fVar2;
+    param_2[1] = (float)((double)CONCAT44(0x43300000, (int)param_1[1] ^ 0x80000000) - bias) * scale;
+    param_2[2] = (float)((double)CONCAT44(0x43300000, (int)param_1[2] ^ 0x80000000) - bias) * scale;
     return;
 }
 
