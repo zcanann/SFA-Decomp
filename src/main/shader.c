@@ -2254,7 +2254,7 @@ void mapLoadUnloadObjects(int flag)
     s16 count;
     int i;
     int n;
-    s16 list[40];
+    s16 list[16];
     s16* q;
     int k;
     int* tp;
