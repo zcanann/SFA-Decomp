@@ -1,5 +1,4 @@
 /* DLL 0x01BE (dimlava) — DIM lava objects [0x801AF9E4-0x801B02BC). */
-#include "main/effect_interfaces.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -83,7 +82,6 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 lbl_802C2308[];
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
@@ -102,7 +100,6 @@ extern u8 framesThisStep;
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
 
-extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -112,15 +109,9 @@ extern u8 lbl_803236B8[];
  * height/distance, trigger the fall when the player is in range, integrate the
  * fall, then shatter (sfx + explosion) on impact. */
 
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
 
 typedef struct Lavaball1bePlacement
 {
@@ -165,7 +156,6 @@ extern void modelLightStruct_setDiffuseColor(u8* light, int r, int g, int b, int
 extern void modelLightStruct_setDistanceAttenuation(u8* light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(u8* light, int p3, int p4, int p5, int p6, int p7, f32 a);
 extern void modelLightStruct_setGlowProjectionRadius(u8* light, f32 a);
-extern int* objFindTexture(int* obj, int a, int b);
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
