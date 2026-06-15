@@ -71,7 +71,6 @@ extern undefined4 FUN_8005d0ac();
 extern f32 lbl_803E5180;
 
 extern f32 lbl_803E44F8;
-extern f32 lbl_803E44D4;
 extern void setDrawLights(int v);
 extern f32 lbl_803E44E8;
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -97,7 +96,6 @@ extern f32 lbl_803E4530;
 extern f32 lbl_803E4534;
 extern f32 lbl_803E4538;
 extern f32 lbl_803E453C;
-extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 
 undefined4
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
