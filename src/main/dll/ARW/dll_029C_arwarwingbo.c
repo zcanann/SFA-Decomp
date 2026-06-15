@@ -91,7 +91,7 @@ void arwarwingbo_update(int obj)
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ArwingBombState* state = ((GameObject*)obj)->extra;
     int arwing = getArwing();
-    f32 zero = lbl_803E7044;
+    f32 zero;
     extern u32 getButtonsJustPressed(int); /* #57 unsigned -> cmplwi */
 
     if (((GameObject*)arwing)->objectFlags & 0x1000)
@@ -100,7 +100,7 @@ void arwarwingbo_update(int obj)
         Obj_FreeObject(obj);
         return;
     }
-    if (state->explosionTimer > zero)
+    if (state->explosionTimer > (zero = lbl_803E7044))
     {
         state->explosionTimer -= timeDelta;
         if (state->explosionTimer <= zero)
