@@ -1,4 +1,3 @@
-#include "main/dll/tricky.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
