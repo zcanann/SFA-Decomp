@@ -1,20 +1,12 @@
 /* DLL 0x4A - CameraModeShipBattle [8010BF08-8010C0D8) */
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camcombat_state.h"
 #include "main/mm.h"
 
 extern f32 timeDelta;
 
-#include "main/dll/CAM/camdrakor.h"
-#include "main/camera_interface.h"
 #include "main/camera_object.h"
-#include "main/dll/CAM/camclimb_state.h"
-#include "main/dll/CAM/camcombat_state.h"
 #include "main/dll/CAM/camshipbattle_state.h"
 #include "main/game_object.h"
-#include "main/mm.h"
 #include "main/object_transform.h"
-#include "main/pad.h"
 
 extern CameraModeShipBattleState* lbl_803DD570;
 extern f32 lbl_803E1948;
