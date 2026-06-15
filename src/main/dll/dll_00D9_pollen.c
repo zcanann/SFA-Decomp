@@ -47,11 +47,13 @@ void fn_8016A660(int obj)
     u8* fragment;
 
     extra = *(PollenExtra**)&((GameObject*)obj)->extra;
-    if (Obj_IsLoadingLocked() != 0)
+    if (Obj_IsLoadingLocked() == 0)
     {
-        burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
-        do
-        {
+        return;
+    }
+    burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
+    do
+    {
             fragment = Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
             ((GameObject*)fragment)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)fragment)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
@@ -86,9 +88,8 @@ void fn_8016A660(int obj)
                 *(int*)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = obj;
             }
         }
-        while (burstCounter-- != 0);
-        extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
-    }
+    while (burstCounter-- != 0);
+    extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
 }
 #pragma dont_inline reset
 
