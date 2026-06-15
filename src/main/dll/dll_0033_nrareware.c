@@ -10,7 +10,6 @@ extern u8 lbl_803DD608;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
 
-extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void fn_8001404C(int param_1);
 extern void loadUiDll(int id);
 extern void GameBit_Set(int eventId, int value);
