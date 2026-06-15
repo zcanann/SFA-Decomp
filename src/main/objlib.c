@@ -1650,6 +1650,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colo
                                         &effectArgs);
             if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (*(short*)(hitObject + 0x46) == 0x69))
             {
+                extern void Sfx_PlayFromObject(int obj, int id);
                 Sfx_PlayFromObject(obj, sfxId);
             }
         }
