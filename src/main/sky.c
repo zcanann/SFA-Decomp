@@ -3145,14 +3145,14 @@ void Sky_func03(int a, int b, u8* cfg)
                 *(f32*)(lbl_803DD12C + iofs + 0x6c) = (f32)(u32)((Sky2Config*)cfg)->unk1C;
                 *(f32*)(lbl_803DD12C + iofs + 0x70) = (f32)(u32)((Sky2Config*)cfg)->unk1C;
                 *(f32*)(lbl_803DD12C + iofs + 0xb8) = EXIInputFlag;
-                if (((Sky2Config*)cfg)->unk2A == 0)
-                {
-                    *(f32*)(lbl_803DD12C + iofs + 0xb4) = EXIInputFlag;
-                }
-                else
+                if (((Sky2Config*)cfg)->unk2A != 0)
                 {
                     *(f32*)(lbl_803DD12C + iofs + 0xb4) =
                         EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->unk2A);
+                }
+                else
+                {
+                    *(f32*)(lbl_803DD12C + iofs + 0xb4) = EXIInputFlag;
                 }
                 p4 = lbl_803DD12C + iofs;
                 if (lbl_803DD12C == NULL)
