@@ -63,7 +63,7 @@ extern int ObjList_FindObjectById(int objId);
 extern void fn_8014C5C0(int obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
-extern f32 lbl_803E4E8C;
+extern const f32 lbl_803E4E8C;
 extern void* objCreateLight(int* obj, int v);
 
 void fn_801C2914(int obj)
@@ -292,6 +292,20 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #define DFSH_SHRINE_FLAG_SUCCESS 0x40
 #define DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE 0x80
 
+typedef struct DfshShrineFlagsBits
+{
+    u8 openedBySequence : 1;
+    u8 success : 1;
+    u8 b2 : 1;
+    u8 b3 : 1;
+    u8 b4 : 1;
+    u8 b5 : 1;
+    u8 b6 : 1;
+    u8 b7 : 1;
+} DfshShrineFlagsBits;
+
+#define DFSH_FLAGS(state) ((DfshShrineFlagsBits*)&(state)->flags)
+
 void dfsh_shrine_update(int obj)
 {
     extern int GameBit_Get(int bit);
@@ -358,8 +372,14 @@ void dfsh_shrine_update(int obj)
             GameBit_Set(0x129, 0);
         }
         break;
+    case 5:
+        state->transitionTimer = 0x1f;
+        (*gScreenTransitionInterface)->step(0x1e, 1);
+        state->mode = 1;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        break;
     case 1:
-        if ((s8)state->flags < 0)
+        if (DFSH_FLAGS(state)->openedBySequence == 1)
         {
             state->mode = 2;
             GameBit_Set(0xb76, 1);
@@ -390,13 +410,13 @@ void dfsh_shrine_update(int obj)
         if (anyMissing == 0)
         {
             state->mode = 7;
-            state->flags = (state->flags & ~DFSH_SHRINE_FLAG_SUCCESS) | DFSH_SHRINE_FLAG_SUCCESS;
+            DFSH_FLAGS(state)->success = 1;
             gameTimerStop();
         }
         else if (isGameTimerDisabled() != 0)
         {
             state->mode = 7;
-            state->flags &= ~DFSH_SHRINE_FLAG_SUCCESS;
+            DFSH_FLAGS(state)->success = 0;
             state->transitionTimer = 0x78;
             for (i = 0; i < 10; i++)
             {
@@ -415,10 +435,18 @@ void dfsh_shrine_update(int obj)
             }
         }
         break;
+    case 7:
+        state->mode = 6;
+        state->transitionTimer = 0x23;
+        (*gScreenTransitionInterface)->start(0x1e, 1);
+        break;
+    case 6:
+        state->mode = 3;
+        break;
     case 3:
         if (objGetAnimStateFlags(player, 1) == 0 && GameBit_Get(0xbfd) == 0)
         {
-            if (((state->flags >> 6) & 1) == 0)
+            if (DFSH_FLAGS(state)->success == 0)
             {
                 state->mode = 4;
                 GameBit_Set(0xb70, 1);
@@ -439,7 +467,7 @@ void dfsh_shrine_update(int obj)
         break;
     case 4:
         state->mode = 0;
-        state->flags &= ~DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE;
+        DFSH_FLAGS(state)->openedBySequence = 0;
         state->rewardIndex = 0;
         state->rewardTimer = lbl_803E4E8C;
         GameBit_Set(0x129, 1);
@@ -453,20 +481,6 @@ void dfsh_shrine_update(int obj)
             GameBit_Set(DFSH_REWARD_BIT(i), 0);
         }
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        break;
-    case 5:
-        state->transitionTimer = 0x1f;
-        (*gScreenTransitionInterface)->step(0x1e, 1);
-        state->mode = 1;
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        break;
-    case 6:
-        state->mode = 3;
-        break;
-    case 7:
-        state->mode = 6;
-        state->transitionTimer = 0x23;
-        (*gScreenTransitionInterface)->start(0x1e, 1);
         break;
     }
 }
