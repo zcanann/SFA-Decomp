@@ -97,9 +97,10 @@ void controllight_update(int obj)
                 f32 radius = state->radius;
                 int count;
                 int i;
-                u8 invBit = !bit;
+                u8 invBit;
                 GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
                 GameObject** p;
+                invBit = !bit;
                 for (i = 0, p = objs; i < count; i++)
                 {
                     GameObject* lightObj = *p;
