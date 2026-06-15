@@ -3040,6 +3040,7 @@ int Tricky_func10(int* obj, int targetObj)
     return 1;
 }
 
+#pragma optimization_level 1
 void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
 {
     register int* state = (int*)obj[0xb8 / 4];
@@ -3081,6 +3082,7 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
         *(u32*)&state[0x54 / 4] |= 0x10000LL;
     }
 }
+#pragma optimization_level reset
 
 int Tricky_getAvailableCommands(void)
 {
