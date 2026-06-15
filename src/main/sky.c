@@ -348,31 +348,35 @@ void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2)
 {
     int r1, g1, b1, r2, g2, b2;
     int bit;
+    int base;
 
     if (lbl_803DD12C == NULL)
     {
         return;
     }
+    base = 0;
+    bit = 0;
     r1 = red * m1 >> 8;
     g1 = green * m1 >> 8;
     b1 = blue * m1 >> 8;
     r2 = red * m2 >> 8;
     g2 = green * m2 >> 8;
     b2 = blue * m2 >> 8;
-    for (bit = 0; bit < 2; bit++)
+    for (; bit < 2; bit++)
     {
         if ((flags & (1 << bit)) != 0)
         {
-            lbl_803DD12C[bit * 0xa4 + 0x7c] = red;
-            lbl_803DD12C[bit * 0xa4 + 0x7d] = green;
-            lbl_803DD12C[bit * 0xa4 + 0x7e] = blue;
-            lbl_803DD12C[bit * 0xa4 + 0x84] = r1;
-            lbl_803DD12C[bit * 0xa4 + 0x85] = g1;
-            lbl_803DD12C[bit * 0xa4 + 0x86] = b1;
-            lbl_803DD12C[bit * 0xa4 + 0x8c] = r2;
-            lbl_803DD12C[bit * 0xa4 + 0x8d] = g2;
-            lbl_803DD12C[bit * 0xa4 + 0x8e] = b2;
+            lbl_803DD12C[base + 0x7c] = red;
+            lbl_803DD12C[base + 0x7d] = green;
+            lbl_803DD12C[base + 0x7e] = blue;
+            lbl_803DD12C[base + 0x84] = r1;
+            lbl_803DD12C[base + 0x85] = g1;
+            lbl_803DD12C[base + 0x86] = b1;
+            lbl_803DD12C[base + 0x8c] = r2;
+            lbl_803DD12C[base + 0x8d] = g2;
+            lbl_803DD12C[base + 0x8e] = b2;
         }
+        base += 0xa4;
     }
 }
 
