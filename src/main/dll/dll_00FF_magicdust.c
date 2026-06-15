@@ -64,7 +64,6 @@ extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern void objMove(f32 a, f32 b, f32 c, int obj);
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
-extern void fn_8002B758(void);
 
 void magicdust_free(int param_1)
 {
