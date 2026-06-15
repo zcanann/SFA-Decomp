@@ -4497,14 +4497,13 @@ f32 curves_distXZ(f32 x, f32 z, uint curveId)
     f32 dz;
 
     curve = RomCurve_FindByIdInline(curveId);
-    if (curve == NULL)
+    if (curve != NULL)
     {
-        return gFloatNegOne;
+        dx = curve->x - x;
+        dz = curve->z - z;
+        return sqrtf(dx * dx + dz * dz);
     }
-
-    dx = curve->x - x;
-    dz = curve->z - z;
-    return sqrtf(dx * dx + dz * dz);
+    return gFloatNegOne;
 }
 
 f32 curves_distFn0B(int obj, uint curveId)
@@ -4515,15 +4514,14 @@ f32 curves_distFn0B(int obj, uint curveId)
     f32 dz;
 
     curve = RomCurve_FindByIdInline(curveId);
-    if (curve == NULL || obj == 0)
+    if (curve != NULL && obj != 0)
     {
-        return gFloatNegOne;
+        dx = curve->x - ((GameObject*)obj)->anim.localPosX;
+        dy = curve->y - ((GameObject*)obj)->anim.localPosY;
+        dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
+        return sqrtf(dx * dx + dy * dy + dz * dz);
     }
-
-    dx = curve->x - ((GameObject*)obj)->anim.localPosX;
-    dy = curve->y - ((GameObject*)obj)->anim.localPosY;
-    dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
-    return sqrtf(dx * dx + dy * dy + dz * dz);
+    return gFloatNegOne;
 }
 
 int curves_isNotPoint(RomCurveDef* curve)
