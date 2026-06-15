@@ -925,14 +925,13 @@ void arwarwing_initAttachments(int obj, int state)
 void arwarwing_resetFlightState(int obj)
 {
     ArwingState* state = ((GameObject*)obj)->extra;
-    f32 v7c = lbl_803E6F7C;
-    f32 v74 = lbl_803E6F74;
+    f32 v7c, v74, v78, v5c, vecc;
 
     state->maxSpeedX = lbl_803E6F70;
-    state->accelX = v74;
-    state->maxSpeedY = lbl_803E6F78;
-    state->accelY = v7c;
-    state->maxSpeedZ = lbl_803E6F78;
+    state->accelX = v74 = lbl_803E6F74;
+    state->maxSpeedY = v78 = lbl_803E6F78;
+    state->accelY = v7c = lbl_803E6F7C;
+    state->maxSpeedZ = v78;
     state->accelZ = v7c;
     state->maxAccelZ = lbl_803E6F80;
     state->minAccelZ = lbl_803E6F84;
@@ -957,11 +956,11 @@ void arwarwing_resetFlightState(int obj)
     state->speedScaleRollR = lbl_803E6F64;
     state->rollEnergy = state->rollEnergyMax;
     state->unkA4 = state->unkA8;
-    state->wingFlexCur = lbl_803E6F5C;
-    state->wingFlexTarget = lbl_803E6F5C;
-    state->velX = lbl_803E6ECC;
-    state->velY = lbl_803E6ECC;
-    state->velZ = lbl_803E6ECC;
+    state->wingFlexCur = v5c = lbl_803E6F5C;
+    state->wingFlexTarget = v5c;
+    state->velX = vecc = lbl_803E6ECC;
+    state->velY = vecc;
+    state->velZ = vecc;
     state->laserLevel = 0;
     ((GameObject*)obj)->anim.localPosX = state->homeX;
     ((GameObject*)obj)->anim.localPosY = state->homeY;
