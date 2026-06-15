@@ -2700,9 +2700,9 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
 void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, char doRender)
 {
     u8 mode;
-    int pathPoint;
-    int pathState;
     int i;
+    int pathState;
+    int pathPoint;
     int pathInfo;
     int state;
 
