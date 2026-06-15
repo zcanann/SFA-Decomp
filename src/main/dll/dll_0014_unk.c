@@ -4936,7 +4936,6 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
     remaining = 4;
     outZCursor = outZ;
     outYCursor = outY;
-    resolveCursor = windowCursor;
     for (remaining = 4; remaining != 0; remaining--)
     {
         curveId = *idCursor;
@@ -4952,21 +4951,21 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
             {
                 mid = high + low >> 1;
                 resolvedCurve = romCurves[mid];
-                if (resolvedCurve->id < curveId)
+                if (curveId > resolvedCurve->id)
                 {
                     low = mid + 1;
                 }
                 else
                 {
-                    if (resolvedCurve->id <= curveId) goto LAB_800e48f4;
+                    if (curveId >= resolvedCurve->id) goto LAB_800e48f4;
                     high = mid + -1;
                 }
             }
             resolvedCurve = NULL;
         }
     LAB_800e48f4:
-        *resolveCursor = resolvedCurve;
-        resolvedCurve = *resolveCursor;
+        *windowCursor = resolvedCurve;
+        resolvedCurve = *windowCursor;
         if (resolvedCurve != NULL)
         {
             *outXCursor = resolvedCurve->x;
@@ -4974,7 +4973,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
             *outZCursor = resolvedCurve->z;
             foundCount = foundCount + 1;
         }
-        resolveCursor = resolveCursor + 1;
+        windowCursor = windowCursor + 1;
         idCursor++;
         outXCursor++;
         outYCursor = outYCursor + 1;
@@ -4988,6 +4987,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
 
     foundCount = 0;
     remaining = 4;
+    windowCursor = windowCurves;
     do
     {
         if (*windowCursor == NULL)
