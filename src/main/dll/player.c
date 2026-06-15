@@ -751,8 +751,11 @@ int fn_802A3F24(int obj, int state)
         *(s16*)((char*)state + 0x278) = 9;
         ((PlayerState*)inner)->unk898 = 0;
     }
-    *(u32*)((char*)inner + 0x360) &= ~2LL;
-    *(u32*)((char*)inner + 0x360) |= 0x2000LL;
+    {
+        int inner2 = *(int*)&((GameObject*)obj)->extra;
+        *(u32*)((char*)inner2 + 0x360) &= ~2LL;
+        *(u32*)((char*)inner2 + 0x360) |= 0x2000LL;
+    }
     *(int*)((char*)state + 4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedA = fz;
