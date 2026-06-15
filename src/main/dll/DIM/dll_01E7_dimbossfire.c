@@ -76,11 +76,11 @@ void dimbossfire_free(int obj)
     void* light;
 
     state = *(int*)(o + 0xb8);
-    light = *(void**)(state + 0x10);
+    light = ((DimbossfireState*)state)->light;
     if (light != 0)
     {
         ModelLightStruct_free(light);
-        *(undefined4*)(state + 0x10) = 0;
+        ((DimbossfireState*)state)->light = NULL;
     }
     (*gExpgfxInterface)->freeSource2((u32)o);
 }
