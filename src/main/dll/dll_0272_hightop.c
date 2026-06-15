@@ -1,7 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
-#include "main/audio/sfx.h"
 #include "main/game_object.h"
-#include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct HightopPlacement
