@@ -6,11 +6,8 @@
 #include "main/dll/dll1cestate_struct.h"
 #include "main/dll/explosionpartfxsource_struct.h"
 #include "main/dll/explosion_state.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2flameburst.h"
-#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
