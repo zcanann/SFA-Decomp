@@ -261,7 +261,7 @@ extern f32 lbl_803E6DC0;
 extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
 extern f32 lbl_803E6DD8;
-extern void mapGetBlockOriginForPos(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z);
+extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
 extern void gameTimerStop(void);
 extern u8 gameTimerIsRunning(void);
 extern void Music_Trigger(int id, int p2);
