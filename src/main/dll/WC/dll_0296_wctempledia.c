@@ -95,8 +95,11 @@ int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
 {
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
 
-    state->currentSpeed = lbl_803E6E48 * -state->currentSpeed * timeDelta + state->currentSpeed;
-    ((GameObject*)obj)->anim.rotZ = (int)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
+    {
+        f32 cs = state->currentSpeed;
+        state->currentSpeed = lbl_803E6E48 * -cs * timeDelta + cs;
+    }
+    ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
     animUpdate->sequenceEventActive = 0;
     animUpdate->activeHitVolumePair &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
     animUpdate->hitVolumePair &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
