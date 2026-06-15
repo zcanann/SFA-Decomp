@@ -2,7 +2,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-extern f32 lbl_803E60A8;
+extern const f32 lbl_803E60A8;
 extern f32 lbl_803E60AC;
 extern f32 lbl_803E60B0;
 
