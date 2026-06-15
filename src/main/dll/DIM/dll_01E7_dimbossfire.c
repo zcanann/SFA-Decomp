@@ -64,6 +64,8 @@ typedef struct DimbossfirePlacement
 
 #define DIMBOSSFIRE_FLAG_START_BURST 1
 #define DIMBOSSFIRE_FLAME_COUNT 10
+#define DIMBOSSFIRE_COOLDOWN_MIN 0xf0  /* minimum random cooldown in frames */
+#define DIMBOSSFIRE_COOLDOWN_MAX 0x1e0 /* maximum random cooldown in frames */
 
 STATIC_ASSERT(offsetof(DimbossfireState, activeTimer) == 0x4);
 STATIC_ASSERT(offsetof(DimbossfireState, initialActiveTimer) == 0x8);
@@ -108,7 +110,7 @@ void dimbossfire_update(int obj)
     int ref;
     DimbossfireState* state;
     DimbossfirePlacement* placement;
-    float heat;
+    float playerDist;
 
     state = ((GameObject*)obj)->extra;
     placement = *(DimbossfirePlacement**)&((GameObject*)obj)->anim.placementData;
@@ -134,7 +136,7 @@ void dimbossfire_update(int obj)
         if (state->cooldownTimer <= lbl_803E4DA0)
         {
             state->cooldownTimer = (f32)(int)
-            randomGetRange(0xf0, 0x1e0);
+            randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
             state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
             state->activeTimer = lbl_80325D68[state->flameIndex];
             state->initialActiveTimer = state->activeTimer;
@@ -173,12 +175,12 @@ void dimbossfire_update(int obj)
             ref = Obj_GetPlayerObject();
             if (((void*)ref != NULL) && ((*(ushort*)(ref + 0xb0) & 0x1000) == 0))
             {
-                heat = Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)(ref + 0x18));
-                if (heat <= lbl_803E4DA4)
+                playerDist = Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)(ref + 0x18));
+                if (playerDist <= lbl_803E4DA4)
                 {
-                    heat = lbl_803E4DA8 - heat / lbl_803E4DA4;
-                    CameraShake_Start(lbl_803E4DAC * heat, lbl_803E4DAC, lbl_803E4DB0);
-                    doRumble(lbl_803E4DB4 * heat);
+                    playerDist = lbl_803E4DA8 - playerDist / lbl_803E4DA4;
+                    CameraShake_Start(lbl_803E4DAC * playerDist, lbl_803E4DAC, lbl_803E4DB0);
+                    doRumble(lbl_803E4DB4 * playerDist);
                 }
             }
             if ((void*)state->light == NULL)
@@ -247,7 +249,7 @@ void dimbossfire_init(int obj, undefined4 arg2, int placement)
     if (placement == 0)
     {
         ((DimbossfireState*)state)->cooldownTimer = (f32)(int)
-        randomGetRange(0xf0, 0x1e0);
+        randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
         randVal = randomGetRange(0, 9);
         *(undefined*)(state + 1) = randVal;
     }
