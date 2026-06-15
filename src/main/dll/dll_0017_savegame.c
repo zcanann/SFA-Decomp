@@ -478,11 +478,13 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     u32* groupStatuses;
     u16* eventIds;
     s8 found;
+    MapBitTransient* base;
 
+    base = gTransientMapBits;
     createTransient = 0;
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
     {
-        idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+        idx = ((u8*)base)[idx + 460];
     }
     eventIds = lbl_80311810;
     if (idx < SAVEGAME_MAP_COUNT && eventIds[idx] != 0)
@@ -514,7 +516,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         lbl_803DD48C = idx;
         (&lbl_803DD48C)[1] = newStatus;
 
-        groupStatuses = gMapObjGroupStatuses;
+        groupStatuses = (u32*)((s8*)base + 60);
         if (value != 0)
         {
             if ((oldStatus & bit) == 0)
@@ -541,7 +543,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             if (!createTransient)
             {
                 found = -1;
-                transient = gTransientMapBits;
+                transient = base;
                 for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
                 {
                     if (idx == transient->mapId && shift == transient->shift)
@@ -553,14 +555,14 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 
                 if (found == -1)
                 {
-                    transient = gTransientMapBits;
+                    transient = base;
                     for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
                     {
                         if (transient->mapId == -1)
                         {
-                            gTransientMapBits[i].mapId = (s8)idx;
-                            gTransientMapBits[i].shift = (u8)shift;
-                            gTransientMapBits[i].timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
+                            base[i].mapId = (s8)idx;
+                            base[i].shift = (u8)shift;
+                            base[i].timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
                             break;
                         }
                     }
