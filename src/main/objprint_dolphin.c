@@ -6192,20 +6192,21 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     int* p1;
     int* p2;
     int* dst;
-    int* src1 = ((int**)((char*)base + 0x20000))[id - 0x1a8a];
-    if (src1 == NULL || ((int**)((char*)base + 0x20000))[idx - 0x1a8a] == NULL)
+    int** tableBase = (int**)((char*)base + 0x20000);
+    int* src1 = tableBase[id - 0x1a8a];
+    if (src1 == NULL || tableBase[idx - 0x1a8a] == NULL)
     {
         if (src1 == NULL)
         {
             e1 = 1;
         }
-        if (((int**)((char*)base + 0x20000))[idx - 0x1a8a] == NULL)
+        if (tableBase[idx - 0x1a8a] == NULL)
         {
             e2 = 1;
         }
     }
     p1 = src1;
-    p2 = ((int**)((char*)base + 0x20000))[idx - 0x1a8a];
+    p2 = tableBase[idx - 0x1a8a];
     if (tbl == (u32*)(base + 0x170e0))
     {
         count = 0x800;
