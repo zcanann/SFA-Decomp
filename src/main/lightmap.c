@@ -206,11 +206,11 @@ void updateVisibleGeometry(void)
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
 
-undefined4 FUN_8005af70(int param_1)
+undefined4 FUN_8005af70(int idx)
 {
-    if ((-1 < param_1) && (param_1 < (int)(uint)DAT_803ddb18))
+    if ((-1 < idx) && (idx < (int)(uint)DAT_803ddb18))
     {
-        return *(undefined4*)(DAT_803ddb1c + param_1 * 4);
+        return *(undefined4*)(DAT_803ddb1c + idx * 4);
     }
     return 0;
 }
@@ -237,65 +237,65 @@ int* fn_8005B11C(void)
 
 int FUN_8005b024(void)
 {
-    int iVar1;
-    int iVar2;
-    double dVar3;
+    int cellZ;
+    int cellX;
+    double coord;
 
-    dVar3 = (double)FUN_802924c4();
-    iVar2 = (int)(dVar3 - (double)(f32)(s32)(DAT_803dda50));
-    dVar3 = (double)FUN_802924c4();
-    iVar1 = (int)(dVar3 - (double)(f32)(s32)(DAT_803dda54));
-    if ((iVar2 < 0) || (0xf < iVar2))
+    coord = (double)FUN_802924c4();
+    cellX = (int)(coord - (double)(f32)(s32)(DAT_803dda50));
+    coord = (double)FUN_802924c4();
+    cellZ = (int)(coord - (double)(f32)(s32)(DAT_803dda54));
+    if ((cellX < 0) || (0xf < cellX))
     {
-        iVar2 = -1;
+        cellX = -1;
     }
-    else if ((iVar1 < 0) || (0xf < iVar1))
+    else if ((cellZ < 0) || (0xf < cellZ))
     {
-        iVar2 = -1;
+        cellX = -1;
     }
     else
     {
-        iVar2 = (int)*(short*)(DAT_80382f00 + (iVar2 + iVar1 * 0x10) * 0xc);
+        cellX = (int)*(short*)(DAT_80382f00 + (cellX + cellZ * 0x10) * 0xc);
     }
-    return iVar2;
+    return cellX;
 }
 
-int FUN_8005b398(undefined8 param_1, double param_2)
+int FUN_8005b398(undefined8 param_1, double y)
 {
-    int iVar1;
-    int* piVar2;
-    int iVar3;
-    int iVar4;
-    double dVar5;
-    undefined8 local_30;
+    int block;
+    int* layerTable;
+    int cellX;
+    int cellZ;
+    double coord;
+    undefined8 cvtTmp;
 
-    dVar5 = (double)FUN_802924c4();
-    iVar3 = (int)(dVar5 - (double)(f32)(s32)(DAT_803dda50));
-    dVar5 = (double)FUN_802924c4();
-    iVar4 = (int)(dVar5 - (double)(f32)(s32)(DAT_803dda54));
-    if ((((-1 < iVar3) && (iVar3 < 0x10)) && (-1 < iVar4)) && (iVar4 < 0x10))
+    coord = (double)FUN_802924c4();
+    cellX = (int)(coord - (double)(f32)(s32)(DAT_803dda50));
+    coord = (double)FUN_802924c4();
+    cellZ = (int)(coord - (double)(f32)(s32)(DAT_803dda54));
+    if ((((-1 < cellX) && (cellX < 0x10)) && (-1 < cellZ)) && (cellZ < 0x10))
     {
-        iVar3 = iVar3 + iVar4 * 0x10;
-        piVar2 = &DAT_80382f14;
-        iVar4 = 5;
+        cellX = cellX + cellZ * 0x10;
+        layerTable = &DAT_80382f14;
+        cellZ = 5;
         do
         {
-            iVar1 = (int)*(char*)(iVar3 + *piVar2);
-            if (-1 < iVar1)
+            block = (int)*(char*)(cellX + *layerTable);
+            if (-1 < block)
             {
-                iVar1 = *(int*)(DAT_803ddb1c + iVar1 * 4);
-                if (((double)(f32)(s32)((int)*(short*)(iVar1 + 0x8a) - 0x32U) < param_2) &&
-                    (local_30 = (double)CONCAT44(0x43300000,
-                                                 (int)*(short*)(iVar1 + 0x8c) + 0x32U ^ 0x80000000),
-                        param_2 < (double)(float)(local_30 - DOUBLE_803df840)))
+                block = *(int*)(DAT_803ddb1c + block * 4);
+                if (((double)(f32)(s32)((int)*(short*)(block + 0x8a) - 0x32U) < y) &&
+                    (cvtTmp = (double)CONCAT44(0x43300000,
+                                                 (int)*(short*)(block + 0x8c) + 0x32U ^ 0x80000000),
+                        y < (double)(float)(cvtTmp - DOUBLE_803df840)))
                 {
-                    return (int)*(char*)(*piVar2 + iVar3);
+                    return (int)*(char*)(*layerTable + cellX);
                 }
             }
-            piVar2 = piVar2 + 1;
-            iVar4 = iVar4 + -1;
+            layerTable = layerTable + 1;
+            cellZ = cellZ + -1;
         }
-        while (iVar4 != 0);
+        while (cellZ != 0);
     }
     return -1;
 }
@@ -355,14 +355,14 @@ void FUN_8005bdbc(void)
     int iVar2;
     int iVar3;
     char* pcVar4;
-    int iVar5;
+    int cellTable;
     int iVar6;
-    int iVar7;
+    int layer;
     int iVar8;
     uint uVar9;
     uint uVar10;
-    undefined4* puVar11;
-    int* piVar12;
+    undefined4* layerDat;
+    int* layerTbl;
     int iVar13;
     double in_f29;
     double dVar14;
@@ -408,16 +408,16 @@ void FUN_8005bdbc(void)
     local_28 = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
     FUN_80286818();
-    iVar7 = 4;
-    piVar12 = &DAT_80382f24;
-    puVar11 = &DAT_80382efc;
+    layer = 4;
+    layerTbl = &DAT_80382f24;
+    layerDat = &DAT_80382efc;
     dVar15 = (double)lbl_803DF834;
     dVar16 = DOUBLE_803df840;
     do
     {
-        iVar5 = *piVar12;
-        DAT_803ddb08 = *puVar11;
-        FUN_800566ec(DAT_803dda50 + 7, DAT_803dda54 + 7, &local_190, &local_1a0, &local_1b0, &local_1c0, iVar7
+        cellTable = *layerTbl;
+        DAT_803ddb08 = *layerDat;
+        FUN_800566ec(DAT_803dda50 + 7, DAT_803dda54 + 7, &local_190, &local_1a0, &local_1b0, &local_1c0, layer
                      , 1, DAT_803ddb40);
         pcVar1 = local_180;
         iVar13 = 8;
@@ -596,7 +596,7 @@ void FUN_8005bdbc(void)
             {
                 uVar9 = (uint) * pcVar4;
                 iVar3 = uVar10 + uVar9 * 0x10;
-                iVar2 = (int)*(char*)(iVar5 + iVar3);
+                iVar2 = (int)*(char*)(cellTable + iVar3);
                 if (iVar2 < 0)
                 {
                     iVar6 = 0;
@@ -630,10 +630,10 @@ void FUN_8005bdbc(void)
             pcVar1 = pcVar1 + 1;
         }
         while (iVar13 < 0x10);
-        piVar12 = piVar12 + -1;
-        puVar11 = puVar11 + -1;
-        iVar7 = iVar7 + -1;
-        if (iVar7 < 0)
+        layerTbl = layerTbl + -1;
+        layerDat = layerDat + -1;
+        layer = layer + -1;
+        if (layer < 0)
         {
             FUN_80286864();
             return;
@@ -1514,7 +1514,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 
     fn_8000F8F8();
     countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
-    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x7c), countShifted, countShifted);
+    modelRenderInstrsState_init(state, *(void**)&((GameObject *)obj)->anim.banks, countShifted, countShifted);
     modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     newR = mapBlockRender_setShader(1, obj, state);
@@ -1564,7 +1564,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     GXLoadTexMtxImm(m, 33, 0);
     gxTextureSetupFn_8007cf7c();
     countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
-    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x80), countShifted, countShifted);
+    modelRenderInstrsState_init(state, *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted, countShifted);
     modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     newR = mapBlockRender_setShader(1, obj, state);
