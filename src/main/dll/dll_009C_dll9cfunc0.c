@@ -20,7 +20,7 @@ void dll_9C_func03(int a, int b, int p, uint flags)
     ScreenFxHdr hdr;
     ScreenFxPart parts[32];
     u8* base = (u8*)lbl_80317E00;
-    ScreenFxPart* pp = parts;
+    ScreenFxPart* pp = (ScreenFxPart*)(int)parts;
     ScreenFxPart* cur;
     int idx;
 
