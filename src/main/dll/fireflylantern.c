@@ -297,9 +297,9 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     vecA[2] = *(f32*)(state + 0x364);
     PSVECSubtract(vecA, (f32*)(obj + 6), tmpA);
     d = PSVECDotProduct(tmpA, (f32*)(state + 0x344));
-    vecA[0] = *(f32*)(state + 0x344) * d + *(f32*)(obj + 6);
-    vecA[1] = *(f32*)(state + 0x348) * d + (objY = *(f32*)(obj + 8));
-    vecA[2] = *(f32*)(state + 0x34c) * d + *(f32*)(obj + 10);
+    vecA[0] = *(f32*)(state + 0x344) * d + ((GameObject*)obj)->anim.localPosX;
+    vecA[1] = *(f32*)(state + 0x348) * d + (objY = ((GameObject*)obj)->anim.localPosY);
+    vecA[2] = *(f32*)(state + 0x34c) * d + ((GameObject*)obj)->anim.localPosZ;
     axisA[0] = lbl_803E2A00;
     axisA[1] = lbl_803E2A04;
     axisA[2] = lbl_803E2A00;
@@ -307,11 +307,11 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     PSVECNormalize(crossA, crossA);
     if (lbl_803E2A00 != crossA[0])
     {
-        dxA = (*(f32*)(obj + 6) - *(f32*)(state + 0x360)) / crossA[0];
+        dxA = (((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0x360)) / crossA[0];
     }
     else
     {
-        dxA = (*(f32*)(obj + 10) - *(f32*)(state + 0x364)) / crossA[2];
+        dxA = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
     }
     curve = *(int*)(state + 0x29c);
     targetPos[0] = *(f32*)(curve + 0xc);
@@ -374,9 +374,9 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     PSVECSubtract(moveTarget, (f32*)(obj + 6), moveDelta);
     objMove(obj, moveDelta[0], moveDelta[1], moveDelta[2]);
     turnStep = lbl_803E2A00;
-    *(f32*)(obj + 0x12) = turnStep;
-    *(f32*)(obj + 0x14) = turnStep;
-    *(f32*)(obj + 0x16) = turnStep;
+    ((GameObject*)obj)->anim.velocityX = turnStep;
+    ((GameObject*)obj)->anim.velocityY = turnStep;
+    ((GameObject*)obj)->anim.velocityZ = turnStep;
     if (angleStep < 0)
     {
         angleStep = -angleStep;
