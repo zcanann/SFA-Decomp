@@ -932,10 +932,10 @@ int DIMbossAnim_selectTargetControlMode(int* obj)
 int DIMbossAnim_finishDefeat(int obj, int p2)
 {
     extern void*Obj_GetPlayerObject(void);
-    int sub;
+    int state;
 
     Obj_GetPlayerObject();
-    sub = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
 
     if ((s32)(s8)((BaddieState*)p2)->moveJustStartedB != 0)
     {
@@ -946,8 +946,8 @@ int DIMbossAnim_finishDefeat(int obj, int p2)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x80);
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);
-        GameBit_Set(((GroundBaddieState*)sub)->gameBitB, 0);
-        GameBit_Set(((GroundBaddieState*)sub)->gameBitA, 1);
+        GameBit_Set(((GroundBaddieState*)state)->gameBitB, 0);
+        GameBit_Set(((GroundBaddieState*)state)->gameBitA, 1);
         if (((GameObject*)obj)->anim.placementData == NULL)
         {
             Obj_FreeObject(obj);
