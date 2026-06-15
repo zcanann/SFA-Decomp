@@ -2841,7 +2841,8 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
     extern f32 lbl_803DF434;
-    char* base = (char*)state + idx * 2 * 0xc;
+    int idx2 = idx * 2;
+#define base ((char*)state + idx2 * 0xc)
     int j;
 
     if (mode == 1)
@@ -2905,6 +2906,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             }
         }
     }
+#undef base
 }
 
 extern int Obj_IsLoadingLocked(void);
