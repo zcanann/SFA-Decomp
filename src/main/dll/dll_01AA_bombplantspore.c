@@ -306,7 +306,7 @@ void bombplantspore_update(void* obj)
     }
     ObjHits_GetPriorityHit((int)obj, &hitObject, 0, 0);
     hitObj = *(void**)((GameObject*)obj)->anim.hitReactState;
-    if ((state->stateFlags & 0x80) == 0)
+    if (((BombplantsporeFlags*)&state->stateFlags)->hitSurface == 0)
     {
         state->driftTimer -= timeDelta;
         if (state->driftTimer < lbl_803E5394)
@@ -370,9 +370,7 @@ void bombplantspore_update(void* obj)
             hitId != 0x198 && hitId != 0x63c)
         {
             Sfx_PlayFromObject(obj, SFXen_tiles_lightup);
-            state->stateFlags =
-                state->stateFlags & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
-                BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE;
+            ((BombplantsporeFlags*)&state->stateFlags)->hitSurface = 1;
             if (lbl_803E53C0 < state->fuseTimer)
             {
                 state->fuseTimer = lbl_803E53C0;
@@ -380,9 +378,7 @@ void bombplantspore_update(void* obj)
         }
         if ((*(u8*)((u8*)state + 0x268) & 0x11) != 0)
         {
-            state->stateFlags =
-                state->stateFlags & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
-                BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE;
+            ((BombplantsporeFlags*)&state->stateFlags)->hitSurface = 1;
             if (lbl_803E53C0 < state->fuseTimer)
             {
                 state->fuseTimer = lbl_803E53C0;
