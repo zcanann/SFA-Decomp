@@ -87,7 +87,7 @@ void fn_801F4D54(int obj, u8* rec)
     {
         ((LgtFireFlyRec*)rec)->offZ =
             ((LgtFireFlyRec*)rec)->radius -
-            (f32)(s32)(randomGetRange(0x14, (s16)(s32) * (f32*)(rec + 0x50)));
+            (f32)(s32)(randomGetRange(0x14, (s16)(s32)((LgtFireFlyRec*)rec)->radius));
     }
     ((LgtFireFlyRec*)rec)->angle += (s16)randomGetRange(0xbb8, 0x1388);
     locals.z0 = lbl_803E5EC4;

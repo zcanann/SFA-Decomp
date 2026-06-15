@@ -41,6 +41,31 @@ typedef struct ArwSquadronSetup
     s16 gameBit;
 } ArwSquadronSetup;
 
+typedef struct ArwSquadronProjectileSetup
+{
+    s16 objectId;
+    u8 pad02[2];
+    u8 field04;
+    u8 field05;
+    u8 pad06[2];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    u8 pad14[4];
+    u8 rotX;
+    u8 rotY;
+    u8 rotZ;
+} ArwSquadronProjectileSetup;
+
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, field04) == 0x04);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, field05) == 0x05);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posX) == 0x08);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posY) == 0x0c);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posZ) == 0x10);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotY) == 0x19);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotZ) == 0x1a);
+
 typedef struct ArwSquadronPathCommand
 {
     u8 pad00[0x18];
@@ -140,14 +165,15 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
     {
         int setup = Obj_AllocObjectSetup(0x20, 0x6ae);
-        ((ObjPlacement*)setup)->posX = px;
-        ((ObjPlacement*)setup)->posY = py;
-        ((ObjPlacement*)setup)->posZ = pz;
-        *(u8*)(setup + 0x1a) = (*(s16*)obj + 0x10000 + angle - 0x8000) >> 8;
-        *(u8*)(setup + 0x19) = -((GameObject*)obj)->anim.rotY >> 8;
-        *(u8*)(setup + 0x18) = 0;
-        *(u8*)(setup + 4) = 1;
-        *(u8*)(setup + 5) = 1;
+        ((ArwSquadronProjectileSetup*)setup)->posX = px;
+        ((ArwSquadronProjectileSetup*)setup)->posY = py;
+        ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
+        ((ArwSquadronProjectileSetup*)setup)->rotZ =
+            (((GameObject*)obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
+        ((ArwSquadronProjectileSetup*)setup)->rotY = -((GameObject*)obj)->anim.rotY >> 8;
+        ((ArwSquadronProjectileSetup*)setup)->rotX = 0;
+        ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
+        ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
     }
     proj = loadObjectAtObject(obj);
     if (proj == 0)

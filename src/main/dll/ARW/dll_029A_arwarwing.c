@@ -11,6 +11,31 @@ typedef struct ArwarwingState
     u8 pad47E[0x498 - 0x47E];
 } ArwarwingState;
 
+typedef struct ArwArwingProjectileSetup
+{
+    s16 objectId;
+    u8 pad02[2];
+    u8 field04;
+    u8 field05;
+    u8 pad06[2];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    u8 pad14[4];
+    u8 rotX;
+    u8 rotY;
+    u8 rotZ;
+} ArwArwingProjectileSetup;
+
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, field04) == 0x04);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, field05) == 0x05);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, posX) == 0x08);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, posY) == 0x0c);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, posZ) == 0x10);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotY) == 0x19);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotZ) == 0x1a);
+
 
 int getArwing(void) { return gArwing; }
 
@@ -548,14 +573,14 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
     }
     {
         int setup = Obj_AllocObjectSetup(0x20, 0x604);
-        ((ObjPlacement*)setup)->posX = px;
-        ((ObjPlacement*)setup)->posY = py;
-        ((ObjPlacement*)setup)->posZ = pz;
-        *(u8*)(setup + 0x1a) = *(s16*)obj >> 8;
-        *(u8*)(setup + 0x19) = ((GameObject*)obj)->anim.rotY >> 8;
-        *(u8*)(setup + 0x18) = 0;
-        *(u8*)(setup + 4) = 1;
-        *(u8*)(setup + 5) = 1;
+        ((ArwArwingProjectileSetup*)setup)->posX = px;
+        ((ArwArwingProjectileSetup*)setup)->posY = py;
+        ((ArwArwingProjectileSetup*)setup)->posZ = pz;
+        ((ArwArwingProjectileSetup*)setup)->rotZ = ((GameObject*)obj)->anim.rotX >> 8;
+        ((ArwArwingProjectileSetup*)setup)->rotY = ((GameObject*)obj)->anim.rotY >> 8;
+        ((ArwArwingProjectileSetup*)setup)->rotX = 0;
+        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
+        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
     }
     proj = loadObjectAtObject(obj);
     if (proj == 0)
@@ -796,12 +821,12 @@ void arwarwing_initAttachments(int obj, int state)
     {
         int setup;
         setup = Obj_AllocObjectSetup(0x20, 0x6de);
-        *(u8*)(setup + 0x4) = 1;
-        *(u8*)(setup + 0x5) = 1;
+        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
+        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
         ((ArwingState*)state)->thrusterL = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
         setup = Obj_AllocObjectSetup(0x20, 0x6de);
-        *(u8*)(setup + 0x4) = 1;
-        *(u8*)(setup + 0x5) = 1;
+        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
+        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
         ((ArwingState*)state)->thrusterR = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
     }
 
