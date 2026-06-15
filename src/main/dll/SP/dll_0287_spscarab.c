@@ -1,12 +1,8 @@
 /* DLL 0x287 — SP scarab / shop item / shopkeeper objects [801E8EA4-801E8EE0) */
-#include "main/effect_interfaces.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
