@@ -10,10 +10,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2flameburst.h"
-#include "main/objhits.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -96,7 +93,6 @@ extern int Obj_GetActiveModel(int obj);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 extern void ModelLightStruct_free(void*);
-extern void Music_Trigger(s32 triggerId, s32 mode);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E492C;
