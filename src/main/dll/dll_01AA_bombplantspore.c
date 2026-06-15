@@ -236,6 +236,13 @@ void bombplant_init(void* obj, void* param, int flag);
 #define BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE 0x80
 #define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
 
+typedef struct
+{
+    u8 hitSurface : 1; /* 0x80 */
+    u8 waitingAck : 1; /* 0x40 */
+    u8 rest : 6;
+} BombplantsporeFlags;
+
 void bombplantspore_update(void* obj)
 {
     BombPlantSporeState* state;
@@ -246,17 +253,16 @@ void bombplantspore_update(void* obj)
     void* playerObj;
     u32 poppedMessage;
     u32 poppedSender;
-    u32 detonateMessage;
     int i;
 
     state = ((GameObject*)obj)->extra;
-    if ((state->stateFlags >> 6 & 1) != 0)
+    if (((BombplantsporeFlags*)&state->stateFlags)->waitingAck != 0)
     {
-        detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0)
         {
-            if (poppedMessage == detonateMessage)
+            switch (poppedMessage)
             {
+            case BOMBPLANTSPORE_MSG_DETONATE:
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
                 Sfx_PlayFromObject(obj, SFXmv_totem_slide);
                 (*gExpgfxInterface)->freeSource((u32)obj);
@@ -269,10 +275,11 @@ void bombplantspore_update(void* obj)
                 state->detonateTimer = lbl_803E53BC;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject((u32)obj);
-                state->stateFlags &= ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
+                ((BombplantsporeFlags*)&state->stateFlags)->waitingAck = 0;
+                break;
             }
         }
-        if ((state->stateFlags >> 6 & 1) != 0)
+        if (((BombplantsporeFlags*)&state->stateFlags)->waitingAck != 0)
         {
             return;
         }
@@ -298,7 +305,7 @@ void bombplantspore_update(void* obj)
                                         lbl_803E53D0));
     }
     ObjHits_GetPriorityHit((int)obj, &hitObject, 0, 0);
-    hitObj = (void*)hitObject;
+    hitObj = *(void**)((GameObject*)obj)->anim.hitReactState;
     if ((state->stateFlags & 0x80) == 0)
     {
         state->driftTimer -= timeDelta;
@@ -387,10 +394,7 @@ void bombplantspore_update(void* obj)
     {
         state->damageType = BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE;
         ObjMsg_SendToObject(hitObj, BOMBPLANTSPORE_MSG_HIT_PLAYER, obj, state);
-        state->stateFlags =
-            state->stateFlags &
-            ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK |
-            BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
+        ((BombplantsporeFlags*)&state->stateFlags)->waitingAck = 1;
     }
     else
     {
