@@ -310,7 +310,6 @@ extern void dll_F7_init();
 extern void Rcp_DisableBlurFilter(void);
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
 extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
