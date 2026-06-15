@@ -1,6 +1,5 @@
 #include "main/tex_dolphin.h"
 #include "main/game_object.h"
-#include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 
