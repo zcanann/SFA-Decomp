@@ -6553,30 +6553,30 @@ int getTableFileEntry(int fileId, int index, int* out)
     {
     case 0x2a:
         count = 0x800;
-        table = &base[0x170e0];
+        table = (u8*)(base + 0x10000) + 0x70e0;
         break;
     case 0x2f:
         count = 0xbb8;
-        table = &base[0x14200];
+        table = (u8*)(base + 0x10000) + 0x4200;
         break;
     case 0x24:
         count = 0x1000;
-        table = &base[0x10200];
+        table = (u8*)(base + 0x10000) + 0x200;
         break;
     case 0x21:
         count = 0x1000;
-        table = &base[0xc200];
+        table = (u8*)(base + 0x10000) - 0x3e00;
         break;
     case 0x50:
         table = *(void**)&base[0x19718];
         break;
     case 0x26:
         count = 0x800;
-        table = &base[0xa200];
+        table = (u8*)(base + 0x10000) - 0x5e00;
         break;
     case 0x1a:
         count = 0x800;
-        table = &base[0x8200];
+        table = (u8*)(base + 0x10000) - 0x7e00;
         break;
     case 0xe:
         count = 0x1fd0;
