@@ -385,7 +385,7 @@ void snowFreeSnowCloud(int cloudId)
     if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0)
     {
         *(s16*)(env + cloudId * 2 + 0xe) = -1;
-        env[cloudId + 0x41] = -1;
+        ((s8*)env)[cloudId + 0x41] = -1;
     }
     for (i = 0; i < 8; i++)
     {
