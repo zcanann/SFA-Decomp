@@ -626,7 +626,7 @@ void translateToDinoLanguage(u8* str)
             }
             if (base != 0)
             {
-                *p = sGameTextGlyphOrder[ch - base] + base - 0x61;
+                *p = sGameTextGlyphOrder[ch - base] + (base - 0x61);
             }
         }
         byteOff += charLen;
