@@ -1,10 +1,8 @@
-#include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
-#include "main/game_object.h"
 
 extern CameraModeClimbState* lbl_803DD578;
 
