@@ -1,4 +1,3 @@
-#include "global.h"
 #include "ghidra_import.h"
 #include "main/audio/sfx.h"
 
