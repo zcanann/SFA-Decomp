@@ -1638,9 +1638,8 @@ int ktrex_stateHandlerA09(int obj, int runtime)
         {
             (*gCameraInterface)->loadTriggeredCamAction(2, 0, 0);
         }
-        return 0;
     }
-    if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+    else if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
     {
         ((KTRexArenaState*)gKTRexState)->unk0C = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
         ((KTRexArenaState*)gKTRexState)->unk4 = lbl_803E67D8;
