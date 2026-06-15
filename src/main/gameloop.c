@@ -502,7 +502,7 @@ extern char sGameBitSetDuringSaveLoadWarning[];
 #pragma optimization_level 3
 void GameBit_Set(int eventId, int value)
 {
-    int id;
+    s16 id;
     u8 flags;
     u8* base;
     int limit;
