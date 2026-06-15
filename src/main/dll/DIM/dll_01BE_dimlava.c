@@ -3,6 +3,12 @@
  * both a small debris particle (seqId 0x1FA) and a full physics lava-ball
  * that homes on a target, glows, and triggers explosions on contact.
  */
+
+#define LAVA1BE_SEQID_DEBRIS   0x1fa
+
+#define LAVA1BE_FLAG_HOMING_OFF 0x08
+#define LAVA1BE_FLAG_INACTIVE   0x10
+#define LAVA1BE_FLAG_FALLING    0x20
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -81,7 +87,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-extern void Music_Trigger(int id, int p2);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ModelLightStruct_free(void* light);
 extern void queueGlowRender(int* obj);
@@ -233,13 +238,13 @@ void lavaball1be_initialise(void)
 
 int lavaball1be_getExtraSize(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x1fa) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS) return 0x0;
     return 0x14;
 }
 
 int lavaball1be_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x1fa) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS) return 0x0;
     return 0x2;
 }
 
@@ -279,7 +284,7 @@ typedef struct
 void lavaball1be_init(s16* obj, u8* p)
 {
     Lavaball1beState* state;
-    if (((GameObject*)obj)->anim.seqId == 0x1fa)
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
         struct
         {
@@ -328,7 +333,7 @@ void lavaball1be_init(s16* obj, u8* p)
             ((GameObject*)obj)->anim.modelState->flags |= 0x810;
         }
         *(int*)&state->targetObj = ObjList_FindObjectById(state->linkedId);
-        state->flags |= 0x10;
+        state->flags |= LAVA1BE_FLAG_INACTIVE;
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->objectFlags |= 0x2000;
         state->light = objCreateLight(obj, 1);
@@ -352,7 +357,7 @@ void lavaball1be_update(s16* obj)
     Lavaball1beState* state;
     int* sub;
 
-    if (((GameObject*)obj)->anim.seqId == 0x1fa)
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
         ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
             localPosX;
@@ -373,7 +378,7 @@ void lavaball1be_update(s16* obj)
     else
     {
         state = ((GameObject*)obj)->extra;
-        if (state->flags & 0x10)
+        if (state->flags & LAVA1BE_FLAG_INACTIVE)
         {
             ObjHits_DisableObject(obj);
         }
@@ -394,15 +399,15 @@ void lavaball1be_update(s16* obj)
                     ((GameObject*)obj)->anim.velocityZ * dt);
             if (((GameObject*)obj)->anim.velocityY < lbl_803E47F8)
             {
-                if (!(state->flags & 0x20))
+                if (!(state->flags & LAVA1BE_FLAG_FALLING))
                 {
                     Sfx_PlayFromObject((int*)obj, 0x3dd);
-                    state->flags |= 0x20;
+                    state->flags |= LAVA1BE_FLAG_FALLING;
                 }
             }
             else
             {
-                state->flags &= ~0x20;
+                state->flags &= ~LAVA1BE_FLAG_FALLING;
             }
             sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
             if (sub != NULL)
@@ -422,24 +427,24 @@ void lavaball1be_update(s16* obj)
                         state->explodeCooldown = 0xa;
                         spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     }
-                    state->flags |= 0x10;
+                    state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= 0x4000;
                 }
                 if (((ObjAnimComponent*)sub)->bankIndex & 1)
                 {
                     spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
-                    state->flags |= 0x10;
+                    state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= 0x4000;
                     return;
                 }
             }
             if (((GameObject*)obj)->anim.localPosY < state->floorY)
             {
-                state->flags |= 0x10;
+                state->flags |= LAVA1BE_FLAG_INACTIVE;
             }
-            if (!(state->flags & 8))
+            if (!(state->flags & LAVA1BE_FLAG_HOMING_OFF))
             {
-                state->flags |= 8;
+                state->flags |= LAVA1BE_FLAG_HOMING_OFF;
             }
             if ((void*)state->light != NULL && modelLightStruct_getActiveState((int*)state->light) != 0)
             {
@@ -485,5 +490,5 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
         lbl_803E47DC * (f32)((GameObject*)obj)->anim.rotX / lbl_803E47E0);
     ((GameObject*)obj)->anim.flags &= ~0x4000;
     ObjHits_EnableObject(obj);
-    state->flags &= ~0x10;
+    state->flags &= ~LAVA1BE_FLAG_INACTIVE;
 }
