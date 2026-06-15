@@ -1138,8 +1138,8 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         lbl_803E2328);
     if (lbl_803DD9C8 > lbl_803E22F8)
     {
-        xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
-        yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
+        xb = (int)*(f32*)((char*)lbl_803A9FE4 + 0xc);
+        yb = (int)*(f32*)((char*)lbl_803A9FE4 + 0x1c);
         tex = (Texture*)lbl_803A9F98[4];
         drawScaledTexture((char*)tex,
                           (f32)(int)(xb - 0x32 + ((Texture*)lbl_803A9F98[6])->width + 0x5a),
@@ -1158,8 +1158,8 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         drawScaledTexture((char*)tex, (f32)(int)(xb - 0xf), (f32)(int)(yb - 0x10), 0xff, 0x100,
                           tex->width, (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
     }
-    xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
-    yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
+    xb = (int)*(f32*)((char*)lbl_803A9FE4 + 0xc);
+    yb = (int)*(f32*)((char*)lbl_803A9FE4 + 0x1c);
     a = lbl_803DD9C0;
     if (lbl_803DD9C8 > lbl_803E22F8)
     {
@@ -1168,8 +1168,8 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     drawTexture(lbl_803A9F98[1], (f32)(int)(xb - 0x18),
                 (f32)(int)(yb - ((Texture*)lbl_803A9F98[1])->height + 3), 0xff, 0xff);
     drawTexture(lbl_803A9F98[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
-    xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
-    yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
+    xb = (int)*(f32*)((char*)lbl_803A9FE4 + 0xc);
+    yb = (int)*(f32*)((char*)lbl_803A9FE4 + 0x1c);
     a = lbl_803DD9C0;
     if (lbl_803DD9C8 > lbl_803E22F8)
     {
@@ -1182,12 +1182,12 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     gameTextSetColor(0xff, 0xff, 0xff,
                      (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - (f64)lbl_803DD9C8)));
     gameTextShow(0x3da);
-    drawTexture(lbl_803A9F98[3], (f32)(int)(*(s16*)((char*)lbl_803A9F98 + 0x58) - 0x32),
+    drawTexture(lbl_803A9F98[3], (f32)(int)((int)*(f32*)((char*)lbl_803A9FE4 + 0xc) - 0x32),
                 (f32)(int)(0xfe - (((Texture*)lbl_803A9F98[3])->width >> 1)), 0xff, 0xff);
     if (lbl_803DD9C8 >= lbl_803E2338 && (p2 & 0xff) == 0)
     {
-        xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
-        yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
+        xb = (int)*(f32*)((char*)lbl_803A9FE4 + 0xc);
+        yb = (int)*(f32*)((char*)lbl_803A9FE4 + 0x1c);
         i = 0;
         sc3 = lbl_803E2300;
         do
@@ -1210,8 +1210,8 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         if ((p2 & 0xff) == 0)
         {
             drawTexture(lbl_803A9F98[5],
-                        (f32)(int)(*(s16*)((char*)lbl_803A9F98 + 0x58) + 0x2f),
-                        (f32)(int)(*(s16*)(box + 0x16) + *(s16*)((char*)lbl_803A9F98 + 0x68) - 1), p2, 0xff);
+                        (f32)(int)((int)*(f32*)((char*)lbl_803A9FE4 + 0xc) + 0x2f),
+                        (f32)(int)(*(s16*)(box + 0x16) + (int)*(f32*)((char*)lbl_803A9FE4 + 0x1c) - 1), p2, 0xff);
         }
     }
     drawScaledTexture((char*)lbl_803A9F98[18],
@@ -1247,8 +1247,8 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                 (f32)(int)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
     if ((p3 & 0xff) != 0)
     {
-        xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
-        yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
+        xb = (int)*(f32*)((char*)lbl_803A9FE4 + 0xc);
+        yb = (int)*(f32*)((char*)lbl_803A9FE4 + 0x1c);
         drawTexture(lbl_803A9F98[17], (f32)(int)(xb + 0x2f), (f32)(int)(yb + 0x14),
                     0xff, 0xff);
         drawTexture(lbl_803A9F98[16], (f32)(int)(xb + 0x2f), (f32)(int)(yb + 0x4b),

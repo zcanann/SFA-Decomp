@@ -200,7 +200,7 @@ void DFSH_LaserBeam_update(uint objAddr)
     config = obj->config;
     runtime = obj->runtime;
 
-    DFSH_LASER_CYCLE_TIMER(runtime) = (s16)(DFSH_LASER_CYCLE_TIMER(runtime) - framesThisStep);
+    DFSH_LASER_CYCLE_TIMER(runtime) -= (s16)framesThisStep;
     if (GameBit_Get(config->disableGameBit) == 0)
     {
         if (DFSH_LASER_CYCLE_TIMER(runtime) < 0)
@@ -235,7 +235,7 @@ void DFSH_LaserBeam_update(uint objAddr)
             if (DFSH_LASER_CYCLE_TIMER(runtime) < 0x28)
             {
                 Sfx_StopObjectChannel(obj, 0x40);
-                if ((lbl_803E4EC0 <= runtime->beamVolumeScale) &&
+                if ((runtime->beamVolumeScale >= lbl_803E4EC0) &&
                     (DFSH_LASER_BLOCKED(runtime) == 0))
                 {
                     runtime->beamVolumeScale -= lbl_803E4EC4 * timeDelta;
@@ -549,10 +549,8 @@ int fn_801C49B8(void* objArg)
         runtime->swayAccel = zero;
     }
 
-    stickAccel = ((f32)(s8)
-    padGetStickX(0) / lbl_803E4F44
-    )
-    *lbl_803E4F48;
+    stickAccel = (f32)(s8)padGetStickX(0) / lbl_803E4F44;
+    stickAccel = stickAccel * lbl_803E4F48;
     runtime->swayVelocity += stickAccel * timeDelta;
 
     target = runtime->swayTarget;
@@ -563,7 +561,7 @@ int fn_801C49B8(void* objArg)
             runtime->swayAccel -= lbl_803E4F48 * timeDelta;
         }
     }
-    else if (target > lbl_803E4F40)
+    else if (lbl_803E4F40 < target)
     {
         if (runtime->swayAccel < target)
         {

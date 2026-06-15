@@ -750,22 +750,25 @@ void arwarwing_updateRollAndEngine(int obj, int state)
                                             ? ((ArwingState*)state)->rollEnergyMax
                                             : ((ArwingState*)state)->rollEnergy;
 
-    if (((ArwingState*)state)->rollEnergy <= lbl_803E6ECC)
     {
-        ((ArwingState*)state)->flags477 &= ~0x6;
-        ((ArwingState*)state)->rollCooldown = ((ArwingState*)state)->rollCooldownInit;
-        ((ArwingState*)state)->rollEnergy = ((ArwingState*)state)->rollEnergyMax;
-        ((ArwingState*)state)->wingFlexTarget = lbl_803E6F68;
-        ((ArwingState*)state)->rollRegenDelay = lbl_803E6ECC;
+        f32 zero = lbl_803E6ECC;
+        if (((ArwingState*)state)->rollEnergy <= zero)
+        {
+            ((ArwingState*)state)->flags477 &= ~0x6;
+            ((ArwingState*)state)->rollCooldown = ((ArwingState*)state)->rollCooldownInit;
+            ((ArwingState*)state)->rollEnergy = ((ArwingState*)state)->rollEnergyMax;
+            ((ArwingState*)state)->wingFlexTarget = lbl_803E6F68;
+            ((ArwingState*)state)->rollRegenDelay = zero;
+        }
     }
 
     if ((u32)vec != 0)
     {
-        int n;
+        s16 n;
         ((ArwingState*)state)->wingFlexCur =
             lbl_803E6EF8 * (((ArwingState*)state)->wingFlexTarget - ((ArwingState*)state)->wingFlexCur) + ((ArwingState
                 *)state)->wingFlexCur;
-        n = (int)((ArwingState*)state)->wingFlexCur;
+        n = (s16)((ArwingState*)state)->wingFlexCur;
         *(s16*)(vec + 0xa) = n;
         *(s16*)(vec + 0x8) = n;
         *(s16*)(vec + 0x6) = n;

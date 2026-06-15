@@ -408,11 +408,11 @@ void hagabon_update(int obj)
         {
             fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta);
             ((GameObject*)obj)->anim.alpha = (u8)fade;
-            if (((GameObject*)obj)->anim.alpha < 7)
+            if (((GameObject*)obj)->anim.alpha <= 6)
             {
                 ((GameObject*)obj)->unkF4 = 1;
                 ((GameObject*)obj)->anim.alpha = 0;
-                state->flags &= 0xef;
+                state->flags &= ~0x10;
                 Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
             }
             ObjHits_DisableObject(obj);
@@ -421,10 +421,10 @@ void hagabon_update(int obj)
         {
             fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta);
             ((GameObject*)obj)->anim.alpha = (u8)fade;
-            if (((GameObject*)obj)->anim.alpha > 0xf8)
+            if (((GameObject*)obj)->anim.alpha >= 0xf9)
             {
                 ((GameObject*)obj)->anim.alpha = 0xff;
-                state->flags &= 0xf7;
+                state->flags &= ~8;
             }
         }
     }
@@ -473,12 +473,12 @@ void hagabon_update(int obj)
     }
     if (((state->flags & 2) != 0) && (lbl_803E2664 < state->pathDistance))
     {
-        state->flags &= 0xfd;
+        state->flags &= ~2;
         state->flags |= 4;
     }
     if (((state->flags & 4) != 0) && (state->pathDistance < lbl_803E2668))
     {
-        state->flags &= 0xfb;
+        state->flags &= ~4;
     }
     if (((state->flags & 6) == 0) && (((HagabonPlacement*)data)->unk1E == 0) &&
         (state->player != 0) && (state->playerDistance < state->chaseRadius))

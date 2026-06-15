@@ -116,12 +116,16 @@ void lightfoot_update(int obj)
     f32 buf[6];
     u8 i;
 
-    if (*(f32*)((char*)anim + 0x10) != lbl_803E8180)
     {
-        *(f32*)((char*)anim + 0x10) -= timeDelta;
-        if (*(f32*)((char*)anim + 0x10) <= lbl_803E8180)
+        f32 timer = *(f32*)((char*)anim + 0x10);
+        f32 limit = lbl_803E8180;
+        if (timer != limit)
         {
-            Obj_FreeObject(obj);
+            *(f32*)((char*)anim + 0x10) = timer - timeDelta;
+            if (*(f32*)((char*)anim + 0x10) <= limit)
+            {
+                Obj_FreeObject(obj);
+            }
         }
     }
 
@@ -246,7 +250,7 @@ void lightfoot_update(int obj)
             Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
             Lightfoot_ResetScriptedPosition(obj);
             ((GameObject*)obj)->unkF8 = 0;
-            ((GroundBaddieState*)inner)->flags400 &= ~0x4;
+            ((GroundBaddieState*)inner)->flags400 &= ~0x2;
         }
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((((GroundBaddieState*)inner)->configFlags & 1) && (((GameObject*)obj)->objectFlags & 0x800))

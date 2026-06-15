@@ -144,20 +144,20 @@ void snowclaw_free(int obj)
     }
 }
 
+#pragma opt_common_subs off
 void snowclaw_init(int* obj, u8* init)
 {
-    u8* table;
+    u8* table = (u8*)(int)lbl_8032A310;
     int* inner;
     ObjModelState* sub;
 
-    table = lbl_8032A310;
     ((GameObject*)obj)->animEventCallback = (void*)snowclaw_animEventCallback;
     sub = ((GameObject*)obj)->anim.modelState;
     if (sub != NULL)
     {
         sub->flags |= 0x4000;
-        sub->shadowTintA = 0x64;
-        sub->shadowTintB = 0x96;
+        ((GameObject*)obj)->anim.modelState->shadowTintA = 0x64;
+        ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
     }
     inner = ((GameObject*)obj)->extra;
     *(int*)inner = 0;
@@ -187,10 +187,11 @@ void snowclaw_init(int* obj, u8* init)
     ((SnowclawState*)inner)->unk30 = lbl_803E66EC;
     storeZeroToFloatParam((char*)inner + 0x98);
     s16toFloat((char*)inner + 0x98, (s16) * (int*)(table + 0x3c));
-    objSeqInitFn_80080078(table, 6);
+    objSeqInitFn_80080078((u8*)(int)lbl_8032A310, 6);
     lbl_803DDD38 = 0x96;
     ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->b0 = 0;
 }
+#pragma opt_common_subs reset
 
 #pragma dont_inline on
 void snowclaw_spawnDropBomb(int obj, int a, int b, int c)

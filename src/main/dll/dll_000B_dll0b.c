@@ -2119,26 +2119,26 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         return -1;
     }
 
-    effect->inlineData = (u8*)effect + sizeof(PartfxEffectState);
+    effects[slot]->inlineData = (u8*)effects[slot] + sizeof(PartfxEffectState);
     {
-        u8* bufp = effect->inlineData;
+        u8* bufp = effects[slot]->inlineData;
         if ((*(u32*)(st + 0x54) & 0x800) == 0)
         {
-            effect->colorBuffers[0] = bufp;
+            effects[slot]->colorBuffers[0] = bufp;
             bufp += e * 16;
-            effect->colorBuffers[1] = bufp;
+            effects[slot]->colorBuffers[1] = bufp;
             bufp += e * 16;
-            effect->colorBuffers[2] = bufp;
+            effects[slot]->colorBuffers[2] = bufp;
             bufp += e * 16;
-            effect->vertexBuffers[0] = bufp;
+            effects[slot]->vertexBuffers[0] = bufp;
             bufp += c * 16;
-            effect->vertexBuffers[1] = bufp;
+            effects[slot]->vertexBuffers[1] = bufp;
             bufp += c * 16;
-            effect->vertexBuffers[2] = bufp;
+            effects[slot]->vertexBuffers[2] = bufp;
             bufp += c * 16;
         }
-        effect->baseVertexBuffer = bufp;
-        effect->baseColorBuffer = bufp + 0x80;
+        effects[slot]->baseVertexBuffer = bufp;
+        effects[slot]->baseColorBuffer = bufp + 0x80;
     }
 
     if (*(int*)(st + 0x40) != 0)
@@ -2155,7 +2155,7 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         int off;
         for (k = 0, off = 0; k < 3; k++, off += 4)
         {
-            u8* dstc = effect->colorBuffers[k];
+            u8* dstc = effects[slot]->colorBuffers[k];
             int bias = 0;
             int j;
             s16* sd = (s16*)d;
@@ -2174,17 +2174,17 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         }
     }
 
-    effect->textureResource = NULL;
-    effect->textureIsBorrowed = 0;
+    effects[slot]->textureResource = NULL;
+    effects[slot]->textureIsBorrowed = 0;
     if (g != NULL)
     {
-        effect->textureResource = g;
-        effect->textureIsBorrowed = 1;
+        effects[slot]->textureResource = g;
+        effects[slot]->textureIsBorrowed = 1;
     }
     else if (f != 0)
     {
-        effect->textureResource = textureLoadAsset(f);
-        effect->textureIsBorrowed = 0;
+        effects[slot]->textureResource = textureLoadAsset(f);
+        effects[slot]->textureIsBorrowed = 0;
     }
 
     if ((*(u32*)(st + 0x54) & 0x800) == 0)
@@ -2193,7 +2193,7 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         int off;
         for (k = 0, off = 0; k < 3; k++, off += 4)
         {
-            u8* dstv = effect->vertexBuffers[k];
+            u8* dstv = effects[slot]->vertexBuffers[k];
             int j;
             s16* sb = (s16*)b;
             for (j = 0; j < c; j++)
@@ -2201,11 +2201,11 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
                 *(s16*)(dstv + 0) = sb[0];
                 *(s16*)(dstv + 2) = sb[1];
                 *(s16*)(dstv + 4) = sb[2];
-                if (effect->textureResource != NULL)
+                if (effects[slot]->textureResource != NULL)
                 {
-                    *(s16*)(dstv + 8) = lbl_803DF460 * ((f32)sb[3] / (f32) * (u16*)((u8*)effect->textureResource +
+                    *(s16*)(dstv + 8) = lbl_803DF460 * ((f32)sb[3] / (f32) * (u16*)((u8*)effects[slot]->textureResource +
                         0xa));
-                    *(s16*)(dstv + 0xa) = lbl_803DF460 * ((f32)sb[4] / (f32) * (u16*)((u8*)effect->textureResource +
+                    *(s16*)(dstv + 0xa) = lbl_803DF460 * ((f32)sb[4] / (f32) * (u16*)((u8*)effects[slot]->textureResource +
                         0xc));
                 }
                 dstv[0xc] = 0xff;
@@ -2218,147 +2218,147 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         }
     }
 
-    effect->emitterCount = st[0x5d];
-    effect->word114 = 0;
-    effect->word118 = 0;
-    effect->word11C = 0;
-    effect->auxAllocation = NULL;
-    effect->releaseRequested = 0;
-    effect->byte13D = 0;
-    effect->stageTimer = 0;
-    effect->nextStage = -1;
-    effect->requestedStage = 0;
-    effect->stageDurations[0] = *(s16*)(st + 0x46);
-    effect->stageDurations[1] = *(s16*)(st + 0x48);
-    effect->stageDurations[2] = *(s16*)(st + 0x4a);
-    effect->stageDurations[3] = *(s16*)(st + 0x4c);
-    effect->stageDurations[4] = *(s16*)(st + 0x4e);
-    effect->stageDurations[5] = *(s16*)(st + 0x50);
-    effect->stageDurations[6] = *(s16*)(st + 0x52);
-    effect->emitterCommands = (u8*)effect->inlineData + base0 + 0x100;
-    effect->auxSequenceBuffer = NULL;
+    effects[slot]->emitterCount = st[0x5d];
+    effects[slot]->word114 = 0;
+    effects[slot]->word118 = 0;
+    effects[slot]->word11C = 0;
+    effects[slot]->auxAllocation = NULL;
+    effects[slot]->releaseRequested = 0;
+    effects[slot]->byte13D = 0;
+    effects[slot]->stageTimer = 0;
+    effects[slot]->nextStage = -1;
+    effects[slot]->requestedStage = 0;
+    effects[slot]->stageDurations[0] = *(s16*)(st + 0x46);
+    effects[slot]->stageDurations[1] = *(s16*)(st + 0x48);
+    effects[slot]->stageDurations[2] = *(s16*)(st + 0x4a);
+    effects[slot]->stageDurations[3] = *(s16*)(st + 0x4c);
+    effects[slot]->stageDurations[4] = *(s16*)(st + 0x4e);
+    effects[slot]->stageDurations[5] = *(s16*)(st + 0x50);
+    effects[slot]->stageDurations[6] = *(s16*)(st + 0x52);
+    effects[slot]->emitterCommands = (u8*)effects[slot]->inlineData + base0 + 0x100;
+    effects[slot]->auxSequenceBuffer = NULL;
     if (total != 0)
     {
-        effect->auxSequenceBuffer = (u8*)effect->emitterCommands + effect->emitterCount * 0x18;
+        effects[slot]->auxSequenceBuffer = (u8*)effects[slot]->emitterCommands + effects[slot]->emitterCount * 0x18;
     }
 
     {
-        u8* dst = effect->auxSequenceBuffer;
+        u8* dst = effects[slot]->auxSequenceBuffer;
         int m;
         int off;
-        for (m = 0, off = 0; m < effect->emitterCount; m++, off += 0x18)
+        for (m = 0, off = 0; m < effects[slot]->emitterCount; m++, off += 0x18)
         {
-            ((u8*)effect->emitterCommands)[off + 0x16] = (*(u8**)st)[off + 0x16];
-            *(s16*)((u8*)effect->emitterCommands + off + 0x14) = *(s16*)(*(u8**)st + off + 0x14);
-            *(int*)((u8*)effect->emitterCommands + off + 0x10) = 0;
-            *(int*)((u8*)effect->emitterCommands + off) = *(int*)(*(u8**)st + off);
-            if ((*(int*)((u8*)effect->emitterCommands + off) & 0xf7fff180) == 0 &&
-                *(s16*)((u8*)effect->emitterCommands + off + 0x14) != 0)
+            ((u8*)effects[slot]->emitterCommands)[off + 0x16] = (*(u8**)st)[off + 0x16];
+            *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14) = *(s16*)(*(u8**)st + off + 0x14);
+            *(int*)((u8*)effects[slot]->emitterCommands + off + 0x10) = 0;
+            *(int*)((u8*)effects[slot]->emitterCommands + off) = *(int*)(*(u8**)st + off);
+            if ((*(int*)((u8*)effects[slot]->emitterCommands + off) & 0xf7fff180) == 0 &&
+                *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14) != 0)
             {
                 int k;
-                *(int*)((u8*)effect->emitterCommands + off + 0x10) = 0;
-                *(u8**)((u8*)effect->emitterCommands + off + 0x10) = dst;
-                dst += *(s16*)((u8*)effect->emitterCommands + off + 0x14) * 2;
-                for (k = 0; k < *(s16*)((u8*)effect->emitterCommands + off + 0x14); k++)
+                *(int*)((u8*)effects[slot]->emitterCommands + off + 0x10) = 0;
+                *(u8**)((u8*)effects[slot]->emitterCommands + off + 0x10) = dst;
+                dst += *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14) * 2;
+                for (k = 0; k < *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14); k++)
                 {
-                    *(s16*)(*(u8**)((u8*)effect->emitterCommands + off + 0x10) + k * 2) =
+                    *(s16*)(*(u8**)((u8*)effects[slot]->emitterCommands + off + 0x10) + k * 2) =
                         *(s16*)(*(u8**)(*(u8**)st + off + 0x10) + k * 2);
                 }
             }
-            *(f32*)((u8*)effect->emitterCommands + off + 4) = *(f32*)(*(u8**)st + off + 4);
-            *(f32*)((u8*)effect->emitterCommands + off + 8) = *(f32*)(*(u8**)st + off + 8);
-            *(f32*)((u8*)effect->emitterCommands + off + 0xc) = *(f32*)(*(u8**)st + off + 0xc);
+            *(f32*)((u8*)effects[slot]->emitterCommands + off + 4) = *(f32*)(*(u8**)st + off + 4);
+            *(f32*)((u8*)effects[slot]->emitterCommands + off + 8) = *(f32*)(*(u8**)st + off + 8);
+            *(f32*)((u8*)effects[slot]->emitterCommands + off + 0xc) = *(f32*)(*(u8**)st + off + 0xc);
         }
     }
 
-    effect->currentStage = -1;
-    effect->stageFrameCountdown = effect->colorVertexCount;
-    effect->flags = *(int*)(st + 0x54);
-    effect->drawPosX = *(f32*)(st + 0x2c);
-    effect->drawPosY = *(f32*)(st + 0x30);
-    effect->drawPosZ = *(f32*)(st + 0x34);
-    effect->renderScale = *(f32*)(st + 0x38);
-    if (effect->flags & 1)
+    effects[slot]->currentStage = -1;
+    effects[slot]->stageFrameCountdown = effects[slot]->colorVertexCount;
+    effects[slot]->flags = *(int*)(st + 0x54);
+    effects[slot]->drawPosX = *(f32*)(st + 0x2c);
+    effects[slot]->drawPosY = *(f32*)(st + 0x30);
+    effects[slot]->drawPosZ = *(f32*)(st + 0x34);
+    effects[slot]->renderScale = *(f32*)(st + 0x38);
+    if (effects[slot]->flags & 1)
     {
-        effect->sourcePosX = *(f32*)(st + 0x2c);
-        effect->sourcePosY = *(f32*)(st + 0x30);
-        effect->sourcePosZ = *(f32*)(st + 0x34);
+        effects[slot]->sourcePosX = *(f32*)(st + 0x2c);
+        effects[slot]->sourcePosY = *(f32*)(st + 0x30);
+        effects[slot]->sourcePosZ = *(f32*)(st + 0x34);
     }
     fz430 = lbl_803DF430;
     fz434 = lbl_803DF434;
-    effect->posStepX = fz430;
-    effect->posStepY = fz430;
-    effect->posStepZ = fz430;
-    effect->scaleChannels[0].cur[0] = fz434;
-    effect->scaleChannels[0].cur[1] = fz434;
-    effect->scaleChannels[0].cur[2] = fz434;
-    effect->scaleChannels[0].step[1] = fz430;
-    effect->scaleChannels[0].step[2] = fz430;
-    effect->scaleChannels[0].step[0] = fz430;
-    effect->scaleChannels[1].cur[2] = fz434;
-    effect->scaleChannels[1].cur[0] = fz434;
-    effect->scaleChannels[1].cur[1] = fz434;
-    effect->scaleChannels[1].step[2] = fz430;
-    effect->scaleChannels[1].step[0] = fz430;
-    effect->scaleChannels[1].step[1] = fz430;
-    effect->rotOffsetZ = 0;
-    effect->rotOffsetY = 0;
-    effect->rotOffsetX = 0;
-    effect->vec120 = 0;
-    effect->vec122 = 0;
-    effect->vec124 = 0;
-    effect->alphaChannels[0].step = fz430;
-    effect->alphaChannels[0].cur = fz430;
-    effect->alphaChannels[1].step = fz430;
-    effect->alphaChannels[1].cur = fz430;
-    effect->blendColorR = fz430;
-    effect->blendColorG = fz430;
-    effect->blendColorB = fz430;
-    effect->blendColorStepR = fz430;
-    effect->blendColorStepG = fz430;
-    effect->blendColorStepB = fz430;
-    effect->velocityX = *(f32*)(st + 0x20);
-    effect->velocityY = *(f32*)(st + 0x24);
-    effect->velocityZ = *(f32*)(st + 0x28);
+    effects[slot]->posStepX = fz430;
+    effects[slot]->posStepY = fz430;
+    effects[slot]->posStepZ = fz430;
+    effects[slot]->scaleChannels[0].cur[0] = fz434;
+    effects[slot]->scaleChannels[0].cur[1] = fz434;
+    effects[slot]->scaleChannels[0].cur[2] = fz434;
+    effects[slot]->scaleChannels[0].step[1] = fz430;
+    effects[slot]->scaleChannels[0].step[2] = fz430;
+    effects[slot]->scaleChannels[0].step[0] = fz430;
+    effects[slot]->scaleChannels[1].cur[2] = fz434;
+    effects[slot]->scaleChannels[1].cur[0] = fz434;
+    effects[slot]->scaleChannels[1].cur[1] = fz434;
+    effects[slot]->scaleChannels[1].step[2] = fz430;
+    effects[slot]->scaleChannels[1].step[0] = fz430;
+    effects[slot]->scaleChannels[1].step[1] = fz430;
+    effects[slot]->rotOffsetZ = 0;
+    effects[slot]->rotOffsetY = 0;
+    effects[slot]->rotOffsetX = 0;
+    effects[slot]->vec120 = 0;
+    effects[slot]->vec122 = 0;
+    effects[slot]->vec124 = 0;
+    effects[slot]->alphaChannels[0].step = fz430;
+    effects[slot]->alphaChannels[0].cur = fz430;
+    effects[slot]->alphaChannels[1].step = fz430;
+    effects[slot]->alphaChannels[1].cur = fz430;
+    effects[slot]->blendColorR = fz430;
+    effects[slot]->blendColorG = fz430;
+    effects[slot]->blendColorB = fz430;
+    effects[slot]->blendColorStepR = fz430;
+    effects[slot]->blendColorStepG = fz430;
+    effects[slot]->blendColorStepB = fz430;
+    effects[slot]->velocityX = *(f32*)(st + 0x20);
+    effects[slot]->velocityY = *(f32*)(st + 0x24);
+    effects[slot]->velocityZ = *(f32*)(st + 0x28);
     lbl_803DD280 = lbl_803DD280 + 1;
     if (lbl_803DD280 > 0x4e20)
     {
         lbl_803DD280 = 0;
     }
-    effect->sequenceId = lbl_803DD280;
-    effect->byte126 = lbl_803DD282;
-    effect->vertexCount = (s16)c;
-    effect->colorVertexCount = (s16)e;
-    effect->sourceObject = *(void**)(st + 4);
-    effect->instanceObject = NULL;
-    effect->sourceYawIndex = st[0x5c];
-    effect->drawGroupCount = *(int*)(st + 0x40);
-    effect->drawGroupStride = *(int*)(st + 0x3c);
-    effect->initialStateByte = st[0x59];
-    effect->soundHandle = 0;
-    effect->activeVertexBufferIndex = 0;
-    effect->byte13B = 0;
-    effect->frameUpdated = 0;
-    effect->textureFrameTimer = st[0x5b];
-    if (effect->textureFrameTimer != 0)
+    effects[slot]->sequenceId = lbl_803DD280;
+    effects[slot]->byte126 = lbl_803DD282;
+    effects[slot]->vertexCount = (s16)c;
+    effects[slot]->colorVertexCount = (s16)e;
+    effects[slot]->sourceObject = *(void**)(st + 4);
+    effects[slot]->instanceObject = NULL;
+    effects[slot]->sourceYawIndex = st[0x5c];
+    effects[slot]->drawGroupCount = *(int*)(st + 0x40);
+    effects[slot]->drawGroupStride = *(int*)(st + 0x3c);
+    effects[slot]->initialStateByte = st[0x59];
+    effects[slot]->soundHandle = 0;
+    effects[slot]->activeVertexBufferIndex = 0;
+    effects[slot]->byte13B = 0;
+    effects[slot]->frameUpdated = 0;
+    effects[slot]->textureFrameTimer = st[0x5b];
+    if (effects[slot]->textureFrameTimer != 0)
     {
-        effect->textureFrameStep = 0x3c / effect->textureFrameTimer;
+        effects[slot]->textureFrameStep = 0x3c / effects[slot]->textureFrameTimer;
     }
     else
     {
-        effect->textureFrameStep = 0;
+        effects[slot]->textureFrameStep = 0;
     }
-    if (effect->textureFrameStep != 0)
+    if (effects[slot]->textureFrameStep != 0)
     {
-        effect->textureFrameFadeStep = 0xff / effect->textureFrameStep;
+        effects[slot]->textureFrameFadeStep = 0xff / effects[slot]->textureFrameStep;
     }
     else
     {
-        effect->textureFrameFadeStep = 0;
+        effects[slot]->textureFrameFadeStep = 0;
     }
-    effect->textureFrame = 0;
-    effect->initialDelayFrames = *(s16*)(st + 0x44);
-    return effect->sequenceId;
+    effects[slot]->textureFrame = 0;
+    effects[slot]->initialDelayFrames = *(s16*)(st + 0x44);
+    return effects[slot]->sequenceId;
 }
 
 extern s16 renderModeSetOrGet(int mode);

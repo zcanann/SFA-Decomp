@@ -761,8 +761,9 @@ int fn_802A3F24(int obj, int state)
     ((GameObject*)obj)->anim.velocityZ = fz;
     *(int*)((char*)state + 4) |= 0x8000000;
     ((GameObject*)obj)->anim.velocityY = fz;
-    if (((GameObject*)obj)->anim.currentMove == 0x419)
+    switch (((GameObject*)obj)->anim.currentMove)
     {
+    case 0x419:
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
             ObjAnim_SetCurrentMove(obj, lbl_80332EF0[6], fz, 0);
@@ -772,8 +773,8 @@ int fn_802A3F24(int obj, int state)
             *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
             return 0xd;
         }
-    }
-    else
+        break;
+    default:
     {
         f32 k;
         ObjAnim_SetCurrentMove(obj, 0x419, fz, 1);
@@ -813,6 +814,8 @@ int fn_802A3F24(int obj, int state)
                 ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
             ((PlayerState*)inner)->unk609 = 0;
         }
+        break;
+    }
     }
     fn_802AB5A4(obj, inner + 4, 5);
     return 0;
@@ -11192,7 +11195,10 @@ void fn_8029A4A8(int obj, int p2)
     s16 sel = ((PlayerState*)p2)->baddie.controlMode;
     int i;
 
-    if (sel == 0x2a || sel == 0x2e || sel == 0x2f || sel == 0x2c) return;
+    if (sel == 0x2a) return;
+    if (sel == 0x2e) return;
+    if (sel == 0x2f) return;
+    if (sel == 0x2c) return;
 
     *(u32*)((char*)inner + 0x360) |= 0x800000LL;
     inner->animState = -1;
@@ -18158,8 +18164,11 @@ int fn_8029D4C0(int obj, int state, f32 fv)
         {
             ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
         }
-        ((GameObject*)obj)->anim.velocityX = lbl_803E7EA4;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E7EA4;
+        {
+            f32 zv = lbl_803E7EA4;
+            ((GameObject*)obj)->anim.velocityX = zv;
+            ((GameObject*)obj)->anim.velocityZ = zv;
+        }
         break;
     case 0xc8:
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;

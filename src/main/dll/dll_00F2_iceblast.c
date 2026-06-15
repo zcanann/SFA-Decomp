@@ -164,9 +164,9 @@ void iceblast_init(int obj, s16* p)
 void iceblast_update(int* obj)
 {
     int* path;
-    int* def;
     f32* state;
     int* player;
+    int* def;
     struct
     {
         s16 dir[3];
@@ -188,11 +188,11 @@ void iceblast_update(int* obj)
     }
     ObjHits_SetHitVolumeSlot((u32)obj, 0x10, ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1, 0);
     state[0] = state[0] - timeDelta;
-    if (state[0] <= lbl_803E3604)
     {
-        f32 zero;
+        f32 zero = lbl_803E3604;
+        if (state[0] <= zero)
+        {
         state[0] = state[0] + lbl_803E3608;
-        zero = lbl_803E3604;
         ((f32*)(int)obj)[9] = zero;
         ((f32*)obj)[11] = zero;
         ((f32*)obj)[10] = lbl_803E360C;
@@ -207,6 +207,7 @@ void iceblast_update(int* obj)
         ObjPath_GetPointWorldPosition((int)path, 0, &((GameObject*)obj)->anim.localPosX,
                                       &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ, 0);
         ObjHits_EnableObject((u32)obj);
+        }
     }
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;

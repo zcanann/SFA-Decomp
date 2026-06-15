@@ -128,14 +128,15 @@ dec:
 }
 #pragma dont_inline reset
 
+#pragma opt_common_subs off
 void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                            s16 clearIfClearBit, s16 latchBit, int musicId)
 {
     extern uint GameBit_Get(int bit); /* #57 */
     extern int Music_Trigger(int id, int value); /* #57 */
     extern int GameBit_Set(int bit, int value); /* #57 */
-    int hasClearIfSetBit = (clearIfSetBit + 1) | (-1 - clearIfSetBit);
-    int hasClearIfClearBit = (clearIfClearBit + 1) | (-1 - clearIfClearBit);
+    int hasClearIfSetBit = (-1 - clearIfSetBit) | (clearIfSetBit + 1);
+    int hasClearIfClearBit = (-1 - clearIfClearBit) | (clearIfClearBit + 1);
     u8 clearIfSetBitValid = (u8)((u32)hasClearIfSetBit >> 31);
     u8 clearIfClearBitValid = (u8)((u32)hasClearIfClearBit >> 31);
 
@@ -185,6 +186,7 @@ end:
     return;
 }
 
+#pragma opt_common_subs reset
 void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                                    s16 clearIfClearBit, s16 latchBit, int musicId)
 {

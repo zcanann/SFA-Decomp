@@ -8,8 +8,6 @@ extern u32 randomGetRange(int min, int max);
 extern void textureFree(void* p);
 
 #pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
@@ -49,13 +47,7 @@ typedef struct LinkMenuItemDB
     u8 pad39[3];
 } LinkMenuItemDB;
 
-#pragma peephole off
-#pragma peephole reset
-#pragma peephole off
-#pragma peephole reset
 #pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void OSReport(const char* fmt, ...);
@@ -105,30 +97,20 @@ void Link_func0A(int idx, int v) { extern LinkMenuItemDB lbl_803A9458[40];  lbl_
 s32 Link_func09(int idx) { extern LinkMenuItemDB lbl_803A9458[40];  return lbl_803A9458[idx].state; }
 #pragma scheduling reset
 void Link_setOpacity(u8 v) { linkItemOpacity = v; }
-#pragma peephole off
 void Link_setSelected(int v) { linkSelected = (s8)v; }
-#pragma peephole reset
 s32 Link_getSelected(void) { return linkSelected; }
 
 /* Stubs added to align function set with v1.0 asm. Source had many Ghidra
  * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
  * asm symbol set is fully present so future hunters can fill bodies. */
 #pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 u16 fn_80130124(void)
@@ -138,7 +120,6 @@ u16 fn_80130124(void)
 }
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
@@ -175,20 +156,14 @@ void linkInitTextures(LinkMenuItemDB* item)
         OSReport(lbl_8031C234);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void linkDrawFn_801302c0(void);
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void linkDrawFn_80130484(void);
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void Link_func0F(void)
 {
     extern u8 lbl_803DD911; /* #57 */
@@ -200,7 +175,6 @@ void Link_func0F(void)
         lbl_803A9458[i].field38 = 4;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -238,7 +212,6 @@ void Link_copy(u8* srcArg)
 }
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void Link_func0B(u8* srcArg)
 {
     extern u8 lbl_803DD911; /* #57 */
@@ -254,10 +227,8 @@ void Link_func0B(u8* srcArg)
         lbl_803A9458[i].field38 = 2;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling reset
-#pragma peephole reset
 
 typedef struct LinkTexture
 {
@@ -924,17 +895,18 @@ void linkDrawFn_80130484(void)
     extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* p;
     void* tex;
+    int i;
     int minX;
     int maxX;
     int w;
     int x;
     int right;
-    int i;
 
     minX = 480;
     maxX = 0;
+    i = 0;
     p = lbl_803A9458;
-    for (i = 0; i < (s8)lbl_803DD911; i++)
+    for (; i < (s8)lbl_803DD911; i++)
     {
         if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
         {

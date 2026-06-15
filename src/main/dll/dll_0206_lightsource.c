@@ -345,7 +345,7 @@ void lightsource_update(int obj)
             {
                 vec[1] = lbl_803E5E14;
             }
-            vec[2] = lbl_803E5E0C;
+            vec[2] = *(f32*)&lbl_803E5E0C;
             fn_80098B18(obj, lbl_803E5E18 * ((GameObject*)obj)->anim.rootMotionScale, b->fxType, sfxFlag, 0, vec);
         }
         if (b->sparks != 0)

@@ -235,6 +235,8 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     u32 handle;
     u32 ok;
     u32 rejected;
+    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
+    extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 
     if ((keymap = dataGetKeymap(id)) != 0)
     {
@@ -327,6 +329,8 @@ int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 mi
     u32 vid;
     u32 vi;
     s32 p;
+    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
+    extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 
     p = prio + prioOffset;
     if ((u8)p > 0xFF)

@@ -1142,27 +1142,30 @@ void gunpowderbarrel_clearHeldState(int* obj)
  * released, restore the default pose and clear them. */
 void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
 {
-    GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
-    u8* h = *(u8**)&((GameObject*)obj)->anim.hitReactState;
+    GunpowderBarrelState* sub;
+    int o = (int)obj;
+    u8* h;
+    sub = ((GameObject*)o)->extra;
+    h = *(u8**)&((GameObject*)o)->anim.hitReactState;
     if (heldByPlayer != 0)
     {
         h[0x6a] = 1;
         h[0x6b] = 1;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode | 8);
         ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 1;
         sub->motionFlags = (u8)(sub->motionFlags & ~2);
-        ObjHits_SetFlags((int)obj, 0x480);
-        ObjHits_ClearSourceMask((int)obj, 1);
-        ObjHits_EnableObject((int)obj);
-        ObjHits_SyncObjectPositionIfDirty((int)obj);
+        ObjHits_SetFlags(o, 0x480);
+        ObjHits_ClearSourceMask(o, 1);
+        ObjHits_EnableObject(o);
+        ObjHits_SyncObjectPositionIfDirty(o);
     }
     else
     {
-        h[0x6a] = (*(u8**)&((GameObject*)obj)->anim.modelInstance)[0x63];
-        h[0x6b] = (*(u8**)&((GameObject*)obj)->anim.modelInstance)[0x64];
+        h[0x6a] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x63];
+        h[0x6b] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x64];
         ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-        ObjHits_ClearFlags((int)obj, 0x400);
+        *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode & ~8);
+        ObjHits_ClearFlags(o, 0x400);
         sub->motionFlags = (u8)(sub->motionFlags | 1);
     }
 }

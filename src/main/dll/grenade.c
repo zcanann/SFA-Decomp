@@ -779,7 +779,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
     if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
     {
         ((TrickyState*)state)->unk720 = lbl_803E23DC;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
         ((TrickyState*)state)->substate = 0;
         return 1;
     }
@@ -788,12 +788,14 @@ int trickyFoodFn_80142d2c(int obj, int state)
     {
         if (result < 2)
         {
-            if (result < 0) goto skip;
+            if (result >= 0) goto dobody;
+            goto skip;
         }
         else if (result >= 6)
         {
             goto skip;
         }
+    dobody:;
         tex = *(int*)&((GameObject*)obj)->extra;
         if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0u)
         {
@@ -810,7 +812,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
 skip:
     if (lbl_803E23DC == ((TrickyState*)state)->unk720)
     {
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
         ((TrickyState*)state)->substate = 0;
     }
     if ((u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1)
