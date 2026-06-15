@@ -131,20 +131,20 @@ void FUN_80152ec0(uint obj, int state)
 {
     float spinVal;
 
-    *(float*)(state + 0x2ac) = lbl_803E34E8;
+    ((BaddieState*)state)->speedScale = lbl_803E34E8;
     *(undefined4*)(state + 0x2e4) = 0x29;
     *(uint*)(state + 0x2e4) = *(uint*)(state + 0x2e4) | 0x7000;
     *(uint*)(state + 0x2e4) = *(uint*)(state + 0x2e4) | 0x20000;
     *(float*)(state + 0x308) = lbl_803E34EC;
-    *(float*)(state + 0x300) = lbl_803E34F0;
-    *(float*)(state + 0x304) = lbl_803E34F4;
+    ((BaddieState*)state)->unk300 = lbl_803E34F0;
+    ((BaddieState*)state)->unk304 = lbl_803E34F4;
     *(u8*)(state + 800) = 0;
     spinVal = lbl_803E34B8;
     *(float*)(state + 0x314) = lbl_803E34B8;
-    *(u8*)(state + 0x321) = 0;
-    *(float*)(state + 0x318) = spinVal;
-    *(u8*)(state + 0x322) = 0;
-    *(float*)(state + 0x31c) = spinVal;
+    ((BaddieState*)state)->unk321 = 0;
+    ((BaddieState*)state)->unk318 = spinVal;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = spinVal;
     *(float*)(state + 0x32c) = lbl_803E34AC;
     ((GameObject *)obj)->anim.hitboxScale = lbl_803E34F8;
     FUN_800068d0(obj, 0xe8);
@@ -178,15 +178,15 @@ void FUN_80152fb4(ushort* obj, int state)
     local_28 = (double)(longlong)tmpInt;
     *(short*)(state + 0x338) = (short)tmpInt;
     FUN_80293474((uint) * (ushort*)(state + 0x338), &offX, &offZ);
-    offX = offX * *(float*)(state + 0x2a8) + *(float*)(state + 0x324);
-    offZ = offZ * *(float*)(state + 0x2a8) + *(float*)(state + 0x32c);
+    offX = offX * ((BaddieState*)state)->unk2A8 + *(float*)(state + 0x324);
+    offZ = offZ * ((BaddieState*)state)->unk2A8 + *(float*)(state + 0x32c);
     if (*(char*)(state + 0x33a) == '\0')
     {
         targetY = (double)((GameObject*)obj)->anim.localPosY;
         dx = *(float*)(state + 0x324) - *(float*)(*(int*)(state + 0x29c) + 0xc);
         dz = *(float*)(state + 0x32c) - *(float*)(*(int*)(state + 0x29c) + 0x14);
         dist = FUN_80293900((double)(dx * dx + dz * dz));
-        if (dist <= (double)(lbl_803E3518 * *(float*)(state + 0x2a8)))
+        if (dist <= (double)(lbl_803E3518 * ((BaddieState*)state)->unk2A8))
         {
             *(u8*)(state + 0x33a) = 1;
             *(u8*)(state + 0x33b) = 0;
