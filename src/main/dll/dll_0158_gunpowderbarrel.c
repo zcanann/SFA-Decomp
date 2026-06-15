@@ -646,6 +646,7 @@ typedef struct GunpowderbarrelPlacement
 
 void gunpowderbarrel_hitDetect(int param_1)
 {
+    extern int Obj_IsObjectAlive(int obj); /* #57 */
     GameObject* barrel;
     GunpowderBarrelState* state;
     f32 sp10[3];
