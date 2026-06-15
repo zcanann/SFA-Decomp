@@ -47,7 +47,6 @@ extern u32 GameBit_Get(int eventId);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
-extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3798;
 extern void objRenderFn_80041018(int* obj);
