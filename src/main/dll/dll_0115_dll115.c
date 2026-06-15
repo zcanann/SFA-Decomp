@@ -141,7 +141,7 @@ void dll_115_update(int obj)
     mapData = (u8*)((GameObject*)obj)->anim.placementData;
     if ((state[1] & 1) != 0)
     {
-        eventId = ((Dll115MapRow*)(mapData + state[0] * 2))->ev18;
+        eventId = ((s16*)(mapData + 0x18))[state[0]];
         if (eventId != -1)
         {
             GameBit_Set(eventId, 1);
@@ -160,14 +160,14 @@ void dll_115_update(int obj)
     case 10:
         break;
     default:
-        eventId = ((Dll115MapRow*)(mapData + state[0] * 2))->ev28;
+        eventId = ((s16*)(mapData + 0x28))[state[0]];
         if (eventId == -1)
         {
             state[0] = 8;
         }
         else if ((u32)GameBit_Get(eventId) != 0)
         {
-            s8 id = (s8)((Dll115MapRow*)(mapData + state[0]))->id40;
+            s8 id = (s8)((u8*)(mapData + 0x40))[state[0]];
             if (id != -1)
             {
                 (*gObjectTriggerInterface)->runSequence(id, (void*)obj, -1);
