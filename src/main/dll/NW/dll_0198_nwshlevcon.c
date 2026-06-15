@@ -1,6 +1,8 @@
 #include "main/dll/dll_0198_nwshlevcon.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 extern undefined4 FUN_8003b818();
 
@@ -14,6 +16,7 @@ extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int a, int b, int c);
 extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(int a, int b, int c, int d);
+extern ModgfxInterface** gModgfxInterface;
 extern void* Obj_GetPlayerObject(void);
 extern void fn_80296518(void* player, int a, int b);
 
@@ -100,6 +103,8 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1e, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xb, 0x1f, 1);
                 (*gMapEventInterface)->setMapAct(0xb, 6);
+                break;
+            default:
                 break;
             }
         }
