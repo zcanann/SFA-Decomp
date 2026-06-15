@@ -1,7 +1,12 @@
+#include "main/dll/CAM/camshipbattle5C.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/dll/CAM/camdebug_state.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
+#include "main/dll/CAM/camstatic_state.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/CAM/viewfinder_state.h"
+#include "main/dll/CAM/dll_5B.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
@@ -247,21 +252,21 @@ void CameraModeViewfinder_copyToCurrent(undefined2* camObj)
 
 void CameraModeViewfinder_free(int camObj)
 {
-    void* player;
-    void* viewObj;
-    int outBuf[1];
+    int player;
+    int viewObj;
+    int outBuf[3];
 
-    *(short*)(*(int*)(camObj + 0xa4) + 6) = *(short*)(*(int*)(camObj + 0xa4) + 6) & ~0x4000;
+    *(s16*)(*(int*)(camObj + 0xa4) + 6) &= ~0x4000;
     Rcp_SetViewFinderHudEnabled(0);
-    viewObj = *(void**)(camObj + 0xa4);
-    if (viewObj != NULL)
+    viewObj = *(int*)(camObj + 0xa4);
+    if ((u32)viewObj != 0)
     {
         ((GameObject*)viewObj)->anim.alpha = 0xff;
-        player = (void*)Obj_GetPlayerObject();
-        if (player == viewObj)
+        player = Obj_GetPlayerObject();
+        if ((u32)player == (u32)viewObj)
         {
-            Player_GetHeldObject((int)viewObj, outBuf);
-            if (*(void**)&outBuf[0] != NULL)
+            Player_GetHeldObject(viewObj, outBuf);
+            if ((u32)outBuf[0] != 0)
             {
                 ((GameObject*)outBuf[0])->anim.alpha = 0xff;
                 if (((GameObject*)outBuf[0])->anim.alpha == 1)
@@ -541,18 +546,16 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->yawCurve.end = lbl_803E17C4;
     lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
     lbl_803DD548->yawCurve.endTangent = lbl_803E17C4;
-    cosv = lbl_803DD548->yawCurve.start;
-    sinv = lbl_803DD548->yawCurve.end;
-    dx = cosv - sinv;
+    dx = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
     if (dx > lbl_803E17C8 || dx < lbl_803E17CC)
     {
-        if (cosv < lbl_803E17C4)
+        if (lbl_803DD548->yawCurve.start < lbl_803E17C4)
         {
-            lbl_803DD548->yawCurve.start = cosv + lbl_803E17D0;
+            lbl_803DD548->yawCurve.start = lbl_803DD548->yawCurve.start + lbl_803E17D0;
         }
-        else if (sinv < lbl_803E17C4)
+        else if (lbl_803DD548->yawCurve.end < lbl_803E17C4)
         {
-            lbl_803DD548->yawCurve.end = sinv + lbl_803E17D0;
+            lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.end + lbl_803E17D0;
         }
     }
     lbl_803DD548->pitchCurve.start = (f32)obj[1];
