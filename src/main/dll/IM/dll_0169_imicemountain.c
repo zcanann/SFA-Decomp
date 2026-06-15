@@ -78,7 +78,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(int* obj, int* extra);
 extern void warpToMap(int mapId, int flags);
-extern u8 Obj_IsLoadingLocked(void);
 extern void fn_801AC01C(int* obj);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
@@ -86,7 +85,6 @@ extern void Music_Trigger(int track, int flag);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern f32 timeDelta;
 extern f32 lbl_803E46DC;
-extern int* ObjGroup_GetObjects(int group, int* countOut);
 
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
