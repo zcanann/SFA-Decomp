@@ -561,7 +561,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 
     handleOffset = (ringIndex & 0xff) * 8;
     handles = gSfxplayerEffectHandles;
-    if (*(int*)((int)handles + handleOffset) == 0)
+    if (((void**)gSfxplayerEffectHandles)[(ringIndex & 0xff) * 2] == NULL)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_VISUAL_SETUP_SIZE, SFXPLAYER_RING_VISUAL_OBJECT_ID);
         ((SfxplayerRingVisualSetup*)setup)->base.unk04[2] = 0xff;
@@ -593,14 +593,14 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->unk20 = lbl_803E6478;
         ((SfxplayerRingVisualSetup*)setup)->unk29 = 0xd2;
         ((SfxplayerRingVisualSetup*)setup)->unk2A = 0;
-        *(int*)((int)handles + handleOffset) =
+        ((int*)gSfxplayerEffectHandles)[(ringIndex & 0xff) * 2] =
             Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
                             ((GameObject*)obj)->anim.mapEventSlot, -1,
                             *(int*)&((GameObject*)obj)->anim.parent);
     }
 
     pair = (int*)((int)gSfxplayerEffectHandles + handleOffset + 4);
-    if (*pair == 0)
+    if (*(void**)pair == NULL)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_HIT_SETUP_SIZE, SFXPLAYER_RING_HIT_OBJECT_ID);
         ((ObjPlacement*)setup)->unk04[2] = 0xff;
