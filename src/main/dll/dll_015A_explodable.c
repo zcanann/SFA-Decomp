@@ -1,4 +1,3 @@
-#include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
