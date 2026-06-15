@@ -661,7 +661,7 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
         if ((f32)(near + far) <= lbl_803DEE7C) {
             *(u16 *)out = 0xFFFF;
         } else {
-            *out = (s16)(s32)(Gq / (near + far));
+            *out = Gq / (near + far);
             if (*(u16 *)out == 0) {
                 *out = 1;
             }
