@@ -405,7 +405,7 @@ typedef struct DFWhirlpoolRenderState
     u8 blue;
 } DFWhirlpoolRenderState;
 
-void dfropenode_render(int obj, int param_2, int param_3)
+void dfropenode_render(int obj, int p2, int p3)
 {
     ObjAnimComponent* objAnim;
     DFropenodeExtra* extra;
@@ -419,7 +419,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
     s16 matrix[0x30];
     f32 originalScale;
 
-    renderState.objAndParam = (undefined4)param_2;
+    renderState.objAndParam = (undefined4)p2;
     objAnim = &((GameObject*)obj)->anim;
     extra = ((GameObject*)obj)->extra;
     objDef = *(int*)&objAnim->placementData;
@@ -460,7 +460,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
     {
         originalScale = ((GameObject*)obj)->anim.rootMotionScale;
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4DF8;
-        Camera_LoadModelViewMatrix(0, param_3, obj, lbl_803E4E18, lbl_803E4DFC, 0);
+        Camera_LoadModelViewMatrix(0, p3, obj, lbl_803E4E18, lbl_803E4DFC, 0);
         ((GameObject*)obj)->anim.rootMotionScale = originalScale;
         textureSetupFn_800799c0();
         textRenderSetupFn_800795e8();
