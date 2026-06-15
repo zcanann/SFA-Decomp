@@ -504,7 +504,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * lbl_803E645C * timeDelta);
+            *(s16*)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta));
         }
         else
         {
