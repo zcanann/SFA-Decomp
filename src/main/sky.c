@@ -1565,6 +1565,7 @@ void skyFn_80088e54(int mode, f32 brightness)
     int bit;
     f32 unset;
     f32 fullBlend;
+    int idx;
 
     env = saveGameGetEnvState();
     if (((SkyState*)lbl_803DD12C)->currentLightIndex != mode)
@@ -1583,15 +1584,16 @@ void skyFn_80088e54(int mode, f32 brightness)
             ((SkyState*)lbl_803DD12C)->unk248 = fullBlend;
             ((SkyState*)lbl_803DD12C)->lightBlendFactor = fullBlend;
         }
-        cloudMode = ((SkyBlendStateFlags*)(lbl_803DD12C + mode * 0xa4 + 0xc1))->cloud;
+        idx = mode * 0xa4;
+        cloudMode = ((SkyBlendStateFlags*)(lbl_803DD12C + idx + 0xc1))->cloud;
         if (cloudMode != 0)
         {
             setDrawCloudsAndLights(cloudMode - 1);
         }
         ((SkyBlendStateFlags*)(lbl_803DD12C + 0x209))->unused80 =
-            ((SkyBlendStateFlags*)(lbl_803DD12C + mode * 0xa4 + 0xc1))->unused80;
+            ((SkyBlendStateFlags*)(lbl_803DD12C + idx + 0xc1))->unused80;
         ((SkyBlendStateFlags*)(lbl_803DD12C + 0x209))->bit20 =
-            ((SkyBlendStateFlags*)(lbl_803DD12C + mode * 0xa4 + 0xc1))->bit20;
+            ((SkyBlendStateFlags*)(lbl_803DD12C + idx + 0xc1))->bit20;
         env2 = saveGameGetEnvState();
         if (getSaveGameLoadStatus() == 0)
         {
