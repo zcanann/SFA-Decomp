@@ -161,13 +161,17 @@ void cmbsrc_hitDetect(int obj)
             state->hitCharge -= 1;
             state->hitRecoverTimer = lbl_803E7384;
         }
-        if (state->hitRecoverTimer != lbl_803E7360)
         {
-            state->hitRecoverTimer -= timeDelta;
-            if (state->hitRecoverTimer <= lbl_803E7360)
+            f32 timer = state->hitRecoverTimer;
+            f32 limit = lbl_803E7360;
+            if (timer != limit)
             {
-                state->hitCharge += 1;
-                state->hitRecoverTimer = lbl_803E7384;
+                state->hitRecoverTimer = timer - timeDelta;
+                if (state->hitRecoverTimer <= limit)
+                {
+                    state->hitCharge += 1;
+                    state->hitRecoverTimer = lbl_803E7384;
+                }
             }
         }
         v = state->hitCharge;
