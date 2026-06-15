@@ -1,12 +1,9 @@
 #include "main/dll/DIM/dimcannon_state.h"
 #include "main/camera_interface.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
-#include "main/objhits.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -55,8 +52,6 @@ extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
-extern void* lbl_803DDB50;
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 extern unsigned long GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 
