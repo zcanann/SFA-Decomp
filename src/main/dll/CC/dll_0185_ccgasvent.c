@@ -35,7 +35,7 @@ void FUN_801a8f88(void)
     short* vent;
 
     ctrl = FUN_80286840();
-    vent = *(short**)(ctrl + 0xb8);
+    vent = (short*)((GameObject*)ctrl)->extra;
     if (((int)*vent == 0xffffffff) || (rnd = GameBit_Get((int)*vent), rnd != 0))
     {
         *(float*)(vent + 0x14) = *(float*)(vent + 0x14) - lbl_803DC074;

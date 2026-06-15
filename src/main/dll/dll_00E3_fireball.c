@@ -371,7 +371,7 @@ extern void dll_F7_update();
 extern void dll_F7_init();
 extern int* Obj_GetActiveModel(int obj);
 extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-extern f32 lbl_803E3330;
+extern const f32 lbl_803E3330;
 extern int cmbsrc_getColorIndex(int* p);
 extern void projectileParticleFxFn_80099660(int* obj, f32 v, int kind);
 extern f32 lbl_803E3354;
@@ -1859,8 +1859,8 @@ void fireball_hitDetect(int* obj)
             ((FireballState*)state)->colorIndex = (u8)idx;
             if (*(void**)state != NULL)
             {
-                u8* pal = (u8*)lbl_80320978;
                 int c = ((FireballState*)state)->colorIndex * 3;
+                u8* pal = (u8*)lbl_80320978;
                 modelLightStruct_setDiffuseColor(*(int**)state, pal[c], pal[c + 1], pal[c + 2], 0);
             }
         }
@@ -1979,7 +1979,6 @@ void fireball_update(int* obj)
     extern void Obj_FreeObject(int* obj); /* #57 */
     extern undefined8 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* other = *(int**)&((GameObject*)obj)->unkF8;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
@@ -2018,9 +2017,9 @@ void fireball_update(int* obj)
         ((FireballState*)state)->stateFlags |= 1;
     }
     {
-        if (hitState->contactFlags != 0)
+        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
-            if (hitState->contactHitVolume != 14)
+            if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactHitVolume != 14)
             {
                 Sfx_PlayFromObject(obj, 179);
             }
@@ -2222,7 +2221,7 @@ void fn_8016F260(int* obj, int* state, int* other)
         difY = targY - (u16)angY;
         if (difY > 0x8000)
         {
-            difY -= 0xffff;
+            difY = (s16)(difY - 0xffff);
         }
         if (difY < -0x8000)
         {
@@ -2231,7 +2230,7 @@ void fn_8016F260(int* obj, int* state, int* other)
         difP = targP - (u16)angP;
         if (difP > 0x8000)
         {
-            difP -= 0xffff;
+            difP = (s16)(difP - 0xffff);
         }
         if (difP < -0x8000)
         {
@@ -2263,9 +2262,10 @@ void fn_8016F260(int* obj, int* state, int* other)
         ((GameObject*)obj)->anim.velocityZ = mathCosf(f);
         f = lbl_803E3338 * (f32)angP / lbl_803E333C;
         c = mathSinf(f);
-        if (lbl_803E3330 != mathCosf(f))
+        t1 = mathCosf(f);
+        if (lbl_803E3330 != t1)
         {
-            c = c / mathCosf(f);
+            c = c / t1;
         }
         ((GameObject*)obj)->anim.velocityY = c;
 

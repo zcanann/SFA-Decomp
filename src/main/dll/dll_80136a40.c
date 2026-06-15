@@ -409,7 +409,7 @@ int trickyFn_80138f14(u8* obj)
     u8* b = ((GameObject*)obj)->extra;
     if ((u32)GameBit_Get(0x4E4) != 0u)
     {
-        ((TrickyImpressState*)b)->unk54 |= 0x10000;
+        ((TrickyImpressState*)b)->unk54 |= 0x10000LL;
         if ((((TrickyImpressState*)b)->unk54 & 0x10) != 0u)
         {
             return 1;

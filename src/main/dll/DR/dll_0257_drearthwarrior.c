@@ -1002,9 +1002,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
         if (((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-            (int)obj, ((EarthWarriorState*)p2)->baddie.animSpeedC, (f32*)((char*)p2 + 0x2a0)) == 0)
+            (int)obj, ((EarthWarriorState*)p2)->baddie.animSpeedC, &((EarthWarriorState*)p2)->baddie.moveSpeed) == 0)
         {
-            *(f32*)((char*)p2 + 0x2a0) = lbl_803E8354;
+            ((EarthWarriorState*)p2)->baddie.moveSpeed = lbl_803E8354;
         }
     }
     fn_802BCA10(obj, q, p2);

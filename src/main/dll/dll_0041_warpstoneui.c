@@ -251,11 +251,11 @@ int WarpstoneUI_frameStart(void)
         lbl_803DD97C = lbl_803DD97C + (lbl_803E22D8 * timeDelta);
     }
     v = lbl_803DD97C;
-    if (lbl_803E22DC < v)
+    if (v > *(f32*)&lbl_803E22DC)
     {
         lbl_803DD97C = lbl_803E22DC;
     }
-    else if (lbl_803E22E0 > v)
+    else if (v < *(f32*)&lbl_803E22E0)
     {
         lbl_803DD97C = lbl_803E22E0;
     }

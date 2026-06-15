@@ -410,15 +410,18 @@ void waterfx_run(void)
             }
         }
     }
-    for (i = 0; i < 10; i++)
     {
-        WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
-        if (s->f10 < lbl_803DF2EC)
+        f32 thr = lbl_803DF2EC;
+        for (i = 0; i < 10; i++)
         {
-            s->f10 += s->f14 * timeDelta;
-            if (s->f10 >= lbl_803DF2EC)
+            WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
+            if (s->f10 < thr)
             {
-                lbl_803DD234 = (void*)((int)lbl_803DD234 - 1);
+                s->f10 += s->f14 * timeDelta;
+                if (s->f10 >= thr)
+                {
+                    lbl_803DD234 = (void*)((int)lbl_803DD234 - 1);
+                }
             }
         }
     }
@@ -495,6 +498,7 @@ void waterfx_onMapSetup(void)
             vd[1].b1 = 3;
             vd[1].b2 = 2;
             vd[1].b3 = 1;
+            vd += 2;
             e = &((WaterEntry7*)lbl_803DD238)[i];
             e->x = cxyz;
             e->y = cxyz;
@@ -502,7 +506,6 @@ void waterfx_onMapSetup(void)
             e->w = cxyz;
             e->f10 = cf10;
             e->active = 0;
-            vd += 2;
         }
     }
     {
@@ -535,6 +538,7 @@ void waterfx_onMapSetup(void)
             vd[1].b1 = 3;
             vd[1].b2 = 2;
             vd[1].b3 = 1;
+            vd += 2;
             g = &((WaterEntry*)lbl_803DD228)[i];
             g->x = cxyz;
             g->y = cxyz;
@@ -543,7 +547,6 @@ void waterfx_onMapSetup(void)
             g->f10 = cf10;
             g->active = 0;
             g->f16 = 0;
-            vd += 2;
         }
     }
     {

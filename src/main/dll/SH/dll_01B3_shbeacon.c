@@ -56,7 +56,7 @@ int sh_beacon_SeqFn(int obj)
     if (((ShBeaconState*)extra)->seqTimer >= lbl_803E5528)
     {
         ((ShBeaconState*)extra)->seqTimer = ((ShBeaconState*)extra)->seqTimer - lbl_803E5528;
-        if ((*(unsigned short*)(obj + 0xb0) & 0x800) != 0)
+        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
         {
             fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 0, 2, 0, 0);
         }
@@ -77,7 +77,7 @@ void sh_beacon_free(int obj, int keepChild)
     if (keepChild == 0)
     {
         void* p = *(void**)&((ShBeaconState*)extra)->childObj;
-        if (p != NULL && (*(unsigned short*)((char*)p + 0xb0) & 0x40) == 0)
+        if (p != NULL && (((GameObject*)p)->objectFlags & 0x40) == 0)
         {
             Obj_FreeObject((int)p);
         }

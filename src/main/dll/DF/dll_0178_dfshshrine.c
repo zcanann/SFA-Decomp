@@ -155,7 +155,7 @@ int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     u8 cmd;
 
     objLocal = obj;
-    state = *(DFlanternShrineState**)(objLocal + 0xb8);
+    state = (DFlanternShrineState*)((GameObject*)objLocal)->extra;
     player = Obj_GetPlayerObject();
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)

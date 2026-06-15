@@ -49,7 +49,7 @@ extern undefined4* gPlayerInterface;
 extern undefined4* gBaddieControlInterface;
 extern void* lbl_803DDA90;
 extern f32 timeDelta;
-extern f32 lbl_803E3060;
+extern const f32 lbl_803E3060;
 extern f32 lbl_803E307C;
 extern f32 lbl_803E3078;
 extern f32 lbl_803E308C;
@@ -141,15 +141,15 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
             spd = lbl_803E30AC * (((GroundBaddieState*)state)->baddie.targetDistance / (f32)(u32)(
                 (GroundBaddieState*)state)->aggroRange);
             *(f32*)(setup + 0x24) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosX - *(f32*)(ref + 8)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX - *(f32*)(ref + 8)) /
                 spd;
             r = (f32)(s32)
             randomGetRange(-0xa, 0xa);
             *(f32*)(setup + 0x28) =
-            (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosY + r - *
+            (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY + r - *
                 (f32*)(ref + 0xc)) / spd;
             *(f32*)(setup + 0x2c) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosZ - *(f32*)(ref + 0x10)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ - *(f32*)(ref + 0x10)) /
                 spd;
         }
     }
@@ -160,6 +160,7 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
     KaldaChomControl* control = ((CampfireState*)p2)->control;
     GroundBaddieState* eventState = (GroundBaddieState*)p3;
+    int n;
 
     lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8) * (u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x28) /
         lbl_803E30A4;
@@ -171,7 +172,6 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     }
     if (((s32)eventState->baddie.eventFlags & 0x80) != 0)
     {
-        int n;
         control->climbFxIndex = (u8)randomGetRange(0, 2);
         eventState->baddie.eventFlags &= ~0x80;
         Sfx_PlayFromObject(obj, SFXkr_climb2);
@@ -197,7 +197,6 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     }
     if (((s32)eventState->baddie.eventFlags & 0x400) != 0)
     {
-        int n;
         control->climbFxIndex = 3;
         n = 10;
         do
@@ -409,7 +408,8 @@ void kaldachom_update(int obj)
         if ((((CampfireState*)state)->unk270 != 3) &&
             (cond = (*gMapEventInterface)->shouldNotSaveTime(((KaldachomPlacement*)ref)->unk14), cond != 0))
         {
-            (**(code**)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
+            (*(void (**)(double, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x58))(
+                (double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
             *(undefined2*)(state + 0x402) = 0;
             Sfx_PlayFromObject(obj, SFXkr_pullup1);
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
@@ -421,7 +421,7 @@ void kaldachom_update(int obj)
     }
     else
     {
-        ref = (**(code**)(*gBaddieControlInterface + 0x30))(obj, state, 0);
+        ref = (*(int (**)(int, int, int))(*(int*)gBaddieControlInterface + 0x30))(obj, state, 0);
         if (ref == 0)
         {
             *(undefined2*)(state + 0x402) = 0;
@@ -443,14 +443,14 @@ void kaldachom_update(int obj)
                 *(undefined4*)(state + 0x2d0) = player;
                 if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (**(code**)(*gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
+                    (*(void (**)(double, int, int, int))(*(int*)gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
                 }
-                ref = (**(code**)(*gBaddieControlInterface + 0x48))
-                    ((f64)(f32)(u32)((CampfireState*)state)->aggroRange, obj, state, 0x8000);
-                if (ref != 0)
+                ref = (*(int (**)(double, int, int, int))(*(int*)gBaddieControlInterface + 0x48))(
+                    (f64)(f32)(u32)((CampfireState*)state)->aggroRange, obj, state, 0x8000);
+                if ((u32)ref != 0)
                 {
-                    (**(code**)(*gBaddieControlInterface + 0x28))
-                        (obj, state, state + 0x35c, (int)((CampfireState*)state)->gameBitB, 0, 0, 0, 4, 0xffffffff);
+                    (*(void (**)(int, int, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x28))(
+                        obj, state, state + 0x35c, (int)((CampfireState*)state)->gameBitB, 0, 0, 0, 4, 0xffffffff);
                     *(undefined*)(state + 0x349) = 0;
                     *(undefined2*)(state + 0x402) = 1;
                 }
@@ -467,16 +467,17 @@ void kaldachom_update(int obj)
                 player = Obj_GetPlayerObject();
                 *(undefined4*)(state + 0x2d0) = player;
                 kaldachom_handleAnimEvents(obj, state, state);
-                (**(code**)(*gBaddieControlInterface + 0x2c))((double)lbl_803E3060, obj, state, 0xffffffff);
+                (*(void (**)(double, int, int, int))(*(int*)gBaddieControlInterface + 0x2c))(
+                    (double)lbl_803E3060, obj, state, 0xffffffff);
                 if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (**(code**)(*gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
+                    (*(void (**)(double, int, int, int))(*(int*)gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
                 }
                 *(undefined4*)(state + 0x3e0) = *(undefined4*)&((GameObject*)obj)->pendingParentObj;
                 *(undefined4*)&((GameObject*)obj)->pendingParentObj = 0;
-                (**(code**)(*gPlayerInterface + 8))
-                ((double)timeDelta, (double)timeDelta, obj, state, &gKaldaChomStateHandlersA,
-                 &gKaldaChomStateHandlersB);
+                (*(void (**)(double, double, int, int, void*, void*))(*(int*)gPlayerInterface + 8))(
+                    (double)timeDelta, (double)timeDelta, obj, state, &gKaldaChomStateHandlersA,
+                    &gKaldaChomStateHandlersB);
                 *(undefined4*)&((GameObject*)obj)->pendingParentObj = *(undefined4*)(state + 0x3e0);
             }
         }

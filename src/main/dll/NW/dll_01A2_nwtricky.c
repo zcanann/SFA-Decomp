@@ -151,7 +151,7 @@ void nw_tricky_update(int* obj)
         }
         break;
     case 1:
-        if (!(*(u16*)((char*)tricky + 0xb0) & 0x1000))
+        if (!(((GameObject*)tricky)->objectFlags & 0x1000))
         {
             ((NwTrickyState*)state)->unk4 += timeDelta;
         }

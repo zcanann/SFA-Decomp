@@ -867,8 +867,11 @@ void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     state = (int)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
     slideMtx = (f32*)(state + 4);
-    if ((visible != 0) && (((GameObject*)obj)->unkF4 == 0))
+    if (visible != 0)
     {
+        switch (((GameObject*)obj)->unkF4)
+        {
+        case 0:
         if ((((LandedArwingState*)state)->surfaceMode == 6) && ((((u32)((LandedArwingState*)state)->flags92 >> 3) & 1) != 0))
         {
             if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
@@ -888,6 +891,8 @@ void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         else
         {
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E2FF4);
+        }
+            break;
         }
     }
 }

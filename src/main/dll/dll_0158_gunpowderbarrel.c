@@ -391,16 +391,14 @@ typedef struct
 void gunpowderbarrel_triggerExplosion(int* obj)
 {
     u8* sub;
-    ObjHitsPriorityState* hitState;
     int hitObj;
     int count;
     u8* tricky;
     int* timer;
 
     sub = ((GameObject*)obj)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (ObjHits_GetPriorityHit((int)obj, &hitObj, 0, 0) != 0 ||
-        (hitState->contactFlags != 0 && (sub[0x49] & 2) != 0))
+        (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (sub[0x49] & 2) != 0))
     {
         sub[0x16] += 1;
         sub[0x49] = (u8)(sub[0x49] | 1);
@@ -657,9 +655,9 @@ void gunpowderbarrel_hitDetect(int param_1)
     barrel = (GameObject*)param_1;
     state = barrel->extra;
 
-    if (Obj_IsObjectAlive(state->linkedTimerObject) == 0)
+    if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0)
     {
-        if (state->linkedTimerObject != 0)
+        if ((void*)state->linkedTimerObject != NULL)
         {
             ObjLink_DetachChild(param_1, state->linkedTimerObject);
             state->linkedTimerObject = 0;
@@ -680,7 +678,7 @@ void gunpowderbarrel_hitDetect(int param_1)
         return;
     }
 
-    if (state->queuedHitObject != 0)
+    if ((void*)state->queuedHitObject != NULL)
     {
         objHitDetectFn_80062e84(param_1, state->queuedHitObject, 1);
         state->queuedHitObject = 0;
@@ -803,38 +801,21 @@ void gunpowderbarrel_init(int obj, u8* def)
     state->motionFlags |= 1;
     {
         u8 v;
-        if ((s8)def[0x19] >= 1)
-        {
-            v = 0;
-        }
-        else
-        {
-            v = 1;
-        }
+        v = ((s8)def[0x19] >= 1) ? 0 : 1;
         ((BarrelBits*)&state->configFlags)->b7 = v;
-        if (*(s16*)(def + 0x1c) == 0)
-        {
-            v = 0;
-        }
-        else
-        {
-            v = 1;
-        }
+        v = (*(s16*)(def + 0x1c) == 0) ? 0 : 1;
         ((BarrelBits*)&state->configFlags)->b6 = v;
     }
     ObjHits_EnableObject(obj);
-    {
-        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        state->hitRadius = (f32)hitState->primaryRadius;
-        if (hitState != NULL)
-        {
-            hitState->trackContactMask = 1;
-        }
-    }
+    state->hitRadius = (f32)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->primaryRadius;
     ((BarrelBits*)&state->heldFlags)->b5 = 0;
     state->unk38 = lbl_803E42C0;
     state->linkedTimerObject = 0;
     (*(void (**)(GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x2c))(state, 1);
+    if ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState != NULL)
+    {
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 1;
+    }
     if (((GameObject*)obj)->anim.seqId == 0x754)
     {
         ((BarrelBits*)&state->heldFlags)->b1 = 1;
@@ -849,6 +830,7 @@ void gunpowderbarrel_init(int obj, u8* def)
 void gunpowderbarrel_update(int obj)
 {
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
+    extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b); /* #57 */
     u8* player = Obj_GetPlayerObject();
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
 
@@ -905,7 +887,7 @@ void gunpowderbarrel_update(int obj)
     }
     else
     {
-        if (Obj_IsObjectAlive(state->linkedTimerObject) == 0 && *(void* *)&state->linkedTimerObject != NULL)
+        if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0 && *(void* *)&state->linkedTimerObject != NULL)
         {
             ObjLink_DetachChild(obj, state->linkedTimerObject);
             state->linkedTimerObject = 0;
@@ -916,7 +898,7 @@ void gunpowderbarrel_update(int obj)
         uint msg;
         msg = 0;
         arg = 0;
-        while (ObjMsg_Pop((void*)obj, &msg, 0, &arg) != 0)
+        while ((int)ObjMsg_Pop((void*)obj, &msg, 0, &arg) != 0)
         {
             switch (msg)
             {
@@ -1259,7 +1241,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     state->motionFlags = (u8)(state->motionFlags | 1);
     Sfx_PlayFromObject((u32)obj, SFXsk_baptr6_c);
     state->motionFlags = (u8)(state->motionFlags | 2);
-    if ((state->configFlags & 0x40) != 0)
+    if (((BarrelBits*)&state->configFlags)->b6 != 0)
     {
         u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
         target = 0;
@@ -1283,7 +1265,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         {
             target = ObjGroup_FindNearestObject(0x3a, obj, (f32*)0);
         }
-        if (target != 0)
+        if ((void*)target != NULL)
         {
             sx = ((GameObject*)obj)->anim.localPosX;
             sy = ((GameObject*)obj)->anim.localPosY;

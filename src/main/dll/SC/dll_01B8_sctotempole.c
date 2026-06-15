@@ -164,7 +164,7 @@ void sc_totempole_update(int obj)
 void sc_totempole_init(int obj, int p2)
 {
     SCTotemPoleState* state = ((GameObject*)obj)->extra;
-    switch (*(int*)(p2 + 0x14))
+    switch (((ObjPlacement*)p2)->mapId)
     {
     case SC_TOTEMPOLE_SETUP_REAR:
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_REAR;

@@ -362,7 +362,7 @@ void fn_801627F4(int obj)
                 diff += 0xffff;
             }
             facing = 0;
-            if (diff < 0x3ffd && diff > -0x3ffd)
+            if (diff <= 0x3ffc && diff >= -0x3ffc)
             {
                 facing = 1;
             }

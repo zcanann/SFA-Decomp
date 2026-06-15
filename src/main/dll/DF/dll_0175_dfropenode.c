@@ -174,8 +174,9 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float* phase)
     raw = (s32)ph;
     idx = (s8)raw;
     *phase = ph - (f32)idx;
-    x0 = *((f32*)**(int**)&((DFropenodeExtra*)extra)->rope + idx * 13);
-    node = **(int**)&((DFropenodeExtra*)extra)->rope + idx * 0x34;
+    node = **(int**)&((DFropenodeExtra*)extra)->rope;
+    x0 = *((f32*)node + idx * 13);
+    node = node + idx * 0x34;
     dx = x0 - *(f32*)(node + 0x34);
     dz = *(f32*)(node + 8) - *(f32*)(node + 0x3c);
     len = sqrtf(dx * dx + dz * dz);
@@ -203,7 +204,7 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     node = (DFRopeNode*)(nodes + idx * 0x34);
     dy = node[1].pos[1] - node->pos[1];
     dz = node[1].pos[2] - node->pos[2];
-    x0 = *(f32*)(nodes + idx * 0x34);
+    x0 = extra->rope->nodes[idx].pos[0];
     *xOut = (node[1].pos[0] - x0) * fraction + (((GameObject*)obj)->anim.localPosX + x0);
     *yOut = dy * fraction + (((GameObject*)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
     *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
@@ -623,10 +624,13 @@ void dfropenode_update(DFropenodeObject* obj)
             extra->minZ = extra->maxZ;
             extra->maxZ = temp;
         }
-        extra->minX -= lbl_803E4E24;
-        extra->minZ -= lbl_803E4E24;
-        extra->maxX += lbl_803E4E24;
-        extra->maxZ += lbl_803E4E24;
+        {
+            f32 m = lbl_803E4E24;
+            extra->minX -= m;
+            extra->minZ -= m;
+            extra->maxX += m;
+            extra->maxZ += m;
+        }
 
         baseX = obj->posX;
         baseY = obj->posY;

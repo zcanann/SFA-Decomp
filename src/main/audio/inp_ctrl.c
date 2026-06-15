@@ -57,7 +57,7 @@ u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     mask = lbl_8032FFE0[channel & 0xff];
     dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
     flags = *dirtyWord;
-    maskedFlags = mask & flags;
+    maskedFlags = flags & mask;
     isDirty = !!maskedFlags;
     if (isDirty != 0)
     {
@@ -68,8 +68,8 @@ u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
         return *(u16*)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
     return _GetInputValue(0,
-                          (McmdInputSlot*)(lbl_803BDEF4 + (channel & 0xff) * 0x24 +
-                              (studio & 0xff) * 0x90),
+                          (McmdInputSlot*)(lbl_803BDEF4 + (studio & 0xff) * 0x90 +
+                              (channel & 0xff) * 0x24),
                           auxIndex, handleIndex);
 }
 
@@ -87,7 +87,7 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     mask = lbl_8032FFF0[channel & 0xff];
     dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
     flags = *dirtyWord;
-    maskedFlags = mask & flags;
+    maskedFlags = flags & mask;
     isDirty = !!maskedFlags;
     if (isDirty != 0)
     {
@@ -98,8 +98,8 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
         return *(u16*)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
     return _GetInputValue(0,
-                          (McmdInputSlot*)(lbl_803BDA74 + (channel & 0xff) * 0x24 +
-                              (studio & 0xff) * 0x90),
+                          (McmdInputSlot*)(lbl_803BDA74 + (studio & 0xff) * 0x90 +
+                              (channel & 0xff) * 0x24),
                           auxIndex, handleIndex);
 }
 
@@ -312,7 +312,7 @@ u32 inpTranslateExCtrl(u32 input)
 u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
 {
     int translated;
-    u32 value;
+    u16 value;
 
     translated = inpTranslateExCtrl(ctrl) & 0xff;
     switch (translated)

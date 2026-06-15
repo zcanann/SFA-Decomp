@@ -65,6 +65,7 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 extern void playerAddMoney(int player, int amount);
 extern void playerAddHealth(int player, int amount);
 extern int gameBitIncrement(int bit);
+typedef struct ShopItem { u8 _pad[0xa]; s16 textId; } ShopItem;
 extern u8 lbl_80327FD0[];
 extern void fn_80295CF4(int player, int mode);
 extern void skyFn_80088c94(int skyId, int enable);
@@ -240,7 +241,8 @@ s16 shop_getItemTextId(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c)
     {
-        return *(s16*)&lbl_80327FD0[idx * 0xc + 0xa];
+        ShopItem *items = (ShopItem *)lbl_80327FD0;
+        return items[idx].textId;
     }
     return 0;
 }

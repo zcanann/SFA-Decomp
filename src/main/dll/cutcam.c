@@ -72,6 +72,10 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
     {
         blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, (int*)0x0, (int*)0x0, 0x10, 0xffffffff, 0xff, 0);
     }
+    else
+    {
+        blocked = '\0';
+    }
     lbl_803DD528 = blocked;
     if (runTrace != '\0')
     {
@@ -534,10 +538,10 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     while (i <= 0xc);
     for (j = 0; j <= 0xc; j = j + 1)
     {
-        radii[j] = lbl_803E16A0;
         endPts[j * 3] = prev[0];
         endPts[j * 3 + 1] = prev[1];
         endPts[j * 3 + 2] = prev[2];
+        radii[j] = lbl_803E16A0;
     }
     hitDetect_calcSweptSphereBounds(bounds, (float*)path, endPts, radii, 0xd);
     hitDetectFn_800691c0(0, bounds, 0x248, 1);
