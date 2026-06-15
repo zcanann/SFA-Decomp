@@ -896,7 +896,8 @@ int fn_802A36EC(int obj, int state)
                 hi = lbl_803E8048;
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E804C;
             }
-            t = (inner->unk5A8 - lo) / (hi - lo) * lbl_803E7FAC;
+            t = (inner->unk5A8 - lo) / (hi - lo);
+            t = t * lbl_803E7FAC;
             r = (t < lbl_803E7EA4) ? lbl_803E7EA4 : ((t > lbl_803E7FAC) ? lbl_803E7FAC : t);
             inner->unk604 = (s16)r;
             ObjAnim_SetCurrentMove(obj, lbl_80332EF0[lbl_803DC6A0], lbl_803E7EA4, 0);
