@@ -490,7 +490,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
     s16 rotation[3];
-    f32 baseVec[4];
+    volatile f32 baseVec[4];
     int* handles;
     s16 angleStep;
     s16 i;
@@ -501,7 +501,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj = (s16)(*(s16*)obj + (int)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta)));
+            *(s16*)obj = (s16)(*(s16*)obj + (int)((lbl_803E6458 + (f32)(u32)state->ringCount) * (lbl_803E645C * timeDelta)));
         }
         else
         {
@@ -511,8 +511,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     if (state->variantSfxTimer != 0 && state->flags.bit10 != 0)
     {
-        state->variantSfxTimer -= (s16)(int)
-        timeDelta;
+        state->variantSfxTimer -= (int)timeDelta;
         if (state->variantSfxTimer <= 0)
         {
             state->variantSfxTimer = 200;
@@ -524,8 +523,8 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     baseVec[3] = lbl_803E6460;
     baseVec[0] = lbl_803E6458;
     angleStep = 0;
-    rotation[2] = 0;
-    rotation[1] = 0;
+    rotation[2] = angleStep;
+    rotation[1] = angleStep;
     handles = gSfxplayerEffectHandles;
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
@@ -646,23 +645,25 @@ void sfxplayer_free(int obj, int arg1)
 {
     uint* handles;
     s16 i;
+    uint zero;
 
     if (arg1 == 0)
     {
         i = 0;
         handles = (uint*)gSfxplayerEffectHandles;
+        zero = 0;
         for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
             if (handles[0] != 0)
             {
                 Obj_FreeObject(handles[0]);
             }
-            handles[0] = 0;
+            handles[0] = zero;
             if (handles[1] != 0)
             {
                 Obj_FreeObject(handles[1]);
             }
-            handles[1] = 0;
+            handles[1] = zero;
             Sfx_PlayFromObject(obj, SFXPLAYER_TIMEOUT_RESET_SFX);
             handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         }

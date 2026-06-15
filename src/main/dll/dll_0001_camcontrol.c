@@ -115,7 +115,7 @@ void camcontrol_updateTargetFeedback(void)
     }
     if (gCamcontrolTargetState == '\0')
     {
-        if (gCamcontrolNormalizedMin >= reticle->currentMoveProgress)
+        if (reticle->currentMoveProgress <= gCamcontrolNormalizedMin)
         {
             if (target != NULL)
             {

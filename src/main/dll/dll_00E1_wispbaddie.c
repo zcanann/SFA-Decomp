@@ -181,16 +181,16 @@ void fn_8014F620(int obj, WispBaddieState* state)
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E26E8 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX)
+        ((GameObject*)obj)->anim.velocityX = lbl_803E26E8 * (*(f32*)((char*)curve + 0x68) - ((GameObject*)obj)->anim.localPosX)
             +
             ((GameObject*)obj)->anim.velocityX;
 
         wave = mathSinf((lbl_803E26DC * (f32)state->hoverWavePhase) / lbl_803E26E0);
         ((GameObject*)obj)->anim.velocityY =
-            ((lbl_803E26F0 * wave + *(f32*)(curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY) *
+            ((lbl_803E26F0 * wave + *(f32*)((char*)curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY) *
             lbl_803E26E8 +
             ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E26E8 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ)
+        ((GameObject*)obj)->anim.velocityZ = lbl_803E26E8 * (*(f32*)((char*)curve + 0x70) - ((GameObject*)obj)->anim.localPosZ)
             +
             ((GameObject*)obj)->anim.velocityZ;
     }

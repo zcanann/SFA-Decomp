@@ -1329,11 +1329,14 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
 
     sum = lbl_803E2420;
     v = ((TrickyState*)state)->speed;
-    dec = lbl_803E241C * timeDelta;
-    while (v > lbl_803E23DC)
     {
-        sum = sum + v * timeDelta;
-        v = v + dec;
+        f32 td = timeDelta;
+        dec = lbl_803E241C * td;
+        while (v > lbl_803E23DC)
+        {
+            sum = v * td + sum;
+            v = v + dec;
+        }
     }
     thresh = baseRadius + sum;
     distSq = thresh;

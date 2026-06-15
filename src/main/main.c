@@ -421,8 +421,8 @@ void VFP_lavapool_init(int obj, int def)
 
 void vfplavastar_update(int obj)
 {
-    VfpLavaStarState* state;
     VfpLavaStarMapData* mapData;
+    VfpLavaStarState* state;
 
     mapData = (VfpLavaStarMapData*)*(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
@@ -433,7 +433,7 @@ void vfplavastar_update(int obj)
         randomGetRange(5, 0x14);
         ((GameObject*)obj)->anim.localPosY = mapData->base.posY;
     }
-    state->effectTimer += (s16)(int)timeDelta;
+    state->effectTimer += (s16)timeDelta;
     if (lbl_803DDCD8 != 0 && state->effectTimer >= 0x28)
     {
         (*(void (*)(int, int, int, int, int, int))*(int*)(*(int*)lbl_803DDCD8 + 4))(obj, 0, 0, 4, -1, 0);

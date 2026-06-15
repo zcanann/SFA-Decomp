@@ -1,4 +1,4 @@
-/* DLL 0x0045 — camera talk / NPC-speak mode [80107AEC-80107B4C) */
+/* DLL 0x0045 - camera talk / NPC-speak mode [80107AEC-80107B4C) */
 #include "main/dll/CAM/cambike_state.h"
 #include "main/mm.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"

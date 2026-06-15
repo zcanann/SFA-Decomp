@@ -272,21 +272,23 @@ int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
     dy = from[1] - to[1];
     dist = dist * lbl_803E3110;
     a = grav * (lbl_803E3114 * grav);
-    grav = -(grav * dy) - (speed = speed * speed);
-    disc = grav * grav - (lbl_803E3118 * a) * (dy * dy + dist * dist);
-    if (disc >= lbl_803E311C)
     {
-        if (flag)
+        f32 vel = -(grav * dy) - (speed = speed * speed);
+        disc = vel * vel - (lbl_803E3118 * a) * (dy * dy + dist * dist);
+        if (disc >= lbl_803E311C)
         {
-            t = (lbl_803E3120 * (-grav + sqrtf(disc))) / a;
+            if (flag)
+            {
+                t = (lbl_803E3120 * (-vel + sqrtf(disc))) / a;
+            }
+            else
+            {
+                t = (lbl_803E3120 * (-vel - sqrtf(disc))) / a;
+            }
+            t = sqrtf(t);
+            a = dist / t;
+            return getAngle(sqrtf(-(a * a - speed)), a);
         }
-        else
-        {
-            t = (lbl_803E3120 * (-grav - sqrtf(disc))) / a;
-        }
-        t = sqrtf(t);
-        a = dist / t;
-        return getAngle(sqrtf(-(a * a - speed)), a);
     }
     return 0x2000;
 }

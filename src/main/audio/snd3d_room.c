@@ -250,7 +250,11 @@ void s3dAllocateRoomStudios(void)
     SndSpatialEntry* entry;
     SndSpatialListener* listener;
     u32 listenerCount;
+    f32 fadeScale;
+    f64 fadeThreshold;
 
+    fadeScale = lbl_803E7894;
+    fadeThreshold = lbl_803E7898;
     s3dUpdateRoomDistances();
 
     listenerCount = 0;
@@ -356,7 +360,7 @@ void s3dAllocateRoomStudios(void)
                 {
                     entry->fade = 0;
                 }
-                if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898)
+                if ((f32)(fadeScale * (f32)entry->fade) >= fadeThreshold)
                 {
                     synthActivateStudio(entry->assignedVoice, 1, 0);
                 }
@@ -379,7 +383,7 @@ void s3dAllocateRoomStudios(void)
                         entry->fade = 0x7f0000;
                         entry->flags &= 0x7fffffff;
                     }
-                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898)
+                    if ((f32)(fadeScale * (f32)entry->fade) >= fadeThreshold)
                     {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
                     }
@@ -396,7 +400,7 @@ void s3dAllocateRoomStudios(void)
                         entry->fade = 0;
                         entry->flags &= 0xbfffffff;
                     }
-                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898)
+                    if ((f32)(fadeScale * (f32)entry->fade) >= fadeThreshold)
                     {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
                     }

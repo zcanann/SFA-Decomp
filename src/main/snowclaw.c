@@ -149,16 +149,14 @@ void snowclaw_init(int* obj, u8* init)
 {
     u8* table;
     int* inner;
-    ObjModelState* sub;
 
     table = lbl_8032A310;
     ((GameObject*)obj)->animEventCallback = (void*)snowclaw_animEventCallback;
-    sub = ((GameObject*)obj)->anim.modelState;
-    if (sub != NULL)
+    if (((GameObject*)obj)->anim.modelState != NULL)
     {
-        sub->flags |= 0x4000;
-        sub->shadowTintA = 0x64;
-        sub->shadowTintB = 0x96;
+        ((GameObject*)obj)->anim.modelState->flags |= 0x4000;
+        ((GameObject*)obj)->anim.modelState->shadowTintA = 0x64;
+        ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
     }
     inner = ((GameObject*)obj)->extra;
     *(int*)inner = 0;
@@ -490,11 +488,11 @@ void snowclaw_hitDetect(int obj)
                 ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->flag6 = 1;
                 ((SnowclawState*)inner)->unkAC = lbl_803E670C;
                 ((SnowclawState*)inner)->unk24 = lbl_803E6728 * mathSinf(
-                    (f32)((GameObject*)obj)->anim.rotX * lbl_803E672C / lbl_803E6730);
+                    lbl_803E672C * (f32)((GameObject*)obj)->anim.rotX / lbl_803E6730);
                 ((SnowclawState*)inner)->unk28 = lbl_803E6734 * (f32)(int)
                 randomGetRange(0x28, 0x64);
                 ((SnowclawState*)inner)->unk2C = lbl_803E6728 * mathCosf(
-                    (f32)((GameObject*)obj)->anim.rotX * lbl_803E672C / lbl_803E6730);
+                    lbl_803E672C * (f32)((GameObject*)obj)->anim.rotX / lbl_803E6730);
                 player = (int*)fn_802972A8(Obj_GetPlayerObject());
                 if (player != 0)
                 {
@@ -513,10 +511,10 @@ void snowclaw_hitDetect(int obj)
             }
         }
     }
-    sub = *(int**)inner;
-    if (sub != 0 && (*(int (*)(int*))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x38)))(sub) == 2)
+    if (*(int**)inner != 0 &&
+        (*(int (*)(int*))(*(int*)(*(int*)(*(int*)&((GameObject*)*(int**)inner)->anim.dll) + 0x38)))(*(int**)inner) == 2)
     {
-        snowclaw_syncMountTransform(obj, (int)sub, 0, 0, 0, 0, 0, 0, 0);
+        snowclaw_syncMountTransform(obj, (int)*(int**)inner, 0, 0, 0, 0, 0, 0, 0);
     }
     a5 = ((SnowclawState*)inner)->hitCooldown;
     if (a5 >= 0)
@@ -564,7 +562,7 @@ void snowclaw_update(int obj)
         }
         else
         {
-            ((SnowclawState*)inner)->health = healthState - 1;
+            ((SnowclawState*)inner)->health -= 1;
         }
         return;
     }
@@ -661,8 +659,7 @@ void snowclaw_update(int obj)
         pulseModes[2] = pulseTable[6];
         pulseModes[3] = pulseTable[7];
         pulseIndex = 3 - *(s8*)&((SnowclawState*)inner)->health;
-        i = ((SnowclawState*)inner)->unkA6;
-        ((SnowclawState*)inner)->unkA6 = i + 1;
+        i = ((SnowclawState*)inner)->unkA6++;
         if ((i % lbl_803DC220) != 0)
         {
             pulseVec[0] = lbl_803E66F0;

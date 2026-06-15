@@ -240,8 +240,8 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     int* a4 = ((int**)obj)[0xA4 / 4];
     char* base;
     f32* p;
-    f32 fc;
     f32 fc2;
+    f32 fc;
     if (mode != 1)
     {
         ((CameraArwingWork*)lbl_803A43C0)->unkC = *(f32*)((char*)a4 + 0x18);

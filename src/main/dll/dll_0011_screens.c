@@ -725,7 +725,7 @@ void loadTaskTexts(void)
         if (s[0] == 'T' && s[1] == 'a' && s[2] == 's' && s[3] == 'k' &&
             s[4] == 'T' && s[5] == 'e' && s[6] == 'x' && s[7] == 't' && s[8] == 's')
         {
-            idx = (s[9] - '0') * 100 + (s[10] - '0') * 10 + s[11] - '0';
+            idx = (s[9] - '0') * 100 + (s[10] - '0') * 10 + (s[11] - '0');
             if (idx < 0xd)
             {
                 lbl_803A4218[idx] = (u8)i;
@@ -764,22 +764,21 @@ void gameBitFn_800ea2e0(u8 id)
 {
     u8* texts;
     u8 wasNew;
+    s16* taskMap;
+    u32 i;
     s16 cachedBank;
     u32 cachedBits;
     u32 mask;
     u32 bits;
     s16 bank;
     s16 historyIdx;
-    u32 i;
-    s16* taskMap;
 
     texts = (u8*)getLastSavedGameTexts();
     cachedBank = -1;
 
     if (texts[6] == 0)
     {
-        taskMap = &lbl_803119E0[1];
-        for (i = 1; (s16)i < 0xce; i++)
+        for (i = 1, taskMap = &lbl_803119E0[1]; (s16)i < 0xce; i++)
         {
             if ((*taskMap == 0xffff) || (*taskMap == -1))
             {
@@ -801,15 +800,15 @@ void gameBitFn_800ea2e0(u8 id)
     mask = 1 << (id % 32);
     bank = (s16)(((u32)id >> 5) + 0x12f);
     bits = GameBit_Get(bank);
-    if ((bits & mask) == 0)
+    if ((bits & mask) != 0)
+    {
+        wasNew = 0;
+    }
+    else
     {
         bits |= mask;
         GameBit_Set(bank, bits);
         wasNew = 1;
-    }
-    else
-    {
-        wasNew = 0;
     }
 
     if (wasNew)

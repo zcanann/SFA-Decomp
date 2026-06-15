@@ -139,7 +139,7 @@ void screenTransition_do2(int p1, int p2, int p3)
     HudColor col;
     if (lbl_803DD42E != 0)
     {
-        lbl_803DD42E = lbl_803DD42E - 1;
+        lbl_803DD42E--;
         return;
     }
     if (screenTransitionPause == 0 && lbl_803DD428 >= lbl_803E0568)
@@ -187,7 +187,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         col.b = 0;
         col.g = 0;
         col.r = 0;
-        col.a = (int)screenTransitionAlpha;
+        col.a = screenTransitionAlpha;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -197,7 +197,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = (int)screenTransitionAlpha;
+        col.a = screenTransitionAlpha;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -210,7 +210,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         col.r = 0xff;
         col.g = 0;
         col.b = 0;
-        col.a = (int)screenTransitionAlpha;
+        col.a = screenTransitionAlpha;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -269,7 +269,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col2.r = r;
         col2.g = b;
         col2.b = g;
-        col2.a = (int)screenTransitionAlpha;
+        col2.a = screenTransitionAlpha;
         hudDrawRect(sx2, sy2, sw2, sh2, col2);
         GXSetScissor(sx2, sy2, sw2, sh2);
     }

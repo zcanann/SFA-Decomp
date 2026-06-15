@@ -161,6 +161,7 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     u8 baseNote;
     u8 inputNote;
     f32 freq;
+    u32 d;
 
     if (packed == 0xffffffffU)
     {
@@ -172,12 +173,12 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     {
         if (baseNote < inputNote)
         {
-            u32 d = inputNote - baseNote;
+            d = inputNote - baseNote;
             freq = voicePitchUpTable[d];
         }
         else
         {
-            u32 d = baseNote - inputNote;
+            d = baseNote - inputNote;
             freq = voicePitchDownTable[d];
         }
         freq = (f32)(u32)(packed & 0xffffff) * freq;

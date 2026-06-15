@@ -63,7 +63,7 @@ void CameraModeClimb_update(short* camObj)
             (f32)(s32)
         lbl_803DD578->transitionDuration;
         lbl_803DD578->relativePosition =
-            blend * (f32)(s32)((u16)lbl_803DD578->targetRelativePosition - (u16)lbl_803DD578->startRelativePosition) +
+            blend * (f32)(s32)(lbl_803DD578->targetRelativePosition - lbl_803DD578->startRelativePosition) +
             (f32)(u32)(u16)
         lbl_803DD578->startRelativePosition;
         lbl_803DD578->targetDistance = blend * (lbl_803DD578->endDistance - lbl_803DD578->startDistance) + lbl_803DD578
