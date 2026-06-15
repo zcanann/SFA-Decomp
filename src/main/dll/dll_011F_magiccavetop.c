@@ -53,7 +53,6 @@ extern void stopRumble2(void);
 extern void staffSetGlow(void* a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void mapUnload(int idx, int flags);
-extern void envFxActFn_800887f8(int a);
 extern void warpToMap(int mapId, int b);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern int loadMapAndParent(int mapId);
