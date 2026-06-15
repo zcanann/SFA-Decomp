@@ -362,7 +362,7 @@ void carryable_break_respawn_update(int obj)
         (*gCarryableInterface)->getAnimState(obj, (int)state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
-            (*(void (*)(int, CarryableBreakRespawnState*))((u8*)*gCarryableInterface + 0x30))(obj, state);
+            (*(void (**)(int, CarryableBreakRespawnState*))((u8*)*gCarryableInterface + 0x30))(obj, state);
             Sfx_PlayFromObject(obj, SFXen_rfall5_c);
             ObjHitbox_SetSphereRadius(obj, 0x28);
             ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
