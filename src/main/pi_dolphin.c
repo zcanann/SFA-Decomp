@@ -3077,34 +3077,34 @@ uint FUN_800461b4(int* param_1, int* param_2)
     return 0;
 }
 
-void FUN_80046270(int param_1, int param_2, int param_3)
+void FUN_80046270(int base, int count, int idx)
 {
-    undefined2 uVar1;
-    uint* puVar2;
-    uint uVar3;
-    uint* puVar4;
-    uint uVar5;
-    int iVar6;
+    undefined2 holeTag;
+    uint* slot;
+    uint childKey;
+    uint* child;
+    uint holeKey;
+    int childIdx;
 
-    uVar5 = *(uint*)(param_1 + param_3 * 8);
-    uVar1 = *(undefined2*)(param_1 + param_3 * 8 + 4);
-    while (param_3 <= param_2 >> 1)
+    holeKey = *(uint*)(base + idx * 8);
+    holeTag = *(undefined2*)(base + idx * 8 + 4);
+    while (idx <= count >> 1)
     {
-        iVar6 = param_3 * 2;
-        if ((iVar6 < param_2) && (puVar4 = (uint*)(param_1 + param_3 * 0x10), *puVar4 < puVar4[2]))
+        childIdx = idx * 2;
+        if ((childIdx < count) && (child = (uint*)(base + idx * 0x10), *child < child[2]))
         {
-            iVar6 = iVar6 + 1;
+            childIdx = childIdx + 1;
         }
-        puVar4 = (uint*)(param_1 + iVar6 * 8);
-        uVar3 = *puVar4;
-        if (uVar3 <= uVar5) break;
-        puVar2 = (uint*)(param_1 + param_3 * 8);
-        *puVar2 = uVar3;
-        *(undefined2*)(puVar2 + 1) = *(undefined2*)(puVar4 + 1);
-        param_3 = iVar6;
+        child = (uint*)(base + childIdx * 8);
+        childKey = *child;
+        if (childKey <= holeKey) break;
+        slot = (uint*)(base + idx * 8);
+        *slot = childKey;
+        *(undefined2*)(slot + 1) = *(undefined2*)(child + 1);
+        idx = childIdx;
     }
-    *(uint*)(param_1 + param_3 * 8) = uVar5;
-    *(undefined2*)(param_1 + param_3 * 8 + 4) = uVar1;
+    *(uint*)(base + idx * 8) = holeKey;
+    *(undefined2*)(base + idx * 8 + 4) = holeTag;
     return;
 }
 
@@ -3335,126 +3335,126 @@ undefined4 FUN_80046cd0(int* param_1, int param_2, int param_3, int param_4, byt
     return 0;
 }
 
-void FUN_80047d88(char* param_1, char param_2, char param_3, undefined4* param_4, undefined4* param_5)
+void FUN_80047d88(char* texel, char doFirst, char doSecond, undefined4* outFirst, undefined4* outSecond)
 {
-    char cVar1;
-    bool bVar2;
-    bool bVar3;
-    undefined4 local_8[2];
+    char c;
+    bool firstResolved;
+    bool secondResolved;
+    undefined4 word[2];
 
-    bVar2 = false;
-    bVar3 = false;
-    if (param_2 == '\0')
+    firstResolved = false;
+    secondResolved = false;
+    if (doFirst == '\0')
     {
-        bVar2 = true;
+        firstResolved = true;
     }
     else
     {
-        cVar1 = *param_1;
-        if ((cVar1 == param_1[1]) && (cVar1 == param_1[2]))
+        c = *texel;
+        if ((c == texel[1]) && (c == texel[2]))
         {
-            if (cVar1 == -1)
+            if (c == -1)
             {
-                *param_4 = 0;
-                bVar2 = true;
+                *outFirst = 0;
+                firstResolved = true;
             }
-            else if (cVar1 == -0x20)
+            else if (c == -0x20)
             {
-                *param_4 = 1;
-                bVar2 = true;
+                *outFirst = 1;
+                firstResolved = true;
             }
-            else if (cVar1 == -0x40)
+            else if (c == -0x40)
             {
-                *param_4 = 2;
-                bVar2 = true;
+                *outFirst = 2;
+                firstResolved = true;
             }
-            else if (cVar1 == -0x60)
+            else if (c == -0x60)
             {
-                *param_4 = 3;
-                bVar2 = true;
+                *outFirst = 3;
+                firstResolved = true;
             }
-            else if (cVar1 == -0x80)
+            else if (c == -0x80)
             {
-                *param_4 = 4;
-                bVar2 = true;
+                *outFirst = 4;
+                firstResolved = true;
             }
-            else if (cVar1 == '`')
+            else if (c == '`')
             {
-                *param_4 = 5;
-                bVar2 = true;
+                *outFirst = 5;
+                firstResolved = true;
             }
-            else if (cVar1 == '@')
+            else if (c == '@')
             {
-                *param_4 = 6;
-                bVar2 = true;
+                *outFirst = 6;
+                firstResolved = true;
             }
-            else if (cVar1 == ' ')
+            else if (c == ' ')
             {
-                *param_4 = 7;
-                bVar2 = true;
+                *outFirst = 7;
+                firstResolved = true;
             }
         }
-        if (!bVar2)
+        if (!firstResolved)
         {
-            *param_4 = DAT_803dd9f0;
+            *outFirst = DAT_803dd9f0;
         }
     }
-    if (param_3 == '\0')
+    if (doSecond == '\0')
     {
-        bVar3 = true;
+        secondResolved = true;
     }
     else
     {
-        cVar1 = param_1[3];
-        if (cVar1 == -1)
+        c = texel[3];
+        if (c == -1)
         {
-            *param_5 = 0;
-            bVar3 = true;
+            *outSecond = 0;
+            secondResolved = true;
         }
-        else if (cVar1 == -0x20)
+        else if (c == -0x20)
         {
-            *param_5 = 1;
-            bVar3 = true;
+            *outSecond = 1;
+            secondResolved = true;
         }
-        else if (cVar1 == -0x40)
+        else if (c == -0x40)
         {
-            *param_5 = 2;
-            bVar3 = true;
+            *outSecond = 2;
+            secondResolved = true;
         }
-        else if (cVar1 == -0x60)
+        else if (c == -0x60)
         {
-            *param_5 = 3;
-            bVar3 = true;
+            *outSecond = 3;
+            secondResolved = true;
         }
-        else if (cVar1 == -0x80)
+        else if (c == -0x80)
         {
-            *param_5 = 4;
-            bVar3 = true;
+            *outSecond = 4;
+            secondResolved = true;
         }
-        else if (cVar1 == '`')
+        else if (c == '`')
         {
-            *param_5 = 5;
-            bVar3 = true;
+            *outSecond = 5;
+            secondResolved = true;
         }
-        else if (cVar1 == '@')
+        else if (c == '@')
         {
-            *param_5 = 6;
-            bVar3 = true;
+            *outSecond = 6;
+            secondResolved = true;
         }
-        else if (cVar1 == ' ')
+        else if (c == ' ')
         {
-            *param_5 = 7;
-            bVar3 = true;
+            *outSecond = 7;
+            secondResolved = true;
         }
-        if (!bVar3)
+        if (!secondResolved)
         {
-            *param_5 = DAT_803dd9ec;
+            *outSecond = DAT_803dd9ec;
         }
     }
-    if ((!bVar2) || (!bVar3))
+    if ((!firstResolved) || (!secondResolved))
     {
-        local_8[0] = *(undefined4*)param_1;
-        FUN_8025c510(DAT_803dd9f4, (byte*)local_8);
+        word[0] = *(undefined4*)texel;
+        FUN_8025c510(DAT_803dd9f4, (byte*)word);
         DAT_803dd9f4 = DAT_803dd9f4 + 1;
         DAT_803dd9f0 = DAT_803dd9f0 + 1;
         DAT_803dd9ec = DAT_803dd9ec + 1;
