@@ -70,7 +70,7 @@ extern f32 lbl_803DEFF8;
 extern f32 lbl_803DEFFC;
 extern u8 lbl_803DD088;
 extern u8 curSeqNo;
-extern void Obj_TransformWorldPointToLocal(f32 wx, f32 wy, f32 wz, f32* x, f32* y, f32* z, void* m);
+extern void Obj_TransformWorldPointToLocal(f32* x, f32* y, f32* z, void* m, f32 wx, f32 wy, f32 wz);
 
 extern u8 lbl_8039944C[];
 extern int lbl_803DD0C0;
@@ -268,9 +268,9 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.previousWorldPosX = ((GameObject*)obj)->anim.worldPosX;
-    ((GameObject*)obj)->anim.previousWorldPosY = ((GameObject*)obj)->anim.worldPosY;
-    ((GameObject*)obj)->anim.previousWorldPosZ = ((GameObject*)obj)->anim.worldPosZ;
+    ((GameObject*)obj)->anim.previousWorldPosX = *(f32*)((int)obj + 0x18);
+    ((GameObject*)obj)->anim.previousWorldPosY = *(f32*)((int)obj + 0x1c);
+    ((GameObject*)obj)->anim.previousWorldPosZ = *(f32*)((int)obj + 0x20);
 
     if (((GameObject*)obj)->animEventCallback != NULL)
     {
@@ -357,7 +357,6 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
     }
 }
 
-#pragma opt_common_subs off
 void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
 {
     void* result;
@@ -396,7 +395,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 entry += 8;
             }
             *(u8**)(slotBase + j * 8) = activeObj;
-            *(u8**)((u8*)(int)lbl_80396918 + slotOff + j * 8 + 4) = obj;
+            *(u8**)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
         }
     }
     else
@@ -420,7 +419,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
             }
             if ((((ObjSeqState*)seq)->flags & 2) != 0)
             {
-                *(s16*)obj += ((ObjSeqState*)seq)->heading;
+                *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
             }
             ((GameObject*)obj)->pendingParentObj = NULL;
             ((GameObject*)obj)->objectFlags &= ~0x1000;
@@ -430,7 +429,6 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
     }
     return result;
 }
-#pragma opt_common_subs reset
 
 void ObjSeq_run(void)
 {
@@ -924,6 +922,7 @@ void ObjSeq_updateCamera(void)
     s16 pitch;
     s16 yaw;
     s16 roll;
+    int code;
 
     obj = lbl_803DD0B8;
     if (obj != NULL)
@@ -975,10 +974,10 @@ void ObjSeq_updateCamera(void)
             *(f32*)(camObj + 0x18) = x;
             *(f32*)(camObj + 0x1c) = y;
             *(f32*)(camObj + 0x20) = z;
-            Obj_TransformWorldPointToLocal(*(f32*)(camObj + 0x18), *(f32*)(camObj + 0x1c),
-                                           *(f32*)(camObj + 0x20), (f32*)(camObj + 0xc),
-                                           (f32*)(camObj + 0x10), (f32*)(camObj + 0x14),
-                                           *(void**)(camObj + 0x30));
+            Obj_TransformWorldPointToLocal((f32*)(camObj + 0xc), (f32*)(camObj + 0x10),
+                                           (f32*)(camObj + 0x14), *(void**)(camObj + 0x30),
+                                           *(f32*)(camObj + 0x18), *(f32*)(camObj + 0x1c),
+                                           *(f32*)(camObj + 0x20));
             *(s16*)camObj = (s16)(0x8000 - pitch);
             *(s16*)(camObj + 2) = (s16) - yaw;
             *(s16*)(camObj + 4) = roll;
@@ -1015,11 +1014,12 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x48:
                     mode48.mode = lbl_803DD108;
-                    if (lbl_803DD100 == 0)
+                    code = lbl_803DD100;
+                    if (code == 0)
                     {
                         mode48.flag = 1;
                     }
-                    (*gCameraInterface)->setMode(0x48, 1, 3, 8, &mode48, lbl_803DD100, 0xff);
+                    (*gCameraInterface)->setMode(0x48, 1, 3, 8, &mode48, code, 0xff);
                     break;
                 case 0x4a:
                     (*gCameraInterface)->setMode(0x4a, 1, 0, 0, NULL, lbl_803DD100, 0xff);
@@ -1521,7 +1521,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         default:
             if (opcode != 0xf)
             {
-                ((ObjSeqState*)seq)->curFrame += cmd[1];
+                ((ObjSeqState*)seq)->curFrame = ((ObjSeqState*)seq)->curFrame + cmd[1];
             }
             break;
         }
@@ -1639,7 +1639,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                 {
                     ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
-                    ((ObjSeqState*)seq)->cmdCursor++;
+                    ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
                 }
                 else
                 {
@@ -1652,9 +1652,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 {
                     if (opcode != 0xf)
                     {
-                        ((ObjSeqState*)seq)->unk68 += cmd[1];
+                        ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + cmd[1];
                     }
-                    ((ObjSeqState*)seq)->cmdCursor++;
+                    ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
                     if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, flags, &out) != 0)
                     {
                         return;
@@ -2653,17 +2653,16 @@ int ObjSeq_update(u8* obj, f32 t)
     }
     else
     {
-        ((ObjSeqState*)seq)->curFrame = ((f32*)(base + 0x3894))[slot];
+        ((ObjSeqState*)seq)->curFrame = (int)((f32*)(base + 0x3894))[slot];
     }
 
-    i = 3;
     p = seq + 6;
-    for (; i != 0; i--)
+    for (i = 3; i != 0; i--)
     {
         p -= 2;
         if (*(s16*)(p + 0x30) > 0)
         {
-            *(s16*)(p + 0x30) -= framesThisStep;
+            *(s16*)(p + 0x30) = *(s16*)(p + 0x30) - framesThisStep;
             if (*(s16*)(p + 0x30) <= 0)
             {
                 *(s16*)(p + 0x30) = 0;
@@ -2697,7 +2696,7 @@ int ObjSeq_update(u8* obj, f32 t)
         slot = (s8)((ObjSeqState*)seq)->slot;
         if ((s8)base[slot + 0x3c4c] != 0 && (s8)base[slot + 0x39e8] != 0)
         {
-            ((ObjSeqState*)seq)->curFrame -= (s8)base[slot + 0x39e8];
+            ((ObjSeqState*)seq)->curFrame = ((ObjSeqState*)seq)->curFrame - (s8)base[slot + 0x39e8];
             if (((ObjSeqState*)seq)->curFrame < 0)
             {
                 ((ObjSeqState*)seq)->curFrame = 0;
@@ -2906,7 +2905,7 @@ int ObjSeq_update(u8* obj, f32 t)
                     if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                     {
                         ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
-                        ((ObjSeqState*)seq)->cmdCursor++;
+                        ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
                     }
                     else
                     {
@@ -2919,9 +2918,9 @@ int ObjSeq_update(u8* obj, f32 t)
                     {
                         if (opcode != 0xf)
                         {
-                            ((ObjSeqState*)seq)->unk68 += cmd[1];
+                            ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + cmd[1];
                         }
-                        ((ObjSeqState*)seq)->cmdCursor++;
+                        ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
                         if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, 0, 0) != 0)
                         {
                             targetFrame = ((ObjSeqState*)seq)->curFrame;
@@ -3028,7 +3027,7 @@ int ObjSeq_update(u8* obj, f32 t)
         ((ObjSeqState*)seq)->unk80 = 0;
         if (action != NULL && (((ObjSeqState*)seq)->flags & 4) != 0)
         {
-            *(u16*)(*(u8**)(action + 0x2c) + 0x58) =
+            *(s16*)(*(u8**)(action + 0x2c) + 0x58) =
                 (u16)(int)(SendMailData * ((ObjSeqState*)seq)->fade);
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
@@ -3040,7 +3039,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 ((GameObject*)obj)->anim.localPosY +
                 ((((GameObject*)obj)->anim.localPosY - scratch[0]) - *(f32*)(model + 0xc));
         }
-        *(s16*)obj += ((ObjSeqState*)seq)->heading;
+        *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
         ObjSeq_ApplyLinkedObjectTransform(obj, activeObj, seq);
         objSeqDoBgCmds0D(seq, activeObj, 0);
 
@@ -3161,7 +3160,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
                 + 0xc));
     }
 
-    *(s16*)obj += ((ObjSeqState*)seq)->heading;
+    *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
     if (*seqObj != obj && (s8)lbl_803DD0D8 == 0)
     {
         objCallSeqFn(*seqObj, obj, seq, ((u8*)(historyBase + 0x3c4c))[(s8)((ObjSeqState*)seq)->slot]);
@@ -3202,9 +3201,9 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
 
 void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
-    s16 basePitch;
     int baseYaw;
     int baseRoll;
+    int basePitch;
     f32 baseX;
     f32 baseY;
     f32 baseZ;
@@ -3248,7 +3247,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
             if ((s8)((ObjSeqState*)seq)->movementState == 2)
             {
                 *(s16*)(seqObj + 0) =
-                    (s16)((s32)basePitch + (s32)(
+                    (s16)(basePitch + (s32)(
                         (f32)((ObjSeqState*)seq)->rotOffsetX * ((ObjSeqState*)seq)->posOffsetScale));
                 *(s16*)(seqObj + 2) =
                     (s16)(baseYaw + (s32)((f32)((ObjSeqState*)seq)->rotOffsetY * ((ObjSeqState*)seq)->posOffsetScale));
@@ -3440,8 +3439,8 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     lbl_80399398[count * 3] = shortIndex;
     lbl_80399398[count * 3 + 2] = shortYrot;
     shortXrot = xrot;
-    lbl_80399398[count * 3 + 1] = shortXrot;
     lbl_803DD0BC++;
+    lbl_80399398[count * 3 + 1] = shortXrot;
 }
 
 void ObjSeq_objLoadAnimData(u8* seq, u8* obj)
@@ -4157,10 +4156,9 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
             for (i = 0; i < objectCount; i++)
             {
                 candidate = objects[i];
-                j = 0;
                 slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
                 entry = slotBase;
-                for (; j < 16; j++)
+                for (j = 0; j < 16; j++)
                 {
                     if (*(u8**)entry == candidate)
                     {
@@ -4211,7 +4209,6 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
     return -1;
 }
 
-#pragma opt_loop_invariants off
 void* ObjSeq_FindTargetObject(u8* obj)
 {
     int objectCount;
@@ -4219,14 +4216,14 @@ void* ObjSeq_FindTargetObject(u8* obj)
     void** objects;
     int targetId;
     int objectType;
-    u8* candidate;
+    f32 bestDistSq;
     void* bestObj;
     int i;
+    u8* candidate;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 distSq;
-    f32 bestDistSq;
 
     targetId = *(int*)(*(u8**)&((GameObject*)obj)->extra + 0x10c);
     if (targetId != 0)
@@ -4247,6 +4244,8 @@ void* ObjSeq_FindTargetObject(u8* obj)
 
     bestDistSq = lbl_803DEFF0;
     bestObj = NULL;
+    {
+    f32 zeroRef = lbl_803DEFB0;
     for (i = 0; i < objectCount; i++)
     {
         candidate = objects[i];
@@ -4256,16 +4255,16 @@ void* ObjSeq_FindTargetObject(u8* obj)
             dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)candidate)->anim.localPosY;
             dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)candidate)->anim.localPosZ;
             distSq = dx * dx + dy * dy + dz * dz;
-            if (bestDistSq < lbl_803DEFB0 || distSq < bestDistSq)
+            if (bestDistSq < zeroRef || distSq < bestDistSq)
             {
                 bestDistSq = distSq;
                 bestObj = candidate;
             }
         }
     }
+    }
     return bestObj;
 }
-#pragma opt_loop_invariants reset
 
 void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 {
@@ -4305,7 +4304,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
             if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
             {
                 ((ObjSeqState*)seq)->unk68 += command[1];
-                ((ObjSeqState*)seq)->cmdCursor = (s16)(((ObjSeqState*)seq)->cmdCursor + (*(s16*)(command + 2) + 1));
+                ((ObjSeqState*)seq)->cmdCursor = (s16)(((ObjSeqState*)seq)->cmdCursor + 1 + *(s16*)(command + 2));
             }
             else
             {
@@ -4459,29 +4458,20 @@ void objSeq_onMapSetup(void)
         }
     }
 
+    for (; i < 0x55; i++)
     {
-        u8* b = lbl_80396918;
-        s16* rModes = (s16*)(b + i * 2 + 0x3a98);
-        int* rHandles = (int*)(b + i * 4 + 0x33e4);
-        u8* rMarks = b + i + 0x338c;
-        for (; i < 0x55; i++)
-        {
-            rMarks[0x810] = 0;
-            rMarks[0x7b8] = 0;
-            rModes[0] = 0;
-            rMarks[0x8c0] = 0;
-            rMarks[0x868] = 0;
-            rMarks[0x6b4] = 0;
-            rMarks[0x65c] = 0;
-            *(f32*)((u8*)rHandles + 0x4b0) = lbl_803DEFB0;
-            *(f32*)((u8*)rHandles + 0x35c) = lbl_803DEFF0;
-            rMarks[0x204] = 0;
-            rHandles[0] = 0;
-            rMarks[0] = 0;
-            rModes += 1;
-            rHandles += 1;
-            rMarks += 1;
-        }
+        base[i + 0x3b9c] = 0;
+        base[i + 0x3b44] = 0;
+        *(s16*)(base + i * 2 + 0x3a98) = 0;
+        base[i + 0x3c4c] = 0;
+        base[i + 0x3bf4] = 0;
+        base[i + 0x3a40] = 0;
+        base[i + 0x39e8] = 0;
+        *(f32*)(base + i * 4 + 0x3894) = lbl_803DEFB0;
+        *(f32*)(base + i * 4 + 0x3740) = lbl_803DEFF0;
+        base[i + 0x3590] = 0;
+        *(int*)(base + i * 4 + 0x33e4) = 0;
+        base[i + 0x338c] = 0;
     }
 
     lbl_803DD124 = 0;
@@ -4550,18 +4540,18 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     nextScale = ROM_CURVE_NODE_SCALE(next);
 
     xPoints[0] = curve->x;
-    xPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->yaw));
     xPoints[1] = next->x;
+    xPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->yaw));
     xPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     yPoints[0] = curve->y;
-    yPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->pitch));
     yPoints[1] = next->y;
+    yPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->pitch));
     yPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->pitch));
 
     zPoints[0] = curve->z;
-    zPoints[2] = curveScale * mathCosf(ROM_CURVE_NODE_ANGLE(curve->yaw));
     zPoints[1] = next->z;
+    zPoints[2] = curveScale * mathCosf(ROM_CURVE_NODE_ANGLE(curve->yaw));
     zPoints[3] = nextScale * mathCosf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
@@ -4596,7 +4586,6 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t)
     int val;
     f32 thr;
 
-    prev = NULL;
     node = NULL;
     if (t < state->fromTime)
     {
@@ -4704,7 +4693,6 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
 {
     RomCurveNode* from;
     RomCurveNode* to;
-    f32 segmentT;
     f32 t;
     f32 fromScale;
     f32 toScale;
@@ -4714,9 +4702,11 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     f32 xTangent;
     f32 yTangent;
     f32 zTangent;
+    f32 segmentT;
     f32 length;
     f32 scale;
     f32 angle;
+    f32* times;
     int segment;
     int i;
 
@@ -4726,35 +4716,34 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     if (from != NULL && state->toNodeId > -1)
     {
         to = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
+        times = &state->fromTime;
         i = 0;
-        while (i <= 8 && t >= *(f32*)((u8*)state + (i << 2) + 8))
+        while (i < 9 && t >= times[i])
         {
             i++;
         }
         segment = i - 1;
-        segmentT = (f32)segment +
-            (t - *(f32*)((u8*)state + (segment << 2) + 8)) /
-                (*(f32*)((u8*)state + (segment << 2) + 12) -
-                    *(f32*)((u8*)state + (segment << 2) + 8));
-        segmentT = segmentT * lbl_803DF01C;
+        segmentT = ((f32)segment +
+                (t - times[segment]) / (times[segment + 1] - times[segment])) *
+            lbl_803DF01C;
 
         fromScale = ROM_CURVE_NODE_SCALE(from);
         toScale = ROM_CURVE_NODE_SCALE(to);
 
         xPoints[0] = from->x;
-        xPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->yaw));
         xPoints[1] = to->x;
         xPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->yaw));
+        xPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         yPoints[0] = from->y;
-        yPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->pitch));
         yPoints[1] = to->y;
         yPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->pitch));
+        yPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->pitch));
 
         zPoints[0] = from->z;
-        zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
         zPoints[1] = to->z;
         zPoints[2] = fromScale * mathCosf(ROM_CURVE_NODE_ANGLE(from->yaw));
+        zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         outPos[0] = Curve_EvalHermite(segmentT, xPoints, &xTangent);
         if ((s8)ignoreY == 0)
@@ -4807,14 +4796,14 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     RomCurveNode* node;
     f32 outPos[3];
     f32 offset[3];
-    f32 z;
-    f32 y;
-    f32 x;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 angleSin;
     f32 angleCos;
+    f32 x;
+    f32 y;
+    f32 z;
 
     base = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (base == NULL)
@@ -4995,8 +4984,8 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
         {
             deltaPrev = -deltaPrev;
         }
-        values[2] = (deltaNext + deltaPrev) * (lbl_803DF000 *
-            (f32)((s8)prev->tangentAndMode >> 2));
+        values[2] = (deltaNext + deltaPrev) * lbl_803DF000 *
+            (f32)((s8)prev->tangentAndMode >> 2);
     }
 
     span = (f32)(keys[prevIndex + 1].frame - keys[prevIndex].frame);
@@ -5019,8 +5008,8 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
             {
                 deltaPrev = -deltaPrev;
             }
-            values[3] = (deltaNext + deltaPrev) * (lbl_803DF000 *
-                (f32)((s8)key->tangentAndMode >> 2));
+            values[3] = (deltaNext + deltaPrev) * lbl_803DF000 *
+                (f32)((s8)key->tangentAndMode >> 2);
         }
     }
 
