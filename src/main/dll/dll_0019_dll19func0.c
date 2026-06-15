@@ -1174,8 +1174,9 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
     nz = *(f32*)(t + 0x14) - seq->posOffsetZ;
     {
         f32 total = sqrtf(nx * nx + nz * nz);
-        f32 step = timeDelta * (total - dist) * lbl_803E1C74;
+        f32 step = timeDelta * (total - dist);
         f32 td;
+        step = step * lbl_803E1C74;
         if (step > lbl_803E1C6C)
         {
             step = lbl_803E1C6C;
@@ -1208,7 +1209,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
             {
                 delta = -0x2000;
             }
-            ((GameObject*)obj)->anim.rotX -= (s16)((delta * framesThisStep) >> 3);
+            ((GameObject*)obj)->anim.rotX -= (delta * framesThisStep) >> 3;
             if ((s8)lbl_803DD5DC > 10)
             {
                 delta = 0;
@@ -1245,7 +1246,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
         ((BaddieState*)st)->controlMode = p6;
         *(int*)&((BaddieState*)st)->targetObj = 0;
         seq->flags = -1;
-        seq->flags = seq->flags & ~0x60;
+        seq->flags = seq->flags & ~0x40;
         ((BaddieState*)st)->physicsActive = 0;
         GameBit_Set(*(s16*)(st + 0x3f4), 0);
     }
