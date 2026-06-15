@@ -40,7 +40,7 @@ extern f32 lbl_803E446C;
 extern f32 lbl_803E4470;
 extern f32 lbl_803E4474;
 extern f32 lbl_803E4478;
-extern f32 lbl_803E447C;
+extern const f32 lbl_803E447C;
 extern f32 lbl_803E4480;
 extern f32 lbl_803E4484;
 extern f32 lbl_803E4498;
@@ -52,6 +52,8 @@ extern f32 lbl_803E44AC;
 extern f32 lbl_803E44B0;
 extern f32 lbl_803E44B4;
 extern f32 lbl_803E44B8;
+
+typedef struct { int a, b; } IntPair;
 
 void RollingBarrel_hitDetect(void)
 {
@@ -106,8 +108,7 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     RollingBarrelState* state = ((GameObject*)obj)->extra;
     int tmp[2];
 
-    tmp[0] = lbl_803E4460;
-    tmp[1] = lbl_803E4464;
+    *(IntPair*)tmp = *(IntPair*)&lbl_803E4460;
     params->respawnParam = -1;
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
     ((GameObject*)obj)->anim.rotZ = 0x4000;
