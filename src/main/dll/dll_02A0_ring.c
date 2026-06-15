@@ -142,7 +142,7 @@ void ring_update(int obj)
 {
     RingState* state = ((GameObject*)obj)->extra;
     int arwing;
-    int setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    int setup;
     int bit;
     int r;
     int hitA;
@@ -154,6 +154,7 @@ void ring_update(int obj)
     f32 mtx[12];
 
     arwing = getArwing();
+    setup = *(int*)&((GameObject*)obj)->anim.placementData;
     if (arwing == 0u)
         arwing = Obj_GetPlayerObject();
 
