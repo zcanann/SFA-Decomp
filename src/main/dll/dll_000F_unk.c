@@ -47,7 +47,6 @@ extern f32 lbl_803E05BC;
 extern u8 lbl_803DD44E;
 extern u8 lbl_803DD44F;
 extern u8 lbl_803DD450;
-extern f64 lbl_803E0598;
 extern f32 lbl_803E05C0;
 extern f32 lbl_803E05C4;
 extern f32 lbl_803DD444;
@@ -580,8 +579,6 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-/* segment pragma-stack balance (re-split): */
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */

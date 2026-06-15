@@ -347,6 +347,7 @@ checked:
 }
 
 #pragma dont_inline on
+#pragma ppc_unroll_speculative on
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH)
 {
     int lineStarts[32];
@@ -429,8 +430,8 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             }
             for (i = 0; i < count; i++)
             {
-                u8 b0 = str[cursor++];
-                u8 b1 = str[cursor++];
+                int b0 = ((u8*)str)[cursor++];
+                int b1 = ((u8*)str)[cursor++];
                 params[i] = (b0 << 8) | b1;
             }
             sel = 1;
@@ -582,6 +583,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     *dst = 0;
     return buffer;
 }
+#pragma ppc_unroll_speculative off
 #pragma dont_inline reset
 
 void gameTextRenderStrs(char* str, int boxIdx)

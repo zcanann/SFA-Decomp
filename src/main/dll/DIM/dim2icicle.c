@@ -64,18 +64,6 @@ typedef struct IcicleFxPos {
     f32 z;
 } IcicleFxPos;
 
-/*
- * --INFO--
- *
- * Function: DIM2icicle_updateBossSequenceEffects
- * EN v1.0 Address: 0x801BB598
- * EN v1.0 Size: 1452b
- * EN v1.1 Size: 1452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 #pragma scheduling off
 #pragma peephole off
 void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
@@ -234,18 +222,6 @@ typedef struct IcicleWarpFlags {
     u8 rest : 7;
 } IcicleWarpFlags;
 
-/*
- * --INFO--
- *
- * Function: DIM2icicle_updateDarkIceMinesWarpAndEffects
- * EN v1.0 Address: 0x801BBB44
- * EN v1.0 Size: 1940b
- * EN v1.1 Size: 1940b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
   DIMbossTopState *topState;
@@ -426,18 +402,6 @@ typedef struct IcicleHitFx {
     f32 z;
 } IcicleHitFx;
 
-/*
- * --INFO--
- *
- * Function: DIM2icicle_updateHitResponse
- * EN v1.0 Address: 0x801BC2D8
- * EN v1.0 Size: 1292b
- * EN v1.1 Size: 1292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIM2icicle_updateHitResponse(int obj, int playerObj)
 {
   int *state;
@@ -550,18 +514,6 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
   }
 }
 
-/*
- * --INFO--
- *
- * Function: DIM2icicle_updateCombatState
- * EN v1.0 Address: 0x801BC7E4
- * EN v1.0 Size: 848b
- * EN v1.1 Size: 848b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUpdate,
                                   DIMbossRuntime *runtime, DIMbossRuntime *updateRuntime)
 {

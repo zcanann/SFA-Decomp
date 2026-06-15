@@ -71,7 +71,6 @@ enum
     SB_KYTECAGE_HIT_RELEASE = 0x1
 };
 
-/* unused dispatcher stub kept to align the v1.0 function set */
 void FUN_801e55c0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
                   u64 param_6, u64 param_7, u64 param_8, u16* param_9, int param_10)
 {
@@ -142,7 +141,6 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-/* detach the attached Kyte child on free */
 void SB_KyteCage_free(GameObject* obj)
 {
     void* child = ((SBKyteCageState*)obj->extra)->kyte;

@@ -912,8 +912,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     grimble_getExtraSize,
 };
 
-/* segment pragma-stack balance (re-split): */
-
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
 

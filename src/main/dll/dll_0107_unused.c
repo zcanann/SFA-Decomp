@@ -292,10 +292,9 @@ void fn_80185B74(int obj)
         {
             u8 st21;
             ObjHits_DisableObject(obj);
-            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            hitState->localPosX = ((GameObject*)obj)->anim.localPosX;
-            hitState->localPosY = ((GameObject*)obj)->anim.localPosY;
-            hitState->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
             if ((getButtonsJustPressed(0) & 0x100) != 0)
             {

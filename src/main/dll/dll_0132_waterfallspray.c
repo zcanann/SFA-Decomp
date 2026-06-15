@@ -48,10 +48,10 @@ typedef struct WaterFallSprayPartfxArgs
 void WaterFallSpray_update(int* objParam)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(u8* obj, int sfxId); /* #57 */
-    u8* obj;
     u32* state;
     u8* data;
     u8* player;
+    u8* obj;
     GameObject* playerObj;
     WaterFallSprayPartfxArgs partfxArgs;
     f32 dx;

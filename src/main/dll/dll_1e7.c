@@ -75,7 +75,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
         {
             fn_8014C66C(*objects, obj);
             if ((vec3f_distanceSquared(&(*objects)->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
-                (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0))
+                (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0u))
             {
                 linkedEventPending = 1;
             }
@@ -173,15 +173,19 @@ uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* 
                 angleDelta = angleDelta + 0xFFFF;
             }
             value = (int)angleDelta;
-            if (value < 0)
+            if (value >= 0)
+            {
+            }
+            else
             {
                 value = -value;
             }
             if (0x20 < value)
             {
-                value = getAngle(object->modelPos.x - config->homePos.x,
-                                 object->modelPos.z - config->homePos.z);
-                OSReport(sSHthorntailAngleYawDebug, (u16)value, facingAngle);
+                OSReport(sSHthorntailAngleYawDebug,
+                         (u16)getAngle(object->modelPos.x - config->homePos.x,
+                                       object->modelPos.z - config->homePos.z),
+                         facingAngle);
                 behaviorState = runtime->behaviorState;
                 if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
                     (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))

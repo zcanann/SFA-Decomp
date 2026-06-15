@@ -1533,9 +1533,9 @@ int ktrex_stateHandlerA08(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 7);
         {
-            char* base = (char*)p + 0x4a;
+            char* pK = (char*)p + 0x4a;
             ((KTRexArenaState*)gKTRexState)->unk4 =
-                (f32)(u32) * (u16*)(base + (((KTRexArenaState*)gKTRexState)->unk101 & ~1));
+                (f32)(u32) * (u16*)(pK + (((KTRexArenaState*)gKTRexState)->unk101 & ~1));
         }
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
         goto ret0;

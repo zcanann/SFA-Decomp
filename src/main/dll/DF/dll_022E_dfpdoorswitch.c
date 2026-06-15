@@ -57,8 +57,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
-/* chuka extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
@@ -525,14 +523,12 @@ void doorswitch_initialise(void)
 {
 }
 
-
 int doorswitch_getExtraSize(void) { return 0x0; }
 int doorswitch_getObjectTypeId(void) { return 0x0; }
 
 void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
-
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

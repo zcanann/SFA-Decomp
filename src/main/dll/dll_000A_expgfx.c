@@ -2737,6 +2737,7 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
     return;
 }
 
+#pragma dont_inline on
 int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short slotType,
                      u8 boundsTemplateId)
 {
@@ -2763,7 +2764,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
     f32 scaleVal;
     u8* poolSourceModesByte;
     u8 modeFlag;
-    uint* slotPoolBases;
+
     ExpgfxQuadVertex* quadVertices;
 
     runtime = EXPGFX_RUNTIME_DATA;
@@ -2784,7 +2785,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         return EXPGFX_INVALID_POOL_INDEX;
     }
     {
-        slotPoolBases = runtime->slotPoolBases;
+
 
         if ((int)poolIndex < EXPGFX_POOL_COUNT)
         {
@@ -2808,7 +2809,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             trackedFrameMask->lowWord = maskLowWord & inverseBit;
             trackedFrameMask->highWord = maskHighWord & (uint)((int)inverseBit >> 0x1f);
         }
-        slot = (ExpgfxSlot*)(slotPoolBases[(int)poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+        slot = (ExpgfxSlot*)(runtime->slotPoolBases[(int)poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
         gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
         if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < (short)gExpgfxSequenceCounter)
@@ -2823,18 +2824,18 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         resourceTableIndex = (int)(short)expgfx_acquireResourceEntry(config->texture.parts.textureId);
         if (resourceTableIndex < 0)
         {
-            expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         resourceHandle = (ExpgfxResourceHandle*)runtime->resourceTable[resourceTableIndex].resource;
         if (resourceHandle == NULL)
         {
-            expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         if (resourceHandle->refCount == EXPGFX_REFCOUNT_OVERFLOW)
         {
-            expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         resourceHandle->refCount = resourceHandle->refCount + 1;
@@ -2889,7 +2890,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX)
         {
             debugPrintf(sExpgfxInvalidTabIndex);
-            expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         Expgfx_SetSlotTableIndex(slot, (u8)expTabIndex);
@@ -3068,6 +3069,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         return slot->sequenceId;
     }
 }
+#pragma dont_inline reset
 
 void expgfx_onMapSetup(void)
 {

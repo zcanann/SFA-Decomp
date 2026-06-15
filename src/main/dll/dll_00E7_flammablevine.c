@@ -55,7 +55,7 @@ undefined4
 #pragma scheduling on
 #pragma peephole on
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, undefined4 param_10
              , ObjAnimUpdateState* animUpdate, int param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
@@ -73,8 +73,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined8 extraout_f1_03;
     undefined8 f1tmp;
 
-    placement = *(int*)&((GameObject*)param_9)->anim.placementData;
-    extra = *(int*)&((GameObject*)param_9)->extra;
+    placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    extra = *(int*)&((GameObject*)obj)->extra;
     i = 0;
     tmp = (int)animUpdate;
     do

@@ -123,14 +123,12 @@ void tree_updateAmbientEffects(int obj, int p2)
 {
     TreeState* state = (TreeState*)p2;
     int i;
-    int ambientObject;
 
     if (((GameObject*)obj)->unkF8 != 0)
     {
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
         {
-            ambientObject = state->ambientEffectHandles[i];
-            if (ambientObject == 0)
+            if ((void*)state->ambientEffectHandles[i] == NULL)
             {
                 state->ambientSpawnTimers[i] -= timeDelta;
                 if (state->ambientSpawnTimers[i] <= lbl_803E72F8)
@@ -141,15 +139,15 @@ void tree_updateAmbientEffects(int obj, int p2)
             }
             else
             {
-                if ((*(int (**)(int))(*(int*)(ambientObject + 0x68) + 0x28))(
-                    ambientObject) > 3)
+                if ((*(int (**)(int))(*(int*)(*(int*)(state->ambientEffectHandles[i] + 0x68)) + 0x28))(
+                    state->ambientEffectHandles[i]) > 3)
                 {
                     state->ambientEffectHandles[i] = 0;
                 }
                 else
                 {
-                    (*(void (**)(int, int))(*(int*)(ambientObject + 0x68) + 0x24))(
-                        ambientObject, (int)&state->ambientEffectPos[i][0]);
+                    (*(void (**)(int, int))(*(int*)(*(int*)(state->ambientEffectHandles[i] + 0x68)) + 0x24))(
+                        state->ambientEffectHandles[i], (int)&state->ambientEffectPos[i][0]);
                 }
             }
         }

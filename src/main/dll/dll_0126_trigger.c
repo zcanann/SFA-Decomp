@@ -1213,9 +1213,9 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     u8* state = ((GameObject*)obj)->extra;
     u8* p = (u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18);
     u8 i = 0;
-    u8 b;
-    u8 sflags;
-    u8 c;
+    u8 opFlags;
+    u8 seqFlags;
+    u8 subOp;
     int t;
     int t2;
     int* tbl;
@@ -1231,18 +1231,18 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
 
     while (i < 8)
     {
-        if (p[1] != 0 && ((sflags = *state, (sflags & 4) == 0) || (*p & 0x20) != 0))
+        if (p[1] != 0 && ((seqFlags = *state, (seqFlags & 4) == 0) || (*p & 0x20) != 0))
         {
-            b = *p;
-            if ((b & 0x10) == 0)
+            opFlags = *p;
+            if ((opFlags & 0x10) == 0)
             {
                 if ((s8)p3 == 1)
                 {
-                    if ((b & 1) != 0)
+                    if ((opFlags & 1) != 0)
                     {
-                        if ((sflags & 1) != 0)
+                        if ((seqFlags & 1) != 0)
                         {
-                            if ((b & 4) == 0)
+                            if ((opFlags & 4) == 0)
                             {
                                 goto next;
                             }
@@ -1250,11 +1250,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         goto run;
                     }
                 }
-                else if ((s8)p3 == -1 && (b & 2) != 0)
+                else if ((s8)p3 == -1 && (opFlags & 2) != 0)
                 {
-                    if ((sflags & 2) != 0)
+                    if ((seqFlags & 2) != 0)
                     {
-                        if ((b & 8) == 0)
+                        if ((opFlags & 8) == 0)
                         {
                             goto next;
                         }
@@ -1262,7 +1262,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     goto run;
                 }
             }
-            else if ((b & 1) != 0)
+            else if ((opFlags & 1) != 0)
             {
                 if ((s8)p3 < 0)
                 {
@@ -1270,7 +1270,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 }
                 goto run;
             }
-            else if ((b & 2) == 0 || (s8)p3 <= 0)
+            else if ((opFlags & 2) == 0 || (s8)p3 <= 0)
             {
             run:
                 switch (p[1])
@@ -1532,8 +1532,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x22:
                     id = (u16)((p[2] << 8) | p[3]);
-                    c = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
-                    (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
+                    subOp = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
+                    (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, subOp ^ 1);
                     break;
                 case 0x15:
                     tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
@@ -1667,14 +1667,14 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x1c:
-                    c = p[2];
-                    if (c == 2)
+                    subOp = p[2];
+                    if (subOp == 2)
                     {
                         GameBit_Set(0x3af, p[3] == 0);
                     }
-                    else if (c < 2)
+                    else if (subOp < 2)
                     {
-                        if (c == 0)
+                        if (subOp == 0)
                         {
                             GameBit_Set(0x3ab, p[3] == 0);
                         }
@@ -1683,10 +1683,10 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             GameBit_Set(0x3ac, p[3] == 0);
                         }
                     }
-                    else if (c < 4)
+                    else if (subOp < 4)
                     {
-                        c = p[3];
-                        if (c == 1)
+                        subOp = p[3];
+                        if (subOp == 1)
                         {
                             GameBit_Set(0x3b0, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
@@ -1694,14 +1694,14 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
                             envFxFn_800887cc();
                         }
-                        else if (c == 0)
+                        else if (subOp == 0)
                         {
                             GameBit_Set(0x3b0, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
                         }
-                        else if (c < 3)
+                        else if (subOp < 3)
                         {
                             GameBit_Set(0x3b0, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
@@ -1766,51 +1766,51 @@ void Trigger_hitDetect(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    int t;
-    int tk;
+    int player;
+    int tricky;
     int target;
     int ok;
-    int ok2;
+    int flagOk;
     int r1;
     int r2;
     int i;
-    u8* p8;
-    u8 c;
+    u8* flagWalker;
+    u8 anchorMode;
     s16 ty;
     f32 dist[1];
 
     dist[0] = lbl_803E4104;
     if (((TriggerPlacement*)def)->unk38 <= 0 || *(s16*)def == 0xf4)
     {
-        t = Obj_GetPlayerObject();
-        if ((void*)t != NULL)
+        player = Obj_GetPlayerObject();
+        if ((void*)player != NULL)
         {
             r1 = fn_802972A8();
             if ((void*)r1 != NULL)
             {
-                t = r1;
+                player = r1;
             }
         }
         else
         {
-            t = getArwing();
+            player = getArwing();
         }
-        tk = getTrickyObject();
-        if ((void*)t != NULL || (void*)tk != NULL)
+        tricky = getTrickyObject();
+        if ((void*)player != NULL || (void*)tricky != NULL)
         {
             if ((*state & 4) != 0)
             {
-                objInterpretSeq(obj, t, 1, 0);
+                objInterpretSeq(obj, player, 1, 0);
                 *state &= ~4;
                 *state |= 1;
             }
             else
             {
                 ok = 1;
-                c = def[0x43];
-                if (c > 2)
+                anchorMode = def[0x43];
+                if (anchorMode > 2)
                 {
-                    target = ObjGroup_FindNearestObject(c - 1, obj, (int)dist);
+                    target = ObjGroup_FindNearestObject(anchorMode - 1, obj, (int)dist);
                     if ((void*)target == NULL)
                     {
                         ok = 0;
@@ -1818,18 +1818,18 @@ void Trigger_hitDetect(int obj)
                 }
                 else
                 {
-                    switch (c)
+                    switch (anchorMode)
                     {
                     case 0:
-                        target = t;
-                        if ((void*)t == NULL)
+                        target = player;
+                        if ((void*)player == NULL)
                         {
                             ok = 0;
                         }
                         break;
                     case 1:
-                        target = tk;
-                        if ((void*)tk == NULL)
+                        target = tricky;
+                        if ((void*)tricky == NULL)
                         {
                             ok = 0;
                         }
@@ -1897,12 +1897,12 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x4c:
-                    ok2 = 1;
+                    flagOk = 1;
                     if (((TriggerState*)state)->unk82 != -1 && GameBit_Get(((TriggerState*)state)->unk82) == 0)
                     {
-                        ok2 = 0;
+                        flagOk = 0;
                     }
-                    if (ok2 && ok)
+                    if (flagOk && ok)
                     {
                         fn_80198DE8(obj, target);
                     }
@@ -1941,7 +1941,7 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x50:
-                    objInterpretSeq(obj, t, 1, 0);
+                    objInterpretSeq(obj, player, 1, 0);
                     if (return1_800202BC() != 0)
                     {
                         Obj_FreeObject(obj);
@@ -1950,20 +1950,20 @@ void Trigger_hitDetect(int obj)
                 case 0x54:
                     ok = 1;
                     i = 0;
-                    p8 = state;
+                    flagWalker = state;
                     while (i < 4 && ok)
                     {
-                        if (*(s16*)(p8 + 0x82) != -1 && GameBit_Get(*(s16*)(p8 + 0x82)) == 0)
+                        if (*(s16*)(flagWalker + 0x82) != -1 && GameBit_Get(*(s16*)(flagWalker + 0x82)) == 0)
                         {
                             ok = 0;
                         }
-                        p8 += 2;
+                        flagWalker += 2;
                         i++;
                     }
                     if (ok && (s8)state[0x8a] >= 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
-                        objInterpretSeq(obj, t, 1, 0);
+                        objInterpretSeq(obj, player, 1, 0);
                     }
                     if (!ok)
                     {

@@ -7,7 +7,6 @@ extern s16 getAngle(f32 dx, f32 dz);
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 
-
 typedef struct CameraArwingWork
 {
     f32 unk0;
@@ -240,8 +239,8 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     int* a4 = ((int**)obj)[0xA4 / 4];
     char* base;
     f32* p;
-    f32 fc;
     f32 fc2;
+    f32 fc;
     if (mode != 1)
     {
         ((CameraArwingWork*)lbl_803A43C0)->unkC = *(f32*)((char*)a4 + 0x18);
@@ -404,12 +403,6 @@ void CameraModeArwing_update(u8* obj)
                                    &((GameObject*)obj)->anim.localPosZ,
                                    *(int*)&((GameObject*)obj)->anim.parent);
 }
-
-/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */

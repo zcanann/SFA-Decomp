@@ -127,7 +127,6 @@ void cflevelcontrol_update(int obj)
         ((CfLevelControlFlags*)&state[0xc])->b3 = 0;
     }
 
-    /* advance the fortress map event once the intro bit (0x40) lands */
     if ((*gMapEventInterface)->getMapAct(0x1d) == 1 &&
         GameBit_Get(0x40) != 0)
     {
@@ -159,7 +158,6 @@ void cflevelcontrol_update(int obj)
     if (((GameObject*)obj)->unkF4 == 0)
     {
         getEnvfxActImmediately((void*)obj, (void*)obj, 0x56, 0);
-        /* one-shot first-visit environment setup */
         if (GameBit_Get(0xd73) == 0)
         {
             getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
@@ -169,7 +167,6 @@ void cflevelcontrol_update(int obj)
             GameBit_Set(0xd73, 1);
         }
 
-        /* returning after the fortress floods */
         if (GameBit_Get(0xdca) != 0)
         {
             getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
@@ -183,7 +180,6 @@ void cflevelcontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 
-    /* drop the disguise bit once the player is no longer disguised */
     if (GameBit_Get(0x94f) != 0 && (((GameObject*)player)->objectFlags & 0x1000) == 0)
     {
         GameBit_Set(0x94e, 0);
@@ -199,7 +195,6 @@ void cflevelcontrol_update(int obj)
         fn_80295CF4((int)Obj_GetPlayerObject(), 1);
     }
 
-    /* pending map-event trigger queued by another TU */
     if (GameBit_Get(0xd3d) != 0)
     {
         (*gMapEventInterface)->restartPoint(&triggerPos, 0, getCurMapLayer(), 1);

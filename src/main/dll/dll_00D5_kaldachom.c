@@ -160,6 +160,7 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
     KaldaChomControl* control = ((CampfireState*)p2)->control;
     GroundBaddieState* eventState = (GroundBaddieState*)p3;
+    int n;
 
     lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8) * (u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x28) /
         lbl_803E30A4;
@@ -171,7 +172,6 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     }
     if (((s32)eventState->baddie.eventFlags & 0x80) != 0)
     {
-        int n;
         control->climbFxIndex = (u8)randomGetRange(0, 2);
         eventState->baddie.eventFlags &= ~0x80;
         Sfx_PlayFromObject(obj, SFXkr_climb2);
@@ -197,7 +197,6 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     }
     if (((s32)eventState->baddie.eventFlags & 0x400) != 0)
     {
-        int n;
         control->climbFxIndex = 3;
         n = 10;
         do

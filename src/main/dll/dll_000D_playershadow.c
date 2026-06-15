@@ -1335,7 +1335,8 @@ char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer suppo
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern u8 gPlayerShadowMode;
-extern u32 lbl_802C2160[];
+typedef struct PlayerShadowParams { u32 w[4]; } PlayerShadowParams;
+extern PlayerShadowParams lbl_802C2160;
 extern f32 lbl_803DF46C;
 extern f32 lbl_803DF488;
 extern f32 lbl_803DF48C;
@@ -1363,8 +1364,7 @@ void playerShadow_setMode(u8 v)
 #pragma scheduling off
 void playerShadow_renderObject(void* obj)
 {
-    u32* defaults;
-    u32 params[4];
+    PlayerShadowParams params;
     int* tileInfo;
     int hitTable;
     int hitCount;
@@ -1381,11 +1381,7 @@ void playerShadow_renderObject(void* obj)
     f32 minZ;
     f32 maxZ;
 
-    defaults = lbl_802C2160;
-    params[0] = defaults[0];
-    params[1] = defaults[1];
-    params[2] = defaults[2];
-    params[3] = defaults[3];
+    params = lbl_802C2160;
     hitTable = 0;
 
     if (gPlayerShadowMode == 0)
@@ -1394,44 +1390,40 @@ void playerShadow_renderObject(void* obj)
     }
 
     mode = gPlayerShadowMode - 0xb;
-    if (mode <= 6)
+    switch (mode)
     {
-        switch (mode)
-        {
-        case 0:
-            radius = lbl_803DF488;
-            height = radius;
-            break;
-        case 1:
-            radius = lbl_803DF48C;
-            height = lbl_803DF490;
-            break;
-        case 2:
-            radius = lbl_803DF494;
-            height = lbl_803DF488;
-            break;
-        case 3:
-            radius = lbl_803DF494;
-            height = lbl_803DF488;
-            break;
-        case 4:
-            radius = lbl_803DF498;
-            height = lbl_803DF490;
-            break;
-        case 5:
-            radius = lbl_803DF49C;
-            height = lbl_803DF4A0;
-            break;
-        case 6:
-            radius = lbl_803DF4A4;
-            height = radius;
-            break;
-        }
-    }
-    else
-    {
+    case 0:
+        radius = lbl_803DF488;
+        height = radius;
+        break;
+    case 1:
+        radius = lbl_803DF48C;
+        height = lbl_803DF490;
+        break;
+    case 2:
+        radius = lbl_803DF494;
+        height = lbl_803DF488;
+        break;
+    case 3:
+        radius = lbl_803DF494;
+        height = lbl_803DF488;
+        break;
+    case 4:
+        radius = lbl_803DF498;
+        height = lbl_803DF490;
+        break;
+    case 5:
+        radius = lbl_803DF49C;
+        height = lbl_803DF4A0;
+        break;
+    case 6:
+        radius = lbl_803DF4A4;
+        height = radius;
+        break;
+    default:
         radius = lbl_803DF46C;
         height = radius;
+        break;
     }
 
     minX = ((GameObject*)obj)->anim.localPosX - radius;
@@ -1466,7 +1458,7 @@ void playerShadow_renderObject(void* obj)
     verts[7][1] = bottomY;
     verts[7][2] = minZ;
 
-    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], params, 4);
+    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], &params, 4);
     hitDetectFn_800691c0(obj, hitData, 0x84, 0);
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
@@ -1603,7 +1595,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 {
     BoneSpawnData data;
     void* cam;
-    int found;
+    u8 found;
     int i;
     f32 dx;
     f32 dy;
@@ -1641,7 +1633,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
             lbl_8030FDE8[0] = dx;
             lbl_8030FDE8[1] = dy;
             lbl_8030FDE8[2] = dz;
-            len = sqrtf(dy * dy + dx * dx + dz * dz);
+            len = sqrtf(dx * dx + dy * dy + dz * dz);
             sc = lbl_803DF468 * len;
             if (lbl_803DF46C != len)
             {

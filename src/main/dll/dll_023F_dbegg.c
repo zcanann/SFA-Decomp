@@ -1,4 +1,4 @@
-/* DLL 0x023F (dbegg) — DB egg and Dragon Fire Palace objects [0x801FE118-0x801FF884). */
+/* DLL 0x023F (dbegg) - DB egg and Dragon Fire Palace objects [0x801FE118-0x801FF884). */
 #include "main/game_object.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -475,7 +475,8 @@ void fn_801FE774(int cam, f32* vel)
         f32 m;
         sumX = sumX / (f32)count;
         sumZ = sumZ / (f32)count;
-        vel[0] = -(sumX * (w = lbl_803E6200) - vel[0]);
+        w = lbl_803E6200;
+        vel[0] = -(w * sumX - vel[0]);
         vel[2] = -(w * sumZ - vel[2]);
         vel[0] = vel[0] * (m = lbl_803E6204);
         vel[2] = vel[2] * m;

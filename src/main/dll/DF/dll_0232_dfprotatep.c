@@ -99,6 +99,7 @@ STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk24) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
+void TrickyCurve_updateBurstTrigger(int obj);
 
 #pragma scheduling on
 #pragma peephole on
@@ -472,7 +473,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 
 #define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep) \
     do { \
-        if ((void *)(handle) != NULL) { \
+        if ((handle) != 0) { \
             *(f32 *)((handle) + 0xc) = lbl_803E6460; \
             *(f32 *)((handle) + 0x10) = lbl_803E6464; \
             *(f32 *)((handle) + 0x14) = lbl_803E6468; \
@@ -489,27 +490,29 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
+    SfxplayerStateFlags* flags = &state->flags;
     s16 rotation[3];
     f32 baseVec[4];
     int* handles;
     s16 angleStep;
     s16 i;
+    int handle;
 
-    if (state->flags.bit10 != 0 && state->flags.bit20 == 0 && state->variantSfxTimer > 0x32)
+    if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXPLAYER_RING_START_SFX);
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj = (s16)(*(s16*)obj + (int)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta)));
+            *(s16*)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * lbl_803E645C * timeDelta);
         }
         else
         {
-            *(s16*)obj = (s16)(*(s16*)obj + (int)(lbl_803E645C * timeDelta));
+            *(s16*)obj += (s16)(lbl_803E645C * timeDelta);
         }
     }
 
-    if (state->variantSfxTimer != 0 && state->flags.bit10 != 0)
+    if (state->variantSfxTimer != 0 && flags->bit10 != 0)
     {
         state->variantSfxTimer -= (s16)(int)
         timeDelta;
@@ -530,8 +533,10 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, rotation, angleStep);
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, rotation, angleStep);
+        handle = handles[0];
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
+        handle = handles[1];
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
         handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
@@ -556,7 +561,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 
     handleOffset = (ringIndex & 0xff) * 8;
     handles = gSfxplayerEffectHandles;
-    if (((void**)gSfxplayerEffectHandles)[(ringIndex & 0xff) * 2] == NULL)
+    if (*(void**)((int)handles + handleOffset) == NULL)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_VISUAL_SETUP_SIZE, SFXPLAYER_RING_VISUAL_OBJECT_ID);
         ((SfxplayerRingVisualSetup*)setup)->base.unk04[2] = 0xff;
@@ -588,7 +593,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->unk20 = lbl_803E6478;
         ((SfxplayerRingVisualSetup*)setup)->unk29 = 0xd2;
         ((SfxplayerRingVisualSetup*)setup)->unk2A = 0;
-        ((int*)gSfxplayerEffectHandles)[(ringIndex & 0xff) * 2] =
+        *(int*)((int)handles + handleOffset) =
             Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
                             ((GameObject*)obj)->anim.mapEventSlot, -1,
                             *(int*)&((GameObject*)obj)->anim.parent);
@@ -649,9 +654,8 @@ void sfxplayer_free(int obj, int arg1)
 
     if (arg1 == 0)
     {
-        i = 0;
         handles = (uint*)gSfxplayerEffectHandles;
-        for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+        for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
             if (handles[0] != 0)
             {
@@ -758,9 +762,8 @@ void sfxplayer_update(int obj)
             }
             if (isGameTimerDisabled() != 0)
             {
-                i = 0;
                 handles = (uint*)gSfxplayerEffectHandles;
-                for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+                for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
                 {
                     if (handles[0] != 0)
                     {
@@ -781,9 +784,8 @@ void sfxplayer_update(int obj)
                 GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 0);
             }
             TrickyCurve_updateEffectHandleRing(obj);
-            i = 0;
             handles = (uint*)gSfxplayerEffectHandles;
-            for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+            for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
             {
                 if (handles[0] != 0)
                 {

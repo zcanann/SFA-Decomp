@@ -49,7 +49,6 @@ extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern f32 mathCosf(f32);
 
-extern u32 lbl_803DD938;
 extern void* lbl_803DD92C;
 extern void* minimapTexture;
 

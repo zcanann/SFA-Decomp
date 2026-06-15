@@ -91,7 +91,6 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     CfCcrateState* state;
 
     state = ((GameObject*)obj)->extra;
-    /* scalessword (0x1b8) and VFP_Spellstone (0x6bf) draw themselves */
     if ((s32)visible == 0 || (objectType = ((GameObject*)obj)->anim.seqId) == 0x1b8)
     {
         return;

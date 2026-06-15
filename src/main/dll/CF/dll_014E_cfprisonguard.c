@@ -95,7 +95,6 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     ObjHits_EnableObject(obj);
     gb50 = GameBit_Get(0x50); /* the old CloudRunner has flown off */
     gb48 = GameBit_Get(0x48); /* the caged guardian has broken out */
-    /* the uncle's cage is open (0x4D): abandon the post */
     if ((sub->flags & 2) != 0 && GameBit_Get(0x4d) != 0)
     {
         sub->flags &= ~0x2;
@@ -311,7 +310,6 @@ void cfprisonguard_init(int* obj, u8* params)
     ((GameObject*)obj)->animEventCallback = (void*)cfprisonguard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     sub->capturedLatch = 1;
-    /* 0x4D: the old CloudRunner's cage is already open */
     if (GameBit_Get(0x4d) != 0)
     {
         sub->flags = (u8)(sub->flags | 4);

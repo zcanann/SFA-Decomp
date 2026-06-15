@@ -56,7 +56,6 @@ extern void TREX_Lazerwall_popQueuedState(int);
 extern void fn_801E66EC(int);
 extern void fn_801E66E4(int);
 extern void fn_801E66DC(int);
-extern void hudFn_8011f38c(int);
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E5A20;
 extern f32 timeDelta;
@@ -82,7 +81,6 @@ extern int* getDLL16(void);
 extern void playerAddMoney(void* player, int amount);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5A24;
-extern f32 lbl_803E5A34;
 
 undefined4 FUN_801e76a0(int obj)
 {
@@ -280,7 +278,8 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     f32 range;
     f32 speed;
 
-    state = state2 = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
+    state2 = *(int*)&((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     range = lbl_803E59D8;
     ((ShopkeeperState*)state)->flags9D4 &= ~0x20;

@@ -1,6 +1,5 @@
 /* DLL 0x0110 — door objects [8017AC2C-8017ADB4) */
 
-
 #include "main/dll/cfguardian_state.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -54,7 +53,6 @@ int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void);
 
 void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
-
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
@@ -273,9 +271,6 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return ret;
 }
-
-
-/* segment pragma-stack balance (re-split): */
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

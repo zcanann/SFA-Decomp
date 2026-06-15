@@ -40,8 +40,6 @@ extern f32 lbl_803E1CB0;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern u8 framesThisStep;
 extern f32 lbl_803E1CC4;
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ,
-                                           u32 obj);
 extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 lbl_803E1CB4;
@@ -162,17 +160,17 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
         buf[1] = *(f32*)(p3 + 0x0c);
         buf[2] = ((BaddieState*)p3)->posY;
         buf[3] = *(f32*)(p3 + 0x24);
-        *(f32*)(p1 + 0x0c) = Curve_EvalHermite(buf, *(f32*)p4, 0);
+        ((GameObject*)p1)->anim.localPosX = Curve_EvalHermite(buf, *(f32*)p4, 0);
         buf[0] = *(f32*)(p3 + 0x04);
         buf[1] = *(f32*)(p3 + 0x10);
         buf[2] = ((BaddieState*)p3)->posZ;
         buf[3] = *(f32*)(p3 + 0x28);
-        *(f32*)(p1 + 0x10) = Curve_EvalHermite(buf, *(f32*)p4, 0);
+        ((GameObject*)p1)->anim.localPosY = Curve_EvalHermite(buf, *(f32*)p4, 0);
         buf[0] = *(f32*)(p3 + 0x08);
         buf[1] = ((BaddieState*)p3)->posX;
         buf[2] = *(f32*)(p3 + 0x20);
         buf[3] = *(f32*)(p3 + 0x2c);
-        *(f32*)(p1 + 0x14) = Curve_EvalHermite(buf, *(f32*)p4, 0);
+        ((GameObject*)p1)->anim.localPosZ = Curve_EvalHermite(buf, *(f32*)p4, 0);
     }
     return ret;
 }
@@ -213,12 +211,12 @@ void FUN_801149bc(short* param_1, int param_2, int param_3)
         *(float*)(param_2 + 4) = (lbl_803E2948 * p0x + p1x) * lbl_803E294C;
         *(undefined4*)(param_2 + 8) = p0y;
         *(float*)(param_2 + 0xc) = (blendScale * p0z + p1z[0]) * blendWeight;
-        *(float*)(param_2 + 4) = *(float*)(param_2 + 4) - *(float*)(param_1 + 6);
-        *(float*)(param_2 + 8) = *(float*)(param_2 + 8) - *(float*)(param_1 + 8);
-        *(float*)(param_2 + 0xc) = *(float*)(param_2 + 0xc) - *(float*)(param_1 + 10);
-        negRotZ = -param_1[2];
-        negRotY = -param_1[1];
-        negRotX = -*param_1;
+        *(float*)(param_2 + 4) = *(float*)(param_2 + 4) - ((GameObject*)param_1)->anim.localPosX;
+        *(float*)(param_2 + 8) = *(float*)(param_2 + 8) - ((GameObject*)param_1)->anim.localPosY;
+        *(float*)(param_2 + 0xc) = *(float*)(param_2 + 0xc) - ((GameObject*)param_1)->anim.localPosZ;
+        negRotZ = -((GameObject*)param_1)->anim.rotZ;
+        negRotY = -((GameObject*)param_1)->anim.rotY;
+        negRotX = -((GameObject*)param_1)->anim.rotX;
         FUN_80017748(&negRotZ, (float*)(param_2 + 4));
         *(u8*)(param_2 + 0x601) = 0;
     }
@@ -360,8 +358,8 @@ int dll_2E_func0C(int idx, char* out)
         q = (char*)ObjGroup_FindNearestObjectToPoint(8, out + 0xc, &range);
         if (q != NULL)
         {
-            *(s16*)(out + 0x0) = (s16)atan2i((int)(*(f32*)(q + 0xc) - *(f32*)(out + 0xc)),
-                                             (int)(*(f32*)(q + 0x14) - *(f32*)(out + 0x14)));
+            *(s16*)(out + 0x0) = (s16)atan2i((int)(((GameObject*)q)->anim.localPosX - *(f32*)(out + 0xc)),
+                                             (int)(((GameObject*)q)->anim.localPosZ - *(f32*)(out + 0x14)));
         }
         else
         {
@@ -648,7 +646,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
     }
     if (*flags & 2)
     {
-        delta = *(s16*)(target + 0x0) - (u16)((GameObject*)obj)->anim.rotX;
+        delta = ((GameObject*)target)->anim.rotX - (u16)((GameObject*)obj)->anim.rotX;
         if (delta > 0x8000)
         {
             delta = delta - 0xffff;
@@ -772,9 +770,9 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
             {
                 if ((*(byte*)(state + 0x611) & 0x20) != 0)
                 {
-                    sv.dx = *(float*)(state + 0x10) - *(float*)(target + 0xc);
-                    sv.dy = *(float*)(state + 0x14) - *(float*)(target + 0x10);
-                    sv.dz = *(float*)(state + 0x18) - *(float*)(target + 0x14);
+                    sv.dx = *(float*)(state + 0x10) - ((GameObject*)target)->anim.localPosX;
+                    sv.dy = *(float*)(state + 0x14) - ((GameObject*)target)->anim.localPosY;
+                    sv.dz = *(float*)(state + 0x18) - ((GameObject*)target)->anim.localPosZ;
                     blendA = sv.dx * sv.dx;
                     blendB = sv.dz * sv.dz;
                     dist = sqrtf(blendA + blendB);
@@ -787,9 +785,9 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
                         blendB = lbl_803E1CA4 - blendB;
                         blendA = lbl_803E1CA4 - blendB;
                         *(float*)(state + 0x10) =
-                            *(float*)(state + 0x10) * blendA + *(float*)(obj + 6) * blendB;
+                            *(float*)(state + 0x10) * blendA + ((GameObject*)obj)->anim.localPosX * blendB;
                         *(float*)(state + 0x18) =
-                            *(float*)(state + 0x18) * blendA + *(float*)(obj + 10) * blendB;
+                            *(float*)(state + 0x18) * blendA + ((GameObject*)obj)->anim.localPosZ * blendB;
                     }
                 }
                 if ((*(int*)(state + 0x618) != -1) && (target == *(uint*)(state + 0x604)))
@@ -822,7 +820,7 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
                 }
                 if ((target != *(uint*)(state + 0x604)) && (target != 0))
                 {
-                    hitReact = *(uint*)(target + 0x54);
+                    hitReact = (uint)((GameObject*)target)->anim.hitReactState;
                     if (hitReact != 0)
                     {
                         if ((*(byte*)(hitReact + 0x62) & 2) != 0)
@@ -855,7 +853,7 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
                 ival = (short)yawDelta;
                 ival = (ival >= 0) ? ival : -ival;
                 if (((0x5555 < ival) || (target == 0)) ||
-                    (Vec_distance((float*)(obj + 0xc), (float*)(target + 0x18)) > *(float*)(state + 0x614)))
+                    (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) > *(float*)(state + 0x614)))
                 {
                     if ((*(u8*)(state + 0x600) != 0) ||
                         ((target == 0 && (*(uint*)(state + 0x604) != 0))))

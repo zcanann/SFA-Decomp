@@ -1111,7 +1111,6 @@ void Checkpoint_initialise(void)
     lbl_803DD418 = (void*)((u8*)lbl_8039CA98 + 0x28);
 }
 
-/* Checkpoint_Add: sorted insertion of route entries by their checkpoint key. */
 #pragma opt_common_subs off
 #pragma peephole off
 void Checkpoint_Add(CheckpointRouteEntry* entry)

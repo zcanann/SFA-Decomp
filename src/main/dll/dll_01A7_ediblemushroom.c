@@ -28,7 +28,7 @@ extern void objMove(u8* obj, f32 vx, f32 vy, f32 vz);
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 
-extern f32 lbl_803E5288;
+extern const f32 lbl_803E5288;
 extern f32 lbl_803E528C;
 extern f32 lbl_803E5290;
 extern f32 lbl_803E5294;
@@ -77,7 +77,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     RomCurveWalker* curve;
-    u8 sval;
+    int sval;
     int curMove;
     int moveId;
     int bit;

@@ -189,7 +189,8 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         return DR_LASERTURRET_STATE_CONTINUE;
     }
     {
-        float t = (float)shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
+        double t = shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
+        float rate = lbl_803E5A10;
         float target;
         if (t > lbl_803E5A18)
         {
@@ -199,8 +200,10 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         {
             target = lbl_803E59DC;
         }
-        animState->aimBlend =
-            lbl_803E5A10 * (target - animState->aimBlend) * timeDelta + animState->aimBlend;
+        {
+            float d = rate * (target - animState->aimBlend);
+            animState->aimBlend = d * timeDelta + animState->aimBlend;
+        }
         if (animState->aimBlend > lbl_803E5A1C)
         {
             animState->aimBlend = lbl_803E59DC;
@@ -209,18 +212,19 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     }
     count = hitDetectFn_80065e50(obj, obj->x, obj->y, obj->z, &arr, 0, 0);
     fmin = lbl_803E5A20;
-    if (count > 0)
     {
+        float zero = lbl_803E59DC;
+        float bias = lbl_803E59E0;
         for (idx = 0; idx < count; idx++)
         {
             fdist = *(f32*)arr[idx] - obj->y;
-            if (fdist < lbl_803E59DC)
+            if (fdist < zero)
             {
                 fdist = -fdist;
             }
             if (fdist < fmin)
             {
-                state->bobBaseY = lbl_803E59E0 + *(f32*)arr[idx];
+                state->bobBaseY = bias + *(f32*)arr[idx];
                 fmin = fdist;
             }
         }
@@ -274,7 +278,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     char stickHi;
     char stickLo;
     int btn;
-    int slot;
+    int cv;
     char nudge;
     ObjTextureRuntimeSlot* texture;
 
@@ -304,15 +308,18 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         {
             state->countValue = (s16)(state->countScale >> 1);
         }
+        cv = state->countValue;
         texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-        texture->textureId = (state->countValue - state->countValue / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        texture->textureId = (cv - cv / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-        slot = state->countValue / 10;
-        texture->textureId = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-        slot = slot / 10;
-        if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
+        {
+            int tens = cv / 10;
+            texture->textureId = (tens - tens / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        }
+        cv = cv / 100;
+        if (cv > DR_LASERTURRET_MAX_DIGIT) cv = DR_LASERTURRET_MAX_DIGIT;
         texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
-        texture->textureId = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        texture->textureId = cv << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
     }
     else if (dispatch == DR_LASERTURRET_PROMPT_DIGIT_COUNT)
     {
@@ -340,15 +347,18 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
             state->digitCount = DR_LASERTURRET_MIN_DIGIT_COUNT;
         }
         {
+            cv = state->digitCount;
             texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-            texture->textureId = (state->digitCount - state->digitCount / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            texture->textureId = (cv - cv / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-            slot = state->digitCount / 10;
-            texture->textureId = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-            slot = slot / 10;
-            if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
+            {
+                int tens = cv / 10;
+                texture->textureId = (tens - tens / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            }
+            cv = cv / 100;
+            if (cv > DR_LASERTURRET_MAX_DIGIT) cv = DR_LASERTURRET_MAX_DIGIT;
             texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
-            texture->textureId = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            texture->textureId = cv << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         }
         btn = getButtonsJustPressed(0);
         if ((btn & DR_LASERTURRET_BUTTON_CANCEL) != 0)

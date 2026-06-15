@@ -92,9 +92,9 @@ int fn_80198B68(u8* obj, f32* point)
     f32 yawSin;
     f32 pitchCos;
     f32 pitchSin;
-    f32 relX;
-    f32 relY;
     f32 relZ;
+    f32 relY;
+    f32 relX;
     f32 localX;
     f32 localY;
     f32 localZ;
@@ -118,15 +118,15 @@ int fn_80198B68(u8* obj, f32* point)
     localY = relY * pitchSin - forward * pitchCos;
     localZ = relY * pitchCos + forward * pitchSin;
 
-    if (localX < lbl_803E40D8)
+    if (localX < 0.0f)
     {
         localX = -localX;
     }
-    if (localY < lbl_803E40D8)
+    if (localY < 0.0f)
     {
         localY = -localY;
     }
-    if (localZ < lbl_803E40D8)
+    if (localZ < 0.0f)
     {
         localZ = -localZ;
     }

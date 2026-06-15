@@ -1,4 +1,4 @@
-/* DLL 0x0045 — camera talk / NPC-speak mode [80107AEC-80107B4C) */
+/* DLL 0x0045 - camera talk / NPC-speak mode [80107AEC-80107B4C) */
 #include "main/dll/CAM/cambike_state.h"
 #include "main/mm.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
@@ -59,8 +59,6 @@ void CameraModeBike_free(void)
     mm_free(lbl_803DD540);
     lbl_803DD540 = 0;
 }
-
-/* segment pragma-stack balance (re-split): */
 
 #pragma peephole on
 void CameraModeBike_update(CameraObject* camera)

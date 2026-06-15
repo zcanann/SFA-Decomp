@@ -259,168 +259,168 @@ void FUN_80152fb4(ushort* obj, int state)
     return;
 }
 
-void FUN_801534d8(ushort* param_1, undefined4* param_2)
+void FUN_801534d8(ushort* obj, undefined4* state)
 {
-    int iVar1;
-    char cVar2;
-    float* pfVar3;
+    int hitResult;
+    char accepted;
+    float* target;
     ObjHitsPriorityState* hitState;
-    float local_28;
-    float local_24;
-    float local_20;
+    float dx;
+    float dy;
+    float dz;
 
-    pfVar3 = (float*)*param_2;
-    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
+    target = (float*)*state;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
         hitState->suppressOutgoingHits = 0;
     }
-    if (*(char*)((int)param_2 + 0x33b) != '\0')
+    if (*(char*)((int)state + 0x33b) != '\0')
     {
-        param_2[0xba] = param_2[0xba] | 0x80;
+        state[0xba] = state[0xba] | 0x80;
     }
-    if ((param_2[0xb7] & 0x2000) != 0)
+    if ((state[0xb7] & 0x2000) != 0)
     {
-        iVar1 = FUN_80006a10((double)(float)param_2[0xbf], pfVar3);
-        if ((((iVar1 != 0) || (pfVar3[4] != 0.0)) &&
-                (cVar2 = (**(code**)(*DAT_803dd71c + 0x90))(pfVar3), cVar2 != '\0')) &&
-            (cVar2 = (**(code**)(*DAT_803dd71c + 0x8c))
-                ((double)lbl_803E3550, *param_2, param_1, &DAT_803dc920, 0xffffffff),
-                cVar2 != '\0'))
+        hitResult = FUN_80006a10((double)(float)state[0xbf], target);
+        if ((((hitResult != 0) || (target[4] != 0.0)) &&
+                (accepted = (**(code**)(*DAT_803dd71c + 0x90))(target), accepted != '\0')) &&
+            (accepted = (**(code**)(*DAT_803dd71c + 0x8c))
+                ((double)lbl_803E3550, *state, obj, &DAT_803dc920, 0xffffffff),
+                accepted != '\0'))
         {
-            param_2[0xb7] = param_2[0xb7] & 0xffffdfff;
+            state[0xb7] = state[0xb7] & 0xffffdfff;
         }
-        FUN_8014d3d0((short*)param_1, param_2, 0xf, 0);
-        local_28 = pfVar3[0x1a] - *(float*)(param_1 + 6);
-        local_24 = pfVar3[0x1b] - ((GameObject *)param_1)->anim.rootMotionScale;
-        local_20 = pfVar3[0x1c] - *(float*)(param_1 + 10);
-        FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)param_1,
-                     (int)param_2, &local_28, '\x01');
-        param_2[0xc9] = (float)param_2[0xc9] + lbl_803DC074;
-        if (lbl_803E3560 < (float)param_2[0xc9])
+        FUN_8014d3d0((short*)obj, state, 0xf, 0);
+        dx = target[0x1a] - *(float*)(obj + 6);
+        dy = target[0x1b] - ((GameObject *)obj)->anim.rootMotionScale;
+        dz = target[0x1c] - *(float*)(obj + 10);
+        FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)obj,
+                     (int)state, &dx, '\x01');
+        state[0xc9] = (float)state[0xc9] + lbl_803DC074;
+        if (lbl_803E3560 < (float)state[0xc9])
         {
-            param_2[0xb9] = param_2[0xb9] & ~(u64)0x10000;
-            param_2[0xc9] = lbl_803E3548;
+            state[0xb9] = state[0xb9] & ~(u64)0x10000;
+            state[0xc9] = lbl_803E3548;
         }
     }
-    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, param_1, (int)param_2, 0xf, '\0');
-    param_2[0xca] = (float)param_2[0xca] - lbl_803DC074;
-    if ((float)param_2[0xca] <= lbl_803E3548)
+    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, obj, (int)state, 0xf, '\0');
+    state[0xca] = (float)state[0xca] - lbl_803DC074;
+    if ((float)state[0xca] <= lbl_803E3548)
     {
-        param_2[0xca] = lbl_803E354C;
-        FUN_80006824((uint)param_1, SFXfox_healthgasp1);
+        state[0xca] = lbl_803E354C;
+        FUN_80006824((uint)obj, SFXfox_healthgasp1);
     }
-    param_2[0xcb] = lbl_803E3548;
+    state[0xcb] = lbl_803E3548;
     return;
 }
 
 void FUN_80153738(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  ushort* param_9, undefined4* param_10)
+                  ushort* obj, undefined4* state)
 {
-    float fVar1;
-    uint uVar2;
+    float resetVal;
+    uint losClear;
     int iVar3;
-    char cVar4;
-    float* pfVar5;
+    char accepted;
+    float* target;
     undefined8 uVar6;
     u8 auStack_48[4];
-    short asStack_44[4];
-    short asStack_3c[4];
-    float local_34;
-    float local_30;
-    float local_2c;
-    float local_28;
-    float local_24;
-    float local_20;
+    short targetGrid[4];
+    short objGrid[4];
+    float objPos_x;
+    float objPos_y;
+    float objPos_z;
+    float dx;
+    float dy;
+    float dz;
 
-    pfVar5 = (float*)*param_10;
-    if (*(char*)((int)param_10 + 0x33b) != '\0')
+    target = (float*)*state;
+    if (*(char*)((int)state + 0x33b) != '\0')
     {
-        param_10[0xba] = param_10[0xba] | 0x80;
+        state[0xba] = state[0xba] | 0x80;
     }
-    if ((param_10[0xb7] & 0x80000000) != 0)
+    if ((state[0xb7] & 0x80000000) != 0)
     {
-        FUN_80006824((uint)param_9, SFXfox_climbgrunt3);
+        FUN_80006824((uint)obj, SFXfox_climbgrunt3);
     }
-    if ((((param_10[0xb7] & 0x2000) != 0) &&
-            (((iVar3 = FUN_80006a10((double)(lbl_803E356C * (float)param_10[0xbf]), pfVar5), iVar3 != 0
-                    || (pfVar5[4] != 0.0)) &&
-                (cVar4 = (**(code**)(*DAT_803dd71c + 0x90))(pfVar5), cVar4 != '\0')))) &&
-        (cVar4 = (**(code**)(*DAT_803dd71c + 0x8c))
-            ((double)lbl_803E3550, *param_10, param_9, &DAT_803dc920, 0xffffffff),
-            cVar4 != '\0'))
+    if ((((state[0xb7] & 0x2000) != 0) &&
+            (((iVar3 = FUN_80006a10((double)(lbl_803E356C * (float)state[0xbf]), target), iVar3 != 0
+                    || (target[4] != 0.0)) &&
+                (accepted = (**(code**)(*DAT_803dd71c + 0x90))(target), accepted != '\0')))) &&
+        (accepted = (**(code**)(*DAT_803dd71c + 0x8c))
+            ((double)lbl_803E3550, *state, obj, &DAT_803dc920, 0xffffffff),
+            accepted != '\0'))
     {
-        param_10[0xb7] = param_10[0xb7] & 0xffffdfff;
+        state[0xb7] = state[0xb7] & 0xffffdfff;
     }
-    ObjHits_SetHitVolumeSlot((int)param_9, 0xe, 1, 0);
-    iVar3 = param_10[0xa7];
-    local_28 = *(float*)(iVar3 + 0xc) - *(float*)(param_9 + 6);
-    local_24 = (lbl_803E3570 + *(float*)(iVar3 + 0x10)) - *(float*)(param_9 + 8);
-    local_20 = *(float*)(iVar3 + 0x14) - *(float*)(param_9 + 10);
-    SeekTwiceBeforeRead(&local_28);
-    param_10[0xcb] = (float)param_10[0xcb] + lbl_803DC074;
-    if ((param_10[0xd0] != 0) || (lbl_803E3560 < (float)param_10[0xcb]))
+    ObjHits_SetHitVolumeSlot((int)obj, 0xe, 1, 0);
+    iVar3 = state[0xa7];
+    dx = *(float*)(iVar3 + 0xc) - *(float*)(obj + 6);
+    dy = (lbl_803E3570 + *(float*)(iVar3 + 0x10)) - *(float*)(obj + 8);
+    dz = *(float*)(iVar3 + 0x14) - *(float*)(obj + 10);
+    SeekTwiceBeforeRead(&dx);
+    state[0xcb] = (float)state[0xcb] + lbl_803DC074;
+    if ((state[0xd0] != 0) || (lbl_803E3560 < (float)state[0xcb]))
     {
-        param_10[0xb9] = param_10[0xb9] | 0x10000;
-        fVar1 = lbl_803E3548;
-        param_10[0xc9] = lbl_803E3548;
-        param_10[0xcb] = fVar1;
+        state[0xb9] = state[0xb9] | 0x10000;
+        resetVal = lbl_803E3548;
+        state[0xc9] = lbl_803E3548;
+        state[0xcb] = resetVal;
     }
     else
     {
-        local_34 = *(float*)(param_9 + 6);
-        local_30 = *(float*)(param_9 + 8);
-        local_2c = *(float*)(param_9 + 10);
-        FUN_80006a68(&local_34, asStack_44);
-        local_34 = pfVar5[0x1a];
-        local_30 = pfVar5[0x1b];
-        local_2c = pfVar5[0x1c];
-        uVar6 = FUN_80006a68(&local_34, asStack_3c);
-        uVar2 = countLeadingZeros(param_10[0xb7]);
-        if (((uVar2 >> 5 & 0x1000000) != 0) &&
+        objPos_x = *(float*)(obj + 6);
+        objPos_y = *(float*)(obj + 8);
+        objPos_z = *(float*)(obj + 10);
+        FUN_80006a68(&objPos_x, targetGrid);
+        objPos_x = target[0x1a];
+        objPos_y = target[0x1b];
+        objPos_z = target[0x1c];
+        uVar6 = FUN_80006a68(&objPos_x, objGrid);
+        losClear = countLeadingZeros(state[0xb7]);
+        if (((losClear >> 5 & 0x1000000) != 0) &&
             (iVar3 = FUN_80006a64(uVar6, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                  asStack_3c, asStack_44, (undefined4*)0x0, auStack_48, 0), iVar3 == 0))
+                                  objGrid, targetGrid, (undefined4*)0x0, auStack_48, 0), iVar3 == 0))
         {
-            param_10[0xb9] = param_10[0xb9] | 0x10000;
-            fVar1 = lbl_803E3548;
-            param_10[0xc9] = lbl_803E3548;
-            param_10[0xcb] = fVar1;
+            state[0xb9] = state[0xb9] | 0x10000;
+            resetVal = lbl_803E3548;
+            state[0xc9] = lbl_803E3548;
+            state[0xcb] = resetVal;
         }
     }
-    FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)param_9,
-                 (int)param_10, &local_28, '\x01');
-    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, param_9, (int)param_10, 0xf, '\0');
+    FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)obj,
+                 (int)state, &dx, '\x01');
+    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, obj, (int)state, 0xf, '\0');
     return;
 }
 
-void FUN_80153b00(int param_1, int param_2)
+void FUN_80153b00(int obj, int state)
 {
-    char cVar1;
+    char spawnCount;
 
-    cVar1 = '\0';
-    switch (*(undefined2*)(param_1 + 0xa0))
+    spawnCount = '\0';
+    switch (*(undefined2*)(obj + 0xa0))
     {
     case 1:
-        cVar1 = '\x01';
+        spawnCount = '\x01';
         break;
     case 2:
-        cVar1 = '\x01';
+        spawnCount = '\x01';
         break;
     case 3:
-        cVar1 = '\x01';
+        spawnCount = '\x01';
         break;
     case 5:
-        if ((*(uint*)(param_2 + 0x2dc) & 0x80000000) != 0)
+        if ((*(uint*)(state + 0x2dc) & 0x80000000) != 0)
         {
-            cVar1 = '\n';
+            spawnCount = '\n';
         }
     }
-    if ((cVar1 != '\0') && ((*(uint*)(param_2 + 0x2dc) & 0x40000000) == 0))
+    if ((spawnCount != '\0') && ((*(uint*)(state + 0x2dc) & 0x40000000) == 0))
     {
-        for (; cVar1 != '\0'; cVar1 = cVar1 + -1)
+        for (; spawnCount != '\0'; spawnCount = spawnCount + -1)
         {
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x802, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x802, NULL, 2, -1, NULL);
         }
     }
     return;
@@ -428,20 +428,20 @@ void FUN_80153b00(int param_1, int param_2)
 
 void FUN_801544a4(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9, int param_10)
+                  uint obj, int state)
 {
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
 
-    *(byte*)(param_10 + 0x33b) = *(byte*)(param_10 + 0x33b) & 0xbf;
-    if (((*(uint*)(param_10 + 0x2dc) & 0x40000000) != 0) && (*(short*)(param_9 + 0xa0) != 1))
+    *(byte*)(state + 0x33b) = *(byte*)(state + 0x33b) & 0xbf;
+    if (((*(uint*)(state + 0x2dc) & 0x40000000) != 0) && (*(short*)(obj + 0xa0) != 1))
     {
-        FUN_800067e8(param_9, 0x49c, 2);
+        FUN_800067e8(obj, 0x49c, 2);
         FUN_8014d4c8((double)lbl_803E35A4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, param_10, 1, 0, 0, in_r8, in_r9, in_r10);
+                     obj, state, 1, 0, 0, in_r8, in_r9, in_r10);
     }
-    FUN_80153b00(param_9, param_10);
+    FUN_80153b00(obj, state);
     return;
 }
 

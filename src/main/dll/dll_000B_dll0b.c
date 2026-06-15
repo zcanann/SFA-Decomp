@@ -469,7 +469,7 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
     undefined8 convFrames2;
 
     biasU = DOUBLE_803e00c0;
-    vtxData = *(int*)(state + (uint) * (byte*)(state + 0x130) * 4 + 0x78);
+    vtxData = (int)((ModgfxState*)state)->vertexBuffers[((ModgfxState*)state)->activeVertexBufferIndex];
     if (mode == 1)
     {
         targetR = ((ModgfxVertexGroupCmd*)command)->valueX;
@@ -773,7 +773,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
         if ((int)((ModgfxState*)state)->blendFrameCount == 0)
         {
             work2 = (int)((ModgfxState*)state)->baseVertexData;
-            vtxBufA = *(int*)(state + (uint) * (byte*)(state + 0x130) * 4 + 0x78);
+            vtxBufA = (int)((ModgfxState*)state)->vertexBuffers[((ModgfxState*)state)->activeVertexBufferIndex];
             work1 = 0;
             for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0 = work0 + 1)
             {
@@ -3067,7 +3067,7 @@ void dll_0B_func05(void)
                             o = Obj_AllocObjectSetup(0x20, 0x66);
                             ((GameObject*)o)->anim.rootMotionScale = tmpl.x;
                             ((GameObject*)o)->anim.localPosX = tmpl.y;
-                            *(f32*)&((ObjDef*)o)->jointData = tmpl.z;
+                            ((GameObject*)o)->anim.localPosY = tmpl.z;
                             *(int*)eff = (int)Obj_SetupObject(o, 5, -1, -1, 0);
                             *(int*)(*(int*)eff + 0xf8) = 1;
                         }
@@ -3086,9 +3086,9 @@ void dll_0B_func05(void)
                             tmpl.y += ((ModgfxEffectSlot*)eff)->posOffsetY;
                             tmpl.z += ((ModgfxEffectSlot*)eff)->posOffsetZ;
                         }
-                        *(f32*)(*(int*)eff + 0x18) = tmpl.x;
-                        *(f32*)(*(int*)eff + 0x1c) = tmpl.y;
-                        *(f32*)(*(int*)eff + 0x20) = tmpl.z;
+                        (*(GameObject**)eff)->anim.worldPosX = tmpl.x;
+                        (*(GameObject**)eff)->anim.worldPosY = tmpl.y;
+                        (*(GameObject**)eff)->anim.worldPosZ = tmpl.z;
                     }
                     if (*(int*)eff != 0)
                     {

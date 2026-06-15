@@ -180,7 +180,11 @@ void CameraModeCombat_update(short* cam)
     {
         if (((CameraObject*)cam)->targetObj != NULL)
         {
-            if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
+            if (*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40)
+            {
+                return;
+            }
+            if (((CameraObject*)cam)->targetFlags & 2)
             {
                 return;
             }
@@ -195,8 +199,11 @@ void CameraModeCombat_update(short* cam)
         {
             if (((CameraObject*)cam)->targetObj != NULL)
             {
-                if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags &
-                    2))
+                if (*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40)
+                {
+                    return;
+                }
+                if (((CameraObject*)cam)->targetFlags & 2)
                 {
                     return;
                 }
@@ -211,7 +218,11 @@ void CameraModeCombat_update(short* cam)
             {
                 if (tgt != NULL)
                 {
-                    if ((*(u8*)&tgt->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
+                    if (*(u8*)&tgt->anim.resetHitboxMode & 0x40)
+                    {
+                        return;
+                    }
+                    if (((CameraObject*)cam)->targetFlags & 2)
                     {
                         return;
                     }
@@ -229,8 +240,11 @@ void CameraModeCombat_update(short* cam)
                     {
                         if (((CameraObject*)cam)->targetObj != NULL)
                         {
-                            if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)
-                                ->targetFlags & 2))
+                            if (*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40)
+                            {
+                                return;
+                            }
+                            if (((CameraObject*)cam)->targetFlags & 2)
                             {
                                 return;
                             }
@@ -248,15 +262,15 @@ void CameraModeCombat_update(short* cam)
                             {
                                 ty = ty + lbl_803E18D0;
                             }
-                            if (tgt->anim.modelInstance->hitVolumeCount <= 1)
+                            if (tgt->anim.modelInstance->hitVolumeCount > 1)
+                            {
+                                fn_8010BF08((CameraObject*)cam, &dx, &dy, &dz, &ty);
+                            }
+                            else
                             {
                                 dx = hitVolumes[tgt->unkE4].centerX - focus->anim.worldPosX;
                                 dy = hitVolumes[tgt->unkE4].centerY - ty;
                                 dz = hitVolumes[tgt->unkE4].centerZ - focus->anim.worldPosZ;
-                            }
-                            else
-                            {
-                                fn_8010BF08((CameraObject*)cam, &dx, &dy, &dz, &ty);
                             }
                         }
                         else
@@ -273,8 +287,11 @@ void CameraModeCombat_update(short* cam)
                         {
                             if (((CameraObject*)cam)->targetObj != NULL)
                             {
-                                if ((*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)
-                                    cam)->targetFlags & 2))
+                                if (*(u8*)&((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40)
+                                {
+                                    return;
+                                }
+                                if (((CameraObject*)cam)->targetFlags & 2)
                                 {
                                     return;
                                 }
@@ -289,7 +306,8 @@ void CameraModeCombat_update(short* cam)
                             py = lbl_803E18D8 + ty;
                             pz = lbl_803E18D4 * dz + focus->anim.worldPosZ;
                             ang = getAngle(dx, dz);
-                            diff = (int)*cam - (0x8000 - ((ang & 0xffff) + 0x8000) & 0xffff);
+                            ad = (ang & 0xffff) + 0x8000;
+                            diff = (int)*cam - ((0x8000 - ad) & 0xffff);
                             if (diff > 0x8000)
                             {
                                 diff = diff - 0xffff;

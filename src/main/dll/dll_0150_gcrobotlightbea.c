@@ -85,10 +85,12 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
-extern f32 lbl_803E422C;
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 lbl_803E4298;
+extern f32 lbl_803E429C;
+extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, int* out, int obj,
+                              int p8, int p9, int p10, int p11);
 extern void modelLightStruct_freeSlot(int* p);
 extern f32 lbl_803E42A0;
 extern f32 lbl_803E42A4;
@@ -636,7 +638,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0) return;
     if (((GameObject*)obj)->unkF4 != 0 ||
-        objBboxFn_800640cc((int)obj + 0xc, vec, 0, out, (int)obj, 4, -1, 0, 0) == 0)
+        objBboxFn_800640cc((void*)((int)obj + 0xc), vec, lbl_803E429C, 0, (int*)out, (int)obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
@@ -678,7 +680,7 @@ void gcrobotlightbea_update(int* obj)
     vec[0] = lbl_80322C38[0];
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];
-    Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
+    Obj_TransformLocalVectorByWorldMatrix(obj, lbl_80322C38, vec);
     voxmaps_traceScaledVectorEnd(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
     PSVECDistance((char*)obj + 0xc, vec2);
     PSVECScale(lbl_80322C38, vec2);

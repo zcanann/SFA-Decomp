@@ -27,7 +27,6 @@ extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43F4;
 extern u8 framesThisStep;
-extern f32 lbl_803E43B8;
 extern f32 lbl_803E4428;
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);

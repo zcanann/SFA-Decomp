@@ -1112,18 +1112,6 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     }
 }
 
-/* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-
-/* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
-
-/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-
-/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
-
 int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
 {
     extern int* gPlayerInterface;
@@ -1499,4 +1487,3 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
-

@@ -56,8 +56,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
-/* chuka extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
@@ -93,7 +91,6 @@ extern f32 lbl_803E6FE4;
 extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
-
 
 int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -560,7 +557,6 @@ void GCRobotBlast_initialise(void)
 {
 }
 
-
 int GCRobotBlast_getExtraSize(void) { return 0x8; }
 int GCRobotBlast_getObjectTypeId(void) { return 0x0; }
 
@@ -572,7 +568,6 @@ void GCRobotBlast_init(int obj, s8* p)
     ((BlastFlags4*)&((GCRobotBlastState*)inner)->flags04)->b80 = 0;
     ((GameObject*)obj)->animEventCallback = (void*)GCRobotBlast_SeqFn;
 }
-
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

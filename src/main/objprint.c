@@ -1318,7 +1318,6 @@ void fn_8003B5E0(int a, int b, int c, u8 d)
     lbl_803DCC0A = d;
 }
 
-/* 100b texture lookup by byte tag. */
 ObjTextureRuntimeSlot* objFindTexture(void* obj, int target, int unusedMaterialIndex)
 {
     ObjTextureRuntimeSlot* result = NULL;

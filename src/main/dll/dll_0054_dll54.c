@@ -66,7 +66,6 @@ extern f32 lbl_803E1B58;
 extern f32 lbl_803E1B60;
 extern f32 lbl_803E1B64;
 extern const f32 lbl_803E1B68;
-extern int getFocusedNpc(void);
 extern s16 getAngle(f32 x, f32 z);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
@@ -365,18 +364,6 @@ void dll_54_update(u8* obj)
                                        *(int*)&camera->anim.parent);
     }
 }
-
-/* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-
-/* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
-
-/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-
-/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */

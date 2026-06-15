@@ -158,7 +158,7 @@ FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 para
     if ((*(byte*)(param_10 + 0x356) & 1) == 0)
     {
         player = FUN_80017a98();
-        if (*(short*)(player + 0x46) == 0)
+        if (((GameObject*)player)->anim.seqId == 0)
         {
             FUN_80006824(param_9, SFXfox_treadwater322);
         }
@@ -203,18 +203,18 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
         for (; objIdx < objCount; objIdx = objIdx + 1)
         {
             other = *(uint*)(objs + objIdx * 4);
-            if ((other != param_9) && (*(short*)(other + 0x46) == 0x306))
+            if ((other != param_9) && (((GameObject*)other)->anim.seqId == 0x306))
             {
-                (**(code**)(**(int**)(other + 0x68) + 0x24))(other, 0x81, 0);
+                (**(code**)(**(int**)&((GameObject*)other)->anim.dll + 0x24))(other, 0x81, 0);
             }
         }
         objs = FUN_80017a98();
-        target = *(int*)(objs + 200);
+        target = *(int*)&((GameObject*)objs)->childObjs[0];
         objs = FUN_80017a98();
-        target = (**(code**)(**(int**)(target + 0x68) + 0x44))(target);
+        target = (**(code**)(**(int**)&((GameObject*)target)->anim.dll + 0x44))(target);
         if (target == 0)
         {
-            if (*(short*)(objs + 0x46) == 0)
+            if (((GameObject*)objs)->anim.seqId == 0)
             {
                 FUN_80006824(param_9, SFXfox_treadwater322);
             }
@@ -223,7 +223,7 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80006824(param_9, SFXfoot_metal_run_2);
             }
         }
-        else if (*(short*)(objs + 0x46) == 0)
+        else if (((GameObject*)objs)->anim.seqId == 0)
         {
             FUN_80006824(param_9, SFXmv_ropecreak22);
         }
@@ -272,9 +272,9 @@ FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 para
         for (; objIdx < objCount; objIdx = objIdx + 1)
         {
             other = *(uint*)(objs + objIdx * 4);
-            if ((other != param_9) && (*(short*)(other + 0x46) == 0x306))
+            if ((other != param_9) && (((GameObject*)other)->anim.seqId == 0x306))
             {
-                hitVtbl = **(int**)(other + 0x68);
+                hitVtbl = **(int**)&((GameObject*)other)->anim.dll;
                 (**(code**)(hitVtbl + 0x24))(other, 0x81, 0);
             }
         }
@@ -359,9 +359,9 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
         for (; objIdx < objCount[0]; objIdx = objIdx + 1)
         {
             other = *(int*)(objs + objIdx * 4);
-            if ((other != param_9) && (*(short*)(other + 0x46) == 0x306))
+            if ((other != param_9) && (((GameObject*)other)->anim.seqId == 0x306))
             {
-                hitVtbl = **(int**)(other + 0x68);
+                hitVtbl = **(int**)&((GameObject*)other)->anim.dll;
                 (**(code**)(hitVtbl + 0x24))(other, 0x81, 0);
             }
         }
@@ -399,7 +399,7 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    int unaff_r29;
+    int subObj;
     int sub;
 
     sub = *(int*)&((GameObject*)param_9)->extra;
@@ -411,8 +411,8 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     if (lbl_803E3A7C < ((GameObject*)param_9)->anim.currentMoveProgress)
     {
-        unaff_r29 = *(int*)(sub + 0x40c);
-        *(byte*)(unaff_r29 + 8) = *(byte*)(unaff_r29 + 8) | 2;
+        subObj = *(int*)(sub + 0x40c);
+        *(byte*)(subObj + 8) = *(byte*)(subObj + 8) | 2;
     }
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -429,7 +429,7 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(undefined*)(param_10 + 0x25f) = 0;
         *(undefined*)(param_10 + 0x349) = 0;
         *(undefined2*)(sub + 0x402) = 0;
-        if ((*(byte*)(unaff_r29 + 9) & 2) == 0)
+        if ((*(byte*)(subObj + 9) & 2) == 0)
         {
             *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.
                 resetHitboxMode | 8;
@@ -823,7 +823,7 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     undefined4 model;
 
-    model = *(undefined4*)(param_9 + 0xb8);
+    model = *(undefined4*)&((GameObject*)param_9)->extra;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E3B00, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -1125,7 +1125,7 @@ int dll_CB_getExtraSize_ret_1040(void) { return 0x410; }
 int dll_CB_getObjectTypeId(void) { return 0x14b; }
 
 s16 dll_CE_setScale(int* obj);
-s16 dll_CB_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
+s16 dll_CB_setScale(int* obj) { return *(s16*)((char*)((GameObject*)obj)->extra + 0x274); }
 
 extern void objRenderFn_8003b8f4(f32);
 

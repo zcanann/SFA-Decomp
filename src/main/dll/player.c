@@ -125,8 +125,9 @@ void fn_802961FC(int a, u8 type)
 {
     if (type > 2)
     {
-        lbl_803DE459 = 0;
+        type = 0;
     }
+    lbl_803DE459 = type;
 }
 
 int fn_8029630C(int obj)
@@ -9176,17 +9177,20 @@ void playerAddMoney(int obj, int amount)
 void fn_80296C84(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int deref = inner->playerStatus;
-    int v = *(s8*)((char*)deref + 1);
+    int v = *(s8*)((char*)inner->playerStatus + 1);
     if (v < 0)
     {
         v = 0;
     }
-    else if (v > *(s8*)((char*)deref + 1))
+    else
     {
-        v = *(s8*)((char*)deref + 1);
+        int hi = *(volatile s8*)((char*)inner->playerStatus + 1);
+        if (v > hi)
+        {
+            v = hi;
+        }
     }
-    *(s8*)((char*)inner->playerStatus) = (s8)v;
+    *(s8*)((char*)*(volatile int*)((char*)inner + 0x35c)) = (s8)v;
     Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 1;
     inner->unk79C = lbl_803E7EA4;
@@ -13134,11 +13138,11 @@ void fn_802B066C(int obj, int state)
     {
         return;
     }
-    if (((ByteFlags*)((char*)state + 0x3f0))->b08 == 0)
+    if (((ByteFlags*)((char*)state + 0x3f0))->b10 == 0)
     {
         v = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
-            ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY);
+            (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
         ((PlayerState*)state)->unk7A4 = v;
         v = ((PlayerState*)state)->unk7A4;
         if (v < lbl_803E7EE0)

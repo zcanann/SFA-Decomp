@@ -3911,9 +3911,6 @@ void fn_8012C000(void)
     }
 }
 
-/* segment pragma-stack balance (re-split): */
-
-
 extern undefined4 FUN_80006948();
 extern int FUN_80006c54();
 extern undefined4 FUN_80006c6c();

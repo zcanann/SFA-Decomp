@@ -941,4 +941,3 @@ int Carryable_updateRenderState(int* obj, int flag)
 
 void SaveGame_setCamActionNo(s16 actionNo);
 
-void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);

@@ -10,7 +10,6 @@ extern float mathCosf(float x);
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
 
-
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -304,20 +303,6 @@ void CameraModeForceBehind_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
-
-/* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
-
-/* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-
-/* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
-
-/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-
-/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */

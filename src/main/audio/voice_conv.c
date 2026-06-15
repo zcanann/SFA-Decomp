@@ -161,6 +161,7 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     u8 baseNote;
     u8 inputNote;
     f32 freq;
+    u32 d;
 
     if (packed == 0xffffffffU)
     {
@@ -172,12 +173,12 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     {
         if (baseNote < inputNote)
         {
-            u32 d = inputNote - baseNote;
+            d = inputNote - baseNote;
             freq = voicePitchUpTable[d];
         }
         else
         {
-            u32 d = baseNote - inputNote;
+            d = baseNote - inputNote;
             freq = voicePitchDownTable[d];
         }
         freq = (f32)(u32)(packed & 0xffffff) * freq;
@@ -205,7 +206,7 @@ u32 voiceConvertDbToLinear(u32 dbCents)
     f32 result;
 
     scaledDb = (f32)(s32)dbCents;
-    base = powf(lbl_803E7834, lbl_803E7838 * scaledDb);
+    base = powf(lbl_803E7834, scaledDb * lbl_803E7838);
     result = lbl_803E7830 * base;
     return __cvt_fp2unsigned(result);
 }

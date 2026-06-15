@@ -150,8 +150,9 @@ int andross_updateModelAlpha(int obj)
     *(f32*)(state + 0x68) = lbl_803E74D4;
     v = ((AndrossState*)state)->fadeAlpha;
     model = *(int*)Obj_GetActiveModel(obj);
+    i = 0;
     alpha = lbl_803E74B4 * v;
-    for (i = 0; i < *(u8*)(model + 0xf8); i++)
+    for (; i < *(u8*)(model + 0xf8); i++)
     {
         op = ObjModel_GetRenderOp(model, i);
         *(s8*)(op + 0x43) = alpha;

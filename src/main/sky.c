@@ -2924,7 +2924,8 @@ void skyFn_8008aee8(void)
     fogColor = *(FogColor*)&lbl_803E8458;
     if (lbl_803DD12C != NULL &&
         ((player = Obj_GetPlayerObject()) == NULL ||
-            ((cell = coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14))) != 0x30 &&
+            ((cell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
+                                     ((GameObject*)player)->anim.localPosZ)) != 0x30 &&
                 cell != 0x2b)))
     {
         sky = *(int**)&lbl_803DD12C;

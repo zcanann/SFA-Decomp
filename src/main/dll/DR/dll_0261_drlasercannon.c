@@ -174,9 +174,8 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     f32 d[3];
     f32* dp;
     f32 horiz;
-    s16 yaw;
-    s16 pitch;
-    int clamp;
+    int yaw;
+    int pitch;
     int negClamp;
     s16 negClampS;
     int delta;
@@ -209,22 +208,22 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     }
     if (maxRate < 0x168)
     {
-        clamp = (s16)(lbl_803E68E0 * (f32)maxRate);
-        negClamp = -clamp;
+        maxRate = (s16)(lbl_803E68E0 * (f32)maxRate);
+        negClamp = -maxRate;
         negClampS = (s16)negClamp;
         out->yaw = (s16)yaw;
-        if (out->yaw > clamp)
+        if (out->yaw > maxRate)
         {
-            out->yaw = clamp;
+            out->yaw = maxRate;
         }
         if (out->yaw < negClamp)
         {
             out->yaw = negClampS;
         }
         out->pitch = (s16)pitch;
-        if (out->pitch > clamp)
+        if (out->pitch > maxRate)
         {
-            out->pitch = clamp;
+            out->pitch = maxRate;
         }
         if (out->pitch < negClamp)
         {

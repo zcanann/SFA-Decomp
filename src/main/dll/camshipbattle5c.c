@@ -288,14 +288,14 @@ f32 fn_8010AC48(int* obj, f32 px, f32 py, f32 pz)
     nx = lbl_803E18A8 * (sx + dx1);
     nz = lbl_803E18A8 * (sz + dz1);
     len = sqrtf(nx * nx + nz * nz);
-    if (lbl_803E1888 != len)
+    if (0.0f != len)
     {
         nx = nx / len;
         nz = nz / len;
     }
     negdot = -(nx * *(f32*)((char*)pts[1] + 8) + nz * *(f32*)((char*)pts[1] + 0x10));
     t1 = nx * dx1 + nz * dz1;
-    if (lbl_803E1888 != t1)
+    if (0.0f != t1)
     {
         t1 = -(negdot + (nx * px + nz * pz)) / t1;
     }
@@ -314,14 +314,14 @@ f32 fn_8010AC48(int* obj, f32 px, f32 py, f32 pz)
     nx = lbl_803E18A8 * (nsx + sx);
     nz = lbl_803E18A8 * (nsz + sz);
     len = sqrtf(nx * nx + nz * nz);
-    if (lbl_803E1888 != len)
+    if (0.0f != len)
     {
         nx = nx / len;
         nz = nz / len;
     }
     negdot = -(nx * *(f32*)((char*)pts[2] + 8) + nz * *(f32*)((char*)pts[2] + 0x10));
     t2 = nx * dx1 + nz * dz1;
-    if (lbl_803E1888 != t2)
+    if (0.0f != t2)
     {
         t2 = -(negdot + (nx * px + nz * pz)) / t2;
     }

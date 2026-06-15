@@ -30,12 +30,12 @@ int saveCb_8007e77c(u8 idx, int unused, void* dst)
     return 0;
 }
 
-int FUN_8007eb04(uint param_1)
+int FUN_8007eb04(uint slot)
 {
     uint uVar1;
     uint uVar2;
     uint uVar3;
-    ushort uVar4;
+    ushort i;
     uint uVar5;
     uint uVar6;
     uint uVar7;
@@ -63,9 +63,9 @@ int FUN_8007eb04(uint param_1)
     uVar1 = 0;
     uVar6 = 1;
     iVar13 = 0;
-    for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8)
+    for (i = 0; i < 0x3f7; i = i + 8)
     {
-        wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+        wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
         uVar12 = wp[1];
         carry = CARRY4(uVar6, uVar12);
         uVar3 = uVar6 + uVar12;
@@ -91,9 +91,9 @@ int FUN_8007eb04(uint param_1)
             wp[8] + (uint)CARRY4(uVar8, uVar18) + wp[10] + (uint)CARRY4(uVar9, uVar19) +
             wp[0xc] + (uint)CARRY4(uVar10, uVar20) + wp[0xe] + (uint)CARRY4(uVar11, uVar21);
     }
-    for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1)
+    for (; i < 0x3ff; i = i + 1)
     {
-        wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+        wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
         uVar3 = *wp;
         uVar5 = wp[1];
         uVar2 = uVar2 ^ uVar5;
@@ -107,7 +107,7 @@ int FUN_8007eb04(uint param_1)
     *(uint*)(DAT_803ddcc4 + 0x1ffc) = uVar2;
     *(uint*)(uVar7 + 0x1ff8) = uVar1;
     FUN_802420e0(DAT_803ddcc4, 0x2000);
-    uVar7 = (param_1 & 0xff) << 0xd;
+    uVar7 = (slot & 0xff) << 0xd;
     iVar13 = FUN_80264428((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, uVar7);
     if (iVar13 == -5)
     {
@@ -127,9 +127,9 @@ int FUN_8007eb04(uint param_1)
             uVar6 = 0;
             uVar7 = 1;
             sum2 = 0;
-            for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8)
+            for (i = 0; i < 0x3f7; i = i + 8)
             {
-                wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+                wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
                 uVar15 = wp[1];
                 carry = CARRY4(uVar7, uVar15);
                 uVar5 = uVar7 + uVar15;
@@ -157,9 +157,9 @@ int FUN_8007eb04(uint param_1)
                     wp[0xc] + (uint)CARRY4(uVar11, uVar21) +
                     wp[0xe] + (uint)CARRY4(uVar12, uVar22);
             }
-            for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1)
+            for (; i < 0x3ff; i = i + 1)
             {
-                wp = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+                wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
                 uVar5 = *wp;
                 uVar24 = wp[1];
                 uVar3 = uVar3 ^ uVar24;

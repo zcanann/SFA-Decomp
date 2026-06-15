@@ -91,8 +91,6 @@ void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefi
 
 void fn_801C5990(MmShrineAnimObj* obj);
 
-/* segment pragma-stack balance (re-split): */
-
 #pragma scheduling off
 #pragma peephole off
 void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8 param_4,

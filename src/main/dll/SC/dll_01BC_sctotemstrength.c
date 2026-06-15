@@ -65,8 +65,6 @@ extern f32 lbl_803E56A4;
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
 extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
-extern uint GameBit_Get(int eventId);
 
 int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

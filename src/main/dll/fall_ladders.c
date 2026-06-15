@@ -74,28 +74,28 @@ extern f32 lbl_803E2984;
 extern f32 lbl_803E2988;
 extern f32 lbl_803E298C;
 
-void FUN_801540a0(undefined4 param_1, int param_2)
+void FUN_801540a0(undefined4 obj, int state)
 {
-    float fVar1;
-    float fVar2;
+    float fa;
+    float fb;
 
-    *(float*)(param_2 + 0x2ac) = lbl_803E35BC;
-    *(undefined4*)(param_2 + 0x2e4) = 1;
-    *(float*)(param_2 + 0x308) = lbl_803E358C;
-    *(float*)(param_2 + 0x300) = lbl_803E35C0;
-    *(float*)(param_2 + 0x304) = lbl_803E35C4;
-    *(undefined*)(param_2 + 800) = 0;
-    fVar2 = lbl_803E35A8;
-    *(float*)(param_2 + 0x314) = lbl_803E35A8;
-    *(undefined*)(param_2 + 0x321) = 7;
-    fVar1 = lbl_803E35A4;
-    *(float*)(param_2 + 0x318) = lbl_803E35A4;
-    *(undefined*)(param_2 + 0x322) = 0;
-    *(float*)(param_2 + 0x31c) = fVar2;
-    *(undefined*)(param_2 + 0x33a) = 0;
-    *(undefined*)(param_2 + 0x33b) = 0;
-    *(float*)(param_2 + 0x324) = lbl_803E35C8;
-    *(float*)(param_2 + 0x2fc) = fVar1;
+    *(float*)(state + 0x2ac) = lbl_803E35BC;
+    *(undefined4*)(state + 0x2e4) = 1;
+    *(float*)(state + 0x308) = lbl_803E358C;
+    *(float*)(state + 0x300) = lbl_803E35C0;
+    *(float*)(state + 0x304) = lbl_803E35C4;
+    *(undefined*)(state + 800) = 0;
+    fb = lbl_803E35A8;
+    *(float*)(state + 0x314) = lbl_803E35A8;
+    *(undefined*)(state + 0x321) = 7;
+    fa = lbl_803E35A4;
+    *(float*)(state + 0x318) = lbl_803E35A4;
+    *(undefined*)(state + 0x322) = 0;
+    *(float*)(state + 0x31c) = fb;
+    *(undefined*)(state + 0x33a) = 0;
+    *(undefined*)(state + 0x33b) = 0;
+    *(float*)(state + 0x324) = lbl_803E35C8;
+    *(float*)(state + 0x2fc) = fa;
     return;
 }
 
@@ -274,68 +274,68 @@ void fn_80154328(int obj, int p)
 #pragma peephole on
 void FUN_80154724(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  short* param_9, int param_10)
+                  short* obj, int state)
 {
-    bool bVar1;
+    bool done;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
 
-    *(float*)(param_10 + 0x32c) = lbl_803E35E4;
-    bVar1 = false;
-    ObjHits_SetHitVolumeSlot((int)param_9, 0x18, 1, -1);
-    if (*(int*)(param_10 + 0x340) != 0)
+    *(float*)(state + 0x32c) = lbl_803E35E4;
+    done = false;
+    ObjHits_SetHitVolumeSlot((int)obj, 0x18, 1, -1);
+    if (*(int*)(state + 0x340) != 0)
     {
-        bVar1 = true;
-        *(float*)(param_10 + 0x324) = lbl_803E3600;
-        *(float*)(param_10 + 0x32c) = lbl_803E35E4;
-        if (param_9[0x50] != 0)
+        done = true;
+        *(float*)(state + 0x324) = lbl_803E3600;
+        *(float*)(state + 0x32c) = lbl_803E35E4;
+        if (obj[0x50] != 0)
         {
             FUN_8014d4c8((double)lbl_803E35F0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         (int)param_9, param_10, 2, 0, 3, in_r8, in_r9, in_r10);
+                         (int)obj, state, 2, 0, 3, in_r8, in_r9, in_r10);
         }
     }
-    if (param_9[0x50] == 3)
+    if (obj[0x50] == 3)
     {
-        *(float*)(param_10 + 0x328) = *(float*)(param_10 + 0x328) - lbl_803DC074;
-        if (*(float*)(param_10 + 0x328) <= lbl_803E35E4)
+        *(float*)(state + 0x328) = *(float*)(state + 0x328) - lbl_803DC074;
+        if (*(float*)(state + 0x328) <= lbl_803E35E4)
         {
-            bVar1 = true;
-            *(float*)(param_10 + 0x32c) = lbl_803E35D8;
-            *(float*)(param_10 + 0x324) = lbl_803E35DC;
+            done = true;
+            *(float*)(state + 0x32c) = lbl_803E35D8;
+            *(float*)(state + 0x324) = lbl_803E35DC;
             FUN_8014d4c8((double)lbl_803E35E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         (int)param_9, param_10, 4, 0, 3, in_r8, in_r9, in_r10);
+                         (int)obj, state, 4, 0, 3, in_r8, in_r9, in_r10);
         }
     }
     else
     {
-        param_2 = (double)*(float*)(*(int*)(param_10 + 0x29c) + 0x14);
-        FUN_8014d3d0(param_9, param_10, 0x3c, 0);
+        param_2 = (double)*(float*)(*(int*)(state + 0x29c) + 0x14);
+        FUN_8014d3d0(obj, state, 0x3c, 0);
     }
-    if (bVar1)
+    if (done)
     {
-        *(uint*)(param_10 + 0x2e4) = *(uint*)(param_10 + 0x2e4) | 0x10000;
+        *(uint*)(state + 0x2e4) = *(uint*)(state + 0x2e4) | 0x10000;
     }
-    else if (*(char*)(param_10 + 0x33a) == '\0')
+    else if (*(char*)(state + 0x33a) == '\0')
     {
-        *(undefined*)(param_10 + 0x33a) = 1;
+        *(undefined*)(state + 0x33a) = 1;
         FUN_8014d4c8((double)lbl_803E3604, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     (int)param_9, param_10, 1, 0, 3, in_r8, in_r9, in_r10);
+                     (int)obj, state, 1, 0, 3, in_r8, in_r9, in_r10);
     }
-    else if (((*(uint*)(param_10 + 0x2dc) & 0x40000000) != 0) &&
+    else if (((*(uint*)(state + 0x2dc) & 0x40000000) != 0) &&
         (FUN_8014d4c8((double)lbl_803E3608, param_2, param_3, param_4, param_5, param_6, param_7,
-                      param_8, (int)param_9, param_10, 3, 0, 3, in_r8, in_r9, in_r10),
-            lbl_803E35E4 == *(float*)(param_10 + 0x328)))
+                      param_8, (int)obj, state, 3, 0, 3, in_r8, in_r9, in_r10),
+            lbl_803E35E4 == *(float*)(state + 0x328)))
     {
-        *(float*)(param_10 + 0x328) = lbl_803E360C;
-        FUN_8014d3d0(param_9, param_10, 1, 0);
-        FUN_80006824((uint)param_9, SFXfox_healthgasp2);
+        *(float*)(state + 0x328) = lbl_803E360C;
+        FUN_8014d3d0(obj, state, 1, 0);
+        FUN_80006824((uint)obj, SFXfox_healthgasp2);
     }
-    param_9[1] = *(short*)(param_10 + 0x19c);
-    param_9[2] = *(short*)(param_10 + 0x19e);
-    if (*(char*)(param_10 + 0x33b) != '\0')
+    obj[1] = *(short*)(state + 0x19c);
+    obj[2] = *(short*)(state + 0x19e);
+    if (*(char*)(state + 0x33b) != '\0')
     {
-        *(char*)(param_10 + 0x33b) = *(char*)(param_10 + 0x33b) + -1;
+        *(char*)(state + 0x33b) = *(char*)(state + 0x33b) + -1;
     }
     return;
 }

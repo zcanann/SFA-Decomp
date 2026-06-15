@@ -669,92 +669,92 @@ void objAnimFn_8014a9f0(short* obj, int state)
 void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* param_4)
 {
     extern double FUN_80293900();
-    ushort uVar1;
-    ushort* puVar2;
-    uint uVar3;
-    undefined4* puVar4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
-    int iVar8;
+    ushort heading;
+    ushort* self;
+    uint angleDiff;
+    undefined4* objArray;
+    int target;
+    int i;
+    int found;
+    int state;
     double extraout_f1;
-    double dVar9;
-    ulonglong uVar10;
-    float local_48;
-    int local_44;
-    float local_40;
-    float local_3c;
-    float local_38;
-    longlong local_30;
+    double distSq;
+    ulonglong flags;
+    float radiusSq;
+    int count;
+    float dx;
+    float dy;
+    float dz;
+    longlong dist;
 
-    uVar10 = FUN_8028682c();
-    puVar2 = (ushort*)(uVar10 >> 0x20);
-    local_48 = (float)extraout_f1;
-    iVar8 = *(int*)(puVar2 + 0x5c);
-    local_44 = 0;
-    iVar7 = 0;
-    if ((uVar10 & 1) == 0)
+    flags = FUN_8028682c();
+    self = (ushort*)(flags >> 0x20);
+    radiusSq = (float)extraout_f1;
+    state = *(int*)(self + 0x5c);
+    count = 0;
+    found = 0;
+    if ((flags & 1) == 0)
     {
-        local_48 = (float)extraout_f1 * (float)extraout_f1;
-        puVar4 = ObjGroup_GetObjects(3, &local_44);
-        if (local_44 != 0)
+        radiusSq = (float)extraout_f1 * (float)extraout_f1;
+        objArray = ObjGroup_GetObjects(3, &count);
+        if (count != 0)
         {
-            for (iVar6 = 0; iVar6 < local_44; iVar6 = iVar6 + 1)
+            for (i = 0; i < count; i = i + 1)
             {
-                dVar9 = FUN_80017714((float*)(puVar2 + 0xc), (float*)(puVar4[iVar6] + 0x18));
-                if ((dVar9 < (double)local_48) && ((ushort*)puVar4[iVar6] != puVar2))
+                distSq = FUN_80017714((float*)(self + 0xc), (float*)(objArray[i] + 0x18));
+                if ((distSq < (double)radiusSq) && ((ushort*)objArray[i] != self))
                 {
-                    *param_4 = (int)puVar4[iVar6];
-                    dVar9 = FUN_80293900(dVar9);
-                    local_30 = (longlong)(int)
-                    dVar9;
-                    *(short*)(param_4 + 1) = (short)(int)dVar9;
-                    if ((uVar10 & 2) != 0)
+                    *param_4 = (int)objArray[i];
+                    distSq = FUN_80293900(distSq);
+                    dist = (longlong)(int)
+                    distSq;
+                    *(short*)(param_4 + 1) = (short)(int)distSq;
+                    if ((flags & 2) != 0)
                     {
-                        if ((*(uint*)(iVar8 + 0x2e4) & 0x8000) == 0)
+                        if ((*(uint*)(state + 0x2e4) & 0x8000) == 0)
                         {
-                            iVar5 = *param_4;
-                            local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar5 + 0x18);
-                            local_3c = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar5 + 0x1c);
-                            local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar5 + 0x20);
+                            target = *param_4;
+                            dx = ((GameObject*)self)->anim.worldPosX - *(float*)(target + 0x18);
+                            dy = ((GameObject*)self)->anim.worldPosY - *(float*)(target + 0x1c);
+                            dz = ((GameObject*)self)->anim.worldPosZ - *(float*)(target + 0x20);
                         }
                         else
                         {
-                            local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
-                            local_3c = lbl_803E31FC;
-                            local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
+                            dx = ((GameObject*)self)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                            dy = lbl_803E31FC;
+                            dz = ((GameObject*)self)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                         }
-                        uVar3 = FUN_80017730();
-                        if (*(short**)(puVar2 + 0x18) == (short*)0x0)
+                        angleDiff = FUN_80017730();
+                        if (*(short**)(self + 0x18) == (short*)0x0)
                         {
-                            uVar1 = *puVar2;
+                            heading = *self;
                         }
                         else
                         {
-                            uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
+                            heading = *self + **(short**)(self + 0x18);
                         }
-                        uVar3 = (uVar3 & 0xffff) - (uint)uVar1;
-                        if (0x8000 < (int)uVar3)
+                        angleDiff = (angleDiff & 0xffff) - (uint)heading;
+                        if (0x8000 < (int)angleDiff)
                         {
-                            uVar3 = uVar3 - 0xffff;
+                            angleDiff = angleDiff - 0xffff;
                         }
-                        if ((int)uVar3 < -0x8000)
+                        if ((int)angleDiff < -0x8000)
                         {
-                            uVar3 = uVar3 + 0xffff;
+                            angleDiff = angleDiff + 0xffff;
                         }
-                        iVar5 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
-                        *(uint*)(iVar8 + 0x2dc) = *(uint*)(iVar8 + 0x2dc) & ~*(uint*)(&DAT_8031e840 + iVar5);
-                        if ((uVar10 & 4) != 0)
+                        target = (short)((angleDiff & 0xffff) >> 0xd) * 4;
+                        *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) & ~*(uint*)(&DAT_8031e840 + target);
+                        if ((flags & 4) != 0)
                         {
                             *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                                *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + iVar5);
+                                *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + target);
                         }
                     }
                     param_4 = param_4 + 2;
-                    iVar7 = iVar7 + 1;
-                    if (param_3 <= iVar7)
+                    found = found + 1;
+                    if (param_3 <= found)
                     {
-                        iVar6 = local_44;
+                        i = count;
                     }
                 }
             }
@@ -762,52 +762,52 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
     }
     else
     {
-        iVar7 = ObjGroup_FindNearestObject(3, puVar2, &local_48);
-        *param_4 = iVar7;
-        if (iVar7 != 0)
+        found = ObjGroup_FindNearestObject(3, self, &radiusSq);
+        *param_4 = found;
+        if (found != 0)
         {
-            local_30 = (longlong)(int)
-            local_48;
-            *(short*)(param_4 + 1) = (short)(int)local_48;
-            if ((uVar10 & 2) != 0)
+            dist = (longlong)(int)
+            radiusSq;
+            *(short*)(param_4 + 1) = (short)(int)radiusSq;
+            if ((flags & 2) != 0)
             {
-                if ((*(uint*)(iVar8 + 0x2e4) & 0x8000) == 0)
+                if ((*(uint*)(state + 0x2e4) & 0x8000) == 0)
                 {
-                    iVar7 = *param_4;
-                    local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar7 + 0x18);
-                    local_3c = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar7 + 0x1c);
-                    local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar7 + 0x20);
+                    found = *param_4;
+                    dx = ((GameObject*)self)->anim.worldPosX - *(float*)(found + 0x18);
+                    dy = ((GameObject*)self)->anim.worldPosY - *(float*)(found + 0x1c);
+                    dz = ((GameObject*)self)->anim.worldPosZ - *(float*)(found + 0x20);
                 }
                 else
                 {
-                    local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
-                    local_3c = lbl_803E31FC;
-                    local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
+                    dx = ((GameObject*)self)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                    dy = lbl_803E31FC;
+                    dz = ((GameObject*)self)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                 }
-                uVar3 = FUN_80017730();
-                if (*(short**)(puVar2 + 0x18) == (short*)0x0)
+                angleDiff = FUN_80017730();
+                if (*(short**)(self + 0x18) == (short*)0x0)
                 {
-                    uVar1 = *puVar2;
+                    heading = *self;
                 }
                 else
                 {
-                    uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
+                    heading = *self + **(short**)(self + 0x18);
                 }
-                uVar3 = (uVar3 & 0xffff) - (uint)uVar1;
-                if (0x8000 < (int)uVar3)
+                angleDiff = (angleDiff & 0xffff) - (uint)heading;
+                if (0x8000 < (int)angleDiff)
                 {
-                    uVar3 = uVar3 - 0xffff;
+                    angleDiff = angleDiff - 0xffff;
                 }
-                if ((int)uVar3 < -0x8000)
+                if ((int)angleDiff < -0x8000)
                 {
-                    uVar3 = uVar3 + 0xffff;
+                    angleDiff = angleDiff + 0xffff;
                 }
-                iVar7 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
-                *(uint*)(iVar8 + 0x2dc) = *(uint*)(iVar8 + 0x2dc) & ~*(uint*)(&DAT_8031e840 + iVar7);
-                if ((uVar10 & 4) != 0)
+                found = (short)((angleDiff & 0xffff) >> 0xd) * 4;
+                *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) & ~*(uint*)(&DAT_8031e840 + found);
+                if ((flags & 4) != 0)
                 {
                     *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                        *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + iVar7);
+                        *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + found);
                 }
             }
         }
@@ -818,26 +818,26 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
 
 double FUN_8014cbcc(int param_1)
 {
-    int iVar1;
-    double dVar2;
+    int state;
+    double ratio;
 
-    iVar1 = *(int*)&((GameObject*)param_1)->extra;
-    if (iVar1 == 0)
+    state = *(int*)&((GameObject*)param_1)->extra;
+    if (state == 0)
     {
-        dVar2 = (double)lbl_803E31FC;
+        ratio = (double)lbl_803E31FC;
     }
-    else if ((*(ushort*)(iVar1 + 0x2b2) == 0) || (*(ushort*)(iVar1 + 0x2b0) == 0))
+    else if ((*(ushort*)(state + 0x2b2) == 0) || (*(ushort*)(state + 0x2b0) == 0))
     {
-        dVar2 = (double)lbl_803E31FC;
+        ratio = (double)lbl_803E31FC;
     }
     else
     {
-        dVar2 = (double)((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(iVar1 + 0x2b0)) -
+        ratio = (double)((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(state + 0x2b0)) -
                 DOUBLE_803e3278) /
-            (float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(iVar1 + 0x2b2)) -
+            (float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(state + 0x2b2)) -
                 DOUBLE_803e3278));
     }
-    return dVar2;
+    return ratio;
 }
 
 #pragma scheduling off
@@ -853,91 +853,91 @@ void FUN_8014ccac(int param_1, undefined4 param_2)
 void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, int param_5,
                   float* param_6, char param_7)
 {
-    float fVar1;
-    double dVar2;
-    double dVar3;
-    double dVar4;
-    float afStack_c8[3];
-    float local_bc;
-    float local_b8;
-    float local_b4;
-    float local_b0;
-    float local_ac;
-    float local_a8;
-    float afStack_a4[13];
+    float speed;
+    double curMag;
+    double tgtMag;
+    double crossMag;
+    float cross[3];
+    float tgtDir_x;
+    float tgtDir_y;
+    float tgtDir_z;
+    float curDir_x;
+    float curDir_y;
+    float curDir_z;
+    float rotMtx[13];
     undefined4 local_70;
     uint uStack_6c;
 
-    dVar2 = SeekTwiceBeforeRead((float*)(param_5 + 0x2b8));
-    if (dVar2 <= (double)lbl_803E31FC)
+    curMag = SeekTwiceBeforeRead((float*)(param_5 + 0x2b8));
+    if (curMag <= (double)lbl_803E31FC)
     {
-        local_b0 = lbl_803E31FC;
-        local_ac = lbl_803E31FC;
-        local_a8 = lbl_803E31FC;
+        curDir_x = lbl_803E31FC;
+        curDir_y = lbl_803E31FC;
+        curDir_z = lbl_803E31FC;
     }
     else
     {
-        local_a8 = (float)((double)lbl_803E3200 / dVar2);
-        local_b0 = *(float*)(param_5 + 0x2b8) * local_a8;
-        local_ac = *(float*)(param_5 + 700) * local_a8;
-        local_a8 = *(float*)(param_5 + 0x2c0) * local_a8;
-        FUN_80247ef8(&local_b0, &local_b0);
+        curDir_z = (float)((double)lbl_803E3200 / curMag);
+        curDir_x = *(float*)(param_5 + 0x2b8) * curDir_z;
+        curDir_y = *(float*)(param_5 + 700) * curDir_z;
+        curDir_z = *(float*)(param_5 + 0x2c0) * curDir_z;
+        FUN_80247ef8(&curDir_x, &curDir_x);
     }
-    dVar3 = SeekTwiceBeforeRead(param_6);
-    if (dVar3 <= (double)lbl_803E31FC)
+    tgtMag = SeekTwiceBeforeRead(param_6);
+    if (tgtMag <= (double)lbl_803E31FC)
     {
-        local_bc = lbl_803E31FC;
-        local_b8 = lbl_803E31FC;
-        local_b4 = lbl_803E31FC;
+        tgtDir_x = lbl_803E31FC;
+        tgtDir_y = lbl_803E31FC;
+        tgtDir_z = lbl_803E31FC;
     }
     else
     {
-        local_b4 = (float)((double)lbl_803E3200 / dVar3);
-        local_bc = *param_6 * local_b4;
-        local_b8 = param_6[1] * local_b4;
-        local_b4 = param_6[2] * local_b4;
+        tgtDir_z = (float)((double)lbl_803E3200 / tgtMag);
+        tgtDir_x = *param_6 * tgtDir_z;
+        tgtDir_y = param_6[1] * tgtDir_z;
+        tgtDir_z = param_6[2] * tgtDir_z;
     }
-    FUN_80247fb0(&local_b0, &local_bc, afStack_c8);
-    dVar4 = SeekTwiceBeforeRead(afStack_c8);
-    if ((double)lbl_803E31FC < dVar4)
+    FUN_80247fb0(&curDir_x, &tgtDir_x, cross);
+    crossMag = SeekTwiceBeforeRead(cross);
+    if ((double)lbl_803E31FC < crossMag)
     {
-        FUN_80247f90(&local_b0, &local_bc);
-        dVar4 = (double)FUN_80292754();
-        uStack_6c = ((uint)(byte)((param_3 < dVar4) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
+        FUN_80247f90(&curDir_x, &tgtDir_x);
+        crossMag = (double)FUN_80292754();
+        uStack_6c = ((uint)(byte)((param_3 < crossMag) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
         local_70 = 0x43300000;
         if (ABS((double)(float)((double)CONCAT44(0x43300000, uStack_6c) - DOUBLE_803e3218)) !=
             (double)lbl_803E31FC)
         {
-            fVar1 = lbl_803E3258;
-            if ((double)lbl_803E31FC < dVar4)
+            speed = lbl_803E3258;
+            if ((double)lbl_803E31FC < crossMag)
             {
-                fVar1 = lbl_803E3200;
+                speed = lbl_803E3200;
             }
-            FUN_80247944((double)(float)(param_3 * (double)fVar1), afStack_a4, afStack_c8);
-            FUN_80247cd8(afStack_a4, &local_b0, &local_bc);
+            FUN_80247944((double)(float)(param_3 * (double)speed), rotMtx, cross);
+            FUN_80247cd8(rotMtx, &curDir_x, &tgtDir_x);
         }
     }
-    dVar4 = (double)(float)(dVar3 * (double)lbl_803E3280);
-    dVar3 = (double)(float)(dVar2 + param_2);
-    if ((dVar4 <= dVar3) && (dVar3 = dVar4, dVar4 < (double)(float)(dVar2 - param_2)))
+    crossMag = (double)(float)(tgtMag * (double)lbl_803E3280);
+    tgtMag = (double)(float)(curMag + param_2);
+    if ((crossMag <= tgtMag) && (tgtMag = crossMag, crossMag < (double)(float)(curMag - param_2)))
     {
-        dVar3 = (double)(float)(dVar2 - param_2);
+        tgtMag = (double)(float)(curMag - param_2);
     }
-    if (param_1 < dVar3)
+    if (param_1 < tgtMag)
     {
-        dVar3 = param_1;
+        tgtMag = param_1;
     }
-    *(float*)(param_4 + 0x24) = (float)((double)local_bc * dVar3);
-    *(float*)(param_4 + 0x28) = (float)((double)local_b8 * dVar3);
-    *(float*)(param_4 + 0x2c) = (float)((double)local_b4 * dVar3);
+    *(float*)(param_4 + 0x24) = (float)((double)tgtDir_x * tgtMag);
+    *(float*)(param_4 + 0x28) = (float)((double)tgtDir_y * tgtMag);
+    *(float*)(param_4 + 0x2c) = (float)((double)tgtDir_z * tgtMag);
     if ((param_7 != '\0') && (*(float*)(param_4 + 0x28) < lbl_803E31FC))
     {
-        fVar1 = lbl_803E3264 + *(float*)(*(int*)(param_5 + 0x29c) + 0x10);
-        if (*(float*)(param_4 + 0x10) < fVar1)
+        speed = lbl_803E3264 + *(float*)(*(int*)(param_5 + 0x29c) + 0x10);
+        if (*(float*)(param_4 + 0x10) < speed)
         {
             *(float*)(param_4 + 0x28) =
                 *(float*)(param_4 + 0x28) *
-                (lbl_803E3200 - (fVar1 - *(float*)(param_4 + 0x10)) / lbl_803E3264);
+                (lbl_803E3200 - (speed - *(float*)(param_4 + 0x10)) / lbl_803E3264);
         }
     }
     return;
@@ -1879,29 +1879,29 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
 
 void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_4)
 {
-    float fVar1;
-    short sVar2;
-    int iVar3;
+    float step;
+    short delta;
+    int targetAngle;
 
-    iVar3 = FUN_80017730();
-    sVar2 = (short)iVar3 - *param_1;
-    if (0x8000 < sVar2)
+    targetAngle = FUN_80017730();
+    delta = (short)targetAngle - *param_1;
+    if (0x8000 < delta)
     {
-        sVar2 = sVar2 + 1;
+        delta = delta + 1;
     }
-    if (sVar2 < -0x8000)
+    if (delta < -0x8000)
     {
-        sVar2 = sVar2 + -1;
+        delta = delta + -1;
     }
-    fVar1 = lbl_803DC074 / (float)((double)CONCAT44(0x43300000, param_3 & 0xffff) - DOUBLE_803e3278);
-    if (lbl_803E3200 < fVar1)
+    step = lbl_803DC074 / (float)((double)CONCAT44(0x43300000, param_3 & 0xffff) - DOUBLE_803e3278);
+    if (lbl_803E3200 < step)
     {
-        fVar1 = lbl_803E3200;
+        step = lbl_803E3200;
     }
     *param_1 = *param_1 +
         (short)(int)((float)((double)CONCAT44(0x43300000,
-                                              (int)(short)(sVar2 + param_4) ^ 0x80000000) -
-            DOUBLE_803e3218) * fVar1);
+                                              (int)(short)(delta + param_4) ^ 0x80000000) -
+            DOUBLE_803e3218) * step);
     return;
 }
 

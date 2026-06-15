@@ -59,7 +59,6 @@ int dll_19E_getObjectTypeId(void) { return 0x1; }
  * EN v1.0 Address: 0x801CCB44
  * EN v1.0 Size: 904b
  */
-/* segment pragma-stack balance (re-split): */
 
 void dll_19E_free(int obj)
 {

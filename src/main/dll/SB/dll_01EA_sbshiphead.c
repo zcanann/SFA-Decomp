@@ -36,7 +36,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 randomGetRange(int min, int max);
 
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
 
@@ -183,7 +182,6 @@ void SB_ShipHead_update(int obj)
         }
         if ((int)ObjMsg_Pop((void*)obj, (uint*)&msg, (uint*)tmp2, (uint*)&tmp3) != 0)
         {
-            /* object-message opcodes raised by the galleon sequence */
             switch (msg)
             {
             case 0x130001:
@@ -287,14 +285,12 @@ void SB_ShipHead_update(int obj)
         lbl_803DDC48 = galleonPhase;
 }
 
-
 int SB_ShipHead_getExtraSize(void) { return sizeof(SBShipHeadState); }
 int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
 
 u32 getSbGalleon(void);
 
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, 0x3); }
-
 
 void SB_ShipHead_init(int obj)
 {

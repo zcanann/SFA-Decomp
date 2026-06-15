@@ -137,7 +137,6 @@ void wmplanets_init(int* obj, u8* init)
     WmPlanetsState* inner = ((GameObject*)obj)->extra;
     f32 a = lbl_803E5FA0 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase; /* 0.1f * */
     ((GameObject*)obj)->anim.rootMotionScale = a * (lbl_803E5F98 + (f32)(s32)((WmPlanetsMapData*)init)->scaleByte);
-    /* ObjPlacement.unk00: nonzero = a radius override was supplied */
     if (*(s16*)init != 0)
     {
         inner->orbitRadius = -(f32)(s32)(((WmPlanetsMapData*)init)->radiusByte << 4);

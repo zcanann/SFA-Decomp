@@ -687,7 +687,6 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
 void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spawnFlags, int modelId, int* colorArgs)
 {

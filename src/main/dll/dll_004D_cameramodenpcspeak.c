@@ -43,7 +43,7 @@ extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int getFocusedNpc(void);
 extern int randomGetRange(int lo, int hi);
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
-extern f32 lbl_803E19E8;
+extern const f32 lbl_803E19E8;
 extern f32 lbl_803E19EC;
 extern f32 lbl_803E19F0;
 extern f32 lbl_803E19F4;
@@ -246,7 +246,6 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     f32 vd[3], vc[3], vb[3], va[3];
     u8 traceWork[CAMCONTROL_TRACE_WORK_SIZE];
 
-
     if (lbl_803DD584 == NULL)
     {
         lbl_803DD584 = (CameraModeNpcSpeakState*)mmAlloc(sizeof(CameraModeNpcSpeakState), 15, 0);
@@ -428,7 +427,7 @@ void CameraModeNpcSpeak_update(u8* obj)
     CameraObject* camera = (CameraObject*)obj;
     CameraModeNpcSpeakState* speakState;
     GameObject* target = (GameObject*)camera->anim.targetObj;
-    f32 ex, ey, ez;
+    f32 ex, ez, ey;
     f32 dx, dy, dz;
 
     if (target == NULL)
@@ -440,26 +439,26 @@ void CameraModeNpcSpeak_update(u8* obj)
     {
         speakState->orbitAngleOffset =
             (s32)((f32)speakState->orbitAngleVelocity * timeDelta + (f32)speakState->orbitAngleOffset);
-        if (speakState->orbitAngleVelocity > 0 && speakState->orbitAngleOffset > 0xd6d8)
+        if (lbl_803DD584->orbitAngleVelocity > 0 && lbl_803DD584->orbitAngleOffset > 0xd6d8)
         {
-            speakState->orbitAngleOffset = 0xd6d8;
+            lbl_803DD584->orbitAngleOffset = 0xd6d8;
         }
-        else if (speakState->orbitAngleVelocity < 0 && speakState->orbitAngleOffset < -0xd6d8)
+        else if (lbl_803DD584->orbitAngleVelocity < 0 && lbl_803DD584->orbitAngleOffset < -0xd6d8)
         {
-            speakState->orbitAngleOffset = -0xd6d8;
+            lbl_803DD584->orbitAngleOffset = -0xd6d8;
         }
-        fn_8010DB7C(target, &speakState->cameraX, &speakState->cameraY, &speakState->cameraZ);
+        fn_8010DB7C(target, &lbl_803DD584->cameraX, &lbl_803DD584->cameraY, &lbl_803DD584->cameraZ);
     }
-    camera->anim.worldPosX = speakState->cameraX;
-    camera->anim.worldPosY = speakState->cameraY;
-    camera->anim.worldPosZ = speakState->cameraZ;
+    camera->anim.worldPosX = lbl_803DD584->cameraX;
+    camera->anim.worldPosY = lbl_803DD584->cameraY;
+    camera->anim.worldPosZ = lbl_803DD584->cameraZ;
     dx = target->anim.worldPosX - speakState->anchorX;
-    dy = (target->anim.worldPosY + speakState->lookAtHeightOffset) - speakState->anchorY;
+    dy = (target->anim.worldPosY + lbl_803DD584->lookAtHeightOffset) - speakState->anchorY;
     dz = target->anim.worldPosZ - speakState->anchorZ;
-    dx *= speakState->lookAtXZScale;
-    dy *= speakState->lookAtYScale;
-    dz *= speakState->lookAtXZScale;
-    if (speakState->mode == 3)
+    dx *= lbl_803DD584->lookAtXZScale;
+    dy *= lbl_803DD584->lookAtYScale;
+    dz *= lbl_803DD584->lookAtXZScale;
+    if (lbl_803DD584->mode == 3)
     {
         camera->anim.rotY = (s16)(s32)
         getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
@@ -471,7 +470,7 @@ void CameraModeNpcSpeak_update(u8* obj)
     ey = camera->anim.worldPosY - dy;
     ez = camera->anim.worldPosZ - dz;
     camera->anim.rotX = (s16)(0x8000 - getAngle(ex, ez));
-    if (speakState->mode != 3)
+    if (lbl_803DD584->mode != 3)
     {
         camera->anim.rotY = (s16)(s32)
         getAngle(ey, sqrtf(ex * ex + ez * ez));
@@ -481,8 +480,6 @@ void CameraModeNpcSpeak_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
-
-/* segment pragma-stack balance (re-split): */
 
 int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6);
 

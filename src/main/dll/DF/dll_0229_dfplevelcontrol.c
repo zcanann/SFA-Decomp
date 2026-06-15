@@ -59,8 +59,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
-/* chuka extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
@@ -97,7 +95,6 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
-extern void DBstealerwo_setFuncPtrs_80203c78(void);
 extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
 extern s16 lbl_80329848[];
@@ -645,7 +642,6 @@ void dfplevelcontrol_setScale(int unused, u8* out)
 
 int dbstealerworm_stateHandlerA00(int obj, int p2);
 
-void DBstealerwo_setFuncPtrs_80203c78(void);
 
 void dfplevelcontrol_init(int obj, int param2)
 {
