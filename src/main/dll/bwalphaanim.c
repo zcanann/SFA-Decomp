@@ -1,7 +1,6 @@
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/game_object.h"
 
-extern char lbl_803284E0[];
 
 void SB_CloudRunner_onSeqFree(int* obj)
 {
