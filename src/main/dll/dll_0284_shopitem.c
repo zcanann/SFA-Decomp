@@ -41,7 +41,6 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole on
 extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);
-extern void* lbl_803AD068[8];
 extern void GXSetBlendMode(int type, int src, int dst, int op);
 extern void gxSetZMode_(u32 a, int b, u32 c);
 extern void gxSetPeControl_ZCompLoc_(u32 a);
@@ -64,7 +63,6 @@ extern void showHelpText(int textId);
 extern void buttonDisable(int a, int b);
 extern void objRenderFn_80041018(int obj);
 extern f32 Curve_EvalBSpline(int p, f32 t, int m);
-extern void DRlaserturret_startTimedChallenge(int);
 extern f32 lbl_803E5A34;
 extern f32 lbl_803E5A38;
 extern f32 lbl_803E5A3C;
