@@ -301,24 +301,24 @@ void CameraModeCombat_update(short* cam)
                             if (diff > 9000)
                             {
                                 step = interpolate((f32)(s32)(diff - 9000), lbl_803E18DC, timeDelta);
-                                *cam = (int)((f32)(s32) * cam - step);
+                                *cam = (s16)((f32)(s32) * cam - step);
                             }
                             else if (diff < -9000)
                             {
                                 step = interpolate((f32)(s32)(diff + 9000), lbl_803E18DC, timeDelta);
-                                *cam = (int)((f32)(s32) * cam - step);
+                                *cam = (s16)((f32)(s32) * cam - step);
                             }
                             if (diff < 3000 && diff > 0)
                             {
                                 if (lbl_803DD56C < 3000 && diff < 1000 && diff < lbl_803DD56C)
                                 {
                                     step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32) * cam + step);
+                                    *cam = (s16)((f32)(s32) * cam + step);
                                 }
                                 else
                                 {
                                     step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32) * cam + step);
+                                    *cam = (s16)((f32)(s32) * cam + step);
                                 }
                             }
                             else if (diff > -3000 && diff < 0)
@@ -326,12 +326,12 @@ void CameraModeCombat_update(short* cam)
                                 if (lbl_803DD56C < -2999 || diff < -999 || diff <= lbl_803DD56C)
                                 {
                                     step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32) * cam + step);
+                                    *cam = (s16)((f32)(s32) * cam + step);
                                 }
                                 else
                                 {
                                     step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32) * cam + step);
+                                    *cam = (s16)((f32)(s32) * cam + step);
                                 }
                             }
                             abs2 = diff;
@@ -416,7 +416,7 @@ void CameraModeCombat_update(short* cam)
                                 ad = ad + 0xffff;
                             }
                             step = interpolate((f32)(s32)ad, lbl_803E1920, timeDelta);
-                            cam[1] = (int)
+                            cam[1] = (s16)
                             ((f32)(s32)
                             cam[1] + step
                             )
