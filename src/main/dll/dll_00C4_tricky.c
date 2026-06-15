@@ -2774,7 +2774,10 @@ void Tricky_hitDetect(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     y = ((GameObject*)obj)->anim.localPosY;
     dy = y - ((GameObject*)obj)->anim.previousLocalPosY;
-    if (dy < lbl_803E23DC)
+    if (dy >= lbl_803E23DC)
+    {
+    }
+    else
     {
         dy = -dy;
     }
@@ -2798,7 +2801,7 @@ void Tricky_hitDetect(int obj)
             ((TrickyState*)state)->trackedHeight = lbl_803E23DC;
         }
     }
-    if ((((TrickyState*)state)->statusFlags >> 5 & 1) != 0)
+    if ((((TrickyState*)state)->statusFlags >> 5 & 1) != 0u)
     {
         objects = ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP, count);
         for (i = 0; i < count[0]; i++)
@@ -2807,7 +2810,10 @@ void Tricky_hitDetect(int obj)
             if (*(s32*)&((TrickyState*)state)->heightTrackObjId == -1)
             {
                 dy = height - ((GameObject*)obj)->anim.localPosY;
-                if (dy < lbl_803E23DC)
+                if (dy >= lbl_803E23DC)
+                {
+                }
+                else
                 {
                     dy = -dy;
                 }
