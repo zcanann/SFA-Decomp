@@ -1055,6 +1055,7 @@ int cfguardian_setScale(int* obj);
  * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
  *   s32 message @0; s32 target @4; s32 data @8. */
 
+#pragma opt_unroll_loops off
 void cloudprisoncontrol_update(int obj)
 {
     int target;
@@ -1141,5 +1142,6 @@ void cloudprisoncontrol_update(int obj)
         }
     }
 }
+#pragma opt_unroll_loops reset
 
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
