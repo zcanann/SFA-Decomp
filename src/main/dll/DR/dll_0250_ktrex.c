@@ -704,12 +704,12 @@ int ktrex_stateHandlerB06(int obj, int runtime)
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~1;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x80000;
+        *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x80000LL;
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 0x80) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~0x80;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000;
+        *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000LL;
     }
     return 0;
 }
