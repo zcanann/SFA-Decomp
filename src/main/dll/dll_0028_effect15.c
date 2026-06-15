@@ -1,8 +1,6 @@
-#include "main/audio/sfx_ids.h"
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/dim_partfx.h"
 
 extern u32 randomGetRange(int min, int max);
 
@@ -970,6 +968,3 @@ void Effect13_func05_nop(void);
 #pragma dont_inline reset
 #pragma dont_inline reset
 
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
