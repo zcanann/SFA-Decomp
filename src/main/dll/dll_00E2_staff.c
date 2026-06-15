@@ -1708,7 +1708,6 @@ u8 fn_8016F16C(int* obj);
 
 s32 staff_func16(int* obj) { return ((StaffState*)((int**)obj)[0xb8 / 4])->fieldB9; }
 
-extern f32 lbl_803E31E8;
 
 void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -1883,7 +1882,6 @@ void staff_release(void)
     }
 }
 
-extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
 
 void mikabombshadow_init(int* obj);
 
@@ -1923,7 +1921,6 @@ void staff_init(int* obj)
     *(int*)(lbl_803AC6B8 + 0x1c) = 0;
 }
 
-extern void fn_8003B5E0(int a, int b, int c, int d);
 
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -2450,7 +2447,6 @@ void staff_update(int* obj)
     }
 }
 
-extern void playerAddHealth(void* player, int amount);
 
 extern f32 fastFloorf(f32 v);
 extern f32 Curve_EvalBSpline(f32* a, f32 t, f32* out);
