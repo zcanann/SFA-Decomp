@@ -7,15 +7,11 @@
  * bits, and drives the music latches. The SeqFn handles the level-exit
  * event (flood the fortress and lock the map).
  */
-#include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/dll/alphaanim.h"
 #include "main/mapEvent.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objanim_update.h"
-#include "main/objseq.h"
 
 typedef struct CflevelcontrolState
 {
