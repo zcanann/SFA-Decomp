@@ -98,7 +98,7 @@ void vfpminifire_update(int obj)
     args.rz = 0;
     args.ry = 0;
     args.rx = 0;
-    if (randomGetRange(0, 4) == 0)
+    if ((int)randomGetRange(0, 4) == 0)
     {
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
     }
@@ -106,7 +106,7 @@ void vfpminifire_update(int obj)
     args.x = (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX) / lbl_803E6098;
     args.y = (((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY) / lbl_803E6098;
     args.z = (((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) / lbl_803E6098;
-    if (randomGetRange(0, 4) == 0)
+    if ((int)randomGetRange(0, 4) == 0)
     {
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
     }
@@ -114,11 +114,11 @@ void vfpminifire_update(int obj)
     args.x *= lbl_803E609C;
     args.y *= lbl_803E609C;
     args.z *= lbl_803E609C;
-    if (randomGetRange(0, 4) == 0)
+    if ((int)randomGetRange(0, 4) == 0)
     {
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
     }
-    if (randomGetRange(0, 2) == 0)
+    if ((int)randomGetRange(0, 2) == 0)
     {
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1);
     }
