@@ -402,7 +402,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* sett
             Sfx_PlayFromObject(0, SFXsc_snort03);
         }
 
-        (*gCameraInterface)->initialise(gCamcontrolPathState->initialiseCurve,
+        (*gCameraInterface)->initialise(&gCamcontrolPathState->initialiseCurve[0],
                                         gCamcontrolPathState->pathCurve.pathLength,
                                         lbl_803E1774, lbl_803E1770, lbl_803E1744,
                                         lbl_803E1778);
