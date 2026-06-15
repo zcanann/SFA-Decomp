@@ -66,22 +66,22 @@ extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5A24;
 extern f32 lbl_803E5A34;
 
-undefined4 FUN_801e76a0(int param_1)
+undefined4 FUN_801e76a0(int obj)
 {
-    uint bit;
+    uint gbit;
     undefined4 result;
     int state;
 
-    state = *(int*)&((GameObject*)param_1)->extra;
-    bit = GameBit_Get(0xcef);
-    if (bit == 0)
+    state = *(int*)&((GameObject*)obj)->extra;
+    gbit = GameBit_Get(0xcef);
+    if (gbit == 0)
     {
         result = 0;
     }
     else
     {
-        bit = GameBit_Get(0xad3);
-        if (bit == 0)
+        gbit = GameBit_Get(0xad3);
+        if (gbit == 0)
         {
             GameBit_Set(0xad3, 1);
             state = *(int*)(state + 0x9b4);
@@ -154,20 +154,20 @@ void shopkeeper_free(int obj)
     return;
 }
 
-void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    float effectArgs[4];
-    effectArgs[0] = lbl_803E59D8;
+    float local_18[4];
+    local_18[0] = lbl_803E59D8;
     if (*(s16*)(state + 0x274) != 7 && visible != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
-            (obj, param_2, param_3, param_4, param_5, lbl_803E59D8);
+            (obj, p2, p3, p4, p5, lbl_803E59D8);
         dll_2E_func06(obj, state + 0x35c, 0);
     }
     if ((*(u8*)(state + 0x9d4) & 0x20) != 0)
     {
-        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, effectArgs, 0x50, NULL);
+        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, local_18, 0x50, NULL);
     }
 }
 
