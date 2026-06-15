@@ -1,5 +1,4 @@
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
