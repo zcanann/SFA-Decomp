@@ -1042,13 +1042,13 @@ void DR_CloudRunner_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         fn_802C11BC(obj, -1, timeDelta);
-        ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000;
+        ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000LL;
     }
     else
     {
         inner->baddie.physicsActive = 0;
         fn_802C11BC(obj, -1, timeDelta);
-        ((ObjAnimComponent*)obj)->modelInstance->flags &= ~0x200000;
+        ((ObjAnimComponent*)obj)->modelInstance->flags &= ~0x200000LL;
     }
     if (inner->cooldownTimer != 0)
     {
@@ -1071,7 +1071,7 @@ void DR_CloudRunner_update(int obj)
     dll_2E_func03(obj, (int)((char*)inner + 0x4c4));
     objAnimFn_80038f38(obj, (int)((char*)inner + 0x494));
     fn_8003B500(obj, (int)((char*)inner + 0x464), lbl_803E83A4);
-    characterDoEyeAnims(obj, (int)((char*)inner + 0x464));
+    characterDoEyeAnims(obj, (int)inner + 0x464);
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
     {
         if (inner->flightState == 0)
