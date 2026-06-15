@@ -21,6 +21,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/SC/sctotembond.h"
+#include "main/dll/SC/sc_shared.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -50,9 +51,6 @@ extern f32 lbl_803E5650;
 extern void objRenderFn_8003b8f4(f32);
 extern void Music_Trigger(int track, int param);
 extern void fn_8011F6D4(int p);
-
-#define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
-#define SC_TOTEMBOND_VT_HANDLE_EVENT 0x20 /* peer anim.dll vtable slot */
 
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
@@ -135,9 +133,9 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 u
             {
                 if ((ScTotemBondObject*)objects[startForEvent2] != obj &&
                     ((ScTotemBondObject*)objects[startForEvent2])->objectType ==
-                        SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
+                        SC_SEQ_TOTEMPOLE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + SC_TOTEMBOND_VT_HANDLE_EVENT))(
+                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent2], 2);
                     break;
                 }
@@ -150,9 +148,9 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 u
             {
                 if ((ScTotemBondObject*)objects[startForEvent3] != obj &&
                     ((ScTotemBondObject*)objects[startForEvent3])->objectType ==
-                        SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
+                        SC_SEQ_TOTEMPOLE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + SC_TOTEMBOND_VT_HANDLE_EVENT))(
+                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent3], 1);
                     break;
                 }

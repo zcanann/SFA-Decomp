@@ -14,6 +14,7 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/dll/DB/DBrockfall.h"
+#include "main/dll/SC/sc_shared.h"
 #include "main/objlib.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
@@ -53,11 +54,8 @@ extern f32 lbl_803E56A0;
 extern f32 lbl_803E56A4;
 
 #define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
-#define PLATFORM1_PEER_SEQ_ID 0x282
 #define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
 #define PLATFORM1_IDLE_PULL_MOVE_ID 0
-
-#define PLATFORM1_VT_HANDLE_EVENT 0x20 /* peer anim.dll vtable slot */
 
 #define PLATFORM1_LOOP_SFX_ID 0x3af
 #define PLATFORM1_PLAYER_SFX_ID 0x13a
@@ -131,10 +129,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             for (; idx2 < cnt2; idx2++)
             {
                 if ((GameObject*)list[idx2] != self &&
-                    ((GameObject*)list[idx2])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                    ((GameObject*)list[idx2])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
                     o = list[idx2];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 2);
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 2);
                     break;
                 }
             }
@@ -144,10 +142,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             for (; idx3 < cnt3; idx3++)
             {
                 if ((GameObject*)list[idx3] != self &&
-                    ((GameObject*)list[idx3])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                    ((GameObject*)list[idx3])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
                     o = list[idx3];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 3);
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 3);
                     break;
                 }
             }
@@ -234,10 +232,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 for (; idx4 < cnt4; idx4++)
                 {
                     if ((GameObject*)list[idx4] != self &&
-                        ((GameObject*)list[idx4])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                        ((GameObject*)list[idx4])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
                         o = list[idx4];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 4);
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 4);
                         break;
                     }
                 }
@@ -261,10 +259,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 for (; idx5 < cnt5; idx5++)
                 {
                     if ((GameObject*)list[idx5] != self &&
-                        ((GameObject*)list[idx5])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                        ((GameObject*)list[idx5])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
                         o = list[idx5];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + PLATFORM1_VT_HANDLE_EVENT))(o, 4);
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 4);
                         break;
                     }
                 }

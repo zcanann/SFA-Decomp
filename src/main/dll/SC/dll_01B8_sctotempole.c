@@ -5,6 +5,7 @@
  * fanfare; the test is timed (beat MuscleFoot's record). */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
+#include "main/dll/SC/sc_shared.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
@@ -39,7 +40,6 @@ typedef struct SCTotemPoleState
     f32 animSpeed;     /* 0x04: light / extinguish anim playback speed */
 } SCTotemPoleState;
 
-#define SC_TOTEMPOLE_OBJECT_TYPE 0x282
 #define SC_TOTEMPOLE_GAMEBIT_FRONT 0x81
 #define SC_TOTEMPOLE_GAMEBIT_LEFT 0x82
 #define SC_TOTEMPOLE_GAMEBIT_RIGHT 0x83
@@ -49,7 +49,6 @@ typedef struct SCTotemPoleState
 #define SC_TOTEMPOLE_SETUP_FRONT 0x4490C
 #define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
 
-#define SC_TOTEMPOLE_VT_HANDLE_EVENT 0x20 /* anim.dll vtable slot */
 #define SC_TOTEMPOLE_EVENT_ALL_LIT 6      /* peer event: all four poles lit */
 
 /* Insert newTime into the three sorted record-time GameBits (ascending,
@@ -135,10 +134,10 @@ void sc_totempole_update(int obj)
                 for (; i < objCount; i++)
                 {
                     if ((void*)objects[i] != (void*)obj &&
-                        ((GameObject*)objects[i])->anim.seqId == SC_TOTEMPOLE_OBJECT_TYPE)
+                        ((GameObject*)objects[i])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
                         (*(void (**)(int, int))(*(int*)&((GameObject*)objects[i])->anim.dll[0] +
-                                                SC_TOTEMPOLE_VT_HANDLE_EVENT))(
+                                                SC_VT_HANDLE_EVENT))(
                             objects[i], SC_TOTEMPOLE_EVENT_ALL_LIT);
                         break;
                     }
