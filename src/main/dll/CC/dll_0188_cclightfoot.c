@@ -656,7 +656,7 @@ void cclightfoot_update(int obj)
     {
         if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0)
         {
-            t = *(s16*)(hitObj + 0x46);
+            t = ((GameObject*)hitObj)->anim.seqId;
             if (t == 0x11 || t == 0x33)
             {
                 Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
