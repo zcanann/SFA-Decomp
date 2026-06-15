@@ -660,7 +660,7 @@ void trickyFn_80142524(u8* obj, u8* state)
 int trickyFn_80142a14(int obj, int state)
 {
     int tex;
-    short sVar;
+    short move;
     u16 sfxId;
     float pos[3];
 
@@ -689,8 +689,8 @@ int trickyFn_80142a14(int obj, int state)
     tex = *(int*)&((GameObject*)obj)->extra;
     if ((((u32)*(u8*)(tex + 0x58) >> 6) & 1) == 0)
     {
-        sVar = ((GameObject*)obj)->anim.currentMove;
-        if (sVar >= 48 || sVar < 41)
+        move = ((GameObject*)obj)->anim.currentMove;
+        if (move >= 48 || move < 41)
         {
             if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
             {
@@ -766,7 +766,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
 {
     int tex;
     int result;
-    short sVar;
+    short move;
     struct Buf5
     {
         u32 a[5];
@@ -794,8 +794,8 @@ int trickyFoodFn_80142d2c(int obj, int state)
         tex = *(int*)&((GameObject*)obj)->extra;
         if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0)
         {
-            sVar = ((GameObject*)obj)->anim.currentMove;
-            if (sVar >= 48 || sVar < 41)
+            move = ((GameObject*)obj)->anim.currentMove;
+            if (move >= 48 || move < 41)
             {
                 if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
                 {
@@ -819,7 +819,7 @@ skip:
 
 int trickyFn_80142eb0(int obj, int state)
 {
-    short sVar;
+    short move;
     int b;
     struct
     {
@@ -835,8 +835,8 @@ int trickyFn_80142eb0(int obj, int state)
         return 1;
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10;
-    sVar = ((GameObject*)obj)->anim.currentMove;
-    if (sVar == 46)
+    move = ((GameObject*)obj)->anim.currentMove;
+    if (move == 46)
     {
         if (((*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0) &&
             (((*(u32*)&((TrickyState*)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
@@ -850,14 +850,14 @@ int trickyFn_80142eb0(int obj, int state)
         spawnBuf.scale = lbl_803E23F0;
         (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, 0x200001, -1, NULL);
     }
-    else if (sVar < 46)
+    else if (move < 46)
     {
-        if (sVar >= 44 && (*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+        if (move >= 44 && (*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
         {
             objAnimFn_8013a3f0(obj, 46, lbl_803E249C, 0);
         }
     }
-    else if (sVar < 48 && (*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+    else if (move < 48 && (*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
     {
         if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
         {
@@ -934,16 +934,16 @@ int trickyFn_801430e0(u8* obj, u8* state)
 
 undefined4 trickyFn_80143210(int obj, int* trickyState)
 {
-    short sVar1;
-    int iVar2;
+    short move;
+    int foodResult;
 
-    iVar2 = trickyFoodFn_8014460c(obj, trickyState);
-    if (iVar2 != 0)
+    foodResult = trickyFoodFn_8014460c(obj, trickyState);
+    if (foodResult != 0)
     {
         return 1;
     }
-    sVar1 = ((GameObject*)obj)->anim.currentMove;
-    switch (sVar1)
+    move = ((GameObject*)obj)->anim.currentMove;
+    switch (move)
     {
     case 0x23:
         if ((trickyState[0x15] & 0x8000000U) != 0)
@@ -963,16 +963,16 @@ undefined4 trickyFn_80143210(int obj, int* trickyState)
 
 undefined4 trickyFn_801432cc(int obj, int* trickyState)
 {
-    short sVar1;
-    int iVar2;
+    short move;
+    int foodResult;
 
-    iVar2 = trickyFoodFn_8014460c(obj, trickyState);
-    if (iVar2 != 0)
+    foodResult = trickyFoodFn_8014460c(obj, trickyState);
+    if (foodResult != 0)
     {
         return 1;
     }
-    sVar1 = ((GameObject*)obj)->anim.currentMove;
-    switch (sVar1)
+    move = ((GameObject*)obj)->anim.currentMove;
+    switch (move)
     {
     case 0x21:
         if ((trickyState[0x15] & 0x8000000U) != 0)
@@ -1284,10 +1284,10 @@ undefined4 trickyFn_80143b78(int obj, int* trickyState)
 int trickyFn_80143c04(int obj, int state)
 {
     int tex;
-    short sVar;
+    short move;
     u8 result;
     int iVar4;
-    float fVar;
+    float threshold;
 
     *(int*)&((TrickyState*)state)->followObj = ((TrickyState*)state)->playerObj;
     iVar4 = *(u32*)&((TrickyState*)state)->followObj + 0x18;
@@ -1300,18 +1300,18 @@ int trickyFn_80143c04(int obj, int state)
     if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
     {
         ((TrickyState*)state)->unkD = -1;
-        fVar = lbl_803E24C8;
+        threshold = lbl_803E24C8;
     }
     else
     {
-        fVar = lbl_803E2408;
+        threshold = lbl_803E2408;
         if ((*(u32*)&((TrickyState*)state)->stateFlags & 0x20000) != 0)
         {
             ((TrickyState*)state)->unkD = 0;
             *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~(u64)0x20000;
         }
     }
-    result = trickyFn_8013b368(fVar, obj, state);
+    result = trickyFn_8013b368(threshold, obj, state);
     if (result == 1)
     {
         ((FlagByte728*)(state + 0x728))->bf7 = 1;
@@ -1324,8 +1324,8 @@ int trickyFn_80143c04(int obj, int state)
             tex = *(int*)&((GameObject*)obj)->extra;
             if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0)
             {
-                sVar = ((GameObject*)obj)->anim.currentMove;
-                if (sVar >= 48 || sVar < 41)
+                move = ((GameObject*)obj)->anim.currentMove;
+                if (move >= 48 || move < 41)
                 {
                     if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
                     {
