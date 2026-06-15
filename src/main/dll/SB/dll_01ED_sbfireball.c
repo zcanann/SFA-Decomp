@@ -141,15 +141,15 @@ void SB_FireBall_update(GameObject* obj)
 
         if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY)
         {
-            hits->hitVolumePriority = SB_FIREBALL_HITBOX_TYPE;
-            hits->hitVolumeId = SB_FIREBALL_HITBOX_PRIORITY;
-            hits->objectHitMask = SB_FIREBALL_HITBOX_SIZE;
-            hits->skeletonHitMask = SB_FIREBALL_HITBOX_SIZE;
-            hits->flags |= SB_FIREBALL_SOLID_HITBOX_FLAG;
+            ObjAnim_GetPriorityHitState(&obj->anim)->hitVolumePriority = SB_FIREBALL_HITBOX_TYPE;
+            ObjAnim_GetPriorityHitState(&obj->anim)->hitVolumeId = SB_FIREBALL_HITBOX_PRIORITY;
+            ObjAnim_GetPriorityHitState(&obj->anim)->objectHitMask = SB_FIREBALL_HITBOX_SIZE;
+            ObjAnim_GetPriorityHitState(&obj->anim)->skeletonHitMask = SB_FIREBALL_HITBOX_SIZE;
+            ObjAnim_GetPriorityHitState(&obj->anim)->flags |= SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
         else
         {
-            hits->flags &= ~SB_FIREBALL_SOLID_HITBOX_FLAG;
+            ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~SB_FIREBALL_SOLID_HITBOX_FLAG;
         }
 
         state->age += framesThisStep;
