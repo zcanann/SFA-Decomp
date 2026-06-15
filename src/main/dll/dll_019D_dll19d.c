@@ -4,7 +4,6 @@
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
 
-extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -45,7 +44,6 @@ extern undefined4 getLActions();
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
-extern f32 lbl_803E51B0;
 extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E51B8;
