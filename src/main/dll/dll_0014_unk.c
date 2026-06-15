@@ -497,7 +497,7 @@ FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4
     while (true);
 }
 
-void FUN_800db47c(float* param_1, undefined* param_2)
+void FUN_800db47c(float* point, undefined* out)
 {
     uint bitMask;
     uint sectorIdx;
@@ -506,11 +506,11 @@ void FUN_800db47c(float* param_1, undefined* param_2)
     uint off;
     byte k;
 
-    sectorIdx = FUN_800db820(param_1);
-    if ((param_2 != (undefined*)0x0) && ((sectorIdx & 0xff) != 0))
+    sectorIdx = FUN_800db820(point);
+    if ((out != (undefined*)0x0) && ((sectorIdx & 0xff) != 0))
     {
-        *param_2 = (char)sectorIdx;
-        param_2[1] = 0;
+        *out = (char)sectorIdx;
+        out[1] = 0;
         bitMask = 1;
         for (i = 0; i < 4; i = i + 1)
         {
@@ -518,31 +518,31 @@ void FUN_800db47c(float* param_1, undefined* param_2)
             childIdx = (uint)(byte)(&DAT_803a076c)[(sectorIdx & 0xff) * 0x28 + off];
             if (childIdx == 0)
             {
-                *(undefined2*)(param_2 + off * 2 + 2) = 0;
+                *(undefined2*)(out + off * 2 + 2) = 0;
             }
             else
             {
-                *(undefined2*)(param_2 + off * 2 + 2) = (&DAT_8039d76c)[childIdx * 0x18];
-                if (param_1[1] <
+                *(undefined2*)(out + off * 2 + 2) = (&DAT_8039d76c)[childIdx * 0x18];
+                if (point[1] <
                     (float)((double)CONCAT44(0x43300000,
                                              (int)(short)(&DAT_8039d768)[childIdx * 0x18] ^ 0x80000000) -
                         DOUBLE_803e1260))
                 {
                     if ((float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_8039d76a)[childIdx * 0x18] ^ 0x80000000) -
-                        DOUBLE_803e1260) < param_1[1])
+                        DOUBLE_803e1260) < point[1])
                     {
                         off = 0;
                         for (k = 0; k < 4; k = k + 1)
                         {
                             if (lbl_803E1270 <
                                 *(float*)(&DAT_8039d748 + childIdx * 0x18 + (uint)k * 2 + 8) +
-                                *param_1 *
+                                *point *
                                 (float)((double)CONCAT44(0x43300000,
                                                          (int)(short)(&DAT_8039d748)
                                                          [childIdx * 0x18 + (off & 0xff)] ^ 0x80000000)
                                     - DOUBLE_803e1260) +
-                                param_1[2] *
+                                point[2] *
                                 (float)((double)CONCAT44(0x43300000,
                                                          (int)(short)(&DAT_8039d748)
                                                          [childIdx * 0x18 + (off & 0xff) + 1] ^
@@ -554,7 +554,7 @@ void FUN_800db47c(float* param_1, undefined* param_2)
                 }
                 if (k == 4)
                 {
-                    param_2[1] = param_2[1] | (byte)bitMask;
+                    out[1] = out[1] | (byte)bitMask;
                 }
             }
             bitMask = (bitMask & 0x7f) << 1;
@@ -563,7 +563,7 @@ void FUN_800db47c(float* param_1, undefined* param_2)
     return;
 }
 
-ushort FUN_800db690(float* param_1)
+ushort FUN_800db690(float* point)
 {
     uint off;
     byte i;
@@ -576,20 +576,20 @@ ushort FUN_800db690(float* param_1)
     {
         do
         {
-            if ((param_1[1] <
+            if ((point[1] <
                     (float)((double)CONCAT44(0x43300000, (int)(short)sector[0x10] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
                 ((float)((double)CONCAT44(0x43300000, (int)(short)sector[0x11] ^ 0x80000000) -
-                    DOUBLE_803e1260) < param_1[1]))
+                    DOUBLE_803e1260) < point[1]))
             {
                 i = 0;
                 off = 0;
                 while ((i < 4 &&
                     (*(float*)(sector + (uint)i * 2 + 8) +
-                        *param_1 *
+                        *point *
                         (float)((double)CONCAT44(0x43300000, (int)(short)sector[off & 0xff] ^ 0x80000000) -
                             DOUBLE_803e1260) +
-                        param_1[2] *
+                        point[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)sector[(off & 0xff) + 1] ^ 0x80000000) -
                             DOUBLE_803e1260) <= lbl_803E1270)))
@@ -610,7 +610,7 @@ ushort FUN_800db690(float* param_1)
     return 0;
 }
 
-int FUN_800db820(float* param_1)
+int FUN_800db820(float* point)
 {
     short next;
     short cur;
@@ -634,24 +634,24 @@ int FUN_800db820(float* param_1)
         {
             if ((&DAT_803a2390)[idx] != '\0')
             {
-                if ((param_1[1] <
+                if ((point[1] <
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
                             DOUBLE_803e1260)) &&
                     ((float)((double)CONCAT44(0x43300000,
                                               (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000) -
-                        DOUBLE_803e1260) < param_1[1]))
+                        DOUBLE_803e1260) < point[1]))
                 {
                     i = 0;
                     off = 0;
                     while ((i < 4 &&
                         (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
-                            *param_1 *
+                            *point *
                             (float)((double)CONCAT44(0x43300000,
                                                      (int)(short)(&DAT_803a0748)
                                                      [idx * 0x14 + (off & 0xff)] ^ 0x80000000)
                                 - DOUBLE_803e1260) +
-                            param_1[2] *
+                            point[2] *
                             (float)((double)CONCAT44(0x43300000,
                                                      (int)(short)(&DAT_803a0748)
                                                      [idx * 0x14 + (off & 0xff) + 1] ^
@@ -672,22 +672,22 @@ int FUN_800db820(float* param_1)
         idx = (int)cur;
         if ((&DAT_803a2390)[idx] != '\0')
         {
-            if ((param_1[1] <
+            if ((point[1] <
                     (float)((double)CONCAT44(0x43300000,
                                              (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
                 ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000
-                ) - DOUBLE_803e1260) < param_1[1]))
+                ) - DOUBLE_803e1260) < point[1]))
             {
                 i = 0;
                 off = 0;
                 while ((i < 4 &&
                     (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
-                        *param_1 *
+                        *point *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)[idx * 0x14 + (off & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
-                        param_1[2] *
+                        point[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)
                                                  [idx * 0x14 + (off & 0xff) + 1] ^
@@ -706,22 +706,22 @@ int FUN_800db820(float* param_1)
         idx = (int)next;
         if ((&DAT_803a2390)[idx] != '\0')
         {
-            if ((param_1[1] <
+            if ((point[1] <
                     (float)((double)CONCAT44(0x43300000,
                                              (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
                 ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000
-                ) - DOUBLE_803e1260) < param_1[1]))
+                ) - DOUBLE_803e1260) < point[1]))
             {
                 i = 0;
                 off = 0;
                 while ((i < 4 &&
                     (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
-                        *param_1 *
+                        *point *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)[idx * 0x14 + (off & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
-                        param_1[2] *
+                        point[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)
                                                  [idx * 0x14 + (off & 0xff) + 1] ^
