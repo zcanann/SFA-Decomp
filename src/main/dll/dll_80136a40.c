@@ -1320,6 +1320,7 @@ int fn_80136E00(int p1, u8* p)
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
+#pragma ppc_unroll_speculative off
 void fn_80137DF8(void)
 {
     char* strs = (char*)lbl_8031D060;
@@ -1560,6 +1561,7 @@ void fn_80137DF8(void)
         }
     }
 }
+#pragma ppc_unroll_speculative on
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
