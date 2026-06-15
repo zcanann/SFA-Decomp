@@ -739,51 +739,51 @@ void FUN_800620e8(undefined4 param_1, undefined4 param_2, float* param_3, int* p
 
 void FUN_800631d4(int param_1, int param_2, int param_3)
 {
-    uint uVar1;
-    int iVar2;
+    uint hitCount;
+    int hitEntry;
 
     if (param_2 == 0)
     {
-        uVar1 = (uint)DAT_803ddbde;
-        iVar2 = DAT_803ddbb4;
+        hitCount = (uint)DAT_803ddbde;
+        hitEntry = DAT_803ddbb4;
     }
     else
     {
-        uVar1 = (uint) * (byte*)(*(int*)(param_2 + 0x50) + 0x5c);
-        iVar2 = *(int*)(*(int*)(param_2 + 0x50) + 0x34);
+        hitCount = (uint) * (byte*)(*(int*)(param_2 + 0x50) + 0x5c);
+        hitEntry = *(int*)(*(int*)(param_2 + 0x50) + 0x34);
     }
     if (param_3 != 0)
     {
-        if ((int)uVar1 < 1)
+        if ((int)hitCount < 1)
         {
             return;
         }
         do
         {
-            if (*(short*)(iVar2 + 0xc) == param_1)
+            if (*(short*)(hitEntry + 0xc) == param_1)
             {
-                *(byte*)(iVar2 + 3) = *(byte*)(iVar2 + 3) & 0xbf;
+                *(byte*)(hitEntry + 3) = *(byte*)(hitEntry + 3) & 0xbf;
             }
-            iVar2 = iVar2 + 0x10;
-            uVar1 = uVar1 - 1;
+            hitEntry = hitEntry + 0x10;
+            hitCount = hitCount - 1;
         }
-        while (uVar1 != 0);
+        while (hitCount != 0);
         return;
     }
-    if ((int)uVar1 < 1)
+    if ((int)hitCount < 1)
     {
         return;
     }
     do
     {
-        if (*(short*)(iVar2 + 0xc) == param_1)
+        if (*(short*)(hitEntry + 0xc) == param_1)
         {
-            *(byte*)(iVar2 + 3) = *(byte*)(iVar2 + 3) | 0x40;
+            *(byte*)(hitEntry + 3) = *(byte*)(hitEntry + 3) | 0x40;
         }
-        iVar2 = iVar2 + 0x10;
-        uVar1 = uVar1 - 1;
+        hitEntry = hitEntry + 0x10;
+        hitCount = hitCount - 1;
     }
-    while (uVar1 != 0);
+    while (hitCount != 0);
     return;
 }
 
@@ -826,43 +826,43 @@ undefined4
 FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, float* param_5,
              float* param_6, byte param_7)
 {
-    float fVar1;
-    float fVar2;
-    float fVar3;
+    float scratch1;
+    float scratch2;
+    float t;
     double dVar4;
-    double dVar5;
-    float local_38;
-    float local_34;
-    float local_30;
-    float local_2c;
-    float local_28;
-    float local_24;
+    double dist;
+    float normX;
+    float normY;
+    float normZ;
+    float dx;
+    float dy;
+    float dz;
 
     if (param_7 == 3)
     {
         *param_4 = *param_5;
         param_4[1] = param_5[1];
         param_4[2] = param_5[2];
-        local_2c = *param_4 - *param_3;
-        local_28 = param_4[1] - param_3[1];
-        local_24 = param_4[2] - param_3[2];
-        FUN_80017784(&local_2c);
-        fVar1 = (float)((double)(param_6[3] +
+        dx = *param_4 - *param_3;
+        dy = param_4[1] - param_3[1];
+        dz = param_4[2] - param_3[2];
+        FUN_80017784(&dx);
+        scratch1 = (float)((double)(param_6[3] +
                 param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1])
             - param_2);
-        fVar2 = (float)((double)(param_6[3] +
+        scratch2 = (float)((double)(param_6[3] +
                 param_3[2] * param_6[2] + *param_3 * *param_6 + param_3[1] * param_6[1])
             - param_2);
-        fVar3 = lbl_803DF934;
-        if (fVar2 != fVar1)
+        t = lbl_803DF934;
+        if (scratch2 != scratch1)
         {
-            fVar3 = fVar2 / (fVar2 - fVar1);
+            t = scratch2 / (scratch2 - scratch1);
         }
-        fVar1 = param_3[1];
-        fVar2 = param_3[2];
-        *param_4 = (*param_4 - *param_3) * fVar3;
-        param_4[1] = (param_4[1] - fVar1) * fVar3;
-        param_4[2] = (param_4[2] - fVar2) * fVar3;
+        scratch1 = param_3[1];
+        scratch2 = param_3[2];
+        *param_4 = (*param_4 - *param_3) * t;
+        param_4[1] = (param_4[1] - scratch1) * t;
+        param_4[2] = (param_4[2] - scratch2) * t;
         *param_4 = *param_4 + *param_3;
         param_4[1] = param_4[1] + param_3[1];
         param_4[2] = param_4[2] + param_3[2];
@@ -872,56 +872,56 @@ FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, flo
     {
         if ((param_7 != 8) && ((7 < param_7 || (param_7 != 5))))
         {
-            fVar1 = param_6[2];
-            fVar2 = *param_6;
-            dVar5 = (double)(float)(param_2 -
+            scratch1 = param_6[2];
+            scratch2 = *param_6;
+            dist = (double)(float)(param_2 -
                 (double)(param_6[3] +
-                    param_4[2] * fVar1 + *param_4 * fVar2 + param_4[1] * param_6[1]
+                    param_4[2] * scratch1 + *param_4 * scratch2 + param_4[1] * param_6[1]
                 ));
-            if (dVar5 <= (double)lbl_803DF934)
+            if (dist <= (double)lbl_803DF934)
             {
                 return 1;
             }
-            FUN_80293900((double)(fVar2 * fVar2 + fVar1 * fVar1));
+            FUN_80293900((double)(scratch2 * scratch2 + scratch1 * scratch1));
             FUN_80292b48();
             dVar4 = (double)FUN_802947f8();
-            param_4[1] = param_4[1] + (float)(dVar5 / dVar4);
+            param_4[1] = param_4[1] + (float)(dist / dVar4);
             return 1;
         }
         *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
         param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
         param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
-        fVar1 = (float)(param_2 -
+        scratch1 = (float)(param_2 -
             (double)(param_6[3] +
                 param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]));
-        *param_4 = fVar1 * *param_6 + *param_4;
-        param_4[1] = fVar1 * param_6[1] + param_4[1];
-        param_4[2] = fVar1 * param_6[2] + param_4[2];
+        *param_4 = scratch1 * *param_6 + *param_4;
+        param_4[1] = scratch1 * param_6[1] + param_4[1];
+        param_4[2] = scratch1 * param_6[2] + param_4[2];
         return 1;
     }
     if (param_7 == 8)
     {
     LAB_800663f8:
-        fVar1 = param_6[2];
-        fVar2 = *param_6;
-        dVar5 = (double)(float)(param_2 -
+        scratch1 = param_6[2];
+        scratch2 = *param_6;
+        dist = (double)(float)(param_2 -
             (double)(param_6[3] +
-                param_4[2] * fVar1 + *param_4 * fVar2 + param_4[1] * param_6[1]));
-        if ((double)lbl_803DF934 < dVar5)
+                param_4[2] * scratch1 + *param_4 * scratch2 + param_4[1] * param_6[1]));
+        if ((double)lbl_803DF934 < dist)
         {
-            FUN_80293900((double)(fVar2 * fVar2 + fVar1 * fVar1));
+            FUN_80293900((double)(scratch2 * scratch2 + scratch1 * scratch1));
             FUN_80292b48();
             dVar4 = (double)FUN_802949e8();
             if ((double)lbl_803DF934 != dVar4)
             {
-                dVar5 = (double)(float)(dVar5 / dVar4);
+                dist = (double)(float)(dist / dVar4);
             }
-            local_38 = *param_6;
-            local_34 = lbl_803DF934;
-            local_30 = param_6[2];
-            FUN_80017784(&local_38);
-            *param_4 = (float)(dVar5 * (double)local_38 + (double)*param_4);
-            param_4[2] = (float)(dVar5 * (double)local_30 + (double)param_4[2]);
+            normX = *param_6;
+            normY = lbl_803DF934;
+            normZ = param_6[2];
+            FUN_80017784(&normX);
+            *param_4 = (float)(dist * (double)normX + (double)*param_4);
+            param_4[2] = (float)(dist * (double)normZ + (double)param_4[2]);
         }
     }
     else
@@ -934,12 +934,12 @@ FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, flo
         *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
         param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
         param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
-        fVar1 = (float)(param_2 -
+        scratch1 = (float)(param_2 -
             (double)(param_6[3] +
                 param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]));
-        *param_4 = fVar1 * *param_6 + *param_4;
-        param_4[1] = fVar1 * param_6[1] + param_4[1];
-        param_4[2] = fVar1 * param_6[2] + param_4[2];
+        *param_4 = scratch1 * *param_6 + *param_4;
+        param_4[1] = scratch1 * param_6[1] + param_4[1];
+        param_4[2] = scratch1 * param_6[2] + param_4[2];
     }
     return 1;
 }
