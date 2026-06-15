@@ -8829,7 +8829,7 @@ void fn_802B249C(int obj, int inner, int state)
             {
                 f32 dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
                 f32 dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
-                f32 d = sqrtf(dx * dx + dz * dz);
+                f32 d = sqrtf(dz * dz + dx * dx);
                 if (d > lbl_803E7EE0)
                 {
                     dx = dx / d;
@@ -8853,7 +8853,7 @@ void fn_802B249C(int obj, int inner, int state)
                         v = pc[1];
                     }
                     pc[0] = (s8)v;
-                    if (**(s8**)((char*)in2 + 0x35c) < 1)
+                    if (**(s8**)((char*)in2 + 0x35c) <= 0)
                     {
                         playerDie(obj);
                     }
@@ -8881,7 +8881,7 @@ void fn_802B249C(int obj, int inner, int state)
             {
                 f32 dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
                 f32 dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
-                f32 d = sqrtf(dx * dx + dz * dz);
+                f32 d = sqrtf(dz * dz + dx * dx);
                 if (d > lbl_803E7EE0)
                 {
                     dx = dx / d;
@@ -8905,7 +8905,7 @@ void fn_802B249C(int obj, int inner, int state)
                         v = pc[1];
                     }
                     pc[0] = (s8)v;
-                    if (**(s8**)((char*)in2 + 0x35c) < 1)
+                    if (**(s8**)((char*)in2 + 0x35c) <= 0)
                     {
                         playerDie(obj);
                     }
@@ -8935,7 +8935,7 @@ void fn_802B249C(int obj, int inner, int state)
             {
                 f32 dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
                 f32 dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
-                f32 d = sqrtf(dx * dx + dz * dz);
+                f32 d = sqrtf(dz * dz + dx * dx);
                 if (d > lbl_803E7EE0)
                 {
                     dx = dx / d;
@@ -8960,7 +8960,7 @@ void fn_802B249C(int obj, int inner, int state)
                         v = pc[1];
                     }
                     pc[0] = (s8)v;
-                    if (**(s8**)((char*)in2 + 0x35c) < 1)
+                    if (**(s8**)((char*)in2 + 0x35c) <= 0)
                     {
                         playerDie(obj);
                     }
