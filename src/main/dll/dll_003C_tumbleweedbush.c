@@ -832,18 +832,14 @@ void Link_free(void)
 {
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */
     extern s8 lbl_803DD911; /* #57 */
-    LinkMenuItem* item;
     int i;
 
-    i = 0;
-    item = lbl_803A9458;
-    for (; i < (s8)lbl_803DD911; i++)
+    for (i = 0; i < (s8)lbl_803DD911; i++)
     {
-        if (item->texture != NULL)
+        if (lbl_803A9458[i].texture != NULL)
         {
-            textureFree(item->texture);
+            textureFree(lbl_803A9458[i].texture);
         }
-        item++;
     }
     lbl_803DD911 = 0;
 }
