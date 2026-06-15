@@ -248,7 +248,7 @@ void fn_801557D4(int* obj, int state)
         if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
             (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
         {
-            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
         }
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
