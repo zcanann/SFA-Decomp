@@ -311,6 +311,7 @@ void DR_CloudRunner_func17(int obj, int param)
     }
 }
 
+#pragma opt_loop_invariants off
 int DR_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
@@ -319,14 +320,17 @@ int DR_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        if (animUpdate->eventIds[i] == 1)
+        switch (animUpdate->eventIds[i])
         {
+        case 1:
             (*gRomCurveInterface)->initCurve((char*)inner + 0x35c, (void*)obj, lbl_803E8410, &local, 0xf);
+            break;
         }
     }
     ((ByteFlags*)&inner->flagsBC1)->b80 = 1;
     return 0;
 }
+#pragma opt_loop_invariants reset
 
 void DR_CloudRunner_func15(int obj, f32* a, f32* b, f32* c)
 {

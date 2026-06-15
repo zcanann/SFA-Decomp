@@ -1708,25 +1708,29 @@ typedef struct CurvesSaveGameObjectPosition
 int pushable_savePos(int obj)
 {
     int i;
-    CurvesSaveGameObjectPosition* position;
     u32 objectId;
 
     for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
     {
-        position = (CurvesSaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET +
-            i * sizeof(CurvesSaveGameObjectPosition));
         objectId = ((RomCurveDef*)((GameObject*)obj)->anim.placementData)->id;
-        if (objectId == position->objectId)
+        if (objectId ==
+            *(u32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET))
         {
-            if ((((GameObject*)obj)->anim.localPosX == position->x) && (((GameObject*)obj)->anim.localPosY == position->
-                    y) &&
-                (((GameObject*)obj)->anim.localPosZ == position->z))
+            if ((((GameObject*)obj)->anim.localPosX ==
+                    *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 4)) &&
+                (((GameObject*)obj)->anim.localPosY ==
+                    *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 8)) &&
+                (((GameObject*)obj)->anim.localPosZ ==
+                    *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 12)))
             {
                 return 0;
             }
-            ((GameObject*)obj)->anim.localPosX = position->x;
-            ((GameObject*)obj)->anim.localPosY = position->y;
-            ((GameObject*)obj)->anim.localPosZ = position->z;
+            ((GameObject*)obj)->anim.localPosX =
+                *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 4);
+            ((GameObject*)obj)->anim.localPosY =
+                *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 8);
+            ((GameObject*)obj)->anim.localPosZ =
+                *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 12);
             return 1;
         }
     }

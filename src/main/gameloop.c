@@ -499,14 +499,15 @@ extern int isSaveGameLoading(void);
 extern void gameBitFn_800ea2e0(int a);
 extern char sGameBitSetDuringSaveLoadWarning[];
 #define GameBit_RequestSync gameBitFn_800ea2e0
+#pragma optimization_level 3
 void GameBit_Set(int eventId, int value)
 {
-    s16 id;
+    int id;
     u8 flags;
     u8* base;
     int limit;
-    int start;
     int end;
+    int start;
     int i;
     u32 bit;
 
@@ -583,6 +584,7 @@ void GameBit_Set(int eventId, int value)
         bit <<= 1;
     }
 }
+#pragma optimization_level reset
 
 int gameBitIncrement(int bit)
 {
@@ -1278,6 +1280,7 @@ void cutsceneEnterExit(int entering, int affectSounds)
 }
 
 #pragma peephole on
+#pragma peephole off
 void removeButtonObject(u32 h)
 {
     int* p;
@@ -1304,6 +1307,7 @@ void removeButtonObject(u32 h)
     }
     lbl_803DCA48--;
 }
+#pragma peephole reset
 
 extern u8* gameTextGetBox(int boxId);
 extern int padGetStickX(int pad);

@@ -4268,11 +4268,11 @@ void* ObjSeq_FindTargetObject(u8* obj)
 
 void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 {
-    int stop;
     int actionIndex;
     u8* command;
-    s8 opcode;
+    u8 opcode;
     s16 repeatCount;
+    int stop;
 
     if (((ObjSeqState*)seq)->cmds == NULL)
     {
@@ -4288,7 +4288,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         actionIndex = ((ObjSeqState*)seq)->cmdCursor;
         command = ((ObjSeqState*)seq)->cmds + actionIndex * 4;
         opcode = command[0];
-        if (opcode == 0)
+        if ((s8)opcode == 0)
         {
             if (((ObjSeqState*)seq)->curFrame >= *(s16*)(command + 2))
             {
@@ -4300,12 +4300,12 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
                 stop = 1;
             }
         }
-        else if (opcode == 0xb && (repeatCount = *(s16*)(command + 2)) > 0)
+        else if ((s8)opcode == 0xb && (repeatCount = *(s16*)(command + 2)) > 0)
         {
             if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
             {
                 ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + command[1];
-                ((ObjSeqState*)seq)->cmdCursor = (s16)(((ObjSeqState*)seq)->cmdCursor + repeatCount + 1);
+                ((ObjSeqState*)seq)->cmdCursor = (s16)(repeatCount + ((ObjSeqState*)seq)->cmdCursor + 1);
             }
             else
             {
@@ -4314,7 +4314,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         }
         else if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
         {
-            if (opcode != 0xf)
+            if ((s8)command[0] != 0xf)
             {
                 ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + command[1];
             }

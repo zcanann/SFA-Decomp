@@ -237,17 +237,15 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     colorWord = lbl_803E8448;
     bitPos = bitReader[4];
     shader = *bitReader;
-    b0 = *(undefined*)(shader + ((int)bitPos >> 3));
-    shader = shader + ((int)bitPos >> 3);
-    b1 = *(undefined*)(shader + 1);
-    b2 = *(undefined*)(shader + 2);
-    bitReader[4] = bitPos + 6;
-    shader = *(int*)((int)blockData + 0x64);
     {
-        uint v = b0;
-        v |= b1 << 8;
-        v |= b2 << 16;
-        shaderIdx = ((uint3)v >> (bitPos & 7)) & 0x3f;
+        uint v;
+        v = *(u8*)(shader + ((int)bitPos >> 3));
+        shader = shader + ((int)bitPos >> 3);
+        v |= *(u8*)(shader + 1) << 8;
+        v |= *(u8*)(shader + 2) << 16;
+        bitReader[4] = bitPos + 6;
+        shader = *(int*)((int)blockData + 0x64);
+        shaderIdx = (v >> (bitPos & 7)) & 0x3f;
     }
     shader = shader + shaderIdx * 0x44;
     GXSetTevAlphaIn(0, 7, 4, 5, 7);
