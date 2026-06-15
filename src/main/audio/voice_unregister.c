@@ -1,4 +1,3 @@
-#include "main/audio/voice_unregister.h"
 #include "main/audio/voice_manage.h"
 
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
