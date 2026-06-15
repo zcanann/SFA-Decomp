@@ -114,8 +114,8 @@ void drcloudper_init(int obj, int setup)
     state->normalY = lbl_803E6BF8;
     state->normalZ = mathCosf(lbl_803E6BF0 * (f32)cloud->yaw / lbl_803E6BF4);
     state->planeDistance =
-        -(state->normalZ * cloud->posZ) +
-        (state->normalX * cloud->posX + state->normalY * cloud->posY);
+        (state->normalX * cloud->posX + state->normalY * cloud->posY) -
+        state->normalZ * cloud->posZ;
     cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;
     if (setupData->cloudIndex == GameBit_Get(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT))
     {
