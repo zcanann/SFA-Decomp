@@ -1823,7 +1823,7 @@ int mapCoordsToId(int x, int z, int layerIdx)
     bits = (u8*)lbl_80382238[4];
     id = 0;
     layers = (s8*)lbl_80382238[3];
-    for (n = 0; n < 64; n++)
+    for (n = 64; n != 0; n--)
     {
         if (layer == layers[0])
         {
