@@ -1184,10 +1184,10 @@ void newshadows_flushShadowRenderTargets(void)
 void newshadows_updateFrameState(void)
 {
     uint texSize;
-    int iVar2;
-    char cVar3;
+    int scrollDisabled;
+    char shadowMapEnabled;
     undefined* view;
-    double dVar5;
+    double depth;
     double savedF31;
     double focusDepth;
     double savedPs31;
@@ -1199,8 +1199,8 @@ void newshadows_updateFrameState(void)
 
     local_8 = (float)savedF31;
     fStack_4 = (float)savedPs31;
-    iVar2 = FUN_800176d0();
-    if (iVar2 == 0)
+    scrollDisabled = FUN_800176d0();
+    if (scrollDisabled == 0)
     {
         lbl_803DDC2C = lbl_803DFA14 * lbl_803DC074 + lbl_803DDC2C;
         lbl_803DDC28 = lbl_803DFA18 * lbl_803DC074 + lbl_803DDC28;
@@ -1217,22 +1217,22 @@ void newshadows_updateFrameState(void)
     DAT_803ddc68 = (int)FUN_800069a8();
     DAT_803ddc20 = DAT_803ddc20 + (ushort)DAT_803dc070 * 0x28a;
     local_20 = CONCAT44(0x43300000, (uint)DAT_803ddc20);
-    dVar5 = (double)FUN_802947f8();
-    lbl_803DDC24 = (float)((double)lbl_803DFA20 * dVar5);
+    depth = (double)FUN_802947f8();
+    lbl_803DDC24 = (float)((double)lbl_803DFA20 * depth);
     FUN_800606a8();
     DAT_803ddc0c = (char)(DAT_803ddc0c + 1) + (char)((DAT_803ddc0c + 1) / 3) * -3;
-    cVar3 = FUN_80048094();
-    if (cVar3 != '\0')
+    shadowMapEnabled = FUN_80048094();
+    if (shadowMapEnabled != '\0')
     {
         view = FUN_8000697c();
         focusDepth = (double)*(float*)(view + 0x1c);
         FUN_80048048(&farDepth, &nearDepth);
-        dVar5 = (double)farDepth;
-        if (focusDepth < dVar5)
+        depth = (double)farDepth;
+        if (focusDepth < depth)
         {
             if ((double)nearDepth < focusDepth)
             {
-                texSize = (uint)((lbl_803DF99C * (float)(dVar5 - focusDepth)) / (float)(dVar5 - (double)nearDepth));
+                texSize = (uint)((lbl_803DF99C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
                 local_20 = (longlong)(int)
                 texSize;
             }

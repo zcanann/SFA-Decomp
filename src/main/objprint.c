@@ -1284,11 +1284,11 @@ void fn_8003A9C0(char* p, int count, s16 a, s16 b)
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
 
-void objAudioFn_80039270(int obj, void* p, int sfxId)
+void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
 {
-    if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
     {
-        Sfx_PlayFromObjectChannel((u32)obj, 0x10, (u16)sfxId);
+        Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
         *(f32*)((char*)p + 0xc) = lbl_803DE9C8;
         *(s16*)((char*)p + 0x14) = -0x500;
         *(u8*)p = 1;
@@ -1738,13 +1738,13 @@ void modelInitMtxs(int p1, int p2)
 extern void fn_80039DF8(int obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DE9A4;
 
-void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
+void objAudioFn_800393f8(u32 p1, int p2, u16 p3, int p4, int p5, u8 p6)
 {
-    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel((u32)p1, 0x10) != 0)
+    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0)
     {
         return;
     }
-    ((void (*)(u32, u32, int))Sfx_PlayFromObjectChannel)((u32)p1, 0x10, p3);
+    Sfx_PlayFromObjectChannel(p1, 0x10, p3);
     *(f32*)((char*)p2 + 0xc) = (f32)p5;
     *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
     *(u8*)((char*)p2 + 0) = 1;
@@ -1994,7 +1994,8 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     if (*(s32*)((char*)p2 + 0) < 0) return;
     t = *(f32*)((char*)p2 + 8) - timeDelta;
     *(f32*)((char*)p2 + 8) = t;
-    if (!(t < lbl_803DE9A4)) return;
+    if (t < lbl_803DE9A4)
+    {
     frame = *(int*)((char*)p2 + 0);
     if (frame >= *(int*)((char*)p2 + 4))
     {
@@ -2025,6 +2026,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
                                             kfval - 1, lbl_803DE99C / lbl_803DB464, 0);
         }
         *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
+    }
     }
 }
 
