@@ -719,7 +719,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     Camera_ApplyFullViewport();
 }
 
-void fn_80127F24(s32 param_1)
+void fn_80127F24(s32 alpha)
 {
     f32 baseSub;
     f32 baseAdd;
@@ -737,11 +737,11 @@ void fn_80127F24(s32 param_1)
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
                              lbl_803E20BC, lbl_803E1EE4,
                              x = (s16)((0xf5 - (s8)i) - lbl_803DD75C),
-                             (u8)param_1, 0x200, 0);
+                             (u8)alpha, 0x200, 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
                              lbl_803E20C0, lbl_803E1EE4,
                              x,
-                             (u8)param_1, 0x200, 0);
+                             (u8)alpha, 0x200, 0);
     }
 
     denom = lbl_803E2090;
@@ -758,10 +758,10 @@ void fn_80127F24(s32 param_1)
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                              baseAdd + off, lbl_803E20CC,
                              x = (s16)((0xff - (s8)i) - lbl_803DD75C),
-                             (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
+                             (u8)alpha, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                              baseSub - off, lbl_803E20CC,
                              x,
-                             (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
+                             (u8)alpha, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
     }
 }
