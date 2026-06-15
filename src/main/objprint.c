@@ -171,7 +171,7 @@ int FUN_80039520(int obj, uint tag)
     int found;
 
     found = 0;
-    hitDef = *(int*)(obj + 0x50);
+    hitDef = (int)((GameObject*)obj)->anim.modelInstance;
     if (hitDef != 0)
     {
         entry = *(byte**)(hitDef + 0xc);
@@ -889,7 +889,7 @@ void FUN_8003b1a4(int obj, int ctx)
     int offset;
 
     found5 = (int*)0x0;
-    hitDef = *(int*)(obj + 0x50);
+    hitDef = (int)((GameObject*)obj)->anim.modelInstance;
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
         offset = 0;
@@ -946,7 +946,7 @@ void FUN_8003b280(int obj, int ctx)
     int offset;
 
     found5 = (int*)0x0;
-    hitDef = *(int*)(obj + 0x50);
+    hitDef = (int)((GameObject*)obj)->anim.modelInstance;
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
     {
         offset = 0;
@@ -1130,7 +1130,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
         {
             if (flag != '\0')
             {
-                seqId = *(short*)(obj + 0x46);
+                seqId = ((GameObject*)obj)->anim.seqId;
                 if ((seqId == 0x1f) || ((seqId < 0x1f && (seqId == 0))))
                 {
                     FUN_802950c8(obj, ctxHi, (int)ctx, param_3, param_4, flag);
@@ -1160,7 +1160,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
         walk = obj;
         for (i = 0; i < (int)(uint) * (byte*)(obj + 0xeb); i = i + 1)
         {
-            child = *(int*)(walk + 200);
+            child = *(int*)&((GameObject*)walk)->childObjs[0];
             if (*(short*)(child + 0x44) == 0x2d)
             {
                 FUN_8003b590(child, obj,OBJPRINT_ACTIVE_BANK(child));
