@@ -408,7 +408,7 @@ void linkb_levcontrol_update(int* obj)
             if (cur[0] != 0)
             {
                 fn_80138908(tricky, 1);
-                if (state->cnt-- == -1 && !(*(u16*)((char*)tricky + 0xb0) & 0x1000))
+                if (state->cnt-- == -1 && !(((GameObject*)tricky)->objectFlags & 0x1000))
                 {
                     GameBit_Set(0x386, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
@@ -454,7 +454,7 @@ void linkb_levcontrol_update(int* obj)
     }
     if (tricky != NULL)
     {
-        if (!(*(u16*)((char*)tricky + 0xb0) & 0x1000))
+        if (!(((GameObject*)tricky)->objectFlags & 0x1000))
         {
             state->timer = state->timer + timeDelta;
         }
