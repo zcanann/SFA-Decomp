@@ -2863,13 +2863,14 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             u8* buf2 = *(u8**)((char*)state + *(u8*)((char*)state + 0x130) * 4 + 0x78);
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
-                s16 v = ((ModgfxVertexGroupCmd*)p)->indices[j];
-                *(s16*)(buf + v * 16 + 0) = (int)((f32) * (s16*)(buf + v * 16 + 0) * tx);
-                *(s16*)(buf + v * 16 + 2) = (int)((f32) * (s16*)(buf + v * 16 + 2) * ty);
-                *(s16*)(buf + v * 16 + 4) = (int)((f32) * (s16*)(buf + v * 16 + 4) * tz);
-                *(s16*)(buf2 + v * 16 + 0) = *(s16*)(buf + v * 16 + 0);
-                *(s16*)(buf2 + v * 16 + 2) = *(s16*)(buf + v * 16 + 2);
-                *(s16*)(buf2 + v * 16 + 4) = *(s16*)(buf + v * 16 + 4);
+#define V0 (((ModgfxVertexGroupCmd*)p)->indices[j])
+                *(s16*)(buf + V0 * 16 + 0) = (int)((f32) * (s16*)(buf + V0 * 16 + 0) * tx);
+                *(s16*)(buf + V0 * 16 + 2) = (int)((f32) * (s16*)(buf + V0 * 16 + 2) * ty);
+                *(s16*)(buf + V0 * 16 + 4) = (int)((f32) * (s16*)(buf + V0 * 16 + 4) * tz);
+                *(s16*)(buf2 + V0 * 16 + 0) = *(s16*)(buf + V0 * 16 + 0);
+                *(s16*)(buf2 + V0 * 16 + 2) = *(s16*)(buf + V0 * 16 + 2);
+                *(s16*)(buf2 + V0 * 16 + 4) = *(s16*)(buf + V0 * 16 + 4);
+#undef V0
             }
             return;
         }
@@ -2882,19 +2883,20 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
         u8* buf2 = *(u8**)((char*)state + *(u8*)((char*)state + 0x130) * 4 + 0x78);
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            s16 v = ((ModgfxVertexGroupCmd*)p)->indices[j];
+#define V0 (((ModgfxVertexGroupCmd*)p)->indices[j])
             if (lbl_803DF434 != *(f32*)(base + 0x30))
             {
-                *(s16*)(buf2 + v * 16 + 0) = (int)(*(f32*)(base + 0x30) * (f32) * (s16*)(buf + v * 16 + 0));
+                *(s16*)(buf2 + V0 * 16 + 0) = (int)(*(f32*)(base + 0x30) * (f32) * (s16*)(buf + V0 * 16 + 0));
             }
             if (lbl_803DF434 != *(f32*)(base + 0x34))
             {
-                *(s16*)(buf2 + v * 16 + 2) = (int)(*(f32*)(base + 0x34) * (f32) * (s16*)(buf + v * 16 + 2));
+                *(s16*)(buf2 + V0 * 16 + 2) = (int)(*(f32*)(base + 0x34) * (f32) * (s16*)(buf + V0 * 16 + 2));
             }
             if (lbl_803DF434 != *(f32*)(base + 0x38))
             {
-                *(s16*)(buf2 + v * 16 + 4) = (int)(*(f32*)(base + 0x38) * (f32) * (s16*)(buf + v * 16 + 4));
+                *(s16*)(buf2 + V0 * 16 + 4) = (int)(*(f32*)(base + 0x38) * (f32) * (s16*)(buf + V0 * 16 + 4));
             }
+#undef V0
         }
     }
 }
