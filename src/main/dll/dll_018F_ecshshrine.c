@@ -60,7 +60,6 @@ typedef struct MmShrineAnimEvents
 #pragma scheduling on
 #pragma peephole on
 extern s16 lbl_80326238[];
-extern undefined4 FUN_800067c0();
 extern undefined8 ObjGroup_RemoveObject();
 extern void Music_Trigger(int trackId, int restart);
 extern void ModelLightStruct_free(void* p);
@@ -99,7 +98,6 @@ extern f32 lbl_803E4FF0;
 extern void ModelLightStruct_free(void* light);
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
-extern u8* mmAlloc(int size, int tag, int p);
 extern f32 mathSinf(f32 angle);
 
 void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
