@@ -119,6 +119,7 @@ extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
 extern u8 lbl_803128E8[];
+extern int lbl_803DB8C0;
 extern f32 lbl_803E0858;
 extern f32 lbl_803E085C;
 extern f32 lbl_803E0860;
@@ -827,7 +828,7 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[12].z = lbl_803E0858;
     e[13].layer = 2;
     e[13].flags = 1;
-    e[13].tex = (void*)0;
+    e[13].tex = &lbl_803DB8C0;
     e[13].mode = 4;
     e[13].x = lbl_803E0858;
     e[13].y = lbl_803E0858;
