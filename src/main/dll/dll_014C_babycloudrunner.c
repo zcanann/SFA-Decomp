@@ -238,7 +238,7 @@ FUN_8019b2e0(double param_1, short* obj, short* target, float* outVel, undefined
             dist = (double)*(float*)(obj + 0x14);
             velZ = (double)*(float*)(obj + 0x16);
             FUN_80017a88((double)*(float*)(obj + 0x12), dist, velZ, (int)obj);
-            if (obj[0x50] != 0x1a)
+            if (((GameObject*)obj)->anim.currentMove != 0x1a)
             {
                 FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, obj, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
@@ -641,9 +641,9 @@ void FUN_8019f1dc(void)
             savedX = (double)((GameObject *)obj)->anim.localPosX;
             savedY = (double)((GameObject *)obj)->anim.localPosY;
             savedZ = (double)((GameObject *)obj)->anim.localPosZ;
-            *(undefined4*)(obj + 0xc) = *(undefined4*)(childOrTarget + 0xc);
-            *(undefined4*)(obj + 0x10) = *(undefined4*)(childOrTarget + 0x10);
-            *(undefined4*)(obj + 0x14) = *(undefined4*)(childOrTarget + 0x14);
+            *(undefined4*)&((GameObject*)obj)->anim.localPosX = *(undefined4*)(childOrTarget + 0xc);
+            *(undefined4*)&((GameObject*)obj)->anim.localPosY = *(undefined4*)(childOrTarget + 0x10);
+            *(undefined4*)&((GameObject*)obj)->anim.localPosZ = *(undefined4*)(childOrTarget + 0x14);
             FUN_800e8630(obj);
             ((GameObject *)obj)->anim.localPosX = (float)savedX;
             ((GameObject *)obj)->anim.localPosY = (float)savedY;
