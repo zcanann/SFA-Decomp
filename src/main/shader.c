@@ -1336,7 +1336,7 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
         for (x = 0; (s16)x < *(s16*)(self + 0); x++)
         {
             int p = (s16)x + (s16)y * *(s16*)(self + 0);
-            if ((*(u32*)(*(int*)(self + 0xc) + p * 4) >> 23 & 0xff) != 0xff)
+            if ((int)(*(u32*)(*(int*)(self + 0xc) + p * 4) >> 23 & 0xff) != 0xff)
             {
                 bitmap[p >> 3] |= 1 << (p & 7);
             }
