@@ -195,7 +195,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             ((BombPlantSporeState*)state)->randomPhase = lbl_803E53AC;
         }
-        else if (lbl_803E53B0 < ((BombPlantSporeState*)state)->randomPhase)
+        else if (((BombPlantSporeState*)state)->randomPhase > lbl_803E53B0)
         {
             ((BombPlantSporeState*)state)->randomPhase = lbl_803E53B0;
         }
