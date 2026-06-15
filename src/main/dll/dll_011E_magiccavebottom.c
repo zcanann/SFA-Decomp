@@ -1,10 +1,6 @@
 /* DLL 0x011E (magiccavebottom) — Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
 #include "main/objseq.h"
-#include "main/dll/CF/CFtoggleswitch.h"
-#include "main/camera_interface.h"
-#include "main/dll/cannon.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 
 extern uint GameBit_Get(int eventId);
 
