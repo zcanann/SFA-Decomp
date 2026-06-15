@@ -219,7 +219,7 @@ void hightop_func0F(int obj, f32* ox, f32* oy, f32* oz)
     pos.x = ((GameObject*)player)->anim.localPosX;
     pos.y = ((GameObject*)player)->anim.localPosY;
     pos.z = ((GameObject*)player)->anim.localPosZ;
-    pos.rx = *(s16*)player;
+    pos.rx = ((GameObject*)player)->anim.rotX;
     pos.ry = ((GameObject*)player)->anim.rotY;
     pos.rz = ((GameObject*)player)->anim.rotZ;
     pos.scale = lbl_803E6AB8;
@@ -343,7 +343,7 @@ void hightop_getLookTargetYaw(int obj, int mode, int* out)
         }
         else
         {
-            *out = *(s16*)obj + 0x4000;
+            *out = ((GameObject*)obj)->anim.rotX + 0x4000;
         }
         break;
     case 3:
@@ -421,7 +421,7 @@ void hightop_init(void* obj, u8* arg)
     local8 = lbl_803E6AA0;
     local1 = lbl_802C2590;
     local2 = lbl_802C25A4;
-    *(s16*)obj = (s16)((s8)arg[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = (void*)hightop_interactionCallback;
     runtime->unkC45 = arg[0x19];
     runtime->unkC16 = 5;
