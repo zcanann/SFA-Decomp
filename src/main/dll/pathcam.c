@@ -52,9 +52,9 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
     {
         pathT = lbl_803E1744;
     }
-    else if (pathT < lbl_803E1740)
+    else if (pathT < *(f32*)&lbl_803E1740)
     {
-        pathT = lbl_803E1740;
+        pathT = *(f32*)&lbl_803E1740;
     }
     pathT = Curve_EvalHermite(pathT,gCamcontrolPathState->initialiseCurve, (float*)0x0);
     if (pathT < lbl_803E1748)
