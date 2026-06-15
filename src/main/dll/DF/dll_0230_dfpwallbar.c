@@ -571,8 +571,8 @@ void chuka_update(int obj)
     int blob = *(int*)&((GameObject*)obj)->extra;
     int ch;
     int* base;
-    int i;
     int o;
+    int i;
     int h;
     int idx;
     int cnt;
@@ -587,7 +587,7 @@ void chuka_update(int obj)
             return;
         }
     }
-    if (*(void**)&((ChukaState*)blob)->linkedObject == NULL)
+    if ((void*)ch == NULL)
     {
         base = ObjList_GetObjects(&idx, &cnt);
         for (i = idx; i < cnt; i++)
