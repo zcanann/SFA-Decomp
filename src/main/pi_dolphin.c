@@ -2838,48 +2838,48 @@ void FUN_80045328(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                   undefined4 param_9, undefined4 param_10, uint param_11, uint param_12,
                   undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    uint uVar1;
-    int iVar2;
-    uint uVar3;
-    uint uVar4;
+    uint alignedSize;
+    int tableIndex;
+    uint tmpBuf;
+    uint fileId;
     undefined8 extraout_f1;
-    undefined8 uVar5;
-    ulonglong uVar6;
+    undefined8 arg0;
+    ulonglong idPair;
     int aiStack_58[22];
 
-    uVar6 = FUN_80286840();
-    iVar2 = (int)(uVar6 >> 0x20);
-    uVar4 = (uint)uVar6;
+    idPair = FUN_80286840();
+    tableIndex = (int)(idPair >> 0x20);
+    fileId = (uint)idPair;
     if (param_12 != 0)
     {
-        if ((&DAT_80360048)[iVar2] == 0)
+        if ((&DAT_80360048)[tableIndex] == 0)
         {
-            uVar5 = extraout_f1;
+            arg0 = extraout_f1;
             FUN_80249300(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         sResourceFileNameTable[iVar2], (int)aiStack_58);
-            if (((uVar6 & 0x1f) == 0) && ((param_12 & 0x1f) == 0))
+                         sResourceFileNameTable[tableIndex], (int)aiStack_58);
+            if (((idPair & 0x1f) == 0) && ((param_12 & 0x1f) == 0))
             {
-                FUN_802420b0(uVar4, param_12);
-                FUN_80006c30(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, uVar4,
+                FUN_802420b0(fileId, param_12);
+                FUN_80006c30(arg0, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, fileId,
                              param_12, param_11, param_13, param_14, param_15, param_16);
             }
             else
             {
-                uVar1 = param_12 + 0x1f & ~0x1f;
-                uVar3 = FUN_80017830(uVar1, 0x7d7d7d7d);
-                FUN_802420b0(uVar3, uVar1);
-                FUN_80006c30(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, uVar3,
-                             uVar1, param_11, param_13, param_14, param_15, param_16);
-                FUN_80003494(uVar4, uVar3, param_12);
-                FUN_80017814(uVar3);
+                alignedSize = param_12 + 0x1f & ~0x1f;
+                tmpBuf = FUN_80017830(alignedSize, 0x7d7d7d7d);
+                FUN_802420b0(tmpBuf, alignedSize);
+                FUN_80006c30(arg0, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, tmpBuf,
+                             alignedSize, param_11, param_13, param_14, param_15, param_16);
+                FUN_80003494(fileId, tmpBuf, param_12);
+                FUN_80017814(tmpBuf);
             }
             FUN_802493c8(aiStack_58);
-            FUN_80242114(uVar4, param_12);
+            FUN_80242114(fileId, param_12);
         }
         else
         {
-            FUN_80003494(uVar4, (&DAT_80360048)[iVar2] + param_11, param_12);
-            FUN_80242114(uVar4, param_12);
+            FUN_80003494(fileId, (&DAT_80360048)[tableIndex] + param_11, param_12);
+            FUN_80242114(fileId, param_12);
         }
     }
     FUN_8028688c();
@@ -2899,24 +2899,24 @@ void FUN_80045be8(void)
     return;
 }
 
-undefined4 FUN_80045c4c(char param_1)
+undefined4 FUN_80045c4c(char flush)
 {
-    bool bVar1;
-    uint uVar2;
-    undefined4* puVar3;
-    undefined8 uVar4;
+    bool wrapped;
+    uint one;
+    undefined4* statePtr;
+    undefined8 pair;
     undefined4 local_28;
     undefined4 uStack_24;
     undefined4 local_20;
     undefined4 local_1c;
     uint local_18;
 
-    uVar2 = 1;
+    one = 1;
     gxSetZMode_(1, 3, 1);
-    uVar4 = FUN_8025ce2c(1);
-    FUN_80258a04((int)((ulonglong)uVar4 >> 0x20), (int)uVar4, uVar2);
-    puVar3 = &local_28;
-    FUN_80256b2c(DAT_803dd954, &uStack_24, puVar3);
+    pair = FUN_8025ce2c(1);
+    FUN_80258a04((int)((ulonglong)pair >> 0x20), (int)pair, one);
+    statePtr = &local_28;
+    FUN_80256b2c(DAT_803dd954, &uStack_24, statePtr);
     local_20 = local_28;
     local_1c = 0;
     local_18 = DAT_803dd950;
@@ -2929,16 +2929,16 @@ undefined4 FUN_80045c4c(char param_1)
     }
     FUN_80243e9c();
     FUN_80258b60((uint)DAT_803dc22e);
-    uVar4 = FUN_80259a9c(DAT_803dd950, 1);
-    FUN_80258a04((int)((ulonglong)uVar4 >> 0x20), (int)uVar4, (uint)puVar3);
+    pair = FUN_80259a9c(DAT_803dd950, 1);
+    FUN_80258a04((int)((ulonglong)pair >> 0x20), (int)pair, (uint)statePtr);
     DAT_803dc22e = DAT_803dc22e + 1;
-    bVar1 = DAT_803dd950 == DAT_803dd96c;
+    wrapped = DAT_803dd950 == DAT_803dd96c;
     DAT_803dd950 = DAT_803dd96c;
-    if (bVar1)
+    if (wrapped)
     {
         DAT_803dd950 = DAT_803dd968;
     }
-    if (((param_1 != '\0') && (DAT_803dc22c != '\0')) &&
+    if (((flush != '\0') && (DAT_803dc22c != '\0')) &&
         (DAT_803dc22c = DAT_803dc22c + -1, DAT_803dc22c == '\0'))
     {
         FUN_8024de40(0);
