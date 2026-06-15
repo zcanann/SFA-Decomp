@@ -45,9 +45,7 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
