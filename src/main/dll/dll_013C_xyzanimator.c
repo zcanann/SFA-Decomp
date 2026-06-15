@@ -366,7 +366,8 @@ void xyzanimator_update(int obj)
         ((XyzAnimatorState*)state)->unk34 = alloc;
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->unk38 = alloc;
-        ((XyzAnimatorState*)state)->unk3C = alloc + stride;
+        alloc = alloc + stride;
+        ((XyzAnimatorState*)state)->unk3C = alloc;
         fn_80194964(setup, state, block);
         if (((XyzAnimatorPlacement*)setup)->unk2C != 4)
         {
