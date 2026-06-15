@@ -1,7 +1,6 @@
 /* DLL 0x235 — DFP target block object [80208508-802086C4) */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/dll/door.h"
 #include "main/dll/fruit.h"
 #include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
