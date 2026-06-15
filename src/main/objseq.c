@@ -4271,7 +4271,6 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
     int actionIndex;
     u8* command;
     u8 opcode;
-    s16 repeatCount;
     int stop;
 
     if (((ObjSeqState*)seq)->cmds == NULL)
