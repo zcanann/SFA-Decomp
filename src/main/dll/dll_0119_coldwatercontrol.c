@@ -27,7 +27,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E3B68;
 extern f32 lbl_803E3B6C;
 extern int fn_80295C40(int obj);
-extern void Obj_FreeObject(int obj);
 
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
