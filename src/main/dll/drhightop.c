@@ -407,7 +407,7 @@ void fn_801EB634(int obj, int stateRaw)
     int hitObj;
     float velNrm[3];
 
-    hitReact = *(int*)(obj + 0x54);
+    hitReact = *(int *)&((GameObject *)obj)->anim.hitReactState;
     if (ObjHits_IsObjectEnabled(obj) != 0)
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
@@ -693,9 +693,9 @@ void fn_801EBD60(int obj, int stateRaw)
                 effect.rotZ = 0;
                 effect.rotY = 0;
                 effect.rotX = 0;
-                effect.x = *(f32*)(obj + 0xc);
-                effect.y = lbl_803E5C10 + *(f32*)(obj + 0x10);
-                effect.z = *(f32*)(obj + 0x14);
+                effect.x = ((GameObject *)obj)->anim.localPosX;
+                effect.y = lbl_803E5C10 + ((GameObject *)obj)->anim.localPosY;
+                effect.z = ((GameObject *)obj)->anim.localPosZ;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x80a, &effect, 1, -1, NULL);
             }
             break;
