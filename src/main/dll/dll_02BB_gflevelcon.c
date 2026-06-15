@@ -305,7 +305,7 @@ void fn_8023A268(int p1, int p2, int p3)
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
         p1 = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if (p1 != 0)
+        if ((void*)p1 != NULL)
         {
             arwprojectile_setLifetime(p1, lbl_803DC4DC);
             arwprojectile_placeForward(p1, (f32)(int)lbl_803DC4D8);
