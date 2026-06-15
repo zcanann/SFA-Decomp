@@ -1,6 +1,4 @@
-#include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
-#include "main/obj_placement.h"
 #include "main/objlib.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
@@ -10,11 +8,7 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/camera_interface.h"
-#include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
