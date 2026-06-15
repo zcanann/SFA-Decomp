@@ -124,15 +124,15 @@ f32 wallanimator_setScale(int obj, int target)
     while (count != 0);
 
     state = ((GameObject*)obj)->extra;
-    deltaY = *(f32*)(target + 0x10) - ((GameObject*)obj)->anim.localPosY;
+    deltaY = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     if ((lbl_803E3FE0 > deltaY) || (lbl_803E3FE4 < deltaY))
     {
         scale = lbl_803E3FD4;
     }
     else
     {
-        deltaX = *(f32*)(target + 0xc) - ((GameObject*)obj)->anim.localPosX;
-        deltaZ = *(f32*)(target + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+        deltaX = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+        deltaZ = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
         if (deltaX * deltaX + deltaZ * deltaZ > lbl_803E3FE8)
         {
             scale = lbl_803E3FD4;
