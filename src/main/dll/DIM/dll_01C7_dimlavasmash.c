@@ -375,8 +375,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
             }
         }
     }
-    m = ~2;
-    for (i = 0; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
+    for (i = 0, m = ~2; i < (int)*(u8*)((char*)arg1 + 0xa2); i++)
     {
         block = (int*)fn_8006070C(arg1, i);
         if (arg3 == (int)*(u8*)((char*)Shader_getLayer((int)block, 0) + 5))

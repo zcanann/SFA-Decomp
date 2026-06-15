@@ -1374,7 +1374,7 @@ int fn_80202DA4(u8* obj, u8* p6, f32 p1, f32 p2, f32 p3, f32 p4)
     if (yawF < p1)
     {
         dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(p6 + 0x10);
-        dy = (dy >= zero) ? dy : -dy;
+        if (dy >= zero) {} else { dy = -dy; }
         if (dy < lbl_803E6378)
         {
             return 1;
@@ -3074,8 +3074,11 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     ((BaddieState*)p2)->unk34D = 1;
     if (d < lbl_803E62D0)
     {
-        ((BaddieState*)p2)->animSpeedA *= lbl_803E62D4;
-        ((BaddieState*)p2)->animSpeedB *= lbl_803E62D4;
+        {
+            f32 k = lbl_803E62D4;
+            ((BaddieState*)p2)->animSpeedA *= k;
+            ((BaddieState*)p2)->animSpeedB *= k;
+        }
         target = *(int*)&((BaddieState*)p2)->targetObj;
         tmpA = sub->unk30;
         tmpB = sub->unk2C;

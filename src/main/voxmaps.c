@@ -194,15 +194,15 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     ix = (int)sx;
     iy = (int)sy;
     iz = (int)sz;
-    if (sx < lbl_803DE6B0)
+    if (sx < 0.0f)
     {
         ix -= 10;
     }
-    if (sy < lbl_803DE6B0)
+    if (sy < 0.0f)
     {
         iy -= 10;
     }
-    if (sz < lbl_803DE6B0)
+    if (sz < 0.0f)
     {
         iz -= 10;
     }
@@ -613,7 +613,7 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
     box[0] = a2->f0;
     box[1] = a2->f2;
     box[2] = a2->f4;
-    box[0] = a2->f0 + 2;
+    box[0] += 2;
     voxmapsFn_80010ff4((struct RouteState*)a1, a2, a3, count, box);
     box[0] -= 4;
     box[1] = a2->f2;

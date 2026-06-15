@@ -677,6 +677,7 @@ void dll_06_func0D(void)
     }
 }
 
+#pragma opt_propagation off
 void sky2_initialise(void)
 {
     u8** states;
@@ -697,6 +698,7 @@ void sky2_initialise(void)
     lbl_803DD184 = NULL;
     states[1] = NULL;
 }
+#pragma opt_propagation reset
 
 void fn_8008EDE8(f32* out)
 {

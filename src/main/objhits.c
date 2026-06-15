@@ -675,7 +675,7 @@ float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, f
     axisDir[0] = axisDir[0] * invLength;
     axisDir[1] = axisDir[1] * invLength;
     axisDir[2] = axisDir[2] * invLength;
-    Vec3_ScaleAdd(base, axial, axisDir, surfacePoint);
+    Vec3_ScaleAdd(base, axisDir, axial, surfacePoint);
     out[0] = point[0] - surfacePoint[0];
     out[1] = gObjHitsScalarZero;
     out[2] = point[2] - surfacePoint[2];
@@ -736,7 +736,7 @@ float* ObjHits_ProjectPointToTaperedCapsule3D(float* point, float pointRadius, f
     axisDir[0] = axisDir[0] * invLength;
     axisDir[1] = axisDir[1] * invLength;
     axisDir[2] = axisDir[2] * invLength;
-    Vec3_ScaleAdd(base, axial, axisDir, surfacePoint);
+    Vec3_ScaleAdd(base, axisDir, axial, surfacePoint);
     out[0] = point[0] - surfacePoint[0];
     out[1] = point[1] - surfacePoint[1];
     out[2] = point[2] - surfacePoint[2];
@@ -789,7 +789,7 @@ float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, 
         axisDir[1] = tip[1] - base[1];
         axisDir[2] = tip[2] - base[2];
         Vec3_Normalize(axisDir);
-        Vec3_ScaleAdd(base, axial, axisDir, surface);
+        Vec3_ScaleAdd(base, axisDir, axial, surface);
         normal[0] = point[0] - surface[0];
         normal[1] = point[1] - surface[1];
         normal[2] = point[2] - surface[2];
@@ -806,7 +806,7 @@ float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, 
             axisDir[0] = axisDir[0] * axial;
             axisDir[1] = axisDir[1] * axial;
             axisDir[2] = axisDir[2] * axial;
-            Vec3_ScaleAdd(axisDir, radiusOffset, normal, blended);
+            Vec3_ScaleAdd(axisDir, normal, radiusOffset, blended);
             Vec3_Normalize(blended);
             axisDir[0] = axisDir[0] * (gObjHitsScalarOne / axial);
             invAxial = gObjHitsScalarOne / axial;
@@ -1467,12 +1467,9 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
                 if (checkA != 0)
                 {
                     pb2 = &spheresB[hit * 4];
-                    ObjHits_RecordPositionHit(pb2[1] + cr[2],
-                                              (modeB != 0)
-                                                  ? spheresA[idxA * 4 + 2]
-                                                  : pb2[2] + cr[3],
-                                              pb2[3] + cr[4], objB, objA,
-                                              stateSrc->hitVolumePriority, stateSrc->hitVolumeId, hit);
+                    ((int (*)(f32, int, int, u8, u8, char, f32, f32))ObjHits_RecordPositionHit)(
+                        pb2[1] + cr[2], objB, objA, stateSrc->hitVolumePriority, stateSrc->hitVolumeId,
+                        hit, (modeB != 0) ? spheresA[idxA * 4 + 2] : pb2[2] + cr[3], pb2[3] + cr[4]);
                     result = 1;
                 }
                 else if (checkB != 0)

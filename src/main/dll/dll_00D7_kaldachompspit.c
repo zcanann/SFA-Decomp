@@ -282,9 +282,9 @@ void kaldachompspit_burst(int obj)
     u8 rnd;
 
     state = ((GameObject*)obj)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     ((GameObject*)obj)->anim.alpha = 0;
     ((GameObject*)obj)->unkF4 = 0xdc;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->flags &= ~1;
     if (*state != 0)
     {

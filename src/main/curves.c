@@ -496,14 +496,14 @@ void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
 
     while (index <= count >> 1)
     {
-        s32 child = index * 2;
+        s32 child = index + index;
 
         if ((child < count) && (heap[child].priority < heap[child + 1].priority))
         {
             child++;
         }
 
-        if (heap[child].priority <= priority)
+        if (priority >= heap[child].priority)
         {
             break;
         }

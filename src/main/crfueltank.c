@@ -1,8 +1,11 @@
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx.h"
 #include "main/crfueltank.h"
 #include "main/gamebits.h"
-#include "main/objhits.h"
+
+extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
+extern void ObjHits_DisableObject(void* obj);
+extern void ObjHits_EnableObject(void* obj);
+extern void ObjHits_SetHitVolumeSlot(void* obj, int hitVolume, int hitType, int sourceSlot);
 
 extern void* Obj_GetPlayerObject(void);
 extern int fn_80080150(void* timer);
@@ -50,8 +53,8 @@ void crfueltank_hitDetect(CrFuelTankObject* obj)
         hitObj = collider->hitObj;
         if (hitObj->objType == 0x38c)
         {
-            ObjHits_DisableObject((u32)obj);
-            Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXsp_sabrepush162);
+            ObjHits_DisableObject(obj);
+            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXsp_sabrepush162);
             obj->fadeTimer = 0xfa;
             obj->triggered = 1;
             if (def->hitEvent != -1)
@@ -77,7 +80,7 @@ void crfueltank_update(CrFuelTankObject* obj)
     {
         if (timerCountDown(state->timer) != 0)
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject(obj);
             obj->flags = (s16)(obj->flags & ~0x4000);
             obj->fadeTimer = 0xff;
         }
@@ -91,7 +94,7 @@ void crfueltank_update(CrFuelTankObject* obj)
         }
         else
         {
-            ObjHits_SetHitVolumeSlot((u32)obj, 0x1d, crfueltank_animFrame(def), 0);
+            ObjHits_SetHitVolumeSlot(obj, 0x1d, crfueltank_animFrame(def), 0);
         }
     }
     return;
@@ -102,13 +105,13 @@ void crfueltank_init(CrFuelTankObject* obj, CrFuelTankDef* def)
     CrFuelTankState* state;
 
     state = obj->state;
-    ObjHits_EnableObject((u32)obj);
-    ObjHits_SetHitVolumeSlot((u32)obj, 0x1d, crfueltank_animFrame(def), 0);
+    ObjHits_EnableObject(obj);
+    ObjHits_SetHitVolumeSlot(obj, 0x1d, crfueltank_animFrame(def), 0);
     storeZeroToFloatParam(state->timer);
     if ((def->hitEvent != -1) && (GameBit_Get(def->hitEvent) != 0))
     {
         s16toFloat(state->timer, 0x708);
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         obj->flags = (s16)(obj->flags | 0x4000);
         obj->fadeTimer = 0;
     }

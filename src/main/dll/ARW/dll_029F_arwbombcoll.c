@@ -247,7 +247,6 @@ void arwbombcoll_update(int obj)
 active :
     {
         int v;
-        ObjHitsPriorityState* hitState;
 
         v = (int)
         (lbl_803E7084 * timeDelta + (f32)(u32)
@@ -262,10 +261,10 @@ active :
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
-        hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
         if (flags->b40 != 0)
         {
-            if ((u32)hitState->lastHitObject != 0 && (u32)hitState->lastHitObject == (u32)arw)
+            if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
+                (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
             {
                 arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
@@ -284,7 +283,8 @@ active :
                 Obj_SetActiveModelIndex(obj, 1);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
-            if ((u32)hitState->lastHitObject != 0 && (u32)hitState->lastHitObject == (u32)arw)
+            if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
+                (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
             {
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);

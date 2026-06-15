@@ -742,10 +742,10 @@ int Tricky_updateSideCommandPrompts(int obj)
 
 void Tricky_destroy(int obj, int shouldKeepFlameChildren)
 {
-    bool bVar1;
-    int state;
     int i;
     int childSlot;
+    bool bVar1;
+    int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[0]);
@@ -774,8 +774,8 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
         while (i < 7);
         Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
         childSlot = *(int*)&((GameObject*)obj)->extra;
-        if (((*(byte*)(childSlot + 0x58) >> 6 & 1) == 0) &&
-            (((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
+        if (((*(byte*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
+            (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
                 (bVar1 = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !bVar1))))
         {
             objAudioFn_800393f8(obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
@@ -785,12 +785,12 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
     objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->unk7A8);
     objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->unk7B0);
     objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->child);
-    if (*(int*)&((TrickyState*)state)->unk7CC != 0)
+    if (*(void**)&((TrickyState*)state)->unk7CC != NULL)
     {
         ObjLink_DetachChild(obj, *(int*)&((TrickyState*)state)->unk7CC);
         Obj_FreeObject(*(int*)&((TrickyState*)state)->unk7CC);
     }
-    if (((((TrickyState*)state)->statusFlags >> 7 & 1) != 0) && (lbl_803DDA48 != 0))
+    if (((((TrickyState*)state)->statusFlags >> 7 & 1) != 0u) && (lbl_803DDA48 != 0))
     {
         Obj_FreeObject(lbl_803DDA48);
         lbl_803DDA48 = 0;
@@ -2700,11 +2700,11 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
 void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, char doRender)
 {
     u8 mode;
-    int state;
+    int i;
     int pathState;
     int pathPoint;
-    int i;
     int pathInfo;
+    int state;
 
     if (doRender != '\0')
     {

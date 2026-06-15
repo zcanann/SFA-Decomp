@@ -275,6 +275,7 @@ void imicemountain_hitDetect(void)
  * gamebit block, arm the map-event triggers, then branch on the queried level
  * state to set the boulder's start state and fire the appropriate triggers. */
 #pragma scheduling off
+#pragma peephole off
 void imicemountain_init(int* obj)
 {
     IMIceMountainState* sub = ((GameObject*)obj)->extra;
@@ -349,6 +350,7 @@ void imicemountain_init(int* obj)
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
+#pragma peephole on
 void crrockfall_free(void);
 
 int imicemountain_getExtraSize(void) { return 0x14; }

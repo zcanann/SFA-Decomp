@@ -86,7 +86,7 @@ f32 vec3f_distanceSquared(f32* a, f32* b)
     return dx * dx + dy * dy + dz * dz;
 }
 
-void Vec3_ScaleAdd(f32* a, f32 s, f32* b, f32* out)
+void Vec3_ScaleAdd(f32* a, f32* b, f32 s, f32* out)
 {
     out[0] = s * b[0] + a[0];
     out[1] = s * b[1] + a[1];
@@ -651,19 +651,17 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
         }
         else
         {
-            roll = lbl_803DE7C0 - __kernel_cos(c1, c0);
-            yaw = lbl_803DE7C0;
+            roll = -__kernel_cos(c1, c0) + (yaw = lbl_803DE7C0);
         }
     }
     else
     {
-        roll = __kernel_cos(c1, c0) - lbl_803DE7C0;
-        yaw = lbl_803DE7C0;
+        roll = __kernel_cos(c1, c0) - (yaw = lbl_803DE7C0);
     }
     {
-        f32 s = lbl_803DE7D0;
         f32 d;
-        *out0 = s * yaw / (d = lbl_803DE7D4);
+        f32 s;
+        *out0 = (s = lbl_803DE7D0) * yaw / (d = lbl_803DE7D4);
         *out1 = s * sinp / d;
         *out2 = s * roll / d;
     }

@@ -1825,13 +1825,14 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
  * whose owner object has the 0x800 state bit by setting its byte _13e. */
 void dll_0B_func0E(void)
 {
+    PartfxEffectState* effect;
+    GameObject* sourceObject;
     int i;
     PartfxEffectState** effects = (PartfxEffectState**)gPartfxActiveEffects;
 
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
-        PartfxEffectState* effect = effects[i];
-        GameObject* sourceObject;
+        effect = effects[i];
         if (effect != NULL)
         {
             sourceObject = effect->sourceObject;

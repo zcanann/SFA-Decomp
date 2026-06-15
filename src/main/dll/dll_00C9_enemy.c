@@ -2030,8 +2030,8 @@ void enemy_free(int obj, int flag)
 {
     u8* child;
     int i;
-    u8* state;
     int n;
+    u8* state;
 
     state = ((GameObject*)obj)->extra;
 

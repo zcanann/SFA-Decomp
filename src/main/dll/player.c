@@ -5964,7 +5964,7 @@ int fn_8029F108(int obj, int state)
     }
     {
         int inner2 = *(int*)&((GameObject*)obj)->extra;
-        *(int*)((char*)inner2 + 0x360) &= ~0x2;
+        *(int*)((char*)inner2 + 0x360) &= ~0x2LL;
         *(int*)((char*)inner2 + 0x360) |= 0x2000;
     }
     *(int*)((char*)state + 0x4) |= 0x100000;
@@ -6061,7 +6061,7 @@ int fn_8029F108(int obj, int state)
             *(s16*)vec = 0;
             *(s16*)((char*)vec + 0x4) = 0;
         }
-        ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+        ((GameObject*)obj)->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         ((GameObject*)obj)->anim.worldPosX = inner->savedPosX;
         ((GameObject*)obj)->anim.worldPosZ = inner->savedPosZ;
         if (((GameObject*)obj)->anim.parent != NULL)
@@ -11519,7 +11519,6 @@ int fn_8029E3F4(int obj, int state)
 int fn_802A49C8(int obj, int state)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int sub;
     f32 k;
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
@@ -11546,13 +11545,12 @@ int fn_802A49C8(int obj, int state)
         Sfx_PlayFromObject(obj, (u16)(inner->characterId == 0 ? 0x327 : 0x379));
     }
 
-    sub = inner->heldObj;
-    if (sub == 0 && *(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
+    if (*(void**)((char*)inner + 0x7f8) == NULL && *(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
     }
-    if (sub != 0 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E9C)
+    if (*(void**)((char*)inner + 0x7f8) != NULL && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E9C)
     {
         inner->unk800 = 0;
         if (*(void**)((char*)inner + 0x7f8) != NULL)
@@ -12978,7 +12976,7 @@ void fn_802AF7F8(int obj, int state)
     case 0x2d:
         break;
     case 0x40:
-        if ((getButtonsJustPressed(0) & 0x200) != 0 &&
+        if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x200) != 0 &&
             ((ByteFlags*)((char*)state + 0x3f3))->b08 != 0 &&
             ((PlayerState*)state)->curAnimId != 0x44)
         {
@@ -15313,7 +15311,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     int sub = inner->unk7F0;
     f32 wpos[3];
 
-    inner->flags360 &= ~0x2;
+    inner->flags360 &= ~0x2LL;
     inner->flags360 |= 0x2000;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
@@ -15747,7 +15745,7 @@ void playerUpdatePathEffectCountdown(int obj, int inner)
 void fn_802AAF80(int obj, int inner, int a, int b, int c)
 {
     int v;
-    if (lbl_803DE44C != NULL && ((((PlayerState*)inner)->unk3F4 >> 6) & 1) != 0)
+    if (lbl_803DE44C != NULL && (((u32)((PlayerState*)inner)->unk3F4 >> 6) & 1) != 0)
     {
         (*gModgfxInterface)->renderEffects((void*)a, b, c, 1, lbl_803DE44C);
     }
@@ -15766,12 +15764,12 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
         playerUpdatePathEffectCountdown(obj, inner);
     }
     v = ((PlayerState*)inner)->flags360;
-    if ((v & 0x60000) != 0)
+    if ((v & 0x60000u) != 0)
     {
         ((PartFxSpawnParams*)lbl_803DAEF0)->posX = ((GameObject*)obj)->anim.localPosX;
         ((PartFxSpawnParams*)lbl_803DAEF0)->posY = ((GameObject*)obj)->anim.localPosY;
         ((PartFxSpawnParams*)lbl_803DAEF0)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        if ((v & 0x40000) != 0)
+        if ((v & 0x40000u) != 0)
         {
             (*gPartfxInterface)->spawnObject(
                 (void*)obj, 0x427, lbl_803DAEF0, 0x200001, -1, NULL);
@@ -15780,7 +15778,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
             (*gPartfxInterface)->spawnObject(
                 (void*)obj, 0x427, lbl_803DAEF0, 0x200001, -1, NULL);
         }
-        if ((((PlayerState*)inner)->flags360 & 0x20000) != 0)
+        if ((((PlayerState*)inner)->flags360 & 0x20000u) != 0)
         {
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)obj, ((GameObject*)obj)->anim.localPosX,

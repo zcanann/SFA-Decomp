@@ -2674,8 +2674,8 @@ void fn_8002A5DC(u8* obj)
     f32 denom;
     f32 sum;
 
-    denom = lbl_803DE888 * ((GameObject*)obj)->anim.hitboxScale;
-    denom *= ((GameObject*)obj)->anim.rootMotionScale;
+    len = lbl_803DE888 * ((GameObject*)obj)->anim.hitboxScale;
+    denom = len * ((GameObject*)obj)->anim.rootMotionScale;
     dx = ((((GameObject*)obj)->anim.previousLocalPosZ - lbl_803DCECC) - (((GameObject*)obj)->anim.localPosZ -
         playerMapOffsetZ)) / denom;
     dz = ((((GameObject*)obj)->anim.localPosX - lbl_803DCED0) - (((GameObject*)obj)->anim.previousLocalPosX -

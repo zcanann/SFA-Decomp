@@ -869,9 +869,9 @@ void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     slideMtx = (f32*)(state + 4);
     if ((visible != 0) && (((GameObject*)obj)->unkF4 == 0))
     {
-        if ((((LandedArwingState*)state)->surfaceMode == 6) && (((((LandedArwingState*)state)->flags92 >> 3) & 1) != 0))
+        if ((((LandedArwingState*)state)->surfaceMode == 6) && ((((u32)((LandedArwingState*)state)->flags92 >> 3) & 1) != 0))
         {
-            if (((((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
+            if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
             {
                 fn_80166E38(slideMtx, &((GameObject*)obj)->anim.velocityX, (f32*)(state + 0x7c));
             }

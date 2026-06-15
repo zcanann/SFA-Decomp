@@ -154,8 +154,8 @@ void wcapertures_initialise(void)
 
 int wcapertures_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    WCAperturesState* state = ((GameObject*)obj)->extra;
     int i;
+    WCAperturesState* state = ((GameObject*)obj)->extra;
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -173,7 +173,7 @@ void wcapertures_init(int obj, int initData)
 
     ((GameObject*)obj)->anim.rotX = (s16)(setup->type << 8);
     ((GameObject*)obj)->animEventCallback = (void*)wcapertures_interactCallback;
-    objAnim->bankIndex = setup->modelIndex;
+    *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
     if ((u32)GameBit_Get(setup->armBit) != 0)

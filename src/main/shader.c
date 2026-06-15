@@ -1054,8 +1054,8 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     }
     if (i == count)
     {
-        lbl_803DCE98 = (u8)(lbl_803DCE98 + 1);
-        if (lbl_803DCE98 == 0x40)
+        lbl_803DCE98 = *(volatile u8*)&lbl_803DCE98 + 1;
+        if (*(volatile u8*)&lbl_803DCE98 == 0x40)
         {
             OSReport(sTrackLoadBlockOverrunError);
         }

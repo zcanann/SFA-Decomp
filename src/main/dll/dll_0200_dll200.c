@@ -10,6 +10,13 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 
+typedef struct IntVec3
+{
+    int a;
+    int b;
+    int c;
+} IntVec3;
+
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
 /* pressureswitch_getExtraSize == 0x8. */
@@ -194,13 +201,11 @@ void fn_801F20D4(int obj)
     extern void GameBit_Set(int slot, int val);
     extern uint GameBit_Get(int id);
     int sub;
-    int stk[3];
+    IntVec3 stk;
 
     sub = *(int*)&((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    stk[0] = lbl_802C247C[0];
-    stk[1] = lbl_802C247C[1];
-    stk[2] = lbl_802C247C[2];
+    stk = *(IntVec3*)lbl_802C247C;
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= 0x8;
@@ -231,7 +236,7 @@ void fn_801F20D4(int obj)
     }
     else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1) != 0)
     {
-        if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)stk, 3) > -1)
+        if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&stk, 3) > -1)
         {
             GameBit_Set(784, 1);
             *(u8*)(sub + 0x27) += 1;
@@ -541,12 +546,6 @@ typedef struct LightSourceFlagByte
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-typedef struct IntVec3
-{
-    int a;
-    int b;
-    int c;
-} IntVec3;
 
 typedef struct ArwAttachTarget
 {

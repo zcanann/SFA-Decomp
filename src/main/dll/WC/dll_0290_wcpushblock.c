@@ -145,7 +145,7 @@ void wcpushblock_hitDetect(void)
 {
 }
 
-#pragma peephole on
+#pragma peephole off
 void wcpushblock_init(int obj, int setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -153,7 +153,7 @@ void wcpushblock_init(int obj, int setup)
     WCPushBlockSetup* setupData = (WCPushBlockSetup*)setup;
 
     objAnim->alpha = 0;
-    objAnim->bankIndex = setupData->modelIndex;
+    *(u8*)&objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;

@@ -44,6 +44,7 @@ void earthwalker_initialise(void)
 
 void earthwalker_update(int obj)
 {
+    extern int GameBit_Get(int eventId);
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;
     EarthWalkerState* ewState = (EarthWalkerState*)state;
@@ -53,7 +54,7 @@ void earthwalker_update(int obj)
     hitOut = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
                                 &ewState->hitReactStepScale);
     ewState->hitReactState = hitOut;
-    if (ewState->hitReactState != 0)
+    if ((u8)hitOut != 0)
     {
         return;
     }
@@ -387,14 +388,13 @@ int fn_80223A1C(int obj, int ai)
     {
         return 2;
     }
-    if (!(dist < lbl_803E6CF4))
+    if (dist < lbl_803E6CF4)
     {
-        return 0;
-    }
-    if (((EarthwalkerState*)state)->randomTimer <= lbl_803E6CF8)
-    {
-        ((EarthwalkerState*)state)->randomTimer = (f32)randomGetRange(0x78, 0xfa);
-        return 4;
+        if (((EarthwalkerState*)state)->randomTimer <= lbl_803E6CF8)
+        {
+            ((EarthwalkerState*)state)->randomTimer = (f32)randomGetRange(0x78, 0xfa);
+            return 4;
+        }
     }
     return 0;
 }
@@ -509,7 +509,7 @@ void earthwalker_init(int obj, int setup)
     ewState->encounterType = *(u8*)(setup + 0x19);
     if (ewState->encounterType == 1)
     {
-        if (GameBit_Get(0x7fc) != 0 ||
+        if ((int)GameBit_Get(0x7fc) != 0 ||
             (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
         {
             ewState->interactionState = 2;
