@@ -1812,9 +1812,9 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
             ((ModgfxState*)obj)->rotStepX = 0;
         }
     }
-    ((ModgfxState*)obj)->rotOffsetZ = ((ModgfxState*)obj)->rotOffsetZ + ((ModgfxState*)obj)->rotStepZ;
-    ((ModgfxState*)obj)->rotOffsetY = ((ModgfxState*)obj)->rotOffsetY + ((ModgfxState*)obj)->rotStepY;
-    ((ModgfxState*)obj)->rotOffsetX = ((ModgfxState*)obj)->rotOffsetX + ((ModgfxState*)obj)->rotStepX;
+    ((ModgfxState*)obj)->rotOffsetZ += ((ModgfxState*)obj)->rotStepZ;
+    ((ModgfxState*)obj)->rotOffsetY += ((ModgfxState*)obj)->rotStepY;
+    ((ModgfxState*)obj)->rotOffsetX += ((ModgfxState*)obj)->rotStepX;
 }
 
 /* EN v1.0 0x800A113C  size: 276b  dll_0B_func0E: flag every active effect
