@@ -2165,17 +2165,17 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         }
     }
 
-    effect->textureResource = NULL;
-    effect->textureIsBorrowed = 0;
+    effects[slot]->textureResource = NULL;
+    effects[slot]->textureIsBorrowed = 0;
     if (g != NULL)
     {
-        effect->textureResource = g;
-        effect->textureIsBorrowed = 1;
+        effects[slot]->textureResource = g;
+        effects[slot]->textureIsBorrowed = 1;
     }
     else if (f != 0)
     {
-        effect->textureResource = textureLoadAsset(f);
-        effect->textureIsBorrowed = 0;
+        effects[slot]->textureResource = textureLoadAsset(f);
+        effects[slot]->textureIsBorrowed = 0;
     }
 
     if ((*(u32*)(st + 0x54) & 0x800) == 0)
