@@ -1020,13 +1020,13 @@ void checkpoint4_render(int param_1);
 
 void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement);
 
-void sideload_update(int obj2)
+void sideload_update(int self)
 {
     int state;
     void* obj;
     short* p;
 
-    state = *(int*)&((GameObject*)obj2)->anim.placementData;
+    state = *(int*)&((GameObject*)self)->anim.placementData;
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
         (getTrickyObject() == 0) && (GameBit_Get((int)*(short*)(state + 0x18)) != 0))
     {
@@ -1034,9 +1034,9 @@ void sideload_update(int obj2)
         *(u8*)((char*)obj + 4) = 2;
         *(u8*)((char*)obj + 5) = 4;
         *(u8*)((char*)obj + 7) = 0xff;
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj2)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj2)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj2)->anim.localPosZ;
+        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)self)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)self)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)self)->anim.localPosZ;
         p = (short*)Obj_SetupObject(obj, 5, -1, -1, (void*)0);
         *p = (short)((u8)((SideloadPlacement*)state)->unk1A << 8);
     }
