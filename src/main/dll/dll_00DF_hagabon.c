@@ -2,7 +2,6 @@
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/pressureSwitch.h"
-#include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
