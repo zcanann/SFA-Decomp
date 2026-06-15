@@ -1,7 +1,6 @@
 #include "main/dll/DR/DRshackle.h"
 #include "main/dll/path_control_interface.h"
 #include "main/checkpoint_interface.h"
-#include "main/game_object.h"
 
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
