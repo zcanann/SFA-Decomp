@@ -1095,7 +1095,6 @@ void dll_CE_init(int obj, u8* p, int flags)
     extern int randomGetRange(int min, int max);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
-    extern f64 lbl_803E2E08;
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E14;
     GroundBaddieState* sub;
@@ -1725,7 +1724,6 @@ void dll_CE_initialise(void)
     lbl_803AC598[5] = (void*)fn_8015DC04;
 }
 
-extern f32 lbl_803E2E90;
 
 void dll_CE_free(int* obj)
 {
