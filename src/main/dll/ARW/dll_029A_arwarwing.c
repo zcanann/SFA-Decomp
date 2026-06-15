@@ -108,7 +108,7 @@ void arwarwing_hitDetect(int obj)
 {
     ArwingState* state = ((GameObject*)obj)->extra;
     f32 pos[3];
-    f32 mtx[12];
+    f32 mtx[16];
 
     if ((((GameObject*)obj)->objectFlags & 0x1000) != 0 && state->aimSnapshotValid != 0)
     {
