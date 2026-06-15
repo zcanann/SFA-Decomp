@@ -1,3 +1,10 @@
+/*
+ * dimwooddoor - spinning wooden-door hazard found in DIM (Dinosaur
+ * InfernoMountain).  Each door tracks the player and flings debris
+ * shards (type 0x1d6) at them.  DIMwooddoor_spawnShard creates one
+ * shard projectile per trigger; DIMwooddoor_updateShardAim computes
+ * the launch angle and speed from the door's current aim state.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
