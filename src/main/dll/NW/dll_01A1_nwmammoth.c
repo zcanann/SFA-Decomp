@@ -162,17 +162,9 @@ void fn_801CEE0C(int p1, int p2)
     case 1:
         *(int*)(p2 + 0x48) = (int)&lbl_803DBF74;
         {
-            int v = GameBit_Get(1400);
-            if (v == 1)
+            switch (GameBit_Get(1400))
             {
-                *(u8*)(p2 + 0x408) = 2;
-            }
-            else if (v > 1)
-            {
-                *(u8*)(p2 + 0x408) = 3;
-            }
-            else if (v == 0)
-            {
+            case 0:
                 if (ObjTrigger_IsSetById(p1, 1398) != 0)
                 {
                     GameBit_Set(1400, 1);
@@ -181,10 +173,13 @@ void fn_801CEE0C(int p1, int p2)
                     *(u8*)(p2 + 0x43c) = (u8)(*(u8*)(p2 + 0x43c) | 0x10);
                     *(u8*)(p2 + 0x408) = 2;
                 }
-            }
-            else
-            {
+                break;
+            case 1:
+                *(u8*)(p2 + 0x408) = 2;
+                break;
+            default:
                 *(u8*)(p2 + 0x408) = 3;
+                break;
             }
         }
         break;
