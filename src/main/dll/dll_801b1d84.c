@@ -37,8 +37,8 @@ extern u8 framesThisStep;
  * spawn a rolling snowball seeded from the placement params. */
 
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void ObjHits_SetHitVolumeSlot(int* obj, int a, int b, int c);
-extern void ObjHitbox_SetSphereRadius(int* obj, int radius);
+extern void ObjHits_SetHitVolumeSlot(int* obj, int a, u8 b, int c);
+extern void ObjHitbox_SetSphereRadius(int* obj, u8 radius);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
@@ -59,8 +59,9 @@ void DIMwooddoor_updateFallingDebris(int* obj)
     case 0:
         {
             f32 oldvy = ((GameObject*)obj)->anim.velocityY;
+            f32 grav = lbl_803E48A4 * -lbl_803DBEF0;
             ObjHitsPriorityState* hitState;
-            ((GameObject*)obj)->anim.velocityY = lbl_803E48A4 * -lbl_803DBEF0 * timeDelta + oldvy;
+            ((GameObject*)obj)->anim.velocityY = grav * timeDelta + oldvy;
             objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                     lbl_803E48A8 * (oldvy + ((GameObject*)obj)->anim.velocityY) * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
