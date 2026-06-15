@@ -48,10 +48,8 @@ void sh_staff_free(int* obj, int p2)
 
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 
