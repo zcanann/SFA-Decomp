@@ -8814,6 +8814,7 @@ void fn_802AFB0C(int obj, int inner, int state)
     }
 }
 
+#pragma opt_loop_invariants off
 void fn_802B249C(int obj, int inner, int state)
 {
     int p;
@@ -9104,6 +9105,7 @@ void fn_802B249C(int obj, int inner, int state)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 void fn_80295B2C(int obj, f32 f1, f32 f2, f32 f3)
 {
