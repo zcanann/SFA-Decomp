@@ -101,11 +101,9 @@ extern void objAudioFn_80039270(int obj, void* p, int id);
 extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
 extern f32 lbl_803DBE4C;
-extern int objUpdateOpacity(int sub);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* getTrickyObject(void);
 extern f32 lbl_803E4248;
-extern void Sfx_StopObjectChannel(int obj, int ch);
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);
 extern int randFn_80080100(int n);
@@ -123,7 +121,6 @@ extern f32 lbl_803E4238;
 extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
-extern void getEnvfxAct(int a, int b, int c, int d);
 
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* sfxTable)
 {
