@@ -1047,10 +1047,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
     float fval;
     int b;
     int val;
-    u8 fxBuf[12];
-    int ia;
-    float fa;
-    int ib;
+    u8 fxBuf[24];
 
     if (trickyFoodFn_8014460c(obj, trickyState) != 0)
     {
@@ -1102,9 +1099,9 @@ int trickyFn_801434b0(int obj, int* trickyState)
         {
             if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
             {
-                *(f32*)&fxBuf[0] = *(f32*)(trickyState + 0x102);
-                *(f32*)&fxBuf[4] = lbl_803E23F8 + *(float*)(trickyState + 0x103);
-                *(f32*)&fxBuf[8] = *(f32*)(trickyState + 0x104);
+                *(f32*)&fxBuf[12] = *(f32*)(trickyState + 0x102);
+                *(f32*)&fxBuf[16] = lbl_803E23F8 + *(float*)(trickyState + 0x103);
+                *(f32*)&fxBuf[20] = *(f32*)(trickyState + 0x104);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7f0, fxBuf, 0x200001, -1,
                                                  NULL);
             }
