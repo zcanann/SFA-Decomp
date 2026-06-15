@@ -1,14 +1,10 @@
 /* DLL 0x01AA (bombplantspore) — Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/SH/dll_01A9_bombplant.h"
-#include "main/objseq.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/SH/SHrocketmushroom.h"
-#include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 typedef struct BombplantsporeStartDriftBurstPlacement
 {
