@@ -1,10 +1,5 @@
 #include "main/obj_placement.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/dll/DF/rope.h"
-#include "main/dll/mmsh_waterspike.h"
 
 typedef struct MagicmakerPlacement
 {
