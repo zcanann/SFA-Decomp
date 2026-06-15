@@ -246,7 +246,7 @@ void dbsh_symbol_update(int obj)
         phase = state->phase;
         if (phase == 0)
         {
-            ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+            ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
             state->phase = 1;
         }
         else if (phase == 2)
@@ -267,7 +267,7 @@ void dbsh_symbol_update(int obj)
         }
         else if (phase == 3)
         {
-            ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+            ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
             if (state->flags.finished != 0)
             {
                 GameBit_Set(0x16b, 1);
