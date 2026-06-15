@@ -1203,11 +1203,9 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    sc = lbl_803DD9D8 + (f32)lbl_803DD9E0;
-                    ca = (u32)((f32)y0 * sc);
+                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + (f32)lbl_803DD9E0));
                     cb = (u32)((f32)(u32)y1 * sc);
-                    sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
-                    cc = (u32)((f32)x0 * sc);
+                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + (f32)lbl_803DD9E1));
                     colb4[0] = lbl_803DD9F3;
                     colb4[1] = lbl_803DD9F2;
                     colb4[2] = lbl_803DD9F1;
@@ -1246,11 +1244,9 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    sc = lbl_803DD9D8 + (f32)lbl_803DD9E0;
-                    ca = (u32)((f32)y0 * sc);
+                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + (f32)lbl_803DD9E0));
                     cb = (u32)((f32)(u32)y1 * sc);
-                    sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
-                    cc = (u32)((f32)x0 * sc);
+                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + (f32)lbl_803DD9E1));
                     colb2[0] = lbl_803DD9F3;
                     colb2[1] = lbl_803DD9F2;
                     colb2[2] = lbl_803DD9F1;
@@ -1302,8 +1298,7 @@ int fn_80136E00(int p1, u8* p)
                     y1 = y + 2;
                     ca = (u32)((f32)y0 * sc);
                     cb = (u32)((f32)(u32)y1 * sc);
-                    sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
-                    cc = (u32)((f32)x0 * sc);
+                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + (f32)lbl_803DD9E1));
                     colb3[0] = lbl_803DD9F3;
                     colb3[1] = lbl_803DD9F2;
                     colb3[2] = lbl_803DD9F1;
@@ -1632,11 +1627,9 @@ void debugPrintDraw(int ctx)
             ys -= 2;
         }
         y2 = yv + 2;
-        scale = lbl_803DD9D8 + (f32)lbl_803DD9E0;
-        xa = (u32)((f32)ys * scale);
+        xa = (u32)((f32)ys * (scale = lbl_803DD9D8 + (f32)lbl_803DD9E0));
         xb = (u32)((f32)y2 * scale);
-        scale = lbl_803DD9DC + (f32)lbl_803DD9E1;
-        ya = (u32)((f32)xs * scale);
+        ya = (u32)((f32)xs * (scale = lbl_803DD9DC + (f32)lbl_803DD9E1));
         yb = (u32)((f32)x1 * scale);
         ((u8*)&colb)[0] = lbl_803DD9F3;
         ((u8*)&colb)[1] = lbl_803DD9F2;
