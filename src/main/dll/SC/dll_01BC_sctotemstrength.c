@@ -6,7 +6,6 @@
  * Winning sets GameBit 0x784, losing sets 0x786. (This file also carries the
  * FElevControl descriptor tail.)
  */
-#include "main/dll/paymentkiosk.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -15,9 +14,7 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/dll/DB/DBrockfall.h"
-#include "main/effect_interfaces.h"
 #include "main/objlib.h"
-#include "main/objanim_internal.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
