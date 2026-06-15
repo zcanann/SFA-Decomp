@@ -344,7 +344,6 @@ extern void quakeSpellFn_8016cee8(int* obj, int* x);
 extern f32 lbl_803E33A0;
 extern f32 lbl_803DBD60;
 extern f32 lbl_803E338C;
-extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
 extern void vecRotateZXY(int* obj, f32* p);
 extern void firepipe_releaseEffectObject(int* obj);
 extern f32 lbl_803E3390;
@@ -352,8 +351,6 @@ extern f32 lbl_803E3394;
 extern f32 lbl_803DBD68;
 extern f32 lbl_803DBD6C;
 extern int lbl_803DBD64;
-extern u32 lbl_803E31A0;
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
