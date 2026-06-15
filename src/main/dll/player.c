@@ -15805,15 +15805,8 @@ void fn_802AE650(int obj, int state, int p3)
         *(f32*)((char*)state + 0x844) =
             lbl_803E7EFC * timeDelta + *(f32*)((char*)state + 0x844);
         v = *(f32*)((char*)state + 0x844);
-        if (v < lbl_803E7EA4)
-        {
-            v = lbl_803E7EA4;
-        }
-        else if (v > lbl_803E7EE0)
-        {
-            v = lbl_803E7EE0;
-        }
-        *(f32*)((char*)state + 0x844) = v;
+        *(f32*)((char*)state + 0x844) =
+            (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
     }
     if ((*(int*)&((PlayerState*)p3)->baddie.eventFlags & 0x200) != 0)
     {
