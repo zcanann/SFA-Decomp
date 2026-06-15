@@ -730,7 +730,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 }
 
 #pragma peephole off
-int fn_80138D7C(int obj, int p2)
+void fn_80138D7C(int obj, int p2)
 {
     extern void*Obj_GetActiveModel(int);
     extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
@@ -740,7 +740,7 @@ int fn_80138D7C(int obj, int p2)
     extern f32 lbl_803E23E8;
     extern f32 lbl_803E2408;
     extern f32 lbl_803E240C;
-    u8 ratio = (u8)((s32)(s8) * (u8*)(*(int*)(p2 + 0) + 2) / 5);
+    u8 ratio = (u8)((s32) * (u8*)(*(int*)(p2 + 0) + 2) / 10);
 
     if (*(u8*)(p2 + 0x82c) != ratio)
     {
@@ -754,7 +754,7 @@ int fn_80138D7C(int obj, int p2)
         }
         *(f32*)(p2 + 0x828) = *(f32*)(p2 + 0x828) - timeDelta;
         t = *(f32*)(p2 + 0x828);
-        if (t <= lbl_803E2408)
+        if (!(t > lbl_803E2408))
         {
             if (t > lbl_803E23DC)
             {
@@ -777,7 +777,7 @@ int fn_80138D7C(int obj, int p2)
             }
         }
     }
-    return 0;
+    return;
 }
 
 #define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e
