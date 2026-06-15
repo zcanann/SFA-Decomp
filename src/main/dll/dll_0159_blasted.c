@@ -162,12 +162,11 @@ void blasted_update(int obj)
             if (m == 5)
             {
                 int k = 0;
-                int cnt = state->damageStep;
-                while (k != cnt)
+                while (k != state->damageStep)
                 {
                     if (v == state->destroyedHitObjects[k++])
                     {
-                        k = cnt;
+                        k = state->damageStep;
                         found = 1;
                     }
                 }
