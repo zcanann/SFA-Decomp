@@ -550,7 +550,7 @@ typedef struct AppleontreeObjectDef
     s16 unk26;
 } AppleontreeObjectDef;
 
-void appleontree_update(int param_1)
+void appleontree_update(int objArg)
 {
     extern void playerAddHealth(u8* player, int v); /* #57 */
     extern u8* Obj_GetPlayerObject(void); /* #57 */
@@ -562,9 +562,9 @@ void appleontree_update(int param_1)
     float fa;
     undefined2* obj;
     int val;
-    undefined4* wordPtr2;
+    undefined4* modelIdxPtrW;
     uint bitVal;
-    int* wordPtr;
+    int* modelIdxPtr;
     int placement;
     int state;
     f32 fc;
@@ -574,7 +574,7 @@ void appleontree_update(int param_1)
     int msg;
     f32 sunTime;
 
-    obj = (undefined2*)param_1;
+    obj = (undefined2*)objArg;
     state = *(int*)(obj + 0x5c);
     placement = *(int*)(obj + 0x26);
     msg = 0;
@@ -708,8 +708,8 @@ void appleontree_update(int param_1)
             if (frac > ((GroundBaddieState*)state)->baddie.posY)
             {
                 val = *(int*)(obj + 0x5c);
-                wordPtr2 = (undefined4*)FUN_80039520((int)obj, 0);
-                *wordPtr2 = 0;
+                modelIdxPtrW = (undefined4*)FUN_80039520((int)obj, 0);
+                *modelIdxPtrW = 0;
                 *(float*)(val + 0x24) = lbl_803E37C8;
                 *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4);
                 FUN_80017a78((int)obj, 1);
@@ -724,8 +724,8 @@ void appleontree_update(int param_1)
                     (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
                 fa = fa * fa * fa * fa;
                 state = (int)((fa * fa) / *(float*)(val + 0x54));
-                wordPtr = (int*)FUN_80039520((int)obj, 0);
-                *wordPtr = 0x100 - state;
+                modelIdxPtr = (int*)FUN_80039520((int)obj, 0);
+                *modelIdxPtr = 0x100 - state;
                 *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
                 *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4) * *(float*)(val + 0x24);
                 FUN_80017a78((int)obj, 1);
@@ -790,8 +790,8 @@ void appleontree_update(int param_1)
                     obj[1] = (f32) * (s16*)(state + 0x4a) * fb;
                     obj[2] = (f32) * (s16*)(state + 0x4c) * fb;
                 }
-                wordPtr = (int*)FUN_80039520((int)obj, 0);
-                *wordPtr = (int)(lbl_803E380C * frac);
+                modelIdxPtr = (int*)FUN_80039520((int)obj, 0);
+                *modelIdxPtr = (int)(lbl_803E380C * frac);
                 FUN_8017de58((uint)obj);
             }
             break;
