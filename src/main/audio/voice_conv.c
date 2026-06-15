@@ -186,7 +186,7 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     {
         freq = (f32)(u32)(packed & 0xffffff);
     }
-    return __cvt_fp2unsigned((freq * lbl_803E7828) /
+    return __cvt_fp2unsigned((lbl_803E7828 * freq) /
         (f32)(u32)*(u32*)lbl_803BD150);
 }
 
