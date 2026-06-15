@@ -930,12 +930,11 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
             search += 0x30;
         }
 
-        if (failedCount == 8)
+        switch (failedCount)
         {
+        case 8:
             return -1;
-        }
-        if (failedCount == 7)
-        {
+        case 7:
             for (i = 0; i < 8; i++)
             {
                 if (routes[i] != 0)
