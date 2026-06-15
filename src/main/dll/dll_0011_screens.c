@@ -1,5 +1,4 @@
 #include "main/asset_load.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
