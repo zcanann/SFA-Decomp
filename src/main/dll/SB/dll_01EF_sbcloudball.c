@@ -166,6 +166,7 @@ void SB_CloudBall_init(GameObject* obj)
     ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
 
     hits->flags = (s16)(hits->flags & ~1);
+    hits = ObjAnim_GetPriorityHitState(&obj->anim);
     hits->trackContactMask = (u16)(hits->trackContactMask | 1);
     if ((void*)state->light == NULL)
     {
