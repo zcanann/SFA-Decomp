@@ -19,25 +19,9 @@
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
 
-/*
- * Per-object extra state for the dimwooddoor2 burnable door
- * (dimwooddoor2_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
-/*
- * Per-object extra state for the dll_1CE hatch door
- * (dll_1CE_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
-
-/*
- * Per-object extra state for the dimmagicbridge flame bridge
- * (dimmagicbridge_getExtraSize == 0x68). init/SeqFn here, dll_199/19A
- * variants in dimmagicbridge.c use their own layout.
- */
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
@@ -46,16 +30,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
-
-/*
- * Per-object extra state for the explosion effect
- * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
- * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
- * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
- * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
- * (recipe #36/#77); the layout is documented here for a future pass.
- */
 
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
@@ -67,8 +41,6 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-/* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -94,6 +66,10 @@ STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
+
+#define OBJ_TYPE_SHARPCLAW       214
+#define PARTFX_SNOWBALL_IMPACT   518
+#define GAMEBIT_SNOWBALL_LAUNCH  648
 
 extern undefined4 FUN_800067c0();
 extern f32 lbl_803E4AA0;
@@ -238,7 +214,7 @@ void dim2snowball_update(int* obj)
                 list = ObjList_GetObjects(&start, &count);
                 for (; start < count; start++)
                 {
-                    if (*(s16*)((char*)list[start] + 0x46) == 214)
+                    if (*(s16*)((char*)list[start] + 0x46) == OBJ_TYPE_SHARPCLAW)
                     {
                         hit = list[start];
                         goto checkHit;
@@ -255,7 +231,7 @@ void dim2snowball_update(int* obj)
             evt[3] = ((GameObject*)obj)->anim.localPosX;
             evt[4] = ((GameObject*)obj)->anim.localPosY;
             evt[5] = ((GameObject*)obj)->anim.localPosZ;
-            (*gPartfxInterface)->spawnObject(obj, 518, evt, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, PARTFX_SNOWBALL_IMPACT, evt, 4, -1, NULL);
             if (((GameObject*)obj)->anim.alpha == 0)
             {
                 Obj_FreeObject(obj);
@@ -307,7 +283,7 @@ void dim2snowball_update(int* obj)
         if (*(u8*)((char*)*(int**)&((Dim2SnowballState*)extra)->curveData + (((Dim2SnowballState*)extra)->curve.idx >>
             2)) == 32)
         {
-            if (GameBit_Get(648) != 0)
+            if (GameBit_Get(GAMEBIT_SNOWBALL_LAUNCH) != 0)
             {
                 int n;
                 ((Dim2SnowballState*)extra)->flagsAC |= 2;
