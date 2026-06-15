@@ -983,13 +983,13 @@ void mikabombshadow_update(int* obj);
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
 
-void siderepel_init(int obj, int param_2)
+void siderepel_init(int obj, int placement)
 {
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0xe000;
     ObjGroup_AddObject(obj, 0x40);
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(obj, (short)((int)(uint) * (ushort*)(param_2 + 0x18) >> 3));
+        ObjHitbox_SetSphereRadius(obj, (short)((int)(uint) * (ushort*)(placement + 0x18) >> 3));
     }
 }
 
