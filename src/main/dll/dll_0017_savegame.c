@@ -472,7 +472,7 @@ int gplayNewGame(char* name, int slot)
 
 void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 {
-    int createTransient;
+    u8 createTransient;
     u32 oldStatus;
     u32 newStatus;
     u32 bit;
