@@ -5,6 +5,8 @@
 #include "main/dll/baddie_setmove.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/duster.h"
+#include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/sky_interface.h"
 
@@ -90,7 +92,6 @@ extern f32 lbl_803E2B00;
 extern f32 lbl_803E2B04;
 extern f32 lbl_803DBCEC;
 
-#pragma opt_common_subs off
 void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
 {
     float hi;
@@ -140,14 +141,10 @@ void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
     PSVECNormalize(sideAxis, sideAxis);
     *outPos = lateral * sideAxis[0] + anchor[7];
     outPos[2] = lateral * sideAxis[2] + anchor[8];
-    {
-        float k = lbl_803E2A2C;
-        *outPos = k * *anchor + *outPos;
-        outPos[1] = k * anchor[1] + outPos[1];
-        outPos[2] = k * anchor[2] + outPos[2];
-    }
+    *outPos = lbl_803E2A2C * *anchor + *outPos;
+    outPos[1] = lbl_803E2A2C * anchor[1] + outPos[1];
+    outPos[2] = lbl_803E2A2C * anchor[2] + outPos[2];
 }
-#pragma opt_common_subs reset
 
 void fn_801554B4(int* obj, int state)
 {
@@ -155,16 +152,16 @@ void fn_801554B4(int* obj, int state)
     float* probeOffsets;
     int i;
     f32 dot;
-    float hit[18];
-    float maxv[3];
-    float minv[3];
-    float sideAxis0[3];
-    float cv[3];
-    float av[3];
-    float toAnchor[3];
-    float bv[3];
-    float sideAxis[3];
     float dv[3];
+    float sideAxis[3];
+    float bv[3];
+    float toAnchor[3];
+    float av[3];
+    float cv[3];
+    float sideAxis0[3];
+    float minv[3];
+    float maxv[3];
+    float hit[18];
 
     didHit = 0;
     probeOffsets = (float*)&lbl_8031F2F8;
@@ -251,7 +248,7 @@ void fn_801557D4(int* obj, int state)
         if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
             (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
         {
-            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
         }
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
@@ -282,7 +279,7 @@ void fn_80155884(int* obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
     }
     return;
 }
@@ -328,7 +325,7 @@ void fn_80155948(int* obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
     }
     return;
 }
@@ -411,13 +408,13 @@ void pollenFn_80155b10(uint obj, int state)
         setup = Obj_AllocObjectSetup(0x24, 0x47b);
         *(float*)(setup + 4) = a[0];
         *(float*)(setup + 6) = a[1];
-        *(float*)(setup + 8) = a[2];
+        *(undefined4*)(setup + 8) = a[2];
         *(undefined*)(setup + 2) = 1;
         *(undefined*)((int)setup + 5) = 1;
         *(undefined*)(setup + 3) = 0xff;
         *(undefined*)((int)setup + 7) = 0xff;
         ref = Obj_SetupObject(setup, 5, -1, -1, 0);
-        if ((void*)ref != NULL)
+        if (ref != 0)
         {
             *(float*)(ref + 0x24) = velXZ;
             *(float*)(ref + 0x28) = cosVal;
@@ -446,13 +443,13 @@ void timeOfDayFn_80155cf8(int obj, int state)
     if ((isDaytime != 0) && (((BaddieState*)state)->seqEntryIndex == 0))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
         Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
     }
     else if ((isDaytime == 0) && (((BaddieState*)state)->seqEntryIndex == 2))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
         Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
     }
     return;
@@ -506,12 +503,12 @@ void fn_80155F20(int obj, int state)
             if (((GameObject*)obj)->anim.currentMove == 1)
             {
                 ((BaddieState*)state)->seqEntryIndex = 2;
-                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
             }
             else if (((GameObject*)obj)->anim.currentMove == 3)
             {
                 ((BaddieState*)state)->seqEntryIndex = 0;
-                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
                 Baddie_SetMove(obj, state, 0, lbl_803E2A54, 0, 0);
             }
         }
@@ -526,34 +523,36 @@ void fn_80155F20(int obj, int state)
 
 void fn_80156010(uint obj, int state)
 {
-    u8 timerExpired;
+    bool timerExpired;
+    short move;
 
-    timerExpired = 0;
+    timerExpired = false;
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
     if (*(float*)(state + 0x324) <= lbl_803E2A60)
     {
-        timerExpired = 1;
+        timerExpired = true;
         *(float*)(state + 0x324) = *(f32 *)&lbl_803E2A60;
     }
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        if (((GameObject*)obj)->anim.currentMove == 4)
+        move = ((GameObject*)obj)->anim.currentMove;
+        if (move == 4)
         {
             pollenFn_80155b10(obj, state);
             *(float*)(state + 0x324) = lbl_803E2A80;
             Baddie_SetMove(obj, state, 5, lbl_803E2A54, 0, 0);
         }
-        else if ((((GameObject*)obj)->anim.currentMove == 5) && (timerExpired))
+        else if ((move == 5) && (timerExpired))
         {
             Baddie_SetMove(obj, state, 6, lbl_803E2A54, 0, 0);
             Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
         }
-        else if (((GameObject*)obj)->anim.currentMove == 6)
+        else if (move == 6)
         {
             Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
             *(float*)(state + 0x324) = lbl_803E2A80;
         }
-        else if (((((GameObject*)obj)->anim.currentMove == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
+        else if (((move == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
             Baddie_SetMove(obj, state, 4, lbl_803E2A54, 0, 0);
             Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
@@ -651,7 +650,7 @@ void fn_8015625C(uint obj, int state)
         if (*(float*)(state + 0x324) <= zero)
         {
             *(float*)(state + 0x324) = lbl_803E2AB0;
-            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x400) != 0)
@@ -751,17 +750,17 @@ void fn_8015652C(uint obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
     }
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
         if (((Curve_AdvanceAlongPath(route, ((BaddieState*)state)->pathStep) != 0 ||
                     route->atSegmentEnd != 0) &&
                 (*gRomCurveInterface)->goNextPoint(route) != 0) &&
-            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2AE4,
+            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E2AE4,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
         }
         if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
         {
@@ -842,7 +841,7 @@ void wbInit(undefined4 unused, int state)
 
 void fn_80156950(uint obj, int state)
 {
-    switch (((GameObject *)obj)->anim.currentMove)
+    switch (*(short*)(obj + 0xa0))
     {
     case 5:
         if (*(ushort*)(state + 0x2f8) != 0)
@@ -859,7 +858,7 @@ void fn_80156950(uint obj, int state)
     case 7:
         if (*(ushort*)(state + 0x2f8) != 0)
         {
-            if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2AF8)
+            if (*(float*)(obj + 0x98) < lbl_803E2AF8)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
             }
@@ -872,11 +871,11 @@ void fn_80156950(uint obj, int state)
     case 8:
         if (*(ushort*)(state + 0x2f8) != 0)
         {
-            if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2AFC)
+            if (*(float*)(obj + 0x98) < lbl_803E2AFC)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
             }
-            else if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E2B00)
+            else if (*(float*)(obj + 0x98) < lbl_803E2B00)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath4);
             }
@@ -892,7 +891,7 @@ void fn_80156950(uint obj, int state)
 
 void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
 {
-    int move;
+    short move;
 
     if (eventKind != 0x11)
     {
@@ -903,7 +902,7 @@ void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eve
         else
         {
             move = ((GameObject*)obj)->anim.currentMove;
-            if ((int)move == 0 || (int)move == 1 || (int)move == 3 || (int)move == 4)
+            if ((((move == 0) || (move == 1)) || (move == 3)) || (move == 4))
             {
                 Sfx_PlayFromObject(obj, SFXfox_roll2);
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
@@ -923,13 +922,15 @@ void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eve
 void fn_80156B0C(uint obj, int state)
 {
     int tblOff;
+    ObjHitsPriorityState* hitState;
 
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     if (((((BaddieState*)state)->controlFlags & 0x80000000) != 0) && (((BaddieState*)state)->seqEntryIndex <= 1))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40000000LL;
+        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40000000;
     }
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
@@ -1024,14 +1025,14 @@ void fn_80156DA0(int obj, int state)
     float toPos[3];
     float sinYaw;
     float cosYaw;
-    float hit[18];
+    float hitOut[24];
 
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-    if (*(float*)(state + 0x324) <= lbl_803E2B18)
+    if (*(float*)(state + 0x324) <= lbl_803E2A60)
     {
         *(float*)(state + 0x324) = (float)(int)randomGetRange(0x3c, 0x78);
     }
-    if (lbl_803E2B18 != *(float*)(state + 0x328))
+    if (lbl_803E2A60 != *(float*)(state + 0x328))
     {
         ObjHits_DisableObject(obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
@@ -1041,7 +1042,7 @@ void fn_80156DA0(int obj, int state)
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             ObjHits_EnableObject(obj);
-            *(float*)(state + 0x328) = lbl_803E2B18;
+            *(float*)(state + 0x328) = lbl_803E2A60;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
         resetting = true;
@@ -1052,7 +1053,7 @@ void fn_80156DA0(int obj, int state)
     }
     if (!resetting)
     {
-        *(short*)obj = *(short*)obj + *(ushort*)(state + 0x338);
+        *(short*)obj = (short)((short)*(short*)obj + (short)*(ushort*)(state + 0x338));
         fromPos[0] = ((GameObject*)obj)->anim.localPosX;
         fromPos[1] = ((GameObject*)obj)->anim.localPosY;
         fromPos[2] = ((GameObject*)obj)->anim.localPosZ;
@@ -1060,8 +1061,9 @@ void fn_80156DA0(int obj, int state)
         toPos[0] = ((GameObject*)obj)->anim.localPosX - lbl_803E2ABC * sinYaw;
         toPos[1] = lbl_803E2AC0 + ((GameObject*)obj)->anim.localPosY;
         toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2ABC * cosYaw;
-        groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hit, obj,
-                                   (uint) * (byte*)(state + 0x261), -1, 0xff, 0);
+        *(int*)hitOut = 0;
+        groundHit = objBboxFn_800640cc(fromPos, toPos, (float*)0x3, hitOut, obj,
+                                   (uint) * (byte*)(state + 0x261), 0xff, 0xffffffff, 0);
         if (((groundHit & 0xff) == 0) || ((((BaddieState*)state)->controlFlags & 0x40000000) == 0))
         {
             if ((groundHit & 0xff) != 0)
