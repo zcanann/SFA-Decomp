@@ -109,7 +109,6 @@ extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
 extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
-extern int maybeTryLoadSave(int a);
 extern void mm_free(u32);
 extern void* getLastSavedGameTexts(void);
 extern u32 lbl_803DD4A0;
@@ -124,7 +123,6 @@ extern s16 lbl_803119E0[];
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
 extern void loadAssetFileById(void** out, int id);
-extern u8 lbl_80313A40[];
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
