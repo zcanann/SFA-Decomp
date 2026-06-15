@@ -320,7 +320,6 @@ void fn_80239FCC(int p1, int p2)
     int rndYaw;
     int rndDur;
     int newObj;
-    int proj;
 
     if (Obj_IsLoadingLocked())
     {
@@ -341,12 +340,12 @@ void fn_80239FCC(int p1, int p2)
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if (proj != 0)
+        rndDur = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if ((void*)rndDur != NULL)
         {
-            *(f32*)(proj + 8) = lbl_803DC4E4;
-            arwprojectile_setLifetime(proj, lbl_803DC4E0);
-            arwprojectile_placeForward(proj, lbl_803E74AC);
+            *(f32*)(rndDur + 8) = lbl_803DC4E4;
+            arwprojectile_setLifetime(rndDur, lbl_803DC4E0);
+            arwprojectile_placeForward(rndDur, lbl_803E74AC);
         }
     }
 }
