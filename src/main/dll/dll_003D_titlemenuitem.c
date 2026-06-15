@@ -449,16 +449,12 @@ void Link_release(void);
 
 void TitleMenuItem_release(void)
 {
-    void** p;
     int i;
 
-    i = 0;
-    p = lbl_803A9DB8;
-    for (; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
-        textureFree(*p);
-        *p = NULL;
-        p++;
+        textureFree(lbl_803A9DB8[i]);
+        lbl_803A9DB8[i] = NULL;
     }
 }
 
