@@ -1,4 +1,8 @@
-/* DLL 0x13E - DIMBossIceSmash [801948C0-80195008) */
+/* DLL 0x13E — DIMBossIceSmash [0x80194890-0x80197190): spinning ice shards
+ * launched during the DIM boss fight.  Each shard integrates velocity and
+ * rotation, optionally follows a path-control surface bounce, fades over a
+ * per-setup lifetime window, and emits two trail particles per frame while
+ * fully opaque. */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
@@ -22,27 +26,27 @@ typedef struct DimbossicesmashPlacement
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    s16 unk28;
-    s16 unk2A;
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    s16 unk34;
-    s16 unk36;
-    u16 unk38;
-    u16 unk3A;
-    u8 unk3C;
+    s16 unk20;  /* launch speed (homing) or velocity X (*100) */
+    s16 unk22;  /* velocity Y (*100) */
+    s16 unk24;  /* velocity Z (*100) */
+    s16 unk26;  /* gravity X (*1000) */
+    s16 unk28;  /* gravity Y (*1000) */
+    s16 unk2A;  /* gravity Z (*1000) */
+    s16 unk2C;  /* rotation velocity X */
+    s16 unk2E;  /* rotation velocity Y */
+    s16 unk30;  /* rotation velocity Z */
+    s16 unk32;  /* rotation gravity X (*10) */
+    s16 unk34;  /* rotation gravity Y (*10) */
+    s16 unk36;  /* rotation gravity Z (*10) */
+    u16 unk38;  /* lifetime in frames */
+    u16 unk3A;  /* fade start frame */
+    u8 unk3C;   /* flags: bit0=homing, bit1=path-control, bit2=trail particles */
     u8 pad3D[0x3E - 0x3D];
-    s16 unk3E;
-    s16 unk40;
-    s16 unk42;
-    s16 unk44;
-    s16 unk46;
+    s16 unk3E;  /* gamebit to set on activation */
+    s16 unk40;  /* gamebit to test for activation */
+    s16 unk42;  /* homing target X */
+    s16 unk44;  /* homing target Y */
+    s16 unk46;  /* homing target Z */
 } DimbossicesmashPlacement;
 
 extern f32 timeDelta;
@@ -96,8 +100,7 @@ void dimbossicesmash_free(int* obj)
 
 void fogcontrol_free(int* obj);
 
-/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
- * trigger gamebit, integrate velocity/rotation with per-axis gravity
+/* gate on the trigger gamebit, integrate velocity/rotation with per-axis gravity
  * clamps, run the path-control hooks with surface bounce, fade alpha over
  * the lifetime window, and emit the two trail particles. */
 void dimbossicesmash_update(u8* obj)
@@ -314,10 +317,9 @@ void dimbossicesmash_update(u8* obj)
     }
 }
 
-/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
- * state from the setup record: spawn position/rotation, launch velocity
- * (optionally homing on the target point), rotation velocities and the
- * gravity/clamp direction flags. */
+/* seed the icesmash launch state from the setup record: spawn position/rotation,
+ * launch velocity (optionally homing on the target point), rotation velocities
+ * and the gravity/clamp direction flags. */
 void fn_80196520(u8* obj, u8* state, u8* setup)
 {
     f32 vx, vy, vz;
@@ -387,7 +389,6 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
     ((DimBossIceSmashState*)state)->unk29C = 0;
 }
 
-/* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
 void dimbossicesmash_init(GameObject* obj, u8* params)
 {
     u8* state;
