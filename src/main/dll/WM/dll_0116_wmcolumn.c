@@ -31,7 +31,6 @@ typedef struct WmColumnPlacement
 
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 
-extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_FindNearestObject();
