@@ -2730,8 +2730,8 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
         if (ch2 != NULL && ((GameObject*)obj)->anim.activeMove > -1)
         {
             ObjModel_BuildAnimBlendTable(obj, *(u8**)(model + 0x30), blend);
-            modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x30), -1,
-                                     ((GameObject*)obj)->anim.activeMoveProgress);
+            ((void (*)(u8*, u8*, u8*, f32, int))modelWalkAnimFn_800248b8)(
+                dst, model, *(u8**)(model + 0x30), ((GameObject*)obj)->anim.activeMoveProgress, -1);
         }
     }
 }

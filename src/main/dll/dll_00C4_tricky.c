@@ -2186,7 +2186,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                         }
                     }
                 }
-                ((TrickyState*)state)->unk2D8 += lbl_803E2598 * (f32)hitCount;
+                ((TrickyState*)state)->unk2D8 += lbl_803E2598 * (f32)(int)hitCount;
                 if ((((TrickyState*)state)->flags2DC & 0x4000) != 0)
                 {
                     ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC | 0x10;
@@ -2504,7 +2504,7 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     maxDistance = lbl_803E25B0;
     for (i = 0; i < 4; i++)
     {
-        angle = (angleScale * (f32)((s32)baseAngle + ((u32)(u16)i << 0xe))
+        angle = (angleScale * (f32)(s32)((s32)baseAngle + ((u32)(u16)i << 0xe))
         )
         /
         angleDivisor;

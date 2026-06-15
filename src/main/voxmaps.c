@@ -267,7 +267,7 @@ void voxmaps_initialise(void)
         mgr->slotOrigin[i].gridZ = 0;
     }
 
-    lbl_803DC8D8 = lbl_803DC8DC;
+    lbl_803DC8D8 = *(void* volatile*)&lbl_803DC8DC;
     lbl_803DC8CC = 0;
     lbl_803DC8C0[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
     lbl_803DC8C0[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
@@ -956,12 +956,7 @@ int voxmaps_processRouteQueue(RouteState* state, int count)
             queue[1].value = queue[state->queueCount--].value;
             CurveHeap_SiftDown(queue, state->queueCount, 1);
         }
-        if (nodeIdx < 0)
-        {
-            done = 1;
-            ret = -1;
-        }
-        else
+        if (nodeIdx >= 0)
         {
             node = state->nodes + nodeIdx;
             state->cur = nodeIdx;
@@ -975,6 +970,11 @@ int voxmaps_processRouteQueue(RouteState* state, int count)
                 node->flag = 1;
                 fn_800118EC((int)state, (VoxBoxArg*)node, nodeIdx);
             }
+        }
+        else
+        {
+            done = 1;
+            ret = -1;
         }
         count--;
     }
@@ -1026,7 +1026,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
             else
             {
                 int dx, dz, d2;
-                state->unk1C = count + 1;
+                state->unk1C += 1;
                 node = &state->nodes[count];
                 node->x = out[0];
                 node->unk2 = out[1];
@@ -1365,7 +1365,7 @@ int fn_80011EB0(RouteState* state, int count)
     i = state->cur;
     node = &state->nodes[i];
     node->unkB = 0xff;
-    while ((j = node->unkA) != 0xff)
+    while ((j = node->unkA) != 0xffu)
     {
         node = &state->nodes[j];
         node->unkB = (u8)i;

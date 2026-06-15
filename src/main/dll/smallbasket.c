@@ -74,7 +74,7 @@ extern f32 lbl_803E2B98;
 extern f32 lbl_803E2BB8;
 extern f32 lbl_803E2BD4;
 extern f32 lbl_803E2BE4;
-extern f32 lbl_803E2BE8;
+extern const f32 lbl_803E2BE8;
 extern f32 lbl_803E2BEC;
 extern f32 lbl_803E2BF0;
 extern f32 lbl_803E2BF4;
@@ -694,8 +694,8 @@ void smallbasket_initModelVariantState(s16* obj, u8* state)
 {
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0xb;
-    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x400b0;
-    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x40001040;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x400b0LL;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x40001040LL;
     switch ((s16)obj[0x46 / 2])
     {
     case 0x6a3:
@@ -850,13 +850,20 @@ void fn_80157B58(int* obj, u8* state)
 
 void fn_8015A924(int* obj, u8* state)
 {
+    typedef struct
+    {
+        f32 spd; // 0x0
+        u32 mask; // 0x4
+        u8 moveId; // 0x8
+        u8 next; // 0x9
+        u8 mode; // 0xa
+        u8 pad;
+    } BasketSeq12;
     u8* tbl = *(u8**)((char*)lbl_8031FD48 + *(u16*)(state + 0x338) * 8);
-    ObjHitsPriorityState* hitState;
     int i;
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 10;
-    hitState->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
@@ -890,13 +897,15 @@ void fn_8015A924(int* obj, u8* state)
         }
         if (*(u16*)(state + 0x2a0) < 4)
         {
+            u8* p8 = tbl + 8;
             i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, (int*)state, *(u8*)(tbl + i + 8), *(f32*)((int)tbl + i), 0, 0);
+            Baddie_SetMove(obj, (int*)state, p8[i], *(f32*)((int)tbl + i), 0, 0);
         }
         else
         {
+            u8* p9 = tbl + 9;
             i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, (int*)state, *(u8*)(tbl + i + 9), *(f32*)((int)tbl + i), 0, 0);
+            Baddie_SetMove(obj, (int*)state, p9[i], *(f32*)((int)tbl + i), 0, 0);
         }
         if (((GameObject*)obj)->anim.currentMove == 9)
         {
@@ -1170,7 +1179,7 @@ void fn_80159284(int* obj, u8* state)
             }
             else
             {
-                *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & -65;
+                *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & ~0x40LL;
             }
             break;
         }
@@ -1290,9 +1299,10 @@ void fn_80159FCC(s16* obj, u8* state)
     }
     if (*(f32*)(state + 0x324) > lbl_803E2C30)
     {
+        extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
         Sfx_PlayFromObject((int)obj, 0x3e8);
         i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
-        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (u8)i, *(f32*)(state + 0x324) / lbl_803E2C70);
+        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, i, *(f32*)(state + 0x324) / lbl_803E2C70);
     }
     else
     {
@@ -1548,7 +1558,7 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
         firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
     }
     *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x40;
-    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40;
+    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
     if (cmd == 0x10 && ((BaddieState*)state)->inWhirlpoolGroup != 0)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
@@ -1558,8 +1568,6 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
     if (*(u8*)(state + 0x33f) != 0)
     {
         u8 step;
-        int i;
-        BasketSeq16* e;
         if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             step = 4;
@@ -1568,13 +1576,11 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
         {
             step = 3;
         }
-        i = step * 0x10;
-        Baddie_SetMove((int*)obj, (int*)state, *(u8*)((char*)tbl + i + 8), *(f32*)((int)tbl + i), 0,
-                    *(int*)((char*)tbl + i + 4) & 0xff);
-        e = (BasketSeq16*)((char*)tbl + i);
-        *(u8*)(state + 0x33c) = e->flagC;
+        Baddie_SetMove((int*)obj, (int*)state, tbl[step].moveId, tbl[step].spd, 0,
+                    tbl[step].mask & 0xff);
+        *(u8*)(state + 0x33c) = tbl[step].flagC;
         ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
-        *(u8*)(state + 0x33f) = e->next9;
+        *(u8*)(state + 0x33f) = tbl[step].next9;
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
         if (((GameObject*)obj)->anim.seqId == 0x6a2)
         {
@@ -2139,7 +2145,7 @@ void fn_80158C2C(s16* obj, u8* state)
                 }
                 else
                 {
-                    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40;
+                    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
                 }
                 break;
             }
@@ -2313,9 +2319,10 @@ void fn_80159958(s16* obj, u8* state)
 
     if (*(f32*)(state + 0x324) > lbl_803E2C30)
     {
+        extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
         Sfx_PlayFromObject((int)obj, 0x3e8);
         i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
-        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (u8)i, *(f32*)(state + 0x324) / lbl_803E2C70);
+        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, i, *(f32*)(state + 0x324) / lbl_803E2C70);
     }
     else
     {

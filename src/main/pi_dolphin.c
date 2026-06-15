@@ -5294,7 +5294,7 @@ void fn_8004C7AC(void* p1, void* p2, void* p3, int w, int h)
     int ck3;
     int w2;
     int h2;
-    if (lbl_803DCD6A < 0xc && lbl_803DCD69 < 7 && lbl_803DCD8C < 6 && lbl_803DCD74 < 2)
+    if (lbl_803DCD6A <= 0xb && lbl_803DCD69 <= 6 && lbl_803DCD8C <= 5 && lbl_803DCD74 <= 1)
     {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, 0x7d);
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 1, 4, 0x3c, 0, 0x7d);
@@ -6239,6 +6239,7 @@ void fn_8004D6D8(void)
 
 extern void fn_8006C540(u8 * *out);
 
+#pragma peephole on
 void fn_8004F380(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
@@ -6500,6 +6501,8 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         lbl_803DCD6A = lbl_803DCD6A + 2;
     }
 }
+
+#pragma peephole reset
 
 extern void fn_8006C5B8(void* out);
 
@@ -7060,17 +7063,17 @@ int fileLoadToBuffer(int id, void* buffer)
 int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
 {
     u8 fileInfo[0x3c];
-    void* tmp;
     int asize;
+    void* tmp;
     if (size == 0) return 0;
     if (lbl_8035F3E8[id] != 0)
     {
-        memcpy(buffer, (void*)(lbl_8035F3E8[id] + offset), size);
+        memcpy(buffer, (void*)((char*)lbl_8035F3E8[id] + offset), size);
         DCStoreRange(buffer, size);
         return size;
     }
     DVDOpen(sResourceFileNameTable[id], fileInfo);
-    if (((int)buffer & 0x1fu) != 0 || (size & 0x1fu) != 0)
+    if (((int)buffer & 0x1fu) != 0 || (size & 0x1f) != 0)
     {
         asize = (size + 0x1f) & ~0x1f;
         tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
@@ -7494,13 +7497,13 @@ extern void* displayFrameBuffer;
 #pragma peephole on
 void videoSwapFrameBuffers(void)
 {
-    u16 sync;
+    int sync;
     int tok[3];
     char fifo[140];
 
     lbl_803DCCA0 = lbl_803DCCA0 + 1;
     sync = GXReadDrawSync();
-    if (sync == (u16)(lbl_803DCCAA + 1))
+    if ((u16)sync == (u16)(lbl_803DCCAA + 1))
     {
         lbl_803DCCAA = sync;
         if (displayFrameBuffer == externalFrameBuffer0)
@@ -7549,11 +7552,11 @@ void videoSwapFrameBuffers(void)
 
 void videoFn_800499e8(void)
 {
+    u16* src;
+    u16* dst;
     char peek[8];
     int tok[3];
     int i;
-    u16* src;
-    u16* dst;
 
     if (gAttractMovieState == 2 || gAttractMovieState == 3)
     {
@@ -7649,8 +7652,8 @@ extern void setShouldResetNextFrame(int v);
 extern u8 lbl_803DCCA5;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
-extern u8 lbl_803DDA28;
-extern char lbl_803DB5DC;
+extern u8 enableDebugText;
+extern char sProgramCounterFormat;
 
 void gpuErrorHandler(void)
 {
@@ -7709,7 +7712,7 @@ void gpuErrorHandler(void)
         }
         break;
     }
-    if (lbl_803DDA28 != 0 && lbl_803DCCDC != 0 && (u32)lbl_803DCCAC > 600)
+    if (enableDebugText != 0 && (void*)lbl_803DCCDC != NULL && (u32)lbl_803DCCAC > 600)
     {
         debugPrintfxy(0x32, 100, strs + 0x40000);
         GXReadXfRasMetric(&botPerf0, (int*)&botClks, &botPerf1, (int*)&botClks2);
@@ -7741,7 +7744,7 @@ void gpuErrorHandler(void)
         {
             debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
         }
-        debugPrintfxy(0x32, 0xa0, &lbl_803DB5DC, *(int*)(lbl_803DCCDC + 0x198));
+        debugPrintfxy(0x32, 0xa0, &sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
     }
 }
 

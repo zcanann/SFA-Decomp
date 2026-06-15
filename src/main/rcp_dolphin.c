@@ -1213,9 +1213,10 @@ void textureFn_80053d58(void* vobj)
 {
     u8* obj = (u8*)vobj;
     u8 mipmap = 0;
-    void* texObj = (void*)(obj + 32);
+    void* texObj;
     *(int*)(obj + 64) = 0;
     obj[72] = 0;
+    texObj = (void*)(obj + 32);
     if ((int)obj[29] - (int)obj[28] > 0) mipmap = 1;
     GXInitTexObj(texObj, obj + 96,
                  *(u16*)(obj + 10), *(u16*)(obj + 12),
@@ -1244,6 +1245,7 @@ void textureFn_80053d58(void* vobj)
 extern void findSomething(int);
 extern void mm_free(void*);
 
+#pragma peephole on
 void textureFree(u8* tex)
 {
     u8* iter;
@@ -1297,6 +1299,7 @@ void textureFree(u8* tex)
         while (count != 0);
     }
 }
+#pragma peephole reset
 
 #pragma scheduling on
 #pragma peephole on
@@ -1963,7 +1966,7 @@ void fn_80053C40(u8* tex, u8* obj)
     {
         mipmap = 0;
     }
-    GXInitTexObj(obj, &tex[((Texture*)tex)->imageOffset + 0x60],
+    GXInitTexObj(obj, (u8*)(tex + ((Texture*)tex)->imageOffset + 0x60),
                  ((Texture*)tex)->width, ((Texture*)tex)->height,
                  0, ((Texture*)tex)->wrapS, ((Texture*)tex)->wrapT, mipmap);
     if (mipmap != 0)
@@ -2353,28 +2356,32 @@ int objShouldUnload(u8* obj)
     {
         keep = 0;
     }
-    else if (m == 0)
+    else if (m != 0)
     {
-        keep = 1;
-    }
-    else if (m < 9)
-    {
-        if ((def[3] >> (m - 1)) & 1)
+        if (m < 9)
+        {
+            if ((def[3] >> (m - 1)) & 1)
+            {
+                keep = 0;
+            }
+            else
+            {
+                goto keep1;
+            }
+        }
+        else if ((def[5] >> (0x10 - m)) & 1)
         {
             keep = 0;
         }
         else
         {
+        keep1:
             keep = 1;
         }
     }
-    else if ((def[5] >> (0x10 - m)) & 1)
-    {
-        keep = 0;
-    }
     else
     {
-        keep = 1;
+        goto keep1;
     }
     if (keep == 0)
     {
@@ -2387,7 +2394,7 @@ int objShouldUnload(u8* obj)
     }
     if (flags & 0x10)
     {
-        return !(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, def[6]);
+        return !(u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, def[6]);
     }
     if (((GameObject*)obj)->pendingParentObj != NULL && ((GameObject*)obj)->seqIndex < 0)
     {
@@ -2498,8 +2505,8 @@ void gxTextureFn_80052efc(void)
     union { f32 m[12]; f64 a8; } mtxu;
 #define mtx mtxu.m
     int lights[8];
-    GXColor8 c;
     GXColor8 c2;
+    GXColor8 c;
     int count;
     int i;
     int sel;
