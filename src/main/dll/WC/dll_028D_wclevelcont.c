@@ -193,8 +193,9 @@ void wclevelcont_hitDetect(void)
 {
 }
 
-void wclevelcont_syncProgressBits(WcLevelControlState* state)
+void wclevelcont_syncProgressBits(int stateArg)
 {
+    WcLevelControlState* state = (WcLevelControlState*)stateArg;
     int flag;
 
     if ((*gSkyInterface)->getSunPosition(0))
@@ -264,7 +265,7 @@ void wclevelcont_update(int obj)
         fn_802251B4(obj, state);
         break;
     }
-    wclevelcont_syncProgressBits(state);
+    wclevelcont_syncProgressBits((int)state);
     if ((*gSkyInterface)->getSunPosition(&sunTime))
     {
         GameBit_Set(0x7f3, 1);
