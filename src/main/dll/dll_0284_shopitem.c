@@ -1,12 +1,8 @@
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/dll/DR/DRpushcart.h"
 #include "main/objseq.h"
-#include "main/screen_transition.h"
 
 typedef struct ShopitemState
 {
