@@ -1772,7 +1772,7 @@ void sceneDraw(void)
         {
             drawSkyStars();
         }
-        (*gSkyInterface)->render();
+        ((void (*)(int, int, int, int, int))(*gSkyInterface)->render)(0, 0, 0, 0, flag);
         if ((renderFlags & 0x10) != 0)
         {
             (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
@@ -1780,7 +1780,7 @@ void sceneDraw(void)
     }
     else
     {
-        (*gSkyInterface)->render();
+        ((void (*)(int, int, int, int, int))(*gSkyInterface)->render)(0, 0, 0, 0, flag);
         (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }
