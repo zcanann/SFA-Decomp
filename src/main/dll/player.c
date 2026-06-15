@@ -123,10 +123,12 @@ int fn_80295CBC(int obj)
 
 void fn_802961FC(int a, u8 type)
 {
+    u8 v = type;
     if (type > 2)
     {
-        lbl_803DE459 = 0;
+        v = 0;
     }
+    lbl_803DE459 = v;
 }
 
 int fn_8029630C(int obj)
@@ -9183,11 +9185,15 @@ void fn_80296C84(int obj)
     {
         v = 0;
     }
-    else if (v > *(s8*)((char*)deref + 1))
+    else
     {
-        v = *(s8*)((char*)deref + 1);
+        int hi = *(s8 volatile*)((char*)deref + 1);
+        if (v > hi)
+        {
+            v = hi;
+        }
     }
-    *(s8*)((char*)inner->playerStatus) = (s8)v;
+    *(s8*)((char*)*(int volatile*)((char*)inner + 0x35C)) = (s8)v;
     Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 1;
     inner->unk79C = lbl_803E7EA4;
