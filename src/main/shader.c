@@ -47,6 +47,13 @@ extern f32 lbl_803DF868;
 
 extern char lbl_8030E4B0[];
 extern int gMapBlockLayerTables[5];
+typedef struct WarpVec
+{
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 pad;
+} WarpVec;
 extern u8 lbl_80386648[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -194,7 +201,7 @@ test:
     if (useObj != 0)
     {
         off = (s8)viewSlot << 4;
-        x = *(f32*)(lbl_80386648 + off);
+        x = ((WarpVec*)lbl_80386648)[(s8)viewSlot].x;
         p = (f32*)(lbl_80386648 + off);
         y = p[1];
         z = p[2];
