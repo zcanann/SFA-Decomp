@@ -63,12 +63,12 @@ void wm_column_free(int obj)
     (*gCarryableInterface)->free(obj);
 }
 
-void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void wm_column_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, f32 scale); /* #57 */
-    if ((*gCarryableInterface)->isVisible(param_1, visible) != 0)
+    if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
     {
-        objRenderFn_8003b8f4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
+        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E37B8);
     }
 }
 

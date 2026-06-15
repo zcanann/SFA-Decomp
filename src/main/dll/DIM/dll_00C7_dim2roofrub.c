@@ -393,36 +393,36 @@ extern f32 lbl_803E327C;
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void selectTexture(void* tex, int x);
 
-void staticCamera_free(int param_1)
+void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(param_1, 7);
+    ObjGroup_RemoveObject(obj, 7);
     return;
 }
 
-void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void staticCamera_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
     return;
 }
 
-void staticCamera_init(short* param_1, int param_2, int param_3)
+void staticCamera_init(short* obj, int def, int skipAdd)
 {
-    undefined* puVar1;
+    undefined* extra;
 
-    *param_1 = -*(short*)(param_2 + 0x1c);
-    param_1[1] = -*(short*)(param_2 + 0x1e);
-    param_1[2] = -*(short*)(param_2 + 0x20);
-    puVar1 = *(undefined**)(param_1 + 0x5c);
-    *puVar1 = *(undefined*)(param_2 + 0x19);
-    *(float*)(puVar1 + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
-    puVar1[1] = 0;
-    if (param_3 == 0)
+    *obj = -*(short*)(def + 0x1c);
+    obj[1] = -*(short*)(def + 0x1e);
+    obj[2] = -*(short*)(def + 0x20);
+    extra = *(undefined**)(obj + 0x5c);
+    *extra = *(undefined*)(def + 0x19);
+    *(float*)(extra + 4) =
+        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(def + 0x1a)) - DOUBLE_803e3e88);
+    extra[1] = 0;
+    if (skipAdd == 0)
     {
-        ObjGroup_AddObject((int)param_1, 7);
+        ObjGroup_AddObject((int)obj, 7);
     }
     return;
 }
