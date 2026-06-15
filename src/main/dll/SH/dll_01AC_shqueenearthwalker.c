@@ -166,11 +166,12 @@ void sh_queenearthwalker_update(void* obj)
             break;
         case 3:
         case 4:
+        case 5:
+        case 6:
+        case 7:
             (*gObjectTriggerInterface)->preempt((int)obj, 0x18f6);
             (*gObjectTriggerInterface)->runSequence(6, obj, 1);
             ((QueenEarthWalkerState*)state)->stateIndex = 3;
-            break;
-        case 5:
             break;
         case 8:
             target = ObjGroup_FindNearestObject(0xf, obj, NULL);
