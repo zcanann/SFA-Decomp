@@ -3,12 +3,12 @@
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 #include "main/objseq.h"
+#include "main/sky_interface.h"
 
 extern undefined4 Music_Trigger();
 extern undefined4 FUN_80006824();
 extern byte gameTimerIsRunning();
 extern double FUN_80006b3c();
-extern byte FUN_80006b44();
 extern undefined4 FUN_80006b4c();
 extern undefined4 FUN_80006b50();
 extern undefined4 FUN_80006b54();
@@ -17,10 +17,10 @@ extern undefined4 GameBit_Set();
 extern undefined4 SCGameBitLatch_Update();
 extern u8* Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
-extern undefined4* DAT_803dd6d8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5F10;
+extern f32 lbl_803E5278;
 extern f32 lbl_803E5F14;
+extern f32 timeDelta;
+extern int isGameTimerDisabled(void);
 
 extern uint GameBit_Get(int id);
 extern f32 lbl_803E5280;
@@ -48,13 +48,13 @@ void nw_levcontrol_update(int objArg)
     obj = objArg;
     state = (float*)((GameObject*)obj)->extra;
     player = (short*)Obj_GetPlayerObject();
-    if (*state > lbl_803E5F10)
+    if (*state > lbl_803E5278)
     {
         gameTextShow(0x435);
-        *state = *state - lbl_803DC074;
-        if (*state < lbl_803E5F10)
+        *state = *state - timeDelta;
+        if (*state < lbl_803E5278)
         {
-            *state = *(f32 *)&lbl_803E5F10;
+            *state = *(f32 *)&lbl_803E5278;
         }
     }
     mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
@@ -71,19 +71,28 @@ void nw_levcontrol_update(int objArg)
         GameBit_Set(0xf24, 1);
         GameBit_Set(0xf25, 1);
     }
-    val = (**(code**)(*DAT_803dd6d8 + 0x24))(0);
-    if (val == 0)
+    val = (*gSkyInterface)->getSunPosition(0);
+    if (val != 0)
     {
-        if ((*(short*)(state + 4) != 0x1a) &&
-            (*(undefined2*)(state + 4) = 0x1a, (*((uint*)state + 2) & 0x10) != 0))
+        if (*(short*)(state + 4) != -1)
         {
-            Music_Trigger((int*)0x1a, 1);
+            *(short*)(state + 4) = -1;
+            if ((*((int*)state + 2) & 0x10) != 0)
+            {
+                Music_Trigger((int*)0x1a, 0);
+            }
         }
     }
-    else if ((*(short*)(state + 4) != -1) &&
-        (*(undefined2*)(state + 4) = 0xffff, (*((uint*)state + 2) & 0x10) != 0))
+    else
     {
-        Music_Trigger((int*)0x1a, 0);
+        if (*(short*)(state + 4) != 0x1a)
+        {
+            *(short*)(state + 4) = 0x1a;
+            if ((*((int*)state + 2) & 0x10) != 0)
+            {
+                Music_Trigger((int*)0x1a, 1);
+            }
+        }
     }
     SCGameBitLatch_Update(state + 2, 8, -1, -1, 0x3a0, (int*)0x35);
     SCGameBitLatch_Update(state + 2, 0x10, -1, -1, 0x3a1, (int*)(int)*(short*)(state + 4));
@@ -105,7 +114,7 @@ void nw_levcontrol_update(int objArg)
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
     }
-    if (((*((uint*)state + 2) & 2) == 0) || (flag = FUN_80006b44(), flag == 0))
+    if (((*((uint*)state + 2) & 2) == 0) || isGameTimerDisabled() == 0)
     {
         switch (*(undefined*)(state + 1))
         {
@@ -147,13 +156,13 @@ void nw_levcontrol_update(int objArg)
             }
             break;
         case 9:
-            if ((player[0x58] & 0x1000U) != 0)
+            if ((*(u16*)(player + 0x58) & 0x1000U) != 0)
             {
                 *(undefined*)(state + 1) = 10;
             }
             break;
         case 10:
-            if ((player[0x58] & 0x1000U) == 0)
+            if ((*(u16*)(player + 0x58) & 0x1000U) == 0)
             {
                 bitVal2 = *((uint*)state + 2);
                 if ((bitVal2 & 1) != 0)
