@@ -34,19 +34,33 @@ STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-/* Ghidra-split phantom retained to keep the unit's function set (and thus
-   the linked layout) aligned with v1.0; body is empty in retail. */
-void FUN_801e55c0(u32 param_1, double param_2, double param_3, u32 param_4, u32 param_5,
-                  u32 param_6, u32 param_7, u32 param_8, u16* param_9, int param_10)
-{
-}
+int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
+int SB_ShipGunBroke_getObjectTypeId(void) { return 0x0; }
 
 void SB_ShipGunBroke_free(void)
 {
 }
 
+void SB_ShipGunBroke_render(GameObject* obj, int p2, int p3, int p4, int p5)
+{
+    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
+    if ((u32)GameBit_Get(placement->destroyedGameBit) != 0u)
+    {
+        ((void(*)(GameObject*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
+    }
+}
+
 void SB_ShipGunBroke_hitDetect(void)
 {
+}
+
+void SB_ShipGunBroke_update(GameObject* obj)
+{
+    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
+    if ((u32)GameBit_Get(placement->destroyedGameBit) != 0u)
+    {
+        Sfx_PlayFromObject((int*)obj, SFXen_nlite1_c);
+    }
 }
 
 void SB_ShipGunBroke_init(void)
@@ -59,25 +73,4 @@ void SB_ShipGunBroke_release(void)
 
 void SB_ShipGunBroke_initialise(void)
 {
-}
-
-int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
-int SB_ShipGunBroke_getObjectTypeId(void) { return 0x0; }
-
-void SB_ShipGunBroke_render(GameObject* obj, int p2, int p3, int p4, int p5)
-{
-    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
-    if ((u32)GameBit_Get(placement->destroyedGameBit) != 0u)
-    {
-        ((void(*)(GameObject*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
-    }
-}
-
-void SB_ShipGunBroke_update(GameObject* obj)
-{
-    SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
-    if ((u32)GameBit_Get(placement->destroyedGameBit) != 0u)
-    {
-        Sfx_PlayFromObject((int*)obj, SFXen_nlite1_c);
-    }
 }
