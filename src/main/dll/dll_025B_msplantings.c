@@ -63,7 +63,6 @@ extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
 extern void objRenderFn_8003b8f4(f32);
-extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int id);
@@ -78,13 +77,11 @@ extern f32 lbl_803E45FC;
 extern f32 lbl_803E4600;
 extern f32 lbl_803E4604;
 extern f32 lbl_803E4608;
-extern int Obj_AllocObjectSetup(int size, int type);
 extern f32 lbl_803E45D8;
 extern f32 lbl_803E45E0;
 extern f32 lbl_803E45E4;
 extern f32 mathSinf(f32 x);
 extern void fn_8003B608(int r, int g, int b);
-extern void objSetSlot(void* obj, int slot);
 
 void FUN_801a8f88(void)
 {
