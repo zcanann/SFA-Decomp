@@ -2209,6 +2209,7 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
 
 #pragma dont_inline off
 #pragma opt_common_subs on
+#pragma optimization_level 1
 void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
 {
     int tmp;
@@ -2240,6 +2241,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     }
     return animLoadFromTable((u8*)hdr, id, (s16)b, bufout);
 }
+#pragma optimization_level reset
 
 typedef struct
 {
