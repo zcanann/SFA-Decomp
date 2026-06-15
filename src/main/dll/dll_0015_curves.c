@@ -370,7 +370,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
         ((GameObject*)obj)->anim.worldPosY *= averageScale;
         ((GameObject*)obj)->anim.worldPosZ *= averageScale;
 
-        if ((collision->flags & 0x8600) != 0)
+        if ((s32)(collision->flags & 0x8600) != 0)
         {
         transform.angles[0] = -((GameObject*)obj)->anim.rotX;
             transform.angles[1] = -((GameObject*)obj)->anim.rotY;
@@ -403,13 +403,13 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
                 idx2 = 1;
                 idx3 = 1;
             }
-            if ((collision->flags & 0x8000) != 0)
+            if ((s32)(collision->flags & 0x8000) != 0)
             {
                 angle = getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
                                  (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
             ((GameObject*)obj)->anim.rotX += (s16)(angle - 0x8000) >> 2;
             }
-            if ((collision->flags & 0x200) != 0)
+            if ((s32)(collision->flags & 0x200) != 0)
             {
                 angle = getAngle(((localY[idx2] - localY[idx1]) + (localY[idx3] - localY[0])) *
                                  lbl_803E0690,
@@ -417,7 +417,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
                                  lbl_803E0690);
                 collision->tiltPitch = -angle;
             }
-            if ((pointCount == 4) && ((collision->flags & 0x400) != 0))
+            if ((pointCount == 4) && ((s32)(collision->flags & 0x400) != 0))
             {
                 angle = getAngle(((localY[idx1] - localY[0]) + (localY[idx2] - localY[idx3])) *
                                  lbl_803E0690,
