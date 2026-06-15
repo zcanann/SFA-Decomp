@@ -69,7 +69,7 @@ extern f32 lbl_803E53F0;
 extern void* lbl_803DDB40;
 extern f32 lbl_803E4708;
 extern void objRenderFn_8003b8f4(f32);
-extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** listOut, int p3, int p4);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
 extern float Vec_distance(float* a, float* b);
@@ -307,19 +307,18 @@ f32 fn_801ACCFC(int obj)
     int count;
     int i;
     int bestIdx;
-    f32 limit;
     f32 bestDist;
-    count = hitDetectFn_80065e50(obj, &list, 0, 0,
+    count = hitDetectFn_80065e50(obj,
                                  ((GameObject*)obj)->anim.localPosX,
                                  ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ);
+                                 ((GameObject*)obj)->anim.localPosZ,
+                                 &list, 0, 0);
     bestDist = lbl_803E4700;
     bestIdx = -1;
-    limit = lbl_803E4704;
     for (i = 0; i < count; i++)
     {
         f32 dy = ((GameObject*)obj)->anim.localPosY - *(f32*)list[i];
-        if (dy > limit && dy < bestDist)
+        if (dy > lbl_803E4704 && dy < bestDist)
         {
             bestDist = dy;
             bestIdx = i;
