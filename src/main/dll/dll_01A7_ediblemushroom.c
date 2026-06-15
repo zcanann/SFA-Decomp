@@ -1,7 +1,5 @@
-#include "main/dll/NW/dll_01A7_ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/curve_walker.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/SH/SHthorntail_internal.h"
@@ -9,7 +7,6 @@
 #include "main/audio/sfx.h"
 #include "main/dll/NW/ediblemushroom_state.h"
 #include "main/dll/ediblemushroom.h"
-#include "main/effect_interfaces.h"
 #include "main/objhits.h"
 
 extern undefined8 ObjGroup_RemoveObject();
