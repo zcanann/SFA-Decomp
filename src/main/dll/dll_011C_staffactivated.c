@@ -75,7 +75,6 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
 STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
 STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
 STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
-extern f32 lbl_803E3C20;
 
 void staffactivated_calcInteractionTargetXZ(int obj, f32* outX, f32* outZ)
 {
