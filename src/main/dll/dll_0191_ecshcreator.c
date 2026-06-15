@@ -30,12 +30,10 @@ extern undefined4 DAT_803dc070;
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern int GameBit_Get(int bit);
 extern f32 lbl_803E4FF8;
-extern int objCreateLight(int a, int b);
 extern u8* mmAlloc(int size, int tag, int p);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 framesThisStep;
-extern f32 lbl_803E5000;
 
 void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
