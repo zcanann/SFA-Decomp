@@ -2835,7 +2835,7 @@ void characterDoEyeAnims(int obj, int p2)
                     else
                     {
                         v = 0x2ff;
-                        *(u8*)(p2 + 0x1e) = 0x81;
+                        *(s8*)(p2 + 0x1e) = -127;
                     }
                     *(u8*)(p2 + 0x1f) = 0x28;
                 }
