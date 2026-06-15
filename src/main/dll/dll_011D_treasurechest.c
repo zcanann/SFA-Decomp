@@ -17,10 +17,10 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
 int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int i;
     TreasureChestSetup * setup;
     u8* state;
     u8 eventId;
+    int i;
 
     setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
