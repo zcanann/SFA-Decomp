@@ -1746,45 +1746,45 @@ void FUN_80040cd0(undefined flag)
 
 void FUN_80040da0(void)
 {
-    bool bVar1;
-    int iVar2;
-    int iVar3;
-    uint uVar4;
-    undefined4 uVar5;
-    int jointIdx;
-    uint* puVar7;
-    short* psVar8;
-    int* piVar9;
-    undefined* child0;
-    int iVar11;
+    bool done;
+    int mode;
+    int status;
+    uint newPtr;
+    undefined4 delay;
+    int i;
+    uint* slotPtr;
+    short* idTblPtr;
+    int* sizePtr;
+    undefined* flagPtr;
+    int pass;
 
-    iVar2 = FUN_80286828();
-    bVar1 = false;
-    iVar11 = 0;
+    mode = FUN_80286828();
+    done = false;
+    pass = 0;
     FUN_8001782c(2);
     FUN_80243e74();
-    jointIdx = DAT_803dd900;
+    i = DAT_803dd900;
     FUN_80243e9c();
-    if (jointIdx == 0)
+    if (i == 0)
     {
-        if ((iVar2 == 0) && (DAT_803dd8f8 == 0))
+        if ((mode == 0) && (DAT_803dd8f8 == 0))
         {
             FUN_800530b4();
             DAT_803dd8f8 = 6;
         }
         else
         {
-            if (iVar2 != 0)
+            if (mode != 0)
             {
                 FUN_800177b4(1);
-                jointIdx = 0;
-                puVar7 = &DAT_80360048;
-                psVar8 = &DAT_803601a8;
-                piVar9 = &DAT_8035fd08;
-                child0 = &DAT_8035fb50;
+                i = 0;
+                slotPtr = &DAT_80360048;
+                idTblPtr = &DAT_803601a8;
+                sizePtr = &DAT_8035fd08;
+                flagPtr = &DAT_8035fb50;
                 do
                 {
-                    switch (jointIdx)
+                    switch (i)
                     {
                     case 0xd:
                     case 0x1b:
@@ -1798,40 +1798,40 @@ void FUN_80040da0(void)
                     case 0x4d:
                     case 0x54:
                     case 0x55:
-                        if (((((*puVar7 != 0) && (*psVar8 != -1)) && (iVar3 = FUN_80017800(*puVar7), iVar3 == 0)
-                        ) && ((iVar2 != 2 ||
-                            (((jointIdx != 0x20 && (jointIdx != 0x4b)) && ((jointIdx != 0x23 && (jointIdx != 0x4d))))
-                            )))) && (uVar4 = FUN_80017830(*piVar9 + 0x20, 0x7d7d7d7d), uVar4 != 0))
+                        if (((((*slotPtr != 0) && (*idTblPtr != -1)) && (status = FUN_80017800(*slotPtr), status == 0)
+                        ) && ((mode != 2 ||
+                            (((i != 0x20 && (i != 0x4b)) && ((i != 0x23 && (i != 0x4d))))
+                            )))) && (newPtr = FUN_80017830(*sizePtr + 0x20, 0x7d7d7d7d), newPtr != 0))
                         {
-                            FUN_80003494(uVar4, *puVar7, *piVar9);
-                            uVar5 = FUN_80017818(0);
-                            FUN_80017814(*puVar7);
-                            *puVar7 = 0;
-                            *puVar7 = uVar4;
-                            FUN_80017818(uVar5);
+                            FUN_80003494(newPtr, *slotPtr, *sizePtr);
+                            delay = FUN_80017818(0);
+                            FUN_80017814(*slotPtr);
+                            *slotPtr = 0;
+                            *slotPtr = newPtr;
+                            FUN_80017818(delay);
                         }
                     }
-                    *child0 = 0;
-                    puVar7 = puVar7 + 1;
-                    psVar8 = psVar8 + 1;
-                    piVar9 = piVar9 + 1;
-                    child0 = child0 + 1;
-                    jointIdx = jointIdx + 1;
+                    *flagPtr = 0;
+                    slotPtr = slotPtr + 1;
+                    idTblPtr = idTblPtr + 1;
+                    sizePtr = sizePtr + 1;
+                    flagPtr = flagPtr + 1;
+                    i = i + 1;
                 }
-                while (jointIdx < 0x58);
+                while (i < 0x58);
                 FUN_800177b4(0xffffffff);
             }
-            for (; (!bVar1 && (iVar11 < 10)); iVar11 = iVar11 + 1)
+            for (; (!done && (pass < 10)); pass = pass + 1)
             {
-                bVar1 = true;
-                jointIdx = 0;
-                puVar7 = &DAT_80360048;
-                psVar8 = &DAT_803601a8;
-                piVar9 = &DAT_8035fd08;
-                child0 = &DAT_8035fb50;
+                done = true;
+                i = 0;
+                slotPtr = &DAT_80360048;
+                idTblPtr = &DAT_803601a8;
+                sizePtr = &DAT_8035fd08;
+                flagPtr = &DAT_8035fb50;
                 do
                 {
-                    switch (jointIdx)
+                    switch (i)
                     {
                     case 0xd:
                     case 0x1b:
@@ -1845,75 +1845,75 @@ void FUN_80040da0(void)
                     case 0x4d:
                     case 0x54:
                     case 0x55:
-                        if (((*puVar7 == 0) || (*psVar8 == -1)) || (iVar3 = FUN_80017800(*puVar7), iVar3 != 0))
+                        if (((*slotPtr == 0) || (*idTblPtr == -1)) || (status = FUN_80017800(*slotPtr), status != 0))
                         {
-                            if (((((iVar2 != 2) && (iVar11 != 0)) && ((*puVar7 != 0 && (*psVar8 != -1)))) &&
-                                    ((iVar3 = FUN_80017800(*puVar7), iVar3 == 1 ||
-                                        (iVar3 = FUN_80017800(*puVar7), iVar3 == 2)))) &&
-                                ((uVar4 = FUN_80017824(*puVar7), 0x2fff < (int)uVar4 &&
-                                    (uVar4 = FUN_80017830(*piVar9 + 0x20, 0x7d7d7d7d), uVar4 != 0))))
+                            if (((((mode != 2) && (pass != 0)) && ((*slotPtr != 0 && (*idTblPtr != -1)))) &&
+                                    ((status = FUN_80017800(*slotPtr), status == 1 ||
+                                        (status = FUN_80017800(*slotPtr), status == 2)))) &&
+                                ((newPtr = FUN_80017824(*slotPtr), 0x2fff < (int)newPtr &&
+                                    (newPtr = FUN_80017830(*sizePtr + 0x20, 0x7d7d7d7d), newPtr != 0))))
                             {
-                                iVar3 = FUN_80017800(uVar4);
-                                if (iVar3 == 0)
+                                status = FUN_80017800(newPtr);
+                                if (status == 0)
                                 {
-                                    FUN_80003494(uVar4, *puVar7, *piVar9);
-                                    uVar5 = FUN_80017818(0);
-                                    FUN_80017814(*puVar7);
-                                    *puVar7 = 0;
-                                    *puVar7 = uVar4;
-                                    FUN_80017818(uVar5);
-                                    bVar1 = false;
+                                    FUN_80003494(newPtr, *slotPtr, *sizePtr);
+                                    delay = FUN_80017818(0);
+                                    FUN_80017814(*slotPtr);
+                                    *slotPtr = 0;
+                                    *slotPtr = newPtr;
+                                    FUN_80017818(delay);
+                                    done = false;
                                 }
                                 else
                                 {
-                                    uVar5 = FUN_80017818(0);
-                                    FUN_80017814(uVar4);
-                                    FUN_80017818(uVar5);
+                                    delay = FUN_80017818(0);
+                                    FUN_80017814(newPtr);
+                                    FUN_80017818(delay);
                                 }
                             }
                         }
                         else
                         {
-                            uVar4 = FUN_80017830(*piVar9 + 0x20, 0x7d7d7d7d);
-                            if (uVar4 != 0)
+                            newPtr = FUN_80017830(*sizePtr + 0x20, 0x7d7d7d7d);
+                            if (newPtr != 0)
                             {
-                                iVar3 = *piVar9;
-                                if ((iVar3 < 210000) || (uVar4 <= *puVar7))
+                                status = *sizePtr;
+                                if ((status < 210000) || (newPtr <= *slotPtr))
                                 {
-                                    if ((iVar3 < 210000) && (uVar4 < *puVar7))
+                                    if ((status < 210000) && (newPtr < *slotPtr))
                                     {
-                                        uVar5 = FUN_80017818(0);
-                                        FUN_80017814(uVar4);
-                                        FUN_80017818(uVar5);
+                                        delay = FUN_80017818(0);
+                                        FUN_80017814(newPtr);
+                                        FUN_80017818(delay);
                                     }
                                     else
                                     {
-                                        FUN_80003494(uVar4, *puVar7, iVar3);
-                                        uVar5 = FUN_80017818(0);
-                                        FUN_80017814(*puVar7);
-                                        *puVar7 = 0;
-                                        *puVar7 = uVar4;
-                                        FUN_80017818(uVar5);
-                                        bVar1 = false;
+                                        FUN_80003494(newPtr, *slotPtr, status);
+                                        delay = FUN_80017818(0);
+                                        FUN_80017814(*slotPtr);
+                                        *slotPtr = 0;
+                                        *slotPtr = newPtr;
+                                        FUN_80017818(delay);
+                                        done = false;
                                     }
                                 }
                                 else
                                 {
-                                    uVar5 = FUN_80017818(0);
-                                    FUN_80017814(uVar4);
-                                    FUN_80017818(uVar5);
+                                    delay = FUN_80017818(0);
+                                    FUN_80017814(newPtr);
+                                    FUN_80017818(delay);
                                 }
                             }
                         }
                     }
-                    *child0 = 0;
-                    puVar7 = puVar7 + 1;
-                    psVar8 = psVar8 + 1;
-                    piVar9 = piVar9 + 1;
-                    child0 = child0 + 1;
-                    jointIdx = jointIdx + 1;
+                    *flagPtr = 0;
+                    slotPtr = slotPtr + 1;
+                    idTblPtr = idTblPtr + 1;
+                    sizePtr = sizePtr + 1;
+                    flagPtr = flagPtr + 1;
+                    i = i + 1;
                 }
-                while (jointIdx < 0x58);
+                while (i < 0x58);
             }
             FUN_8001782c(0);
         }
@@ -2068,7 +2068,7 @@ undefined4 FUN_80043E64(uint* param_1, int param_2, int param_3)
     uint* puVar7;
     uint* puVar8;
     uint* puVar9;
-    uint* child0;
+    uint* dst;
 
     iVar4 = 0;
     bVar1 = false;
@@ -2162,26 +2162,26 @@ undefined4 FUN_80043E64(uint* param_1, int param_2, int param_3)
     {
         puVar9 = (uint*)&DAT_80350c70;
         puVar7 = puVar8;
-        child0 = puVar3;
+        dst = puVar3;
         for (; iVar5 != 0; iVar5 = iVar5 + -1)
         {
             if (((bVar1) || (uVar6 = *puVar7, uVar6 == 0xffffffff)) || ((uVar6 & 0x10000000) == 0))
             {
-                if (((bVar2) || (uVar6 = *child0, uVar6 == 0xffffffff)) || ((uVar6 & 0x10000000) == 0))
+                if (((bVar2) || (uVar6 = *dst, uVar6 == 0xffffffff)) || ((uVar6 & 0x10000000) == 0))
                 {
                     if ((bVar1) || (*puVar7 != 0xffffffff))
                     {
-                        if ((bVar2) || (*child0 != 0xffffffff))
+                        if ((bVar2) || (*dst != 0xffffffff))
                         {
                             if ((bVar1) || (*puVar7 == 0))
                             {
-                                if ((bVar2) || (*child0 == 0))
+                                if ((bVar2) || (*dst == 0))
                                 {
                                     *puVar9 = 0;
                                 }
                                 else
                                 {
-                                    *puVar9 = *child0;
+                                    *puVar9 = *dst;
                                 }
                             }
                             else
@@ -2213,14 +2213,14 @@ undefined4 FUN_80043E64(uint* param_1, int param_2, int param_3)
             else
             {
                 *puVar9 = uVar6;
-                if ((puVar3 != (uint*)0x0) && (*child0 == 0xffffffff))
+                if ((puVar3 != (uint*)0x0) && (*dst == 0xffffffff))
                 {
                     bVar2 = true;
                 }
             }
             puVar7 = puVar7 + 1;
             puVar9 = puVar9 + 1;
-            child0 = child0 + 1;
+            dst = dst + 1;
             iVar4 = iVar4 + 1;
         }
     }
@@ -2284,7 +2284,7 @@ undefined4 FUN_80043E64(uint* param_1, int param_2, int param_3)
     {
         puVar9 = puVar8;
         puVar7 = puVar3;
-        child0 = param_1;
+        dst = param_1;
         if (param_1 == (uint*)&DAT_80346d30)
         {
             puVar9 = (uint*)&DAT_80346d30;
@@ -2362,31 +2362,31 @@ undefined4 FUN_80043E64(uint* param_1, int param_2, int param_3)
                         {
                             if ((bVar2) || (puVar3 == (uint*)0x0))
                             {
-                                *child0 = 0;
+                                *dst = 0;
                             }
                             else
                             {
-                                *child0 = *puVar7;
+                                *dst = *puVar7;
                             }
                         }
                         else
                         {
-                            *child0 = *puVar9;
+                            *dst = *puVar9;
                         }
                     }
                     else
                     {
-                        *child0 = uVar6 & 0xffffff | 0x20000000;
+                        *dst = uVar6 & 0xffffff | 0x20000000;
                     }
                 }
                 else
                 {
-                    *child0 = uVar6;
+                    *dst = uVar6;
                 }
                 iVar4 = iVar4 + 1;
                 puVar9 = puVar9 + 1;
                 puVar7 = puVar7 + 1;
-                child0 = child0 + 1;
+                dst = dst + 1;
             }
         }
     }
