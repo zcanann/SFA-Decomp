@@ -69,20 +69,20 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 #define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
+    (TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st) \
     { \
-        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_HELPERS_ACTIVE_FLAG; \
+        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_HELPERS_ACTIVE_FLAG; \
         TRICKY_RUNTIME(st)->flags |= TRICKY_STATE_HELPERS_FINISHED_FLAG; \
     }
 
 #define TRICKY_CLEAR_RESET_FLAGS(st) \
     { \
-        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_10; \
-        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_10000; \
-        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_20000; \
-        TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_RESET_FLAG_40000; \
+        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_10; \
+        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_10000; \
+        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_20000; \
+        TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_40000; \
         *(s8 *)((u8 *)(st) + 0xd) = -1; \
     }
 
@@ -609,7 +609,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                     }
                 }
             }
-            trickyState->flags &= ~TRICKY_STATE_RESET_FLAG_10;
+            trickyState->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_10;
             if (trickyGuardFindBaddieTarget(trickyState) == 0)
             {
                 newTarget = (int)&trickyState->homeObj->worldPosX;
@@ -695,7 +695,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         trickyDebugPrint(strBase + 0x6c8);
         if ((double)obj->currentMoveProgress <= (double)lbl_803E2420)
         {
-            trickyState->flags &= ~TRICKY_STATE_RESET_FLAG_10;
+            trickyState->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_10;
             if (trickyGuardFindBaddieTarget(trickyState) == 0)
             {
                 newTarget = (int)&trickyState->homeObj->worldPosX;
