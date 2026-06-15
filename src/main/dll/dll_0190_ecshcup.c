@@ -1,9 +1,6 @@
 /* DLL 0x190 - ECSHCup [801C835C-801C83D0) */
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
-#include "main/screen_transition.h"
-#include "main/dll/dll_0190_ecshcup.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern GameObject* Obj_GetPlayerObject(void);
