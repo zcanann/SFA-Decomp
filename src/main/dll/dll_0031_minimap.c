@@ -128,7 +128,6 @@ extern void titlescreen_update(u8 * obj);
 extern void titlescreen_init(u8 * obj, u8 * p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
-extern u8 lbl_803A9FE4[0x34];
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(void*);
 extern void* debugLogEnd;
@@ -153,8 +152,6 @@ extern f32 lbl_803E227C;
 extern f32 lbl_803E2280;
 extern void* lbl_803DD960;
 extern f32 timeDelta;
-extern u32 lbl_803DDA00;
-extern void OSSetErrorHandler(int kind, void* handler);
 extern void Sfx_StopFromObject(int obj, int id);
 extern u32 lbl_803E2200;
 extern f32 lbl_803DD94C;
@@ -164,7 +161,6 @@ extern f32 lbl_803E2268;
 extern f32 lbl_803E226C;
 extern f32 lbl_803E2270;
 extern f32 lbl_803E2274;
-extern u8 enableDebugText;
 extern int getButtonsHeld(int p);
 extern int getButtonsJustPressed(int p);
 extern f32 powfCoreFast(f32 base, f32 exp);
@@ -182,7 +178,6 @@ extern f32 lbl_803DBBE4;
 extern f32 lbl_803E2294;
 extern f32 lbl_803E2298;
 extern f32 lbl_803E229C;
-extern void GXSetTevColor(int id, int* color);
 
 int Minimap_update(void)
 {
