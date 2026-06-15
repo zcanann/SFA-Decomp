@@ -1606,8 +1606,7 @@ void macInit(void)
     int off;
     u32 i;
 
-    macRealTimeLo = 0;
-    off = 0;
+    macRealTimeLo = off = 0;
     macActiveRoot = 0;
     macTimeQueueRoot = 0;
     macRealTimeHi = 0;
