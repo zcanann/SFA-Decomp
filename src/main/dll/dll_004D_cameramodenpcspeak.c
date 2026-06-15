@@ -86,7 +86,6 @@ extern f32 lbl_803DB9B4;
 extern f32 lbl_803DB9B8;
 extern int lbl_803DB9BC;
 extern f32 lbl_803DD580;
-extern CameraModeTitlePose lbl_803A4420;
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 extern f32 lbl_803DB9C4;
 extern s16 getAngle(f32 x, f32 z);
