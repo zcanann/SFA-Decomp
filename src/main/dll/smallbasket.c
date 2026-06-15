@@ -891,12 +891,12 @@ void fn_8015A924(int* obj, u8* state)
         if (*(u16*)(state + 0x2a0) < 4)
         {
             i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, (int*)state, *(u8*)(tbl + i + 8), *(f32*)((int)tbl + i), 0, 0);
+            Baddie_SetMove(obj, (int*)state, (tbl + i)[8], *(f32*)((int)tbl + i), 0, 0);
         }
         else
         {
             i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, (int*)state, *(u8*)(tbl + i + 9), *(f32*)((int)tbl + i), 0, 0);
+            Baddie_SetMove(obj, (int*)state, (tbl + i)[9], *(f32*)((int)tbl + i), 0, 0);
         }
         if (((GameObject*)obj)->anim.currentMove == 9)
         {
