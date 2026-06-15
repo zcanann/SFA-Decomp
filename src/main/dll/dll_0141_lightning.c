@@ -1,11 +1,6 @@
 /* DLL 0x0141 (lightning) — MMP lightning object [0x801978A0-0x80197DA8). */
-#include "main/dll/MMP/MMP_asteroid.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/MMP/MMP_moonrock.h"
-#include "main/camera_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
