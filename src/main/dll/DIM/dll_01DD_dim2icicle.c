@@ -63,19 +63,19 @@ extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
 extern f32 lbl_803E4B68;
 
-void FUN_801b9cc4(int param_1)
+void FUN_801b9cc4(int obj)
 {
-    char* pcVar1;
-    int iVar2;
+    char* state;
+    int placement;
 
-    pcVar1 = ((GameObject*)param_1)->extra;
-    if ((pcVar1[2] & 1U) == 0)
+    state = ((GameObject*)obj)->extra;
+    if ((state[2] & 1U) == 0)
     {
-        iVar2 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if (('\0' < *pcVar1) && (*pcVar1 = *pcVar1 + -1, *pcVar1 == '\0'))
+        placement = *(int*)&((GameObject*)obj)->anim.placementData;
+        if (('\0' < *state) && (*state = *state + -1, *state == '\0'))
         {
-            pcVar1[2] = pcVar1[2] | 1;
-            GameBit_Set((int)*(short*)(iVar2 + 0x1e), 1);
+            state[2] = state[2] | 1;
+            GameBit_Set((int)*(short*)(placement + 0x1e), 1);
         }
     }
     return;
