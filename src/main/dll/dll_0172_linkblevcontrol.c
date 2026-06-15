@@ -122,7 +122,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
@@ -138,7 +137,6 @@ extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int* getTrickyObject(void);
 extern void fn_80138908(int* tricky, int mode);
 extern f32 lbl_803E47C8;
-extern f32 lbl_803E47C0;
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
