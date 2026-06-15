@@ -1635,11 +1635,7 @@ void timeOfDayFn_8008b964(void)
 
     time = pEXIInputFlag;
     env = saveGameGetEnvState();
-    if (lbl_803DD12C == NULL)
-    {
-        return;
-    }
-    if (lbl_803DD154 == 0)
+    if (lbl_803DD12C == NULL || lbl_803DD154 == 0)
     {
         return;
     }
