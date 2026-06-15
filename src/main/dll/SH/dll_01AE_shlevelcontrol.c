@@ -6,9 +6,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-#include "main/mapEvent.h"
 #include "main/dll/SP/SPshopkeeper.h"
-#include "main/dll/IM/dll_01AE_shlevelcontrol.h"
 
 extern void envFxActFn_800887f8(int);
 extern int mapUnload(int id, int flags);
