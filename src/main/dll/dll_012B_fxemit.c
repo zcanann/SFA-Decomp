@@ -400,12 +400,8 @@ void fxemit_update(FxEmitObject* obj)
     }
 }
 
-#include "main/dll/CF/CFchuckobj.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
-#include "main/objseq.h"
 #include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
