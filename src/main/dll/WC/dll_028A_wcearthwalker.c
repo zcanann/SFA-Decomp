@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
+#include "main/dll/baddie_state.h"
 
 int earthwalker_getExtraSize(void) { return 0x660; }
 
@@ -360,12 +361,12 @@ int fn_802239A4(int obj, int ai)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
 
-    if (*(s8*)(ai + 0x27b) != 0)
+    if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         ((EarthwalkerState*)state)->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
     }
-    else if (*(s8*)(ai + 0x346) != 0)
+    else if (*(s8*)&((BaddieState*)ai)->moveDone != 0)
     {
         return 3;
     }
@@ -377,7 +378,7 @@ int fn_80223A1C(int obj, int ai)
     int state = *(int*)&((GameObject*)obj)->extra;
     f32 dist;
 
-    if (*(s8*)(ai + 0x27b) != 0)
+    if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         ((EarthwalkerState*)state)->flagsAC0 |= 1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 1);
@@ -404,7 +405,7 @@ int fn_80223AFC(int obj, int ai)
     EarthwalkerState* state = *(EarthwalkerState**)&((GameObject*)obj)->extra;
     RomCurveWalker* route = &state->route;
 
-    if (*(s8*)(ai + 0x27b) != 0)
+    if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
@@ -424,9 +425,9 @@ int fn_80223BC4(int obj, int ai)
 {
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
 
-    if (*(s8*)(ai + 0x27a) != 0)
+    if (*(s8*)&((BaddieState*)ai)->moveJustStartedA != 0)
     {
-        *(f32*)(ai + 0x2a0) = lbl_803E6D10;
+        ((BaddieState*)ai)->moveSpeed = lbl_803E6D10;
         getAngle(((GameObject*)obj)->anim.localPosX - player->anim.localPosX,
                  ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ);
     }
@@ -452,9 +453,9 @@ int fn_80223C34(int obj, int ai)
 
 int fn_80223CF0(int obj, int ai)
 {
-    if (*(s8*)(ai + 0x27a) != 0)
+    if (*(s8*)&((BaddieState*)ai)->moveJustStartedA != 0)
     {
-        *(f32*)(ai + 0x2a0) = lbl_803E6D14;
+        ((BaddieState*)ai)->moveSpeed = lbl_803E6D14;
     }
     return 0;
 }
