@@ -1,5 +1,8 @@
-/* DLL 0x01C3 — dimgate (Dinosaur Island Mission gate). TU: 0x801B15D8–0x801B17F4. */
-
+/*
+ * dimgate (DLL 0x1C3) — mission gate object for Dinosaur Island.
+ * Opens (hitbox state 0→2) once a type-399 object appears in the trigger
+ * list, latching a gamebit so the gate stays open on reload.
+ */
 #include "main/game_object.h"
 
 typedef struct DimgatePlacement
@@ -68,8 +71,6 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
 
 void dimbarrier_init(int obj, s8* p);
 
-/* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
- * present in the trigger list, latching the gamebit. */
 void dimgate_update(int obj)
 {
     int* extra = ((GameObject*)obj)->extra;
@@ -116,15 +117,3 @@ void dimgate_update(int obj)
         }
     }
 }
-
-/* dimbarrier_update: while a live type-470 object is in the list, count down the
- * arm timer; on expiry fade the barrier out and latch its gamebit. */
-
-/* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
- * spawn a rolling snowball seeded from the placement params. */
-
-/* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
- * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-
-/* dimicewall_update: on shatter, emit two snow particle bursts and latch the
- * gamebit; otherwise let Tricky push through it. */

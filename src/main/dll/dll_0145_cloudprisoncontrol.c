@@ -1099,10 +1099,11 @@ void cloudprisoncontrol_update(int obj)
                 if (!found)
                 {
                     i = lbl_803DDB09;
-                    lbl_803AC7D8[i * 2] = target;
-                    *(u8*)((char*)lbl_803AC7D8 + i * 8 + 6) = 0;
+                    p = (int*)((char*)lbl_803AC7D8 + i * 8);
+                    p[0] = target;
+                    *(u8*)((char*)p + 6) = 0;
                     lbl_803DDB09++;
-                    *(s16*)((char*)lbl_803AC7D8 + i * 8 + 4) = data;
+                    *(s16*)((char*)p + 4) = data;
                 }
                 ObjMsg_SendToObject(target, 0xf0003, obj, 0);
             }
@@ -1113,7 +1114,7 @@ void cloudprisoncontrol_update(int obj)
             break;
         case 0xf0008:
             i = 0;
-            for (p = lbl_803AC7D8; i < lbl_803DDB09 && *p != target; p += 2)
+            for (p = lbl_803AC7D8; i < lbl_803DDB09 && *(u32*)p != (u32)target; p += 2)
             {
                 i++;
             }

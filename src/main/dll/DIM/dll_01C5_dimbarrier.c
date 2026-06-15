@@ -1,5 +1,8 @@
-/* DLL 0x01C5 — dimbarrier (Dinosaur Island Mission barrier object). TU: 0x801B1B40–0x801B1D84. */
-
+/*
+ * dimbarrier (DLL 0x1C5) — barrier object for Dinosaur Island Mission.
+ * While a live type-470 object is in the trigger list, counts down an arm
+ * timer; on expiry fades the barrier out and latches its gamebit.
+ */
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
@@ -73,11 +76,6 @@ void dimbarrier_init(int obj, s8* p)
 
 int fn_801B17F4(int obj, int delta);
 
-/* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
- * present in the trigger list, latching the gamebit. */
-
-/* dimbarrier_update: while a live type-470 object is in the list, count down the
- * arm timer; on expiry fade the barrier out and latch its gamebit. */
 void dimbarrier_update(int obj)
 {
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -140,12 +138,3 @@ void dimbarrier_update(int obj)
         break;
     }
 }
-
-/* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
- * spawn a rolling snowball seeded from the placement params. */
-
-/* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
- * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-
-/* dimicewall_update: on shatter, emit two snow particle bursts and latch the
- * gamebit; otherwise let Tricky push through it. */

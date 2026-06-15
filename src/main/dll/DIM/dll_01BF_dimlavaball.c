@@ -1,4 +1,8 @@
-/* DLL 0x1BF - DIMLavaball [801AE0EC-801AE100) */
+/*
+ * dimlavaball (DLL 0x1BF) - DIM lava-ball cannon proxy; manages the spawned
+ * 0x18D lava-ball sub-object, controls its fire period and game-bit gate,
+ * and relaunches it on each fire cycle.
+ */
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -28,39 +32,12 @@ typedef struct IMIceMountainState
 
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
-/*
- * Per-object extra state for the magiclight proximity light
- * (magiclight_getExtraSize == 0x14 for non-0x172 types).
- */
-
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-
-/*
- * Per-object extra state for the dll_16C map-event boulder proxy
- * (dll_16C_getExtraSize == 0x24).
- */
-
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
-
-/*
- * Per-object extra state for the crrockfall falling rock
- * (crrockfall_getExtraSize == 0x14).
- */
-
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017ac8();
-
-/* Trivial 4b 0-arg blr leaves. */
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
-
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-#undef MEVT_QUERY
 
 extern u32 randomGetRange(int min, int max);
 
@@ -73,39 +50,11 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern void warpToMap(int mapId, int flags);
 
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-
-/* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
- * through jumptable_80323698 (states 1..7; state 0 idles). */
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 
-/* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
- * from a small id table, then run the map-event sub-object state callbacks. */
-
-/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
- * extra block, optionally re-issuing a move on the sub-object first. */
-
 extern void Music_Trigger(int track, int flag);
 extern f32 timeDelta;
-
-/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
- * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-
-/* dll_16C_update: re-link the spawned sub-object, then while active/visible run
- * its move and fade opacity by distance to the player. */
-
-/* crrockfall_init: derive the per-rock scale from the placement params, size the
- * capsule hitbox from the sub-object bounds, set up render flags, and pick the
- * state-table variant by object type. */
-
-/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
- * height/distance, trigger the fall when the player is in range, integrate the
- * fall, then shatter (sfx + explosion) on impact. */
 
 #include "main/obj_placement.h"
 #include "main/game_object.h"

@@ -275,15 +275,15 @@ void MagicPlant_update(int obj)
                 divisor = 100;
             }
             progress /= (f32)divisor;
-            if (progress > lbl_803E3858)
+            if (progress > 1.0f)
             {
-                progress = lbl_803E3858;
+                progress = 1.0f;
             }
-            else if (progress < lbl_803E385C)
+            else if (progress < 0.0f)
             {
-                progress = lbl_803E385C;
+                progress = 0.0f;
             }
-            state->animProgress = lbl_803E3858 - progress;
+            state->animProgress = 1.0f - progress;
         }
         if (plant->objAnim.currentMove != 0)
         {
@@ -294,6 +294,10 @@ void MagicPlant_update(int obj)
 
     case MAGICPLANT_MODE_ACTIVE:
         fn_8017F4F4(obj, setup, state);
+        break;
+
+    case MAGICPLANT_MODE_HIT_REACT:
+        fn_8017F334(obj, setup, state);
         break;
 
     case MAGICPLANT_MODE_FADE_OUT:
@@ -327,10 +331,6 @@ void MagicPlant_update(int obj)
         }
         plant->objAnim.alpha = (u8)alpha;
         ((ObjHitsPriorityState*)plant->objAnim.hitReactState)->flags |= 1;
-        break;
-
-    case MAGICPLANT_MODE_HIT_REACT:
-        fn_8017F334(obj, setup, state);
         break;
     }
 

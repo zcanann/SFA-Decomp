@@ -1096,7 +1096,7 @@ extern f32 lbl_803E736C;
 extern f32 lbl_803E7370;
 extern f32 lbl_803E7374;
 extern f32 lbl_803E7384;
-extern u8 lbl_803DC3E0[];
+extern u8 lbl_803DC3E0[8];
 extern u8 lbl_8032BD00[];
 extern u8 lbl_8032BD50[];
 extern f32 lbl_803E7378;

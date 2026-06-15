@@ -1,3 +1,10 @@
+/*
+ * dimbossgut2 (DLL 0x1E3) - DIM boss gut-spike / tendril objects (the
+ * glowing green projectile stalks that track the player around the gut cavity).
+ * Each instance follows a ROM curve path while locked on, emits particle
+ * breath fx, and hosts a green point light.  Hit-detection uses a sphere
+ * hitbox that resets after each contact burst.
+ */
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"

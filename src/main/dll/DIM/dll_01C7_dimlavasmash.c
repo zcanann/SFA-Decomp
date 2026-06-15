@@ -1,3 +1,9 @@
+/*
+ * dimlavasmash (DLL 0x1C7) - DIM lava-smash hazard; a surface object that
+ * rises and smashes when struck by a certain hit type, sets surface-passable
+ * flags on the underlying map block, and triggers a game-bit sequence event
+ * on completion.
+ */
 #include "main/dll/DIM/dimcannon_state.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -52,8 +58,6 @@ extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
-extern unsigned long GameBit_Set(int eventId, int value);
-extern void objRenderFn_8003b8f4(f32);
 
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -316,8 +320,6 @@ void dimlavasmash_update(int* obj)
 int dimlavasmash_getExtraSize(void) { return 0x3; }
 int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 
-/* if (o->_X == K) return A; else return B; */
-
 typedef struct DimlavasmashPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -339,9 +341,6 @@ typedef struct DimlavasmashState
     s8 unkB;
     u8 padC[0x10 - 0xC];
 } DimlavasmashState;
-
-/* dimcannon extra block (0xb4); the head is the per-cannonball column
- * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
 
 #pragma dont_inline on
 #pragma opt_propagation off
@@ -434,17 +433,6 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return ((DimlavasmashState*)state)->state == 0;
 }
-
-/* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
- * sub-variant, else seeds the 10-slot trail particle array, installs the
- * sequence fn, acquires its model resource and applies map flags. */
-
-/* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
- * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
-
-/* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
- * turret with the stick, charges with A, fires on release/full charge, and
- * exits on B or after the post-completion delay. */
 
 typedef struct DimlavasmashObjectDef
 {

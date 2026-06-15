@@ -109,8 +109,9 @@ void fn_801E991C(int p1, char* table)
     GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
     GXSetCurrentMtx(0);
     getAmbientColor(0, &r, &g, &b);
+    i = 0;
     p = table;
-    for (i = 0; i < 9; i++)
+    for (; i < 9; i++)
     {
         if (((*(u8*)(p + 0x4ce) & 1) != 0) && (*(s16*)(p + 0x4cc) >= 4))
         {
@@ -126,7 +127,6 @@ void fn_801E991C(int p1, char* table)
                 shPos3f32(verts[0] - playerMapOffsetX, verts[0 + 1], verts[0 + 2] - playerMapOffsetZ);
                 shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0xc));
                 shTexCoord2f32(u0, u0);
-                GXWGFifo.f32 = u0;
                 shPos3f32(verts[4] - playerMapOffsetX, verts[4 + 1], verts[4 + 2] - playerMapOffsetZ);
                 shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x1c));
                 shTexCoord2f32(u1, u0);
@@ -136,7 +136,6 @@ void fn_801E991C(int p1, char* table)
                 shPos3f32(verts[8] - playerMapOffsetX, verts[8 + 1], verts[8 + 2] - playerMapOffsetZ);
                 shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x2c));
                 shTexCoord2f32(u0, u0);
-                GXWGFifo.f32 = u0;
                 verts += 8;
             }
         }

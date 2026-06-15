@@ -1,3 +1,16 @@
+/*
+ * dimbossspit - the DIM boss-tonsil "spit/fight" main hit-state.
+ *
+ * dimBossTonsil_newState_hitFightMain drives the boss-tonsil object while it
+ * is actively being fought: it flags the hit-react model active, ticks the
+ * baddie-control hit/animation vtable callbacks, and runs two independent
+ * countdown timers (lbl_803DDBA4 / lbl_803DDB98) off timeDelta. When either
+ * timer expires it clears the active flag, marks the object disabled, clears
+ * the boss-active game bit and sets one of the two route game bits depending
+ * on gDIMbosstonsilRoutePhase. A separate rumble timer (lbl_803DDB9C/BA0)
+ * plays the rumble sfx and triggers controller rumble. The player update is
+ * called with the object's pending-parent link temporarily detached.
+ */
 #include "main/dll/DIM/DIMbossspit.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"

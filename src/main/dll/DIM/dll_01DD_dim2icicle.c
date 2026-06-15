@@ -1,4 +1,5 @@
-/* DLL 0x1DD — DIM2 icicle / conveyor / crusher platform objects [801B8798-801B8860) */
+/* DLL 0x1DD — DIM2 Icicle: a swaying ceiling icicle that detects a hit,
+ * waits, then drops to its target Y floor position and triggers a game-bit. */
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
@@ -229,14 +230,6 @@ void dim2icicle_update(int obj)
     }
 }
 
-void dll_1DB_update(int obj);
-
-/* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
- * fall, land on contact object, clamp to floor height. */
-
-/* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
- * from distance/anim-state via the interface vtables. */
-
 int dim2icicle_getExtraSize(void) { return 0xc; }
 int dim2icicle_getObjectTypeId(void) { return 0x0; }
 
@@ -245,25 +238,3 @@ void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4B68);
 }
-
-
-/* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
- *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the
- *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
- *              obj[8]. Also sets obj[0xB8]->f10 from a constant and OR-merges flags
- *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
-
-/* dim2lavacontrol_setScale: every-frame tick -- if not already "armed" (bit 0 of
- *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit
- *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
-
-/* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
- *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
- *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
- *     else do the same dest writes (different scheduling).
- *   - Then if (distance^2 from player to obj position < lbl_803E4BA0) and sub.f24
- *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
- *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
-
-/* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
- *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */

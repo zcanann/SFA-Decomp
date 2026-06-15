@@ -847,17 +847,17 @@ void dll_5F_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (ctx == 0)
-        {
-            buf.pos[0] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->posZ;
-        }
-        else
+        if ((void*)ctx != NULL)
         {
             buf.pos[0] = lbl_803E0828 + *(f32*)(ctx + 0x18);
             buf.pos[1] = lbl_803E0828 + *(f32*)(ctx + 0x1c);
             buf.pos[2] = lbl_803E0828 + *(f32*)(ctx + 0x20);
+        }
+        else
+        {
+            buf.pos[0] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312650, 0xc, &base[140], 0x48, 0);

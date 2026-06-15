@@ -1,3 +1,12 @@
+/*
+ * dim2lift - DIM2 boss (Icicle) lift-combat and baddie-animation
+ * callbacks.  Contains the AI hit-decision functions (FUN_801ba*) that
+ * choose the boss move based on player distance/angle/phase, the lift-
+ * impact / tonsil-slam / breath-burst / blue-white-capture move
+ * callbacks (FUN_801bb*), and the higher-level
+ * DIMbossHitDetect_* / DIMbossAnim_* entry points called from the
+ * object-descriptor vtable.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"

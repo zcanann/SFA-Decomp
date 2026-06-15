@@ -1,4 +1,8 @@
-/* DLL 0x01C1 (dimsnowball) — DIM snowball object [0x801B0DD4-0x801B13E8). */
+/*
+ * dimsnowball (DLL 0x1C1) - DIM snowball rolling hazard; follows a spline
+ * path defined by gDimSnowballCoords, plays a jingle on sharp course changes,
+ * and drives a hit-detect object that clears its target on impact.
+ */
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -15,8 +19,6 @@ STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
-
-static inline int* DIMcannon_GetActiveModel(void* obj);
 
 extern void imicepillar_free(void);
 extern int imicepillar_getObjectTypeId(void);
@@ -52,8 +54,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 extern void objRenderFn_8003b8f4(f32);
 
 extern u8 framesThisStep;
-
-/* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -222,8 +222,6 @@ void dimsnowball_update(int obj)
     }
 }
 
-/* segment pragma-stack balance (re-split): */
-
 typedef struct DimSnowballState
 {
     void* target;
@@ -276,5 +274,3 @@ void dimsnowball_release(void)
 void dimsnowball_initialise(void)
 {
 }
-
-int dimsnowball1c2_getExtraSize(void);

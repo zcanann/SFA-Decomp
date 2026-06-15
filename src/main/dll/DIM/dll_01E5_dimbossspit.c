@@ -1,3 +1,11 @@
+/*
+ * dimbossspit (DLL 0x1E5) - the DIM boss spit-ball projectile object.
+ * Launched from the boss, the spit ball drifts under gravity, spinning on all
+ * axes, and spawns particle trail fx each frame.  On contact it transitions to
+ * a burst phase (DIMbossspit_updateBurst): camera shake, rumble, expanding
+ * transparent sphere hitbox, and a shrinking hit volume.  Carries a green glow
+ * light whose intensity flickers frame-by-frame.
+ */
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"

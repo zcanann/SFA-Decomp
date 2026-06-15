@@ -1,4 +1,9 @@
-/* DLL 0x1D1 - DIMTruthHornIce [801B63F4-801B6464) */
+/* DLL 0x1D1 — DIM Truth Horn Ice: a breakable ice target in Snowhorn Wastes 2.
+ * Hit-count tracked in extra->hitsLeft; when depleted sets gameBit and starts a
+ * particle-burst death animation (spawn loop in phase 1, freeze-hide in phase 2).
+ * Tricky can deliver fire hits via vtable dispatch (slot 0x28 of Tricky's type at
+ * offset 0x68). Also contains fn_801B6D40 (generic byte-damage helper shared by
+ * this DLL group). */
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -57,26 +62,9 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
-/* dimwooddoor2 variant: trigger-init that loads a different float into the
- * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-
-/* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
- * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
- * when GameBit 0x1ef is on and the player's emission controller is lingering,
- * latch GameBit 0x1e8. */
-
-/* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
- * and using mask 0x6000 + initial state byte 3 at +0. */
-
-/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
- * every 16 frames, and ramp each active slot's alpha toward full; then update
- * the animated bridge mesh. */
-
 extern f32 timeDelta;
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-/* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -98,9 +86,6 @@ STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
- * tables filled by the RomCurve interface). */
-
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern undefined4 FUN_800067c0();
@@ -113,59 +98,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
-#pragma scheduling on
-#pragma peephole on
-void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
-{
-    uint uVar1;
-    int iVar2;
-    float* pfVar3;
-
-    pfVar3 = ((GameObject*)param_1)->extra;
-    if (pfVar3[4] == 0.0)
-    {
-        FUN_800067c0((int*)0xdf, 1);
-    }
-    pfVar3[4] = 2.8026e-44;
-    iVar2 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    if (iVar2 == 0x49b23)
-    {
-        uVar1 = GameBit_Get(0xc5c);
-        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5b), uVar1 == 0))
-        {
-            *param_3 = *pfVar3;
-            *param_4 = pfVar3[1];
-        }
-        uVar1 = GameBit_Get(0xc5b);
-        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5c), uVar1 == 0))
-        {
-            *param_3 = -*pfVar3;
-            *param_4 = -pfVar3[1];
-        }
-        uVar1 = GameBit_Get(0xc5b);
-        if (uVar1 != 0)
-        {
-            GameBit_Set(0xc5c, 0);
-        }
-        uVar1 = GameBit_Get(0xc5b);
-        if (uVar1 == 0)
-        {
-            GameBit_Set(0xc5c, 1);
-        }
-    }
-    else if ((iVar2 < 0x49b23) && (iVar2 == 0x1ea9))
-    {
-        *param_3 = *pfVar3;
-        *param_4 = pfVar3[1];
-    }
-    else
-    {
-        *param_3 = *pfVar3;
-        *param_4 = pfVar3[1];
-    }
-    return;
 }
 
 void dll_1CF_free(void);

@@ -1,4 +1,9 @@
-/* DLL 0x01C0 (dimlogfire) — DIM logfire object [0x801B0670-0x801B0DD4). */
+/*
+ * dimlogfire (DLL 0x1C0) - DIM log-fire hazard; the burning log drives a
+ * flicker/douse state machine, spawns particles and a point light, handles
+ * a sequence callback for animation events, and tracks a hit-strength counter
+ * that douses the flame when depleted.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
@@ -19,8 +24,6 @@ STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
-
-static inline int* DIMcannon_GetActiveModel(void* obj);
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -173,8 +176,6 @@ void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
-/* segment pragma-stack balance (re-split): */
 
 typedef struct DimlogfirePlacement
 {
@@ -355,4 +356,3 @@ void dimlogfire_init(int obj, int def)
     }
 }
 
-int dimsnowball_getExtraSize(void);

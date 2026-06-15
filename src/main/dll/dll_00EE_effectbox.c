@@ -96,8 +96,8 @@ void fn_80174588(int obj, PushableState* p2);
 void effectbox_update(int obj)
 {
     int def;
-    int count;
     int single;
+    int count;
     int* list;
     int i;
     int other;
@@ -131,7 +131,7 @@ void effectbox_update(int obj)
         {
         case 1:
             single = (int)Obj_GetPlayerObject();
-            if (single == 0)
+            if (single == 0u)
             {
                 return;
             }
@@ -140,7 +140,7 @@ void effectbox_update(int obj)
             break;
         case 0:
             single = (int)getTrickyObject();
-            if (single == 0)
+            if (single == 0u)
             {
                 return;
             }

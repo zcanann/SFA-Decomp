@@ -1,4 +1,11 @@
-/* DLL 0x1E7 - DIMBossFire [801C04B8-801C053C) */
+/*
+ * dimbossfire (DLL 0x1E7) - DIM boss flame-jet emitters placed around the boss
+ * arena.  Each instance fires on a random cooldown (or is triggered by a game
+ * bit).  While active it runs a particle burst, optional camera shake and rumble
+ * scaled by player distance, spawns a coloured point light (orange = flameColor≠0,
+ * green = flameColor==0) that fades out with the active timer, and maintains a
+ * sphere hitbox.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"

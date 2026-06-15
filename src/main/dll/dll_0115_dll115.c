@@ -125,6 +125,7 @@ void dll_115_update(int obj)
 {
     u8* state;
     u8* mapData;
+    short* p;
     int step;
     int eventId;
 
@@ -167,7 +168,6 @@ void dll_115_update(int obj)
         break;
     }
     {
-        short* p;
         step = state[0] - 1;
         p = (short*)mapData + step;
         while (step >= 0)

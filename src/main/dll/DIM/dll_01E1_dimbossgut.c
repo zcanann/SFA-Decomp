@@ -1,3 +1,9 @@
+/*
+ * dimbossgut (DLL 0x1E1) - the DIM boss gut cavity object (interior mesh).
+ * Advances the gut's idle animation each frame and renders it.
+ * The animEventCallback is wired to DIMbossgut_updateState to clear the
+ * hit-volume pair and suppress sequence events.
+ */
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
 #include "main/game_object.h"
 

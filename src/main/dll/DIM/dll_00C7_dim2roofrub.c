@@ -1,4 +1,14 @@
-/* DLL 0xC7 - DIM2RoofRub [8016B230-8016B2E0) */
+/*
+ * dim2roofrub (DLL 0xC7) - DIM2 roof-rub object and shared DLL glue.
+ * The dim2roofrub object is a GC-map interactive surface that triggers
+ * animation sequences and particle effects when the player walks over it.
+ * This TU also carries the object-descriptor tables and forward-declaration
+ * stubs for every other object type bundled into this DLL (StaticCamera,
+ * MikaBomb, Staff, Fireball, FlameThrowerSpe, Shield, AnimatedObj,
+ * DepthOfFieldPoint, GCbaddieShield, BaddieInterestP, Pollen,
+ * PollenFragment, KaldaChompSpit, PinPonSpike, Curve, ReStartMarker,
+ * DLL_F7, Checkpoint4).
+ */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
@@ -1058,7 +1068,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
 {
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern undefined8 ObjHits_DisableObject(); /* per-fn prototype, do not hoist */
     short seqType;
     char count;
     uint uVar3;
@@ -1182,24 +1192,6 @@ LAB_801725bc:
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void staff_func0F(void);
 
 
@@ -1232,16 +1224,6 @@ void shield_release(void);
 void shield_initialise(void);
 
 void shield_free(int obj);
-
-
-
-
-
-
-
-
-
-
 
 
 int animatedobj_getExtraSize(void);
@@ -1666,14 +1648,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-s16 staff_getHitReactValue(int* obj);
-
-s32 staff_func16(int* obj);
-
-
-
-
-
 void flamethrowerspe_render(void);
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
@@ -1683,11 +1657,6 @@ void flamethrowerspe_func0B(int* obj);
 
 
 void staff_modelMtxFn(int* obj, int p4, int p5);
-
-
-
-
-
 
 
 void gcbaddieshield_update(int* obj);

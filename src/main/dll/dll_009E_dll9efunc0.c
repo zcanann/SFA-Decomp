@@ -165,7 +165,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    end = e + 14;
+    end = (GfxCmd*)((u8*)e + 336);
     buf.count = end - e;
     buf.hw[0] = *(s16*)&tab[0x1f8];
     buf.hw[1] = *(s16*)&tab[0x1fa];

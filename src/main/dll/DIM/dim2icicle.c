@@ -1,3 +1,10 @@
+/*
+ * dim2icicle - DIM2 Icicle boss per-frame update functions.
+ * Handles boss sequence effects (glow light, dust/burst particle spawns),
+ * Dark Ice Mines map-warp and environmental effects, player hit-response
+ * (score tracking, game-bit setting, hit-effect spawning), and the main
+ * combat-state driver that runs the AI and controls Tricky interaction.
+ */
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"

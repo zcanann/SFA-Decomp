@@ -1,4 +1,5 @@
-/* DLL 0x19E - DIM Tricky [801CCFA4-801CCFB4) */
+/* DLL 0x19E — DIM Tricky companion object: sparkle effect, hit-detect toggle,
+ * line-of-sight voxmap trace, and Tricky egg-interact sequence trigger. */
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx_ids.h"
@@ -29,36 +30,6 @@ extern f32 lbl_803E51E8;
 
 int dll_19E_getExtraSize(void) { return 0x10; }
 int dll_19E_getObjectTypeId(void) { return 0x1; }
-
-/*
- * Function: dll_19C_init
- * EN v1.0 Address: 0x801CC950
- * EN v1.0 Size: 64b
- */
-
-/*
- * Function: dll_19D_free
- * EN v1.0 Address: 0x801CC9A8
- * EN v1.0 Size: 132b
- */
-
-/*
- * Function: dll_19D_init
- * EN v1.0 Address: 0x801CCECC
- * EN v1.0 Size: 208b
- */
-
-/*
- * Function: dll_19D_hitDetect
- * EN v1.0 Address: 0x801CCA30
- * EN v1.0 Size: 276b
- */
-
-/*
- * Function: dll_19D_update
- * EN v1.0 Address: 0x801CCB44
- * EN v1.0 Size: 904b
- */
 
 void dll_19E_free(int obj)
 {

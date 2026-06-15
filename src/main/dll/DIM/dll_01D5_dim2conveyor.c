@@ -1,4 +1,7 @@
-/* DLL 0x01D5 - dim2conveyor / dimwooddoor2 / dim2pathgenerator group. TU: 0x801B63F4-0x801B6464. */
+/* DLL 0x1D5 — DIM 2 conveyor belt object. Scrolls two texture channels on a conveyor mesh using
+ * sin/cos of a placement-defined rotation angle. For map id 0x49B23 (the dual-direction belt),
+ * manages forward/reverse direction via game bits 3163/3164 with a timed swap (swapTimer). Adds
+ * itself to object group 22; music track 0xDF is kept alive while the belt is moving. */
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -56,28 +59,11 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-/* dimwooddoor2 variant: trigger-init that loads a different float into the
- * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-
-/* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
- * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
- * when GameBit 0x1ef is on and the player's emission controller is lingering,
- * latch GameBit 0x1e8. */
-
-/* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
- * and using mask 0x6000 + initial state byte 3 at +0. */
-
-/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
- * every 16 frames, and ramp each active slot's alpha toward full; then update
- * the animated bridge mesh. */
-
 extern f32 timeDelta;
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 extern f32 mathSinf(f32 x);
-
-/* segment pragma-stack balance (re-split): */
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -90,9 +76,6 @@ STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
- * tables filled by the RomCurve interface). */
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
@@ -109,59 +92,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
-#pragma scheduling on
-#pragma peephole on
-void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
-{
-    uint uVar1;
-    int iVar2;
-    float* pfVar3;
-
-    pfVar3 = ((GameObject*)param_1)->extra;
-    if (pfVar3[4] == 0.0)
-    {
-        FUN_800067c0((int*)0xdf, 1);
-    }
-    pfVar3[4] = 2.8026e-44;
-    iVar2 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    if (iVar2 == 0x49b23)
-    {
-        uVar1 = GameBit_Get(0xc5c);
-        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5b), uVar1 == 0))
-        {
-            *param_3 = *pfVar3;
-            *param_4 = pfVar3[1];
-        }
-        uVar1 = GameBit_Get(0xc5b);
-        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5c), uVar1 == 0))
-        {
-            *param_3 = -*pfVar3;
-            *param_4 = -pfVar3[1];
-        }
-        uVar1 = GameBit_Get(0xc5b);
-        if (uVar1 != 0)
-        {
-            GameBit_Set(0xc5c, 0);
-        }
-        uVar1 = GameBit_Get(0xc5b);
-        if (uVar1 == 0)
-        {
-            GameBit_Set(0xc5c, 1);
-        }
-    }
-    else if ((iVar2 < 0x49b23) && (iVar2 == 0x1ea9))
-    {
-        *param_3 = *pfVar3;
-        *param_4 = pfVar3[1];
-    }
-    else
-    {
-        *param_3 = *pfVar3;
-        *param_4 = pfVar3[1];
-    }
-    return;
 }
 
 void dll_1CF_free(void);
@@ -240,9 +170,6 @@ void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
         break;
     }
 }
-
-/* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
- * return 1 if the signed result dropped to or below 0. */
 
 void dim2conveyor_init(int* obj, u8* params)
 {

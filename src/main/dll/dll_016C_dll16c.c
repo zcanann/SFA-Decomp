@@ -546,8 +546,9 @@ void dll_16C_update(int* obj)
     if (((GameObject*)obj)->anim.seqId == 883 || GameBit_Get(0x3a2) != 0)
     {
         int* sub = (int*)extra->linkedObj;
+        f32 b;
         f32 blend;
-        f32 a, b;
+        f32 a;
         if (((GameObject*)obj)->anim.currentMove != 0x100)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 0);
@@ -570,7 +571,8 @@ void dll_16C_update(int* obj)
             {
                 t = lbl_803E4758;
             }
-            extra->opacity = (int)(lbl_803E4764 * (lbl_803E4758 - t));
+            t = lbl_803E4758 - t;
+            extra->opacity = lbl_803E4764 * t;
             if (((GameObject*)obj)->anim.modelState != NULL)
             {
                 ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -581,7 +583,7 @@ void dll_16C_update(int* obj)
             extra->opacity = 0xff;
             if (((GameObject*)obj)->anim.modelState != NULL)
             {
-                ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+                ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
             }
         }
     }

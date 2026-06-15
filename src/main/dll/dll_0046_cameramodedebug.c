@@ -23,6 +23,7 @@ extern f32 lbl_803E185C;
 extern f32 lbl_803E1860;
 extern f32 lbl_803E1870;
 
+#pragma fp_contract off
 void CameraModeDebug_update(short* camObj)
 {
     extern u16 getButtonsJustPressed(int port); /* #57 */
@@ -70,22 +71,35 @@ void CameraModeDebug_update(short* camObj)
     {
         lbl_803DD550->orbitRadius = lbl_803E1858;
     }
-    *(s16*)cam = (s16)(*(s16*)cam - (s8)padGetCX(0) * 3);
-    *(s16*)(cam + 2) = (s16)(*(s16*)(cam + 2) + (s8)padGetCY(0) * 3);
+    {
+        u16 dx = (s8)padGetCX(0) * 3;
+        u16 dy = (s8)padGetCY(0) * 3;
+        *(s16*)cam = (s16)(*(s16*)cam - dx);
+        *(s16*)(cam + 2) = (s16)(*(s16*)(cam + 2) + dy);
+    }
     {
         f32 cosYaw = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
         f32 sinYaw = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
         f32 sinPitch = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
         f32 cosPitch = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
+        f32 rc;
+        f32 rs;
+        f32 xt;
+        f32 zt;
         radius = lbl_803DD550->orbitRadius;
-        *(f32*)(cam + 24) = *(f32*)(state + 24) + radius * sinPitch * sinYaw;
-        *(f32*)(cam + 28) = lbl_803E1854 + *(f32*)(state + 28) + radius * cosPitch;
-        *(f32*)(cam + 32) = *(f32*)(state + 32) + radius * sinPitch * cosYaw;
+        rc = radius * cosPitch;
+        rs = radius * sinPitch;
+        xt = rs * sinYaw;
+        zt = rs * cosYaw;
+        *(f32*)(cam + 24) = *(f32*)(state + 24) + xt;
+        *(f32*)(cam + 28) = lbl_803E1854 + *(f32*)(state + 28) + rc;
+        *(f32*)(cam + 32) = *(f32*)(state + 32) + zt;
     }
     Obj_TransformWorldPointToLocal(*(f32*)(cam + 24), *(f32*)(cam + 28), *(f32*)(cam + 32),
                                    (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
                                    *(int*)(cam + 48));
 }
+#pragma fp_contract reset
 
 void CameraModeDebug_init(void)
 {

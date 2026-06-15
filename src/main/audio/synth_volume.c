@@ -57,9 +57,9 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
     switch (target)
     {
     case SYNTH_FADE_SELECTOR_ACTION_0_OR_1:
-        targetVolume = lbl_803E7798 * (f32)volume;
         fadePos = lbl_803E77A8;
         fadeStepBase = lbl_803E77D4;
+        targetVolume = lbl_803E7798 * (f32)volume;
         fade = (SynthFade*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
         for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++)
         {
@@ -90,9 +90,9 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
         return;
 
     case SYNTH_FADE_SELECTOR_ACTION_2_OR_3:
-        targetVolume = lbl_803E7798 * (f32)volume;
         fadePos = lbl_803E77A8;
         fadeStepBase = lbl_803E77D4;
+        targetVolume = lbl_803E7798 * (f32)volume;
         fade = (SynthFade*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
         for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++)
         {
@@ -138,9 +138,9 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
         matchState = SYNTH_FADE_TYPE_ACTION_1;
 
     setup_type:
-        targetVolume = lbl_803E7798 * (f32)volume;
         fadePos = lbl_803E77A8;
         fadeStepBase = lbl_803E77D4;
+        targetVolume = lbl_803E7798 * (f32)volume;
         fade = (SynthFade*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
         for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++)
         {

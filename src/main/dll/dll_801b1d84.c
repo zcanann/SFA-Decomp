@@ -13,8 +13,8 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
     u8 unk1;
     s16 unk2;
     u8 pad4[0x5 - 0x4];
-    u8 hitboxRadius;
-    u8 hitVolumeSlot;
+    s8 hitboxRadius;
+    s8 hitVolumeSlot;
     u8 unk7;
     u8 state;
     s8 rotZRate;
@@ -49,6 +49,7 @@ extern f32 lbl_803DBEF0;
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
+extern int* getTrickyObject(void);
 
 void DIMwooddoor_updateFallingDebris(int* obj)
 {

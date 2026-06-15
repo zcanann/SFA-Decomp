@@ -37,9 +37,14 @@ extern undefined4* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern f32 lbl_803E59DC;
-extern f32 lbl_803E59E0;
+extern const f32 lbl_803E59E0;
 extern u32 lbl_803E59D0;
 extern u32 lbl_803E59D4;
+
+typedef struct LazerwallHeadPair {
+    u32 a;
+    u32 b;
+} LazerwallHeadPair;
 
 int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 {
@@ -51,8 +56,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     int pushKindB;
     int popOut;
 
-    head[0] = lbl_803E59D0;
-    head[1] = lbl_803E59D4;
+    *(LazerwallHeadPair*)head = *(LazerwallHeadPair*)&lbl_803E59D0;
     playerObj = (int)Obj_GetPlayerObject();
     state = *(int*)(arg1 + 0xb8);
 
@@ -79,18 +83,20 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 
             if ((s8) * (u8*)(hit + 0x19) == 0xc)
             {
+                playerObj = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
                 pushKindA = 1;
-                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) == 0)
+                if (Stack_IsFull(playerObj) == 0)
                 {
-                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState*)state)->stack, &pushKindA);
+                    Stack_Push(playerObj, &pushKindA);
                 }
             }
             else
             {
+                playerObj = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
                 pushKindB = 2;
-                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) == 0)
+                if (Stack_IsFull(playerObj) == 0)
                 {
-                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState*)state)->stack, &pushKindB);
+                    Stack_Push(playerObj, &pushKindB);
                 }
             }
 
@@ -103,10 +109,11 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 = 0xff;
     if (((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 == 0xff)
     {
+        playerObj = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
         popOut = 0;
-        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) == 0)
+        if (Stack_IsEmpty(playerObj) == 0)
         {
-            Stack_Pop(((TREXLazerwallUpdateTimedChallengeState*)state)->stack, &popOut);
+            Stack_Pop(playerObj, &popOut);
         }
         return popOut + 1;
     }

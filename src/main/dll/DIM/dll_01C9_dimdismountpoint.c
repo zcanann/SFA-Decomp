@@ -1,3 +1,9 @@
+/*
+ * dimdismountpoint (DLL 0x1C9) — dismount-point object for Dinosaur Island
+ * Mission 2.  Tracks the nearest conveyor object and exposes a signed-distance
+ * plane test so the conveyor can determine which side of the dismount point
+ * the player is on.
+ */
 #include "main/dll/DIM/DIM2conveyor.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
@@ -38,7 +44,6 @@ void dimdismountpoint_initialise(void)
 
 void dimdismountpoint_update(int* obj)
 {
-    extern uint GameBit_Get(int eventId);
     int* nearest;
     f32 d;
 
@@ -96,7 +101,6 @@ void dimbridgecogmai_release(void);
 
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
-
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (visible == 0 || ((GameObject*)obj)->unkF8 != 0)
@@ -111,7 +115,6 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
         objRenderFn_8003b8f4(lbl_803E490C);
     }
 }
-
 
 void dimdismountpoint_func11(int obj, int flag)
 {

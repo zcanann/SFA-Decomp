@@ -1,3 +1,12 @@
+/*
+ * dimbosscrackpar (DLL 0x1E6) - DIM boss crack-particle emitter objects.
+ * Each instance is placed at a crack site in the DIM gut wall.  While the
+ * associated game bit is set it spawns two particle effects per frame
+ * (one indexed by placement particleIndex, plus a fixed glow burst).
+ * The animEventCallback (dimbosscrackpar_SeqFn) does the same on sequence ticks.
+ * NOTE: GameBit_Get is used implicitly (no include); adding gamebits.h changes
+ * codegen at the (u32) cast call sites — leave it implicit.
+ */
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
@@ -10,9 +19,9 @@
 typedef struct DimbosscrackparPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 particleIndex; /* 0x1A: added to base particle id 1222 to select crack effect */
     u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
+    s16 triggerGameBit; /* 0x1E: game bit that gates particle emission */
 } DimbosscrackparPlacement;
 
 extern f32 lbl_803E4D98;
@@ -34,12 +43,12 @@ void magicmaker_update(int obj);
 int dimbosscrackpar_SeqFn(int* obj)
 {
     int* side = *(int**)&((GameObject*)obj)->anim.placementData;
-    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->unk1E) == 0u)
+    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->triggerGameBit) == 0u)
     {
         return 0;
     }
     (*gPartfxInterface)->spawnObject(
-        obj, ((DimbosscrackparPlacement*)side)->unk1A + 1222, NULL, 2, -1, NULL);
+        obj, ((DimbosscrackparPlacement*)side)->particleIndex + 1222, NULL, 2, -1, NULL);
     (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
     return 0;
 }
@@ -47,10 +56,10 @@ int dimbosscrackpar_SeqFn(int* obj)
 void dimbosscrackpar_update(int* obj)
 {
     int* side = *(int**)&((GameObject*)obj)->anim.placementData;
-    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->unk1E) != 0u)
+    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->triggerGameBit) != 0u)
     {
         (*gPartfxInterface)->spawnObject(
-            obj, ((DimbosscrackparPlacement*)side)->unk1A + 1222, NULL, 2, -1, NULL);
+            obj, ((DimbosscrackparPlacement*)side)->particleIndex + 1222, NULL, 2, -1, NULL);
         (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
     }
 }

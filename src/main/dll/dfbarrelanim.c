@@ -18,6 +18,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
                       f32 unused, f32 tickScale)
 {
     DFRope* rope;
+    DFRopeNode* nodes;
     DFRopeNode* node;
     DFRopeLink* link;
     DFRopeNode* nextNode;
@@ -58,16 +59,17 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     rope->damping = lbl_803E4E00;
     rope->enabled = 1;
     rope->step = lbl_803E4DF8;
-    if (lbl_803E4E04 < rope->step * length)
+    if (rope->step * length > lbl_803E4E04)
     {
-        rope->step = lbl_803E4E04 / length;
+        rope->step = *(f32*)&lbl_803E4E04 / length;
     }
     rope->maxSlack = lbl_803E4E08;
     rope->stepPerTick = rope->step / tickScale;
     rope->inverseTicks = lbl_803E4E0C / tickScale;
 
     zero = lbl_803E4DFC;
-    node = rope->nodes;
+    nodes = rope->nodes;
+    node = nodes;
     for (i = 0; i < count; i++, node++)
     {
         node->pos[0] = (f32)i * dx + rope->start[0];
@@ -101,11 +103,11 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
         }
     }
 
-    rope->nodes[count - 1].locked = 1;
-    rope->nodes[0].locked = 1;
+    nodes[count - 1].locked = 1;
+    nodes[0].locked = 1;
 
     link = rope->links;
-    node = rope->nodes;
+    node = nodes;
     linkCount = count - 1;
     for (i = 0; i < linkCount; i++)
     {
@@ -115,7 +117,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
         link->force[1] = zero;
         link->force[0] = zero;
         link->maxLength = lbl_803E4E14 * link->restLength;
-        nextNode = (DFRopeNode*)((u8*)rope->nodes + (i + 1) * sizeof(DFRopeNode));
+        nextNode = (DFRopeNode*)((u8*)nodes + (i + 1) * sizeof(DFRopeNode));
         DFRopeLink_AttachNodes(link, node, nextNode);
         link++;
         node++;

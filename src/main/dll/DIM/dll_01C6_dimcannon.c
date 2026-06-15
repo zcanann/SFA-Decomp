@@ -1,3 +1,9 @@
+/*
+ * dimcannon (DLL 0x1C6) - DIM lava cannon; a stationary turret that tracks
+ * and fires cannonballs at the player, with a manned-control mode (fireState 3)
+ * in which the player aims with the stick, charges with A, and fires on release.
+ * The 0x1D6 sub-variant is a falling-debris prop shared with DIMwooddoor.
+ */
 #include "main/dll/DIM/dimcannon_state.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -82,7 +88,6 @@ extern s16 lbl_803DBF04;
 extern f32 lbl_803DBF08;
 extern f32 lbl_803DBEF8;
 extern f32 lbl_803DBEFC;
-extern void objRenderFn_8003b8f4(f32);
 
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -339,10 +344,6 @@ void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimlavasmash_free(void);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* if (o->_X == K) return A; else return B; */
-
 typedef struct DimcannonPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -395,9 +396,6 @@ void dimcannon_free(int* obj)
     ObjGroup_RemoveObject(obj, 3);
 }
 
-/* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
- * sub-variant, else seeds the 10-slot trail particle array, installs the
- * sequence fn, acquires its model resource and applies map flags. */
 void dimcannon_init(int* obj, int* arg)
 {
     ObjMsg_AllocQueue(obj, 4);
@@ -479,8 +477,6 @@ void dimcannon_init(int* obj, int* arg)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-/* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
- * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
 void dimcannon_update(int* obj)
 {
     extern void* Obj_GetPlayerObject(void);
@@ -636,9 +632,6 @@ void dimcannon_update(int* obj)
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E48F0, timeDelta, NULL);
 }
 
-/* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
- * turret with the stick, charges with A, fires on release/full charge, and
- * exits on B or after the post-completion delay. */
 int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     extern void* Obj_GetPlayerObject(void);

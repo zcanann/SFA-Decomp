@@ -947,7 +947,6 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     extern f32 lbl_803E2EFC;
     extern f64 lbl_803E2ED8;
     int hit;
-    ObjHitsPriorityState* hitState;
     f64 d;
     f32 r;
     struct
@@ -960,9 +959,8 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     } a;
 
     hit = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 9;
-    hitState->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (randomGetRange(0, 100) < 50)
     {

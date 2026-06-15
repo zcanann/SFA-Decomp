@@ -1,6 +1,9 @@
-/* DLL 0x01C4 (dimicewall) — DIM ice wall and gate objects [0x801B17F4-0x801B1B40). */
+/*
+ * dimicewall (DLL 0x1C4) — ice wall object for Dinosaur Island Mission.
+ * On shatter (hp reaches zero), emits particle bursts and latches a gamebit;
+ * while intact, allows Tricky to push through it.
+ */
 #include "main/dll/dimicewallstate_struct.h"
-
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
@@ -48,21 +51,8 @@ int fn_801B17F4(int obj, int delta)
     return inner[0] <= 0;
 }
 
-/* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
- * present in the trigger list, latching the gamebit. */
 void dimgate_update(int* obj);
 
-/* dimbarrier_update: while a live type-470 object is in the list, count down the
- * arm timer; on expiry fade the barrier out and latch its gamebit. */
-
-/* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
- * spawn a rolling snowball seeded from the placement params. */
-
-/* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
- * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-
-/* dimicewall_update: on shatter, emit two snow particle bursts and latch the
- * gamebit; otherwise let Tricky push through it. */
 void dimicewall_update(int* obj)
 {
     int* extra = ((GameObject*)obj)->extra;

@@ -1,3 +1,9 @@
+/*
+ * dimboss (DLL 0x1E0) - the DIM world boss object.
+ * Manages the boss's lifecycle: initialise/update/render/free, anim-event dispatch,
+ * hit-detection, asset loading for the DIM→DIMTOP transition, and the game-bit-
+ * driven sequence-flag word (gDIMbossSequenceFlags).
+ */
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"

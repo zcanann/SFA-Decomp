@@ -446,6 +446,7 @@ void explosion_free(int obj);
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
+#pragma opt_strength_reduction off
 void dll_1CE_update(int* obj)
 {
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -474,12 +475,12 @@ void dll_1CE_update(int* obj)
     if (((GameObject*)obj)->anim.seqId == 0x334) return;
     {
         int found = 0;
-        int i;
+        int i = 0;
         int* list = *(int**)((char*)obj + 0x58);
-        int n = (s8) * (s8*)((char*)list + 0x10f);
-        for (i = 0; i < n; i++)
+        int n = (s8) * (s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f);
+        for (; i < n; i++)
         {
-            int* o = *(int**)((char*)list + (i * 4 + 0x100));
+            int* o = *(int**)((char*)list + i * 4 + 0x100);
             if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6)
             {
                 found = 1;
@@ -488,8 +489,7 @@ void dll_1CE_update(int* obj)
         }
         if (!found) return;
     }
-    sub->igniteCountdown -= 1;
-    if ((s8)sub->igniteCountdown > 0) return;
+    if ((s8)(sub->igniteCountdown -= 1) > 0) return;
     GameBit_Set(((Dll1CEPlacement*)q)->gameBitId, 1);
     sub->opened = 1;
     if ((u32)(s16)((Dll1CEPlacement*)q)->unk1A != GameBit_Get(0x46d)) return;

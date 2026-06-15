@@ -708,6 +708,7 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
+#pragma fp_contract off
 void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
@@ -728,9 +729,9 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* e = buf.entries;
     f32 t;
     u8* base = (u8*)(int)lbl_803128E8;
+    GfxCmd* e = buf.entries;
     e[0].layer = 0;
     e[0].flags = 8;
     e[0].tex = &base[0xa0];
@@ -881,6 +882,7 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 9, &base[0x0], 8, &base[0x5c], 0x90, 0);
 }
+#pragma fp_contract reset
 
 void dll_62_func03(int sourceObj, int variant, int posSource, uint flags);
 

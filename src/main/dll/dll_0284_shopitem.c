@@ -448,12 +448,15 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
     {
         objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
     }
-    *(u8*)(ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0) + 0x43) = 0x7F;
+    {
+        int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0);
+        *(u8*)(renderOp + 0x43) = 0x7F;
+    }
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5A30);
     for (i = 0; i < 10; i++)
     {
         slot = state + i * 4;
-        if (*(int*)(slot + 0x98) != 0)
+        if (*(void**)(slot + 0x98) != NULL)
         {
             lightningRender();
             if (getHudHiddenFrameCount() == 0)
@@ -475,7 +478,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                 v.x = ((GameObject*)obj)->anim.localPosX;
                 v.y = ((GameObject*)obj)->anim.localPosY;
                 v.z = ((GameObject*)obj)->anim.localPosZ;
-                if (v.owner == obj)
+                if ((u32)v.owner == (u32)obj)
                 {
                     if (b->flag_40)
                     {

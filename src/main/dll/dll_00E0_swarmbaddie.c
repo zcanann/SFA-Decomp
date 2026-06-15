@@ -236,10 +236,11 @@ void swarmbaddie_update(int obj)
 {
     int hitObj;
     SwarmBaddieState* state;
-    f32 d[3];
-    f32 sqz;
-    f32 sqx;
-    f32 sqy;
+    struct
+    {
+        f32 x, y, z;
+    } d;
+    f32* dp = &d.x;
     f32 volume;
     int oldTarget;
     int hitD;
@@ -273,23 +274,17 @@ void swarmbaddie_update(int obj)
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL)
     {
-        d[0] = state->player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = state->player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = state->player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        sqz = d[2] * d[2];
-        sqx = d[0] * d[0];
-        sqy = d[1] * d[1];
-        state->playerDistance = sqrtf(sqz + (sqx + sqy));
+        d.x = state->player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d.y = state->player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d.z = state->player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        state->playerDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     if ((void*)oldTarget != NULL)
     {
-        d[0] = *(f32*)&((GameObject*)oldTarget)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = *(f32*)&((GameObject*)oldTarget)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = *(f32*)(oldTarget + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
-        sqz = d[2] * d[2];
-        sqx = d[0] * d[0];
-        sqy = d[1] * d[1];
-        state->pathDistance = sqrtf(sqz + (sqx + sqy));
+        d.x = *(f32*)&((GameObject*)oldTarget)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
+        d.y = *(f32*)&((GameObject*)oldTarget)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
+        d.z = *(f32*)(oldTarget + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        state->pathDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     if (((state->flags & 2) != 0) && (state->pathDistance > lbl_803E26C4))
     {
