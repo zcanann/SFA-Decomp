@@ -314,7 +314,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
  *
  * EN v1.0 Address: 0x8026CF78, size 232b
  */
-void fn_8026CF78(u8 secIndex)
+void fn_8026CF78(int secIndex)
 {
     SynthSequenceQueue* section;
 
