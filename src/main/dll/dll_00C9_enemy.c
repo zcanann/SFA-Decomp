@@ -1958,7 +1958,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     if ((flags & 1) != 0)
                     {
-                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1;
+                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1LL;
                         *(u32*)&((EnemyState*)state)->unk2E8 = *(u32*)&((EnemyState*)state)->unk2E8 | 2;
                     }
                     if (*(void**)&((EnemyState*)state)->modelLight == NULL)
