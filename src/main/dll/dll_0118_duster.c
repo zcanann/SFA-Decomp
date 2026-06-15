@@ -56,7 +56,6 @@ STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
 STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
-extern void* gCameraInterface;
 extern void objRenderFn_8003b8f4(int obj, float arg);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               void* obj, int flags, int mask, int arg9, int arg10);
