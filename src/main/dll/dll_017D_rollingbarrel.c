@@ -1,7 +1,9 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
 
 extern int Obj_GetPlayerObject(void);
@@ -23,7 +25,7 @@ extern void ObjGroup_AddObject(int obj, int groupId);
 extern void Obj_FreeObject(int obj);
 
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
-extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void CameraShake_Start(int obj, f32 a, f32 b, f32 c);
 extern void doRumble(f32 v);
 
 extern void objRenderFn_8003b8f4(f32 v);
@@ -74,6 +76,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     {
         return;
     }
+
     ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
 }
 
@@ -130,7 +133,7 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
 
 void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
 
-#pragma peephole off
+#pragma peephole on
 void RollingBarrel_update(int obj)
 {
     RollingBarrelState* state;
@@ -152,9 +155,22 @@ void RollingBarrel_update(int obj)
     dist_sq = lbl_803E4468;
     bVar1 = state->state;
 
-    switch (bVar1)
+    if (bVar1 == ROLLINGBARREL_STATE_RESPAWN_WAIT)
     {
-        case ROLLINGBARREL_STATE_ROLLING:
+        state->timer += timeDelta;
+        if (state->timer >= lbl_803E44B0)
+        {
+            state->hitVolumeSlot = 0;
+            state->state = ROLLINGBARREL_STATE_CLEANUP;
+            state->timer -= lbl_803E44B0;
+            ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
+            lbl_803DDB20 -= 1;
+        }
+    }
+    else if (bVar1 < ROLLINGBARREL_STATE_RESPAWN_WAIT)
+    {
+        if (bVar1 == ROLLINGBARREL_STATE_ROLLING)
+        {
             if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
             {
                 f32 vmax = lbl_803E446C;
@@ -240,7 +256,7 @@ void RollingBarrel_update(int obj)
                     (f32)(int)((GameObject*)obj)->anim.rotY);
             hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
 
-            if (blocked != 0 || (u32)hitInfo == (u32)Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||
+            if (blocked != 0 || hitInfo == Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||
                 hitResult == 0x13)
             {
                 if (blocked == 0)
@@ -254,34 +270,25 @@ void RollingBarrel_update(int obj)
                 r = randomGetRange(0, 2);
                 fn_801A5D88(obj, (int)r);
             }
-            break;
-        case ROLLINGBARREL_STATE_EXPLODED_WAIT:
+        }
+        else
+        {
             state->timer += timeDelta;
             if (state->timer >= lbl_803E44B0)
             {
                 state->state = ROLLINGBARREL_STATE_RESPAWN_WAIT;
                 state->timer -= lbl_803E44B0;
             }
-            break;
-        case ROLLINGBARREL_STATE_RESPAWN_WAIT:
-            state->timer += timeDelta;
-            if (state->timer >= lbl_803E44B0)
-            {
-                state->hitVolumeSlot = 0;
-                state->state = ROLLINGBARREL_STATE_CLEANUP;
-                state->timer -= lbl_803E44B0;
-                ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
-                lbl_803DDB20 -= 1;
-            }
-            break;
-        case ROLLINGBARREL_STATE_CLEANUP:
-            state->timer += timeDelta;
-            if (state->timer >= lbl_803E44B4)
-            {
-                Obj_FreeObject(obj);
-                return;
-            }
-            break;
+        }
+    }
+    else if (bVar1 < 4)
+    {
+        state->timer += timeDelta;
+        if (state->timer >= lbl_803E44B4)
+        {
+            Obj_FreeObject(obj);
+            return;
+        }
     }
 
     if (state->hitVolumeSlot != 0)
@@ -309,13 +316,21 @@ void fn_801A5D88(int obj, int explosionVariant)
     Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (lbl_803DDB20 > 1)
     {
+        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        r2 = randomGetRange(0x32, 0x3c);
+        size = (f32)(int)
+        r2;
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, size);
     }
     else
     {
+        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        r2 = randomGetRange(0x32, 0x3c);
+        size = (f32)(int)
+        r2;
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, size);
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
@@ -329,7 +344,7 @@ void fn_801A5D88(int obj, int explosionVariant)
         if (dist <= lbl_803E4470)
         {
             falloff = lbl_803E4474 - dist / lbl_803E4470;
-            CameraShake_Start(lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
+            CameraShake_Start(obj, lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
             doRumble(lbl_803E4484 * falloff);
         }
     }
