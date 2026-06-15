@@ -1,5 +1,20 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
+
+/* Obj_AllocObjectSetup(36,...) buffer composed in drcreator_update and
+ * drcreator_spawnProjectileCallback. Head is the common ObjPlacement;
+ * tail (0x18..0x23) is file-local. */
+typedef struct DrcreatorSetup
+{
+    ObjPlacement base; /* 0x00..0x17 */
+    u8 pad18;          /* 0x18 */
+    u8 unk19;          /* 0x19 */
+    u8 pad1A[0x24 - 0x1A];
+} DrcreatorSetup;
+
+STATIC_ASSERT(offsetof(DrcreatorSetup, unk19) == 0x19);
+STATIC_ASSERT(sizeof(DrcreatorSetup) == 0x24);
 
 typedef struct DrcreatorPlacement
 {
@@ -107,20 +122,20 @@ void drcreator_update(int obj)
                 if (((DrcreatorState*)runtime)->spawnTimer <= 0)
                 {
                     o = Obj_AllocObjectSetup(36, 1725);
-                    *(f32*)(o + 8) = ((GameObject*)obj)->anim.localPosX;
-                    *(f32*)(o + 0xc) = ((GameObject*)obj)->anim.localPosY;
-                    *(f32*)(o + 0x10) = ((GameObject*)obj)->anim.localPosZ;
-                    *(u8*)(o + 4) = 1;
-                    *(u8*)(o + 5) = 1;
-                    *(u8*)(o + 6) = 255;
-                    *(u8*)(o + 7) = 250;
+                    ((DrcreatorSetup*)o)->base.posX = ((GameObject*)obj)->anim.localPosX;
+                    ((DrcreatorSetup*)o)->base.posY = ((GameObject*)obj)->anim.localPosY;
+                    ((DrcreatorSetup*)o)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+                    ((DrcreatorSetup*)o)->base.unk04[0] = 1;
+                    ((DrcreatorSetup*)o)->base.unk04[1] = 1;
+                    ((DrcreatorSetup*)o)->base.unk04[2] = 255;
+                    ((DrcreatorSetup*)o)->base.unk04[3] = 250;
                     if (((GameObject*)obj)->anim.mapEventSlot == 2)
                     {
-                        *(u8*)(o + 0x19) = 4;
+                        ((DrcreatorSetup*)o)->unk19 = 4;
                     }
                     else
                     {
-                        *(u8*)(o + 0x19) = 1;
+                        ((DrcreatorSetup*)o)->unk19 = 1;
                     }
                     p = (char*)Obj_SetupObject(o, 5, -1, -1, 0);
                     if (p != NULL)
@@ -171,27 +186,27 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
             if (GameBit_Get(((DrcreatorSpawnProjectileCallbackState*)runtime)->unk4) != 0)
             {
                 o = Obj_AllocObjectSetup(36, 1725);
-                *(f32*)(o + 8) = ((GameObject*)obj)->anim.localPosX;
-                *(f32*)(o + 0xc) = ((GameObject*)obj)->anim.localPosY;
-                *(f32*)(o + 0x10) = ((GameObject*)obj)->anim.localPosZ;
-                *(u8*)(o + 4) = 1;
-                *(u8*)(o + 5) = 1;
-                *(u8*)(o + 6) = 255;
-                *(u8*)(o + 7) = 255;
-                *(u8*)(o + 0x19) = 2;
+                ((DrcreatorSetup*)o)->base.posX = ((GameObject*)obj)->anim.localPosX;
+                ((DrcreatorSetup*)o)->base.posY = ((GameObject*)obj)->anim.localPosY;
+                ((DrcreatorSetup*)o)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+                ((DrcreatorSetup*)o)->base.unk04[0] = 1;
+                ((DrcreatorSetup*)o)->base.unk04[1] = 1;
+                ((DrcreatorSetup*)o)->base.unk04[2] = 255;
+                ((DrcreatorSetup*)o)->base.unk04[3] = 255;
+                ((DrcreatorSetup*)o)->unk19 = 2;
                 p = Obj_SetupObject(o, 5, -1, -1, 0);
                 if ((void*)p != NULL)
                 {
-                    *(s16*)(p + 2) = 0;
+                    ((DrcreatorState*)p)->unk2 = 0;
                     *(s16*)p = (s16)randomGetRange(0, 65535);
-                    *(f32*)(p + 0x24) = lbl_803E69A8 * (f32)(int)
+                    ((DrcreatorState*)p)->velocityX = lbl_803E69A8 * (f32)(int)
                     randomGetRange(-((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA,
                                    ((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA);
-                    *(f32*)(p + 0x28) = lbl_803E69A8 * (f32) * (int*)runtime;
-                    *(f32*)(p + 0x2c) = lbl_803E69A8 * (f32)(int)
+                    ((DrcreatorState*)p)->velocityY = lbl_803E69A8 * (f32) * (int*)runtime;
+                    ((DrcreatorState*)p)->velocityZ = lbl_803E69A8 * (f32)(int)
                     randomGetRange(-((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA,
                                    ((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA);
-                    *(int*)(p + 0xc4) = obj;
+                    ((DrcreatorState*)p)->creatorObj = obj;
                 }
             }
             break;

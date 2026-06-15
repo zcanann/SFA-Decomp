@@ -102,10 +102,11 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     }
     if ((mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) == 0x10)
     {
-        if (sourceState->inactiveTimer != lbl_803E7360)
+        f32 zero = lbl_803E7360;
+        if (sourceState->inactiveTimer != zero)
         {
             sourceState->inactiveTimer -= timeDelta;
-            if (sourceState->inactiveTimer <= lbl_803E7360)
+            if (sourceState->inactiveTimer <= zero)
             {
                 result = 1;
             }
@@ -159,14 +160,17 @@ void cmbsrc_hitDetect(int obj)
             state->hitCharge -= 1;
             state->hitRecoverTimer = lbl_803E7384;
         }
-        if (state->hitRecoverTimer != lbl_803E7360)
+        {
+        f32 zero = lbl_803E7360;
+        if (state->hitRecoverTimer != zero)
         {
             state->hitRecoverTimer -= timeDelta;
-            if (state->hitRecoverTimer <= lbl_803E7360)
+            if (state->hitRecoverTimer <= zero)
             {
                 state->hitCharge += 1;
                 state->hitRecoverTimer = lbl_803E7384;
             }
+        }
         }
         v = state->hitCharge;
         if (v < 0)
@@ -183,6 +187,7 @@ void cmbsrc_hitDetect(int obj)
 
 int cmbsrc_cycleColor(int obj, int state)
 {
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight *light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;

@@ -201,7 +201,7 @@ void iceblast_update(int* obj)
         f32 zero;
         state[0] = state[0] + lbl_803E3608;
         zero = lbl_803E3604;
-        ((f32*)obj)[9] = zero;
+        ((f32*)(int)obj)[9] = zero;
         ((f32*)obj)[11] = zero;
         ((f32*)obj)[10] = lbl_803E360C;
         vec.pos[1] = zero;

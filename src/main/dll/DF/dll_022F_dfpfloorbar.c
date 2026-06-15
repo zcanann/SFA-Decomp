@@ -240,18 +240,14 @@ void dfpfloorbar_init(int obj, int params)
 void dfpfloorbar_initialise(void)
 {
     u8* modeRow = gDfpfloorbarModeTable;
+    int i;
 
-    modeRow[0] = 0;
-    modeRow[1] = 0;
-    modeRow[2] = 0;
-    modeRow += DFPFLOORBAR_MODE_ROW_SIZE;
-    modeRow[0] = 0;
-    modeRow[1] = 0;
-    modeRow[2] = 0;
-    modeRow += DFPFLOORBAR_MODE_ROW_SIZE;
-    modeRow[0] = 0;
-    modeRow[1] = 0;
-    modeRow[2] = 0;
+    for (i = 0; i < DFPFLOORBAR_MODE_ROW_COUNT; i++, modeRow += DFPFLOORBAR_MODE_ROW_SIZE)
+    {
+        modeRow[0] = 0;
+        modeRow[1] = 0;
+        modeRow[2] = 0;
+    }
 }
 
 ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {

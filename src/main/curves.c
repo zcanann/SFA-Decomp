@@ -414,16 +414,17 @@ f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
 
 f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
+    f32 p0 = values[0];
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-p0 + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +
-        (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
-    f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[1];
+        (lbl_803DE664 * p0 + lbl_803DE66C * values[1]);
+    f32 c = lbl_803DE668 * p0 + lbl_803DE664 * values[1];
 
     if (outTangent != NULL)
     {
         *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c;
     }
-    return t * (t * (a * t + b) + c) + values[0];
+    return t * (t * (a * t + b) + c) + p0;
 }
 
 void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)

@@ -173,8 +173,10 @@ void pollen_hitDetect(int obj)
     {
         f32 fz;
         ((GameObject*)obj)->anim.localPosX = hitState->contactPosX;
-        ((GameObject*)obj)->anim.localPosY = hitState->contactPosY;
-        ((GameObject*)obj)->anim.localPosZ = hitState->contactPosZ;
+        ((GameObject*)obj)->anim.localPosY =
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosY;
+        ((GameObject*)obj)->anim.localPosZ =
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosZ;
         fz = lbl_803E313C;
         ((GameObject*)obj)->anim.velocityX = fz;
         ((GameObject*)obj)->anim.velocityY = fz;
@@ -366,7 +368,6 @@ void pinponspike_update(int obj);
 void pollen_update(int obj)
 {
     PollenExtra* extra;
-    ObjHitsPriorityState* hitState;
     int i;
 
     extra = *(PollenExtra**)&((GameObject*)obj)->extra;
@@ -389,9 +390,11 @@ void pollen_update(int obj)
         ObjHits_SetHitVolumeSlot((u32)obj, 0x16, 1, 0);
         ObjHitbox_SetSphereRadius(obj, 7);
         ObjHits_EnableObject((u32)obj);
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        if (hitState->lastHitObject != 0 &&
-            (hitState->lastHitObject == (int)Obj_GetPlayerObject() || hitState->lastHitObject == (int)getTrickyObject()))
+        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
+            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                 (int)Obj_GetPlayerObject() ||
+             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                 (int)getTrickyObject()))
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E3138);

@@ -1,5 +1,6 @@
 #include "main/dll/LGT/LGTcontrollight.h"
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
+#include "main/game_object.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void* params, void* outVec);
@@ -23,18 +24,18 @@ int fn_801F4C04(int* obj)
 
 void fn_801F4C28(u8* obj, u8* rec)
 {
-    ((LgtFireFlyRec*)rec)->src0X = *(f32*)(obj + 0x0c);
-    ((LgtFireFlyRec*)rec)->src0Y = *(f32*)(obj + 0x10);
-    ((LgtFireFlyRec*)rec)->src0Z = *(f32*)(obj + 0x14);
-    ((LgtFireFlyRec*)rec)->src1X = *(f32*)(obj + 0x0c);
-    ((LgtFireFlyRec*)rec)->src1Y = *(f32*)(obj + 0x10);
-    ((LgtFireFlyRec*)rec)->src1Z = *(f32*)(obj + 0x14);
-    ((LgtFireFlyRec*)rec)->src2X = *(f32*)(obj + 0x0c);
-    ((LgtFireFlyRec*)rec)->src2Y = *(f32*)(obj + 0x10);
-    ((LgtFireFlyRec*)rec)->src2Z = *(f32*)(obj + 0x14);
-    ((LgtFireFlyRec*)rec)->src3X = *(f32*)(obj + 0x0c);
-    ((LgtFireFlyRec*)rec)->src3Y = *(f32*)(obj + 0x10);
-    ((LgtFireFlyRec*)rec)->src3Z = *(f32*)(obj + 0x14);
+    ((LgtFireFlyRec*)rec)->src0X = ((GameObject*)obj)->anim.localPosX;
+    ((LgtFireFlyRec*)rec)->src0Y = ((GameObject*)obj)->anim.localPosY;
+    ((LgtFireFlyRec*)rec)->src0Z = ((GameObject*)obj)->anim.localPosZ;
+    ((LgtFireFlyRec*)rec)->src1X = ((GameObject*)obj)->anim.localPosX;
+    ((LgtFireFlyRec*)rec)->src1Y = ((GameObject*)obj)->anim.localPosY;
+    ((LgtFireFlyRec*)rec)->src1Z = ((GameObject*)obj)->anim.localPosZ;
+    ((LgtFireFlyRec*)rec)->src2X = ((GameObject*)obj)->anim.localPosX;
+    ((LgtFireFlyRec*)rec)->src2Y = ((GameObject*)obj)->anim.localPosY;
+    ((LgtFireFlyRec*)rec)->src2Z = ((GameObject*)obj)->anim.localPosZ;
+    ((LgtFireFlyRec*)rec)->src3X = ((GameObject*)obj)->anim.localPosX;
+    ((LgtFireFlyRec*)rec)->src3Y = ((GameObject*)obj)->anim.localPosY;
+    ((LgtFireFlyRec*)rec)->src3Z = ((GameObject*)obj)->anim.localPosZ;
     ((LgtFireFlyRec*)rec)->baseX = lbl_803E5EAC;
     ((LgtFireFlyRec*)rec)->baseY = lbl_803E5EB0;
     ((LgtFireFlyRec*)rec)->baseZ = lbl_803E5EB4;
@@ -46,9 +47,9 @@ void fn_801F4C28(u8* obj, u8* rec)
     ((LgtFireFlyRec*)rec)->unk66 = 4;
     ((LgtFireFlyRec*)rec)->radiusMin = lbl_803E5EB8;
     ((LgtFireFlyRec*)rec)->radius = lbl_803E5EBC;
-    ((LgtFireFlyRec*)rec)->posX = *(f32*)(obj + 0x0c);
-    ((LgtFireFlyRec*)rec)->posY = *(f32*)(obj + 0x10);
-    ((LgtFireFlyRec*)rec)->posZ = *(f32*)(obj + 0x14);
+    ((LgtFireFlyRec*)rec)->posX = ((GameObject*)obj)->anim.localPosX;
+    ((LgtFireFlyRec*)rec)->posY = ((GameObject*)obj)->anim.localPosY;
+    ((LgtFireFlyRec*)rec)->posZ = ((GameObject*)obj)->anim.localPosZ;
     ((LgtFireFlyRec*)rec)->firstFrame = 1;
     ((LgtFireFlyRec*)rec)->unk78 = lbl_803E5EC0;
 }
@@ -86,7 +87,7 @@ void fn_801F4D54(int obj, u8* rec)
     {
         ((LgtFireFlyRec*)rec)->offZ =
             ((LgtFireFlyRec*)rec)->radius -
-            (f32)(s32)(randomGetRange(0x14, (s16)(s32) * (f32*)(rec + 0x50)));
+            (f32)(s32)(randomGetRange(0x14, (s16)(s32)((LgtFireFlyRec*)rec)->radius));
     }
     ((LgtFireFlyRec*)rec)->angle += (s16)randomGetRange(0xbb8, 0x1388);
     locals.z0 = lbl_803E5EC4;

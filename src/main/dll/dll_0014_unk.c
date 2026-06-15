@@ -1806,13 +1806,13 @@ u16 getPatchGroup(float* point, int patchGroupIndex, undefined4 param_3, undefin
 #pragma peephole on
 uint isInWalkGroupOrPatch(float* point)
 {
-    s16 idx;
-    s16 i;
-    ObjfsaPatch* patch;
     s16* nz;
     s16* nx;
     char* offs;
+    ObjfsaPatch* patch;
     int count;
+    s16 i;
+    s16 idx;
     f32 y;
 
     if (mathFn_800dbff0(point) != 0)
@@ -1823,7 +1823,7 @@ uint isInWalkGroupOrPatch(float* point)
     idx = 1;
     patch = &lbl_8039CAE8[1];
     count = lbl_803DD468;
-    for (; idx < count; idx++, patch++)
+    for (; idx < count; patch++, idx++)
     {
         y = point[1];
         if (y < (f32)patch->maxY && y > (f32)patch->minY)
@@ -1832,7 +1832,7 @@ uint isInWalkGroupOrPatch(float* point)
             nz = (s16*)patch;
             nx = (s16*)patch;
             offs = (char*)patch;
-            for (; i < 4; i++, offs += 4, nz += 2, nx += 2)
+            for (; i < 4; offs += 4, i++, nz += 2, nx += 2)
             {
                 if (*(f32*)(offs + 0x10) +
                     (point[0] * (f32)nx[0] + point[2] * (f32)nz[1]) >
@@ -1969,8 +1969,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
 
 int mathFn_800dbff0(float* point)
 {
-    s16 down;
     s16 up;
+    s16 down;
     ObjfsaWalkGroup* g;
     f32 y;
     f32 z;
@@ -1985,7 +1985,7 @@ int mathFn_800dbff0(float* point)
     }
     else
     {
-        up = down + 1;
+        up = lbl_803DD464 + 1;
     }
 
     while (down != up)
@@ -3932,12 +3932,12 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
     float distance;
     double nearestCurveId;
     double nearestDistance;
-    int objectCount;
     int startIndex;
+    int objectCount;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
-    nearestCurveId = (double)lbl_803E12B0;
-    nearestDistance = (double)lbl_803E12B8;
+    nearestCurveId = (double)gFloatNegOne;
+    nearestDistance = (double)gFloatZero;
     for (i = 0; i < objectCount; i = i + 1)
     {
         obj = objects[i];
@@ -3949,7 +3949,7 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
                     dy = ((GameObject*)obj)->anim.worldPosY - y,
                     dz = ((GameObject*)obj)->anim.worldPosZ - z,
                     distance = sqrtf(dz * dz + (dx * dx + dy * dy)),
-                    (double)lbl_803E12B0 == nearestCurveId || (distance < nearestDistance))))))
+                    (double)gFloatNegOne == nearestCurveId || (distance < nearestDistance))))))
         {
             nearestCurveId = (double)curve->id;
             nearestDistance = distance;

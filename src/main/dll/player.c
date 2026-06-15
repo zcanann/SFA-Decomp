@@ -1387,17 +1387,15 @@ int fn_8029A76C(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            void** p = lbl_80332ED4;
             int i;
             lbl_803DE42C = 0;
             for (i = 0; i < 7; i++)
             {
-                if (*p != NULL)
+                if (lbl_80332ED4[i] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)lbl_80332ED4[i]);
+                    lbl_80332ED4[i] = NULL;
                 }
-                p++;
             }
             if (lbl_803DE454 != NULL)
             {
@@ -4967,18 +4965,16 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            void** p = lbl_80332ED4;
             int i;
             inner->animState = -1;
             lbl_803DE42C = 0;
             for (i = 0; i < 7; i++)
             {
-                if (*p != NULL)
+                if (lbl_80332ED4[i] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)lbl_80332ED4[i]);
+                    lbl_80332ED4[i] = NULL;
                 }
-                p++;
             }
             if (lbl_803DE454 != NULL)
             {
@@ -5237,18 +5233,14 @@ int fn_8029AF9C(int obj, int state)
                     getCurSeqNo() != 0)
                 {
                     int i;
-                    void** p;
                     lbl_803DE42C = 0;
-                    i = 0;
-                    p = lbl_80332ED4;
-                    for (; i < 7; i++)
+                    for (i = 0; i < 7; i++)
                     {
-                        if (*p != NULL)
+                        if (lbl_80332ED4[i] != NULL)
                         {
-                            Obj_FreeObject((int)*p);
-                            *p = NULL;
+                            Obj_FreeObject((int)lbl_80332ED4[i]);
+                            lbl_80332ED4[i] = NULL;
                         }
-                        p++;
                     }
                     if (lbl_803DE454 != NULL)
                     {
@@ -9842,16 +9834,14 @@ int fn_80299E44(int obj, int state, f32 fv)
             getCurSeqNo() != 0)
         {
             int i;
-            void** p = lbl_80332ED4;
             lbl_803DE42C = 0;
             for (i = 0; i < 7; i++)
             {
-                if (*p != NULL)
+                if (lbl_80332ED4[i] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)lbl_80332ED4[i]);
+                    lbl_80332ED4[i] = NULL;
                 }
-                p++;
             }
             if (lbl_803DE454 != NULL)
             {
@@ -10382,17 +10372,14 @@ int fn_802A5048(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
         int i;
-        void** p;
         lbl_803DE42C = 0;
-        p = lbl_80332ED4;
         for (i = 0; i < 7; i++)
         {
-            if (*p != NULL)
+            if (lbl_80332ED4[i] != NULL)
             {
-                Obj_FreeObject((int)*p);
-                *p = NULL;
+                Obj_FreeObject((int)lbl_80332ED4[i]);
+                lbl_80332ED4[i] = NULL;
             }
-            p++;
         }
         if (lbl_803DE454 != NULL)
         {
@@ -10524,18 +10511,15 @@ void fn_8029C8C8(int obj, int p2)
         lbl_803DE42C != 0)
     {
         int i;
-        void** p;
         inner->animState = -1;
         lbl_803DE42C = 0;
-        p = lbl_80332ED4;
         for (i = 0; i < 7; i++)
         {
-            if (*p != NULL)
+            if (lbl_80332ED4[i] != NULL)
             {
-                Obj_FreeObject((int)*p);
-                *p = NULL;
+                Obj_FreeObject((int)lbl_80332ED4[i]);
+                lbl_80332ED4[i] = NULL;
             }
-            p++;
         }
         if (lbl_803DE454 != NULL)
         {
@@ -10694,8 +10678,8 @@ void fn_802A96D8(void)
 {
     void** p;
     s8 i;
-    int idx3;
     int obj;
+    int idx3;
 
     if (!Obj_IsLoadingLocked()) return;
     idx3 = 0;
@@ -11224,7 +11208,6 @@ void fn_8029A4A8(int obj, int p2)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     s16 sel = ((PlayerState*)p2)->baddie.controlMode;
-    void** p;
     int i;
 
     if (sel == 0x2a || sel == 0x2e || sel == 0x2f || sel == 0x2c) return;
@@ -11244,15 +11227,13 @@ void fn_8029A4A8(int obj, int p2)
     }
 
     lbl_803DE42C = 0;
-    p = lbl_80332ED4;
     for (i = 0; i < 7; i++)
     {
-        if (*p != NULL)
+        if (lbl_80332ED4[i] != NULL)
         {
-            Obj_FreeObject((int)*p);
-            *p = NULL;
+            Obj_FreeObject((int)lbl_80332ED4[i]);
+            lbl_80332ED4[i] = NULL;
         }
-        p++;
     }
     if (lbl_803DE454 != NULL)
     {
@@ -12919,7 +12900,6 @@ void fn_802AF7F8(int obj, int state)
     int inner;
     u8 result;
     int r35c;
-    void** p;
     int i;
     int v;
     if (fn_802A9C0C(obj, state, 0x2d) != 0)
@@ -13023,15 +13003,13 @@ void fn_802AF7F8(int obj, int state)
         {
             ((PlayerState*)state)->animState = -1;
             lbl_803DE42C = 0;
-            p = lbl_80332ED4;
             for (i = 0; i < 7; i++)
             {
-                if (*p != NULL)
+                if (lbl_80332ED4[i] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)lbl_80332ED4[i]);
+                    lbl_80332ED4[i] = NULL;
                 }
-                p++;
             }
             if (lbl_803DE454 != NULL)
             {
@@ -13422,8 +13400,8 @@ int fn_8029A5E4(int obj, int state)
 
 void fn_80296D20(int obj, void* arg)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
     PlayerState* inner = ((GameObject*)obj)->extra;
+    int state = (int)inner;
     short type;
 
     if (((GameObject*)obj)->anim.parent == arg)
@@ -15574,8 +15552,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
         sqrtf(inner->unk4C8 * inner->unk4C8 +
             inner->unk4CC * inner->unk4CC);
     {
-        f32 d = ((PlayerState*)state)->baddie.animSpeedC;
-        f32 c = (d < lbl_803E7EA4) ? lbl_803E7EA4 : ((d > inner->maxSpeed) ? inner->maxSpeed : d);
+        f32 c = (((PlayerState*)state)->baddie.animSpeedC < lbl_803E7EA4) ? lbl_803E7EA4 : ((((PlayerState*)state)->baddie.animSpeedC > inner->maxSpeed) ? inner->maxSpeed : ((PlayerState*)state)->baddie.animSpeedC);
         ((PlayerState*)state)->baddie.animSpeedC = c;
     }
 
@@ -15696,20 +15673,26 @@ void fn_802AA014(int obj)
             h2 = (u16)res >> 1;
             ycomp = cot * -(((inner->unk788 - (f32)h2) / (f32)h2) * aspect);
             xcomp = cot * ((inner->unk78C - (f32)hw) / (f32)hw);
-            len = sqrtf(lbl_803E80AC + (ycomp * ycomp + xcomp * xcomp));
+            len = sqrtf(lbl_803E80AC + (xcomp * xcomp + ycomp * ycomp));
             v[0] = ycomp / len;
             v[1] = xcomp / len;
             v[2] = lbl_803E7F5C / len;
             Matrix_TransformVector(fn_8000E814(), v, v);
-            *(f32*)((char*)o + 0x24) = v[0] * lbl_803E80D8;
-            *(f32*)((char*)o + 0x28) = v[1] * lbl_803E80D8;
-            *(f32*)((char*)o + 0x2c) = v[2] * lbl_803E80D8;
-            *(f32*)((char*)o + 0xc) = *(f32*)((char*)o + 0x18) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x24) + *(f32*)((char*)slot + 0xc);
-            *(f32*)((char*)o + 0x10) = *(f32*)((char*)o + 0x1c) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x28) + *(f32*)((char*)slot + 0x10);
-            *(f32*)((char*)o + 0x14) = *(f32*)((char*)o + 0x20) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x2c) + *(f32*)((char*)slot + 0x14);
+            {
+                f32 scale = lbl_803E80D8;
+                *(f32*)((char*)o + 0x24) = v[0] * scale;
+                *(f32*)((char*)o + 0x28) = v[1] * scale;
+                *(f32*)((char*)o + 0x2c) = v[2] * scale;
+            }
+            {
+                f32 k = lbl_803E7ED4;
+                *(f32*)((char*)o + 0xc) = *(f32*)((char*)o + 0x18) =
+                    k * *(f32*)((char*)o + 0x24) + *(f32*)((char*)slot + 0xc);
+                *(f32*)((char*)o + 0x10) = *(f32*)((char*)o + 0x1c) =
+                    k * *(f32*)((char*)o + 0x28) + *(f32*)((char*)slot + 0x10);
+                *(f32*)((char*)o + 0x14) = *(f32*)((char*)o + 0x20) =
+                    k * *(f32*)((char*)o + 0x2c) + *(f32*)((char*)slot + 0x14);
+            }
             *(s16*)((char*)o + 2) = *(s16*)((char*)slot + 2) / 2;
             *(s16*)((char*)o + 0) = -*(s16*)((char*)slot + 0);
             *(int*)((char*)o + 0xf4) = 0x64;
@@ -15895,7 +15878,7 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
         ((ObjPlacement*)setup)->posY = y0 + yoff;
         ((ObjPlacement*)setup)->posZ = z0 + yoff;
         setup = Obj_SetupObject(setup, 5, -1, -1, 0);
-        if (setup != 0)
+        if ((void*)setup != NULL)
         {
             ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 0, &x0, &y0, &z0, 0);
             ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 1, &x1, &y1, &z1, 0);
@@ -18151,7 +18134,7 @@ int fn_8029D4C0(int obj, int state, f32 fv)
                 d += 0xffff;
             }
             *(s16*)((char*)inner + 0x478) =
-                *(s16*)((char*)inner + 0x478) + (d * (int)fv >> 3);
+                *(s16*)((char*)(int)inner + 0x478) + (d * (int)fv >> 3);
             inner->yaw = *(s16*)((char*)inner + 0x478);
         }
         break;
@@ -18186,7 +18169,7 @@ int fn_8029D4C0(int obj, int state, f32 fv)
                 d += 0xffff;
             }
             *(s16*)((char*)inner + 0x478) =
-                *(s16*)((char*)inner + 0x478) + (d * (int)fv >> 3);
+                *(s16*)((char*)(int)inner + 0x478) + (d * (int)fv >> 3);
             inner->yaw = *(s16*)((char*)inner + 0x478);
         }
         break;

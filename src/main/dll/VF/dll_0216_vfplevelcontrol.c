@@ -183,10 +183,10 @@ void vfplevelcontrol_init(int* obj, u8* init)
 
 void fn_801F9804(int obj)
 {
+    s16* p;
     VFPLevelControlState* state = ((GameObject*)obj)->extra;
     s16 bits[4];
-    s16* p;
-    int i;
+    s16 i;
 
     if (state->latch.fields.sequenceStep < 4)
     {
@@ -194,14 +194,15 @@ void fn_801F9804(int obj)
         bits[1] = GameBit_Get(0xe19);
         bits[2] = GameBit_Get(0xe17);
         bits[3] = GameBit_Get(0xe18);
-        p = &bits[state->latch.fields.sequenceStep];
-        for (i = state->latch.fields.sequenceStep; i < 4; i++)
+        i = state->latch.fields.sequenceStep;
+        p = &bits[i];
+        for (; i < 4; i++)
         {
             if (i == state->latch.fields.sequenceStep)
             {
                 if (*p != 0)
                 {
-                    state->latch.fields.sequenceStep = state->latch.fields.sequenceStep + 1;
+                    state->latch.fields.sequenceStep++;
                     if (state->latch.fields.sequenceStep == 4)
                     {
                         GameBit_Set(0xe1b, 1);

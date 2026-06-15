@@ -29,6 +29,41 @@ extern void* Obj_AllocObjectSetup(int size, int objectId);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 extern ModgfxInterface** gModgfxInterface;
 
+/* Obj_AllocObjectSetup(0x38,...) buffer composed in dfsh_objcreator_update.
+ * Head is the common ObjPlacement; tail (0x18..0x37) is file-local. */
+typedef struct DfshObjCreatorSetup
+{
+    ObjPlacement base; /* 0x00..0x17 */
+    s16 unk18;         /* 0x18 */
+    s16 unk1A;         /* 0x1A */
+    s16 unk1C;         /* 0x1C */
+    u8 pad1E[0x22 - 0x1E];
+    s16 unk22;         /* 0x22 */
+    u8 pad24[0x27 - 0x24];
+    u8 unk27;          /* 0x27 */
+    u8 pad28;          /* 0x28 */
+    u8 unk29;          /* 0x29 */
+    s8 unk2A;          /* 0x2A */
+    u8 unk2B;          /* 0x2B */
+    u8 pad2C[0x2E - 0x2C];
+    s8 unk2E;          /* 0x2E */
+    u8 pad2F;          /* 0x2F */
+    s16 unk30;         /* 0x30 */
+    u8 pad32[0x34 - 0x32];
+    u16 unk34;         /* 0x34 */
+    u8 pad36[0x38 - 0x36];
+} DfshObjCreatorSetup;
+
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk18) == 0x18);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk22) == 0x22);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk27) == 0x27);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk29) == 0x29);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk2A) == 0x2A);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk2E) == 0x2E);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk30) == 0x30);
+STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk34) == 0x34);
+STATIC_ASSERT(sizeof(DfshObjCreatorSetup) == 0x38);
+
 void dfsh_objcreator_free(void)
 {
 }
@@ -93,32 +128,32 @@ void dfsh_objcreator_update(int obj)
     if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0)
     {
         spawnSetup = Obj_AllocObjectSetup(0x38, 0x11);
-        *(f32*)(spawnSetup + 0x08) = ((ObjPlacement*)setup)->posX;
-        *(f32*)(spawnSetup + 0x0c) = ((ObjPlacement*)setup)->posY;
-        *(f32*)(spawnSetup + 0x10) = ((ObjPlacement*)setup)->posZ;
-        *(int*)(spawnSetup + 0x14) = ((ObjPlacement*)setup)->mapId;
-        spawnSetup[0x04] = setup[0x04];
-        spawnSetup[0x05] = setup[0x05];
-        spawnSetup[0x06] = setup[0x06];
-        spawnSetup[0x07] = setup[0x07];
-        spawnSetup[0x27] = 3;
-        *(s16*)(spawnSetup + 0x18) = 0x1e7;
-        *(s16*)(spawnSetup + 0x30) = -1;
-        *(s16*)(spawnSetup + 0x1a) = -1;
-        *(s16*)(spawnSetup + 0x1c) = -1;
-        *(s8*)(spawnSetup + 0x2a) = (s8)(*(s16*)obj >> 8);
-        spawnSetup[0x2b] = 2;
+        ((DfshObjCreatorSetup*)spawnSetup)->base.posX = ((ObjPlacement*)setup)->posX;
+        ((DfshObjCreatorSetup*)spawnSetup)->base.posY = ((ObjPlacement*)setup)->posY;
+        ((DfshObjCreatorSetup*)spawnSetup)->base.posZ = ((ObjPlacement*)setup)->posZ;
+        ((DfshObjCreatorSetup*)spawnSetup)->base.mapId = ((ObjPlacement*)setup)->mapId;
+        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[0] = setup[0x04];
+        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[1] = setup[0x05];
+        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[2] = setup[0x06];
+        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[3] = setup[0x07];
+        ((DfshObjCreatorSetup*)spawnSetup)->unk27 = 3;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk18 = 0x1e7;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk30 = -1;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk1A = -1;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk1C = -1;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk2A = (s8)(*(s16*)obj >> 8);
+        ((DfshObjCreatorSetup*)spawnSetup)->unk2B = 2;
         if (GameBit_Get(0xfc) != 0)
         {
-            *(s16*)(spawnSetup + 0x22) = 0x49;
+            ((DfshObjCreatorSetup*)spawnSetup)->unk22 = 0x49;
         }
         else
         {
-            *(s16*)(spawnSetup + 0x22) = -1;
+            ((DfshObjCreatorSetup*)spawnSetup)->unk22 = -1;
         }
-        spawnSetup[0x29] = 0xff;
-        *(s8*)(spawnSetup + 0x2e) = -1;
-        *(u16*)(spawnSetup + 0x34) = 0xffff;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk29 = 0xff;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk2E = -1;
+        ((DfshObjCreatorSetup*)spawnSetup)->unk34 = 0xffff;
         Obj_SetupObject(spawnSetup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                         *(int*)&((GameObject*)obj)->anim.parent);
         state->spawnTimer = 100;

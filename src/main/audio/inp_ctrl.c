@@ -58,7 +58,7 @@ u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
     flags = *dirtyWord;
     maskedFlags = mask & flags;
-    isDirty = maskedFlags != 0;
+    isDirty = !!maskedFlags;
     if (isDirty != 0)
     {
         *dirtyWord = flags & ~mask;
@@ -88,7 +88,7 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
     flags = *dirtyWord;
     maskedFlags = mask & flags;
-    isDirty = maskedFlags != 0;
+    isDirty = !!maskedFlags;
     if (isDirty != 0)
     {
         *dirtyWord = flags & ~mask;

@@ -464,21 +464,17 @@ void expgfx_initSlotQuad(void* slotPtr)
     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0)
     {
         slot->scaleCurrent =
-            (int)
-        ((f32)(u16)
+        (f32)(u16)
         slot->scaleStep * step + (f32)(u16)
         slot->scaleCurrent
-        )
         ;
     }
     else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0)
     {
         slot->scaleCurrent =
-            (int)
-        ((f32)(u16)
+        (f32)(u16)
         slot->scaleCurrent - (f32)(u16)
         slot->scaleStep * step
-        )
         ;
     }
 
@@ -2494,7 +2490,7 @@ void renderParticles(void)
                                                 (double)poolBounds->minY, (double)poolBounds->maxY,
                                                 (double)(poolBounds->minZ - playerMapOffsetZ),
                                                 (double)(poolBounds->maxZ - playerMapOffsetZ),
-                                                &boundsTemplate->minX) != 0)
+                                                &boundsTemplate->minX) & 0xffu)
             {
                 sourcePosition = (ExpgfxPoolSourcePosition*)*poolSourceIds;
                 if (sourcePosition != (ExpgfxPoolSourcePosition*)0x0)

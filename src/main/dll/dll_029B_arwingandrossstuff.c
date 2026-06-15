@@ -174,7 +174,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
     ((GameObject*)obj)->anim.rotY = -((GameObject*)obj)->anim.rotY;
 }
 
-#pragma peephole on
+#pragma peephole off
 void arwingandrossstuff_init(int obj, u8* setup)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;

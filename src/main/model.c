@@ -2209,6 +2209,7 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
 
 #pragma dont_inline off
 #pragma opt_common_subs on
+#pragma optimization_level 1
 void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
 {
     int tmp;
@@ -2240,6 +2241,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     }
     return animLoadFromTable((u8*)hdr, id, (s16)b, bufout);
 }
+#pragma optimization_level reset
 
 typedef struct
 {
@@ -2730,8 +2732,8 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
         if (ch2 != NULL && ((GameObject*)obj)->anim.activeMove > -1)
         {
             ObjModel_BuildAnimBlendTable(obj, *(u8**)(model + 0x30), blend);
-            modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x30), -1,
-                                     ((GameObject*)obj)->anim.activeMoveProgress);
+            ((void (*)(u8*, u8*, u8*, f32, int))modelWalkAnimFn_800248b8)(
+                dst, model, *(u8**)(model + 0x30), ((GameObject*)obj)->anim.activeMoveProgress, -1);
         }
     }
 }

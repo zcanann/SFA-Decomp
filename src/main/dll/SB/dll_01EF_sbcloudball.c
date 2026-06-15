@@ -148,6 +148,7 @@ void SB_CloudBall_hitDetect(GameObject* obj)
     {
         Sfx_PlayFromObject((int*)obj, SFXen_rockshat16);
     }
+    hits = ObjAnim_GetPriorityHitState(&obj->anim);
     hits->flags = (s16)(hits->flags & ~1);
     state->fadeTimer = lbl_803E58F0;
     obj->anim.alpha = 0;
@@ -165,6 +166,7 @@ void SB_CloudBall_init(GameObject* obj)
     ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
 
     hits->flags = (s16)(hits->flags & ~1);
+    hits = ObjAnim_GetPriorityHitState(&obj->anim);
     hits->trackContactMask = (u16)(hits->trackContactMask | 1);
     if ((void*)state->light == NULL)
     {

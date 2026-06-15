@@ -427,21 +427,14 @@ TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxV
 
 void fn_80131F0C(void)
 {
-    void** p;
-    s16* assetIds;
     int i;
 
-    i = 0;
-    p = lbl_803A9DB8;
-    assetIds = (s16*)lbl_8031C2A8;
-    for (; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
-        if (*p == 0)
+        if (lbl_803A9DB8[i] == NULL)
         {
-            *p = textureLoadAsset(*assetIds);
+            lbl_803A9DB8[i] = textureLoadAsset(lbl_8031C2A8[i]);
         }
-        p++;
-        assetIds++;
     }
 }
 
@@ -449,16 +442,12 @@ void Link_release(void);
 
 void TitleMenuItem_release(void)
 {
-    void** p;
     int i;
 
-    i = 0;
-    p = lbl_803A9DB8;
-    for (; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
-        textureFree(*p);
-        *p = NULL;
-        p++;
+        textureFree(lbl_803A9DB8[i]);
+        lbl_803A9DB8[i] = NULL;
     }
 }
 

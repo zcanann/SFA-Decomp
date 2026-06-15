@@ -544,6 +544,7 @@ void hightop_initialise(void)
 }
 
 #pragma dont_inline on
+#pragma peephole on
 int hightop_handleMotionEvent(int obj, u8 event)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
@@ -573,6 +574,7 @@ int hightop_handleMotionEvent(int obj, u8 event)
     }
     return 0;
 }
+#pragma peephole reset
 #pragma dont_inline reset
 
 void hightop_hitDetect(int obj)
@@ -737,16 +739,16 @@ int hightop_stateHandler01(int obj, int p)
         ((BaddieState*)p)->velSmoothTime = lbl_803E6B28;
         if (((GameObject*)obj)->anim.currentMove != lbl_803DC32C)
         {
-            ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
+            ObjAnim_SetCurrentMove(obj, lbl_803DC32C, v, 0);
         }
     }
     if (((BaddieState*)p)->inputMagnitude < lbl_803E6B2C)
     {
         *(s16*)((char*)p + 0x334) = 0;
         ((BaddieState*)p)->turnRate = 0;
-        ((BaddieState*)p)->inputMagnitude = lbl_803E6AA8;
+        ((BaddieState*)p)->inputMagnitude = *(f32*)&lbl_803E6AA8;
     }
-    if (*(f32*)&((BaddieState*)p)->trackedObj > lbl_803E6AA8 && ((BaddieState*)p)->inputMagnitude > lbl_803E6AA8)
+    if (*(f32*)&((BaddieState*)p)->trackedObj > *(f32*)&lbl_803E6AA8 && ((BaddieState*)p)->inputMagnitude > *(f32*)&lbl_803E6AA8)
     {
         return 3;
     }
@@ -1177,6 +1179,7 @@ int hightop_stateHandler09(int obj, int p)
     return 0;
 }
 
+#pragma opt_strength_reduction off
 int hightop_stateHandler10(int obj, int p)
 {
     HighTopRuntime* rt = ((GameObject*)obj)->extra;
@@ -1225,3 +1228,4 @@ int hightop_stateHandler10(int obj, int p)
     }
     return 0;
 }
+#pragma opt_strength_reduction reset

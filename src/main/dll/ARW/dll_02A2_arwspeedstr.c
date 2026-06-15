@@ -23,6 +23,17 @@ STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY)== 0x10);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ)== 0x14);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, flags)== 0x18);
 
+typedef struct ARWSpeedStrVelocity
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} ARWSpeedStrVelocity;
+
+STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, x)== 0x00);
+STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y)== 0x04);
+STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z)== 0x08);
+
 int arwspeedstr_getExtraSize(void) { return 0x1c; }
 
 int arwspeedstr_getObjectTypeId(void) { return 0; }
@@ -96,9 +107,9 @@ void arwspeedstr_update(int obj)
 
 void fn_80231058(int obj, int src)
 {
-    ((GameObject*)obj)->anim.velocityX = *(f32*)(src + 0x0);
-    ((GameObject*)obj)->anim.velocityY = *(f32*)(src + 0x4);
-    ((GameObject*)obj)->anim.velocityZ = *(f32*)(src + 0x8);
+    ((GameObject*)obj)->anim.velocityX = ((ARWSpeedStrVelocity*)src)->x;
+    ((GameObject*)obj)->anim.velocityY = ((ARWSpeedStrVelocity*)src)->y;
+    ((GameObject*)obj)->anim.velocityZ = ((ARWSpeedStrVelocity*)src)->z;
 }
 
 void fn_80231028(int obj, int v)

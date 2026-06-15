@@ -437,24 +437,21 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
 }
 
 #pragma dont_inline on
+#pragma opt_common_subs off
 void fn_800E5CBC(short* obj, int state)
 {
     CurvesCollisionState* collision;
     float normalZ;
     short pitch;
-    int angle;
+    short angle;
     float dy;
     float dx;
     float dz;
     short outVec[4];
-    float local_64;
-    float local_60;
-    float local_5c;
-    float local_58;
-    float afStack_54[20];
+    float matrixBuf[24];
 
     collision = (CurvesCollisionState*)state;
-    if ((collision->surfaceFlags & 0x10) != 0)
+    if (((s8)collision->surfaceFlags & 0x10) != 0)
     {
         outVec[0] = -*obj;
         if (*(short**)(obj + 0x18) != (short*)0x0)
@@ -463,22 +460,22 @@ void fn_800E5CBC(short* obj, int state)
         }
         outVec[1] = 0;
         outVec[2] = 0;
-        local_64 = lbl_803E068C;
-        local_60 = lbl_803E0668;
-        local_5c = lbl_803E0668;
-        local_58 = lbl_803E0668;
-        mtxRotateByVec3s(afStack_54, outVec);
-        Matrix_TransformPoint(afStack_54, (double)collision->surfaceNormalX,
+        matrixBuf[0] = lbl_803E068C;
+        matrixBuf[1] = lbl_803E0668;
+        matrixBuf[2] = lbl_803E0668;
+        matrixBuf[3] = lbl_803E0668;
+        mtxRotateByVec3s(&matrixBuf[4], outVec);
+        Matrix_TransformPoint(&matrixBuf[4], (double)collision->surfaceNormalX,
                               (double)collision->surfaceNormalY, (double)collision->surfaceNormalZ,
                               &dy, &dx, &dz);
         angle = getAngle(dx, dz);
-        pitch = 0x4000 - (short)angle;
+        pitch = 0x4000 - angle;
         collision->tiltPitchTarget = pitch;
         collision->tiltPitch =
             collision->tiltPitch +
             ((int)((uint)framesThisStep * ((int)pitch - (int)collision->tiltPitch)) >> 3);
         angle = getAngle(dx, dy);
-        pitch = -(0x4000 - (short)angle);
+        pitch = -(0x4000 - angle);
         collision->tiltRollTarget = pitch;
         collision->tiltRoll =
             collision->tiltRoll +
@@ -499,6 +496,7 @@ void fn_800E5CBC(short* obj, int state)
     }
     return;
 }
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 
 #pragma dont_inline on
@@ -537,9 +535,9 @@ void fn_800E5E38(int obj, CurvesCollisionState* collision)
 void fn_800E5F1C(int obj, CurvesCollisionState* collision)
 {
     u32 hitCount;
+    RomCurvePoint* point;
     int i;
     s8 foundBelow;
-    RomCurvePoint* point;
     RomCurvePoint* points;
     f32 topSentinel;
     f32 floorSentinel;
@@ -565,7 +563,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     {
         if ((s8)point->type != ROMCURVE_POINT_TYPE_WATER)
         {
-            if ((foundBelow == 0) && (point->x < (collision->points[0][1] + lbl_803E06AC)) &&
+            if ((foundBelow == 0) && (point->x < (lbl_803E06AC + collision->points[0][1])) &&
                 (point->z > lbl_803E0678))
             {
                 collision->floorY[0] = point->x;
@@ -576,7 +574,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
                 }
                 foundBelow = 1;
             }
-            else if ((point->x >= (collision->points[0][1] + lbl_803E06AC)) && (point->z < zero))
+            else if ((point->x >= (lbl_803E06AC + collision->points[0][1])) && (point->z < zero))
             {
                 collision->ceilingY[0] = point->x;
             }
@@ -844,6 +842,7 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
     u32 flags;
     int pointIndex;
     int pointOffset;
+    int worldIdx;
     f32* localPoint;
     CurvesTransformScratch transform;
     f32 matrix[16];
@@ -869,15 +868,17 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         pointIndex = 0;
+        worldIdx = 0;
         pointOffset = 0;
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
             localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                   &collision->localPointWorld[pointIndex][0],
-                                  &collision->localPointWorld[pointIndex][1],
-                                  &collision->localPointWorld[pointIndex][2]);
+                                  &collision->localPointWorld[0][worldIdx + 1],
+                                  &collision->localPointWorld[0][worldIdx + 2]);
             pointOffset += 0xc;
+            worldIdx += 3;
             pointIndex++;
         }
         for (pointIndex = 0;
@@ -898,6 +899,7 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
     u32 flags;
     int pointIndex;
     int pointOffset;
+    int worldIdx;
     f32* localPoint;
     CurvesTransformScratch transform;
     f32 matrix[16];
@@ -924,15 +926,17 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         pointIndex = 0;
+        worldIdx = 0;
         pointOffset = 0;
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
             localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                   &collision->localPointWorld[pointIndex][0],
-                                  &collision->localPointWorld[pointIndex][1],
-                                  &collision->localPointWorld[pointIndex][2]);
+                                  &collision->localPointWorld[0][worldIdx + 1],
+                                  &collision->localPointWorld[0][worldIdx + 2]);
             pointOffset += 0xc;
+            worldIdx += 3;
             pointIndex++;
         }
         for (pointIndex = 0;
@@ -951,9 +955,9 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
 f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
 {
     u32 hitCount;
-    int i;
     f32 maxY;
     RomCurvePoint* point;
+    int i;
     RomCurvePoint* points;
 
     points = curves_getCurves(obj, x, z, &hitCount, 1);
@@ -961,7 +965,7 @@ f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
     point = points;
     for (i = 0; i < (int)hitCount; i++)
     {
-        if ((point->x < maxY) && (point->z > lbl_803E0668))
+        if ((point->x < maxY) && (point->z > *(f32*)&lbl_803E0668))
         {
             return points[i].x;
         }
@@ -1382,6 +1386,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
 
 void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
 {
+    extern int ObjHits_IsObjectEnabled(int obj);
     CurvesCollisionState* collision;
     f32 r;
     f32 v;
@@ -1408,10 +1413,10 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
 
     collision = state;
     if ((collision->subtype != CURVES_COLLISION_SUBTYPE_NONE) &&
-        ((state->flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
-        ((state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0))
+        ((s32)(state->flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
+        ((s32)(state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0))
     {
-        if (*(int*)&obj->anim.parent != 0)
+        if (*(void**)&obj->anim.parent != NULL)
         {
             if ((*(void**)(*(int*)&obj->anim.parent + 0x58) != NULL) &&
                 (ObjHits_IsObjectEnabled(*(int*)&obj->anim.parent) != 0))
@@ -1439,7 +1444,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             obj->anim.worldPosZ = obj->anim.localPosZ;
         }
         s.angles[0] = obj->anim.rotX;
-        if ((state->flags & 0x20) != 0)
+        if ((s32)(state->flags & 0x20) != 0)
         {
             s.angles[1] = 0;
             s.angles[2] = 0;
@@ -1564,7 +1569,7 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     state->segmentLocalPoints = segmentLocalPoints;
     for (i = 0; i < count; i++)
     {
-        state->segmentSourceTypes[i] = types[i];
+        state->segmentSourceTypes[i] = (int)types[i];
         state->segmentHitTypes[i] = -1;
         state->segmentRadii[i] = radii[i];
     }
@@ -1583,8 +1588,8 @@ void dll_15_func07(void* arg1, CurvesCollisionState* state)
     {
         type = state->subtype;
         if (type != CURVES_COLLISION_SUBTYPE_OBJECT && type != CURVES_COLLISION_SUBTYPE_POINT) return;
-        if ((s32)(flags & 0x00000004) != 0) mask = (u8)(mask | 0x1);
-        if ((s32)(flags & 0x01000000) != 0) mask = (u8)(mask | 0x20);
+        if ((s32)(flags & 0x00000004) != 0) mask |= 0x1;
+        if ((s32)(flags & 0x01000000) != 0) mask |= 0x20;
         hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
     }
 }

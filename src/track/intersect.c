@@ -577,10 +577,9 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = (u32)gDepthReadPendingCount;
         if (n < 0x14) {
-            DepthReadRequest* slot = (DepthReadRequest*)((u8*)&gDepthReadPendingQueue + n * 0xC);
-            slot->x = (u16)x;
-            slot->y = (u16)y;
-            slot->key = requestKey;
+            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].x = (u16)x;
+            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].y = (u16)y;
+            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].key = requestKey;
             gDepthReadPendingCount++;
         }
         i = 0;
@@ -625,7 +624,7 @@ extern f32 lbl_803DEE74;
 extern f32 lbl_803DEE78;
 extern f32 lbl_803DEE7C;
 extern f32 Gq;
-extern f32 lbl_803DD03C;
+extern int lbl_803DD03C;
 extern int lbl_803968C0[];
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -655,16 +654,16 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
 
     if (out != NULL) {
         if ((f32)(near + far) <= lbl_803DEE7C) {
-            *out = (s16)0xFFFF;
+            *out = 0xFFFF;
         } else {
             *out = (s16)(s32)(Gq / (near + far));
-            if (*out == 0) {
+            if (*(u16 *)out == 0) {
                 *out = 1;
             }
         }
     }
-    lbl_803DD038 = fabs(near);
-    lbl_803DD034 = fabs(far);
+    lbl_803DD038 = __fabs(near);
+    lbl_803DD034 = __fabs(far);
     C_MTXPerspective((void *)lbl_803968C0, fov, aspect, lbl_803DD038, lbl_803DD034);
     lbl_803DD03C = 0;
 }
@@ -1018,8 +1017,8 @@ void screenImageDraw(u8 alpha)
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    Mtx mtx_30;
     Mtx mtx_60;
+    Mtx mtx_30;
     int handle;
     f32 fA;
     f32 fB;
@@ -1037,7 +1036,7 @@ void screenImageDraw(u8 alpha)
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
-    PSMTXScale(mtx_60, lbl_803DEEE8, lbl_803DEEE8, lbl_803DEEE4);
+    PSMTXScale(mtx_60, lbl_803DEEE8, *(f32 *)&lbl_803DEEE8, lbl_803DEEE4);
     mtx_60[1][3] = -fA;
     GXLoadTexMtxImm(mtx_60, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
@@ -1061,12 +1060,12 @@ void screenImageDraw(u8 alpha)
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, lbl_8030EA70, -3);
-    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 1);
 
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, lbl_8030EA88, -3);
-    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 1);
 
     GXSetTevOrder(1, 0xFF, 0xFF, 8);
     GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0xF);
@@ -1103,8 +1102,8 @@ void screenImageDraw(u8 alpha)
     GXSetTevAlphaOp(4, 1, 0, 1, 1, 2);
 
     GXSetTevKColorSel(5, 0xE);
-    GXSetTevDirect(5);
     GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
+    GXSetTevDirect(5);
     GXSetTevColorIn(5, 0xF, 0xE, 0, 0xF);
     GXSetTevAlphaIn(5, 1, 7, 7, 2);
     GXSetTevSwapMode(5, 0, 0);
@@ -1328,12 +1327,10 @@ void doColorFilter(u8* mod)
     *(u32*)&c2 = lbl_803DEED0;
     *(u32*)&c3 = lbl_803DEED4;
     {
-        int s0 = mod[0] >> 3;
-        int s1 = mod[1] >> 3;
-        int s2 = mod[2] >> 3;
-        c0.r = (u8)(c0.r + s0);
-        c0.g = (u8)(c0.g + s1);
-        c0.b = (u8)(c0.b + s2);
+        int s0, s1, s2;
+        c0.r = (u8)(c0.r + (s0 = mod[0] >> 3));
+        c0.g = (u8)(c0.g + (s1 = mod[1] >> 3));
+        c0.b = (u8)(c0.b + (s2 = mod[2] >> 3));
         c1.r = (u8)(c1.r + s0);
         c1.g = (u8)(c1.g + s1);
         c1.b = (u8)(c1.b + s2);
@@ -1387,7 +1384,7 @@ void doColorFilter(u8* mod)
     GXSetTevColorIn(2, 0xf, 8, 0xe, 0);
     GXSetTevAlphaIn(2, 7, 7, 7, 0);
     GXSetTevSwapMode(2, 0, 3);
-    GXSetTevColorOp(2, 0, 0, 3, 1, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
 
     GXClearVtxDesc();
@@ -1438,7 +1435,6 @@ void doColorFilter(u8* mod)
     GXWGFifo.s16 = 0x80;
 
     Camera_RebuildProjectionMatrix();
-    GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
 
 static inline float distortSqrtf(float x) {
@@ -1494,18 +1490,21 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     *(u32*)&c1 = lbl_803DEEBC;
     *(u32*)&c2 = lbl_803DEEC0;
     *(u32*)&c3 = lbl_803DEEC4;
-    c0.r = (u8)(c0.r + (mod[0] >> 2));
-    c0.g = (u8)(c0.g + (mod[1] >> 2));
-    c0.b = (u8)(c0.b + (mod[2] >> 2));
-    c1.r = (u8)(c1.r + (mod[0] >> 2));
-    c1.g = (u8)(c1.g + (mod[1] >> 2));
-    c1.b = (u8)(c1.b + (mod[2] >> 2));
-    c2.r = (u8)(c2.r + (mod[0] >> 2));
-    c2.g = (u8)(c2.g + (mod[1] >> 2));
-    c2.b = (u8)(c2.b + (mod[2] >> 2));
-    c3.r = (u8)(c3.r + (mod[0] >> 3));
-    c3.g = (u8)(c3.g + (mod[1] >> 3));
-    c3.b = (u8)(c3.b + (mod[2] >> 3));
+    {
+        int s0, s1, s2;
+        c0.r = (u8)(c0.r + (s0 = mod[0] >> 2));
+        c0.g = (u8)(c0.g + (s1 = mod[1] >> 2));
+        c0.b = (u8)(c0.b + (s2 = mod[2] >> 2));
+        c1.r = (u8)(c1.r + s0);
+        c1.g = (u8)(c1.g + s1);
+        c1.b = (u8)(c1.b + s2);
+        c2.r = (u8)(c2.r + s0);
+        c2.g = (u8)(c2.g + s1);
+        c2.b = (u8)(c2.b + s2);
+        c3.r = (u8)(c3.r + (mod[0] >> 3));
+        c3.g = (u8)(c3.g + (mod[1] >> 3));
+        c3.b = (u8)(c3.b + (mod[2] >> 3));
+    }
 
     Camera_ProjectWorldSphere(&proj5, &proj4, &proj3, &proj2, &proj1, &proj0,
                               pos[0] - playerMapOffsetX, pos[1], pos[2] - playerMapOffsetZ, radius);
@@ -5077,12 +5076,13 @@ void fn_8007BD8C(int handle1, int handle2)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void selectReflectionTexture(int);
-    extern int isHeavyFogEnabled(void);
+    extern u8 isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_30;
     GXColor temp;
+    f32 (*ind)[3] = lbl_8030EA10;
 
     selectReflectionTexture(0);
     selectTexture(handle1, 1);
@@ -5109,29 +5109,16 @@ void fn_8007BD8C(int handle1, int handle2)
             &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
     }
 
-    *(u32*)&temp = (lbl_803DB690 & 0xFFFFFF00) | (*(u32*)&temp & 0xFFFFFFFF);
-    {
-        GXColor c0;
-        *(u32*)&c0 = lbl_803DB690;
-        GXSetTevKColor(0, c0);
-    }
+    GXSetTevKColor(0, *(GXColor*)&lbl_803DB690);
     GXSetTevKColorSel(0, 0xC);
-    {
-        GXColor c1;
-        *(u32*)&c1 = lbl_803DB694;
-        GXSetTevKColor(1, c1);
-    }
+    GXSetTevKColor(1, *(GXColor*)&lbl_803DB694);
     GXSetTevKColorSel(1, 0xD);
-    {
-        GXColor c2;
-        *(u32*)&c2 = lbl_803DB698;
-        GXSetTevKColor(2, c2);
-    }
+    GXSetTevKColor(2, *(GXColor*)&lbl_803DB698);
     GXSetTevKColorSel(2, 0xE);
 
-    ((u8*)&temp)[0] = (u8)((s8)((u8*)&temp)[0] >> 2);
-    ((u8*)&temp)[1] = (u8)((s8)((u8*)&temp)[1] >> 2);
-    ((u8*)&temp)[2] = (u8)((s8)((u8*)&temp)[2] >> 2);
+    ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] >> 2);
+    ((u8*)&temp)[1] = (u8)(((u8*)&temp)[1] >> 2);
+    ((u8*)&temp)[2] = (u8)(((u8*)&temp)[2] >> 2);
     GXSetTevColor(1, temp);
 
     ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
@@ -5141,9 +5128,9 @@ void fn_8007BD8C(int handle1, int handle2)
 
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
-    GXSetIndTexMtx(1, lbl_8030EA10, -1);
-    GXSetIndTexMtx(2, (f32(*)[3])((u8*)lbl_8030EA10 + 0x18), -1);
-    GXSetIndTexMtx(3, (f32(*)[3])((u8*)lbl_8030EA10 + 0x30), -1);
+    GXSetIndTexMtx(1, ind, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])((u8*)ind + 0x18), -1);
+    GXSetIndTexMtx(3, (f32(*)[3])((u8*)ind + 0x30), -1);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 1);
     GXSetTevIndirect(2, 0, 0, 7, 3, 0, 0, 0, 0, 0);
@@ -5351,8 +5338,8 @@ void fn_8007CAF4(void)
     extern u8 isHeavyFogEnabled(void);
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
-    f32 tOff;
     f32 sOff;
+    f32 tOff;
     f32 indMtx[6];
     Mtx scaleMtx;
 
@@ -5591,11 +5578,11 @@ void gxTextureSetupFn_8007cf7c(void)
  * crackable without inline asm. */
 void fn_8007D670(void)
 {
-    Mtx* mats = &lbl_803967C0;
+    f32* mats = (f32*)&lbl_803967C0;
     Mtx tmp;
-    PSMTXConcat(mats[3], mats[0], tmp);
+    PSMTXConcat((f32(*)[4])(mats + 36), (f32(*)[4])mats, tmp);
     GXLoadTexMtxImm(tmp, 0x1E, GX_MTX3x4);
-    PSMTXConcat(mats[2], mats[0], tmp);
+    PSMTXConcat((f32(*)[4])(mats + 24), (f32(*)[4])mats, tmp);
     GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
 }
 

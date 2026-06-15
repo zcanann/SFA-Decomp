@@ -11,6 +11,42 @@ typedef struct ArwarwingState
     u8 pad47E[0x498 - 0x47E];
 } ArwarwingState;
 
+typedef struct ArwArwingProjectileSetup
+{
+    s16 objectId;
+    u8 pad02[2];
+    u8 field04;
+    u8 field05;
+    u8 pad06[2];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    u8 pad14[4];
+    u8 rotX;
+    u8 rotY;
+    u8 rotZ;
+} ArwArwingProjectileSetup;
+
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, field04) == 0x04);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, field05) == 0x05);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, posX) == 0x08);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, posY) == 0x0c);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, posZ) == 0x10);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotY) == 0x19);
+STATIC_ASSERT(offsetof(ArwArwingProjectileSetup, rotZ) == 0x1a);
+
+typedef struct ArwArwingVec3
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} ArwArwingVec3;
+
+STATIC_ASSERT(offsetof(ArwArwingVec3, x) == 0x0);
+STATIC_ASSERT(offsetof(ArwArwingVec3, y) == 0x4);
+STATIC_ASSERT(offsetof(ArwArwingVec3, z) == 0x8);
+
 
 int getArwing(void) { return gArwing; }
 
@@ -108,9 +144,9 @@ void arwarwing_getVelocity(int out, int arwing)
 void arwarwing_setVelocity(int arwing, int in)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    state->velX = *(f32*)(in + 0);
-    state->velY = *(f32*)(in + 4);
-    state->velZ = *(f32*)(in + 8);
+    state->velX = ((ArwArwingVec3*)in)->x;
+    state->velY = ((ArwArwingVec3*)in)->y;
+    state->velZ = ((ArwArwingVec3*)in)->z;
 }
 
 void arwarwing_addVelocity(int arwing, int in)
@@ -134,31 +170,35 @@ int arwarwing_getCollectedRingCount(int arwing)
 }
 
 #pragma scheduling off
+#pragma peephole off
 void arwarwing_addScore(int arwing, u8 amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    u16 v;
-    state->score = state->score + amount;
+    int v;
+    state->score += amount;
     v = state->score;
-    if (v > 0x270f)
+    if ((u32)v > 0x270f)
     {
         v = 0x270f;
     }
     state->score = v;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
+#pragma peephole off
 int arwarwing_getScore(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    u16 score = state->score;
-    if (score > 0x270f)
+    int score = state->score;
+    if ((u32)score > 0x270f)
     {
         score = 0x270f;
     }
     state->score = score;
     return state->score;
 }
+#pragma peephole reset
 
 int arwarwing_getBombCount(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->bombCount; }
 
@@ -186,19 +226,24 @@ int arwarwing_incrementPickup6D8Count(int arwing)
     return ((*(ArwingState**)&((GameObject*)arwing)->extra)->pickup6D8Count)++;
 }
 
+#pragma peephole off
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
     if (state->collectedRings == 9)
     {
-        state->score = state->score + 0x64;
-        if (state->score > 0x270f)
+        int v;
+        state->score += 0x64;
+        v = state->score;
+        if ((u32)v > 0x270f)
         {
-            state->score = 0x270f;
+            v = 0x270f;
         }
+        state->score = v;
     }
     return (state->collectedRings)++;
 }
+#pragma peephole reset
 
 #pragma peephole off
 void arwarwing_addMaxShield(int arwing, int p2)
@@ -539,14 +584,14 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
     }
     {
         int setup = Obj_AllocObjectSetup(0x20, 0x604);
-        ((ObjPlacement*)setup)->posX = px;
-        ((ObjPlacement*)setup)->posY = py;
-        ((ObjPlacement*)setup)->posZ = pz;
-        *(u8*)(setup + 0x1a) = *(s16*)obj >> 8;
-        *(u8*)(setup + 0x19) = ((GameObject*)obj)->anim.rotY >> 8;
-        *(u8*)(setup + 0x18) = 0;
-        *(u8*)(setup + 4) = 1;
-        *(u8*)(setup + 5) = 1;
+        ((ArwArwingProjectileSetup*)setup)->posX = px;
+        ((ArwArwingProjectileSetup*)setup)->posY = py;
+        ((ArwArwingProjectileSetup*)setup)->posZ = pz;
+        ((ArwArwingProjectileSetup*)setup)->rotZ = ((GameObject*)obj)->anim.rotX >> 8;
+        ((ArwArwingProjectileSetup*)setup)->rotY = ((GameObject*)obj)->anim.rotY >> 8;
+        ((ArwArwingProjectileSetup*)setup)->rotX = 0;
+        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
+        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
     }
     proj = loadObjectAtObject(obj);
     if (proj == 0)
@@ -787,12 +832,12 @@ void arwarwing_initAttachments(int obj, int state)
     {
         int setup;
         setup = Obj_AllocObjectSetup(0x20, 0x6de);
-        *(u8*)(setup + 0x4) = 1;
-        *(u8*)(setup + 0x5) = 1;
+        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
+        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
         ((ArwingState*)state)->thrusterL = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
         setup = Obj_AllocObjectSetup(0x20, 0x6de);
-        *(u8*)(setup + 0x4) = 1;
-        *(u8*)(setup + 0x5) = 1;
+        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
+        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
         ((ArwingState*)state)->thrusterR = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
     }
 
@@ -916,14 +961,13 @@ void arwarwing_initAttachments(int obj, int state)
 void arwarwing_resetFlightState(int obj)
 {
     ArwingState* state = ((GameObject*)obj)->extra;
-    f32 v7c = lbl_803E6F7C;
-    f32 v74 = lbl_803E6F74;
+    f32 v7c, v74, v78, v5c, vecc;
 
     state->maxSpeedX = lbl_803E6F70;
-    state->accelX = v74;
-    state->maxSpeedY = lbl_803E6F78;
-    state->accelY = v7c;
-    state->maxSpeedZ = lbl_803E6F78;
+    state->accelX = v74 = lbl_803E6F74;
+    state->maxSpeedY = v78 = lbl_803E6F78;
+    state->accelY = v7c = lbl_803E6F7C;
+    state->maxSpeedZ = v78;
     state->accelZ = v7c;
     state->maxAccelZ = lbl_803E6F80;
     state->minAccelZ = lbl_803E6F84;
@@ -948,11 +992,11 @@ void arwarwing_resetFlightState(int obj)
     state->speedScaleRollR = lbl_803E6F64;
     state->rollEnergy = state->rollEnergyMax;
     state->unkA4 = state->unkA8;
-    state->wingFlexCur = lbl_803E6F5C;
-    state->wingFlexTarget = lbl_803E6F5C;
-    state->velX = lbl_803E6ECC;
-    state->velY = lbl_803E6ECC;
-    state->velZ = lbl_803E6ECC;
+    state->wingFlexCur = v5c = lbl_803E6F5C;
+    state->wingFlexTarget = v5c;
+    state->velX = vecc = lbl_803E6ECC;
+    state->velY = vecc;
+    state->velZ = vecc;
     state->laserLevel = 0;
     ((GameObject*)obj)->anim.localPosX = state->homeX;
     ((GameObject*)obj)->anim.localPosY = state->homeY;

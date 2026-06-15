@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
+#include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
 #include "main/player_control_interface.h"
 
@@ -377,7 +378,7 @@ void DIMbosstonsil_init(int obj, undefined4 p2, int isAltVariant)
     (*(void (**)(int, undefined4, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, p2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
     ((GameObject*)obj)->animEventCallback = (void*)dll_DIM_BossGutSpik_update;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
-    *(s16*)(state + 0x270) = 0;
+    ((BaddieState*)state)->substate = 0;
     gDIMbosstonsilRoutePhase = (s8)GameBit_Get(0x20c);
     if (gDIMbosstonsilRoutePhase < 3)
     {

@@ -92,6 +92,7 @@ extern f32 lbl_803E2B00;
 extern f32 lbl_803E2B04;
 extern f32 lbl_803DBCEC;
 
+#pragma opt_common_subs off
 void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
 {
     float hi;
@@ -141,10 +142,14 @@ void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
     PSVECNormalize(sideAxis, sideAxis);
     *outPos = lateral * sideAxis[0] + anchor[7];
     outPos[2] = lateral * sideAxis[2] + anchor[8];
-    *outPos = lbl_803E2A2C * *anchor + *outPos;
-    outPos[1] = lbl_803E2A2C * anchor[1] + outPos[1];
-    outPos[2] = lbl_803E2A2C * anchor[2] + outPos[2];
+    {
+        float k = lbl_803E2A2C;
+        *outPos = k * *anchor + *outPos;
+        outPos[1] = k * anchor[1] + outPos[1];
+        outPos[2] = k * anchor[2] + outPos[2];
+    }
 }
+#pragma opt_common_subs reset
 
 void fn_801554B4(int* obj, int state)
 {
@@ -152,16 +157,16 @@ void fn_801554B4(int* obj, int state)
     float* probeOffsets;
     int i;
     f32 dot;
-    float dv[3];
-    float sideAxis[3];
-    float bv[3];
-    float toAnchor[3];
-    float av[3];
-    float cv[3];
-    float sideAxis0[3];
-    float minv[3];
-    float maxv[3];
     float hit[18];
+    float maxv[3];
+    float minv[3];
+    float sideAxis0[3];
+    float cv[3];
+    float av[3];
+    float toAnchor[3];
+    float bv[3];
+    float sideAxis[3];
+    float dv[3];
 
     didHit = 0;
     probeOffsets = (float*)&lbl_8031F2F8;
@@ -248,7 +253,7 @@ void fn_801557D4(int* obj, int state)
         if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
             (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
         {
-            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
         }
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
@@ -279,7 +284,7 @@ void fn_80155884(int* obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
     }
     return;
 }
@@ -325,7 +330,7 @@ void fn_80155948(int* obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
     }
     return;
 }
@@ -408,13 +413,13 @@ void pollenFn_80155b10(uint obj, int state)
         setup = Obj_AllocObjectSetup(0x24, 0x47b);
         *(float*)(setup + 4) = a[0];
         *(float*)(setup + 6) = a[1];
-        *(undefined4*)(setup + 8) = a[2];
+        *(float*)(setup + 8) = a[2];
         *(undefined*)(setup + 2) = 1;
         *(undefined*)((int)setup + 5) = 1;
         *(undefined*)(setup + 3) = 0xff;
         *(undefined*)((int)setup + 7) = 0xff;
         ref = Obj_SetupObject(setup, 5, -1, -1, 0);
-        if (ref != 0)
+        if ((void*)ref != NULL)
         {
             *(float*)(ref + 0x24) = velXZ;
             *(float*)(ref + 0x28) = cosVal;
@@ -443,13 +448,13 @@ void timeOfDayFn_80155cf8(int obj, int state)
     if ((isDaytime != 0) && (((BaddieState*)state)->seqEntryIndex == 0))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
     }
     else if ((isDaytime == 0) && (((BaddieState*)state)->seqEntryIndex == 2))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
     }
     return;
@@ -503,12 +508,12 @@ void fn_80155F20(int obj, int state)
             if (((GameObject*)obj)->anim.currentMove == 1)
             {
                 ((BaddieState*)state)->seqEntryIndex = 2;
-                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
             }
             else if (((GameObject*)obj)->anim.currentMove == 3)
             {
                 ((BaddieState*)state)->seqEntryIndex = 0;
-                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
                 Baddie_SetMove(obj, state, 0, lbl_803E2A54, 0, 0);
             }
         }
@@ -648,7 +653,7 @@ void fn_8015625C(uint obj, int state)
         if (*(float*)(state + 0x324) <= zero)
         {
             *(float*)(state + 0x324) = lbl_803E2AB0;
-            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x400) != 0)
@@ -748,7 +753,7 @@ void fn_8015652C(uint obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
     }
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
@@ -758,7 +763,7 @@ void fn_8015652C(uint obj, int state)
             (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E2AE4,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
         }
         if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
         {
@@ -1021,14 +1026,14 @@ void fn_80156DA0(int obj, int state)
     float toPos[3];
     float sinYaw;
     float cosYaw;
-    undefined4 hitOut;
+    float hit[18];
 
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-    if (*(float*)(state + 0x324) <= lbl_803E2A60)
+    if (*(float*)(state + 0x324) <= lbl_803E2B18)
     {
         *(float*)(state + 0x324) = (float)(int)randomGetRange(0x3c, 0x78);
     }
-    if (lbl_803E2A60 != *(float*)(state + 0x328))
+    if (lbl_803E2B18 != *(float*)(state + 0x328))
     {
         ObjHits_DisableObject(obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
@@ -1038,7 +1043,7 @@ void fn_80156DA0(int obj, int state)
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             ObjHits_EnableObject(obj);
-            *(float*)(state + 0x328) = lbl_803E2A60;
+            *(float*)(state + 0x328) = lbl_803E2B18;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
         resetting = true;
@@ -1049,7 +1054,7 @@ void fn_80156DA0(int obj, int state)
     }
     if (!resetting)
     {
-        *(short*)obj = (short)((short)*(short*)obj + (short)*(ushort*)(state + 0x338));
+        *(short*)obj = *(short*)obj + *(ushort*)(state + 0x338);
         fromPos[0] = ((GameObject*)obj)->anim.localPosX;
         fromPos[1] = ((GameObject*)obj)->anim.localPosY;
         fromPos[2] = ((GameObject*)obj)->anim.localPosZ;
@@ -1057,9 +1062,8 @@ void fn_80156DA0(int obj, int state)
         toPos[0] = ((GameObject*)obj)->anim.localPosX - lbl_803E2ABC * sinYaw;
         toPos[1] = lbl_803E2AC0 + ((GameObject*)obj)->anim.localPosY;
         toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2ABC * cosYaw;
-        hitOut = 0;
-        groundHit = objBboxFn_800640cc(fromPos, toPos, (float*)0x3, &hitOut, obj,
-                                   (uint) * (byte*)(state + 0x261), 0xff, 0xffffffff, 0);
+        groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hit, obj,
+                                   (uint) * (byte*)(state + 0x261), -1, 0xff, 0);
         if (((groundHit & 0xff) == 0) || ((((BaddieState*)state)->controlFlags & 0x40000000) == 0))
         {
             if ((groundHit & 0xff) != 0)
