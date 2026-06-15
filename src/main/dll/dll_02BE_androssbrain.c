@@ -1,6 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-#include "main/objhits.h"
 
 /*
  * Per-object extra state for the Andross brain core
