@@ -5,7 +5,7 @@
 
 int salInitDsp(u32 flags);
 int salStartDsp(void);
-void salCtrlDsp(u32 param_1);
+void salCtrlDsp(u32 dest);
 u32 salGetStartDelay(void);
 void hwInitIrq(void);
 void hwEnableIrq(void);

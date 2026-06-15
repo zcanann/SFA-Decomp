@@ -68,10 +68,10 @@ int salStartDsp(void)
     return 1;
 }
 
-void salCtrlDsp(u32 param_1)
+void salCtrlDsp(u32 dest)
 {
     u32 elapsed = salGetStartDelay();
-    salBuildCommandList((s16*)param_1, elapsed);
+    salBuildCommandList((s16*)dest, elapsed);
     {
         u32 saved = dspCmdList;
         salDspCallbackEnabled = 0;

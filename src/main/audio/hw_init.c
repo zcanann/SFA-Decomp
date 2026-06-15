@@ -16,7 +16,7 @@ extern void hwInitIrq(void);
 extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
 extern int salInitDsp(u32 flags);
 extern void doNothing_802737E8(void);
-extern void salCtrlDsp(u32 param_1);
+extern void salCtrlDsp(u32 dest);
 extern void salHandleAuxProcessing(void);
 extern void fn_8026EC44(u32 value);
 extern void audioFn_80271498(u32 value);
