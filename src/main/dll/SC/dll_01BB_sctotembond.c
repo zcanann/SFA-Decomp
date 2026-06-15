@@ -48,6 +48,7 @@ extern void hudFn_8011f38c(int visible);
 extern void fn_80296124(int player, void* pos, void* obj, int arg);
 
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
+#define SC_TOTEMBOND_VT_HANDLE_EVENT 0x20 /* peer anim.dll vtable slot */
 
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
@@ -137,7 +138,7 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 u
                     ((ScTotemBondObject*)objects[startForEvent2])->objectType ==
                         SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + 0x20))(
+                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + SC_TOTEMBOND_VT_HANDLE_EVENT))(
                         objects[startForEvent2], 2);
                     break;
                 }
@@ -152,7 +153,7 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 u
                     ((ScTotemBondObject*)objects[startForEvent3])->objectType ==
                         SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + 0x20))(
+                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + SC_TOTEMBOND_VT_HANDLE_EVENT))(
                         objects[startForEvent3], 1);
                     break;
                 }
