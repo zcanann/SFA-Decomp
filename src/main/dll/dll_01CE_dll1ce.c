@@ -124,12 +124,12 @@ void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double par
     int slotOff;
     int slot;
     double extraout_f1;
-    double dVar9;
-    double dVar10;
+    double scale;
+    double prevVal;
 
     obj = FUN_8028683c();
-    sub4c = *(int*)(obj + 0x4c);
-    state = *(int*)(obj + 0xb8);
+    sub4c = *(int *)&((GameObject *)obj)->anim.placementData;
+    state = *(int *)&((GameObject *)obj)->extra;
     slotIdx = *(byte*)(state + 0xa58);
     *(byte*)(state + 0xa58) = slotIdx + 1;
     slotOff = (uint)slotIdx * 0x30;
@@ -142,8 +142,8 @@ void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double par
     *(float*)(slot + 0x1c) = (float)extraout_f1;
     *(u8*)(slot + 0x2d) = extraout_r4;
     *(undefined4*)(slot + 0x10) = 0;
-    dVar9 = FUN_80293900(extraout_f1);
-    *(int*)(slot + 0x14) = (int)((double)lbl_803E55C8 * dVar9);
+    scale = FUN_80293900(extraout_f1);
+    *(int*)(slot + 0x14) = (int)((double)lbl_803E55C8 * scale);
     lifetime = *(int*)(slot + 0x14);
     if (lifetime < 0)
     {
@@ -191,16 +191,16 @@ LAB_801b44d4:
     }
     obj = randomGetRange(0, 3);
     *(char*)(state + slotOff + 0x2c) = (char)obj;
-    dVar10 = (double)*(float*)(slot + 0x1c);
-    dVar9 = (double)FUN_802924b4();
+    prevVal = (double)*(float*)(slot + 0x1c);
+    scale = (double)FUN_802924b4();
     *(float*)(slot + 0xc) =
         -(float)((double)lbl_803DE7F0 *
-            (double)(float)((double)(float)(dVar10 - (double)*(float*)(slot + 0x18)) * dVar9)
-            - dVar10);
-    dVar9 = (double)FUN_802924b4();
+            (double)(float)((double)(float)(prevVal - (double)*(float*)(slot + 0x18)) * scale)
+            - prevVal);
+    scale = (double)FUN_802924b4();
     state = state + slotOff;
     *(char*)(state + 0x2e) =
-        (char)(int)-(float)((double)lbl_803DE7EC * (double)(float)((double)lbl_803E55D0 * dVar9)
+        (char)(int)-(float)((double)lbl_803DE7EC * (double)(float)((double)lbl_803E55D0 * scale)
             - (double)lbl_803E55D0);
     *(int*)(state + 0x20) = (int)lbl_803E55D8;
     *(undefined4*)(state + 0x24) = *(undefined4*)(state + 0x20);
