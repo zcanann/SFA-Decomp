@@ -894,15 +894,17 @@ void ktrex_init(int obj, char* arg)
 {
     int i;
     int cp;
-    gKTRexRuntime = ((GameObject*)obj)->extra;
+    s16 yaw0;
+    KTRexRuntime* rt;
+    rt = (KTRexRuntime*)(gKTRexRuntime = ((GameObject*)obj)->extra);
     (*(void (**)(int, char*, void*, int, int, int, int, f32))((char*)*gBaddieControlInterface + 0x58))(
-        obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0), lbl_803E684C);
+        obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0 ? 1 : 0), lbl_803E684C);
     ((GameObject*)obj)->animEventCallback = (void*)ktrex_animEventCallback;
-    (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))(obj, gKTRexRuntime, 0);
-    ((KTRexRuntime*)gKTRexRuntime)->unk270 = 2;
-    *(int*)&((KTRexRuntime*)gKTRexRuntime)->unk2D0 = 0;
-    ((KTRexRuntime*)gKTRexRuntime)->unk25F = 0;
-    ((KTRexRuntime*)gKTRexRuntime)->unk349 = 0;
+    (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))(obj, rt, 0);
+    rt->unk270 = 2;
+    *(int*)&rt->unk2D0 = 0;
+    rt->unk25F = 0;
+    rt->unk349 = 0;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x88;
     ObjHits_EnableObject(obj);
     if (((GameObject*)obj)->anim.modelState != NULL)
@@ -911,8 +913,9 @@ void ktrex_init(int obj, char* arg)
     }
     gKTRexState = ((KTRexRuntime*)gKTRexRuntime)->arena;
     ((KTRexArenaState*)gKTRexState)->stack = allocModelStruct_800139e8(4, 4);
-    *(s16*)obj = (s16)((s8)arg[0x2a] << 8);
-    ((KTRexArenaState*)gKTRexState)->homeYaw = (s16)((s8)arg[0x2a] << 8);
+    yaw0 = (s16)((s8)arg[0x2a] << 8);
+    *(s16*)obj = yaw0;
+    ((KTRexArenaState*)gKTRexState)->homeYaw = yaw0;
     for (i = 0; i < 4; i++)
     {
         cp = (int)(*gRomCurveInterface)->getById(*(int*)((char*)lbl_8032A510 + 0x4c + i * 4));
