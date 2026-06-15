@@ -6752,7 +6752,7 @@ void fn_8004D230(void)
     GXSetTevSwapMode(lbl_803DCD90, 1, 1);
     if (lbl_803DCD90 == 0)
     {
-        GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xf);
     }
     else
     {
