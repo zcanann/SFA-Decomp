@@ -1,19 +1,11 @@
 /* DLL 0x01AB — bombplantingspot (Sauria bomb planting spot / trigger). TU: 0x801D3FF4–0x801D4198. */
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objseq.h"
 
 extern u32 GameBit_Get(int eventId);
 
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
-#include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 extern uint GameBit_Get(int bit);
 extern int gameBitDecrement(int bit);
