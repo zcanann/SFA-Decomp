@@ -741,24 +741,14 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 #pragma peephole on
 static void* skeetla_validateRouteEntry(void* entry)
 {
-    s16 requiredBit;
-    s16 forbiddenBit;
-
     if (entry == NULL)
     {
-        return NULL;
+        entry = NULL;
     }
-
-    requiredBit = *(s16*)((u8*)entry + 0x30);
-    if ((requiredBit != -1) && (GameBit_Get(requiredBit) == 0))
+    else if (((*(s16*)((u8*)entry + 0x30) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x30)) == 0)) ||
+        ((*(s16*)((u8*)entry + 0x32) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x32)) != 0)))
     {
-        return NULL;
-    }
-
-    forbiddenBit = *(s16*)((u8*)entry + 0x32);
-    if ((forbiddenBit != -1) && (GameBit_Get(forbiddenBit) != 0))
-    {
-        return NULL;
+        entry = NULL;
     }
 
     return entry;
