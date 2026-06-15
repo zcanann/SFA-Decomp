@@ -88,10 +88,7 @@ extern ObjfsaPatch lbl_8039CAE8[];
 extern ObjfsaWalkGroup lbl_8039FAE8[];
 extern u8 lbl_803A1730[];
 
-extern u8 lbl_803DD440;
-extern u32 playerOverride;
 extern u32 lbl_803DD458;
-extern void* memset(void* dst, int val, u32 n);
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
