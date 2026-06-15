@@ -1,12 +1,4 @@
-#include "main/dll/df_partfx.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
 #include "main/resource.h"
-#include "main/screen_transition.h"
-#include "main/dll/path_control_interface.h"
-#include "main/objanim.h"
 
 extern undefined4 DAT_803de0af;
 
