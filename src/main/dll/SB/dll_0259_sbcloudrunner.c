@@ -22,7 +22,6 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/objhits.h"
