@@ -432,6 +432,7 @@ void MoonSeedPlantingSpot_update(int obj)
     }
 }
 
+#pragma optimization_level 2
 int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 {
     int* sub;
@@ -456,8 +457,8 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
             ret = 1;
             if (GameBit_Get(*(s16*)(inner + 8)) != 0 && GameBit_Get(*(s16*)(inner + 0xa)) == 0)
             {
-                sub = *(int**)&((GameObject*)obj)->anim.placementData;
                 inner = ((GameObject*)obj)->extra;
+                sub = *(int**)&((GameObject*)obj)->anim.placementData;
                 if (GameBit_Get(*(s16*)(inner + 8)) != 0)
                 {
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
@@ -470,6 +471,7 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
     }
     return ret;
 }
+#pragma optimization_level reset
 
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
