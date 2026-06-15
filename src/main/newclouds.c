@@ -28,9 +28,6 @@ extern void* Obj_GetActiveModel(void* obj);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
 extern s16* Camera_GetCurrentViewSlot(void);
-extern void Obj_BuildWorldTransformMatrix(void* obj, f32 mtx[3][4], int flags);
-extern void skyFn_8008a04c(void);
-extern void skyFn_8008a500(void);
 extern int randomGetRange(int min, int max);
 
 extern u8 framesThisStep;
@@ -128,7 +125,6 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
     gCloudOverridePositionZ = c;
 }
 
-extern void padUpdate(void);
 extern void* textureLoadAsset(int);
 
 extern void textureFree(void* handle);
@@ -214,7 +210,6 @@ void newclouds_onMapSetup(void)
     Music_Trigger(235, 0);
 }
 
-extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 
 #pragma dont_inline on
