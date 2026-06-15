@@ -449,7 +449,7 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
         {
             t = lbl_803E385C;
         }
-        state->animProgress = lbl_803E3858 - t;
+        state->animProgress = *(f32*)&lbl_803E3858 - t;
     }
     else
     {
@@ -457,7 +457,7 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     }
     state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
     state->animStepScale = lbl_803E385C;
-    ObjAnim_SetMoveProgress((double)state->animProgress, (ObjAnimComponent*)obj);
+    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->animProgress);
     objAnim->rotX = (s16)((u32)setup->yawByte << 8);
     plant->objectFlags |= MAGICPLANT_OBJECT_FLAGS_CHILD_EFFECTS;
     objAnim->bankIndex = (s8)setup->modelIndex;
