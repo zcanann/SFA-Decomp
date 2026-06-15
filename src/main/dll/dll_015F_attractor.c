@@ -27,7 +27,6 @@ extern undefined4 FUN_80044404();
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43D0;
 extern void* Obj_GetPlayerObject(void);
-extern u8 framesThisStep;
 extern f32 lbl_803E43C0;
 extern int atan2i(int y, int x);
 
