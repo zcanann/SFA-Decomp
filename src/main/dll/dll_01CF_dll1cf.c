@@ -123,51 +123,51 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 #pragma peephole on
 void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
 {
-    uint uVar1;
-    int iVar2;
-    float* pfVar3;
+    uint bitValue;
+    int typeId;
+    float* extra;
 
-    pfVar3 = ((GameObject*)param_1)->extra;
-    if (pfVar3[4] == 0.0)
+    extra = ((GameObject*)param_1)->extra;
+    if (extra[4] == 0.0)
     {
         FUN_800067c0((int*)0xdf, 1);
     }
-    pfVar3[4] = 2.8026e-44;
-    iVar2 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    if (iVar2 == 0x49b23)
+    extra[4] = 2.8026e-44;
+    typeId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    if (typeId == 0x49b23)
     {
-        uVar1 = GameBit_Get(0xc5c);
-        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5b), uVar1 == 0))
+        bitValue = GameBit_Get(0xc5c);
+        if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5b), bitValue == 0))
         {
-            *param_3 = *pfVar3;
-            *param_4 = pfVar3[1];
+            *param_3 = *extra;
+            *param_4 = extra[1];
         }
-        uVar1 = GameBit_Get(0xc5b);
-        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5c), uVar1 == 0))
+        bitValue = GameBit_Get(0xc5b);
+        if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5c), bitValue == 0))
         {
-            *param_3 = -*pfVar3;
-            *param_4 = -pfVar3[1];
+            *param_3 = -*extra;
+            *param_4 = -extra[1];
         }
-        uVar1 = GameBit_Get(0xc5b);
-        if (uVar1 != 0)
+        bitValue = GameBit_Get(0xc5b);
+        if (bitValue != 0)
         {
             GameBit_Set(0xc5c, 0);
         }
-        uVar1 = GameBit_Get(0xc5b);
-        if (uVar1 == 0)
+        bitValue = GameBit_Get(0xc5b);
+        if (bitValue == 0)
         {
             GameBit_Set(0xc5c, 1);
         }
     }
-    else if ((iVar2 < 0x49b23) && (iVar2 == 0x1ea9))
+    else if ((typeId < 0x49b23) && (typeId == 0x1ea9))
     {
-        *param_3 = *pfVar3;
-        *param_4 = pfVar3[1];
+        *param_3 = *extra;
+        *param_4 = extra[1];
     }
     else
     {
-        *param_3 = *pfVar3;
-        *param_4 = pfVar3[1];
+        *param_3 = *extra;
+        *param_4 = extra[1];
     }
     return;
 }
