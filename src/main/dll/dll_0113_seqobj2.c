@@ -80,46 +80,46 @@ FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_15,
              undefined4 param_16)
 {
-    byte bVar1;
-    int iVar2;
-    int iVar3;
-    byte* pbVar4;
-    int iVar5;
+    byte eventId;
+    int animState;
+    int i;
+    byte* flags;
+    int placement;
 
     if (((GameObject*)param_9)->seqIndex != -1)
     {
-        iVar5 = *(int*)&((GameObject*)param_9)->anim.placementData;
-        pbVar4 = ((GameObject*)param_9)->extra;
+        placement = *(int*)&((GameObject*)param_9)->anim.placementData;
+        flags = ((GameObject*)param_9)->extra;
         animUpdate->sequenceEventActive = 0;
-        iVar2 = (int)animUpdate;
-        for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1)
+        animState = (int)animUpdate;
+        for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
         {
-            bVar1 = animUpdate->eventIds[iVar3];
-            if (bVar1 == 2)
+            eventId = animUpdate->eventIds[i];
+            if (eventId == 2)
             {
-                if (*(byte*)(iVar5 + 0x24) != 0)
+                if (*(byte*)(placement + 0x24) != 0)
                 {
                     param_1 = FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                           (uint) * (byte*)(iVar5 + 0x24), '\0', iVar2, param_12, param_13, param_14
+                                           (uint) * (byte*)(placement + 0x24), '\0', animState, param_12, param_13, param_14
                                            , param_15, param_16);
                 }
             }
-            else if (bVar1 < 2)
+            else if (eventId < 2)
             {
-                if (((bVar1 != 0) && ((*(byte*)(iVar5 + 0x1d) & 1) == 0)) &&
-                    ((*(byte*)(iVar5 + 0x1d) & 2) != 0))
+                if (((eventId != 0) && ((*(byte*)(placement + 0x1d) & 1) == 0)) &&
+                    ((*(byte*)(placement + 0x1d) & 2) != 0))
                 {
-                    param_1 = FUN_80017698((int)*(short*)(iVar5 + 0x18), 1);
+                    param_1 = FUN_80017698((int)*(short*)(placement + 0x18), 1);
                 }
             }
-            else if (bVar1 < 4)
+            else if (eventId < 4)
             {
-                iVar2 = 0;
+                animState = 0;
                 param_12 = 0;
                 (*gObjectTriggerInterface)->setCamVars(0x56, 1, 0, 0);
             }
         }
-        *pbVar4 = *pbVar4 | 4;
+        *flags = *flags | 4;
     }
     return 0;
 }
@@ -142,7 +142,7 @@ void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 void seqObject_update(int obj)
 {
     uint bitValue;
-    byte bVar2;
+    byte flagBits;
     SeqObjectPlacement * def;
     SeqObjectState* state;
 
@@ -150,16 +150,16 @@ void seqObject_update(int obj)
     def = (SeqObjectPlacement*)((GameObject*)obj)->anim.placementData;
     if ((state->flags & SEQOBJECT_STATE_SEQUENCE_DONE) != 0)
     {
-        bVar2 = def->flags;
-        if ((bVar2 & 1) == 0)
+        flagBits = def->flags;
+        if ((flagBits & 1) == 0)
         {
-            if ((bVar2 & 8) != 0)
+            if ((flagBits & 8) != 0)
             {
                 FUN_80017698(def->openGameBit, 1);
             }
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
-        else if ((bVar2 & 4) == 0)
+        else if ((flagBits & 4) == 0)
         {
             FUN_80017698(def->triggerGameBit, 0);
         }
@@ -173,8 +173,8 @@ void seqObject_update(int obj)
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
         bitValue = FUN_80017690(def->triggerGameBit);
-        bVar2 = (byte)bitValue;
-        if ((bVar2 != state->triggerBitState) && (state->triggerBitState = bVar2, bVar2 != 0))
+        flagBits = (byte)bitValue;
+        if ((flagBits != state->triggerBitState) && (state->triggerBitState = flagBits, flagBits != 0))
         {
             if (def->triggerId != -1)
             {
