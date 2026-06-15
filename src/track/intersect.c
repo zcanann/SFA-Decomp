@@ -628,11 +628,11 @@ extern f32 lbl_803DEE74;
 extern f32 lbl_803DEE78;
 extern f32 lbl_803DEE7C;
 extern f32 Gq;
-extern f32 lbl_803DD03C;
+extern int lbl_803DD03C;
 extern int lbl_803968C0[];
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern f32 fabs(f32 x);
+extern double fabs(double x);
 
 void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
                        float *mat, short *out)
@@ -658,16 +658,16 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
 
     if (out != NULL) {
         if ((f32)(near + far) <= lbl_803DEE7C) {
-            *out = (s16)0xFFFF;
+            *(u16 *)out = 0xFFFF;
         } else {
             *out = (s16)(s32)(Gq / (near + far));
-            if (*out == 0) {
+            if (*(u16 *)out == 0) {
                 *out = 1;
             }
         }
     }
-    lbl_803DD038 = fabs(near);
-    lbl_803DD034 = fabs(far);
+    lbl_803DD038 = __fabs(near);
+    lbl_803DD034 = __fabs(far);
     C_MTXPerspective((void *)lbl_803968C0, fov, aspect, lbl_803DD038, lbl_803DD034);
     lbl_803DD03C = 0;
 }
