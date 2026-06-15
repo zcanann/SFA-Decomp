@@ -271,7 +271,7 @@ void FUN_8015b2d0(short* obj, int state)
         *(undefined*)(state + 0x33b) = 1;
     }
     ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
-    *(undefined*)(*(int*)(obj + 0x2a) + 0x70) = 0;
+    *(undefined*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x70) = 0;
     *obj = *obj + -0x100;
     return;
 }
@@ -526,7 +526,7 @@ FUN_8015c3b4(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(byte*)(control + 0x44) = *(byte*)(control + 0x44) | 0x10;
     }
     *(byte*)(control + 0x44) = *(byte*)(control + 0x44) | 0xc;
-    *(undefined4*)(state + 0x280) = *(undefined4*)(obj + 0x98);
+    *(undefined4*)(state + 0x280) = *(undefined4*)&((GameObject*)obj)->anim.currentMoveProgress;
     return 0;
 }
 
@@ -919,7 +919,7 @@ FUN_8015d00c(undefined8 param_1, double param_2, double param_3, undefined8 para
     int control;
     int extra;
 
-    extra = *(int*)(obj + 0x5c);
+    extra = *(int*)&((GameObject*)obj)->extra;
     if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E39AC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
