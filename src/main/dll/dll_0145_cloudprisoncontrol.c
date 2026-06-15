@@ -94,22 +94,22 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                                       undefined4 param_9, undefined4 param_10, undefined4 param_11, int param_12,
                                       int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    byte bVar1;
-    undefined2 uVar2;
-    ushort uVar3;
-    double dVar4;
-    short sVar6;
-    uint uVar5;
+    byte opFlags;
+    undefined2 stateIdx;
+    ushort scaleRaw;
+    double prevResult;
+    short delta;
+    uint flagBits;
     short* objSeq;
-    uint uVar8;
-    uint uVar9;
-    int iVar10;
-    byte bVar16;
-    int* piVar11;
-    short* psVar12;
-    int iVar13;
-    undefined4 uVar14;
-    undefined4 uVar15;
+    uint flagVal;
+    uint flagReg;
+    int iResult;
+    byte subOp;
+    int* idList;
+    short* childSeq;
+    int childObj;
+    undefined4 srcA;
+    undefined4 srcB;
     int objBase;
     byte opIndex;
     byte* seqFlags;
@@ -121,20 +121,20 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
     double resultVal;
     double tmpF1d;
     double tmpF1e;
-    undefined8 uVar23;
+    undefined8 tmpResult;
     int local_38;
     int local_34[13];
 
-    uVar23 = FUN_8028682c();
-    objSeq = (short*)((ulonglong)uVar23 >> 0x20);
-    objBase = (int)uVar23;
+    tmpResult = FUN_8028682c();
+    objSeq = (short*)((ulonglong)tmpResult >> 0x20);
+    objBase = (int)tmpResult;
     seqFlags = *(byte**)(objSeq + 0x5c);
     opPtr = (byte*)(*(int*)(objSeq + 0x26) + 0x18);
     opIndex = 0;
     resultVal = tmpF1a;
     do
     {
-        dVar4 = DOUBLE_803e4d68;
+        prevResult = DOUBLE_803e4d68;
         mode = (char)param_11;
         if (7 < opIndex)
         {
@@ -153,37 +153,37 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
             FUN_80286878();
             return;
         }
-        if ((opPtr[1] != 0) && ((bVar16 = *seqFlags, (bVar16 & 4) == 0 || ((*opPtr & 0x20) != 0))))
+        if ((opPtr[1] != 0) && ((subOp = *seqFlags, (subOp & 4) == 0 || ((*opPtr & 0x20) != 0))))
         {
-            bVar1 = *opPtr;
-            if ((bVar1 & 0x10) == 0)
+            opFlags = *opPtr;
+            if ((opFlags & 0x10) == 0)
             {
                 if (mode == '\x01')
                 {
-                    if ((bVar1 & 1) != 0)
+                    if ((opFlags & 1) != 0)
                     {
-                        if ((bVar16 & 1) != 0)
+                        if ((subOp & 1) != 0)
                         {
-                            bVar1 = bVar1 & 4;
+                            opFlags = opFlags & 4;
                         joined_r0x80199a04:
-                            if (bVar1 == 0) goto switchD_80199a5c_caseD_0;
+                            if (opFlags == 0) goto switchD_80199a5c_caseD_0;
                         }
                         goto code_r0x80199a48;
                     }
                 }
-                else if ((mode == -1) && ((bVar1 & 2) != 0))
+                else if ((mode == -1) && ((opFlags & 2) != 0))
                 {
-                    if ((bVar16 & 2) != 0)
+                    if ((subOp & 2) != 0)
                     {
-                        bVar1 = bVar1 & 8;
+                        opFlags = opFlags & 8;
                         goto joined_r0x80199a04;
                     }
                     goto code_r0x80199a48;
                 }
             }
-            else if ((bVar1 & 1) == 0)
+            else if ((opFlags & 1) == 0)
             {
-                if (((bVar1 & 2) == 0) || (mode < '\x01')) goto code_r0x80199a48;
+                if (((opFlags & 2) == 0) || (mode < '\x01')) goto code_r0x80199a48;
             }
             else if (-1 < mode)
             {
@@ -191,33 +191,33 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                 switch (opPtr[1])
                 {
                 case 1:
-                    bVar16 = opPtr[2];
-                    if (bVar16 == 9)
+                    subOp = opPtr[2];
+                    if (subOp == 9)
                     {
-                        iVar10 = FUN_80017a98();
-                        if (iVar10 != 0)
+                        iResult = FUN_80017a98();
+                        if (iResult != 0)
                         {
-                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 10);
+                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iResult, 10);
                         }
                     }
-                    else if (bVar16 < 9)
+                    else if (subOp < 9)
                     {
-                        if ((7 < bVar16) && (iVar10 = FUN_80017a98(), iVar10 != 0))
+                        if ((7 < subOp) && (iResult = FUN_80017a98(), iResult != 0))
                         {
-                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 1);
+                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iResult, 1);
                         }
                     }
-                    else if (bVar16 == 0xb)
+                    else if (subOp == 0xb)
                     {
-                        iVar10 = FUN_80017a98();
-                        if (iVar10 != 0)
+                        iResult = FUN_80017a98();
+                        if (iResult != 0)
                         {
-                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D94, iVar10, 1);
+                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D94, iResult, 1);
                         }
                     }
-                    else if ((bVar16 < 0xb) && (iVar10 = FUN_80017a98(), iVar10 != 0))
+                    else if ((subOp < 0xb) && (iResult = FUN_80017a98(), iResult != 0))
                     {
-                        resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 0xb);
+                        resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iResult, 0xb);
                     }
                     break;
                 case 4:
@@ -304,11 +304,11 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                         }
                         break;
                     case 9:
-                        uVar5 = FUN_80080f40();
+                        flagBits = FUN_80080f40();
                         local_34[2] = (int)opPtr[3];
                         local_34[1] = 0x43300000;
                         resultVal = (double)FUN_80080f3c((double)(float)((double)CONCAT44(0x43300000, local_34[2]) -
-                                                          DOUBLE_803e4d88), uVar5 ^ 1);
+                                                          DOUBLE_803e4d88), flagBits ^ 1);
                         break;
                     case 10:
                         local_34[2] = (int)opPtr[3];
@@ -329,21 +329,21 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     resultVal = (double)FUN_800723a0();
                     break;
                 case 0xb:
-                    bVar16 = opPtr[2];
-                    if (bVar16 == 2)
+                    subOp = opPtr[2];
+                    if (subOp == 2)
                     {
                         (*gObjectTriggerInterface)->setFlag(opPtr[3], 0);
                     }
-                    else if (bVar16 < 2)
+                    else if (subOp < 2)
                     {
-                        if (bVar16 == 0)
+                        if (subOp == 0)
                         {
                         LAB_80199dec:
-                            iVar10 = ObjGroup_FindNearestObject(0xf, objSeq, (float*)0x0);
+                            iResult = ObjGroup_FindNearestObject(0xf, objSeq, (float*)0x0);
                             resultVal = tmpF1b;
-                            if (iVar10 != 0)
+                            if (iResult != 0)
                             {
-                                (*gObjectTriggerInterface)->runSequence(opPtr[3], (void*)iVar10, -1);
+                                (*gObjectTriggerInterface)->runSequence(opPtr[3], (void*)iResult, -1);
                                 resultVal = tmpF1b;
                             }
                         }
@@ -352,33 +352,33 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                             (*gObjectTriggerInterface)->setFlag(opPtr[3], 1);
                         }
                     }
-                    else if (bVar16 < 4) goto LAB_80199dec;
+                    else if (subOp < 4) goto LAB_80199dec;
                     break;
                 case 0xc:
-                    uVar3 = *(ushort*)(opPtr + 2);
-                    iVar10 = FUN_80017b00(&local_38, local_34);
+                    scaleRaw = *(ushort*)(opPtr + 2);
+                    iResult = FUN_80017b00(&local_38, local_34);
                     for (; local_38 < local_34[0]; local_38 = local_38 + 1)
                     {
-                        iVar13 = *(int*)(iVar10 + local_38 * 4);
-                        psVar12 = *(short**)(iVar13 + 0x4c);
-                        if (psVar12 == (short*)0x0) goto LAB_80199ef0;
-                        sVar6 = *psVar12;
-                        if (sVar6 == 0x54)
+                        childObj = *(int*)(iResult + local_38 * 4);
+                        childSeq = *(short**)(childObj + 0x4c);
+                        if (childSeq == (short*)0x0) goto LAB_80199ef0;
+                        delta = *childSeq;
+                        if (delta == 0x54)
                         {
                         LAB_80199ed4:
-                            if ((int)psVar12[0x1c] == (uint)uVar3)
+                            if ((int)childSeq[0x1c] == (uint)scaleRaw)
                             {
                                 resultVal = (double)objInterpretSeq_v11_unused(
                                     resultVal, param_2, param_3, param_4, param_5, param_6, param_7
-                                    , param_8, iVar13, objBase, param_11, param_12, param_13,
+                                    , param_8, childObj, objBase, param_11, param_12, param_13,
                                     param_14, param_15, param_16);
                             }
                         }
-                        else if (sVar6 < 0x54)
+                        else if (delta < 0x54)
                         {
-                            if ((sVar6 < 0x51) && (0x4a < sVar6)) goto LAB_80199ed4;
+                            if ((delta < 0x51) && (0x4a < delta)) goto LAB_80199ed4;
                         }
-                        else if (sVar6 == 0x230) goto LAB_80199ed4;
+                        else if (delta == 0x230) goto LAB_80199ed4;
                     LAB_80199ef0:
                         ;
                     }
@@ -390,30 +390,30 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                                 (uint) * (ushort*)(opPtr + 2), param_11, param_12, 0, param_15, param_16);
                     break;
                 case 0x10:
-                    iVar10 = FUN_80017a98();
-                    resultVal = (double)FUN_80017a78(iVar10, (uint)opPtr[2]);
+                    iResult = FUN_80017a98();
+                    resultVal = (double)FUN_80017a78(iResult, (uint)opPtr[2]);
                     break;
                 case 0x11:
                     resultVal = (double)FUN_80017698(0x4e3, (uint) * (ushort*)(opPtr + 2));
                     break;
                 case 0x12:
-                    bVar16 = opPtr[2];
-                    uVar9 = (uint)bVar16 << 8 & 0x3f00 | (uint)opPtr[3];
-                    uVar8 = FUN_80017690(uVar9);
-                    uVar5 = ((uint)bVar16 << 8) >> 0xe;
-                    if (uVar5 == 0)
+                    subOp = opPtr[2];
+                    flagReg = (uint)subOp << 8 & 0x3f00 | (uint)opPtr[3];
+                    flagVal = FUN_80017690(flagReg);
+                    flagBits = ((uint)subOp << 8) >> 0xe;
+                    if (flagBits == 0)
                     {
-                        uVar8 = 0;
+                        flagVal = 0;
                     }
-                    else if (uVar5 == 1)
+                    else if (flagBits == 1)
                     {
-                        uVar8 = 0xffffffff;
+                        flagVal = 0xffffffff;
                     }
-                    else if (uVar5 == 2)
+                    else if (flagBits == 2)
                     {
-                        uVar8 = ~uVar8;
+                        flagVal = ~flagVal;
                     }
-                    resultVal = (double)FUN_80017698(uVar9, uVar8);
+                    resultVal = (double)FUN_80017698(flagReg, flagVal);
                     break;
                 case 0x13:
                     resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))
@@ -424,13 +424,13 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                         ((int)*(char*)(objSeq + 0x56), *(undefined2*)(opPtr + 2), 0);
                     break;
                 case 0x15:
-                    piVar11 = (int*)FUN_80017af0(*(ushort*)(opPtr + 2) + 2);
-                    if (piVar11 != (int*)0x0)
+                    idList = (int*)FUN_80017af0(*(ushort*)(opPtr + 2) + 2);
+                    if (idList != (int*)0x0)
                     {
-                        for (; *piVar11 != -1; piVar11 = piVar11 + 1)
+                        for (; *idList != -1; idList = idList + 1)
                         {
-                            iVar10 = FUN_8005337c(*piVar11);
-                            if (iVar10 == 0)
+                            iResult = FUN_8005337c(*idList);
+                            if (iResult == 0)
                             {
                                 param_13 = 0;
                                 param_14 = 0;
@@ -442,13 +442,13 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     }
                     break;
                 case 0x16:
-                    piVar11 = (int*)FUN_80017af0(*(ushort*)(opPtr + 2) + 2);
-                    if (piVar11 != (int*)0x0)
+                    idList = (int*)FUN_80017af0(*(ushort*)(opPtr + 2) + 2);
+                    if (idList != (int*)0x0)
                     {
-                        for (; *piVar11 != -1; piVar11 = piVar11 + 1)
+                        for (; *idList != -1; idList = idList + 1)
                         {
-                            iVar10 = FUN_8005337c(*piVar11);
-                            if (iVar10 != 0)
+                            iResult = FUN_8005337c(*idList);
+                            if (iResult != 0)
                             {
                                 resultVal = (double)FUN_80053754();
                             }
@@ -466,79 +466,79 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))(opPtr[3], opPtr[2], 0);
                     break;
                 case 0x1c:
-                    bVar16 = opPtr[2];
-                    if (bVar16 == 2)
+                    subOp = opPtr[2];
+                    if (subOp == 2)
                     {
-                        uVar5 = countLeadingZeros((uint)opPtr[3]);
-                        resultVal = (double)FUN_80017698(0x3af, uVar5 >> 5);
+                        flagBits = countLeadingZeros((uint)opPtr[3]);
+                        resultVal = (double)FUN_80017698(0x3af, flagBits >> 5);
                     }
-                    else if (bVar16 < 2)
+                    else if (subOp < 2)
                     {
-                        if (bVar16 == 0)
+                        if (subOp == 0)
                         {
-                            uVar5 = countLeadingZeros((uint)opPtr[3]);
-                            resultVal = (double)FUN_80017698(0x3ab, uVar5 >> 5);
+                            flagBits = countLeadingZeros((uint)opPtr[3]);
+                            resultVal = (double)FUN_80017698(0x3ab, flagBits >> 5);
                         }
                         else
                         {
-                            uVar5 = countLeadingZeros((uint)opPtr[3]);
-                            resultVal = (double)FUN_80017698(0x3ac, uVar5 >> 5);
+                            flagBits = countLeadingZeros((uint)opPtr[3]);
+                            resultVal = (double)FUN_80017698(0x3ac, flagBits >> 5);
                         }
                     }
-                    else if (bVar16 < 4)
+                    else if (subOp < 4)
                     {
-                        bVar16 = opPtr[3];
-                        if (bVar16 == 1)
+                        subOp = opPtr[3];
+                        if (subOp == 1)
                         {
-                            uVar23 = FUN_80017698(0x3b0, 0);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                                  uVar15, uVar14, 0x134, 0, param_13, param_14, param_15, param_16);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                                  uVar15, uVar14, 0x135, 0, param_13, param_14, param_15, param_16);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                                  uVar15, uVar14, 0x142, 0, param_13, param_14, param_15, param_16);
-                            resultVal = (double)FUN_80080f10(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
+                            tmpResult = FUN_80017698(0x3b0, 0);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            tmpResult = FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                                  srcB, srcA, 0x134, 0, param_13, param_14, param_15, param_16);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            tmpResult = FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                                  srcB, srcA, 0x135, 0, param_13, param_14, param_15, param_16);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            tmpResult = FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                                  srcB, srcA, 0x142, 0, param_13, param_14, param_15, param_16);
+                            resultVal = (double)FUN_80080f10(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7,
                                                           param_8);
                         }
-                        else if (bVar16 == 0)
+                        else if (subOp == 0)
                         {
-                            uVar23 = FUN_80017698(0x3b0, 1);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                                  uVar15, uVar14, 0x134, 0, param_13, param_14, param_15, param_16);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                                  uVar15, uVar14, 0x135, 0, param_13, param_14, param_15, param_16);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            resultVal = (double)FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                          param_8, uVar15, uVar14, 0x142, 0, param_13, param_14,
+                            tmpResult = FUN_80017698(0x3b0, 1);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            tmpResult = FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                                  srcB, srcA, 0x134, 0, param_13, param_14, param_15, param_16);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            tmpResult = FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                                  srcB, srcA, 0x135, 0, param_13, param_14, param_15, param_16);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            resultVal = (double)FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7,
+                                                          param_8, srcB, srcA, 0x142, 0, param_13, param_14,
                                                           param_15
                                                           , param_16);
                         }
-                        else if (bVar16 < 3)
+                        else if (subOp < 3)
                         {
-                            uVar23 = FUN_80017698(0x3b0, 1);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                                  uVar15, uVar14, 0x136, 0, param_13, param_14, param_15, param_16);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                                  uVar15, uVar14, 0x137, 0, param_13, param_14, param_15, param_16);
-                            uVar14 = FUN_80017a98();
-                            uVar15 = FUN_80017a98();
-                            resultVal = (double)FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                          param_8, uVar15, uVar14, 0x143, 0, param_13, param_14,
+                            tmpResult = FUN_80017698(0x3b0, 1);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            tmpResult = FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                                  srcB, srcA, 0x136, 0, param_13, param_14, param_15, param_16);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            tmpResult = FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                                  srcB, srcA, 0x137, 0, param_13, param_14, param_15, param_16);
+                            srcA = FUN_80017a98();
+                            srcB = FUN_80017a98();
+                            resultVal = (double)FUN_80006728(tmpResult, param_2, param_3, param_4, param_5, param_6, param_7,
+                                                          param_8, srcB, srcA, 0x143, 0, param_13, param_14,
                                                           param_15
                                                           , param_16);
                         }
@@ -562,34 +562,34 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     resultVal = (double)(**(code**)(*DAT_803dd72c + 0x44))(opPtr[3], opPtr[2]);
                     break;
                 case 0x1f:
-                    psVar12 = (short*)FUN_80017a98();
-                    sVar6 = *objSeq - *psVar12;
-                    if (0x8000 < sVar6)
+                    childSeq = (short*)FUN_80017a98();
+                    delta = *objSeq - *childSeq;
+                    if (0x8000 < delta)
                     {
-                        sVar6 = sVar6 + 1;
+                        delta = delta + 1;
                     }
-                    if (sVar6 < -0x8000)
+                    if (delta < -0x8000)
                     {
-                        sVar6 = sVar6 + -1;
+                        delta = delta + -1;
                     }
-                    iVar10 = (int)sVar6;
-                    if (iVar10 < 0)
+                    iResult = (int)delta;
+                    if (iResult < 0)
                     {
-                        iVar10 = -iVar10;
+                        iResult = -iResult;
                     }
-                    if (iVar10 < 0x4001)
+                    if (iResult < 0x4001)
                     {
-                        iVar10 = FUN_80056600();
+                        iResult = FUN_80056600();
                         param_13 = *DAT_803dd72c;
                         resultVal = (double)(**(code**)(param_13 + 0x1c))
-                            (objSeq + 6, (int)*objSeq, opPtr[3], iVar10);
+                            (objSeq + 6, (int)*objSeq, opPtr[3], iResult);
                     }
                     else
                     {
-                        iVar10 = FUN_80056600();
+                        iResult = FUN_80056600();
                         param_13 = *DAT_803dd72c;
                         resultVal = (double)(**(code**)(param_13 + 0x1c))
-                        (objSeq + 6, (int)(short)(*objSeq + -0x8000), opPtr[3], iVar10
+                        (objSeq + 6, (int)(short)(*objSeq + -0x8000), opPtr[3], iResult
                         );
                     }
                     break;
@@ -604,81 +604,81 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     }
                     break;
                 case 0x21:
-                    bVar16 = opPtr[2];
-                    uVar5 = (uint)bVar16 << 8 & 0x1f00 | (uint)opPtr[3];
-                    uVar9 = FUN_80017690(uVar5);
-                    resultVal = (double)FUN_80017698(uVar5, uVar9 ^ 1 << (((uint)bVar16 << 8) >> 0xd));
+                    subOp = opPtr[2];
+                    flagBits = (uint)subOp << 8 & 0x1f00 | (uint)opPtr[3];
+                    flagReg = FUN_80017690(flagBits);
+                    resultVal = (double)FUN_80017698(flagBits, flagReg ^ 1 << (((uint)subOp << 8) >> 0xd));
                     break;
                 case 0x22:
-                    uVar2 = *(undefined2*)(opPtr + 2);
-                    bVar16 = (**(code**)(*DAT_803dd72c + 0x4c))((int)*(char*)(objSeq + 0x56), uVar2);
+                    stateIdx = *(undefined2*)(opPtr + 2);
+                    subOp = (**(code**)(*DAT_803dd72c + 0x4c))((int)*(char*)(objSeq + 0x56), stateIdx);
                     resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))
-                        ((int)*(char*)(objSeq + 0x56), uVar2, bVar16 ^ 1);
+                        ((int)*(char*)(objSeq + 0x56), stateIdx, subOp ^ 1);
                     break;
                 case 0x23:
-                    bVar16 = opPtr[2];
-                    if (bVar16 == 2)
+                    subOp = opPtr[2];
+                    if (subOp == 2)
                     {
                         resultVal = (double)(**(code**)(*DAT_803dd72c + 0x28))();
                     }
-                    else if (bVar16 < 2)
+                    else if (subOp < 2)
                     {
-                        if (bVar16 == 0)
+                        if (subOp == 0)
                         {
-                            iVar10 = FUN_80056600();
+                            iResult = FUN_80056600();
                             param_13 = *DAT_803dd72c;
-                            resultVal = (double)(**(code**)(param_13 + 0x24))(objSeq + 6, (int)*objSeq, iVar10, 0);
+                            resultVal = (double)(**(code**)(param_13 + 0x24))(objSeq + 6, (int)*objSeq, iResult, 0);
                         }
                         else
                         {
                             resultVal = (double)(**(code**)(*DAT_803dd72c + 0x2c))();
                         }
                     }
-                    else if (bVar16 < 4)
+                    else if (subOp < 4)
                     {
-                        iVar10 = FUN_80056600();
+                        iResult = FUN_80056600();
                         param_13 = *DAT_803dd72c;
-                        resultVal = (double)(**(code**)(param_13 + 0x24))(objSeq + 6, (int)*objSeq, iVar10, 1);
+                        resultVal = (double)(**(code**)(param_13 + 0x24))(objSeq + 6, (int)*objSeq, iResult, 1);
                     }
                     break;
                 case 0x26:
-                    iVar10 = FUN_80017a90();
-                    if (iVar10 != 0)
+                    iResult = FUN_80017a90();
+                    if (iResult != 0)
                     {
-                        bVar16 = opPtr[2];
-                        if (bVar16 == 2)
+                        subOp = opPtr[2];
+                        if (subOp == 2)
                         {
-                            iVar13 = ObjGroup_FindNearestObject(0x32, iVar10, (float*)0x0);
+                            childObj = ObjGroup_FindNearestObject(0x32, iResult, (float*)0x0);
                             resultVal = tmpF1d;
-                            if (iVar13 == 0)
+                            if (childObj == 0)
                             {
-                                iVar13 = ObjGroup_FindNearestObject(0x31, iVar10, (float*)0x0);
+                                childObj = ObjGroup_FindNearestObject(0x31, iResult, (float*)0x0);
                                 resultVal = tmpF1e;
                             }
-                            if (iVar13 != 0)
+                            if (childObj != 0)
                             {
-                                resultVal = (double)(**(code**)(**(int**)(iVar10 + 0x68) + 0x38))(iVar10);
+                                resultVal = (double)(**(code**)(**(int**)(iResult + 0x68) + 0x38))(iResult);
                             }
                         }
-                        else if (bVar16 < 2)
+                        else if (subOp < 2)
                         {
-                            if (bVar16 == 0)
+                            if (subOp == 0)
                             {
-                                resultVal = (double)(**(code**)(**(int**)(iVar10 + 0x68) + 0x3c))();
+                                resultVal = (double)(**(code**)(**(int**)(iResult + 0x68) + 0x3c))();
                             }
                             else
                             {
-                                iVar10 = FUN_80017a90();
+                                iResult = FUN_80017a90();
                                 resultVal = (double)FUN_80017ac8(resultVal, param_2, param_3, param_4, param_5, param_6,
                                                               param_7
-                                                              , param_8, iVar10);
+                                                              , param_8, iResult);
                             }
                         }
-                        else if (bVar16 == 4)
+                        else if (subOp == 4)
                         {
                             resultVal = (double)FUN_80017698(0xd00, 1);
                         }
-                        else if (bVar16 < 4)
+                        else if (subOp < 4)
                         {
                             resultVal = (double)FUN_80017698(0xd00, 0);
                         }
@@ -709,14 +709,14 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     **(float**)(objBase + 0xb8) =
                         (float)(param_2 *
                             (double)(float)((double)CONCAT44(0x43300000, local_34[2]) - DOUBLE_803e4d68));
-                    resultVal = dVar4;
+                    resultVal = prevResult;
                     break;
                 case 0x2d:
-                    iVar10 = FUN_80017a98();
-                    if (iVar10 == 0)
+                    iResult = FUN_80017a98();
+                    if (iResult == 0)
                     {
-                        iVar10 = FUN_8020a6fc();
-                        if (iVar10 != 0)
+                        iResult = FUN_8020a6fc();
+                        if (iResult != 0)
                         {
                             resultVal = (double)FUN_80125b7c(resultVal, param_2, param_3, param_4, param_5, param_6, param_7,
                                                           param_8, (uint) * (ushort*)(opPtr + 2));
@@ -733,11 +733,11 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     resultVal = (double)FUN_80040da0();
                     break;
                 case 0x2f:
-                    iVar10 = ObjGroup_FindNearestObject(0x4c, objSeq, (float*)0x0);
+                    iResult = ObjGroup_FindNearestObject(0x4c, objSeq, (float*)0x0);
                     resultVal = tmpF1c;
-                    if (iVar10 != 0)
+                    if (iResult != 0)
                     {
-                        resultVal = (double)FUN_8020a908(iVar10, (uint)opPtr[3] * 0x3c);
+                        resultVal = (double)FUN_8020a908(iResult, (uint)opPtr[3] * 0x3c);
                     }
                 }
             }
