@@ -359,7 +359,7 @@ int dataInsertKeymap(u16 keymapId, void* keymapData)
     for (i = 0; i < dataKeymapNum && DATA_KEYMAP_TAB[i].key < keymapId; ++i);
     if (i < dataKeymapNum)
     {
-        if (keymapId != DATA_KEYMAP_TAB[i].key)
+        if (keymapId != ((DataRefEntry *)(base + i * 8))[0x8C0].key)
         {
             if (dataKeymapNum < 256)
             {
@@ -375,7 +375,7 @@ int dataInsertKeymap(u16 keymapId, void* keymapData)
         }
         else
         {
-            DATA_KEYMAP_TAB[i].refCount++;
+            ((DataRefEntry *)(base + i * 8))[0x8C0].refCount++;
             sndEnd();
             return 0;
         }
