@@ -3,8 +3,14 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/game_ui_interface.h"
+#include "main/gamebits.h"
+#include "main/mapEvent.h"
+#include "main/effect_interfaces.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/light.h"
+#include "main/objanim_update.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
@@ -15,6 +21,8 @@
  * this DLL live in the adjacent unit main/light.c (next .text range).
  */
 
+extern undefined4 DAT_803de940;
+extern f64 DOUBLE_803e6d90;
 extern f32 lbl_803E6100;
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
@@ -22,7 +30,7 @@ extern f32 lbl_803E6150;
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDCC0;
 extern f32 lbl_803E6138;
-extern int fn_801FC6F4(int, int, ObjAnimUpdateState*);
+extern void fn_801FC6F4(int, int, ObjAnimUpdateState*);
 extern f32 lbl_803E6128;
 extern f32 lbl_803E610C;
 extern f32 lbl_803E611C;
@@ -353,7 +361,8 @@ void spellStoneUseFn_801fd270(int obj)
     {
         cond = (s16)GameBit_Get(state->requiredGameBit);
     }
-    if ((s16)GameBit_Get(state->completeGameBit) != 0 || state->used != 0) return;
+    if ((s16)GameBit_Get(state->completeGameBit) != 0) return;
+    if (state->used != 0) return;
     if ((s16)cond == 0) return;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
     if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0)
@@ -565,7 +574,7 @@ void seqpoint_update(int* obj)
     switch (self->mode)
     {
     case 0:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
+        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
@@ -576,14 +585,14 @@ void seqpoint_update(int* obj)
         self->done = 1;
         break;
     case 2:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
+        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case 3:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
+        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
@@ -609,8 +618,8 @@ void seqpoint_update(int* obj)
 void vfpdraghead_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj); /* #57 */
-    extern int randomGetRange(int min, int max); /* #57: signed return -> cmpwi */
-    int state = (s8)(*(char**)&((GameObject*)obj)->anim.placementData)[0x19];
+    extern int randomGetRange(int min, int max); /* #57 signed return -> cmpwi */
+    int state = (s8)(*(s8**)&((GameObject*)obj)->anim.placementData)[0x19];
     VfpDragHeadState* self2;
 
     if (state == 2)
@@ -665,7 +674,7 @@ void vfpdraghead_update(int* obj)
     }
 }
 
-int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
+void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
     extern undefined4 loadMapAndParent(int); /* #57 */
     extern undefined4 lockLevel(undefined4, int); /* #57 */
@@ -681,9 +690,8 @@ int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
         case 0:
             break;
         case 13:
-            switch ((int)ctx->eventIds[i])
+            if ((int)ctx->eventIds[i] == 20)
             {
-            case 20:
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
@@ -709,13 +717,11 @@ int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
                     (*gMapEventInterface)->setMapAct(8, 6);
                     warpToMap(124, 0);
                 }
-                break;
             }
             break;
         }
         ctx->eventIds[i] = 0;
     }
-    return 0;
 }
 
 void fn_801FBAC8(int obj)
