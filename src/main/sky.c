@@ -1586,8 +1586,7 @@ void skyFn_80088e54(int mode, f32 brightness)
             ((SkyState*)lbl_803DD12C)->unk248 = fullBlend;
             ((SkyState*)lbl_803DD12C)->lightBlendFactor = fullBlend;
         }
-        idx = mode * 0xa4;
-        cloudMode = ((SkyBlendStateFlags*)(lbl_803DD12C + idx + 0xc1))->cloud;
+        cloudMode = ((SkyBlendStateFlags*)(lbl_803DD12C + (idx = mode * 0xa4) + 0xc1))->cloud;
         if (cloudMode != 0)
         {
             setDrawCloudsAndLights(cloudMode - 1);
