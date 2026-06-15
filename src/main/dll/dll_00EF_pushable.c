@@ -3,7 +3,6 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/objhits.h"
