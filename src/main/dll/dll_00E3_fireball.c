@@ -387,7 +387,6 @@ extern int cmbsrc_getColorIndex(int* p);
 extern void projectileParticleFxFn_80099660(int* obj, f32 v, int kind);
 extern f32 lbl_803E3354;
 extern f32 lbl_803E3358;
-extern void objSetSlot(int* obj, int slot);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
@@ -414,8 +413,6 @@ extern u8 lbl_803DBD58[8];
 extern void queueGlowRender(int light);
 extern f32 lbl_803E3350;
 extern f32 lbl_803E3340;
-extern f32 fcos16(u16 angle);
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
