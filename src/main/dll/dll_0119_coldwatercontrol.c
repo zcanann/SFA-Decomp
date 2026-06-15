@@ -37,11 +37,11 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     undefined4 uVar1;
     char cVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
+    int mapId;
+    int scratch;
+    int state;
+    int def;
+    int eventIndex;
     undefined8 extraout_f1;
     undefined8 extraout_f1_00;
     undefined8 extraout_f1_01;
@@ -49,41 +49,41 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined8 extraout_f1_03;
     undefined8 uVar8;
 
-    iVar6 = *(int*)&((GameObject*)param_9)->anim.placementData;
-    iVar5 = *(int*)&((GameObject*)param_9)->extra;
-    iVar7 = 0;
-    iVar4 = (int)animUpdate;
+    def = *(int*)&((GameObject*)param_9)->anim.placementData;
+    state = *(int*)&((GameObject*)param_9)->extra;
+    eventIndex = 0;
+    scratch = (int)animUpdate;
     do
     {
-        if ((int)(uint)animUpdate->eventCount <= iVar7)
+        if ((int)(uint)animUpdate->eventCount <= eventIndex)
         {
             return 0;
         }
-        switch (animUpdate->eventIds[iVar7])
+        switch (animUpdate->eventIds[eventIndex])
         {
         case 2:
         case 0x65:
-            iVar4 = *(int*)(iVar6 + 0x14);
-            if (iVar4 == 0x49f5a)
+            scratch = *(int*)(def + 0x14);
+            if (scratch == 0x49f5a)
             {
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x26);
-                iVar4 = 1;
+                scratch = 1;
                 FUN_80042b9c(0, 0, 1);
                 uVar1 = FUN_80044404(0x26);
                 FUN_80042bec(uVar1, 0);
                 uVar1 = FUN_80044404(0xb);
                 FUN_80042bec(uVar1, 1);
             }
-            else if (iVar4 < 0x49f5a)
+            else if (scratch < 0x49f5a)
             {
-                if (iVar4 == 0x451b9)
+                if (scratch == 0x451b9)
                 {
                     cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1;
                     if (cVar2 == '\x02')
                     {
                         FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0xb);
-                        iVar4 = 1;
+                        scratch = 1;
                         FUN_80042b9c(0, 0, 1);
                         uVar1 = FUN_80044404(0xb);
                         FUN_80042bec(uVar1, 0);
@@ -91,7 +91,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                     else
                     {
                         FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
-                        iVar4 = 1;
+                        scratch = 1;
                         FUN_80042b9c(0, 0, 1);
                         uVar1 = FUN_80044404(0x29);
                         FUN_80042bec(uVar1, 0);
@@ -99,18 +99,18 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                 }
                 else
                 {
-                    if ((0x451b8 < iVar4) || (iVar4 != 0x43775)) goto LAB_801893dc;
+                    if ((0x451b8 < scratch) || (scratch != 0x43775)) goto LAB_801893dc;
                     FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
-                    iVar4 = 1;
+                    scratch = 1;
                     FUN_80042b9c(0, 0, 1);
                     uVar1 = FUN_80044404(0x29);
                     FUN_80042bec(uVar1, 0);
                 }
             }
-            else if (iVar4 == 0x4cd65)
+            else if (scratch == 0x4cd65)
             {
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x41);
-                iVar4 = 1;
+                scratch = 1;
                 FUN_80042b9c(0, 0, 1);
                 uVar1 = FUN_80044404(0x41);
                 FUN_80042bec(uVar1, 0);
@@ -121,7 +121,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
             LAB_801893dc:
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
-                iVar4 = 1;
+                scratch = 1;
                 FUN_80042b9c(0, 0, 1);
                 uVar1 = FUN_80044404(0x29);
                 FUN_80042bec(uVar1, 0);
@@ -129,16 +129,16 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             break;
         case 3:
         case 100:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x49f5a)
+            mapId = *(int*)(def + 0x14);
+            if (mapId == 0x49f5a)
             {
-                iVar4 = 0;
+                scratch = 0;
                 param_12 = (int)*gMapEventInterface;
                 param_1 = (**(code**)(param_12 + 0x50))(0xb, 4);
             }
-            else if (iVar3 < 0x49f5a)
+            else if (mapId < 0x49f5a)
             {
-                if (iVar3 == 0x451b9)
+                if (mapId == 0x451b9)
                 {
                     cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1_00;
@@ -150,30 +150,30 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                         FUN_80043030(uVar8, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
                         (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 0);
                         (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 0);
-                        iVar4 = 0;
+                        scratch = 0;
                         param_12 = (int)*gMapEventInterface;
                         param_1 = (**(code**)(param_12 + 0x50))(0xd, 0xe);
                     }
                 }
-                else if ((iVar3 < 0x451b9) && (iVar3 == 0x43775))
+                else if ((mapId < 0x451b9) && (mapId == 0x43775))
                 {
-                    iVar4 = 1;
+                    scratch = 1;
                     FUN_80042b9c(0, 0, 1);
                     FUN_80044404(7);
                     param_1 = FUN_80043030(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
                 }
             }
-            else if (iVar3 == 0x4cd65)
+            else if (mapId == 0x4cd65)
             {
-                iVar4 = 1;
+                scratch = 1;
                 FUN_80042b9c(0, 0, 1);
                 FUN_80044404(0xb);
                 param_1 = FUN_80043030(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
             }
             break;
         case 5:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x451b9)
+            mapId = *(int*)(def + 0x14);
+            if (mapId == 0x451b9)
             {
                 cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_01;
@@ -182,19 +182,19 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                     param_1 = FUN_80042800();
                 }
             }
-            else if (iVar3 < 0x451b9)
+            else if (mapId < 0x451b9)
             {
-                if (iVar3 == 0x43775)
+                if (mapId == 0x43775)
                 {
                 LAB_801895a4:
                     param_1 = FUN_80042800();
                 }
             }
-            else if (iVar3 == 0x49f5a) goto LAB_801895a4;
+            else if (mapId == 0x49f5a) goto LAB_801895a4;
             break;
         case 6:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x451b9)
+            mapId = *(int*)(def + 0x14);
+            if (mapId == 0x451b9)
             {
                 cVar2 = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_02;
@@ -203,101 +203,101 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                     param_1 = FUN_800427c8();
                 }
             }
-            else if (iVar3 < 0x451b9)
+            else if (mapId < 0x451b9)
             {
-                if (iVar3 == 0x43775)
+                if (mapId == 0x43775)
                 {
                 LAB_80189614:
                     param_1 = FUN_800427c8();
                 }
             }
-            else if (iVar3 == 0x49f5a) goto LAB_80189614;
+            else if (mapId == 0x49f5a) goto LAB_80189614;
             break;
         case 7:
         case 0x66:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x49f5a)
+            mapId = *(int*)(def + 0x14);
+            if (mapId == 0x49f5a)
             {
                 param_1 = FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x32,
-                                       '\0', iVar4, param_12, param_13, param_14, param_15, param_16);
+                                       '\0', scratch, param_12, param_13, param_14, param_15, param_16);
             }
-            else if (iVar3 < 0x49f5a)
+            else if (mapId < 0x49f5a)
             {
-                if ((iVar3 == 0x451b9) &&
+                if ((mapId == 0x451b9) &&
                     (cVar2 = (*gMapEventInterface)->getMapAct(0xd), param_1 = extraout_f1_03,
                         cVar2 == '\x02'))
                 {
-                    iVar4 = (int)*gMapEventInterface;
-                    uVar8 = (**(code**)(iVar4 + 0x44))(0xb, 5);
+                    scratch = (int)*gMapEventInterface;
+                    uVar8 = (**(code**)(scratch + 0x44))(0xb, 5);
                     param_1 = FUN_80053c98(uVar8, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x4e,
-                                           '\0', iVar4, param_12, param_13, param_14, param_15, param_16);
+                                           '\0', scratch, param_12, param_13, param_14, param_15, param_16);
                 }
             }
-            else if (iVar3 == 0x4cd65)
+            else if (mapId == 0x4cd65)
             {
-                FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7f, '\0', iVar4
+                FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7f, '\0', scratch
                              , param_12, param_13, param_14, param_15, param_16);
-                iVar4 = (int)*gMapEventInterface;
-                param_1 = (**(code**)(iVar4 + 0x44))(0x41, 2);
+                scratch = (int)*gMapEventInterface;
+                param_1 = (**(code**)(scratch + 0x44))(0x41, 2);
             }
             break;
         case 10:
-            *(u8*)(iVar5 + 0x1a) = 1;
+            *(u8*)(state + 0x1a) = 1;
             break;
         case 0xb:
-            *(u8*)(iVar5 + 0x1a) = 0;
+            *(u8*)(state + 0x1a) = 0;
             break;
         case 0xc:
-            *(float*)(iVar5 + 4) = FLOAT_803e4830;
+            *(float*)(state + 4) = FLOAT_803e4830;
             break;
         case 0xd:
-            *(float*)(iVar5 + 4) = FLOAT_803e4840;
+            *(float*)(state + 4) = FLOAT_803e4840;
             break;
         case 0xe:
-            *(float*)(iVar5 + 4) = FLOAT_803e4844;
+            *(float*)(state + 4) = FLOAT_803e4844;
             break;
         case 0xf:
-            *(float*)(iVar5 + 4) = FLOAT_803e4848;
+            *(float*)(state + 4) = FLOAT_803e4848;
             break;
         case 0x10:
-            *(float*)(iVar5 + 8) = FLOAT_803e4830;
+            *(float*)(state + 8) = FLOAT_803e4830;
             break;
         case 0x11:
-            *(float*)(iVar5 + 8) = FLOAT_803e4840;
+            *(float*)(state + 8) = FLOAT_803e4840;
             break;
         case 0x12:
-            *(float*)(iVar5 + 8) = FLOAT_803e4844;
+            *(float*)(state + 8) = FLOAT_803e4844;
             break;
         case 0x13:
-            *(float*)(iVar5 + 8) = FLOAT_803e4848;
+            *(float*)(state + 8) = FLOAT_803e4848;
             break;
         case 0x14:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4830;
+            *(float*)(state + 0xc) = FLOAT_803e4830;
             break;
         case 0x15:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4840;
+            *(float*)(state + 0xc) = FLOAT_803e4840;
             break;
         case 0x16:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4844;
+            *(float*)(state + 0xc) = FLOAT_803e4844;
             break;
         case 0x17:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4848;
+            *(float*)(state + 0xc) = FLOAT_803e4848;
             break;
         case 0x18:
-            iVar3 = *(int*)(iVar5 + 0x10);
-            if (iVar3 != 0)
+            mapId = *(int*)(state + 0x10);
+            if (mapId != 0)
             {
-                *(ushort*)(iVar3 + 6) = *(ushort*)(iVar3 + 6) & 0xbfff;
+                *(ushort*)(mapId + 6) = *(ushort*)(mapId + 6) & 0xbfff;
             }
             break;
         case 0x19:
-            iVar3 = *(int*)(iVar5 + 0x10);
-            if (iVar3 != 0)
+            mapId = *(int*)(state + 0x10);
+            if (mapId != 0)
             {
-                *(ushort*)(iVar3 + 6) = *(ushort*)(iVar3 + 6) | 0x4000;
+                *(ushort*)(mapId + 6) = *(ushort*)(mapId + 6) | 0x4000;
             }
         }
-        iVar7 = iVar7 + 1;
+        eventIndex = eventIndex + 1;
     }
     while (true);
 }
