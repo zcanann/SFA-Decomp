@@ -170,33 +170,33 @@ extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
 void FUN_801ee668(u16 *param_1, int param_2)
 {
-    f32 heading;
-    f64 negHeading;
-    f64 sinYaw;
-    f64 cosYaw;
-    f64 scale;
+    f32 fVar1;
+    f64 dVar2;
+    f64 dVar3;
+    f64 dVar4;
+    f64 dVar5;
 
     (**(code **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(param_2 + 0x6a));
-    sinYaw = (f64)FUN_80294964();
-    cosYaw = (f64)FUN_80293f90();
-    heading = lbl_803E6908;
+    dVar3 = (f64)FUN_80294964();
+    dVar4 = (f64)FUN_80293f90();
+    fVar1 = lbl_803E6908;
     if (*(int *)(param_2 + 0x10) != 0)
     {
-        heading = (f32)((f64)CONCAT44(0x43300000, (int)*(s16 *)(param_2 + 0x2e) ^ 0x80000000) -
+        fVar1 = (f32)((f64)CONCAT44(0x43300000, (int)*(s16 *)(param_2 + 0x2e) ^ 0x80000000) -
             DOUBLE_803e6938) / lbl_803E6924;
     }
     *(f32 *)(param_2 + 0x60) =
-        lbl_803DC074 * (heading - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
+        lbl_803DC074 * (fVar1 - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
         *(f32 *)(param_2 + 0x60);
-    heading = lbl_803E692C;
-    scale = (f64)lbl_803E692C;
-    negHeading = -(f64)*(f32 *)(param_2 + 0x60);
+    fVar1 = lbl_803E692C;
+    dVar5 = (f64)lbl_803E692C;
+    dVar2 = -(f64)*(f32 *)(param_2 + 0x60);
     *(f32 *)(param_2 + 0x78) = *(f32 *)(param_2 + 0x60);
-    *(f32 *)(param_2 + 0x7c) = heading;
+    *(f32 *)(param_2 + 0x7c) = fVar1;
     (**(code **)(*DAT_803dd6e4 + 0x28))
-    ((f64)(((f32)(cosYaw * negHeading + (f64)(f32)(scale * -sinYaw)) * lbl_803DC074) /
+    ((f64)(((f32)(dVar4 * dVar2 + (f64)(f32)(dVar5 * -dVar3)) * lbl_803DC074) /
          lbl_803E6930),
-     (f64)(((f32)(sinYaw * negHeading + (f64)(f32)(scale * cosYaw)) * lbl_803DC074) /
+     (f64)(((f32)(dVar3 * dVar2 + (f64)(f32)(dVar5 * dVar4)) * lbl_803DC074) /
          lbl_803E6930));
     return;
 }
@@ -314,11 +314,11 @@ void fn_801EE668(s16 *obj, u8 *state)
     int v;
     f32 spd;
 
-    yawTarget = (-*(int *)(state + 0x74) * 6000) / 70;
-    pitchTarget = (-*(int *)(state + 0x70) * 12000) / 70;
+    yawTarget = (-((SBCloudRunnerState *)state)->stickY * 6000) / 70;
+    pitchTarget = (-((SBCloudRunnerState *)state)->stickX * 12000) / 70;
 
     {
-        f32 t = (f32)(*(int *)(state + 0x70) << 3) / lbl_803E5C98;
+        f32 t = (f32)(((SBCloudRunnerState *)state)->stickX << 3) / lbl_803E5C98;
         *(s16 *)(state + 0x2c) = -(t * timeDelta - (f32) * (s16 *)(state + 0x2c));
     }
     *(s16 *)(state + 0x2c) -= (*(s16 *)(state + 0x2c) * framesThisStep) >> 5;
@@ -344,18 +344,18 @@ void fn_801EE668(s16 *obj, u8 *state)
     {
         d = (d + 0x10000) - 1;
     }
-    *(s16 *)(state + 0x2e) = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32) * (s16 *)(int)(state + 0x2e);
+    ((SBCloudRunnerState *)state)->rotZ = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32) * (s16 *)(int)(state + 0x2e);
 
     v = ((GameObject *)obj)->anim.rotY;
     v = (v < -8000) ? -8000 : ((v > 8000) ? 8000 : v);
     ((GameObject *)obj)->anim.rotY = v;
 
-    v = *(s16 *)(state + 0x2e);
+    v = ((SBCloudRunnerState *)state)->rotZ;
     v = (v < -13000) ? -13000 : ((v > 13000) ? 13000 : v);
-    *(s16 *)(state + 0x2e) = v;
+    ((SBCloudRunnerState *)state)->rotZ = v;
 
     ((GameObject *)obj)->anim.rotX = *(s16 *)(state + 0x2c) + 0x4000;
-    ((GameObject *)obj)->anim.rotZ = *(s16 *)(state + 0x2e);
+    ((GameObject *)obj)->anim.rotZ = ((SBCloudRunnerState *)state)->rotZ;
 
     events.sfxFlag = 0;
     spd = lbl_803E5CB0 * (f32)((GameObject *)obj)->anim.rotY + lbl_803E5CAC;
@@ -376,9 +376,9 @@ void fn_801EE668(s16 *obj, u8 *state)
     }
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, spd, timeDelta, (ObjAnimEventList *)&events);
 
-    *(f32 *)(obj + 6) = *(f32 *)(state + 0x4c);
-    *(f32 *)(obj + 8) = *(f32 *)(state + 0x50);
-    *(f32 *)(obj + 10) = *(f32 *)(state + 0x54);
+    *(f32 *)(obj + 6) = ((SBCloudRunnerState *)state)->spawnPosX;
+    *(f32 *)(obj + 8) = ((SBCloudRunnerState *)state)->spawnPosY;
+    *(f32 *)(obj + 10) = ((SBCloudRunnerState *)state)->spawnPosZ;
 
     if (events.sfxFlag)
     {
@@ -392,10 +392,10 @@ void fn_801EE668(s16 *obj, u8 *state)
         {
             ((WCButtonFlag *)(state + 0x80))->held = 0;
         }
-        else if (*(s8 *)(state + 0x64) == 0)
+        else if (*(s8 *)&((SBCloudRunnerState *)state)->burstCooldown == 0)
         {
             doSpawn = 1;
-            *(s8 *)(state + 0x64) = A_BURST_COOLDOWN_FRAMES;
+            *(s8 *)&((SBCloudRunnerState *)state)->burstCooldown = A_BURST_COOLDOWN_FRAMES;
         }
     }
     else
@@ -403,10 +403,10 @@ void fn_801EE668(s16 *obj, u8 *state)
         if ((getButtonsHeld(0) & A_BUTTON_MASK) != 0)
         {
             ((WCButtonFlag *)(state + 0x80))->held = 1;
-            if (*(s8 *)(state + 0x64) < A_BURST_READY_THRESHOLD)
+            if (*(s8 *)&((SBCloudRunnerState *)state)->burstCooldown < A_BURST_READY_THRESHOLD)
             {
                 doSpawn = 1;
-                *(s8 *)(state + 0x64) = A_BURST_COOLDOWN_FRAMES;
+                *(s8 *)&((SBCloudRunnerState *)state)->burstCooldown = A_BURST_COOLDOWN_FRAMES;
             }
         }
     }
@@ -582,8 +582,8 @@ void SB_CloudRunner_update(GameObject *obj)
         return;
     }
     setAButtonIcon(6);
-    *(int *)(state + 0x70) = (int)(s8)padGetStickX(0);
-    *(int *)(state + 0x74) = (int)(s8)padGetStickY(0);
+    ((SBCloudRunnerState *)state)->stickX = (int)(s8)padGetStickX(0);
+    ((SBCloudRunnerState *)state)->stickY = (int)(s8)padGetStickY(0);
     if (*(void **)&((SBCloudRunnerState *)state)->targetObj == NULL)
     {
         int count;
@@ -600,13 +600,13 @@ void SB_CloudRunner_update(GameObject *obj)
         }
     }
     obj->unkF4 = 0;
-    prevSubState = *(s8 *)(state + 0x65);
+    prevSubState = *(s8 *)&((SBCloudRunnerState *)state)->rideSubState;
     *(s8 *)&((SBCloudRunnerState *)state)->burstCooldown = (s8)(*(s8 *)&((SBCloudRunnerState *)state)->burstCooldown - framesThisStep);
     if (*(s8 *)&((SBCloudRunnerState *)state)->burstCooldown < 0)
     {
         *(s8 *)&((SBCloudRunnerState *)state)->burstCooldown = 0;
     }
-    switch (*(s8 *)(state + 0x65))
+    switch (*(s8 *)&((SBCloudRunnerState *)state)->rideSubState)
     {
     case RIDE_SUBSTATE_STEER:
         ((void (*)(int, int))fn_801EE668)((int)obj, state);
@@ -620,17 +620,17 @@ void SB_CloudRunner_update(GameObject *obj)
         obj->unkF4 = 1;
         break;
     }
-    *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) + (f32)(int)obj->anim.rotZ * timeDelta / lbl_803E5CBC;
-    *(f32 *)(state + 0x58) = *(f32 *)(state + 0x58) + (f32)(int)obj->anim.rotY * timeDelta / lbl_803E5CBC;
-    *(f32 *)(state + 0x5c) -= timeDelta * (*(f32 *)(state + 0x5c) * lbl_803E5CC0);
-    *(f32 *)(state + 0x58) -= timeDelta * (*(f32 *)(state + 0x58) * lbl_803E5CC0);
-    obj->anim.rotY -= (s16)(lbl_803E5CB8 * *(f32 *)(state + 0x58));
-    obj->anim.localPosY = lbl_803E5CB8 * *(f32 *)(state + 0x58) + ((SBCloudRunnerState *)state)->spawnPosY;
-    obj->anim.localPosZ = lbl_803E5CB8 * *(f32 *)(state + 0x5c) + ((SBCloudRunnerState *)state)->spawnPosZ;
-    *(s16 *)(state + 0x6c) += framesThisStep;
-    if (*(s8 *)(state + 0x65) != prevSubState)
+    ((SBCloudRunnerState *)state)->tiltZ = ((SBCloudRunnerState *)state)->tiltZ + (f32)(int)obj->anim.rotZ * timeDelta / lbl_803E5CBC;
+    ((SBCloudRunnerState *)state)->tiltY = ((SBCloudRunnerState *)state)->tiltY + (f32)(int)obj->anim.rotY * timeDelta / lbl_803E5CBC;
+    ((SBCloudRunnerState *)state)->tiltZ -= timeDelta * (((SBCloudRunnerState *)state)->tiltZ * lbl_803E5CC0);
+    ((SBCloudRunnerState *)state)->tiltY -= timeDelta * (((SBCloudRunnerState *)state)->tiltY * lbl_803E5CC0);
+    obj->anim.rotY -= (s16)(lbl_803E5CB8 * ((SBCloudRunnerState *)state)->tiltY);
+    obj->anim.localPosY = lbl_803E5CB8 * ((SBCloudRunnerState *)state)->tiltY + ((SBCloudRunnerState *)state)->spawnPosY;
+    obj->anim.localPosZ = lbl_803E5CB8 * ((SBCloudRunnerState *)state)->tiltZ + ((SBCloudRunnerState *)state)->spawnPosZ;
+    ((SBCloudRunnerState *)state)->rideFrames += framesThisStep;
+    if (*(s8 *)&((SBCloudRunnerState *)state)->rideSubState != prevSubState)
     {
-        *(s16 *)(state + 0x6c) = 0;
+        ((SBCloudRunnerState *)state)->rideFrames = 0;
     }
     ((void (*)(int, int))WCPushBlock_UpdateCloudAction)((int)obj, state);
 }
