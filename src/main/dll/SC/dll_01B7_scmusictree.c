@@ -248,7 +248,7 @@ typedef struct ScMusictreeState
 
 void sc_musictree_update(int obj)
 {
-    extern void sc_musictree_spawnAmbientEffect(int obj, int inner, u8 frames, int idx);    int inner = *(int*)&((GameObject*)obj)->extra;
+    int inner = *(int*)&((GameObject*)obj)->extra;
     f32 stk[7];
     f32 vec[3];
     f32 vec2[3];
