@@ -654,6 +654,7 @@ int TitleMenuItem_isChanged(TitleMenuItem* item);
 
 /* EN v1.0 0x80131E60  size: 172b  Create text-backed title menu item. */
 
+#pragma peephole off
 void Link_release(void)
 {
     u8* p;
@@ -666,6 +667,7 @@ void Link_release(void)
     }
     fn_8001BDD4(3);
 }
+#pragma peephole reset
 
 void Link_initialise(void)
 {
