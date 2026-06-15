@@ -1,8 +1,6 @@
 /* DLL 0x17F — moon seed bush / MMP asteroid objects [801A6638-801A6778) */
-#include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
-#include "main/dll/IM/IMspacecraft.h"
 
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
@@ -21,12 +19,9 @@ extern void objRenderFn_8003b8f4(f32 v);
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavaball.h"
-#include "main/dll/IM/IMspacecraft.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
 typedef struct MoonSeedBushPlacement
