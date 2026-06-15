@@ -1,15 +1,7 @@
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
-#include "main/camera_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
-#include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
-#include "main/dll/FRONT/dll_39.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
-#include "stdarg.h"
 
 extern int ObjGroup_FindNearestObject();
 extern undefined8 FUN_80053754();
