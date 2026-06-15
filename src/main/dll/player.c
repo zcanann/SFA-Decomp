@@ -13117,7 +13117,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
     }
     if (inner->baddie.controlMode == 0x2e || inner->baddie.controlMode == 0x2f)
     {
-        *flags &= 0x7d;
+        *(u32*)flags &= 0x7dLL;
         *flags |= 2;
     }
     *p8 = 0x78;
