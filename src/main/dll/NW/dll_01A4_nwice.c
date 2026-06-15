@@ -50,10 +50,10 @@ void nw_ice_update(int* obj)
     state = ((GameObject*)obj)->extra;
     if (state->linkedObj != NULL)
     {
-        ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)state->linkedObj + 0xc);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)state->linkedObj + 0x10);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)state->linkedObj + 0x14);
-        *(s16*)obj = *(s16*)state->linkedObj;
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->linkedObj)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->linkedObj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->linkedObj)->anim.localPosZ;
+        ((GameObject*)obj)->anim.rotX = ((GameObject*)state->linkedObj)->anim.rotX;
         ObjGroup_FindNearestObjectForObject(0x3c, (u32)obj, &nearestDist);
 
         if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
