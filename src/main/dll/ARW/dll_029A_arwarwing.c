@@ -969,12 +969,13 @@ void arwarwing_resetFlightState(int obj)
     ArwingState* state = ((GameObject*)obj)->extra;
     f32 v7c;
     f32 v74;
+    f32 v78;
 
     state->maxSpeedX = lbl_803E6F70;
     state->accelX = v74 = lbl_803E6F74;
-    state->maxSpeedY = lbl_803E6F78;
+    state->maxSpeedY = v78 = lbl_803E6F78;
     state->accelY = v7c = lbl_803E6F7C;
-    state->maxSpeedZ = lbl_803E6F78;
+    state->maxSpeedZ = v78;
     state->accelZ = v7c;
     state->maxAccelZ = lbl_803E6F80;
     state->minAccelZ = lbl_803E6F84;
@@ -999,8 +1000,8 @@ void arwarwing_resetFlightState(int obj)
     state->speedScaleRollR = lbl_803E6F64;
     state->rollEnergy = state->rollEnergyMax;
     state->unkA4 = state->unkA8;
-    state->wingFlexCur = state->wingFlexTarget = lbl_803E6F5C;
-    state->velX = state->velY = state->velZ = lbl_803E6ECC;
+    state->wingFlexTarget = state->wingFlexCur = lbl_803E6F5C;
+    state->velZ = state->velY = state->velX = lbl_803E6ECC;
     state->laserLevel = 0;
     ((GameObject*)obj)->anim.localPosX = state->homeX;
     ((GameObject*)obj)->anim.localPosY = state->homeY;
