@@ -45,7 +45,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
-extern f32 lbl_803E46D0;
 
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
