@@ -30,8 +30,6 @@ extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
-extern u8 lbl_803DBF20;
-extern void* mmAlloc(int size, int a, int b);
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -52,7 +50,6 @@ typedef struct Dll1DFState
 
 #pragma scheduling on
 #pragma peephole on
-extern f32 lbl_803E4B08;
 extern f32 lbl_803E4B98;
 extern f32 lbl_803E4BA8;
 extern f32 lbl_803E4BAC;
