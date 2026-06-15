@@ -43,10 +43,8 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E3AF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B40;
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
