@@ -1453,42 +1453,42 @@ void FUN_800401a0(float* param_1, float* param_2, short* param_3, int param_4, u
     return;
 }
 
-void FUN_8004036c(undefined4 param_1)
+void FUN_8004036c(undefined4 mtx)
 {
-    DAT_803dd8a4 = param_1;
+    DAT_803dd8a4 = mtx;
     return;
 }
 
-void FUN_800406cc(int param_1)
+void FUN_800406cc(int obj)
 {
     int* renderNode;
     int model;
     int i;
 
-    if (lbl_803DF684 == ((GameObject*)param_1)->anim.rootMotionScale)
+    if (lbl_803DF684 == ((GameObject*)obj)->anim.rootMotionScale)
     {
         DAT_803dd8a4 = 0;
     }
     else
     {
-        renderNode = (int*)FUN_80017a54(param_1);
+        renderNode = (int*)FUN_80017a54(obj);
         model = *renderNode;
         if (*(char*)(model + 0xf6) == '\0')
         {
-            FUN_800400ac(param_1, param_1, model, 1);
+            FUN_800400ac(obj, obj, model, 1);
         }
         else
         {
-            fn_8003FDA8(param_1, param_1, model);
+            fn_8003FDA8(obj, obj, model);
         }
-        if (((GameObject*)param_1)->anim.classId == 1)
+        if (((GameObject*)obj)->anim.classId == 1)
         {
-            model = param_1;
-            for (i = 0; i < (int)(uint)((GameObject*)param_1)->childCount; i = i + 1)
+            model = obj;
+            for (i = 0; i < (int)(uint)((GameObject*)obj)->childCount; i = i + 1)
             {
                 if (*(int*)(model + 200) != 0)
                 {
-                    FUN_80040784(*(int*)(model + 200), param_1, 1);
+                    FUN_80040784(*(int*)(model + 200), obj, 1);
                 }
                 model = model + 4;
             }
@@ -1635,27 +1635,27 @@ void FUN_80040784(undefined4 param_1, undefined4 param_2, uint param_3)
     return;
 }
 
-void FUN_80040a88(int param_1)
+void FUN_80040a88(int obj)
 {
     short seqId;
     int* renderNode;
     int model;
     int sub;
     undefined4 shadowColor;
-    int local_44;
-    int local_40;
-    int local_3c;
-    float local_38;
-    float local_34;
-    float local_30;
-    int local_2c;
-    int local_28;
-    float local_24;
-    undefined4 local_20[2];
-    longlong local_18;
+    int screenZ;
+    int screenY;
+    int screenX;
+    float projZ;
+    float projY;
+    float projX;
+    int d4;
+    int d3;
+    float d2;
+    undefined4 d1[2];
+    longlong shadowWidth;
 
-    renderNode = (int*)FUN_80017a54(param_1);
-    if (lbl_803DF684 == ((GameObject*)param_1)->anim.rootMotionScale)
+    renderNode = (int*)FUN_80017a54(obj);
+    if (lbl_803DF684 == ((GameObject*)obj)->anim.rootMotionScale)
     {
         DAT_803dd8a4 = 0;
     }
@@ -1664,54 +1664,54 @@ void FUN_80040a88(int param_1)
         model = *renderNode;
         if ((*(ushort*)(model + 2) & 0x8000) == 0)
         {
-            sub = param_1;
-            if (*(int*)&((GameObject*)param_1)->ownerObj != 0)
+            sub = obj;
+            if (*(int*)&((GameObject*)obj)->ownerObj != 0)
             {
-                sub = *(int*)&((GameObject*)param_1)->ownerObj;
+                sub = *(int*)&((GameObject*)obj)->ownerObj;
             }
-            FUN_800400ac(param_1, sub, model, 0);
+            FUN_800400ac(obj, sub, model, 0);
         }
         else
         {
-            sub = param_1;
-            if (*(int*)&((GameObject*)param_1)->ownerObj != 0)
+            sub = obj;
+            if (*(int*)&((GameObject*)obj)->ownerObj != 0)
             {
-                sub = *(int*)&((GameObject*)param_1)->ownerObj;
+                sub = *(int*)&((GameObject*)obj)->ownerObj;
             }
-            fn_8003F8EC(param_1, sub, model);
+            fn_8003F8EC(obj, sub, model);
         }
-        model = param_1;
-        for (sub = 0; sub < (int)(uint)((GameObject*)param_1)->childCount; sub = sub + 1)
+        model = obj;
+        for (sub = 0; sub < (int)(uint)((GameObject*)obj)->childCount; sub = sub + 1)
         {
             if (*(int*)(model + 200) != 0)
             {
-                FUN_80040784(*(int*)(model + 200), param_1, 0);
+                FUN_80040784(*(int*)(model + 200), obj, 0);
             }
             model = model + 4;
         }
-        if (((((OBJPRINT_MODEL_DEF(param_1)->shadowType == 4) && (DAT_803dd8a9 == '\0')) &&
-                    ((seqId = ((GameObject*)param_1)->anim.seqId, seqId != 0x6a8 && (seqId != 0x6a9)))) &&
+        if (((((OBJPRINT_MODEL_DEF(obj)->shadowType == 4) && (DAT_803dd8a9 == '\0')) &&
+                    ((seqId = ((GameObject*)obj)->anim.seqId, seqId != 0x6a8 && (seqId != 0x6a9)))) &&
                 ((seqId != 0x6aa && (seqId != 0x6ab)))) &&
             ((seqId != 0x6ac && (seqId != 0x752))))
         {
-            FUN_80006940((double)(((GameObject*)param_1)->anim.localPosX - lbl_803DDA58),
-                         (double)((GameObject*)param_1)->anim.localPosY,
-                         (double)(((GameObject*)param_1)->anim.localPosZ - lbl_803DDA5C),
-                         (double)(((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.
-                             rootMotionScale), &local_30,
-                         &local_34, &local_38);
-            FUN_80006938((double)local_30, (double)local_34, (double)local_38, &local_3c, &local_40,
-                         &local_44);
-            model = FUN_8006f690(local_3c, local_40, param_1);
-            if (model < local_44)
+            FUN_80006940((double)(((GameObject*)obj)->anim.localPosX - lbl_803DDA58),
+                         (double)((GameObject*)obj)->anim.localPosY,
+                         (double)(((GameObject*)obj)->anim.localPosZ - lbl_803DDA5C),
+                         (double)(((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.
+                             rootMotionScale), &projX,
+                         &projY, &projZ);
+            FUN_80006938((double)projX, (double)projY, (double)projZ, &screenX, &screenY,
+                         &screenZ);
+            model = FUN_8006f690(screenX, screenY, obj);
+            if (model < screenZ)
             {
-                ((ObjAnimComponent*)param_1)->modelState->shadowAlphaStep = -0x20;
+                ((ObjAnimComponent*)obj)->modelState->shadowAlphaStep = -0x20;
             }
             else
             {
-                ((ObjAnimComponent*)param_1)->modelState->shadowAlphaStep = 0x20;
+                ((ObjAnimComponent*)obj)->modelState->shadowAlphaStep = 0x20;
             }
-            sub = (int)((ObjAnimComponent*)param_1)->modelState;
+            sub = (int)((ObjAnimComponent*)obj)->modelState;
             model = ((ObjModelState*)sub)->shadowAlpha + ((ObjModelState*)sub)->shadowAlphaStep;
             if (model < 0x100)
             {
@@ -1728,19 +1728,19 @@ void FUN_80040a88(int param_1)
             {
                 ((ObjModelState*)sub)->shadowAlpha = 0xff;
             }
-            *(undefined*)((int)&DAT_803dc0e8 + 3) = ((ObjAnimComponent*)param_1)->modelState->shadowAlpha;
-            FUN_8006b03c(param_1, local_20, &local_24, &local_28, &local_2c);
+            *(undefined*)((int)&DAT_803dc0e8 + 3) = ((ObjAnimComponent*)obj)->modelState->shadowAlpha;
+            FUN_8006b03c(obj, d1, &d2, &d3, &d4);
             shadowColor = DAT_803dc0e8;
-            local_18 = (longlong)(int)(lbl_803DF6EC * local_24);
-            FUN_800709e4(local_20[0], local_28, local_2c, &shadowColor,
-                         (int)(lbl_803DF6EC * local_24), 1);
+            shadowWidth = (longlong)(int)(lbl_803DF6EC * d2);
+            FUN_800709e4(d1[0], d3, d4, &shadowColor,
+                         (int)(lbl_803DF6EC * d2), 1);
         }
     }
 }
 
-void FUN_80040cd0(undefined param_1)
+void FUN_80040cd0(undefined flag)
 {
-    DAT_803dd8a9 = param_1;
+    DAT_803dd8a9 = flag;
     return;
 }
 
@@ -1924,16 +1924,16 @@ void FUN_80040da0(void)
 
 void FUN_80041c10(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9)
+                  int charId)
 {
     int charPos;
     undefined8 extraout_f1;
     undefined8 acc;
 
-    if (*(short*)(&DAT_802cc9d4 + param_9 * 2) != -1)
+    if (*(short*)(&DAT_802cc9d4 + charId * 2) != -1)
     {
         charPos = (int)(*gMapEventInterface)->getCurCharPos();
-        *(char*)(charPos + 0xe) = (char)param_9;
+        *(char*)(charPos + 0xe) = (char)charId;
         param_1 = extraout_f1;
     }
     acc = FUN_800443fc(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
@@ -1955,15 +1955,15 @@ void FUN_80041c10(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 
 int FUN_80041ff8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                 int param_9)
+                 int mapId)
 {
-    int which;
+    int slot;
     int mapped;
     int charId;
 
-    if (param_9 < 0x4b)
+    if (mapId < 0x4b)
     {
-        charId = (&DAT_802cc8a8)[param_9];
+        charId = (&DAT_802cc8a8)[mapId];
     }
     else
     {
@@ -1974,17 +1974,17 @@ int FUN_80041ff8(undefined8 param_1, undefined8 param_2, undefined8 param_3, und
     {
         if (DAT_803601f2 == mapped)
         {
-            which = 0;
+            slot = 0;
         }
         else if (DAT_80360236 == mapped)
         {
-            which = 1;
+            slot = 1;
         }
         else
         {
-            which = -1;
+            slot = -1;
         }
-        if (which == -1)
+        if (slot == -1)
         {
             FUN_80041c10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, mapped);
             return mapped;
@@ -2023,33 +2023,33 @@ undefined4 FUN_80042838(void)
     return flags;
 }
 
-int FUN_80042b9c(int param_1, int param_2, int param_3)
+int FUN_80042b9c(int val, int idx, int reset)
 {
-    int slot;
+    int cur;
 
-    if (param_3 == 1)
+    if (reset == 1)
     {
         DAT_803dc210 = 0xfffffffe;
         uRam803dc214 = 0xfffffffe;
         return -1;
     }
-    slot = (&DAT_803dc210)[param_2];
-    if ((param_1 != slot) && (slot != -2))
+    cur = (&DAT_803dc210)[idx];
+    if ((val != cur) && (cur != -2))
     {
-        return slot;
+        return cur;
     }
-    (&DAT_803dc210)[param_2] = 0xfffffffe;
+    (&DAT_803dc210)[idx] = 0xfffffffe;
     return -1;
 }
 
-int FUN_80042bec(undefined4 param_1, int param_2)
+int FUN_80042bec(undefined4 val, int idx)
 {
-    if ((&DAT_803dc210)[param_2] == -2)
+    if ((&DAT_803dc210)[idx] == -2)
     {
-        (&DAT_803dc210)[param_2] = param_1;
+        (&DAT_803dc210)[idx] = val;
         return -1;
     }
-    return (&DAT_803dc210)[param_2];
+    return (&DAT_803dc210)[idx];
 }
 
 void FUN_80043030(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
