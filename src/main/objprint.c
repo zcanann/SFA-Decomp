@@ -554,7 +554,7 @@ void FUN_8003a1c4(int param_1, int param_2)
 
 void fn_8003A328(double amount, short* obj, char* ctx)
 {
-    uint uVar1;
+    uint tmp;
     short* found;
     int model;
     int entryIdx;
@@ -566,7 +566,7 @@ void fn_8003A328(double amount, short* obj, char* ctx)
     {
         entryIdx = 0;
         vecOffset = 0;
-        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(model); uVar1 != 0; uVar1 = uVar1 - 1)
+        for (tmp = (uint)OBJPRINT_JOINT_COUNT(model); tmp != 0; tmp = tmp - 1)
         {
             if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
@@ -581,8 +581,8 @@ void fn_8003A328(double amount, short* obj, char* ctx)
     {
         if (*found != 0)
         {
-            uVar1 = *found * 3;
-            *found = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+            tmp = *found * 3;
+            *found = (short)((int)tmp >> 2) + (ushort)((int)tmp < 0 && (tmp & 3) != 0);
         }
         if (amount < (double)lbl_803DF624)
         {
