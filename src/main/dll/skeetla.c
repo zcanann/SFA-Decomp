@@ -142,7 +142,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
     }
 
-    state->stateFlags &= 0xfff7ffff;
+    state->stateFlags &= ~0x80000LL;
 
     if (state->unk374 != 0)
     {
