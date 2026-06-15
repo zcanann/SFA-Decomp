@@ -1,6 +1,5 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
-#include "main/dll/tframeanimator_state.h"
 
 int area_getExtraSize(void) { return 0x0; }
 int area_getObjectTypeId(void) { return 0x0; }
