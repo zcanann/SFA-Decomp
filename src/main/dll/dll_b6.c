@@ -178,6 +178,7 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
  */
 void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus) {
     f32 mag;
+    f32 minMove;
     cameraState->focusMoveHistory[0] = cameraState->focusMoveHistory[1];
     cameraState->focusMoveHistory[1] = cameraState->focusMoveHistory[2];
     cameraState->focusMoveHistory[2] = cameraState->focusMoveHistory[3];
@@ -187,14 +188,15 @@ void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimCom
         mag = sqrtf(mag);
     }
     cameraState->focusMoveHistory[4] = mag;
-    cameraState->focusMoveAverage = gCamcontrolNormalizedMin;
+    minMove = gCamcontrolNormalizedMin;
+    cameraState->focusMoveAverage = minMove;
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[0];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[1];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[2];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[3];
     cameraState->focusMoveAverage += cameraState->focusMoveHistory[4];
     cameraState->focusMoveAverage *= lbl_803E1658;
-    if (cameraState->focusMoveAverage < gCamcontrolNormalizedMin) {
+    if (cameraState->focusMoveAverage < minMove) {
         cameraState->focusMoveAverage = -cameraState->focusMoveAverage;
     }
 }
