@@ -67,14 +67,11 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
-extern f32 lbl_803E5D78;
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern int GameBit_Get(int id);
 extern int Obj_GetPlayerObject(void);
 extern f32 lbl_803E5D80;
-extern f32 lbl_803E5DC0;
 
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
