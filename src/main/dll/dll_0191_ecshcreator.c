@@ -3,15 +3,9 @@
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/objseq.h"
 
-#include "main/dll/mmshrine/ecsh_shrine_state.h"
 #include "main/audio/sfx_ids.h"
-#include "main/game_ui_interface.h"
 #include "main/obj_placement.h"
-#include "main/objanim.h"
-#include "main/dll/mmshrine/shrine1C2.h"
-#include "main/dll/mmshrine/torch1C1.h"
 #include "main/resource.h"
-#include "main/screen_transition.h"
 
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
