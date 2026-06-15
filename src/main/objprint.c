@@ -1,7 +1,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/objprint.h"
-#include "main/objanim_internal.h"
 
 #define OBJPRINT_OBJECT(obj) ((ObjAnimComponent *)(obj))
 #define OBJPRINT_MODEL_INSTANCE(obj) (OBJPRINT_OBJECT(obj)->modelInstance)
