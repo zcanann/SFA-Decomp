@@ -70,6 +70,7 @@ void vfpminifire_free(int obj)
 
 void vfpminifire_update(int obj)
 {
+    extern int randomGetRange(int min, int max); /* #57 */
     VfpMinifireState* state = ((GameObject*)obj)->extra;
     VfpMinifirePartfxArgs args;
     int linkedGfx;
@@ -141,8 +142,9 @@ void vfpminifire_update(int obj)
         (((GameObject*)obj)->anim.localPosY < state->baseY && state->burstStarted == 0))
     {
         state->burstStarted = 1;
+        i = VFPMINIFIRE_BURST_COUNT;
         Sfx_StopObjectChannel(obj, 0x7f);
-        for (i = VFPMINIFIRE_BURST_COUNT; i != 0; i--)
+        for (; i != 0; i--)
         {
             VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_BURST_EFFECT, &args, 1);
         }
