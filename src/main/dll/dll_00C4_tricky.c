@@ -109,7 +109,7 @@ extern void freeAndNull(void* param_1);
 extern void trickyVoxAllocFn_8004b5d4(void* param_1);
 extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int param_6, int param_7);
-extern void objAudioFn_8006edcc(f32 param_1, f32 param_2, int obj, u16 param_4, int param_5, float* points, void* aux);
+extern void objAudioFn_8006edcc(int obj, u16 param_4, int param_5, float* points, void* aux, f32 param_1, f32 param_2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
 extern void doNothing_onTrickyFree(void);
@@ -2633,8 +2633,8 @@ void Tricky_applyFloorResponse(int obj, int state)
     if ((((TrickyState*)state)->controlFlags & 0x00200000) != 0)
     {
         ObjPath_GetPointWorldPositionArray(obj, 2, 2, points);
-        objAudioFn_8006edcc(((TrickyState*)state)->unk310, lbl_803E256C, obj, ((TrickyState*)state)->unk2F8, 7, points,
-                            (void*)(state + 4));
+        objAudioFn_8006edcc(obj, ((TrickyState*)state)->unk2F8, 7, points, (void*)(state + 4),
+                            ((TrickyState*)state)->unk310, lbl_803E256C);
     }
 }
 
