@@ -4244,6 +4244,8 @@ void* ObjSeq_FindTargetObject(u8* obj)
 
     bestDistSq = lbl_803DEFF0;
     bestObj = NULL;
+    {
+    f32 zeroRef = lbl_803DEFB0;
     for (i = 0; i < objectCount; i++)
     {
         candidate = objects[i];
@@ -4253,12 +4255,13 @@ void* ObjSeq_FindTargetObject(u8* obj)
             dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)candidate)->anim.localPosY;
             dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)candidate)->anim.localPosZ;
             distSq = dx * dx + dy * dy + dz * dz;
-            if (bestDistSq < lbl_803DEFB0 || distSq < bestDistSq)
+            if (bestDistSq < zeroRef || distSq < bestDistSq)
             {
                 bestDistSq = distSq;
                 bestObj = candidate;
             }
         }
+    }
     }
     return bestObj;
 }
