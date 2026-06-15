@@ -135,7 +135,6 @@ extern f32 lbl_803E5BA4;
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5C4C;
-extern undefined4 FUN_8000680c();
 extern uint GameBit_Get(int eventId);
 extern undefined4 fn_801EAE4C();
 extern undefined4 fn_801EB0D4();
