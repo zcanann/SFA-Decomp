@@ -1,5 +1,4 @@
 #include "main/effect_interfaces.h"
-#include "main/dll/pickup.h"
 #include "main/game_object.h"
 
 extern ModgfxInterface** gModgfxInterface;
