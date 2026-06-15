@@ -6519,7 +6519,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
         }
     }
     if (nextMove != -1 && ((GameObject*)obj)->anim.currentMove != nextMove &&
-        ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
+        ((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0)
     {
         ObjAnim_SetCurrentMove(obj, nextMove, lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
