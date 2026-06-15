@@ -1722,7 +1722,7 @@ void mikabombshadow_init(int* obj)
     ((GameObject*)obj)->anim.rotY = 0x4000;
     *(s16*)obj = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
-    ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD;
+    ((GameObject*)obj)->anim.modelState->flags |= 0x10000LL;
     *(f32*)state = out;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - out;
     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0;
