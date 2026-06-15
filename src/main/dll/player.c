@@ -6604,7 +6604,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             lbl_803DC6A0 = 2;
             blend = lbl_803E7EF8;
             d2 = (lbl_803E7F10 + diff) - ((GameObject*)obj)->anim.localPosY;
-            v = lbl_803E8030 * -d2;
+            v = -d2 * lbl_803E8030;
             if (v >= lbl_803E7EA4)
             {
                 ((GameObject*)obj)->anim.velocityY = sqrtf(v);
