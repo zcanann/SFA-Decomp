@@ -36,7 +36,7 @@ typedef struct AramTransferQueue
  * EN v1.1 Address: 0x80283FA0
  * EN v1.1 Size: 152b
  */
-#pragma scheduling off
+#pragma scheduling on
 void aramQueueCallback(void* req)
 {
     AramTransferQueue* queue;
