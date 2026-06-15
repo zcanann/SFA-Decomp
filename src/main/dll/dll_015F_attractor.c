@@ -63,20 +63,20 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
              undefined4 param_9, undefined4 param_10, ObjAnimUpdateState* animUpdate)
 {
-    undefined4 uVar1;
-    int iVar2;
-    undefined8 uVar3;
+    undefined4 handle;
+    int i;
+    undefined8 obj;
 
-    for (iVar2 = 0; iVar2 < (int)(uint)animUpdate->eventCount; iVar2 = iVar2 + 1)
+    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
     {
-        if (animUpdate->eventIds[iVar2] == 1)
+        if (animUpdate->eventIds[i] == 1)
         {
             FUN_80017698(0xdcb, 1);
-            uVar3 = FUN_80017698(0x4a3, 0);
-            FUN_80041ff8(uVar3, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x2b);
+            obj = FUN_80017698(0x4a3, 0);
+            FUN_80041ff8(obj, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x2b);
             FUN_80042b9c(0, 0, 1);
-            uVar1 = FUN_80044404(0x2b);
-            FUN_80042bec(uVar1, 0);
+            handle = FUN_80044404(0x2b);
+            FUN_80042bec(handle, 0);
         }
     }
     return 0;
