@@ -8,11 +8,8 @@
 
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DR/sandwormBoss.h"
-#include "main/objseq.h"
 
 #define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */
 #define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
