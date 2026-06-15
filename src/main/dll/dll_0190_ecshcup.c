@@ -270,36 +270,36 @@ void ecsh_cup_release(void)
 
 #pragma scheduling off
 #pragma peephole off
-void ecsh_cup_init(int obj, int p2)
+void ecsh_cup_init(int obj, int def)
 {
     extern int randomGetRange(int min, int max); /* #57 */
-    int t;
-    f32 ftmp;
+    int state;
+    f32 dist;
 
-    t = *(int*)&((GameObject*)obj)->extra;
-    ftmp = lbl_803E5064;
+    state = *(int*)&((GameObject*)obj)->extra;
+    dist = lbl_803E5064;
     lbl_803DDBC8 = 0;
-    ((EcshCupState*)t)->unk0 = ((GameObject*)obj)->anim.localPosX;
-    ((EcshCupState*)t)->unk4 = ((GameObject*)obj)->anim.localPosY;
-    ((EcshCupState*)t)->unk8 = ((GameObject*)obj)->anim.localPosZ;
-    ((EcshCupState*)t)->unk18 = ((GameObject*)obj)->anim.localPosY;
+    ((EcshCupState*)state)->unk0 = ((GameObject*)obj)->anim.localPosX;
+    ((EcshCupState*)state)->unk4 = ((GameObject*)obj)->anim.localPosY;
+    ((EcshCupState*)state)->unk8 = ((GameObject*)obj)->anim.localPosZ;
+    ((EcshCupState*)state)->unk18 = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E5084;
     {
         f32 fz = lbl_803E5068;
-        ((EcshCupState*)t)->unkC = fz;
-        ((EcshCupState*)t)->unk10 = fz;
-        ((EcshCupState*)t)->unk14 = fz;
+        ((EcshCupState*)state)->unkC = fz;
+        ((EcshCupState*)state)->unk10 = fz;
+        ((EcshCupState*)state)->unk14 = fz;
     }
-    ((EcshCupState*)t)->unk24 = 0;
-    ((EcshCupState*)t)->unk28 = *(s16*)(p2 + 0x1a);
-    ((EcshCupState*)t)->unk20 = (f32)randomGetRange(0, 0x258);
-    ((EcshCupState*)t)->unk2C = (s16)randomGetRange(-0x320, 0x320);
-    *(u8*)&((EcshCupState*)t)->unk2E = 1;
+    ((EcshCupState*)state)->unk24 = 0;
+    ((EcshCupState*)state)->unk28 = *(s16*)(def + 0x1a);
+    ((EcshCupState*)state)->unk20 = (f32)randomGetRange(0, 0x258);
+    ((EcshCupState*)state)->unk2C = (s16)randomGetRange(-0x320, 0x320);
+    *(u8*)&((EcshCupState*)state)->unk2E = 1;
     *(u8*)(obj + 0x37) = 0;
-    ((EcshCupState*)t)->unk1C = lbl_803E5068;
+    ((EcshCupState*)state)->unk1C = lbl_803E5068;
     if (lbl_803DDBC8 == 0)
     {
-        lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &ftmp);
+        lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &dist);
     }
     ObjHits_EnableObject(obj);
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
