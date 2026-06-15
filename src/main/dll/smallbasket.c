@@ -1735,7 +1735,7 @@ void fn_80158494(s16* obj, u8* state)
     int i;
     f32 dv[3];
 
-    *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & ~0x40;
+    *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & ~0x40LL;
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
         firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
@@ -1747,7 +1747,7 @@ void fn_80158494(s16* obj, u8* state)
         if ((*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BA8,
                                              (int*)&lbl_803DBCF0, -1) != 0)
         {
-            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
+            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000LL;
         }
         if (*(u8*)(state + 0x33b) == 0)
         {
@@ -1825,7 +1825,7 @@ void fn_80158494(s16* obj, u8* state)
                 && (*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BC0,
                                                     (int*)&lbl_803DBCF0, -1) != 0)
             {
-                *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
+                *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000LL;
             }
             if ((*(u8*)(state + 0x33d) & 0xa) == 0)
             {
