@@ -1,6 +1,7 @@
 #include "main/game_object.h"
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
+#include "main/objanim_internal.h"
 
 extern void mm_free(void* ptr);
 
@@ -1237,10 +1238,13 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     scaledExtent = ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.hitboxScale;
     cornerWords = (u32*)corners;
     sourceWords = (u32*)lbl_802C1A88;
-    i = 24;
+    i = 12;
     do
     {
-        *cornerWords++ = *sourceWords++;
+        cornerWords[0] = sourceWords[0];
+        cornerWords[1] = sourceWords[1];
+        cornerWords += 2;
+        sourceWords += 2;
     }
     while (--i != 0);
 
@@ -1642,7 +1646,7 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b
     atten = obj->specularAttenuationScale * lbl_803DE790;
     lightObj = (u8*)obj + 0xc0;
     zero = lbl_803DE75C;
-    GXInitLightAttn(lightObj, zero, zero, lbl_803DE760, atten, zero, lbl_803DE760 - atten);
+    GXInitLightAttn(lightObj, zero, zero, (one = lbl_803DE760), atten, zero, one - atten);
 }
 
 void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
