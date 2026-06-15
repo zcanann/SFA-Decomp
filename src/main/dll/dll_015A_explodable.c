@@ -252,7 +252,6 @@ void explodable_free(int obj, int flag)
     }
 }
 
-extern void objSetSlot(int* obj, int slot);
 
 extern void fn_801A2E80(int obj, int def, int p3, int state);
 
