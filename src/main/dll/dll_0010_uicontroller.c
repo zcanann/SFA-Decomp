@@ -331,22 +331,22 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int actFilter)
     double in_f31;
     double bestSq;
     double in_ps31_1;
-    undefined8 uVar11;
-    int local_38[12];
+    undefined8 query;
+    int objList[12];
     float local_8;
     float fStack_4;
 
     local_8 = (float)in_f31;
     fStack_4 = (float)in_ps31_1;
-    uVar11 = FUN_80286838();
-    pos = (float*)((ulonglong)uVar11 >> 0x20);
-    objPtr = (int*)(**(code**)(*DAT_803dd71c + 0x10))(local_38);
+    query = FUN_80286838();
+    pos = (float*)((ulonglong)query >> 0x20);
+    objPtr = (int*)(**(code**)(*DAT_803dd71c + 0x10))(objList);
     bestSq = (double)lbl_803E1278;
-    for (i = 0; i < local_38[0]; i = i + 1)
+    for (i = 0; i < objList[0]; i = i + 1)
     {
         obj = *objPtr;
         if ((((((obj != 0) && (*(char*)(obj + 0x19) == '$')) &&
-                        (((uint)uVar11 == 0xffffffff || ((uint) * (byte*)(obj + 3) == (uint)uVar11)))) &&
+                        (((uint)query == 0xffffffff || ((uint) * (byte*)(obj + 3) == (uint)query)))) &&
                     ((actFilter == -1 || (*(char*)(obj + 0x1a) == actFilter)))) &&
                 (((int)*(short*)(obj + 0x30) == 0xffffffff ||
                     (bit = GameBit_Get((int)*(short*)(obj + 0x30)), bit != 0)))) &&
@@ -691,11 +691,11 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
              float* state, uint param_10, undefined4 param_11, int param_12, int param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    uint uVar1;
+    uint linkId;
     undefined4 extraout_r4;
     undefined4 extraout_r4_00;
-    undefined4 uVar2;
-    float fVar3;
+    undefined4 r4Arg;
+    float curve;
     double dVar4;
     double dVar5;
 
@@ -708,21 +708,21 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         FUN_80003494((uint)(state + 0x3a), (uint)(state + 0x3e), 0x10);
         if (state[0x20] == 0.0)
         {
-            uVar1 = FUN_800dd50c((int)state[0x28], -1, param_10);
+            linkId = FUN_800dd50c((int)state[0x28], -1, param_10);
         }
         else
         {
-            uVar1 = FUN_800dd3ec((int)state[0x28], -1, param_10);
+            linkId = FUN_800dd3ec((int)state[0x28], -1, param_10);
         }
-        if (uVar1 == 0xffffffff)
+        if (linkId == 0xffffffff)
         {
             state[0x29] = 0.0;
         }
         else
         {
-            if ((int)uVar1 < 0)
+            if ((int)linkId < 0)
             {
-                fVar3 = 0.0;
+                curve = 0.0;
             }
             else
             {
@@ -731,21 +731,21 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                 while (param_12 <= param_13)
                 {
                     param_10 = param_13 + param_12 >> 1;
-                    fVar3 = (float)(int)romCurves[param_10];
-                    if (*(uint*)((int)fVar3 + 0x14) < uVar1)
+                    curve = (float)(int)romCurves[param_10];
+                    if (*(uint*)((int)curve + 0x14) < linkId)
                     {
                         param_12 = param_10 + 1;
                     }
                     else
                     {
-                        if (*(uint*)((int)fVar3 + 0x14) <= uVar1) goto LAB_800de544;
+                        if (*(uint*)((int)curve + 0x14) <= linkId) goto LAB_800de544;
                         param_13 = param_10 - 1;
                     }
                 }
-                fVar3 = 0.0;
+                curve = 0.0;
             }
         LAB_800de544:
-            state[0x29] = fVar3;
+            state[0x29] = curve;
             if (state[0x29] != 0.0)
             {
                 if (state[0x20] == 0.0)
@@ -792,7 +792,7 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                                                                              (uint) * (byte*)((int)state[0x29
                                                                              ] + 0x2e)) - DOUBLE_803e12a8) * dVar5);
                     state[0x41] = (float)((double)lbl_803E1290 * dVar5);
-                    uVar2 = extraout_r4_00;
+                    r4Arg = extraout_r4_00;
                 }
                 else
                 {
@@ -838,12 +838,12 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                                                                              (uint) * (byte*)((int)state[0x27
                                                                              ] + 0x2e)) - DOUBLE_803e12a8) * dVar5);
                     state[0x41] = (float)((double)lbl_803E1290 * dVar5);
-                    uVar2 = extraout_r4;
+                    r4Arg = extraout_r4;
                 }
                 if (state[0x24] != 0.0)
                 {
                     FUN_80006a18(dVar5, dVar4, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
-                                 uVar2, param_10, param_12, param_13, fVar3, param_15, param_16);
+                                 r4Arg, param_10, param_12, param_13, curve, param_15, param_16);
                 }
                 if (state[0x20] == 0.0)
                 {
@@ -876,18 +876,18 @@ FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     undefined4 extraout_r4;
     undefined4 extraout_r4_00;
-    undefined4 uVar1;
+    undefined4 r4Arg;
     int iVar2;
     int iVar3;
     float fVar4;
-    uint uVar5;
+    uint linkId;
     float fVar6;
     undefined4 in_r9;
     undefined4 in_r10;
     double dVar7;
     double dVar8;
-    uint local_88[4];
-    uint local_78[4];
+    uint linksA[4];
+    uint linksB[4];
     undefined4 local_68;
     uint uStack_64;
     undefined4 local_60;
@@ -924,91 +924,91 @@ FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         {
             fVar4 = state[0x28];
             iVar2 = 0;
-            uVar5 = *(uint*)((int)fVar4 + 0x1c);
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 1) == 0)) && (uVar5 != 0xffffffff))
+            linkId = *(uint*)((int)fVar4 + 0x1c);
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 1) == 0)) && (linkId != 0xffffffff))
             {
                 iVar2 = 1;
-                local_88[0] = uVar5;
+                linksA[0] = linkId;
             }
-            uVar5 = *(uint*)((int)fVar4 + 0x20);
+            linkId = *(uint*)((int)fVar4 + 0x20);
             iVar3 = iVar2;
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 2) == 0)) && (uVar5 != 0xffffffff))
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 2) == 0)) && (linkId != 0xffffffff))
             {
                 iVar3 = iVar2 + 1;
-                local_88[iVar2] = uVar5;
+                linksA[iVar2] = linkId;
             }
-            uVar5 = *(uint*)((int)fVar4 + 0x24);
+            linkId = *(uint*)((int)fVar4 + 0x24);
             iVar2 = iVar3;
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 4) == 0)) && (uVar5 != 0xffffffff))
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 4) == 0)) && (linkId != 0xffffffff))
             {
                 iVar2 = iVar3 + 1;
-                local_88[iVar3] = uVar5;
+                linksA[iVar3] = linkId;
             }
-            uVar5 = *(uint*)((int)fVar4 + 0x28);
+            linkId = *(uint*)((int)fVar4 + 0x28);
             iVar3 = iVar2;
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 8) == 0)) && (uVar5 != 0xffffffff))
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 8) == 0)) && (linkId != 0xffffffff))
             {
                 iVar3 = iVar2 + 1;
-                local_88[iVar2] = uVar5;
+                linksA[iVar2] = linkId;
             }
             if (iVar3 == 0)
             {
-                uVar5 = 0xffffffff;
+                linkId = 0xffffffff;
             }
             else
             {
-                uVar5 = randomGetRange(0, iVar3 - 1);
-                uVar5 = local_88[uVar5];
+                linkId = randomGetRange(0, iVar3 - 1);
+                linkId = linksA[linkId];
             }
         }
         else
         {
             fVar4 = state[0x28];
             iVar2 = 0;
-            uVar5 = *(uint*)((int)fVar4 + 0x1c);
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 1) != 0)) && (uVar5 != 0xffffffff))
+            linkId = *(uint*)((int)fVar4 + 0x1c);
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 1) != 0)) && (linkId != 0xffffffff))
             {
                 iVar2 = 1;
-                local_78[0] = uVar5;
+                linksB[0] = linkId;
             }
-            uVar5 = *(uint*)((int)fVar4 + 0x20);
+            linkId = *(uint*)((int)fVar4 + 0x20);
             iVar3 = iVar2;
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 2) != 0)) && (uVar5 != 0xffffffff))
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 2) != 0)) && (linkId != 0xffffffff))
             {
                 iVar3 = iVar2 + 1;
-                local_78[iVar2] = uVar5;
+                linksB[iVar2] = linkId;
             }
-            uVar5 = *(uint*)((int)fVar4 + 0x24);
+            linkId = *(uint*)((int)fVar4 + 0x24);
             iVar2 = iVar3;
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 4) != 0)) && (uVar5 != 0xffffffff))
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 4) != 0)) && (linkId != 0xffffffff))
             {
                 iVar2 = iVar3 + 1;
-                local_78[iVar3] = uVar5;
+                linksB[iVar3] = linkId;
             }
-            uVar5 = *(uint*)((int)fVar4 + 0x28);
+            linkId = *(uint*)((int)fVar4 + 0x28);
             iVar3 = iVar2;
-            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 8) != 0)) && (uVar5 != 0xffffffff))
+            if (((-1 < (int)linkId) && ((*(byte*)((int)fVar4 + 0x1b) & 8) != 0)) && (linkId != 0xffffffff))
             {
                 iVar3 = iVar2 + 1;
-                local_78[iVar2] = uVar5;
+                linksB[iVar2] = linkId;
             }
             if (iVar3 == 0)
             {
-                uVar5 = 0xffffffff;
+                linkId = 0xffffffff;
             }
             else
             {
-                uVar5 = randomGetRange(0, iVar3 - 1);
-                uVar5 = local_78[uVar5];
+                linkId = randomGetRange(0, iVar3 - 1);
+                linkId = linksB[linkId];
             }
         }
-        if (uVar5 == 0xffffffff)
+        if (linkId == 0xffffffff)
         {
             state[0x29] = 0.0;
         }
         else
         {
-            if ((int)uVar5 < 0)
+            if ((int)linkId < 0)
             {
                 fVar6 = 0.0;
             }
@@ -1020,13 +1020,13 @@ FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                 {
                     iVar2 = (int)fVar4 + iVar3 >> 1;
                     fVar6 = (float)(int)romCurves[iVar2];
-                    if (*(uint*)((int)fVar6 + 0x14) < uVar5)
+                    if (*(uint*)((int)fVar6 + 0x14) < linkId)
                     {
                         iVar3 = iVar2 + 1;
                     }
                     else
                     {
-                        if (*(uint*)((int)fVar6 + 0x14) <= uVar5) goto LAB_800df42c;
+                        if (*(uint*)((int)fVar6 + 0x14) <= linkId) goto LAB_800df42c;
                         fVar4 = (float)(iVar2 + -1);
                     }
                 }
@@ -1098,7 +1098,7 @@ FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                     dVar8 = (double)(float)((double)(float)((double)CONCAT44(0x43300000, uStack_64) -
                         DOUBLE_803e12a8) * dVar8);
                     state[0x41] = (float)((double)lbl_803E1290 * dVar8);
-                    uVar1 = extraout_r4_00;
+                    r4Arg = extraout_r4_00;
                 }
                 else
                 {
@@ -1162,12 +1162,12 @@ FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                     dVar8 = (double)(float)((double)(float)((double)CONCAT44(0x43300000, uStack_c) -
                         DOUBLE_803e12a8) * dVar8);
                     state[0x41] = (float)((double)lbl_803E1290 * dVar8);
-                    uVar1 = extraout_r4;
+                    r4Arg = extraout_r4;
                 }
                 if (state[0x24] != 0.0)
                 {
                     FUN_80006a18(dVar8, dVar7, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
-                                 uVar1, iVar3, fVar4, fVar6, uVar5, in_r9, in_r10);
+                                 r4Arg, iVar3, fVar4, fVar6, linkId, in_r9, in_r10);
                 }
                 if (state[0x20] == 0.0)
                 {
