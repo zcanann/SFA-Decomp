@@ -31,6 +31,8 @@ typedef struct DepthReadRequest {
     s32 key;   /* 0x8: opaque request key */
 } DepthReadRequest;
 
+typedef struct IndMtxBlob { f32 m[6]; } IndMtxBlob;
+
 extern Mtx lbl_803967C0;
 extern Mtx lbl_80396820;
 extern Mtx lbl_80396850;
@@ -2254,9 +2256,9 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    Mtx mtx_30;
-    Mtx mtx_60;
     Mtx mtx_90;
+    Mtx mtx_60;
+    Mtx mtx_30;
     f32 indMtx[6];
     void* renderOp;
     void* tex;
@@ -2265,12 +2267,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
     int alpha_byte;
     void (*pcb)(void*, void**, int);
 
-    indMtx[0] = lbl_802C1F68[0];
-    indMtx[1] = lbl_802C1F68[1];
-    indMtx[2] = lbl_802C1F68[2];
-    indMtx[3] = lbl_802C1F68[3];
-    indMtx[4] = lbl_802C1F68[4];
-    indMtx[5] = lbl_802C1F68[5];
+    *(IndMtxBlob *)indMtx = *(IndMtxBlob *)lbl_802C1F68;
 
     model = obj_b[0];
     renderOp = (void*)ObjModel_GetRenderOp(model, slot);
@@ -2297,7 +2294,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
 
     GXSetIndTexOrder(1, 0, 2);
     GXSetIndTexCoordScale(1, 0, 0);
-    GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 1, 0, 0);
     PSMTXScale(mtx_30, lbl_803DB6B0, lbl_803DB6B0, lbl_803DEEE4);
     PSMTXConcat(mtx_30, lbl_80396820, mtx_90);
     PSMTXTrans(mtx_30,
