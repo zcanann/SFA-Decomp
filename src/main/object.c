@@ -457,7 +457,7 @@ void objSetSlot(u8* obj, s8 slot)
 void fn_8002B758(void* v)
 {
     int i;
-    int count = lbl_803DCB74;
+    s8 count = lbl_803DCB74;
 
     for (i = 0; i < count; i++)
     {
