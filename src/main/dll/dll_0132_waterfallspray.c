@@ -1,6 +1,5 @@
 /* DLL 0x132 — waterfall spray / XYZ animator / SFX player objects [801978A0-801978A8) */
 #include "main/dll/MMP/MMP_asteroid.h"
-#include "main/effect_interfaces.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
@@ -9,11 +8,7 @@ extern u32 randomGetRange(int min, int max);
 extern u8 framesThisStep;
 extern f32 sqrtf(f32);
 
-#include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/MMP/MMP_moonrock.h"
-#include "main/camera_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
