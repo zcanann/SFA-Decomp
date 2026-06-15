@@ -1578,7 +1578,6 @@ void debugPrintDraw(int ctx)
     u32 xs, ys;
     u32 yv;
     u32 y2;
-    int ta, tb;
     u32 xa, xb, ya, yb;
     f32 scale;
     u32 colw;
@@ -1626,9 +1625,7 @@ void debugPrintDraw(int ctx)
     yv = debugPrintYpos;
     xs = lbl_803DDA14;
     ys = lbl_803DDA16;
-    ta = !(yv - ys);
-    tb = !(x1 - xs);
-    if ((ta | tb) == 0)
+    if ((((yv - ys) == 0) | ((x1 - xs) == 0)) == 0)
     {
         if (ys >= 2)
         {
