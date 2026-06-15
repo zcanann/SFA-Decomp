@@ -2167,7 +2167,10 @@ int fn_800626C8(int* obj, int delta)
     }
     f31 = lbl_803DEC90 * (f32) * alphaStep;
     f31 = lbl_803DB654 * f31;
-    v = (s16)(int)((f32)objShadowFn_80062378(obj, modelState->shadowTintA) * f31);
+    {
+        f32 tint = (f32)objShadowFn_80062378(obj, modelState->shadowTintA);
+        v = (s16)(int)(tint * f31);
+    }
     if (v > 0xff)
     {
         v = 0xff;
