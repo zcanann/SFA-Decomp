@@ -4,7 +4,6 @@
 #include <dolphin/os.h>
 
 extern OSTime __OSGetSystemTime();
-extern char _db_stack_end[];
 
 #define OS_BI2_DEBUG_ADDRESS 0x800000F4
 #define DEBUGFLAG_ADDR 0x800030E8
