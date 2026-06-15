@@ -433,6 +433,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     }
 }
 
+#pragma opt_loop_invariants off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
     f32 vel[3];
@@ -470,6 +471,7 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
     voxmaps_worldToGrid(pos, gridB);
     return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
 }
+#pragma opt_loop_invariants reset
 
 int voxmaps_traceWorldLine(void* p1, void* p2)
 {
