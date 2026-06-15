@@ -4703,9 +4703,33 @@ RomCurveDef* RomCurve_findByIdWithIndex(uint curveId, int* outIndex)
 
 #define ROMCURVE_PLACEMENT_ANGLE(v) ((lbl_803E0614 * (f32)((s32)(v) << 8)) / lbl_803E0618)
 
-static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve);
+static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
+{
+    int bit;
 
-static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
+    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
+    {
+        if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
+{
+    int bit;
+
+    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
+    {
+        if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
