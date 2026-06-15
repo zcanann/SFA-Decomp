@@ -20,8 +20,11 @@
 #define SC_TOTEMPUZZLE_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_READY_FLAG 0x2
 #define SC_TOTEMPUZZLE_REVERSED_FLAG 0x1
+#define SC_TOTEMPUZZLE_PULSE_FLAG 0x4
 #define SC_TOTEMPUZZLE_FORWARD_STEP 4
 #define SC_TOTEMPUZZLE_SOLVED_COUNT 5
+#define SC_TOTEMPUZZLE_CAP_INDEX 5
+#define SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID 0x100
 
 #define SC_TOTEMPUZZLE_WRONG_SFX 0x487
 #define SC_TOTEMPUZZLE_COMPLETE_SFX 0x7e
@@ -150,7 +153,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
         solvedTexture = objFindTexture(obj, 0, 0);
         if (solvedTexture != NULL)
         {
-            solvedTexture->textureId = 0x100;
+            solvedTexture->textureId = SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID;
         }
     }
 
@@ -240,7 +243,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     state = obj->state;
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitNx, &hitNy, &hitNz, &lightArgs[3],
                                                  &lightArgs[4], &lightArgs[5]);
-    if ((obj->puzzleIndex == 5) || (GameBit_Get(0x639) != 0) || (GameBit_Get(0xc10) == 0))
+    if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (GameBit_Get(0x639) != 0) || (GameBit_Get(0xc10) == 0))
     {
         if ((hitKind != 0) && (hitKind != 0x11))
         {
@@ -303,12 +306,12 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         return;
     }
 
-    if ((state->flags & 4) != 0)
+    if ((state->flags & SC_TOTEMPUZZLE_PULSE_FLAG) != 0)
     {
         state->pulseTimer -= timeDelta;
         if (state->pulseTimer < lbl_803E55F4)
         {
-            state->flags &= ~4;
+            state->flags &= ~SC_TOTEMPUZZLE_PULSE_FLAG;
             Sfx_PlayFromObjectLimited((int)obj, SFXtr_jbike_whine2, 2);
             if ((state->flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0)
             {
@@ -344,7 +347,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         else
         {
             state->pulseTimer = state->pulseTimerReset / state->peerPhaseOffset;
-            state->flags |= 4;
+            state->flags |= SC_TOTEMPUZZLE_PULSE_FLAG;
         }
     }
 
@@ -368,16 +371,16 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
 
     state = obj->state;
     obj->puzzleIndex = (s8)params->puzzleIndex;
-    if (obj->puzzleIndex < 0 || obj->puzzleIndex > 5)
+    if (obj->puzzleIndex < 0 || obj->puzzleIndex > SC_TOTEMPUZZLE_CAP_INDEX)
     {
         obj->puzzleIndex = 0;
     }
-    if (obj->puzzleIndex == 5)
+    if (obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX)
     {
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
-            tex->textureId = 0x100;
+            tex->textureId = SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID;
         }
     }
     state->stepIndex = (s16)obj->puzzleIndex;
@@ -391,7 +394,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
-            tex->textureId = 0x100;
+            tex->textureId = SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID;
         }
     }
     obj->yaw = (s16)(s32)state->angle;

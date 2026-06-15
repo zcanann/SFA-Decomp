@@ -34,9 +34,9 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 typedef struct SCTotemPoleState
 {
     u16 gameBit;       /* 0x00: this pole's lit-state GameBit */
-    u8 currentState;   /* 0x04: lit (1) / unlit (0) this frame */
-    u8 previousState;  /* 0x05: lit state last frame, for edge detection */
-    f32 animSpeed;     /* 0x08: light / extinguish anim playback speed */
+    u8 currentState;   /* 0x02: lit (1) / unlit (0) this frame */
+    u8 previousState;  /* 0x03: lit state last frame, for edge detection */
+    f32 animSpeed;     /* 0x04: light / extinguish anim playback speed */
 } SCTotemPoleState;
 
 #define SC_TOTEMPOLE_OBJECT_TYPE 0x282

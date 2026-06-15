@@ -63,7 +63,10 @@ extern f32 lbl_803E56A4;
 #define PLATFORM1_PLAYER_SFX_ID 0x13a
 #define PLATFORM1_PLATFORM_SFX_ID 0x4a3
 
-/* EN v1.0 0x801DE430  size: 2596b  platform1_control: tug-of-war rope
+#define PLATFORM1_TRACK_EXIT_NEG (-0x46dc) /* offset below this -> EXIT_NEGATIVE */
+#define PLATFORM1_TRACK_EXIT_POS (-0xb24)  /* offset above this -> EXIT_POSITIVE */
+
+/* platform1_control: tug-of-war rope
  * minigame. Resolves the anchor object, applies sequence events, then per
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
@@ -217,12 +220,12 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 st->offsetVelocity = *(const f32*)&lbl_803E568C;
             }
-            if (st->currentTrackOffset >= -0x46dc && st->currentTrackOffset <= -0xb24)
+            if (st->currentTrackOffset >= PLATFORM1_TRACK_EXIT_NEG && st->currentTrackOffset <= PLATFORM1_TRACK_EXIT_POS)
             {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
             diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E5690;
-            if (st->currentTrackOffset < -0x46dc)
+            if (st->currentTrackOffset < PLATFORM1_TRACK_EXIT_NEG)
             {
                 st->transitionStep = 0;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
@@ -249,7 +252,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ret = 4;
                 goto done;
             }
-            if (st->currentTrackOffset > -0xb24)
+            if (st->currentTrackOffset > PLATFORM1_TRACK_EXIT_POS)
             {
                 st->transitionStep = 3;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
@@ -388,20 +391,20 @@ void sc_totemstrength_init(int* obj)
     st->savedPosZ = self->anim.localPosZ;
 }
 
-/* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
+/* sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
 void sc_totemstrength_update(u8* obj)
 {
     Platform1State* st = ((GameObject*)obj)->extra;
-    u8 t;
+    u8 mapMode;
     s16 step;
-    u8 b;
-    f32 fz;
+    u8 flags;
+    f32 zero;
 
     Obj_GetPlayerObject();
     GameBit_Set(0xf1d, 0);
-    t = (*gMapEventInterface)->getMapAct(0xe);
-    if (t == 6)
+    mapMode = (*gMapEventInterface)->getMapAct(0xe);
+    if (mapMode == 6)
     {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0)
         {
@@ -419,17 +422,17 @@ void sc_totemstrength_update(u8* obj)
                 st->linkedObject = 0;
                 *(s16*)obj = -0x2900;
                 st->currentTrackOffset = -0x2900;
-                b = st->flags;
-                if ((b & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0)
+                flags = st->flags;
+                if ((flags & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0)
                 {
                     GameBit_Set(0x784, 1);
                     st->loopSfxHandle = -1;
                     st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                     st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE);
                 }
-                else if ((b & PLATFORM1_FLAG_EXIT_POSITIVE) != 0)
+                else if ((flags & PLATFORM1_FLAG_EXIT_POSITIVE) != 0)
                 {
-                    st->flags = (u8)(b & ~PLATFORM1_FLAG_EXIT_POSITIVE);
+                    st->flags = (u8)(flags & ~PLATFORM1_FLAG_EXIT_POSITIVE);
                     st->loopSfxHandle = -1;
                     GameBit_Set(0x786, 1);
                 }
@@ -443,9 +446,9 @@ void sc_totemstrength_update(u8* obj)
                 *(s16*)obj = -0x2900;
                 st->currentTrackOffset = -0x2900;
                 st->prevTrackOffset = st->currentTrackOffset;
-                fz = lbl_803E5678;
+                zero = lbl_803E5678;
                 st->motionValue0 = lbl_803E5678;
-                st->offsetVelocity = fz;
+                st->offsetVelocity = zero;
                 st->transitionStep = 1;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);
             }

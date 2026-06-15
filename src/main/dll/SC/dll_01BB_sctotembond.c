@@ -360,9 +360,9 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
             {
                 if ((values[i + 1] < values[i]) || (values[i] == 0))
                 {
-                    u16 b = values[i];
+                    u16 tmp = values[i];
                     values[i] = values[i + 1];
-                    values[i + 1] = b;
+                    values[i + 1] = tmp;
                     changed = 1;
                 }
             }
