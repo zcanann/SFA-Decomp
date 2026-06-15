@@ -95,6 +95,7 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
+extern undefined4 getLActions();
 extern undefined4 FUN_80006824();
 extern uint FUN_80006ab8();
 extern undefined8 FUN_80006ac4();
@@ -138,10 +139,13 @@ extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
 extern void* memset(void* dst, int v, int n);
+extern f32 lbl_803E6390;
 extern int gDBStealerWormStateHandlersA[];
 extern void DBstealerwo_setFuncPtrs_80203c78(void);
+extern void OSReport(const char* fmt, ...);
 extern f32 lbl_803E62BC;
 extern f32 timeDelta;
+extern int gDBStealerWormStateHandlersB[];
 extern int dbstealerworm_stateHandlerA02();
 extern int dbstealerworm_stateHandlerA04();
 extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
@@ -155,9 +159,11 @@ extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerB06();
 extern void fn_80202EF0(int obj, int p2);
+extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E62F4;
 extern f32 lbl_803E62E8;
 extern f32 lbl_803E62EC;
+extern f64 lbl_803E63F0;
 
 int dbstealerworm_stateHandlerB04(int obj, int p)
 {
@@ -935,6 +941,7 @@ void dbstealerworm_release(void)
 {
 }
 
+void dbholecontrol1_hitDetect(void);
 
 void dbstealerworm_init(int* obj, u8* def, int param3)
 {
@@ -994,9 +1001,11 @@ void dbstealerworm_free(int* obj)
     ((void(*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
 }
 
+void dbholecontrol1_init(int* obj, u8* params);
 
 int dbstealerworm_getExtraSize(void) { return 0x460; }
 int dbstealerworm_getObjectTypeId(void) { return 0x49; }
+int dbholecontrol1_getExtraSize(void);
 
 s16 DBstealerworm_setScale(int* obj) { return ((BaddieState*)((int**)obj)[0xb8 / 4])->controlMode; }
 
@@ -1006,6 +1015,7 @@ void dbstealerworm_hitDetect(int obj)
     (*(void (*)(int, int*, int*))(*(int*)(*gPlayerInterface + 0xc)))(obj, inner, gDBStealerWormStateHandlersA);
 }
 
+void GCRobotBlast_init(int obj, s8* p);
 
 void dbstealerworm_initialise(void) { DBstealerwo_setFuncPtrs_80203c78(); }
 
@@ -1105,6 +1115,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
     return 0;
 }
 
+int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 int dbstealerworm_func0B(int obj, u8 msg, int* out)
 {
@@ -1387,6 +1398,7 @@ int fn_80202DA4(u8* obj, u8* p6, f32 p1, f32 p2, f32 p3, f32 p4)
     return 0;
 }
 
+void dfpobjcreator_update(int obj);
 #pragma dont_inline reset
 
 int dbstealerworm_stateHandlerA02(int obj, int p2)
@@ -1738,6 +1750,7 @@ void fn_80203144(int obj, int p2, int p3)
     }
 }
 
+void dfplevelcontrol_update(int obj);
 
 int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
 {
@@ -1821,6 +1834,7 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     return 0;
 }
 
+void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 int dbstealerworm_stateHandlerB06(int obj, int p2)
 {
@@ -1863,9 +1877,8 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
             entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->unk24 * 8];
             n = *(s16*)(entry + 4);
             off = n * 12;
-            while (n != 0)
+            for (; n != 0; n--)
             {
-                n--;
                 Stack_Push(sub->msgStack, (int*)(*(int*)entry + (off -= 12)));
             }
             sub->unk34 = 1;
@@ -1932,7 +1945,6 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
     }
 }
 
-#pragma opt_propagation off
 int dbstealerworm_stateHandlerA0A(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
@@ -2004,7 +2016,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     else
     {
         sub->flags15 |= 4;
-        if (*(void**)&sub->linkedObj != NULL && (int)(((BaddieState*)p2)->eventFlags & 0x200) != 0)
+        if (sub->linkedObj != 0 && (((BaddieState*)p2)->eventFlags & 0x200) != 0)
         {
             t = *(int*)&((BaddieState*)p2)->targetObj;
             stk.v[0] = *(f32*)(t + 0xc) - ((GameObject*)obj)->anim.localPosX;
@@ -2036,7 +2048,6 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
         return 0;
     }
 }
-#pragma opt_propagation reset
 
 int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
 {
@@ -2125,8 +2136,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
         if ((u32)obj == (u32)ObjGroup_FindNearestObject(3, *(int*)&((BaddieState*)p2)->targetObj, 0))
         {
             sub->unk3C = *(int*)&((BaddieState*)p2)->targetObj;
-            tmpB = sub->unk2C;
             tmpA = sub->unk30;
+            tmpB = sub->unk2C;
             q = sub->msgStack;
             msgA[0] = sub->unk28;
             msgA[1] = tmpB;
@@ -2393,7 +2404,13 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
         player = Obj_GetPlayerObject();
         d = (s16)Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
-        d = (d >= 0) ? d : -d;
+        if (d >= 0)
+        {
+        }
+        else
+        {
+            d = -d;
+        }
         if (d < 0x1c71 && yawf < lbl_803E62D0)
         {
             flag = 1;
@@ -2498,6 +2515,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
 }
 
 #pragma opt_loop_invariants off
+#pragma opt_propagation off
 void dbstealerworm_update(u8* objp)
 {
     extern void Stack_Push(int sp, int* args);
@@ -2541,7 +2559,7 @@ void dbstealerworm_update(u8* objp)
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
     {
         entry = tbl + *(s16*)(data + 0x24) * 8;
-        entry += 0x15c;
+        entry = entry + 0x15c;
         ((DbStealerwormControl*)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
         n = *(s16*)(entry + 4);
         off = n * 0xc;
@@ -2640,6 +2658,7 @@ void dbstealerworm_update(u8* objp)
     }
 }
 #pragma opt_loop_invariants reset
+#pragma opt_propagation reset
 
 int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
 {
@@ -2743,7 +2762,13 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
         player = Obj_GetPlayerObject();
         d = (s16)Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
-        d = (d >= 0) ? d : -d;
+        if (d >= 0)
+        {
+        }
+        else
+        {
+            d = -d;
+        }
         if (d < 0x1c71 && yawf < lbl_803E62D0)
         {
             flag = 1;
@@ -3044,11 +3069,8 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     sub->flags15 &= ~4;
     if (*(u16*)(*(int*)&((BaddieState*)p2)->targetObj + 0xb0) & 0x1000)
     {
-        {
-            f32 zero = lbl_803E62A8;
-            ((BaddieState*)p2)->animSpeedA = zero;
-            ((BaddieState*)p2)->animSpeedB = zero;
-        }
+        ((BaddieState*)p2)->animSpeedA = lbl_803E62A8;
+        ((BaddieState*)p2)->animSpeedB = lbl_803E62A8;
         ((BaddieState*)p2)->moveSpeed = lbl_803E62C0;
         return 0;
     }
@@ -3091,11 +3113,8 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     }
     if (d < lbl_803E62D8 && randomGetRange(0, n) == 0)
     {
-        {
-            f32 zero = lbl_803E62A8;
-            ((BaddieState*)p2)->animSpeedA = zero;
-            ((BaddieState*)p2)->animSpeedB = zero;
-        }
+        ((BaddieState*)p2)->animSpeedA = lbl_803E62A8;
+        ((BaddieState*)p2)->animSpeedB = lbl_803E62A8;
         target = *(int*)&((BaddieState*)p2)->targetObj;
         tmpA = sub->unk30;
         tmpB = sub->unk2C;
@@ -3123,6 +3142,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     return 0;
 }
 
+void dbegg_update(int obj);
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 
