@@ -117,7 +117,6 @@ extern f32 lbl_803E7010;
 extern f32 lbl_803E627C;
 extern f32 lbl_803E62A0;
 extern f32 lbl_803E6278;
-extern int gDBStealerWormStateHandlersA[];
 extern f32 timeDelta;
 
 undefined4
