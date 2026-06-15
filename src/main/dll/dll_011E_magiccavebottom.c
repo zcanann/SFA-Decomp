@@ -14,7 +14,6 @@ extern void envFxActFn_800887f8(int a);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
-extern f32 lbl_803E3C80;
 
 int magiccavebottom_getExtraSize(void)
 {
