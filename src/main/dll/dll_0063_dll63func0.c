@@ -720,10 +720,10 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     } buf;
     GfxCmd* e;
     GfxCmd* entries;
-    uint flag;
+    u8* base = lbl_80312BD8;
     int i;
     s16* p;
-    u8* base = lbl_80312BD8;
+    uint flag;
     if (variant == 1)
     {
         *(s16*)&base[0x112] = 0;
@@ -731,8 +731,7 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     flag = *(u8*)(*(u8**)&((GameObject*)sourceObj)->anim.placementData + 0x1a);
     if (variant == 2)
     {
-        p = (s16*)base;
-        for (i = 0; i < 14; i++)
+        for (i = 0, p = (s16*)base; i < 14; i++)
         {
             if (p[0] > 0)
             {
