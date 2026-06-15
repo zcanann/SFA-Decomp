@@ -26,7 +26,6 @@ extern f32 lbl_803E18B0;
 extern f32 lbl_803E18B4;
 extern f32 lbl_803E18B8;
 
-extern undefined4 FUN_800033a8();
 extern f32 Curve_EvalCatmullRom(f32* samples, f32 t, f32* out);
 extern f32 Curve_EvalBSpline(f32* samples, f32 t, f32* out);
 extern void fn_8010A104(int* nextNodeId, int* prevNodeId, f32 x, f32 y, f32 z, int tag);
