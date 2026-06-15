@@ -9,7 +9,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 int ccqueen_getExtraSize(void) { return 0x654; }
 
-extern f32 lbl_803E45C8;
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 timeDelta;
