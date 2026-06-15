@@ -1,13 +1,6 @@
 /* DLL 0x0121 — infotext. TU: 0x8018B9F0–0x8018BB00. */
-#include "main/objseq.h"
 
-#include "main/dll/CF/CFtoggleswitch.h"
-#include "main/camera_interface.h"
-#include "main/dll/cannon.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 extern int ObjTrigger_IsSet();
 
