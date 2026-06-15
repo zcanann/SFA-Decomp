@@ -115,7 +115,7 @@ void cnthitobjec_init(int obj, int setup)
     state->remainingHealth = 0;
     setupData->hitSourceProfile = (s8)((u32)setupData->hitSourceProfile % CNTHIT_PROFILE_COUNT);
     state->allowedHitSources = lbl_8032BEF8[setupData->hitSourceProfile];
-    state->allowedHitSourceCount = lbl_803DC42C[setupData->hitSourceProfile];
+    state->allowedHitSourceCount = (&lbl_803DC42C)[setupData->hitSourceProfile];
     if ((void*)state->allowedHitSources == (void*)&lbl_803DC428)
     {
         ObjHits_ClearSourceMask(obj, 8);
