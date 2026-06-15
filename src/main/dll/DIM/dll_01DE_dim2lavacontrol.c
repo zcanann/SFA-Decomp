@@ -1,10 +1,8 @@
-#include "main/audio/sfx_ids.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/player_objects.h"
 
@@ -37,11 +35,7 @@ extern void Music_Trigger(int trackId, int restart);
 extern void* Obj_GetPlayerObject(void);
 extern int getSaveGameLoadStatus(void);
 
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2projrock.h"
-#include "main/objanim_internal.h"
 
 typedef struct Dim2lavacontrolPlacement
 {
@@ -74,7 +68,6 @@ extern u32 GameBit_Get(int id);
 extern f32 lbl_803E4B90;
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void timeOfDayFn_80055000(void);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 extern void envFxActFn_800887f8(int a);
 extern u8 lbl_803DBF28[8];
