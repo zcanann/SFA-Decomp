@@ -405,7 +405,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         runtime->effectTimer = runtime->effectTimer - timeDelta;
     }
-    runtime->behaviorFlags = runtime->behaviorFlags & 0xf7;
+    runtime->behaviorFlags = runtime->behaviorFlags & ~0x08;
     if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
         SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0)
     {

@@ -693,13 +693,13 @@ void viewportEffectFn_8000e380(void)
 #pragma dont_inline on
 void Camera_ApplyCurrentViewport(void* viewportArg)
 {
-    int resolution;
+    u32 resolution;
     u16 height;
     int viewportY;
     int clipped;
 
     resolution = getScreenResolution();
-    clipped = (u32)resolution >> 16;
+    clipped = resolution >> 16;
     height = resolution;
     viewportY = lbl_803DC884 + 6;
     clipped = clipped - viewportY;

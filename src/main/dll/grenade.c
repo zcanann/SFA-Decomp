@@ -896,7 +896,7 @@ int trickyFn_80142eb0(int obj, int state)
             objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
             trickyDebugPrint(lbl_8031D478);
         }
-        *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~0x10;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & 0xFFFFFFEFu;
         ((TrickyState*)state)->substate = 0;
     }
         break;
