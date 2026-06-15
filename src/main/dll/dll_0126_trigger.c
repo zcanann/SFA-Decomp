@@ -1227,8 +1227,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     u32 sel;
     s16 d;
     int ang;
-    int first;
     int count;
+    int first;
     u16 id;
 
     while (i < 8)
