@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/dll/baddie_state.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/curve_walker.h"
@@ -154,18 +155,18 @@ void fn_80154C24(int obj, int state)
     float fval;
     uint randVal;
 
-    *(float*)(state + 0x2ac) = lbl_803E29E8;
-    *(undefined4*)(state + 0x2e4) = 0x8000009;
-    *(float*)(state + 0x308) = lbl_803E29D0;
-    *(float*)(state + 0x300) = lbl_803E29B4;
-    *(float*)(state + 0x304) = lbl_803E29EC;
-    *(undefined*)(state + 0x320) = 0;
+    ((BaddieState*)state)->speedScale = lbl_803E29E8;
+    ((BaddieState*)state)->unk2E4 = 0x8000009;
+    ((BaddieState*)state)->unk308 = lbl_803E29D0;
+    ((BaddieState*)state)->unk300 = lbl_803E29B4;
+    ((BaddieState*)state)->unk304 = lbl_803E29EC;
+    ((BaddieState*)state)->unk320 = 0;
     fval = lbl_803E29F0;
     *(float*)(state + 0x314) = lbl_803E29F0;
-    *(undefined*)(state + 0x321) = 1;
-    *(float*)(state + 0x318) = lbl_803E2994;
-    *(undefined*)(state + 0x322) = 0;
-    *(float*)(state + 0x31c) = fval;
+    ((BaddieState*)state)->unk321 = 1;
+    ((BaddieState*)state)->unk318 = lbl_803E2994;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = fval;
     fval = lbl_803E2990;
     *(float*)(state + 0x324) = lbl_803E2990;
     *(float*)(state + 0x328) = fval;
@@ -178,7 +179,7 @@ void fn_80154C24(int obj, int state)
     fval = (f32)(s32)
     randVal;
     fval = lbl_803E29F8 * fval;
-    *(float*)(state + 0x2fc) = fval;
+    ((BaddieState*)state)->pathStep = fval;
 }
 
 void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)

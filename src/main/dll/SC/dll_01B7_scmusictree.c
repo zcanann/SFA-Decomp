@@ -184,7 +184,7 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {
     extern int GameBit_Get(int bit); /* #57 */
-    int id = *(int*)(*(int*)(p1 + 0x4c) + 0x14);
+    int id = ((ObjPlacement*)((GameObject*)p1)->anim.placementData)->mapId;
     SCMusicTreeState* state = (SCMusicTreeState*)p2;
     (void)effectType;
 

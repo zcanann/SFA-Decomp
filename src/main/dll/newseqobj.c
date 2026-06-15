@@ -64,7 +64,7 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 
     if (state[0x33b] == 5)
     {
-        *(u32*)(state + 0x2e8) |= 0x10;
+        ((BaddieState*)state)->reactionFlags |= 0x10;
         return 0;
     }
     if (msgId == 0xe)
@@ -77,10 +77,10 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
     }
     if (msgId == 0x10)
     {
-        *(u32*)(state + 0x2e8) |= 0x28;
+        ((BaddieState*)state)->reactionFlags |= 0x28;
         return 0;
     }
-    if ((*(u32*)(state + 0x2dc) & 0x40) != 0 ||
+    if ((((BaddieState*)state)->controlFlags & 0x40) != 0 ||
         (trig[arrIdx] != 0 && ((u32)(msgId - 0xe) <= 1 || msgId == 0x13)))
     {
         if (msgId != 0x11)
@@ -91,7 +91,7 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
                 Sfx_PlayFromObject(obj, 0x255);
                 Sfx_PlayFromObject(obj, 0x16);
             }
-            *(u32*)(state + 0x2e8) |= 0x10;
+            ((BaddieState*)state)->reactionFlags |= 0x10;
             Baddie_SetMove(obj, state, rowsC[state[0x33c] * 12 + 8],
                         *(f32*)(rowsC + state[0x33c] * 12), 0,
                         (u8) * (u32*)(rowsC + state[0x33c] * 12 + 4));
@@ -164,7 +164,7 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
             *(u16*)(state + 0x338) = animRows[off + 9];
             *(f32*)(state + 0x328) = (f32)(u32) * (u16*)(state + 0x2ec);
         }
-        *(u32*)(state + 0x2e8) |= 8;
+        ((BaddieState*)state)->reactionFlags |= 8;
         if (*(s16*)((char*)p3 + 0x44) == 0x1c)
         {
             return 0;
@@ -184,15 +184,15 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
         {
             state[0x2f5] = 0;
         }
-        if (p6 > *(u16*)(state + 0x2b0))
+        if (p6 > ((BaddieState*)state)->hitCounter)
         {
-            *(u16*)(state + 0x2b0) = 0;
+            ((BaddieState*)state)->hitCounter = 0;
         }
         else
         {
-            *(u16*)(state + 0x2b0) = *(u16*)(state + 0x2b0) - p6;
+            ((BaddieState*)state)->hitCounter = ((BaddieState*)state)->hitCounter - p6;
         }
-        if (*(u16*)(state + 0x2b0) == 0)
+        if (((BaddieState*)state)->hitCounter == 0)
         {
             Sfx_PlayFromObject(obj, 0x13);
         }
@@ -329,7 +329,7 @@ void fn_80150910(int* obj, u8* state)
     u8* tbl1c = *(u8**)(base + state[0x33b] * 0x28 + 0x1c);
     u32 flags;
 
-    if (state[0x33b] == 5 && (*(u32*)(state + 0x2dc) & 0x800000))
+    if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
     {
         GameBit_Set(0x1c8, 1);
     }
@@ -343,7 +343,7 @@ void fn_80150910(int* obj, u8* state)
             if (*(f32*)(state + 0x328) <= z)
             {
                 *(f32*)(state + 0x328) = z;
-                *(u32*)(state + 0x2dc) |= 0x40000000;
+                ((BaddieState*)state)->controlFlags |= 0x40000000;
                 *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 0xa];
             }
         }
@@ -354,7 +354,7 @@ void fn_80150910(int* obj, u8* state)
     }
     if (state[0x33d] != 0)
     {
-        if (*(u32*)(state + 0x2dc) & 0x40000000)
+        if (((BaddieState*)state)->controlFlags & 0x40000000)
         {
             f32 z = lbl_803E2740;
             ((GameObject*)obj)->anim.velocityZ = z;
@@ -373,11 +373,11 @@ void fn_80150910(int* obj, u8* state)
             return;
         }
     }
-    if ((*(u32*)(state + 0x2dc) & 0x80000000) && state[0x33d] == 0)
+    if ((((BaddieState*)state)->controlFlags & 0x80000000) && state[0x33d] == 0)
     {
         sidekickToy_updateCurveTargetLatch(obj);
     }
-    flags = *(u32*)(state + 0x2dc);
+    flags = ((BaddieState*)state)->controlFlags;
     if (flags & 0x2000)
     {
         f32 d;
@@ -394,7 +394,7 @@ void fn_80150910(int* obj, u8* state)
         }
         {
             f32 spd = (lbl_803E2778 - d) * lbl_803E277C;
-            *(f32*)(state + 0x310) = spd * *(f32*)(state + 0x2fc);
+            *(f32*)(state + 0x310) = spd * ((BaddieState*)state)->pathStep;
         }
         if (*(f32*)(state + 0x310) < lbl_803E2780)
         {
@@ -418,13 +418,13 @@ void fn_80150910(int* obj, u8* state)
             delta = lbl_803E278C + delta;
         }
         *(f32*)(state + 0x308) =
-            (*(f32*)(state + 0x2fc) - *(f32*)(state + 0x310)) / lbl_803E274C *
+            (((BaddieState*)state)->pathStep - *(f32*)(state + 0x310)) / lbl_803E274C *
             (lbl_803E2748 - ((delta >= lbl_803E2740) ? delta : -delta) / lbl_803E278C);
         if (*(f32*)(state + 0x308) < lbl_803E2754)
         {
             *(f32*)(state + 0x308) = lbl_803E2754;
         }
-        if ((*(u32*)(state + 0x2dc) & 0x40000000) && state[0x33d] == 0)
+        if ((((BaddieState*)state)->controlFlags & 0x40000000) && state[0x33d] == 0)
         {
             if (*(u16*)(state + 0x338) != 0)
             {

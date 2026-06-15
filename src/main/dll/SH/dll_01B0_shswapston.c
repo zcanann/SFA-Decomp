@@ -10,7 +10,12 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 {
     u8 pad0[0x8 - 0x0];
     u8 unk8;
-    u8 pad9[0x10 - 0x9];
+    u8 unk9;        /* 0x9: toggled bit0 on event 0xa */
+    u8 flagsA;      /* 0xa: input/hit flags (bit0 player, bit1 hit) */
+    u8 padB[0xE - 0xB];
+    s16 gameBitE;   /* 0xe: GameBit id (get/set) */
+    u8 padE[0xD4 - 0x10];
+    u8 flagsD4;     /* 0xd4: bit2 set on event 0x17 */
 } WarpstoneUpdateMenuAnimObjState;
 
 extern uint GameBit_Get(int eventId);
@@ -263,21 +268,21 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 
     if ((s8)animUpdate->sequenceEventActive != 0)
     {
-        *(u8*)(state + 0xa) = *(u8*)(state + 0xa) & ~3;
+        ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA & ~3;
         if (playerFn_801d6d58() != 0)
         {
-            *(u8*)(state + 0xa) = *(u8*)(state + 0xa) | 1;
+            ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA | 1;
         }
         {
             int hit = (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0) ? 1 : 0;
             if (hit)
             {
-                *(u8*)(state + 0xa) = *(u8*)(state + 0xa) | 2;
+                ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA | 2;
             }
         }
         animUpdate->sequenceEventActive = 0;
 
-        if (GameBit_Get(*(s16*)(state + 0xe)) != 0 && animatedObjGetSeqId(animObj) == 0x35f)
+        if (GameBit_Get(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE) != 0 && animatedObjGetSeqId(animObj) == 0x35f)
         {
             AudioStream_CancelPrepared();
             seqClearTaskTexts();
@@ -292,7 +297,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
         switch (command)
         {
         case 0x17:
-            *(u8*)(state + 0xd4) = *(u8*)(state + 0xd4) | 4;
+            ((WarpstoneUpdateMenuAnimObjState*)state)->flagsD4 = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsD4 | 4;
             Sfx_PlayFromObject(0, 0x420);
             break;
 
@@ -318,7 +323,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             break;
 
         case 0xa:
-            *(u8*)(state + 9) = *(u8*)(state + 9) ^ 1;
+            ((WarpstoneUpdateMenuAnimObjState*)state)->unk9 = ((WarpstoneUpdateMenuAnimObjState*)state)->unk9 ^ 1;
             break;
 
         case 9:
@@ -344,7 +349,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
                 int dll16 = getDLL16();
                 (*(void (**)(int))(*(int*)dll16 + 0x10))(command - 0xd);
             }
-            GameBit_Set(*(s16*)(state + 0xe), 1);
+            GameBit_Set(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE, 1);
             GameBit_Set(0x887, 1);
             break;
 

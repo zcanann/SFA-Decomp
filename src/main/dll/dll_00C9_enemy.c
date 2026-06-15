@@ -8,6 +8,7 @@
  * fools the beam. ("GC" = GameCube; see the dll_0150 header.)
  */
 #include "main/camera_interface.h"
+#include "main/dll/baddie_state.h"
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/objseq.h"
@@ -1178,7 +1179,7 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     extern u8 lbl_803DBC58;
     u8* state = ((GameObject*)obj)->extra;
     u8* data = *(u8**)state;
-    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0)
+    if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
         if ((u8)baddieTargetFn_8014a150(obj, state, &((GameObject*)obj)->anim.worldPosX, data + 0x68) != 0)
         {
@@ -1188,11 +1189,11 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     if ((*gRomCurveInterface)->initCurve(*(u8**)state, (void*)obj, lbl_803E25DC,
                                          (int*)&lbl_803DBC58, -1) != 0)
     {
-        *(u32*)(state + 0x2dc) &= ~0x2000LL;
+        ((BaddieState*)state)->controlFlags &= ~0x2000LL;
     }
     else
     {
-        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
+        ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x2000;
     }
 }
 
