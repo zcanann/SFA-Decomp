@@ -34,13 +34,11 @@ extern f32 FLOAT_803e4848;
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E3B68;
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E3B50;
 extern f32 lbl_803E3B54;
 extern f32 lbl_803E3B58;
 extern f32 lbl_803E3B5C;
-extern int textureLoadAsset(int id);
 
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
