@@ -1,4 +1,3 @@
-#include "main/audio/hw_voice_params.h"
 #include "main/audio/dsp_voice.h"
 
 extern u8* volatile dspVoice;
