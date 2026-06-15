@@ -41,13 +41,13 @@ void sh_emptytumblew_init(s16* p1, int p2)
 {
     f32 fv;
 
-    *(s16*)((char*)p1 + 4) = (*(u8*)(p2 + 0x18) - 0x7f) * 0x80;
-    *(s16*)((char*)p1 + 2) = (*(u8*)(p2 + 0x19) - 0x7f) * 0x80;
-    *(s16*)((char*)p1 + 0) = *(u8*)(p2 + 0x1a) << 8;
-    *(f32*)((char*)p1 + 8) = *(f32*)(p2 + 0x1c);
-    fv = *(f32*)((char*)p1 + 8);
+    ((GameObject*)p1)->anim.rotZ = (*(u8*)(p2 + 0x18) - 0x7f) * 0x80;
+    ((GameObject*)p1)->anim.rotY = (*(u8*)(p2 + 0x19) - 0x7f) * 0x80;
+    ((GameObject*)p1)->anim.rotX = *(u8*)(p2 + 0x1a) << 8;
+    ((GameObject*)p1)->anim.rootMotionScale = *(f32*)(p2 + 0x1c);
+    fv = ((GameObject*)p1)->anim.rootMotionScale;
     ObjHitbox_SetCapsuleBounds(p1, (int)(lbl_803E5540 * fv), (int)(lbl_803E5544 * fv), (int)(lbl_803E5548 * fv));
-    *(u16*)((char*)p1 + 0xb0) |= 0x4000;
+    ((GameObject*)p1)->objectFlags |= 0x4000;
 }
 
 #pragma scheduling on

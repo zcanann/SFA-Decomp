@@ -113,7 +113,7 @@ void spdrape_update(int obj)
         {
             if (player != 0)
             {
-                if (state[3] + (state[1] * *(f32*)(player + 0xc) + state[2] * *(f32*)(player + 0x14)) < lbl_803E5AA0)
+                if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ) < lbl_803E5AA0)
                 {
                     ((SpdrapeState*)state)->unk10 = (int)&lbl_803DC0B0;
                 }
@@ -163,7 +163,7 @@ void spdrape_update(int obj)
         {
             if (player != 0)
             {
-                if (state[3] + (state[1] * *(f32*)(player + 0xc) + state[2] * *(f32*)(player + 0x14)) < lbl_803E5AA0)
+                if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ) < lbl_803E5AA0)
                 {
                     ((SpdrapeState*)state)->unk10 = (int)&lbl_803DC0B0;
                 }

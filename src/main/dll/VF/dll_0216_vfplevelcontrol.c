@@ -67,7 +67,7 @@ void vfplevelcontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 
-    coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14));
+    coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
     mapEventState = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     switch (mapEventState)
     {

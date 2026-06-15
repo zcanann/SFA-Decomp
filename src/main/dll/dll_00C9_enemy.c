@@ -554,14 +554,14 @@ void objAnimFn_8014a9f0(short* obj, int state)
     if ((((((TrickyState*)state)->controlFlags & 0x20) != 0) && ((((TrickyState*)state)->controlFlags & 0x400000) == 0))
         && (((((TrickyState*)state)->flags2DC & 0x1800) == 0) && ((((TrickyState*)state)->unk323 & 4) == 0)))
     {
-        vy = -(((TrickyState*)state)->unk300 * timeDelta - *(f32*)(obj + 0x14));
+        vy = -(((TrickyState*)state)->unk300 * timeDelta - ((GameObject*)obj)->anim.velocityY);
     }
-    v = *(f32*)(obj + 0x12);
-    *(f32*)(obj + 0x12) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
-    v = *(f32*)(obj + 0x14);
-    *(f32*)(obj + 0x14) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
-    v = *(f32*)(obj + 0x16);
-    *(f32*)(obj + 0x16) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
+    v = ((GameObject*)obj)->anim.velocityX;
+    ((GameObject*)obj)->anim.velocityX = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
+    v = ((GameObject*)obj)->anim.velocityY;
+    ((GameObject*)obj)->anim.velocityY = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
+    v = ((GameObject*)obj)->anim.velocityZ;
+    ((GameObject*)obj)->anim.velocityZ = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
     mode = 0;
     if (((((TrickyState*)state)->controlFlags & 0x80) != 0) && (((TrickyState*)state)->unk323 != 0))
     {
@@ -621,8 +621,8 @@ void objAnimFn_8014a9f0(short* obj, int state)
     else if (mode == 2)
     {
         if (ObjAnim_SampleRootCurvePhase(
-            sqrtf(*(f32*)(obj + 0x12) * *(f32*)(obj + 0x12) +
-                *(f32*)(obj + 0x16) * *(f32*)(obj + 0x16)),
+            sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ),
             (ObjAnimComponent*)obj, &phase) != 0)
         {
             ((TrickyState*)state)->animPlaySpeed = phase;
@@ -632,9 +632,9 @@ void objAnimFn_8014a9f0(short* obj, int state)
     {
         if ((((TrickyState*)state)->unk2F1 & 0x80) == 0)
         {
-            *(f32*)(obj + 0x12) = *(f32*)(obj + 0x12) * powfBitEstimate(((TrickyState*)state)->base, timeDelta);
-            *(f32*)(obj + 0x14) = *(f32*)(obj + 0x14) * powfBitEstimate(((TrickyState*)state)->base, timeDelta);
-            *(f32*)(obj + 0x16) = *(f32*)(obj + 0x16) * powfBitEstimate(((TrickyState*)state)->base, timeDelta);
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * powfBitEstimate(((TrickyState*)state)->base, timeDelta);
+            ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * powfBitEstimate(((TrickyState*)state)->base, timeDelta);
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * powfBitEstimate(((TrickyState*)state)->base, timeDelta);
         }
     }
     Tricky_applyFloorResponse(obj, state);
@@ -642,25 +642,25 @@ void objAnimFn_8014a9f0(short* obj, int state)
     {
         if ((((TrickyState*)state)->unk2F1 & 0x80) == 0)
         {
-            objMove(obj, *(f32*)(obj + 0x12) * timeDelta, *(f32*)(obj + 0x14) * timeDelta,
-                    *(f32*)(obj + 0x16) * timeDelta);
+            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+                    ((GameObject*)obj)->anim.velocityZ * timeDelta);
         }
     }
     else if ((((TrickyState*)state)->controlFlags & 0x20) != 0)
     {
-        f32 newY = (*(f32*)(obj + 0x14) * timeDelta + *(f32*)(obj + 8))
+        f32 newY = (((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY)
             - lbl_803E25D4 * (((TrickyState*)state)->unk300 * (timeDelta * timeDelta));
         if ((((TrickyState*)state)->unk2F1 & 0x80) == 0)
         {
-            objMove(obj, *(f32*)(obj + 0x12) * timeDelta, newY - *(f32*)(obj + 8),
-                    *(f32*)(obj + 0x16) * timeDelta);
-            *(f32*)(obj + 0x14) = vy;
+            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, newY - ((GameObject*)obj)->anim.localPosY,
+                    ((GameObject*)obj)->anim.velocityZ * timeDelta);
+            ((GameObject*)obj)->anim.velocityY = vy;
         }
     }
     else if ((((TrickyState*)state)->unk2F1 & 0x80) == 0)
     {
-        objMove(obj, *(f32*)(obj + 0x12) * timeDelta, *(f32*)(obj + 0x14) * timeDelta,
-                *(f32*)(obj + 0x16) * timeDelta);
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+                ((GameObject*)obj)->anim.velocityZ * timeDelta);
     }
 }
 
@@ -1240,15 +1240,15 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
             {
                 if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
                 {
-                    d.x = *(f32*)(obj + 0xc) - *(f32*)(out->obj + 0xc);
+                    d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)out->obj)->anim.worldPosX;
                     d.y = lbl_803E2574;
-                    d.z = *(f32*)(obj + 0x10) - *(f32*)(out->obj + 0x10);
+                    d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)out->obj)->anim.worldPosZ;
                 }
                 else
                 {
-                    d.x = *(f32*)(obj + 0xc) - *(f32*)(out->obj + 0xc);
-                    d.y = *(f32*)(obj + 0xe) - *(f32*)(out->obj + 0xe);
-                    d.z = *(f32*)(obj + 0x10) - *(f32*)(out->obj + 0x10);
+                    d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)out->obj)->anim.worldPosX;
+                    d.y = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)out->obj)->anim.worldPosY;
+                    d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)out->obj)->anim.worldPosZ;
                 }
                 diff = (u16)getAngle(-d.x, -d.z);
                 if (*(short**)(obj + 0x18) != 0)
@@ -1301,15 +1301,15 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                     {
                         if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
                         {
-                            d.x = *(f32*)(obj + 0xc) - *(f32*)(cur->obj + 0xc);
+                            d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)cur->obj)->anim.worldPosX;
                             d.y = lbl_803E2574;
-                            d.z = *(f32*)(obj + 0x10) - *(f32*)(cur->obj + 0x10);
+                            d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)cur->obj)->anim.worldPosZ;
                         }
                         else
                         {
-                            d.x = *(f32*)(obj + 0xc) - *(f32*)(cur->obj + 0xc);
-                            d.y = *(f32*)(obj + 0xe) - *(f32*)(cur->obj + 0xe);
-                            d.z = *(f32*)(obj + 0x10) - *(f32*)(cur->obj + 0x10);
+                            d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)cur->obj)->anim.worldPosX;
+                            d.y = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)cur->obj)->anim.worldPosY;
+                            d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)cur->obj)->anim.worldPosZ;
                         }
                         diff = (u16)getAngle(-d.x, -d.z);
                         if (*(short**)(obj + 0x18) != 0)

@@ -36,7 +36,7 @@ int fn_80295CE4(int obj)
 
 void fn_802960E8(void* playerObj, s16 p2)
 {
-    PlayerState* inner = *(PlayerState**)((char*)playerObj + 0xb8);
+    PlayerState* inner = ((GameObject*)playerObj)->extra;
     inner->unk81C = p2;
 }
 
@@ -3790,7 +3790,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         0);
                     {
                         int prt = *(int*)&((GameObject*)obj)->ownerObj;
-                        obj2 = *(int*)(prt + 0xb8);
+                        obj2 = (int)((GameObject*)prt)->extra;
                         if (*(u32*)(prt + 0x54) != 0)
                         {
                             spd = (f32) * (s16*)(*(int*)(prt + 0x54) + 0x5a);
@@ -16249,7 +16249,7 @@ void fn_802AB38C(int a, int b, int c)
     case 0x40:
         ((PlayerState*)b)->unk854 = lbl_803E7EDC;
         {
-            int sub = *(int*)((char*)*(int*)((char*)a + 0xb8) + 0x35c);
+            int sub = *(int*)((char*)((GameObject*)a)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 0xa;
             if (v < 0)
             {
@@ -16267,7 +16267,7 @@ void fn_802AB38C(int a, int b, int c)
     case 0x5bd:
         c = -1;
         {
-            int sub = *(int*)((char*)*(int*)((char*)a + 0xb8) + 0x35c);
+            int sub = *(int*)((char*)((GameObject*)a)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 0x14;
             if (v < 0)
             {

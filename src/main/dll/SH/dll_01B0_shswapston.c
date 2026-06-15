@@ -597,7 +597,7 @@ void warpstone_init(int obj, u8* setup)
 
     state = *(int*)&((GameObject*)obj)->extra;
     setupYaw = (s16)(setup[0x1a] << 8);
-    *(s16*)obj = setupYaw;
+    ((GameObject*)obj)->anim.rotX = setupYaw;
     ((GameObject*)obj)->animEventCallback = warpstone_updateMenuAnimObj;
     ((WarpstoneState*)state)->unkE = 0x15a;
     ((WarpstoneState*)state)->unk10 = 0x886;

@@ -193,15 +193,18 @@ void ShipBattle_update(int obj)
     extern int* ObjList_GetObjects(int* out_head, int* out_count);
     extern void Obj_FreeObject(int obj);
     int* objects;
-    int objectCount;
     int triggerResult;
+    int objectCount;
     int current;
     int linkedObject;
     int sameGroupCount;
     int groupId;
 
-    if (((GameObject*)obj)->anim.placementData == NULL || *(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18)
-        == -1)
+    if (((GameObject*)obj)->anim.placementData == NULL)
+    {
+        return;
+    }
+    if (*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18) == -1)
     {
         return;
     }
@@ -232,7 +235,7 @@ void ShipBattle_update(int obj)
         triggerResult++;
     }
 
-    if (sameGroupCount <= 1 && linkedObject != 0 && *(s16*)(linkedObject + 0xb4) != -1)
+    if (sameGroupCount <= 1 && (void*)linkedObject != NULL && *(s16*)(linkedObject + 0xb4) != -1)
     {
         *(s16*)(linkedObject + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(groupId);

@@ -121,9 +121,9 @@ void firstPersonDoControls(short* obj)
     {
         lbl_803DD548->clampedPosY = lbl_803DD548->camPosY;
     }
-    *(f32*)(obj + 0xc) = lbl_803DD548->camPosX;
-    *(f32*)(obj + 0xe) = lbl_803DD548->clampedPosY;
-    *(f32*)(obj + 0x10) = lbl_803DD548->camPosZ;
+    ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->camPosX;
+    ((GameObject*)obj)->anim.worldPosY = lbl_803DD548->clampedPosY;
+    ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->camPosZ;
     if (lbl_803DD548->flags.zoomHudEnabled)
     {
         zoom2 = *(f32*)(obj + 0x5a);

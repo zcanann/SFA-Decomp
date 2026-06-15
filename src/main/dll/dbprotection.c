@@ -414,7 +414,7 @@ void fn_801DFA28(u8* obj)
         case 0:
             tx = ((SBGalleonState*)state)->homeX - lbl_803E570C;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E56EC + *(f32*)(tricky + 0x10);
+            ty = lbl_803E56EC + ((GameObject*)tricky)->anim.localPosY;
             if ((((SBGalleonState*)state)->headingLatch <= 0) &&
                 ((((SBGalleonState*)state)->phaseCounter == 0) || (((SBGalleonState*)state)->phaseCounter == 5)))
             {
@@ -425,38 +425,38 @@ void fn_801DFA28(u8* obj)
         case 1:
             tx = ((SBGalleonState*)state)->homeX - lbl_803E5710;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E56EC + *(f32*)(tricky + 0x10);
+            ty = lbl_803E56EC + ((GameObject*)tricky)->anim.localPosY;
             break;
         case 2:
-            tx = *(f32*)(tricky + 0xC) - lbl_803E5714;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E5714;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E5718 + *(f32*)(tricky + 0x10);
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
             break;
         case 3:
-            tx = *(f32*)(tricky + 0xC) - lbl_803E571C;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E571C;
             tz = lbl_803E5720 + ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E5718 + *(f32*)(tricky + 0x10);
-            tz = tz + (*(f32*)(tricky + 0x14) - ((SBGalleonState*)state)->posZ);
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
+            tz = tz + (((GameObject*)tricky)->anim.localPosZ - ((SBGalleonState*)state)->posZ);
             ((SBGalleonState*)state)->unk7B = 0;
             break;
         case 4:
-            tx = *(f32*)(tricky + 0xC) - lbl_803E571C;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E571C;
             tz = lbl_803E5724 + ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E5718 + *(f32*)(tricky + 0x10);
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
             ((SBGalleonState*)state)->unk7B = 0;
             break;
         case 5:
-            tx = *(f32*)(tricky + 0xC) - lbl_803E571C;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E571C;
             tz = ((SBGalleonState*)state)->homeZ - lbl_803E5720;
-            ty = lbl_803E5718 + *(f32*)(tricky + 0x10);
-            tz = tz + (*(f32*)(tricky + 0x14) - ((SBGalleonState*)state)->posZ);
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
+            tz = tz + (((GameObject*)tricky)->anim.localPosZ - ((SBGalleonState*)state)->posZ);
             ((SBGalleonState*)state)->unk7B = 0;
             break;
         default:
             ((SBGalleonState*)state)->unk7B = 0;
             tx = ((SBGalleonState*)state)->homeX - lbl_803E5728;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E572C + *(f32*)(tricky + 0x10);
+            ty = lbl_803E572C + ((GameObject*)tricky)->anim.localPosY;
             break;
         }
         tx = tx - ((GameObject*)obj)->anim.localPosX;
@@ -579,7 +579,7 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->cycleKind = 3;
             ((SBGalleonState*)state)->stage = 6;
             ((SBGalleonState*)state)->headingLatch = 200;
-            ((SBGalleonState*)state)->refZ = *(f32*)(tricky + 0x14);
+            ((SBGalleonState*)state)->refZ = ((GameObject*)tricky)->anim.localPosZ;
         }
         break;
     case 2:
@@ -648,7 +648,7 @@ void fn_801DFA28(u8* obj)
             speedTarget = lbl_803E56D0;
             tx = lbl_803E5788 + ((SBGalleonState*)state)->homeX;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E578C + *(f32*)(tricky + 0x10);
+            ty = lbl_803E578C + ((GameObject*)tricky)->anim.localPosY;
             nextState = 8;
             threshold = lbl_803E5724;
             break;
@@ -656,7 +656,7 @@ void fn_801DFA28(u8* obj)
             speedTarget = lbl_803E5790;
             tx = ((SBGalleonState*)state)->homeX - lbl_803E5794;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = lbl_803E5724 + *(f32*)(tricky + 0x10);
+            ty = lbl_803E5724 + ((GameObject*)tricky)->anim.localPosY;
             nextState = 2;
             threshold = lbl_803E5784;
             break;
@@ -763,7 +763,7 @@ void fn_801DFA28(u8* obj)
         ((GameObject*)obj)->anim.localPosX = ((SBGalleonState*)state)->posX + ((SBGalleonState*)state)->swayX;
         ((GameObject*)obj)->anim.localPosY = ((SBGalleonState*)state)->posY + ((SBGalleonState*)state)->swayY;
         ((GameObject*)obj)->anim.localPosZ = ((SBGalleonState*)state)->posZ + ((SBGalleonState*)state)->swayZ +
-            (*(f32*)(tricky + 0x14) - ((SBGalleonState*)state)->refZ);
+            (((GameObject*)tricky)->anim.localPosZ - ((SBGalleonState*)state)->refZ);
         if (((SBGalleonState*)state)->stage >= 7)
         {
             if (((SBGalleonState*)state)->fadeTimer == 0)

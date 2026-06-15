@@ -182,7 +182,7 @@ void FUN_80152fb4(ushort* obj, int state)
     offZ = offZ * *(float*)(state + 0x2a8) + *(float*)(state + 0x32c);
     if (*(char*)(state + 0x33a) == '\0')
     {
-        targetY = (double)*(float*)(obj + 8);
+        targetY = (double)((GameObject*)obj)->anim.localPosY;
         dx = *(float*)(state + 0x324) - *(float*)(*(int*)(state + 0x29c) + 0xc);
         dz = *(float*)(state + 0x32c) - *(float*)(*(int*)(state + 0x29c) + 0x14);
         dist = FUN_80293900((double)(dx * dx + dz * dz));
@@ -195,7 +195,7 @@ void FUN_80152fb4(ushort* obj, int state)
     else if (*(char*)(state + 0x33a) == '\x01')
     {
         dt = (double)lbl_803DC074;
-        targetY = -(double)(float)((double)lbl_803E351C * dt - (double)*(float*)(obj + 8));
+        targetY = -(double)(float)((double)lbl_803E351C * dt - (double)((GameObject*)obj)->anim.localPosY);
         if ((double)(*(float*)(state + 0x328) - lbl_803E3520) < targetY)
         {
             local_28 = (double)CONCAT44(0x43300000, (uint) * (byte*)(state + 0x33b));
@@ -233,15 +233,15 @@ void FUN_80152fb4(ushort* obj, int state)
     }
     else
     {
-        targetY = (double)(lbl_803E3524 * lbl_803DC074 + *(float*)(obj + 8));
+        targetY = (double)(lbl_803E3524 * lbl_803DC074 + ((GameObject*)obj)->anim.localPosY);
         if ((double)*(float*)(state + 0x328) <= targetY)
         {
             *(u8*)(state + 0x33a) = 0;
         }
     }
-    *(float*)(obj + 0x12) = lbl_803DC078 * (offX - *(float*)(obj + 6));
-    *(float*)(obj + 0x14) = lbl_803DC078 * (float)(targetY - (double)*(float*)(obj + 8));
-    *(float*)(obj + 0x16) = lbl_803DC078 * (offZ - *(float*)(obj + 10));
+    ((GameObject*)obj)->anim.velocityX = lbl_803DC078 * (offX - ((GameObject*)obj)->anim.localPosX);
+    ((GameObject*)obj)->anim.velocityY = lbl_803DC078 * (float)(targetY - (double)((GameObject*)obj)->anim.localPosY);
+    ((GameObject*)obj)->anim.velocityZ = lbl_803DC078 * (offZ - ((GameObject*)obj)->anim.localPosZ);
     enemy_free((double)lbl_803E3528, (double)lbl_803E352C, obj, state, 0xf, '\0');
     *(float*)(state + 0x334) = *(float*)(state + 0x334) - lbl_803DC074;
     if (*(float*)(state + 0x334) <= lbl_803E3500)

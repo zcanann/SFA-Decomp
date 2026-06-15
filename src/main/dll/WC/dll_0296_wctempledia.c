@@ -60,21 +60,21 @@ STATIC_ASSERT(offsetof(WCTempleDiaSetup, solvedBit) == WCTEMPLE_DIA_SETUP_SOLVED
 
 void wctempledia_syncPartVisibility(int obj, u8 mask)
 {
+    int block;
     int part;
     int bit;
     int slot;
-    u8* block;
 
-    block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+    block = (int)mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                             ((GameObject*)obj)->anim.localPosZ));
-    if (block != NULL)
+    if ((void*)block != NULL)
     {
         for (part = 1; part < WCTEMPLE_DIA_STAGE_COUNT + 1; part++)
         {
             bit = mask & (1 << (part - 1));
-            for (slot = 0; slot < block[0xa2]; slot++)
+            for (slot = 0; slot < *(u8*)(block + 0xa2); slot++)
             {
-                int entry = fn_8006070C((int)block, slot);
+                int entry = fn_8006070C(block, slot);
                 if (*(u8*)(entry + 0x29) == part)
                 {
                     if (bit != 0)

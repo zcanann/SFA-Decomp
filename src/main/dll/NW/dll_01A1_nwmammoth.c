@@ -248,6 +248,7 @@ int fn_801CE078(int* obj, u8* st)
     int snd;
     f32 sunTime;
     WoPartfxBlock blk;
+    NwMammothState* state = (NwMammothState*)st;
 
     cv = (u8)(*gSkyInterface)->getSunPosition(&sunTime);
     if (*(s8*)(st + 0x45b) != 0)
@@ -262,7 +263,7 @@ int fn_801CE078(int* obj, u8* st)
     {
         if (cv != 0)
         {
-            if (*(f32*)(st + 0x54) > lbl_803E520C)
+            if (state->pathSpeed > lbl_803E520C)
             {
                 return -1;
             }
@@ -284,7 +285,7 @@ int fn_801CE078(int* obj, u8* st)
         if (st[0x43c] & 2)
         {
             st[0x408] = 0x15;
-            *(f32*)(st + 4) = (f32)(s32)
+            state->stateTimer = (f32)(s32)
             randomGetRange(0, 300);
         }
         break;
@@ -293,24 +294,24 @@ int fn_801CE078(int* obj, u8* st)
         {
             Sfx_PlayFromObject((u32)obj, 0x14c);
         }
-        *(f32*)(st + 4) -= timeDelta;
-        if (cv == 0 && *(f32*)(st + 4) <= lbl_803E520C)
+        state->stateTimer -= timeDelta;
+        if (cv == 0 && state->stateTimer <= lbl_803E520C)
         {
             st[0x408] = 0x16;
         }
         {
-            f32 t = *(f32*)(st + 0x1c) - timeDelta;
-            *(f32*)(st + 0x1c) = t;
+            f32 t = state->partfxTimer - timeDelta;
+            state->partfxTimer = t;
             if (t <= lbl_803E520C)
             {
                 if (((GameObject*)obj)->objectFlags & 0x800)
                 {
-                    blk.pos[0] = *(f32*)(st + 0xc);
-                    blk.pos[1] = *(f32*)(st + 0x10);
-                    blk.pos[2] = *(f32*)(st + 0x14);
+                    blk.pos[0] = state->spawnPosX;
+                    blk.pos[1] = state->spawnPosY;
+                    blk.pos[2] = state->spawnPosZ;
                     (*gPartfxInterface)->spawnObject(obj, 0x7f0, &blk, 0x200001, -1, NULL);
                 }
-                *(f32*)(st + 0x1c) = lbl_803E5218;
+                state->partfxTimer = lbl_803E5218;
             }
         }
         break;
@@ -330,30 +331,31 @@ int fn_801CE078(int* obj, u8* st)
 
 void fn_801CEA14(short* obj, u8* st, u8* p3)
 {
+    NwMammothState* state = (NwMammothState*)st;
     switch (fn_801CE078((int*)obj, st))
     {
     case -1:
-        *(f32*)(st + 0x54) -= lbl_803E523C * timeDelta;
-        if (*(f32*)(st + 0x54) < lbl_803E5240)
+        state->pathSpeed -= lbl_803E523C * timeDelta;
+        if (state->pathSpeed < lbl_803E5240)
         {
-            *(f32*)(st + 0x54) = lbl_803E520C;
+            state->pathSpeed = lbl_803E520C;
         }
         break;
     case 0:
-        if ((*((u8*)obj + 0xaf) & 4) || *(f32*)(st + 0x18) < lbl_803E5244)
+        if ((*((u8*)obj + 0xaf) & 4) || state->playerDistanceSq < lbl_803E5244)
         {
-            *(f32*)(st + 0x54) -= lbl_803E5248 * timeDelta;
-            if (*(f32*)(st + 0x54) < lbl_803E5240)
+            state->pathSpeed -= lbl_803E5248 * timeDelta;
+            if (state->pathSpeed < lbl_803E5240)
             {
-                *(f32*)(st + 0x54) = lbl_803E520C;
+                state->pathSpeed = lbl_803E520C;
             }
         }
         else
         {
-            *(f32*)(st + 0x54) += lbl_803E523C * timeDelta;
-            if (*(f32*)(st + 0x54) > lbl_803E524C)
+            state->pathSpeed += lbl_803E523C * timeDelta;
+            if (state->pathSpeed > lbl_803E524C)
             {
-                *(f32*)(st + 0x54) = *(f32*)&lbl_803E524C;
+                state->pathSpeed = *(f32*)&lbl_803E524C;
             }
         }
         break;
@@ -365,27 +367,27 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     case 8:
         {
             u8* cv = st + 0x5c;
-            if (Curve_AdvanceAlongPath((Curve*)cv, *(f32*)(st + 0x54)) != 0 || *(int*)(cv + 0x10) != 0)
+            if (Curve_AdvanceAlongPath((Curve*)cv, state->pathSpeed) != 0 || ((Curve*)cv)->idx != 0)
             {
                 (*gRomCurveInterface)->goNextPoint(cv);
             }
             {
-                f32 dx = *(f32*)(cv + 0x68) - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = *(f32*)(cv + 0x70) - ((GameObject*)obj)->anim.localPosZ;
+                f32 dx = ((Curve*)cv)->sample[0] - ((GameObject*)obj)->anim.localPosX;
+                f32 dz = ((Curve*)cv)->sample[2] - ((GameObject*)obj)->anim.localPosZ;
                 ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
                                              (ObjAnimComponent*)obj, (float*)(st + 0x4c));
             }
-            ((GameObject*)obj)->anim.rotX = (s16)(getAngle(*(f32*)(cv + 0x74), *(f32*)(cv + 0x7c)) + 0x8000);
-            ((GameObject*)obj)->anim.localPosX = *(f32*)(cv + 0x68);
-            ((GameObject*)obj)->anim.localPosZ = *(f32*)(cv + 0x70);
-            if (*(f32*)(st + 0x54) <= lbl_803E520C)
+            ((GameObject*)obj)->anim.rotX = (s16)(getAngle(((Curve*)cv)->tangent[0], ((Curve*)cv)->tangent[2]) + 0x8000);
+            ((GameObject*)obj)->anim.localPosX = ((Curve*)cv)->sample[0];
+            ((GameObject*)obj)->anim.localPosZ = ((Curve*)cv)->sample[2];
+            if (state->pathSpeed <= lbl_803E520C)
             {
                 st[0x408] = 7;
             }
             break;
         }
     case 7:
-        if (*(f32*)(st + 0x54) > lbl_803E5250)
+        if (state->pathSpeed > lbl_803E5250)
         {
             st[0x408] = 8;
         }
@@ -444,17 +446,18 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
     extern int* getTrickyObject(void); /* #57 */
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408])
     {
     case 9:
-        *(f32*)(st + 0) += timeDelta;
-        if (*(f32*)(st + 0) > lbl_803E5228)
+        state->sfxTimer += timeDelta;
+        if (state->sfxTimer > lbl_803E5228)
         {
             Sfx_PlayFromObject((u32)obj, 0x150);
-            *(f32*)(st + 0) -= lbl_803E5228;
+            state->sfxTimer -= lbl_803E5228;
         }
-        if (*(f32*)(st + 0x18) < (f32)(s32)(p3[0xc] * p3[0xc]))
+        if (state->playerDistanceSq < (f32)(s32)(p3[0xc] * p3[0xc]))
         {
             st[0x408] = 0xa;
         }
@@ -466,11 +469,11 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0xb:
-        *(f32*)(st + 0) += timeDelta;
-        if (*(f32*)(st + 0) > lbl_803E5228)
+        state->sfxTimer += timeDelta;
+        if (state->sfxTimer > lbl_803E5228)
         {
             Sfx_PlayFromObject((u32)obj, 0x150);
-            *(f32*)(st + 0) -= lbl_803E5228;
+            state->sfxTimer -= lbl_803E5228;
         }
         if (ObjTrigger_IsSet(obj) != 0)
         {
@@ -589,19 +592,19 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         {
             Obj_FreeObject(*(int*)(st + 0x24));
             *(int*)(st + 0x24) = 0;
-            *(s8*)(st + 0x43f) += 1;
-            if (*(s8*)(st + 0x43f) > 3)
+            state->uiMessageCount += 1;
+            if (state->uiMessageCount > 3)
             {
-                *(s8*)(st + 0x43f) = 3;
+                state->uiMessageCount = 3;
             }
-            GameBit_Set(0x48b, *(s8*)(st + 0x43f));
-            if (*(s8*)(st + 0x43f) >= 3)
+            GameBit_Set(0x48b, state->uiMessageCount);
+            if (state->uiMessageCount >= 3)
             {
                 st[0x408] = 0x11;
             }
             else
             {
-                if (*(s8*)(st + 0x43f) % 2 == 0)
+                if (state->uiMessageCount % 2 == 0)
                 {
                     Sfx_PlayFromObject((u32)obj, 0x14f);
                 }
@@ -615,7 +618,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         st[0x408] = 0x13;
         break;
     case 0x11:
-        if (!(*(u16*)(*(char**)(st + 0x28) + 0xb0) & 0x1000) && *(f32*)(st + 8) >= lbl_803E5234)
+        if (!(*(u16*)(*(char**)(st + 0x28) + 0xb0) & 0x1000) && state->airMeterValue >= lbl_803E5234)
         {
             Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -656,17 +659,17 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     }
     if (st[0x43c] & 0x40)
     {
-        if (*(f32*)(st + 8) < lbl_803E5238 * (f32) * (s8*)(st + 0x43f))
+        if (state->airMeterValue < lbl_803E5238 * (f32)state->uiMessageCount)
         {
-            *(f32*)(st + 8) += timeDelta;
+            state->airMeterValue += timeDelta;
         }
-        if (*(f32*)(st + 8) >= lbl_803E5234)
+        if (state->airMeterValue >= lbl_803E5234)
         {
             (*gGameUIInterface)->runAirMeter(0xc8);
         }
         else
         {
-            (*gGameUIInterface)->runAirMeter((int)*(f32*)(st + 8));
+            (*gGameUIInterface)->runAirMeter((int)state->airMeterValue);
         }
     }
 }
@@ -680,7 +683,7 @@ void nw_mammoth_free(void* obj)
 
     node = ((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x4d);
-    if ((*((u8*)node + 0x43c) & 0x40) != 0)
+    if ((((NwMammothState*)node)->runtimeFlags & 0x40) != 0)
     {
         (*gGameUIInterface)->airMeterShutdown();
     }

@@ -1,6 +1,7 @@
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/audio/sfx.h"
+#include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
@@ -592,38 +593,38 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
       }
     }
     else {
-      if (*(void **)(playerObj + 0x2d0) == NULL) {
+      if (((BaddieState *)playerObj)->targetObj == NULL) {
         player = Obj_GetPlayerObject();
         if (fn_80295A04(player, 1) != 0) {
           ((void (*)(int, int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x28))
                     (obj, playerObj, (int)state + 0x35c, (int)*(s16 *)((int)state + 0x3f4), 0, 2, 10, -1, -1);
-          *(int *)(playerObj + 0x2d0) = player;
-          *(u8 *)(playerObj + 0x349) = 0;
+          *(int *)&((BaddieState *)playerObj)->targetObj = player;
+          ((BaddieState *)playerObj)->hasTarget = 0;
         }
       }
       if (*(s16 *)((int)state + 0x402) == 1) {
-        if (*(s8 *)(playerObj + 0x354) == 3) {
+        if (*(s8 *)&((BaddieState *)playerObj)->hitPoints == 3) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x68, 0, 0, 0);
         }
-        else if (*(s8 *)(playerObj + 0x354) == 2) {
+        else if (*(s8 *)&((BaddieState *)playerObj)->hitPoints == 2) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x6c, 0, 0, 0);
         }
       }
       else if (*(s16 *)((int)state + 0x402) == 2) {
-        if (*(s8 *)(playerObj + 0x354) == 3) {
+        if (*(s8 *)&((BaddieState *)playerObj)->hitPoints == 3) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x77, 0, 0, 0);
         }
-        else if (*(s8 *)(playerObj + 0x354) == 2) {
+        else if (*(s8 *)&((BaddieState *)playerObj)->hitPoints == 2) {
           ((void (*)(int, int, int, int, int))*(code **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x78, 0, 0, 0);
         }
       }
-      *(u8 *)(playerObj + 0x346) = 0;
+      ((BaddieState *)playerObj)->moveDone = 0;
       *(s8 *)(playerObj + 0x34f) = hitResult;
-      *(u8 *)(playerObj + 0x354) -= 1;
+      ((BaddieState *)playerObj)->hitPoints -= 1;
       Sfx_PlayFromObject(obj, 0x4b1);
-      if (*(s8 *)(playerObj + 0x354) <= 0) {
-        *(u8 *)(playerObj + 0x354) = 0;
-        *(u8 *)(playerObj + 0x349) = 0;
+      if (*(s8 *)&((BaddieState *)playerObj)->hitPoints <= 0) {
+        ((BaddieState *)playerObj)->hitPoints = 0;
+        ((BaddieState *)playerObj)->hasTarget = 0;
         (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0);
         hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         hitState->flags &= ~1;

@@ -4,6 +4,7 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
+#include "main/dll/dim2conveyor.h"
 
 extern uint GameBit_Get(int eventId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
@@ -92,13 +93,13 @@ int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate)
     if ((state[0x43c] & 0x20) == 0)
     {
         Sfx_StopObjectChannel(obj, 0x7f);
-        *(f32*)(state + 0x54) = lbl_803E520C;
+        ((NwMammothState*)state)->pathSpeed = lbl_803E520C;
         state[0x43c] = (u8)(state[0x43c] & ~0x10);
         state[0x43c] = (u8)(state[0x43c] | 0x20);
     }
     if ((state[0x43c] & 4) != 0)
     {
-        *(f32*)(state + 0x18) = lbl_803E520C;
+        ((NwMammothState*)state)->playerDistanceSq = lbl_803E520C;
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~0x40);
         fn_801CDF94(obj, (int)state, 1);
@@ -118,7 +119,7 @@ int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void fn_801CDF94(int obj, int state, int flag)
 {
-    if (flag != 0 && *(void**)(state + 0x28) != NULL && *(f32*)(state + 0x18) < lbl_803E5214)
+    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL && ((NwMammothState*)state)->playerDistanceSq < lbl_803E5214)
     {
         *(u8*)(state + 0x40c) = 1;
         *(f32*)(state + 0x410) = *(f32*)(*(int*)(state + 0x28) + 0xc);

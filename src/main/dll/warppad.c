@@ -114,9 +114,9 @@ void FUN_8018f650(void)
                 local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
             }
             FUN_80017748(&local_68, &local_54);
-            local_54 = local_54 + *(float*)(obj + 0xc);
-            local_50 = local_50 + *(float*)(obj + 0x10);
-            local_4c = local_4c + *(float*)(obj + 0x14);
+            local_54 = local_54 + ((GameObject*)obj)->anim.localPosX;
+            local_50 = local_50 + ((GameObject*)obj)->anim.localPosY;
+            local_4c = local_4c + ((GameObject*)obj)->anim.localPosZ;
             (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                              auStack_60, 0x200001, -1, NULL);
         }
@@ -139,9 +139,9 @@ void FUN_8018f650(void)
                     local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
                 }
                 FUN_80017748(&local_68, &local_54);
-                local_54 = local_54 + *(float*)(obj + 0xc);
-                local_50 = local_50 + *(float*)(obj + 0x10);
-                local_4c = local_4c + *(float*)(obj + 0x14);
+                local_54 = local_54 + ((GameObject*)obj)->anim.localPosX;
+                local_50 = local_50 + ((GameObject*)obj)->anim.localPosY;
+                local_4c = local_4c + ((GameObject*)obj)->anim.localPosZ;
                 (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                  auStack_60, 0x200001, -1, NULL);
             }
@@ -243,9 +243,9 @@ void FUN_8018f650(void)
             FUN_80017748((ushort*)(data + 0x1a), &local_54);
             if (*(char*)(data + 8) == '\x06')
             {
-                local_54 = local_54 + *(float*)(obj + 0xc);
-                local_50 = local_50 + *(float*)(obj + 0x10);
-                local_4c = local_4c + *(float*)(obj + 0x14);
+                local_54 = local_54 + ((GameObject*)obj)->anim.localPosX;
+                local_50 = local_50 + ((GameObject*)obj)->anim.localPosY;
+                local_4c = local_4c + ((GameObject*)obj)->anim.localPosZ;
                 (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                  auStack_60, 0x200001, -1, NULL);
             }
@@ -269,9 +269,9 @@ void FUN_8018f650(void)
                 FUN_80017748((ushort*)(data + 0x1a), &local_54);
                 if (*(char*)(data + 8) == '\x06')
                 {
-                    local_54 = local_54 + *(float*)(obj + 0xc);
-                    local_50 = local_50 + *(float*)(obj + 0x10);
-                    local_4c = local_4c + *(float*)(obj + 0x14);
+                    local_54 = local_54 + ((GameObject*)obj)->anim.localPosX;
+                    local_50 = local_50 + ((GameObject*)obj)->anim.localPosY;
+                    local_4c = local_4c + ((GameObject*)obj)->anim.localPosZ;
                     (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                      auStack_60, 0x200001, -1, NULL);
                 }

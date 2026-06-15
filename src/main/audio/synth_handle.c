@@ -425,16 +425,18 @@ u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut)
         combinedValue = combinedValue | low;
         combined = (s16)combinedValue;
         shift = 1;
-        combined = (s16)(combined << shift);
-        *valueOut = (s16)(combined >> shift);
+        combined <<= shift;
+        combined >>= shift;
+        *valueOut = combined;
         p += 2;
     }
     else
     {
         combined = high;
         shift = 9;
-        combined = (s16)(combined << shift);
-        *valueOut = (s16)(combined >> shift);
+        combined <<= shift;
+        combined >>= shift;
+        *valueOut = combined;
         p += 1;
     }
 

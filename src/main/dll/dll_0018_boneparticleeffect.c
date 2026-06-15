@@ -1357,8 +1357,8 @@ extern void textureFree(void* resource);
 #pragma peephole off
 void boneParticleEffect_release(void)
 {
-    int i;
     void** p;
+    int i;
     void* zero;
     i = 0;
     p = gBoneParticleEffectBuffers;
@@ -1507,9 +1507,9 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                 dx = *(f32*)(mtx + 0x30) + playerMapOffsetX;
                 dy = *(f32*)(mtx + 0x34);
                 dz = *(f32*)(mtx + 0x38) + playerMapOffsetZ;
-                dx = dx - *(f32*)(o + 0xc);
-                dy = dy - *(f32*)(o + 0x10);
-                dz = dz - *(f32*)(o + 0x14);
+                dx = dx - ((GameObject*)o)->anim.localPosX;
+                dy = dy - ((GameObject*)o)->anim.localPosY;
+                dz = dz - ((GameObject*)o)->anim.localPosZ;
                 dx = dx * 20.02f;
                 if (id == 0x1d || id == 0x1d)
                 {
@@ -1555,9 +1555,9 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                     s.vx = s.vx + playerMapOffsetX;
                     s.vz = s.vz + playerMapOffsetZ;
                     idx = (k + row) * 0x10;
-                    *(s16*)((u8*)*grp + idx) = (s32)(dx + (s.vx - *(f32*)(o + 0xc)));
-                    *(s16*)((u8*)*grp + idx + 2) = (s32)(dy + (s.vy - *(f32*)(o + 0x10)));
-                    *(s16*)((u8*)*grp + idx + 4) = (s32)(dz + (s.vz - *(f32*)(o + 0x14)));
+                    *(s16*)((u8*)*grp + idx) = (s32)(dx + (s.vx - ((GameObject*)o)->anim.localPosX));
+                    *(s16*)((u8*)*grp + idx + 2) = (s32)(dy + (s.vy - ((GameObject*)o)->anim.localPosY));
+                    *(s16*)((u8*)*grp + idx + 4) = (s32)(dz + (s.vz - ((GameObject*)o)->anim.localPosZ));
                     *(u8*)((u8*)*grp + idx + 0xf) = 0x9b;
                     t = base + idx;
                     *(s16*)((u8*)*grp + idx + 0xa) = (s16)(*(s16*)(t + 0x1ba) - (lbl_803DD2B8 << 2));
@@ -1575,9 +1575,9 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
         slot += 1;
     }
     while (slot < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
-    s.vx = *(f32*)(o + 0xc);
-    s.vy = *(f32*)(o + 0x10);
-    s.vz = *(f32*)(o + 0x14);
+    s.vx = ((GameObject*)o)->anim.localPosX;
+    s.vy = ((GameObject*)o)->anim.localPosY;
+    s.vz = ((GameObject*)o)->anim.localPosZ;
     s.w = lbl_803DF4C4;
     setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
     if (lbl_803DD2BC != 0)

@@ -366,18 +366,18 @@ void AttractMovieVideo_Decode(void* param)
     {
         AttractMoviePlayer* player2; /* block-local → r25 */
         void** readMsg; /* block-local → r24 */
-        u8* componentKind; /* block-local → r23 */
+        char* componentKind; /* block-local → r23 */
         OSMessage tmpBuf;
 
         OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
         readMsg = (void**)tmpBuf;
         i = 0;
-        player2 = &lbl_803A5D60;
-        componentKind = player2->compInfo.mFrameComp;
+        player2 = player;
+        componentKind = (char*)player2;
 
         while (i < player->compInfo.mNumComponents)
         {
-            if (*componentKind == 0)
+            if (componentKind[0x70] == 0)
             {
                 s32 dec = THPVideoDecode(dvdData,
                                          ((AttractMovieTextureSet*)readMsg)->yTexture,

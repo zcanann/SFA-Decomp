@@ -1785,6 +1785,7 @@ void dim2roofrub_init(int* obj, int* params);
 
 void animatedobj_init(int* obj, int* params);
 
+#pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
     extern int timerCountDown(f32 * p); /* #57 */
@@ -1819,7 +1820,7 @@ void flamethrowerspe_update(int* obj)
             return;
         }
         ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, *(int*)((char*)lbl_803209C0 + (s8) * (u8*)((char*)src + 0x19) * 0xc + 8), 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
         {
             f32 dt = timeDelta;
             objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
@@ -1830,6 +1831,7 @@ void flamethrowerspe_update(int* obj)
         break;
     }
 }
+#pragma opt_common_subs reset
 
 void mikabomb_update(int* obj);
 

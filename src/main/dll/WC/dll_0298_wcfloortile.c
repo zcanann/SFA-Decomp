@@ -55,10 +55,9 @@ void wcfloortile_hitDetect(void)
 void wcfloortile_init(int obj)
 {
     WcFloorTileState* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
 
     *(s16*)obj = -0x4000;
-    hitState->flags |= 0x1800;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
     state->flags |= 2;
 }
 
@@ -371,7 +370,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     arwarwing_clampToFlightBounds(obj, state);
 }
 
-#pragma peephole on
+#pragma peephole off
 void arwarwing_updateBombFire(int obj, int state)
 {
     ArwingState* arwing = (ArwingState*)state;
@@ -379,12 +378,18 @@ void arwarwing_updateBombFire(int obj, int state)
         return;
     {
         f32 t = arwing->bombCooldown;
-        if (t > lbl_803E6ECC)
+        f32 zero = lbl_803E6ECC;
+        if (t > zero)
         {
             arwing->bombCooldown = t - timeDelta;
-            if (arwing->bombCooldown >= lbl_803E6ECC)
+            if (arwing->bombCooldown < zero)
+            {
+                arwing->bombCooldown = zero;
+            }
+            else
+            {
                 return;
-            arwing->bombCooldown = lbl_803E6ECC;
+            }
         }
     }
     if (arwing->inputFlags & 0x200)

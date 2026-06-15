@@ -55,9 +55,16 @@ typedef struct NwMammothCurveState {
 } NwMammothCurveState;
 
 typedef struct NwMammothState {
-  u8 pad00[0x18];
+  f32 sfxTimer;
+  f32 stateTimer;
+  f32 airMeterValue;
+  f32 spawnPosX;
+  f32 spawnPosY;
+  f32 spawnPosZ;
   f32 playerDistanceSq;
-  u8 pad1C[0x28 - 0x1C];
+  f32 partfxTimer;
+  u8 pad20[0x24 - 0x20];
+  void *trackedObject;
   void *playerObject;
   u8 pad2C[0x48 - 0x2C];
   u8 *triggerList;
@@ -147,7 +154,15 @@ STATIC_ASSERT(sizeof(NwMammothCurveState) == 0x110);
 STATIC_ASSERT(offsetof(NwMammothCurveState, pointX) == 0x68);
 STATIC_ASSERT(offsetof(NwMammothCurveState, pointY) == 0x6C);
 STATIC_ASSERT(offsetof(NwMammothCurveState, pointZ) == 0x70);
+STATIC_ASSERT(offsetof(NwMammothState, sfxTimer) == 0x00);
+STATIC_ASSERT(offsetof(NwMammothState, stateTimer) == 0x04);
+STATIC_ASSERT(offsetof(NwMammothState, airMeterValue) == 0x08);
+STATIC_ASSERT(offsetof(NwMammothState, spawnPosX) == 0x0C);
+STATIC_ASSERT(offsetof(NwMammothState, spawnPosY) == 0x10);
+STATIC_ASSERT(offsetof(NwMammothState, spawnPosZ) == 0x14);
 STATIC_ASSERT(offsetof(NwMammothState, playerDistanceSq) == 0x18);
+STATIC_ASSERT(offsetof(NwMammothState, partfxTimer) == 0x1C);
+STATIC_ASSERT(offsetof(NwMammothState, trackedObject) == 0x24);
 STATIC_ASSERT(offsetof(NwMammothState, playerObject) == 0x28);
 STATIC_ASSERT(offsetof(NwMammothState, triggerList) == 0x48);
 STATIC_ASSERT(offsetof(NwMammothState, animStepScale) == 0x4C);

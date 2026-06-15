@@ -72,10 +72,11 @@ void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
-    if (visible != 0 && state->state < ROLLINGBARREL_STATE_EXPLODED_WAIT)
+    if (visible == 0 || state->state >= ROLLINGBARREL_STATE_EXPLODED_WAIT)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
+        return;
     }
+    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
 }
 
 void SpiritDoorLock_free(int obj);
