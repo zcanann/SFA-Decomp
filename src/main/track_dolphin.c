@@ -2493,7 +2493,7 @@ int objShadowFn_80062498(int* obj, int param2)
     modelState = ((ObjAnimComponent*)obj)->modelState;
     if (shouldDrawShadows() == 0)
     {
-        modelState->shadowCastSlot = NULL;
+        ((ObjAnimComponent*)obj)->modelState->shadowCastSlot = NULL;
         return 0;
     }
 
