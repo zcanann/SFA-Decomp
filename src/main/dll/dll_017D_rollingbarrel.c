@@ -49,7 +49,7 @@ extern f32 lbl_803E44A0;
 extern f32 lbl_803E44A4;
 extern f32 lbl_803E44A8;
 extern f32 lbl_803E44AC;
-extern f32 lbl_803E44B0;
+extern const f32 lbl_803E44B0;
 extern f32 lbl_803E44B4;
 extern f32 lbl_803E44B8;
 
