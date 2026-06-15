@@ -37,8 +37,8 @@ undefined4
 FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4, u8 param_5,
              int param_6)
 {
-    undefined4 uVar1;
-    uint uVar2;
+    undefined4 result;
+    uint rnd;
     int local_98[3];
     undefined2 local_8c;
     undefined2 local_8a;
@@ -89,7 +89,7 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
     }
     if (param_1 == 0)
     {
-        uVar1 = 0xffffffff;
+        result = 0xffffffff;
     }
     else
     {
@@ -137,8 +137,8 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
             uStack_2c = randomGetRange(8, 10);
             local_70 = lbl_803E0E50 * (f32)(s32)
             uStack_2c;
-            uVar2 = randomGetRange(0, 0x28);
-            if (uVar2 == 0)
+            rnd = randomGetRange(0, 0x28);
+            if (rnd == 0)
             {
                 uStack_2c = randomGetRange(0x15, 0x29);
                 local_5c = lbl_803E0E38 *
@@ -366,8 +366,8 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
             local_56 = 0x500;
             break;
         case 0x744:
-            uVar2 = randomGetRange(0, 4);
-            if (uVar2 == 4)
+            rnd = randomGetRange(0, 4);
+            if (rnd == 4)
             {
                 local_5c = lbl_803E0E88;
                 local_38 = 0x9b;
@@ -407,42 +407,42 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
                 local_60 = local_60 + local_78;
             }
         }
-        uVar1 = (*gExpgfxInterface)->spawnEffect(local_98, 0xffffffff, param_2, 0);
+        result = (*gExpgfxInterface)->spawnEffect(local_98, 0xffffffff, param_2, 0);
     }
-    return uVar1;
+    return result;
 }
 
 undefined4 FUN_800c9030(uint param_1, int* param_2)
 {
-    int iVar1;
-    int iVar2;
-    int iVar3;
+    int hi;
+    int lo;
+    int mid;
 
     *param_2 = -1;
     if ((int)param_1 < 0)
     {
         return 0;
     }
-    iVar1 = DAT_803de090 + -1;
-    iVar2 = 0;
+    hi = DAT_803de090 + -1;
+    lo = 0;
     while (true)
     {
         while (true)
         {
-            if (iVar1 < iVar2)
+            if (hi < lo)
             {
                 *param_2 = -1;
                 return 0;
             }
-            iVar3 = iVar1 + iVar2 >> 1;
-            if (param_1 <= (uint)(&DAT_8039d0b8)[iVar3 * 2]) break;
-            iVar2 = iVar3 + 1;
+            mid = hi + lo >> 1;
+            if (param_1 <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
+            lo = mid + 1;
         }
-        if ((uint)(&DAT_8039d0b8)[iVar3 * 2] <= param_1) break;
-        iVar1 = iVar3 + -1;
+        if ((uint)(&DAT_8039d0b8)[mid * 2] <= param_1) break;
+        hi = mid + -1;
     }
-    *param_2 = iVar3;
-    return (&DAT_8039d0bc)[iVar3 * 2];
+    *param_2 = mid;
+    return (&DAT_8039d0bc)[mid * 2];
 }
 
 extern s16 lbl_803DD414;
