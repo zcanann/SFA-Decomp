@@ -1400,6 +1400,7 @@ void dll_0B_func10(void)
     gModgfxSequenceParamIndex = 0;
 }
 
+extern void OSReport(const char* fmt, ...);
 
 
 ObjectDescriptor11 projgfx_funcs = {
@@ -1467,26 +1468,27 @@ void dll_0B_initialise(void)
 
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
+    ModgfxSpawnContext* context = &gModgfxSpawnContext;
     f32 fz;
     f32 fz2;
-    memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
-    gModgfxSpawnContext.modeByte = p2;
-    gModgfxSpawnContext.attachedSource = (void*)p1;
-    gModgfxSpawnContext.sourceModeCopy = (u8)p2;
+    memset(context, 0, sizeof(*context));
+    context->modeByte = p2;
+    context->attachedSource = (void*)p1;
+    context->sourceModeCopy = (u8)p2;
     fz = lbl_803DF430;
-    gModgfxSpawnContext.posX = fz;
-    gModgfxSpawnContext.posY = fz;
-    gModgfxSpawnContext.posZ = fz;
-    gModgfxSpawnContext.vecX = fz;
-    gModgfxSpawnContext.vecY = fz;
-    gModgfxSpawnContext.vecZ = fz;
+    context->posX = fz;
+    context->posY = fz;
+    context->posZ = fz;
+    context->vecX = fz;
+    context->vecY = fz;
+    context->vecZ = fz;
     fz2 = lbl_803DF434;
-    gModgfxSpawnContext.scale = fz2;
-    gModgfxSpawnContext.word40 = p4;
-    gModgfxSpawnContext.word3C = p5;
-    gModgfxSpawnContext.byte59 = p3;
-    gModgfxSpawnContext.byte5A = 0;
-    gModgfxSpawnContext.byte5B = 0;
+    context->scale = fz2;
+    context->word40 = p4;
+    context->word3C = p5;
+    context->byte59 = p3;
+    context->byte5A = 0;
+    context->byte5B = 0;
 }
 
 void dll_0B_func0A(s16* p)
@@ -1556,37 +1558,35 @@ void dll_0B_func07(void* p1)
 }
 
 #pragma dont_inline on
-#pragma opt_loop_invariants off
 void fn_800A1040(s16 p1, int p2)
 {
+    PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    PartfxEffectState** p = (PartfxEffectState**)gPartfxActiveEffects;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
-        if (p[i] == NULL) continue;
-        if ((s16)p1 != p[i]->sequenceId && p2 == 0) continue;
-        if (p[i]->auxAllocation != NULL)
+        if (arr[i] == NULL) continue;
+        if ((s16)p1 != arr[i]->sequenceId && p2 == 0) continue;
+        if (arr[i]->auxAllocation != NULL)
         {
-            mm_free(p[i]->auxAllocation);
+            mm_free(arr[i]->auxAllocation);
         }
-        if (p[i]->instanceObject != NULL)
+        if (arr[i]->instanceObject != NULL)
         {
-            Obj_FreeObject(p[i]->instanceObject);
+            Obj_FreeObject(arr[i]->instanceObject);
         }
-        p[i]->inlineData = NULL;
-        if (p[i]->textureIsBorrowed == 0 && p[i]->textureResource != NULL)
+        arr[i]->inlineData = NULL;
+        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
         {
-            textureFree(p[i]->textureResource);
+            textureFree(arr[i]->textureResource);
         }
-        if (p[i]->textureIsBorrowed == 0)
+        if (arr[i]->textureIsBorrowed == 0)
         {
-            p[i]->textureResource = NULL;
+            arr[i]->textureResource = NULL;
         }
-        mm_free(p[i]);
-        p[i] = NULL;
+        mm_free(arr[i]);
+        arr[i] = NULL;
     }
 }
-#pragma opt_loop_invariants reset
 #pragma dont_inline reset
 
 void boneParticleEffect_release(void);
@@ -1735,14 +1735,6 @@ void fn_800A0478(ModgfxState* state)
 }
 
 #pragma peephole off
-typedef struct
-{
-    s16 ang[3];
-    s16 pad;
-    f32 scale;
-    f32 pos[3];
-} EffXform;
-
 void fn_800A081C(int p1, int p2, int mode)
 {
     extern void vecRotateZXY(void*, f32*);
@@ -1757,18 +1749,18 @@ void fn_800A081C(int p1, int p2, int mode)
             int flags = ((ModgfxState*)p1)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
             {
-                EffXform xf2;
+                s16 buf[6];
+                f32* fbuf = (f32*)&buf[2];
+                s16 v = *((ModgfxState*)p1)->unk04;
                 f32 fill = lbl_803DF430;
-                s16 v;
-                xf2.pos[0] = fill;
-                xf2.pos[1] = fill;
-                xf2.pos[2] = fill;
-                xf2.scale = lbl_803DF434;
-                v = *((ModgfxState*)p1)->unk04;
-                xf2.ang[0] = v;
-                xf2.ang[1] = v;
-                xf2.ang[2] = v;
-                vecRotateZXY(&xf2, (f32*)(p2 + 0x4));
+                fbuf[3] = fill;
+                fbuf[2] = fill;
+                fbuf[1] = fill;
+                fbuf[0] = lbl_803DF434;
+                buf[2] = v;
+                buf[1] = v;
+                buf[0] = v;
+                vecRotateZXY(buf, (f32*)(p2 + 0x4));
             }
             ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX;
             ((ModgfxState*)p1)->posStepY = ((ModgfxVertexGroupCmd*)p2)->valueY;
@@ -1824,9 +1816,9 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
             ((ModgfxState*)obj)->rotStepX = 0;
         }
     }
-    ((ModgfxState*)obj)->rotOffsetZ += ((ModgfxState*)obj)->rotStepZ;
-    ((ModgfxState*)obj)->rotOffsetY += ((ModgfxState*)obj)->rotStepY;
-    ((ModgfxState*)obj)->rotOffsetX += ((ModgfxState*)obj)->rotStepX;
+    ((ModgfxState*)obj)->rotOffsetZ = ((ModgfxState*)obj)->rotOffsetZ + ((ModgfxState*)obj)->rotStepZ;
+    ((ModgfxState*)obj)->rotOffsetY = ((ModgfxState*)obj)->rotOffsetY + ((ModgfxState*)obj)->rotStepY;
+    ((ModgfxState*)obj)->rotOffsetX = ((ModgfxState*)obj)->rotOffsetX + ((ModgfxState*)obj)->rotStepX;
 }
 
 /* EN v1.0 0x800A113C  size: 276b  dll_0B_func0E: flag every active effect
@@ -1852,6 +1844,7 @@ void dll_0B_func0E(void)
     }
 }
 
+extern void*gPartfxResourceModule00;
 
 extern f32 lbl_803DD284;
 
@@ -1980,6 +1973,7 @@ void dll_0B_onMapSetup(void)
     }
 }
 
+extern void* Obj_GetActiveModel(void);
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
@@ -2026,35 +2020,34 @@ extern int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int 
 
 void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 {
-    gModgfxSpawnContext.pendingSpawns = gModgfxPendingSpawnQueue;
-    gModgfxSpawnContext.pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
+    ModgfxSpawnContext* context = &gModgfxSpawnContext;
+
+    context->pendingSpawns = gModgfxPendingSpawnQueue;
+    context->pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
     if (g == NULL && f == 0)
     {
-        gModgfxSpawnContext.flags |= 0x2000000LL;
+        context->flags |= 0x2000000;
     }
     else
     {
-        gModgfxSpawnContext.flags |= 0x4000000LL;
+        context->flags |= 0x4000000;
     }
-    if (gModgfxSpawnContext.flags & 1)
+    if (context->flags & 1)
     {
-        if (gModgfxSpawnContext.attachedSource != NULL)
+        if (context->attachedSource != NULL)
         {
-            gModgfxSpawnContext.posX += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosX;
-            gModgfxSpawnContext.posY += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosY;
-            gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosZ;
+            context->posX += ((ExpgfxSourceObject*)context->attachedSource)->worldPosX;
+            context->posY += ((ExpgfxSourceObject*)context->attachedSource)->worldPosY;
+            context->posZ += ((ExpgfxSourceObject*)context->attachedSource)->worldPosZ;
         }
         else
         {
-            gModgfxSpawnContext.posX += ((ExpgfxSourceObject*)a)->localPosX;
-            gModgfxSpawnContext.posY += ((ExpgfxSourceObject*)a)->localPosY;
-            gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)a)->localPosZ;
+            context->posX += ((ExpgfxSourceObject*)a)->localPosX;
+            context->posY += ((ExpgfxSourceObject*)a)->localPosY;
+            context->posZ += ((ExpgfxSourceObject*)a)->localPosZ;
         }
     }
-    {
-        extern s16 dll_0B_func04();
-        gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
-    }
+    gModgfxLastSpawnHandle = dll_0B_func04(context, 0, (int)c, b, (int)e, d, f, g);
 }
 
 extern f32 lbl_803DF460;
@@ -2072,15 +2065,15 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     int base0;
     f32 fz430;
     f32 fz434;
-    PartfxEffectState** effects;
-    PartfxEffectState* effect;
+    void** scan;
 
-    effects = (PartfxEffectState**)gPartfxActiveEffects;
     total = 0;
     found = 0;
+    scan = (void**)gPartfxActiveEffects;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
     {
-        if (effects[i] == NULL) found = 1;
+        if (*scan == NULL) found = 1;
+        scan++;
     }
     if (found)
     {
@@ -2111,34 +2104,33 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         base0 = ((e * 3) << 4) + (int)(long)((c * 3) << 4);
     }
 
-    effects[slot] = (PartfxEffectState*)mmAlloc(base0 + n * 0x18 + total * 2 + 0x240, 0x15, 0);
-    effect = effects[slot];
-    if (effect == NULL)
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot] = (PartfxEffectState*)mmAlloc(base0 + n * 0x18 + total * 2 + 0x240, 0x15, 0);
+    if (((PartfxEffectState**)gPartfxActiveEffects)[slot] == NULL)
     {
         fn_800A1040(0, 0);
         return -1;
     }
 
-    effects[slot]->inlineData = (u8*)effects[slot] + sizeof(PartfxEffectState);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->inlineData = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot] + sizeof(PartfxEffectState);
     {
-        u8* bufp = effects[slot]->inlineData;
+        u8* bufp = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->inlineData;
         if ((*(u32*)(st + 0x54) & 0x800) == 0)
         {
-            effects[slot]->colorBuffers[0] = bufp;
+            ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorBuffers[0] = bufp;
             bufp += e * 16;
-            effects[slot]->colorBuffers[1] = bufp;
+            ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorBuffers[1] = bufp;
             bufp += e * 16;
-            effects[slot]->colorBuffers[2] = bufp;
+            ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorBuffers[2] = bufp;
             bufp += e * 16;
-            effects[slot]->vertexBuffers[0] = bufp;
+            ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexBuffers[0] = bufp;
             bufp += c * 16;
-            effects[slot]->vertexBuffers[1] = bufp;
+            ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexBuffers[1] = bufp;
             bufp += c * 16;
-            effects[slot]->vertexBuffers[2] = bufp;
+            ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexBuffers[2] = bufp;
             bufp += c * 16;
         }
-        effects[slot]->baseVertexBuffer = bufp;
-        effects[slot]->baseColorBuffer = bufp + 0x80;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->baseVertexBuffer = bufp;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->baseColorBuffer = bufp + 0x80;
     }
 
     if (*(int*)(st + 0x40) != 0)
@@ -2155,7 +2147,7 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         int off;
         for (k = 0, off = 0; k < 3; k++, off += 4)
         {
-            u8* dstc = effects[slot]->colorBuffers[k];
+            u8* dstc = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorBuffers[k];
             int bias = 0;
             int j;
             s16* sd = (s16*)d;
@@ -2174,17 +2166,17 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         }
     }
 
-    effects[slot]->textureResource = NULL;
-    effects[slot]->textureIsBorrowed = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = NULL;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureIsBorrowed = 0;
     if (g != NULL)
     {
-        effects[slot]->textureResource = g;
-        effects[slot]->textureIsBorrowed = 1;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = g;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureIsBorrowed = 1;
     }
     else if (f != 0)
     {
-        effects[slot]->textureResource = textureLoadAsset(f);
-        effects[slot]->textureIsBorrowed = 0;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = textureLoadAsset(f);
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureIsBorrowed = 0;
     }
 
     if ((*(u32*)(st + 0x54) & 0x800) == 0)
@@ -2193,7 +2185,7 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         int off;
         for (k = 0, off = 0; k < 3; k++, off += 4)
         {
-            u8* dstv = effects[slot]->vertexBuffers[k];
+            u8* dstv = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexBuffers[k];
             int j;
             s16* sb = (s16*)b;
             for (j = 0; j < c; j++)
@@ -2201,11 +2193,11 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
                 *(s16*)(dstv + 0) = sb[0];
                 *(s16*)(dstv + 2) = sb[1];
                 *(s16*)(dstv + 4) = sb[2];
-                if (effects[slot]->textureResource != NULL)
+                if (((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource != NULL)
                 {
-                    *(s16*)(dstv + 8) = lbl_803DF460 * ((f32)sb[3] / (f32) * (u16*)((u8*)effects[slot]->textureResource +
+                    *(s16*)(dstv + 8) = lbl_803DF460 * ((f32)sb[3] / (f32) * (u16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource +
                         0xa));
-                    *(s16*)(dstv + 0xa) = lbl_803DF460 * ((f32)sb[4] / (f32) * (u16*)((u8*)effects[slot]->textureResource +
+                    *(s16*)(dstv + 0xa) = lbl_803DF460 * ((f32)sb[4] / (f32) * (u16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource +
                         0xc));
                 }
                 dstv[0xc] = 0xff;
@@ -2218,147 +2210,147 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         }
     }
 
-    effects[slot]->emitterCount = st[0x5d];
-    effects[slot]->word114 = 0;
-    effects[slot]->word118 = 0;
-    effects[slot]->word11C = 0;
-    effects[slot]->auxAllocation = NULL;
-    effects[slot]->releaseRequested = 0;
-    effects[slot]->byte13D = 0;
-    effects[slot]->stageTimer = 0;
-    effects[slot]->nextStage = -1;
-    effects[slot]->requestedStage = 0;
-    effects[slot]->stageDurations[0] = *(s16*)(st + 0x46);
-    effects[slot]->stageDurations[1] = *(s16*)(st + 0x48);
-    effects[slot]->stageDurations[2] = *(s16*)(st + 0x4a);
-    effects[slot]->stageDurations[3] = *(s16*)(st + 0x4c);
-    effects[slot]->stageDurations[4] = *(s16*)(st + 0x4e);
-    effects[slot]->stageDurations[5] = *(s16*)(st + 0x50);
-    effects[slot]->stageDurations[6] = *(s16*)(st + 0x52);
-    effects[slot]->emitterCommands = (u8*)effects[slot]->inlineData + base0 + 0x100;
-    effects[slot]->auxSequenceBuffer = NULL;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount = st[0x5d];
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word114 = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word118 = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word11C = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->auxAllocation = NULL;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->releaseRequested = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->byte13D = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageTimer = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->nextStage = -1;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->requestedStage = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[0] = *(s16*)(st + 0x46);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[1] = *(s16*)(st + 0x48);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[2] = *(s16*)(st + 0x4a);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[3] = *(s16*)(st + 0x4c);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[4] = *(s16*)(st + 0x4e);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[5] = *(s16*)(st + 0x50);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[6] = *(s16*)(st + 0x52);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->inlineData + base0 + 0x100;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->auxSequenceBuffer = NULL;
     if (total != 0)
     {
-        effects[slot]->auxSequenceBuffer = (u8*)effects[slot]->emitterCommands + effects[slot]->emitterCount * 0x18;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->auxSequenceBuffer = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount * 0x18;
     }
 
     {
-        u8* dst = effects[slot]->auxSequenceBuffer;
+        u8* dst = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->auxSequenceBuffer;
         int m;
         int off;
-        for (m = 0, off = 0; m < effects[slot]->emitterCount; m++, off += 0x18)
+        for (m = 0, off = 0; m < ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount; m++, off += 0x18)
         {
-            ((u8*)effects[slot]->emitterCommands)[off + 0x16] = (*(u8**)st)[off + 0x16];
-            *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14) = *(s16*)(*(u8**)st + off + 0x14);
-            *(int*)((u8*)effects[slot]->emitterCommands + off + 0x10) = 0;
-            *(int*)((u8*)effects[slot]->emitterCommands + off) = *(int*)(*(u8**)st + off);
-            if ((*(int*)((u8*)effects[slot]->emitterCommands + off) & 0xf7fff180) == 0 &&
-                *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14) != 0)
+            ((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands)[off + 0x16] = (*(u8**)st)[off + 0x16];
+            *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14) = *(s16*)(*(u8**)st + off + 0x14);
+            *(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) = 0;
+            *(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off) = *(int*)(*(u8**)st + off);
+            if ((*(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off) & 0xf7fff180) == 0 &&
+                *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14) != 0)
             {
                 int k;
-                *(int*)((u8*)effects[slot]->emitterCommands + off + 0x10) = 0;
-                *(u8**)((u8*)effects[slot]->emitterCommands + off + 0x10) = dst;
-                dst += *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14) * 2;
-                for (k = 0; k < *(s16*)((u8*)effects[slot]->emitterCommands + off + 0x14); k++)
+                *(int*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) = 0;
+                *(u8**)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) = dst;
+                dst += *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14) * 2;
+                for (k = 0; k < *(s16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x14); k++)
                 {
-                    *(s16*)(*(u8**)((u8*)effects[slot]->emitterCommands + off + 0x10) + k * 2) =
+                    *(s16*)(*(u8**)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0x10) + k * 2) =
                         *(s16*)(*(u8**)(*(u8**)st + off + 0x10) + k * 2);
                 }
             }
-            *(f32*)((u8*)effects[slot]->emitterCommands + off + 4) = *(f32*)(*(u8**)st + off + 4);
-            *(f32*)((u8*)effects[slot]->emitterCommands + off + 8) = *(f32*)(*(u8**)st + off + 8);
-            *(f32*)((u8*)effects[slot]->emitterCommands + off + 0xc) = *(f32*)(*(u8**)st + off + 0xc);
+            *(f32*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 4) = *(f32*)(*(u8**)st + off + 4);
+            *(f32*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 8) = *(f32*)(*(u8**)st + off + 8);
+            *(f32*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off + 0xc) = *(f32*)(*(u8**)st + off + 0xc);
         }
     }
 
-    effects[slot]->currentStage = -1;
-    effects[slot]->stageFrameCountdown = effects[slot]->colorVertexCount;
-    effects[slot]->flags = *(int*)(st + 0x54);
-    effects[slot]->drawPosX = *(f32*)(st + 0x2c);
-    effects[slot]->drawPosY = *(f32*)(st + 0x30);
-    effects[slot]->drawPosZ = *(f32*)(st + 0x34);
-    effects[slot]->renderScale = *(f32*)(st + 0x38);
-    if (effects[slot]->flags & 1)
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->currentStage = -1;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageFrameCountdown = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->flags = *(int*)(st + 0x54);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosX = *(f32*)(st + 0x2c);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosY = *(f32*)(st + 0x30);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosZ = *(f32*)(st + 0x34);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->renderScale = *(f32*)(st + 0x38);
+    if (((PartfxEffectState**)gPartfxActiveEffects)[slot]->flags & 1)
     {
-        effects[slot]->sourcePosX = *(f32*)(st + 0x2c);
-        effects[slot]->sourcePosY = *(f32*)(st + 0x30);
-        effects[slot]->sourcePosZ = *(f32*)(st + 0x34);
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosX = *(f32*)(st + 0x2c);
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosY = *(f32*)(st + 0x30);
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosZ = *(f32*)(st + 0x34);
     }
     fz430 = lbl_803DF430;
     fz434 = lbl_803DF434;
-    effects[slot]->posStepX = fz430;
-    effects[slot]->posStepY = fz430;
-    effects[slot]->posStepZ = fz430;
-    effects[slot]->scaleChannels[0].cur[0] = fz434;
-    effects[slot]->scaleChannels[0].cur[1] = fz434;
-    effects[slot]->scaleChannels[0].cur[2] = fz434;
-    effects[slot]->scaleChannels[0].step[1] = fz430;
-    effects[slot]->scaleChannels[0].step[2] = fz430;
-    effects[slot]->scaleChannels[0].step[0] = fz430;
-    effects[slot]->scaleChannels[1].cur[2] = fz434;
-    effects[slot]->scaleChannels[1].cur[0] = fz434;
-    effects[slot]->scaleChannels[1].cur[1] = fz434;
-    effects[slot]->scaleChannels[1].step[2] = fz430;
-    effects[slot]->scaleChannels[1].step[0] = fz430;
-    effects[slot]->scaleChannels[1].step[1] = fz430;
-    effects[slot]->rotOffsetZ = 0;
-    effects[slot]->rotOffsetY = 0;
-    effects[slot]->rotOffsetX = 0;
-    effects[slot]->vec120 = 0;
-    effects[slot]->vec122 = 0;
-    effects[slot]->vec124 = 0;
-    effects[slot]->alphaChannels[0].step = fz430;
-    effects[slot]->alphaChannels[0].cur = fz430;
-    effects[slot]->alphaChannels[1].step = fz430;
-    effects[slot]->alphaChannels[1].cur = fz430;
-    effects[slot]->blendColorR = fz430;
-    effects[slot]->blendColorG = fz430;
-    effects[slot]->blendColorB = fz430;
-    effects[slot]->blendColorStepR = fz430;
-    effects[slot]->blendColorStepG = fz430;
-    effects[slot]->blendColorStepB = fz430;
-    effects[slot]->velocityX = *(f32*)(st + 0x20);
-    effects[slot]->velocityY = *(f32*)(st + 0x24);
-    effects[slot]->velocityZ = *(f32*)(st + 0x28);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepX = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepY = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepZ = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].cur[0] = fz434;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].cur[1] = fz434;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].cur[2] = fz434;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].step[1] = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].step[2] = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].step[0] = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[1].cur[2] = fz434;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[1].cur[0] = fz434;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[1].cur[1] = fz434;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[1].step[2] = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[1].step[0] = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[1].step[1] = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->rotOffsetZ = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->rotOffsetY = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->rotOffsetX = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vec120 = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vec122 = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vec124 = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->alphaChannels[0].step = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->alphaChannels[0].cur = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->alphaChannels[1].step = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->alphaChannels[1].cur = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->blendColorR = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->blendColorG = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->blendColorB = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->blendColorStepR = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->blendColorStepG = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->blendColorStepB = fz430;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityX = *(f32*)(st + 0x20);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityY = *(f32*)(st + 0x24);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityZ = *(f32*)(st + 0x28);
     lbl_803DD280 = lbl_803DD280 + 1;
     if (lbl_803DD280 > 0x4e20)
     {
         lbl_803DD280 = 0;
     }
-    effects[slot]->sequenceId = lbl_803DD280;
-    effects[slot]->byte126 = lbl_803DD282;
-    effects[slot]->vertexCount = (s16)c;
-    effects[slot]->colorVertexCount = (s16)e;
-    effects[slot]->sourceObject = *(void**)(st + 4);
-    effects[slot]->instanceObject = NULL;
-    effects[slot]->sourceYawIndex = st[0x5c];
-    effects[slot]->drawGroupCount = *(int*)(st + 0x40);
-    effects[slot]->drawGroupStride = *(int*)(st + 0x3c);
-    effects[slot]->initialStateByte = st[0x59];
-    effects[slot]->soundHandle = 0;
-    effects[slot]->activeVertexBufferIndex = 0;
-    effects[slot]->byte13B = 0;
-    effects[slot]->frameUpdated = 0;
-    effects[slot]->textureFrameTimer = st[0x5b];
-    if (effects[slot]->textureFrameTimer != 0)
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sequenceId = lbl_803DD280;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->byte126 = lbl_803DD282;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexCount = (s16)c;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount = (s16)e;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceObject = *(void**)(st + 4);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->instanceObject = NULL;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st[0x5c];
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupCount = *(int*)(st + 0x40);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupStride = *(int*)(st + 0x3c);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialStateByte = st[0x59];
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->soundHandle = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->activeVertexBufferIndex = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->byte13B = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->frameUpdated = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameTimer = st[0x5b];
+    if (((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameTimer != 0)
     {
-        effects[slot]->textureFrameStep = 0x3c / effects[slot]->textureFrameTimer;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameStep = 0x3c / ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameTimer;
     }
     else
     {
-        effects[slot]->textureFrameStep = 0;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameStep = 0;
     }
-    if (effects[slot]->textureFrameStep != 0)
+    if (((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameStep != 0)
     {
-        effects[slot]->textureFrameFadeStep = 0xff / effects[slot]->textureFrameStep;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameFadeStep = 0xff / ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameStep;
     }
     else
     {
-        effects[slot]->textureFrameFadeStep = 0;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrameFadeStep = 0;
     }
-    effects[slot]->textureFrame = 0;
-    effects[slot]->initialDelayFrames = *(s16*)(st + 0x44);
-    return effects[slot]->sequenceId;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureFrame = 0;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialDelayFrames = *(s16*)(st + 0x44);
+    return ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sequenceId;
 }
 
 extern s16 renderModeSetOrGet(int mode);
@@ -2380,6 +2372,13 @@ extern f32 lbl_803DF454;
 extern f32 lbl_803DF458;
 extern f32 lbl_803DF45C;
 
+typedef struct
+{
+    s16 ang[3];
+    s16 pad;
+    f32 scale;
+    f32 pos[3];
+} EffXform;
 
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
@@ -2460,15 +2459,15 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             {
                 aligned = 1;
             }
-        }
-        if ((*(int*)((char*)*p + 0xa4) & 0x4) && !aligned)
-        {
-            if (*(void**)((char*)*p + 4) != NULL)
+            if (!aligned)
             {
-                xf.ang[0] = *(s16*)(*(char**)((char*)*p + 4));
-                xf.ang[1] = *(s16*)(*(char**)((char*)*p + 4) + 2);
-                xf.ang[2] = *(s16*)(*(char**)((char*)*p + 4) + 4);
-                vecRotateZXY(&xf.ang[0], &pos[0]);
+                if (*(void**)((char*)*p + 4) != NULL)
+                {
+                    xf.ang[0] = *(s16*)(*(char**)((char*)*p + 4));
+                    xf.ang[1] = *(s16*)(*(char**)((char*)*p + 4) + 2);
+                    xf.ang[2] = *(s16*)(*(char**)((char*)*p + 4) + 4);
+                    vecRotateZXY(&xf.ang[0], &pos[0]);
+                }
             }
         }
         rot[0] = lbl_803DF430;
@@ -2761,7 +2760,7 @@ void fn_800A0524(void* state, void* p, int mode)
 {
     extern f32 lbl_803DF430;
     extern f32 lbl_803DF43C;
-    u8* buf = (u8*)((ModgfxState*)state)->vertexBuffers[((ModgfxState*)state)->activeVertexBufferIndex];
+    u8* buf = *(u8**)((char*)state + *(u8*)((char*)state + 0x130) * 4 + 0x78);
     int j;
 
     if (mode == 1)
@@ -2801,8 +2800,9 @@ void fn_800A0524(void* state, void* p, int mode)
             *(f32*)((char*)state + 0xbc) = tr;
             *(f32*)((char*)state + 0xc0) = tg;
             *(f32*)((char*)state + 0xc4) = tb;
-            *(f32*)((char*)state + 0xd0) = *(f32*)((char*)state + 0xcc) =
-                *(f32*)((char*)state + 0xc8) = lbl_803DF430;
+            *(f32*)((char*)state + 0xc8) = lbl_803DF430;
+            *(f32*)((char*)state + 0xcc) = lbl_803DF430;
+            *(f32*)((char*)state + 0xd0) = lbl_803DF430;
         }
     }
     *(f32*)((char*)state + 0xbc) += *(f32*)((char*)state + 0xc8);
@@ -2864,14 +2864,13 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             u8* buf2 = *(u8**)((char*)state + *(u8*)((char*)state + 0x130) * 4 + 0x78);
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
-#define V0 (((ModgfxVertexGroupCmd*)p)->indices[j])
-                *(s16*)(buf + V0 * 16 + 0) = (s16)((f32) * (s16*)(buf + V0 * 16 + 0) * tx);
-                *(s16*)(buf + V0 * 16 + 2) = (s16)((f32) * (s16*)(buf + V0 * 16 + 2) * ty);
-                *(s16*)(buf + V0 * 16 + 4) = (s16)((f32) * (s16*)(buf + V0 * 16 + 4) * tz);
-                *(s16*)(buf2 + V0 * 16 + 0) = *(s16*)(buf + V0 * 16 + 0);
-                *(s16*)(buf2 + V0 * 16 + 2) = *(s16*)(buf + V0 * 16 + 2);
-                *(s16*)(buf2 + V0 * 16 + 4) = *(s16*)(buf + V0 * 16 + 4);
-#undef V0
+                s16 v = ((ModgfxVertexGroupCmd*)p)->indices[j];
+                *(s16*)(buf + v * 16 + 0) = (int)((f32) * (s16*)(buf + v * 16 + 0) * tx);
+                *(s16*)(buf + v * 16 + 2) = (int)((f32) * (s16*)(buf + v * 16 + 2) * ty);
+                *(s16*)(buf + v * 16 + 4) = (int)((f32) * (s16*)(buf + v * 16 + 4) * tz);
+                *(s16*)(buf2 + v * 16 + 0) = *(s16*)(buf + v * 16 + 0);
+                *(s16*)(buf2 + v * 16 + 2) = *(s16*)(buf + v * 16 + 2);
+                *(s16*)(buf2 + v * 16 + 4) = *(s16*)(buf + v * 16 + 4);
             }
             return;
         }
@@ -2884,20 +2883,19 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
         u8* buf2 = *(u8**)((char*)state + *(u8*)((char*)state + 0x130) * 4 + 0x78);
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-#define V0 (((ModgfxVertexGroupCmd*)p)->indices[j])
+            s16 v = ((ModgfxVertexGroupCmd*)p)->indices[j];
             if (lbl_803DF434 != *(f32*)(base + 0x30))
             {
-                *(s16*)(buf2 + V0 * 16 + 0) = (s16)(*(f32*)(base + 0x30) * (f32) * (s16*)(buf + V0 * 16 + 0));
+                *(s16*)(buf2 + v * 16 + 0) = (int)(*(f32*)(base + 0x30) * (f32) * (s16*)(buf + v * 16 + 0));
             }
             if (lbl_803DF434 != *(f32*)(base + 0x34))
             {
-                *(s16*)(buf2 + V0 * 16 + 2) = (s16)(*(f32*)(base + 0x34) * (f32) * (s16*)(buf + V0 * 16 + 2));
+                *(s16*)(buf2 + v * 16 + 2) = (int)(*(f32*)(base + 0x34) * (f32) * (s16*)(buf + v * 16 + 2));
             }
             if (lbl_803DF434 != *(f32*)(base + 0x38))
             {
-                *(s16*)(buf2 + V0 * 16 + 4) = (s16)(*(f32*)(base + 0x38) * (f32) * (s16*)(buf + V0 * 16 + 4));
+                *(s16*)(buf2 + v * 16 + 4) = (int)(*(f32*)(base + 0x38) * (f32) * (s16*)(buf + v * 16 + 4));
             }
-#undef V0
         }
     }
 }
