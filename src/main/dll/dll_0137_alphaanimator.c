@@ -57,7 +57,6 @@ extern undefined4 FUN_80286878();
 
 extern void mm_free(void* p);
 
-extern f32 lbl_803E3F70;
 extern f32 lbl_803E3F78;
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -66,7 +65,6 @@ extern void* mmAlloc(int size, int align, int tag);
 extern f32 lbl_803E3F7C;
 extern f32 lbl_803E3F80;
 extern f32 lbl_803E3F84;
-extern f32 lbl_803E3F40;
 
 void alphaanimator_free(int* obj)
 {
