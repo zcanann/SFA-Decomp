@@ -43,9 +43,8 @@ void dll_A2_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    u8* tab = lbl_80318B00;
+    u8* tab = (u8*)(int)lbl_80318B00;
     GfxCmd* e = buf.entries;
-    GfxCmd* end;
     u32 fl;
 
     e[0].layer = 0;
@@ -148,8 +147,7 @@ void dll_A2_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    end = e + 12;
-    buf.count = end - e;
+    buf.count = (GfxCmd*)((u8*)e + 0x120) - e;
     buf.hw[0] = *(s16*)&tab[0x1f8];
     buf.hw[1] = *(s16*)&tab[0x1fa];
     buf.hw[2] = *(s16*)&tab[0x1fc];
@@ -158,10 +156,9 @@ void dll_A2_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.hw[5] = *(s16*)&tab[0x202];
     buf.hw[6] = *(s16*)&tab[0x204];
     buf.cmds = e;
-    fl = 0xc010480;
-    buf.flags = fl;
-    fl |= flags;
-    buf.flags = fl;
+    buf.flags = 0xc010480;
+    buf.flags |= flags;
+    fl = buf.flags;
     if (fl & 1)
     {
         if (sourceObj != 0)
