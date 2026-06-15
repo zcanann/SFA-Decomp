@@ -54,13 +54,13 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
              , ObjAnimUpdateState* animUpdate, int param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
-    undefined4 uVar1;
-    char cVar2;
-    int iVar3;
+    undefined4 effectHandle;
+    char mapAct;
+    int resId;
     int iVar4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
+    int extra;
+    int placement;
+    int eventIdx;
     undefined8 extraout_f1;
     undefined8 extraout_f1_00;
     undefined8 extraout_f1_01;
@@ -68,52 +68,52 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined8 extraout_f1_03;
     undefined8 uVar8;
 
-    iVar6 = *(int*)&((GameObject*)param_9)->anim.placementData;
-    iVar5 = *(int*)&((GameObject*)param_9)->extra;
-    iVar7 = 0;
+    placement = *(int*)&((GameObject*)param_9)->anim.placementData;
+    extra = *(int*)&((GameObject*)param_9)->extra;
+    eventIdx = 0;
     iVar4 = (int)animUpdate;
     do
     {
-        if ((int)(uint)animUpdate->eventCount <= iVar7)
+        if ((int)(uint)animUpdate->eventCount <= eventIdx)
         {
             return 0;
         }
-        switch (animUpdate->eventIds[iVar7])
+        switch (animUpdate->eventIds[eventIdx])
         {
         case 2:
         case 0x65:
-            iVar4 = *(int*)(iVar6 + 0x14);
+            iVar4 = *(int*)(placement + 0x14);
             if (iVar4 == 0x49f5a)
             {
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x26);
                 iVar4 = 1;
                 FUN_80042b9c(0, 0, 1);
-                uVar1 = FUN_80044404(0x26);
-                FUN_80042bec(uVar1, 0);
-                uVar1 = FUN_80044404(0xb);
-                FUN_80042bec(uVar1, 1);
+                effectHandle = FUN_80044404(0x26);
+                FUN_80042bec(effectHandle, 0);
+                effectHandle = FUN_80044404(0xb);
+                FUN_80042bec(effectHandle, 1);
             }
             else if (iVar4 < 0x49f5a)
             {
                 if (iVar4 == 0x451b9)
                 {
-                    cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                    mapAct = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1;
-                    if (cVar2 == '\x02')
+                    if (mapAct == '\x02')
                     {
                         FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0xb);
                         iVar4 = 1;
                         FUN_80042b9c(0, 0, 1);
-                        uVar1 = FUN_80044404(0xb);
-                        FUN_80042bec(uVar1, 0);
+                        effectHandle = FUN_80044404(0xb);
+                        FUN_80042bec(effectHandle, 0);
                     }
                     else
                     {
                         FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
                         iVar4 = 1;
                         FUN_80042b9c(0, 0, 1);
-                        uVar1 = FUN_80044404(0x29);
-                        FUN_80042bec(uVar1, 0);
+                        effectHandle = FUN_80044404(0x29);
+                        FUN_80042bec(effectHandle, 0);
                     }
                 }
                 else
@@ -122,8 +122,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                     FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
                     iVar4 = 1;
                     FUN_80042b9c(0, 0, 1);
-                    uVar1 = FUN_80044404(0x29);
-                    FUN_80042bec(uVar1, 0);
+                    effectHandle = FUN_80044404(0x29);
+                    FUN_80042bec(effectHandle, 0);
                 }
             }
             else if (iVar4 == 0x4cd65)
@@ -131,10 +131,10 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x41);
                 iVar4 = 1;
                 FUN_80042b9c(0, 0, 1);
-                uVar1 = FUN_80044404(0x41);
-                FUN_80042bec(uVar1, 0);
-                uVar1 = FUN_80044404(0xb);
-                FUN_80042bec(uVar1, 1);
+                effectHandle = FUN_80044404(0x41);
+                FUN_80042bec(effectHandle, 0);
+                effectHandle = FUN_80044404(0xb);
+                FUN_80042bec(effectHandle, 1);
             }
             else
             {
@@ -142,26 +142,26 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
                 iVar4 = 1;
                 FUN_80042b9c(0, 0, 1);
-                uVar1 = FUN_80044404(0x29);
-                FUN_80042bec(uVar1, 0);
+                effectHandle = FUN_80044404(0x29);
+                FUN_80042bec(effectHandle, 0);
             }
             break;
         case 3:
         case 100:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x49f5a)
+            resId = *(int*)(placement + 0x14);
+            if (resId == 0x49f5a)
             {
                 iVar4 = 0;
                 param_12 = (int)*gMapEventInterface;
                 param_1 = (**(code**)(param_12 + 0x50))(0xb, 4);
             }
-            else if (iVar3 < 0x49f5a)
+            else if (resId < 0x49f5a)
             {
-                if (iVar3 == 0x451b9)
+                if (resId == 0x451b9)
                 {
-                    cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                    mapAct = (*gMapEventInterface)->getMapAct(0xd);
                     param_1 = extraout_f1_00;
-                    if (cVar2 == '\x02')
+                    if (mapAct == '\x02')
                     {
                         uVar8 = extraout_f1_00;
                         FUN_80042b9c(0, 0, 1);
@@ -174,7 +174,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                         param_1 = (**(code**)(param_12 + 0x50))(0xd, 0xe);
                     }
                 }
-                else if ((iVar3 < 0x451b9) && (iVar3 == 0x43775))
+                else if ((resId < 0x451b9) && (resId == 0x43775))
                 {
                     iVar4 = 1;
                     FUN_80042b9c(0, 0, 1);
@@ -182,7 +182,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                     param_1 = FUN_80043030(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
                 }
             }
-            else if (iVar3 == 0x4cd65)
+            else if (resId == 0x4cd65)
             {
                 iVar4 = 1;
                 FUN_80042b9c(0, 0, 1);
@@ -191,60 +191,60 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             }
             break;
         case 5:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x451b9)
+            resId = *(int*)(placement + 0x14);
+            if (resId == 0x451b9)
             {
-                cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                mapAct = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_01;
-                if (cVar2 == '\x02')
+                if (mapAct == '\x02')
                 {
                     param_1 = FUN_80042800();
                 }
             }
-            else if (iVar3 < 0x451b9)
+            else if (resId < 0x451b9)
             {
-                if (iVar3 == 0x43775)
+                if (resId == 0x43775)
                 {
                 LAB_801895a4:
                     param_1 = FUN_80042800();
                 }
             }
-            else if (iVar3 == 0x49f5a) goto LAB_801895a4;
+            else if (resId == 0x49f5a) goto LAB_801895a4;
             break;
         case 6:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x451b9)
+            resId = *(int*)(placement + 0x14);
+            if (resId == 0x451b9)
             {
-                cVar2 = (*gMapEventInterface)->getMapAct(0xd);
+                mapAct = (*gMapEventInterface)->getMapAct(0xd);
                 param_1 = extraout_f1_02;
-                if (cVar2 == '\x02')
+                if (mapAct == '\x02')
                 {
                     param_1 = FUN_800427c8();
                 }
             }
-            else if (iVar3 < 0x451b9)
+            else if (resId < 0x451b9)
             {
-                if (iVar3 == 0x43775)
+                if (resId == 0x43775)
                 {
                 LAB_80189614:
                     param_1 = FUN_800427c8();
                 }
             }
-            else if (iVar3 == 0x49f5a) goto LAB_80189614;
+            else if (resId == 0x49f5a) goto LAB_80189614;
             break;
         case 7:
         case 0x66:
-            iVar3 = *(int*)(iVar6 + 0x14);
-            if (iVar3 == 0x49f5a)
+            resId = *(int*)(placement + 0x14);
+            if (resId == 0x49f5a)
             {
                 param_1 = FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x32,
                                        '\0', iVar4, param_12, param_13, param_14, param_15, param_16);
             }
-            else if (iVar3 < 0x49f5a)
+            else if (resId < 0x49f5a)
             {
-                if ((iVar3 == 0x451b9) &&
-                    (cVar2 = (*gMapEventInterface)->getMapAct(0xd), param_1 = extraout_f1_03,
-                        cVar2 == '\x02'))
+                if ((resId == 0x451b9) &&
+                    (mapAct = (*gMapEventInterface)->getMapAct(0xd), param_1 = extraout_f1_03,
+                        mapAct == '\x02'))
                 {
                     iVar4 = (int)*gMapEventInterface;
                     uVar8 = (**(code**)(iVar4 + 0x44))(0xb, 5);
@@ -252,7 +252,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                                            '\0', iVar4, param_12, param_13, param_14, param_15, param_16);
                 }
             }
-            else if (iVar3 == 0x4cd65)
+            else if (resId == 0x4cd65)
             {
                 FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7f, '\0', iVar4
                              , param_12, param_13, param_14, param_15, param_16);
@@ -261,62 +261,62 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             }
             break;
         case 10:
-            *(u8*)(iVar5 + 0x1a) = 1;
+            *(u8*)(extra + 0x1a) = 1;
             break;
         case 0xb:
-            *(u8*)(iVar5 + 0x1a) = 0;
+            *(u8*)(extra + 0x1a) = 0;
             break;
         case 0xc:
-            *(float*)(iVar5 + 4) = FLOAT_803e4830;
+            *(float*)(extra + 4) = FLOAT_803e4830;
             break;
         case 0xd:
-            *(float*)(iVar5 + 4) = FLOAT_803e4840;
+            *(float*)(extra + 4) = FLOAT_803e4840;
             break;
         case 0xe:
-            *(float*)(iVar5 + 4) = FLOAT_803e4844;
+            *(float*)(extra + 4) = FLOAT_803e4844;
             break;
         case 0xf:
-            *(float*)(iVar5 + 4) = FLOAT_803e4848;
+            *(float*)(extra + 4) = FLOAT_803e4848;
             break;
         case 0x10:
-            *(float*)(iVar5 + 8) = FLOAT_803e4830;
+            *(float*)(extra + 8) = FLOAT_803e4830;
             break;
         case 0x11:
-            *(float*)(iVar5 + 8) = FLOAT_803e4840;
+            *(float*)(extra + 8) = FLOAT_803e4840;
             break;
         case 0x12:
-            *(float*)(iVar5 + 8) = FLOAT_803e4844;
+            *(float*)(extra + 8) = FLOAT_803e4844;
             break;
         case 0x13:
-            *(float*)(iVar5 + 8) = FLOAT_803e4848;
+            *(float*)(extra + 8) = FLOAT_803e4848;
             break;
         case 0x14:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4830;
+            *(float*)(extra + 0xc) = FLOAT_803e4830;
             break;
         case 0x15:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4840;
+            *(float*)(extra + 0xc) = FLOAT_803e4840;
             break;
         case 0x16:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4844;
+            *(float*)(extra + 0xc) = FLOAT_803e4844;
             break;
         case 0x17:
-            *(float*)(iVar5 + 0xc) = FLOAT_803e4848;
+            *(float*)(extra + 0xc) = FLOAT_803e4848;
             break;
         case 0x18:
-            iVar3 = *(int*)(iVar5 + 0x10);
-            if (iVar3 != 0)
+            resId = *(int*)(extra + 0x10);
+            if (resId != 0)
             {
-                *(ushort*)(iVar3 + 6) = *(ushort*)(iVar3 + 6) & 0xbfff;
+                *(ushort*)(resId + 6) = *(ushort*)(resId + 6) & 0xbfff;
             }
             break;
         case 0x19:
-            iVar3 = *(int*)(iVar5 + 0x10);
-            if (iVar3 != 0)
+            resId = *(int*)(extra + 0x10);
+            if (resId != 0)
             {
-                *(ushort*)(iVar3 + 6) = *(ushort*)(iVar3 + 6) | 0x4000;
+                *(ushort*)(resId + 6) = *(ushort*)(resId + 6) | 0x4000;
             }
         }
-        iVar7 = iVar7 + 1;
+        eventIdx = eventIdx + 1;
     }
     while (true);
 }
