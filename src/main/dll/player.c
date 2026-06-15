@@ -11368,7 +11368,6 @@ int fn_802957B4(int obj)
 int fn_8029BC4C(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int idx;
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -11380,9 +11379,8 @@ int fn_8029BC4C(int obj, int state, f32 fv)
         {
             lbl_803DE459 = 2;
         }
-        idx = lbl_803DE459;
-        ((PlayerState*)state)->baddie.moveSpeed = lbl_803DC690[idx - 1];
-        ObjAnim_SetCurrentMove(obj, lbl_803DC688[idx - 1], lbl_803E7EA4, 0);
+        ((PlayerState*)state)->baddie.moveSpeed = (&lbl_803DC690)[lbl_803DE459 - 1];
+        ObjAnim_SetCurrentMove(obj, (&lbl_803DC688)[lbl_803DE459 - 1], lbl_803E7EA4, 0);
         lbl_803DE459 = 0;
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
