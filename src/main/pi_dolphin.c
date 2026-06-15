@@ -2976,16 +2976,16 @@ void fn_8004A8F8(char enabled)
 
 void FUN_8004600c(void)
 {
-    uint uVar1;
+    uint fracByte;
     uint uVar2;
-    double dVar3;
-    undefined8 uVar4;
+    double elapsed;
+    undefined8 timePair;
 
     FUN_802461cc(-0x7fc9fd20);
-    uVar4 = FUN_80246298(-0x7fc9fd20);
-    dVar3 = FUN_80286cd0((uint)((ulonglong)uVar4 >> 0x20), (uint)uVar4);
+    timePair = FUN_80246298(-0x7fc9fd20);
+    elapsed = FUN_80286cd0((uint)((ulonglong)timePair >> 0x20), (uint)timePair);
     lbl_803DD940 =
-        (float)(dVar3 / (double)(float)((double)CONCAT44(0x43300000, DAT_800000f8 / 4000) -
+        (float)(elapsed / (double)(float)((double)CONCAT44(0x43300000, DAT_800000f8 / 4000) -
             DOUBLE_803df700));
     FUN_80246308(-0x7fc9fd20);
     FUN_80246190(-0x7fc9fd20);
@@ -3004,13 +3004,13 @@ void FUN_8004600c(void)
         lbl_803DC078 = lbl_803DF6F8 / lbl_803DC074;
     }
     uVar2 = (uint)(lbl_803DC074 + lbl_803DD934);
-    uVar1 = uVar2 & 0xff;
+    fracByte = uVar2 & 0xff;
     DAT_803dc071 = (undefined)uVar2;
     lbl_803DD934 =
         (lbl_803DC074 + lbl_803DD934) -
-        (float)((double)CONCAT44(0x43300000, uVar1) - DOUBLE_803df700);
+        (float)((double)CONCAT44(0x43300000, fracByte) - DOUBLE_803df700);
     DAT_803dc070 = DAT_803dc071;
-    if (uVar1 == 0)
+    if (fracByte == 0)
     {
         DAT_803dc070 = 1;
     }
@@ -3830,7 +3830,7 @@ int fn_8004B148(int* p)
 
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 #pragma ppc_unroll_speculative off
-int fn_8004B31C(int* param_1, int startNode, int targetPos, int param_4, u8 flag)
+int fn_8004B31C(int* ctx, int startNode, int targetPos, int param_4, u8 flag)
 {
     int i = 0;
     int o4;
@@ -3844,61 +3844,61 @@ int fn_8004B31C(int* param_1, int startNode, int targetPos, int param_4, u8 flag
     u16* hh;
     u16 v;
 
-    *(s16*)((char*)param_1 + 0x22) = i;
-    *(s16*)((char*)param_1 + 0x20) = i;
+    *(s16*)((char*)ctx + 0x22) = i;
+    *(s16*)((char*)ctx + 0x20) = i;
     o4 = i;
     o8 = i;
     for (i = 0; i < 0xf8; i += 8)
     {
-        *(int*)(param_1[1] + o4) = 0;
-        *(u8*)(*param_1 + o8 + 0xe) = 0;
-        *(int*)(param_1[1] + o4 + 8) = 0;
-        *(u8*)(*param_1 + o8 + 0x1e) = 0;
-        *(int*)(param_1[1] + o4 + 0x10) = 0;
-        *(u8*)(*param_1 + o8 + 0x2e) = 0;
-        *(int*)(param_1[1] + o4 + 0x18) = 0;
-        *(u8*)(*param_1 + o8 + 0x3e) = 0;
-        *(int*)(param_1[1] + o4 + 0x20) = 0;
-        *(u8*)(*param_1 + o8 + 0x4e) = 0;
-        *(int*)(param_1[1] + o4 + 0x28) = 0;
-        *(u8*)(*param_1 + o8 + 0x5e) = 0;
-        *(int*)(param_1[1] + o4 + 0x30) = 0;
-        *(u8*)(*param_1 + o8 + 0x6e) = 0;
-        *(int*)(param_1[1] + o4 + 0x38) = 0;
-        *(u8*)(*param_1 + o8 + 0x7e) = 0;
+        *(int*)(ctx[1] + o4) = 0;
+        *(u8*)(*ctx + o8 + 0xe) = 0;
+        *(int*)(ctx[1] + o4 + 8) = 0;
+        *(u8*)(*ctx + o8 + 0x1e) = 0;
+        *(int*)(ctx[1] + o4 + 0x10) = 0;
+        *(u8*)(*ctx + o8 + 0x2e) = 0;
+        *(int*)(ctx[1] + o4 + 0x18) = 0;
+        *(u8*)(*ctx + o8 + 0x3e) = 0;
+        *(int*)(ctx[1] + o4 + 0x20) = 0;
+        *(u8*)(*ctx + o8 + 0x4e) = 0;
+        *(int*)(ctx[1] + o4 + 0x28) = 0;
+        *(u8*)(*ctx + o8 + 0x5e) = 0;
+        *(int*)(ctx[1] + o4 + 0x30) = 0;
+        *(u8*)(*ctx + o8 + 0x6e) = 0;
+        *(int*)(ctx[1] + o4 + 0x38) = 0;
+        *(u8*)(*ctx + o8 + 0x7e) = 0;
         o4 += 0x40;
         o8 += 0x80;
     }
     for (; i < 0xfe; i++)
     {
-        *(int*)(param_1[1] + i * 8) = 0;
-        *(u8*)(*param_1 + i * 16 + 0xe) = 0;
+        *(int*)(ctx[1] + i * 8) = 0;
+        *(u8*)(*ctx + i * 16 + 0xe) = 0;
     }
-    param_1[6] = startNode;
-    param_1[3] = targetPos;
-    param_1[4] = param_4;
-    *(u8*)((char*)param_1 + 0x28) = flag & 1;
-    param_1[9] = 10000;
-    s = *(s16*)((char*)param_1 + 0x20);
+    ctx[6] = startNode;
+    ctx[3] = targetPos;
+    ctx[4] = param_4;
+    *(u8*)((char*)ctx + 0x28) = flag & 1;
+    ctx[9] = 10000;
+    s = *(s16*)((char*)ctx + 0x20);
     if (s == 0xfe)
     {
         node = NULL;
     }
     else
     {
-        node = (int*)(*param_1 + (*(s16*)((char*)param_1 + 0x20))++ * 0x10);
+        node = (int*)(*ctx + (*(s16*)((char*)ctx + 0x20))++ * 0x10);
         *node = startNode;
         node[2] = 0;
         *(u8*)(node + 3) = 0xff;
-        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)param_1[3]);
+        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)ctx[3]);
     }
     i = node[1] + node[2];
-    heap = (u32*)param_1[1];
+    heap = (u32*)ctx[1];
     hh = (u16*)heap;
-    v = *(s16*)((char*)param_1 + 0x20) - 1;
-    hh[++(*(s16*)((char*)param_1 + 0x22)) * 4 + 2] = v;
-    *(u32*)((int)heap + *(s16*)((char*)param_1 + 0x22) * 8) = -1 - i;
-    i = *(s16*)((char*)param_1 + 0x22);
+    v = *(s16*)((char*)ctx + 0x20) - 1;
+    hh[++(*(s16*)((char*)ctx + 0x22)) * 4 + 2] = v;
+    *(u32*)((int)heap + *(s16*)((char*)ctx + 0x22) * 8) = -1 - i;
+    i = *(s16*)((char*)ctx + 0x22);
     pri = *(u32*)((int)heap + i * 8);
     idx = hh[i * 4 + 2];
     *heap = -1;
