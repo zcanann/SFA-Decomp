@@ -133,7 +133,7 @@ FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 para
     if ((*(byte*)(state + 0x356) & 1) == 0)
     {
         player = FUN_80017a98();
-        if (*(short*)(player + 0x46) == 0)
+        if (((GameObject*)player)->anim.seqId == 0)
         {
             FUN_80006824(obj, SFXfox_treadwater322);
         }
@@ -178,7 +178,7 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
         for (; objIdx < objCount; objIdx = objIdx + 1)
         {
             other = *(uint*)(objList + objIdx * 4);
-            if ((other != obj) && (*(short*)(other + 0x46) == 0x306))
+            if ((other != obj) && (((GameObject*)other)->anim.seqId == 0x306))
             {
                 (**(code**)(**(int**)(other + 0x68) + 0x24))(other, 0x81, 0);
             }
@@ -189,7 +189,7 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
         onGround = (**(code**)(**(int**)(onGround + 0x68) + 0x44))(onGround);
         if (onGround == 0)
         {
-            if (*(short*)(objList + 0x46) == 0)
+            if (((GameObject*)objList)->anim.seqId == 0)
             {
                 FUN_80006824(obj, SFXfox_treadwater322);
             }
@@ -198,7 +198,7 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80006824(obj, SFXfoot_metal_run_2);
             }
         }
-        else if (*(short*)(objList + 0x46) == 0)
+        else if (((GameObject*)objList)->anim.seqId == 0)
         {
             FUN_80006824(obj, SFXmv_ropecreak22);
         }
@@ -247,7 +247,7 @@ FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 para
         for (; objIdx < objCount; objIdx = objIdx + 1)
         {
             other = *(uint*)(objList + objIdx * 4);
-            if ((other != obj) && (*(short*)(other + 0x46) == 0x306))
+            if ((other != obj) && (((GameObject*)other)->anim.seqId == 0x306))
             {
                 vtbl = **(int**)(other + 0x68);
                 (**(code**)(vtbl + 0x24))(other, 0x81, 0);
@@ -334,7 +334,7 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
         for (; objIdx < objCount[0]; objIdx = objIdx + 1)
         {
             other = *(int*)(objList + objIdx * 4);
-            if ((other != obj) && (*(short*)(other + 0x46) == 0x306))
+            if ((other != obj) && (((GameObject*)other)->anim.seqId == 0x306))
             {
                 vtbl = **(int**)(other + 0x68);
                 (**(code**)(vtbl + 0x24))(other, 0x81, 0);
@@ -473,7 +473,7 @@ FUN_80160798(undefined8 param_1, double param_2, double param_3, undefined8 para
         c = lbl_803E3B00;
         *(float*)(state + 0x290) = lbl_803E3B00;
         *(float*)(state + 0x28c) = c;
-        FUN_80003494(extra + 0x35c, obj + 0xc, 0xc);
+        FUN_80003494(extra + 0x35c, &((GameObject*)obj)->anim.localPosX, 0xc);
         mtx = FUN_80003494(extra + 0x368, *(int*)(state + 0x2d0) + 0xc, 0xc);
         FUN_80006a54(mtx, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
         if ((*(float*)(state + 0x2c0) < lbl_803E3B04) && (*(char*)(extra + 0x405) == '\x02'))
@@ -546,7 +546,7 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     undefined4 animId;
 
-    animId = *(undefined4*)(obj + 0xb8);
+    animId = *(undefined4*)&((GameObject*)obj)->extra;
     if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E3B00, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -554,8 +554,8 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(undefined*)(state + 0x346) = 0;
     }
     *(undefined*)(state + 0x25f) = 1;
-    *(undefined2*)(obj + 4) = *(undefined2*)(state + 0x19e);
-    *(undefined2*)(obj + 2) = *(undefined2*)(state + 0x19c);
+    *(undefined2*)&((GameObject*)obj)->anim.rotZ = *(undefined2*)(state + 0x19e);
+    *(undefined2*)&((GameObject*)obj)->anim.rotY = *(undefined2*)(state + 0x19c);
     (**(code**)(*DAT_803dd738 + 0x10))
         ((double)lbl_803E3B24, (double)lbl_803E3B28, obj, state, animId);
     *(float*)(state + 0x2a0) = lbl_803E3B2C * *(float*)(state + 0x280);
@@ -775,7 +775,7 @@ void chukchuk_init(u8* obj, u8* params)
         sub->arcHalfAngle = (u16)((s8)params[0x28] * 0xb6);
         sub->attackChance = params[0x2f];
         sub->aimHeightY = params[0x27];
-        *(s16*)obj = (s16)((s8)params[0x2a] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x2a] << 8);
     }
 }
 void iceball_hitDetect(void);
@@ -827,17 +827,17 @@ void fn_8015F5B0(short* obj)
         if (o != NULL)
         {
             pl = Obj_GetPlayerObject();
-            ((GameObject*)o)->anim.velocityX = (*(f32*)(pl + 0xc) - ((GameObject*)obj)->anim.localPosX) / (sc =
+            ((GameObject*)o)->anim.velocityX = (((GameObject*)pl)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / (sc =
                 lbl_803E2E24);
             ((GameObject*)o)->anim.velocityY =
-                ((*(f32*)(pl + 0x10) + (f32)(u32)
+                ((((GameObject*)pl)->anim.localPosY + (f32)(u32)
             sub->aimHeightY
             )
             -((GameObject*)obj)->anim.localPosY
             )
             /
             sc;
-            ((GameObject*)o)->anim.velocityZ = (*(f32*)(pl + 0x14) - ((GameObject*)obj)->anim.localPosZ) / sc;
+            ((GameObject*)o)->anim.velocityZ = (((GameObject*)pl)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / sc;
         }
     }
 }
@@ -918,8 +918,8 @@ void chukchuk_update(short* obj)
             tex->textureId = 0;
         }
         pl = Obj_GetPlayerObject();
-        dx = *(f32*)(pl + 0xc) - ((GameObject*)obj)->anim.localPosX;
-        dz = *(f32*)(pl + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+        dx = ((GameObject*)pl)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+        dz = ((GameObject*)pl)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
         di = sqrtf(dx * dx + dz * dz);
         if (di < v->triggerDistance)
         {
@@ -930,11 +930,11 @@ void chukchuk_update(short* obj)
             }
             if ((v->flags & 5) != 0)
             {
-                stk.d[0] = *(f32*)(pl + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-                stk.d[1] = *(f32*)(pl + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
-                stk.d[2] = *(f32*)(pl + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+                stk.d[0] = ((GameObject*)pl)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+                stk.d[1] = ((GameObject*)pl)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+                stk.d[2] = ((GameObject*)pl)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
                 ang = getAngle(stk.d[0], stk.d[2]) & 0xffff;
-                ang -= *obj & 0xffff;
+                ang -= ((GameObject*)obj)->anim.rotX & 0xffff;
                 if (ang > 0x8000)
                 {
                     ang -= 0xffff;
