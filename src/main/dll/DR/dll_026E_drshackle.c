@@ -199,14 +199,15 @@ void drshackle_update(int obj)
     char* p = ((GameObject*)obj)->extra;
     int q = *(int*)&((GameObject*)obj)->anim.placementData;
     int count;
-    int* list;
+    int sub;
     int j;
+    int* list;
     if (((DrshacklePlacement*)q)->unk1A != 0 && *(void**)p == 0)
     {
         list = ObjGroup_GetObjects(0x17, &count);
         while (count-- != 0)
         {
-            int sub = *(int*)(*list + 0x4c);
+            sub = *(int*)(*list + 0x4c);
             for (j = 0; j < ((DrshackleState*)p)->unk14; j++)
             {
                 if (*(u8*)(sub + 0x18) == ((DrshacklePlacement*)q)->unk1A + j * 4)
