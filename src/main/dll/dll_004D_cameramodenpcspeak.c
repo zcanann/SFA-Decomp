@@ -554,24 +554,24 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ)
     angle = (u16)getAngle(dx, dz);
 
     {
-        f32 scale = state->anchorLerpScale;
+        f32 scale = lbl_803DD584->anchorLerpScale;
         dx *= scale;
         dz *= scale;
     }
     dx += state->anchorX;
     dz += state->anchorZ;
 
-    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)(angle + state->orbitAngleOffset) / lbl_803E19D4);
-    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)(angle + state->orbitAngleOffset) / lbl_803E19D4);
+    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)(angle + lbl_803DD584->orbitAngleOffset) / lbl_803E19D4);
+    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)(angle + lbl_803DD584->orbitAngleOffset) / lbl_803E19D4);
 
-    if (dist < state->minDistance)
+    if (dist < lbl_803DD584->minDistance)
     {
-        dist = state->minDistance;
+        dist = lbl_803DD584->minDistance;
     }
-    dist += state->distanceOffset;
+    dist += lbl_803DD584->distanceOffset;
 
     *outX = cosVal * dist + dx;
-    *outY = (target->anim.worldPosY + state->targetHeightOffset) - lbl_803E19D8 * ((lbl_803E19DC + target->anim.
+    *outY = (target->anim.worldPosY + lbl_803DD584->targetHeightOffset) - lbl_803E19D8 * ((lbl_803E19DC + target->anim.
         worldPosY) - state->anchorY);
     *outZ = sinVal * dist + dz;
 }
