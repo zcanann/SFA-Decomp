@@ -1,16 +1,10 @@
 /* DLL 0x0110 — door objects [8017AC2C-8017ADB4) */
-#include "main/game_object.h"
 
 
 #include "main/dll/cfguardian_state.h"
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/cfguardian.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/alphaanim.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 
 typedef struct DoorObjectDef
