@@ -501,13 +501,7 @@ f32 fn_801EA678(int obj, int state)
             v6 = lbl_803E5B48 * (f32) * (s32*)(state + 0x44) +
                 lbl_803E5B48 * *(f32*)(state + 0x34);
             d = v7 - v6;
-            if (d >= lbl_803E5AE8)
-            {
-            }
-            else
-            {
-                d = -d;
-            }
+            d = (d >= lbl_803E5AE8) ? d : -d;
         }
         if (d <= *(f32*)(state + 0x1c))
         {
@@ -519,24 +513,19 @@ f32 fn_801EA678(int obj, int state)
         }
         else
         {
-            result = ((d - *(f32*)(state + 0x1c)) /
-                    (*(f32*)(state + 0x18) - *(f32*)(state + 0x1c))) *
+            f32 ratio = (d - *(f32*)(state + 0x1c)) /
+                    (*(f32*)(state + 0x18) - *(f32*)(state + 0x1c));
+            result = ratio *
                 (*(f32*)(state + 0x20) - *(f32*)(state + 0x24)) +
                 *(f32*)(state + 0x24);
         }
         if (*(u8*)(state + 0x434) == 0)
         {
             d = v6 - v7;
-            if (d >= lbl_803E5AE8)
-            {
-            }
-            else
-            {
-                d = -d;
-            }
+            d = (d >= lbl_803E5AE8) ? d : -d;
             if (d > lbl_803DC0E0)
             {
-                result = 0.0f;
+                result = *(f32*)&lbl_803E5AE8;
             }
         }
     }
