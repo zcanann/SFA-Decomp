@@ -4563,14 +4563,14 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
                               Curve_BuildHermiteCoeffs);
 
-    times = &out->fromTime;
-    times[0] = lbl_803DEFB0;
+    times = (f32*)out;
+    times[2] = lbl_803DEFB0;
     for (i = 0; i < 8; i++)
     {
         dx = xSamples[i + 1] - xSamples[i];
         dy = ySamples[i + 1] - ySamples[i];
         dz = zSamples[i + 1] - zSamples[i];
-        times[i + 1] = times[i] + sqrtf(dx * dx + dy * dy + dz * dz);
+        times[i + 3] = times[i + 2] + sqrtf(dx * dx + dy * dy + dz * dz);
     }
     if ((s8)flag == 1)
     {
@@ -4578,7 +4578,7 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     }
     for (i = 0; i <= 8; i++)
     {
-        times[i] += t;
+        times[i + 2] += t;
     }
 }
 
