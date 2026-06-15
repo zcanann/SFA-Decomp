@@ -4,7 +4,6 @@
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
 #include "main/dll/CF/dll_165.h"
-#include "main/dll/CF/dll_163.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern f32 lbl_803E3BBC;
