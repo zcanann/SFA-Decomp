@@ -15,7 +15,6 @@ extern f32 lbl_803E13BC;
 extern f32 lbl_803E13C0;
 extern f32 lbl_803E13C4;
 
-extern u8 lbl_80317E00[];
 
 void dll_9B_func03(int a, int b, int p, uint flags)
 {
