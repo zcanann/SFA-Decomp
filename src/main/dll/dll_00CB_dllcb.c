@@ -831,8 +831,8 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(undefined*)(param_10 + 0x346) = 0;
     }
     *(undefined*)(param_10 + 0x25f) = 1;
-    *(undefined2*)(param_9 + 4) = *(undefined2*)(param_10 + 0x19e);
-    *(undefined2*)(param_9 + 2) = *(undefined2*)(param_10 + 0x19c);
+    ((GameObject*)param_9)->anim.rotZ = *(undefined2*)(param_10 + 0x19e);
+    ((GameObject*)param_9)->anim.rotY = *(undefined2*)(param_10 + 0x19c);
     (**(code**)(*DAT_803dd738 + 0x10))
         ((double)lbl_803E3B24, (double)lbl_803E3B28, param_9, param_10, model);
     *(float*)(param_10 + 0x2a0) = lbl_803E3B2C * *(float*)(param_10 + 0x280);
