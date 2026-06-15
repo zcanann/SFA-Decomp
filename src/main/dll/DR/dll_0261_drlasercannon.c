@@ -490,7 +490,7 @@ void drlasercannon_update(int obj)
     {
         return;
     }
-    if (state->warningObject != 0)
+    if ((void*)state->warningObject != NULL)
     {
         ((GameObject*)state->warningObject)->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)state->warningObject)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E68FC;
@@ -501,7 +501,7 @@ void drlasercannon_update(int obj)
         if (GameBit_Get(setup->warningOffGameBit) != 0)
         {
             state->flags.b6 = 0;
-            if (state->warningObject != 0)
+            if ((void*)state->warningObject != NULL)
             {
                 staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
             }
@@ -510,7 +510,7 @@ void drlasercannon_update(int obj)
     else
     {
         objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, 5 - (u8)state->health, lbl_803E6904);
-        if (state->warningObject != 0)
+        if ((void*)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
         }
