@@ -173,10 +173,14 @@ void exploded_update(int* obj)
             }
             flag = 0;
         }
-        if (flag != 0)
-        {
-            state->explodePhase = 2;
-        }
+    }
+    else
+    {
+        flag = 0;
+    }
+    if (flag != 0)
+    {
+        state->explodePhase = 2;
     }
 }
 

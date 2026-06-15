@@ -14,7 +14,6 @@ extern f32 lbl_803E7828;
 extern f32 lbl_803E7830;
 extern f32 lbl_803E7834;
 extern f32 lbl_803E7838;
-extern f64 lbl_803E7840;
 
 /*
  * Mark all entries of the MIDI voice-id table and direct voice-id table
@@ -211,22 +210,11 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
  */
 u32 voiceConvertDbToLinear(u32 dbCents)
 {
-    union
-    {
-        struct
-        {
-            u32 hi, lo;
-        } w;
-
-        f64 d;
-    } conv;
     f32 scaledDb;
     f32 base;
     f32 result;
 
-    conv.w.hi = 0x43300000;
-    conv.w.lo = dbCents ^ 0x80000000;
-    scaledDb = (f32)(conv.d - lbl_803E7840);
+    scaledDb = (f32)(s32)dbCents;
     base = powf(lbl_803E7834, lbl_803E7838 * scaledDb);
     result = lbl_803E7830 * base;
     return __cvt_fp2unsigned(result);
