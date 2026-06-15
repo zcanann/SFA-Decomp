@@ -52,7 +52,6 @@ STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
 STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
 STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
 STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
-extern f32 Vec_xzDistance(float* a, float* b);
 
 void dll_115_hitDetect_nop(void)
 {
