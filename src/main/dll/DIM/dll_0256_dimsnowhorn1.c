@@ -2,8 +2,6 @@
 extern f32 lbl_803DC740[2];
 extern s16 lbl_803DC73C[2];
 #include "main/dll/DIM/dll_802B9780_shared.h"
-#include "main/effect_interfaces.h"
-#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
