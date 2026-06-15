@@ -108,7 +108,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     for (i = 0; i < ((DrshackleState*)p)->unk14; i++)
     {
         int entry = *ptr;
-        if (entry != 0)
+        if ((void*)entry != NULL)
         {
             ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32*)(entry + 0xc),
                                           (f32*)(entry + 0x10), (f32*)(entry + 0x14), 0);
