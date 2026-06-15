@@ -132,11 +132,11 @@ void CameraModeBike_update(CameraObject* camera)
         angleDelta = (short)rotVal - camera->anim.rotY;
         if (0x8000 < angleDelta)
         {
-            angleDelta = angleDelta + 1;
+            angleDelta = angleDelta - 0xFFFF;
         }
         if (angleDelta < -0x8000)
         {
-            angleDelta = angleDelta + -1;
+            angleDelta = angleDelta + 0xFFFF;
         }
         camera->anim.rotY = camera->anim.rotY + (angleDelta >> 3);
         sinYaw = mathSinf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
@@ -159,11 +159,11 @@ void CameraModeBike_update(CameraObject* camera)
         angleDelta = (short)rotVal - camera->anim.rotZ;
         if (0x8000 < angleDelta)
         {
-            angleDelta = angleDelta + 1;
+            angleDelta = angleDelta - 0xFFFF;
         }
         if (angleDelta < -0x8000)
         {
-            angleDelta = angleDelta + -1;
+            angleDelta = angleDelta + 0xFFFF;
         }
         rotVal = (int)
         ((f32)(s32)
