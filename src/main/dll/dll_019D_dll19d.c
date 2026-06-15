@@ -1,20 +1,10 @@
 /* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CBA98–0x801CBD88. */
-#include "main/dll/torch1CD.h"
-#include "main/game_object.h"
-#include "main/dll/torch1cd_state.h"
-#include "main/effect_interfaces.h"
 
 
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/shrine1CE.h"
-#include "main/dll/torch1CD.h"
 #include "main/objhits.h"
-#include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dll19DPlacement
 {
