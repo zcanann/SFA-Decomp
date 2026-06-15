@@ -172,6 +172,7 @@ void wcpushblock_initialise(void)
 {
 }
 
+#pragma opt_common_subs off
 void wcpushblock_update(int obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -596,6 +597,7 @@ void wcpushblock_update(int obj)
         lbl_803E6D8C * mathSinf(lbl_803E6D90 * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / lbl_803E6D94);
     ((GameObject*)obj)->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
+#pragma opt_common_subs reset
 
 void fn_802251B4(int obj, WcLevelControlState* state)
 {
