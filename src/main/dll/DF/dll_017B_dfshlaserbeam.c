@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/dll_017B_dfshlaserbeam.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
