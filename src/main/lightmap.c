@@ -1331,15 +1331,13 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
 {
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
-    void** p;
     int i;
     if (ix < 0 || ix >= 16) return -1;
     if (iz < 0 || iz >= 16) return -1;
     ix = ix + (iz << 4);
-    p = gMapBlockLayerTables;
     for (i = 0; i < 5; i++)
     {
-        s8* table = (s8*)*p;
+        s8* table = (s8*)gMapBlockLayerTables[i];
         int idx = table[ix];
         if (idx > -1)
         {
@@ -1350,7 +1348,6 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
                 return table[ix];
             }
         }
-        p++;
     }
     return -1;
 }
