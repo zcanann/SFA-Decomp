@@ -2,10 +2,8 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/mm.h"
-#include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objfx.h"
-#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
