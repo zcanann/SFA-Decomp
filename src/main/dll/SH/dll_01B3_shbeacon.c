@@ -1,5 +1,4 @@
 /* DLL 0x1B3 - SHBeacon [801D9B1C-801D9BDC) */
-#include "main/game_object.h"
 #include "main/dll/beaconflags_types.h"
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -8,7 +7,6 @@
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-#include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
@@ -16,7 +14,6 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 
-#include "main/dll/DR/shstaff_state.h"
 
 typedef struct ShBeaconPlacement
 {
