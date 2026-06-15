@@ -123,7 +123,7 @@ void spscarab_update(int obj)
         ((GameObject*)obj)->anim.velocityX = outV[0];
         ((GameObject*)obj)->anim.velocityZ = outV[2];
         angle = (s16)getAngle(-((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);
-        *(s16*)(obj) = angle;
+        ((GameObject*)obj)->anim.rotX = angle;
     }
 
     if (getXZDistance((int*)(Obj_GetPlayerObject() + 0x18), (int*)&((GameObject*)obj)->anim.worldPosX)
@@ -172,13 +172,13 @@ void spscarab_init(int obj, int def)
     pair.b = lbl_803E5A72;
 
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x6000;
-    *(s16*)(obj) = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
 
     ((GameObject*)obj)->anim.velocityX =
-        -mathSinf(lbl_803E5A8C * (f32)(s32) * (s16*)(obj) /
+        -mathSinf(lbl_803E5A8C * (f32)(s32)((GameObject*)obj)->anim.rotX /
             lbl_803E5A90);
     ((GameObject*)obj)->anim.velocityZ =
-        -mathCosf(lbl_803E5A8C * (f32)(s32) * (s16*)(obj) /
+        -mathCosf(lbl_803E5A8C * (f32)(s32)((GameObject*)obj)->anim.rotX /
             lbl_803E5A90);
 
     objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
