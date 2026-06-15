@@ -448,7 +448,7 @@ void fn_800E5CBC(short* obj, int state)
     float dx;
     float dz;
     short outVec[4];
-    float matrixBuf[24];
+    float matrixBuf[20];
 
     collision = (CurvesCollisionState*)state;
     if (((s8)collision->surfaceFlags & 0x10) != 0)
