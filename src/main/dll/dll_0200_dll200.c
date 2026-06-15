@@ -81,36 +81,36 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
 {
-    char cVar1;
-    float fVar2;
-    float fVar3;
-    float fVar4;
+    char hitCount;
+    float floorY;
+    float floorMargin;
+    float fallVel;
     int iVar5;
-    u8 uVar8;
-    float* pfVar6;
-    uint uVar7;
-    int iVar9;
-    float fVar10;
-    int iVar11;
-    undefined2* puVar12;
-    int local_18[3];
+    u8 wasReset;
+    float* collider;
+    uint inputBits;
+    int colByteOff;
+    float landedObj;
+    int colIdx;
+    undefined2* state;
+    int colList[3];
 
-    puVar12 = ((GameObject*)param_9)->extra;
+    state = ((GameObject*)param_9)->extra;
     iVar5 = FUN_80017a98();
-    if (*(char*)((int)puVar12 + 5) == '\0')
+    if (*(char*)((int)state + 5) == '\0')
     {
-        uVar8 = 0;
+        wasReset = 0;
         if (((*(byte*)&((GameObject*)param_9)->anim.resetHitboxMode & 1) != 0) && (((GameObject*)param_9)->unkF8 == 0))
         {
-            *puVar12 = 0;
-            puVar12[1] = 0x28;
+            *state = 0;
+            state[1] = 0x28;
             FUN_80006ba8(0, 0x100);
-            uVar8 = 1;
+            wasReset = 1;
         }
-        *(u8*)((int)puVar12 + 5) = uVar8;
-        if (*(char*)((int)puVar12 + 5) != '\0')
+        *(u8*)((int)state + 5) = wasReset;
+        if (*(char*)((int)state + 5) != '\0')
         {
-            *(u8*)(puVar12 + 3) = 1;
+            *(u8*)(state + 3) = 1;
         }
         if (((GameObject*)param_9)->unkF8 == 0)
         {
@@ -123,40 +123,40 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                 ((GameObject*)param_9)->anim.velocityY * lbl_803DC074 + ((GameObject*)param_9)->anim.localPosY;
             iVar5 = FUN_800632f4((double)((GameObject*)param_9)->anim.localPosX,
                                  (double)((GameObject*)param_9)->anim.localPosY,
-                                 (double)((GameObject*)param_9)->anim.localPosZ, param_9, local_18, 0, 1);
-            fVar4 = lbl_803E6A24;
-            fVar3 = lbl_803E6A20;
-            fVar10 = 0.0;
-            iVar11 = 0;
-            iVar9 = 0;
+                                 (double)((GameObject*)param_9)->anim.localPosZ, param_9, colList, 0, 1);
+            fallVel = lbl_803E6A24;
+            floorMargin = lbl_803E6A20;
+            landedObj = 0.0;
+            colIdx = 0;
+            colByteOff = 0;
             if (0 < iVar5)
             {
                 do
                 {
-                    pfVar6 = *(float**)(local_18[0] + iVar9);
-                    if (*(char*)(pfVar6 + 5) != '\x0e')
+                    collider = *(float**)(colList[0] + colByteOff);
+                    if (*(char*)(collider + 5) != '\x0e')
                     {
-                        fVar2 = *pfVar6;
-                        if ((((GameObject*)param_9)->anim.localPosY < fVar2) &&
-                            ((fVar2 - fVar3 < ((GameObject*)param_9)->anim.localPosY || (iVar11 == 0))))
+                        floorY = *collider;
+                        if ((((GameObject*)param_9)->anim.localPosY < floorY) &&
+                            ((floorY - floorMargin < ((GameObject*)param_9)->anim.localPosY || (colIdx == 0))))
                         {
-                            fVar10 = pfVar6[4];
-                            ((GameObject*)param_9)->anim.localPosY = fVar2;
-                            ((GameObject*)param_9)->anim.velocityY = fVar4;
+                            landedObj = collider[4];
+                            ((GameObject*)param_9)->anim.localPosY = floorY;
+                            ((GameObject*)param_9)->anim.velocityY = fallVel;
                         }
                     }
-                    iVar9 = iVar9 + 4;
-                    iVar11 = iVar11 + 1;
+                    colByteOff = colByteOff + 4;
+                    colIdx = colIdx + 1;
                     iVar5 = iVar5 + -1;
                 }
                 while (iVar5 != 0);
             }
-            if (fVar10 != 0.0)
+            if (landedObj != 0.0)
             {
-                iVar5 = *(int*)((int)fVar10 + 0x58);
-                cVar1 = *(char*)(iVar5 + 0x10f);
-                *(char*)(iVar5 + 0x10f) = cVar1 + '\x01';
-                *(uint*)(iVar5 + cVar1 * 4 + 0x100) = param_9;
+                iVar5 = *(int*)((int)landedObj + 0x58);
+                hitCount = *(char*)(iVar5 + 0x10f);
+                *(char*)(iVar5 + 0x10f) = hitCount + '\x01';
+                *(uint*)(iVar5 + hitCount * 4 + 0x100) = param_9;
             }
         }
     }
@@ -165,24 +165,24 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
         ObjHits_DisableObject(param_9);
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
-        uVar7 = FUN_80006c00(0);
-        if ((uVar7 & 0x100) != 0)
+        inputBits = FUN_80006c00(0);
+        if ((inputBits & 0x100) != 0)
         {
-            *(u8*)(puVar12 + 3) = 0;
+            *(u8*)(state + 3) = 0;
             FUN_80006ba8(0, 0x100);
         }
         if (((GameObject*)param_9)->unkF8 == 1)
         {
-            *(u8*)((int)puVar12 + 5) = 2;
+            *(u8*)((int)state + 5) = 2;
         }
-        if ((*(char*)((int)puVar12 + 5) == '\x02') && (((GameObject*)param_9)->unkF8 == 0))
+        if ((*(char*)((int)state + 5) == '\x02') && (((GameObject*)param_9)->unkF8 == 0))
         {
-            *(u8*)((int)puVar12 + 5) = 0;
-            *(u8*)(puVar12 + 3) = 0;
+            *(u8*)((int)state + 5) = 0;
+            *(u8*)(state + 3) = 0;
         }
-        if (*(char*)(puVar12 + 3) != '\0')
+        if (*(char*)(state + 3) != '\0')
         {
-            ObjMsg_SendToObject(iVar5, 0x100008, param_9, CONCAT22(puVar12[1], *puVar12));
+            ObjMsg_SendToObject(iVar5, 0x100008, param_9, CONCAT22(state[1], *state));
         }
     }
     return;
@@ -305,16 +305,16 @@ void fn_801F27E4(int obj)
 
 void FUN_801f2b94(short* param_1)
 {
-    int iVar1;
-    double dVar2;
+    int player;
+    double dist;
 
     if (*(char*)(*(int*)(param_1 + 0x5c) + 0xc) == '\x02')
     {
         *param_1 = *param_1 + 0x32;
     }
-    iVar1 = FUN_80017a98();
-    dVar2 = (double)FUN_8001771c((float*)(iVar1 + 0x18), (float*)(param_1 + 0xc));
-    if ((double)lbl_803E6A80 <= dVar2)
+    player = FUN_80017a98();
+    dist = (double)FUN_8001771c((float*)(player + 0x18), (float*)(param_1 + 0xc));
+    if ((double)lbl_803E6A80 <= dist)
     {
         FUN_8000680c((int)param_1, 0x40);
     }
