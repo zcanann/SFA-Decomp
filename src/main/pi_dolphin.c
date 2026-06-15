@@ -4013,7 +4013,7 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
         {
             idx = 0x4b;
         }
-        else if ((texId & 0x40000000) != 0 && (flags & 0x1000) == 0)
+        else if (((int)texId & 0x40000000) != 0 && (flags & 0x1000) == 0)
         {
             idx = 0x20;
         }
