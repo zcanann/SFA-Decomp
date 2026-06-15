@@ -360,8 +360,11 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     KaldaChomControl* control;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    if ((visible != 0) && (((GameObject*)obj)->unkF4 == 0))
+    if (visible != 0)
     {
+        switch (((GameObject*)obj)->unkF4)
+        {
+        case 0:
         if (((KaldachomState*)state)->unk3E8 != lbl_803E3060)
         {
             fn_8003B5E0(200, 0, 0, (int)((KaldachomState*)state)->unk3E8);
@@ -377,6 +380,8 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                                       &control->upperMouthPosZ, 0);
         ObjPath_GetPointWorldPosition(obj, 1, &control->lowerMouthPosX, &control->lowerMouthPosY,
                                       &control->lowerMouthPosZ, 0);
+        break;
+        }
     }
     return;
 }
