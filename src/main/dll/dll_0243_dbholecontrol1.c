@@ -119,7 +119,6 @@ int dbstealerworm_stateHandlerB04(int obj, int p);
 int dbstealerworm_stateHandlerB02(int obj, int p);
 
 extern void Obj_RemoveFromUpdateList(int* obj);
-extern void Stack_Free(int* stack);
 extern f32 lbl_803E6390;
 extern int gDBStealerWormStateHandlersA[];
 extern void DBstealerwo_setFuncPtrs_80203c78(void);
