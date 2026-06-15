@@ -233,8 +233,8 @@ extern SaveGameDefaultPosition lbl_802C2170;
 
 int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
 {
-    int i;
     u8* walker;
+    int i;
 
     for (i = 0, walker = gSaveGameData; i < SAVEGAME_OBJECT_POSITION_COUNT; walker += sizeof(SaveGameObjectPosition), i++)
     {
