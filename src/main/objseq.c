@@ -344,8 +344,8 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
     flags = obj[0xaf];
     flags &= ~7;
     obj[0xaf] = flags;
-    Obj_GetWorldPosition(obj, &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY,
-                         &((GameObject*)obj)->anim.worldPosZ);
+    Obj_GetWorldPosition(obj, (f32*)((int)obj + 0x18), (f32*)((int)obj + 0x1c),
+                         (f32*)((int)obj + 0x20));
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject = 0;
