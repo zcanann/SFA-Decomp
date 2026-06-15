@@ -173,8 +173,10 @@ void pollen_hitDetect(int obj)
     {
         f32 fz;
         ((GameObject*)obj)->anim.localPosX = hitState->contactPosX;
-        ((GameObject*)obj)->anim.localPosY = hitState->contactPosY;
-        ((GameObject*)obj)->anim.localPosZ = hitState->contactPosZ;
+        ((GameObject*)obj)->anim.localPosY =
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosY;
+        ((GameObject*)obj)->anim.localPosZ =
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosZ;
         fz = lbl_803E313C;
         ((GameObject*)obj)->anim.velocityX = fz;
         ((GameObject*)obj)->anim.velocityY = fz;
