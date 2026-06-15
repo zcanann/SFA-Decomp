@@ -11,7 +11,9 @@
  * span covers every observed access - the true allocation may be larger.
  */
 typedef struct EarthwalkerState {
-    u8 unk0[0x9B0 - 0x0];
+    u8 unk0[0x611 - 0x0];
+    u8 unk611; /* OR-set with bit 2 at init */
+    u8 unk612[0x9B0 - 0x612];
     RomCurveWalker route;
     f32 unkAB8;
     f32 randomTimer;
@@ -19,6 +21,7 @@ typedef struct EarthwalkerState {
     u8 unkAC1[0xAC8 - 0xAC1];
 } EarthwalkerState;
 
+STATIC_ASSERT(offsetof(EarthwalkerState, unk611) == 0x611);
 STATIC_ASSERT(offsetof(EarthwalkerState, route) == 0x9B0);
 STATIC_ASSERT(offsetof(EarthwalkerState, route.posX) == 0xA18);
 STATIC_ASSERT(offsetof(EarthwalkerState, unkAB8) == 0xAB8);

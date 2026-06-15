@@ -504,7 +504,7 @@ void earthwalker_init(int obj, int setup)
     dll_2E_func05(obj, state, -8192, 12743, 2);
     dll_2E_func09(state, 0, &local, 2);
     fn_80113F94(state, lbl_803E6CE8);
-    *(u8*)(state + 0x611) |= 2;
+    ((EarthwalkerState*)state)->unk611 |= 2;
     ewObj->facingAngle = (s16)((s8) * (s8*)(setup + 0x18) << 8);
     ewState->encounterType = *(u8*)(setup + 0x19);
     if (ewState->encounterType == 1)
