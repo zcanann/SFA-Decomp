@@ -2094,11 +2094,10 @@ void drawGlow(uint slotPoolBase, int poolIndex)
 
     slot = (ExpgfxSlot*)((char*)dstBuf - EXPGFX_SLOT_SIZE);
     slotIndex = 0;
-    dstBuf = gExpgfxTableEntries;
     do
     {
         slot = (ExpgfxSlot*)((char*)slot + EXPGFX_SLOT_SIZE);
-        tabEntry = &((ExpgfxTableEntry*)dstBuf)[Expgfx_GetSlotTableIndex(slot)];
+        tabEntry = &gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
         if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
