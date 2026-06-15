@@ -11611,41 +11611,51 @@ void fn_80295CF4(int obj, int a)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
 
-    if (lbl_803DE44C == NULL || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
+    if (lbl_803DE44C == NULL)
+    {
+        return;
+    }
+    if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
     {
         return;
     }
     if (a == 0)
     {
-        *(s16*)((char*)lbl_803DE44C + 6) |= 0x4000;
-        if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+        if (lbl_803DE44C != NULL)
         {
-            inner->unk8B4 = 1;
-            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+            *(s16*)((char*)lbl_803DE44C + 6) |= 0x4000;
+            if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+            {
+                inner->unk8B4 = 1;
+                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+            }
+            GameBit_Set(0x96b, 1);
+            GameBit_Set(0x961, 1);
+            GameBit_Set(0x969, 1);
+            GameBit_Set(0x964, 1);
+            GameBit_Set(0x965, 1);
+            GameBit_Set(0x986, 1);
+            GameBit_Set(0x960, 1);
         }
-        GameBit_Set(0x96b, 1);
-        GameBit_Set(0x961, 1);
-        GameBit_Set(0x969, 1);
-        GameBit_Set(0x964, 1);
-        GameBit_Set(0x965, 1);
-        GameBit_Set(0x986, 1);
-        GameBit_Set(0x960, 1);
     }
     else
     {
-        if (((ByteFlags*)((char*)inner + 0x3f4))->b40)
+        if (lbl_803DE44C != NULL)
         {
-            inner->unk8B4 = 4;
-            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+            if (lbl_803DE44C && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+            {
+                inner->unk8B4 = 4;
+                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+            }
+            *(s16*)((char*)lbl_803DE44C + 6) &= ~0x4000;
+            GameBit_Set(0x96b, 0);
+            GameBit_Set(0x961, 0);
+            GameBit_Set(0x969, 0);
+            GameBit_Set(0x964, 0);
+            GameBit_Set(0x965, 0);
+            GameBit_Set(0x986, 0);
+            GameBit_Set(0x960, 0);
         }
-        *(s16*)((char*)lbl_803DE44C + 6) &= ~0x4000;
-        GameBit_Set(0x96b, 0);
-        GameBit_Set(0x961, 0);
-        GameBit_Set(0x969, 0);
-        GameBit_Set(0x964, 0);
-        GameBit_Set(0x965, 0);
-        GameBit_Set(0x986, 0);
-        GameBit_Set(0x960, 0);
     }
     ((ByteFlags*)((char*)inner + 0x3f4))->b40 = a;
 }
