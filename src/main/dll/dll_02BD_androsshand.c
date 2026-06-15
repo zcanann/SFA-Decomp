@@ -390,6 +390,7 @@ void androsshand_init(int obj, u8* setup)
     state->startupDelay = 5;
     *(u8*)&state->handState = 3;
     *(u8*)&state->prevState = 3;
+    state = ((GameObject*)obj)->extra;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
     state->animSpeed = lbl_8032C270[4];
     ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E75B0;
