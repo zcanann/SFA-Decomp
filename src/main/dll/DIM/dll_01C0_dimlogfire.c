@@ -84,6 +84,8 @@ extern f32 lbl_803E4834;
 extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
 
+#define DIMLOGFIRE_GROUP 0x31
+
 int dimlogfire_getExtraSize(void) { return 0x24; }
 int dimlogfire_getObjectTypeId(void) { return 0x1; }
 
@@ -103,7 +105,7 @@ void dimlogfire_free(int* obj, int mode)
     {
         Obj_FreeObject((int*)inner->subObj);
     }
-    ObjGroup_RemoveObject(obj, 0x31);
+    ObjGroup_RemoveObject(obj, DIMLOGFIRE_GROUP);
     if ((void*)inner->light != NULL)
     {
         ModelLightStruct_free((void*)inner->light);
@@ -180,7 +182,7 @@ void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 typedef struct DimlogfirePlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E;
+    s16 douseGameBit;
     u8 pad20[0x68 - 0x20];
     void* unk68;
     u8 pad6C[0x70 - 0x6C];
@@ -189,9 +191,9 @@ typedef struct DimlogfirePlacement
 typedef struct DimlogfireObjectDef
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 initMode;
     s16 strengthInit;
-    s16 unk1E;
+    s16 douseGameBit;
 } DimlogfireObjectDef;
 
 void dimlogfire_update(int obj)
@@ -257,7 +259,7 @@ void dimlogfire_update(int obj)
             ObjHits_DisableObject(obj);
             state->mode = 1;
             state->dousedLatch = 1;
-            GameBit_Set(((DimlogfirePlacement*)tricky)->unk1E, 1);
+            GameBit_Set(((DimlogfirePlacement*)tricky)->douseGameBit, 1);
         }
         tricky = getTrickyObject();
         if ((uint)tricky != 0)
@@ -321,13 +323,13 @@ void dimlogfire_init(int obj, int def)
     DimLogFireState* state;
 
     ((GameObject*)obj)->animEventCallback = (void*)dimlogfire_SeqFn;
-    ObjGroup_AddObject(obj, 0x31);
+    ObjGroup_AddObject(obj, DIMLOGFIRE_GROUP);
     state = ((GameObject*)obj)->extra;
     state->unk20 = 0;
-    state->unk18 = ((DimlogfireObjectDef*)def)->unk1A;
+    state->unk18 = ((DimlogfireObjectDef*)def)->initMode;
     state->strengthInit = (s8)((DimlogfireObjectDef*)def)->strengthInit;
     *(u8*)&state->strength = *(u8*)&state->strengthInit;
-    if (GameBit_Get(((DimlogfireObjectDef*)def)->unk1E) != 0)
+    if (GameBit_Get(((DimlogfireObjectDef*)def)->douseGameBit) != 0)
     {
         state->mode = 1;
         state->dousedLatch = 1;
