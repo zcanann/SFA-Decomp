@@ -31,6 +31,27 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
     u8 pad23[0x28 - 0x23];
 } ScMusictreeSpawnAmbientEffectPlacement;
 
+/* Obj_AllocObjectSetup(0x28,...) buffer composed in sc_musictree_spawnAmbient.
+ * Head is the common ObjPlacement; tail (0x18..0x27) is file-local. */
+typedef struct ScMusictreeSetup
+{
+    ObjPlacement head; /* 0x00..0x17 */
+    int unk18;         /* 0x18 */
+    u16 unk1C;         /* 0x1C */
+    u16 unk1E;         /* 0x1E */
+    u8 unk20;          /* 0x20 */
+    u8 unk21;          /* 0x21 */
+    u8 unk22;          /* 0x22 */
+    u8 unk23;          /* 0x23 */
+    u8 unk24;          /* 0x24 */
+    s8 unk25;          /* 0x25 */
+    s16 unk26;         /* 0x26 */
+} ScMusictreeSetup;
+
+STATIC_ASSERT(offsetof(ScMusictreeSetup, unk18) == 0x18);
+STATIC_ASSERT(offsetof(ScMusictreeSetup, unk1C) == 0x1C);
+STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
+
 extern void objRenderFn_8003b8f4(f32);
 extern void fn_8003B608(int a, int b, int c);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
@@ -139,23 +160,23 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x28, 0x210);
-        *(u8*)(setup + 4) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk4;
-        *(u8*)(setup + 6) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk6;
-        *(u8*)(setup + 5) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk5;
-        *(u8*)(setup + 7) = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk7 - 10;
+        ((ScMusictreeSetup*)setup)->head.unk04[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk4;
+        ((ScMusictreeSetup*)setup)->head.unk04[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk6;
+        ((ScMusictreeSetup*)setup)->head.unk04[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk5;
+        ((ScMusictreeSetup*)setup)->head.unk04[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk7 - 10;
         ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
         ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
         ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
-        *(u16*)(setup + 0x1c) = randomGetRange(0x708, 0x1770);
-        *(u16*)(setup + 0x1e) = 1;
-        *(u8*)(setup + 0x20) = 10;
-        *(u8*)(setup + 0x21) = 40;
-        *(u8*)(setup + 0x22) = 50;
-        *(u8*)(setup + 0x23) = 10;
-        *(u8*)(setup + 0x24) = 50;
-        *(s8*)(setup + 0x25) = -50;
-        *(s16*)(setup + 0x26) = -1;
-        *(int*)(setup + 0x18) = 0;
+        ((ScMusictreeSetup*)setup)->unk1C = randomGetRange(0x708, 0x1770);
+        ((ScMusictreeSetup*)setup)->unk1E = 1;
+        ((ScMusictreeSetup*)setup)->unk20 = 10;
+        ((ScMusictreeSetup*)setup)->unk21 = 40;
+        ((ScMusictreeSetup*)setup)->unk22 = 50;
+        ((ScMusictreeSetup*)setup)->unk23 = 10;
+        ((ScMusictreeSetup*)setup)->unk24 = 50;
+        ((ScMusictreeSetup*)setup)->unk25 = -50;
+        ((ScMusictreeSetup*)setup)->unk26 = -1;
+        ((ScMusictreeSetup*)setup)->unk18 = 0;
         state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
 }
