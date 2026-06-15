@@ -2647,13 +2647,13 @@ int ObjSeq_update(u8* obj, f32 t)
     slot = (s8)((ObjSeqState*)seq)->slot;
     if (base[slot + 0x338c] == 1)
     {
-        ((ObjSeqState*)seq)->curFrame = *(s16*)(base + slot * 2 + 0x3694);
+        ((ObjSeqState*)seq)->curFrame = ((s16*)(base + 0x3694))[slot];
         ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
         ObjSeq_RefreshActionCursor(obj, activeObj, seq);
     }
     else
     {
-        ((ObjSeqState*)seq)->curFrame = (int)*(f32*)(base + slot * 4 + 0x3894);
+        ((ObjSeqState*)seq)->curFrame = (int)((f32*)(base + 0x3894))[slot];
     }
 
     p = seq + 6;
@@ -2772,7 +2772,7 @@ int ObjSeq_update(u8* obj, f32 t)
         slot = (s8)((ObjSeqState*)seq)->slot;
         if (base[slot + 0x3590] != 0)
         {
-            ((ObjSeqState*)seq)->heading = *(s16*)(base + slot * 2 + 0x35e8);
+            ((ObjSeqState*)seq)->heading = ((s16*)(base + 0x35e8))[slot];
         }
 
         if ((s8)((ObjSeqState*)seq)->unk7C != 0)
