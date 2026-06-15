@@ -496,7 +496,7 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
         {
             if ((double)info[0] < param_1)
             {
-                absDy = (double)(*(float*)(obj + 8) - *(float*)(target + 0x10));
+                absDy = (double)(((GameObject *)obj)->anim.rootMotionScale - *(float*)(target + 0x10));
                 if (absDy < (double)lbl_803E6F40)
                 {
                     absDy = -absDy;
