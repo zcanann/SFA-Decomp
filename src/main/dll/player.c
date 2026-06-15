@@ -9184,13 +9184,14 @@ void fn_80296C84(int obj)
     PlayerState* inner = ((GameObject*)obj)->extra;
     int deref = inner->playerStatus;
     int v = *(s8*)((char*)deref + 1);
+    int hi;
     if (v < 0)
     {
         v = 0;
     }
-    else if (v > *(s8*)((char*)deref + 1))
+    else if (v > (hi = *(volatile s8*)((char*)deref + 1)))
     {
-        v = *(s8*)((char*)deref + 1);
+        v = hi;
     }
     *(s8*)((char*)inner->playerStatus) = (s8)v;
     Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
