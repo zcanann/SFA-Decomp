@@ -539,14 +539,14 @@ void DFP_Torch_free(int obj)
 
 void dfpobjcreator_init(int obj, s8* def);
 
-void DFP_Torch_init(int obj, int param2)
+void DFP_Torch_init(int obj, int def)
 {
     DfpTorchState* state = ((GameObject*)obj)->extra;
     void* res;
     f32 local_18;
     int v;
-    *(s16*)obj = (s16)((*(s8*)(param2 + 0x18) & 0x3f) << 10);
-    v = *(s16*)(param2 + 0x1a);
+    *(s16*)obj = (s16)((*(s8*)(def + 0x18) & 0x3f) << 10);
+    v = *(s16*)(def + 0x1a);
     if (v > 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = (f32)v / lbl_803E63E4;
@@ -555,19 +555,19 @@ void DFP_Torch_init(int obj, int param2)
     {
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63E8;
     }
-    state->mode = *(u8*)(param2 + 0x19);
-    state->gameBit = *(s16*)(param2 + 0x1e);
+    state->mode = *(u8*)(def + 0x19);
+    state->gameBit = *(s16*)(def + 0x1e);
     local_18 = lbl_803E63E0;
     if (state->mode == 0)
     {
         state->lit = 1;
         res = Resource_Acquire(0x69, 1);
-        if (*(s16*)(param2 + 0x1c) == 0)
+        if (*(s16*)(def + 0x1c) == 0)
         {
             (*(void (*)(int, int, void*, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, &local_18, 0x10004, -1, 0);
         }
     }
-    state->colorIdx = (u8) * (s16*)(param2 + 0x1c);
+    state->colorIdx = (u8) * (s16*)(def + 0x1c);
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
 }
 
