@@ -1209,8 +1209,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         }
         if (*(s16*)(sourceObj + 0x44) == 1)
         {
-            slotPtr = base + (s8)((ObjSeqState*)seq)->slot * 2;
-            if (*(s16*)(slotPtr + 0x3a98) - 1 != 0x45)
+            if (((s16*)(base + 0x3a98))[(s8)((ObjSeqState*)seq)->slot] - 1 != 0x45)
             {
                 break;
             }
@@ -1394,8 +1393,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
     case 39:
         if (lbl_803DB720 == (s8)((ObjSeqState*)seq)->slot)
         {
-            slotPtr = base + (s8)((ObjSeqState*)seq)->slot * 4;
-            lbl_803DB728 = (int)*(f32*)(slotPtr + 0x3894);
+            lbl_803DB728 = (int)((f32*)(base + 0x3894))[(s8)((ObjSeqState*)seq)->slot];
             lbl_803DD070 = seqStreamFn_8008023c((s8)((ObjSeqState*)seq)->slot) == 0;
         }
         break;
@@ -1403,8 +1401,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         slot = (s8)((ObjSeqState*)seq)->slot;
         if (base[slot + 0x3334] == 0)
         {
-            slotPtr = base + slot * 2;
-            trackId = (u32)(*(s16*)(slotPtr + 0x3a98) - 1) & 0x3fff;
+            trackId = (u32)(((s16*)(base + 0x3a98))[slot] - 1) & 0x3fff;
             lbl_803DD068 = trackId;
             streams = seqStreamLookupFn_8007fff8(lbl_8030ECA8, 5, trackId);
             if (streams != NULL)
