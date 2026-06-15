@@ -1,11 +1,9 @@
 #include "main/game_object.h"
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
-#include "main/objanim.h"
 
 typedef struct GrimblePlacement
 {
