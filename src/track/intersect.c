@@ -1810,9 +1810,46 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
         int ref0;
         int ref1;
         GXColor fogColor;
-        if (((u8*)obj_a)[0x37] >= 0xff
-            && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
-            && ((ModelRenderOp *)renderOp)->alpha >= 0xff) {
+        if (((u8*)obj_a)[0x37] < 0xff
+            || (((ModelRenderOp *)renderOp)->flags & 0x40000000) != 0
+            || ((ModelRenderOp *)renderOp)->alpha < 0xff) {
+            GXSetBlendMode(1, 4, 5, 5);
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
+                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(0, 3, 0);
+                    lbl_803DD018 = 0;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
+            } else if ((((ModelFileHeader *)model)->flags & 0x2000) != 0) {
+                zCompLoc = 0;
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 1);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 1;
+                    lbl_803DD01A = 1;
+                }
+                ref0 = fn_8003BB74();
+                ref1 = fn_8003BB74();
+                GXSetAlphaCompare(4, ref1, 0, 4, ref0);
+            } else {
+                GXSetBlendMode(1, 4, 5, 5);
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 0);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
+            }
+        } else {
             if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
                 GXSetBlendMode(0, 1, 0, 5);
                 if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
@@ -1855,44 +1892,6 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                         lbl_803DD012 = 1;
                         lbl_803DD01A = 1;
                     }
-                }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
-            }
-        } else {
-            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                GXSetBlendMode(1, 4, 5, 5);
-                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                    GXSetZMode(0, 3, 0);
-                    lbl_803DD018 = 0;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 0;
-                    lbl_803DD01A = 1;
-                }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
-            } else if ((((ModelFileHeader *)model)->flags & 0x2000) != 0) {
-                GXSetBlendMode(1, 4, 5, 5);
-                zCompLoc = 0;
-                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
-                    GXSetZMode(1, 3, 1);
-                    lbl_803DD018 = 1;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 1;
-                    lbl_803DD01A = 1;
-                }
-                ref0 = fn_8003BB74();
-                ref1 = fn_8003BB74();
-                GXSetAlphaCompare(4, ref1, 0, 4, ref0);
-            } else {
-                GXSetBlendMode(1, 4, 5, 5);
-                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                    GXSetZMode(1, 3, 0);
-                    lbl_803DD018 = 1;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 0;
-                    lbl_803DD01A = 1;
                 }
                 GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
