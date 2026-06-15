@@ -3033,46 +3033,46 @@ void FUN_8004600c(void)
     return;
 }
 
-uint FUN_800461b4(int* param_1, int* param_2)
+uint FUN_800461b4(int* ctx, int* entry)
 {
-    uint uVar1;
-    int iVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
+    uint clz;
+    int neighbor;
+    int node;
+    int goal;
+    int base;
+    int i;
+    int remaining;
 
-    iVar4 = param_1[4];
-    iVar3 = *param_2;
-    if (*(char*)(iVar3 + 0x19) != '$')
+    goal = ctx[4];
+    node = *entry;
+    if (*(char*)(node + 0x19) != '$')
     {
-        uVar1 = countLeadingZeros(iVar3 - iVar4);
-        return uVar1 >> 5;
+        clz = countLeadingZeros(node - goal);
+        return clz >> 5;
     }
-    if ((*(byte*)(param_2 + 3) & 0x80) == 0)
+    if ((*(byte*)(entry + 3) & 0x80) == 0)
     {
-        if (*(byte*)(iVar3 + 3) != 0)
+        if (*(byte*)(node + 3) != 0)
         {
-            uVar1 = countLeadingZeros((uint) * (byte*)(iVar3 + 3) - iVar4);
-            return uVar1 >> 5;
+            clz = countLeadingZeros((uint) * (byte*)(node + 3) - goal);
+            return clz >> 5;
         }
-        iVar5 = *(int*)(*param_1 + (uint) * (byte*)(param_2 + 3) * 0x10);
-        iVar6 = 0;
-        iVar7 = 4;
-        iVar2 = iVar5;
+        base = *(int*)(*ctx + (uint) * (byte*)(entry + 3) * 0x10);
+        i = 0;
+        remaining = 4;
+        neighbor = base;
         do
         {
-            if (*(int*)(iVar3 + 0x14) == *(int*)(iVar2 + 0x1c))
+            if (*(int*)(node + 0x14) == *(int*)(neighbor + 0x1c))
             {
-                uVar1 = countLeadingZeros((uint) * (byte*)(iVar6 + iVar5 + 4) - iVar4);
-                return uVar1 >> 5;
+                clz = countLeadingZeros((uint) * (byte*)(i + base + 4) - goal);
+                return clz >> 5;
             }
-            iVar2 = iVar2 + 4;
-            iVar6 = iVar6 + 1;
-            iVar7 = iVar7 + -1;
+            neighbor = neighbor + 4;
+            i = i + 1;
+            remaining = remaining + -1;
         }
-        while (iVar7 != 0);
+        while (remaining != 0);
     }
     return 0;
 }
@@ -3166,15 +3166,15 @@ void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
     FUN_80286880();
 }
 
-undefined4 FUN_800469d0(int param_1)
+undefined4 FUN_800469d0(int iter)
 {
-    short sVar1;
+    short cursor;
 
-    sVar1 = *(short*)(param_1 + 0x2c);
-    if ((int)sVar1 < (int)*(short*)(param_1 + 0x2a))
+    cursor = *(short*)(iter + 0x2c);
+    if ((int)cursor < (int)*(short*)(iter + 0x2a))
     {
-        *(short*)(param_1 + 0x2c) = sVar1 + 1;
-        return *(undefined4*)(*(int*)(param_1 + 8) + sVar1 * 4);
+        *(short*)(iter + 0x2c) = cursor + 1;
+        return *(undefined4*)(*(int*)(iter + 8) + cursor * 4);
     }
     return 0;
 }
@@ -3234,104 +3234,104 @@ void fn_8004B394(void)
     return;
 }
 
-undefined4 FUN_80046cd0(int* param_1, int param_2, int param_3, int param_4, byte param_5)
+undefined4 FUN_80046cd0(int* ctx, int startNode, int param_3, int goal, byte param_5)
 {
-    undefined2 uVar1;
-    short sVar2;
-    int iVar3;
-    undefined4* puVar4;
-    uint uVar5;
-    int iVar6;
-    int iVar7;
-    int* piVar8;
-    int iVar9;
-    double dVar10;
+    undefined2 holeTag;
+    short num;
+    int slotCount;
+    undefined4* heap;
+    uint holeKey;
+    int heapOff;
+    int nodeOff;
+    int* node;
+    int blocksLeft;
+    double dist;
 
-    iVar3 = 0;
-    *(undefined2*)((int)param_1 + 0x22) = 0;
-    *(undefined2*)(param_1 + 8) = 0;
-    iVar6 = 0;
-    iVar7 = 0;
-    iVar9 = 0x1f;
+    slotCount = 0;
+    *(undefined2*)((int)ctx + 0x22) = 0;
+    *(undefined2*)(ctx + 8) = 0;
+    heapOff = 0;
+    nodeOff = 0;
+    blocksLeft = 0x1f;
     do
     {
-        *(undefined4*)(param_1[1] + iVar6) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0xe) = 0;
-        *(undefined4*)(param_1[1] + iVar6 + 8) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0x1e) = 0;
-        *(undefined4*)(param_1[1] + iVar6 + 0x10) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0x2e) = 0;
-        *(undefined4*)(param_1[1] + iVar6 + 0x18) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0x3e) = 0;
-        *(undefined4*)(param_1[1] + iVar6 + 0x20) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0x4e) = 0;
-        *(undefined4*)(param_1[1] + iVar6 + 0x28) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0x5e) = 0;
-        *(undefined4*)(param_1[1] + iVar6 + 0x30) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0x6e) = 0;
-        *(undefined4*)(param_1[1] + iVar6 + 0x38) = 0;
-        *(undefined*)(*param_1 + iVar7 + 0x7e) = 0;
-        iVar6 = iVar6 + 0x40;
-        iVar7 = iVar7 + 0x80;
-        iVar3 = iVar3 + 8;
-        iVar9 = iVar9 + -1;
+        *(undefined4*)(ctx[1] + heapOff) = 0;
+        *(undefined*)(*ctx + nodeOff + 0xe) = 0;
+        *(undefined4*)(ctx[1] + heapOff + 8) = 0;
+        *(undefined*)(*ctx + nodeOff + 0x1e) = 0;
+        *(undefined4*)(ctx[1] + heapOff + 0x10) = 0;
+        *(undefined*)(*ctx + nodeOff + 0x2e) = 0;
+        *(undefined4*)(ctx[1] + heapOff + 0x18) = 0;
+        *(undefined*)(*ctx + nodeOff + 0x3e) = 0;
+        *(undefined4*)(ctx[1] + heapOff + 0x20) = 0;
+        *(undefined*)(*ctx + nodeOff + 0x4e) = 0;
+        *(undefined4*)(ctx[1] + heapOff + 0x28) = 0;
+        *(undefined*)(*ctx + nodeOff + 0x5e) = 0;
+        *(undefined4*)(ctx[1] + heapOff + 0x30) = 0;
+        *(undefined*)(*ctx + nodeOff + 0x6e) = 0;
+        *(undefined4*)(ctx[1] + heapOff + 0x38) = 0;
+        *(undefined*)(*ctx + nodeOff + 0x7e) = 0;
+        heapOff = heapOff + 0x40;
+        nodeOff = nodeOff + 0x80;
+        slotCount = slotCount + 8;
+        blocksLeft = blocksLeft + -1;
     }
-    while (iVar9 != 0);
-    iVar6 = iVar3 * 8;
-    iVar7 = iVar3 * 0x10;
-    iVar9 = 0xfe - iVar3;
-    if (iVar3 < 0xfe)
+    while (blocksLeft != 0);
+    heapOff = slotCount * 8;
+    nodeOff = slotCount * 0x10;
+    blocksLeft = 0xfe - slotCount;
+    if (slotCount < 0xfe)
     {
         do
         {
-            *(undefined4*)(param_1[1] + iVar6) = 0;
-            *(undefined*)(*param_1 + iVar7 + 0xe) = 0;
-            iVar6 = iVar6 + 8;
-            iVar7 = iVar7 + 0x10;
-            iVar9 = iVar9 + -1;
+            *(undefined4*)(ctx[1] + heapOff) = 0;
+            *(undefined*)(*ctx + nodeOff + 0xe) = 0;
+            heapOff = heapOff + 8;
+            nodeOff = nodeOff + 0x10;
+            blocksLeft = blocksLeft + -1;
         }
-        while (iVar9 != 0);
+        while (blocksLeft != 0);
     }
-    param_1[6] = param_2;
-    param_1[3] = param_3;
-    param_1[4] = param_4;
-    *(byte*)(param_1 + 10) = param_5 & 1;
-    param_1[9] = 10000;
-    sVar2 = *(short*)(param_1 + 8);
-    if (sVar2 == 0xfe)
+    ctx[6] = startNode;
+    ctx[3] = param_3;
+    ctx[4] = goal;
+    *(byte*)(ctx + 10) = param_5 & 1;
+    ctx[9] = 10000;
+    num = *(short*)(ctx + 8);
+    if (num == 0xfe)
     {
-        piVar8 = (int*)0x0;
+        node = (int*)0x0;
     }
     else
     {
-        *(short*)(param_1 + 8) = sVar2 + 1;
-        piVar8 = (int*)(*param_1 + sVar2 * 0x10);
-        *piVar8 = param_2;
-        piVar8[2] = 0;
-        *(undefined*)(piVar8 + 3) = 0xff;
-        dVar10 = FUN_80017714((float*)(*piVar8 + 8), (float*)param_1[3]);
-        iVar3 = FUN_80286718(dVar10);
-        piVar8[1] = iVar3;
+        *(short*)(ctx + 8) = num + 1;
+        node = (int*)(*ctx + num * 0x10);
+        *node = startNode;
+        node[2] = 0;
+        *(undefined*)(node + 3) = 0xff;
+        dist = FUN_80017714((float*)(*node + 8), (float*)ctx[3]);
+        slotCount = FUN_80286718(dist);
+        node[1] = slotCount;
     }
-    iVar6 = piVar8[1];
-    iVar3 = piVar8[2];
-    puVar4 = (undefined4*)param_1[1];
-    sVar2 = *(short*)((int)param_1 + 0x22) + 1;
-    *(short*)((int)param_1 + 0x22) = sVar2;
-    *(short*)(puVar4 + sVar2 * 2 + 1) = *(short*)(param_1 + 8) + -1;
-    puVar4[*(short*)((int)param_1 + 0x22) * 2] = -1 - (iVar6 + iVar3);
-    iVar3 = (int)*(short*)((int)param_1 + 0x22);
-    uVar5 = puVar4[iVar3 * 2];
-    uVar1 = *(undefined2*)(puVar4 + iVar3 * 2 + 1);
-    *puVar4 = 0xffffffff;
-    while (iVar6 = iVar3 >> 1, (uint)puVar4[iVar6 * 2] < uVar5)
+    heapOff = node[1];
+    slotCount = node[2];
+    heap = (undefined4*)ctx[1];
+    num = *(short*)((int)ctx + 0x22) + 1;
+    *(short*)((int)ctx + 0x22) = num;
+    *(short*)(heap + num * 2 + 1) = *(short*)(ctx + 8) + -1;
+    heap[*(short*)((int)ctx + 0x22) * 2] = -1 - (heapOff + slotCount);
+    slotCount = (int)*(short*)((int)ctx + 0x22);
+    holeKey = heap[slotCount * 2];
+    holeTag = *(undefined2*)(heap + slotCount * 2 + 1);
+    *heap = 0xffffffff;
+    while (heapOff = slotCount >> 1, (uint)heap[heapOff * 2] < holeKey)
     {
-        *(undefined2*)(puVar4 + iVar3 * 2 + 1) = *(undefined2*)(puVar4 + iVar6 * 2 + 1);
-        puVar4[iVar3 * 2] = puVar4[iVar6 * 2];
-        iVar3 = iVar6;
+        *(undefined2*)(heap + slotCount * 2 + 1) = *(undefined2*)(heap + heapOff * 2 + 1);
+        heap[slotCount * 2] = heap[heapOff * 2];
+        slotCount = heapOff;
     }
-    puVar4[iVar3 * 2] = uVar5;
-    *(undefined2*)(puVar4 + iVar3 * 2 + 1) = uVar1;
+    heap[slotCount * 2] = holeKey;
+    *(undefined2*)(heap + slotCount * 2 + 1) = holeTag;
     return 0;
 }
 
