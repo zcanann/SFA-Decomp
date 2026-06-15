@@ -694,7 +694,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         if (DAT_803dd8cc == '\0')
         {
             renderFlags = OBJPRINT_MODEL_DEF(modelData)->renderFlags;
-            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)(modelData + 0x32) + 0xc) == (float*)0x0))
+            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)&((GameObject*)modelData)->anim.modelState + 0xc) == (float*)0x0))
             {
                 if ((renderFlags & 0x10) == 0)
                 {
@@ -728,7 +728,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
             }
             else
             {
-                FUN_8004afc0(*(float**)(*(int*)(modelData + 0x32) + 0xc));
+                FUN_8004afc0(*(float**)(*(int*)&((GameObject*)modelData)->anim.modelState + 0xc));
                 lightCount = 0;
             }
         }
