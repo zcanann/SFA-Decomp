@@ -27,7 +27,6 @@ extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4F68;
 extern void objRenderFn_8003b8f4(f32);
-extern void* ObjList_FindObjectById(int id);
 extern f32 lbl_803E4F78;
 extern u8 Obj_IsLoadingLocked(void);
 extern u8* Obj_AllocObjectSetup(int size, int type);
