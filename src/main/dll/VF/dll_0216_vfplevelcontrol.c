@@ -183,9 +183,9 @@ void vfplevelcontrol_init(int* obj, u8* init)
 
 void fn_801F9804(int obj)
 {
+    s16* p;
     VFPLevelControlState* state = ((GameObject*)obj)->extra;
     s16 bits[4];
-    s16* p;
     s16 i;
 
     if (state->latch.fields.sequenceStep < 4)
