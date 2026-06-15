@@ -1,6 +1,5 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
-#include "main/audio/voice_alloc.h"
 #include "main/audio/voice_manage.h"
 
 extern void macMakeInactive(McmdVoiceState* state, int x);
