@@ -744,7 +744,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     int q = inner + 0xb58;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+#define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04 = 0;
     ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b08 = 0;
     ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F2)->b10 = 0;
@@ -1005,7 +1005,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
         if (((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-            (int)obj, ((EarthWarriorState*)p2)->baddie.animSpeedC, &((EarthWarriorState*)p2)->baddie.moveSpeed) == 0)
+            (int)obj, ((EarthWarriorState*)p2)->baddie.animSpeedC, (f32*)((int)p2 + 0x2a0)) == 0)
         {
             ((EarthWarriorState*)p2)->baddie.moveSpeed = lbl_803E8354;
         }
@@ -1013,6 +1013,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     fn_802BCA10(obj, q, p2);
     return 0;
 }
+#undef hitState
 
 int DR_EarthWarrior_stateHandler01(int obj, int p2)
 {
