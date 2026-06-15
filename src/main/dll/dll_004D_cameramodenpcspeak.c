@@ -1,28 +1,8 @@
 /* DLL 0x004D (cameramodenpcspeak) — Camera mode NPC speak handlers [0x8010DB7C-0x8010E51C). */
 #include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/dll/cameramodetitlepose_struct.h"
-#include "main/game_object.h"
 #include "main/mm.h"
-#include "ghidra_import.h"
-#include "main/dll/baddieControl.h"
-#include "main/camera_object.h"
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camera_mode_54_state.h"
-#include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/dll/CAM/cutCam.h"
-#include "main/dll/CAM/camcrawl_state.h"
-#include "main/dll/CAM/camera_mode_cannon_state.h"
-#include "main/dll/CAM/camperv_state.h"
-#include "main/dll/CAM/camworldmap_state.h"
-#include "main/obj_placement.h"
-#include "main/mapEvent.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/screen_transition.h"
-#include "main/dll/dll19_state.h"
-#include "main/objanim.h"
-#include "main/dll/baddie_state.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
