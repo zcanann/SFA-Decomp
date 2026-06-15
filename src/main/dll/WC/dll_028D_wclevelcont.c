@@ -55,29 +55,26 @@ void wclevelcont_func13(int value, s16 i, s16 j)
     lbl_803AD298[i][j] = (u8)value;
 }
 
-void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
+void wclevelcont_func12(int obj, s16* outRow, s16* outCol, f32 px, f32 pz)
 {
-    extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
     f32 outX, outZ;
 
-    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                            ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DB8) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
 
 void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
-    extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
     f32 outX, outZ;
 
-    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                            ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
-    {
-        f32 base = lbl_803E6DB4;
-        *outXp = base + (lbl_803E6DB8 + outX + (f32)(col * 48));
-        *outZp = base + (lbl_803E6DC0 + outZ + (f32)(row * 48));
-    }
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    *outXp = lbl_803E6DB4 + (lbl_803E6DB8 + outX + (f32)(col * 48));
+    *outZp = lbl_803E6DB4 + (lbl_803E6DC0 + outZ + (f32)(row * 48));
 }
 
 void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
@@ -134,29 +131,26 @@ void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
     lbl_803AD2D8[i][j] = (u8)value;
 }
 
-void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
+void wclevelcont_func0B(int obj, s16* outRow, s16* outCol, f32 px, f32 pz)
 {
-    extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
     f32 outX, outZ;
 
-    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                            ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DD0) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
 
 void wclevelcont_setScale(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
-    extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
     f32 outX, outZ;
 
-    mapGetBlockOriginForPos(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                            ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
-    {
-        f32 base = lbl_803E6DB4;
-        *outXp = base + (lbl_803E6DD0 + outX + (f32)(col * 48));
-        *outZp = base + (lbl_803E6DD4 + outZ + (f32)(row * 48));
-    }
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
+        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    *outXp = lbl_803E6DB4 + (lbl_803E6DD0 + outX + (f32)(col * 48));
+    *outZp = lbl_803E6DB4 + (lbl_803E6DD4 + outZ + (f32)(row * 48));
 }
 
 int wclevelcont_getExtraSize(void) { return 0x1c; }
@@ -199,47 +193,47 @@ void wclevelcont_hitDetect(void)
 {
 }
 
-void wclevelcont_syncProgressBits(int state)
+void wclevelcont_syncProgressBits(WcLevelControlState* state)
 {
     int flag;
 
     if ((*gSkyInterface)->getSunPosition(0))
     {
-        if (((WcLevelControlState*)state)->thorntailMusicId != 0x2d)
+        if (state->thorntailMusicId != 0x2d)
         {
-            ((WcLevelControlState*)state)->thorntailMusicId = 0x2d;
+            state->thorntailMusicId = 0x2d;
             Music_Trigger(0x2d, 1);
         }
-        if (((WcLevelControlState*)state)->ambientMusicId != -1)
+        if (state->ambientMusicId != -1)
         {
-            ((WcLevelControlState*)state)->ambientMusicId = 0xffff;
+            state->ambientMusicId = 0xffff;
             Music_Trigger(0x22, 0);
         }
     }
     else
     {
-        if (((WcLevelControlState*)state)->thorntailMusicId != 0x39)
+        if (state->thorntailMusicId != 0x39)
         {
-            ((WcLevelControlState*)state)->thorntailMusicId = 0x39;
+            state->thorntailMusicId = 0x39;
             Music_Trigger(0x39, 1);
         }
-        if (((WcLevelControlState*)state)->ambientMusicId != 0x22)
+        if (state->ambientMusicId != 0x22)
         {
-            ((WcLevelControlState*)state)->ambientMusicId = 0x22;
+            state->ambientMusicId = 0x22;
             Music_Trigger(0x22, 1);
         }
     }
-    SCGameBitLatch_Update(state + 0x10, 0x8, -1, -1, 0xba6, 0xd2);
-    SCGameBitLatch_Update(state + 0x10, 0x4, -1, -1, 0xcce, 0x36);
-    SCGameBitLatch_Update(state + 0x10, 0x10, -1, -1, 0xcd0, 0xd4);
-    SCGameBitLatch_Update(state + 0x10, 0x40, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x4, -1, -1, 0xcce, 0x36);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
     flag = 0;
     if ((u32)GameBit_Get(0xba6) == 0 && ((u32)GameBit_Get(0xda9) != 0 || gameTimerIsRunning() != 0))
     {
         flag = 1;
     }
     GameBit_Set(0xf31, flag);
-    SCGameBitLatch_Update(state + 0x10, 0x80, -1, -1, 0xf31, 0xaf);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
 
 void wclevelcont_update(int obj)
@@ -270,7 +264,7 @@ void wclevelcont_update(int obj)
         fn_802251B4(obj, state);
         break;
     }
-    wclevelcont_syncProgressBits((int)state);
+    wclevelcont_syncProgressBits(state);
     if ((*gSkyInterface)->getSunPosition(&sunTime))
     {
         GameBit_Set(0x7f3, 1);
