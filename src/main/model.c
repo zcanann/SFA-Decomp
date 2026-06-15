@@ -1175,7 +1175,7 @@ extern void* lbl_803DCB50;
 extern void* allocModelStruct(int size, int align);
 extern int* lbl_803DCB5C;
 
-#pragma peephole on
+#pragma peephole off
 void ObjModel_InitResourceCaches(void)
 {
     void* m;
