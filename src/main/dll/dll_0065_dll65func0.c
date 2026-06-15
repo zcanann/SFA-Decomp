@@ -728,6 +728,7 @@ void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
     } buf;
     u8* base = lbl_80312E58;
     GfxCmd* e = buf.entries;
+    u8* base = lbl_80312E58;
     int ctx;
     uint flag;
     if (variant == 1)
