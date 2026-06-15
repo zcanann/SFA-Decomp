@@ -996,7 +996,7 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
         SynthDelayedNode* next = node->next;
         node->bucketIndex = 0xff;
         {
-            if (*(u8*)(synthVoice + node->voiceIndex * SYNTH_VOICE_SLOT_SIZE +
+            if (*(u8*)(node->voiceIndex * SYNTH_VOICE_SLOT_SIZE + synthVoice +
                 SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) == 0)
             {
                 callback(node->voiceIndex);
