@@ -3,7 +3,6 @@
  * TU = 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*).
  */
 #include "main/game_object.h"
-#include "main/objhits.h"
 
 extern void objRenderFn_8003b8f4(f32 alpha);
 extern f32 lbl_803E4348;
