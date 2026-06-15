@@ -1361,9 +1361,16 @@ void fn_80137DF8(void)
                 col = x;
                 for (; x < 0x280; x++)
                 {
-                    for (row = 0; row < 0x96000; row += 0x500)
+                    for (row = 0; row < 0x96000; row += 0x2800)
                     {
                         *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row + 0x500) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row + 0xa00) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row + 0xf00) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row + 0x1400) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row + 0x1900) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row + 0x1e00) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row + 0x2300) = 0x1080;
                     }
                     col += 2;
                 }
