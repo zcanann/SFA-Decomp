@@ -102,11 +102,12 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     }
     if ((mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) == 0x10)
     {
-        f32 zero = lbl_803E7360;
-        if (zero != sourceState->inactiveTimer)
+        f32 timer = sourceState->inactiveTimer;
+        f32 limit = lbl_803E7360;
+        if (timer != limit)
         {
-            sourceState->inactiveTimer -= timeDelta;
-            if (sourceState->inactiveTimer <= zero)
+            sourceState->inactiveTimer = timer - timeDelta;
+            if (sourceState->inactiveTimer <= limit)
             {
                 result = 1;
             }
@@ -160,17 +161,14 @@ void cmbsrc_hitDetect(int obj)
             state->hitCharge -= 1;
             state->hitRecoverTimer = lbl_803E7384;
         }
-        {
-        f32 zero = lbl_803E7360;
-        if (zero != state->hitRecoverTimer)
+        if (state->hitRecoverTimer != lbl_803E7360)
         {
             state->hitRecoverTimer -= timeDelta;
-            if (state->hitRecoverTimer <= zero)
+            if (state->hitRecoverTimer <= lbl_803E7360)
             {
                 state->hitCharge += 1;
                 state->hitRecoverTimer = lbl_803E7384;
             }
-        }
         }
         v = state->hitCharge;
         if (v < 0)
@@ -187,7 +185,6 @@ void cmbsrc_hitDetect(int obj)
 
 int cmbsrc_cycleColor(int obj, int state)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight *light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -251,7 +248,6 @@ int cmbsrc_cycleColor(int obj, int state)
 
 void cmbsrc_updateVisuals(int obj, int state)
 {
-    extern u8 cmbsrc_cycleColor(int obj, int state);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -270,12 +266,11 @@ void cmbsrc_updateVisuals(int obj, int state)
     }
     else
     {
-        f32 ratio = (f32)sourceState->hitCharge / lbl_803E7378;
-        f32 baseRadius = setup->radius * lbl_803E737C;
-        f32 fullRadius = lbl_803E7374 * setup->radius;
         sourceState->radius += interpolate(
-            ratio * (fullRadius - baseRadius) +
-            baseRadius - sourceState->radius,
+            (f32)sourceState->hitCharge / lbl_803E7378 *
+            (lbl_803E7374 * setup->radius -
+                setup->radius * lbl_803E737C) +
+            setup->radius * lbl_803E737C - sourceState->radius,
             lbl_803E7380, timeDelta);
     }
     dist = Vec_distance(viewSlot + 0x44, obj + 0x18);
@@ -285,7 +280,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         {
             if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
             {
-                colorIdx = cmbsrc_cycleColor(obj, state);
+                colorIdx = (u8)cmbsrc_cycleColor(obj, state);
             }
             else
             {
@@ -406,8 +401,6 @@ void cmbsrc_updateVisuals(int obj, int state)
 
 int cmbsrc_update(int obj)
 {
-    extern u8 cmbsrc_shouldDeactivate(int obj, int state, int setup);
-    extern u8 cmbsrc_shouldActivate(int obj, int state, int setup);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* state = cmbsrc->state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
