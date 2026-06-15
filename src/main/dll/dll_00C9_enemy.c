@@ -2001,7 +2001,6 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void enemy_hitDetect(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState;
     ObjHitsPriorityState* childHitState;
 
     if (*(void**)&((EnemyState*)state)->modelLight != NULL && modelLightStruct_getActiveState(
@@ -2010,17 +2009,17 @@ void enemy_hitDetect(int obj)
         ModelLightStruct_free(((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    ((EnemyState*)state)->lastHitObject = hitState->lastHitObject;
-    if (hitState->lastHitObject != 0)
+    ((EnemyState*)state)->lastHitObject =
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
+    if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
     {
-        hitState->suppressOutgoingHits = 1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (((GameObject*)obj)->childObjs[0] != NULL && *(void**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54) != NULL
         && (childHitState = *(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject
             != 0)
     {
-        hitState->suppressOutgoingHits = 1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {
