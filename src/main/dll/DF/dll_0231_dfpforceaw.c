@@ -68,7 +68,6 @@ typedef struct TrickyCurveBurstFxParams
 
 extern void fn_80206C18(int* obj);
 extern void fn_80206968(int* obj);
-extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
 
 void TrickyCurve_updateBurstTrigger(int obj)
 {
