@@ -171,11 +171,10 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
 void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
 {
     short classId;
-    int buttons;
+    u16 buttons;
     int cond;
     CamcontrolAction43Payload action43Payload;
     CamcontrolAction44Payload action44Payload;
-    longlong convHeight;
 
     if (target->pendingParentObj == NULL)
     {
@@ -207,9 +206,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         {
             action44Payload.distance = cameraMtxVar57->minDistance;
             action44Payload.yOffset = cameraMtxVar57->lowerHeightOffset;
-            convHeight = (longlong)(int)
-            cameraMtxVar57->targetHeight;
-            action44Payload.height = (int)cameraMtxVar57->targetHeight;
+            action44Payload.height = (s16)cameraMtxVar57->targetHeight;
             cameraSetInterpMode(0);
             (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &action44Payload, 0xf, 0xfe);
         }
