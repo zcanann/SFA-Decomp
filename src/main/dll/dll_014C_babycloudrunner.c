@@ -665,12 +665,11 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
  * move, otherwise start or speed-scale the turn move by the delta. */
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
-void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
+void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
 {
     int shifted;
-    fn_8003ADC4(a, b, (char*)c + 0x3c, 0x28, 0, 3);
-    shifted = Obj_GetYawDeltaToObject((int)a, (int)b, 0) >> 3;
+    fn_8003ADC4((int*)a, (int*)b, (char*)c + 0x3c, 0x28, 0, 3);
+    shifted = Obj_GetYawDeltaToObject(a, b, 0) >> 3;
     *(s16*)a += shifted;
     if (d == 0) return;
     if ((s16)shifted > -200 && (s16)shifted < 200)
@@ -678,11 +677,11 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
         if (((BabyCloudRunnerState*)c)->turnLatch != 0)
         {
             ((BabyCloudRunnerState*)c)->turnLatch = 0;
-            ObjAnim_SetCurrentMove((int)a, 0, lbl_803E4218, 0);
+            ObjAnim_SetCurrentMove(a, 0, lbl_803E4218, 0);
         }
         else
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)a, lbl_803E423C, timeDelta, 0);
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(a, lbl_803E423C, timeDelta, 0);
         }
     }
     else
@@ -690,12 +689,12 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
         if (((BabyCloudRunnerState*)c)->turnLatch == 0)
         {
             ((BabyCloudRunnerState*)c)->turnLatch = 1;
-            ObjAnim_SetCurrentMove((int)a, 9, lbl_803E4218, 0);
+            ObjAnim_SetCurrentMove(a, 9, lbl_803E4218, 0);
         }
         else
         {
             s16 t;
-            if ((s16)shifted > 0)
+            if ((int)(s16)shifted > 0)
             {
                 t = (s16)shifted >> 2;
             }
@@ -703,7 +702,7 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
             {
                 t = -(s16)shifted >> 2;
             }
-            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)a, (f32)t / lbl_803E4240, timeDelta, 0);
+            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(a, (f32)t / lbl_803E4240, timeDelta, 0);
         }
     }
 }
@@ -1099,7 +1098,7 @@ void babycloudrunner_update(int* obj)
                     }
                     else
                     {
-                        sandworm_turnTowardTargetAnim(obj, near, (u8*)sub, 0);
+                        sandworm_turnTowardTargetAnim((int)obj, (int)near, (u8*)sub, 0);
                         if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) <= lbl_803DBE3C)
                         {
                             fn_8014C66C(near, Obj_GetPlayerObject());
@@ -1195,7 +1194,7 @@ void babycloudrunner_update(int* obj)
                         (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                         sub->unkB0 = 1;
                     }
-                    sandworm_turnTowardTargetAnim(obj, (int*)Obj_GetPlayerObject(), (u8*)sub, 1);
+                    sandworm_turnTowardTargetAnim((int)obj, (int)Obj_GetPlayerObject(), (u8*)sub, 1);
                     if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(
                         (int)obj, sub->animSpeed, timeDelta, 0) != 0)
                     {
