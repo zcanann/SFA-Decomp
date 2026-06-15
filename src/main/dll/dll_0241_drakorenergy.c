@@ -157,61 +157,61 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 undefined4
 FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
     float speedDiv;
-    uint queueFull;
+    uint busy;
     int target;
     short* msgQueue;
     int control;
     double dist;
-    undefined4 local_48;
-    undefined4 local_44;
-    undefined4 local_40;
-    undefined4 local_3c;
-    undefined4 local_38;
-    undefined4 local_34;
-    undefined4 local_30;
-    undefined4 local_2c;
-    undefined4 local_28;
+    undefined4 msgWord48;
+    undefined4 msgWord44;
+    undefined4 msgWord40;
+    undefined4 msgWord3c;
+    undefined4 msgWord38;
+    undefined4 msgWord34;
+    undefined4 msgWord30;
+    undefined4 msgWord2c;
+    undefined4 msgWord28;
     float dx;
     float dy;
     float dz;
 
-    control = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
     *(byte*)(control + 0x15) = *(byte*)(control + 0x15) & 0xfb;
     speedDiv = lbl_803E6F88;
-    *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
-    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / speedDiv;
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    *(float*)(state + 0x280) = *(float*)(state + 0x280) / lbl_803E6F88;
+    *(float*)(state + 0x284) = *(float*)(state + 0x284) / speedDiv;
+    *(float*)(state + 0x2a0) = lbl_803E6F8C;
+    if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+                     obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        *(undefined*)(state + 0x346) = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 0x1f;
-    if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)(param_10 + 0x2d0) + 0x10) - lbl_803E6F90))
+    *(undefined*)(state + 0x34d) = 0x1f;
+    if ((((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E6F84) ||
+        (((GameObject*)obj)->anim.localPosY < *(float*)(*(int*)(state + 0x2d0) + 0x10) - lbl_803E6F90))
     {
-        target = *(int*)(param_10 + 0x2d0);
-        dx = *(float*)(target + 0xc) - ((GameObject*)param_9)->anim.localPosX;
-        dy = *(float*)(target + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
-        dz = *(float*)(target + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
+        target = *(int*)(state + 0x2d0);
+        dx = *(float*)(target + 0xc) - ((GameObject*)obj)->anim.localPosX;
+        dy = *(float*)(target + 0x10) - (((GameObject*)obj)->anim.localPosY + lbl_803E6F94);
+        dz = *(float*)(target + 0x14) - ((GameObject*)obj)->anim.localPosZ;
         dist = FUN_80293900((double)(dz * dz + dx * dx + dy * dy));
         if (dist < (double)lbl_803E6F50)
         {
-            local_40 = *(undefined4*)(param_10 + 0x2d0);
+            msgWord40 = *(undefined4*)(state + 0x2d0);
             msgQueue = *(short**)(control + 0x24);
-            local_48 = 0xe;
-            local_44 = 1;
-            queueFull = FUN_80006ab8(msgQueue);
-            if (queueFull == 0)
+            msgWord48 = 0xe;
+            msgWord44 = 1;
+            busy = FUN_80006ab8(msgQueue);
+            if (busy == 0)
             {
-                FUN_80006ac4(msgQueue, (uint) & local_48);
+                FUN_80006ac4(msgQueue, (uint) & msgWord48);
             }
             *(undefined*)(control + 0x34) = 1;
         }
@@ -219,23 +219,23 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     else
     {
         msgQueue = *(short**)(control + 0x24);
-        local_30 = 9;
-        local_2c = 0;
-        local_28 = 0x24;
-        queueFull = FUN_80006ab8(msgQueue);
-        if (queueFull == 0)
+        msgWord30 = 9;
+        msgWord2c = 0;
+        msgWord28 = 0x24;
+        busy = FUN_80006ab8(msgQueue);
+        if (busy == 0)
         {
-            FUN_80006ac4(msgQueue, (uint) & local_30);
+            FUN_80006ac4(msgQueue, (uint) & msgWord30);
         }
         *(undefined*)(control + 0x34) = 1;
-        local_34 = *(undefined4*)(param_10 + 0x2d0);
+        msgWord34 = *(undefined4*)(state + 0x2d0);
         msgQueue = *(short**)(control + 0x24);
-        local_3c = 7;
-        local_38 = 1;
-        queueFull = FUN_80006ab8(msgQueue);
-        if (queueFull == 0)
+        msgWord3c = 7;
+        msgWord38 = 1;
+        busy = FUN_80006ab8(msgQueue);
+        if (busy == 0)
         {
-            FUN_80006ac4(msgQueue, (uint) & local_3c);
+            FUN_80006ac4(msgQueue, (uint) & msgWord3c);
         }
         *(undefined*)(control + 0x34) = 1;
     }
