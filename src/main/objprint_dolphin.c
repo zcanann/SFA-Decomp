@@ -1637,11 +1637,11 @@ void FUN_80040784(undefined4 param_1, undefined4 param_2, uint param_3)
 
 void FUN_80040a88(int param_1)
 {
-    short sVar1;
-    int* piVar2;
-    int iVar3;
-    int iVar4;
-    undefined4 local_48;
+    short seqId;
+    int* renderNode;
+    int model;
+    int sub;
+    undefined4 shadowColor;
     int local_44;
     int local_40;
     int local_3c;
@@ -1654,45 +1654,45 @@ void FUN_80040a88(int param_1)
     undefined4 local_20[2];
     longlong local_18;
 
-    piVar2 = (int*)FUN_80017a54(param_1);
+    renderNode = (int*)FUN_80017a54(param_1);
     if (lbl_803DF684 == ((GameObject*)param_1)->anim.rootMotionScale)
     {
         DAT_803dd8a4 = 0;
     }
     else
     {
-        iVar3 = *piVar2;
-        if ((*(ushort*)(iVar3 + 2) & 0x8000) == 0)
+        model = *renderNode;
+        if ((*(ushort*)(model + 2) & 0x8000) == 0)
         {
-            iVar4 = param_1;
+            sub = param_1;
             if (*(int*)&((GameObject*)param_1)->ownerObj != 0)
             {
-                iVar4 = *(int*)&((GameObject*)param_1)->ownerObj;
+                sub = *(int*)&((GameObject*)param_1)->ownerObj;
             }
-            FUN_800400ac(param_1, iVar4, iVar3, 0);
+            FUN_800400ac(param_1, sub, model, 0);
         }
         else
         {
-            iVar4 = param_1;
+            sub = param_1;
             if (*(int*)&((GameObject*)param_1)->ownerObj != 0)
             {
-                iVar4 = *(int*)&((GameObject*)param_1)->ownerObj;
+                sub = *(int*)&((GameObject*)param_1)->ownerObj;
             }
-            fn_8003F8EC(param_1, iVar4, iVar3);
+            fn_8003F8EC(param_1, sub, model);
         }
-        iVar3 = param_1;
-        for (iVar4 = 0; iVar4 < (int)(uint)((GameObject*)param_1)->childCount; iVar4 = iVar4 + 1)
+        model = param_1;
+        for (sub = 0; sub < (int)(uint)((GameObject*)param_1)->childCount; sub = sub + 1)
         {
-            if (*(int*)(iVar3 + 200) != 0)
+            if (*(int*)(model + 200) != 0)
             {
-                FUN_80040784(*(int*)(iVar3 + 200), param_1, 0);
+                FUN_80040784(*(int*)(model + 200), param_1, 0);
             }
-            iVar3 = iVar3 + 4;
+            model = model + 4;
         }
         if (((((OBJPRINT_MODEL_DEF(param_1)->shadowType == 4) && (DAT_803dd8a9 == '\0')) &&
-                    ((sVar1 = ((GameObject*)param_1)->anim.seqId, sVar1 != 0x6a8 && (sVar1 != 0x6a9)))) &&
-                ((sVar1 != 0x6aa && (sVar1 != 0x6ab)))) &&
-            ((sVar1 != 0x6ac && (sVar1 != 0x752))))
+                    ((seqId = ((GameObject*)param_1)->anim.seqId, seqId != 0x6a8 && (seqId != 0x6a9)))) &&
+                ((seqId != 0x6aa && (seqId != 0x6ab)))) &&
+            ((seqId != 0x6ac && (seqId != 0x752))))
         {
             FUN_80006940((double)(((GameObject*)param_1)->anim.localPosX - lbl_803DDA58),
                          (double)((GameObject*)param_1)->anim.localPosY,
@@ -1702,8 +1702,8 @@ void FUN_80040a88(int param_1)
                          &local_34, &local_38);
             FUN_80006938((double)local_30, (double)local_34, (double)local_38, &local_3c, &local_40,
                          &local_44);
-            iVar3 = FUN_8006f690(local_3c, local_40, param_1);
-            if (iVar3 < local_44)
+            model = FUN_8006f690(local_3c, local_40, param_1);
+            if (model < local_44)
             {
                 ((ObjAnimComponent*)param_1)->modelState->shadowAlphaStep = -0x20;
             }
@@ -1711,28 +1711,28 @@ void FUN_80040a88(int param_1)
             {
                 ((ObjAnimComponent*)param_1)->modelState->shadowAlphaStep = 0x20;
             }
-            iVar4 = (int)((ObjAnimComponent*)param_1)->modelState;
-            iVar3 = ((ObjModelState*)iVar4)->shadowAlpha + ((ObjModelState*)iVar4)->shadowAlphaStep;
-            if (iVar3 < 0x100)
+            sub = (int)((ObjAnimComponent*)param_1)->modelState;
+            model = ((ObjModelState*)sub)->shadowAlpha + ((ObjModelState*)sub)->shadowAlphaStep;
+            if (model < 0x100)
             {
-                if (iVar3 < 0)
+                if (model < 0)
                 {
-                    ((ObjModelState*)iVar4)->shadowAlpha = 0;
+                    ((ObjModelState*)sub)->shadowAlpha = 0;
                 }
                 else
                 {
-                    ((ObjModelState*)iVar4)->shadowAlpha = iVar3;
+                    ((ObjModelState*)sub)->shadowAlpha = model;
                 }
             }
             else
             {
-                ((ObjModelState*)iVar4)->shadowAlpha = 0xff;
+                ((ObjModelState*)sub)->shadowAlpha = 0xff;
             }
             *(undefined*)((int)&DAT_803dc0e8 + 3) = ((ObjAnimComponent*)param_1)->modelState->shadowAlpha;
             FUN_8006b03c(param_1, local_20, &local_24, &local_28, &local_2c);
-            local_48 = DAT_803dc0e8;
+            shadowColor = DAT_803dc0e8;
             local_18 = (longlong)(int)(lbl_803DF6EC * local_24);
-            FUN_800709e4(local_20[0], local_28, local_2c, &local_48,
+            FUN_800709e4(local_20[0], local_28, local_2c, &shadowColor,
                          (int)(lbl_803DF6EC * local_24), 1);
         }
     }
@@ -1926,30 +1926,30 @@ void FUN_80041c10(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
 {
-    int iVar1;
+    int charPos;
     undefined8 extraout_f1;
-    undefined8 uVar2;
+    undefined8 acc;
 
     if (*(short*)(&DAT_802cc9d4 + param_9 * 2) != -1)
     {
-        iVar1 = (int)(*gMapEventInterface)->getCurCharPos();
-        *(char*)(iVar1 + 0xe) = (char)param_9;
+        charPos = (int)(*gMapEventInterface)->getCurCharPos();
+        *(char*)(charPos + 0xe) = (char)param_9;
         param_1 = extraout_f1;
     }
-    uVar2 = FUN_800443fc(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    uVar2 = FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    FUN_800443fc(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
     return;
 }
 
@@ -1957,41 +1957,41 @@ int FUN_80041ff8(undefined8 param_1, undefined8 param_2, undefined8 param_3, und
                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                  int param_9)
 {
-    int iVar1;
-    int iVar2;
-    int iVar3;
+    int which;
+    int mapped;
+    int charId;
 
     if (param_9 < 0x4b)
     {
-        iVar3 = (&DAT_802cc8a8)[param_9];
+        charId = (&DAT_802cc8a8)[param_9];
     }
     else
     {
-        iVar3 = 5;
+        charId = 5;
     }
-    iVar2 = (int)*(short*)(&DAT_802cc9d4 + iVar3 * 2);
-    if (iVar2 != -1)
+    mapped = (int)*(short*)(&DAT_802cc9d4 + charId * 2);
+    if (mapped != -1)
     {
-        if (DAT_803601f2 == iVar2)
+        if (DAT_803601f2 == mapped)
         {
-            iVar1 = 0;
+            which = 0;
         }
-        else if (DAT_80360236 == iVar2)
+        else if (DAT_80360236 == mapped)
         {
-            iVar1 = 1;
+            which = 1;
         }
         else
         {
-            iVar1 = -1;
+            which = -1;
         }
-        if (iVar1 == -1)
+        if (which == -1)
         {
-            FUN_80041c10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar2);
-            return iVar2;
+            FUN_80041c10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, mapped);
+            return mapped;
         }
     }
-    FUN_80041c10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar3);
-    return iVar3;
+    FUN_80041c10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, charId);
+    return charId;
 }
 
 void FUN_800427c8(void)
@@ -2015,17 +2015,17 @@ void FUN_80042800(void)
 
 undefined4 FUN_80042838(void)
 {
-    undefined4 uVar1;
+    undefined4 flags;
 
     FUN_80243e74();
-    uVar1 = DAT_803dd900;
+    flags = DAT_803dd900;
     FUN_80243e9c();
-    return uVar1;
+    return flags;
 }
 
 int FUN_80042b9c(int param_1, int param_2, int param_3)
 {
-    int iVar1;
+    int slot;
 
     if (param_3 == 1)
     {
@@ -2033,10 +2033,10 @@ int FUN_80042b9c(int param_1, int param_2, int param_3)
         uRam803dc214 = 0xfffffffe;
         return -1;
     }
-    iVar1 = (&DAT_803dc210)[param_2];
-    if ((param_1 != iVar1) && (iVar1 != -2))
+    slot = (&DAT_803dc210)[param_2];
+    if ((param_1 != slot) && (slot != -2))
     {
-        return iVar1;
+        return slot;
     }
     (&DAT_803dc210)[param_2] = 0xfffffffe;
     return -1;
