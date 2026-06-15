@@ -1,21 +1,11 @@
 /* DLL 0x194 — GP/SH scene controller [801C70F0-801C7724) */
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/dll/mmshrine/shrine1C2.h"
-#include "main/objseq.h"
 #include "main/screen_transition.h"
 
 extern void objRenderFn_8003b8f4(f32);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/dll/creator1C4.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 #include "main/screen_transition.h"
 
 extern f32 lbl_803E5058;
