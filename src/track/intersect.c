@@ -3,6 +3,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 #include "main/model.h"
@@ -220,41 +221,47 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     }
 }
 
-/* EN v1.0 Size: 256b - 92.6% match. Per-iteration byte decrement
- * over 256 rows in two parallel arrays. Target recomputes the full
- * stw/lfd/fsubs conversion before the else-branch store instead of
- * CSE'ing it from the compare: reproduced with opt_common_subs off
- * (77 -> 92.6%). Residual: a/b pointer init mr + b colors r5 not r3
- * (coloring), and @NNN-vs-named SDA21 relocs (score-neutral, #70). */
-#pragma opt_common_subs off
+/* EN v1.0 Size: 256b - 77% match. Per-iteration byte decrement:
+ *   if (b != 0) {
+ *     v = (f32)(u32)b - step;
+ *     if (v <= 0) b = 0; else b = (u8)v;
+ *   }
+ * for 256 rows in two parallel arrays. MWCC CSEs the conversion
+ * expression (v) between the compare and the store, emitting a
+ * single fctiwz on cached f2. Target recomputes the full
+ * stw/lfd/fsubs sequence before the second use, which suggests
+ * retail source had a variable reassignment between the two uses
+ * (see Ghidra: local_18 reassigned before the else-branch store).
+ * Can't reproduce the re-store without __asm. */
 void timeFn_8006f400(f32 step)
 {
     int i;
+    u8* a;
+    u8* b;
     extern u8 lbl_80392DE0[];
     extern u8 lbl_80391DE0[];
-    u8* a = lbl_80392DE0;
-    u8* b = lbl_80391DE0;
 
+    a = lbl_80392DE0;
+    b = lbl_80391DE0;
     for (i = 0; i < 256; i++) {
         if (a[0x33] != 0) {
             if ((f32)(u32)a[0x33] - step <= 0.0f) {
                 a[0x33] = 0;
             } else {
-                a[0x33] = (s32)((f32)(u32)a[0x33] - step);
+                a[0x33] = (u8)(s32)((f32)(u32)a[0x33] - step);
             }
         }
         if (b[0x0E] != 0) {
             if ((f32)(u32)b[0x0E] - step <= 0.0f) {
                 b[0x0E] = 0;
             } else {
-                b[0x0E] = (s32)((f32)(u32)b[0x0E] - step);
+                b[0x0E] = (u8)(s32)((f32)(u32)b[0x0E] - step);
             }
         }
         a += 0x38;
         b += 0x10;
     }
 }
-#pragma opt_common_subs reset
 
 void drawFn_8006f500(void)
 {
@@ -570,9 +577,10 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = (u32)gDepthReadPendingCount;
         if (n < 0x14) {
-            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].x = (u16)x;
-            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].y = (u16)y;
-            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].key = requestKey;
+            DepthReadRequest* slot = (DepthReadRequest*)((u8*)&gDepthReadPendingQueue + n * 0xC);
+            slot->x = (u16)x;
+            slot->y = (u16)y;
+            slot->key = requestKey;
             gDepthReadPendingCount++;
         }
         i = 0;
@@ -617,10 +625,11 @@ extern f32 lbl_803DEE74;
 extern f32 lbl_803DEE78;
 extern f32 lbl_803DEE7C;
 extern f32 Gq;
-extern int lbl_803DD03C;
+extern f32 lbl_803DD03C;
 extern int lbl_803968C0[];
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
+extern f32 fabs(f32 x);
 
 void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
                        float *mat, short *out)
@@ -646,16 +655,16 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
 
     if (out != NULL) {
         if ((f32)(near + far) <= lbl_803DEE7C) {
-            *out = 0xFFFF;
+            *out = (s16)0xFFFF;
         } else {
             *out = (s16)(s32)(Gq / (near + far));
-            if (*(u16 *)out == 0) {
+            if (*out == 0) {
                 *out = 1;
             }
         }
     }
-    lbl_803DD038 = __fabs(near);
-    lbl_803DD034 = __fabs(far);
+    lbl_803DD038 = fabs(near);
+    lbl_803DD034 = fabs(far);
     C_MTXPerspective((void *)lbl_803968C0, fov, aspect, lbl_803DD038, lbl_803DD034);
     lbl_803DD03C = 0;
 }
@@ -1009,8 +1018,8 @@ void screenImageDraw(u8 alpha)
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    Mtx mtx_60;
     Mtx mtx_30;
+    Mtx mtx_60;
     int handle;
     f32 fA;
     f32 fB;
@@ -1028,7 +1037,7 @@ void screenImageDraw(u8 alpha)
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
-    PSMTXScale(mtx_60, lbl_803DEEE8, *(f32 *)&lbl_803DEEE8, lbl_803DEEE4);
+    PSMTXScale(mtx_60, lbl_803DEEE8, lbl_803DEEE8, lbl_803DEEE4);
     mtx_60[1][3] = -fA;
     GXLoadTexMtxImm(mtx_60, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
@@ -1052,12 +1061,12 @@ void screenImageDraw(u8 alpha)
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, lbl_8030EA70, -3);
-    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 1);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
 
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, lbl_8030EA88, -3);
-    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 1);
+    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 0, 0, 1);
 
     GXSetTevOrder(1, 0xFF, 0xFF, 8);
     GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0xF);
@@ -1094,8 +1103,8 @@ void screenImageDraw(u8 alpha)
     GXSetTevAlphaOp(4, 1, 0, 1, 1, 2);
 
     GXSetTevKColorSel(5, 0xE);
-    GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
     GXSetTevDirect(5);
+    GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
     GXSetTevColorIn(5, 0xF, 0xE, 0, 0xF);
     GXSetTevAlphaIn(5, 1, 7, 7, 2);
     GXSetTevSwapMode(5, 0, 0);
@@ -1319,10 +1328,12 @@ void doColorFilter(u8* mod)
     *(u32*)&c2 = lbl_803DEED0;
     *(u32*)&c3 = lbl_803DEED4;
     {
-        int s0, s1, s2;
-        c0.r = (u8)(c0.r + (s0 = mod[0] >> 3));
-        c0.g = (u8)(c0.g + (s1 = mod[1] >> 3));
-        c0.b = (u8)(c0.b + (s2 = mod[2] >> 3));
+        int s0 = mod[0] >> 3;
+        int s1 = mod[1] >> 3;
+        int s2 = mod[2] >> 3;
+        c0.r = (u8)(c0.r + s0);
+        c0.g = (u8)(c0.g + s1);
+        c0.b = (u8)(c0.b + s2);
         c1.r = (u8)(c1.r + s0);
         c1.g = (u8)(c1.g + s1);
         c1.b = (u8)(c1.b + s2);
@@ -1376,7 +1387,7 @@ void doColorFilter(u8* mod)
     GXSetTevColorIn(2, 0xf, 8, 0xe, 0);
     GXSetTevAlphaIn(2, 7, 7, 7, 0);
     GXSetTevSwapMode(2, 0, 3);
-    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(2, 0, 0, 3, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
 
     GXClearVtxDesc();
@@ -1427,6 +1438,7 @@ void doColorFilter(u8* mod)
     GXWGFifo.s16 = 0x80;
 
     Camera_RebuildProjectionMatrix();
+    GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
 
 static inline float distortSqrtf(float x) {
@@ -1482,21 +1494,18 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     *(u32*)&c1 = lbl_803DEEBC;
     *(u32*)&c2 = lbl_803DEEC0;
     *(u32*)&c3 = lbl_803DEEC4;
-    {
-        int s0, s1, s2;
-        c0.r = (u8)(c0.r + (s0 = mod[0] >> 2));
-        c0.g = (u8)(c0.g + (s1 = mod[1] >> 2));
-        c0.b = (u8)(c0.b + (s2 = mod[2] >> 2));
-        c1.r = (u8)(c1.r + s0);
-        c1.g = (u8)(c1.g + s1);
-        c1.b = (u8)(c1.b + s2);
-        c2.r = (u8)(c2.r + s0);
-        c2.g = (u8)(c2.g + s1);
-        c2.b = (u8)(c2.b + s2);
-        c3.r = (u8)(c3.r + (mod[0] >> 3));
-        c3.g = (u8)(c3.g + (mod[1] >> 3));
-        c3.b = (u8)(c3.b + (mod[2] >> 3));
-    }
+    c0.r = (u8)(c0.r + (mod[0] >> 2));
+    c0.g = (u8)(c0.g + (mod[1] >> 2));
+    c0.b = (u8)(c0.b + (mod[2] >> 2));
+    c1.r = (u8)(c1.r + (mod[0] >> 2));
+    c1.g = (u8)(c1.g + (mod[1] >> 2));
+    c1.b = (u8)(c1.b + (mod[2] >> 2));
+    c2.r = (u8)(c2.r + (mod[0] >> 2));
+    c2.g = (u8)(c2.g + (mod[1] >> 2));
+    c2.b = (u8)(c2.b + (mod[2] >> 2));
+    c3.r = (u8)(c3.r + (mod[0] >> 3));
+    c3.g = (u8)(c3.g + (mod[1] >> 3));
+    c3.b = (u8)(c3.b + (mod[2] >> 3));
 
     Camera_ProjectWorldSphere(&proj5, &proj4, &proj3, &proj2, &proj1, &proj0,
                               pos[0] - playerMapOffsetX, pos[1], pos[2] - playerMapOffsetZ, radius);
@@ -5068,13 +5077,12 @@ void fn_8007BD8C(int handle1, int handle2)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void selectReflectionTexture(int);
-    extern u8 isHeavyFogEnabled(void);
+    extern int isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_30;
     GXColor temp;
-    f32 (*ind)[3] = lbl_8030EA10;
 
     selectReflectionTexture(0);
     selectTexture(handle1, 1);
@@ -5101,16 +5109,29 @@ void fn_8007BD8C(int handle1, int handle2)
             &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
     }
 
-    GXSetTevKColor(0, *(GXColor*)&lbl_803DB690);
+    *(u32*)&temp = (lbl_803DB690 & 0xFFFFFF00) | (*(u32*)&temp & 0xFFFFFFFF);
+    {
+        GXColor c0;
+        *(u32*)&c0 = lbl_803DB690;
+        GXSetTevKColor(0, c0);
+    }
     GXSetTevKColorSel(0, 0xC);
-    GXSetTevKColor(1, *(GXColor*)&lbl_803DB694);
+    {
+        GXColor c1;
+        *(u32*)&c1 = lbl_803DB694;
+        GXSetTevKColor(1, c1);
+    }
     GXSetTevKColorSel(1, 0xD);
-    GXSetTevKColor(2, *(GXColor*)&lbl_803DB698);
+    {
+        GXColor c2;
+        *(u32*)&c2 = lbl_803DB698;
+        GXSetTevKColor(2, c2);
+    }
     GXSetTevKColorSel(2, 0xE);
 
-    ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] >> 2);
-    ((u8*)&temp)[1] = (u8)(((u8*)&temp)[1] >> 2);
-    ((u8*)&temp)[2] = (u8)(((u8*)&temp)[2] >> 2);
+    ((u8*)&temp)[0] = (u8)((s8)((u8*)&temp)[0] >> 2);
+    ((u8*)&temp)[1] = (u8)((s8)((u8*)&temp)[1] >> 2);
+    ((u8*)&temp)[2] = (u8)((s8)((u8*)&temp)[2] >> 2);
     GXSetTevColor(1, temp);
 
     ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
@@ -5120,9 +5141,9 @@ void fn_8007BD8C(int handle1, int handle2)
 
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
-    GXSetIndTexMtx(1, ind, -1);
-    GXSetIndTexMtx(2, (f32(*)[3])((u8*)ind + 0x18), -1);
-    GXSetIndTexMtx(3, (f32(*)[3])((u8*)ind + 0x30), -1);
+    GXSetIndTexMtx(1, lbl_8030EA10, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])((u8*)lbl_8030EA10 + 0x18), -1);
+    GXSetIndTexMtx(3, (f32(*)[3])((u8*)lbl_8030EA10 + 0x30), -1);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 1);
     GXSetTevIndirect(2, 0, 0, 7, 3, 0, 0, 0, 0, 0);
@@ -5330,8 +5351,8 @@ void fn_8007CAF4(void)
     extern u8 isHeavyFogEnabled(void);
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
-    f32 sOff;
     f32 tOff;
+    f32 sOff;
     f32 indMtx[6];
     Mtx scaleMtx;
 
@@ -5564,17 +5585,18 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/* EN v1.0 Size: 108b - 77% match. MWCC recomputes &lbl_803967C0 for
- * each PSMTXConcat call; target caches it once in r31 (callee-save)
- * and reuses across both calls. Register-allocator preference -- not
- * crackable without inline asm. */
+/* EN v1.0 Size: 108b - 92% match. f32* base + byte-offset args hoists
+ * &lbl_803967C0 into r31 (callee-save) and reuses it across both calls,
+ * matching the target. Residual: target loads the LO directly into r31
+ * (addi r31,r3,0); MWCC lands it in r4 then copies (mr r31,r4) -- a
+ * single within-class allocator choice (#108). */
 void fn_8007D670(void)
 {
-    f32* mats = (f32*)&lbl_803967C0;
+    f32* base = (f32*)&lbl_803967C0;
     Mtx tmp;
-    PSMTXConcat((f32(*)[4])(mats + 36), (f32(*)[4])mats, tmp);
+    PSMTXConcat((void*)(base + 36), (void*)base, tmp);
     GXLoadTexMtxImm(tmp, 0x1E, GX_MTX3x4);
-    PSMTXConcat((f32(*)[4])(mats + 24), (f32(*)[4])mats, tmp);
+    PSMTXConcat((void*)(base + 24), (void*)base, tmp);
     GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
 }
 
@@ -5633,8 +5655,9 @@ int cardLoadFn_8007d72c(void)
     } else if (res == -13 || res == 0) {
         res = CARDGetSerialNo(0, &serial);
         if (res == 0) {
-            u64 stored = *(u64*)&lbl_803DD048;
-            if (stored == 0 || stored != serial) {
+            u32* serial_words = (u32*)&serial;
+            if ((lbl_803DD048 | lbl_803DD04C) == 0 ||
+                ((lbl_803DD048 ^ serial_words[0]) | (lbl_803DD04C ^ serial_words[1])) != 0) {
                 res = -0x55;
                 lbl_803DB700 = 0xB;
             } else if (need_format) {
@@ -5718,19 +5741,12 @@ int cardDeleteFn_8007d99c(void)
     lbl_803DD058 = 0;
 
     do {
-        int ok;
         if (cardProbe(0) == 0) {
-            ok = 0;
-        } else {
-            lbl_803DD040 = mmAlloc(0xA000, -1, 0);
-            if (lbl_803DD040 == 0) {
-                lbl_803DB700 = 8;
-                ok = 0;
-            } else {
-                ok = 1;
-            }
+            return 0;
         }
-        if (!ok) {
+        lbl_803DD040 = mmAlloc(0xA000, -1, 0);
+        if (lbl_803DD040 == 0) {
+            lbl_803DB700 = 8;
             return 0;
         }
         lbl_803DB700 = 0;
