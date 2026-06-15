@@ -1046,13 +1046,13 @@ int hightop_stateHandler09(int obj, int p)
     int i;
     if ((s8)((HightopPlacement*)p)->unk27A != 0 || state->flagsC49.b6 != 0)
     {
-        if (state->flagsC4A.b0 != 0)
+        if (state->flagsC4A.b0 == 0)
         {
-            state->unkC4B = 9;
+            state->unkC4B = 0;
         }
         else
         {
-            state->unkC4B = 0;
+            state->unkC4B = 9;
         }
         state->unk9FD &= ~1;
         state->flagsC49.b1 = 0;
