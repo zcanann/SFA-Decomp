@@ -84,7 +84,6 @@ extern int ObjMsg_SendToObject();
 extern void objRenderFn_8003b8f4(f32);
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E4190;
