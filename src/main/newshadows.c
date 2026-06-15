@@ -1654,9 +1654,11 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
 {
     u8* base = lbl_8030E8B0;
     int idx = (u8)a;
+    int t;
     u8 v;
-    if (idx < 0 || idx >= 0x23) v = 0;
-    else v = base[idx + 0xb4];
+    if (idx < 0 || idx >= 0x23) t = 0;
+    else t = base[idx + 0xb4];
+    v = (u8)t;
     switch ((u8)b)
     {
     case 1: break;
