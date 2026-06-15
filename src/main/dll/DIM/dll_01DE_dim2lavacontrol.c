@@ -1,3 +1,6 @@
+/* DLL 0x1DE — DIM2 Lava Control: manages the DIM2 lava-rise sequence —
+ * triggers env-fx transitions, drives music track changes based on player
+ * carry state, and maintains the countdown-armed SCGameBitLatch triggers. */
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
@@ -31,7 +34,6 @@ extern void Music_Trigger(int id, int value);
 extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
-extern void Music_Trigger(int trackId, int restart);
 extern void* Obj_GetPlayerObject(void);
 extern int getSaveGameLoadStatus(void);
 
@@ -91,16 +93,7 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-void dll_1DA_release(void);
-
-/* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
- * fall, land on contact object, clamp to floor height. */
-
-/* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
- * from distance/anim-state via the interface vtables. */
-
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
-int dll_1DF_getExtraSize(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -110,17 +103,6 @@ void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4B90);
 }
 
-void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
- *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the
- *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
- *              obj[8]. Also sets obj[0xB8]->f10 from a constant and OR-merges flags
- *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
-
-/* dim2lavacontrol_setScale: every-frame tick -- if not already "armed" (bit 0 of
- *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit
- *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
 void dim2lavacontrol_setScale(void* obj)
 {
     void* sub = ((GameObject*)obj)->extra;
@@ -145,19 +127,6 @@ void dim2lavacontrol_free(void)
     Music_Trigger(0xC4, 0);
     timeOfDayFn_80055000();
 }
-
-/* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
- *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
- *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
- *     else do the same dest writes (different scheduling).
- *   - Then if (distance^2 from player to obj position < lbl_803E4BA0) and sub.f24
- *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
- *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
-
-void dll_1DF_update(void* obj);
-
-/* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
- *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
 
 void dim2lavacontrol_init(int obj, int param2)
 {
