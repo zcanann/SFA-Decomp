@@ -32,14 +32,14 @@ extern f32 mathCosf(f32 x);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern const f32 lbl_803E5390;
-extern const f32 lbl_803E5394;
-extern const f32 lbl_803E5398;
-extern const f32 lbl_803E539C;
-extern const f32 lbl_803E53A8;
-extern const f32 lbl_803E53AC;
-extern const f32 lbl_803E53B0;
-extern const f32 lbl_803E53B4;
+extern f32 lbl_803E5390;
+extern f32 lbl_803E5394;
+extern f32 lbl_803E5398;
+extern f32 lbl_803E539C;
+extern f32 lbl_803E53A8;
+extern f32 lbl_803E53AC;
+extern f32 lbl_803E53B0;
+extern f32 lbl_803E53B4;
 
 extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(void* obj, int id);
@@ -58,21 +58,21 @@ extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 
                                         int flags, f32 f8val, f32 mult);
 extern u8 lbl_80326D98[];
 extern u8 lbl_803DBFC0;
-extern const f32 lbl_803E5388;
-extern const f32 lbl_803E538C;
-extern const f32 lbl_803E53B8;
-extern const f32 lbl_803E53BC;
-extern const f32 lbl_803E53C0;
-extern const f32 lbl_803E53C4;
-extern const f32 lbl_803E53C8;
+extern f32 lbl_803E5388;
+extern f32 lbl_803E538C;
+extern f32 lbl_803E53B8;
+extern f32 lbl_803E53BC;
+extern f32 lbl_803E53C0;
+extern f32 lbl_803E53C4;
+extern f32 lbl_803E53C8;
 extern f64 lbl_803E53D0;
 extern f64 lbl_803E53D8;
 extern f32 lbl_803E53E0;
-extern const f32 lbl_803E53E4;
-extern const f32 lbl_803E53E8;
-extern const f32 lbl_803E53EC;
+extern f32 lbl_803E53E4;
+extern f32 lbl_803E53E8;
+extern f32 lbl_803E53EC;
 extern f32 lbl_803E53F0;
-extern const f32 lbl_803E53F4;
+extern f32 lbl_803E53F4;
 
 int bombplantspore_getExtraSize(void)
 {
@@ -163,7 +163,8 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
         }
-        ((BombPlantSporeState*)state)->spinAngle += ((BombPlantSporeState*)state)->unk2a8;
+        ((BombPlantSporeState*)state)->spinAngle =
+            ((BombPlantSporeState*)state)->spinAngle + ((BombPlantSporeState*)state)->unk2a8;
         angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
         if (0x8000 < angleDelta)
         {
@@ -173,7 +174,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             angleDelta += 0xffff;
         }
-        if (angleDelta > ((BombplantsporeUpdateDriftPlacement*)params)->unk1A)
+        if (((BombplantsporeUpdateDriftPlacement*)params)->unk1A < angleDelta)
         {
             ((BombPlantSporeState*)state)->spinAngle = (s16)(
                 baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->unk1A);
@@ -195,7 +196,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             ((BombPlantSporeState*)state)->randomPhase = lbl_803E53AC;
         }
-        else if (((BombPlantSporeState*)state)->randomPhase > lbl_803E53B0)
+        else if (lbl_803E53B0 < ((BombPlantSporeState*)state)->randomPhase)
         {
             ((BombPlantSporeState*)state)->randomPhase = lbl_803E53B0;
         }
@@ -210,9 +211,9 @@ void bombplantspore_updateDrift(void* obj, void* state)
     {
         angleDelta += 0xffff;
     }
-    ((BombPlantSporeState*)state)->unk2a8 += (angleDelta * (s32)framesThisStep) >> 4;
+    ((BombPlantSporeState*)state)->unk2a8 += (s16)((angleDelta * (s32)framesThisStep) >> 4);
     ((BombPlantSporeState*)state)->unk278 =
-        (lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->unk278)) *
+        lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->unk278) *
         timeDelta +
         ((BombPlantSporeState*)state)->unk278;
 
@@ -253,16 +254,17 @@ void bombplantspore_update(void* obj)
     void* playerObj;
     u32 poppedMessage;
     u32 poppedSender;
+    u32 detonateMessage;
     int i;
 
     state = ((GameObject*)obj)->extra;
-    if ((state->stateFlags >> 6 & 1) != 0u)
+    if ((state->stateFlags >> 6 & 1) != 0)
     {
+        detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0)
         {
-            switch ((int)poppedMessage)
+            if (poppedMessage == detonateMessage)
             {
-            case BOMBPLANTSPORE_MSG_DETONATE:
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
                 Sfx_PlayFromObject(obj, SFXmv_totem_slide);
                 (*gExpgfxInterface)->freeSource((u32)obj);
@@ -276,10 +278,9 @@ void bombplantspore_update(void* obj)
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject((u32)obj);
                 BOMBPLANTSPORE_FLAGS(state)->waitingForDetonateAck = 0;
-                break;
             }
         }
-        if ((state->stateFlags >> 6 & 1) != 0u)
+        if ((state->stateFlags >> 6 & 1) != 0)
         {
             return;
         }
@@ -318,9 +319,9 @@ void bombplantspore_update(void* obj)
         {
             state->unk2a0 = lbl_803E5394;
         }
-        *(s16*)obj += state->yawStep;
+        *(s16*)obj += *(u16*)&state->yawStep;
         ((GameObject*)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject*)obj)->anim.velocityY;
-        if (((GameObject*)obj)->anim.velocityY < lbl_803E53E4)
+        if (lbl_803E53E4 > ((GameObject*)obj)->anim.velocityY)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E53E4;
         }
@@ -449,3 +450,4 @@ void bombplantspore_init(void* obj, void* param2)
     state->yawStep = (s16)randomGetRange(-0x200, 0x200);
 }
 
+void bombplantingspot_update(void* obj);
