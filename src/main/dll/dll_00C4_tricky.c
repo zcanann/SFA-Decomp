@@ -205,100 +205,100 @@ extern f32 lbl_803E3244;
 
 void FUN_80144e40(int param_1, int param_2)
 {
-    float fVar1;
-    int iVar2;
-    bool bVar4;
-    uint uVar3;
-    int local_18[3];
+    float heightVal;
+    int scratch;
+    bool cond;
+    uint bit;
+    int hit[3];
 
     *(float*)(param_2 + 0x720) = *(float*)(param_2 + 0x720) - lbl_803DC074;
     if (*(float*)(param_2 + 0x720) < lbl_803E306C)
     {
         *(float*)(param_2 + 0x720) = lbl_803E306C;
     }
-    iVar2 = ObjHits_GetPriorityHit(param_1, local_18, (int*)0x0, (uint*)0x0);
-    if (((iVar2 != 0) && (*(int*)(local_18[0] + 0xc4) != 0)) &&
-        (*(short*)(*(int*)(local_18[0] + 0xc4) + 0x44) == 1))
+    scratch = ObjHits_GetPriorityHit(param_1, hit, (int*)0x0, (uint*)0x0);
+    if (((scratch != 0) && (*(int*)(hit[0] + 0xc4) != 0)) &&
+        (*(short*)(*(int*)(hit[0] + 0xc4) + 0x44) == 1))
     {
-        fVar1 = *(float*)(param_2 + 0x720);
-        if (lbl_803E306C < fVar1)
+        heightVal = *(float*)(param_2 + 0x720);
+        if (lbl_803E306C < heightVal)
         {
-            *(float*)(param_2 + 0x720) = fVar1 + lbl_803E30D0;
+            *(float*)(param_2 + 0x720) = heightVal + lbl_803E30D0;
             if (*(char*)(param_2 + 10) != '\v')
             {
                 if ((*(uint*)(param_2 + 0x54) & 0x10) == 0)
                 {
-                    iVar2 = *(int*)&((GameObject*)param_1)->extra;
-                    if ((((*(byte*)(iVar2 + 0x58) >> 6 & 1) == 0) &&
+                    scratch = *(int*)&((GameObject*)param_1)->extra;
+                    if ((((*(byte*)(scratch + 0x58) >> 6 & 1) == 0) &&
                             ((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.
                                 currentMove < 0x29)))) &&
-                        (bVar4 = FUN_800067f0(param_1, 0x10), !bVar4))
+                        (cond = FUN_800067f0(param_1, 0x10), !cond))
                     {
-                        FUN_80039468(param_1, iVar2 + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
+                        FUN_80039468(param_1, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
                     *(u8*)(param_2 + 10) = 10;
                     *(uint*)(param_2 + 0x54) = *(uint*)(param_2 + 0x54) | 0x10;
                 }
                 else if (*(float*)(param_2 + 0x720) <= lbl_803E31C4)
                 {
-                    iVar2 = *(int*)&((GameObject*)param_1)->extra;
-                    if ((((*(byte*)(iVar2 + 0x58) >> 6 & 1) == 0) &&
+                    scratch = *(int*)&((GameObject*)param_1)->extra;
+                    if ((((*(byte*)(scratch + 0x58) >> 6 & 1) == 0) &&
                             ((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.
                                 currentMove < 0x29)))) &&
-                        (bVar4 = FUN_800067f0(param_1, 0x10), !bVar4))
+                        (cond = FUN_800067f0(param_1, 0x10), !cond))
                     {
-                        FUN_80039468(param_1, iVar2 + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
+                        FUN_80039468(param_1, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
                 }
                 else
                 {
                     *(float*)(param_2 + 0x720) = *(float*)(param_2 + 0x720) * lbl_803E3138;
-                    uVar3 = FUN_80017690(0x245);
-                    if (uVar3 != 0)
+                    bit = FUN_80017690(0x245);
+                    if (bit != 0)
                     {
                         if (lbl_803E306C == *(float*)(param_2 + 0x2ac))
                         {
-                            bVar4 = false;
+                            cond = false;
                         }
                         else if (lbl_803E30A0 == *(float*)(param_2 + 0x2b0))
                         {
-                            bVar4 = true;
+                            cond = true;
                         }
                         else if (*(float*)(param_2 + 0x2b4) - *(float*)(param_2 + 0x2b0) <= lbl_803E30A4)
                         {
-                            bVar4 = false;
+                            cond = false;
                         }
                         else
                         {
-                            bVar4 = true;
+                            cond = true;
                         }
-                        if (!bVar4)
+                        if (!cond)
                         {
                             *(u8*)(param_2 + 10) = 0xb;
                             return;
                         }
                     }
-                    iVar2 = *(int*)&((GameObject*)param_1)->extra;
-                    if (((*(byte*)(iVar2 + 0x58) >> 6 & 1) == 0) &&
+                    scratch = *(int*)&((GameObject*)param_1)->extra;
+                    if (((*(byte*)(scratch + 0x58) >> 6 & 1) == 0) &&
                         (((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.currentMove
                                 < 0x29)) &&
-                            (bVar4 = FUN_800067f0(param_1, 0x10), !bVar4))))
+                            (cond = FUN_800067f0(param_1, 0x10), !cond))))
                     {
-                        FUN_80039468(param_1, iVar2 + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
+                        FUN_80039468(param_1, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
                 }
             }
         }
         else
         {
-            *(float*)(param_2 + 0x720) = fVar1 + lbl_803E317C;
-            iVar2 = *(int*)&((GameObject*)param_1)->extra;
-            if ((((*(byte*)(iVar2 + 0x58) >> 6 & 1) == 0) &&
+            *(float*)(param_2 + 0x720) = heightVal + lbl_803E317C;
+            scratch = *(int*)&((GameObject*)param_1)->extra;
+            if ((((*(byte*)(scratch + 0x58) >> 6 & 1) == 0) &&
                     ((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.currentMove <
                         0x29)))) &&
-                (bVar4 = FUN_800067f0(param_1, 0x10), !bVar4))
+                (cond = FUN_800067f0(param_1, 0x10), !cond))
             {
-                FUN_80039468(param_1, iVar2 + 0x3a8, 0x34f, 0x500, 0xffffffff, 0);
+                FUN_80039468(param_1, scratch + 0x3a8, 0x34f, 0x500, 0xffffffff, 0);
             }
         }
     }
@@ -742,7 +742,7 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
 {
     int i;
     int childSlot;
-    bool bVar1;
+    bool playing;
     int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -774,7 +774,7 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
         childSlot = *(int*)&((GameObject*)obj)->extra;
         if (((*(byte*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
             (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-                (bVar1 = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !bVar1))))
+                (playing = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !playing))))
         {
             objAudioFn_800393f8(obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
         }
@@ -2850,13 +2850,13 @@ void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, float* param_11, float* param_12)
 {
-    short sVar1;
-    bool bVar2;
-    int* piVar3;
-    char cVar4;
-    int iVar5;
-    double dVar6;
-    undefined8 uVar7;
+    short objId;
+    bool applyOffset;
+    int* target;
+    char blocked;
+    int player;
+    double dist;
+    undefined8 packed;
     char local_a0[4];
     short asStack_9c[4];
     short asStack_94[4];
@@ -2866,23 +2866,23 @@ void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     float local_78;
     int aiStack_74[29];
 
-    uVar7 = FUN_8028683c();
-    piVar3 = (int*)((ulonglong)uVar7 >> 0x20);
-    iVar5 = (int)uVar7;
+    packed = FUN_8028683c();
+    target = (int*)((ulonglong)packed >> 0x20);
+    player = (int)packed;
     local_a0[0] = '\0';
-    cVar4 = '\0';
-    if (*(int*)(iVar5 + 0x29c) != 0)
+    blocked = '\0';
+    if (*(int*)(player + 0x29c) != 0)
     {
         local_80 = *param_11;
         local_7c = param_11[1];
         local_78 = param_11[2];
-        bVar2 = true;
-        sVar1 = *(short*)((int)piVar3 + 0x46);
-        if (((((sVar1 != 0x613) && (sVar1 != 0x642)) && (sVar1 != 0x3fe)) &&
-            ((sVar1 != 0x7c6 && (sVar1 != 0x7c8)))) && ((sVar1 != 0x251 && (sVar1 != 0x851))))
+        applyOffset = true;
+        objId = *(short*)((int)target + 0x46);
+        if (((((objId != 0x613) && (objId != 0x642)) && (objId != 0x3fe)) &&
+            ((objId != 0x7c6 && (objId != 0x7c8)))) && ((objId != 0x251 && (objId != 0x851))))
         {
             local_7c = local_7c + lbl_803E3234;
-            bVar2 = false;
+            applyOffset = false;
         }
         FUN_80006a68(&local_80, asStack_9c);
         local_80 = *param_12;
@@ -2890,23 +2890,23 @@ void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
         local_78 = param_12[2];
         FUN_80006a68(&local_80, asStack_94);
         FUN_80247eb8(param_11, &local_80, afStack_8c);
-        dVar6 = SeekTwiceBeforeRead(afStack_8c);
-        if (dVar6 < (double)lbl_803E3244)
+        dist = SeekTwiceBeforeRead(afStack_8c);
+        if (dist < (double)lbl_803E3244)
         {
-            if (piVar3[0xc] == 0)
+            if (target[0xc] == 0)
             {
-                cVar4 = FUN_80006a64(dVar6, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                blocked = FUN_80006a64(dist, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                      asStack_94, asStack_9c, (undefined4*)0x0, local_a0, 0);
             }
-            if ((!bVar2) && (local_a0[0] == '\x01'))
+            if ((!applyOffset) && (local_a0[0] == '\x01'))
             {
-                cVar4 = '\x01';
+                blocked = '\x01';
             }
         }
     }
-    if ((cVar4 != '\0') && ((*(uint*)(iVar5 + 0x2e4) & 8) != 0))
+    if ((blocked != '\0') && ((*(uint*)(player + 0x2e4) & 8) != 0))
     {
-        FUN_800620e8(param_11, &local_80, (float*)0x0, aiStack_74, piVar3, (uint) * (byte*)(iVar5 + 0x261),
+        FUN_800620e8(param_11, &local_80, (float*)0x0, aiStack_74, target, (uint) * (byte*)(player + 0x261),
                      0xffffffff, 0, 0);
     }
     FUN_80286888();
