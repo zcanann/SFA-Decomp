@@ -1,4 +1,3 @@
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 
 static TRKFramingState gTRKFramingState;
