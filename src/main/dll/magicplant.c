@@ -501,13 +501,14 @@ void fn_801534D8(int obj, int state)
     *(f32*)(state + 0x328) = lblB0;
     *(f32*)(state + 0x32c) = lblB0;
     ((BaddieState*)state)->pathStep = lblD0;
-    if (((GameObject*)obj)->anim.seqId == 0x7c6)
+    switch (((GameObject*)obj)->anim.seqId)
     {
+    case 0x7c6:
         ((BaddieState*)state)->inWhirlpoolGroup = 1;
-    }
-    else
-    {
+        break;
+    default:
         ((BaddieState*)state)->inWhirlpoolGroup = 0;
+        break;
     }
 }
 
