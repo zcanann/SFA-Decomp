@@ -45,18 +45,20 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FEseqobjectEffectParams effect;
     register int self = obj;
+    register ObjAnimUpdateState* anim = animUpdate;
+    register int controlObj;
     int i;
     int msg;
     uint sender;
     uint param;
-    int controlObj;
-    f32 zero;
     f32 one;
+    f32 zero;
 
-    zero = lbl_803E56B0;
-    one = lbl_803E56B4;
     controlObj = 0;
-    for (i = 0; i < animUpdate->eventCount; i++)
+    i = 0;
+    one = lbl_803E56B4;
+    zero = lbl_803E56B0;
+    for (; i < anim->eventCount; i++)
     {
         effect.x = zero;
         effect.y = zero;
@@ -66,7 +68,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         effect.xRot = 0;
         effect.variant = 0;
 
-        switch (animUpdate->eventIds[i])
+        switch (anim->eventIds[i])
         {
         case 1:
             GameBit_Set(0x75, 1);
@@ -96,35 +98,35 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     while (ObjMsg_Pop((void*)self, (uint*)&msg, &sender, &param) != 0)
     {
-        if ((((u8*)animUpdate)[0x90] & 0x80) == 0)
+        if ((((u8*)anim)[0x90] & 0x80) == 0)
         {
-            if (msg == 0xf000b)
+            switch (msg)
             {
+            case 0xf000b:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
                     ObjMsg_SendToObject((void*)controlObj, 0x130001, (void*)self, 0);
                 }
-            }
-            else if (msg == 0xf000c)
-            {
+                break;
+            case 0xf000c:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
                     ObjMsg_SendToObject((void*)controlObj, 0x130002, (void*)self, 0);
                 }
-            }
-            else if (msg == 0xf000d)
-            {
+                break;
+            case 0xf000d:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
                     ObjMsg_SendToObject((void*)controlObj, 0x130003, (void*)self, 0);
                 }
+                break;
             }
         }
     }
-    animUpdate->sequenceEventActive = 0;
+    anim->sequenceEventActive = 0;
     return 0;
 }
 

@@ -91,12 +91,16 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     void* phrase;
     int textureIndex;
     int drawAlpha;
+    u8 a;
     f32 markerX;
+    int frame;
+
+    a = (u8)alpha;
 
     switch (item->kind)
     {
     case 0:
-        drawTexture(lbl_803A9DB8[1], (u8)(((u8)alpha * 0xb4) >> 8),
+        drawTexture(lbl_803A9DB8[1], (u8)((a * 0xb4) >> 8),
                     (f32)item->x, (f32)item->y, 0x100);
 
         texture = lbl_803A9DB8[0];
@@ -104,7 +108,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
             ((f32)(item->value - item->minValue) /
                 (f32)(item->maxValue - item->minValue)) +
             (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
-        drawTexture(texture, (u8)(((u8)alpha * 0xff) >> 8),
+        drawTexture(texture, (u8)((a * 0xff) >> 8),
                     markerX, (f32)(item->y - 4), 0x100);
         break;
     case 1:
@@ -128,7 +132,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
             textureIndex = 5;
         }
 
-        drawAlpha = (u8)alpha;
+        drawAlpha = a;
         if ((item->flags & TITLE_MENU_FLAG_A_TOGGLE) != 0)
         {
             drawAlpha >>= 1;
@@ -139,17 +143,18 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     case 2:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
                                    (item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0 ? 0 : item->value);
-        gameTextSetColor(0, 0, 0, (u8)((alpha * 0x96) >> 8));
+        gameTextSetColor(0, 0, 0, (u8)((a * 0x96) >> 8));
         gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
         gameTextAppendStr(phrase, item->extra.window.windowId);
-        gameTextSetColor(0xff, 0xff, 0xff, alpha);
+        gameTextSetColor(0xff, 0xff, 0xff, a);
         gameTextSetWindowStrPos(item->extra.window.windowId, 0, 0);
         gameTextAppendStr(phrase, item->extra.window.windowId);
         break;
     }
 
-    item->frameDelay--;
-    if (item->frameDelay < 0)
+    frame = (u8)item->frameDelay - 1;
+    item->frameDelay = frame;
+    if ((s8)frame < 0)
     {
         item->frameDelay = 0;
     }
@@ -219,7 +224,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
         if ((sliderDelta == 0) ||
             ((lbl_803DD91C < (f32)item->minValue) && (sliderDelta < 0)) ||
-            (((f32)item->maxValue < lbl_803DD91C) && (sliderDelta > 0)))
+            ((lbl_803DD91C > (f32)item->maxValue) && (sliderDelta > 0)))
         {
             lbl_803DD918 = 0;
         }
@@ -263,24 +268,24 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
     if (item->value > item->maxValue)
     {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) != 0)
         {
-            item->value = item->maxValue;
+            item->value = 0;
         }
         else
         {
-            item->value = 0;
+            item->value = item->maxValue;
         }
     }
     else if (item->value < item->minValue)
     {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) != 0)
         {
-            item->value = item->minValue;
+            item->value = item->maxValue;
         }
         else
         {
-            item->value = item->maxValue;
+            item->value = item->minValue;
         }
     }
 

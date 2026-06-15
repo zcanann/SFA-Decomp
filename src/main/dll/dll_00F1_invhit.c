@@ -358,9 +358,9 @@ void invhit_update(int* obj)
             char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
             char* targetObj;
             f32** hits[2];
-            f32 reach;
             f32 dx2;
             f32 dz2;
+            f32 reach;
             s8 cnt;
             f32 thr;
 

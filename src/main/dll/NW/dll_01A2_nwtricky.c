@@ -67,11 +67,11 @@ void nw_tricky_update(int* obj)
     int* player;
     int** objects;
     int** scan;
-    int i;
     int* ip;
     int* found;
     f32 dPlayer;
     f32 t;
+    int i;
 
     state = ((GameObject*)obj)->extra;
     tricky = getTrickyObject();

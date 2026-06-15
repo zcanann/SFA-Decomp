@@ -13,17 +13,18 @@
 
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
+extern f32 fn_8010AC48(int* window, f32 x, f32 y, f32 z);
 
 void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
 {
     int curve;
     int linked;
+    int found;
     int i;
     int k;
     int window[4];
     int count;
     int dummy;
-    int found;
     int done;
     f32 dist;
 
@@ -31,11 +32,11 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     found = 1;
     for (i = 0; i < 5; i++)
     {
-        if (*(int*)(curve + 28 + i * 4) > -1 &&
+        if (*(int*)(curve + i * 4 + 28) > -1 &&
             ((s8) * (s8*)(curve + 27) & (1 << i)) == 0)
         {
-            linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + 28 + i * 4));
-            if (linked != 0 &&
+            linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 28));
+            if ((u32)linked != 0 &&
                 (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
                     *(u8*)(linked + 51) == tag))
             {
@@ -48,15 +49,15 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     {
         for (i = 0; i < 5; i++)
         {
-            if (*(int*)(curve + 28 + i * 4) > -1 &&
+            if (*(int*)(curve + i * 4 + 28) > -1 &&
                 ((s8) * (s8*)(curve + 27) & (1 << i)) != 0)
             {
-                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + 28 + i * 4));
-                if (linked != 0 &&
+                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 28));
+                if ((u32)linked != 0 &&
                     (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
                         *(u8*)(linked + 51) == tag))
                 {
-                    *p1 = *(int*)(curve + 28 + i * 4);
+                    *p1 = *(int*)(curve + i * 4 + 28);
                     i = 5;
                 }
             }
@@ -65,11 +66,12 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     done = 0;
     do
     {
+        f32 thresh = lbl_803E1888;
         done = 1;
         curve = (int)(*gRomCurveInterface)->getById(*p1);
         pathcam_findTaggedNodeWindow((u8*)curve, window, tag);
         dist = fn_8010AC48(window, x, y, z);
-        if (dist < lbl_803E1888)
+        if (dist < thresh)
         {
             if (window[0] > -1)
             {
@@ -96,15 +98,15 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
         curve = (int)(*gRomCurveInterface)->getById(*p2);
         for (i = 0; i < 5; i++)
         {
-            if (*(int*)(curve + 28 + i * 4) > -1 &&
+            if (*(int*)(curve + i * 4 + 28) > -1 &&
                 ((s8) * (s8*)(curve + 27) & (1 << i)) == 0)
             {
-                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + 28 + i * 4));
-                if (linked != 0 &&
+                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 28));
+                if ((u32)linked != 0 &&
                     (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
                         *(u8*)(linked + 51) == tag))
                 {
-                    *p2 = *(int*)(curve + 28 + i * 4);
+                    *p2 = *(int*)(curve + i * 4 + 28);
                     i = 5;
                 }
             }
