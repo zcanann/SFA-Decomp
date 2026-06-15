@@ -1,6 +1,5 @@
 /* TODO: restore stripped imported address metadata if needed. */
 
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/support.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msg.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 #include <string.h>
