@@ -1,11 +1,9 @@
 /* DLL 0x199 — NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
-#include "main/dll/dll_0198_nwshlevcon.h"
 #include "main/dll/dll197state_struct.h"
 #include "main/dll/dll199state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-#include "main/obj_placement.h"
 #include "main/dll/dimmagicbridge.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
