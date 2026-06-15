@@ -718,11 +718,12 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
+    int fl;
     GfxCmd* entries;
     GfxCmd* e;
     f32 fa = lbl_803E0BE8;
     f32 fb = lbl_803E0BEC;
-    int fl = 100;
+    fl = 100;
     if (variant == 0)
     {
         fl = 0x8c;
