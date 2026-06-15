@@ -10,7 +10,6 @@ extern undefined4 GameBit_Set();
 
 extern int* getTrickyObject(void);
 extern uint GameBit_Get(int id);
-extern f32 lbl_803E5280;
 
 int sh_tricky_getExtraSize(void)
 {
