@@ -1,11 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/ARW/ARWarwingattachment.h"
-#include "main/objHitReact.h"
-#include "main/objseq.h"
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
