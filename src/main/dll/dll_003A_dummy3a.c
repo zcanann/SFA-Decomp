@@ -10,7 +10,6 @@ extern undefined4 FUN_80053c98();
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de3a8;
 
-extern u8 lbl_803DD728;
 
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
