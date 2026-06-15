@@ -343,7 +343,6 @@ void titlescreen_init(u8* obj, u8* p)
     }
 }
 
-extern f32 lbl_803E23E8;
 
 extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
@@ -390,7 +389,6 @@ void fn_80133F70(void* obj)
     sprintf(buf, lbl_803DBBF0, b);
 }
 
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* Obj_GetActiveModel(void* obj);
 
@@ -1099,7 +1097,6 @@ void creditsStart_(void)
     }
 }
 
-extern void CMenu_SetFadeCounter(int v);
 
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
 
@@ -1262,4 +1259,3 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     }
 }
 
-extern u16* debugFrameBuffer;
