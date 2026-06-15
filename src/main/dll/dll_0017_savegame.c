@@ -1447,8 +1447,10 @@ void saveGame_saveObjectPos(int* obj)
     register u8* slot;
     register int v;
     register int i;
+    int status;
     if (((GameObject*)obj)->anim.flags & 0x2000) return;
-    if (saveGameLoadStatus == 0)
+    status = saveGameLoadStatus;
+    if (status == 0)
     {
         slot = gSaveGameData;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
