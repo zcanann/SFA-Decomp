@@ -63,6 +63,7 @@ void controllight_init(int obj, int setup)
 }
 
 #pragma opt_loop_invariants off
+#pragma optimization_level 1
 void controllight_update(int obj)
 {
     ControlLightState* state = ((GameObject*)obj)->extra;
@@ -115,6 +116,7 @@ void controllight_update(int obj)
 
     state->lastBit = bit;
 }
+#pragma optimization_level reset
 #pragma opt_loop_invariants reset
 
 void controllight_release(void)
