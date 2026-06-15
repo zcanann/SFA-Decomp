@@ -1,4 +1,3 @@
-#include "string.h"
 #include "stddef.h"
 
 #define K1 0x80808080
