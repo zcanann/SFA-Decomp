@@ -824,7 +824,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     s8* arr;
 
     layer = 0;
-    arr = &lbl_803DB624;
+    arr = (s8*)(int)&lbl_803DB624;
     if (arr[0] != mapType)
     {
         layer = 1;
