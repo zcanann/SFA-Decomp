@@ -2,7 +2,6 @@
 #include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 
 #pragma scheduling on
