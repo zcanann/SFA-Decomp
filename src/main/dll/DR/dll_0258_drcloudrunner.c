@@ -98,12 +98,11 @@ void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
 int DR_CloudRunner_stateHandler07(int obj)
 {
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
-    int v;
+    u8 v;
     if (inner->airTimeRemaining == 0)
     {
         v = ((GameObject*)obj)->anim.alpha;
-        v -= framesThisStep;
-        ((GameObject*)obj)->anim.alpha = (u8)v;
+        ((GameObject*)obj)->anim.alpha = v - framesThisStep;
     }
     return 0;
 }
@@ -322,10 +321,12 @@ int DR_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        switch (animUpdate->eventIds[i])
+        switch ((int)animUpdate->eventIds[i])
         {
         case 1:
             (*gRomCurveInterface)->initCurve((char*)inner + 0x35c, (void*)obj, lbl_803E8410, &local, 0xf);
+            break;
+        default:
             break;
         }
     }
@@ -1041,13 +1042,13 @@ void DR_CloudRunner_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         fn_802C11BC(obj, -1, timeDelta);
-        ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000LL;
+        ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000;
     }
     else
     {
         inner->baddie.physicsActive = 0;
         fn_802C11BC(obj, -1, timeDelta);
-        ((ObjAnimComponent*)obj)->modelInstance->flags &= ~0x200000LL;
+        ((ObjAnimComponent*)obj)->modelInstance->flags &= ~0x200000;
     }
     if (inner->cooldownTimer != 0)
     {
