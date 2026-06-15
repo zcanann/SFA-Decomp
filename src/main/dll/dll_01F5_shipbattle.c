@@ -200,7 +200,11 @@ void ShipBattle_update(int obj)
     }
 
     triggerResult = (*gObjectTriggerInterface)->update((u8*)obj, (f32)lbl_803DB411);
-    if (triggerResult == 0 || ((GameObject*)obj)->seqIndex != -2)
+    if (triggerResult == 0)
+    {
+        return;
+    }
+    if (((GameObject*)obj)->seqIndex != -2)
     {
         return;
     }
