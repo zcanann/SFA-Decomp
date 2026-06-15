@@ -3,7 +3,6 @@
 #include "main/model.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
-#include "main/objanim_internal.h"
 
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
