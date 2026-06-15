@@ -48,7 +48,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void* Obj_GetPlayerObject(void);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 Vec_distance(void* a, void* b);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E4268;
