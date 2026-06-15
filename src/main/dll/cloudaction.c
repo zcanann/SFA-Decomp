@@ -113,7 +113,7 @@ void renderClouds(int a, int b, int c, int d)
         fn_8008DAE8((int)gCloudOverrideObject);
         model = Obj_GetActiveModel((int)gCloudOverrideObject);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        gCloudOverrideObject->anim.alpha = 0xff;
+        ((u8*)gCloudOverrideObject)[0x37] = 0xff;
         v = *(f32*)(view + 0xc);
         gCloudOverrideObject->anim.worldPosX = v;
         gCloudOverrideObject->anim.localPosX = v;
@@ -137,7 +137,7 @@ void renderClouds(int a, int b, int c, int d)
     {
         model = Obj_GetActiveModel((int)lbl_8039AB28.upperCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        lbl_8039AB28.upperCloudObj->anim.alpha = 0xff;
+        ((u8*)lbl_8039AB28.upperCloudObj)[0x37] = 0xff;
         if ((u32)gCloudOverridePositionValid != 0)
         {
             lbl_8039AB28.upperCloudObj->anim.localPosX = gCloudOverridePositionX;
@@ -163,7 +163,7 @@ void renderClouds(int a, int b, int c, int d)
         }
         model = Obj_GetActiveModel((int)lbl_8039AB28.mainCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        lbl_8039AB28.mainCloudObj->anim.alpha = 0xff;
+        ((u8*)lbl_8039AB28.mainCloudObj)[0x37] = 0xff;
         v = *(f32*)(view + 0xc);
         lbl_8039AB28.mainCloudObj->anim.worldPosX = v;
         lbl_8039AB28.mainCloudObj->anim.localPosX = v;
@@ -243,7 +243,7 @@ void renderClouds(int a, int b, int c, int d)
     {
         model = Obj_GetActiveModel((int)lbl_8039AB28.lowerCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        lbl_8039AB28.lowerCloudObj->anim.alpha = 0xff;
+        ((u8*)lbl_8039AB28.lowerCloudObj)[0x37] = 0xff;
         if ((u32)gCloudOverridePositionValid != 0)
         {
             lbl_8039AB28.lowerCloudObj->anim.localPosX = gCloudOverridePositionX;
