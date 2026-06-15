@@ -1758,7 +1758,7 @@ void trickyFn_80148d8c(int obj, int state)
     int setup;
     int alpha;
     void* tricky;
-    u32 spawnBits;
+    int spawnBits;
     u8 moveId;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -1789,7 +1789,7 @@ void trickyFn_80148d8c(int obj, int state)
         ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->unk318);
         ((TrickyState*)state)->unk323 = 1;
         ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0);
-        if (*(int*)&((GameObject*)obj)->anim.hitReactState != 0)
+        if (*(void**)&((GameObject*)obj)->anim.hitReactState != NULL)
         {
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
@@ -1864,7 +1864,7 @@ void trickyFn_80148d8c(int obj, int state)
                                                        lbl_803E2570 * (f32) * (s16*)(setup + 0x2c));
             }
             ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~(u64)0x800;
-            ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & ~3;
+            ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & ~3LL;
         }
     }
 }
