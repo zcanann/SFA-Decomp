@@ -478,6 +478,7 @@ typedef struct LinkMenuItem
 #define LINK_FLAG_NO_ACCEPT      0x0020
 #define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
+#pragma peephole off
 undefined4 Link_update(void)
 {
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */
@@ -617,6 +618,7 @@ undefined4 Link_update(void)
     linkDrawFn_80130484();
     return result;
 }
+#pragma peephole reset
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
