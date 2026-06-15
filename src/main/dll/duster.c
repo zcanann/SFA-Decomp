@@ -901,8 +901,7 @@ void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eve
         }
         else
         {
-            move = ((GameObject*)obj)->anim.currentMove;
-            if ((((move == 0) || (move == 1)) || (move == 3)) || (move == 4))
+            if ((((move = ((GameObject*)obj)->anim.currentMove) == 0) || (move == 1)) || (move == 3) || (move == 4))
             {
                 Sfx_PlayFromObject(obj, SFXfox_roll2);
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
