@@ -598,42 +598,42 @@ void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8
 
 undefined4
 FUN_80152a30(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined2 param_10
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, undefined2 objType
 )
 {
-    uint uVar1;
-    undefined4 uVar2;
-    undefined2* puVar3;
+    uint loadingLocked;
+    undefined4 result;
+    undefined2* setup;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    int iVar4;
+    int def;
 
-    iVar4 = *(int*)(param_9 + 0x4c);
+    def = *(int*)(obj + 0x4c);
     FUN_80017a98();
-    uVar1 = FUN_80017ae8();
-    if ((uVar1 & 0xff) == 0)
+    loadingLocked = FUN_80017ae8();
+    if ((loadingLocked & 0xff) == 0)
     {
-        uVar2 = 0;
+        result = 0;
     }
     else
     {
-        puVar3 = FUN_80017aa4(0x24, param_10);
-        *puVar3 = param_10;
-        *(u8*)(puVar3 + 2) = *(u8*)(iVar4 + 4);
-        *(u8*)(puVar3 + 3) = *(u8*)(iVar4 + 6);
-        *(u8*)((int)puVar3 + 5) = 1;
-        *(u8*)((int)puVar3 + 7) = *(u8*)(iVar4 + 7);
-        *(undefined4*)(puVar3 + 4) = *(undefined4*)(param_9 + 0xc);
-        *(undefined4*)(puVar3 + 6) = *(undefined4*)(param_9 + 0x10);
-        *(undefined4*)(puVar3 + 8) = *(undefined4*)(param_9 + 0x14);
-        *(u8*)((int)puVar3 + 0x19) = 0;
-        puVar3[0x10] = 0x95;
-        uVar2 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar3, 5,
-                             ((GameObject*)param_9)->anim.mapEventSlot, 0xffffffff, *(uint**)(param_9 + 0x30), in_r8,
+        setup = FUN_80017aa4(0x24, objType);
+        *setup = objType;
+        *(u8*)(setup + 2) = *(u8*)(def + 4);
+        *(u8*)(setup + 3) = *(u8*)(def + 6);
+        *(u8*)((int)setup + 5) = 1;
+        *(u8*)((int)setup + 7) = *(u8*)(def + 7);
+        *(undefined4*)(setup + 4) = *(undefined4*)(obj + 0xc);
+        *(undefined4*)(setup + 6) = *(undefined4*)(obj + 0x10);
+        *(undefined4*)(setup + 8) = *(undefined4*)(obj + 0x14);
+        *(u8*)((int)setup + 0x19) = 0;
+        setup[0x10] = 0x95;
+        result = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup, 5,
+                             ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff, *(uint**)(obj + 0x30), in_r8,
                              in_r9, in_r10);
     }
-    return uVar2;
+    return result;
 }
 
 #pragma scheduling off
