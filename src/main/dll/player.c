@@ -5975,7 +5975,7 @@ int fn_8029F108(int obj, int state)
     }
     {
         int inner2 = *(int*)&((GameObject*)obj)->extra;
-        *(int*)((char*)inner2 + 0x360) &= ~0x2LL;
+        *(int*)((char*)inner2 + 0x360) &= ~0x2;
         *(int*)((char*)inner2 + 0x360) |= 0x2000;
     }
     *(int*)((char*)state + 0x4) |= 0x100000;
@@ -6007,17 +6007,15 @@ int fn_8029F108(int obj, int state)
         }
         kind = (*(int (*)(int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x30)))(sub);
         (*(void (*)(int, int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 3);
-        if (kind >= 2)
+        switch (kind)
         {
-            n = 9;
-        }
-        else if (kind >= 1)
-        {
+        case 1:
             n = 8;
-        }
-        else
-        {
+            break;
+        case 2:
+        default:
             n = 9;
+            break;
         }
         inner->targetYaw = *(s16*)((char*)sub + 0x0);
         inner->yaw = inner->targetYaw;
