@@ -1,8 +1,6 @@
 #include "main/dll/dll_0198_nwshlevcon.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 extern undefined4 FUN_8003b818();
 
