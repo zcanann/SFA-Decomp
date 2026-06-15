@@ -1272,10 +1272,10 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     f32 distance;
     f32 objPos[3];
     f32 curvePos[3];
-    s16 objGrid[4];
     s16 curveGrid[4];
+    s16 objGrid[4];
     u8 traceHit;
-    int bboxHit[34];
+    int bboxHit[14];
     int curveIndex;
     int typeIndex;
 
