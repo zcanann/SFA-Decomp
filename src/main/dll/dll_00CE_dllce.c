@@ -658,7 +658,6 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     GroundBaddieState* sub;
     u8* hit;
     int flags;
-    ObjHitsPriorityState* hitState;
 
     sub = ((GameObject*)obj)->extra;
     hit = *(u8**)&sub->control;
@@ -682,9 +681,8 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     else
     {
         ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->objectPairPriority = 10;
-        hitState->objectPairHitVolume = 1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }
     if (*(char*)&p->baddie.moveDone != '\0')
