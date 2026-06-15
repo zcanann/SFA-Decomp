@@ -3166,7 +3166,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
     *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
     if (*seqObj != obj && (s8)lbl_803DD0D8 == 0)
     {
-        objCallSeqFn(*seqObj, obj, seq, *(u8*)(historyBase + (s8)((ObjSeqState*)seq)->slot + 0x3c4c));
+        objCallSeqFn(*seqObj, obj, seq, ((u8*)(historyBase + 0x3c4c))[(s8)((ObjSeqState*)seq)->slot]);
     }
 
     ObjSeq_ApplyLinkedObjectTransform(obj, *seqObj, seq);
@@ -3179,8 +3179,8 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
         animatedObjFreeAndSavePlayerPos(obj, *seqObj, seq);
     }
 
-    *(f32*)(historyBase + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3740) = (f32)((ObjSeqState*)seq)->curFrame;
-    *(s16*)(historyBase + (s8)((ObjSeqState*)seq)->slot * 2 + 0x2be0) = ((ObjSeqState*)seq)->curFrame;
+    ((f32*)(historyBase + 0x3740))[(s8)((ObjSeqState*)seq)->slot] = (f32)((ObjSeqState*)seq)->curFrame;
+    ((s16*)(historyBase + 0x2be0))[(s8)((ObjSeqState*)seq)->slot] = ((ObjSeqState*)seq)->curFrame;
     time = OSGetTime();
     *(long long*)(historyBase + (s8)((ObjSeqState*)seq)->slot * 8 + 0x2f38) = time;
     time = OSGetTime();
