@@ -69,15 +69,16 @@ void ktrexfloorswitch_render(void* obj, undefined4 p2, undefined4 p3, undefined4
 void ktrexfloorswitch_init(int obj, char* arg)
 {
     char* p = ((GameObject*)obj)->extra;
-    int q;
     int r;
     *(s16*)obj = (s16)(((u8*)arg)[0x18] << 8);
     ((KtrexfloorswitchState*)p)->unk8 = (f32)(u32)((u8*)arg)[0x19];
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->unkF8 = 1;
-    q = *(int*)&((GameObject*)obj)->anim.placementData;
-    r = (*gRomCurveInterface)->find(&lbl_803DC2A0, 1, 0, ((KtrexfloorswitchPlacement*)q)->unk8,
-                                    ((KtrexfloorswitchPlacement*)q)->unkC, ((KtrexfloorswitchPlacement*)q)->unk10);
+    r = (*gRomCurveInterface)->find(
+        &lbl_803DC2A0, 1, 0,
+        ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->unk8,
+        ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->unkC,
+        ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->unk10);
     if (r != -1)
     {
         r = (int)(*gRomCurveInterface)->getById(r);

@@ -233,7 +233,7 @@ int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8* arg)
     return 0;
 }
 
-#pragma optimization_level 1
+#pragma optimization_level 2
 int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;

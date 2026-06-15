@@ -36,7 +36,7 @@ void worldplanet_updateMapLighting(void)
     (&lbl_803DDD24)[0] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 0, lbl_803E65F8);
     (&lbl_803DDD24)[1] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 1, lbl_803E65F8);
     (&lbl_803DDD24)[2] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 2, lbl_803E65F8);
-    skyFn_800895e0(7, (&lbl_803DDD24)[0], (&lbl_803DDD24)[1], (&lbl_803DDD24)[2], 0x40, 0x40);
+    skyFn_800895e0(7, ((volatile u8*)&lbl_803DDD24)[0], ((volatile u8*)&lbl_803DDD24)[1], ((volatile u8*)&lbl_803DDD24)[2], 0x40, 0x40);
 
     (&lbl_803DDD20)[0] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 0, lbl_803DDD14);
     (&lbl_803DDD20)[1] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 1, lbl_803DDD14);
