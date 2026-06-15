@@ -140,6 +140,7 @@ BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader)
     return FALSE;
 }
 
+#pragma opt_common_subs off
 void model_adjustModelList(ModelList* list, int index)
 {
     s16* entry;
@@ -169,6 +170,7 @@ checkTail:
     }
     return;
 }
+#pragma opt_common_subs on
 
 void modelInitModelList(ModelList* list, s16 index, void* header)
 {
