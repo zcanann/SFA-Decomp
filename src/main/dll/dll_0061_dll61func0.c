@@ -881,7 +881,7 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
             buf.pos[2] = lbl_803E0888 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 9, &base[0x0], 8, &base[0x5c], 0x90, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_803128E8, 8, &base[0x5c], 0x90, 0);
 }
 #pragma fp_contract reset
 
