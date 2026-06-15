@@ -120,7 +120,6 @@ extern u8 lbl_803A1730[];
 
 #pragma scheduling on
 #pragma peephole on
-extern u8 lbl_803DD440;
 extern void* memset(void* dst, int val, u32 n);
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
@@ -128,7 +127,6 @@ extern f32 lbl_803E05F4;
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
-extern f32 lbl_803E05A4;
 extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
 extern f32 lbl_803E0610;
 extern f32 lbl_803E0614;
@@ -154,14 +152,11 @@ extern f32 lbl_803E0608;
 extern f32 lbl_803E060C;
 extern char sObjfsaMissingPatchExitPoint0[];
 extern char sObjfsaMissingPatchExitPoint1[];
-extern u8 gameTimerIsRunning(void* p, int a, int b);
 extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
 extern f32 gFloatHalf;
-extern f32 lbl_803E12B8;
 extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
 extern f32 lbl_803E0664;
-extern SaveData saveData;
 
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
