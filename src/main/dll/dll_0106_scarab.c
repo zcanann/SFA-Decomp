@@ -599,7 +599,6 @@ void scarab_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-extern undefined4 FUN_80006b14();
 extern int Obj_GetActiveModel(int obj);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objfx_spawnDirectionalBurst(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
