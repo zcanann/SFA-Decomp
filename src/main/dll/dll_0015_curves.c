@@ -1024,6 +1024,7 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
 
 void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValue, f32 step)
 {
+    extern int ObjHits_IsObjectEnabled(int obj);
     int flags;
     CurvesCollisionState* collision;
     f32* pf;
