@@ -151,8 +151,11 @@ void wclevelcont_setScale(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 
     mapGetBlockOriginForPos(&outX, &outZ, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                             ((GameObject*)obj)->anim.localPosZ);
-    *outXp = lbl_803E6DB4 + (lbl_803E6DD0 + outX + (f32)(col * 48));
-    *outZp = lbl_803E6DB4 + (lbl_803E6DD4 + outZ + (f32)(row * 48));
+    {
+        f32 base = lbl_803E6DB4;
+        *outXp = base + (lbl_803E6DD0 + outX + (f32)(col * 48));
+        *outZp = base + (lbl_803E6DD4 + outZ + (f32)(row * 48));
+    }
 }
 
 int wclevelcont_getExtraSize(void) { return 0x1c; }
@@ -289,21 +292,25 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         int bi = b;
         if (dx == -1)
         {
-            f32 pz, px;
+            f32 pz, px, ix, iz;
             mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                     ((GameObject*)obj)->anim.localPosZ);
-            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + lbl_803E6DBC);
-            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
+            ix = lbl_803E6DD0 + px;
+            *outX = lbl_803E6DB4 + (ix + lbl_803E6DBC);
+            iz = lbl_803E6DD4 + pz;
+            *outZ = lbl_803E6DB4 + (iz + (f32)(bi * 48));
             a += 1;
             limit = 8;
         }
         else
         {
-            f32 pz, px;
+            f32 pz, px, ix, iz;
             mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                     ((GameObject*)obj)->anim.localPosZ);
-            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + lbl_803E6DA8);
-            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
+            ix = lbl_803E6DD0 + px;
+            *outX = lbl_803E6DB4 + (ix + lbl_803E6DA8);
+            iz = lbl_803E6DD4 + pz;
+            *outZ = lbl_803E6DB4 + (iz + (f32)(bi * 48));
             a -= 1;
             limit = -1;
         }
@@ -313,18 +320,20 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
             {
                 if (lbl_803AD2D8[i][b] <= 4)
                 {
-                    f32 pz, px;
+                    f32 pz, px, ix;
                     i += dx;
                     mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-                    *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
+                    ix = lbl_803E6DD0 + px;
+                    *outX = lbl_803E6DB4 + (ix + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
-                    f32 pz, px;
+                    f32 pz, px, ix;
                     mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-                    *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
+                    ix = lbl_803E6DD0 + px;
+                    *outX = lbl_803E6DB4 + (ix + (f32)((s16)i * 48));
                     return 2;
                 }
             }
@@ -336,21 +345,25 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         int ai = a;
         if (dy == -1)
         {
-            f32 pz, px;
+            f32 pz, px, ix, iz;
             mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                     ((GameObject*)obj)->anim.localPosZ);
-            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
-            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + lbl_803E6DBC);
+            ix = lbl_803E6DD0 + px;
+            *outX = lbl_803E6DB4 + (ix + (f32)(ai * 48));
+            iz = lbl_803E6DD4 + pz;
+            *outZ = lbl_803E6DB4 + (iz + lbl_803E6DBC);
             b += 1;
             limit = 8;
         }
         else
         {
-            f32 pz, px;
+            f32 pz, px, ix, iz;
             mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                     ((GameObject*)obj)->anim.localPosZ);
-            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
-            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + lbl_803E6DA8);
+            ix = lbl_803E6DD0 + px;
+            *outX = lbl_803E6DB4 + (ix + (f32)(ai * 48));
+            iz = lbl_803E6DD4 + pz;
+            *outZ = lbl_803E6DB4 + (iz + lbl_803E6DA8);
             b -= 1;
             limit = -1;
         }
@@ -360,18 +373,20 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
             {
                 if (lbl_803AD2D8[a][i] <= 4)
                 {
-                    f32 pz, px;
+                    f32 pz, px, iz;
                     i += dy;
                     mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-                    *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
+                    iz = lbl_803E6DD4 + pz;
+                    *outZ = lbl_803E6DB4 + (iz + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
-                    f32 pz, px;
+                    f32 pz, px, iz;
                     mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-                    *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
+                    iz = lbl_803E6DD4 + pz;
+                    *outZ = lbl_803E6DB4 + (iz + (f32)((s16)i * 48));
                     return 2;
                 }
             }

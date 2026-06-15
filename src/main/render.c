@@ -199,7 +199,10 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
         dst->bit += gap;
     }
     modelRenderInstrsState_setBit(dst, startBit + bitWidth);
-    return ((u8*)src->instrs)[(src->bit >> 3) + 1];
+    {
+        u8* ep = (u8*)src->instrs + (src->bit >> 3);
+        return ep[1];
+    }
 }
 
 /* Refill the two parallel 64-bit bitstream windows from the next
