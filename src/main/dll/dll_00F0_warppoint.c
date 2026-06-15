@@ -41,7 +41,6 @@ extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
 extern unsigned long GameBit_Set(int eventId, int value);
 extern void warpToMap(int mapId, int flag);
-extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern f32 sqrtf(f32 x);
@@ -52,7 +51,6 @@ extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern f32 lbl_803E35D8;
 extern f32 lbl_803E35DC;
-extern void objSetSlot(s16* obj, int slot);
 
 static inline int* Transporter_GetActiveModel(void* obj)
 {
