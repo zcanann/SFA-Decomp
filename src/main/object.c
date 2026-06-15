@@ -254,8 +254,8 @@ void Obj_ClearModelColorFadeRecursive(u8* obj)
 void Obj_TickModelColorFadeRecursive(u8* obj)
 {
     f32 alpha;
-    int i;
     u8* childScan;
+    int i;
 
     if ((((GameObject*)obj)->colorFadeFlags & 4) != 0)
     {
@@ -277,7 +277,7 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
         ((GameObject*)obj)->colorFadeFlags ^= 4;
     }
 
-    ((GameObject*)obj)->colorFadeAlpha = (int)alpha;
+    ((GameObject*)obj)->colorFadeAlpha = (s8)alpha;
     if ((((GameObject*)obj)->colorFadeFlags & 8) == 0)
     {
         ((GameObject*)obj)->colorFadeFrames -= framesThisStep;
