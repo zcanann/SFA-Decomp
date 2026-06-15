@@ -38,7 +38,6 @@ extern int textureLoadAsset(int id);
 extern int* gameTextGet(int id);
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
-extern f32 lbl_803E3B7C;
 
 void infopoint_hitDetect(void)
 {
