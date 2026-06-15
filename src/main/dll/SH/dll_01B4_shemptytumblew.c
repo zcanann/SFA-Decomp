@@ -1,14 +1,9 @@
-#include "main/dll/DR/DRearthwalk.h"
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/dll/CR/CRsnowbike.h"
-#include "main/mapEventTypes.h"
-#include "main/screen_transition.h"
-#include "global.h"
 
 extern f32 lbl_803DDC00;
 
