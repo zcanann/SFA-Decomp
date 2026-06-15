@@ -3,7 +3,6 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 #include "main/model.h"
