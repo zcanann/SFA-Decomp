@@ -6,7 +6,6 @@
 #include "main/frustum.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/objseq.h"
 #include "main/dll/dll_002E_moveLib.h"
 
 extern undefined8 ObjGroup_RemoveObject();
