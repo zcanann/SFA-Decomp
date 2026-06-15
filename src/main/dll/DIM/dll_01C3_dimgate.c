@@ -1,11 +1,6 @@
 /* DLL 0x01C3 — dimgate (Dinosaur Island Mission gate). TU: 0x801B15D8–0x801B17F4. */
-#include "ghidra_import.h"
 
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIMExplosion.h"
 
 typedef struct DimgatePlacement
 {
@@ -19,7 +14,6 @@ extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState* hitState, int
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4878;
-extern int Sfx_PlayFromObject(int obj, int sfx);
 
 void dimgate_free(void)
 {
