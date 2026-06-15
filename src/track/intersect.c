@@ -2255,7 +2255,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     return 1;
 }
 
-void modelCb_80074518(void* obj_a, void** obj_b, int slot)
+int modelCb_80074518(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DB6B0, lbl_803DB6B4;
@@ -2272,6 +2272,8 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
+    extern int fn_8003BB74(void);
+    extern void GXSetAlphaCompare(int, int, int, int, int);
     Mtx mtx_90;
     Mtx mtx_60;
     Mtx mtx_30;
@@ -2310,7 +2312,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
 
     GXSetIndTexOrder(1, 0, 2);
     GXSetIndTexCoordScale(1, 0, 0);
-    GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 1, 0, 0);
     PSMTXScale(mtx_30, lbl_803DB6B0, lbl_803DB6B0, lbl_803DEEE4);
     PSMTXConcat(mtx_30, lbl_80396820, mtx_90);
     PSMTXTrans(mtx_30,
@@ -2337,13 +2339,11 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
         pcb(obj_a, obj_b, slot);
     } else {
         u8 zCompLoc = 1;
-        u32 modelFlags;
-        if (((u8*)obj_a)[0x37] >= 0xff
-            && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
-            && ((ModelRenderOp *)renderOp)->alpha >= 0xff) {
-            modelFlags = ((ModelRenderOp *)renderOp)->flags;
+        if (((u8*)obj_a)[0x37] < 0xff
+            || (((ModelRenderOp *)renderOp)->flags & 0x40000000) != 0
+            || ((ModelRenderOp *)renderOp)->alpha < 0xff) {
+            GXSetBlendMode(1, 4, 5, 5);
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                GXSetBlendMode(0, 1, 0, 5);
                 if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
                     GXSetZMode(0, 3, 0);
@@ -2352,8 +2352,21 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     lbl_803DD012 = 0;
                     lbl_803DD01A = 1;
                 }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
+            } else if ((((ModelFileHeader *)model)->flags & 0x2000) != 0) {
+                int alphaRef0;
+                zCompLoc = 0;
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 1);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 1;
+                    lbl_803DD01A = 1;
+                }
+                alphaRef0 = fn_8003BB74();
+                GXSetAlphaCompare(4, fn_8003BB74(), 0, 4, alphaRef0);
             } else {
-                GXSetBlendMode(0, 1, 0, 5);
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
                     GXSetZMode(1, 3, 0);
@@ -2362,31 +2375,54 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     lbl_803DD012 = 0;
                     lbl_803DD01A = 1;
                 }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
-            GXSetAlphaCompare(7, 0, 0, 7, 0);
         } else {
-            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                GXSetBlendMode(1, 4, 5, 5);
-                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                    GXSetZMode(1, 3, 0);
-                    lbl_803DD018 = 1;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 0;
-                    lbl_803DD01A = 1;
+            if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
+                GXSetBlendMode(0, 1, 0, 5);
+                if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
+                    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                        GXSetZMode(0, 3, 0);
+                        lbl_803DD018 = 0;
+                        lbl_803DD014 = 3;
+                        lbl_803DD012 = 0;
+                        lbl_803DD01A = 1;
+                    }
+                } else {
+                    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                        (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
+                        GXSetZMode(1, 3, 1);
+                        lbl_803DD018 = 1;
+                        lbl_803DD014 = 3;
+                        lbl_803DD012 = 1;
+                        lbl_803DD01A = 1;
+                    }
                 }
+                GXSetAlphaCompare(4, 192, 0, 4, 192);
             } else {
-                GXSetBlendMode(1, 4, 5, 5);
-                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                    GXSetZMode(0, 3, 0);
-                    lbl_803DD018 = 0;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 0;
-                    lbl_803DD01A = 1;
+                GXSetBlendMode(0, 1, 0, 5);
+                if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
+                    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                        GXSetZMode(0, 3, 0);
+                        lbl_803DD018 = 0;
+                        lbl_803DD014 = 3;
+                        lbl_803DD012 = 0;
+                        lbl_803DD01A = 1;
+                    }
+                } else {
+                    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                        (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
+                        GXSetZMode(1, 3, 1);
+                        lbl_803DD018 = 1;
+                        lbl_803DD014 = 3;
+                        lbl_803DD012 = 1;
+                        lbl_803DD01A = 1;
+                    }
                 }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
-            GXSetAlphaCompare(7, 0, 0, 7, 0);
         }
         if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
             zCompLoc = 0;
@@ -2396,12 +2432,13 @@ void modelCb_80074518(void* obj_a, void** obj_b, int slot)
             lbl_803DD011 = zCompLoc;
             lbl_803DD019 = 1;
         }
-        if ((((ModelRenderOp *)renderOp)->flags & 0x10) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x8) != 0) {
             GXSetCullMode(2);
         } else {
             GXSetCullMode(0);
         }
     }
+    return 1;
 }
 
 u32 objCallback_80074d04(int handle, void* model)
