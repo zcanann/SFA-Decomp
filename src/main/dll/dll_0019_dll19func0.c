@@ -1335,9 +1335,9 @@ void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16
     }
     else
     {
-        dp[0] = *(f32*)(target + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-        dp[1] = *(f32*)(target + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
-        dp[2] = *(f32*)(target + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+        dp[0] = ((GameObject*)target)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = ((GameObject*)target)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = ((GameObject*)target)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         ang = getAngle(-dp[0], -dp[2]);
         ovr = *(s16**)&((GameObject*)obj)->anim.parent;
         if (ovr != NULL)
