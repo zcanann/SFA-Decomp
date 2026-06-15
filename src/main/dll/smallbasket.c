@@ -241,7 +241,7 @@ void FUN_8015a6c0(uint param_1, int param_2)
     case 4:
         if (*(short*)(param_2 + 0x2f8) != 0)
         {
-            if (lbl_803E3954 <= *(float*)(param_1 + 0x98))
+            if (lbl_803E3954 <= ((GameObject *)param_1)->anim.currentMoveProgress)
             {
                 FUN_80006824(param_1, SFXfox_fightbreath4);
             }
