@@ -1,10 +1,17 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/dll/dll_01A1_nwmammoth.h"
+#include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/dll/creator1D4.h"
 #include "main/dll/dim2conveyor.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/gameplay_runtime.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
+#include "main/audio/sfx.h"
 #include "main/curve.h"
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
@@ -17,10 +24,21 @@ extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 objAudioFn_8006ef38();
+extern uint countLeadingZeros();
 
 extern undefined4 DAT_803274f4;
+extern f64 DOUBLE_803e5eb8;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5E98;
 extern f32 lbl_803E5EA4;
+extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EAC;
+extern f32 lbl_803E5EB0;
+extern f32 lbl_803E5EC0;
+extern f32 lbl_803E5EC4;
+extern f32 lbl_803E5EC8;
+extern f32 lbl_803E5ECC;
+extern f32 lbl_803E5ED0;
 
 #pragma scheduling on
 #pragma peephole on
@@ -133,52 +151,57 @@ void fn_801CEE0C(int p1, int p2)
 
     if (fn_801CE078(p1) != 0) return;
 
-    switch (*(u8*)(p2 + 0x408))
+    switch (state->stateIndex)
     {
     case 0:
-        *(int*)&state->triggerList = (int)&lbl_803DBF70;
+        *(int*)(p2 + 0x48) = (int)&lbl_803DBF70;
         if (GameBit_Get(211) != 0)
         {
-            *(u8*)(p2 + 0x408) = 1;
+            state->stateIndex = 1;
         }
         break;
     case 1:
-        *(int*)&state->triggerList = (int)&lbl_803DBF74;
+        *(int*)(p2 + 0x48) = (int)&lbl_803DBF74;
         {
-            switch (GameBit_Get(1400))
+            int v = GameBit_Get(1400);
+            if (v == 1)
             {
-            case 0:
+                state->stateIndex = 2;
+            }
+            else if (v > 1)
+            {
+                state->stateIndex = 3;
+            }
+            else if (v == 0)
+            {
                 if (ObjTrigger_IsSetById(p1, 1398) != 0)
                 {
                     GameBit_Set(1400, 1);
                     gameBitDecrement(1398);
                     (*gObjectTriggerInterface)->runSequence(2, (void*)p1, -1);
-                    *(u8*)(p2 + 0x43c) = (u8)(*(u8*)(p2 + 0x43c) | 0x10);
-                    *(u8*)(p2 + 0x408) = 2;
+                    state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
+                    state->stateIndex = 2;
                 }
-                break;
-            case 1:
-                *(u8*)(p2 + 0x408) = 2;
-                break;
-            default:
-                *(u8*)(p2 + 0x408) = 3;
-                break;
+            }
+            else
+            {
+                state->stateIndex = 3;
             }
         }
         break;
     case 2:
-        *(int*)&state->triggerList = (int)&lbl_803DBF78;
+        *(int*)(p2 + 0x48) = (int)&lbl_803DBF78;
         if (ObjTrigger_IsSetById(p1, 1398) != 0)
         {
             GameBit_Set(1400, 2);
             gameBitDecrement(1398);
             (*gObjectTriggerInterface)->runSequence(4, (void*)p1, -1);
-            *(u8*)(p2 + 0x408) = 3;
-            *(u8*)(p2 + 0x43c) = (u8)(*(u8*)(p2 + 0x43c) | 0x10);
+            state->stateIndex = 3;
+            state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
         }
         break;
     case 3:
-        *(int*)&state->triggerList = (int)&lbl_803DBF7C;
+        *(int*)(p2 + 0x48) = (int)&lbl_803DBF7C;
         break;
     }
 }
@@ -190,31 +213,31 @@ void fn_801CED2C(int p1, int p2)
     extern int lbl_803DBFB4;
     extern int lbl_803DBFB8;
     extern int lbl_803DBFBC;
-
     NwMammothState* state = (NwMammothState*)p2;
-    switch (*(u8*)(p2 + 0x408))
+
+    switch (state->stateIndex)
     {
     case 4:
-        *(int*)&state->triggerList = (int)&lbl_803DBFB4;
+        *(int*)(p2 + 0x48) = (int)&lbl_803DBFB4;
         if (ObjTrigger_IsSetById(p1, 418) != 0)
         {
-            *(u8*)(p2 + 0x43c) = (u8)(*(u8*)(p2 + 0x43c) | 0x10);
+            state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
             GameBit_Set(413, 1);
             GameBit_Set(419, 1);
             GameBit_Set(3813, 1);
             GameBit_Set(3814, 1);
-            *(u8*)(p2 + 0x408) = 5;
+            state->stateIndex = 5;
         }
         break;
     case 5:
-        *(int*)&state->triggerList = (int)&lbl_803DBFB8;
+        *(int*)(p2 + 0x48) = (int)&lbl_803DBFB8;
         if (GameBit_Get(415) != 0)
         {
-            *(u8*)(p2 + 0x408) = 6;
+            state->stateIndex = 6;
         }
         break;
     case 6:
-        *(int*)&state->triggerList = (int)&lbl_803DBFBC;
+        *(int*)(p2 + 0x48) = (int)&lbl_803DBFBC;
         break;
     }
 }
@@ -381,46 +404,46 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF90;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF90;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF8C;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF8C;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF88;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF88;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF84;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF84;
         }
         else
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF80;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF80;
         }
     }
     else
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFA4;
+            *(int*)(st + 0x48) = (int)&lbl_803DBFA4;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFA0;
+            *(int*)(st + 0x48) = (int)&lbl_803DBFA0;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF9C;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF9C;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF98;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF98;
         }
         else
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF94;
+            *(int*)(st + 0x48) = (int)&lbl_803DBF94;
         }
     }
 }
@@ -496,23 +519,23 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     }
                     {
                         int* o2 = ObjList_FindObjectById(*ids);
-                        if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
+                        if ((int*)Player_GetTargetObject(*(int*)(st + 0x28)) == o2)
                         {
-                            fn_8014C66C(o2, *(int**)&state->playerObject);
+                            fn_8014C66C(o2, *(int**)(st + 0x28));
                         }
                         else
                         {
                             int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
                             if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, (char*)o2 + 0x18) >= lbl_803E522C)
                             {
-                                if (vec3f_distanceSquared(*(char**)&state->playerObject + 0x18, (char*)o2 + 0x18) >=
+                                if (vec3f_distanceSquared(*(char**)(st + 0x28) + 0x18, (char*)o2 + 0x18) >=
                                     lbl_803E522C)
                                 {
                                     fn_8014C66C(o2, obj);
                                 }
                                 else
                                 {
-                                    fn_8014C66C(o2, *(int**)&state->playerObject);
+                                    fn_8014C66C(o2, *(int**)(st + 0x28));
                                 }
                             }
                             else
@@ -533,8 +556,8 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     (**(void (**)(int*, int*, int, int))((char*)(*(int**)*(int*)((char*)tk + 0x68)) + 0x28))(
                         tk, obj, 1, 1);
                 }
-                *(int*)&state->triggerList = (int)&lbl_803DBFA8;
-                if (*(void**)&state->trackedObject == NULL)
+                *(int*)(st + 0x48) = (int)&lbl_803DBFA8;
+                if (*(void**)(st + 0x24) == NULL)
                 {
                     short* cfg = *(short**)&((GameObject*)obj)->anim.placementData;
                     if (tw2 != NULL && *(s16*)((char*)tw2 + 0x46) == 0x3fb)
@@ -549,7 +572,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                             {
                                 (**(void (**)(int*, u8*))((char*)(*(int**)*(int*)((char*)tw2 + 0x68)) + 0x2c))(
                                     tw2, st + 0xc);
-                                *(int**)&state->trackedObject = tw2;
+                                *(int**)(st + 0x24) = tw2;
                                 st[0x408] = 0xe;
                             }
                         }
@@ -564,18 +587,18 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             break;
         }
     case 0xe:
-        if (getXZDistance(st + 0xc, *(char**)&state->trackedObject + 0x18) < lbl_803E5230)
+        if (getXZDistance(st + 0xc, *(char**)(st + 0x24) + 0x18) < lbl_803E5230)
         {
             Sfx_PlayFromObject((u32)obj, 0x38b);
-            fn_80163980(*(int*)&state->trackedObject);
+            fn_80163980(*(int*)(st + 0x24));
             st[0x408] = 0xf;
         }
         break;
     case 0xf:
         if (st[0x43c] & 2)
         {
-            Obj_FreeObject(*(int*)&state->trackedObject);
-            *(int*)&state->trackedObject = 0;
+            Obj_FreeObject(*(int*)(st + 0x24));
+            *(int*)(st + 0x24) = 0;
             state->uiMessageCount += 1;
             if (state->uiMessageCount > 3)
             {
@@ -602,7 +625,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         st[0x408] = 0x13;
         break;
     case 0x11:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000) && state->airMeterValue >= lbl_803E5234)
+        if (!(*(u16*)(*(char**)(st + 0x28) + 0xb0) & 0x1000) && state->airMeterValue >= lbl_803E5234)
         {
             Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -613,7 +636,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0x12:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000))
+        if (!(*(u16*)(*(char**)(st + 0x28) + 0xb0) & 0x1000))
         {
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {
@@ -627,7 +650,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     default:
         if (GameBit_Get(0x224) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFB0;
+            *(int*)(st + 0x48) = (int)&lbl_803DBFB0;
         }
         else
         {
@@ -636,7 +659,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                 GameBit_Set(0xea7, 1);
                 GameBit_Set(0x9d5, 1);
             }
-            *(int*)&state->triggerList = (int)&lbl_803DBFAC;
+            *(int*)(st + 0x48) = (int)&lbl_803DBFAC;
         }
         fn_801CE078(obj, st);
         break;
@@ -680,7 +703,6 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
     int i;
     void* node;
 
-    NwMammothState* state = (NwMammothState*)p2;
     node = ((GameObject*)obj)->extra;
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++)
