@@ -18,7 +18,6 @@ extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
 extern f32 timeDelta;
 extern void Rcp_DisableBlurFilter(void);
-extern void* FUN_800069a8();
 extern undefined4 Camera_GetCurrentViewSlot();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
@@ -61,7 +60,6 @@ extern void PSVECNormalize(f32 * v, f32 * out);
 extern void PSVECScale(f32* v, f32* out, f32 s);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-extern int shipBattleFn_801eed24(int focus);
 
 void CameraModeCombat_copyToCurrent_nop(void)
 {
