@@ -87,7 +87,6 @@ extern s8 lbl_803DDB09;
 extern int lbl_803DDB0C;
 extern int lbl_803AC7D8[];
 extern int lbl_803AC878[];
-extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 
 undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                                       undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
