@@ -1,4 +1,3 @@
-#include <dolphin/dvd.h>
 #include <dolphin/dvd/__dvd.h>
 
 typedef void (*stateFunc)(DVDCommandBlock* block);
