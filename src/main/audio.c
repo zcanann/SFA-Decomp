@@ -1726,7 +1726,7 @@ int musicInitMidiWad(void)
     if (gAudioCompletedLoadFlags & 0x800)
     {
         size = gMidiWadLoadedSize;
-        if (size & 0x1f)
+        if ((int)size & 0x1f)
         {
             size = (size | 0x1f) + 1;
         }
