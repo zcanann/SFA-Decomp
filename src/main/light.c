@@ -574,7 +574,7 @@ void seqpoint_update(int* obj)
     switch (self->mode)
     {
     case 0:
-        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
@@ -585,14 +585,14 @@ void seqpoint_update(int* obj)
         self->done = 1;
         break;
     case 2:
-        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case 3:
-        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
