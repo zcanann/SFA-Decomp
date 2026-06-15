@@ -9,7 +9,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
 #include "main/dll/player_motion.h"
-#include "main/objhits.h"
 #include "main/objlib.h"
 
 typedef struct GunpowderbarrelTriggerExplosionPlacement
