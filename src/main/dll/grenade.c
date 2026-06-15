@@ -1526,7 +1526,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         sv = randomGetRange(0x20, 0xff);
         ang = lbl_803E2454 * (f32)(s16)((*(s16*)obj + sv) * 0x100) / lbl_803E2458;
         ((TrickyState*)state)->unk72C = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject*)obj)->anim.localPosX);
-        ((TrickyState*)state)->unk730 = *(u32*)&((GameObject*)obj)->anim.localPosY;
+        *(f32*)&((TrickyState*)state)->unk730 = ((GameObject*)obj)->anim.localPosY;
         ((TrickyState*)state)->unk734 = (f32)(lbl_803E2484 * -mathCosf(ang) + ((GameObject*)obj)->anim.localPosZ);
         if (((TrickyState*)state)->unk28 != state + 0x72c)
         {
