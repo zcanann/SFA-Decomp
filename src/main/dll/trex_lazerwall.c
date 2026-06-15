@@ -3,7 +3,6 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/TREX/TREX_Lazerwall.h"
 
 typedef struct TREXLazerwallUpdateTimedChallengeState
 {
