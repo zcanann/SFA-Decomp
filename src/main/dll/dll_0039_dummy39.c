@@ -16,10 +16,8 @@ extern u8 framesThisStep;
 extern u8 lbl_803DD728;
 extern u32 lbl_803DD72C;
 extern void textureFree(u32);
-extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int mapId, int spawnId);
 extern int Obj_GetPlayerObject(void);
-extern s16 lbl_803DD8C2;
 
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
