@@ -24,6 +24,7 @@ extern f32 lbl_803E1164;
 extern f32 lbl_803E1168;
 extern f32 lbl_803E116C;
 
+#pragma opt_propagation off
 void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     FbBuf buf;
@@ -193,6 +194,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80316C40, 1, &lbl_803DB910, 0x26a, 0);
 }
+#pragma opt_propagation reset
 
 void dll_8F_func03(int sourceObj, int variant, int posSource, uint flags);
 
