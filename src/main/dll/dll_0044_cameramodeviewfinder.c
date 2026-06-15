@@ -366,9 +366,9 @@ void CameraModeViewfinder_update(s16* obj)
                 fade = lbl_803E17C4;
             }
             fade = fade * lbl_803E1828;
-            if (fade > lbl_803E17E8)
+            if (fade > *(f32*)&lbl_803E17E8)
             {
-                fade = lbl_803E17E8;
+                fade = *(f32*)&lbl_803E17E8;
             }
             brightness = (int)(lbl_803E1814 * fade);
         }
