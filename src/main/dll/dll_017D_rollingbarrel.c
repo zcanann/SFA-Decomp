@@ -313,21 +313,13 @@ void fn_801A5D88(int obj, int explosionVariant)
     Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (lbl_803DDB20 > 1)
     {
-        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        r2 = randomGetRange(0x32, 0x3c);
-        size = (f32)(int)
-        r2;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, size);
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     else
     {
-        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        r2 = randomGetRange(0x32, 0x3c);
-        size = (f32)(int)
-        r2;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, size);
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
