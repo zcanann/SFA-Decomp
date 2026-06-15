@@ -316,7 +316,7 @@ void dbsh_shrine_init(DbshShrineObject* obj)
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 0);
 
-    if (MAP_EVENT_GET_ANIM(obj->mapId, 1) == 0)
+    if ((u8)MAP_EVENT_GET_ANIM(obj->mapId, 1) == 0)
     {
         MAP_EVENT_SET_ANIM(obj->mapId, 1, 1);
     }
