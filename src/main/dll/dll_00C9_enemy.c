@@ -1568,9 +1568,9 @@ void fn_8014B878(int* arg1, int* sub)
 void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 fc)
 {
     f32 mag1, mag2, magcross, finalScale;
-    f32 stk_8[3];
-    f32 stk_14[3];
     f32 stk_20[3];
+    f32 stk_14[3];
+    f32 stk_8[3];
     f32 stk_2c[12];
 
     mag1 = PSVECMag((f32*)((int)obj2 + 0x2b8));
@@ -1612,7 +1612,7 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 f
         int gt;
         angle = fn_80291FF4(PSVECDotProduct(stk_20, stk_14));
         gt = (angle > fc);
-        if ((f32)__fabs((f32)gt) != lbl_803E2574)
+        if (__fabs((f32)gt) != lbl_803E2574)
         {
             f32 rot = fc * ((angle > lbl_803E2574) ? lbl_803E256C : lbl_803E25C4);
             PSMTXRotAxisRad(stk_2c, stk_8, rot);
