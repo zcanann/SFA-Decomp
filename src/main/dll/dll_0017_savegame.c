@@ -720,11 +720,11 @@ undefined* FUN_800e82d8(void)
 
 void FUN_800e8630(int obj)
 {
-    int objId;
-    undefined1* entry;
-    int slotBase;
-    int slotIdx;
-    int groupsLeft;
+    int placementId;
+    undefined1* slot;
+    int baseIndex;
+    int foundIndex;
+    int remaining;
 
     if ((*(ushort*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
@@ -734,38 +734,38 @@ void FUN_800e8630(int obj)
     {
         return;
     }
-    slotBase = 0;
-    entry = &DAT_803a3f08;
-    groupsLeft = 9;
-    while ((slotIdx = slotBase, *(int*)(entry + 0x168) != 0 &&
-        (objId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14), objId != *(int*)(entry + 0x168))))
+    baseIndex = 0;
+    slot = &DAT_803a3f08;
+    remaining = 9;
+    while ((foundIndex = baseIndex, *(int*)(slot + 0x168) != 0 &&
+        (placementId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14), placementId != *(int*)(slot + 0x168))))
     {
-        slotIdx = slotBase + 1;
-        if ((*(int*)(entry + 0x178) == 0) || (objId == *(int*)(entry + 0x178))) break;
-        slotIdx = slotBase + 2;
-        if ((*(int*)(entry + 0x188) == 0) || (objId == *(int*)(entry + 0x188))) break;
-        slotIdx = slotBase + 3;
-        if ((*(int*)(entry + 0x198) == 0) || (objId == *(int*)(entry + 0x198))) break;
-        slotIdx = slotBase + 4;
-        if ((*(int*)(entry + 0x1a8) == 0) || (objId == *(int*)(entry + 0x1a8))) break;
-        slotIdx = slotBase + 5;
-        if ((*(int*)(entry + 0x1b8) == 0) || (objId == *(int*)(entry + 0x1b8))) break;
-        slotIdx = slotBase + 6;
-        if ((*(int*)(entry + 0x1c8) == 0) || (objId == *(int*)(entry + 0x1c8))) break;
-        entry = entry + 0x70;
-        slotBase = slotBase + 7;
-        groupsLeft = groupsLeft + -1;
-        slotIdx = slotBase;
-        if (groupsLeft == 0) break;
+        foundIndex = baseIndex + 1;
+        if ((*(int*)(slot + 0x178) == 0) || (placementId == *(int*)(slot + 0x178))) break;
+        foundIndex = baseIndex + 2;
+        if ((*(int*)(slot + 0x188) == 0) || (placementId == *(int*)(slot + 0x188))) break;
+        foundIndex = baseIndex + 3;
+        if ((*(int*)(slot + 0x198) == 0) || (placementId == *(int*)(slot + 0x198))) break;
+        foundIndex = baseIndex + 4;
+        if ((*(int*)(slot + 0x1a8) == 0) || (placementId == *(int*)(slot + 0x1a8))) break;
+        foundIndex = baseIndex + 5;
+        if ((*(int*)(slot + 0x1b8) == 0) || (placementId == *(int*)(slot + 0x1b8))) break;
+        foundIndex = baseIndex + 6;
+        if ((*(int*)(slot + 0x1c8) == 0) || (placementId == *(int*)(slot + 0x1c8))) break;
+        slot = slot + 0x70;
+        baseIndex = baseIndex + 7;
+        remaining = remaining + -1;
+        foundIndex = baseIndex;
+        if (remaining == 0) break;
     }
-    if (slotIdx == 0x3f)
+    if (foundIndex == 0x3f)
     {
         return;
     }
-    (&DAT_803a4070)[slotIdx * 4] = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-    (&DAT_803a4074)[slotIdx * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosX;
-    (&DAT_803a4078)[slotIdx * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosY;
-    (&DAT_803a407c)[slotIdx * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosZ;
+    (&DAT_803a4070)[foundIndex * 4] = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    (&DAT_803a4074)[foundIndex * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosX;
+    (&DAT_803a4078)[foundIndex * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosY;
+    (&DAT_803a407c)[foundIndex * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosZ;
     *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = *(undefined4*)&((GameObject*)obj)->anim
         .localPosX;
     *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)obj)->
@@ -981,174 +981,174 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
 
 void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
 {
-    bool bVar1;
-    char cVar2;
-    uint uVar3;
-    char cVar4;
-    short* psVar5;
-    char* pcVar6;
-    uint* puVar7;
-    uint uVar8;
-    uint uVar9;
-    uint uVar10;
-    char* pcVar11;
-    int iVar12;
-    int iVar13;
-    longlong lVar14;
+    bool keepTransient;
+    char foundIndex;
+    uint flags;
+    char scanIndex;
+    short* eventIds;
+    char* entry;
+    uint* groupStatuses;
+    uint shift;
+    uint newFlags;
+    uint mapId;
+    char* history;
+    int i;
+    int j;
+    longlong packed;
 
-    lVar14 = FUN_80286830();
-    uVar10 = (uint)((ulonglong)lVar14 >> 0x20);
-    uVar8 = (uint)lVar14;
-    pcVar11 = &DAT_803a3be0;
-    if (0x4fffffffff < lVar14)
+    packed = FUN_80286830();
+    mapId = (uint)((ulonglong)packed >> 0x20);
+    shift = (uint)packed;
+    history = &DAT_803a3be0;
+    if (0x4fffffffff < packed)
     {
-        uVar10 = (uint)(byte)(&DAT_803a3dac)[uVar10];
+        mapId = (uint)(byte)(&DAT_803a3dac)[mapId];
     }
-    if ((int)uVar10 < 0x78)
+    if ((int)mapId < 0x78)
     {
-        if ((ushort)(&DAT_80312460)[uVar10] != 0)
+        if ((ushort)(&DAT_80312460)[mapId] != 0)
         {
             if (param_3 == -1)
             {
                 param_3 = 1;
             }
-            bVar1 = param_3 == -2;
-            if (bVar1)
+            keepTransient = param_3 == -2;
+            if (keepTransient)
             {
                 param_3 = 0;
             }
-            uVar3 = FUN_80017690((uint)(ushort)(&DAT_80312460)[uVar10]);
+            flags = FUN_80017690((uint)(ushort)(&DAT_80312460)[mapId]);
             if (param_3 == 0)
             {
-                uVar9 = uVar3 & ~(1 << uVar8);
+                newFlags = flags & ~(1 << shift);
             }
             else
             {
-                uVar9 = uVar3 | 1 << uVar8;
+                newFlags = flags | 1 << shift;
             }
-            FUN_80017698((uint)(ushort)(&DAT_80312460)[uVar10], uVar9);
-            DAT_803de104 = uVar10;
-            uRam803de108 = uVar9;
+            FUN_80017698((uint)(ushort)(&DAT_80312460)[mapId], newFlags);
+            DAT_803de104 = mapId;
+            uRam803de108 = newFlags;
             if (param_3 == 0)
             {
-                psVar5 = &DAT_80312460;
-                puVar7 = &DAT_803a3c1c;
-                uVar3 = ~(1 << uVar8);
-                iVar12 = 0x14;
+                eventIds = &DAT_80312460;
+                groupStatuses = &DAT_803a3c1c;
+                flags = ~(1 << shift);
+                i = 0x14;
                 do
                 {
-                    if (*psVar5 == (&DAT_80312460)[uVar10])
+                    if (*eventIds == (&DAT_80312460)[mapId])
                     {
-                        *puVar7 = *puVar7 & uVar3;
+                        *groupStatuses = *groupStatuses & flags;
                     }
-                    if (psVar5[1] == (&DAT_80312460)[uVar10])
+                    if (eventIds[1] == (&DAT_80312460)[mapId])
                     {
-                        puVar7[1] = puVar7[1] & uVar3;
+                        groupStatuses[1] = groupStatuses[1] & flags;
                     }
-                    if (psVar5[2] == (&DAT_80312460)[uVar10])
+                    if (eventIds[2] == (&DAT_80312460)[mapId])
                     {
-                        puVar7[2] = puVar7[2] & uVar3;
+                        groupStatuses[2] = groupStatuses[2] & flags;
                     }
-                    if (psVar5[3] == (&DAT_80312460)[uVar10])
+                    if (eventIds[3] == (&DAT_80312460)[mapId])
                     {
-                        puVar7[3] = puVar7[3] & uVar3;
+                        groupStatuses[3] = groupStatuses[3] & flags;
                     }
-                    if (psVar5[4] == (&DAT_80312460)[uVar10])
+                    if (eventIds[4] == (&DAT_80312460)[mapId])
                     {
-                        puVar7[4] = puVar7[4] & uVar3;
+                        groupStatuses[4] = groupStatuses[4] & flags;
                     }
-                    if (psVar5[5] == (&DAT_80312460)[uVar10])
+                    if (eventIds[5] == (&DAT_80312460)[mapId])
                     {
-                        puVar7[5] = puVar7[5] & uVar3;
+                        groupStatuses[5] = groupStatuses[5] & flags;
                     }
-                    psVar5 = psVar5 + 6;
-                    puVar7 = puVar7 + 6;
-                    iVar12 = iVar12 + -1;
+                    eventIds = eventIds + 6;
+                    groupStatuses = groupStatuses + 6;
+                    i = i + -1;
                 }
-                while (iVar12 != 0);
-                if (!bVar1)
+                while (i != 0);
+                if (!keepTransient)
                 {
-                    cVar4 = '\0';
-                    iVar12 = 4;
-                    pcVar6 = pcVar11;
+                    scanIndex = '\0';
+                    i = 4;
+                    entry = history;
                     do
                     {
-                        if ((((((uVar10 == (int)*pcVar6) && (cVar2 = cVar4, uVar8 == (byte)pcVar6[1])) ||
-                                    ((cVar2 = cVar4 + '\x01', uVar10 == (int)pcVar6[3] && (uVar8 == (byte)pcVar6[4])))
-                                ) || ((cVar2 = cVar4 + '\x02', uVar10 == (int)pcVar6[6] &&
-                                    (uVar8 == (byte)pcVar6[7])))) ||
-                                ((cVar2 = cVar4 + '\x03', uVar10 == (int)pcVar6[9] && (uVar8 == (byte)pcVar6[10]))))
-                            || ((uVar10 == (int)pcVar6[0xc] &&
-                                (cVar2 = cVar4 + '\x04', uVar8 == (byte)pcVar6[0xd]))))
+                        if ((((((mapId == (int)*entry) && (foundIndex = scanIndex, shift == (byte)entry[1])) ||
+                                    ((foundIndex = scanIndex + '\x01', mapId == (int)entry[3] && (shift == (byte)entry[4])))
+                                ) || ((foundIndex = scanIndex + '\x02', mapId == (int)entry[6] &&
+                                    (shift == (byte)entry[7])))) ||
+                                ((foundIndex = scanIndex + '\x03', mapId == (int)entry[9] && (shift == (byte)entry[10]))))
+                            || ((mapId == (int)entry[0xc] &&
+                                (foundIndex = scanIndex + '\x04', shift == (byte)entry[0xd]))))
                             goto LAB_800e9628;
-                        pcVar6 = pcVar6 + 0xf;
-                        cVar4 = cVar4 + '\x05';
-                        iVar12 = iVar12 + -1;
+                        entry = entry + 0xf;
+                        scanIndex = scanIndex + '\x05';
+                        i = i + -1;
                     }
-                    while (iVar12 != 0);
-                    cVar2 = -1;
+                    while (i != 0);
+                    foundIndex = -1;
                 LAB_800e9628:
-                    if (cVar2 == -1)
+                    if (foundIndex == -1)
                     {
-                        iVar12 = 0;
-                        iVar13 = 0x14;
+                        i = 0;
+                        j = 0x14;
                         do
                         {
-                            if (*pcVar11 == -1)
+                            if (*history == -1)
                             {
-                                iVar12 = iVar12 * 3;
-                                (&DAT_803a3be0)[iVar12] = (char)uVar10;
-                                (&DAT_803a3be1)[iVar12] = (char)lVar14;
-                                (&DAT_803a3be2)[iVar12] = 3;
+                                i = i * 3;
+                                (&DAT_803a3be0)[i] = (char)mapId;
+                                (&DAT_803a3be1)[i] = (char)packed;
+                                (&DAT_803a3be2)[i] = 3;
                                 break;
                             }
-                            pcVar11 = pcVar11 + 3;
-                            iVar12 = iVar12 + 1;
-                            iVar13 = iVar13 + -1;
+                            history = history + 3;
+                            i = i + 1;
+                            j = j + -1;
                         }
-                        while (iVar13 != 0);
+                        while (j != 0);
                     }
                 }
             }
             else
             {
-                uVar8 = 1 << uVar8;
-                if ((uVar3 & uVar8) == 0)
+                shift = 1 << shift;
+                if ((flags & shift) == 0)
                 {
-                    psVar5 = &DAT_80312460;
-                    puVar7 = &DAT_803a3c1c;
-                    iVar12 = 0x14;
+                    eventIds = &DAT_80312460;
+                    groupStatuses = &DAT_803a3c1c;
+                    i = 0x14;
                     do
                     {
-                        if (*psVar5 == (&DAT_80312460)[uVar10])
+                        if (*eventIds == (&DAT_80312460)[mapId])
                         {
-                            *puVar7 = *puVar7 | uVar8;
+                            *groupStatuses = *groupStatuses | shift;
                         }
-                        if (psVar5[1] == (&DAT_80312460)[uVar10])
+                        if (eventIds[1] == (&DAT_80312460)[mapId])
                         {
-                            puVar7[1] = puVar7[1] | uVar8;
+                            groupStatuses[1] = groupStatuses[1] | shift;
                         }
-                        if (psVar5[2] == (&DAT_80312460)[uVar10])
+                        if (eventIds[2] == (&DAT_80312460)[mapId])
                         {
-                            puVar7[2] = puVar7[2] | uVar8;
+                            groupStatuses[2] = groupStatuses[2] | shift;
                         }
-                        if (psVar5[3] == (&DAT_80312460)[uVar10])
+                        if (eventIds[3] == (&DAT_80312460)[mapId])
                         {
-                            puVar7[3] = puVar7[3] | uVar8;
+                            groupStatuses[3] = groupStatuses[3] | shift;
                         }
-                        if (psVar5[4] == (&DAT_80312460)[uVar10])
+                        if (eventIds[4] == (&DAT_80312460)[mapId])
                         {
-                            puVar7[4] = puVar7[4] | uVar8;
+                            groupStatuses[4] = groupStatuses[4] | shift;
                         }
-                        if (psVar5[5] == (&DAT_80312460)[uVar10])
+                        if (eventIds[5] == (&DAT_80312460)[mapId])
                         {
-                            puVar7[5] = puVar7[5] | uVar8;
+                            groupStatuses[5] = groupStatuses[5] | shift;
                         }
-                        psVar5 = psVar5 + 6;
-                        puVar7 = puVar7 + 6;
-                        iVar12 = iVar12 + -1;
+                        eventIds = eventIds + 6;
+                        groupStatuses = groupStatuses + 6;
+                        i = i + -1;
                     }
-                    while (iVar12 != 0);
+                    while (i != 0);
                 }
             }
         }
