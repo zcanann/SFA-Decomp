@@ -477,6 +477,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     MapBitTransient* transient;
     u32* groupStatuses;
     u16* eventIds;
+    s8 found;
 
     createTransient = 0;
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
@@ -539,24 +540,29 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 
             if (!createTransient)
             {
+                found = -1;
                 transient = gTransientMapBits;
                 for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
                 {
-                    if (transient->mapId == idx && transient->shift == shift)
+                    if (idx == transient->mapId && shift == transient->shift)
                     {
-                        return;
+                        found = (s8)i;
+                        break;
                     }
                 }
 
-                transient = gTransientMapBits;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                if (found == -1)
                 {
-                    if (transient->mapId == -1)
+                    transient = gTransientMapBits;
+                    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
                     {
-                        transient->mapId = (s8)idx;
-                        transient->shift = (u8)shift;
-                        transient->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
-                        break;
+                        if (transient->mapId == -1)
+                        {
+                            gTransientMapBits[i].mapId = (s8)idx;
+                            gTransientMapBits[i].shift = (u8)shift;
+                            gTransientMapBits[i].timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
+                            break;
+                        }
                     }
                 }
             }
