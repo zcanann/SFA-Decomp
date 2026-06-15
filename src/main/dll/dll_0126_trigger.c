@@ -1272,7 +1272,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 }
                 goto run;
             }
-            else if ((b & 2) == 0 || (s8)p3 < 1)
+            else if ((b & 2) == 0 || (s8)p3 <= 0)
             {
             run:
                 switch (p[1])
