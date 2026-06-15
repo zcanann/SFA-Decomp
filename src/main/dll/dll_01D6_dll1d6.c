@@ -127,7 +127,6 @@ extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32
 extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
 extern s16 lbl_803DBF18;
 extern f32 lbl_803E4A88;
-extern f32 lbl_803E4A40;
 extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
 extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803E4A7C;
