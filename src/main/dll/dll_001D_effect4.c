@@ -2602,7 +2602,6 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 
-extern f32 lbl_803DB7B0;
 // VERIFY lbl_803DF720 may already exist in modgfx.c
 // VERIFY lbl_803DF724 may already exist in modgfx.c
 // VERIFY lbl_803DF728 may already exist in modgfx.c
