@@ -875,7 +875,7 @@ void vfpplatform_update(int obj)
                         s16 timer = *(s16*)(state + 4);
                         if (timer != 0)
                         {
-                            *(s16*)(state + 4) = timer - (int)timeDelta;
+                            *(s16*)(state + 4) -= (s16)timeDelta;
                             if (*(s16*)(state + 4) <= 0)
                             {
                                 *(s16*)(state + 4) = 0;
