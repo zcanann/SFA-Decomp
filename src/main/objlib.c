@@ -987,6 +987,7 @@ ObjAnimComponent** ObjHitReact_GetResetObjects(int* outObjectCount)
     return gObjHitReactResetObjects;
 }
 
+#pragma peephole on
 void ObjHits_InitWorkBuffers(void)
 {
     int hitVolumeIndex;
@@ -1001,14 +1002,14 @@ void ObjHits_InitWorkBuffers(void)
     gObjHitsSecondaryHitboxBufferScratch0 = mmAlloc(0x400, 0xe, 0);
     gObjHitsSecondaryHitboxBufferScratch1 = mmAlloc(0x400, 0xe, 0);
     gObjHitsPriorityHitTickDelta = lbl_803DE914;
-    hitVolumeIndex = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex = 0] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
     return;
 }
+#pragma peephole reset
 
 uint ObjGroup_ContainsObject(uint obj, int group)
 {
