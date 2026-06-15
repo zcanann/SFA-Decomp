@@ -1949,8 +1949,9 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        if (((GameObject*)obj)->unkF4 == 0)
+        switch (((GameObject*)obj)->unkF4)
         {
+        case 0:
             ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
             {
                 u32 flags = *(u32*)&((EnemyState*)state)->unk2E8;
@@ -1958,7 +1959,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     if ((flags & 1) != 0)
                     {
-                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1;
+                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1LL;
                         *(u32*)&((EnemyState*)state)->unk2E8 = *(u32*)&((EnemyState*)state)->unk2E8 | 2;
                     }
                     if (*(void**)&((EnemyState*)state)->modelLight == NULL)
@@ -1992,6 +1993,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
             }
+            break;
         }
     }
 }
