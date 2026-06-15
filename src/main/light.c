@@ -30,7 +30,7 @@ extern f32 lbl_803E6150;
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDCC0;
 extern f32 lbl_803E6138;
-extern void fn_801FC6F4(int, int, ObjAnimUpdateState*);
+extern int fn_801FC6F4(int, int, ObjAnimUpdateState*);
 extern f32 lbl_803E6128;
 extern f32 lbl_803E610C;
 extern f32 lbl_803E611C;
@@ -674,7 +674,7 @@ void vfpdraghead_update(int* obj)
     }
 }
 
-void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
+int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
     extern undefined4 loadMapAndParent(int); /* #57 */
     extern undefined4 lockLevel(undefined4, int); /* #57 */
@@ -690,8 +690,9 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
         case 0:
             break;
         case 13:
-            if ((int)ctx->eventIds[i] == 20)
+            switch ((int)ctx->eventIds[i])
             {
+            case 20:
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
@@ -717,11 +718,13 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
                     (*gMapEventInterface)->setMapAct(8, 6);
                     warpToMap(124, 0);
                 }
+                break;
             }
             break;
         }
         ctx->eventIds[i] = 0;
     }
+    return 0;
 }
 
 void fn_801FBAC8(int obj)
