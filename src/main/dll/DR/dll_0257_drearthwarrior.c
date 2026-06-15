@@ -437,12 +437,14 @@ void DR_EarthWarrior_free(int obj)
 void DR_EarthWarrior_func23(int obj, int mode)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    if (mode == 1)
+    switch (mode)
     {
+    case 1:
         inner->sub.health += 4;
         objAudioFn_800393f8(obj, (char*)(char*)inner + 0x3bc, 0x291, 0x1000, -1, 1);
         inner->sub.unk8EC = lbl_803E82E8;
         *(f32*)((char*)lbl_8033527C + 0x24) = inner->sub.unk8EC;
+        break;
     }
 }
 
