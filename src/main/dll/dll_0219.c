@@ -57,8 +57,6 @@ void dll_219_update(Dll219Object* obj)
     u8* setup = obj->setup;
     Dll219State* state = obj->state;
     s16 objectId = obj->objectId;
-    f32 targetX;
-    f32 loweredTargetX;
 
     if (objectId < DLL_219_OBJECT_ID_GATE)
     {
@@ -77,27 +75,24 @@ void dll_219_update(Dll219Object* obj)
 
     if ((u32)GameBit_Get(state->gameBit) != 0)
     {
-        loweredTargetX = ((ObjPlacement*)setup)->posX - lbl_803E60A8;
-        if (obj->x > loweredTargetX)
+        if (obj->x > ((ObjPlacement*)setup)->posX - lbl_803E60A8)
         {
             obj->x -= lbl_803E60AC;
-            targetX = ((ObjPlacement*)setup)->posX - lbl_803E60A8;
-            if (obj->x < targetX)
+            if (obj->x < ((ObjPlacement*)setup)->posX - lbl_803E60A8)
             {
-                obj->x = targetX;
+                obj->x = ((ObjPlacement*)setup)->posX - lbl_803E60A8;
             }
             return;
         }
     }
     if ((u32)GameBit_Get(state->gameBit) == 0)
     {
-        targetX = ((ObjPlacement*)setup)->posX;
-        if (obj->x < targetX)
+        if (obj->x < ((ObjPlacement*)setup)->posX)
         {
             obj->x += lbl_803E60B0;
-            if (obj->x > targetX)
+            if (obj->x > ((ObjPlacement*)setup)->posX)
             {
-                obj->x = targetX;
+                obj->x = ((ObjPlacement*)setup)->posX;
             }
         }
     }
