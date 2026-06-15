@@ -1,3 +1,9 @@
+/*
+ * dimbridgecogmai (DLL 0x1C8) — bridge cog main object for Dinosaur Island
+ * Mission 2.  Watches one or more gamebits and, when they become set, either
+ * hides the cog or triggers an animation sequence depending on the gamebit
+ * value; also fires sequence events from the SeqFn callback.
+ */
 #include "main/dll/DIM/DIM2conveyor.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
@@ -24,7 +30,6 @@ typedef struct DimbridgecogmaiPlacement
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-extern unsigned long GameBit_Set(int eventId, int value);
 extern f32 lbl_803E4900;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -35,7 +40,6 @@ void dimbridgecogmai_hitDetect(void)
 void dimbridgecogmai_initialise(void)
 {
 }
-
 
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
 int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
@@ -144,4 +148,3 @@ void dimbridgecogmai_update(int* obj)
         }
     }
 }
-
