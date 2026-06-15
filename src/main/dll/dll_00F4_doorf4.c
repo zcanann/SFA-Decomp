@@ -364,17 +364,17 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             while (i < objCount && active == 0)
             {
                 other = *walk;
-                if (*(s16*)((char*)other + 0x46) == 0x7c)
+                if (((GameObject*)other)->anim.seqId == 0x7c)
                 {
-                    dx = *(f32*)((char*)other + 0xc) - ((ObjPlacement*)def)->posX;
-                    dy = *(f32*)((char*)other + 0x14) - ((ObjPlacement*)def)->posZ;
+                    dx = ((GameObject*)other)->anim.localPosX - ((ObjPlacement*)def)->posX;
+                    dy = ((GameObject*)other)->anim.localPosZ - ((ObjPlacement*)def)->posZ;
                     if (sqrtf(dx * dx + dy * dy) < lbl_803E3660)
                     {
                         ang = (lbl_803E364C * (f32)(*(s8*)(def + 0x18) << 8)) / lbl_803E3650;
                         sd = mathSinf(ang);
                         s = mathCosf(ang);
                         sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
-                            + (sd * *(f32*)((char*)other + 0xc) + s * *(f32*)((char*)other + 0x14));
+                            + (sd * ((GameObject*)other)->anim.localPosX + s * ((GameObject*)other)->anim.localPosZ);
                         if (sd < lbl_803E3664 && sd > lbl_803E3668)
                         {
                             active = 1;
