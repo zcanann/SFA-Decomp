@@ -5,8 +5,6 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
-#include "main/effect_interfaces.h"
-#include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined8 ObjGroup_RemoveObject();
