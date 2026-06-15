@@ -1,5 +1,4 @@
 #include "main/dll/tricky_state.h"
-#include "main/dll/tumbleweedbush.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 
