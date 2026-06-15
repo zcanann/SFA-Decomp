@@ -4,15 +4,10 @@
 
 extern undefined8 ObjGroup_RemoveObject();
 
-#include "main/dll/cfguardian_state.h"
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/cfguardian.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/alphaanim.h"
-#include "main/objanim_internal.h"
 
 typedef struct LockDoorLockPlacement
 {
