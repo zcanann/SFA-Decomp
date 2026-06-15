@@ -110,19 +110,13 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     dx = *(f32*)(state + 4);
     if (dz2 < dx)
     {
-        if (dy2 < lbl_803E40D8)
-        {
-            dy2 = -dy2;
-        }
+        dy2 = (dy2 < lbl_803E40D8) ? -dy2 : dy2;
         if (dy2 < speed)
         {
             nearEnd = false;
             if (dz < dx)
             {
-                if (dy < lbl_803E40D8)
-                {
-                    dy = -dy;
-                }
+                dy = (dy < lbl_803E40D8) ? -dy : dy;
                 if (dy < speed)
                 {
                     nearEnd = true;
@@ -142,10 +136,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     nearEnd = false;
     if (dz < dx)
     {
-        if (dy < lbl_803E40D8)
-        {
-            dy = -dy;
-        }
+        dy = (dy < lbl_803E40D8) ? -dy : dy;
         if (dy < speed)
         {
             nearEnd = true;
