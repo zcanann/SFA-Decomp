@@ -123,7 +123,7 @@ extern f32 lbl_803E05F4;
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
+extern void fn_800D915C(int pos, int* obj, f32 fval, void* fnTable);
 extern f32 lbl_803E0610;
 extern f32 lbl_803E0614;
 extern f32 lbl_803E0618;
@@ -3690,7 +3690,7 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
     return 1;
 }
 
-void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
+void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable);
 
 /* segment pragma-stack balance (re-split): */
 
