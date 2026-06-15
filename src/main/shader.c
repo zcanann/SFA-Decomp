@@ -532,7 +532,8 @@ undefined4 FUN_80057690(int param_1)
         }
         else
         {
-            dist = (double)FUN_8001771c((float*)(param_1 + 0x18), (float*)(viewObj + 0x18));
+            dist = (double)FUN_8001771c(&((GameObject*)param_1)->anim.worldPosX,
+                                        &((GameObject*)viewObj)->anim.worldPosX);
         }
         if (range < dist)
         {
