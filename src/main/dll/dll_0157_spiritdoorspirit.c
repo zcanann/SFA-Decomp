@@ -81,49 +81,49 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
-    uint uVar1;
-    int iVar2;
-    int iVar3;
-    undefined8 uVar4;
+    uint objId;
+    int triggerType;
+    int i;
+    undefined8 anim;
 
-    uVar4 = FUN_80286840();
-    uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
-    iVar2 = 0;
-    for (iVar3 = 0; iVar3 < *(char*)((int)uVar4 + 0x1b); iVar3 = iVar3 + 1)
+    anim = FUN_80286840();
+    objId = (uint)((ulonglong)anim >> 0x20);
+    triggerType = 0;
+    for (i = 0; i < *(char*)((int)anim + 0x1b); i = i + 1)
     {
-        switch (*(u8*)((int)uVar4 + iVar3 + 0x13))
+        switch (*(u8*)((int)anim + i + 0x13))
         {
         case 0:
             if (param_3 != (ushort*)0x0)
             {
-                FUN_80006824(uVar1, *param_3);
+                FUN_80006824(objId, *param_3);
             }
             break;
         case 1:
-            iVar2 = 1;
+            triggerType = 1;
             break;
         case 2:
-            iVar2 = 2;
+            triggerType = 2;
             break;
         case 3:
-            iVar2 = 3;
+            triggerType = 3;
             break;
         case 4:
-            iVar2 = 4;
+            triggerType = 4;
             break;
         case 7:
             if (param_3 != (ushort*)0x0)
             {
-                FUN_80006824(uVar1, param_3[1]);
+                FUN_80006824(objId, param_3[1]);
             }
             break;
         case 9:
-            FUN_80006824(uVar1, SFXsk_trwhin3);
+            FUN_80006824(objId, SFXsk_trwhin3);
         }
     }
-    if ((iVar2 != 0) && (param_3 != (ushort*)0x0))
+    if ((triggerType != 0) && (param_3 != (ushort*)0x0))
     {
-        FUN_80006824(uVar1, param_3[2]);
+        FUN_80006824(objId, param_3[2]);
     }
     FUN_8028688c();
     return;
@@ -133,19 +133,19 @@ undefined4
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
 {
-    int iVar1;
-    short sVar2;
-    undefined4 uVar3;
+    int newYaw;
+    short yawDelta;
+    undefined4 result;
     double dVar4;
-    double dVar5;
-    double dVar6;
+    double velZ;
+    double dx;
     undefined8 in_f5;
     undefined8 in_f6;
     undefined8 in_f7;
     undefined8 in_f8;
-    float local_58;
-    float local_54;
-    float local_50[2];
+    float dz;
+    float dy;
+    float deltaVec[2];
     undefined4 local_48;
     uint uStack_44;
     undefined4 local_40;
@@ -154,36 +154,36 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
 
     if (param_3 == (short*)0x0)
     {
-        uVar3 = 0;
+        result = 0;
     }
     else
     {
-        local_50[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
-        dVar6 = (double)local_50[0];
-        local_54 = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
-        local_58 = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
-        dVar4 = FUN_80293900((double)(local_58 * local_58 + (float)(dVar6 * dVar6) + local_54 * local_54
+        deltaVec[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
+        dx = (double)deltaVec[0];
+        dy = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
+        dz = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
+        dVar4 = FUN_80293900((double)(dz * dz + (float)(dx * dx) + dy * dy
         ));
         if ((double)(float)((double)lbl_803E4DBC * param_1) <= dVar4)
         {
-            FUN_8006f7a0(local_50, &local_54, &local_58);
-            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)local_50[0] * param_1);
-            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)local_54 * param_1);
-            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)local_58 * param_1);
-            sVar2 = (*param_3 + -0x8000) - *param_2;
-            if (0x8000 < sVar2)
+            FUN_8006f7a0(deltaVec, &dy, &dz);
+            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)deltaVec[0] * param_1);
+            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)dy * param_1);
+            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)dz * param_1);
+            yawDelta = (*param_3 + -0x8000) - *param_2;
+            if (0x8000 < yawDelta)
             {
-                sVar2 = sVar2 + 1;
+                yawDelta = yawDelta + 1;
             }
-            if (sVar2 < -0x8000)
+            if (yawDelta < -0x8000)
             {
-                sVar2 = sVar2 + -1;
+                yawDelta = yawDelta + -1;
             }
             uStack_44 = (int)*param_2 ^ 0x80000000;
             local_48 = 0x43300000;
-            uStack_3c = (int)sVar2 ^ 0x80000000;
+            uStack_3c = (int)yawDelta ^ 0x80000000;
             local_40 = 0x43300000;
-            iVar1 = (int)
+            newYaw = (int)
             ((f32)(s32)
             uStack_44 +
                 (float)((double)((lbl_803E4DC0 +
@@ -191,25 +191,25 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
                     )) * (float)(param_1 * (double)lbl_803DC074)) / dVar4)
             )
             ;
-            local_38 = (longlong)iVar1;
-            *param_2 = (short)iVar1;
+            local_38 = (longlong)newYaw;
+            *param_2 = (short)newYaw;
             dVar4 = (double)*(float*)(param_2 + 0x14);
-            dVar5 = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, dVar5, (int)param_2);
+            velZ = (double)*(float*)(param_2 + 0x16);
+            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, velZ, (int)param_2);
             if (param_2[0x50] != 0x1a)
             {
-                FUN_800305f8((double)lbl_803E4DA8, dVar4, dVar5, dVar6, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
+                FUN_800305f8((double)lbl_803E4DA8, dVar4, velZ, dx, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
             FUN_8002f6ac(param_1, (int)param_2, param_4);
-            uVar3 = 0;
+            result = 0;
         }
         else
         {
-            uVar3 = 1;
+            result = 1;
         }
     }
-    return uVar3;
+    return result;
 }
 
 undefined4
@@ -283,51 +283,51 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
              , undefined4 param_10, ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    int iVar1;
-    uint uVar2;
-    short* psVar3;
-    uint local_28;
-    uint local_24;
-    uint local_20[4];
+    int i;
+    uint allSet;
+    short* state;
+    uint cursor;
+    uint msgId;
+    uint msgData[4];
 
-    psVar3 = ((GameObject*)param_9)->extra;
-    local_28 = 0;
-    while (iVar1 = ObjMsg_Pop(param_9, &local_24, local_20, &local_28), iVar1 != 0)
+    state = ((GameObject*)param_9)->extra;
+    cursor = 0;
+    while (i = ObjMsg_Pop(param_9, &msgId, msgData, &cursor), i != 0)
     {
-        if (local_24 == 0x110001)
+        if (msgId == 0x110001)
         {
-            if ((*psVar3 == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
+            if ((*state == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
+                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                     0x110001, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
-        else if ((int)local_24 < 0x110001)
+        else if ((int)msgId < 0x110001)
         {
-            if (local_24 == 0xa0005)
+            if (msgId == 0xa0005)
             {
-                param_1 = FUN_80017698((int)*psVar3, 1);
+                param_1 = FUN_80017698((int)*state, 1);
             }
         }
-        else if (local_24 == 0x110003)
+        else if (msgId == 0x110003)
         {
-            if ((*psVar3 == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
+            if ((*state == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
+                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                     0x110003, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
-        else if ((((int)local_24 < 0x110003) && (*psVar3 == 0x55)) &&
+        else if ((((int)msgId < 0x110003) && (*state == 0x55)) &&
             (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
-            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
+            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                 0x110002, param_9, 0, param_13, param_14, param_15, param_16);
         }
     }
-    for (iVar1 = 0; iVar1 < (int)(uint)animUpdate->eventCount; iVar1 = iVar1 + 1)
+    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
     {
-        if (((animUpdate->eventIds[iVar1] == 1) && (uVar2 = FUN_80017690(0x54), uVar2 != 0))
-            && ((uVar2 = FUN_80017690(0x55), uVar2 != 0 && (uVar2 = FUN_80017690(0x56), uVar2 != 0))))
+        if (((animUpdate->eventIds[i] == 1) && (allSet = FUN_80017690(0x54), allSet != 0))
+            && ((allSet = FUN_80017690(0x55), allSet != 0 && (allSet = FUN_80017690(0x56), allSet != 0))))
         {
             FUN_80017698(0x4e0, 1);
         }
@@ -341,10 +341,10 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    int iVar1;
-    double dVar2;
+    int state;
+    double flapValue;
 
-    iVar1 = *(int*)&((GameObject*)param_9)->extra;
+    state = *(int*)&((GameObject*)param_9)->extra;
     if ((((GameObject*)param_9)->anim.currentMove != 5) && (((GameObject*)param_9)->anim.currentMove != 0xd))
     {
         FUN_800305f8((double)((GameObject*)param_9)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
@@ -363,28 +363,28 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
                      param_6, param_7,
                      param_8, param_9, 5, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
-    if (dVar2 < (double)lbl_803E4EB0)
+    flapValue = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
+    if (flapValue < (double)lbl_803E4EB0)
     {
-        dVar2 = (double)lbl_803E4EB0;
+        flapValue = (double)lbl_803E4EB0;
     }
-    if ((double)lbl_803E4ECC < dVar2)
+    if ((double)lbl_803E4ECC < flapValue)
     {
-        dVar2 = (double)lbl_803E4ECC;
+        flapValue = (double)lbl_803E4ECC;
     }
     if (((GameObject*)param_9)->anim.currentMove == 0xd)
     {
         if (((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E4ECC)
         {
-            *(byte*)(iVar1 + 0x244) = *(byte*)(iVar1 + 0x244) & 0xbf;
+            *(byte*)(state + 0x244) = *(byte*)(state + 0x244) & 0xbf;
         }
-        else if ((*(byte*)(iVar1 + 0x244) >> 6 & 1) == 0)
+        else if ((*(byte*)(state + 0x244) >> 6 & 1) == 0)
         {
             FUN_80006824(param_9, SFXand_spitout);
-            *(byte*)(iVar1 + 0x244) = *(byte*)(iVar1 + 0x244) & 0xbf | 0x40;
+            *(byte*)(state + 0x244) = *(byte*)(state + 0x244) & 0xbf | 0x40;
         }
     }
-    FUN_8002fc3c(dVar2, (double)lbl_803DC074);
+    FUN_8002fc3c(flapValue, (double)lbl_803DC074);
     return 1;
 }
 
