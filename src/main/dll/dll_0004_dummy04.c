@@ -10,8 +10,6 @@
 
 extern undefined4 DAT_803de0af;
 
-extern u8 lbl_803DD42D;
-extern u8 screenTransitionPause;
 
 void FUN_800d7780(undefined param_1)
 {
