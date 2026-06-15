@@ -45,20 +45,18 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FEseqobjectEffectParams effect;
     register int self = obj;
-    register ObjAnimUpdateState* anim = animUpdate;
-    register int controlObj;
     int i;
     int msg;
     uint sender;
     uint param;
+    int controlObj;
     f32 one;
     f32 zero;
 
-    controlObj = 0;
-    i = 0;
-    one = lbl_803E56B4;
     zero = lbl_803E56B0;
-    for (; i < anim->eventCount; i++)
+    one = lbl_803E56B4;
+    controlObj = 0;
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         effect.x = zero;
         effect.y = zero;
@@ -68,7 +66,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         effect.xRot = 0;
         effect.variant = 0;
 
-        switch (anim->eventIds[i])
+        switch (animUpdate->eventIds[i])
         {
         case 1:
             GameBit_Set(0x75, 1);
@@ -98,7 +96,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     while (ObjMsg_Pop((void*)self, (uint*)&msg, &sender, &param) != 0)
     {
-        if ((((u8*)anim)[0x90] & 0x80) == 0)
+        if ((((u8*)animUpdate)[0x90] & 0x80) == 0)
         {
             switch (msg)
             {
@@ -126,7 +124,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
         }
     }
-    anim->sequenceEventActive = 0;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 
@@ -146,13 +144,20 @@ void FEseqobject_initialise(void)
 {
 }
 
+void FElevControl_free(void);
 
+void FElevControl_hitDetect(void);
 
+void FElevControl_update(void);
 
+void FElevControl_release(void);
 
+void FElevControl_initialise(void);
 
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
+int FElevControl_getExtraSize(void);
+int FElevControl_getObjectTypeId(void);
 
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -160,7 +165,9 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E56B4);
 }
 
+void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
+void FElevControl_init(int x);
 
 /*
  * Function: FEseqobject_init
@@ -194,6 +201,7 @@ void FEseqobject_update(int obj)
  * EN v1.0 Address: 0x801DF9AC
  * EN v1.0 Size: 16b
  */
+int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * Function: dll_144_init
