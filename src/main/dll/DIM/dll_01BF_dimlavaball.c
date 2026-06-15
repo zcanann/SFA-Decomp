@@ -1,5 +1,4 @@
 /* DLL 0x1BF - DIMLavaball [801AE0EC-801AE100) */
-#include "main/effect_interfaces.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -108,15 +107,9 @@ extern f32 timeDelta;
  * height/distance, trigger the fall when the player is in range, integrate the
  * fall, then shatter (sfx + explosion) on impact. */
 
-#include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
 
 typedef struct Lavaball1bfPlacement
 {
@@ -139,12 +132,10 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-extern f32 lbl_803E4768;
 extern f32 lbl_803E4810;
 extern void Music_Trigger(int id, int p2);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
