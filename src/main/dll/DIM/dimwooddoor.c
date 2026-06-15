@@ -2,7 +2,6 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/dll/DIM/DIMwooddoor.h"
 
 typedef struct DIMWoodDoorConfig
 {
