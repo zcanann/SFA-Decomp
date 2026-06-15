@@ -1,7 +1,6 @@
 #include "main/game_object.h"
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
-#include "main/dll/modelfx.h"
 #include "main/dll_000A_expgfx.h"
 
 extern u32 randomGetRange(int min, int max);
