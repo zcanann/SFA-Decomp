@@ -1073,9 +1073,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 s1a.angles[2] = curveObj[2];
             }
             s1a.scale = lbl_803E068C;
-            s1a.x = *(f32*)(curveObj + 6);
-            s1a.y = *(f32*)(curveObj + 8);
-            s1a.z = *(f32*)(curveObj + 10);
+            s1a.x = ((GameObject*)curveObj)->anim.localPosX;
+            s1a.y = ((GameObject*)curveObj)->anim.localPosY;
+            s1a.z = ((GameObject*)curveObj)->anim.localPosZ;
             setMatrixFromObjectPos(m1a, &s1a);
             i = 0;
             byteOff = 0;
@@ -1096,22 +1096,22 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 {
                     Matrix_TransformPoint((f32*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58)) +
                                           (*(byte*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) + 2) * 0x10,
-                                          *(f32*)(curveObj + 6), *(f32*)(curveObj + 8), *(f32*)(curveObj + 10),
+                                          ((GameObject*)curveObj)->anim.localPosX, ((GameObject*)curveObj)->anim.localPosY, ((GameObject*)curveObj)->anim.localPosZ,
                                           (f32*)(curveObj + 0xc), (f32*)(curveObj + 0xe), (f32*)(curveObj + 0x10));
                 }
                 else
                 {
-                    Obj_TransformLocalPointToWorld(*(f32*)(curveObj + 6), *(f32*)(curveObj + 8),
-                                                   *(f32*)(curveObj + 10), (f32*)(curveObj + 0xc),
+                    Obj_TransformLocalPointToWorld(((GameObject*)curveObj)->anim.localPosX, ((GameObject*)curveObj)->anim.localPosY,
+                                                   ((GameObject*)curveObj)->anim.localPosZ, (f32*)(curveObj + 0xc),
                                                    (f32*)(curveObj + 0xe), (f32*)(curveObj + 0x10),
                                                    *(u32*)(curveObj + 0x18));
                 }
             }
             else
             {
-                *(f32*)(curveObj + 0xc) = *(f32*)(curveObj + 6);
-                *(f32*)(curveObj + 0xe) = *(f32*)(curveObj + 8);
-                *(f32*)(curveObj + 0x10) = *(f32*)(curveObj + 10);
+                ((GameObject*)curveObj)->anim.worldPosX = ((GameObject*)curveObj)->anim.localPosX;
+                ((GameObject*)curveObj)->anim.worldPosY = ((GameObject*)curveObj)->anim.localPosY;
+                ((GameObject*)curveObj)->anim.worldPosZ = ((GameObject*)curveObj)->anim.localPosZ;
             }
         }
         if (((state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0) &&
@@ -1129,9 +1129,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 s1b.angles[2] = curveObj[2];
             }
             s1b.scale = lbl_803E068C;
-            s1b.x = *(f32*)(curveObj + 0xc);
-            s1b.y = *(f32*)(curveObj + 0xe);
-            s1b.z = *(f32*)(curveObj + 0x10);
+            s1b.x = ((GameObject*)curveObj)->anim.worldPosX;
+            s1b.y = ((GameObject*)curveObj)->anim.worldPosY;
+            s1b.z = ((GameObject*)curveObj)->anim.worldPosZ;
             setMatrixFromObjectPos(m1b, &s1b);
             i = 0;
             byteOff = 0;
@@ -1170,9 +1170,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 collision->surfaceNormalZ = collision->segmentHitPlanes[0][2];
                 if (((collision->surfaceFlags & 1) != 0) && (collision->segmentHitTypes[0] == 0x21))
                 {
-                    *(f32*)(curveObj + 0xc) = collision->points[0][0];
-                    *(f32*)(curveObj + 0xe) = collision->points[0][1];
-                    *(f32*)(curveObj + 0x10) = collision->points[0][2];
+                    ((GameObject*)curveObj)->anim.worldPosX = collision->points[0][0];
+                    ((GameObject*)curveObj)->anim.worldPosY = collision->points[0][1];
+                    ((GameObject*)curveObj)->anim.worldPosZ = collision->points[0][2];
                 }
                 break;
             default:
@@ -1221,16 +1221,16 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
             linked = *(int*)(curveObj + 0x2a);
             if ((linked == 0) || ((*(ushort*)&((GameObject*)linked)->anim.eventTable & 1) == 0))
             {
-                *(f32*)(curveObj + 0x14) =
-                    (f32)((f64)invStep * (f64)(*(f32*)(curveObj + 0xe) - *(f32*)(curveObj + 0x48)));
+                ((GameObject*)curveObj)->anim.velocityY =
+                    (f32)((f64)invStep * (f64)(((GameObject*)curveObj)->anim.worldPosY - *(f32*)(curveObj + 0x48)));
             }
             else
             {
-                *(f32*)(curveObj + 0x14) =
-                    (f32)((f64)invStep * (f64)(*(f32*)(curveObj + 0xe) - ((GameObject*)linked)->anim.worldPosZ));
-                if (*(f32*)(*(int*)(curveObj + 0x2a) + 0x20) < *(f32*)(curveObj + 0xe))
+                ((GameObject*)curveObj)->anim.velocityY =
+                    (f32)((f64)invStep * (f64)(((GameObject*)curveObj)->anim.worldPosY - ((GameObject*)linked)->anim.worldPosZ));
+                if (*(f32*)(*(int*)(curveObj + 0x2a) + 0x20) < ((GameObject*)curveObj)->anim.worldPosY)
                 {
-                    *(f32*)(curveObj + 0x14) = lbl_803E0668;
+                    ((GameObject*)curveObj)->anim.velocityY = lbl_803E0668;
                 }
             }
         }
@@ -1254,9 +1254,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 s2a.angles[2] = curveObj[2];
             }
             s2a.scale = lbl_803E068C;
-            s2a.x = *(f32*)(curveObj + 6);
-            s2a.y = *(f32*)(curveObj + 8);
-            s2a.z = *(f32*)(curveObj + 10);
+            s2a.x = ((GameObject*)curveObj)->anim.localPosX;
+            s2a.y = ((GameObject*)curveObj)->anim.localPosY;
+            s2a.z = ((GameObject*)curveObj)->anim.localPosZ;
             setMatrixFromObjectPos(m2a, &s2a);
             i = 0;
             byteOff = 0;
@@ -1291,9 +1291,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 s2b.angles[2] = curveObj[2];
             }
             s2b.scale = lbl_803E068C;
-            s2b.x = *(f32*)(curveObj + 0xc);
-            s2b.y = *(f32*)(curveObj + 0xe);
-            s2b.z = *(f32*)(curveObj + 0x10);
+            s2b.x = ((GameObject*)curveObj)->anim.worldPosX;
+            s2b.y = ((GameObject*)curveObj)->anim.worldPosY;
+            s2b.z = ((GameObject*)curveObj)->anim.worldPosZ;
             setMatrixFromObjectPos(m2b, &s2b);
             i = 0;
             byteOff = 0;
@@ -1334,9 +1334,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 sE.angles[2] = curveObj[2];
             }
             sE.scale = lbl_803E068C;
-            sE.x = *(f32*)(curveObj + 6);
-            sE.y = *(f32*)(curveObj + 8);
-            sE.z = *(f32*)(curveObj + 10);
+            sE.x = ((GameObject*)curveObj)->anim.localPosX;
+            sE.y = ((GameObject*)curveObj)->anim.localPosY;
+            sE.z = ((GameObject*)curveObj)->anim.localPosZ;
             setMatrixFromObjectPos(mE, &sE);
             i = 0;
             byteOff = 0;
@@ -1365,22 +1365,22 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
         {
             outOff = (uint) * (byte*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) * 0x10;
             Matrix_TransformPoint((f32*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58)) + outOff,
-                                  *(f32*)(curveObj + 0xc), *(f32*)(curveObj + 0xe), *(f32*)(curveObj + 0x10),
+                                  ((GameObject*)curveObj)->anim.worldPosX, ((GameObject*)curveObj)->anim.worldPosY, ((GameObject*)curveObj)->anim.worldPosZ,
                                   (f32*)(curveObj + 6), (f32*)(curveObj + 8), (f32*)(curveObj + 10));
         }
         else
         {
-            Obj_TransformWorldPointToLocal(*(f32*)(curveObj + 0xc), *(f32*)(curveObj + 0xe),
-                                           *(f32*)(curveObj + 0x10), (f32*)(curveObj + 6),
+            Obj_TransformWorldPointToLocal(((GameObject*)curveObj)->anim.worldPosX, ((GameObject*)curveObj)->anim.worldPosY,
+                                           ((GameObject*)curveObj)->anim.worldPosZ, (f32*)(curveObj + 6),
                                            (f32*)(curveObj + 8), (f32*)(curveObj + 10),
                                            *(u32*)(curveObj + 0x18));
         }
     }
     else
     {
-        *(f32*)(curveObj + 6) = *(f32*)(curveObj + 0xc);
-        *(f32*)(curveObj + 8) = *(f32*)(curveObj + 0xe);
-        *(f32*)(curveObj + 10) = *(f32*)(curveObj + 0x10);
+        ((GameObject*)curveObj)->anim.localPosX = ((GameObject*)curveObj)->anim.worldPosX;
+        ((GameObject*)curveObj)->anim.localPosY = ((GameObject*)curveObj)->anim.worldPosY;
+        ((GameObject*)curveObj)->anim.localPosZ = ((GameObject*)curveObj)->anim.worldPosZ;
     }
 }
 
