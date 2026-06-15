@@ -120,7 +120,7 @@ void vfplift23_updateState(int obj)
         ((GameObject*)obj)->anim.localPosY = setup->base.posY + raisedOffset;
         state->applyHeight = 0;
     }
-    if (state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED)
+    if (state->mode == VFPLIFT_STATE_RAISED || state->mode > VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED)
     {
         vfplift_setObjectHitDisabled(obj);
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & VFPLIFT_OBJ_FLAG_INTERACT) != 0)
@@ -210,7 +210,7 @@ void vfplift1_updateState(int obj)
     {
         return;
     }
-    if (state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED)
+    if (state->mode == VFPLIFT_STATE_RAISED || state->mode > VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED)
     {
         vfplift_setObjectHitDisabled(obj);
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & VFPLIFT_OBJ_FLAG_INTERACT) != 0)
