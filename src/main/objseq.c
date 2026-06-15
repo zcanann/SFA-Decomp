@@ -4,12 +4,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
-#include "main/game_object.h"
 #include "main/sky_80080E58_shared.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
 
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
