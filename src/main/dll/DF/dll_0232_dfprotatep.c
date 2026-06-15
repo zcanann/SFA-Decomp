@@ -649,12 +649,12 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState
 
 void sfxplayer_free(int obj, int arg1)
 {
-    int* handles;
+    uint* handles;
     s16 i;
 
     if (arg1 == 0)
     {
-        handles = gSfxplayerEffectHandles;
+        handles = (uint*)gSfxplayerEffectHandles;
         for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
             if (handles[0] != 0)
@@ -714,11 +714,11 @@ int sfxplayer_getObjectTypeId(void) { return 0x0; }
 
 void sfxplayer_update(int obj)
 {
+    uint* handles;
     s16 i;
     s16 hitType;
     u8 mode;
     SfxplayerState* state;
-    uint* handles;
     SfxplayerStateFlags* flags;
     undefined4 hitObj;
 
