@@ -199,8 +199,8 @@ void pointlight_init(int obj, int setup)
                                                 (f32)(u32)setupData->distanceFar);
 
         {
-            u8 brightness = setupData->brightness;
-            if (brightness >= POINTLIGHT_MAX_SPOT_BRIGHTNESS)
+            int brightness = setupData->brightness;
+            if ((u32)brightness >= POINTLIGHT_MAX_SPOT_BRIGHTNESS)
             {
                 brightness = POINTLIGHT_MAX_SPOT_BRIGHTNESS;
             }
