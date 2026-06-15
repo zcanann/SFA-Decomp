@@ -1,4 +1,3 @@
-#include "main/dll/dll_0105_largecrate.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
@@ -588,7 +587,6 @@ int LargeCrate_SeqFn(int* obj)
 }
 
 #include "main/dll/cfforcefield.h"
-#include "main/dll/dll_0105_largecrate.h"
 #include "main/game_object.h"
 #include "main/dll/cfforcefield_state.h"
 #include "main/resource.h"
