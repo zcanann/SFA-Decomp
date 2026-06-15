@@ -577,10 +577,10 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = (u32)gDepthReadPendingCount;
         if (n < 0x14) {
-            DepthReadRequest* slot = (DepthReadRequest*)((u8*)&gDepthReadPendingQueue + n * 0xC);
-            slot->x = (u16)x;
-            slot->y = (u16)y;
-            slot->key = requestKey;
+            DepthReadRequest* queue = (DepthReadRequest*)&gDepthReadPendingQueue;
+            queue[n].x = (u16)x;
+            queue[n].y = (u16)y;
+            queue[n].key = requestKey;
             gDepthReadPendingCount++;
         }
         i = 0;
@@ -595,6 +595,7 @@ int depthReadRequestPoll(int x, int y, int requestKey)
             i++;
             n--;
         }
+        return 0;
     }
     return 0;
 }
