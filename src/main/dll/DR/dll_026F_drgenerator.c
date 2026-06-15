@@ -124,17 +124,18 @@ void drgenerator_hitDetect(int obj)
     f32 hitPosY;
     f32 hitPosX;
     uint hitVolume;
+    int hitObject;
     void* found;
     if (((BitFlags8*)(p + 0x19b))->b0 || ((BitFlags8*)(p + 0x19b))->b3)
     {
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, &hitVolume, &hitPosX, &hitPosY,
+    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, 0, &hitVolume, &hitPosX, &hitPosY,
                                            &hitPosZ) != 5)
     {
         return;
     }
-    p[0x19a] = p[0x19a] - hitVolume;
+    p[0x19a] -= hitVolume;
     Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E6B5C);
     fn_8009A8C8(obj, lbl_803E6B60);
     if (p[0x19a] > 0)
