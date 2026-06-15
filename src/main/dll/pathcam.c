@@ -12,8 +12,8 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
                               CameraObject* camera)
 {
     CamcontrolPathSampleWork work;
-    int iVar1;
-    int iVar2;
+    int handler;
+    int i;
     f32 pathT;
 
     memset(&work, 0, 0x144);
@@ -27,17 +27,17 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
     Obj_TransformLocalPointToWorld((double)work.sampleX, (double)work.sampleY, (double)work.sampleZ,
                                    &work.worldX, &work.worldY, work.worldZ, work.model);
     work.targetObj = target;
-    iVar1 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-    (*(code*)(**(int**)(iVar1 + 4) + 0x14))(&work, target);
+    handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
+    (*(code*)(**(int**)(handler + 4) + 0x14))(&work, target);
     Obj_TransformLocalPointToWorld(work.sampleX, work.sampleY, work.sampleZ,
                                    &work.targetX, &work.targetY, work.targetZ, work.model);
-    (*(code*)(**(int**)(iVar1 + 4) + 0x24))
+    (*(code*)(**(int**)(handler + 4) + 0x24))
         (&work, 1, 3, &gCamcontrolPathState->curveMin, &gCamcontrolPathState->curveMax);
-    iVar2 = gCamcontrolPathState->pathCurve.count + -3;
-    for (; iVar2 < gCamcontrolPathState->pathCurve.count; iVar2 = iVar2 + 1)
+    i = gCamcontrolPathState->pathCurve.count + -3;
+    for (; i < gCamcontrolPathState->pathCurve.count; i = i + 1)
     {
-        gCamcontrolPathState->pointsX[iVar2] = work.sampleX;
-        gCamcontrolPathState->pointsZ[iVar2] = work.sampleZ;
+        gCamcontrolPathState->pointsX[i] = work.sampleX;
+        gCamcontrolPathState->pointsZ[i] = work.sampleZ;
     }
     if (lbl_803E1740 != gCamcontrolPathState->pathCurve.pathLength)
     {
