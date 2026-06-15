@@ -4,12 +4,9 @@
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
-#include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
-#include "main/objanim.h"
 
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
