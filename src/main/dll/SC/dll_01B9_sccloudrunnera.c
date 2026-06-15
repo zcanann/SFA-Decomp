@@ -128,9 +128,9 @@ void sc_cloudrunnera_update(int obj)
             }
             arr++;
         }
-        if (matchCount <= 1 && (u32)found != 0 && *(s16*)(found + 0xb4) != -1)
+        if (matchCount <= 1 && (u32)found != 0 && ((GameObject*)found)->seqIndex != -1)
         {
-            *(s16*)(found + 0xb4) = -1;
+            ((GameObject*)found)->seqIndex = -1;
             (*gObjectTriggerInterface)->endSequence(markCopy);
         }
         ((GameObject*)obj)->seqIndex = -1;
@@ -198,7 +198,7 @@ void sc_cloudrunnera_update(int obj)
         int t = *(int*)&((GameObject*)obj)->childObjs[0];
         if ((u32)t != 0)
         {
-            *(s16*)(t + 4) = ((GameObject*)obj)->anim.rotZ;
+            ((GameObject*)t)->anim.rotZ = ((GameObject*)obj)->anim.rotZ;
             *(s16*)(*(int*)&((GameObject*)obj)->childObjs[0] + 2) = (s16)(((GameObject*)obj)->anim.rotY + 0xe38);
             *(s16*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0) = (s16)(((GameObject*)obj)->anim.rotX + -0x8000);
         }
@@ -219,13 +219,13 @@ void sc_cloudrunnera_init(int obj, int p2)
     seq->curveId = -1;
     ((GameObject*)obj)->unkF8 = 0;
 
-    if (*(int*)(obj + 0xf4) == 0 && *(s16*)(p2 + 0x18) != 1)
+    if (((GameObject*)obj)->unkF4 == 0 && *(s16*)(p2 + 0x18) != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)seq, (u8*)p2);
         ((GameObject*)obj)->unkF4 = *(s16*)(p2 + 0x18) + 1;
     }
-    else if (*(int*)(obj + 0xf4) != 0 && *(s16*)(p2 + 0x18) != *(int*)(obj + 0xf4) - 1)
+    else if (((GameObject*)obj)->unkF4 != 0 && *(s16*)(p2 + 0x18) != ((GameObject*)obj)->unkF4 - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)seq);
         if (*(s16*)(p2 + 0x18) != -1)
