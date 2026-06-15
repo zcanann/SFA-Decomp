@@ -523,14 +523,14 @@ void fn_80155F20(int obj, int state)
 
 void fn_80156010(uint obj, int state)
 {
-    bool timerExpired;
+    u8 timerExpired;
     short move;
 
-    timerExpired = false;
+    timerExpired = 0;
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
     if (*(float*)(state + 0x324) <= lbl_803E2A60)
     {
-        timerExpired = true;
+        timerExpired = 1;
         *(float*)(state + 0x324) = *(f32 *)&lbl_803E2A60;
     }
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
