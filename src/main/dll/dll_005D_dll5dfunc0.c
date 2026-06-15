@@ -128,6 +128,7 @@ extern f32 lbl_803E07A8;
 extern f32 lbl_803E07AC;
 extern f32 lbl_803E07B0;
 extern f32 lbl_803E07B4;
+extern f32 lbl_803E07B8;
 extern f32 lbl_803E07BC;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
@@ -725,8 +726,8 @@ void dll_5D_func03(int sourceObj, int variant, int posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* e = buf.entries;
     u8* base = (u8*)(int)lbl_80312130;
+    GfxCmd* e = buf.entries;
     int ctx;
     e[0].layer = 0;
     e[0].flags = 0x15;
@@ -809,9 +810,9 @@ void dll_5D_func03(int sourceObj, int variant, int posSource, uint flags)
     ctx = sourceObj;
     buf.ctx = ctx;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E07BC;
-    buf.pos[1] = lbl_803E07BC;
-    buf.pos[2] = lbl_803E07BC;
+    buf.pos[0] = lbl_803E0790;
+    buf.pos[1] = lbl_803E07B8;
+    buf.pos[2] = lbl_803E0790;
     buf.col[0] = lbl_803E0790;
     buf.col[1] = lbl_803E0790;
     buf.col[2] = lbl_803E0790;
@@ -834,17 +835,17 @@ void dll_5D_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((void*)ctx == NULL)
+        if ((void*)ctx != NULL)
         {
-            buf.pos[0] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = lbl_803E0790 + *(f32*)(ctx + 0x18);
+            buf.pos[1] = lbl_803E07B8 + *(f32*)(ctx + 0x1c);
+            buf.pos[2] = lbl_803E0790 + *(f32*)(ctx + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E07BC + *(f32*)(ctx + 0x18);
-            buf.pos[1] = lbl_803E07BC + *(f32*)(ctx + 0x1c);
-            buf.pos[2] = lbl_803E07BC + *(f32*)(ctx + 0x20);
+            buf.pos[0] = lbl_803E0790 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E07B8 + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0790 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80312130, 0x18, &base[212], 0x20b, 0);
