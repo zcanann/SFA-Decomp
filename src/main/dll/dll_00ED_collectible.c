@@ -815,7 +815,7 @@ void fn_80172144(int* obj)
     }
     else
     {
-        u8 n = framesThisStep;
+        int n = framesThisStep;
         objMove(obj, ((GameObject*)obj)->anim.velocityX * (f32)(u32)n,
                 ((GameObject*)obj)->anim.velocityY * (f32)(u32)n,
                 ((GameObject*)obj)->anim.velocityZ * (f32)(u32)n);
