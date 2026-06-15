@@ -80,30 +80,30 @@ extern int getHudHiddenFrameCount(void);
 extern void mm_free_(int p);
 extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
 
-undefined4 FUN_801e76a0(int param_1)
+undefined4 FUN_801e76a0(int obj)
 {
-    uint uVar1;
-    undefined4 uVar2;
-    int iVar3;
+    uint bit;
+    undefined4 result;
+    int target;
 
-    iVar3 = *(int*)&((GameObject*)param_1)->extra;
-    uVar1 = GameBit_Get(0xcef);
-    if (uVar1 == 0)
+    target = *(int*)&((GameObject*)obj)->extra;
+    bit = GameBit_Get(0xcef);
+    if (bit == 0)
     {
-        uVar2 = 0;
+        result = 0;
     }
     else
     {
-        uVar1 = GameBit_Get(0xad3);
-        if (uVar1 == 0)
+        bit = GameBit_Get(0xad3);
+        if (bit == 0)
         {
             GameBit_Set(0xad3, 1);
-            iVar3 = *(int*)(iVar3 + 0x9b4);
-            (**(code**)(**(int**)&((GameObject*)iVar3)->anim.dll + 0x24))(iVar3, 1, 2);
+            target = *(int*)(target + 0x9b4);
+            (**(code**)(**(int**)&((GameObject*)target)->anim.dll + 0x24))(target, 1, 2);
         }
-        uVar2 = 2;
+        result = 2;
     }
-    return uVar2;
+    return result;
 }
 
 void fn_801E7DC8(int p1, int p2, int count);
