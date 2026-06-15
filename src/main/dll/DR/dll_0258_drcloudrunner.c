@@ -739,7 +739,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
             ObjAnim_SetCurrentMove(
                 obj, *(s16*)(base + ((masked = idx & 0xfe) + ((ByteFlags*)&inner->flagsBC0)->b80) * 2 + 0x60), speed,
                 0);
-            ((CloudRunnerState*)p2)->baddie.moveSpeed = *(f32*)(base + (masked >> 1) * 4 + 0xc0);
+            ((CloudRunnerState*)p2)->baddie.moveSpeed = ((f32*)(base + 0xc0))[masked >> 1];
         }
         else
         {
