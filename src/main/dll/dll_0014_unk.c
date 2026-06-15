@@ -5193,7 +5193,10 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
         diffZ = startZ - z;
         diffX = startX - x;
         diffY = startY - y;
-        distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
+        {
+            f32 zz = diffZ * diffZ;
+            distance = -(diffX * diffX + diffY * diffY + zz);
+        }
     }
     else if (projection > gFloatOne)
     {
@@ -5203,7 +5206,10 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
         diffZ = endZ - z;
         diffX = endX - x;
         diffY = endY - y;
-        distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
+        {
+            f32 zz = diffZ * diffZ;
+            distance = -(diffX * diffX + diffY * diffY + zz);
+        }
     }
     else
     {
