@@ -244,7 +244,7 @@ undefined4 mapLoadDataFile(int mapId, int fileId)
     int fi;
     int ok;
     u32 tmp;
-    char buf[104];
+    char buf[56];
 
     if (lbl_803DCC92 != 0)
     {

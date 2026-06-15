@@ -819,6 +819,7 @@ void Link_free(void)
     lbl_803DD911 = 0;
 }
 
+#pragma peephole off
 void linkDrawFn_801302c0(void)
 {
     extern s8 lbl_803DD911; /* #57 */
@@ -957,3 +958,4 @@ void linkDrawFn_80130484(void)
         p++;
     }
 }
+#pragma peephole reset
