@@ -37,7 +37,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha);
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB);
 int modelCb_80073d04(u8 *obj, int *objB);
 int moonFxCb_80074110(u8 *obj, int *objB, int slot);
-int modelCb_80074518(void* obj_a, void** obj_b, int param_3);
+void modelCb_80074518(void* obj_a, void** obj_b, int param_3);
 u32 objCallback_80074d04(int handle, void* model);
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color);
 void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
