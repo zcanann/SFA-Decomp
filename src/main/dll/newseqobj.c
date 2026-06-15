@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/newSeqObj.h"
 
 extern int GameBit_Set(int bit, int value);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
