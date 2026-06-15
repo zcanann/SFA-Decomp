@@ -222,7 +222,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
             {
                 state->contactTimer -= lbl_803E242C;
                 ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 0x7f;
-                state->stateFlags &= ~8;
+                state->stateFlags &= ~8LL;
             }
         }
     }
