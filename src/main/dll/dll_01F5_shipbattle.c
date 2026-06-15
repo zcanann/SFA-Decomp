@@ -1,23 +1,13 @@
 /* DLL 0x01F5 — ShipBattle (Lylat Cruise ship-battle sequence, chain/fireball/cage/cloudball). TU: 0x801E55B8–0x801E59AC. */
-#include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
-#include "main/dll/TREX/TREX_levelcontrol.h"
 
 extern void objRenderFn_8003b8f4(f32);
 
-#include "ghidra_import.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/mapEvent.h"
-#include "main/dll/TREX/TREX_trex.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/objhits_types.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct ShipBattleObjectDef
 {
