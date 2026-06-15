@@ -394,7 +394,11 @@ void LaserBeam_update(int obj2)
                 {
                     a = lbl_803E5D30;
                 }
-                b->unk28 = (s16)(int)((lbl_803E5D30 - a) * lbl_803E5D34);
+                {
+                    f32 tt = *(f32*)&lbl_803E5D30 - a;
+                    tt = lbl_803E5D34 * tt;
+                    b->unk28 = (s16)(int)tt;
+                }
                 if (!(lat < lbl_803E5D38 && lat > lbl_803E5D3C) && b->unk4C == 1)
                 {
                     (*gModgfxInterface)->detachSource((void*)obj2);
