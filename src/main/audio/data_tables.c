@@ -292,7 +292,10 @@ s32 dataRemoveCurve(u16 sid)
 
     sndBegin();
     num = dataCurveNum;
-    for (i = 0; i < num && t->curve[i].id != sid; ++i);
+    {
+        DATA_TAB* c = &t->curve[0];
+        for (i = 0; i < num && sid != c->id; ++c, ++i);
+    }
 
     if (i != num && --t->curve[i].refCount == 0)
     {
