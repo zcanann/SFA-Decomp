@@ -4301,7 +4301,6 @@ typedef struct
  * resets the item slot tables. */
 void GameUI_release(void)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
     GameUiHud* g = (GameUiHud*)lbl_803A87F0;
     void** p;
     int i;
@@ -4318,13 +4317,14 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        if (*(void**)(lbl_803A87F0 + 2504 + j * 4) != NULL)
+        void** q = &g->itemTextures[j];
+        if (*q != NULL)
         {
-            textureFree(*(void**)(lbl_803A87F0 + 2504 + j * 4));
-            *(void**)(lbl_803A87F0 + 2504 + j * 4) = NULL;
+            textureFree(*q);
+            *q = NULL;
         }
-        *(s16*)(lbl_803A87F0 + 2376 + j * 2) = -1;
-        lbl_803A87F0[1096 + j] = 1;
+        g->itemSlots[j] = -1;
+        g->itemFlags[j] = 1;
     }
 
     if (lbl_803DD7C8 != 0)
@@ -4341,13 +4341,14 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        if (*(void**)(lbl_803A87F0 + 2504 + j * 4) != NULL)
+        void** q = &g->itemTextures[j];
+        if (*q != NULL)
         {
-            textureFree(*(void**)(lbl_803A87F0 + 2504 + j * 4));
-            *(void**)(lbl_803A87F0 + 2504 + j * 4) = NULL;
+            textureFree(*q);
+            *q = NULL;
         }
-        *(s16*)(lbl_803A87F0 + 2376 + j * 2) = -1;
-        lbl_803A87F0[1096 + j] = 1;
+        g->itemSlots[j] = -1;
+        g->itemFlags[j] = 1;
     }
 
     textureFree(lbl_803DD8C4);
