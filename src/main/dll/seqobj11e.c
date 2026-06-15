@@ -68,35 +68,35 @@ extern undefined4 uRam803dc90c;
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_80152040(int param_1, int param_2)
+void FUN_80152040(int obj, int state)
 {
-    int iVar1;
-    int iVar2;
-    int iVar3;
+    int playerObj;
+    int count;
+    int def;
 
-    iVar1 = FUN_80017a98();
-    iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
-    iVar2 = (**(code**)(*DAT_803dd6e8 + 0x20))(0x1be);
-    if (iVar2 == 0)
+    playerObj = FUN_80017a98();
+    def = *(int *)&((GameObject *)obj)->anim.placementData;
+    count = (**(code**)(*DAT_803dd6e8 + 0x20))(0x1be);
+    if (count == 0)
     {
         FUN_8011e800(2);
-        *(undefined2*)(param_2 + 0x338) = DAT_803dc908;
-        (*gObjectTriggerInterface)->runSequence(0, (void*)param_1, -1);
+        *(undefined2*)(state + 0x338) = DAT_803dc908;
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
-    else if ((iVar1 == 0) || (iVar2 = FUN_80294d20(iVar1), iVar2 < 0x19))
+    else if ((playerObj == 0) || (count = FUN_80294d20(playerObj), count < 0x19))
     {
         FUN_8011e800(2);
-        *(undefined2*)(param_2 + 0x338) = uRam803dc90a;
-        (*gObjectTriggerInterface)->runSequence(1, (void*)param_1, -1);
+        *(undefined2*)(state + 0x338) = uRam803dc90a;
+        (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
     }
     else
     {
-        FUN_80294d28(iVar1, -0x19);
-        GameBit_Set((int)*(short*)(iVar3 + 0x1c), 1);
-        *(undefined2*)(param_2 + 0x338) = uRam803dc90c;
-        *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
+        FUN_80294d28(playerObj, -0x19);
+        GameBit_Set((int)*(short*)(def + 0x1c), 1);
+        *(undefined2*)(state + 0x338) = uRam803dc90c;
+        *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
         FUN_8011e800(2);
-        (*gObjectTriggerInterface)->runSequence(2, (void*)param_1, -1);
+        (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
     }
     return;
 }
