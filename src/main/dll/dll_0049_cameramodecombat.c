@@ -3,12 +3,6 @@
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
-#include "main/dll/CAM/camdrakor.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camclimb_state.h"
-#include "main/dll/CAM/camshipbattle_state.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
 
