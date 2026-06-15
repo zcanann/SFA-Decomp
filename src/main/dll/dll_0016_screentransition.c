@@ -19,7 +19,6 @@ void Checkpoint_release(void);
 extern u8 lbl_803DD42D;
 u8 screenTransition_func07(void) { return lbl_803DD42D; }
 
-extern u32 lbl_803DD410;
 
 extern f32 screenTransitionAlpha;
 f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
@@ -34,7 +33,6 @@ void setScreenTransitionPause(u32 pause) { screenTransitionPause = (u8)pause; }
 extern f32 lbl_803E0558;
 u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlpha; }
 
-extern f32 lbl_803E0570;
 
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
@@ -355,7 +353,6 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     }
 }
 
-extern f64 lbl_803E0520;
 
 #pragma scheduling reset
 #pragma scheduling reset
