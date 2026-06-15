@@ -4942,7 +4942,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
     outZCursor = outZ;
     outYCursor = outY;
     resolveCursor = windowCursor;
-    do
+    for (remaining = 4; remaining != 0; remaining--)
     {
         curveId = *idCursor;
         if ((int)curveId < 0)
@@ -4984,9 +4984,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
         outXCursor++;
         outYCursor = outYCursor + 1;
         outZCursor = outZCursor + 1;
-        remaining = remaining + -1;
     }
-    while (remaining != 0);
 
     if (((foundCount < 2) || (windowCurves[1] == NULL)) || (windowCurves[2] == NULL))
     {
