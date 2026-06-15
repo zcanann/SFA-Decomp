@@ -16,10 +16,13 @@
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
+#define DIMBOSSCRACKPAR_BASE_PARTICLE_ID  1222 /* crack-site particle, offset by particleIndex */
+#define DIMBOSSCRACKPAR_GLOW_PARTICLE_ID  1224 /* fixed glow burst particle */
+
 typedef struct DimbosscrackparPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 particleIndex; /* 0x1A: added to base particle id 1222 to select crack effect */
+    s16 particleIndex; /* 0x1A: added to DIMBOSSCRACKPAR_BASE_PARTICLE_ID to select crack effect */
     u8 pad1C[0x1E - 0x1C];
     s16 triggerGameBit; /* 0x1E: game bit that gates particle emission */
 } DimbosscrackparPlacement;
@@ -48,8 +51,8 @@ int dimbosscrackpar_SeqFn(int* obj)
         return 0;
     }
     (*gPartfxInterface)->spawnObject(
-        obj, ((DimbosscrackparPlacement*)side)->particleIndex + 1222, NULL, 2, -1, NULL);
-    (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
+        obj, ((DimbosscrackparPlacement*)side)->particleIndex + DIMBOSSCRACKPAR_BASE_PARTICLE_ID, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject(obj, DIMBOSSCRACKPAR_GLOW_PARTICLE_ID, NULL, 2, -1, NULL);
     return 0;
 }
 
