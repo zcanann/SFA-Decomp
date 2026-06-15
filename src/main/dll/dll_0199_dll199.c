@@ -10,14 +10,11 @@
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 
-extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
-extern void Music_Trigger(int track, int param);
 extern int GameBit_Set(int eventId, int value);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern ModgfxInterface** gModgfxInterface;
-extern void fn_80296518(void* player, int a, int b);
 extern int getButtonsHeld(int pad);
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
@@ -36,7 +33,6 @@ extern f32 lbl_803E516C;
 extern f32 lbl_803E5170;
 extern f32 lbl_803E5174;
 extern void ObjMsg_AllocQueue(int obj, int n);
-extern u8 Obj_IsLoadingLocked(void);
 
 void dll_199_hitDetect(void)
 {
