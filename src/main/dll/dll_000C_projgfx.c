@@ -1313,7 +1313,6 @@ void playerShadow_func03_nop(void);
 
 int projgfx_getObjectTypeId(void) { return 0x0; }
 
-extern u8 lbl_8039BE98[];
 
 extern void OSReport(const char* fmt, ...);
 #pragma scheduling off
