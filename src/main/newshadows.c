@@ -1546,12 +1546,10 @@ extern u32 lbl_8038E1DC[3];
 void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* outY)
 {
     int idx = (lbl_803DCF8C + 1) % 3;
-    ObjModelState* modelState;
     *outTable = lbl_8038E1DC[idx];
-    modelState = ((GameObject*)obj)->anim.modelState;
-    *outF = modelState->shadowScale;
-    *outX = (int)modelState->shadowOffsetX;
-    *outY = (int)modelState->shadowOffsetY;
+    *outF = ((GameObject*)obj)->anim.modelState->shadowScale;
+    *outX = (int)((GameObject*)obj)->anim.modelState->shadowOffsetX;
+    *outY = (int)((GameObject*)obj)->anim.modelState->shadowOffsetY;
 }
 
 extern void* textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
