@@ -638,8 +638,8 @@ void mapTextureScrollGetOffset(int idx, float* outX, float* outY)
     char* base;
     idx <<= 4;
     *outX = *(f32*)(lbl_803DCE68 + idx) / (divisor = lbl_803DEBC8);
-    base = (char*)lbl_803DCE68 + idx;
-    *outY = *(f32*)(base + 4) / divisor;
+    base = (char*)(lbl_803DCE68 + 4);
+    *outY = *(f32*)(base + idx) / divisor;
 }
 
 void goToPrevMapLayer(void)
