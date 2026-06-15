@@ -1,6 +1,5 @@
 /* TODO: restore stripped imported address metadata if needed. */
 
-#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/notify.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 inline DSError TRKDoNotifyStopped_Inline(TRKBuffer* msg, MessageCommandID cmd) {
