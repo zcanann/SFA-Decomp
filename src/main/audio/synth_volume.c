@@ -1,4 +1,3 @@
-#include "main/audio/synth_volume.h"
 #include "main/dll/synthfade_struct.h"
 
 extern void voiceKill(u8 voiceIdx);
