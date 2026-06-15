@@ -417,14 +417,14 @@ void staticCamera_init(short* obj, int def, int skipAdd)
 
 void FUN_8016d188(int param_1, int param_2)
 {
-    float fVar1;
-    int iVar2;
-    uint uVar3;
+    float scaleB;
+    int hasTread;
+    uint queryResult;
     int iVar4;
-    double dVar5;
-    int local_58;
-    float local_54;
-    int local_50;
+    double baseScale;
+    int camOut;
+    float intensity;
+    int effectId;
     undefined2 local_4c[3];
     short local_46;
     float local_44;
@@ -443,58 +443,58 @@ void FUN_8016d188(int param_1, int param_2)
     {
         if (*(char*)(iVar4 + 0xba) != '\0')
         {
-            iVar2 = FUN_80294d10(param_2);
-            if (iVar2 == 0)
+            hasTread = FUN_80294d10(param_2);
+            if (hasTread == 0)
             {
-                local_54 = lbl_803E3F24;
-                fVar1 = lbl_803E3F28;
+                intensity = lbl_803E3F24;
+                scaleB = lbl_803E3F28;
             }
             else
             {
-                local_54 = lbl_803E3F20;
-                fVar1 = lbl_803E3F20;
+                intensity = lbl_803E3F20;
+                scaleB = lbl_803E3F20;
             }
             if (*(byte*)(iVar4 + 0xbb) == 7)
             {
-                dVar5 = (double)lbl_803E3F2C;
-                local_18 = (longlong)(int)(lbl_803E3F30 * fVar1);
-                FUN_800810f8(dVar5, dVar5, dVar5, (double)(lbl_803E3F34 * local_54), param_1, 7,
-                             (uint) * (byte*)(iVar4 + 0xba), 1, (int)(lbl_803E3F30 * fVar1), 0, 0);
+                baseScale = (double)lbl_803E3F2C;
+                local_18 = (longlong)(int)(lbl_803E3F30 * scaleB);
+                FUN_800810f8(baseScale, baseScale, baseScale, (double)(lbl_803E3F34 * intensity), param_1, 7,
+                             (uint) * (byte*)(iVar4 + 0xba), 1, (int)(lbl_803E3F30 * scaleB), 0, 0);
             }
             else
             {
-                dVar5 = (double)lbl_803E3F20;
-                local_18 = (longlong)(int)(lbl_803E3F30 * fVar1);
-                FUN_800810f8(dVar5, dVar5, dVar5, (double)(lbl_803E3F34 * local_54), param_1,
+                baseScale = (double)lbl_803E3F20;
+                local_18 = (longlong)(int)(lbl_803E3F30 * scaleB);
+                FUN_800810f8(baseScale, baseScale, baseScale, (double)(lbl_803E3F34 * intensity), param_1,
                              (uint) * (byte*)(iVar4 + 0xbb), (uint) * (byte*)(iVar4 + 0xba), 1,
-                             (int)(lbl_803E3F30 * fVar1), 0, 0);
+                             (int)(lbl_803E3F30 * scaleB), 0, 0);
             }
         }
-        FUN_80294c60(param_2, &local_50, &local_54);
+        FUN_80294c60(param_2, &effectId, &intensity);
         local_34 = 0;
         local_32 = 0;
         local_30 = 0;
         local_2c = lbl_803E3F20;
-        if (local_50 == 0x87)
+        if (effectId == 0x87)
         {
-            iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F30));
+            iVar4 = (int)(lbl_803E3F38 * (intensity / lbl_803E3F30));
             local_18 = (longlong)iVar4;
             local_2e = 0x15 - (short)iVar4;
-            local_28 = lbl_803E3F3C * (local_54 / lbl_803E3F40 - lbl_803E3F2C);
+            local_28 = lbl_803E3F3C * (intensity / lbl_803E3F40 - lbl_803E3F2C);
             local_34 = 0xc94;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             local_2e = 9;
-            local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F40) + lbl_803E3F44;
+            local_2c = lbl_803E3F48 * (intensity / lbl_803E3F40) + lbl_803E3F44;
             local_24 = lbl_803E3F4C;
             local_34 = 0xc0e;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
         }
-        else if (local_50 < 0x87)
+        else if (effectId < 0x87)
         {
-            if (local_50 == 0x7f)
+            if (effectId == 0x7f)
             {
                 local_2c = lbl_803E3F58;
                 local_2e = 10;
@@ -503,71 +503,71 @@ void FUN_8016d188(int param_1, int param_2)
                 local_34 = 0xc0e;
                 (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
             }
-            else if (local_50 < 0x7f)
+            else if (effectId < 0x7f)
             {
-                if ((local_50 == 0x43) && (lbl_803E3F4C < local_54))
+                if ((effectId == 0x43) && (lbl_803E3F4C < intensity))
                 {
-                    iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F30));
+                    iVar4 = (int)(lbl_803E3F38 * (intensity / lbl_803E3F30));
                     local_18 = (longlong)iVar4;
                     local_2e = (short)iVar4 + 6;
-                    local_28 = lbl_803E3F3C * (local_54 / lbl_803E3F40 - lbl_803E3F2C);
+                    local_28 = lbl_803E3F3C * (intensity / lbl_803E3F40 - lbl_803E3F2C);
                     local_34 = 0xc94;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
                     local_2e = 9;
-                    local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F40) + lbl_803E3F44;
+                    local_2c = lbl_803E3F48 * (intensity / lbl_803E3F40) + lbl_803E3F44;
                     local_24 = lbl_803E3F4C;
                     local_34 = 0xc0e;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
                 }
             }
-            else if (local_50 == 0x85)
+            else if (effectId == 0x85)
             {
-                if (lbl_803E3F4C < local_54)
+                if (lbl_803E3F4C < intensity)
                 {
-                    uVar3 = FUN_80017690(0xc55);
-                    if (uVar3 == 0)
+                    queryResult = FUN_80017690(0xc55);
+                    if (queryResult == 0)
                     {
-                        fVar1 = local_54 / lbl_803E3F40;
-                        iVar4 = (int)(lbl_803E3F38 * fVar1);
+                        scaleB = intensity / lbl_803E3F40;
+                        iVar4 = (int)(lbl_803E3F38 * scaleB);
                         local_2e = (short)iVar4;
                         local_34 = 0xc94;
                     }
                     else
                     {
-                        fVar1 = local_54 / lbl_803E3F50;
-                        iVar4 = (int)(lbl_803E3F38 * fVar1);
+                        scaleB = intensity / lbl_803E3F50;
+                        iVar4 = (int)(lbl_803E3F38 * scaleB);
                         local_2e = (short)iVar4;
                         local_34 = 0xc75;
                     }
                     local_18 = (longlong)iVar4;
-                    local_28 = lbl_803E3F5C * (lbl_803E3F28 - fVar1);
+                    local_28 = lbl_803E3F5C * (lbl_803E3F28 - scaleB);
                     local_2e = 0x15 - local_2e;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
                     local_2e = 9;
-                    uVar3 = FUN_80017690(0xc55);
-                    if (uVar3 == 0)
+                    queryResult = FUN_80017690(0xc55);
+                    if (queryResult == 0)
                     {
                         local_34 = 0xc0e;
-                        fVar1 = lbl_803E3F40;
+                        scaleB = lbl_803E3F40;
                     }
                     else
                     {
                         local_34 = 0xc75;
-                        fVar1 = lbl_803E3F50;
+                        scaleB = lbl_803E3F50;
                     }
-                    local_2c = lbl_803E3F48 * (local_54 / fVar1) + lbl_803E3F44;
+                    local_2c = lbl_803E3F48 * (intensity / scaleB) + lbl_803E3F44;
                     local_24 = lbl_803E3F4C;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
                 }
             }
-            else if (0x84 < local_50)
+            else if (0x84 < effectId)
             {
-                uVar3 = FUN_80017690(0xc55);
-                if (uVar3 == 0)
+                queryResult = FUN_80017690(0xc55);
+                if (queryResult == 0)
                 {
                     local_34 = 0xc0e;
                 }
@@ -575,12 +575,12 @@ void FUN_8016d188(int param_1, int param_2)
                 {
                     local_34 = 0xc75;
                 }
-                fVar1 = *(float*)(param_2 + 0x98);
-                if (lbl_803E3F68 <= fVar1)
+                scaleB = *(float*)(param_2 + 0x98);
+                if (lbl_803E3F68 <= scaleB)
                 {
-                    if (fVar1 < lbl_803E3F70)
+                    if (scaleB < lbl_803E3F70)
                     {
-                        local_28 = lbl_803E3F5C * (lbl_803E3F74 * (fVar1 - lbl_803E3F68) - lbl_803E3F2C);
+                        local_28 = lbl_803E3F5C * (lbl_803E3F74 * (scaleB - lbl_803E3F68) - lbl_803E3F2C);
                         local_2e = 9;
                         local_2c = lbl_803E3F20;
                         local_24 = lbl_803E3F4C;
@@ -597,18 +597,18 @@ void FUN_8016d188(int param_1, int param_2)
                 }
             }
         }
-        else if (local_50 == 0x468)
+        else if (effectId == 0x468)
         {
-            if (lbl_803E3F4C < local_54)
+            if (lbl_803E3F4C < intensity)
             {
-                iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F60));
+                iVar4 = (int)(lbl_803E3F38 * (intensity / lbl_803E3F60));
                 local_18 = (longlong)iVar4;
                 local_46 = 0x15 - (short)iVar4;
                 local_4c[0] = 0xc95;
-                FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &local_58);
-                local_28 = *(float*)(local_58 + 0xc);
-                local_24 = *(float*)(local_58 + 0x10);
-                local_20 = *(undefined4*)(local_58 + 0x14);
+                FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &camOut);
+                local_28 = *(float*)(camOut + 0xc);
+                local_24 = *(float*)(camOut + 0x10);
+                local_20 = *(undefined4*)(camOut + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
                                                  0x200001, -1, local_4c);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
@@ -619,17 +619,17 @@ void FUN_8016d188(int param_1, int param_2)
                                                  0x200001, -1, local_4c);
                 local_46 = 9;
                 local_4c[0] = 0xc95;
-                local_44 = lbl_803E3F64 * (local_54 / lbl_803E3F60) + lbl_803E3F44;
-                local_28 = *(float*)(local_58 + 0xc);
-                local_24 = *(float*)(local_58 + 0x10);
-                local_20 = *(undefined4*)(local_58 + 0x14);
+                local_44 = lbl_803E3F64 * (intensity / lbl_803E3F60) + lbl_803E3F44;
+                local_28 = *(float*)(camOut + 0xc);
+                local_24 = *(float*)(camOut + 0x10);
+                local_20 = *(undefined4*)(camOut + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &local_34,
                                                  0x200001, -1, local_4c);
             }
         }
-        else if (local_50 < 0x468)
+        else if (effectId < 0x468)
         {
-            if (local_50 < 0x89)
+            if (effectId < 0x89)
             {
                 local_2e = 0x23;
                 local_24 = lbl_803E3F4C;
@@ -641,19 +641,19 @@ void FUN_8016d188(int param_1, int param_2)
                 (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
             }
         }
-        else if ((local_50 == 0x46f) && (lbl_803E3F4C < local_54))
+        else if ((effectId == 0x46f) && (lbl_803E3F4C < intensity))
         {
-            iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F60));
+            iVar4 = (int)(lbl_803E3F38 * (intensity / lbl_803E3F60));
             local_18 = (longlong)iVar4;
             local_2e = 0x15 - (short)iVar4;
-            local_28 = lbl_803E3F5C * (lbl_803E3F28 - local_54 / lbl_803E3F60);
+            local_28 = lbl_803E3F5C * (lbl_803E3F28 - intensity / lbl_803E3F60);
             local_34 = 0xc94;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
             local_2e = 9;
-            local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F60) + lbl_803E3F44;
+            local_2c = lbl_803E3F48 * (intensity / lbl_803E3F60) + lbl_803E3F44;
             local_24 = lbl_803E3F4C;
             local_34 = 0xc0e;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
@@ -662,13 +662,13 @@ void FUN_8016d188(int param_1, int param_2)
     return;
 }
 
-void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
+void FUN_8016d994(int obj, undefined fxType, undefined fxIntensity)
 {
-    int iVar1;
+    int state;
 
-    iVar1 = *(int*)&((GameObject*)param_1)->extra;
-    *(undefined*)(iVar1 + 0xbb) = param_2;
-    *(undefined*)(iVar1 + 0xba) = param_3;
+    state = *(int*)&((GameObject*)obj)->extra;
+    *(undefined*)(state + 0xbb) = fxType;
+    *(undefined*)(state + 0xba) = fxIntensity;
     return;
 }
 
@@ -676,98 +676,98 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
 {
-    short sVar1;
-    int iVar2;
-    int* piVar3;
-    uint uVar4;
-    int iVar5;
-    int* piVar6;
-    double dVar7;
-    double dVar8;
+    short alpha;
+    int hitbox;
+    int* group;
+    uint idx;
+    int row;
+    int* state;
+    double computed;
+    double clamped;
     undefined8 local_18;
 
-    piVar6 = ((GameObject*)param_9)->extra;
-    iVar2 = FUN_80017a54(param_9);
-    *(ushort*)(iVar2 + 0x18) = *(ushort*)(iVar2 + 0x18) & ~0x8;
-    FUN_8002fc3c((double)(float)piVar6[0x14], (double)lbl_803DC074);
-    iVar2 = 3;
-    piVar3 = piVar6;
+    state = ((GameObject*)param_9)->extra;
+    hitbox = FUN_80017a54(param_9);
+    *(ushort*)(hitbox + 0x18) = *(ushort*)(hitbox + 0x18) & ~0x8;
+    FUN_8002fc3c((double)(float)state[0x14], (double)lbl_803DC074);
+    hitbox = 3;
+    group = state;
     do
     {
-        if ((*(byte*)(piVar3 + 5) & 2) != 0)
+        if ((*(byte*)(group + 5) & 2) != 0)
         {
-            uVar4 = (uint) * (ushort*)(piVar3 + 3);
-            iVar5 = *piVar3 + uVar4 * 0x14;
-            for (; (int)uVar4 < (int)(uint) * (ushort*)((int)piVar3 + 0xe); uVar4 = uVar4 + 2)
+            idx = (uint) * (ushort*)(group + 3);
+            row = *group + idx * 0x14;
+            for (; (int)idx < (int)(uint) * (ushort*)((int)group + 0xe); idx = idx + 2)
             {
-                if (piVar3 == (int*)piVar6[0x12])
+                if (group == (int*)state[0x12])
                 {
                     param_3 = (double)lbl_803E3F8C;
-                    dVar7 = (double)(float)(param_3 *
-                        (double)((lbl_803E3FA4 * (float)piVar6[0x26] -
-                            *(float*)(iVar5 + 0xc)) * lbl_803E3FA8));
-                    dVar8 = (double)lbl_803E3F4C;
-                    if ((dVar8 <= dVar7) && (dVar8 = dVar7, param_3 < dVar7))
+                    computed = (double)(float)(param_3 *
+                        (double)((lbl_803E3FA4 * (float)state[0x26] -
+                            *(float*)(row + 0xc)) * lbl_803E3FA8));
+                    clamped = (double)lbl_803E3F4C;
+                    if ((clamped <= computed) && (clamped = computed, param_3 < computed))
                     {
-                        dVar8 = param_3;
+                        clamped = param_3;
                     }
-                    *(short*)(iVar5 + 0x10) = (short)(int)(param_3 - dVar8);
-                    *(undefined2*)(iVar5 + 0x24) = *(undefined2*)(iVar5 + 0x10);
+                    *(short*)(row + 0x10) = (short)(int)(param_3 - clamped);
+                    *(undefined2*)(row + 0x24) = *(undefined2*)(row + 0x10);
                 }
                 else
                 {
                     param_3 = (double)lbl_803E3FC4;
-                    *(short*)(iVar5 + 0x10) =
+                    *(short*)(row + 0x10) =
                         (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
-                            (double)(f32)(s32)((int)*(short*)(iVar5 + 0x10)));
-                    *(undefined2*)(iVar5 + 0x24) = *(undefined2*)(iVar5 + 0x10);
+                            (double)(f32)(s32)((int)*(short*)(row + 0x10)));
+                    *(undefined2*)(row + 0x24) = *(undefined2*)(row + 0x10);
                 }
-                sVar1 = *(short*)(iVar5 + 0x10);
-                if (sVar1 < 0)
+                alpha = *(short*)(row + 0x10);
+                if (alpha < 0)
                 {
-                    sVar1 = 0;
+                    alpha = 0;
                 }
-                else if (0xff < sVar1)
+                else if (0xff < alpha)
                 {
-                    sVar1 = 0xff;
+                    alpha = 0xff;
                 }
-                *(short*)(iVar5 + 0x10) = sVar1;
-                sVar1 = *(short*)(iVar5 + 0x24);
-                if (sVar1 < 0)
+                *(short*)(row + 0x10) = alpha;
+                alpha = *(short*)(row + 0x24);
+                if (alpha < 0)
                 {
-                    sVar1 = 0;
+                    alpha = 0;
                 }
-                else if (0xff < sVar1)
+                else if (0xff < alpha)
                 {
-                    sVar1 = 0xff;
+                    alpha = 0xff;
                 }
-                *(short*)(iVar5 + 0x24) = sVar1;
-                if ((*(short*)(iVar5 + 0x10) < 1) && (*(short*)(iVar5 + 0x24) < 1))
+                *(short*)(row + 0x24) = alpha;
+                if ((*(short*)(row + 0x10) < 1) && (*(short*)(row + 0x24) < 1))
                 {
-                    *(short*)((int)piVar3 + 0x12) = *(short*)((int)piVar3 + 0x12) + -2;
-                    *(short*)(piVar3 + 3) = *(short*)(piVar3 + 3) + 2;
+                    *(short*)((int)group + 0x12) = *(short*)((int)group + 0x12) + -2;
+                    *(short*)(group + 3) = *(short*)(group + 3) + 2;
                 }
-                iVar5 = iVar5 + 0x28;
+                row = row + 0x28;
             }
-            if ((piVar3 != (int*)piVar6[0x12]) && (*(short*)((int)piVar3 + 0x12) == 0))
+            if ((group != (int*)state[0x12]) && (*(short*)((int)group + 0x12) == 0))
             {
-                *(byte*)(piVar3 + 5) = *(byte*)(piVar3 + 5) & 0xfd;
+                *(byte*)(group + 5) = *(byte*)(group + 5) & 0xfd;
             }
         }
-        piVar3 = piVar3 + 6;
-        iVar2 = iVar2 + -1;
+        group = group + 6;
+        hitbox = hitbox + -1;
     }
-    while (iVar2 != 0);
+    while (hitbox != 0);
     FUN_8016d188(param_9, *(int*)&((GameObject*)param_9)->ownerObj);
     FUN_80294d6c(*(int*)&((GameObject*)param_9)->ownerObj);
-    *(undefined*)((int)piVar6 + 0xb9) = 0;
+    *(undefined*)((int)state + 0xb9) = 0;
     if (DAT_803ad338 != '\0')
     {
         DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
         ObjHitbox_SetSphereRadius(DAT_803ad334, (short)(int)DAT_803ad324);
         ObjHits_SetHitVolumeSlot(DAT_803ad334, 0x11, 5, 0);
         DAT_803ad330 = DAT_803ad330 + lbl_803E3F7C;
-        dVar8 = (double)DAT_803ad330;
+        clamped = (double)DAT_803ad330;
         DAT_803ad328 = DAT_803ad328 * lbl_803E3F80;
         DAT_803ad32c = DAT_803ad32c * lbl_803E3F84;
         ((GameObject*)DAT_803ad334)->anim.alpha = (char)(int)DAT_803ad330;
@@ -776,7 +776,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
         if ((double)DAT_803ad330 < (double)lbl_803E3F20)
         {
             DAT_803ad338 = '\0';
-            FUN_80017ac8((double)DAT_803ad330, dVar8, param_3, param_4, param_5, param_6, param_7, param_8,
+            FUN_80017ac8((double)DAT_803ad330, clamped, param_3, param_4, param_5, param_6, param_7, param_8,
                          DAT_803ad334);
             DAT_803ad334 = 0;
         }
@@ -1059,63 +1059,63 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
                   uint param_9)
 {
     extern undefined8 ObjHits_DisableObject(); /* #57 */
-    short sVar1;
-    char cVar2;
+    short seqType;
+    char count;
     uint uVar3;
     int iVar4;
-    int iVar5;
-    int iVar6;
-    undefined8 uVar7;
+    int placement;
+    int state;
+    undefined8 disabledObj;
 
-    iVar6 = *(int*)&((GameObject*)param_9)->extra;
-    iVar5 = *(int*)&((GameObject*)param_9)->anim.placementData;
+    state = *(int*)&((GameObject*)param_9)->extra;
+    placement = *(int*)&((GameObject*)param_9)->anim.placementData;
     iVar4 = (int)((GameObject*)param_9)->anim.modelInstance->extraSetupData;
     FUN_80017a98();
     FUN_80017a90();
     FUN_80017a98();
     FUN_80017a90();
-    uVar7 = ObjHits_DisableObject(param_9);
+    disabledObj = ObjHits_DisableObject(param_9);
     if ((*(ushort*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
     {
-        *(float*)(iVar6 + 8) = lbl_803E40E8;
+        *(float*)(state + 8) = lbl_803E40E8;
         if (((GameObject*)param_9)->anim.modelState != NULL)
         {
             ((GameObject*)param_9)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    if ((int)*(short*)(iVar6 + 0x10) != 0xffffffff)
+    if ((int)*(short*)(state + 0x10) != 0xffffffff)
     {
-        FUN_80017698((int)*(short*)(iVar6 + 0x10), 1);
-        uVar7 = FUN_800e842c(param_9);
+        FUN_80017698((int)*(short*)(state + 0x10), 1);
+        disabledObj = FUN_800e842c(param_9);
     }
-    uVar3 = (uint) * (short*)(iVar5 + 0x1e);
+    uVar3 = (uint) * (short*)(placement + 0x1e);
     if (uVar3 != 0xffffffff)
     {
-        uVar7 = FUN_80017698(uVar3, 1);
+        disabledObj = FUN_80017698(uVar3, 1);
     }
-    uVar3 = (uint) * (short*)(iVar5 + 0x2c);
+    uVar3 = (uint) * (short*)(placement + 0x2c);
     if (0 < (int)uVar3)
     {
         FUN_80017688(uVar3);
     }
-    sVar1 = *(short*)(iVar4 + 2);
-    if (sVar1 == 4)
+    seqType = *(short*)(iVar4 + 2);
+    if (seqType == 4)
     {
-        sVar1 = ((GameObject*)param_9)->anim.seqId;
-        if (sVar1 == 0x3cd)
+        seqType = ((GameObject*)param_9)->anim.seqId;
+        if (seqType == 0x3cd)
         {
             iVar4 = FUN_80017a98();
-            FUN_80294d60(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4, 2);
+            FUN_80294d60(disabledObj, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4, 2);
             uVar3 = FUN_80017a98();
             FUN_80006824(uVar3, SFXen_treadlpc);
             FUN_80081118((double)lbl_803E40EC, param_9, 1, 0x28);
         }
-        else if ((sVar1 < 0x3cd) && (sVar1 == 0xb))
+        else if ((seqType < 0x3cd) && (seqType == 0xb))
         {
             uVar3 = FUN_80017a98();
-            uVar7 = FUN_80006824(uVar3, SFXen_treadlpc);
+            disabledObj = FUN_80006824(uVar3, SFXen_treadlpc);
             iVar4 = FUN_80017a98();
-            FUN_80294d60(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4, 4);
+            FUN_80294d60(disabledObj, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4, 4);
             FUN_80081118((double)lbl_803E40EC, param_9, 3, 0x28);
         }
         else
@@ -1125,42 +1125,42 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
             FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
         }
     }
-    else if ((sVar1 < 4) && (sVar1 == 1))
+    else if ((seqType < 4) && (seqType == 1))
     {
-        sVar1 = ((GameObject*)param_9)->anim.seqId;
-        if (sVar1 == 0x319)
+        seqType = ((GameObject*)param_9)->anim.seqId;
+        if (seqType == 0x319)
         {
             FUN_80006824(param_9, SFXwp_gprop2_c);
             FUN_80017698(0x3e9, 1);
-            *(undefined2*)(iVar6 + 0x3c) = 0x4b0;
+            *(undefined2*)(state + 0x3c) = 0x4b0;
             FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
         }
         else
         {
-            if (sVar1 < 0x319)
+            if (seqType < 0x319)
             {
-                if (sVar1 == 0x5a)
+                if (seqType == 0x5a)
                 {
                     FUN_80006824(param_9, SFXen_treadlpc);
                     FUN_80081118((double)lbl_803E40EC, param_9, 2, 0x28);
                     goto LAB_801725bc;
                 }
-                if ((sVar1 < 0x5a) && (sVar1 == 0x22))
+                if ((seqType < 0x5a) && (seqType == 0x22))
                 {
                     FUN_80006824(param_9, SFXen_treadlpc);
                     FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
                     goto LAB_801725bc;
                 }
             }
-            else if (sVar1 == 0x6a6)
+            else if (seqType == 0x6a6)
             {
                 uVar3 = FUN_80017690(0x86a);
-                cVar2 = (char)uVar3;
-                if (cVar2 < '\a')
+                count = (char)uVar3;
+                if (count < '\a')
                 {
-                    cVar2 = cVar2 + '\x01';
+                    count = count + '\x01';
                 }
-                FUN_80017698(0x86a, (int)cVar2);
+                FUN_80017698(0x86a, (int)count);
                 FUN_80081118((double)lbl_803E40EC, param_9, 6, 0x28);
                 FUN_80006824(param_9, SFXen_treadlpc);
                 goto LAB_801725bc;
