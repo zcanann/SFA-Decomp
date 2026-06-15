@@ -405,8 +405,8 @@ undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate
             GameBit_Set(0x103, 1);
             *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) & ~8;
             player = Obj_GetPlayerObject();
-            dx = *(float*)(obj + 6) - *(float*)(player + 0xc);
-            dz = *(float*)(obj + 10) - *(float*)(player + 0x14);
+            dx = *(float*)(obj + 6) - ((GameObject*)player)->anim.localPosX;
+            dz = *(float*)(obj + 10) - ((GameObject*)player)->anim.localPosZ;
             len = sqrtf(dx * dx + dz * dz);
             if (len != lbl_803E3528)
             {
@@ -1036,8 +1036,8 @@ void pushable_hitDetect(int* obj)
             vec.pos[3] = lbl_803E3528;
             setMatrixFromObjectPos(mtx, &vec);
             Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
-                                  (f32*)((char*)obj + 0x24), &tmpY, (f32*)((char*)obj + 0x2c));
-            objMove(obj, ((f32*)obj)[9], lbl_803E3528, ((f32*)obj)[11]);
+                                  &((GameObject*)obj)->anim.velocityX, &tmpY, &((GameObject*)obj)->anim.velocityZ);
+            objMove(obj, ((GameObject*)obj)->anim.velocityX, lbl_803E3528, ((GameObject*)obj)->anim.velocityZ);
             if ((state->flags & 4) == 0)
             {
                 fn_80174BFC(obj, state);
