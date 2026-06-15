@@ -298,7 +298,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         ((QueenEarthWalkerState*)state)->flags &= ~0x8;
         ((QueenEarthWalkerState*)state)->eventTable = &lbl_803DBFD0;
         player = Obj_GetPlayerObject();
-        *(u8*)((int)state + 0x8) = 1;
+        ((u8*)state)[0x8] = 1;
         ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
         ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
         ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
