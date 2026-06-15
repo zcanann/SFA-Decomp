@@ -3209,17 +3209,17 @@ void Sky_func03(int a, int b, u8* cfg)
                 *(int*)(lbl_803DD12C + ((SkyState*)lbl_803DD12C)->unk251 * 4 + 8);
             *(int*)(lbl_803DD12C + ((SkyState*)lbl_803DD12C)->unk251 * 4 + 8) = tmp;
             ((SkyState*)lbl_803DD12C)->unk250 = -1;
-            if (((SkyState*)lbl_803DD12C)->unk255 < 0)
+            if ((((u32)(u8)((SkyState*)lbl_803DD12C)->unk255 >> 7) & 1) != 0)
             {
                 ((SkyState*)lbl_803DD12C)->unk23C = EXIInputFlag;
-                if (((Sky2Config*)cfg)->unk2A == 0)
-                {
-                    ((SkyState*)lbl_803DD12C)->unk240 = EXIInputFlag;
-                }
-                else
+                if (((Sky2Config*)cfg)->unk2A != 0)
                 {
                     ((SkyState*)lbl_803DD12C)->unk240 =
                         EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->unk2A);
+                }
+                else
+                {
+                    ((SkyState*)lbl_803DD12C)->unk240 = EXIInputFlag;
                 }
             }
             else
