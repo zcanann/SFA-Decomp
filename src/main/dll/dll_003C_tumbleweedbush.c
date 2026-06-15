@@ -208,34 +208,31 @@ void Link_copy(u8* srcArg)
 {
     extern u8 lbl_803DD911; /* #57 */
     extern LinkMenuItemDB lbl_803A9458[40];
-    LinkMenuItemDB* dst;
     LinkMenuItemDB* src;
     int i;
 
     i = 0;
-    dst = lbl_803A9458;
     src = (LinkMenuItemDB*)srcArg;
     for (; i < (s8)lbl_803DD911; i++)
     {
-        dst->field16 = src->field16;
-        dst->field1A = src->field1A;
-        dst->field04 = src->field04;
+        lbl_803A9458[i].field16 = src->field16;
+        lbl_803A9458[i].field1A = src->field1A;
+        lbl_803A9458[i].field04 = src->field04;
         if (src->textureAssetId != -1)
         {
-            if (dst->texture == NULL)
+            if (lbl_803A9458[i].texture == NULL)
             {
-                dst->texture = textureLoadAsset(src->textureAssetId);
+                lbl_803A9458[i].texture = textureLoadAsset(src->textureAssetId);
             }
         }
         else
         {
-            if (dst->texture != NULL)
+            if (lbl_803A9458[i].texture != NULL)
             {
-                textureFree(dst->texture);
+                textureFree(lbl_803A9458[i].texture);
             }
-            dst->texture = NULL;
+            lbl_803A9458[i].texture = NULL;
         }
-        dst++;
         src++;
     }
 }
