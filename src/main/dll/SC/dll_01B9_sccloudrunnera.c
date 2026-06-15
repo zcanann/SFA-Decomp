@@ -1,7 +1,6 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
-#include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int a, int b);
@@ -9,10 +8,8 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 
-#include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/objfx.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 
