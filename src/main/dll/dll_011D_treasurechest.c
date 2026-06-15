@@ -87,7 +87,6 @@ void treasurechest_hitDetect(int obj)
 
 #include "main/dll/CF/dll_165.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
