@@ -3206,7 +3206,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
     int baseYaw;
     int baseRoll;
-    int basePitch;
+    s16 basePitch;
     f32 baseX;
     f32 baseY;
     f32 baseZ;
@@ -4802,9 +4802,9 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     RomCurveNode* node;
     f32 outPos[3];
     f32 offset[3];
-    f32 dz;
-    f32 dy;
     f32 dx;
+    f32 dy;
+    f32 dz;
     f32 angleSin;
     f32 angleCos;
     f32 x;

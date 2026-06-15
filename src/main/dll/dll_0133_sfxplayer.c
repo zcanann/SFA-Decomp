@@ -3,7 +3,7 @@
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
-extern f32 lbl_803DC074;
+extern f32 timeDelta;
 
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/camera_interface.h"
@@ -239,7 +239,7 @@ void sfxplayerObj_update(u8* obj)
             (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
             (((data[0x1c] & 4) != 0) && (bitState == 0)))
         {
-            *(f32*)state -= lbl_803DC074;
+            *(f32*)state -= timeDelta;
             if (*(f32*)state <= lbl_803E40B8)
             {
                 *(f32*)state = (f32)(s32)

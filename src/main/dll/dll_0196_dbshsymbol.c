@@ -55,8 +55,8 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     f32 animDiv;
     int v;
     int* list;
-    int count;
     int idx;
+    int count;
     int i;
     int player;
     DbshSymbolState* state;

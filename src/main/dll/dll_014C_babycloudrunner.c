@@ -665,6 +665,7 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
  * move, otherwise start or speed-scale the turn move by the delta. */
 #pragma dont_inline on
 #pragma scheduling off
+#pragma peephole off
 void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
 {
     int shifted;
@@ -694,18 +695,20 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
         else
         {
             s16 t;
-            if ((int)(s16)shifted > 0)
+            s16 sv = (s16)shifted;
+            if ((int)sv > 0)
             {
-                t = (s16)shifted >> 2;
+                t = sv >> 2;
             }
             else
             {
-                t = -(s16)shifted >> 2;
+                t = -sv >> 2;
             }
             ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(a, (f32)t / lbl_803E4240, timeDelta, 0);
         }
     }
 }
+#pragma peephole on
 #pragma dont_inline reset
 
 /* EN v1.0 0x8019E6C8  size: 316b  babycloudrunner_func0B: when the player

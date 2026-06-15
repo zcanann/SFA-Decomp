@@ -726,6 +726,7 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
+    u8* tex = lbl_803149B0;
     GfxCmd* e = buf.entries;
     e[0].layer = 0;
     e[0].flags = 0xc8;
@@ -736,7 +737,7 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[0].z = lbl_803E0C74;
     e[1].layer = 0;
     e[1].flags = 0xe;
-    e[1].tex = &lbl_803149B0[212];
+    e[1].tex = &tex[212];
     e[1].mode = 0x80;
     e[1].x = lbl_803E0C74;
     e[1].y = lbl_803E0C74;
@@ -750,21 +751,21 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     e[2].layer = 0;
     e[2].flags = 7;
-    e[2].tex = &lbl_803149B0[256];
+    e[2].tex = &tex[256];
     e[2].mode = 4;
     e[2].x = lbl_803E0C74;
     e[2].y = lbl_803E0C74;
     e[2].z = lbl_803E0C74;
     e[3].layer = 0;
     e[3].flags = 7;
-    e[3].tex = &lbl_803149B0[240];
+    e[3].tex = &tex[240];
     e[3].mode = 2;
     e[3].x = lbl_803E0C78;
     e[3].y = lbl_803E0C7C;
     e[3].z = lbl_803E0C78;
     e[4].layer = 0;
     e[4].flags = 7;
-    e[4].tex = &lbl_803149B0[256];
+    e[4].tex = &tex[256];
     e[4].mode = 2;
     if (posSource != 0)
     {
@@ -780,7 +781,7 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     e[5].layer = 1;
     e[5].flags = 7;
-    e[5].tex = &lbl_803149B0[256];
+    e[5].tex = &tex[256];
     e[5].mode = 2;
     if (posSource != 0)
     {
@@ -803,35 +804,35 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[6].z = lbl_803E0C74;
     e[7].layer = 1;
     e[7].flags = 0xe;
-    e[7].tex = &lbl_803149B0[212];
+    e[7].tex = &tex[212];
     e[7].mode = 0x4000;
     e[7].x = lbl_803E0C74;
     e[7].y = lbl_803E0C90;
     e[7].z = lbl_803E0C74;
     e[8].layer = 1;
     e[8].flags = 7;
-    e[8].tex = &lbl_803149B0[240];
+    e[8].tex = &tex[240];
     e[8].mode = 4;
     e[8].x = lbl_803E0C94;
     e[8].y = lbl_803E0C74;
     e[8].z = lbl_803E0C74;
     e[9].layer = 2;
     e[9].flags = 0xe;
-    e[9].tex = &lbl_803149B0[212];
+    e[9].tex = &tex[212];
     e[9].mode = 2;
     e[9].x = lbl_803E0C98;
     e[9].y = lbl_803E0C9C;
     e[9].z = lbl_803E0C98;
     e[10].layer = 2;
     e[10].flags = 0xe;
-    e[10].tex = &lbl_803149B0[212];
+    e[10].tex = &tex[212];
     e[10].mode = 0x4000;
     e[10].x = lbl_803E0C74;
     e[10].y = lbl_803E0CA0;
     e[10].z = lbl_803E0C74;
     e[11].layer = 2;
     e[11].flags = 7;
-    e[11].tex = &lbl_803149B0[240];
+    e[11].tex = &tex[240];
     e[11].mode = 4;
     e[11].x = lbl_803E0C74;
     e[11].y = lbl_803E0C74;
@@ -860,14 +861,14 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x10;
-    buf.count = (e + 12) - buf.entries;
-    buf.hw[0] = *(s16*)&lbl_803149B0[272];
-    buf.hw[1] = *(s16*)&lbl_803149B0[274];
-    buf.hw[2] = *(s16*)&lbl_803149B0[276];
-    buf.hw[3] = *(s16*)&lbl_803149B0[278];
-    buf.hw[4] = *(s16*)&lbl_803149B0[280];
-    buf.hw[5] = *(s16*)&lbl_803149B0[282];
-    buf.hw[6] = *(s16*)&lbl_803149B0[284];
+    buf.count = (e + 11) - buf.entries;
+    buf.hw[0] = *(s16*)&tex[272];
+    buf.hw[1] = *(s16*)&tex[274];
+    buf.hw[2] = *(s16*)&tex[276];
+    buf.hw[3] = *(s16*)&tex[278];
+    buf.hw[4] = *(s16*)&tex[280];
+    buf.hw[5] = *(s16*)&tex[282];
+    buf.hw[6] = *(s16*)&tex[284];
     buf.cmds = buf.entries;
     buf.flags = 0x4000400;
     buf.flags |= flags;
@@ -886,7 +887,7 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_803149B0[0], 0xc, &lbl_803149B0[140], 0x34, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &tex[0], 0xc, &tex[140], 0x34, 0);
 }
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);

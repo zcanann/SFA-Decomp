@@ -717,35 +717,36 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         GfxCmd entries[32];
     } buf;
     u8* base = lbl_803146D8;
+    GfxCmd* entries = buf.entries;
     GfxCmd* e;
-    buf.entries[0].layer = 0;
-    buf.entries[0].flags = 0x15;
-    buf.entries[0].tex = &base[0x1b0];
-    buf.entries[0].mode = 4;
-    buf.entries[0].x = lbl_803E0BB8;
-    buf.entries[0].y = lbl_803E0BB8;
-    buf.entries[0].z = lbl_803E0BB8;
+    entries[0].layer = 0;
+    entries[0].flags = 0x15;
+    entries[0].tex = &base[0x1b0];
+    entries[0].mode = 4;
+    entries[0].x = lbl_803E0BB8;
+    entries[0].y = lbl_803E0BB8;
+    entries[0].z = lbl_803E0BB8;
     if (variant == 0)
     {
-        buf.entries[1].layer = 0;
-        buf.entries[1].flags = 0x15;
-        buf.entries[1].tex = &base[0x1b0];
-        buf.entries[1].mode = 2;
-        buf.entries[1].x = lbl_803E0BBC;
-        buf.entries[1].y = lbl_803E0BC0;
-        buf.entries[1].z = lbl_803E0BBC;
-        e = &buf.entries[2];
+        entries[1].layer = 0;
+        entries[1].flags = 0x15;
+        entries[1].tex = &base[0x1b0];
+        entries[1].mode = 2;
+        entries[1].x = lbl_803E0BBC;
+        entries[1].y = lbl_803E0BC0;
+        entries[1].z = lbl_803E0BBC;
+        e = &entries[2];
     }
     else
     {
-        buf.entries[1].layer = 0;
-        buf.entries[1].flags = 0x15;
-        buf.entries[1].tex = &base[0x1b0];
-        buf.entries[1].mode = 2;
-        buf.entries[1].x = lbl_803E0BBC;
-        buf.entries[1].y = lbl_803E0BC4;
-        buf.entries[1].z = lbl_803E0BBC;
-        e = &buf.entries[2];
+        entries[1].layer = 0;
+        entries[1].flags = 0x15;
+        entries[1].tex = &base[0x1b0];
+        entries[1].mode = 2;
+        entries[1].x = lbl_803E0BBC;
+        entries[1].y = lbl_803E0BC4;
+        entries[1].z = lbl_803E0BBC;
+        e = &entries[2];
     }
     if (variant == 0)
     {

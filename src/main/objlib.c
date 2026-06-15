@@ -1079,10 +1079,10 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
 #pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
 {
+    uint* entry;
     uint nearest;
     uint index;
     uint limit;
-    uint* entry;
     float distanceSq;
     float bestDistanceSq;
 
@@ -1126,10 +1126,10 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
 
 int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
 {
+    uint* entry;
     uint nearest;
     uint index;
     uint limit;
-    uint* entry;
     float distanceSq;
     float bestDistanceSq;
 
@@ -2109,9 +2109,9 @@ uint ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
     ObjLibRegionList** lists;
     ObjLibRegionList* list;
     ObjLibRegionEntry* entry;
-    int hitId;
     int listIndex;
     int entryOffset;
+    int hitId;
 
     hitId = -1;
     lists = RomList_GetLoadedPages();
@@ -2141,15 +2141,15 @@ uint ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
                     f32 localY = deltaY * pitchSin - yawZ * pitchCos;
                     f32 localZ = deltaY * pitchCos + yawZ * pitchSin;
 
-                    if (localX < lbl_803DE970)
+                    if (localX < 0.0f)
                     {
                         localX = -localX;
                     }
-                    if (localY < lbl_803DE970)
+                    if (localY < 0.0f)
                     {
                         localY = -localY;
                     }
-                    if (localZ < lbl_803DE970)
+                    if (localZ < 0.0f)
                     {
                         localZ = -localZ;
                     }

@@ -218,8 +218,7 @@ void alphaanimator_update(int* obj)
         {
             return;
         }
-        s->fadeA = lbl_803E3F7C;
-        s->fadeB = lbl_803E3F7C;
+        s->fadeB = s->fadeA = lbl_803E3F7C;
         s->fadeMax = (f32)(u32)((AlphaanimatorPlacement*)d)->fadeMax;
         if (((AlphaanimatorPlacement*)d)->unk18 == -1)
         {
@@ -227,12 +226,12 @@ void alphaanimator_update(int* obj)
         }
         else
         {
-            s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+            *(s8*)&s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
         }
         s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
         if (((AlphaanimatorPlacement*)d)->unk1A != -1 && GameBit_Get(((AlphaanimatorPlacement*)d)->unk1A) != 0)
         {
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
+            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
             s->fadeA = lbl_803E3F78 + s->fadeMax;
             s->gateVal = 1;
         }
@@ -249,7 +248,7 @@ void alphaanimator_update(int* obj)
     }
     if (mode == 2)
     {
-        s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+        *(s8*)&s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
         if ((s8)s->doneCount > 2 &&
             (s8)s->gateVal != (s8)s->prevGate)
         {
@@ -273,7 +272,7 @@ void alphaanimator_update(int* obj)
         }
         if ((s8)s->gateVal == 0)
         {
-            s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+            *(s8*)&s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
             if ((s8)s->gateVal == 0)
             {
                 return;
@@ -409,13 +408,17 @@ void alphaanimator_update(int* obj)
         }
         break;
     case 3:
-        sp = (f32)(s8)((AlphaanimatorPlacement*)d)->unk1F;
-        if ((s8)((AlphaanimatorPlacement*)d)->unk1F < 0)
         {
-            sp = (f32)(-(s8)((AlphaanimatorPlacement*)d)->unk1F);
+            s32 step = (s8)((AlphaanimatorPlacement*)d)->unk1F;
+            if (step < 0)
+            {
+                step = -step;
+            }
+            sp = (f32)step;
         }
+        sp = sp / lbl_803E3F80;
         s->fadeA =
-            sp / lbl_803E3F80 * timeDelta + s->fadeA;
+            sp * timeDelta + s->fadeA;
         if (s->fadeA > s->fadeMax)
         {
             s->fadeA = s->fadeMax;

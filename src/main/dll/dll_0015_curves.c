@@ -614,6 +614,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     collision->resultFloorGap = collision->floorGap[0];
 }
 
+#pragma opt_unroll_count 4
 void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
 {
     u8 pointCount;
@@ -720,6 +721,7 @@ buildTransform:
         localOffset += 0xc;
     }
 }
+#pragma opt_unroll_count 0
 
 void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 {
@@ -1563,6 +1565,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     }
 }
 
+#pragma opt_unroll_count 8
 void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii,
                    s8* types)
 {
@@ -1579,6 +1582,7 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     }
     state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
+#pragma opt_unroll_count 0
 
 void dll_15_func07(void* arg1, CurvesCollisionState* state)
 {

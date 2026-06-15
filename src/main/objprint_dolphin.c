@@ -1328,7 +1328,7 @@ void FUN_800400b0(void)
 
     obj = (ushort*)FUN_80286838();
     volumes = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
-    outVol = *(float**)(obj + 0x3a);
+    outVol = *(float**)&((GameObject*)obj)->anim.hitVolumeTransforms;
     if ((*(byte*)((int)obj + 0xaf) & 0x28) == 0)
     {
         renderNode = (int*)FUN_80017a54((int)obj);
@@ -1398,9 +1398,9 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, ushort* obj,
     }
     if (mtx == (float*)0x0)
     {
-        local_74 = *(undefined4*)(obj + 0xc);
-        local_70 = *(undefined4*)(obj + 0xe);
-        local_6c = *(undefined4*)(obj + 0x10);
+        local_74 = *(undefined4*)&((GameObject*)obj)->anim.worldPosX;
+        local_70 = *(undefined4*)&((GameObject*)obj)->anim.worldPosY;
+        local_6c = *(undefined4*)&((GameObject*)obj)->anim.worldPosZ;
         if (flag == 0)
         {
             local_80 = *obj;
@@ -1472,9 +1472,9 @@ void FUN_800406cc(int obj)
             model = obj;
             for (i = 0; i < (int)(uint)((GameObject*)obj)->childCount; i = i + 1)
             {
-                if (*(int*)(model + 200) != 0)
+                if (*(int*)&((GameObject*)model)->childObjs[0] != 0)
                 {
-                    FUN_80040784(*(int*)(model + 200), obj, 1);
+                    FUN_80040784(*(int*)&((GameObject*)model)->childObjs[0], obj, 1);
                 }
                 model = model + 4;
             }
@@ -1537,7 +1537,7 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
         parentNode = (int*)FUN_80017a54((int)parent);
         boneOff = ((ushort)child[0x58] & 7) * 0x18;
         bonePtr = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
-        jointIdx = (int)*(char*)(bonePtr + *(char*)((int)parent + 0xad) + 0x12);
+        jointIdx = (int)*(char*)(bonePtr + ((GameObject*)parent)->anim.bankIndex + 0x12);
         local_d0 = *(undefined4*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff);
         local_cc = *(undefined4*)(bonePtr + 4);
         local_c8 = *(undefined4*)(bonePtr + 8);
@@ -1669,9 +1669,9 @@ void FUN_80040a88(int obj)
         model = obj;
         for (sub = 0; sub < (int)(uint)((GameObject*)obj)->childCount; sub = sub + 1)
         {
-            if (*(int*)(model + 200) != 0)
+            if (*(int*)&((GameObject*)model)->childObjs[0] != 0)
             {
-                FUN_80040784(*(int*)(model + 200), obj, 0);
+                FUN_80040784(*(int*)&((GameObject*)model)->childObjs[0], obj, 0);
             }
             model = model + 4;
         }
@@ -2844,7 +2844,7 @@ void objRenderModel(int* obj)
         iter = (u8*)obj;
         for (; i < ((GameObject*)obj)->childCount; i++)
         {
-            int* child = *(int**)(iter + 0xc8);
+            int* child = *(int**)&((GameObject*)iter)->childObjs[0];
             if (child != NULL)
             {
                 objRenderChild(child, obj, 0);

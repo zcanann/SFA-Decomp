@@ -146,7 +146,7 @@ void trickyFn_80141290(int obj, int ball)
 
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, (void*)0) != 0)
         {
-            *(u32*)(ball + CANNONBALL_FLAGS) &= ~CANNONBALL_HIDE_FLAG;
+            *(u32*)(ball + CANNONBALL_FLAGS) &= ~0x10LL;
         }
         else
         {

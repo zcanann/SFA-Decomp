@@ -1,20 +1,22 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
-#include "main/obj_placement.h"
-#include "main/dll/scmusictreesetup_struct.h"
-#include "main/game_object.h"
-
-extern void objRenderFn_8003b8f4(f32);
-extern void Sfx_PlayFromObject(int a, int b);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objfx.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+
+extern void objRenderFn_8003b8f4(f32);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int objectId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern void cmbsrc_setExternalActive(int obj, int active);
+extern void Obj_FreeObject(int obj);
+extern void objSetSlot(int obj, int slot);
+extern int* gTitleMenuControlInterface;
+extern u8 lbl_803DB411;    /* trigger-interface update parameter */
+extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
 
 typedef struct ScCloudrunneraPlacement
 {
@@ -48,24 +50,6 @@ typedef struct ScCloudrunneraSetup
     u8 unk29;         /* 0x29 */
     u8 unk2A;         /* 0x2A */
 } ScCloudrunneraSetup;
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int Obj_SetupObject(int s, int a, int b, int c, int d);
-extern void cmbsrc_setExternalActive(int obj, int active);
-extern void Obj_FreeObject(int obj);
-extern void objSetSlot(int obj, int slot);
-extern int* gTitleMenuControlInterface;
-
-extern u8 lbl_803DB411;
-extern f32 lbl_803E55E0;
-
-STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
 int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
 int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }

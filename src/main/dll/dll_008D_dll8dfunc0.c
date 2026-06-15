@@ -29,10 +29,12 @@ extern f32 lbl_803E1128;
 int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     FbBuf buf;
-    FbCmd* p = buf.entries;
+    FbCmd* p;
     u8* base = lbl_80316B60;
     int ret = 0;
     f32 q;
+
+    p = buf.entries;
 
     if (variant == 0)
     {

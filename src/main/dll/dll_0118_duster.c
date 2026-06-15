@@ -183,8 +183,9 @@ void duster_update(int obj)
 
     while (ObjMsg_Pop(obj, &msg, 0, 0) != 0)
     {
-        if (msg == 0x7000b)
+        switch (msg)
         {
+        case 0x7000b:
             Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
@@ -196,6 +197,7 @@ void duster_update(int obj)
                     ? next
                     : mapState->maxCollectedCount;
             state->complete = 1;
+            break;
         }
     }
 
@@ -224,7 +226,7 @@ void duster_update(int obj)
         for (i = 0; i < floorHitCount; i++)
         {
             floorDelta = **(f32**)((int)floorHits + i * 4) - ((GameObject*)obj)->anim.localPosY;
-            if (floorDelta < lbl_803E38C4)
+            if (floorDelta < *(f32*)&lbl_803E38C4)
             {
                 floorDelta = -floorDelta;
             }

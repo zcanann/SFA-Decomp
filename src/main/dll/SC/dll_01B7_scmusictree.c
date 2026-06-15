@@ -7,6 +7,21 @@
 #include "main/objfx.h"
 #include "main/objhits.h"
 
+/* placement mapIds: striking the three totem trees sets the combo bits
+   sclevelcontrol watches; the three "gate" trees gate their bits on
+   GAMEBIT_MUSICTREE_GATE. */
+#define SC_MUSICTREE_MAP_TOTEM_1 0x30d9c
+#define SC_MUSICTREE_MAP_TOTEM_2 0x30d9d
+#define SC_MUSICTREE_MAP_TOTEM_3 0x30d9b
+#define SC_MUSICTREE_MAP_GATE_1 0x448c2
+#define SC_MUSICTREE_MAP_GATE_2 0x45178
+#define SC_MUSICTREE_MAP_GATE_3 0x4517c
+
+#define GAMEBIT_TOTEM_COMBO_1 0x7d
+#define GAMEBIT_TOTEM_COMBO_2 0x7e
+#define GAMEBIT_TOTEM_COMBO_3 0x7f
+#define GAMEBIT_MUSICTREE_GATE 0xc44
+
 typedef struct ScMusictreePlacement
 {
     u8 pad0[0x20 - 0x0];
@@ -54,17 +69,14 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 extern void objRenderFn_8003b8f4(f32);
 extern void fn_8003B608(int a, int b, int c);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
-extern f32 lbl_803E558C;
-extern void GameBit_Set(int bit, int val);
-extern void Sfx_PlayFromObject(int a, int b);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern f32 lbl_803E5588;
 extern void GameBit_Set(int id, int value);
+extern int GameBit_Get(int bit);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int objectId);
+extern u32 randomGetRange(int min, int max);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
-extern int Obj_SetupObject(int s, int a, int b, int c, int d);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
@@ -74,6 +86,8 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+extern f32 lbl_803E5588;
+extern f32 lbl_803E558C;
 extern f32 lbl_803E5590;
 extern f32 lbl_803E5594;
 extern f32 lbl_803E5598;
@@ -149,7 +163,6 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma dont_inline on
 void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
-    extern int randomGetRange(int lo, int hi); /* #57 */
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     SCMusicTreeState* state = (SCMusicTreeState*)p2;
     int setup;
@@ -182,38 +195,37 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 #pragma dont_inline on
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {
-    extern int GameBit_Get(int bit); /* #57 */
     int id = ((ObjPlacement*)((GameObject*)p1)->anim.placementData)->mapId;
     SCMusicTreeState* state = (SCMusicTreeState*)p2;
     (void)effectType;
 
     switch (id)
     {
-    case 0x30d9c:
+    case SC_MUSICTREE_MAP_TOTEM_1:
         Sfx_PlayFromObject(p1, 299);
         Sfx_PlayFromObject(p1, 298);
-        GameBit_Set(0x7d, 1);
+        GameBit_Set(GAMEBIT_TOTEM_COMBO_1, 1);
         break;
-    case 0x30d9d:
+    case SC_MUSICTREE_MAP_TOTEM_2:
         Sfx_PlayFromObject(p1, 300);
         Sfx_PlayFromObject(p1, 298);
-        GameBit_Set(0x7e, 1);
+        GameBit_Set(GAMEBIT_TOTEM_COMBO_2, 1);
         break;
-    case 0x30d9b:
+    case SC_MUSICTREE_MAP_TOTEM_3:
         Sfx_PlayFromObject(p1, 0x12d);
         Sfx_PlayFromObject(p1, 298);
-        GameBit_Set(0x7f, 1);
+        GameBit_Set(GAMEBIT_TOTEM_COMBO_3, 1);
         break;
-    case 0x448c2:
-        if ((u32)GameBit_Get(0xc44) != 0)
+    case SC_MUSICTREE_MAP_GATE_1:
+        if ((u32)GameBit_Get(GAMEBIT_MUSICTREE_GATE) != 0)
             GameBit_Set(0xc41, 1);
         break;
-    case 0x45178:
-        if ((u32)GameBit_Get(0xc44) != 0)
+    case SC_MUSICTREE_MAP_GATE_2:
+        if ((u32)GameBit_Get(GAMEBIT_MUSICTREE_GATE) != 0)
             GameBit_Set(0xc43, 1);
         break;
-    case 0x4517c:
-        if ((u32)GameBit_Get(0xc44) != 0)
+    case SC_MUSICTREE_MAP_GATE_3:
+        if ((u32)GameBit_Get(GAMEBIT_MUSICTREE_GATE) != 0)
             GameBit_Set(0xc45, 1);
         break;
     }
@@ -221,14 +233,9 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 }
 #pragma dont_inline reset
 
-/* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
- * driver: replays the env-fx set on map (re)entry, latches the race
- * GameBits, runs the two race countdown timers, eases the heavy fog level,
- * tracks the totem combo code (bits 0x7d..0x7f), and keeps the area music
- * in sync with the Thorntail animation state. */
-
-/* segment pragma-stack balance (re-split): */
-
+/* Alternate field view of the music-tree object's extra block used by
+   sc_musictree_update (the CloudRunnerState/SCMusicTreeState families
+   overlap this same 0x50-byte block). */
 typedef struct ScMusictreeState
 {
     u8 pad0[0x30 - 0x0];
@@ -243,7 +250,6 @@ typedef struct ScMusictreeState
 
 void sc_musictree_update(int obj)
 {
-    extern void sc_musictree_spawnAmbientEffect(int obj, int inner, u8 frames, int idx); /* #57 */
     int inner = *(int*)&((GameObject*)obj)->extra;
     f32 stk[7];
     f32 vec[3];
@@ -395,7 +401,6 @@ end:
 
 void sc_musictree_init(int obj, SCMusicTreeSetup* setup)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
     SCMusicTreeState* state = ((GameObject*)obj)->extra;
     f32 stk[7];
     f32 ratio;

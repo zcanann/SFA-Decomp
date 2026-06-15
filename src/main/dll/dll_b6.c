@@ -37,8 +37,6 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
     ObjHitVolumeRuntimeBounds *data;
     ObjHitVolumeRuntimeBounds *entry;
     ObjDefHitVolume *row;
-    ObjHitVolumeRuntimeTransform *src;
-    ObjHitVolumeRuntimeTransform *transform;
     GameObject *best;
     int i;
     int k;
@@ -76,11 +74,10 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         if ((int)obj->anim.modelInstance->hitVolumes[obj->unkE4].priority < bestPri) {
             continue;
         }
-        transform = &obj->anim.hitVolumeTransforms[obj->unkE4];
         if ((*(u8 *)&obj->anim.resetHitboxMode & 0x80) || (data[obj->unkE4].flags & 0x80)) {
             dy = gCamcontrolNormalizedMin;
         } else {
-            dy = focus->worldPosY - transform->centerY;
+            dy = focus->worldPosY - obj->anim.hitVolumeTransforms[obj->unkE4].centerY;
         }
         if (dy <= lbl_803E1644) {
             continue;
@@ -88,8 +85,8 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         if (dy >= lbl_803E1648) {
             continue;
         }
-        dx = focus->worldPosX - transform->centerX;
-        dz = focus->worldPosZ - transform->centerZ;
+        dx = focus->worldPosX - obj->anim.hitVolumeTransforms[obj->unkE4].centerX;
+        dz = focus->worldPosZ - obj->anim.hitVolumeTransforms[obj->unkE4].centerZ;
         distsq = dz * dz + dx * dx;
         entry = &data[obj->unkE4];
         range = (f32)(int)(entry->bounds[2] << 2);
@@ -137,10 +134,9 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
             v1[0] = focus->worldPosX;
             v1[1] = lbl_803E1648 + focus->worldPosY;
             v1[2] = focus->worldPosZ;
-            src = &best->anim.hitVolumeTransforms[best->unkE4];
-            v2[0] = src->jointX;
-            v2[1] = src->jointY;
-            v2[2] = src->jointZ;
+            v2[0] = best->anim.hitVolumeTransforms[best->unkE4].jointX;
+            v2[1] = best->anim.hitVolumeTransforms[best->unkE4].jointY;
+            v2[2] = best->anim.hitVolumeTransforms[best->unkE4].jointZ;
             voxmaps_worldToGrid(v1, g1);
             voxmaps_worldToGrid(v2, g2);
             if (voxmaps_traceLine(g1, g2, out1, out2, 0) == 0 && out2[0] != 1) {

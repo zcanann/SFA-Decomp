@@ -3294,8 +3294,11 @@ void walkgroupFindExitPointFn_800dc398(void)
     if ((u32)checksum != (u32)lbl_803DD460)
     {
         lbl_803DD460 = checksum;
-        scale = lbl_803E0600;
-        if (blockFlags[2] == 0 && blockFlags[0x34] == 0)
+        if (blockFlags[2] != 0 || blockFlags[0x34] != 0)
+        {
+            scale = lbl_803E0600;
+        }
+        else
         {
             scale = lbl_803E0604;
         }
@@ -5017,7 +5020,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
 void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
 {
     extern undefined4 RomCurve_getAdjacentWindow(); /* #57 */
-    u32 linkId;
+    int linkId;
     u32 adjacentId;
     int low;
     int high;
@@ -5038,13 +5041,13 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         linkId = curve->linkIds[i];
-        if (linkId != ROMCURVE_LINK_ID_NONE)
+        if (linkId != -1)
         {
             if ((curve->blockedLinkMask & (1 << i)) != 0)
             {
                 outIds[0] = linkId;
             }
-            else
+            else if ((curve->blockedLinkMask & (1 << i)) == 0)
             {
                 outIds[2] = linkId;
             }
@@ -5093,7 +5096,7 @@ foundAdjacent:
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         linkId = adjacent->linkIds[i];
-        if (linkId != ROMCURVE_LINK_ID_NONE)
+        if (linkId != -1)
         {
             if ((adjacent->blockedLinkMask & (1 << i)) == 0)
             {

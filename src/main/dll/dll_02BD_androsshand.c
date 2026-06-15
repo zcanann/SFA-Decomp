@@ -47,11 +47,11 @@ void androsshand_update(int obj)
     AndrossHandState* state = ((GameObject*)obj)->extra;
     u8 changed = 0;
 
-    if (state->androssObj == 0)
+    if (state->androssObj == 0u)
     {
         state->androssObj = ObjList_FindObjectById(0x47b77);
     }
-    if (state->arwingObj == 0)
+    if (state->arwingObj == 0u)
     {
         state->arwingObj = getArwing();
     }
@@ -67,7 +67,7 @@ void androsshand_update(int obj)
     ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
     ObjHits_EnableObject(obj);
 
-    if (state->androssObj != 0)
+    if (state->androssObj != 0u)
     {
         f32 v1c;
         f32 angle;

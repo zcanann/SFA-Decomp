@@ -14,6 +14,7 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/dll/DB/DBrockfall.h"
+#include "main/dll/SC/sc_shared.h"
 #include "main/objlib.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
@@ -22,22 +23,14 @@ extern undefined4 Sfx_KeepAliveLoopedObjectSound();
 extern uint randomGetRange();
 extern undefined4 setAButtonIcon();
 extern u8* Obj_GetPlayerObject(void);
-
-#define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
-#define PLATFORM1_PEER_SEQ_ID 0x282
-#define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
-#define PLATFORM1_IDLE_PULL_MOVE_ID 0
-
-#define PLATFORM1_LOOP_SFX_ID 0x3af
-#define PLATFORM1_PLAYER_SFX_ID 0x13a
-#define PLATFORM1_PLATFORM_SFX_ID 0x4a3
-
 extern u32 getButtonsJustPressedIfNotBusy(int pad);
 extern int isGameTimerDisabled(void);
 extern f32 fn_8001461C(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(int n);
+extern void objRenderFn_8003b8f4(f32);
+extern void GameBit_Set(int eventId, int value);
 extern int lbl_803DDC10;
 extern int lbl_803DC070;
 extern u8 framesThisStep;
@@ -59,13 +52,22 @@ extern const f32 lbl_803E569C;
 extern f32 lbl_803E56A0;
 extern f32 lbl_803E56A4;
 
-/* EN v1.0 0x801DE430  size: 2596b  platform1_control: tug-of-war rope
+#define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
+#define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
+#define PLATFORM1_IDLE_PULL_MOVE_ID 0
+
+#define PLATFORM1_LOOP_SFX_ID 0x3af
+#define PLATFORM1_PLAYER_SFX_ID 0x13a
+#define PLATFORM1_PLATFORM_SFX_ID 0x4a3
+
+#define PLATFORM1_TRACK_EXIT_NEG (-0x46dc) /* offset below this -> EXIT_NEGATIVE */
+#define PLATFORM1_TRACK_EXIT_POS (-0xb24)  /* offset above this -> EXIT_POSITIVE */
+
+/* platform1_control: tug-of-war rope
  * minigame. Resolves the anchor object, applies sequence events, then per
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
-extern void objRenderFn_8003b8f4(f32);
-
 int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* self;
@@ -126,10 +128,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             for (; idx2 < cnt2; idx2++)
             {
                 if ((GameObject*)list[idx2] != self &&
-                    ((GameObject*)list[idx2])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                    ((GameObject*)list[idx2])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
                     o = list[idx2];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 2);
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 2);
                     break;
                 }
             }
@@ -139,10 +141,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             for (; idx3 < cnt3; idx3++)
             {
                 if ((GameObject*)list[idx3] != self &&
-                    ((GameObject*)list[idx3])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                    ((GameObject*)list[idx3])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
                     o = list[idx3];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 3);
+                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 3);
                     break;
                 }
             }
@@ -215,12 +217,12 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 st->offsetVelocity = *(const f32*)&lbl_803E568C;
             }
-            if (st->currentTrackOffset >= -0x46dc && st->currentTrackOffset <= -0xb24)
+            if (st->currentTrackOffset >= PLATFORM1_TRACK_EXIT_NEG && st->currentTrackOffset <= PLATFORM1_TRACK_EXIT_POS)
             {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
             diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E5690;
-            if (st->currentTrackOffset < -0x46dc)
+            if (st->currentTrackOffset < PLATFORM1_TRACK_EXIT_NEG)
             {
                 st->transitionStep = 0;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
@@ -229,10 +231,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 for (; idx4 < cnt4; idx4++)
                 {
                     if ((GameObject*)list[idx4] != self &&
-                        ((GameObject*)list[idx4])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                        ((GameObject*)list[idx4])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
                         o = list[idx4];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 4);
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 4);
                         break;
                     }
                 }
@@ -247,7 +249,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ret = 4;
                 goto done;
             }
-            if (st->currentTrackOffset > -0xb24)
+            if (st->currentTrackOffset > PLATFORM1_TRACK_EXIT_POS)
             {
                 st->transitionStep = 3;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
@@ -256,10 +258,10 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 for (; idx5 < cnt5; idx5++)
                 {
                     if ((GameObject*)list[idx5] != self &&
-                        ((GameObject*)list[idx5])->anim.seqId == PLATFORM1_PEER_SEQ_ID)
+                        ((GameObject*)list[idx5])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
                         o = list[idx5];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + 0x20))(o, 4);
+                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)o)->anim.dll + SC_VT_HANDLE_EVENT))(o, 4);
                         break;
                     }
                 }
@@ -366,14 +368,10 @@ void sc_totemstrength_initialise(void)
 {
 }
 
-void paymentkiosk_free(void);
-
 int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
-int paymentkiosk_getExtraSize(void);
 
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
-void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void sc_totemstrength_init(int* obj)
 {
@@ -390,21 +388,20 @@ void sc_totemstrength_init(int* obj)
     st->savedPosZ = self->anim.localPosZ;
 }
 
-/* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
+/* sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
 void sc_totemstrength_update(u8* obj)
 {
-    extern void GameBit_Set(int eventId, int value);
     Platform1State* st = ((GameObject*)obj)->extra;
-    u8 t;
+    u8 mapMode;
     s16 step;
-    u8 b;
-    f32 fz;
+    u8 flags;
+    f32 zero;
 
     Obj_GetPlayerObject();
     GameBit_Set(0xf1d, 0);
-    t = (*gMapEventInterface)->getMapAct(0xe);
-    if (t == 6)
+    mapMode = (*gMapEventInterface)->getMapAct(0xe);
+    if (mapMode == 6)
     {
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0)
         {
@@ -422,17 +419,17 @@ void sc_totemstrength_update(u8* obj)
                 st->linkedObject = 0;
                 *(s16*)obj = -0x2900;
                 st->currentTrackOffset = -0x2900;
-                b = st->flags;
-                if ((b & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0)
+                flags = st->flags;
+                if ((flags & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0)
                 {
                     GameBit_Set(0x784, 1);
                     st->loopSfxHandle = -1;
                     st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                     st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE);
                 }
-                else if ((b & PLATFORM1_FLAG_EXIT_POSITIVE) != 0)
+                else if ((flags & PLATFORM1_FLAG_EXIT_POSITIVE) != 0)
                 {
-                    st->flags = (u8)(b & ~PLATFORM1_FLAG_EXIT_POSITIVE);
+                    st->flags = (u8)(flags & ~PLATFORM1_FLAG_EXIT_POSITIVE);
                     st->loopSfxHandle = -1;
                     GameBit_Set(0x786, 1);
                 }
@@ -446,9 +443,9 @@ void sc_totemstrength_update(u8* obj)
                 *(s16*)obj = -0x2900;
                 st->currentTrackOffset = -0x2900;
                 st->prevTrackOffset = st->currentTrackOffset;
-                fz = lbl_803E5678;
+                zero = lbl_803E5678;
                 st->motionValue0 = lbl_803E5678;
-                st->offsetVelocity = fz;
+                st->offsetVelocity = zero;
                 st->transitionStep = 1;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);
             }
@@ -470,41 +467,6 @@ void sc_totemstrength_update(u8* obj)
         }
     }
 }
-
-/* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
-u32 PaymentKiosk_testEvent(int obj, int p2, int ev);
-
-/* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
-
-/* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
-
-static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
-
-static int FEseqobject_findControlObject(void);
-
-/*
- * Function: FEseqobject_init
- * EN v1.0 Address: 0x801DF8F4
- * EN v1.0 Size: 56b
- */
-
-/*
- * Function: FEseqobject_update
- * EN v1.0 Address: 0x801DF894
- * EN v1.0 Size: 96b
- */
-
-/*
- * Function: dll_144_SeqFn
- * EN v1.0 Address: 0x801DF9AC
- * EN v1.0 Size: 16b
- */
-
-/*
- * Function: dll_144_init
- * EN v1.0 Address: 0x801DFA08
- * EN v1.0 Size: 24b
- */
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

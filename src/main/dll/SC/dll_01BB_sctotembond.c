@@ -21,6 +21,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/SC/sctotembond.h"
+#include "main/dll/SC/sc_shared.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -46,8 +47,10 @@ extern f32 lbl_803E565C;
 extern f32 lbl_803E5660;
 extern void hudFn_8011f38c(int visible);
 extern void fn_80296124(int player, void* pos, void* obj, int arg);
-
-#define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
+extern f32 lbl_803E5650;
+extern void objRenderFn_8003b8f4(f32);
+extern void Music_Trigger(int track, int param);
+extern void fn_8011F6D4(int p);
 
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
@@ -57,11 +60,6 @@ extern void fn_80296124(int player, void* pos, void* obj, int arg);
 #define SC_TOTEMBOND_EVENT_START_ORBS 0x01
 #define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
 #define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
-
-extern f32 lbl_803E5650;
-extern void objRenderFn_8003b8f4(f32);
-extern void Music_Trigger(int track, int param);
-extern void fn_8011F6D4(int p);
 
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
@@ -135,9 +133,9 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 u
             {
                 if ((ScTotemBondObject*)objects[startForEvent2] != obj &&
                     ((ScTotemBondObject*)objects[startForEvent2])->objectType ==
-                        SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
+                        SC_SEQ_TOTEMPOLE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + 0x20))(
+                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent2], 2);
                     break;
                 }
@@ -150,9 +148,9 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 u
             {
                 if ((ScTotemBondObject*)objects[startForEvent3] != obj &&
                     ((ScTotemBondObject*)objects[startForEvent3])->objectType ==
-                        SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)
+                        SC_SEQ_TOTEMPOLE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + 0x20))(
+                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent3], 1);
                     break;
                 }
@@ -360,9 +358,9 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
             {
                 if ((values[i + 1] < values[i]) || (values[i] == 0))
                 {
-                    u16 b = values[i];
+                    u16 tmp = values[i];
                     values[i] = values[i + 1];
-                    values[i + 1] = b;
+                    values[i + 1] = tmp;
                     changed = 1;
                 }
             }

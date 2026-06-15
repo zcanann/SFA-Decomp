@@ -5364,7 +5364,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     u8 changed;
     int path;
     PlayerState* inner = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = Player_GetObjHitsState(obj);
+    ObjHitsPriorityState* hitState;
     f32 amt;
 
     r = fn_8029B9FC(obj, state, fv);
@@ -5400,7 +5400,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             }
             if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
                 ((GameObject*)obj)->anim.currentMoveProgress >
-                ((f32*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x14])
+                *(f32*)((inner->moveSlots + 0x50) + (u32)inner->moveSlotIndex * 0xb0))
             {
                 u16 sfx;
                 if (inner->characterId == 0)
@@ -5416,7 +5416,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             }
             if ((((PlayerState*)state)->baddie.moveEventFlags & 2) == 0 &&
                 ((GameObject*)obj)->anim.currentMoveProgress >
-                ((f32*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x15])
+                *(f32*)((inner->moveSlots + 0x54) + (u32)inner->moveSlotIndex * 0xb0))
             {
                 Sfx_PlayFromObject(obj, 0x1a);
                 ((PlayerState*)state)->baddie.moveEventFlags = ((PlayerState*)state)->baddie.moveEventFlags | 2;
@@ -5429,19 +5429,19 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                 if (((GameObject*)obj)->anim.currentMoveProgress > *(f32*)(slot + 0x28))
                 {
                     *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) | 2;
-                    if (((u8*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x6c] != 0)
+                    if (*(u8*)((inner->moveSlots + 0x6c) + (u32)inner->moveSlotIndex * 0xb0) != 0)
                     {
                         *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) | 4;
                         inner->unk8C0 = 0;
                     }
                 }
                 if (((GameObject*)obj)->anim.currentMoveProgress >
-                    ((f32*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x8])
+                    *(f32*)((inner->moveSlots + 0x20) + (u32)inner->moveSlotIndex * 0xb0))
                 {
                     *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) | 1;
                 }
                 if (((GameObject*)obj)->anim.currentMoveProgress >
-                    ((f32*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x9])
+                    *(f32*)((inner->moveSlots + 0x24) + (u32)inner->moveSlotIndex * 0xb0))
                 {
                     *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) & ~1;
                 }
@@ -5463,7 +5463,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     if (v >= *(f32*)(slot2 + 0x8c))
                     {
                         inner->moveSlotIndex =
-                            *(u8*)(slot2 + (u32)inner->unk8C0 + 0x15);
+                            *(u8*)((slot2 + 0x15) + (u32)inner->unk8C0);
                     }
                     else
                     {
@@ -5539,7 +5539,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             }
         }
         *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) & ~0xef;
-        ((PlayerState*)state)->baddie.moveSpeed = ((f32*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x7];
+        ((PlayerState*)state)->baddie.moveSpeed = *(f32*)((inner->moveSlots + 0x1c) + (u32)inner->moveSlotIndex * 0xb0);
         inner->unk824 = ((PlayerState*)state)->baddie.moveSpeed;
         inner->unk8CF = 0;
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
@@ -5569,7 +5569,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         {
             objSetAnimField48to0((int*)path);
             (*(void (*)(int, int))*(int*)(*(int*)(*(int*)((char*)path + 0x68)) + 0x38))(
-                path, ((u8*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x5c]);
+                path, *(u8*)((inner->moveSlots + 0x5c) + (u32)inner->moveSlotIndex * 0xb0));
             {
                 int slot = inner->moveSlots +
                     (u32)inner->moveSlotIndex * 0xb0;
@@ -5585,8 +5585,9 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->lastHitObject = 0;
         }
     }
+    hitState = Player_GetObjHitsState(obj);
     hitState->hitVolumePriority = 0xb;
-    hitState->hitVolumeId = ((u8*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x14];
+    hitState->hitVolumeId = *(u8*)((inner->moveSlots + 0x14) + (u32)inner->moveSlotIndex * 0xb0);
     {
         int slot = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
         f32 t = *(f32*)(slot + 0xa0);
@@ -5612,7 +5613,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             }
         }
     }
-    if ((((u8*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x88] &
+    if ((*(u8*)((inner->moveSlots + 0x88) + (u32)inner->moveSlotIndex * 0xb0) &
             2) != 0 &&
         inner->lastHitObject != 0)
     {
@@ -5652,7 +5653,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                 if (Player_GetObjHitsState(obj)->suppressOutgoingHits == 0)
                 {
                     int bits;
-                    switch (*(s8*)((char*)inner->moveSlots + stride + i + 0x5d))
+                    switch (*(s8*)((char*)(inner->moveSlots + 0x5d) + stride + i))
                     {
                     case -1:
                         bits = 0;
@@ -5698,7 +5699,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone == 0)
     {
         if (((GameObject*)obj)->anim.currentMoveProgress >=
-            ((f32*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0xb])
+            *(f32*)((inner->moveSlots + 0x2c) + (u32)inner->moveSlotIndex * 0xb0))
         {
             if (((PlayerState*)state)->baddie.targetObj == NULL)
             {
@@ -13830,7 +13831,7 @@ int fn_802A418C(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     int i;
-    s8 c;
+    int c;
     int* list;
     u8 buf[64];
     f32 dist;
@@ -13851,12 +13852,12 @@ int fn_802A418C(int obj, int state, f32 fv)
     {
         c = ((s8 (*)(int, int, int, void*, int))fn_802A74A4)(obj, (int)inner, state, buf, -0x141);
     }
-    if (c == -1)
+    if ((s8)c == -1)
     {
         inner->unk8C2 = -1;
         inner->unk8C3 = 0;
     }
-    else if (c == inner->unk8C2)
+    else if ((s8)c == inner->unk8C2)
     {
         int n = *(u8*)((char*)inner + 0x8c3) + 1;
         inner->unk8C3 = n;

@@ -88,17 +88,16 @@ void magicdust_update(int obj)
     char fxArg;
     char burstArg[3];
     int msg[1];
-    register int msgId;
     f32 dist;
 
     player = (int)Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
     state = *(int*)&((GameObject*)obj)->extra;
-    msgId = 0x7000b;
     while (ref = ObjMsg_Pop(obj, (uint*)msg, (uint*)0x0, (uint*)0x0), ref != 0)
     {
-        if (msg[0] == msgId)
+        switch (msg[0])
         {
+        case 0x7000b:
             ref = (int)((GameObject*)obj)->anim.modelInstance->extraSetupData;
             (*gExpgfxInterface)->freeSource2((u32)obj);
             itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
@@ -112,6 +111,7 @@ void magicdust_update(int obj)
             ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
             OSReport(sMagicDustCollectedMessage);
             ((GameObject*)obj)->anim.alpha = 1;
+            break;
         }
     }
     if ((((MagicDustState*)state)->flags27A & 0x10) == 0)

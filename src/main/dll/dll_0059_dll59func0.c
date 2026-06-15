@@ -125,6 +125,7 @@ extern f32 lbl_803E06FC;
 extern f32 lbl_803E0700;
 extern f32 lbl_803E0704;
 extern f32 lbl_803E0708;
+extern f32 lbl_803E070C;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
@@ -790,9 +791,9 @@ void dll_59_func03(int sourceObj, int variant, int posSource, uint flags)
     ctx = sourceObj;
     buf.ctx = ctx;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0708;
-    buf.pos[1] = lbl_803E0708;
-    buf.pos[2] = lbl_803E0708;
+    buf.pos[0] = lbl_803E06F0;
+    buf.pos[1] = lbl_803E070C;
+    buf.pos[2] = lbl_803E06F0;
     buf.col[0] = lbl_803E06F0;
     buf.col[1] = lbl_803E06F0;
     buf.col[2] = lbl_803E06F0;
@@ -815,17 +816,17 @@ void dll_59_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((void*)ctx == NULL)
+        if ((void*)ctx != NULL)
         {
-            buf.pos[0] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = lbl_803E06F0 + *(f32*)(ctx + 0x18);
+            buf.pos[1] = lbl_803E070C + *(f32*)(ctx + 0x1c);
+            buf.pos[2] = lbl_803E06F0 + *(f32*)(ctx + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E0708 + *(f32*)(ctx + 0x18);
-            buf.pos[1] = lbl_803E0708 + *(f32*)(ctx + 0x1c);
-            buf.pos[2] = lbl_803E0708 + *(f32*)(ctx + 0x20);
+            buf.pos[0] = lbl_803E06F0 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E070C + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E06F0 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x11, (u8*)(int)lbl_80311C58, 8, &base[172], 0xc0d, 0);
