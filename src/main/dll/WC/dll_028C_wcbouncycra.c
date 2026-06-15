@@ -153,25 +153,21 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
     objAnim = (ObjAnimComponent*)obj;
     if (objAnim->bankIndex == WCBLOCK_VARIANT_A)
     {
-        iface = (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state);
-        iface->getCellXYA(
+        ((WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state))->getCellXYA(
             *(u8*)(state + WCBLOCK_TILE_INDEX_OFFSET), (s16*)(state + WCBLOCK_CELL_X_OFFSET),
-            (s16*)(state + WCBLOCK_CELL_Z_OFFSET), iface);
-        iface = (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state);
-        iface->getCellWorldA(
+            (s16*)(state + WCBLOCK_CELL_Z_OFFSET), (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state));
+        ((WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state))->getCellWorldA(
             obj, *(s16*)(state + WCBLOCK_CELL_X_OFFSET), *(s16*)(state + WCBLOCK_CELL_Z_OFFSET), &cellX,
-            &cellZ, iface);
+            &cellZ, (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state));
     }
     else
     {
-        iface = (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state);
-        iface->getCellXYB(
+        ((WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state))->getCellXYB(
             *(u8*)(state + WCBLOCK_TILE_INDEX_OFFSET), (s16*)(state + WCBLOCK_CELL_X_OFFSET),
-            (s16*)(state + WCBLOCK_CELL_Z_OFFSET), iface);
-        iface = (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state);
-        iface->getCellWorldB(
+            (s16*)(state + WCBLOCK_CELL_Z_OFFSET), (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state));
+        ((WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state))->getCellWorldB(
             obj, *(s16*)(state + WCBLOCK_CELL_X_OFFSET), *(s16*)(state + WCBLOCK_CELL_Z_OFFSET), &cellX,
-            &cellZ, iface);
+            &cellZ, (WCBlockGridInterface*)WCBLOCK_GRID_IFACE(state));
     }
 
     min = cellX - WCBLOCK_PLAYER_CELL_MARGIN;

@@ -3388,6 +3388,9 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
 extern u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p5, int z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_factor_limit 8
+#pragma ppc_unroll_instructions_limit 200
 u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, void* results)
 {
     f32 initB, initA;
@@ -3439,6 +3442,7 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
     *(u8*)((u8*)results + 0x6e) = hitCount;
     return hitCount;
 }
+#pragma ppc_unroll_speculative off
 
 typedef union
 {
