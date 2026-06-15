@@ -111,8 +111,8 @@ void curvefish_update(int obj)
 {
     CurveFishState* state;
     CurveFishSetup* setup;
-    CurveFishSetup* setup2;
     void* player;
+    CurveFishSetup* setup2;
     u32 curveQuery;
     int firstNode;
     int secondNode;
