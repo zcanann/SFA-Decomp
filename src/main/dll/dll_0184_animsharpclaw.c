@@ -190,13 +190,13 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void animsharpclaw_free(int obj)
 {
     char* inner;
-    int* child;
-    child = ((GameObject*)obj)->childObjs[0];
+    int child;
     inner = ((GameObject*)obj)->extra;
-    if (child != NULL)
+    child = (int)((GameObject*)obj)->childObjs[0];
+    if ((void*)child != NULL)
     {
-        ObjLink_DetachChild(obj, (int)child);
-        Obj_FreeObject((int)child);
+        ObjLink_DetachChild(obj, child);
+        Obj_FreeObject(child);
     }
     (*gObjectTriggerInterface)->freeState((u8*)inner);
     (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
