@@ -434,6 +434,7 @@ void arwsquadron_updateVolley(int p1, int p2, int p3)
     }
     else if (timerCountDown(&state->shotIntervalTimer) != 0)
     {
+        extern void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, int flag);
         arwsquadron_spawnProjectile(p1, 0, state->volleyAngle,
                                     (s8)state->volleyShotsRemaining == setup->shotsPerVolley ? 1 : 0);
         if (state->projectilePathCount > 1)
