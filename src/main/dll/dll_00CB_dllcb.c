@@ -553,7 +553,6 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
     extern void* lbl_803AC5D0[];
     extern void* lbl_803AC5E8[];
     extern f32 timeDelta;
-    extern f64 lbl_803E2EA0;
     extern f32 lbl_803E2E9C;
     int setup;
 
@@ -1132,7 +1131,6 @@ int dll_CB_getObjectTypeId(void) { return 0x14b; }
 s16 dll_CE_setScale(int* obj);
 s16 dll_CB_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
 
-extern f32 lbl_803E2E30;
 extern void objRenderFn_8003b8f4(f32);
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -1223,7 +1221,6 @@ int fn_80160690(short* out, u8* obj)
     return 0;
 }
 
-extern f32 lbl_803E2DC8;
 extern u8 framesThisStep;
 
 extern f32 lbl_803E2E7C;
