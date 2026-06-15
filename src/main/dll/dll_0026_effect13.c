@@ -413,37 +413,37 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
     return uVar1;
 }
 
-undefined4 FUN_800c9030(uint param_1, int* param_2)
+undefined4 FUN_800c9030(uint key, int* outIndex)
 {
-    int iVar1;
-    int iVar2;
-    int iVar3;
+    int hi;
+    int lo;
+    int mid;
 
-    *param_2 = -1;
-    if ((int)param_1 < 0)
+    *outIndex = -1;
+    if ((int)key < 0)
     {
         return 0;
     }
-    iVar1 = DAT_803de090 + -1;
-    iVar2 = 0;
+    hi = DAT_803de090 + -1;
+    lo = 0;
     while (true)
     {
         while (true)
         {
-            if (iVar1 < iVar2)
+            if (hi < lo)
             {
-                *param_2 = -1;
+                *outIndex = -1;
                 return 0;
             }
-            iVar3 = iVar1 + iVar2 >> 1;
-            if (param_1 <= (uint)(&DAT_8039d0b8)[iVar3 * 2]) break;
-            iVar2 = iVar3 + 1;
+            mid = hi + lo >> 1;
+            if (key <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
+            lo = mid + 1;
         }
-        if ((uint)(&DAT_8039d0b8)[iVar3 * 2] <= param_1) break;
-        iVar1 = iVar3 + -1;
+        if ((uint)(&DAT_8039d0b8)[mid * 2] <= key) break;
+        hi = mid + -1;
     }
-    *param_2 = iVar3;
-    return (&DAT_8039d0bc)[iVar3 * 2];
+    *outIndex = mid;
+    return (&DAT_8039d0bc)[mid * 2];
 }
 
 extern s16 lbl_803DD414;
