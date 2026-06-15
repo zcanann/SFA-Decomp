@@ -1,11 +1,8 @@
-#include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/player_control_interface.h"
 
