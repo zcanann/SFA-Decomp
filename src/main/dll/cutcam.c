@@ -66,8 +66,8 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
     *(float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET) = radius;
     *(s8*)(traceWork + CAMCONTROL_TRACE_BBOX_HIT_OFFSET) = -1;
     *(s8*)(traceWork + CAMCONTROL_TRACE_MODE_OFFSET) = traceMode;
-    blocked = '\0';
     *(undefined2*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) = 0;
+    blocked = '\0';
     if (runBbox != '\0')
     {
         blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, (int*)0x0, (int*)0x0, 0x10, 0xffffffff, 0xff, 0);
