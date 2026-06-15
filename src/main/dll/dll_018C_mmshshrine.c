@@ -207,16 +207,16 @@ void mmsh_shrine_hitDetect(void)
 void mmsh_shrine_free(int obj)
 {
     extern undefined4 GameBit_Set(int eventId, int value);
-    int t = *(int*)&((GameObject*)obj)->extra;
-    if ((((MmshShrineState*)t)->unk18 & 0x20) != 0)
+    int state = *(int*)&((GameObject*)obj)->extra;
+    if ((((MmshShrineState*)state)->unk18 & 0x20) != 0)
     {
         fn_8011F6D4(0);
-        ((MmshShrineState*)t)->unk18 = ((MmshShrineState*)t)->unk18 & 0xffffffdf;
+        ((MmshShrineState*)state)->unk18 = ((MmshShrineState*)state)->unk18 & 0xffffffdf;
     }
-    if (*(void**)t != NULL)
+    if (*(void**)state != NULL)
     {
-        ModelLightStruct_free(*(void**)t);
-        *(int*)t = 0;
+        ModelLightStruct_free(*(void**)state);
+        *(int*)state = 0;
     }
     Music_Trigger(0xd8, 0);
     Music_Trigger(0xd9, 0);
@@ -360,7 +360,7 @@ void mmsh_shrine_update(int objArg)
     }
 }
 
-void mmsh_shrine_init(undefined2* obj, int arg2)
+void mmsh_shrine_init(undefined2* obj, int def)
 {
     extern void GameBit_Set(int eventId, int value);
     int light;
@@ -371,9 +371,9 @@ void mmsh_shrine_init(undefined2* obj, int arg2)
     ((GameObject*)obj)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
     *(undefined2*)(state + 7) = 10;
     *(undefined*)(state + 9) = 0;
-    if (0 < *(short*)(arg2 + 0x1a))
+    if (0 < *(short*)(def + 0x1a))
     {
-        *(short*)(state + 7) = *(short*)(arg2 + 0x1a) >> 8;
+        *(short*)(state + 7) = *(short*)(def + 0x1a) >> 8;
     }
     GameBit_Set(299, 0);
     GameBit_Set(0x12d, 0);
