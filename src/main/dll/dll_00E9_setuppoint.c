@@ -305,7 +305,6 @@ extern void dll_F7_free();
 extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
-extern void selectTexture(void* tex, int x);
 
 void staticCamera_free(int param_1)
 {
