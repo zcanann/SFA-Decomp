@@ -32,7 +32,7 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     int i;
     short* vertex;
     float angleRadians;
-    double vertexX;
+    f32 vertexX;
 
     startX = (int)(lbl_803E4DE0 * startNode[0]);
     startY = (int)(lbl_803E4DE0 * startNode[1]);
@@ -42,13 +42,14 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     endZ = (int)(lbl_803E4DE0 * endNode[2]);
     memcpy(out, templateData, 0x60);
 
-    angleRadians = (lbl_803E4DE4 * (float)(short)angle) / lbl_803E4DE8;
+    i = 0;
     vertex = out;
-    for (i = 0; i < 6; i++)
+    angleRadians = (lbl_803E4DE4 * (float)(short)angle) / lbl_803E4DE8;
+    for (; i < 6; i++)
     {
         vertexX = (float)(int)*vertex;
-        *vertex = (short)(int)(vertexX * mathCosf(angleRadians));
-        vertex[2] = (short)(int)(-vertexX * mathSinf(angleRadians));
+        *vertex = (int)(vertexX * mathCosf(angleRadians));
+        vertex[2] = (int)(-vertexX * mathSinf(angleRadians));
         vertex += 8;
     }
 
