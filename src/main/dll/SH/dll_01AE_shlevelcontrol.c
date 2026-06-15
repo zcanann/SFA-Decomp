@@ -957,7 +957,6 @@ void sh_levelcontrol_init(int obj)
     extern void GameBit_Set(u32 id, u32 value); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     int i;
-    s16* bitIds;
     u32 v;
 
     ((GameObject*)obj)->animEventCallback = (void*)SH_LevelControl_SeqFn;
@@ -996,11 +995,10 @@ void sh_levelcontrol_init(int obj)
 
     if (GameBit_Get(319) == 0)
     {
-        bitIds = lbl_80327618_ids;
+        extern s16 lbl_80327618[]; /* #57 */
         for (i = 0; i < 18; i++)
         {
-            GameBit_Set(*bitIds, 0);
-            bitIds++;
+            GameBit_Set(lbl_80327618[i], 0);
         }
     }
     timeOfDayFn_80055000();
