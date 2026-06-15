@@ -1,7 +1,5 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
-#include "main/maketex.h"
-#include "main/objanim.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 
