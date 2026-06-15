@@ -347,10 +347,16 @@ void alphaanimator_update(int* obj)
             {
                 s->alphaLevel =
                     (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
+                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1D)
                 {
                     return;
                 }
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
+                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                {
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
+                }
+                s->doneCount += 1;
             }
             else
             {
@@ -360,13 +366,13 @@ void alphaanimator_update(int* obj)
                 {
                     return;
                 }
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
+                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                {
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
+                }
+                s->doneCount += 1;
             }
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-            if (((AlphaanimatorPlacement*)d)->unk1A != -1)
-            {
-                GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
-            }
-            s->doneCount += 1;
         }
         else
         {
@@ -374,10 +380,16 @@ void alphaanimator_update(int* obj)
             {
                 s->alphaLevel =
                     (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
+                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1C)
                 {
                     return;
                 }
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
+                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                {
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 0);
+                }
+                s->doneCount += 1;
             }
             else
             {
@@ -387,13 +399,13 @@ void alphaanimator_update(int* obj)
                 {
                     return;
                 }
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
+                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                {
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 0);
+                }
+                s->doneCount += 1;
             }
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-            if (((AlphaanimatorPlacement*)d)->unk1A != -1)
-            {
-                GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 0);
-            }
-            s->doneCount += 1;
         }
         break;
     case 3:
