@@ -1,32 +1,12 @@
-/*
- * dll_80136a40 - EN v1.0 retargeted system/debug leaves.
- *
- * A grab-bag of low-level support code linked into this DLL:
- *   - The fatal-error display thread (fn_80137DF8) plus its installer
- *     (fn_80137D28 / fn_801388D0): OSSetErrorHandler hooks dump the
- *     exception type, DSISR/SRR0, the stack trace and a full GPR/SPR
- *     register window straight into the external framebuffers, flipping
- *     them forever in a hang loop.
- *   - The debug text subsystem: an in-memory record log (debugPrintf /
- *     debugPrintfxy / debugPrintSetColor write tagged records into
- *     debugLogBuffer) replayed by debugPrintDraw, which lays the log out
- *     twice (measure then draw) and rasterizes glyphs through
- *     fn_80136A40 (per-glyph texture select + textRenderChar) and
- *     fn_80136E00 (record interpreter: color/tab/newline/position tags).
- *   - The title-screen ObjectDescriptor (gTitleScreenObjDescriptor) and
- *     its forwarded callbacks.
- *   - Tricky companion helpers: queued-path particle emission
- *     (Tricky_emitQueuedPathParticles), command-target selection,
- *     blend-channel weight animation and impress/GameBit state pokes.
- *   - Misc object teardown (objAnimFreeChildren) and a minimap timer
- *     readout (fn_80133F70).
- */
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
+#include "main/dll/FRONT/dll_39.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "stdarg.h"
@@ -56,23 +36,43 @@ extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
+extern undefined8 FUN_80053754();
+extern undefined4 FUN_80246dcc();
+
+extern undefined4 DAT_803dc818;
+extern undefined4 DAT_803de5a8;
+extern undefined4 DAT_803de5c4;
+extern undefined4 DAT_803de62b;
+extern undefined4 DAT_803de6b4;
+extern undefined4 DAT_803de6b8;
+extern undefined4 DAT_803de6bc;
+extern undefined4 DAT_803de6c0;
+extern f32 FLOAT_803e3098;
 
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
+extern u8 lbl_803DBBB0;
+extern u8 lbl_803DD928;
 extern void* minimapTexture;
 extern void* lbl_803DD940;
+extern s8 lbl_803DD944;
 
+#pragma scheduling on
+#pragma peephole on
 extern u8 warpstoneUIState;
+extern u8 showCredits;
 extern void titlescreen_free(u8 * obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);
 extern void titlescreen_init(u8 * obj, u8 * p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
+extern f32 lbl_803DD968;
 extern f32 lbl_803E23E8;
+extern f32 lbl_803E2344;
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(void*);
 extern f32 lbl_803E23B8;
@@ -90,11 +90,13 @@ extern int vsprintf(char* s, const char* format, va_list arg);
 extern int lbl_803DD9E4;
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
+extern int Obj_AllocObjectSetup(int a, int b);
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
 extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
-extern int* Obj_GetActiveModel(int obj);
+extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
+extern int* Obj_GetActiveModel(void* obj);
 extern f32 lbl_803E2408;
 extern void* lbl_803DD984;
 extern f32 timeDelta;
@@ -102,6 +104,7 @@ extern u32 lbl_803DDA00;
 extern u32 lbl_803DDA08;
 extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
+extern void Music_Trigger(s32 triggerId, s32 mode);
 extern u8 lbl_803AB118[];
 extern s16 lbl_803DDA40;
 extern u32 lbl_803DDA3C;
@@ -121,14 +124,8 @@ extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
-extern f32 lbl_803E240C;
-extern f32 lbl_803E2418;
-extern f32 getXZDistance(f32* a, f32* b);
-extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
-extern int dll_19_func1B(int);
-extern int* gBaddieControlInterface;
-extern f32 fn_8014C5D0(int);
-extern f32 vec3f_distanceSquared(int, int);
+extern f32 lbl_803DD99C;
+extern u16 lbl_803DBC0A;
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
 extern void DCStoreRange(void* p, u32 nBytes);
@@ -149,6 +146,7 @@ extern f32 lbl_803E2398;
 extern f32 lbl_803E239C;
 extern f32 lbl_803E23A0;
 extern f32 lbl_803E23A4;
+extern int getButtonsHeld(int p);
 extern void GXSetTevColor(int id, int* color);
 extern void setTextColor(int p);
 extern u16 lbl_803DDA14;
@@ -160,6 +158,7 @@ extern u8 lbl_803DD9F2;
 extern u8 lbl_803DD9F3;
 extern u16 lbl_803DD9F6;
 extern int lbl_803DDA10;
+extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern u16* debugFrameBuffer;
 extern char lbl_803DBC18;
 extern char lbl_803DBC1C;
@@ -179,13 +178,83 @@ extern void VIWaitForRetrace(void);
 extern u16 lbl_803DD9F4;
 extern u32 lbl_803DDA04;
 extern u32 lbl_803DD9FC;
-__declspec(section ".sdata") extern char lbl_803DBBF0[];
+
+void FUN_80132034(void)
+{
+    bool bVar1;
+
+    bVar1 = false;
+    if ((DAT_803de5c4 == '\x02') && (DAT_803dc818 != '\0'))
+    {
+        bVar1 = true;
+    }
+    if (!bVar1)
+    {
+        return;
+    }
+    DAT_803de5a8 = 5;
+    return;
+}
+
+void FUN_801334d4(void)
+{
+    FUN_80053754();
+    FUN_80053754();
+    return;
+}
+
+void FUN_80134bc4(void)
+{
+    DAT_803de62b = 0;
+    return;
+}
+
+void FUN_80135810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  char* param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
+                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
+{
+}
+
+void FUN_80135814(void)
+{
+    return;
+}
+
+void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)
+{
+    DAT_803de6b4 = param_4;
+    DAT_803de6b8 = param_3;
+    DAT_803de6bc = param_2;
+    DAT_803de6c0 = param_1;
+    FUN_80246dcc(-0x7fc54288);
+    return;
+}
+
+void FUN_80135c84(int param_1, uint param_2)
+{
+    *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) =
+        (byte)((param_2 & 0xff) << 6) & 0x40 | *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) & 0xbf;
+    return;
+}
+
+void FUN_8013651c(int param_1)
+{
+    int iVar1;
+
+    iVar1 = *(int*)&((GameObject*)param_1)->extra;
+    *(uint*)(iVar1 + 0x54) = *(uint*)(iVar1 + 0x54) | 0x80000000;
+    *(float*)(iVar1 + 0x808) = FLOAT_803e3098;
+    return;
+}
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 void reportAllocFail(void)
 {
 }
+
+int dll_3F_frameStart_ret_0(void);
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 
@@ -266,6 +335,8 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
 
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
 {
+    extern f32 getXZDistance(f32 * a, f32 * b);
+    extern f32 lbl_803E2418;
     f32 bestPriorityDist;
     f32 bestFallbackDist;
     u8* entry;
@@ -419,6 +490,8 @@ int fn_80138920(u8* obj, int arg1, int arg2)
     return 1;
 }
 
+__declspec(section ".sdata") extern char lbl_803DBBF0[];
+
 void fn_80133F70(void* obj)
 {
     char buf[12];
@@ -473,6 +546,7 @@ void fn_80137948(char* fmt, ...)
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
+void Minimap_release(void);
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
@@ -529,12 +603,14 @@ void fn_801375A0(void)
  * the rlwimi only uses bit 0 of r4. No C form found to force it. */
 #pragma scheduling on
 #pragma peephole on
-void fn_80138908(u8* obj, u8 v)
+void fn_80138908(int* obj, u8 v)
 {
     u8* x = ((GameObject*)obj)->extra;
     u8 b = *(u8*)(x + 0x58);
     *(u8*)(x + 0x58) = (u8)((b & ~0x40) | ((v & 1) << 6));
 }
+
+void titlescreen_free(u8* obj);
 
 /* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
  * the thread at &lbl_803AB118. */
@@ -563,8 +639,14 @@ void fn_80137D28(void)
 
 int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 {
-    extern int* ObjGroup_GetObjects(int, int*);
+    extern int dll_19_func1B(int);
+    extern int* gBaddieControlInterface;
+    extern MapEventInterface** gMapEventInterface;
+    extern f32 fn_8014C5D0(int);
+    extern int*ObjGroup_GetObjects(int, int*);
     extern int ObjGroup_ContainsObject(int, int);
+    extern f32 vec3f_distanceSquared(int, int);
+    extern f32 lbl_803E23DC;
     int* objs;
     int* tmpList;
     int closest;
@@ -650,6 +732,14 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 #pragma peephole off
 void fn_80138D7C(int obj, int p2)
 {
+    extern void*Obj_GetActiveModel(int);
+    extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
+    extern f32 timeDelta;
+    extern f32 lbl_803E23DC;
+    extern f32 lbl_803E23E0;
+    extern f32 lbl_803E23E8;
+    extern f32 lbl_803E2408;
+    extern f32 lbl_803E240C;
     u8 ratio = (u8)((s32) * (u8*)(*(int*)(p2 + 0) + 2) / 10);
 
     if (*(u8*)(p2 + 0x82c) != ratio)
@@ -687,6 +777,7 @@ void fn_80138D7C(int obj, int p2)
             }
         }
     }
+    return;
 }
 
 #define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e
@@ -703,9 +794,10 @@ void fn_80138D7C(int obj, int p2)
  * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
 void Tricky_updateBlendChannelWeight(int obj, u8* state)
 {
+    extern void* Obj_GetActiveModel(int obj);
     int model;
     f32 target;
-    Obj_GetActiveModel(obj); /* discarded result, but target emits this bl */
+    Obj_GetActiveModel(obj);
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 7) & 1) != 0)
     {
         model = (int)Obj_GetActiveModel(obj);
@@ -1019,6 +1111,8 @@ int fn_80136A40(int p1, int c)
     return c;
 }
 
+extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
+
 #pragma peephole off
 int fn_80136E00(int p1, u8* p)
 {
@@ -1038,7 +1132,7 @@ int fn_80136E00(int p1, u8* p)
     u8 c1;
     u8 c2;
     u8 c3;
-    u8 colb1[4]; /* four separate colb/colw pairs: distinct stack slots are load-bearing */
+    u8 colb1[4];
     u32 colw1;
     u32 colw2;
     u8 colb2[4];
@@ -1270,14 +1364,14 @@ void fn_80137DF8(void)
                     row = 0;
                     for (n = 0; n < 60; n++)
                     {
-                        *(u16*)((char*)debugDrawFrameBuffer + row + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x500) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xA00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xF00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1400) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1900) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x2300) + col) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x500)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xA00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xF00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1400)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1900)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1E00)) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x2300)) = 0x1080;
                         row += 0x2800;
                     }
                     col += 2;
