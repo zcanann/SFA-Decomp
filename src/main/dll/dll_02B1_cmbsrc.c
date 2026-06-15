@@ -102,10 +102,11 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     }
     if ((mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) == 0x10)
     {
-        if (sourceState->inactiveTimer != lbl_803E7360)
+        f32 zero = lbl_803E7360;
+        if (sourceState->inactiveTimer != zero)
         {
             sourceState->inactiveTimer -= timeDelta;
-            if (sourceState->inactiveTimer <= lbl_803E7360)
+            if (sourceState->inactiveTimer <= zero)
             {
                 result = 1;
             }
