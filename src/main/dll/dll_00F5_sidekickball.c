@@ -2,7 +2,6 @@
 #include "main/dll/dll_00F4_doorf4.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
-#include "main/objseq.h"
 
 /*
  * Per-object extra state for the doorf4 auto door
@@ -34,7 +33,6 @@ STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
  */
 #include "main/dll/sidekickball_state.h"
 #include "main/dll/path_control_interface.h"
-#include "main/dll/dll_00F5_sidekickball.h"
 #include "main/dll/tframeanimator_state.h"
 
 typedef struct Doorf4State
