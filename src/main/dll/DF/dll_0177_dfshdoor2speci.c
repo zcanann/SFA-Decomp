@@ -1,5 +1,4 @@
 #include "main/game_object.h"
-#include "main/dll/DF/dll_198.h"
 #include "main/objtexture.h"
 
 typedef struct DFSHDoor2SpeciPlacement
