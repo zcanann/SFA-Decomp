@@ -9,10 +9,6 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/objseq.h"
-#include "main/effect_interfaces.h"
-#include "main/dll/DIM/DIMlavasmash.h"
-#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -63,15 +59,12 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-extern u32 lbl_803DDB48;
 extern void objRenderFn_8003b8f4(f32);
-extern void Music_Trigger(int id, int p2);
 extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
-extern int modelLightStruct_getActiveState(int* p);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
 extern undefined4 ObjGroup_AddObject();
