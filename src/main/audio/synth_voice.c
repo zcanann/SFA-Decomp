@@ -965,18 +965,9 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
 void fn_802712C8(SynthDelayedNode* fade)
 {
     SynthVoiceTimers* timers = (SynthVoiceTimers*)fade;
-    {
-        int a = synthRealTimeHi;
-        int b = synthRealTimeLo;
-        timers->updateTimeHi0 = a;
-        timers->updateTimeLo0 = b;
-    }
-    {
-        int a = synthRealTimeHi;
-        int b = synthRealTimeLo;
-        timers->updateTimeHi1 = a;
-        timers->updateTimeLo1 = b;
-    }
+
+    *(u64*)&timers->updateTimeHi0 = *(u64*)&synthRealTimeHi;
+    *(u64*)&timers->updateTimeHi1 = *(u64*)&synthRealTimeHi;
     synthQueueDelayedUpdate(fade, 0, 0);
     synthQueueDelayedUpdate(fade, 1, 0);
 }

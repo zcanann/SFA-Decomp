@@ -688,9 +688,7 @@ void Link_release(void)
     u8* p;
     int i;
 
-    i = 0;
-    p = linkTextures;
-    for (; i < 6; i++)
+    for (i = 0, p = linkTextures; i < 6; i++)
     {
         textureFree(*(void**)p);
         p += 8;
