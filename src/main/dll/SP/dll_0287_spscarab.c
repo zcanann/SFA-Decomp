@@ -153,7 +153,7 @@ void spscarab_update(int obj)
     }
 }
 
-void spscarab_init(int obj, int param_2)
+void spscarab_init(int obj, int def)
 {
     extern int Obj_GetActiveModel(int obj); /* #57 */
     extern int randomGetRange(int lo, int hi); /* #57 */
@@ -172,7 +172,7 @@ void spscarab_init(int obj, int param_2)
     pair.b = lbl_803E5A72;
 
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x6000;
-    *(s16*)(obj) = (s16)((s32)(s8) * (u8*)(param_2 + 0x18) << 8);
+    *(s16*)(obj) = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
 
     ((GameObject*)obj)->anim.velocityX =
         -mathSinf(lbl_803E5A8C * (f32)(s32) * (s16*)(obj) /
@@ -181,17 +181,17 @@ void spscarab_init(int obj, int param_2)
         -mathCosf(lbl_803E5A8C * (f32)(s32) * (s16*)(obj) /
             lbl_803E5A90);
 
-    objAnim->bankIndex = (s8)(1 - *(u8*)(param_2 + 0x19));
+    objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
 
-    ((SpscarabState*)p_b8)->unk0 = (f32)(s32) * (s16*)(param_2 + 0x1a);
+    ((SpscarabState*)p_b8)->unk0 = (f32)(s32) * (s16*)(def + 0x1a);
     ((SpscarabState*)p_b8)->unk4 = lbl_803E5A94 + (f32)randomGetRange(0, 0x64) / lbl_803E5A80;
-    ((SpscarabState*)p_b8)->unk8 = *(int*)(param_2 + 0x14);
-    *(int*)(param_2 + 0x14) = -1;
+    ((SpscarabState*)p_b8)->unk8 = *(int*)(def + 0x14);
+    *(int*)(def + 0x14) = -1;
 
     Sfx_AddLoopedObjectSound(obj, 0x406);
     model = Obj_GetActiveModel(obj);
 
-    switch ((s8) * (u8*)(param_2 + 0x19))
+    switch ((s8) * (u8*)(def + 0x19))
     {
     case 0:
         *(u8*)(*(int*)(model + 0x34) + 8) = *((u8*)&pair + randomGetRange(0, 2));
