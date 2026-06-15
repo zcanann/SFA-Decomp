@@ -99,7 +99,8 @@ extern f32 lbl_803E2730;
 extern f32 lbl_803E2734;
 extern f32 lbl_803E2738;
 extern f32 lbl_803E273C;
-extern char lbl_8031F16C[];
+typedef struct { char pad[4]; u8* ptr; char pad2[0x28 - 8]; } WispEntry;
+extern WispEntry lbl_8031F16C[];
 extern u8 lbl_8031DD30[];
 
 void wispbaddie_hitDetect(void)
@@ -819,7 +820,7 @@ void fn_8015039C(int obj, int animState)
 void fn_801504BC(int obj, int delta)
 {
     u8* inner = ((GameObject*)obj)->extra;
-    u8* ptr = *(u8**)(lbl_8031F16C + (inner[0x33b] * 0x28 + 4));
+    u8* ptr = lbl_8031F16C[inner[0x33b]].ptr;
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
