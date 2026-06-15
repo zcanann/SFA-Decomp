@@ -498,7 +498,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
     for (; i < count; i++)
     {
         u32 o = (u32)list[i];
-        if (o != (u32)obj && *(s16*)(o + 0x46) == 0x518 &&
+        if (o != (u32)obj && ((GameObject*)o)->anim.seqId == 0x518 &&
             Vec_distance((void*)(obj + 0x18), (void*)(o + 0x18)) < lbl_803E4580)
         {
             u32 c;
@@ -733,7 +733,7 @@ void mmp_moonrock_update(int obj)
             for (i = 0; i < count; i++)
             {
                 u32 o = (u32) * list;
-                if (o != (u32)obj && *(s16*)(o + 0x46) == 0x519 &&
+                if (o != (u32)obj && ((GameObject*)o)->anim.seqId == 0x519 &&
                     Vec_xzDistance((f32*)(obj + 0x18), (f32*)(o + 0x18)) < k)
                 {
                     (*gCarryableInterface)->setVisible(stateCopy, 1);
