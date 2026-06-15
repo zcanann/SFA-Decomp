@@ -3164,10 +3164,9 @@ void expgfx_initialise(void)
     poolActiveMasks = runtime->poolActiveMasks;
     poolActiveCounts = runtime->poolActiveCounts;
     poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-    groupCount = EXPGFX_POOL_GROUP_COUNT;
-    do
+    poolIndex = 0;
+    for (groupCount = EXPGFX_POOL_GROUP_COUNT; groupCount != 0; groupCount--)
     {
-        poolIndex = 0;
         *poolActiveMasks = poolIndex;
         *poolActiveCounts = poolIndex;
         *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
@@ -3195,9 +3194,7 @@ void expgfx_initialise(void)
         poolActiveMasks += 8;
         poolActiveCounts += 8;
         poolSlotTypeIds += 8;
-        groupCount--;
     }
-    while (groupCount != 0);
 
     slotPoolBases = runtime->slotPoolBases;
     poolIndex = 0;
