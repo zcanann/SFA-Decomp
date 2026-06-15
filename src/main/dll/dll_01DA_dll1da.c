@@ -29,15 +29,12 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 extern f32 timeDelta;
 
-extern f32 lbl_803E4A30;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4AD8;
-extern f32 lbl_803E4A38;
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 extern float Vec_distance(float* a, float* b);
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E4ADC;
-extern int ObjList_FindObjectById(int id);
 extern undefined4 ObjHits_AddContactObject();
 extern int ObjHits_GetPriorityHit();
 extern f32 sqrtf(f32 x);
@@ -52,8 +49,6 @@ extern f32 lbl_803E4AF8;
 extern f32 lbl_803E4AFC;
 extern f32 lbl_803E4B00;
 extern const f32 lbl_803E4B04;
-extern int* gBaddieControlInterface;
-extern f32 lbl_803E4BA8;
 
 void dll_1DA_free(void)
 {
