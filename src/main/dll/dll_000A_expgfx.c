@@ -2737,6 +2737,7 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
     return;
 }
 
+#pragma dont_inline on
 int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short slotType,
                      u8 boundsTemplateId)
 {
@@ -3068,6 +3069,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         return slot->sequenceId;
     }
 }
+#pragma dont_inline reset
 
 void expgfx_onMapSetup(void)
 {
