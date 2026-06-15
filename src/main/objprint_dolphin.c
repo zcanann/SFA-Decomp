@@ -1331,37 +1331,37 @@ void FUN_800400ac(undefined4 param_1, undefined4 param_2, int param_3, uint para
 
 void FUN_800400b0(void)
 {
-    ushort* puVar1;
-    int* piVar2;
-    float* pfVar3;
-    int iVar4;
-    int iVar5;
-    ObjDefHitVolume* psVar6;
-    float* pfVar7;
-    ObjDefHitVolume* psVar8;
+    ushort* obj;
+    int* renderNode;
+    float* jointMtx;
+    int jointIdx;
+    int i;
+    ObjDefHitVolume* volumes;
+    float* outVol;
+    ObjDefHitVolume* vol;
 
-    puVar1 = (ushort*)FUN_80286838();
-    psVar6 = ((GameObject*)puVar1)->anim.modelInstance->hitVolumes;
-    pfVar7 = *(float**)(puVar1 + 0x3a);
-    if ((*(byte*)((int)puVar1 + 0xaf) & 0x28) == 0)
+    obj = (ushort*)FUN_80286838();
+    volumes = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
+    outVol = *(float**)(obj + 0x3a);
+    if ((*(byte*)((int)obj + 0xaf) & 0x28) == 0)
     {
-        piVar2 = (int*)FUN_80017a54((int)puVar1);
-        psVar8 = psVar6;
-        for (iVar5 = 0; iVar5 < (int)(uint)((GameObject*)puVar1)->anim.modelInstance->hitVolumeCount; iVar5 = iVar5 + 1)
+        renderNode = (int*)FUN_80017a54((int)obj);
+        vol = volumes;
+        for (i = 0; i < (int)(uint)((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i = i + 1)
         {
-            iVar4 = (int)psVar8->jointIndices[((GameObject*)puVar1)->anim.bankIndex];
-            if (iVar4 < 0)
+            jointIdx = (int)vol->jointIndices[((GameObject*)obj)->anim.bankIndex];
+            if (jointIdx < 0)
             {
-                pfVar3 = (float*)0x0;
+                jointMtx = (float*)0x0;
             }
             else
             {
-                pfVar3 = (float*)FUN_80017970(piVar2, iVar4);
+                jointMtx = (float*)FUN_80017970(renderNode, jointIdx);
             }
-            FUN_800401a0((float*)0x0, pfVar7 + 3, &psVar8->posX, psVar6->flags & 0x10, puVar1, 0);
-            FUN_800401a0(pfVar3, pfVar7, &psVar8->jointOffsetX, psVar6->flags & 0x10, puVar1, 1);
-            psVar8++;
-            pfVar7 = pfVar7 + 6;
+            FUN_800401a0((float*)0x0, outVol + 3, &vol->posX, volumes->flags & 0x10, obj, 0);
+            FUN_800401a0(jointMtx, outVol, &vol->jointOffsetX, volumes->flags & 0x10, obj, 1);
+            vol++;
+            outVol = outVol + 6;
         }
     }
     FUN_80286884();
@@ -1461,9 +1461,9 @@ void FUN_8004036c(undefined4 param_1)
 
 void FUN_800406cc(int param_1)
 {
-    int* piVar1;
-    int iVar2;
-    int iVar3;
+    int* renderNode;
+    int model;
+    int i;
 
     if (lbl_803DF684 == ((GameObject*)param_1)->anim.rootMotionScale)
     {
@@ -1471,26 +1471,26 @@ void FUN_800406cc(int param_1)
     }
     else
     {
-        piVar1 = (int*)FUN_80017a54(param_1);
-        iVar2 = *piVar1;
-        if (*(char*)(iVar2 + 0xf6) == '\0')
+        renderNode = (int*)FUN_80017a54(param_1);
+        model = *renderNode;
+        if (*(char*)(model + 0xf6) == '\0')
         {
-            FUN_800400ac(param_1, param_1, iVar2, 1);
+            FUN_800400ac(param_1, param_1, model, 1);
         }
         else
         {
-            fn_8003FDA8(param_1, param_1, iVar2);
+            fn_8003FDA8(param_1, param_1, model);
         }
         if (((GameObject*)param_1)->anim.classId == 1)
         {
-            iVar2 = param_1;
-            for (iVar3 = 0; iVar3 < (int)(uint)((GameObject*)param_1)->childCount; iVar3 = iVar3 + 1)
+            model = param_1;
+            for (i = 0; i < (int)(uint)((GameObject*)param_1)->childCount; i = i + 1)
             {
-                if (*(int*)(iVar2 + 200) != 0)
+                if (*(int*)(model + 200) != 0)
                 {
-                    FUN_80040784(*(int*)(iVar2 + 200), param_1, 1);
+                    FUN_80040784(*(int*)(model + 200), param_1, 1);
                 }
-                iVar2 = iVar2 + 4;
+                model = model + 4;
             }
         }
     }
