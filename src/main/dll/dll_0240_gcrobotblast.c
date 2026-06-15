@@ -107,8 +107,6 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
-extern u8 lbl_80329514[];
-extern f32 timeDelta;
 
 int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
