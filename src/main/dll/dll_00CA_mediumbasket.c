@@ -930,14 +930,14 @@ FUN_8015d00c(undefined8 param_1, double param_2, double param_3, undefined8 para
     *(byte*)(control + 0x44) = *(byte*)(control + 0x44) | 0xc;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) | 8;
+        *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
         *(undefined2*)(extra + 0x402) = 4;
     }
-    *obj = (short)(int)(lbl_803E39F4 *
+    ((GameObject*)obj)->anim.rotX = (short)(int)(lbl_803E39F4 *
         (((float)((double)CONCAT44(0x43300000,
                                    (int)*(short*)(state + 0x336) ^ 0x80000000)
             - DOUBLE_803e3a00) * lbl_803DC074) / lbl_803E39F8) +
-        (float)((double)CONCAT44(0x43300000, (int)*obj ^ 0x80000000) -
+        (float)((double)CONCAT44(0x43300000, (int)((GameObject*)obj)->anim.rotX ^ 0x80000000) -
             DOUBLE_803e3a00));
     *(float*)(state + 0x2a0) = lbl_803E39D0;
     *(float*)(state + 0x280) = lbl_803E39E0;
@@ -1531,9 +1531,9 @@ int mediumbasket_updateSpinState(int obj, int state)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         sub->targetState = 4;
     }
-    *(s16*)obj = (s16)(lbl_803E2D5C *
+    ((GameObject*)obj)->anim.rotX = (s16)(lbl_803E2D5C *
         (((f32)((GroundBaddieState*)state)->baddie.turnRate * timeDelta) / lbl_803E2D60) +
-        (f32) * (s16*)obj);
+        (f32)((GameObject*)obj)->anim.rotX);
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D38;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D48;
     return 0;
@@ -1827,10 +1827,10 @@ void fn_8015CE68(int obj, int state)
                                       (f32*)(control + 0x30), (f32*)(control + 0x34), 0);
     }
     *(f32*)(control + 0x30) = lbl_803E2D90 + ((GameObject*)obj)->anim.localPosY;
-    angle = (lbl_803E2D98 * (f32) * (s16*)obj) / lbl_803E2D9C;
+    angle = (lbl_803E2D98 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E2D9C;
     *(f32*)(control + 0x2c) =
         *(f32*)(control + 0x2c) - scale * (lbl_803E2D94 * mathSinf(angle));
-    angle = (lbl_803E2D98 * (f32) * (s16*)obj) / lbl_803E2D9C;
+    angle = (lbl_803E2D98 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E2D9C;
     *(f32*)(control + 0x34) =
         *(f32*)(control + 0x34) - scale * (lbl_803E2D94 * mathCosf(angle));
     pathX = lbl_803E2D14;
