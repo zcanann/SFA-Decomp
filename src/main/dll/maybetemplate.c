@@ -137,6 +137,49 @@ extern f32 lbl_803E2010;
 extern f32 lbl_803E2014;
 extern f32 lbl_803E2018;
 
+/* File-local overlay for the pause/status HUD block at lbl_803A87F0 (accessed
+ * as a raw u8* base here). Only the pure-constant scalar fields are named; the
+ * indexed/per-slot arrays in this region are left as raw casts to preserve
+ * register coloring (byte-neutral). The lower offsets (<0x244) are modeled
+ * file-locally elsewhere (CMenuHud in dll_0000_baby_snowworm.c). */
+typedef struct PauseMenuHud
+{
+    u8 _pad0[0x244];
+    int texHandle;       /* 0x244 */
+    u8 _pad248[0xB00 - 0x248];
+    f32 magicCur;        /* 0xB00 */
+    u8 _padB04[0xB08 - 0xB04];
+    f32 moneyAnim;       /* 0xB08 */
+    f32 healthAnim;      /* 0xB0C */
+    u8 _padB10[0xB24 - 0xB10];
+    f32 keyAnim;         /* 0xB24 */
+    f32 scarabAnim;      /* 0xB28 */
+    f32 spiritAnim;      /* 0xB2C */
+    u8 _padB30[0xB38 - 0xB30];
+    int magicValue;      /* 0xB38 */
+    u8 _padB3C[0xB50 - 0xB3C];
+    int maxMagicValue;   /* 0xB50 */
+    u8 _padB54[0xB58 - 0xB54];
+    int spiritBitState;  /* 0xB58 */
+    u8 _padB5C[0xB7C - 0xB5C];
+    int magicLatch;      /* 0xB7C */
+    u8 _padB80[0xB94 - 0xB80];
+    int maxMagicLatch;   /* 0xB94 */
+} PauseMenuHud;
+
+STATIC_ASSERT(offsetof(PauseMenuHud, texHandle) == 0x244);
+STATIC_ASSERT(offsetof(PauseMenuHud, magicCur) == 0xB00);
+STATIC_ASSERT(offsetof(PauseMenuHud, moneyAnim) == 0xB08);
+STATIC_ASSERT(offsetof(PauseMenuHud, healthAnim) == 0xB0C);
+STATIC_ASSERT(offsetof(PauseMenuHud, keyAnim) == 0xB24);
+STATIC_ASSERT(offsetof(PauseMenuHud, scarabAnim) == 0xB28);
+STATIC_ASSERT(offsetof(PauseMenuHud, spiritAnim) == 0xB2C);
+STATIC_ASSERT(offsetof(PauseMenuHud, magicValue) == 0xB38);
+STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicValue) == 0xB50);
+STATIC_ASSERT(offsetof(PauseMenuHud, spiritBitState) == 0xB58);
+STATIC_ASSERT(offsetof(PauseMenuHud, magicLatch) == 0xB7C);
+STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicLatch) == 0xB94);
+
 void hudDrawMagicBar(int p1, int p2, uint p3)
 {
     int total;
@@ -461,11 +504,11 @@ void pauseMenuDrawStatus(void)
     statuses[0] = Player_GetCurrentHealth((int)player);
     statuses[7] = Player_GetMaxHealth((int)player);
     statuses[1] = GameBit_Get(0xC1);
-    if (*(int*)(base + 0xB38) - Player_GetCurrentMagic((int)player) < 0)
+    if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic((int)player) < 0)
     {
         delta = -1;
     }
-    else if (*(int*)(base + 0xB38) - Player_GetCurrentMagic((int)player) > 0)
+    else if (((PauseMenuHud*)base)->magicValue - Player_GetCurrentMagic((int)player) > 0)
     {
         delta = 1;
     }
@@ -473,12 +516,12 @@ void pauseMenuDrawStatus(void)
     {
         delta = 0;
     }
-    statuses[2] = *(int*)(base + 0xB38) - delta;
-    if (*(int*)(base + 0xB50) - Player_GetMaxMagic((int)player) < 0)
+    statuses[2] = ((PauseMenuHud*)base)->magicValue - delta;
+    if (((PauseMenuHud*)base)->maxMagicValue - Player_GetMaxMagic((int)player) < 0)
     {
         delta = -1;
     }
-    else if (*(int*)(base + 0xB50) - Player_GetMaxMagic((int)player) > 0)
+    else if (((PauseMenuHud*)base)->maxMagicValue - Player_GetMaxMagic((int)player) > 0)
     {
         delta = 1;
     }
@@ -487,17 +530,17 @@ void pauseMenuDrawStatus(void)
         delta = 0;
     }
     negDelta = -delta;
-    statuses[8] = *(int*)(base + 0xB50) + negDelta;
+    statuses[8] = ((PauseMenuHud*)base)->maxMagicValue + negDelta;
     if ((negDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) &&
         (objIsCurModelNotZero(player) != 0) && (GameBit_Get(0xEB1) != 0))
     {
         Sfx_KeepAliveLoopedObjectSound(0, 0x3F0);
     }
-    *(int*)(base + 0xB7C) = statuses[2];
-    *(int*)(base + 0xB94) = statuses[8];
+    ((PauseMenuHud*)base)->magicLatch = statuses[2];
+    ((PauseMenuHud*)base)->maxMagicLatch = statuses[8];
     statuses[4] = GameBit_Get(0x66C);
     statuses[10] = GameBit_Get(0x13D);
-    if (statuses[10] != *(int*)(base + 0xB58))
+    if (statuses[10] != ((PauseMenuHud*)base)->spiritBitState)
     {
         u8 flag = statuses[10] == 0;
         GameBit_Set(0x967, flag);
@@ -579,27 +622,27 @@ void pauseMenuDrawStatus(void)
         }
         if ((GameBit_Get(0xB98) != 0) || (statuses[4] != 0))
         {
-            *(f32*)(base + 0xB0C) = lbl_803E1FC0;
+            ((PauseMenuHud*)base)->healthAnim = lbl_803E1FC0;
         }
         if ((GameBit_Get(0xB99) != 0) || (statuses[1] != 0))
         {
-            *(f32*)(base + 0xB00) = lbl_803E1FC0;
+            ((PauseMenuHud*)base)->magicCur = lbl_803E1FC0;
         }
         if ((GameBit_Get(0xB9A) != 0) || (statuses[10] != 0))
         {
-            *(f32*)(base + 0xB24) = lbl_803E1FC0;
+            ((PauseMenuHud*)base)->keyAnim = lbl_803E1FC0;
         }
         if ((GameBit_Get(0xB9B) != 0) || (statuses[11] != 0))
         {
-            *(f32*)(base + 0xB28) = lbl_803E1FC0;
+            ((PauseMenuHud*)base)->scarabAnim = lbl_803E1FC0;
         }
         if ((GameBit_Get(0xB9C) != 0) || (statuses[3] != 0))
         {
-            *(f32*)(base + 0xB08) = lbl_803E1FC0;
+            ((PauseMenuHud*)base)->moneyAnim = lbl_803E1FC0;
         }
         if ((GameBit_Get(0xD97) != 0) || (statuses[12] != 0))
         {
-            *(f32*)(base + 0xB2C) = lbl_803E1FC0;
+            ((PauseMenuHud*)base)->spiritAnim = lbl_803E1FC0;
         }
         lbl_803DD844 = lbl_803E1E3C;
     }
@@ -901,12 +944,12 @@ void hudDrawButtons(int param1, int param2, int param3)
             i++;
         }
         while (i < 7);
-        drawTexture(*(int*)(base + 0x244), lbl_803E1FCC, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
-        drawScaledTexture(*(int*)(base + 0x244), lbl_803E1FD4, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
+        drawTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FCC, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
+        drawScaledTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FD4, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
                           0x12, 10, 1);
-        drawScaledTexture(*(int*)(base + 0x244), lbl_803E1FCC, lbl_803E1FD8, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
+        drawScaledTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FCC, lbl_803E1FD8, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
                           0x12, 10, 2);
-        drawScaledTexture(*(int*)(base + 0x244), lbl_803E1FD4, lbl_803E1FD8, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
+        drawScaledTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FD4, lbl_803E1FD8, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
                           0x12, 10, 3);
         if ((player != NULL) && (objIsCurModelNotZero(player) != 0))
         {
