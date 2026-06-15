@@ -4,7 +4,6 @@
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined8 ObjGroup_RemoveObject();
 
 extern void objRenderFn_8003b8f4(f32);
 
