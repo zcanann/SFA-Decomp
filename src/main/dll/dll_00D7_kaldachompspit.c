@@ -173,7 +173,6 @@ void kaldachompspit_update(int obj)
     f32 vz;
     s16 v;
     f32 t;
-    ObjHitsPriorityState* hitState;
 
     objAnim = &((GameObject*)obj)->anim;
     state = ((GameObject*)obj)->extra;
@@ -218,21 +217,21 @@ void kaldachompspit_update(int obj)
             ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
         ObjHits_EnableObject((u32)obj);
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        if (hitState->lastHitObject != 0)
+        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
         {
             if (((GameObject*)obj)->unkF4 < 0x17c)
             {
                 kaldachompspit_burst(obj);
                 return;
             }
-            if ((hitState->lastHitObject == Obj_GetPlayerObject()) || (hitState->lastHitObject == getTrickyObject()))
+            if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == Obj_GetPlayerObject()) ||
+                (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == getTrickyObject()))
             {
                 kaldachompspit_burst(obj);
                 return;
             }
         }
-        if (hitState->contactFlags != 0)
+        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
             kaldachompspit_burst(obj);
         }
