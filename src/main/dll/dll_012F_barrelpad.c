@@ -30,7 +30,6 @@ extern f32 lbl_803E3F18;
 extern f32 lbl_803E3F1C;
 extern f32 lbl_803E3F20;
 extern f32 lbl_803E3F24;
-extern f32 lbl_803E3EEC;
 
 void barrelpad_free(void)
 {
