@@ -4316,9 +4316,9 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         {
             if ((s8)command[0] != 0xf)
             {
-                ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + command[1];
+                ((ObjSeqState*)seq)->unk68 += command[1];
             }
-            ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+            ((ObjSeqState*)seq)->cmdCursor++;
         }
         else
         {

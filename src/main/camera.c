@@ -1101,12 +1101,10 @@ void Camera_InitState(void)
     u8* base = (u8*)gObjInverseYawTransformMatrices;
     u32 i;
     CameraViewSlot* slot;
-    int off;
 
     for (i = 0; i < 12; i++)
     {
-        off = (u8)i * 96;
-        slot = (CameraViewSlot*)(base + off + 4416);
+        slot = (CameraViewSlot*)(base + (u8)i * 96 + 4416);
         slot->roll = 0;
         slot->yaw = 0;
         slot->pitch = 0x7FF8;
