@@ -1263,11 +1263,10 @@ void textureFree(u8* tex)
     }
     (((Texture*)tex)->refCount)--;
     if (((Texture*)tex)->refCount != 0) return;
-    count = gLoadedTextureCount;
-    if (count <= 0) return;
     {
-        int i = 0;
-        do
+        int i;
+        count = gLoadedTextureCount;
+        for (i = 0; count > 0; i++, count--)
         {
             if (gLoadedTextures[i].texture == tex)
             {
@@ -1288,10 +1287,7 @@ void textureFree(u8* tex)
                 gLoadedTextures[i].texture = NULL;
                 return;
             }
-            i++;
-            count--;
         }
-        while (count != 0);
     }
 }
 #pragma peephole reset
