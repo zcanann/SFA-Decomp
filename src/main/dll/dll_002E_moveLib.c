@@ -190,56 +190,56 @@ void FUN_801149b8(undefined8 param_1, double param_2, double param_3, undefined8
 void FUN_801149bc(short* param_1, int param_2, int param_3)
 {
     extern undefined4 ObjPath_GetPointWorldPosition(); /* #57 */
-    float fVar1;
-    float fVar2;
-    uint* puVar3;
-    ushort local_38;
-    short local_36;
-    short local_34;
-    float local_30;
-    undefined4 local_2c;
-    float local_28;
-    float local_24;
-    undefined4 uStack_20;
-    float local_1c[4];
+    float blendScale;
+    float blendWeight;
+    uint* seqHandle;
+    ushort negRotZ;
+    short negRotY;
+    short negRotX;
+    float p0x;
+    undefined4 p0y;
+    float p0z;
+    float p1x;
+    undefined4 p1y;
+    float p1z[4];
 
     if (*(char*)(param_2 + 0x601) != '\0')
     {
-        puVar3 = FUN_80039518();
-        FUN_8003ac24((int)param_1, puVar3, (uint) * (byte*)(param_2 + 0x610));
-        ObjPath_GetPointWorldPosition(param_1, param_3, &local_30, &local_2c, &local_28, 0);
-        ObjPath_GetPointWorldPosition(param_1, param_3 + 1, &local_24, &uStack_20, local_1c, 0);
-        fVar2 = lbl_803E294C;
-        fVar1 = lbl_803E2948;
-        *(float*)(param_2 + 4) = (lbl_803E2948 * local_30 + local_24) * lbl_803E294C;
-        *(undefined4*)(param_2 + 8) = local_2c;
-        *(float*)(param_2 + 0xc) = (fVar1 * local_28 + local_1c[0]) * fVar2;
+        seqHandle = FUN_80039518();
+        FUN_8003ac24((int)param_1, seqHandle, (uint) * (byte*)(param_2 + 0x610));
+        ObjPath_GetPointWorldPosition(param_1, param_3, &p0x, &p0y, &p0z, 0);
+        ObjPath_GetPointWorldPosition(param_1, param_3 + 1, &p1x, &p1y, p1z, 0);
+        blendWeight = lbl_803E294C;
+        blendScale = lbl_803E2948;
+        *(float*)(param_2 + 4) = (lbl_803E2948 * p0x + p1x) * lbl_803E294C;
+        *(undefined4*)(param_2 + 8) = p0y;
+        *(float*)(param_2 + 0xc) = (blendScale * p0z + p1z[0]) * blendWeight;
         *(float*)(param_2 + 4) = *(float*)(param_2 + 4) - *(float*)(param_1 + 6);
         *(float*)(param_2 + 8) = *(float*)(param_2 + 8) - *(float*)(param_1 + 8);
         *(float*)(param_2 + 0xc) = *(float*)(param_2 + 0xc) - *(float*)(param_1 + 10);
-        local_38 = -param_1[2];
-        local_36 = -param_1[1];
-        local_34 = -*param_1;
-        FUN_80017748(&local_38, (float*)(param_2 + 4));
+        negRotZ = -param_1[2];
+        negRotY = -param_1[1];
+        negRotX = -*param_1;
+        FUN_80017748(&negRotZ, (float*)(param_2 + 4));
         *(u8*)(param_2 + 0x601) = 0;
     }
-    ObjPath_GetPointWorldPosition(param_1, param_3, &local_30, &local_2c, &local_28, 0);
-    *(float*)(param_2 + 0x10) = local_30;
-    *(undefined4*)(param_2 + 0x14) = local_2c;
-    *(float*)(param_2 + 0x18) = local_28;
+    ObjPath_GetPointWorldPosition(param_1, param_3, &p0x, &p0y, &p0z, 0);
+    *(float*)(param_2 + 0x10) = p0x;
+    *(undefined4*)(param_2 + 0x14) = p0y;
+    *(float*)(param_2 + 0x18) = p0z;
     return;
 }
 
 void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefined2 param_4, int param_5)
 {
-    float fVar1;
-    uint* puVar2;
+    float initVal;
+    uint* seqHandle;
 
     *(undefined2*)(param_2 + 0x183) = param_3;
     *(undefined2*)((int)param_2 + 0x60e) = param_4;
     *(char*)(param_2 + 0x184) = (char)param_5;
     param_2[0x17f] = 0;
-    fVar1 = lbl_803E2910;
+    initVal = lbl_803E2910;
     *param_2 = lbl_803E2910;
     param_2[0x17e] = 0;
     param_2[0x181] = 0;
@@ -247,14 +247,14 @@ void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefine
     param_2[0x185] = lbl_803E290C;
     *(u8*)(param_2 + 0x180) = 0;
     *(u8*)((int)param_2 + 0x601) = 1;
-    param_2[1] = fVar1;
-    param_2[2] = fVar1;
-    param_2[3] = fVar1;
+    param_2[1] = initVal;
+    param_2[2] = initVal;
+    param_2[3] = initVal;
     param_2[0x186] = 0xffffffff;
-    puVar2 = FUN_80039518();
-    FUN_8003ac24(param_1, puVar2, param_5);
-    puVar2 = FUN_80039518();
-    FUN_8003ad08(param_1, puVar2, param_5, (int)(param_2 + 7));
+    seqHandle = FUN_80039518();
+    FUN_8003ac24(param_1, seqHandle, param_5);
+    seqHandle = FUN_80039518();
+    FUN_8003ad08(param_1, seqHandle, param_5, (int)(param_2 + 7));
     FUN_8003a9c8((int)(param_2 + 7), (uint) * (byte*)(param_2 + 0x184), 0, 0);
     FUN_80003494((uint)(param_2 + 0x16f), 0x8031ad30, (uint) * (byte*)(param_2 + 0x184) << 1);
     FUN_80003494((int)param_2 + 0x5da, 0x8031ad30, (uint) * (byte*)(param_2 + 0x184) << 1);
