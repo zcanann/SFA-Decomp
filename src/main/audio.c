@@ -2117,6 +2117,7 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit)
 
 int AudioStream_Play(int id, void (*preparedCallback)(void))
 {
+    extern char sAdpExtension;
     char path[64];
     u8 vol;
     u8* dvd = (u8*)(int)lbl_80336C40;
@@ -2161,7 +2162,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     }
     gAudioStreamDvdState = 0;
 
-    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, 0) == 0)
+    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, &sAdpExtension) == 0)
     {
         goto ret0;
     }
