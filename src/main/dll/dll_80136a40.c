@@ -313,7 +313,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         f32 fk;
         f32 dx, dy, dz;
     } stk;
-    u8 i;
+    u8 i = 0x14;
     u32 flags = *(u32*)(b + 0x54);
     if ((flags & 0x1800) == 0) return;
     stk.dx = *(f32*)(b + 0x408) - *(f32*)(a + 0x18);
@@ -323,13 +323,14 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     stk.hx = *(s16*)(a + 0);
     stk.hy = *(s16*)(a + 2);
     stk.hz = *(s16*)(a + 4);
-    if ((flags & 0x800) != 0) return;
-    i = 0x14;
-    while (i-- != 0)
+    if ((flags & 0x800) == 0)
     {
-        (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
+        while (i-- != 0)
+        {
+            (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
+        }
+        *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000LL;
     }
-    *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000;
 }
 
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
