@@ -1,12 +1,8 @@
-#include "main/asset_load.h"
 #include "main/dll/CF/CFchuckobj.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct WarpPadPlayerStandingOnPlacement
 {
