@@ -177,7 +177,7 @@ int ktrex_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
             *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x1000;
             break;
         case 5:
-            *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000;
+            *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000LL;
             break;
         case 6:
             if (((KTRexArenaState*)gKTRexState)->light != NULL)
@@ -670,7 +670,7 @@ int ktrex_stateHandlerB07(int obj, int runtime)
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 0x80) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~0x80;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x40000;
+        *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x40000LL;
     }
     return 0;
 }
@@ -707,12 +707,12 @@ int ktrex_stateHandlerB06(int obj, int runtime)
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~1;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x80000;
+        *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x80000LL;
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 0x80) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~0x80;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000;
+        *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x20000LL;
     }
     return 0;
 }
