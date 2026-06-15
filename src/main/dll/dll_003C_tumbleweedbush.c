@@ -267,6 +267,7 @@ typedef struct LinkMenuItemDA
 #define LINK_FLAG_HIDDEN           0x4000
 #define LINK_FLAG_SELECTED_COLOR   0x0080
 
+#pragma peephole off
 void Link_render(void)
 {
     extern LinkMenuItemDA lbl_803A9458[40]; /* #57 */
@@ -429,6 +430,7 @@ void Link_render(void)
 
     MWTRACE(0xff);
 }
+#pragma peephole reset
 
 typedef struct LinkTextureSlot
 {

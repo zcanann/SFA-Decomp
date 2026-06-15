@@ -248,6 +248,7 @@ extern void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 #pragma scheduling on
 #pragma peephole on
+#pragma scheduling off
 void* loadAsset(void* reqVoid)
 {
     u8 tmp[0x10];
@@ -287,6 +288,7 @@ void* loadAsset(void* reqVoid)
         break;
     }
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

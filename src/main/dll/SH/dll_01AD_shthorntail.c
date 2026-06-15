@@ -186,19 +186,22 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     {
     case SHTHORNTAIL_LOCOMOTION_1:
         runtime->impactSfxTable =
-            dataTables->levelMode0Locomotion1ImpactSfxVariants + config->impactSfxVariant * 2;
+            (u8*)dataTables + (config->impactSfxVariant * 2 +
+                               offsetof(SHthorntailDataTables, levelMode0Locomotion1ImpactSfxVariants));
         break;
     case SHTHORNTAIL_LOCOMOTION_2:
         gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT);
         if (gameBit != 0)
         {
             runtime->impactSfxTable =
-                dataTables->levelMode0Locomotion2SetImpactSfxVariants + config->impactSfxVariant * 2;
+                (u8*)dataTables + (config->impactSfxVariant * 2 +
+                               offsetof(SHthorntailDataTables, levelMode0Locomotion2SetImpactSfxVariants));
         }
         else
         {
             runtime->impactSfxTable =
-                dataTables->levelMode0Locomotion2ClearImpactSfxVariants + config->impactSfxVariant * 2;
+                (u8*)dataTables + (config->impactSfxVariant * 2 +
+                               offsetof(SHthorntailDataTables, levelMode0Locomotion2ClearImpactSfxVariants));
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_3:
@@ -206,12 +209,14 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
         if (gameBit != 0)
         {
             runtime->impactSfxTable =
-                dataTables->levelMode0Locomotion3SetImpactSfxVariants + config->impactSfxVariant * 2;
+                (u8*)dataTables + (config->impactSfxVariant * 2 +
+                               offsetof(SHthorntailDataTables, levelMode0Locomotion3SetImpactSfxVariants));
         }
         else
         {
             runtime->impactSfxTable =
-                dataTables->levelMode0Locomotion3ClearImpactSfxVariants + config->impactSfxVariant * 2;
+                (u8*)dataTables + (config->impactSfxVariant * 2 +
+                               offsetof(SHthorntailDataTables, levelMode0Locomotion3ClearImpactSfxVariants));
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_5:
@@ -219,7 +224,8 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
         if (gameBit == 0)
         {
             runtime->impactSfxTable =
-                dataTables->levelMode0Locomotion5ClearImpactSfxVariants + config->impactSfxVariant * 2;
+                (u8*)dataTables + (config->impactSfxVariant * 2 +
+                               offsetof(SHthorntailDataTables, levelMode0Locomotion5ClearImpactSfxVariants));
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_6:
@@ -244,7 +250,8 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
         break;
     case SHTHORNTAIL_LOCOMOTION_8:
         runtime->impactSfxTable =
-            dataTables->levelMode0Locomotion8ImpactSfxVariants + config->impactSfxVariant * 2;
+            (u8*)dataTables + (config->impactSfxVariant * 2 +
+                               offsetof(SHthorntailDataTables, levelMode0Locomotion8ImpactSfxVariants));
         break;
     }
     SHthorntail_updateState(obj, runtime);
