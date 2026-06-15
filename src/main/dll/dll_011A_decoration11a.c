@@ -1,10 +1,5 @@
-#include "main/dll_000A_expgfx.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/objhits.h"
-#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
-#include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
 extern void* ObjGroup_GetObjects();
