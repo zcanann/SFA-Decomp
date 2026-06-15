@@ -207,7 +207,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     lastContactObj = (void*)hitState->lastHitObject;
     if ((hitState->flags & 8) == 0 ||
-        (*(s16*)((u8*)lastContactObj + 0x46) == 0x1f))
+        (((GameObject*)lastContactObj)->anim.seqId == 0x1f))
     {
         lastContactObj = NULL;
     }
@@ -269,7 +269,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     case 0xc:
         objfx_spawnHitEmitterAtPos(hitPosPtr, 8, 0xff, 0x20, 0x20);
         objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
-        if (*(s16*)((u8*)lastContactObj + 0x46) == 0x69)
+        if (((GameObject*)lastContactObj)->anim.seqId == 0x69)
         {
             Sfx_PlayFromObject(obj, SFXfox_outofwater122);
         }
@@ -1147,15 +1147,15 @@ void skeetla_spawnLinkedSparks(u8* obj)
     args.y = ((TrickyState*)state)->unk3DC;
     args.z = ((TrickyState*)state)->unk3E0;
     args.objectId = *(s16*)obj;
-    if (*(s16*)(linkedObj + 0x46) == SKEETLA_LINKED_SOURCE_ID_OBJ_A)
+    if (((GameObject*)linkedObj)->anim.seqId == SKEETLA_LINKED_SOURCE_ID_OBJ_A)
     {
         args.sourceId =
-            (u8)(*(u32 (**)(u8*))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x28))(linkedObj);
+            (u8)(*(u32 (**)(u8*))(*(int*)(*(int*)&((GameObject*)linkedObj)->anim.dll) + 0x28))(linkedObj);
     }
-    else if (*(s16*)(linkedObj + 0x46) == SKEETLA_LINKED_SOURCE_ID_OBJ_B)
+    else if (((GameObject*)linkedObj)->anim.seqId == SKEETLA_LINKED_SOURCE_ID_OBJ_B)
     {
         args.sourceId =
-            (u8)(*(u32 (**)(u8*))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x28))(linkedObj);
+            (u8)(*(u32 (**)(u8*))(*(int*)(*(int*)&((GameObject*)linkedObj)->anim.dll) + 0x28))(linkedObj);
     }
     else
     {
