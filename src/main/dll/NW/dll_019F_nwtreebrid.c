@@ -174,7 +174,6 @@ void treebird_update(int obj)
 #include "main/objseq.h"
 #include "main/dll/dll_019F_nwtreebrid.h"
 
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 
 void treebird_init(int obj, int setup)
 {
