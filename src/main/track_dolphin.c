@@ -2146,23 +2146,21 @@ void* shadowInit(int* obj, int size)
 {
     int rounded;
     ObjModelState* modelState;
-    ObjModelInstance* modelDef;
     s16 texId;
 
     rounded = roundUpTo4(size);
     *(int*)&((ObjAnimComponent*)obj)->modelState = rounded;
     modelState = ((ObjAnimComponent*)obj)->modelState;
-    modelDef = ((ObjAnimComponent*)obj)->modelInstance;
-    texId = modelDef->shadowTextureId;
-    if (texId != -1 && modelDef->shadowType != 2)
+    texId = ((ObjAnimComponent*)obj)->modelInstance->shadowTextureId;
+    if (texId != -1 && ((ObjAnimComponent*)obj)->modelInstance->shadowType != 2)
     {
         modelState->shadowTexture = (void*)textureLoad(-texId, 0);
     }
-    else if (modelDef->renderFlags & 0x4)
+    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 0x4)
     {
         modelState->shadowTexture = (void*)textureAlloc512();
     }
-    else if (modelDef->renderFlags & 0x2)
+    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 0x2)
     {
         modelState->shadowTexture = NULL;
         modelState->shadowWorkBuffer = NULL;
