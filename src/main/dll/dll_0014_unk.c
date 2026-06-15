@@ -1,13 +1,17 @@
 #include "main/dll/objfsa_romcurve.h"
+#include "main/dll/savedata_struct.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 
 extern void OSReport(const char* fmt, ...);
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
+#include "main/dll/curve_walker.h"
 
+#include "main/dll/rom_curve_segment_projection.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 
@@ -57,8 +61,8 @@ extern f32 lbl_803E1278;
 extern f32 lbl_803E1290;
 extern f32 lbl_803E12B0;
 extern f32 lbl_803E12B4;
-extern f32 lbl_803E063C;
-extern f32 lbl_803E0640;
+extern f32 lbl_803E12BC;
+extern f32 lbl_803E12C0;
 extern f32 gFloatOne;
 
 extern f32 lbl_803E05F0;
@@ -116,6 +120,7 @@ extern u8 lbl_803A1730[];
 
 #pragma scheduling on
 #pragma peephole on
+extern u8 lbl_803DD440;
 extern void* memset(void* dst, int val, u32 n);
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
@@ -123,7 +128,8 @@ extern f32 lbl_803E05F4;
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
-extern void fn_800D915C(int pos, int* obj, f32 fval, void* fnTable);
+extern f32 lbl_803E05A4;
+extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
 extern f32 lbl_803E0610;
 extern f32 lbl_803E0614;
 extern f32 lbl_803E0618;
@@ -148,11 +154,14 @@ extern f32 lbl_803E0608;
 extern f32 lbl_803E060C;
 extern char sObjfsaMissingPatchExitPoint0[];
 extern char sObjfsaMissingPatchExitPoint1[];
+extern u8 gameTimerIsRunning(void* p, int a, int b);
 extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
 extern f32 gFloatHalf;
+extern f32 lbl_803E12B8;
 extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
 extern f32 lbl_803E0664;
+extern SaveData saveData;
 
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
@@ -231,130 +240,130 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
 undefined4
 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             float* state, float param_10, undefined4 param_11, undefined4 param_12,
+             float* param_9, float param_10, undefined4 param_11, undefined4 param_12,
              undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    float prevVal;
-    undefined4 result;
+    float fVar1;
+    undefined4 uVar2;
     undefined4 extraout_r4;
     undefined4 extraout_r4_00;
-    double conv;
-    double conv2;
+    double dVar3;
+    double dVar4;
 
-    prevVal = state[0x28];
-    if (((prevVal == 0.0) || (state[0x29] == 0.0)) || (param_10 == 0.0))
+    fVar1 = param_9[0x28];
+    if (((fVar1 == 0.0) || (param_9[0x29] == 0.0)) || (param_10 == 0.0))
     {
-        result = 1;
+        uVar2 = 1;
     }
     else
     {
-        if (state[0x20] == 0.0)
+        if (param_9[0x20] == 0.0)
         {
-            state[0x27] = prevVal;
-            state[0x28] = state[0x29];
-            state[0x29] = param_10;
-            FUN_80003494((uint)(state + 0x2a), (uint)(state + 0x2e), 0x10);
-            FUN_80003494((uint)(state + 0x32), (uint)(state + 0x36), 0x10);
-            result = 0x10;
-            FUN_80003494((uint)(state + 0x3a), (uint)(state + 0x3e), 0x10);
-            state[0x2e] = *(float*)((int)state[0x28] + 8);
-            state[0x2f] = *(float*)((int)state[0x29] + 8);
-            conv = (double)FUN_80293f90();
-            state[0x30] =
+            param_9[0x27] = fVar1;
+            param_9[0x28] = param_9[0x29];
+            param_9[0x29] = param_10;
+            FUN_80003494((uint)(param_9 + 0x2a), (uint)(param_9 + 0x2e), 0x10);
+            FUN_80003494((uint)(param_9 + 0x32), (uint)(param_9 + 0x36), 0x10);
+            uVar2 = 0x10;
+            FUN_80003494((uint)(param_9 + 0x3a), (uint)(param_9 + 0x3e), 0x10);
+            param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
+            param_9[0x2f] = *(float*)((int)param_9[0x29] + 8);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x30] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
-            state[0x31] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x31] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * conv);
-            state[0x36] = *(float*)((int)state[0x28] + 0xc);
-            state[0x37] = *(float*)((int)state[0x29] + 0xc);
-            conv = (double)FUN_80293f90();
-            state[0x38] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
+            param_9[0x37] = *(float*)((int)param_9[0x29] + 0xc);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x38] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
-            state[0x39] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x39] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * conv);
-            state[0x3e] = *(float*)((int)state[0x28] + 0x10);
-            state[0x3f] = *(float*)((int)state[0x29] + 0x10);
-            conv = (double)FUN_80294964();
-            state[0x40] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
+            param_9[0x3f] = *(float*)((int)param_9[0x29] + 0x10);
+            dVar3 = (double)FUN_80294964();
+            param_9[0x40] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * conv);
-            conv2 = (double)FUN_80294964();
-            conv = DOUBLE_803e1268;
-            conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                     (uint) * (byte*)((int)state[0x29] +
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            dVar4 = (double)FUN_80294964();
+            dVar3 = DOUBLE_803e1268;
+            dVar4 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
+                                                                     (uint) * (byte*)((int)param_9[0x29] +
                                                                          0x2e)) -
-                DOUBLE_803e1268) * conv2);
-            state[0x41] = (float)((double)lbl_803E1250 * conv2);
-            if (state[0x24] != 0.0)
+                DOUBLE_803e1268) * dVar4);
+            param_9[0x41] = (float)((double)lbl_803E1250 * dVar4);
+            if (param_9[0x24] != 0.0)
             {
-                FUN_80006a18(conv2, conv, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
-                             extraout_r4_00, result, param_12, param_13, param_14, param_15, param_16);
-                if (lbl_803E1248 <= *state)
+                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                             extraout_r4_00, uVar2, param_12, param_13, param_14, param_15, param_16);
+                if (lbl_803E1248 <= *param_9)
                 {
-                    *state = lbl_803E124C;
+                    *param_9 = lbl_803E124C;
                 }
             }
         }
         else
         {
-            state[0x27] = prevVal;
-            state[0x28] = state[0x29];
-            state[0x29] = param_10;
-            FUN_80003494((uint)(state + 0x2e), (uint)(state + 0x2a), 0x10);
-            FUN_80003494((uint)(state + 0x36), (uint)(state + 0x32), 0x10);
-            result = 0x10;
-            FUN_80003494((uint)(state + 0x3e), (uint)(state + 0x3a), 0x10);
-            state[0x2a] = *(float*)((int)state[0x29] + 8);
-            state[0x2b] = *(float*)((int)state[0x28] + 8);
-            conv = (double)FUN_80293f90();
-            state[0x2c] =
+            param_9[0x27] = fVar1;
+            param_9[0x28] = param_9[0x29];
+            param_9[0x29] = param_10;
+            FUN_80003494((uint)(param_9 + 0x2e), (uint)(param_9 + 0x2a), 0x10);
+            FUN_80003494((uint)(param_9 + 0x36), (uint)(param_9 + 0x32), 0x10);
+            uVar2 = 0x10;
+            FUN_80003494((uint)(param_9 + 0x3e), (uint)(param_9 + 0x3a), 0x10);
+            param_9[0x2a] = *(float*)((int)param_9[0x29] + 8);
+            param_9[0x2b] = *(float*)((int)param_9[0x28] + 8);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x2c] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
-            state[0x2d] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x2d] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * conv);
-            state[0x32] = *(float*)((int)state[0x29] + 0xc);
-            state[0x33] = *(float*)((int)state[0x28] + 0xc);
-            conv = (double)FUN_80293f90();
-            state[0x34] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            param_9[0x32] = *(float*)((int)param_9[0x29] + 0xc);
+            param_9[0x33] = *(float*)((int)param_9[0x28] + 0xc);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x34] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * conv);
-            conv = (double)FUN_80293f90();
-            state[0x35] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            dVar3 = (double)FUN_80293f90();
+            param_9[0x35] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x28] + 0x2e) * conv);
-            state[0x3a] = *(float*)((int)state[0x29] + 0x10);
-            state[0x3b] = *(float*)((int)state[0x28] + 0x10);
-            conv = (double)FUN_80294964();
-            state[0x3c] =
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x28] + 0x2e) * dVar3);
+            param_9[0x3a] = *(float*)((int)param_9[0x29] + 0x10);
+            param_9[0x3b] = *(float*)((int)param_9[0x28] + 0x10);
+            dVar3 = (double)FUN_80294964();
+            param_9[0x3c] =
                 lbl_803E1250 *
-                (float)((double)(float)(u32)*(byte*)((int)state[0x29] + 0x2e) * conv);
-            conv2 = (double)FUN_80294964();
-            conv = DOUBLE_803e1268;
-            conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                     (uint) * (byte*)((int)state[0x28] +
+                (float)((double)(float)(u32)*(byte*)((int)param_9[0x29] + 0x2e) * dVar3);
+            dVar4 = (double)FUN_80294964();
+            dVar3 = DOUBLE_803e1268;
+            dVar4 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
+                                                                     (uint) * (byte*)((int)param_9[0x28] +
                                                                          0x2e)) -
-                DOUBLE_803e1268) * conv2);
-            state[0x3d] = (float)((double)lbl_803E1250 * conv2);
-            if (state[0x24] != 0.0)
+                DOUBLE_803e1268) * dVar4);
+            param_9[0x3d] = (float)((double)lbl_803E1250 * dVar4);
+            if (param_9[0x24] != 0.0)
             {
-                FUN_80006a18(conv2, conv, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
-                             extraout_r4, result, param_12, param_13, param_14, param_15, param_16);
-                if (*state <= lbl_803E1270)
+                FUN_80006a18(dVar4, dVar3, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                             extraout_r4, uVar2, param_12, param_13, param_14, param_15, param_16);
+                if (*param_9 <= lbl_803E1270)
                 {
-                    *state = lbl_803E1274;
+                    *param_9 = lbl_803E1274;
                 }
             }
         }
-        result = 0;
+        uVar2 = 0;
     }
-    return result;
+    return uVar2;
 }
 
 void FUN_800da594(double param_1, float* value)
@@ -376,13 +385,13 @@ void FUN_800da594(double param_1, float* value)
 
 bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  float* state, float param_10, float param_11, float param_12, undefined4 param_13,
+                  float* param_9, float param_10, float param_11, float param_12, undefined4 param_13,
                   undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     return 0;
 }
 
-void FUN_800da700(undefined4 param_1, undefined4 param_2, int actFilter)
+void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
 {
     float dx;
     float dy;
@@ -412,13 +421,13 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int actFilter)
         obj = *objList;
         if ((((((obj != 0) && (*(char*)(obj + 0x19) == '$')) &&
                         (((uint)uVar11 == 0xffffffff || ((uint) * (byte*)(obj + 3) == (uint)uVar11)))) &&
-                    ((actFilter == -1 || (*(char*)(obj + 0x1a) == actFilter)))) &&
+                    ((param_3 == -1 || (*(char*)(obj + 0x1a) == param_3)))) &&
                 (((int)*(short*)(obj + 0x30) == 0xffffffff ||
                     (bit = GameBit_Get((int)*(short*)(obj + 0x30)), bit != 0)))) &&
             ((((int)*(short*)(obj + 0x32) == 0xffffffff ||
                     (bit = GameBit_Get((int)*(short*)(obj + 0x32)), bit == 0)) &&
-                (dx = *pos - ((GameObject *)obj)->anim.rootMotionScale, dy = pos[1] - ((GameObject *)obj)->anim.localPosX,
-                    dz = pos[2] - ((GameObject *)obj)->anim.localPosY,
+                (dx = *pos - *(float*)(obj + 8), dy = pos[1] - *(float*)(obj + 0xc),
+                    dz = pos[2] - *(float*)(obj + 0x10),
                     distSq = (double)(dz * dz + dx * dx + dy * dy), distSq < bestDistSq))))
         {
             bestDistSq = distSq;
@@ -437,306 +446,306 @@ void FUN_800da850(uint value, undefined* out)
 }
 
 undefined2
-FUN_800db110(float* point, int patchIdx, undefined4 param_3, undefined4 param_4, byte param_5)
+FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4, byte param_5)
 {
-    byte i;
-    uint sectorIdx;
-    uint off;
+    byte bVar1;
+    uint uVar2;
+    uint uVar3;
 
-    i = 0;
+    bVar1 = 0;
     do
     {
-        if (3 < i)
+        if (3 < bVar1)
         {
             return 0;
         }
-        if (((&DAT_803a2390)[patchIdx] != '\0') &&
-            (sectorIdx = (uint)(byte)(&DAT_803a076c)[patchIdx * 0x28 + (uint)i], sectorIdx != 0))
+        if (((&DAT_803a2390)[param_2] != '\0') &&
+            (uVar2 = (uint)(byte)(&DAT_803a076c)[param_2 * 0x28 + (uint)bVar1], uVar2 != 0))
         {
-            if ((point[1] <
+            if ((param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_8039d768)[sectorIdx * 0x18] ^ 0x80000000) -
+                                             (int)(short)(&DAT_8039d768)[uVar2 * 0x18] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_8039d76a)[sectorIdx * 0x18] ^ 0x80000000
-                ) - DOUBLE_803e1260) < point[1]))
+                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_8039d76a)[uVar2 * 0x18] ^ 0x80000000
+                ) - DOUBLE_803e1260) < param_1[1]))
             {
                 param_5 = 0;
-                off = 0;
+                uVar3 = 0;
                 while ((param_5 < 4 &&
-                    (*(float*)(&DAT_8039d748 + sectorIdx * 0x18 + (uint)param_5 * 2 + 8) +
-                        *point *
+                    (*(float*)(&DAT_8039d748 + uVar2 * 0x18 + (uint)param_5 * 2 + 8) +
+                        *param_1 *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_8039d748)[sectorIdx * 0x18 + (off & 0xff)]
+                                                 (int)(short)(&DAT_8039d748)[uVar2 * 0x18 + (uVar3 & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
-                        point[2] *
+                        param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_8039d748)
-                                                 [sectorIdx * 0x18 + (off & 0xff) + 1] ^
+                                                 [uVar2 * 0x18 + (uVar3 & 0xff) + 1] ^
                                                  0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                 {
                     param_5 = param_5 + 1;
-                    off = off + 2;
+                    uVar3 = uVar3 + 2;
                 }
             }
             if (param_5 == 4)
             {
-                return (&DAT_8039d76c)[sectorIdx * 0x18];
+                return (&DAT_8039d76c)[uVar2 * 0x18];
             }
         }
-        i = i + 1;
+        bVar1 = bVar1 + 1;
     }
     while (true);
 }
 
-void FUN_800db47c(float* point, undefined* out)
+void FUN_800db47c(float* param_1, undefined* param_2)
 {
-    uint bitMask;
-    uint sectorIdx;
-    byte i;
-    uint childIdx;
-    uint off;
-    byte k;
+    uint uVar1;
+    uint uVar2;
+    byte bVar3;
+    uint uVar4;
+    uint uVar5;
+    byte unaff_r31;
 
-    sectorIdx = FUN_800db820(point);
-    if ((out != (undefined*)0x0) && ((sectorIdx & 0xff) != 0))
+    uVar2 = FUN_800db820(param_1);
+    if ((param_2 != (undefined*)0x0) && ((uVar2 & 0xff) != 0))
     {
-        *out = (char)sectorIdx;
-        out[1] = 0;
-        bitMask = 1;
-        for (i = 0; i < 4; i = i + 1)
+        *param_2 = (char)uVar2;
+        param_2[1] = 0;
+        uVar1 = 1;
+        for (bVar3 = 0; bVar3 < 4; bVar3 = bVar3 + 1)
         {
-            off = (uint)i;
-            childIdx = (uint)(byte)(&DAT_803a076c)[(sectorIdx & 0xff) * 0x28 + off];
-            if (childIdx == 0)
+            uVar5 = (uint)bVar3;
+            uVar4 = (uint)(byte)(&DAT_803a076c)[(uVar2 & 0xff) * 0x28 + uVar5];
+            if (uVar4 == 0)
             {
-                *(undefined2*)(out + off * 2 + 2) = 0;
+                *(undefined2*)(param_2 + uVar5 * 2 + 2) = 0;
             }
             else
             {
-                *(undefined2*)(out + off * 2 + 2) = (&DAT_8039d76c)[childIdx * 0x18];
-                if (point[1] <
+                *(undefined2*)(param_2 + uVar5 * 2 + 2) = (&DAT_8039d76c)[uVar4 * 0x18];
+                if (param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_8039d768)[childIdx * 0x18] ^ 0x80000000) -
+                                             (int)(short)(&DAT_8039d768)[uVar4 * 0x18] ^ 0x80000000) -
                         DOUBLE_803e1260))
                 {
                     if ((float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_8039d76a)[childIdx * 0x18] ^ 0x80000000) -
-                        DOUBLE_803e1260) < point[1])
+                                                 (int)(short)(&DAT_8039d76a)[uVar4 * 0x18] ^ 0x80000000) -
+                        DOUBLE_803e1260) < param_1[1])
                     {
-                        off = 0;
-                        for (k = 0; k < 4; k = k + 1)
+                        uVar5 = 0;
+                        for (unaff_r31 = 0; unaff_r31 < 4; unaff_r31 = unaff_r31 + 1)
                         {
                             if (lbl_803E1270 <
-                                *(float*)(&DAT_8039d748 + childIdx * 0x18 + (uint)k * 2 + 8) +
-                                *point *
+                                *(float*)(&DAT_8039d748 + uVar4 * 0x18 + (uint)unaff_r31 * 2 + 8) +
+                                *param_1 *
                                 (float)((double)CONCAT44(0x43300000,
                                                          (int)(short)(&DAT_8039d748)
-                                                         [childIdx * 0x18 + (off & 0xff)] ^ 0x80000000)
+                                                         [uVar4 * 0x18 + (uVar5 & 0xff)] ^ 0x80000000)
                                     - DOUBLE_803e1260) +
-                                point[2] *
+                                param_1[2] *
                                 (float)((double)CONCAT44(0x43300000,
                                                          (int)(short)(&DAT_8039d748)
-                                                         [childIdx * 0x18 + (off & 0xff) + 1] ^
+                                                         [uVar4 * 0x18 + (uVar5 & 0xff) + 1] ^
                                                          0x80000000) - DOUBLE_803e1260))
                                 break;
-                            off = off + 2;
+                            uVar5 = uVar5 + 2;
                         }
                     }
                 }
-                if (k == 4)
+                if (unaff_r31 == 4)
                 {
-                    out[1] = out[1] | (byte)bitMask;
+                    param_2[1] = param_2[1] | (byte)uVar1;
                 }
             }
-            bitMask = (bitMask & 0x7f) << 1;
+            uVar1 = (uVar1 & 0x7f) << 1;
         }
     }
     return;
 }
 
-ushort FUN_800db690(float* point)
+ushort FUN_800db690(float* param_1)
 {
-    uint off;
-    byte i;
-    undefined2* sector;
-    int remaining;
+    uint uVar1;
+    byte bVar2;
+    undefined2* puVar3;
+    int iVar4;
 
-    sector = &DAT_8039d748;
-    remaining = DAT_803de0e4;
+    puVar3 = &DAT_8039d748;
+    iVar4 = DAT_803de0e4;
     if (0 < DAT_803de0e4)
     {
         do
         {
-            if ((point[1] <
-                    (float)((double)CONCAT44(0x43300000, (int)(short)sector[0x10] ^ 0x80000000) -
+            if ((param_1[1] <
+                    (float)((double)CONCAT44(0x43300000, (int)(short)puVar3[0x10] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)sector[0x11] ^ 0x80000000) -
-                    DOUBLE_803e1260) < point[1]))
+                ((float)((double)CONCAT44(0x43300000, (int)(short)puVar3[0x11] ^ 0x80000000) -
+                    DOUBLE_803e1260) < param_1[1]))
             {
-                i = 0;
-                off = 0;
-                while ((i < 4 &&
-                    (*(float*)(sector + (uint)i * 2 + 8) +
-                        *point *
-                        (float)((double)CONCAT44(0x43300000, (int)(short)sector[off & 0xff] ^ 0x80000000) -
+                bVar2 = 0;
+                uVar1 = 0;
+                while ((bVar2 < 4 &&
+                    (*(float*)(puVar3 + (uint)bVar2 * 2 + 8) +
+                        *param_1 *
+                        (float)((double)CONCAT44(0x43300000, (int)(short)puVar3[uVar1 & 0xff] ^ 0x80000000) -
                             DOUBLE_803e1260) +
-                        point[2] *
+                        param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)sector[(off & 0xff) + 1] ^ 0x80000000) -
+                                                 (int)(short)puVar3[(uVar1 & 0xff) + 1] ^ 0x80000000) -
                             DOUBLE_803e1260) <= lbl_803E1270)))
                 {
-                    i = i + 1;
-                    off = off + 2;
+                    bVar2 = bVar2 + 1;
+                    uVar1 = uVar1 + 2;
                 }
-                if (i == 4)
+                if (bVar2 == 4)
                 {
-                    return sector[0x12];
+                    return puVar3[0x12];
                 }
             }
-            sector = sector + 0x18;
-            remaining = remaining + -1;
+            puVar3 = puVar3 + 0x18;
+            iVar4 = iVar4 + -1;
         }
-        while (remaining != 0);
+        while (iVar4 != 0);
     }
     return 0;
 }
 
-int FUN_800db820(float* point)
+int FUN_800db820(float* param_1)
 {
-    short next;
-    short cur;
-    uint off;
-    int idx;
-    byte i;
+    short sVar1;
+    short sVar2;
+    uint uVar3;
+    int iVar4;
+    byte bVar5;
 
-    cur = (short)DAT_803de0e0;
+    sVar2 = (short)DAT_803de0e0;
     if (DAT_803de0e0 == 0xb4)
     {
-        next = 0;
+        sVar1 = 0;
     }
     else
     {
-        next = cur + 1;
+        sVar1 = sVar2 + 1;
     }
     do
     {
-        idx = (int)cur;
-        if (idx == next)
+        iVar4 = (int)sVar2;
+        if (iVar4 == sVar1)
         {
-            if ((&DAT_803a2390)[idx] != '\0')
+            if ((&DAT_803a2390)[iVar4] != '\0')
             {
-                if ((point[1] <
+                if ((param_1[1] <
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
+                                                 (int)(short)(&DAT_803a0768)[iVar4 * 0x14] ^ 0x80000000) -
                             DOUBLE_803e1260)) &&
                     ((float)((double)CONCAT44(0x43300000,
-                                              (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000) -
-                        DOUBLE_803e1260) < point[1]))
+                                              (int)(short)(&DAT_803a076a)[iVar4 * 0x14] ^ 0x80000000) -
+                        DOUBLE_803e1260) < param_1[1]))
                 {
-                    i = 0;
-                    off = 0;
-                    while ((i < 4 &&
-                        (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
-                            *point *
+                    bVar5 = 0;
+                    uVar3 = 0;
+                    while ((bVar5 < 4 &&
+                        (*(float*)(&DAT_803a0748 + iVar4 * 0x14 + (uint)bVar5 * 2 + 8) +
+                            *param_1 *
                             (float)((double)CONCAT44(0x43300000,
                                                      (int)(short)(&DAT_803a0748)
-                                                     [idx * 0x14 + (off & 0xff)] ^ 0x80000000)
+                                                     [iVar4 * 0x14 + (uVar3 & 0xff)] ^ 0x80000000)
                                 - DOUBLE_803e1260) +
-                            point[2] *
+                            param_1[2] *
                             (float)((double)CONCAT44(0x43300000,
                                                      (int)(short)(&DAT_803a0748)
-                                                     [idx * 0x14 + (off & 0xff) + 1] ^
+                                                     [iVar4 * 0x14 + (uVar3 & 0xff) + 1] ^
                                                      0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                     {
-                        i = i + 1;
-                        off = off + 2;
+                        bVar5 = bVar5 + 1;
+                        uVar3 = uVar3 + 2;
                     }
-                    if (i == 4)
+                    if (bVar5 == 4)
                     {
-                        DAT_803de0e0 = (int)cur;
-                        return (int)cur;
+                        DAT_803de0e0 = (int)sVar2;
+                        return (int)sVar2;
                     }
                 }
             }
             return 0;
         }
-        idx = (int)cur;
-        if ((&DAT_803a2390)[idx] != '\0')
+        iVar4 = (int)sVar2;
+        if ((&DAT_803a2390)[iVar4] != '\0')
         {
-            if ((point[1] <
+            if ((param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
+                                             (int)(short)(&DAT_803a0768)[iVar4 * 0x14] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000
-                ) - DOUBLE_803e1260) < point[1]))
+                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[iVar4 * 0x14] ^ 0x80000000
+                ) - DOUBLE_803e1260) < param_1[1]))
             {
-                i = 0;
-                off = 0;
-                while ((i < 4 &&
-                    (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
-                        *point *
+                bVar5 = 0;
+                uVar3 = 0;
+                while ((bVar5 < 4 &&
+                    (*(float*)(&DAT_803a0748 + iVar4 * 0x14 + (uint)bVar5 * 2 + 8) +
+                        *param_1 *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_803a0748)[idx * 0x14 + (off & 0xff)]
+                                                 (int)(short)(&DAT_803a0748)[iVar4 * 0x14 + (uVar3 & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
-                        point[2] *
+                        param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)
-                                                 [idx * 0x14 + (off & 0xff) + 1] ^
+                                                 [iVar4 * 0x14 + (uVar3 & 0xff) + 1] ^
                                                  0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                 {
-                    i = i + 1;
-                    off = off + 2;
+                    bVar5 = bVar5 + 1;
+                    uVar3 = uVar3 + 2;
                 }
-                if (i == 4)
+                if (bVar5 == 4)
                 {
-                    DAT_803de0e0 = (int)cur;
-                    return (int)cur;
+                    DAT_803de0e0 = (int)sVar2;
+                    return (int)sVar2;
                 }
             }
         }
-        idx = (int)next;
-        if ((&DAT_803a2390)[idx] != '\0')
+        iVar4 = (int)sVar1;
+        if ((&DAT_803a2390)[iVar4] != '\0')
         {
-            if ((point[1] <
+            if ((param_1[1] <
                     (float)((double)CONCAT44(0x43300000,
-                                             (int)(short)(&DAT_803a0768)[idx * 0x14] ^ 0x80000000) -
+                                             (int)(short)(&DAT_803a0768)[iVar4 * 0x14] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
-                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[idx * 0x14] ^ 0x80000000
-                ) - DOUBLE_803e1260) < point[1]))
+                ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_803a076a)[iVar4 * 0x14] ^ 0x80000000
+                ) - DOUBLE_803e1260) < param_1[1]))
             {
-                i = 0;
-                off = 0;
-                while ((i < 4 &&
-                    (*(float*)(&DAT_803a0748 + idx * 0x14 + (uint)i * 2 + 8) +
-                        *point *
+                bVar5 = 0;
+                uVar3 = 0;
+                while ((bVar5 < 4 &&
+                    (*(float*)(&DAT_803a0748 + iVar4 * 0x14 + (uint)bVar5 * 2 + 8) +
+                        *param_1 *
                         (float)((double)CONCAT44(0x43300000,
-                                                 (int)(short)(&DAT_803a0748)[idx * 0x14 + (off & 0xff)]
+                                                 (int)(short)(&DAT_803a0748)[iVar4 * 0x14 + (uVar3 & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
-                        point[2] *
+                        param_1[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_803a0748)
-                                                 [idx * 0x14 + (off & 0xff) + 1] ^
+                                                 [iVar4 * 0x14 + (uVar3 & 0xff) + 1] ^
                                                  0x80000000) - DOUBLE_803e1260) <= lbl_803E1270)))
                 {
-                    i = i + 1;
-                    off = off + 2;
+                    bVar5 = bVar5 + 1;
+                    uVar3 = uVar3 + 2;
                 }
-                if (i == 4)
+                if (bVar5 == 4)
                 {
-                    DAT_803de0e0 = (int)next;
-                    return (int)next;
+                    DAT_803de0e0 = (int)sVar1;
+                    return (int)sVar1;
                 }
             }
         }
-        cur = cur + -1;
-        if (cur == -1)
+        sVar2 = sVar2 + -1;
+        if (sVar2 == -1)
         {
-            cur = 0xb4;
+            sVar2 = 0xb4;
         }
-        next = next + 1;
-        if (next == 0xb5)
+        sVar1 = sVar1 + 1;
+        if (sVar1 == 0xb5)
         {
-            next = 0;
+            sVar1 = 0;
         }
     }
     while (true);
@@ -745,7 +754,7 @@ int FUN_800db820(float* point)
 undefined4
 FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             float* state, undefined4 param_10, uint param_11)
+             float* param_9, undefined4 param_10, uint param_11)
 {
     return 0;
 }
@@ -753,41 +762,41 @@ FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 undefined4
 FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             float* state, uint param_10, undefined4 param_11, int param_12, int param_13,
+             float* param_9, uint param_10, undefined4 param_11, int param_12, int param_13,
              undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    uint nextId;
+    uint uVar1;
     undefined4 extraout_r4;
     undefined4 extraout_r4_00;
-    undefined4 r4carry;
-    float curveDef;
-    double conv;
-    double conv2;
+    undefined4 uVar2;
+    float fVar3;
+    double dVar4;
+    double dVar5;
 
-    if (((state != (float*)0x0) && (state[0x28] != 0.0)) && (state[0x29] != 0.0))
+    if (((param_9 != (float*)0x0) && (param_9[0x28] != 0.0)) && (param_9[0x29] != 0.0))
     {
-        state[0x27] = state[0x28];
-        state[0x28] = state[0x29];
-        FUN_80003494((uint)(state + 0x2a), (uint)(state + 0x2e), 0x10);
-        FUN_80003494((uint)(state + 0x32), (uint)(state + 0x36), 0x10);
-        FUN_80003494((uint)(state + 0x3a), (uint)(state + 0x3e), 0x10);
-        if (state[0x20] == 0.0)
+        param_9[0x27] = param_9[0x28];
+        param_9[0x28] = param_9[0x29];
+        FUN_80003494((uint)(param_9 + 0x2a), (uint)(param_9 + 0x2e), 0x10);
+        FUN_80003494((uint)(param_9 + 0x32), (uint)(param_9 + 0x36), 0x10);
+        FUN_80003494((uint)(param_9 + 0x3a), (uint)(param_9 + 0x3e), 0x10);
+        if (param_9[0x20] == 0.0)
         {
-            nextId = FUN_800dd50c((int)state[0x28], -1, param_10);
+            uVar1 = FUN_800dd50c((int)param_9[0x28], -1, param_10);
         }
         else
         {
-            nextId = FUN_800dd3ec((int)state[0x28], -1, param_10);
+            uVar1 = FUN_800dd3ec((int)param_9[0x28], -1, param_10);
         }
-        if (nextId == 0xffffffff)
+        if (uVar1 == 0xffffffff)
         {
-            state[0x29] = 0.0;
+            param_9[0x29] = 0.0;
         }
         else
         {
-            if ((int)nextId < 0)
+            if ((int)uVar1 < 0)
             {
-                curveDef = 0.0;
+                fVar3 = 0.0;
             }
             else
             {
@@ -796,127 +805,127 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
                 while (param_12 <= param_13)
                 {
                     param_10 = param_13 + param_12 >> 1;
-                    curveDef = (float)(int)romCurves[param_10];
-                    if (*(uint*)((int)curveDef + 0x14) < nextId)
+                    fVar3 = (float)(int)romCurves[param_10];
+                    if (*(uint*)((int)fVar3 + 0x14) < uVar1)
                     {
                         param_12 = param_10 + 1;
                     }
                     else
                     {
-                        if (*(uint*)((int)curveDef + 0x14) <= nextId) goto LAB_800de544;
+                        if (*(uint*)((int)fVar3 + 0x14) <= uVar1) goto LAB_800de544;
                         param_13 = param_10 - 1;
                     }
                 }
-                curveDef = 0.0;
+                fVar3 = 0.0;
             }
         LAB_800de544:
-            state[0x29] = curveDef;
-            if (state[0x29] != 0.0)
+            param_9[0x29] = fVar3;
+            if (param_9[0x29] != 0.0)
             {
-                if (state[0x20] == 0.0)
+                if (param_9[0x20] == 0.0)
                 {
-                    state[0x2e] = *(float*)((int)state[0x28] + 8);
-                    state[0x2f] = *(float*)((int)state[0x29] + 8);
-                    conv = (double)FUN_80293f90();
-                    state[0x30] =
+                    param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
+                    param_9[0x2f] = *(float*)((int)param_9[0x29] + 8);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x30] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    conv = (double)FUN_80293f90();
-                    state[0x31] =
+                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x31] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x29] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    state[0x36] = *(float*)((int)state[0x28] + 0xc);
-                    state[0x37] = *(float*)((int)state[0x29] + 0xc);
-                    conv = (double)FUN_80293f90();
-                    state[0x38] =
+                                                                 (uint) * (byte*)((int)param_9[0x29] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
+                    param_9[0x37] = *(float*)((int)param_9[0x29] + 0xc);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x38] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    conv = (double)FUN_80293f90();
-                    state[0x39] =
+                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x39] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x29] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    state[0x3e] = *(float*)((int)state[0x28] + 0x10);
-                    state[0x3f] = *(float*)((int)state[0x29] + 0x10);
-                    conv = (double)FUN_80294964();
-                    state[0x40] =
+                                                                 (uint) * (byte*)((int)param_9[0x29] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
+                    param_9[0x3f] = *(float*)((int)param_9[0x29] + 0x10);
+                    dVar4 = (double)FUN_80294964();
+                    param_9[0x40] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    conv2 = (double)FUN_80294964();
-                    conv = DOUBLE_803e12a8;
-                    conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                             (uint) * (byte*)((int)state[0x29
-                                                                             ] + 0x2e)) - DOUBLE_803e12a8) * conv2);
-                    state[0x41] = (float)((double)lbl_803E1290 * conv2);
-                    r4carry = extraout_r4_00;
+                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    dVar5 = (double)FUN_80294964();
+                    dVar4 = DOUBLE_803e12a8;
+                    dVar5 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
+                                                                             (uint) * (byte*)((int)param_9[0x29
+                                                                             ] + 0x2e)) - DOUBLE_803e12a8) * dVar5);
+                    param_9[0x41] = (float)((double)lbl_803E1290 * dVar5);
+                    uVar2 = extraout_r4_00;
                 }
                 else
                 {
-                    state[0x2e] = *(float*)((int)state[0x28] + 8);
-                    state[0x2f] = *(float*)((int)state[0x27] + 8);
-                    conv = (double)FUN_80293f90();
-                    state[0x30] =
+                    param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
+                    param_9[0x2f] = *(float*)((int)param_9[0x27] + 8);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x30] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    conv = (double)FUN_80293f90();
-                    state[0x31] =
+                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x31] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x27] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    state[0x36] = *(float*)((int)state[0x28] + 0xc);
-                    state[0x37] = *(float*)((int)state[0x27] + 0xc);
-                    conv = (double)FUN_80293f90();
-                    state[0x38] =
+                                                                 (uint) * (byte*)((int)param_9[0x27] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
+                    param_9[0x37] = *(float*)((int)param_9[0x27] + 0xc);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x38] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    conv = (double)FUN_80293f90();
-                    state[0x39] =
+                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    dVar4 = (double)FUN_80293f90();
+                    param_9[0x39] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x27] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    state[0x3e] = *(float*)((int)state[0x28] + 0x10);
-                    state[0x3f] = *(float*)((int)state[0x27] + 0x10);
-                    conv = (double)FUN_80294964();
-                    state[0x40] =
+                                                                 (uint) * (byte*)((int)param_9[0x27] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
+                    param_9[0x3f] = *(float*)((int)param_9[0x27] + 0x10);
+                    dVar4 = (double)FUN_80294964();
+                    param_9[0x40] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint) * (byte*)((int)state[0x28] + 0x2e))
-                            - DOUBLE_803e12a8) * conv);
-                    conv2 = (double)FUN_80294964();
-                    conv = DOUBLE_803e12a8;
-                    conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                             (uint) * (byte*)((int)state[0x27
-                                                                             ] + 0x2e)) - DOUBLE_803e12a8) * conv2);
-                    state[0x41] = (float)((double)lbl_803E1290 * conv2);
-                    r4carry = extraout_r4;
+                                                                 (uint) * (byte*)((int)param_9[0x28] + 0x2e))
+                            - DOUBLE_803e12a8) * dVar4);
+                    dVar5 = (double)FUN_80294964();
+                    dVar4 = DOUBLE_803e12a8;
+                    dVar5 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,
+                                                                             (uint) * (byte*)((int)param_9[0x27
+                                                                             ] + 0x2e)) - DOUBLE_803e12a8) * dVar5);
+                    param_9[0x41] = (float)((double)lbl_803E1290 * dVar5);
+                    uVar2 = extraout_r4;
                 }
-                if (state[0x24] != 0.0)
+                if (param_9[0x24] != 0.0)
                 {
-                    FUN_80006a18(conv2, conv, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
-                                 r4carry, param_10, param_12, param_13, curveDef, param_15, param_16);
+                    FUN_80006a18(dVar5, dVar4, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                                 uVar2, param_10, param_12, param_13, fVar3, param_15, param_16);
                 }
-                if (state[0x20] == 0.0)
+                if (param_9[0x20] == 0.0)
                 {
-                    FUN_80006a10((double)lbl_803E12B4, state);
+                    FUN_80006a10((double)lbl_803E12B4, param_9);
                 }
                 else
                 {
-                    FUN_80006a10((double)lbl_803E12B0, state);
+                    FUN_80006a10((double)lbl_803E12B0, param_9);
                 }
                 return 0;
             }
@@ -928,7 +937,7 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 undefined4
 FUN_800ddf84(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             float* state, float param_10, undefined4 param_11, undefined4 param_12,
+             float* param_9, float param_10, undefined4 param_11, undefined4 param_12,
              undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     return 0;
@@ -937,20 +946,20 @@ FUN_800ddf84(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 undefined4
 FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             float* state)
+             float* param_9)
 {
     undefined4 extraout_r4;
     undefined4 extraout_r4_00;
-    undefined4 r4carry;
-    int count;
-    int count2;
-    float tmpF;
-    uint linkId;
-    float curveDef;
+    undefined4 uVar1;
+    int iVar2;
+    int iVar3;
+    float fVar4;
+    uint uVar5;
+    float fVar6;
     undefined4 in_r9;
     undefined4 in_r10;
-    double conv;
-    double conv2;
+    double dVar7;
+    double dVar8;
     uint local_88[4];
     uint local_78[4];
     undefined4 local_68;
@@ -978,269 +987,269 @@ FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     undefined4 local_10;
     uint uStack_c;
 
-    if (((state != (float*)0x0) && (state[0x28] != 0.0)) && (state[0x29] != 0.0))
+    if (((param_9 != (float*)0x0) && (param_9[0x28] != 0.0)) && (param_9[0x29] != 0.0))
     {
-        state[0x27] = state[0x28];
-        state[0x28] = state[0x29];
-        FUN_80003494((uint)(state + 0x2a), (uint)(state + 0x2e), 0x10);
-        FUN_80003494((uint)(state + 0x32), (uint)(state + 0x36), 0x10);
-        FUN_80003494((uint)(state + 0x3a), (uint)(state + 0x3e), 0x10);
-        if (state[0x20] == 0.0)
+        param_9[0x27] = param_9[0x28];
+        param_9[0x28] = param_9[0x29];
+        FUN_80003494((uint)(param_9 + 0x2a), (uint)(param_9 + 0x2e), 0x10);
+        FUN_80003494((uint)(param_9 + 0x32), (uint)(param_9 + 0x36), 0x10);
+        FUN_80003494((uint)(param_9 + 0x3a), (uint)(param_9 + 0x3e), 0x10);
+        if (param_9[0x20] == 0.0)
         {
-            tmpF = state[0x28];
-            count = 0;
-            linkId = *(uint*)((int)tmpF + 0x1c);
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 1) == 0)) && (linkId != 0xffffffff))
+            fVar4 = param_9[0x28];
+            iVar2 = 0;
+            uVar5 = *(uint*)((int)fVar4 + 0x1c);
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 1) == 0)) && (uVar5 != 0xffffffff))
             {
-                count = 1;
-                local_88[0] = linkId;
+                iVar2 = 1;
+                local_88[0] = uVar5;
             }
-            linkId = *(uint*)((int)tmpF + 0x20);
-            count2 = count;
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 2) == 0)) && (linkId != 0xffffffff))
+            uVar5 = *(uint*)((int)fVar4 + 0x20);
+            iVar3 = iVar2;
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 2) == 0)) && (uVar5 != 0xffffffff))
             {
-                count2 = count + 1;
-                local_88[count] = linkId;
+                iVar3 = iVar2 + 1;
+                local_88[iVar2] = uVar5;
             }
-            linkId = *(uint*)((int)tmpF + 0x24);
-            count = count2;
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 4) == 0)) && (linkId != 0xffffffff))
+            uVar5 = *(uint*)((int)fVar4 + 0x24);
+            iVar2 = iVar3;
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 4) == 0)) && (uVar5 != 0xffffffff))
             {
-                count = count2 + 1;
-                local_88[count2] = linkId;
+                iVar2 = iVar3 + 1;
+                local_88[iVar3] = uVar5;
             }
-            linkId = *(uint*)((int)tmpF + 0x28);
-            count2 = count;
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 8) == 0)) && (linkId != 0xffffffff))
+            uVar5 = *(uint*)((int)fVar4 + 0x28);
+            iVar3 = iVar2;
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 8) == 0)) && (uVar5 != 0xffffffff))
             {
-                count2 = count + 1;
-                local_88[count] = linkId;
+                iVar3 = iVar2 + 1;
+                local_88[iVar2] = uVar5;
             }
-            if (count2 == 0)
+            if (iVar3 == 0)
             {
-                linkId = 0xffffffff;
+                uVar5 = 0xffffffff;
             }
             else
             {
-                linkId = randomGetRange(0, count2 - 1);
-                linkId = local_88[linkId];
+                uVar5 = randomGetRange(0, iVar3 - 1);
+                uVar5 = local_88[uVar5];
             }
         }
         else
         {
-            tmpF = state[0x28];
-            count = 0;
-            linkId = *(uint*)((int)tmpF + 0x1c);
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 1) != 0)) && (linkId != 0xffffffff))
+            fVar4 = param_9[0x28];
+            iVar2 = 0;
+            uVar5 = *(uint*)((int)fVar4 + 0x1c);
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 1) != 0)) && (uVar5 != 0xffffffff))
             {
-                count = 1;
-                local_78[0] = linkId;
+                iVar2 = 1;
+                local_78[0] = uVar5;
             }
-            linkId = *(uint*)((int)tmpF + 0x20);
-            count2 = count;
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 2) != 0)) && (linkId != 0xffffffff))
+            uVar5 = *(uint*)((int)fVar4 + 0x20);
+            iVar3 = iVar2;
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 2) != 0)) && (uVar5 != 0xffffffff))
             {
-                count2 = count + 1;
-                local_78[count] = linkId;
+                iVar3 = iVar2 + 1;
+                local_78[iVar2] = uVar5;
             }
-            linkId = *(uint*)((int)tmpF + 0x24);
-            count = count2;
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 4) != 0)) && (linkId != 0xffffffff))
+            uVar5 = *(uint*)((int)fVar4 + 0x24);
+            iVar2 = iVar3;
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 4) != 0)) && (uVar5 != 0xffffffff))
             {
-                count = count2 + 1;
-                local_78[count2] = linkId;
+                iVar2 = iVar3 + 1;
+                local_78[iVar3] = uVar5;
             }
-            linkId = *(uint*)((int)tmpF + 0x28);
-            count2 = count;
-            if (((-1 < (int)linkId) && ((*(byte*)((int)tmpF + 0x1b) & 8) != 0)) && (linkId != 0xffffffff))
+            uVar5 = *(uint*)((int)fVar4 + 0x28);
+            iVar3 = iVar2;
+            if (((-1 < (int)uVar5) && ((*(byte*)((int)fVar4 + 0x1b) & 8) != 0)) && (uVar5 != 0xffffffff))
             {
-                count2 = count + 1;
-                local_78[count] = linkId;
+                iVar3 = iVar2 + 1;
+                local_78[iVar2] = uVar5;
             }
-            if (count2 == 0)
+            if (iVar3 == 0)
             {
-                linkId = 0xffffffff;
+                uVar5 = 0xffffffff;
             }
             else
             {
-                linkId = randomGetRange(0, count2 - 1);
-                linkId = local_78[linkId];
+                uVar5 = randomGetRange(0, iVar3 - 1);
+                uVar5 = local_78[uVar5];
             }
         }
-        if (linkId == 0xffffffff)
+        if (uVar5 == 0xffffffff)
         {
-            state[0x29] = 0.0;
+            param_9[0x29] = 0.0;
         }
         else
         {
-            if ((int)linkId < 0)
+            if ((int)uVar5 < 0)
             {
-                curveDef = 0.0;
+                fVar6 = 0.0;
             }
             else
             {
-                tmpF = (float)(DAT_803de0f0 + -1);
-                count2 = 0;
-                while (count2 <= (int)tmpF)
+                fVar4 = (float)(DAT_803de0f0 + -1);
+                iVar3 = 0;
+                while (iVar3 <= (int)fVar4)
                 {
-                    count = (int)tmpF + count2 >> 1;
-                    curveDef = (float)(int)romCurves[count];
-                    if (*(uint*)((int)curveDef + 0x14) < linkId)
+                    iVar2 = (int)fVar4 + iVar3 >> 1;
+                    fVar6 = (float)(int)romCurves[iVar2];
+                    if (*(uint*)((int)fVar6 + 0x14) < uVar5)
                     {
-                        count2 = count + 1;
+                        iVar3 = iVar2 + 1;
                     }
                     else
                     {
-                        if (*(uint*)((int)curveDef + 0x14) <= linkId) goto LAB_800df42c;
-                        tmpF = (float)(count + -1);
+                        if (*(uint*)((int)fVar6 + 0x14) <= uVar5) goto LAB_800df42c;
+                        fVar4 = (float)(iVar2 + -1);
                     }
                 }
-                curveDef = 0.0;
+                fVar6 = 0.0;
             }
         LAB_800df42c:
-            state[0x29] = curveDef;
-            if (state[0x29] != 0.0)
+            param_9[0x29] = fVar6;
+            if (param_9[0x29] != 0.0)
             {
-                if (state[0x20] == 0.0)
+                if (param_9[0x20] == 0.0)
                 {
-                    state[0x2e] = *(float*)((int)state[0x28] + 8);
-                    state[0x2f] = *(float*)((int)state[0x29] + 8);
-                    uStack_c = (int)*(char*)((int)state[0x28] + 0x2c) << 8 ^ 0x80000000;
+                    param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
+                    param_9[0x2f] = *(float*)((int)param_9[0x29] + 8);
+                    uStack_c = (int)*(char*)((int)param_9[0x28] + 0x2c) << 8 ^ 0x80000000;
                     local_10 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_14 = (uint) * (byte*)((int)state[0x28] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_14 = (uint) * (byte*)((int)param_9[0x28] + 0x2e);
                     local_18 = 0x43300000;
-                    state[0x30] =
+                    param_9[0x30] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_14) - DOUBLE_803e12a8) *
-                            conv);
-                    uStack_1c = (int)*(char*)((int)state[0x29] + 0x2c) << 8 ^ 0x80000000;
+                            dVar7);
+                    uStack_1c = (int)*(char*)((int)param_9[0x29] + 0x2c) << 8 ^ 0x80000000;
                     local_20 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_24 = (uint) * (byte*)((int)state[0x29] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_24 = (uint) * (byte*)((int)param_9[0x29] + 0x2e);
                     local_28 = 0x43300000;
-                    state[0x31] =
+                    param_9[0x31] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_24) - DOUBLE_803e12a8) *
-                            conv);
-                    state[0x36] = *(float*)((int)state[0x28] + 0xc);
-                    state[0x37] = *(float*)((int)state[0x29] + 0xc);
-                    uStack_2c = (int)*(char*)((int)state[0x28] + 0x2d) << 8 ^ 0x80000000;
+                            dVar7);
+                    param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
+                    param_9[0x37] = *(float*)((int)param_9[0x29] + 0xc);
+                    uStack_2c = (int)*(char*)((int)param_9[0x28] + 0x2d) << 8 ^ 0x80000000;
                     local_30 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_34 = (uint) * (byte*)((int)state[0x28] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_34 = (uint) * (byte*)((int)param_9[0x28] + 0x2e);
                     local_38 = 0x43300000;
-                    state[0x38] =
+                    param_9[0x38] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_34) - DOUBLE_803e12a8) *
-                            conv);
-                    uStack_3c = (int)*(char*)((int)state[0x29] + 0x2d) << 8 ^ 0x80000000;
+                            dVar7);
+                    uStack_3c = (int)*(char*)((int)param_9[0x29] + 0x2d) << 8 ^ 0x80000000;
                     local_40 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_44 = (uint) * (byte*)((int)state[0x29] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_44 = (uint) * (byte*)((int)param_9[0x29] + 0x2e);
                     local_48 = 0x43300000;
-                    state[0x39] =
+                    param_9[0x39] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_44) - DOUBLE_803e12a8) *
-                            conv);
-                    state[0x3e] = *(float*)((int)state[0x28] + 0x10);
-                    state[0x3f] = *(float*)((int)state[0x29] + 0x10);
-                    uStack_4c = (int)*(char*)((int)state[0x28] + 0x2c) << 8 ^ 0x80000000;
+                            dVar7);
+                    param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
+                    param_9[0x3f] = *(float*)((int)param_9[0x29] + 0x10);
+                    uStack_4c = (int)*(char*)((int)param_9[0x28] + 0x2c) << 8 ^ 0x80000000;
                     local_50 = 0x43300000;
-                    conv = (double)FUN_80294964();
-                    uStack_54 = (uint) * (byte*)((int)state[0x28] + 0x2e);
+                    dVar7 = (double)FUN_80294964();
+                    uStack_54 = (uint) * (byte*)((int)param_9[0x28] + 0x2e);
                     local_58 = 0x43300000;
-                    state[0x40] =
+                    param_9[0x40] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_54) - DOUBLE_803e12a8) *
-                            conv);
-                    uStack_5c = (int)*(char*)((int)state[0x29] + 0x2c) << 8 ^ 0x80000000;
+                            dVar7);
+                    uStack_5c = (int)*(char*)((int)param_9[0x29] + 0x2c) << 8 ^ 0x80000000;
                     local_60 = 0x43300000;
-                    conv2 = (double)FUN_80294964();
-                    conv = DOUBLE_803e12a8;
-                    uStack_64 = (uint) * (byte*)((int)state[0x29] + 0x2e);
+                    dVar8 = (double)FUN_80294964();
+                    dVar7 = DOUBLE_803e12a8;
+                    uStack_64 = (uint) * (byte*)((int)param_9[0x29] + 0x2e);
                     local_68 = 0x43300000;
-                    conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000, uStack_64) -
-                        DOUBLE_803e12a8) * conv2);
-                    state[0x41] = (float)((double)lbl_803E1290 * conv2);
-                    r4carry = extraout_r4_00;
+                    dVar8 = (double)(float)((double)(float)((double)CONCAT44(0x43300000, uStack_64) -
+                        DOUBLE_803e12a8) * dVar8);
+                    param_9[0x41] = (float)((double)lbl_803E1290 * dVar8);
+                    uVar1 = extraout_r4_00;
                 }
                 else
                 {
-                    state[0x2e] = *(float*)((int)state[0x28] + 8);
-                    state[0x2f] = *(float*)((int)state[0x27] + 8);
-                    uStack_64 = (int)*(char*)((int)state[0x28] + 0x2c) << 8 ^ 0x80000000;
+                    param_9[0x2e] = *(float*)((int)param_9[0x28] + 8);
+                    param_9[0x2f] = *(float*)((int)param_9[0x27] + 8);
+                    uStack_64 = (int)*(char*)((int)param_9[0x28] + 0x2c) << 8 ^ 0x80000000;
                     local_68 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_5c = (uint) * (byte*)((int)state[0x28] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_5c = (uint) * (byte*)((int)param_9[0x28] + 0x2e);
                     local_60 = 0x43300000;
-                    state[0x30] =
+                    param_9[0x30] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_5c) - DOUBLE_803e12a8) *
-                            conv);
-                    uStack_54 = (int)*(char*)((int)state[0x27] + 0x2c) << 8 ^ 0x80000000;
+                            dVar7);
+                    uStack_54 = (int)*(char*)((int)param_9[0x27] + 0x2c) << 8 ^ 0x80000000;
                     local_58 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_4c = (uint) * (byte*)((int)state[0x27] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_4c = (uint) * (byte*)((int)param_9[0x27] + 0x2e);
                     local_50 = 0x43300000;
-                    state[0x31] =
+                    param_9[0x31] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_4c) - DOUBLE_803e12a8) *
-                            conv);
-                    state[0x36] = *(float*)((int)state[0x28] + 0xc);
-                    state[0x37] = *(float*)((int)state[0x27] + 0xc);
-                    uStack_44 = (int)*(char*)((int)state[0x28] + 0x2d) << 8 ^ 0x80000000;
+                            dVar7);
+                    param_9[0x36] = *(float*)((int)param_9[0x28] + 0xc);
+                    param_9[0x37] = *(float*)((int)param_9[0x27] + 0xc);
+                    uStack_44 = (int)*(char*)((int)param_9[0x28] + 0x2d) << 8 ^ 0x80000000;
                     local_48 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_3c = (uint) * (byte*)((int)state[0x28] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_3c = (uint) * (byte*)((int)param_9[0x28] + 0x2e);
                     local_40 = 0x43300000;
-                    state[0x38] =
+                    param_9[0x38] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_3c) - DOUBLE_803e12a8) *
-                            conv);
-                    uStack_34 = (int)*(char*)((int)state[0x27] + 0x2d) << 8 ^ 0x80000000;
+                            dVar7);
+                    uStack_34 = (int)*(char*)((int)param_9[0x27] + 0x2d) << 8 ^ 0x80000000;
                     local_38 = 0x43300000;
-                    conv = (double)FUN_80293f90();
-                    uStack_2c = (uint) * (byte*)((int)state[0x27] + 0x2e);
+                    dVar7 = (double)FUN_80293f90();
+                    uStack_2c = (uint) * (byte*)((int)param_9[0x27] + 0x2e);
                     local_30 = 0x43300000;
-                    state[0x39] =
+                    param_9[0x39] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803e12a8) *
-                            conv);
-                    state[0x3e] = *(float*)((int)state[0x28] + 0x10);
-                    state[0x3f] = *(float*)((int)state[0x27] + 0x10);
-                    uStack_24 = (int)*(char*)((int)state[0x28] + 0x2c) << 8 ^ 0x80000000;
+                            dVar7);
+                    param_9[0x3e] = *(float*)((int)param_9[0x28] + 0x10);
+                    param_9[0x3f] = *(float*)((int)param_9[0x27] + 0x10);
+                    uStack_24 = (int)*(char*)((int)param_9[0x28] + 0x2c) << 8 ^ 0x80000000;
                     local_28 = 0x43300000;
-                    conv = (double)FUN_80294964();
-                    uStack_1c = (uint) * (byte*)((int)state[0x28] + 0x2e);
+                    dVar7 = (double)FUN_80294964();
+                    uStack_1c = (uint) * (byte*)((int)param_9[0x28] + 0x2e);
                     local_20 = 0x43300000;
-                    state[0x40] =
+                    param_9[0x40] =
                         lbl_803E1290 *
                         (float)((double)(float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803e12a8) *
-                            conv);
-                    uStack_14 = (int)*(char*)((int)state[0x27] + 0x2c) << 8 ^ 0x80000000;
+                            dVar7);
+                    uStack_14 = (int)*(char*)((int)param_9[0x27] + 0x2c) << 8 ^ 0x80000000;
                     local_18 = 0x43300000;
-                    conv2 = (double)FUN_80294964();
-                    conv = DOUBLE_803e12a8;
-                    uStack_c = (uint) * (byte*)((int)state[0x27] + 0x2e);
+                    dVar8 = (double)FUN_80294964();
+                    dVar7 = DOUBLE_803e12a8;
+                    uStack_c = (uint) * (byte*)((int)param_9[0x27] + 0x2e);
                     local_10 = 0x43300000;
-                    conv2 = (double)(float)((double)(float)((double)CONCAT44(0x43300000, uStack_c) -
-                        DOUBLE_803e12a8) * conv2);
-                    state[0x41] = (float)((double)lbl_803E1290 * conv2);
-                    r4carry = extraout_r4;
+                    dVar8 = (double)(float)((double)(float)((double)CONCAT44(0x43300000, uStack_c) -
+                        DOUBLE_803e12a8) * dVar8);
+                    param_9[0x41] = (float)((double)lbl_803E1290 * dVar8);
+                    uVar1 = extraout_r4;
                 }
-                if (state[0x24] != 0.0)
+                if (param_9[0x24] != 0.0)
                 {
-                    FUN_80006a18(conv2, conv, param_3, param_4, param_5, param_6, param_7, param_8, (int)state,
-                                 r4carry, count2, tmpF, curveDef, linkId, in_r9, in_r10);
+                    FUN_80006a18(dVar8, dVar7, param_3, param_4, param_5, param_6, param_7, param_8, (int)param_9,
+                                 uVar1, iVar3, fVar4, fVar6, uVar5, in_r9, in_r10);
                 }
-                if (state[0x20] == 0.0)
+                if (param_9[0x20] == 0.0)
                 {
-                    FUN_80006a10((double)lbl_803E12B4, state);
+                    FUN_80006a10((double)lbl_803E12B4, param_9);
                 }
                 else
                 {
-                    FUN_80006a10((double)lbl_803E12B0, state);
+                    FUN_80006a10((double)lbl_803E12B0, param_9);
                 }
                 return 0;
             }
@@ -1251,7 +1260,7 @@ FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 undefined4
 FUN_800de998(double param_1, undefined8 param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, float* state, int param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, int param_10,
              undefined4 param_11, int param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
@@ -1272,20 +1281,20 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     f32 distance;
     f32 objPos[3];
     f32 curvePos[3];
-    s16 curveGrid[4];
     s16 objGrid[4];
+    s16 curveGrid[4];
     u8 traceHit;
-    int bboxHit[14];
+    int bboxHit[34];
     int curveIndex;
     int typeIndex;
 
-    bestDistance = lbl_803E063C;
+    bestDistance = lbl_803E12BC;
     bestCurve = NULL;
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
 
     objPos[0] = *(f32*)(obj + 0xc);
-    objPos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
+    objPos[1] = lbl_803E12C0 + *(f32*)(obj + 0x10);
     objPos[2] = *(f32*)(obj + 0x14);
     voxmaps_worldToGrid(objPos, objGrid);
 
@@ -1304,7 +1313,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                 if (distance < bestDistance)
                 {
                     curvePos[0] = curve->x;
-                    curvePos[1] = lbl_803E0640 + curve->y;
+                    curvePos[1] = lbl_803E12C0 + curve->y;
                     curvePos[2] = curve->z;
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     if (((traceHit = 0, voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0) != 0) ||
@@ -1320,7 +1329,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                 if ((curve->action == action) && (distance < bestActionDistance))
                 {
                     curvePos[0] = curve->x;
-                    curvePos[1] = lbl_803E0640 + curve->y;
+                    curvePos[1] = lbl_803E12C0 + curve->y;
                     curvePos[2] = curve->z;
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     if (((traceHit = 0, voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0) != 0) ||
@@ -1351,27 +1360,29 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
 #pragma scheduling on
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
-    int curve;
-    int hi;
     int lo;
+    int hi;
     int mid;
+    int curve;
+    u32 id;
 
     if (curveId < 0)
     {
         return 0;
     }
 
-    hi = nRomCurves - 1;
     lo = 0;
-    while (hi >= lo)
+    hi = nRomCurves - 1;
+    id = (u32)curveId;
+    while (lo <= hi)
     {
         mid = (hi + lo) >> 1;
         curve = (int)romCurves[mid];
-        if ((u32)curveId > ((ObjfsaRomCurveDef*)curve)->id)
+        if (id > ((ObjfsaRomCurveDef*)curve)->id)
         {
             lo = mid + 1;
         }
-        else if ((u32)curveId < ((ObjfsaRomCurveDef*)curve)->id)
+        else if (id < ((ObjfsaRomCurveDef*)curve)->id)
         {
             hi = mid - 1;
         }
@@ -1795,13 +1806,13 @@ u16 getPatchGroup(float* point, int patchGroupIndex, undefined4 param_3, undefin
 #pragma peephole on
 uint isInWalkGroupOrPatch(float* point)
 {
+    s16 idx;
+    s16 i;
+    ObjfsaPatch* patch;
     s16* nz;
     s16* nx;
     char* offs;
-    ObjfsaPatch* patch;
     int count;
-    s16 i;
-    s16 idx;
     f32 y;
 
     if (mathFn_800dbff0(point) != 0)
@@ -1812,7 +1823,7 @@ uint isInWalkGroupOrPatch(float* point)
     idx = 1;
     patch = &lbl_8039CAE8[1];
     count = lbl_803DD468;
-    for (; idx < count; patch++, idx++)
+    for (; idx < count; idx++, patch++)
     {
         y = point[1];
         if (y < (f32)patch->maxY && y > (f32)patch->minY)
@@ -1821,7 +1832,7 @@ uint isInWalkGroupOrPatch(float* point)
             nz = (s16*)patch;
             nx = (s16*)patch;
             offs = (char*)patch;
-            for (; i < 4; offs += 4, i++, nz += 2, nx += 2)
+            for (; i < 4; i++, offs += 4, nz += 2, nx += 2)
             {
                 if (*(f32*)(offs + 0x10) +
                     (point[0] * (f32)nx[0] + point[2] * (f32)nz[1]) >
@@ -1958,8 +1969,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
 
 int mathFn_800dbff0(float* point)
 {
-    s16 up;
     s16 down;
+    s16 up;
     ObjfsaWalkGroup* g;
     f32 y;
     f32 z;
@@ -1974,7 +1985,7 @@ int mathFn_800dbff0(float* point)
     }
     else
     {
-        up = lbl_803DD464 + 1;
+        up = down + 1;
     }
 
     while (down != up)
@@ -2215,8 +2226,6 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     int mid;
     int nextCurve;
     float t;
-    u32 mask;
-    int k;
 
     if (state == NULL)
     {
@@ -2238,29 +2247,17 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     candidateCount = 0;
     if (state->reverse == 0)
     {
-        mask = 1;
-        for (k = 0; k < 4; k++)
-        {
-            neighborId = *(s32*)(curve + 0x1c + k * 4);
-            if (neighborId > -1 && (*(s8*)(curve + 0x1b) & mask) == 0 && neighborId != -1)
-            {
-                candidateIds[candidateCount++] = neighborId;
-            }
-            mask <<= 1;
-        }
+        ROMCURVE_ADD_LINK(0x1c, 1, 0);
+        ROMCURVE_ADD_LINK(0x20, 2, 0);
+        ROMCURVE_ADD_LINK(0x24, 4, 0);
+        ROMCURVE_ADD_LINK(0x28, 8, 0);
     }
     else
     {
-        mask = 1;
-        for (k = 0; k < 4; k++)
-        {
-            neighborId = *(s32*)(curve + 0x1c + k * 4);
-            if (neighborId > -1 && (*(s8*)(curve + 0x1b) & mask) != 0 && neighborId != -1)
-            {
-                candidateIds[candidateCount++] = neighborId;
-            }
-            mask <<= 1;
-        }
+        ROMCURVE_ADD_LINK(0x1c, 1, 1);
+        ROMCURVE_ADD_LINK(0x20, 2, 1);
+        ROMCURVE_ADD_LINK(0x24, 4, 1);
+        ROMCURVE_ADD_LINK(0x28, 8, 1);
     }
 
     if (candidateCount == 0)
@@ -2497,34 +2494,6 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx)
     return -1;
 }
 
-static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
-{
-    int bit;
-
-    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
-    {
-        if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) == 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
-{
-    int bit;
-
-    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
-    {
-        if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
 int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* outPhase)
 {
     extern undefined4 RomCurve_getAdjacentWindow(); /* #57 */
@@ -2541,7 +2510,14 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
     int n;
     int k;
 
-    while (!RomCurve_noUnblockedLinks((RomCurvePlacementDef*)curve))
+    while (!((((ObjfsaRomCurveDef*)curve)->linkIds[0] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 1)
+            != 0) &&
+        (((ObjfsaRomCurveDef*)curve)->linkIds[1] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 2) !=
+            0) &&
+        (((ObjfsaRomCurveDef*)curve)->linkIds[2] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 4) !=
+            0) &&
+        (((ObjfsaRomCurveDef*)curve)->linkIds[3] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 8) !=
+            0)))
     {
         RomCurve_getAdjacentWindow(curve, adjacentWindow);
         projected = RomCurve_projectPointToAdjacentWindow(x, y, z, adjacentWindow,
@@ -2612,7 +2588,7 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
     }
     c2 = Objfsa_FindRomCurveById(linkId);
 
-    if ((void*)c2 == NULL)
+    if (c2 == 0)
     {
         *outX = *(f32*)(curve + 8);
         *outY = *(f32*)(curve + 0xc);
@@ -3072,37 +3048,37 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
 
     if (state->reverse != 0)
     {
-        state->hermX[0] = *(f32*)((char*)state->nodeA4 + 0x8);
-        state->hermX[1] = *(f32*)((char*)state->nodeA0 + 0x8);
-        state->hermX[2] = RomCurveNode_GetHermiteTangent(state->nodeA4, 0x2c, 0);
-        state->hermX[3] = RomCurveNode_GetHermiteTangent(state->nodeA0, 0x2c, 0);
+        state->hermX[0] = *(f32*)((char*)toCurve + 0x8);
+        state->hermX[1] = *(f32*)((char*)fromCurve + 0x8);
+        state->hermX[2] = RomCurveNode_GetHermiteTangent(toCurve, 0x2c, 0);
+        state->hermX[3] = RomCurveNode_GetHermiteTangent(fromCurve, 0x2c, 0);
 
-        state->hermY[0] = *(f32*)((char*)state->nodeA4 + 0xc);
-        state->hermY[1] = *(f32*)((char*)state->nodeA0 + 0xc);
-        state->hermY[2] = RomCurveNode_GetHermiteTangent(state->nodeA4, 0x2d, 0);
-        state->hermY[3] = RomCurveNode_GetHermiteTangent(state->nodeA0, 0x2d, 0);
+        state->hermY[0] = *(f32*)((char*)toCurve + 0xc);
+        state->hermY[1] = *(f32*)((char*)fromCurve + 0xc);
+        state->hermY[2] = RomCurveNode_GetHermiteTangent(toCurve, 0x2d, 0);
+        state->hermY[3] = RomCurveNode_GetHermiteTangent(fromCurve, 0x2d, 0);
 
-        state->hermZ[0] = *(f32*)((char*)state->nodeA4 + 0x10);
-        state->hermZ[1] = *(f32*)((char*)state->nodeA0 + 0x10);
-        state->hermZ[2] = RomCurveNode_GetHermiteTangent(state->nodeA4, 0x2c, 1);
-        state->hermZ[3] = RomCurveNode_GetHermiteTangent(state->nodeA0, 0x2c, 1);
+        state->hermZ[0] = *(f32*)((char*)toCurve + 0x10);
+        state->hermZ[1] = *(f32*)((char*)fromCurve + 0x10);
+        state->hermZ[2] = RomCurveNode_GetHermiteTangent(toCurve, 0x2c, 1);
+        state->hermZ[3] = RomCurveNode_GetHermiteTangent(fromCurve, 0x2c, 1);
     }
     else
     {
-        state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
-        state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
-        state->hermX2[2] = RomCurveNode_GetHermiteTangent(state->nodeA0, 0x2c, 0);
-        state->hermX2[3] = RomCurveNode_GetHermiteTangent(state->nodeA4, 0x2c, 0);
+        state->hermX2[0] = *(f32*)((char*)fromCurve + 0x8);
+        state->hermX2[1] = *(f32*)((char*)toCurve + 0x8);
+        state->hermX2[2] = RomCurveNode_GetHermiteTangent(fromCurve, 0x2c, 0);
+        state->hermX2[3] = RomCurveNode_GetHermiteTangent(toCurve, 0x2c, 0);
 
-        state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
-        state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
-        state->hermY2[2] = RomCurveNode_GetHermiteTangent(state->nodeA0, 0x2d, 0);
-        state->hermY2[3] = RomCurveNode_GetHermiteTangent(state->nodeA4, 0x2d, 0);
+        state->hermY2[0] = *(f32*)((char*)fromCurve + 0xc);
+        state->hermY2[1] = *(f32*)((char*)toCurve + 0xc);
+        state->hermY2[2] = RomCurveNode_GetHermiteTangent(fromCurve, 0x2d, 0);
+        state->hermY2[3] = RomCurveNode_GetHermiteTangent(toCurve, 0x2d, 0);
 
-        state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
-        state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
-        state->hermZ2[2] = RomCurveNode_GetHermiteTangent(state->nodeA0, 0x2c, 1);
-        state->hermZ2[3] = RomCurveNode_GetHermiteTangent(state->nodeA4, 0x2c, 1);
+        state->hermZ2[0] = *(f32*)((char*)fromCurve + 0x10);
+        state->hermZ2[1] = *(f32*)((char*)toCurve + 0x10);
+        state->hermZ2[2] = RomCurveNode_GetHermiteTangent(fromCurve, 0x2c, 1);
+        state->hermZ2[3] = RomCurveNode_GetHermiteTangent(toCurve, 0x2c, 1);
     }
 
     if (curveFn_800da23c(state, targetCurve) != 0)
@@ -3551,10 +3527,10 @@ void walkgroupFindExitPointFn_800dc398(void)
     }
 }
 
-int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
+int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighborId)
 {
-    int bestNeighborIds[2];
     float bestDistances[2];
+    int bestNeighborIds[2];
     RomCurveSegmentProjection segment;
     int i;
     int neighborId;
@@ -3576,33 +3552,29 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
 
     for (i = 0; i < 4; i++)
     {
-        neighborId = *(int*)(curve + 0x1c);
+        neighborId = *(int*)(curve + 0x1c + i * 4);
         if (neighborId > -1)
         {
             neighborCurve = Objfsa_FindRomCurveById(neighborId);
-            if ((void*)neighborCurve != NULL)
+            if (neighborCurve != 0)
             {
                 segment.endX = *(f32*)(neighborCurve + 0x8);
                 segment.endY = *(f32*)(neighborCurve + 0xc);
                 segment.endZ = *(f32*)(neighborCurve + 0x10);
 
                 RomCurve_distanceToSegment(x, y, z, &segment);
-                dy = segment.nearestY - y;
                 dx = segment.nearestX - x;
+                dy = segment.nearestY - y;
                 dz = segment.nearestZ - z;
-                {
-                    f32 yy = dy * dy;
-                    distance = yy + dx * dx + dz * dz;
-                }
+                distance = dz * dz + dx * dx + dy * dy;
                 slot = (preferredNeighborId == neighborId);
                 if (distance < bestDistances[slot])
                 {
                     bestDistances[slot] = distance;
-                    bestNeighborIds[slot] = *(int*)(curve + 0x1c);
+                    bestNeighborIds[slot] = neighborId;
                 }
             }
         }
-        curve = curve + 4;
     }
 
     if (bestNeighborIds[0] != -1)
@@ -3702,6 +3674,7 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
 {
     extern f32 vec3f_distanceSquared(int, int);
     u8 i;
+    ObjfsaPatch* entry;
     f32 d1;
 
     for (i = 0; i < 256; i++)
@@ -3709,25 +3682,27 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
         if (lbl_8039CAE8[i].groupId == id) break;
     }
 
-    outVec[0] = (f32)(s32)lbl_8039CAE8[i].exit0X;
+    entry = &lbl_8039CAE8[i];
+
+    outVec[0] = (f32)(s32)entry->exit0X;
     outVec[1] = *(f32*)(p1 + 4);
-    outVec[2] = (f32)(s32)lbl_8039CAE8[i].exit0Z;
+    outVec[2] = (f32)(s32)entry->exit0Z;
     d1 = vec3f_distanceSquared(p1, (int)outVec);
 
-    outVec[0] = (f32)(s32)lbl_8039CAE8[i].exit1X;
-    outVec[2] = (f32)(s32)lbl_8039CAE8[i].exit1Z;
+    outVec[0] = (f32)(s32)entry->exit1X;
+    outVec[2] = (f32)(s32)entry->exit1Z;
 
     if (vec3f_distanceSquared(p1, (int)outVec) < d1)
     {
         return 1;
     }
 
-    outVec[0] = (f32)(s32)lbl_8039CAE8[i].exit0X;
-    outVec[2] = (f32)(s32)lbl_8039CAE8[i].exit0Z;
+    outVec[0] = (f32)(s32)entry->exit0X;
+    outVec[2] = (f32)(s32)entry->exit0Z;
     return 1;
 }
 
-void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable);
+void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 
 /* segment pragma-stack balance (re-split): */
 
@@ -3893,8 +3868,8 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
     extern int curves_distFn15(); /* #57 */
     RomCurveDef* curve;
     RomCurveDef* nextCurve;
-    int nextCurveId;
-    int previousCurveId;
+    u32 nextCurveId;
+    u32 previousCurveId;
     int linkIndex;
     int hitCount;
     f32 dx;
@@ -3907,10 +3882,10 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
     *outDistance = lbl_803E065C;
     do
     {
-        nextCurveId = -1;
+        nextCurveId = ROMCURVE_LINK_ID_NONE;
         linkIndex = 0;
         nextCurve = curve;
-        while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == -1))
+        while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == ROMCURVE_LINK_ID_NONE))
         {
             if ((curve->blockedLinkMask & (1 << linkIndex)) == 0)
             {
@@ -3921,7 +3896,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         }
 
         nextCurve = curve;
-        if (nextCurveId != -1)
+        if (nextCurveId != ROMCURVE_LINK_ID_NONE)
         {
             nextCurve = RomCurve_FindByIdInline(nextCurveId);
             if (RomCurve_segmentIntersectsOriginRayXZ(curve, nextCurve, x, y, z, lbl_803E0660) != 0)
@@ -3940,7 +3915,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         previousCurveId = nextCurveId;
         curve = nextCurve;
     }
-    while ((previousCurveId != (int)curveId) && (nextCurveId != -1));
+    while ((previousCurveId != curveId) && (nextCurveId != ROMCURVE_LINK_ID_NONE));
 
     return hitCount & 1;
 }
@@ -3952,34 +3927,32 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
     float dz;
     int* objects;
     int obj;
-    int i;
     RomCurveDef* curve;
+    int i;
     float distance;
-    float nearestDistance;
-    float nearestCurveId;
-    int startIndex;
+    double nearestCurveId;
+    double nearestDistance;
     int objectCount;
+    int startIndex;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
-    nearestCurveId = gFloatNegOne;
-    nearestDistance = gFloatZero;
+    nearestCurveId = (double)lbl_803E12B0;
+    nearestDistance = (double)lbl_803E12B8;
     for (i = 0; i < objectCount; i = i + 1)
     {
         obj = objects[i];
-        if (((GameObject*)obj)->anim.classId == 0x2c &&
-            ((GameObject*)obj)->anim.mapEventSlot != queryAll &&
-            (curve = (RomCurveDef*)((GameObject*)obj)->anim.placementData, curve != NULL) &&
-            curve->type == 0x16)
+        if ((((((GameObject*)obj)->anim.classId == 0x2c) &&
+                    (((GameObject*)obj)->anim.mapEventSlot != queryAll)) &&
+                (curve = (RomCurveDef*)((GameObject*)obj)->anim.placementData, curve != NULL)) &&
+            ((curve->type == 0x16 &&
+                ((dx = ((GameObject*)obj)->anim.worldPosX - x,
+                    dy = ((GameObject*)obj)->anim.worldPosY - y,
+                    dz = ((GameObject*)obj)->anim.worldPosZ - z,
+                    distance = sqrtf(dz * dz + (dx * dx + dy * dy)),
+                    (double)lbl_803E12B0 == nearestCurveId || (distance < nearestDistance))))))
         {
-            dx = ((GameObject*)obj)->anim.worldPosX - x;
-            dy = ((GameObject*)obj)->anim.worldPosY - y;
-            dz = ((GameObject*)obj)->anim.worldPosZ - z;
-            distance = sqrtf(dz * dz + (dx * dx + dy * dy));
-            if (gFloatNegOne == nearestCurveId || distance < nearestDistance)
-            {
-                nearestDistance = distance;
-                nearestCurveId = (float)(u32)curve->id;
-            }
+            nearestCurveId = (double)curve->id;
+            nearestDistance = distance;
         }
     }
     return (int)nearestCurveId;
@@ -4446,7 +4419,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     int j;
     int linkId;
     RomCurveDef* linkedCurve;
-    int candidates[4];
+    int candidates[7];
 
     if (curve == NULL)
     {
@@ -4534,13 +4507,14 @@ f32 curves_distXZ(f32 x, f32 z, uint curveId)
     f32 dz;
 
     curve = RomCurve_FindByIdInline(curveId);
-    if (curve != NULL)
+    if (curve == NULL)
     {
-        dx = curve->x - x;
-        dz = curve->z - z;
-        return sqrtf(dx * dx + dz * dz);
+        return gFloatNegOne;
     }
-    return gFloatNegOne;
+
+    dx = curve->x - x;
+    dz = curve->z - z;
+    return sqrtf(dx * dx + dz * dz);
 }
 
 f32 curves_distFn0B(int obj, uint curveId)
@@ -4551,14 +4525,15 @@ f32 curves_distFn0B(int obj, uint curveId)
     f32 dz;
 
     curve = RomCurve_FindByIdInline(curveId);
-    if (curve != NULL && (void*)obj != NULL)
+    if (curve == NULL || obj == 0)
     {
-        dx = curve->x - ((GameObject*)obj)->anim.localPosX;
-        dy = curve->y - ((GameObject*)obj)->anim.localPosY;
-        dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
-        return sqrtf(dx * dx + dy * dy + dz * dz);
+        return gFloatNegOne;
     }
-    return gFloatNegOne;
+
+    dx = curve->x - ((GameObject*)obj)->anim.localPosX;
+    dy = curve->y - ((GameObject*)obj)->anim.localPosY;
+    dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
+    return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
 int curves_isNotPoint(RomCurveDef* curve)
@@ -4727,6 +4702,10 @@ RomCurveDef* RomCurve_findByIdWithIndex(uint curveId, int* outIndex)
 }
 
 #define ROMCURVE_PLACEMENT_ANGLE(v) ((lbl_803E0614 * (f32)((s32)(v) << 8)) / lbl_803E0618)
+
+static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve);
+
+static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
 
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
@@ -5004,7 +4983,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
 void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
 {
     extern undefined4 RomCurve_getAdjacentWindow(); /* #57 */
-    int linkId;
+    u32 linkId;
     u32 adjacentId;
     int low;
     int high;
@@ -5025,13 +5004,13 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         linkId = curve->linkIds[i];
-        if (linkId != -1)
+        if (linkId != ROMCURVE_LINK_ID_NONE)
         {
             if ((curve->blockedLinkMask & (1 << i)) != 0)
             {
                 outIds[0] = linkId;
             }
-            else if ((curve->blockedLinkMask & (1 << i)) == 0)
+            else
             {
                 outIds[2] = linkId;
             }
@@ -5080,7 +5059,7 @@ foundAdjacent:
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         linkId = adjacent->linkIds[i];
-        if (linkId != -1)
+        if (linkId != ROMCURVE_LINK_ID_NONE)
         {
             if ((adjacent->blockedLinkMask & (1 << i)) == 0)
             {
@@ -5092,8 +5071,8 @@ foundAdjacent:
 
 int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int excludeLinkId)
 {
-    int bestLink[2];
     f32 bestDistance[2];
+    int bestLink[2];
     RomCurveSegmentProjection segment;
     f32 dx;
     f32 dy;
@@ -5120,22 +5099,47 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
         linkId = curve->linkIds[linkIndex];
         if ((s32)linkId > -1)
         {
-            linkedCurve = (RomCurveDef*)Objfsa_FindRomCurveById((int)linkId);
+            if ((s32)linkId < 0)
+            {
+                linkedCurve = NULL;
+            }
+            else
+            {
+                high = nRomCurves - 1;
+                low = 0;
+                while (low <= high)
+                {
+                    mid = (high + low) >> 1;
+                    linkedCurve = romCurves[mid];
+                    if (linkId > linkedCurve->id)
+                    {
+                        low = mid + 1;
+                    }
+                    else if (linkId < linkedCurve->id)
+                    {
+                        high = mid - 1;
+                    }
+                    else
+                    {
+                        goto foundLinkedCurve;
+                    }
+                }
+                linkedCurve = NULL;
+            }
+
+        foundLinkedCurve:
             if (linkedCurve != NULL)
             {
                 segment.endX = linkedCurve->x;
                 segment.endY = linkedCurve->y;
                 segment.endZ = linkedCurve->z;
                 RomCurve_distanceToSegment(x, y, z, &segment);
-                dy = segment.nearestY - y;
-                dx = segment.nearestX - x;
                 dz = segment.nearestZ - z;
-                {
-                    f32 yy = dy * dy;
-                    distance = yy + dx * dx + dz * dz;
-                }
+                dx = segment.nearestX - x;
+                dy = segment.nearestY - y;
+                distance = dz * dz + dx * dx + dy * dy;
                 slot = (u32)__cntlzw(excludeLinkId - linkId) >> 5;
-                if (distance > bestDistance[slot])
+                if (bestDistance[slot] < distance)
                 {
                     bestDistance[slot] = distance;
                     bestLink[slot] = curve->linkIds[linkIndex];
@@ -5144,15 +5148,12 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
         }
     }
 
-    if (bestLink[0] != -1)
+    if ((bestLink[0] == ROMCURVE_LINK_ID_NONE) &&
+        (bestLink[0] = bestLink[1], bestLink[1] == ROMCURVE_LINK_ID_NONE))
     {
-        return bestLink[0];
+        bestLink[0] = ROMCURVE_LINK_ID_NONE;
     }
-    if (bestLink[1] != -1)
-    {
-        return bestLink[1];
-    }
-    return -1;
+    return bestLink[0];
 }
 
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)
@@ -5184,14 +5185,14 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     endZ = segment->endZ;
     startZ = segment->startZ;
     deltaZ = endZ - startZ;
-    if (((gFloatZero == deltaX) && (gFloatZero == deltaY)) && (gFloatZero == deltaZ))
-    {
-        projection = gFloatZero;
-    }
-    else
+    if (((gFloatZero != deltaX) || (gFloatZero != deltaY)) || (gFloatZero != deltaZ))
     {
         projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
             (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
+    }
+    else
+    {
+        projection = gFloatZero;
     }
     if (projection < gFloatZero)
     {
@@ -5201,7 +5202,7 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
         diffZ = startZ - z;
         diffX = startX - x;
         diffY = startY - y;
-        distance = -(diffZ * diffZ + (diffX * diffX + diffY * diffY));
+        distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
     }
     else if (projection > gFloatOne)
     {
@@ -5211,7 +5212,7 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
         diffZ = endZ - z;
         diffX = endX - x;
         diffY = endY - y;
-        distance = -(diffZ * diffZ + (diffX * diffX + diffY * diffY));
+        distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
     }
     else
     {
@@ -5538,7 +5539,6 @@ int curves_findByAction(int act)
 /* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane
  * crosses the segment between a and b. */
-#pragma opt_common_subs off
 int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY,
                                           f32 z, f32 unusedW)
 {
@@ -5546,10 +5546,13 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x,
     f32 az = a->z;
     f32 bx = b->x;
     f32 bz = b->z;
-    f32 cross1 = az * bx - ax * bz;
+    f32 cross1 = bx * az - ax * bz;
     f32 sum1 = cross1 + (x * (bz - az) + z * (ax - bx));
-    if ((sum1 <= gFloatZero && cross1 >= gFloatZero) ||
-        (sum1 >= gFloatZero && cross1 < gFloatZero))
+    if (!((sum1 <= gFloatZero && cross1 >= gFloatZero) ||
+        (sum1 >= gFloatZero && cross1 < gFloatZero)))
+    {
+        return 0;
+    }
     {
         f32 cross_a = -z * ax + x * az;
         f32 cross_b = -z * bx + x * bz;
@@ -5558,7 +5561,6 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x,
         {
             return 1;
         }
+        return 0;
     }
-    return 0;
 }
-#pragma opt_common_subs reset
