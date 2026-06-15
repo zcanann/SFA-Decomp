@@ -1519,7 +1519,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
             ((TrickyState*)state)->stateFlags &= ~0x400;
             ((TrickyState*)state)->unkD2 = 0;
         }
-        ((TrickyState*)state)->unk728 &= ~0x20;
+        ((FlagByte728*)(state + 0x728))->bf5 = 0;
         state[0xa] = 0xc;
         break;
     case 1:
