@@ -1,11 +1,9 @@
 /* DLL 0x01DF — dim2snowball / dim2conveyor / dll1d6 group. TU: 0x801B8798–0x801B8860. */
-#include "main/audio/sfx_ids.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
@@ -33,9 +31,6 @@ extern void* Obj_GetPlayerObject(void);
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2projrock.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 
 typedef struct Dll1DFState
