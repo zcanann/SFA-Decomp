@@ -19,8 +19,6 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 
