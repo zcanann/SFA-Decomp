@@ -1044,7 +1044,7 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4108);
 }
 
-void cloudprisoncontrol_init(int obj) { ObjMsg_AllocQueue(obj, 0xa); }
+void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
 int cfguardian_setScale(int* obj);
 
@@ -1055,7 +1055,6 @@ int cfguardian_setScale(int* obj);
  * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
  *   s32 message @0; s32 target @4; s32 data @8. */
 
-#pragma opt_unroll_loops off
 void cloudprisoncontrol_update(int obj)
 {
     int target;
@@ -1098,12 +1097,13 @@ void cloudprisoncontrol_update(int obj)
                 }
                 if (!found)
                 {
+                    char* e;
                     i = lbl_803DDB09;
-                    p = (int*)((char*)lbl_803AC7D8 + i * 8);
-                    p[0] = target;
-                    *(u8*)((char*)p + 6) = 0;
+                    e = (char*)lbl_803AC7D8 + i * 8;
+                    *(int*)e = target;
+                    *(u8*)(e + 6) = 0;
                     lbl_803DDB09++;
-                    *(s16*)((char*)p + 4) = data;
+                    *(s16*)(e + 4) = data;
                 }
                 ObjMsg_SendToObject(target, 0xf0003, obj, 0);
             }
@@ -1143,6 +1143,5 @@ void cloudprisoncontrol_update(int obj)
         }
     }
 }
-#pragma opt_unroll_loops reset
 
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);

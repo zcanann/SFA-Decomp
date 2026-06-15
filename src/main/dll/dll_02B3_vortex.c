@@ -23,7 +23,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 objRotY;
     u8 i;
     f32 particleArgs[6];
-    int hudHidden;
+    u8 hudHidden;
 
     if (visible == 0)
     {
@@ -50,7 +50,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            u8 reverse = setup->reverseTextureScroll != 0;
+            u8 reverse = setup->reverseTextureScroll != 0 ? 1 : 0;
             if (setup->invertGameBit != -1 && GameBit_Get(setup->invertGameBit) != 0)
             {
                 reverse = !reverse;

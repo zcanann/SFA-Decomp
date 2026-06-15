@@ -655,7 +655,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
     case 10:
     case 11:
     case 12:
-        if (((BossDrakorState*)state)->airMeterHandle < ((int*)((char*)tbl + 0x74))[action])
+        if (((BossDrakorState*)state)->airMeterHandle < (tbl + action)[0x1d])
         {
             ((BossDrakorState*)state)->curveFollowState = 1;
         }

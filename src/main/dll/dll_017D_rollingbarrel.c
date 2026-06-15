@@ -49,7 +49,7 @@ extern f32 lbl_803E44A0;
 extern f32 lbl_803E44A4;
 extern f32 lbl_803E44A8;
 extern f32 lbl_803E44AC;
-extern const f32 lbl_803E44B0;
+extern f32 lbl_803E44B0;
 extern f32 lbl_803E44B4;
 extern f32 lbl_803E44B8;
 
@@ -61,11 +61,13 @@ void RollingBarrel_release(void)
 {
 }
 
+int SpiritDoorLock_getExtraSize(void);
 int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 
 void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
 
+void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -78,6 +80,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
 }
 
+void SpiritDoorLock_free(int obj);
 
 void RollingBarrel_free(int obj)
 {
@@ -128,6 +131,7 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, lbl_803E44B8, tmp, -1);
 }
 
+void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
 
 #pragma peephole off
 void RollingBarrel_update(int obj)
@@ -302,6 +306,7 @@ void fn_801A5D88(int obj, int explosionVariant)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
     u32 r;
+    u32 r2;
     int player;
     f32 dist;
     f32 falloff;
@@ -309,17 +314,13 @@ void fn_801A5D88(int obj, int explosionVariant)
     Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (lbl_803DDB20 > 1)
     {
-        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        size = (f32)(s32)randomGetRange(0x32, 0x3c);
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, size);
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     else
     {
-        f32 size;
         r = randomGetRange(0, 1) & 0xff;
-        size = (f32)(s32)randomGetRange(0x32, 0x3c);
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, size);
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;

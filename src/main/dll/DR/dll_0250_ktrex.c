@@ -561,13 +561,15 @@ void ktrex_update(int obj)
     int phase;
     int i;
     f32 dz, dx;
+    s16* bitA;
+    s16* bitB;
 
     if (((GameObject*)obj)->unkF4 != 0)
     {
         return;
     }
-    gKTRexRuntime = ((GameObject*)obj)->extra;
-    runtime = gKTRexRuntime;
+    runtime = ((GameObject*)obj)->extra;
+    gKTRexRuntime = runtime;
     if (((GameObject*)obj)->unkF8 == 1)
     {
         Music_Trigger(40, 1);
@@ -583,21 +585,18 @@ void ktrex_update(int obj)
         d[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
         d[1] = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         d[2] = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        ((KTRexRuntime*)runtime)->unk2C0 =
-            sqrtf(((f32*)d)[2] * ((f32*)d)[2] + (((f32*)d)[0] * ((f32*)d)[0] + ((f32*)d)[1] * ((f32*)d)[1]));
+        ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
     characterDoEyeAnims(obj, (char*)gKTRexRuntime + 0x3ac);
     maskA = 0;
+    bitA = lbl_803DC290;
+    for (i = 0; i < 4; i++)
     {
-        s16* pA = lbl_803DC290;
-        for (i = 0; i < 4; i++)
+        if (GameBit_Get(*bitA) != 0)
         {
-            if (GameBit_Get(*pA) != 0)
-            {
-                maskA |= 1 << i;
-            }
-            pA++;
+            maskA |= 1 << i;
         }
+        bitA++;
     }
     ((KTRexArenaState*)gKTRexState)->unkFF = maskA;
     player = ((KTRexRuntime*)runtime)->unk2D0;
@@ -622,16 +621,14 @@ void ktrex_update(int obj)
     ((KTRexArenaState*)gKTRexState)->unkFE = ((u8*)&tmp)[(((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3];
     flags = ((KTRexArenaState*)gKTRexState)->unkFE;
     maskB = 0;
+    bitB = lbl_803DC298;
+    for (i = 0; i < 4; i++)
     {
-        s16* pB = lbl_803DC298;
-        for (i = 0; i < 4; i++)
+        if ((flags & (1 << i)) != 0 && GameBit_Get(*bitB) != 0)
         {
-            if ((flags & (1 << i)) != 0 && GameBit_Get(*pB) != 0)
-            {
-                maskB |= 1 << i;
-            }
-            pB++;
+            maskB |= 1 << i;
         }
+        bitB++;
     }
     ((KTRexArenaState*)gKTRexState)->laneMode = maskB;
     (*(void (**)(int, void*, void*, int, void*, int, int, int))((char*)*gBaddieControlInterface + 0x54))(
@@ -897,18 +894,15 @@ void ktrex_init(int obj, char* arg)
 {
     int i;
     int cp;
-    KTRexRuntime* runtime;
-    char* base = (char*)lbl_8032A510;
     gKTRexRuntime = ((GameObject*)obj)->extra;
     (*(void (**)(int, char*, void*, int, int, int, int, f32))((char*)*gBaddieControlInterface + 0x58))(
-        obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | ((arg != 0) ? 1 : 0), lbl_803E684C);
+        obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0), lbl_803E684C);
     ((GameObject*)obj)->animEventCallback = (void*)ktrex_animEventCallback;
-    runtime = gKTRexRuntime;
-    (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 0);
-    runtime->unk270 = 2;
-    *(int*)&runtime->unk2D0 = 0;
-    runtime->unk25F = 0;
-    runtime->unk349 = 0;
+    (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))(obj, gKTRexRuntime, 0);
+    ((KTRexRuntime*)gKTRexRuntime)->unk270 = 2;
+    *(int*)&((KTRexRuntime*)gKTRexRuntime)->unk2D0 = 0;
+    ((KTRexRuntime*)gKTRexRuntime)->unk25F = 0;
+    ((KTRexRuntime*)gKTRexRuntime)->unk349 = 0;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x88;
     ObjHits_EnableObject(obj);
     if (((GameObject*)obj)->anim.modelState != NULL)
@@ -917,41 +911,28 @@ void ktrex_init(int obj, char* arg)
     }
     gKTRexState = ((KTRexRuntime*)gKTRexRuntime)->arena;
     ((KTRexArenaState*)gKTRexState)->stack = allocModelStruct_800139e8(4, 4);
+    *(s16*)obj = (s16)((s8)arg[0x2a] << 8);
+    ((KTRexArenaState*)gKTRexState)->homeYaw = (s16)((s8)arg[0x2a] << 8);
+    for (i = 0; i < 4; i++)
     {
-        s16 yaw = (s16)((s8)arg[0x2a] << 8);
-        *(s16*)obj = yaw;
-        ((KTRexArenaState*)gKTRexState)->homeYaw = yaw;
-    }
-    {
-        int* pA = (int*)(base + 0x4c);
-        int* pB = (int*)(base + 0x3c);
-        int* pC = (int*)(base + 0x6c);
-        int* pD = (int*)(base + 0x5c);
-        for (i = 0; i < 4; i++)
+        cp = (int)(*gRomCurveInterface)->getById(*(int*)((char*)lbl_8032A510 + 0x4c + i * 4));
+        if (cp != 0)
         {
-            cp = (int)(*gRomCurveInterface)->getById(*pA);
-            if ((void*)cp != NULL)
-            {
-                ((KTRexArenaState*)gKTRexState)->laneAX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-                ((KTRexArenaState*)gKTRexState)->laneAY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-                ((KTRexArenaState*)gKTRexState)->laneAZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
-                cp = (int)(*gRomCurveInterface)->getById(*pB);
-                ((KTRexArenaState*)gKTRexState)->laneBX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-                ((KTRexArenaState*)gKTRexState)->laneBY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-                ((KTRexArenaState*)gKTRexState)->laneBZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
-                cp = (int)(*gRomCurveInterface)->getById(*pC);
-                ((KTRexArenaState*)gKTRexState)->laneCX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-                ((KTRexArenaState*)gKTRexState)->laneCY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-                ((KTRexArenaState*)gKTRexState)->laneCZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
-                cp = (int)(*gRomCurveInterface)->getById(*pD);
-                ((KTRexArenaState*)gKTRexState)->laneDX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-                ((KTRexArenaState*)gKTRexState)->laneDY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-                ((KTRexArenaState*)gKTRexState)->laneDZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
-            }
-            pA++;
-            pB++;
-            pC++;
-            pD++;
+            ((KTRexArenaState*)gKTRexState)->laneAX[i] = ((ObjfsaRomCurveDef*)cp)->x;
+            ((KTRexArenaState*)gKTRexState)->laneAY[i] = ((ObjfsaRomCurveDef*)cp)->y;
+            ((KTRexArenaState*)gKTRexState)->laneAZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
+            cp = (int)(*gRomCurveInterface)->getById(*(int*)((char*)lbl_8032A510 + 0x3c + i * 4));
+            ((KTRexArenaState*)gKTRexState)->laneBX[i] = ((ObjfsaRomCurveDef*)cp)->x;
+            ((KTRexArenaState*)gKTRexState)->laneBY[i] = ((ObjfsaRomCurveDef*)cp)->y;
+            ((KTRexArenaState*)gKTRexState)->laneBZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
+            cp = (int)(*gRomCurveInterface)->getById(*(int*)((char*)lbl_8032A510 + 0x6c + i * 4));
+            ((KTRexArenaState*)gKTRexState)->laneCX[i] = ((ObjfsaRomCurveDef*)cp)->x;
+            ((KTRexArenaState*)gKTRexState)->laneCY[i] = ((ObjfsaRomCurveDef*)cp)->y;
+            ((KTRexArenaState*)gKTRexState)->laneCZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
+            cp = (int)(*gRomCurveInterface)->getById(*(int*)((char*)lbl_8032A510 + 0x5c + i * 4));
+            ((KTRexArenaState*)gKTRexState)->laneDX[i] = ((ObjfsaRomCurveDef*)cp)->x;
+            ((KTRexArenaState*)gKTRexState)->laneDY[i] = ((ObjfsaRomCurveDef*)cp)->y;
+            ((KTRexArenaState*)gKTRexState)->laneDZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
         }
     }
     ((KTRexArenaState*)gKTRexState)->rowAX = (char*)gKTRexState + 0x10;
@@ -1182,24 +1163,19 @@ void ktrex_updateAttackEffects(int obj)
     }
 }
 
-typedef struct KTRexQuad
-{
-    int a;
-    int b;
-    int c;
-    int d;
-} KTRexQuad;
-
 void ktrex_updateContactEffects(int obj, void* runtime)
 {
-    int hitType;
-    uint hitC;
     int hitA;
+    uint hitC;
+    int hitType;
     int msg[4];
     int hit;
     f32* contactPoints;
     f32* pt;
-    *(KTRexQuad*)msg = *(KTRexQuad*)lbl_802C2550;
+    msg[0] = lbl_802C2550[0];
+    msg[1] = lbl_802C2550[1];
+    msg[2] = lbl_802C2550[2];
+    msg[3] = lbl_802C2550[3];
     if (lbl_803DDD4C != 0)
     {
         lbl_803DDD4C -= 1;
@@ -1290,18 +1266,14 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     u8 phase;
     int idx;
     u16 flags;
-    int laneBit;
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState*)gKTRexState)->unkFC = 0;
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x20;
-        {
-            char* base = (char*)p + 0x38;
-            ((KTRexRuntime*)runtime)->unk294 =
-                *(f32*)(base + ((KTRexArenaState*)gKTRexState)->unkFC * 4) / lbl_803E67C4;
-        }
+        ((KTRexRuntime*)runtime)->unk294 =
+            *(f32*)((u8*)((char*)p + ((KTRexArenaState*)gKTRexState)->unkFC * 4) + 0x38) / lbl_803E67C4;
     }
     if (ktrex_updateArenaPathProgress(runtime) != 0)
     {
@@ -1313,18 +1285,16 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         return 4;
     }
     flags = ((KTRexArenaState*)gKTRexState)->timerFA;
-    laneBit = flags & 1;
-    if (((KTRexArenaState*)gKTRexState)->unkFC == 0 &&
-        (phase = ((KTRexArenaState*)gKTRexState)->unk101) >= 2 && (flags & 0x20) == 0 &&
-        ((laneBit == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67E8) ||
-            (laneBit != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
+    phase = ((KTRexArenaState*)gKTRexState)->unk101;
+    if (((KTRexArenaState*)gKTRexState)->unkFC == 0 && phase >= 2 && (flags & 0x20) == 0 &&
+        (((flags & 1) == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67E8) ||
+            ((flags & 1) != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
     {
         idx = phase >> 1;
         if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x56])
         {
-            int push;
+            int push = 5;
             ((KTRexArenaState*)gKTRexState)->unk103 = 2;
-            push = 5;
             if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
             {
                 Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
@@ -1334,7 +1304,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         }
         if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x52])
         {
-            u8 cond;
+            int cond;
             u8 fe = ((KTRexArenaState*)gKTRexState)->unkFE;
             if (fe == 1)
             {
@@ -1354,9 +1324,8 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             }
             if (cond && (((KTRexArenaState*)gKTRexState)->timerFA & 0x40) == 0)
             {
-                int push;
+                int push = 0xb;
                 ((KTRexArenaState*)gKTRexState)->unkFD = 0;
-                push = 0xb;
                 if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
                 {
                     Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
@@ -1371,13 +1340,16 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x40;
         if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
         {
-            u8 result;
-            result = 0;
+            int result;
             if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
             {
                 if (((KTRexArenaState*)gKTRexState)->unk8 - ((KTRexArenaState*)gKTRexState)->unkF4 > lbl_803E67B4)
                 {
                     result = 1;
+                }
+                else
+                {
+                    result = 0;
                 }
             }
             else
@@ -1386,12 +1358,15 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 {
                     result = 1;
                 }
+                else
+                {
+                    result = 0;
+                }
             }
             if (result != 0)
             {
-                int push;
+                int push = 5;
                 ((KTRexArenaState*)gKTRexState)->unk103 = 1;
-                push = 5;
                 if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
                 {
                     Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
@@ -1557,11 +1532,8 @@ int ktrex_stateHandlerA08(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 7);
-        {
-            char* pK = (char*)p + 0x4a;
-            ((KTRexArenaState*)gKTRexState)->unk4 =
-                (f32)(u32) * (u16*)(pK + (((KTRexArenaState*)gKTRexState)->unk101 & ~1));
-        }
+        ((KTRexArenaState*)gKTRexState)->unk4 =
+            (f32)(u32) * (u16*)((char*)p + (((KTRexArenaState*)gKTRexState)->unk101 & ~1) + 0x4a);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
         goto ret0;
     }
@@ -1676,11 +1648,8 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState*)gKTRexState)->unkFC = 2;
-        {
-            char* base = (char*)p + 0x38;
-            ((KTRexRuntime*)runtime)->unk294 =
-                *(f32*)(base + ((KTRexArenaState*)gKTRexState)->unkFC * 4) / lbl_803E67C4;
-        }
+        ((KTRexRuntime*)runtime)->unk294 =
+            *(f32*)((u8*)((char*)p + ((KTRexArenaState*)gKTRexState)->unkFC * 4) + 0x38) / lbl_803E67C4;
     }
     if (ktrex_updateArenaPathProgress(runtime) != 0)
     {
@@ -1699,13 +1668,10 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
     }
+    ((KTRexArenaState*)gKTRexState)->unk4 -= timeDelta;
+    if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
     {
-        f32 t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
-        ((KTRexArenaState*)gKTRexState)->unk4 = t;
-        if (t <= lbl_803E67B8)
-        {
-            ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
-        }
+        ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
     }
     if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8 &&
         ((KTRexArenaState*)gKTRexState)->unk0C == phase &&
@@ -1714,7 +1680,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
         {
-            u8 cond;
+            int cond;
             u8 fe;
             ((KTRexArenaState*)gKTRexState)->unk101 += 1;
             GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->unk101);
@@ -1763,9 +1729,8 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         }
         else
         {
-            int push;
+            int push = 2;
             ((KTRexArenaState*)gKTRexState)->unk101 -= 1;
-            push = 2;
             if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
             {
                 Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
