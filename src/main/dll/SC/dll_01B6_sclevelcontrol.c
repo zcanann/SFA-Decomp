@@ -5,11 +5,7 @@
  * at the Ocean Force Point), mode 2->6 when 0x2d0 is set (totem-bond ceremony
  * complete). Chief/MuscleFoot/throne require mode >=3. Also resets the four
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
-#include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
-
-/* TODO stubs to align function set with v1.0 asm. Bodies are large
- * state-machine and animation logic; filling them is a follow-up task. */
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -21,20 +17,15 @@
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_80006824();
-extern byte FUN_80006b44();
-extern undefined4 FUN_80006b4c();
-extern undefined4 FUN_80006b50();
-extern undefined4 FUN_80006b54();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern int FUN_80017a98();
+/* the four LightFoot totem-pole lit-state bits, reset on entry */
+#define GAMEBIT_TOTEMPOLE_FRONT 0x81
+#define GAMEBIT_TOTEMPOLE_LEFT 0x82
+#define GAMEBIT_TOTEMPOLE_RIGHT 0x83
+#define GAMEBIT_TOTEMPOLE_REAR 0x84
+/* village mode gates */
+#define GAMEBIT_WATER_SPELLSTONE_PLACED 0x5f3 /* mode 1 -> 2 */
+#define GAMEBIT_TOTEMBOND_COMPLETE 0x2d0      /* mode 2 -> 6 */
 
-extern f32 lbl_803E61E8;
-
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E5554;
 extern void objRenderFn_8003b8f4(f32);
 extern void gameTimerStop(void);
@@ -76,105 +67,6 @@ extern f32 lbl_803E555C;
 extern f32 lbl_803E5560;
 extern f32 lbl_803E556C;
 
-undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
-{
-    byte bval;
-    byte eventId;
-    uint bitVal;
-    int i;
-    int state;
-
-    state = *(int*)&((GameObject*)obj)->extra;
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
-    {
-        eventId = animUpdate->eventIds[i];
-        if (eventId == 2)
-        {
-            sc_levelcontrol_setAnimEventState(obj, 5);
-        }
-        else if (eventId < 2)
-        {
-            if (eventId != 0)
-            {
-                sc_levelcontrol_setAnimEventState(obj, 7);
-            }
-        }
-        else if (eventId < 4)
-        {
-            ((ScLevelControlState*)state)->flags1F = ((ScLevelControlState*)state)->flags1F | 2;
-        }
-    }
-    ((ScLevelControlState*)state)->flags1F = ((ScLevelControlState*)state)->flags1F | 1;
-    FUN_80017698(0x60f, 0);
-    i = *(int*)&((GameObject*)obj)->extra;
-    FUN_80017a98();
-    if (((ScLevelcontrolProcessAnimEventsState*)i)->unk1D == '\x05')
-    {
-        FUN_80017698(0x60f, 1);
-        bval = FUN_80006b44();
-        if (bval != 0)
-        {
-            bitVal = FUN_80017690(0x7a);
-            if (bitVal != 0)
-            {
-                FUN_80017698(0x85, 1);
-            }
-            ((ScLevelControlState*)i)->timer10 = lbl_803E61E8;
-            ((ScLevelControlState*)i)->mode = 0;
-            FUN_80006824(0, SFXsp_skeep_mumb1);
-            FUN_800067c0((int*)0xef, 0);
-        }
-    }
-    return 0;
-}
-
-void sc_levelcontrol_setAnimEventState(int obj, undefined value)
-{
-    char mode;
-    int state;
-
-    state = *(int*)&((GameObject*)obj)->extra;
-    ((ScLevelControlState*)state)->mode = value;
-    mode = *(char*)&((ScLevelControlState*)state)->mode;
-    if (mode == '\x02')
-    {
-        ((ScLevelControlState*)state)->mode = 0;
-    }
-    else if (mode == '\x05')
-    {
-        FUN_80017698(0x2b8, 1);
-        FUN_80017698(0x4bd, 0);
-        FUN_80017698(0x85, 0);
-        FUN_80006b54(0x1d, 0x96);
-        FUN_800067c0((int*)0xef, 1);
-        FUN_80006b50();
-    }
-    else if (mode == '\x03')
-    {
-        FUN_80006b54(0x1d, 0x3c);
-        ((ScLevelControlState*)state)->mode = 0;
-        FUN_800067c0((int*)0xc7, 1);
-        FUN_80006b50();
-    }
-    else if (mode == '\x06')
-    {
-        FUN_800067c0((int*)0xef, 0);
-        ((ScLevelControlState*)state)->mode = 0;
-        ((ScLevelControlState*)state)->fadeTimer = lbl_803E61E8;
-        FUN_80006b4c();
-    }
-    else if (mode == '\x04')
-    {
-        ((ScLevelControlState*)state)->mode = 0;
-        FUN_800067c0((int*)0xc7, 0);
-        FUN_80006b4c();
-    }
-    return;
-}
-
-#pragma scheduling off
-#pragma peephole off
 void sc_levelcontrol_hitDetect(void)
 {
 }
@@ -308,10 +200,10 @@ void sc_levelcontrol_init(int obj)
     GameBit_Set(0x60f, 1);
     GameBit_Set(0x2b8, 0);
     GameBit_Set(0x4bd, 1);
-    GameBit_Set(0x81, 0);
-    GameBit_Set(0x82, 0);
-    GameBit_Set(0x83, 0);
-    GameBit_Set(0x84, 0);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
+    GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
     st->fog0C = lbl_803E5580;
     v = lbl_803E5564;
     st->fogNear = lbl_803E5564;
@@ -334,17 +226,10 @@ void sc_levelcontrol_init(int obj)
     ((GameObject*)obj)->unkF8 = 1;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-/* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
- * driver: replays the env-fx set on map (re)entry, latches the race
- * GameBits, runs the two race countdown timers, eases the heavy fog level,
- * tracks the totem combo code (bits 0x7d..0x7f), and keeps the area music
- * in sync with the Thorntail animation state. */
+/* Per-frame driver: replays the env-fx set on map (re)entry, advances the
+   village mode gates, runs the fade/exit countdown timers, eases the heavy
+   fog level, tracks the totem combo code (bits 0x7d..0x7f) into the music
+   step, and keeps the area music in sync with the day/night sun position. */
 void sc_levelcontrol_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -398,7 +283,7 @@ void sc_levelcontrol_update(int obj)
             switch (c)
             {
             case 1:
-                if ((u32)GameBit_Get(0x5f3) != 0)
+                if ((u32)GameBit_Get(GAMEBIT_WATER_SPELLSTONE_PLACED) != 0)
                 {
                     (*gMapEventInterface)->setMapAct(0xe, 2);
                 }
@@ -407,7 +292,7 @@ void sc_levelcontrol_update(int obj)
             case 3:
             case 4:
             case 5:
-                if ((u32)GameBit_Get(0x2d0) != 0)
+                if ((u32)GameBit_Get(GAMEBIT_TOTEMBOND_COMPLETE) != 0)
                 {
                     (*gMapEventInterface)->setMapAct(0xe, 6);
                 }
@@ -433,10 +318,10 @@ void sc_levelcontrol_update(int obj)
             ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
             GameBit_Set(0x2b8, 0);
             GameBit_Set(0x4bd, 1);
-            GameBit_Set(0x81, 0);
-            GameBit_Set(0x82, 0);
-            GameBit_Set(0x83, 0);
-            GameBit_Set(0x84, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
             GameBit_Set(0x63e, 1);
             GameBit_Set(0x7cf, 1);
         }
@@ -455,10 +340,10 @@ void sc_levelcontrol_update(int obj)
             ((ScLevelControlState*)state)->timer10 = lbl_803E5558;
             GameBit_Set(0x2b8, 0);
             GameBit_Set(0x4bd, 1);
-            GameBit_Set(0x81, 0);
-            GameBit_Set(0x82, 0);
-            GameBit_Set(0x83, 0);
-            GameBit_Set(0x84, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_FRONT, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_LEFT, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_RIGHT, 0);
+            GameBit_Set(GAMEBIT_TOTEMPOLE_REAR, 0);
         }
     }
     ((ScLevelControlState*)state)->areaCell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
