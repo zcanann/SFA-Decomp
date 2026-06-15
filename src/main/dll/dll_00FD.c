@@ -109,12 +109,12 @@ void dll_14D_update(undefined2* obj)
             *state = 2;
         }
     }
-    *(f32*)(obj + 6) = *(f32*)(*(int*)(state + 4) + 0xc);
-    *(f32*)(obj + 8) = *(f32*)(*(int*)(state + 4) + 0x10);
-    *(f32*)(obj + 10) = *(f32*)(*(int*)(state + 4) + 0x14);
-    *(s16*)obj = **(s16**)(state + 4);
-    *(s16*)(obj + 2) = *(s16*)(*(int*)(state + 4) + 4);
-    *(s16*)(obj + 1) = *(s16*)(*(int*)(state + 4) + 2);
+    ((GameObject*)obj)->anim.localPosX = *(f32*)(*(int*)(state + 4) + 0xc);
+    ((GameObject*)obj)->anim.localPosY = *(f32*)(*(int*)(state + 4) + 0x10);
+    ((GameObject*)obj)->anim.localPosZ = *(f32*)(*(int*)(state + 4) + 0x14);
+    ((GameObject*)obj)->anim.rotX = **(s16**)(state + 4);
+    ((GameObject*)obj)->anim.rotZ = *(s16*)(*(int*)(state + 4) + 4);
+    ((GameObject*)obj)->anim.rotY = *(s16*)(*(int*)(state + 4) + 2);
     mode = *state;
     switch (mode)
     {
