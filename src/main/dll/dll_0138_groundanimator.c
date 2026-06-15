@@ -90,7 +90,6 @@ extern void objRenderFn_80041018(int* obj);
 extern void DCStoreRangeNoSync(void* addr, int len);
 extern void* mmAlloc(int size, int align, int tag);
 extern u16 lbl_803DBDF0[];
-extern f32 lbl_803E3F7C;
 
 void FUN_80192488(void)
 {
