@@ -4707,7 +4707,19 @@ static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
     return 1;
 }
 
-static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
+static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
+{
+    int bit;
+
+    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
+    {
+        if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
