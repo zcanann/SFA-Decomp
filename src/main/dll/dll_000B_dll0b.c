@@ -1400,7 +1400,6 @@ void dll_0B_func10(void)
     gModgfxSequenceParamIndex = 0;
 }
 
-extern void OSReport(const char* fmt, ...);
 
 
 ObjectDescriptor11 projgfx_funcs = {
@@ -1844,7 +1843,6 @@ void dll_0B_func0E(void)
     }
 }
 
-extern void*gPartfxResourceModule00;
 
 extern f32 lbl_803DD284;
 
@@ -1973,7 +1971,6 @@ void dll_0B_onMapSetup(void)
     }
 }
 
-extern void* Obj_GetActiveModel(void);
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
