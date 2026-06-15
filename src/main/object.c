@@ -2567,9 +2567,12 @@ u8* loadObjectFile(int id)
         }
         *(u8**)((int)lbl_803DCBA8 + off) = buf;
         lbl_803DCBA4[id] = 1;
-        return buf;
     }
-    return 0;
+    else
+    {
+        return 0;
+    }
+    return buf;
 }
 
 int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
