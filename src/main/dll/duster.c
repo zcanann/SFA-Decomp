@@ -523,36 +523,34 @@ void fn_80155F20(int obj, int state)
 
 void fn_80156010(uint obj, int state)
 {
-    bool timerExpired;
-    short move;
+    u8 timerExpired;
 
-    timerExpired = false;
+    timerExpired = 0;
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
     if (*(float*)(state + 0x324) <= lbl_803E2A60)
     {
-        timerExpired = true;
+        timerExpired = 1;
         *(float*)(state + 0x324) = *(f32 *)&lbl_803E2A60;
     }
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        move = ((GameObject*)obj)->anim.currentMove;
-        if (move == 4)
+        if (((GameObject*)obj)->anim.currentMove == 4)
         {
             pollenFn_80155b10(obj, state);
             *(float*)(state + 0x324) = lbl_803E2A80;
             Baddie_SetMove(obj, state, 5, lbl_803E2A54, 0, 0);
         }
-        else if ((move == 5) && (timerExpired))
+        else if ((((GameObject*)obj)->anim.currentMove == 5) && (timerExpired))
         {
             Baddie_SetMove(obj, state, 6, lbl_803E2A54, 0, 0);
             Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
         }
-        else if (move == 6)
+        else if (((GameObject*)obj)->anim.currentMove == 6)
         {
             Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
             *(float*)(state + 0x324) = lbl_803E2A80;
         }
-        else if (((move == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
+        else if (((((GameObject*)obj)->anim.currentMove == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
             Baddie_SetMove(obj, state, 4, lbl_803E2A54, 0, 0);
             Sfx_PlayFromObject(obj, SFXfox_fightbreath1);

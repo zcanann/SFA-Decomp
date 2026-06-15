@@ -209,13 +209,20 @@ s32 dataRemoveLayer(u16 sid)
 
     sndBegin();
     num = dataLayerNum;
-    for (i = 0; i < num && t->layer[i].id != sid; ++i);
+    {
+        LAYER_TAB* c = &t->layer[0];
+        for (i = 0; i < num && sid != c->id; ++c, ++i);
+    }
 
     if (i != num && --t->layer[i].refCount == 0)
     {
-        for (j = i + 1; j < num; j++)
         {
-            t->layer[j - 1] = t->layer[j];
+            LAYER_TAB* p = &t->layer[i + 1];
+            for (j = i + 1; j < num; j++)
+            {
+                p[-1] = p[0];
+                p++;
+            }
         }
 
         --dataLayerNum;
@@ -292,7 +299,10 @@ s32 dataRemoveCurve(u16 sid)
 
     sndBegin();
     num = dataCurveNum;
-    for (i = 0; i < num && t->curve[i].id != sid; ++i);
+    {
+        DATA_TAB* c = &t->curve[0];
+        for (i = 0; i < num && sid != c->id; ++c, ++i);
+    }
 
     if (i != num && --t->curve[i].refCount == 0)
     {

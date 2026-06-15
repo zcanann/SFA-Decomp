@@ -38,7 +38,7 @@ extern u8 lbl_80321008[];
 extern f32 lbl_803E3700;
 extern f32 lbl_803E3704;
 extern f32 lbl_803E3708;
-extern f32 lbl_803E3718;
+extern const f32 lbl_803E3718;
 extern f32 lbl_803E3728;
 
 void ProjectileSwitch_free(void)
@@ -215,7 +215,7 @@ void ProjectileSwitch_update(int obj)
             *(u8*)state2 = 1;
         }
     }
-    if (lbl_803E3718 < ((ProjectileSwitchState*)state)->unk4)
+    if (((ProjectileSwitchState*)state)->unk4 > lbl_803E3718)
     {
         ((ProjectileSwitchState*)state)->unk4 =
             ((ProjectileSwitchState*)state)->unk4 - (f32)(u32)

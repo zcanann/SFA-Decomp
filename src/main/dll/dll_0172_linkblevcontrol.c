@@ -305,7 +305,7 @@ void linkb_levcontrol_init(int* obj)
     fn_80088870(t + 0x38, (u8*)(int)lbl_803238D8, t + 0x70, t + 0xa8);
     if (getSaveGameLoadStatus() != 0)
     {
-        if ((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
         {
             envFxActFn_800887f8(0x3f);
         }
@@ -313,7 +313,7 @@ void linkb_levcontrol_init(int* obj)
     }
     else
     {
-        if ((*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)
         {
             envFxActFn_800887f8(0x1f);
         }

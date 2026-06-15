@@ -1213,28 +1213,29 @@ void textureFn_80053d58(void* vobj)
 {
     u8* obj = (u8*)vobj;
     u8 mipmap = 0;
+    void* texObj = (void*)(obj + 32);
     *(int*)(obj + 64) = 0;
     obj[72] = 0;
     if ((int)obj[29] - (int)obj[28] > 0) mipmap = 1;
-    GXInitTexObj((void*)(obj + 32), obj + 96,
+    GXInitTexObj(texObj, obj + 96,
                  *(u16*)(obj + 10), *(u16*)(obj + 12),
                  obj[22], obj[23], obj[24], mipmap);
     if (mipmap != 0)
     {
-        GXInitTexObjLOD((void*)(obj + 32), obj[25], obj[26],
+        GXInitTexObjLOD(texObj, obj[25], obj[26],
                         (f32)(u32)obj[28], (f32)(s32)obj[29],
                         lbl_803DEB98, 0, 0, 0);
     }
     else
     {
-        GXInitTexObjLOD((void*)(obj + 32), obj[25], obj[26],
+        GXInitTexObjLOD(texObj, obj[25], obj[26],
                         lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
     }
-    GXInitTexObjUserData((void*)(obj + 32), obj);
+    GXInitTexObjUserData(texObj, obj);
     {
-        int fmt = GXGetTexObjFmt((void*)(obj + 32));
-        u16 w = GXGetTexObjWidth((void*)(obj + 32));
-        u16 h = GXGetTexObjHeight((void*)(obj + 32));
+        int fmt = GXGetTexObjFmt(texObj);
+        u16 w = GXGetTexObjWidth(texObj);
+        u16 h = GXGetTexObjHeight(texObj);
         *(u32*)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
     }
 }
@@ -1268,10 +1269,10 @@ void textureFree(u8* tex)
     count = gLoadedTextureCount;
     if (count <= 0) return;
     {
-        LoadedTextureEntry* entry = gLoadedTextures;
+        int i = 0;
         do
         {
-            if (entry->texture == tex)
+            if (gLoadedTextures[i].texture == tex)
             {
                 iter = *(u8**)tex;
                 while (iter != NULL)
@@ -1286,11 +1287,11 @@ void textureFree(u8* tex)
                 }
                 if (((Texture*)tex)->preloaded != 0) findSomething(*(int*)&((Texture*)tex)->tmemAddr);
                 if (((Texture*)tex)->cached == 0) mm_free(tex);
-                entry->key = -1;
-                entry->texture = NULL;
+                gLoadedTextures[i].key = -1;
+                gLoadedTextures[i].texture = NULL;
                 return;
             }
-            entry++;
+            i++;
             count--;
         }
         while (count != 0);
@@ -1299,6 +1300,7 @@ void textureFree(u8* tex)
 
 #pragma scheduling on
 #pragma peephole on
+#pragma ppc_unroll_speculative off
 int textureCrazyPointerFollowFn_80054c30(int* p, int n)
 {
     int limit = *(u16*)((char*)p + 16);
@@ -1306,21 +1308,16 @@ int textureCrazyPointerFollowFn_80054c30(int* p, int n)
     if (n >= limit) n = limit - 1;
     n >>= 8;
     if (n <= 0) return (int)p;
-    q = (u32)n >> 3;
-    if (q != 0)
+    for (q = (u32)n >> 3; q != 0; q--)
     {
-        do
-        {
-            p = *(int**)p;
-            p = *(int**)p;
-            p = *(int**)p;
-            p = *(int**)p;
-            p = *(int**)p;
-            p = *(int**)p;
-            p = *(int**)p;
-            p = *(int**)p;
-        }
-        while (--q != 0);
+        p = *(int**)p;
+        p = *(int**)p;
+        p = *(int**)p;
+        p = *(int**)p;
+        p = *(int**)p;
+        p = *(int**)p;
+        p = *(int**)p;
+        p = *(int**)p;
     }
     n = n & 7;
     if (n == 0) return (int)p;
@@ -1332,6 +1329,7 @@ int textureCrazyPointerFollowFn_80054c30(int* p, int n)
     return (int)p;
 }
 
+#pragma ppc_unroll_speculative on
 #pragma scheduling off
 #pragma peephole off
 void shaderInit(u8* def, void** out, u8* obj)
@@ -1450,8 +1448,8 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
             r = randomGetRange(0, 0x3e8);
             if (r > 0x3d9)
             {
-                node[0] &= ~0x80000;
-                node[0] |= 0x40000;
+                node[0] &= ~0x80000LL;
+                node[0] |= 0x40000LL;
             }
         }
         else if (a == 0)
@@ -1463,11 +1461,11 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
                 if (*cnt < 0)
                 {
                     *cnt = 0;
-                    node[0] &= ~0xc0000;
+                    node[0] &= ~0xc0000LL;
                 }
                 else
                 {
-                    node[0] |= 0x80000;
+                    node[0] |= 0x80000LL;
                 }
             }
         }
@@ -1477,7 +1475,7 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
             if (*cnt < 0)
             {
                 *cnt = 0;
-                node[0] &= ~0xc0000;
+                node[0] &= ~0xc0000LL;
             }
         }
     }
@@ -1493,13 +1491,13 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
             if (*cnt < 0)
             {
                 *cnt = -*cnt;
-                node[0] &= ~0x80000;
+                node[0] &= ~0x80000LL;
                 flag2 = 1;
             }
             if (*cnt >= *(u16*)(def + 0x10))
             {
                 *cnt = *(u16*)(def + 0x10) * 2 - 1 - *cnt;
-                node[0] |= 0x80000;
+                node[0] |= 0x80000LL;
                 flag2 = 1;
             }
         }
@@ -2295,8 +2293,8 @@ void loadNextMap(void)
             *(f32*)(pos + 0) = ((WarpDestination*)lbl_803879A0)->x;
             *(f32*)(pos + 4) = ((WarpDestination*)lbl_803879A0)->y;
             *(f32*)(pos + 8) = ((WarpDestination*)lbl_803879A0)->z;
-            pos[0xd] = (s8)((WarpDestination*)lbl_803879A0)->angle0;
-            pos[0xc] = (s8)((WarpDestination*)lbl_803879A0)->angle1;
+            *(s8*)(pos + 0xd) = (s8)((WarpDestination*)lbl_803879A0)->angle0;
+            *(s8*)(pos + 0xc) = (s8)((WarpDestination*)lbl_803879A0)->angle1;
             mapReload();
             lbl_803DCEB8 = lbl_803DCEBA;
             lbl_803DCEBA = -1;

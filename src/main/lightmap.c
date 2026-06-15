@@ -1070,9 +1070,7 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
     }
     PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
     t = (s32) - stk[2] + offset;
-    if (t < 0) v = 0;
-    else if (t > 0x7ffffff) v = 0x7ffffff;
-    else v = t;
+    v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
 }
@@ -1102,9 +1100,7 @@ void fn_8005D3B4(u8* obj, u8* model, s32 b)
         ((f32) * (s16*)(obj + 16) * timing + *(f32*)(model + 0x38)));
     PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
     t = (s32) - stk[2];
-    if (t < 0) v = 0;
-    else if (t > 0x7ffffff) v = 0x7ffffff;
-    else v = t;
+    v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = (u32)model;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
@@ -1119,9 +1115,7 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
         lbl_803DCE30 = 0;
     }
     t = (s32) - p[2];
-    if (t < 0) v = 0;
-    else if (t > 0x7ffffff) v = 0x7ffffff;
-    else v = t;
+    v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = a;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = b;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | 0x38000000;
@@ -1485,8 +1479,9 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
     cursor = state[4] + 4;
     state[4] = cursor;
-    v = ((u8*)state[0])[cursor >> 3];
-    base = (int*)(state[0] + (cursor >> 3));
+    countShifted = cursor >> 3;
+    v = ((u8*)state[0])[countShifted];
+    base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -1527,8 +1522,9 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
     cursor = state[4] + 4;
     state[4] = cursor;
-    v = ((u8*)state[0])[cursor >> 3];
-    base = (int*)(state[0] + (cursor >> 3));
+    countShifted = cursor >> 3;
+    v = ((u8*)state[0])[countShifted];
+    base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -1557,7 +1553,6 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     int countShifted;
     int newR;
     u32 v;
-    int byteOff;
     int* base;
     int cursor;
     int nibble;
@@ -1577,9 +1572,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
     state[4] += 4;
     cursor = state[4];
-    byteOff = cursor >> 3;
-    v = ((u8*)state[0])[byteOff];
-    base = (int*)(state[0] + byteOff);
+    countShifted = cursor >> 3;
+    v = ((u8*)state[0])[countShifted];
+    base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;

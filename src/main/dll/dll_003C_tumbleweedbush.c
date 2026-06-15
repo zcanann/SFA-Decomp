@@ -208,34 +208,31 @@ void Link_copy(u8* srcArg)
 {
     extern u8 lbl_803DD911; /* #57 */
     extern LinkMenuItemDB lbl_803A9458[40];
-    LinkMenuItemDB* dst;
     LinkMenuItemDB* src;
     int i;
 
     i = 0;
-    dst = lbl_803A9458;
     src = (LinkMenuItemDB*)srcArg;
     for (; i < (s8)lbl_803DD911; i++)
     {
-        dst->field16 = src->field16;
-        dst->field1A = src->field1A;
-        dst->field04 = src->field04;
+        lbl_803A9458[i].field16 = src->field16;
+        lbl_803A9458[i].field1A = src->field1A;
+        lbl_803A9458[i].field04 = src->field04;
         if (src->textureAssetId != -1)
         {
-            if (dst->texture == NULL)
+            if (lbl_803A9458[i].texture == NULL)
             {
-                dst->texture = textureLoadAsset(src->textureAssetId);
+                lbl_803A9458[i].texture = textureLoadAsset(src->textureAssetId);
             }
         }
         else
         {
-            if (dst->texture != NULL)
+            if (lbl_803A9458[i].texture != NULL)
             {
-                textureFree(dst->texture);
+                textureFree(lbl_803A9458[i].texture);
             }
-            dst->texture = NULL;
+            lbl_803A9458[i].texture = NULL;
         }
-        dst++;
         src++;
     }
 }
@@ -703,15 +700,12 @@ void Link_release(void)
 
 void Link_initialise(void)
 {
-    LinkTextureSlot* slot;
     int i;
 
-    i = 0;
-    slot = (LinkTextureSlot*)linkTextures;
-    for (; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
-        slot->texture = textureLoadAsset(slot->assetId);
-        slot++;
+        ((LinkTextureSlot*)linkTextures)[i].texture =
+            textureLoadAsset(((LinkTextureSlot*)linkTextures)[i].assetId);
     }
 
     padFn_80014b18(10);
@@ -832,18 +826,14 @@ void Link_free(void)
 {
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */
     extern s8 lbl_803DD911; /* #57 */
-    LinkMenuItem* item;
     int i;
 
-    i = 0;
-    item = lbl_803A9458;
-    for (; i < (s8)lbl_803DD911; i++)
+    for (i = 0; i < (s8)lbl_803DD911; i++)
     {
-        if (item->texture != NULL)
+        if (lbl_803A9458[i].texture != NULL)
         {
-            textureFree(item->texture);
+            textureFree(lbl_803A9458[i].texture);
         }
-        item++;
     }
     lbl_803DD911 = 0;
 }

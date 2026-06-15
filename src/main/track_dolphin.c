@@ -1872,7 +1872,7 @@ void MapBlock_initShaders(int obj)
             {
                 *(int*)(p + 0x24) = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[v];
                 v = *(u8*)(p + 0x29);
-                if (v != 0)
+                if ((u32)v != 0u)
                 {
                     mapTextureOverrideAcquire(*(int*)(p + 0x24), 0, v);
                 }
@@ -2021,9 +2021,9 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
         for (i = 1; i < n; i++)
         {
             cur = val - *(f32*)arr[i];
-            if (cur >= __AR_Callback)
+            if (cur >= *(f32*)&__AR_Callback)
             {
-                if (best < __AR_Callback || cur < best)
+                if (best < *(f32*)&__AR_Callback || cur < best)
                 {
                     best = cur;
                 }
@@ -2171,7 +2171,7 @@ void* shadowInit(int* obj, int size)
     {
         modelState->shadowTexture = (void*)textureFn_8006c5c4();
     }
-    if (modelDef->shadowType == 1)
+    if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 1)
     {
         modelState->shadowRenderResource = NULL;
     }
@@ -2179,8 +2179,8 @@ void* shadowInit(int* obj, int size)
     {
         modelState->shadowRenderResource = (void*)-1;
     }
-    modelState->shadowScale = *(f32*)modelDef;
-    modelState->shadowModelScale = *(f32*)((char*)modelDef + 0x88);
+    modelState->shadowScale = *(f32*)((ObjAnimComponent*)obj)->modelInstance;
+    modelState->shadowModelScale = *(f32*)((char*)((ObjAnimComponent*)obj)->modelInstance + 0x88);
     modelState->shadowOffsetX = lbl_803DCED8;
     modelState->shadowOffsetY = lbl_803DB650;
     modelState->shadowOffsetZ = lbl_803DCEDC;
@@ -2224,8 +2224,9 @@ int fn_800626C8(int* obj, int delta)
             *alphaStep = 0x4000;
         }
     }
-    f31 = lbl_803DB654 * (lbl_803DEC90 * (f32) * alphaStep);
-    v = (int)((f32)objShadowFn_80062378(obj, modelState->shadowTintA) * f31);
+    f31 = lbl_803DEC90 * (f32) * alphaStep;
+    f31 = lbl_803DB654 * f31;
+    v = (s16)(int)((f32)objShadowFn_80062378(obj, modelState->shadowTintA) * f31);
     if (v > 0xff)
     {
         v = 0xff;
@@ -2283,8 +2284,8 @@ typedef struct AngleXf
 void fn_80061094(f32* vec, f32* out, f32 scale)
 {
     AngleXf xf;
-    f32 ax;
-    f32 az;
+    f64 ax;
+    f64 az;
     int i;
 
     xf.tx = 0.0f;
@@ -2292,8 +2293,8 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
     xf.tz = 0.0f;
     xf.scale = 1.0f;
     xf.rotZ = 0;
-    ax = (f32)__fabs(vec[0]);
-    az = (f32)__fabs(vec[2]);
+    ax = __fabs(vec[0]);
+    az = __fabs(vec[2]);
     if (ax > az)
     {
         xf.rotY = (u16)getAngle(ax, vec[1]);
@@ -2377,6 +2378,7 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
     lbl_803DB658 = 1;
 }
 
+#pragma opt_strength_reduction off
 int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
 {
     ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
@@ -2424,8 +2426,9 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
         i += 3;
         input += 5;
     }
-    return lbl_803DCEF2 != 0;
+    return lbl_803DCEF2 > 0;
 }
+#pragma opt_strength_reduction reset
 
 void fn_8006135C(s16* out, void* obj)
 {
@@ -2462,8 +2465,8 @@ void fn_8006135C(s16* out, void* obj)
     PSVECScale(b, b, scale);
     PSVECScale(c, c, scale);
     nd = -dist;
-    z = lbl_803DEC58;
     s = (&lbl_803DEC70)[1];
+    z = lbl_803DEC58;
     out[0] = (s * ((z - b[0]) - c[0]));
     out[1] = (s * ((nd - b[1]) - c[1]));
     out[2] = (s * ((z - b[2]) - c[2]));

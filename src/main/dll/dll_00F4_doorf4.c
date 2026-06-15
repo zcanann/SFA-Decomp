@@ -192,6 +192,7 @@ void doorf4_init(int* obj, int* params)
         state->gameBitB = 68;
         break;
     case 283:
+    case 284:
         state->gameBitB = 152;
         break;
     case 318:

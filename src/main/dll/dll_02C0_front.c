@@ -208,20 +208,17 @@ extern void* gameTextGet(s32);
 #pragma peephole off
 void titlescreen_release(void)
 {
-    register void** p;
     int i;
     textureFree(lbl_803DD9D4);
     lbl_803DD9D4 = NULL;
     i = 0;
-    p = lbl_803A9F98;
     do
     {
-        if (*p != NULL)
+        if (lbl_803A9F98[i] != NULL)
         {
-            textureFree(*p);
-            *p = NULL;
+            textureFree(lbl_803A9F98[i]);
+            lbl_803A9F98[i] = NULL;
         }
-        p++;
         i++;
     }
     while (i < 19);
@@ -329,12 +326,13 @@ void titlescreen_init(u8* obj, u8* p)
     }
     else
     {
-        ((TitlescreenState*)a)->unk34 = lbl_803E22F8;
+        f32 blend = lbl_803E22F8;
+        ((TitlescreenState*)a)->unk34 = blend;
         ((TitlescreenState*)a)->unk31 = -2;
         v = ((GameObject*)obj)->anim.seqId;
         if (v == 0x78a)
         {
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, blend, 0);
         }
         else if (v == 0x781)
         {

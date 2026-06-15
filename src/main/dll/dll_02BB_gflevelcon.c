@@ -304,11 +304,11 @@ void fn_8023A268(int p1, int p2, int p3)
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if (proj != 0)
+        p1 = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if ((void*)p1 != NULL)
         {
-            arwprojectile_setLifetime(proj, lbl_803DC4DC);
-            arwprojectile_placeForward(proj, (f32)(u32)lbl_803DC4D8);
+            arwprojectile_setLifetime(p1, lbl_803DC4DC);
+            arwprojectile_placeForward(p1, (f32)(int)lbl_803DC4D8);
         }
     }
 }
@@ -320,7 +320,6 @@ void fn_80239FCC(int p1, int p2)
     int rndYaw;
     int rndDur;
     int newObj;
-    int proj;
 
     if (Obj_IsLoadingLocked())
     {
@@ -329,11 +328,11 @@ void fn_80239FCC(int p1, int p2)
         rndYaw = (s16)randomGetRange(-0x8000, 0x7fff);
         rndDur = randomGetRange(0x64, 0x12c);
         newObj = Obj_AllocObjectSetup(0x20, 0x859);
-        ang = lbl_803E74A0 * (f32)(u32)
+        ang = lbl_803E74A0 * (f32)(int)
         rndYaw / lbl_803E74A4;
-        *(f32*)(newObj + 8) = (f32)(u32)
+        *(f32*)(newObj + 8) = (f32)(int)
         rndDur * mathSinf(ang) + *(f32*)(*(int*)p2 + 0xc);
-        *(f32*)(newObj + 0xc) = (f32)(u32)
+        *(f32*)(newObj + 0xc) = (f32)(int)
         rndDur * mathCosf(ang) + *(f32*)(*(int*)p2 + 0x10);
         *(f32*)(newObj + 0x10) = *(f32*)(p2 + 0xc8) - lbl_803E74A8;
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
@@ -341,12 +340,12 @@ void fn_80239FCC(int p1, int p2)
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if (proj != 0)
+        rndDur = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if ((void*)rndDur != NULL)
         {
-            *(f32*)(proj + 8) = lbl_803DC4E4;
-            arwprojectile_setLifetime(proj, lbl_803DC4E0);
-            arwprojectile_placeForward(proj, lbl_803E74AC);
+            *(f32*)(rndDur + 8) = lbl_803DC4E4;
+            arwprojectile_setLifetime(rndDur, lbl_803DC4E0);
+            arwprojectile_placeForward(rndDur, lbl_803E74AC);
         }
     }
 }

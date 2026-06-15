@@ -65,16 +65,14 @@ int fn_8015E3A0(int obj, int p2)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int count;
     int idx;
-    ObjHitsPriorityState* hitState;
 
     if ((s32)(s8) * (u8*)(p2 + 0x27a) != 0)
     {
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->objectPairPriority = 10;
-    hitState->objectPairHitVolume = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
 
     if ((s32)(s8) * (u8*)(p2 + 0x27a) != 0)
@@ -477,7 +475,6 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
     int i;
     GroundBaddieState* sub;
     int* objs;
-    ObjHitsPriorityState* hitState;
 
     sub = ((GameObject*)obj)->extra;
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
@@ -485,9 +482,8 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->objectPairPriority = 10;
-    hitState->objectPairHitVolume = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
@@ -658,7 +654,6 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     GroundBaddieState* sub;
     u8* hit;
     int flags;
-    ObjHitsPriorityState* hitState;
 
     sub = ((GameObject*)obj)->extra;
     hit = *(u8**)&sub->control;
@@ -682,9 +677,8 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     else
     {
         ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->objectPairPriority = 10;
-        hitState->objectPairHitVolume = 1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }
     if (*(char*)&p->baddie.moveDone != '\0')

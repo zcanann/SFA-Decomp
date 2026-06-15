@@ -1329,15 +1329,16 @@ ObjTextureRuntimeSlot* objFindTexture(void* obj, int target, int unusedMaterialI
         ObjTextureSlotDef* entries = modelDef->textureSlotDefs;
         if (entries == NULL) return NULL;
         {
+            ObjTextureSlotDef* walk = entries;
             u8 count = modelDef->textureSlotCount;
             int i;
             for (i = 0; i < count; i++)
             {
-                if (target == entries->tag)
+                if (target == walk->tag)
                 {
                     result = &((GameObject*)obj)->anim.textureSlots[i];
                 }
-                entries++;
+                walk++;
             }
         }
     }

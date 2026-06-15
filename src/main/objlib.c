@@ -720,7 +720,7 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                hitState->sphereIndices[hitSlot] = sphereIndex;
+                *(u8*)&hitState->sphereIndices[hitSlot] = sphereIndex;
                 hitState->priorities[hitSlot] = priority;
                 hitState->hitVolumes[hitSlot] = hitVolume;
                 hitState->hitPosX[hitSlot] = sourceObj->localPosX;
@@ -734,7 +734,7 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
     if ((hitSlot == hitState->priorityHitCount) &&
         (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
-        hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
+        *(u8*)&hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
         hitState->priorities[hitState->priorityHitCount] = priority;
         hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
         hitState->hitObjects[hitState->priorityHitCount] = hitObj;
@@ -1079,6 +1079,7 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     return nearest;
 }
 
+#pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
 {
     uint nearest;
@@ -1087,7 +1088,6 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
     uint* entry;
     float distanceSq;
     float bestDistanceSq;
-    u8* off;
 
     nearest = 0;
     if ((group < 0) || (group >= OBJGROUP_COUNT))
@@ -1102,9 +1102,8 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
-    off = &gObjGroupOffsets[group];
-    index = (uint)off[0];
-    limit = (uint)off[1];
+    index = (uint)gObjGroupOffsets[group];
+    limit = (uint)(&gObjGroupOffsets[group])[1];
     entry = (uint*)gObjGroupObjects + index;
     while ((int)index < (int)limit)
     {
@@ -1136,7 +1135,6 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     uint* entry;
     float distanceSq;
     float bestDistanceSq;
-    u8* off;
 
     nearest = 0;
     if ((group < 0) || (group >= OBJGROUP_COUNT))
@@ -1151,9 +1149,8 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
-    off = &gObjGroupOffsets[group];
-    index = (uint)off[0];
-    limit = (uint)off[1];
+    index = (uint)gObjGroupOffsets[group];
+    limit = (uint)(&gObjGroupOffsets[group])[1];
     entry = (uint*)gObjGroupObjects + index;
     while ((int)index < (int)limit)
     {
@@ -1176,6 +1173,7 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     }
     return nearest;
 }
+#pragma opt_loop_invariants reset
 
 uint* ObjGroup_GetObjects(int group, int* countOut)
 {
@@ -1383,6 +1381,7 @@ undefined4 ObjMsg_Pop(void* obj, uint* outMessage, uint* outSender, uint* outPar
     return 0;
 }
 
+#pragma opt_loop_invariants off
 void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* sender, uint message, uint param)
 {
     int* objects;
@@ -1393,15 +1392,19 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
     int objectIndex;
     int objectCount;
     void* obj;
+    int includeSender;
+    int matchAny;
 
     objects = (int*)ObjList_GetObjects(&objectIndex, &objectCount);
     maskedFlags = flags & 0xffff;
+    includeSender = maskedFlags & OBJMSG_SEND_INCLUDE_SENDER;
+    matchAny = maskedFlags & OBJMSG_SEND_MATCH_ANY;
     for (; objectIndex < objectCount; objectIndex = objectIndex + 1)
     {
         obj = (void*)objects[objectIndex];
-        if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
+        if (((obj != sender) || (includeSender == 0)) &&
             ((((GameObject*)obj)->anim.seqId == (short)targetId ||
-                ((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0))) &&
+                (matchAny != 0))) &&
             ((Vec_distance(&((GameObject*)sender)->anim.worldPosX,
                            &((GameObject*)obj)->anim.worldPosX) < radius &&
                     (obj != (void*)0x0)) &&
@@ -1427,6 +1430,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
     }
     return;
 }
+#pragma opt_loop_invariants reset
 
 void ObjMsg_SendToObjects(int targetId, uint flags, void* sender, uint message, uint param)
 {
@@ -1650,6 +1654,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colo
                                         &effectArgs);
             if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (*(short*)(hitObject + 0x46) == 0x69))
             {
+                extern void Sfx_PlayFromObject(int obj, int id);
                 Sfx_PlayFromObject(obj, sfxId);
             }
         }
@@ -1852,6 +1857,7 @@ undefined4 ObjTrigger_IsSet(int obj)
     return 0;
 }
 
+#pragma opt_loop_invariants off
 int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
 {
     int startIndex;
@@ -1905,6 +1911,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     }
     return foundObj;
 }
+#pragma opt_loop_invariants reset
 
 undefined4 ObjList_ContainsObject(int obj)
 {

@@ -3416,11 +3416,7 @@ void ObjSeq_setFlag(int index, int value)
 {
     s8 flag;
 
-    if (index < 0)
-    {
-        return;
-    }
-    if (index >= 0x55)
+    if (index < 0 || index >= 0x55)
     {
         return;
     }
@@ -3435,11 +3431,7 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     s16 shortXrot;
     s16 shortYrot;
 
-    if (index < 0)
-    {
-        return;
-    }
-    if (index >= 0x55)
+    if (index < 0 || index >= 0x55)
     {
         return;
     }

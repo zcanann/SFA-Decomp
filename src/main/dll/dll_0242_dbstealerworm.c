@@ -12,6 +12,14 @@
 #include "main/main.h"
 #include "main/objlib.h"
 
+typedef struct DbStealerwormFlags44
+{
+    u8 b6_7 : 2;
+    u8 bit5 : 1;
+    u8 bit4 : 1;
+    u8 b0_3 : 4;
+} DbStealerwormFlags44;
+
 extern uint GameBit_Get(int eventId);
 
 extern void objRenderFn_8003b8f4(f32);
@@ -942,14 +950,14 @@ void dbstealerworm_init(int* obj, u8* def, int param3)
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     u8* sub;
     int* p40c;
-    int mode;
+    u8 mode;
     int r;
 
     sub = ((GameObject*)obj)->extra;
     mode = 6;
     if (param3 != 0)
     {
-        mode = (u8)(mode | 1);
+        mode |= 1;
     }
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(
         obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
@@ -962,9 +970,8 @@ void dbstealerworm_init(int* obj, u8* def, int param3)
     r = randomGetRange(0xa, 0x12c);
     ((DbStealerwormControl*)p40c)->countdown = (f32)(s32)
     r;
-    ((DbStealerwormControl*)p40c)->flags44 = (u8)(
-        (((DbStealerwormControl*)p40c)->flags44 & ~0x20) | ((def[0x2b] & 1) << 5));
-    ((DbStealerwormControl*)p40c)->flags44 = (u8)(((DbStealerwormControl*)p40c)->flags44 | 0x10);
+    ((DbStealerwormFlags44*)&((DbStealerwormControl*)p40c)->flags44)->bit5 = def[0x2b] & 1;
+    ((DbStealerwormFlags44*)&((DbStealerwormControl*)p40c)->flags44)->bit4 = 1;
     ((DbStealerwormControl*)p40c)->linkedObj = 0;
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);

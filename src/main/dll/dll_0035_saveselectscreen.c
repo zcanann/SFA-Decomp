@@ -178,8 +178,6 @@ void SaveSelectScreen_release(void)
 #pragma dont_inline on
 void saveFileSelect_init(int param_1, int param_2)
 {
-    int i;
-
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
     if (param_1 == 0)
     {
@@ -193,8 +191,7 @@ void saveFileSelect_init(int param_1, int param_2)
         if (param_1 == 1)
         {
             saveFileSelect_currentSlotIndex = (s8)param_2;
-            i = (s8)param_2;
-            if (*(u8*)((char*)(saveFileSelect_saveSlots + i) + 0x20) == 0)
+            if (saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].isOccupied == 0)
             {
                 loadUiDll(6);
             }

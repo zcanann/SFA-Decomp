@@ -132,8 +132,7 @@ s32 synthUpdateCallbacks(void)
 
     for (listIndex = 0; listIndex < SYNTH_CALLBACK_ACTIVE_LIST_COUNT; listIndex++)
     {
-        callback = gSynthCurrentVoice->callbackLists[listIndex];
-        if (callback != 0)
+        if ((callback = gSynthCurrentVoice->callbackLists[listIndex]) != 0)
         {
             goto checkThreshold;
             while (1)
@@ -153,8 +152,7 @@ s32 synthUpdateCallbacks(void)
                     gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX]->prev = callback;
                 }
                 gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback;
-                callback = gSynthCurrentVoice->callbackLists[listIndex];
-                if (callback == 0)
+                if ((callback = gSynthCurrentVoice->callbackLists[listIndex]) == 0)
                 {
                     break;
                 }

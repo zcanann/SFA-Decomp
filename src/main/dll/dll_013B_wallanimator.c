@@ -67,6 +67,12 @@ typedef struct WallanimatorState
     u8 pad5[0x8 - 0x5];
 } WallanimatorState;
 
+typedef struct WallanimatorActiveBits
+{
+    u8 active : 1;
+    u8 rest : 7;
+} WallanimatorActiveBits;
+
 f32 wallanimator_setScale(int obj, int target)
 {
     struct
@@ -215,16 +221,14 @@ void wallanimator_update(int obj)
     desc = *(int*)&((GameObject*)obj)->anim.placementData;
     *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
 
-    if (((u32) * (u8*)(state + 1) >> 7) != 0)
+    if (((*(u8*)(state + 1) >> 7) & 1) != 0u)
     {
         return;
     }
 
     if (*state >= WALLANIMATOR_DONE_TIMER)
     {
-        u8 activeBit = 1;
-        *(u8*)(state + 1) =
-            (*(u8*)(state + 1) & ~WALLANIMATOR_RUNTIME_ACTIVE_FLAG) | (activeBit << 7);
+        ((WallanimatorActiveBits*)((u8*)state + 4))->active = 1;
         GameBit_Set((int)*(short*)(desc + 0x18), 1);
         Sfx_PlayFromObject(obj, WALLANIMATOR_COMPLETE_SFX);
         return;

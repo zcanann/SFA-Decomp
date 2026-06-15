@@ -114,7 +114,7 @@ float fn_802943F4(float x) {
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 float fn_8029454C(float x) {
     u16 n;
     float y = trigReduceQuadrant(&n, x);

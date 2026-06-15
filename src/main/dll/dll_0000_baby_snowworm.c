@@ -252,7 +252,7 @@ void GameUI_unselectAllItems(void)
     extern u8 lbl_803DD8B8; /* #57 */
     register int* p;
     p = (int*)lbl_8031B5D8;
-    while (*p != 0)
+    while (*(void**)p != NULL)
     {
         *(s16*)((u8*)p + 4) = 0;
         p = (int*)((u8*)p + 0x10);
@@ -566,13 +566,16 @@ void timeListFn_8012be84(void)
 
     buttons = (u16)getButtonsJustPressed(0);
     padGetAnalogInput(0, &buf[1], &buf[0]);
-    if ((s8)buf[0] == 1)
     {
-        lbl_803DD75B = 1;
-    }
-    if ((s8)buf[0] == -1)
-    {
-        lbl_803DD75B = 2;
+        int analog = buf[0];
+        if ((s8)analog == 1)
+        {
+            lbl_803DD75B = 1;
+        }
+        if ((s8)analog == -1)
+        {
+            lbl_803DD75B = 2;
+        }
     }
     if (lbl_803DD75B != prev_state)
     {
@@ -1275,7 +1278,7 @@ void fn_80128120(int unused, int p2)
     extern u8 hudTextures[0x198]; /* #57 */
     s16 n = 0xc8 - lbl_803DD75C;
     int v;
-    int level;
+    u8 level;
     s8 i;
 
     pauseMenuDrawElement(*(int*)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20D8, n, p2, (int)lbl_803E1F34, 0);
@@ -4231,9 +4234,8 @@ void fn_8012F9B4(int idx, s16 target, s8 flag)
 {
     extern undefined4 cMenuSetItems(); /* #57 */
     void* entry = &lbl_8031B5D8[idx * 16];
-    s16* cursor = (s16*)((char*)entry + 4);
     int count = cMenuSetItems(*(int*)entry, flag);
-    s16 pos = *cursor;
+    s16 pos = *(s16*)((char*)entry + 4);
     u8 i;
 
     for (i = 0; i < count; i++)
@@ -4241,7 +4243,7 @@ void fn_8012F9B4(int idx, s16 target, s8 flag)
         s16 lookup = pos;
         if (lbl_803A8C78[lookup] != 0 && lbl_803A9038[lookup] == target)
         {
-            *cursor = pos;
+            *(s16*)((char*)entry + 4) = pos;
             return;
         }
         pos++;
@@ -4255,19 +4257,22 @@ void fn_8012F9B4(int idx, s16 target, s8 flag)
 void fn_8012FA70(int idx, s8 flag)
 {
     extern undefined4 cMenuSetItems(); /* #57 */
-    void* entry = &lbl_8031B5D8[idx * 16];
-    s16* cursor = (s16*)((char*)entry + 4);
-    int count = cMenuSetItems(*(int*)entry, flag);
-    s16 pos = *cursor;
+    void* entry;
     u8 prev = 1;
+    int count;
+    s16 pos;
     u8 i;
+
+    entry = &lbl_8031B5D8[idx * 16];
+    count = cMenuSetItems(*(int*)entry, flag);
+    pos = *(s16*)((char*)entry + 4);
 
     for (i = 0; i < count * 2; i++)
     {
         u8 b = lbl_803A8C78[(s16)pos];
         if (b != 0 && (prev != 0 || i >= count))
         {
-            *cursor = pos;
+            *(s16*)((char*)entry + 4) = pos;
             return;
         }
         prev = b;

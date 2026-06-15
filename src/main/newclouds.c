@@ -218,7 +218,7 @@ extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 
 #pragma dont_inline on
-void* lightningCreate(f32* a, f32* b, f32 c, f32 d, int e, int f, int g)
+void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g)
 {
     LightningEffect* p = mmAlloc(40, 23, 0);
 
@@ -484,14 +484,15 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
         dx = (f32)lbl_8039A848[i].x - pos[0];
         dSq = dx * dx;
         dz = (f32)lbl_8039A848[i].z - pos[2];
-        dSq += dz * dz;
-        if (dSq == 0.0f)
+        dz = dz * dz;
+        dSq = dSq + dz;
+        if (dSq != 0.0f)
         {
-            dists[i] = 0.0f;
+            dists[i] = sqrtf__inline(dSq);
         }
         else
         {
-            dists[i] = sqrtf__inline(dSq);
+            dists[i] = 0.0f;
         }
         if (dists[i] < lbl_803DF1DC)
         {
@@ -563,7 +564,7 @@ void lightningRender(void* state)
     end[2] = p->end[2] - playerMapOffsetZ;
     a = p->timer;
     b = p->lifetime;
-    half = b >> 1;
+    half = (u32)b >> 1;
     if (a <= half)
     {
         _gxSetTevColor2(0x80, 0x80, 0xff, 0xff);

@@ -605,7 +605,7 @@ void GameUI_func14(s16 a, int b, int c)
 {
     int* entry = lbl_8031B5D8;
     lbl_803A9398[0] = 0;
-    while (*(void**)entry != NULL)
+    while ((void*)*entry != NULL)
     {
         s16* row = (s16*)*entry;
         while (row[0] != -1)

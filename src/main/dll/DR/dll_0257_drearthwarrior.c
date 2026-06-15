@@ -437,12 +437,14 @@ void DR_EarthWarrior_free(int obj)
 void DR_EarthWarrior_func23(int obj, int mode)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    if (mode == 1)
+    switch (mode)
     {
+    case 1:
         inner->sub.health += 4;
         objAudioFn_800393f8(obj, (char*)(char*)inner + 0x3bc, 0x291, 0x1000, -1, 1);
         inner->sub.unk8EC = lbl_803E82E8;
         *(f32*)((char*)lbl_8033527C + 0x24) = inner->sub.unk8EC;
+        break;
     }
 }
 
@@ -585,7 +587,7 @@ void fn_802BE6E8(int obj, int t, int p3)
 
 int fn_802BC830(int obj, int p2, int p3)
 {
-    ((EarthWarriorSub*)p2)->unk360 |= 0x1000000;
+    *(u32*)&((EarthWarriorSub*)p2)->unk360 |= 0x1000000LL;
     ((BaddieState*)p3)->moveSpeed = lbl_803E82EC;
     if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject*)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
@@ -609,8 +611,8 @@ int fn_802BC830(int obj, int p2, int p3)
     }
     if (((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b80 != 0)
     {
-        f32 lim = *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x10);
-        if (((BaddieState*)p3)->animSpeedC <= lim && ((BaddieState*)p3)->animSpeedA <= lim)
+        if (((BaddieState*)p3)->animSpeedC <= *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x10) &&
+            ((BaddieState*)p3)->animSpeedA <= *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x10))
         {
             ((EarthWarriorSub*)p2)->savedYaw = ((EarthWarriorSub*)p2)->currentYaw;
             ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b40 = 0;
