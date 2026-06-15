@@ -3937,32 +3937,34 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
     float dz;
     int* objects;
     int obj;
-    RomCurveDef* curve;
     int i;
+    RomCurveDef* curve;
     float distance;
-    double nearestCurveId;
-    double nearestDistance;
-    int objectCount;
+    float nearestDistance;
+    float nearestCurveId;
     int startIndex;
+    int objectCount;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
-    nearestCurveId = (double)lbl_803E12B0;
-    nearestDistance = (double)lbl_803E12B8;
+    nearestCurveId = gFloatNegOne;
+    nearestDistance = gFloatZero;
     for (i = 0; i < objectCount; i = i + 1)
     {
         obj = objects[i];
-        if ((((((GameObject*)obj)->anim.classId == 0x2c) &&
+        if (((((GameObject*)obj)->anim.classId == 0x2c) &&
                     (((GameObject*)obj)->anim.mapEventSlot != queryAll)) &&
-                (curve = (RomCurveDef*)((GameObject*)obj)->anim.placementData, curve != NULL)) &&
-            ((curve->type == 0x16 &&
-                ((dx = ((GameObject*)obj)->anim.worldPosX - x,
-                    dy = ((GameObject*)obj)->anim.worldPosY - y,
-                    dz = ((GameObject*)obj)->anim.worldPosZ - z,
-                    distance = sqrtf(dz * dz + (dx * dx + dy * dy)),
-                    (double)lbl_803E12B0 == nearestCurveId || (distance < nearestDistance))))))
+                (curve = (RomCurveDef*)((GameObject*)obj)->anim.placementData, curve != NULL) &&
+                curve->type == 0x16)
         {
-            nearestCurveId = (double)curve->id;
-            nearestDistance = distance;
+            dx = ((GameObject*)obj)->anim.worldPosX - x;
+            dy = ((GameObject*)obj)->anim.worldPosY - y;
+            dz = ((GameObject*)obj)->anim.worldPosZ - z;
+            distance = sqrtf(dz * dz + (dx * dx + dy * dy));
+            if (gFloatNegOne == nearestCurveId || distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestCurveId = (float)curve->id;
+            }
         }
     }
     return (int)nearestCurveId;
