@@ -365,18 +365,14 @@ void arwarwing_updateWeaponFire(int obj, int state)
     arwarwing_updateThrusters(obj, state);
     {
         f32 t = ((ArwingState*)state)->fireCooldown;
-        f32 lim = lbl_803E6ECC;
-        if (t > lim)
+        f32 zero = lbl_803E6ECC;
+        if (t > zero)
         {
             ((ArwingState*)state)->fireCooldown = t - timeDelta;
-            if (((ArwingState*)state)->fireCooldown < lim)
-            {
-                ((ArwingState*)state)->fireCooldown = lim;
-            }
+            if (((ArwingState*)state)->fireCooldown < zero)
+                ((ArwingState*)state)->fireCooldown = zero;
             else
-            {
                 return;
-            }
         }
     }
     fire = 0;
