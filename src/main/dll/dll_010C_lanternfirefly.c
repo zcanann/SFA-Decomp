@@ -6,7 +6,6 @@
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
 
