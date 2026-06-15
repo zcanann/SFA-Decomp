@@ -2354,7 +2354,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 }
                 GXSetAlphaCompare(7, 0, 0, 7, 0);
             } else if ((((ModelFileHeader *)model)->flags & 0x2000) != 0) {
-                int alphaRef0;
+                int alphaRef0, alphaRef1;
                 zCompLoc = 0;
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
@@ -2365,7 +2365,8 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     lbl_803DD01A = 1;
                 }
                 alphaRef0 = fn_8003BB74();
-                GXSetAlphaCompare(4, fn_8003BB74(), 0, 4, alphaRef0);
+                alphaRef1 = fn_8003BB74();
+                GXSetAlphaCompare(4, alphaRef1, 0, 4, alphaRef0);
             } else {
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
