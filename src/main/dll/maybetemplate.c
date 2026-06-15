@@ -729,7 +729,7 @@ void minimapFn_8012310c(void)
     if ((lbl_803DD7A0 != '\0') && (lbl_803DD7A2 == 0xff))
     {
         lbl_803DD8D2 = lbl_803DD8D2 + framesThisStep * 4;
-        if (lbl_803DBA68 < lbl_803DD8D2)
+        if (lbl_803DD8D2 > lbl_803DBA68)
         {
             lbl_803DD8D2 = lbl_803DBA68;
         }
