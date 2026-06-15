@@ -103,7 +103,6 @@ void FUN_8013651c(int param_1)
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 extern u8 warpstoneUIState;
-extern u8 showCredits;
 
 void WarpstoneUI_frameEnd(void)
 {
@@ -206,7 +205,6 @@ void fn_80133F70(void* obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
@@ -350,7 +348,6 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E2354;
 
 extern void gameTextFn_80016810(int textId, int a, int b);
 
