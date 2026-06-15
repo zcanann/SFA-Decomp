@@ -7,14 +7,16 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
+#define DIMICEWALL_MAPID_NO_SFX 7433
+
 typedef struct DimicewallPlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId;
     u8 pad18[0x19 - 0x18];
-    s8 unk19;
+    s8 shatterScale;
     u8 pad1A[0x1E - 0x1A];
-    s16 unk1E;
+    s16 shatterGameBit;
 } DimicewallPlacement;
 
 extern uint GameBit_Get(int eventId);
@@ -64,7 +66,7 @@ void dimicewall_update(int* obj)
         {
             f32 desc[6];
             int i;
-            desc[2] =(f32)(s8)((DimicewallPlacement*)def)->unk19 / lbl_803E4880;
+            desc[2] =(f32)(s8)((DimicewallPlacement*)def)->shatterScale / lbl_803E4880;
             desc[5] = lbl_803E4884;
             for (i = 45; i != 0; i--)
             {
@@ -90,14 +92,14 @@ void dimicewall_update(int* obj)
                 ;
                 (*gPartfxInterface)->spawnObject(obj, 2042, desc, 2, -1, NULL);
             }
-            if ((u32)((DimicewallPlacement*)def)->unk14 != 7433)
+            if ((u32)((DimicewallPlacement*)def)->mapId != DIMICEWALL_MAPID_NO_SFX)
             {
                 Sfx_PlayFromObject((int)obj, 1147);
             }
             ((DimicewallState*)extra)->unk1 = 1;
-            if (((DimicewallPlacement*)def)->unk1E != -1)
+            if (((DimicewallPlacement*)def)->shatterGameBit != -1)
             {
-                GameBit_Set(((DimicewallPlacement*)def)->unk1E, 1);
+                GameBit_Set(((DimicewallPlacement*)def)->shatterGameBit, 1);
             }
         }
         else
