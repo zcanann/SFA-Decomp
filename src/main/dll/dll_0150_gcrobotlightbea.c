@@ -95,13 +95,13 @@ extern f32 lbl_803E42A4;
 extern f32 lbl_80322C38[];
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
-extern void* modelLightStruct_createPointLight(int a, int b, int c, int d);
+extern void* modelLightStruct_createPointLight(int* obj, int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int* obj, void* out, void* in);
 extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
 extern f32 PSVECDistance(void* a, void* b);
-extern void PSVECScale(void* in, void* out, f32 scale);
+extern void PSVECScale(void* in, void* out);
 extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
@@ -663,12 +663,12 @@ void gcrobotlightbea_update(int* obj)
     GcRobotLightBeaState* sub;
     f32 vec[3];
     f32 vec2[3];
-    u8 b_byte, g_byte, r_byte;
+    u8 r_byte, g_byte, b_byte;
 
     sub = ((GameObject*)obj)->extra;
     if (sub->light == NULL)
     {
-        sub->light = modelLightStruct_createPointLight(0xfa, 0xfa, 0xfa, 1);
+        sub->light = modelLightStruct_createPointLight(obj, 0xfa, 0xfa, 0xfa, 1);
         if (sub->light != NULL)
         {
             modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
@@ -681,7 +681,7 @@ void gcrobotlightbea_update(int* obj)
     Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
     voxmaps_traceScaledVectorEnd(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
     PSVECDistance((char*)obj + 0xc, vec2);
-    PSVECScale(lbl_80322C38, vec2, 0);
+    PSVECScale(lbl_80322C38, vec2);
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
     if (sub->light != NULL)
     {
