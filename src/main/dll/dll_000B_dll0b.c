@@ -1734,6 +1734,14 @@ void fn_800A0478(ModgfxState* state)
 }
 
 #pragma peephole off
+typedef struct
+{
+    s16 ang[3];
+    s16 pad;
+    f32 scale;
+    f32 pos[3];
+} EffXform;
+
 void fn_800A081C(int p1, int p2, int mode)
 {
     extern void vecRotateZXY(void*, f32*);
@@ -1748,18 +1756,18 @@ void fn_800A081C(int p1, int p2, int mode)
             int flags = ((ModgfxState*)p1)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
             {
-                s16 buf[6];
-                f32* fbuf = (f32*)&buf[2];
-                s16 v = *((ModgfxState*)p1)->unk04;
+                EffXform xf2;
                 f32 fill = lbl_803DF430;
-                fbuf[3] = fill;
-                fbuf[2] = fill;
-                fbuf[1] = fill;
-                fbuf[0] = lbl_803DF434;
-                buf[2] = v;
-                buf[1] = v;
-                buf[0] = v;
-                vecRotateZXY(buf, (f32*)(p2 + 0x4));
+                s16 v;
+                xf2.pos[0] = fill;
+                xf2.pos[1] = fill;
+                xf2.pos[2] = fill;
+                xf2.scale = lbl_803DF434;
+                v = *((ModgfxState*)p1)->unk04;
+                xf2.ang[0] = v;
+                xf2.ang[1] = v;
+                xf2.ang[2] = v;
+                vecRotateZXY(&xf2, (f32*)(p2 + 0x4));
             }
             ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX;
             ((ModgfxState*)p1)->posStepY = ((ModgfxVertexGroupCmd*)p2)->valueY;
@@ -2371,13 +2379,6 @@ extern f32 lbl_803DF454;
 extern f32 lbl_803DF458;
 extern f32 lbl_803DF45C;
 
-typedef struct
-{
-    s16 ang[3];
-    s16 pad;
-    f32 scale;
-    f32 pos[3];
-} EffXform;
 
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
