@@ -1404,9 +1404,8 @@ int ktrex_stateHandlerA03(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
-        return 0;
     }
-    if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+    else if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
     {
         phase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
         f5 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)
