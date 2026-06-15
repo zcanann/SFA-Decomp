@@ -1,7 +1,5 @@
 #include "main/audio/sfx.h"
-#include "main/dll/WC/WCpushblock.h"
 #include "main/game_object.h"
-#include "main/objanim.h"
 
 #define WCPUSHBLOCK_SPAWN_OBJECT_ID 0x119
 #define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
