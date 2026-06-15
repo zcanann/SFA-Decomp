@@ -1028,7 +1028,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             }
             gCamcontrolModeSettings->transitionTimer = (s16) * (s8*)(data + 1);
             gCamcontrolModeSettings->transitionDuration = (s16) * (s8*)(data + 1);
-            cam->letterboxTargetOffset = data[7];
+            *(u8*)&cam->letterboxTargetOffset = data[7];
         }
         else
         {
