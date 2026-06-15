@@ -311,18 +311,18 @@ void bombplantspore_update(void* obj)
         state->driftTimer -= timeDelta;
         if (state->driftTimer < lbl_803E5394)
         {
-            state->driftTimer = lbl_803E5394;
+            state->driftTimer = *(f32*)&lbl_803E5394;
         }
         state->unk2a0 -= timeDelta;
         if (state->unk2a0 < lbl_803E5394)
         {
-            state->unk2a0 = lbl_803E5394;
+            state->unk2a0 = *(f32*)&lbl_803E5394;
         }
         *(s16*)obj += *(u16*)&state->yawStep;
         ((GameObject*)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject*)obj)->anim.velocityY;
-        if (lbl_803E53E4 > ((GameObject*)obj)->anim.velocityY)
+        if (((GameObject*)obj)->anim.velocityY < lbl_803E53E4)
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E53E4;
+            ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E53E4;
         }
         if (((GameObject*)obj)->anim.velocityY > lbl_803E5394)
         {
@@ -371,17 +371,17 @@ void bombplantspore_update(void* obj)
         {
             Sfx_PlayFromObject(obj, SFXen_tiles_lightup);
             ((BombplantsporeFlags*)&state->stateFlags)->hitSurface = 1;
-            if (lbl_803E53C0 < state->fuseTimer)
+            if (state->fuseTimer > lbl_803E53C0)
             {
-                state->fuseTimer = lbl_803E53C0;
+                state->fuseTimer = *(f32*)&lbl_803E53C0;
             }
         }
         if ((*(u8*)((u8*)state + 0x268) & 0x11) != 0)
         {
             ((BombplantsporeFlags*)&state->stateFlags)->hitSurface = 1;
-            if (lbl_803E53C0 < state->fuseTimer)
+            if (state->fuseTimer > lbl_803E53C0)
             {
-                state->fuseTimer = lbl_803E53C0;
+                state->fuseTimer = *(f32*)&lbl_803E53C0;
             }
         }
     }
