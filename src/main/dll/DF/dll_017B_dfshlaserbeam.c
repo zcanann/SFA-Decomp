@@ -280,9 +280,10 @@ void DFSH_LaserBeam_update(uint objAddr)
         DFSH_LASER_DAMAGE_COOLDOWN(runtime) = 0;
     }
 
+    damageDistance = beamPlane + (yawSin * ((GameObject*)playerObj)->anim.localPosX +
+            yawCos * ((GameObject*)playerObj)->anim.localPosZ);
     if ((DFSH_LASER_PROXIMITY_MODE(runtime) == 1) ||
-        ((lbl_803E4EC0 < (beamPlane + (yawSin * ((GameObject*)playerObj)->anim.localPosX +
-                yawCos * ((GameObject*)playerObj)->anim.localPosZ))) &&
+        ((lbl_803E4EC0 < damageDistance) &&
             (DFSH_LASER_PROXIMITY_MODE(runtime) != 0)))
     {
         DFSH_LASER_BLOCK_TIMER(runtime) -= (s16)framesThisStep;
