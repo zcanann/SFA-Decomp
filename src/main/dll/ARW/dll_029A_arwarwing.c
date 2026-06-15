@@ -357,12 +357,18 @@ void arwarwing_updateWeaponFire(int obj, int state)
     arwarwing_updateThrusters(obj, state);
     {
         f32 t = ((ArwingState*)state)->fireCooldown;
-        if (t > lbl_803E6ECC)
+        f32 lim = lbl_803E6ECC;
+        if (t > lim)
         {
             ((ArwingState*)state)->fireCooldown = t - timeDelta;
-            if (((ArwingState*)state)->fireCooldown >= lbl_803E6ECC)
+            if (((ArwingState*)state)->fireCooldown < lim)
+            {
+                ((ArwingState*)state)->fireCooldown = lim;
+            }
+            else
+            {
                 return;
-            ((ArwingState*)state)->fireCooldown = lbl_803E6ECC;
+            }
         }
     }
     fire = 0;
@@ -375,20 +381,20 @@ void arwarwing_updateWeaponFire(int obj, int state)
     if ((((ArwingState*)state)->inputFlags & 0x100) == 0 && fire == 0)
         return;
     ((ArwingState*)state)->fireTimer = lbl_803E6F04;
-    switch ((s8)((ArwingState*)state)->laserLevel)
+    if ((s8)((ArwingState*)state)->laserLevel == 2)
     {
-    case 2:
         arwarwing_spawnLaserShot(obj, state, 0, 2, 1);
         arwarwing_spawnLaserShot(obj, state, 1, 2, 0);
-        break;
-    case 1:
+    }
+    else if ((s8)((ArwingState*)state)->laserLevel == 1)
+    {
         arwarwing_spawnLaserShot(obj, state, 0, 1, 1);
         arwarwing_spawnLaserShot(obj, state, 1, 1, 0);
-        break;
-    default:
+    }
+    else
+    {
         arwarwing_spawnLaserShot(obj, state, ((ArwingState*)state)->laserSide, 0, 1);
         ((ArwingState*)state)->laserSide = (((ArwingState*)state)->laserSide ^ 1) & 0xff;
-        break;
     }
     ((ArwingState*)state)->fireCooldown = (f32)(u32)((ArwingState*)state)->fireDelay;
 }
