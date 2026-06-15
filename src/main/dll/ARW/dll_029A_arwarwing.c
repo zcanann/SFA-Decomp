@@ -151,10 +151,12 @@ void arwarwing_addScore(int arwing, u8 amount)
 int arwarwing_getScore(int arwing)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    if (state->score > 0x270f)
+    u16 score = state->score;
+    if (score > 0x270f)
     {
-        state->score = 0x270f;
+        score = 0x270f;
     }
+    state->score = score;
     return state->score;
 }
 
