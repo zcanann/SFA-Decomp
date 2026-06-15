@@ -29,7 +29,6 @@ extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
 extern f32 timeDelta;
 
-extern f32 lbl_803E43BC;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43F4;
 extern u8 framesThisStep;
