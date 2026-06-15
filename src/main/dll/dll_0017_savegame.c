@@ -235,11 +235,12 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
     int i;
 
     for (i = 0, position = &gSaveGameData[0]; i < SAVEGAME_OBJECT_POSITION_COUNT;
-         i++, position += sizeof(SaveGameObjectPosition))
+         position += sizeof(SaveGameObjectPosition), i++)
     {
         if (object->objectId == *(u32*)(position + SAVEGAME_OBJECT_POSITION_OFFSET))
         {
-            u8* slot = gSaveGameData + i * sizeof(SaveGameObjectPosition);
+            u8* slot = gSaveGameData;
+            slot += i * sizeof(SaveGameObjectPosition);
             object->x = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 4);
             object->y = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 8);
             object->z = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 12);
