@@ -116,9 +116,9 @@ void sh_beacon_init(int obj, int defData)
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(u8*)((char*)setup + 4) = 2;
-        *(u8*)((char*)setup + 5) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
-        *(u8*)((char*)setup + 7) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
+        ((ObjPlacement*)setup)->unk04[0] = 2;
+        ((ObjPlacement*)setup)->unk04[1] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
+        ((ObjPlacement*)setup)->unk04[3] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
         ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
     }
 
@@ -150,9 +150,9 @@ void sh_beacon_update(int obj)
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                *(u8*)((char*)setup + 4) = 2;
-                *(u8*)((char*)setup + 5) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
-                *(u8*)((char*)setup + 7) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
+                ((ObjPlacement*)setup)->unk04[0] = 2;
+                ((ObjPlacement*)setup)->unk04[1] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
+                ((ObjPlacement*)setup)->unk04[3] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
                 ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
             }
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);

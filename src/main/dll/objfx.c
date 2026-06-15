@@ -504,24 +504,25 @@ void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
     {
         return;
     }
-    if (b >= 5)
+    if (b < 5)
     {
-        return;
-    }
-    if (gExpgfxFrameTimerB != lbl_803DF35C)
-    {
-        frame = 0;
-    }
-    else
-    {
-        frame = (u8)t2.v[b];
-    }
-    vec[0] = lbl_803DF35C;
-    vec[1] = d;
-    vec[2] = lbl_803DF35C;
-    if (a == 1)
-    {
-        fn_80098B18(obj, c, (u8)t1.v[b], frame, 0, vec);
+        if (lbl_803DF35C != gExpgfxFrameTimerB)
+        {
+            frame = 0;
+        }
+        else
+        {
+            frame = (u8)t2.v[b];
+        }
+        vec[0] = lbl_803DF35C;
+        vec[1] = d;
+        vec[2] = lbl_803DF35C;
+        switch (a)
+        {
+        case 1:
+            fn_80098B18(obj, c, (u8)t1.v[b], frame, 0, vec);
+            break;
+        }
     }
 }
 
@@ -738,8 +739,9 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
     switch (mode)
     {
     case 0:
+        i = 10;
         scale = lbl_803DF358;
-        for (i = 10; i < 20; i += 2)
+        for (; i < 20; i += 2)
         {
             ps.f6 = (s16)i;
             ps.f8 = scale;
@@ -748,8 +750,9 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
         tailScale = lbl_803DF390;
         break;
     case 1:
+        i = 10;
         scale = lbl_803DF354;
-        for (i = 10; i < 20; i += 2)
+        for (; i < 20; i += 2)
         {
             ps.f6 = (s16)i;
             ps.f8 = scale;
@@ -762,8 +765,9 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
         tailScale = lbl_803DF354;
         break;
     case 2:
+        i = 10;
         scale = lbl_803DF354;
-        for (i = 10; i < 20; i += 2)
+        for (; i < 20; i += 2)
         {
             ps.f6 = (s16)i;
             ps.f8 = scale;
@@ -776,8 +780,9 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
         tailScale = lbl_803DF354;
         break;
     case 3:
+        i = 10;
         scale = lbl_803DF358;
-        for (i = 10; i < 20; i += 2)
+        for (; i < 20; i += 2)
         {
             ps.f6 = (s16)i;
             ps.f8 = scale;
@@ -786,8 +791,9 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
         tailScale = lbl_803DF390;
         break;
     case 4:
+        i = 10;
         scale = lbl_803DF354;
-        for (i = 10; i < 20; i += 2)
+        for (; i < 20; i += 2)
         {
             ps.f6 = (s16)i;
             ps.f8 = scale;
@@ -800,8 +806,9 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
         tailScale = lbl_803DF354;
         break;
     case 6:
+        i = 10;
         scale = lbl_803DF358;
-        for (i = 10; i < 20; i += 2)
+        for (; i < 20; i += 2)
         {
             ps.f6 = (s16)i;
             ps.f8 = scale;
@@ -984,7 +991,7 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 fextra, void* li
 
 void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* light)
 {
-    u8 args[40];
+    u8 args[16];
     int i;
 
     switch (type)

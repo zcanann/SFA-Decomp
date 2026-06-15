@@ -359,8 +359,8 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             else
             {
                 int* newSetup = Obj_AllocObjectSetup(0x20, 0x659);
-                *(u8*)((char*)newSetup + 4) = 2;
-                *(u8*)((char*)newSetup + 7) = 0xff;
+                ((ObjPlacement*)newSetup)->unk04[0] = 2;
+                ((ObjPlacement*)newSetup)->unk04[3] = 0xff;
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
             state->slots[i] = loadResult;
@@ -530,8 +530,8 @@ void sh_staff_update(int obj)
             else
             {
                 int* newSetup = Obj_AllocObjectSetup(0x20, 0x659);
-                *(u8*)((char*)newSetup + 4) = 2;
-                *(u8*)((char*)newSetup + 7) = 0xff;
+                ((ObjPlacement*)newSetup)->unk04[0] = 2;
+                ((ObjPlacement*)newSetup)->unk04[3] = 0xff;
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
             state->slots[0] = loadResult;

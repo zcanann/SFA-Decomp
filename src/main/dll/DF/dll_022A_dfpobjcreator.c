@@ -110,6 +110,26 @@ typedef struct DfpobjcreatorPlacement
     u8 pad2F[0x30 - 0x2F];
 } DfpobjcreatorPlacement;
 
+/* Obj_AllocObjectSetup(0x24,...) spawn buffer composed in
+ * dbstealerworm_stateHandlerA00. Head is the common ObjPlacement (the
+ * 0x04..0x07 bytes live in ObjPlacement.unk04); tail (0x18..0x23) is
+ * file-local. */
+typedef struct DfpobjcreatorSetup
+{
+    ObjPlacement base; /* 0x00..0x17 */
+    u8 pad18[0x1A - 0x18];
+    s16 unk1A;         /* 0x1A */
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;         /* 0x1E */
+    s16 unk20;         /* 0x20 */
+    u8 pad22[0x24 - 0x22];
+} DfpobjcreatorSetup;
+
+STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk1A) == 0x1A);
+STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk1E) == 0x1E);
+STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk20) == 0x20);
+STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
+
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
@@ -638,16 +658,16 @@ void dfpobjcreator_update(int obj)
             {
                 state->spawnTimer = state->spawnPeriod;
                 setup = Obj_AllocObjectSetup(0x24, 0x71b);
-                ((ObjPlacement*)setup)->posX = ((DfpobjcreatorPlacement*)data)->posX;
-                ((ObjPlacement*)setup)->posY = ((DfpobjcreatorPlacement*)data)->posY;
-                ((ObjPlacement*)setup)->posZ = ((DfpobjcreatorPlacement*)data)->posZ;
-                setup[4] = ((DfpobjcreatorPlacement*)data)->unk4;
-                setup[5] = ((DfpobjcreatorPlacement*)data)->unk5;
-                setup[6] = ((DfpobjcreatorPlacement*)data)->unk6;
-                setup[7] = ((DfpobjcreatorPlacement*)data)->unk7;
-                *(s16*)(setup + 0x1e) = -1;
-                *(s16*)(setup + 0x20) = -1;
-                *(s16*)(setup + 0x1a) = 0xdc;
+                ((DfpobjcreatorSetup*)setup)->base.posX = ((DfpobjcreatorPlacement*)data)->posX;
+                ((DfpobjcreatorSetup*)setup)->base.posY = ((DfpobjcreatorPlacement*)data)->posY;
+                ((DfpobjcreatorSetup*)setup)->base.posZ = ((DfpobjcreatorPlacement*)data)->posZ;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[0] = ((DfpobjcreatorPlacement*)data)->unk4;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[1] = ((DfpobjcreatorPlacement*)data)->unk5;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[2] = ((DfpobjcreatorPlacement*)data)->unk6;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[3] = ((DfpobjcreatorPlacement*)data)->unk7;
+                ((DfpobjcreatorSetup*)setup)->unk1E = -1;
+                ((DfpobjcreatorSetup*)setup)->unk20 = -1;
+                ((DfpobjcreatorSetup*)setup)->unk1A = 0xdc;
                 newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                          *(int*)&((GameObject*)obj)->anim.parent);
                 ((GameObject*)newObj)->unkF4 = *(s8*)(data + 0x1e);

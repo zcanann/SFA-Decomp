@@ -1238,13 +1238,10 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     scaledExtent = ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.hitboxScale;
     cornerWords = (u32*)corners;
     sourceWords = (u32*)lbl_802C1A88;
-    i = 12;
+    i = 24;
     do
     {
-        cornerWords[0] = sourceWords[0];
-        cornerWords[1] = sourceWords[1];
-        cornerWords += 2;
-        sourceWords += 2;
+        *cornerWords++ = *sourceWords++;
     }
     while (--i != 0);
 

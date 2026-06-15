@@ -482,9 +482,9 @@ int pushable_func0B(int obj, int other)
 
     state = *(int*)&((GameObject*)obj)->extra;
     d = delta;
-    d[0] = *(f32*)(other + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    d[1] = *(f32*)(other + 0x10) - ((GameObject*)obj)->anim.localPosY;
-    d[2] = *(f32*)(other + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    d[0] = ((GameObject*)other)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    d[1] = ((GameObject*)other)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    d[2] = ((GameObject*)other)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
         *(f32*)(state + 0xc);
 }

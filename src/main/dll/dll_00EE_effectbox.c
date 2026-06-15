@@ -168,9 +168,9 @@ void effectbox_update(int obj)
         for (i = 0; i < count; i++)
         {
             other = *list;
-            dx = *(f32*)(other + 0xc) - ((GameObject*)obj)->anim.localPosX;
-            dy = *(f32*)(other + 0x10) - ((GameObject*)obj)->anim.localPosY;
-            dz = *(f32*)(other + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+            dx = ((GameObject*)other)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+            dy = ((GameObject*)other)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+            dz = ((GameObject*)other)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
             proj = dx * sinY + dz * cosY;
             if ((proj > negExtX) && (proj < extX))
             {

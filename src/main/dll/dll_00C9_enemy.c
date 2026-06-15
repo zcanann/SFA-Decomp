@@ -1364,7 +1364,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
 
     if (((GameObject*)node)->unkF4 != 0)
         return 0;
-    ((TrickyState*)sub)->flags2DC |= 0x8000;
+    ((TrickyState*)sub)->flags2DC |= 0x8000LL;
     memcpy(sub + 0x2c4, sub + 0x2b8, 0xc);
     memcpy(sub + 0x2b8, (char*)node + 0x24, 0xc);
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -1377,7 +1377,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             {
                 (*(void (*)(int*, int, int*))(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.dll) + 0x34)))(
                     obj, 1, node);
-                ((TrickyState*)sub)->flags2DC |= 0x200000;
+                ((TrickyState*)sub)->flags2DC |= 0x200000LL;
                 *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
             }
             break;
@@ -1385,7 +1385,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             obj = Obj_GetPlayerObject();
             if (obj != NULL)
             {
-                ((TrickyState*)sub)->flags2DC &= ~0x200000;
+                ((TrickyState*)sub)->flags2DC &= ~0x200000LL;
                 *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
             }
             break;
@@ -1411,7 +1411,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     baddieInstantiateWeapon(node, (int*)sub);
     if (((GameObject*)node)->seqIndex == -1)
     {
-        ((TrickyState*)sub)->unk2E8 &= ~3;
+        ((TrickyState*)sub)->unk2E8 &= ~3LL;
         ObjHits_DisableObject((u32)node);
         return 0;
     }
@@ -1447,19 +1447,19 @@ void fn_8014B878(int* arg1, int* sub)
     if (target != NULL && (((TrickyState*)sub)->controlFlags & 0x10000) == 0 &&
         (target != player || (((GameObject*)player)->objectFlags & 0x1000) == 0))
     {
-        ((TrickyState*)sub)->flags2DC &= 0xff7fffff;
+        ((TrickyState*)sub)->flags2DC &= ~0x800000LL;
         camTarget = (int*)(*gCameraInterface)->getOverrideTarget();
         if (camTarget == arg1)
         {
-            ((TrickyState*)sub)->flags2DC |= 0x800200;
+            ((TrickyState*)sub)->flags2DC |= 0x800200LL;
         }
         {
             u16 dist = ((TrickyState*)sub)->unk2A4;
             u16 near = (u16)(int)((TrickyState*)sub)->waterLevel;
             if (dist < near)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x400;
-                ((TrickyState*)sub)->flags2DC &= 0xfffffdff;
+                ((TrickyState*)sub)->flags2DC |= 0x400LL;
+                ((TrickyState*)sub)->flags2DC &= ~0x200LL;
             }
             else
             {
@@ -1467,15 +1467,15 @@ void fn_8014B878(int* arg1, int* sub)
                 u16 mid = (u16)(int)midf;
                 if (dist < mid)
                 {
-                    ((TrickyState*)sub)->flags2DC |= 0x200;
-                    ((TrickyState*)sub)->flags2DC &= 0xfffffbff;
+                    ((TrickyState*)sub)->flags2DC |= 0x200LL;
+                    ((TrickyState*)sub)->flags2DC &= ~0x400LL;
                 }
                 else
                 {
                     u16 far = (u16)(int)(lbl_803E25D8 * midf);
                     if (dist > far)
                     {
-                        ((TrickyState*)sub)->flags2DC &= 0xdffff9ff;
+                        ((TrickyState*)sub)->flags2DC &= ~0x20000600LL;
                     }
                 }
             }
@@ -1483,28 +1483,28 @@ void fn_8014B878(int* arg1, int* sub)
     }
     else
     {
-        ((TrickyState*)sub)->flags2DC &= 0xff7ff9ff;
+        ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
         if ((((TrickyState*)sub)->controlFlags & 0x10000) != 0 ||
             (*(int**)&((TrickyState*)sub)->actionTargetObj == player && (((GameObject*)player)->objectFlags & 0x1000) !=
                 0))
         {
-            ((TrickyState*)sub)->flags2DC &= 0xdfffffff;
+            ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
         }
     }
-    ((TrickyState*)sub)->flags2DC &= 0xf890fff7;
+    ((TrickyState*)sub)->flags2DC &= ~0x076f0008LL;
     if (tricky != NULL)
     {
         u8 r = (*(u8(**)(int*))(*(int*)*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
-        if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000;
+        if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000LL;
     }
     if (*(int**)&((TrickyState*)sub)->actionTargetObj == player)
     {
         if (playerIsDisguised(player) != 0)
         {
-            ((TrickyState*)sub)->flags2DC |= 8;
+            ((TrickyState*)sub)->flags2DC |= 8LL;
             if ((((TrickyState*)sub)->controlFlags & 0x2000) != 0)
             {
-                ((TrickyState*)sub)->flags2DC &= 0xff7ff9ff;
+                ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
             }
         }
     }
@@ -1514,38 +1514,38 @@ void fn_8014B878(int* arg1, int* sub)
         {
             u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
                                            (void*)(*(char**)&((TrickyState*)sub)->actionTargetObj + 0x18));
-            if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000;
+            if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
             if ((((TrickyState*)sub)->flags2DC & 0x1000000) == 0)
             {
-                ((TrickyState*)sub)->flags2DC &= 0xdfffffff;
+                ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
             }
         }
         else
         {
-            ((TrickyState*)sub)->flags2DC |= 0x1000000;
+            ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
         }
         {
             u16 mode = ((TrickyState*)sub)->unk2A0;
             if (mode < 2 || mode > 5)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x400000;
+                ((TrickyState*)sub)->flags2DC |= 0x400000LL;
             }
             else if ((((TrickyState*)sub)->flags2DC & 0x1000000) != 0)
             {
-                ((TrickyState*)sub)->flags2DC |= 0x2000000;
+                ((TrickyState*)sub)->flags2DC |= 0x2000000LL;
             }
         }
         if ((((TrickyState*)sub)->controlFlags & 0x4000) == 0)
         {
             f32* t = (f32*)*(int**)&((TrickyState*)sub)->actionTargetObj;
             f32 mag = sqrtf(t[11] * t[11] + (t[9] * t[9] + t[10] * t[10]));
-            if (mag > lbl_803E25D4) ((TrickyState*)sub)->flags2DC |= 0x4000000;
+            if (mag > lbl_803E25D4) ((TrickyState*)sub)->flags2DC |= 0x4000000LL;
         }
         if ((((TrickyState*)sub)->flags2DC & 0x600) != 0 &&
             (((TrickyState*)sub)->flags2DC & 0x6800000) != 0 &&
             (((TrickyState*)sub)->flags2DC & 0x1000000) != 0)
         {
-            ((TrickyState*)sub)->flags2DC |= 0x20000000;
+            ((TrickyState*)sub)->flags2DC |= 0x20000000LL;
         }
         if ((((TrickyState*)sub)->flags2DC & 0x20000000) != 0)
         {
@@ -1555,13 +1555,13 @@ void fn_8014B878(int* arg1, int* sub)
             }
             else
             {
-                ((TrickyState*)sub)->flags2DC |= 0xf0000;
+                ((TrickyState*)sub)->flags2DC |= 0xf0000LL;
             }
         }
     }
     if (((BaddieState*)sub)->hitCounter == 0)
     {
-        ((TrickyState*)sub)->flags2DC |= 0x800;
+        ((TrickyState*)sub)->flags2DC |= 0x800LL;
     }
 }
 
@@ -1711,6 +1711,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
     }
 }
 
+#pragma fp_contract off
 void fn_8014BC98(int* node, int* sub)
 {
     extern void fn_8014BC98(int* node, int* sub);
@@ -1751,7 +1752,7 @@ void fn_8014BC98(int* node, int* sub)
         if (delta < -0x8000) delta += 0xFFFF;
         d16 = (u16)delta;
         ((TrickyState*)sub)->unk2A2 = d16;
-        ((TrickyState*)sub)->unk2A0 = d16 >> 13;
+        ((TrickyState*)sub)->unk2A0 = (u32)d16 >> 13;
 
         dist = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
         *(s16*)&((TrickyState*)sub)->unk2A4 = (s16)(s32)
@@ -1764,6 +1765,7 @@ void fn_8014BC98(int* node, int* sub)
         }
     }
 }
+#pragma fp_contract on
 
 void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
 {
@@ -1949,8 +1951,9 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        if (((GameObject*)obj)->unkF4 == 0)
+        switch (((GameObject*)obj)->unkF4)
         {
+        case 0:
             ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
             {
                 u32 flags = *(u32*)&((EnemyState*)state)->unk2E8;
@@ -1992,6 +1995,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
             }
+            break;
         }
     }
 }
@@ -2008,17 +2012,17 @@ void enemy_hitDetect(int obj)
         ModelLightStruct_free(((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    ((EnemyState*)state)->lastHitObject = hitState->lastHitObject;
-    if (hitState->lastHitObject != 0)
+    ((EnemyState*)state)->lastHitObject =
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
+    if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
     {
-        hitState->suppressOutgoingHits = 1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (((GameObject*)obj)->childObjs[0] != NULL && *(void**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54) != NULL
-        && (childHitState = *(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject
+        && (*(ObjHitsPriorityState**)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject
             != 0)
     {
-        hitState->suppressOutgoingHits = 1;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {
@@ -2068,7 +2072,7 @@ void enemy_free(int obj, int flag)
         if (child != NULL)
         {
             ObjLink_DetachChild(obj, child);
-            if (flag == 0 || (*(u16*)(child + 0xb0) & 0x10) == 0)
+            if (flag == 0 || (((GameObject*)child)->objectFlags & 0x10) == 0)
             {
                 Obj_FreeObject((int)child);
             }
@@ -2147,7 +2151,7 @@ void enemy_update(int obj)
         }
         (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->unk2E, (void*)obj, -1);
         ((EnemyState*)state)->controlFlags |= 2;
-        *(int*)&((EnemyState*)state)->controlFlags = *(int*)&((EnemyState*)state)->controlFlags & -2;
+        *(u32*)&((EnemyState*)state)->controlFlags &= ~1LL;
         return;
     }
     if (((GameObject*)obj)->unkF4 != 0)
@@ -2180,7 +2184,7 @@ void enemy_update(int obj)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
-                    ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
+                    *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                 }
                 else
                 {
@@ -2209,7 +2213,7 @@ void enemy_update(int obj)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
-                    *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
+                    *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                 }
                 else
                 {
@@ -2242,7 +2246,7 @@ void enemy_update(int obj)
                         {
                             enemy_init(obj, setup, 0);
                             ((EnemyState*)state)->controlFlags |= 0x1000;
-                            *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
+                            *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                         }
                         else
                         {
@@ -2528,7 +2532,7 @@ void enemy_init(int obj, u8* setup, int flag)
         if (((GameObject*)obj)->unkF4 != 0)
         {
             ((EnemyState*)state)->controlFlags |= 0x1000;
-            ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
+            *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
             ObjHits_DisableObject((u32)obj);
         }
         else if ((((EnemyState*)state)->flags2E4 & 1) != 0)
@@ -2537,11 +2541,11 @@ void enemy_init(int obj, u8* setup, int flag)
         }
     }
     ((EnemyState*)state)->unk2D8 = lbl_803E2574;
-    if (lbl_803E25B0 < ((EnemyState*)state)->unk2A8)
+    if (((EnemyState*)state)->unk2A8 > *(f32*)&lbl_803E25B0)
     {
         ((EnemyState*)state)->unk2A8 = lbl_803E25B0;
     }
-    if (lbl_803E25B0 < ((EnemyState*)state)->unk2AC)
+    if (((EnemyState*)state)->unk2AC > *(f32*)&lbl_803E25B0)
     {
         ((EnemyState*)state)->unk2AC = lbl_803E25B0;
     }

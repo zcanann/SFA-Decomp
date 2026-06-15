@@ -831,15 +831,13 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag)
 {
-    MmRegion* reg;
     HeapItem* base;
     int oldSize;
     while (size % 32 != 0)
     {
         size++;
     }
-    reg = &gMmRegionTable[region];
-    base = (HeapItem*)reg->start;
+    base = (HeapItem*)gMmRegionTable[region].start;
     base[idx].type = type;
     oldSize = base[idx].size;
     base[idx].size = size;
@@ -847,7 +845,7 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
     if (oldSize > size)
     {
         s16 oldNext;
-        int ni = base[reg->f4++].stack;
+        int ni = base[gMmRegionTable[region].f4++].stack;
         base[idx].type = newType;
         while ((oldSize - size) % 32 != 0)
         {
@@ -878,12 +876,10 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
 
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag)
 {
-    MmRegion* reg;
     int oldSize;
     int ni;
     HeapItem* base;
-    reg = &gMmRegionTable[region];
-    base = (HeapItem*)reg->start;
+    base = (HeapItem*)gMmRegionTable[region].start;
     base[idx].type = type;
     oldSize = base[idx].size;
     base[idx].size = newSize;
@@ -891,7 +887,7 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
     if (oldSize > newSize)
     {
         s16 oldNext;
-        ni = base[reg->f4++].stack;
+        ni = base[gMmRegionTable[region].f4++].stack;
         base[ni].key = (char*)base[idx].key + newSize;
         if ((int)base[ni].key % 32 != 0)
         {

@@ -505,8 +505,7 @@ void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
     else
     {
         ((BaddieState*)ctx)->animSpeedC = ((BaddieState*)ctx)->animSpeedC * lbl_803E0574;
-        ((BaddieState*)ctx)->moveInputX = lbl_803E0570;
-        ((BaddieState*)ctx)->moveInputZ = lbl_803E0570;
+        ((BaddieState*)ctx)->moveInputZ = ((BaddieState*)ctx)->moveInputX = lbl_803E0570;
     }
     if (((BaddieState*)ctx)->moveInputX > lbl_803E0578)
     {
@@ -561,7 +560,7 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
             ratio = ((BaddieState*)ctx)->animSpeedB / mag;
         }
         tmp = ratio;
-        idx = (int)(lbl_803E05A0 * (f32)ratio);
+        idx = (int)((f32)ratio * lbl_803E05A0);
         if (idx < 0)
         {
             idx = -idx;
@@ -605,7 +604,7 @@ typedef struct PlayerMoveBuf
     s8 count;
 } PlayerMoveBuf;
 
-void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
+void player_setScale(f32 dt, short* moveState, uint* obj, int flags)
 {
     PlayerMoveBuf buf;
     s8* ptr;
@@ -617,8 +616,9 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
         ((BaddieState*)obj)->moveSpeed, dt, (int)moveState, (ObjAnimEventList*)&buf);
 
     ((BaddieState*)obj)->eventFlags = 0;
+    i = 0;
     ptr = (s8*)&buf;
-    for (i = 0; i < buf.count; i++)
+    for (; i < buf.count; i++)
     {
         ((BaddieState*)obj)->eventFlags |= 1 << ptr[0x13];
         ptr++;
@@ -651,11 +651,11 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
         {
             if ((flags & 1) != 0)
             {
-                ((BaddieState*)obj)->animSpeedA = (f32)(-(f64)buf.c / dt);
+                ((BaddieState*)obj)->animSpeedA = -buf.c / dt;
             }
             if ((flags & 2) != 0)
             {
-                ((BaddieState*)obj)->animSpeedB = (f32)((f64)buf.a / dt);
+                ((BaddieState*)obj)->animSpeedB = buf.a / dt;
             }
             if ((flags & 8) != 0)
             {
@@ -663,7 +663,7 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
             }
             if ((flags & 4) != 0)
             {
-                *(f32*)((char*)obj + 0x288) = (f32)((f64)buf.b / dt);
+                *(f32*)((char*)obj + 0x288) = buf.b / dt;
                 *obj |= 0x10000;
             }
         }
@@ -711,12 +711,12 @@ int fn_800D9F38(void* a, void* b);
 
 void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 {
-    int changed;
-    int done;
     int iterations;
     int currentState;
+    int done;
     int result;
     void (*exitFn)(char*, char*);
+    int changed;
 
     changed = 0;
     iterations = 0;
@@ -739,7 +739,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             *(s16*)(state + 0x276) = *(s16*)(state + 0x274);
             *(s16*)(state + 0x274) = (s16)(result - 1);
             exitFn = *(void (**)(char*, char*))(state + 0x304);
-            if (exitFn != 0)
+            if (exitFn != NULL)
             {
                 exitFn(pos, state);
                 *(void**)(state + 0x304) = 0;
@@ -751,9 +751,9 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             *(u8*)(state + 0x34c) = 0;
             *(u8*)(state + 0x356) = 0;
             *(s16*)(state + 0x278) = 0;
-            if (*(int*)(pos + 0x54) != 0)
+            if (*(void**)(pos + 0x54) != NULL)
             {
-                *(u8*)(*(int*)(pos + 0x54) + 0x70) = 0;
+                *(u8*)((char*)*(void**)(pos + 0x54) + 0x70) = 0;
             }
         }
         else if (result < 0)
@@ -764,7 +764,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             {
                 *(s16*)(state + 0x276) = (s16)currentState;
                 exitFn = *(void (**)(char*, char*))(state + 0x304);
-                if (exitFn != 0)
+                if (exitFn != NULL)
                 {
                     exitFn(pos, state);
                     *(void**)(state + 0x304) = 0;
@@ -803,7 +803,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
     }
     *(s16*)(state + 0x276) = *(s16*)(state + 0x274);
 
-    if (lbl_803DD440 == 0 && ((s32) * (s8*)(state + 0x34c) & 1) == 0)
+    if ((s8)lbl_803DD440 == 0 && ((s32) * (s8*)(state + 0x34c) & 1) == 0)
     {
         u8 animEvents[0x1c];
         int i;
@@ -823,11 +823,14 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
     if ((*(u32*)state & 0x4000) == 0)
     {
         int decay;
+        f32 t;
 
-        decay = (s32)((f32)((f64) * (s16*)(pos + 2) - lbl_803E0598) * dt * lbl_803E05C0);
-        *(s16*)(pos + 2) = *(s16*)(pos + 2) - (s16)decay;
-        decay = (s32)((f32)((f64) * (s16*)(pos + 4) - lbl_803E0598) * dt * lbl_803E05C0);
-        *(s16*)(pos + 4) = *(s16*)(pos + 4) - (s16)decay;
+        t = (f32)(int) * (s16*)(pos + 2) * dt;
+        decay = (s32)(t * lbl_803E05C0);
+        *(s16*)(pos + 2) -= (s16)decay;
+        t = (f32)(int) * (s16*)(pos + 4) * dt;
+        decay = (s32)(t * lbl_803E05C0);
+        *(s16*)(pos + 4) -= (s16)decay;
     }
 }
 
@@ -1064,11 +1067,13 @@ void walkPath_writeU16LE(u32 v, u8* dst);
 
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
 {
-    int flag30 = 0;
-    int i = 0;
-    int done;
+    int i;
     s16 startState;
+    int done;
     int result;
+    int flag30;
+    flag30 = 0;
+    i = 0;
     if (((BaddieState*)obj)->substate != ((BaddieState*)obj)->prevSubstate)
     {
         ((BaddieState*)obj)->moveJustStartedB = 1;
@@ -1089,15 +1094,15 @@ void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
         else if (result < 0)
         {
             result = -result;
-            if (result == startState)
-            {
-                ((BaddieState*)obj)->moveJustStartedB = 0;
-            }
-            else
+            if (result != startState)
             {
                 ((BaddieState*)obj)->prevSubstate = startState;
                 ((BaddieState*)obj)->moveJustStartedB = 1;
                 ((BaddieState*)obj)->unk32E = 0;
+            }
+            else
+            {
+                ((BaddieState*)obj)->moveJustStartedB = 0;
             }
             ((BaddieState*)obj)->substate = result;
             done = 1;

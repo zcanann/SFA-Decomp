@@ -194,17 +194,17 @@ void modelInitModelList(ModelList* list, s16 index, void* header)
 
 ModelList* allocModelStruct(int capacity, int dataSize)
 {
-    ModelList* list;
     int entryBytes;
+    ModelList* list;
 
     entryBytes = dataSize + 2;
     list = mmAlloc(capacity * entryBytes + sizeof(ModelList), 0x1a, NULL);
     list->entries = (s16*)((u8*)list + sizeof(ModelList));
     list->dataSize = dataSize;
-    list->strideShorts = entryBytes >> 1;
+    list->strideShorts = (u32)entryBytes >> 1;
     list->end = list->entries;
     list->capacityEnd = list->entries + capacity * list->strideShorts;
-    memset(list->entries, -1, capacity * list->strideShorts * 2);
+    memset(list->entries, -1, capacity * (list->strideShorts * 2));
     return list;
 }
 
@@ -259,7 +259,7 @@ void* Resource_Acquire(u32 id, int unused)
 
 void Resource_ResetRefCounts(void)
 {
-    s32 i;
+    u32 i;
 
     for (i = 0; i < 0x2c1; i++)
     {
@@ -383,7 +383,7 @@ void uiDll_runFrameEndAndLoadNext(void)
         resourceId = lbl_802C6E08[lbl_803DC8EC];
         if (resourceId != -1)
         {
-            lbl_803DC8E8 = Resource_Acquire(resourceId, 1);
+            lbl_803DC8E8 = Resource_Acquire((u16)resourceId, 1);
         }
         else
         {
@@ -421,7 +421,7 @@ int uiDll_runFrameStartAndLoadNext(void)
         resourceId = lbl_802C6E08[lbl_803DC8EC];
         if (resourceId != -1)
         {
-            lbl_803DC8E8 = Resource_Acquire(resourceId, 1);
+            lbl_803DC8E8 = Resource_Acquire((u16)resourceId, 1);
         }
         else
         {
@@ -456,8 +456,8 @@ void* getDLL16(void)
 
 void loadUiDll(int index)
 {
-    s32 current;
     s32 next;
+    s32 current;
     s32 resourceId;
 
     current = curUiDll;
@@ -478,7 +478,7 @@ void loadUiDll(int index)
             resourceId = lbl_802C6E08[lbl_803DC8EC];
             if (resourceId != -1)
             {
-                lbl_803DC8E8 = Resource_Acquire(resourceId, 1);
+                lbl_803DC8E8 = Resource_Acquire((u16)resourceId, 1);
             }
             else
             {
@@ -565,16 +565,15 @@ void gameTimerRun(void)
         f32 panByte;
         f32 volume;
         Sfx_KeepAliveLoopedObjectSound(0, SFXsc_clubhit01);
-        ratio = lbl_803DC900 / lbl_803DC8FC;
         if ((lbl_803DC8F9 & 1) != 0)
         {
-            panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * ratio) & 0xFF));
-            volume = lbl_803DE6C4 - lbl_803DE6C8 * ratio;
+            panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * (lbl_803DC900 / lbl_803DC8FC)) & 0xFF));
+            volume = lbl_803DE6C4 - lbl_803DE6C8 * (lbl_803DC900 / lbl_803DC8FC);
         }
         else
         {
-            panByte = (f32)(((int)(lbl_803DE6C0 * ratio) & 0xFF) + 0x2F);
-            volume = lbl_803DE6C8 * ratio + lbl_803DE6CC;
+            panByte = (f32)(((int)(lbl_803DE6C0 * (lbl_803DC900 / lbl_803DC8FC)) & 0xFF) + 0x2F);
+            volume = lbl_803DE6C8 * (lbl_803DC900 / lbl_803DC8FC) + lbl_803DE6CC;
         }
         Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, volume);
     }

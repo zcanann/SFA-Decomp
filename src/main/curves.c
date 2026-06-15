@@ -28,7 +28,7 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
         evalFn(px, bufX);
         vx = bufX[3];
         d1x = lbl_803DC8B0 * bufX[2] + (lbl_80338790[2] * bufX[0] + lbl_80338790[0] * bufX[1]);
-        d2x = lbl_80338790[1] * bufX[1] + lbl_80338790[3] * bufX[0];
+        d2x = lbl_80338790[3] * bufX[0] + lbl_80338790[1] * bufX[1];
         d3x = lbl_80338790[3] * bufX[0];
     }
     if (py != NULL)
@@ -36,7 +36,7 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
         evalFn(py, bufY);
         vy = bufY[3];
         d1y = lbl_803DC8B0 * bufY[2] + (lbl_80338790[2] * bufY[0] + lbl_80338790[0] * bufY[1]);
-        d2y = lbl_80338790[1] * bufY[1] + lbl_80338790[3] * bufY[0];
+        d2y = lbl_80338790[3] * bufY[0] + lbl_80338790[1] * bufY[1];
         d3y = lbl_80338790[3] * bufY[0];
     }
     if (pz != NULL)
@@ -44,7 +44,7 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
         evalFn(pz, bufZ);
         vz = bufZ[3];
         d1z = lbl_803DC8B0 * bufZ[2] + (lbl_80338790[2] * bufZ[0] + lbl_80338790[0] * bufZ[1]);
-        d2z = lbl_80338790[1] * bufZ[1] + lbl_80338790[3] * bufZ[0];
+        d2z = lbl_80338790[3] * bufZ[0] + lbl_80338790[1] * bufZ[1];
         d3z = lbl_80338790[3] * bufZ[0];
     }
 

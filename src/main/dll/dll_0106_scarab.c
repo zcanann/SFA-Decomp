@@ -368,7 +368,7 @@ void scarab_update(int obj)
                 {
                     *(s16*)obj = (s16)(*(s16*)obj + (int)randomGetRange(-1460, 1460));
                 }
-                *(f32*)(obj + 0x24) = ((ScarabState*)state)->velX;
+                ((GameObject*)obj)->anim.velocityX = ((ScarabState*)state)->velX;
                 {
                     f32 fz = lbl_803E39F8;
                     ((GameObject*)obj)->anim.velocityY = fz;

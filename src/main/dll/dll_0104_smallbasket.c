@@ -781,7 +781,7 @@ void smallbasket_update(int obj)
     {
         return;
     }
-    playerState = *(int*)(player + 0xb8);
+    playerState = *(int*)&((GameObject*)player)->extra;
     if (((CfperchState*)state)->unk12 <= 0)
     {
         ((CfperchState*)state)->unk12 = 800;

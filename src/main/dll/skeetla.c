@@ -351,8 +351,9 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
     state = ((GameObject*)obj)->extra;
     ((TrickyState*)state)->unk5A = targetYaw;
 
+    delta = (u16)(s16)targetYaw;
     currentYaw = *(s16*)obj;
-    delta = currentYaw - (u16)targetYaw;
+    delta = currentYaw - delta;
     if (delta > 0x8000)
     {
         delta -= 0xffff;
@@ -364,25 +365,25 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 
     if ((((TrickyState*)state)->stateFlags & 0x100000) != 0)
     {
-        ((TrickyState*)state)->stateFlags |= 0x200000;
+        ((TrickyState*)state)->stateFlags |= 0x200000LL;
     }
     else
     {
-        ((TrickyState*)state)->stateFlags &= 0xffdfffff;
+        ((TrickyState*)state)->stateFlags &= ~0x200000LL;
     }
     ((TrickyState*)state)->stateFlags &= 0xef2fffff;
 
     if (delta > 0x10)
     {
-        ((TrickyState*)state)->stateFlags |= 0x900000;
+        ((TrickyState*)state)->stateFlags |= 0x900000LL;
     }
     else if (delta < -0x10)
     {
-        ((TrickyState*)state)->stateFlags |= 0x500000;
+        ((TrickyState*)state)->stateFlags |= 0x500000LL;
     }
     else
     {
-        *(u16*)obj = targetYaw;
+        *(s16*)obj = targetYaw;
         return 0;
     }
 
@@ -390,17 +391,17 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
     {
         step = (s32)(lbl_803E2450 * timeDelta);
         *(s16*)obj = currentYaw - step;
-        ((TrickyState*)state)->stateFlags |= 0x10000000;
+        ((TrickyState*)state)->stateFlags |= 0x10000000LL;
     }
     else if (delta < -0x200)
     {
         step = (s32)(lbl_803E2450 * timeDelta);
         *(s16*)obj = currentYaw + step;
-        ((TrickyState*)state)->stateFlags |= 0x10000000;
+        ((TrickyState*)state)->stateFlags |= 0x10000000LL;
     }
     else
     {
-        *(u16*)obj = targetYaw;
+        *(s16*)obj = targetYaw;
     }
 
     return delta;
@@ -846,23 +847,24 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
 
     if ((((TrickyState*)state)->unk6EC == pathId) && (*(u32*)&((TrickyState*)state)->unk6E8 == route))
     {
-        entry = fn_8004B118(state + 0x6b8);
-        ((TrickyState*)state)->unk6E8 = entry;
+        ((TrickyState*)state)->unk6E8 = fn_8004B118(state + 0x6b8);
+        entry = ((TrickyState*)state)->unk6E8;
         if (entry == NULL)
         {
             return NULL;
         }
 
-        if ((*(s16*)((u8*)entry + 0x30) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x30)) == 0))
+        if (entry == NULL)
         {
             entry = NULL;
         }
-        else if ((*(s16*)((u8*)entry + 0x32) != -1) &&
-            (GameBit_Get(*(s16*)((u8*)entry + 0x32)) != 0))
+        else if (((*(s16*)((u8*)entry + 0x30) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x30)) == 0)) ||
+            ((*(s16*)((u8*)entry + 0x32) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x32)) != 0)))
         {
             entry = NULL;
         }
         ((TrickyState*)state)->unk6E8 = entry;
+        entry = ((TrickyState*)state)->unk6E8;
         if (entry != NULL)
         {
             return entry;
@@ -1288,6 +1290,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
 
 extern void** ObjGroup_GetObjects(int group, int* countOut);
 
+#pragma peephole off
 void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
 {
     int count;
@@ -1299,15 +1302,17 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
     u8* def;
     ObjHitsPriorityState* hitState;
     u16 minRadius;
+    f32 scale;
 
     objects = ObjGroup_GetObjects(0x40, &count);
+    scale = lbl_803E2484;
     for (i = 0; i < count; i++)
     {
         obj = objects[i];
         def = *(u8**)&((GameObject*)obj)->anim.placementData;
         trickyAdjustStepAroundPoint(start, end, guardPoint, &((GameObject*)obj)->anim.worldPosX,
-                                    lbl_803E2484 * (f32) * (u16*)(def + 0x18),
-                                    lbl_803E2484 * (f32) * (u16*)(def + 0x1a));
+                                    scale * (f32)(u32) * (u16*)(def + 0x18),
+                                    scale * (f32)(u32) * (u16*)(def + 0x1a));
     }
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
@@ -1319,15 +1324,16 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
         if (minRadius != 0)
         {
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            if ((hitState != NULL) && ((*(u16*)&hitState->flags & 1) != 0))
+            if ((hitState != NULL) && ((*(s16*)&hitState->flags & 1) != 0))
             {
                 trickyAdjustStepAroundPoint(start, end, guardPoint, &((GameObject*)obj)->anim.worldPosX,
-                                            lbl_803E2484 * (f32)minRadius,
-                                            lbl_803E2484 * (f32) * (u16*)(def + 0x86));
+                                            scale * (f32)(u32)minRadius,
+                                            scale * (f32)(u32) * (u16*)(def + 0x86));
             }
         }
     }
 }
+#pragma peephole reset
 
 /* ===== LEGACY src kept for mining; remove after restructure ===== */
 #if 0
@@ -1422,7 +1428,7 @@ void FUN_8013939c(uint param_1)
     }
     local_34 = hitState->lastHitObject;
     if ((hitState->flags & 8) == 0 ||
-        (*(short*)(local_34 + 0x46) == 0x1f))
+        (((GameObject*)local_34)->anim.seqId == 0x1f))
     {
         local_34 = 0;
     }
@@ -1482,7 +1488,7 @@ void FUN_8013939c(uint param_1)
     case 0xc:
         FUN_800810e8(afStack_20, 8, 0xff, 0x20, 0x20);
         FUN_80081120(param_1, auStack_2c, 4, (int*)0x0);
-        if (*(short*)(local_34 + 0x46) == 0x69)
+        if (((GameObject*)local_34)->anim.seqId == 0x69)
         {
             FUN_80006824(param_1, SFXfox_outofwater122);
         }

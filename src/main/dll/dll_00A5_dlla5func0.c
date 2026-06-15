@@ -1,5 +1,6 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/pickup.h"
+#include "main/game_object.h"
 
 extern ModgfxInterface** gModgfxInterface;
 
@@ -175,9 +176,9 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     {
         if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1508 + *(f32*)(sourceObj + 0xc);
-            buf.pos[1] = lbl_803E1508 + *(f32*)(sourceObj + 0xe);
-            buf.pos[2] = lbl_803E1508 + *(f32*)(sourceObj + 0x10);
+            buf.pos[0] = lbl_803E1508 + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = lbl_803E1508 + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = lbl_803E1508 + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {
