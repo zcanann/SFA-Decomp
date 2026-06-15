@@ -1,6 +1,4 @@
 #include "main/camera_object.h"
-#include "main/dll/CAM/camclimb_state.h"
-#include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
 
