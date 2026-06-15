@@ -1,6 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/game_object.h"
-#include "main/model.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct DREarthWarriorPlacement
