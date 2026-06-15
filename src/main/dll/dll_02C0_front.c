@@ -1054,7 +1054,7 @@ void creditsStart_(void)
     }
     if (lbl_803DD9A8 > 0)
     {
-        lbl_803DD9A8 = lbl_803DD9A8 - lbl_803DB411;
+        lbl_803DD9A8 -= lbl_803DB411;
         if (lbl_803DD9A8 < 0)
         {
             lbl_803DD9A8 = 0;
