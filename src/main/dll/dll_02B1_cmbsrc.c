@@ -160,14 +160,17 @@ void cmbsrc_hitDetect(int obj)
             state->hitCharge -= 1;
             state->hitRecoverTimer = lbl_803E7384;
         }
-        if (state->hitRecoverTimer != lbl_803E7360)
+        {
+        f32 zero = lbl_803E7360;
+        if (state->hitRecoverTimer != zero)
         {
             state->hitRecoverTimer -= timeDelta;
-            if (state->hitRecoverTimer <= lbl_803E7360)
+            if (state->hitRecoverTimer <= zero)
             {
                 state->hitCharge += 1;
                 state->hitRecoverTimer = lbl_803E7384;
             }
+        }
         }
         v = state->hitCharge;
         if (v < 0)
