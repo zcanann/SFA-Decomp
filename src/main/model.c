@@ -2154,8 +2154,7 @@ void fn_80026928(int* obj, int b, int* p3)
         *(f32*)(out + 0x20) = lbl_803DE850;
         {
             int* arr = (int*)*(int*)p3[1];
-            int* top = &arr[p3[2]];
-            e2 = top[-1];
+            e2 = arr[p3[2] - 1];
         }
         hdr2 = *(u8**)obj;
         n2 = *(u8*)(hdr2 + 0xf3);
