@@ -5,7 +5,6 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
-#include "main/dll/rom_curve_interface.h"
 
 typedef struct TriggerPlacement
 {
