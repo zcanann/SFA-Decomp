@@ -2838,48 +2838,48 @@ void FUN_80045328(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                   undefined4 param_9, undefined4 param_10, uint param_11, uint param_12,
                   undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    uint uVar1;
-    int iVar2;
-    uint uVar3;
-    uint uVar4;
+    uint aligned;
+    int resIdx;
+    uint scratch;
+    uint dst;
     undefined8 extraout_f1;
-    undefined8 uVar5;
-    ulonglong uVar6;
+    undefined8 src;
+    ulonglong pairWord;
     int aiStack_58[22];
 
-    uVar6 = FUN_80286840();
-    iVar2 = (int)(uVar6 >> 0x20);
-    uVar4 = (uint)uVar6;
+    pairWord = FUN_80286840();
+    resIdx = (int)(pairWord >> 0x20);
+    dst = (uint)pairWord;
     if (param_12 != 0)
     {
-        if ((&DAT_80360048)[iVar2] == 0)
+        if ((&DAT_80360048)[resIdx] == 0)
         {
-            uVar5 = extraout_f1;
+            src = extraout_f1;
             FUN_80249300(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         sResourceFileNameTable[iVar2], (int)aiStack_58);
-            if (((uVar6 & 0x1f) == 0) && ((param_12 & 0x1f) == 0))
+                         sResourceFileNameTable[resIdx], (int)aiStack_58);
+            if (((pairWord & 0x1f) == 0) && ((param_12 & 0x1f) == 0))
             {
-                FUN_802420b0(uVar4, param_12);
-                FUN_80006c30(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, uVar4,
+                FUN_802420b0(dst, param_12);
+                FUN_80006c30(src, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, dst,
                              param_12, param_11, param_13, param_14, param_15, param_16);
             }
             else
             {
-                uVar1 = param_12 + 0x1f & ~0x1f;
-                uVar3 = FUN_80017830(uVar1, 0x7d7d7d7d);
-                FUN_802420b0(uVar3, uVar1);
-                FUN_80006c30(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, uVar3,
-                             uVar1, param_11, param_13, param_14, param_15, param_16);
-                FUN_80003494(uVar4, uVar3, param_12);
-                FUN_80017814(uVar3);
+                aligned = param_12 + 0x1f & ~0x1f;
+                scratch = FUN_80017830(aligned, 0x7d7d7d7d);
+                FUN_802420b0(scratch, aligned);
+                FUN_80006c30(src, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, scratch,
+                             aligned, param_11, param_13, param_14, param_15, param_16);
+                FUN_80003494(dst, scratch, param_12);
+                FUN_80017814(scratch);
             }
             FUN_802493c8(aiStack_58);
-            FUN_80242114(uVar4, param_12);
+            FUN_80242114(dst, param_12);
         }
         else
         {
-            FUN_80003494(uVar4, (&DAT_80360048)[iVar2] + param_11, param_12);
-            FUN_80242114(uVar4, param_12);
+            FUN_80003494(dst, (&DAT_80360048)[resIdx] + param_11, param_12);
+            FUN_80242114(dst, param_12);
         }
     }
     FUN_8028688c();
@@ -3108,7 +3108,7 @@ void FUN_80046270(int heap, int size, int idx)
     return;
 }
 
-void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
+void fn_8004B11C(undefined4 ctxArg, undefined4 entryArg, undefined key)
 {
     int sel;
     uint mask;
@@ -3154,7 +3154,7 @@ void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
                 fval = FUN_80017714((float*)(ent + 8), (float*)(found + 8));
                 uval = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000, ctx[2]) -
                     DOUBLE_803df728) + fval));
-                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, param_3, uval, found);
+                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, key, uval, found);
                 sel = DAT_803dd988;
             }
         }
@@ -3234,7 +3234,7 @@ void fn_8004B394(void)
     return;
 }
 
-undefined4 FUN_80046cd0(int* queue, int startNode, int param_3, int param_4, byte flag)
+undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, byte flag)
 {
     undefined2 tag;
     short count;
@@ -3293,7 +3293,7 @@ undefined4 FUN_80046cd0(int* queue, int startNode, int param_3, int param_4, byt
         while (remaining != 0);
     }
     queue[6] = startNode;
-    queue[3] = param_3;
+    queue[3] = targetPos;
     queue[4] = param_4;
     *(byte*)(queue + 10) = flag & 1;
     queue[9] = 10000;
@@ -3519,7 +3519,7 @@ void FUN_8004812c(int tex, int arg)
     return;
 }
 
-void FUN_80049910(undefined4* param_1)
+void FUN_80049910(undefined4* obj)
 {
     float fVar1;
     float* pfVar2;
@@ -3594,7 +3594,7 @@ void FUN_80049910(undefined4* param_1)
     local_18 = lbl_803DF748;
     FUN_8025d8c4(&local_44, DAT_803dda00, 0);
     FUN_80258674(DAT_803dda08, 0, 0, 0, 0, DAT_803dda00);
-    local_100 = *param_1;
+    local_100 = *obj;
     FUN_8025c510(DAT_803dd9f4, (byte*)&local_100);
     newshadows_getBlankShadowTexture(&local_f0);
     if (local_f0 != 0)
@@ -3830,7 +3830,7 @@ int fn_8004B148(int* p)
 
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 #pragma ppc_unroll_speculative off
-int fn_8004B31C(int* param_1, int startNode, int targetPos, int param_4, u8 flag)
+int fn_8004B31C(int* queue, int startNode, int targetPos, int param_4, u8 flag)
 {
     int i = 0;
     int o4;
@@ -3844,61 +3844,61 @@ int fn_8004B31C(int* param_1, int startNode, int targetPos, int param_4, u8 flag
     u16* hh;
     u16 v;
 
-    *(s16*)((char*)param_1 + 0x22) = i;
-    *(s16*)((char*)param_1 + 0x20) = i;
+    *(s16*)((char*)queue + 0x22) = i;
+    *(s16*)((char*)queue + 0x20) = i;
     o4 = i;
     o8 = i;
     for (i = 0; i < 0xf8; i += 8)
     {
-        *(int*)(param_1[1] + o4) = 0;
-        *(u8*)(*param_1 + o8 + 0xe) = 0;
-        *(int*)(param_1[1] + o4 + 8) = 0;
-        *(u8*)(*param_1 + o8 + 0x1e) = 0;
-        *(int*)(param_1[1] + o4 + 0x10) = 0;
-        *(u8*)(*param_1 + o8 + 0x2e) = 0;
-        *(int*)(param_1[1] + o4 + 0x18) = 0;
-        *(u8*)(*param_1 + o8 + 0x3e) = 0;
-        *(int*)(param_1[1] + o4 + 0x20) = 0;
-        *(u8*)(*param_1 + o8 + 0x4e) = 0;
-        *(int*)(param_1[1] + o4 + 0x28) = 0;
-        *(u8*)(*param_1 + o8 + 0x5e) = 0;
-        *(int*)(param_1[1] + o4 + 0x30) = 0;
-        *(u8*)(*param_1 + o8 + 0x6e) = 0;
-        *(int*)(param_1[1] + o4 + 0x38) = 0;
-        *(u8*)(*param_1 + o8 + 0x7e) = 0;
+        *(int*)(queue[1] + o4) = 0;
+        *(u8*)(*queue + o8 + 0xe) = 0;
+        *(int*)(queue[1] + o4 + 8) = 0;
+        *(u8*)(*queue + o8 + 0x1e) = 0;
+        *(int*)(queue[1] + o4 + 0x10) = 0;
+        *(u8*)(*queue + o8 + 0x2e) = 0;
+        *(int*)(queue[1] + o4 + 0x18) = 0;
+        *(u8*)(*queue + o8 + 0x3e) = 0;
+        *(int*)(queue[1] + o4 + 0x20) = 0;
+        *(u8*)(*queue + o8 + 0x4e) = 0;
+        *(int*)(queue[1] + o4 + 0x28) = 0;
+        *(u8*)(*queue + o8 + 0x5e) = 0;
+        *(int*)(queue[1] + o4 + 0x30) = 0;
+        *(u8*)(*queue + o8 + 0x6e) = 0;
+        *(int*)(queue[1] + o4 + 0x38) = 0;
+        *(u8*)(*queue + o8 + 0x7e) = 0;
         o4 += 0x40;
         o8 += 0x80;
     }
     for (; i < 0xfe; i++)
     {
-        *(int*)(param_1[1] + i * 8) = 0;
-        *(u8*)(*param_1 + i * 16 + 0xe) = 0;
+        *(int*)(queue[1] + i * 8) = 0;
+        *(u8*)(*queue + i * 16 + 0xe) = 0;
     }
-    param_1[6] = startNode;
-    param_1[3] = targetPos;
-    param_1[4] = param_4;
-    *(u8*)((char*)param_1 + 0x28) = flag & 1;
-    param_1[9] = 10000;
-    s = *(s16*)((char*)param_1 + 0x20);
+    queue[6] = startNode;
+    queue[3] = targetPos;
+    queue[4] = param_4;
+    *(u8*)((char*)queue + 0x28) = flag & 1;
+    queue[9] = 10000;
+    s = *(s16*)((char*)queue + 0x20);
     if (s == 0xfe)
     {
         node = NULL;
     }
     else
     {
-        node = (int*)(*param_1 + (*(s16*)((char*)param_1 + 0x20))++ * 0x10);
+        node = (int*)(*queue + (*(s16*)((char*)queue + 0x20))++ * 0x10);
         *node = startNode;
         node[2] = 0;
         *(u8*)(node + 3) = 0xff;
-        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)param_1[3]);
+        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)queue[3]);
     }
     i = node[1] + node[2];
-    heap = (u32*)param_1[1];
+    heap = (u32*)queue[1];
     hh = (u16*)heap;
-    v = *(s16*)((char*)param_1 + 0x20) - 1;
-    hh[++(*(s16*)((char*)param_1 + 0x22)) * 4 + 2] = v;
-    *(u32*)((int)heap + *(s16*)((char*)param_1 + 0x22) * 8) = -1 - i;
-    i = *(s16*)((char*)param_1 + 0x22);
+    v = *(s16*)((char*)queue + 0x20) - 1;
+    hh[++(*(s16*)((char*)queue + 0x22)) * 4 + 2] = v;
+    *(u32*)((int)heap + *(s16*)((char*)queue + 0x22) * 8) = -1 - i;
+    i = *(s16*)((char*)queue + 0x22);
     pri = *(u32*)((int)heap + i * 8);
     idx = hh[i * 4 + 2];
     *heap = -1;
