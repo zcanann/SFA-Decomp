@@ -45,7 +45,8 @@ float __kernel_cos(float y, float x) {
         value = lbl_803E79C8 - r * (lbl_803E7A0C * r2 + lbl_803E7A08);
     }
 
-    quadrant = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x >> 1) & 0x40000000);
+    quadrant = (*(u32 *)&x >> 1) & 0x40000000;
+    quadrant = (quadrant & ~0x80000000) | (*(u32 *)&y & 0x80000000);
     switch (quadrant) {
         case 0x00000000:
             return value;
@@ -76,7 +77,8 @@ float fn_802924B4(float y, float x) {
         value = lbl_803E79C8 - r * (((lbl_803E7A28 * r2 + lbl_803E7A24) * r2 + lbl_803E7A20) * r2 + lbl_803E7A1C);
     }
 
-    quadrant = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x >> 1) & 0x40000000);
+    quadrant = (*(u32 *)&x >> 1) & 0x40000000;
+    quadrant = (quadrant & ~0x80000000) | (*(u32 *)&y & 0x80000000);
     switch (quadrant) {
         case 0x00000000:
             return value;
@@ -113,7 +115,8 @@ float fn_802925C4(float y, float x) {
                  + lbl_803E7A48) * r2 + lbl_803E7A40) * r2 + lbl_803E7A38) * r2 + lbl_803E7A30);
     }
 
-    quadrant = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x >> 1) & 0x40000000);
+    quadrant = (*(u32 *)&x >> 1) & 0x40000000;
+    quadrant = (quadrant & ~0x80000000) | (*(u32 *)&y & 0x80000000);
     switch (quadrant) {
         case 0x00000000:
             return (float)value;
