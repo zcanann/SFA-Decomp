@@ -300,41 +300,41 @@ extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 
-void staticCamera_free(int param_1)
+void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(param_1, 7);
+    ObjGroup_RemoveObject(obj, 7);
     return;
 }
 
-void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void staticCamera_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
     return;
 }
 
-void staticCamera_init(short* param_1, int param_2, int param_3)
+void staticCamera_init(short* obj, int placement, int param_3)
 {
     undefined* colorState;
 
-    *param_1 = -*(short*)(param_2 + 0x1c);
-    param_1[1] = -*(short*)(param_2 + 0x1e);
-    param_1[2] = -*(short*)(param_2 + 0x20);
-    colorState = *(undefined**)(param_1 + 0x5c);
-    *colorState = *(undefined*)(param_2 + 0x19);
+    *obj = -*(short*)(placement + 0x1c);
+    obj[1] = -*(short*)(placement + 0x1e);
+    obj[2] = -*(short*)(placement + 0x20);
+    colorState = *(undefined**)(obj + 0x5c);
+    *colorState = *(undefined*)(placement + 0x19);
     *(float*)(colorState + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(placement + 0x1a)) - DOUBLE_803e3e88);
     colorState[1] = 0;
     if (param_3 == 0)
     {
-        ObjGroup_AddObject((int)param_1, 7);
+        ObjGroup_AddObject((int)obj, 7);
     }
     return;
 }
 
-void FUN_8016d188(int param_1, int param_2)
+void FUN_8016d188(int obj, int partfx)
 {
     float intensity;
     int scratch2;
@@ -357,12 +357,12 @@ void FUN_8016d188(int param_1, int param_2)
     undefined4 local_20;
     longlong amountLL;
 
-    amount = *(int*)&((GameObject*)param_1)->extra;
-    if ((param_1 != 0) && (param_2 != 0))
+    amount = *(int*)&((GameObject*)obj)->extra;
+    if ((obj != 0) && (partfx != 0))
     {
         if (*(char*)(amount + 0xba) != '\0')
         {
-            scratch2 = FUN_80294d10(param_2);
+            scratch2 = FUN_80294d10(partfx);
             if (scratch2 == 0)
             {
                 progress = lbl_803E3F24;
@@ -377,19 +377,19 @@ void FUN_8016d188(int param_1, int param_2)
             {
                 spawnScale = (double)lbl_803E3F2C;
                 amountLL = (longlong)(int)(lbl_803E3F30 * intensity);
-                FUN_800810f8(spawnScale, spawnScale, spawnScale, (double)(lbl_803E3F34 * progress), param_1, 7,
+                FUN_800810f8(spawnScale, spawnScale, spawnScale, (double)(lbl_803E3F34 * progress), obj, 7,
                              (uint) * (byte*)(amount + 0xba), 1, (int)(lbl_803E3F30 * intensity), 0, 0);
             }
             else
             {
                 spawnScale = (double)lbl_803E3F20;
                 amountLL = (longlong)(int)(lbl_803E3F30 * intensity);
-                FUN_800810f8(spawnScale, spawnScale, spawnScale, (double)(lbl_803E3F34 * progress), param_1,
+                FUN_800810f8(spawnScale, spawnScale, spawnScale, (double)(lbl_803E3F34 * progress), obj,
                              (uint) * (byte*)(amount + 0xbb), (uint) * (byte*)(amount + 0xba), 1,
                              (int)(lbl_803E3F30 * intensity), 0, 0);
             }
         }
-        FUN_80294c60(param_2, &seqId, &progress);
+        FUN_80294c60(partfx, &seqId, &progress);
         local_34 = 0;
         local_32 = 0;
         local_30 = 0;
@@ -401,15 +401,15 @@ void FUN_8016d188(int param_1, int param_2)
             frames = 0x15 - (short)amount;
             yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
             local_34 = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
             frames = 9;
             alpha = lbl_803E3F48 * (progress / lbl_803E3F40) + lbl_803E3F44;
             scale = lbl_803E3F4C;
             local_34 = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
         }
         else if (seqId < 0x87)
         {
@@ -420,7 +420,7 @@ void FUN_8016d188(int param_1, int param_2)
                 scale = lbl_803E3F54;
                 yOffset = lbl_803E3F50;
                 local_34 = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
             }
             else if (seqId < 0x7f)
             {
@@ -431,13 +431,13 @@ void FUN_8016d188(int param_1, int param_2)
                     frames = (short)amount + 6;
                     yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
                     local_34 = 0xc94;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b4, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b4, &local_34, 2, -1, NULL);
                     frames = 9;
                     alpha = lbl_803E3F48 * (progress / lbl_803E3F40) + lbl_803E3F44;
                     scale = lbl_803E3F4C;
                     local_34 = 0xc0e;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
                 }
             }
             else if (seqId == 0x85)
@@ -462,10 +462,10 @@ void FUN_8016d188(int param_1, int param_2)
                     amountLL = (longlong)amount;
                     yOffset = lbl_803E3F5C * (lbl_803E3F28 - intensity);
                     frames = 0x15 - frames;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
                     frames = 9;
                     useAltTex = FUN_80017690(0xc55);
                     if (useAltTex == 0)
@@ -480,7 +480,7 @@ void FUN_8016d188(int param_1, int param_2)
                     }
                     alpha = lbl_803E3F48 * (progress / intensity) + lbl_803E3F44;
                     scale = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
                 }
             }
             else if (0x84 < seqId)
@@ -494,7 +494,7 @@ void FUN_8016d188(int param_1, int param_2)
                 {
                     local_34 = 0xc75;
                 }
-                intensity = *(float*)(param_2 + 0x98);
+                intensity = *(float*)(partfx + 0x98);
                 if (lbl_803E3F68 <= intensity)
                 {
                     if (intensity < lbl_803E3F70)
@@ -503,7 +503,7 @@ void FUN_8016d188(int param_1, int param_2)
                         frames = 9;
                         alpha = lbl_803E3F20;
                         scale = lbl_803E3F4C;
-                        (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
                     }
                 }
                 else
@@ -512,7 +512,7 @@ void FUN_8016d188(int param_1, int param_2)
                     frames = 9;
                     alpha = lbl_803E3F20;
                     scale = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
                 }
             }
         }
@@ -524,17 +524,17 @@ void FUN_8016d188(int param_1, int param_2)
                 amountLL = (longlong)amount;
                 frameCount = 0x15 - (short)amount;
                 spawnParam[0] = 0xc95;
-                FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &ownerXform);
+                FUN_80294c48(*(int*)&((GameObject*)obj)->ownerObj, &ownerXform);
                 yOffset = *(float*)(ownerXform + 0xc);
                 scale = *(float*)(ownerXform + 0x10);
                 local_20 = *(undefined4*)(ownerXform + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &local_34,
                                                  0x200001, -1, spawnParam);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &local_34,
                                                  0x200001, -1, spawnParam);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &local_34,
                                                  0x200001, -1, spawnParam);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &local_34,
                                                  0x200001, -1, spawnParam);
                 frameCount = 9;
                 spawnParam[0] = 0xc95;
@@ -542,7 +542,7 @@ void FUN_8016d188(int param_1, int param_2)
                 yOffset = *(float*)(ownerXform + 0xc);
                 scale = *(float*)(ownerXform + 0x10);
                 local_20 = *(undefined4*)(ownerXform + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7ba, &local_34,
                                                  0x200001, -1, spawnParam);
             }
         }
@@ -554,10 +554,10 @@ void FUN_8016d188(int param_1, int param_2)
                 scale = lbl_803E3F4C;
                 yOffset = lbl_803E3F50;
                 local_34 = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
                 frames = 0x12;
                 scale = lbl_803E3F54;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
             }
         }
         else if ((seqId == 0x46f) && (lbl_803E3F4C < progress))
@@ -567,25 +567,25 @@ void FUN_8016d188(int param_1, int param_2)
             frames = 0x15 - (short)amount;
             yOffset = lbl_803E3F5C * (lbl_803E3F28 - progress / lbl_803E3F60);
             local_34 = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &local_34, 2, -1, NULL);
             frames = 9;
             alpha = lbl_803E3F48 * (progress / lbl_803E3F60) + lbl_803E3F44;
             scale = lbl_803E3F4C;
             local_34 = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &local_34, 2, -1, NULL);
         }
     }
     return;
 }
 
-void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
+void FUN_8016d994(int obj, undefined param_2, undefined param_3)
 {
     int extra;
 
-    extra = *(int*)&((GameObject*)param_1)->extra;
+    extra = *(int*)&((GameObject*)obj)->extra;
     *(undefined*)(extra + 0xbb) = param_2;
     *(undefined*)(extra + 0xba) = param_3;
     return;
@@ -593,7 +593,7 @@ void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
 
 void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9)
+                  int obj)
 {
     short level;
     int scratch;
@@ -605,8 +605,8 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
     double clamped;
     undefined8 local_18;
 
-    extra = ((GameObject*)param_9)->extra;
-    scratch = FUN_80017a54(param_9);
+    extra = ((GameObject*)obj)->extra;
+    scratch = FUN_80017a54(obj);
     *(ushort*)(scratch + 0x18) = *(ushort*)(scratch + 0x18) & ~0x8;
     FUN_8002fc3c((double)(float)extra[0x14], (double)lbl_803DC074);
     scratch = 3;
@@ -677,8 +677,8 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
         scratch = scratch + -1;
     }
     while (scratch != 0);
-    FUN_8016d188(param_9, *(int*)&((GameObject*)param_9)->ownerObj);
-    FUN_80294d6c(*(int*)&((GameObject*)param_9)->ownerObj);
+    FUN_8016d188(obj, *(int*)&((GameObject*)obj)->ownerObj);
+    FUN_80294d6c(*(int*)&((GameObject*)obj)->ownerObj);
     *(undefined*)((int)extra + 0xb9) = 0;
     if (DAT_803ad338 != '\0')
     {
@@ -968,7 +968,7 @@ void FUN_80170048(void)
     return;
 }
 
-void checkpoint4_render(int param_1)
+void checkpoint4_render(int obj)
 {
     objRenderFn_8003b8f4(lbl_803E3420);
 }
@@ -1025,7 +1025,7 @@ void mikabombshadow_update(int* obj);
 
 void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
+                  uint obj)
 {
     extern undefined8 ObjHits_DisableObject(); /* #57 */
     short seqOrType;
@@ -1036,26 +1036,26 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
     int extra;
     undefined8 result;
 
-    extra = *(int*)&((GameObject*)param_9)->extra;
-    placement = *(int*)&((GameObject*)param_9)->anim.placementData;
-    audioObj = (int)((GameObject*)param_9)->anim.modelInstance->extraSetupData;
+    extra = *(int*)&((GameObject*)obj)->extra;
+    placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    audioObj = (int)((GameObject*)obj)->anim.modelInstance->extraSetupData;
     FUN_80017a98();
     FUN_80017a90();
     FUN_80017a98();
     FUN_80017a90();
-    result = ObjHits_DisableObject(param_9);
-    if ((*(ushort*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
+    result = ObjHits_DisableObject(obj);
+    if ((*(ushort*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         *(float*)(extra + 8) = lbl_803E40E8;
-        if (((GameObject*)param_9)->anim.modelState != NULL)
+        if (((GameObject*)obj)->anim.modelState != NULL)
         {
-            ((GameObject*)param_9)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+            ((GameObject*)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
     if ((int)*(short*)(extra + 0x10) != 0xffffffff)
     {
         FUN_80017698((int)*(short*)(extra + 0x10), 1);
-        result = FUN_800e842c(param_9);
+        result = FUN_800e842c(obj);
     }
     scratchU = (uint) * (short*)(placement + 0x1e);
     if (scratchU != 0xffffffff)
@@ -1070,14 +1070,14 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
     seqOrType = *(short*)(audioObj + 2);
     if (seqOrType == 4)
     {
-        seqOrType = ((GameObject*)param_9)->anim.seqId;
+        seqOrType = ((GameObject*)obj)->anim.seqId;
         if (seqOrType == 0x3cd)
         {
             audioObj = FUN_80017a98();
             FUN_80294d60(result, param_2, param_3, param_4, param_5, param_6, param_7, param_8, audioObj, 2);
             scratchU = FUN_80017a98();
             FUN_80006824(scratchU, SFXen_treadlpc);
-            FUN_80081118((double)lbl_803E40EC, param_9, 1, 0x28);
+            FUN_80081118((double)lbl_803E40EC, obj, 1, 0x28);
         }
         else if ((seqOrType < 0x3cd) && (seqOrType == 0xb))
         {
@@ -1085,24 +1085,24 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
             result = FUN_80006824(scratchU, SFXen_treadlpc);
             audioObj = FUN_80017a98();
             FUN_80294d60(result, param_2, param_3, param_4, param_5, param_6, param_7, param_8, audioObj, 4);
-            FUN_80081118((double)lbl_803E40EC, param_9, 3, 0x28);
+            FUN_80081118((double)lbl_803E40EC, obj, 3, 0x28);
         }
         else
         {
             scratchU = FUN_80017a98();
             FUN_80006824(scratchU, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
+            FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
         }
     }
     else if ((seqOrType < 4) && (seqOrType == 1))
     {
-        seqOrType = ((GameObject*)param_9)->anim.seqId;
+        seqOrType = ((GameObject*)obj)->anim.seqId;
         if (seqOrType == 0x319)
         {
-            FUN_80006824(param_9, SFXwp_gprop2_c);
+            FUN_80006824(obj, SFXwp_gprop2_c);
             FUN_80017698(0x3e9, 1);
             *(undefined2*)(extra + 0x3c) = 0x4b0;
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
+            FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
         }
         else
         {
@@ -1110,14 +1110,14 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
             {
                 if (seqOrType == 0x5a)
                 {
-                    FUN_80006824(param_9, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, param_9, 2, 0x28);
+                    FUN_80006824(obj, SFXen_treadlpc);
+                    FUN_80081118((double)lbl_803E40EC, obj, 2, 0x28);
                     goto LAB_801725bc;
                 }
                 if ((seqOrType < 0x5a) && (seqOrType == 0x22))
                 {
-                    FUN_80006824(param_9, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
+                    FUN_80006824(obj, SFXen_treadlpc);
+                    FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
                     goto LAB_801725bc;
                 }
             }
@@ -1130,23 +1130,23 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
                     counter = counter + '\x01';
                 }
                 FUN_80017698(0x86a, (int)counter);
-                FUN_80081118((double)lbl_803E40EC, param_9, 6, 0x28);
-                FUN_80006824(param_9, SFXen_treadlpc);
+                FUN_80081118((double)lbl_803E40EC, obj, 6, 0x28);
+                FUN_80006824(obj, SFXen_treadlpc);
                 goto LAB_801725bc;
             }
-            FUN_80006824(param_9, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
+            FUN_80006824(obj, SFXen_waterblock_stop);
+            FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
         }
     }
     else
     {
-        FUN_80006824(param_9, SFXen_waterblock_stop);
-        FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
+        FUN_80006824(obj, SFXen_waterblock_stop);
+        FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
     }
 LAB_801725bc:
-    *(undefined4*)&((GameObject*)param_9)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)param_9)->anim.
+    *(undefined4*)&((GameObject*)obj)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.
         modelInstance + 4);
-    ((GameObject*)param_9)->unkF4 = 1;
+    ((GameObject*)obj)->unkF4 = 1;
     return;
 }
 
