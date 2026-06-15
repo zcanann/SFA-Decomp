@@ -5910,8 +5910,11 @@ int fn_8029EBCC(int obj, int state)
                 d = lbl_803E7EA4;
             }
         }
-        inner->targetYaw =
-            (s16)(lbl_803E7FB4 * d * lbl_803DC6DC + (f32)inner->targetYaw);
+        {
+            f32 dd = lbl_803E7FB4 * d;
+            inner->targetYaw =
+                (s16)(dd * lbl_803DC6DC + (f32)inner->targetYaw);
+        }
         inner->yaw = inner->targetYaw;
     }
     if (inner->unk7BC > lbl_803E7EA4)
