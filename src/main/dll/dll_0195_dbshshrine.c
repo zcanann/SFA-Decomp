@@ -285,8 +285,6 @@ void dbsh_shrine_hitDetect(void)
 {
 }
 
-#include "main/mapEvent.h"
-#include "main/dll/creator1C6.h"
 
 #define DBSH_SHRINE_GB_FIRST_RISE 0x15f
 #define DBSH_SHRINE_GB_ACTIVE 0xefa
