@@ -94,9 +94,7 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
-extern u8 lbl_80329514[];
 extern f32 lbl_803E6398;
-extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
 extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
 
