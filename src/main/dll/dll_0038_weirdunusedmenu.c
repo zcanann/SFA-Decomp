@@ -1,7 +1,5 @@
 #include "main/audio/sfx_ids.h"
-#include "main/dll/dll_4E.h"
 #include "main/dll/debug/dimenu.h"
-#include "main/screen_transition.h"
 
 typedef struct WeirdMenuWork
 {
