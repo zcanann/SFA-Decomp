@@ -199,8 +199,8 @@ void sc_cloudrunnera_update(int obj)
         if ((u32)t != 0)
         {
             ((GameObject*)t)->anim.rotZ = ((GameObject*)obj)->anim.rotZ;
-            *(s16*)(*(int*)&((GameObject*)obj)->childObjs[0] + 2) = (s16)(((GameObject*)obj)->anim.rotY + 0xe38);
-            *(s16*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0) = (s16)(((GameObject*)obj)->anim.rotX + -0x8000);
+            ((GameObject*)*(int*)&((GameObject*)obj)->childObjs[0])->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY + 0xe38);
+            ((GameObject*)*(int*)&((GameObject*)obj)->childObjs[0])->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + -0x8000);
         }
     }
 }
