@@ -208,7 +208,6 @@ void sc_totempuzzle_hitDetect(void)
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-extern undefined4 FUN_800067c0();
 extern int ObjHits_GetPriorityHitWithPosition();
 
 extern f32 playerMapOffsetX;
