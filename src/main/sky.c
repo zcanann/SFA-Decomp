@@ -984,11 +984,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
     int val;
 
     player = Obj_GetPlayerObject();
-    if ((void*)lbl_803DD134 == NULL)
-    {
-        return;
-    }
-    if (player == NULL)
+    if ((void*)lbl_803DD134 == NULL || player == NULL)
     {
         return;
     }
