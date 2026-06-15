@@ -1,4 +1,5 @@
 #include "main/dll/DF/DFbarrel.h"
+#include "main/game_object.h"
 #include "dolphin/mtx.h"
 
 extern f32 lbl_803E4DF8;
@@ -62,7 +63,7 @@ void DFRope_UpdateSimulation(u8* self)
 
     k = 0;
     zero = lbl_803E4DFC;
-    for (; k < *(int*)(self + 0x28); k++)
+    for (; k < *(int *)&((GameObject *)self)->anim.velocityY; k++)
     {
         link = (u8*)*(int*)(self + 0x4);
         for (j = 0; j < (int)self[0x8] - 1; j++, link += DFBARREL_ROPE_LINK_SIZE)
