@@ -944,7 +944,7 @@ void dll_70_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.hw[4] = *(s16*)&base[412];
     buf.hw[5] = *(s16*)&base[414];
     buf.hw[6] = *(s16*)&base[416];
-    buf.cmds = buf.entries;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x1000082;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)

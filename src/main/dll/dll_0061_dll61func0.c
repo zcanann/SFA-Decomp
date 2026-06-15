@@ -861,7 +861,7 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.hw[4] = *(s16*)&base[0xb8];
     buf.hw[5] = *(s16*)&base[0xba];
     buf.hw[6] = *(s16*)&base[0xbc];
-    buf.cmds = buf.entries;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x4000010;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
