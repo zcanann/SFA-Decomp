@@ -723,6 +723,7 @@ buildTransform:
 
 void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 {
+    extern int ObjHits_IsObjectEnabled(int obj);
     u32 flags;
     int matrixSource;
     int pointIndex;
@@ -737,13 +738,14 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 
     if ((s32)(collision->flags & CURVES_COLLISION_STATE_ACTIVE) != 0)
     {
-        if (*(int*)&((GameObject*)obj)->anim.parent != 0)
+        if (*(void**)&((GameObject*)obj)->anim.parent != NULL)
         {
-            if ((*(int*)(*(int*)&((GameObject*)obj)->anim.parent + 0x58) != 0) &&
+            if ((*(void**)(*(int*)&((GameObject*)obj)->anim.parent + 0x58) != NULL) &&
                 (ObjHits_IsObjectEnabled(*(int*)&((GameObject*)obj)->anim.parent) != 0))
             {
                 matrixSource = *(int*)(*(int*)&((GameObject*)obj)->anim.parent + 0x58);
-                Matrix_TransformPoint((f32*)(matrixSource + ((*(u8*)(matrixSource + 0x10c) + 2) * 0x40)),
+                pointOffset = (*(u8*)(matrixSource + 0x10c) + 2) * 0x10;
+                Matrix_TransformPoint((f32*)matrixSource + pointOffset,
                                       ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                       ((GameObject*)obj)->anim.localPosZ,
                                       &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY,
