@@ -917,7 +917,7 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
         {
             entry = sweepPtrs[index];
             insertIndex = index;
-            while ((gap < insertIndex) &&
+            while ((insertIndex > gap) &&
                 (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->minX > entry->minX))
             {
                 sweepPtrs[insertIndex] = prevEntry;

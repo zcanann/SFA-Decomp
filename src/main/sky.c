@@ -469,9 +469,8 @@ void modelTextureFn_80089970(int slot)
                                          lbl_803DD12C[offset + 0x81],
                                          lbl_803DD12C[offset + 0x82], 0xff);
     }
-    offset = slot * 0xa4;
-    lightSetColor(0, lbl_803DD12C[offset + 0x88], lbl_803DD12C[offset + 0x89],
-                  lbl_803DD12C[offset + 0x8a]);
+    lightSetColor(0, lbl_803DD12C[slot * 0xa4 + 0x88], lbl_803DD12C[slot * 0xa4 + 0x89],
+                  lbl_803DD12C[slot * 0xa4 + 0x8a]);
 }
 
 void* fn_80089A50(void)
@@ -592,8 +591,7 @@ void fn_800897D4(int slot, f32* x, f32* y, f32* z)
     offset = slot * 0xa4;
     sky = lbl_803DD12C + offset;
     *x = ((SkyState*)sky)->lights[0].directionX;
-    sky = lbl_803DD12C;
-    sky += offset;
+    sky = lbl_803DD12C + offset;
     *y = ((SkyState*)sky)->lights[0].directionY;
     sky = lbl_803DD12C;
     sky += offset;
@@ -2127,7 +2125,7 @@ void fn_8008D088(int slot)
             {
                 len = dur;
             }
-            p->step = lbl_803DF114 / len;
+            p->step = *(f32*)&lbl_803DF114 / len;
             for (i = 0; i < 0x21; i++)
             {
                 (*(SkySlotAnim**)(&lbl_803DD184 + slot))->vel[i] =

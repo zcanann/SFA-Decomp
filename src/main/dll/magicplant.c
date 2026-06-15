@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/magicPlant.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_setmove.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
@@ -98,7 +99,6 @@ extern f32 lbl_803E2928;
 extern f32 lbl_803E292C;
 extern f32 lbl_803E2930;
 extern void fn_80293018(int idx, f32* outA, f32* outB);
-extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
 extern void fn_8015355C(int obj, int p2);
 extern f32 lbl_803E28D4;
 extern f32 lbl_803E28D8;
@@ -643,7 +643,7 @@ void fn_80153BFC(int obj, int p2)
     if ((((BaddieState*)p2)->controlFlags & 0x40000000) != 0 && ((GameObject*)obj)->anim.currentMove != 1)
     {
         Sfx_PlayFromObjectLimited(obj, 0x49c, 2);
-        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, p2, 1, lbl_803E290C, 0, 0);
+        Baddie_SetMove(obj, p2, 1, lbl_803E290C, 0, 0);
     }
     fn_8015355C(obj, p2);
 }
@@ -866,7 +866,7 @@ void fn_8015383C(int obj, int state)
     if ((flagByte & 0x40) == 0)
     {
         Sfx_PlayFromObjectLimited(obj, 0x49b, 2);
-        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 2, lbl_803E290C, 0, 0);
+        Baddie_SetMove(obj, state, 2, lbl_803E290C, 0, 0);
         ((BaddieState*)state)->inWhirlpoolGroup = (u8)((((BaddieState*)state)->inWhirlpoolGroup) | 0x40);
         ((BaddieState*)state)->seqEntryIndex = 0;
     }
@@ -907,7 +907,7 @@ void fn_8015383C(int obj, int state)
                 Sfx_PlayFromObject(obj, 0x357);
             }
         }
-        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, mode, lbl_803E2910, 0, 0);
+        Baddie_SetMove(obj, state, mode, lbl_803E2910, 0, 0);
     }
     if (((GameObject*)obj)->anim.currentMove == 5)
     {
@@ -982,7 +982,7 @@ checkedKind:
     {
         *(f32*)(state + 0x32c) = lbl_803E2940;
         *(f32*)(state + 0x324) = lbl_803E2944;
-        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 4, lbl_803E2948, 0, 3);
+        Baddie_SetMove(obj, state, 4, lbl_803E2948, 0, 3);
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000;
         ((BaddieState*)state)->inWhirlpoolGroup = 0x3c;
     }
@@ -1036,17 +1036,17 @@ void fn_80153E0C(int obj, int state)
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
         if (*(f32*)(state + 0x32c) <= lbl_803E294C)
         {
-            ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 6, lbl_803E2948, 0, 3);
+            Baddie_SetMove(obj, state, 6, lbl_803E2948, 0, 3);
             *(f32*)(state + 0x32c) = lbl_803E294C;
         }
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 5, lbl_803E2954, 0, 3);
+            Baddie_SetMove(obj, state, 5, lbl_803E2954, 0, 3);
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 0, lbl_803E2958, 0, 3);
+        Baddie_SetMove(obj, state, 0, lbl_803E2958, 0, 3);
     }
     ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
     ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;

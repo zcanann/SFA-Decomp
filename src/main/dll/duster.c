@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_setmove.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/duster.h"
@@ -23,7 +24,6 @@ extern f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz,
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 dt);
 extern char lbl_803DBCD8;
-extern void fn_8014D08C(int, int, int, float, int, int);
 extern void fn_80154D0C(int, int, ushort*, float*);
 extern uint fn_80154FB4(double, short*, int, uint);
 extern int fn_80169EF4(f32 speed, f32 arc, float* src, float* dst, char flag);
@@ -253,7 +253,7 @@ void fn_801557D4(int* obj, int state)
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             Sfx_PlayFromObject((uint)obj, SFXfox_runbreath1);
-            fn_8014D08C((int)obj, state, 2, lbl_803E2A04, 0, 0);
+            Baddie_SetMove((int)obj, state, 2, lbl_803E2A04, 0, 0);
         }
     }
     return;
@@ -273,7 +273,7 @@ void fn_80155884(int* obj, int state)
         fn_80154FB4((double)lbl_803E2A30, (short*)obj, state, 0x19);
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            fn_8014D08C((int)obj, state, 0, lbl_803E2A30, 0, 0);
+            Baddie_SetMove((int)obj, state, 0, lbl_803E2A30, 0, 0);
             Sfx_PlayFromObject((uint)obj, SFXfox_roll4);
         }
     }
@@ -315,11 +315,11 @@ void fn_80155948(int* obj, int state)
             if (outIds[0] < 0x5dc)
             {
                 Sfx_PlayFromObject((uint)obj, SFXfox_roll3);
-                fn_8014D08C((int)obj, state, 1, lbl_803E2A30, 0, 0);
+                Baddie_SetMove((int)obj, state, 1, lbl_803E2A30, 0, 0);
             }
             else
             {
-                fn_8014D08C((int)obj, state, 3, lbl_803E2A30, 0, 0);
+                Baddie_SetMove((int)obj, state, 3, lbl_803E2A30, 0, 0);
             }
         }
     }
@@ -444,13 +444,13 @@ void timeOfDayFn_80155cf8(int obj, int state)
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
         *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
-        fn_8014D08C(obj, state, 1, lbl_803E2A78, 0, 0);
+        Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
     }
     else if ((isDaytime == 0) && (((BaddieState*)state)->seqEntryIndex == 2))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
         *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
-        fn_8014D08C(obj, state, 3, lbl_803E2A78, 0, 0);
+        Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
     }
     return;
 }
@@ -466,7 +466,7 @@ void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 param_11, 
     {
         if ((((BaddieState*)state)->seqEntryIndex == 2) && (((GameObject*)obj)->anim.currentMove != 5))
         {
-            fn_8014D08C(obj, state, 5, lbl_803E2A7C, 0, 0);
+            Baddie_SetMove(obj, state, 5, lbl_803E2A7C, 0, 0);
         }
     }
     else if ((((GameObject*)obj)->anim.currentMove == 5) || (((GameObject*)obj)->anim.currentMove == 4))
@@ -509,12 +509,12 @@ void fn_80155F20(int obj, int state)
             {
                 ((BaddieState*)state)->seqEntryIndex = 0;
                 *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
-                fn_8014D08C(obj, state, 0, lbl_803E2A54, 0, 0);
+                Baddie_SetMove(obj, state, 0, lbl_803E2A54, 0, 0);
             }
         }
         else if ((((BaddieState*)state)->seqEntryIndex == 2) && (((GameObject*)obj)->anim.currentMove != 2))
         {
-            fn_8014D08C(obj, state, 2, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
         }
     }
     timeOfDayFn_80155cf8(obj, state);
@@ -540,21 +540,21 @@ void fn_80156010(uint obj, int state)
         {
             pollenFn_80155b10(obj, state);
             *(float*)(state + 0x324) = lbl_803E2A80;
-            fn_8014D08C(obj, state, 5, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 5, lbl_803E2A54, 0, 0);
         }
         else if ((move == 5) && (timerExpired))
         {
-            fn_8014D08C(obj, state, 6, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 6, lbl_803E2A54, 0, 0);
             Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
         }
         else if (move == 6)
         {
-            fn_8014D08C(obj, state, 2, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
             *(float*)(state + 0x324) = lbl_803E2A80;
         }
         else if (((move == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
-            fn_8014D08C(obj, state, 4, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 4, lbl_803E2A54, 0, 0);
             Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
         }
     }
@@ -909,7 +909,7 @@ void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int e
             }
             else
             {
-                fn_8014D08C(obj, state, 4, lbl_803E2B04, 0, 0);
+                Baddie_SetMove(obj, state, 4, lbl_803E2B04, 0, 0);
                 ((BaddieState*)state)->seqEntryIndex = 0;
                 Sfx_PlayFromObject(obj, SFXfox_roll1);
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
@@ -942,13 +942,13 @@ void fn_80156B0C(uint obj, int state)
         if (*(ushort*)(state + 0x2a0) < 4)
         {
             tblOff = (uint)((BaddieState*)state)->seqEntryIndex * 0xc;
-            fn_8014D08C(obj, state, (uint)lbl_8031F318[tblOff + 8],
+            Baddie_SetMove(obj, state, (uint)lbl_8031F318[tblOff + 8],
                         *(float*)(lbl_8031F318 + tblOff), 0, 0);
         }
         else
         {
             tblOff = (uint)((BaddieState*)state)->seqEntryIndex * 0xc;
-            fn_8014D08C(obj, state, (uint)lbl_8031F318[tblOff + 9],
+            Baddie_SetMove(obj, state, (uint)lbl_8031F318[tblOff + 9],
                         *(float*)(lbl_8031F318 + tblOff), 0, 0);
         }
     }
@@ -973,7 +973,7 @@ void fn_80156C34(uint obj, int state)
             ((BaddieState*)state)->seqEntryIndex = 0;
         }
         tblOff = (uint)((BaddieState*)state)->seqEntryIndex * 0xc;
-        fn_8014D08C(obj, state, (uint)lbl_8031F318[tblOff + 8],
+        Baddie_SetMove(obj, state, (uint)lbl_8031F318[tblOff + 8],
                     *(float*)(lbl_8031F318 + tblOff), 0, 0);
     }
     fn_80156950(obj, state);
@@ -1037,7 +1037,7 @@ void fn_80156DA0(int obj, int state)
         ObjHits_DisableObject(obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
-            fn_8014D08C(obj, state, 5, lbl_803DBCEC, 0, 0);
+            Baddie_SetMove(obj, state, 5, lbl_803DBCEC, 0, 0);
         }
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
@@ -1071,12 +1071,12 @@ void fn_80156DA0(int obj, int state)
                 if (((GameObject*)obj)->anim.currentMove == 0)
                 {
                     *(undefined2*)(state + 0x338) = 0;
-                    fn_8014D08C(obj, state, 0, lbl_803E2AC8, 0, 1);
+                    Baddie_SetMove(obj, state, 0, lbl_803E2AC8, 0, 1);
                 }
                 else
                 {
                     float fz;
-                    fn_8014D08C(obj, state, 1, lbl_803E2ACC, 0, 0);
+                    Baddie_SetMove(obj, state, 1, lbl_803E2ACC, 0, 0);
                     fz = lbl_803E2B18;
                     ((GameObject*)obj)->anim.velocityX = fz;
                     ((GameObject*)obj)->anim.velocityY = fz;

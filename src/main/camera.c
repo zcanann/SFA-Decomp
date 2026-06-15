@@ -420,12 +420,11 @@ void screenFn_8000e944(void* viewportArg)
         viewIndex = gCameraCurrentViewIndex;
         if ((*(int*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0)
         {
-            s16 halfWidth = (s16)(t << 2);
             s16 halfHeight;
-            lbl_802C5ED0[viewIndex * 8 + 4] = halfWidth;
+            lbl_802C5ED0[viewIndex * 8 + 4] = (s16)(t << 2);
             halfHeight = (s16)((width >> 1) << 2);
             lbl_802C5ED0[viewIndex * 8 + 5] = halfHeight;
-            lbl_802C5ED0[viewIndex * 8 + 0] = halfWidth;
+            lbl_802C5ED0[viewIndex * 8 + 0] = (s16)(t << 2);
             lbl_802C5ED0[viewIndex * 8 + 1] = halfHeight;
         }
     }
@@ -474,7 +473,7 @@ void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* ou
     (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
         gCameraProjectionMatrix[14] * pos[2]);
-    if (w != lbl_803DE60C)
+    if (lbl_803DE60C != w)
     {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -515,7 +514,7 @@ void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* ou
     (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
         gCameraProjectionMatrix[14] * pos[2]);
-    if (w != lbl_803DE60C)
+    if (lbl_803DE60C != w)
     {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -562,7 +561,7 @@ void Camera_ProjectWorldSphere(
     (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
         gCameraProjectionMatrix[14] * pos[2]);
-    if (w != lbl_803DE60C)
+    if (lbl_803DE60C != w)
     {
         invW = lbl_803DE5F0 / w;
         *outX *= invW;
@@ -579,7 +578,7 @@ void Camera_ProjectWorldSphere(
         (gCameraProjectionMatrix[12] * pos[0] +
         gCameraProjectionMatrix[13] * pos[1] +
             gCameraProjectionMatrix[14] * pos[2]);
-        if (w != lbl_803DE60C)
+        if (lbl_803DE60C != w)
         {
             invW = lbl_803DE5F0 / w;
             *outRadiusX = fabsf(invW * (radius * gCameraProjectionMatrix[0]));

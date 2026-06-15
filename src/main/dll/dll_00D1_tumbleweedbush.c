@@ -153,6 +153,7 @@ typedef struct TumbleweedBushState
     u8 pad51[3];
 } TumbleweedBushState;
 
+#pragma optimization_level 2
 void tumbleweedbush_update(int* obj)
 {
     TumbleweedBushState* state;
@@ -162,8 +163,9 @@ void tumbleweedbush_update(int* obj)
     int hit0;
     f32 dx, dy, d;
     int j;
-    int i;
+    int nullVal;
     int** slot;
+    int i;
 
     state = ((GameObject*)obj)->extra;
     player = (int*)Obj_GetPlayerObject();
@@ -175,7 +177,7 @@ void tumbleweedbush_update(int* obj)
             Sfx_PlayFromObject(obj, SFXsc_gethit04);
             for (i = 0; (u8)i < state->pieceCount; i++)
             {
-                int** slot = (int**)&state->pieceObjects[(u8)i];
+                slot = (int**)&state->pieceObjects[(u8)i];
                 if (*slot != NULL)
                 {
                     if (((GameObject*)obj)->anim.seqId == 0x28d)
@@ -197,19 +199,20 @@ void tumbleweedbush_update(int* obj)
         {
         }
     }
-    for (j = 0; (u8)j < state->pieceCount; j++)
+    for (nullVal = j = 0; (u8)j < state->pieceCount; j++)
     {
         slot = (int**)&state->pieceObjects[(u8)j];
         if (*slot != NULL)
         {
             if (((int(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x20))(*slot) > 1)
             {
-                *slot = NULL;
+                *slot = (int*)nullVal;
             }
         }
     }
 }
 
+#pragma optimization_level reset
 void fn_80163980(int* obj)
 {
     u8 v = 0x7;

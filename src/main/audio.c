@@ -392,8 +392,9 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
         {
             PSVECSubtract((f32*)((u8*)slot + 0x44), &((GameObject*)player)->anim.worldPosX, v);
             t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
-            if ((t > lbl_803DE5C8 ? t : lbl_803DE5C8) > (t2 = lbl_803DE5C0))
+            if (lbl_803DE5C0 < (t > lbl_803DE5C8 ? t : lbl_803DE5C8))
             {
+                t2 = lbl_803DE5C0;
             }
             else
             {
@@ -858,8 +859,10 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = (u32*)&(&table->flags[i << 2])[384];
-    ip = (u16*)&(&table->flags[i << 1])[128];
+    op = (u32*)&table->flags[i << 2];
+    op += 96;
+    ip = (u16*)&table->flags[i << 1];
+    ip += 64;
     sfx16 = (u16)sfxId;
     for (; i >= 0; i--)
     {
@@ -2045,8 +2048,8 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7)
 {
     int idx;
-    TextCallbackEntry* entry;
     void* buf;
+    TextCallbackEntry* entry;
     idx = lbl_803DC7B8;
     lbl_803DC7B8 = idx + 1;
     entry = &lbl_80335940[idx];

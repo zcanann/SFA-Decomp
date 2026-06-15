@@ -403,10 +403,10 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
 {
     byte cornerIndex;
     float nearX;
-    float farX;
     float nearY;
-    float farY;
     float nearZ;
+    float farX;
+    float farY;
     float farZ;
     int i;
 
@@ -449,9 +449,9 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
             nearZ = *minZ;
             farZ = *maxZ;
         }
-        if ((planes->distance + (nearY * planes->normalY + nearX * planes->normalX + nearZ * planes->normalZ) <
+        if ((planes->distance + (nearX * planes->normalX + nearY * planes->normalY + nearZ * planes->normalZ) <
                 lbl_803DEBCC)
-            && (planes->distance + (farY * planes->normalY + farX * planes->normalX + farZ * planes->normalZ) <
+            && (planes->distance + (farX * planes->normalX + farY * planes->normalY + farZ * planes->normalZ) <
                 lbl_803DEBCC))
         {
             return 0;

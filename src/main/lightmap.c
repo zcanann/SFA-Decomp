@@ -1468,13 +1468,12 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
 {
     int state[5];
     int countShifted;
+    int cursor;
     u32 v;
-    int byteOff;
     int* base;
     int newR;
     int nibble;
     int i;
-    int cursor;
 
     countShifted = (int)*(u16*)((char*)obj + 0x84) << 3;
     modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
@@ -1484,11 +1483,10 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     newR = mapBlockRender_setLightmapShader(obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
-    state[4] += 4;
-    cursor = state[4];
-    byteOff = cursor >> 3;
-    v = ((u8*)state[0])[byteOff];
-    base = (int*)(state[0] + byteOff);
+    cursor = state[4] + 4;
+    state[4] = cursor;
+    v = ((u8*)state[0])[cursor >> 3];
+    base = (int*)(state[0] + (cursor >> 3));
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -1513,13 +1511,11 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     int state[5];
     int countShifted;
     int newR;
-    u32 v;
-    int byteOff;
-    int* base;
     int cursor;
+    u32 v;
+    int* base;
     int nibble;
     int i;
-    int byteOff2;
 
     fn_8000F8F8();
     countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
@@ -1529,11 +1525,10 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
-    state[4] += 4;
-    cursor = state[4];
-    byteOff = cursor >> 3;
-    v = ((u8*)state[0])[byteOff];
-    base = (int*)(state[0] + byteOff);
+    cursor = state[4] + 4;
+    state[4] = cursor;
+    v = ((u8*)state[0])[cursor >> 3];
+    base = (int*)(state[0] + (cursor >> 3));
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;

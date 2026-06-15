@@ -463,21 +463,22 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
     long pos;
     long base;
     long i;
-    long num;
+    u16 num;
     MAC_MAINTAB* m;
 
     sndBegin();
 
     main = (mid >> 6) & 0x3ff;
-    num = t->macMain[main].num;
+    m = &t->macMain[main];
+    num = m->num;
 
     if (num == 0)
     {
-        pos = base = t->macMain[main].subTabIndex = dataMacTotal;
+        pos = base = m->subTabIndex = dataMacTotal;
     }
     else
     {
-        base = t->macMain[main].subTabIndex;
+        base = m->subTabIndex;
         for (i = 0; i < num && t->macSub[base + i].id < mid; ++i)
         {
         }
@@ -537,15 +538,16 @@ s32 dataRemoveMacro(u16 mid)
 
     sndBegin();
     main = (mid >> 6) & 0x3ff;
+    m = &t->macMain[main];
 
-    if (t->macMain[main].num != 0)
+    if (m->num != 0)
     {
-        base = t->macMain[main].subTabIndex;
-        for (i = 0; i < t->macMain[main].num && mid != t->macSub[base + i].id; ++i)
+        base = m->subTabIndex;
+        for (i = 0; i < m->num && mid != t->macSub[base + i].id; ++i)
         {
         }
 
-        if (i < t->macMain[main].num)
+        if (i < m->num)
         {
             if (--t->macSub[base + i].refCount == 0)
             {

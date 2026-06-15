@@ -1257,19 +1257,16 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
         int entryIdx = 0, vecOffset = 0;
         int count = OBJPRINT_JOINT_COUNT(m);
         int i;
-        if (count > 0)
+        for (i = 0; i < count; i++)
         {
-            for (i = 0; i < count; i++)
+            u8* entries = *(u8**)&((ObjDef*)m)->jointData;
+            int adj = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
+            if ((int)entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target)
             {
-                u8* entries = *(u8**)&((ObjDef*)m)->jointData;
-                int adj = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
-                if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target)
-                {
-                    result = (char*)((GameObject*)obj)->anim.jointPoseData + vecOffset;
-                }
-                entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
-                vecOffset += 0x12;
+                result = (char*)((GameObject*)obj)->anim.jointPoseData + vecOffset;
             }
+            entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
+            vecOffset += 0x12;
         }
     }
     return result;
@@ -1277,13 +1274,12 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
 
 void fn_8003A9C0(char* p, int count, s16 a, s16 b)
 {
-    int i;
-    if (count <= 0) return;
-    for (i = 0; i < count; i++)
+    while (count > 0)
     {
         *(s16*)(p + 0x14) = a;
         *(s16*)(p + 0x44) = b;
         p += 0x60;
+        count--;
     }
 }
 extern f32 lbl_803DE9C8;
@@ -1447,7 +1443,7 @@ void fn_8003A168(int p1, int p2)
         {
             u8* data = *(u8**)((char*)table + 0x10);
             s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(p1);
-            if (data[(offset + i) + 1] != 0xff && data[i] == 0)
+            if ((int)data[(offset + i) + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)*(void**)(p1 + 0x6c) + j);
             }
@@ -1531,7 +1527,7 @@ void fn_8003AC14(int obj, int* keys, int count)
             {
                 u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key)
+                if ((int)data[di] != 0xff && (int)data[i] == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
@@ -1573,7 +1569,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
             {
                 u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key)
+                if ((int)data[di] != 0xff && (int)data[i] == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
@@ -1616,7 +1612,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
             {
                 u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key)
+                if ((int)data[di] != 0xff && (int)data[i] == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
@@ -1780,8 +1776,7 @@ void fn_8003B500(int obj, int p4)
         for (k = 0; k < n; k++)
         {
             u8* data = *(u8**)&((ObjDef*)table)->jointData;
-            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0)
+            if ((int)data[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
@@ -1796,7 +1791,7 @@ void fn_8003B500(int obj, int p4)
             found[0] = (s16)(found[0] * 3 / 4);
         }
         fn_80039DF8(obj, (s16*)p4, found, lbl_803DE9A4);
-        *(s16*)(p4 + 0x1a) = (s16)(u8) * (s16*)(p4 + 0x1a);
+        *(s16*)(p4 + 0x1a) = (s16)(u16) * (s16*)(p4 + 0x1a);
     }
 }
 
@@ -1861,10 +1856,9 @@ void objPosFn_80039510(int obj, int key, int out)
     n = (s32)(u32)((ObjDef*)table)->jointCount;
     for (k = 0; k < n; k++)
     {
-        u8* data = *(u8**)&((ObjDef*)table)->jointData;
-        if (key == (int)data[i])
+        if (key == (int)(*(u8**)&((ObjDef*)table)->jointData)[i])
         {
-            joint = *(u8*)(data + i + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 1);
+            joint = (*(u8**)&((ObjDef*)table)->jointData + i + OBJPRINT_ACTIVE_BANK_INDEX(obj))[1];
             break;
         }
         i = i + ((ObjDef*)table)->modelCount + 1;
@@ -2063,8 +2057,7 @@ void fn_8003A230(int obj, int p2, f32 val)
         for (k = 0; k < n; k++)
         {
             u8* data = *(u8**)&((ObjDef*)table)->jointData;
-            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0)
+            if ((int)data[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
@@ -2090,7 +2083,7 @@ void fn_8003A230(int obj, int p2, f32 val)
         {
             fn_80039B54(obj, (s16*)p2, found, val);
         }
-        *(s16*)((char*)p2 + 0x1a) = (s16)(u8) * (s16*)((char*)p2 + 0x1a);
+        *(s16*)((char*)p2 + 0x1a) = (s16)(u16) * (s16*)((char*)p2 + 0x1a);
         if (val > lbl_803DE9E4)
         {
             flag = 1;
@@ -2127,8 +2120,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         for (k = 0; k < n; k++)
         {
             u8* data = *(u8**)&((ObjDef*)table)->jointData;
-            s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0)
+            if ((int)data[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff && (int)data[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }

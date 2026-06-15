@@ -301,7 +301,7 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
         int count = font->count;
         GlyphEntry* e = font->entries;
         int i;
-        for (i = 0; i < count; i++)
+        for (i = 0; i != count; i++)
         {
             if (e->id == id)
             {

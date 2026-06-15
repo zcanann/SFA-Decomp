@@ -500,7 +500,7 @@ void SB_Galleon_update(GameObject* obj)
         (*gMapEventInterface)->setObjGroupStatus(SBGALLEON_MAP_PALACE, 1, 1);
         (*gMapEventInterface)->setObjGroupStatus(SBGALLEON_MAP_PALACE, 5, 1);
         lockLevel(mapGetDirIdx(SBGALLEON_MAP_PALACE), 0);
-        if ((*gMapEventInterface)->getObjGroupStatus(*(u8*)((char*)obj + 0x34), 1) == 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(*(u8*)((char*)obj + 0x34), 1) == 0)
         {
             (*gMapEventInterface)->setObjGroupStatus(*(u8*)((char*)obj + 0x34), 1, 1);
         }

@@ -83,14 +83,15 @@ float fsin16Precise(int angle) {
         case 0x8000:
             return -(y * (((lbl_803E7CBC * y2 + lbl_803E7CB8) * y2 + lbl_803E7CB4) * y2 + lbl_803E7CB0));
         default:
-            return lbl_803E7CA0
-                   - y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0);
+            return -(y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0)
+                     + lbl_803E7CA0);
     }
 }
 
 float fn_80293D0C(int angle) {
     s16 reduced = angle << 2;
-    double y = lbl_803E7CD0 * fastCastS16ToFloat(&reduced);
+    float cast = fastCastS16ToFloat(&reduced);
+    double y = lbl_803E7CD0 * cast;
     double y2 = y * y;
 
     switch (angle & 0xE000) {
@@ -120,14 +121,14 @@ float fn_80293D0C(int angle) {
                                       * y2
                                   + lbl_803E7CD8)));
         default:
-            return (float)(lbl_803E7D08
-                           - y2
+            return (float)(-(y2
                                  * (((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2
                                       + lbl_803E7D20)
                                          * y2
                                      + lbl_803E7D18)
                                         * y2
-                                    + lbl_803E7D10));
+                                    + lbl_803E7D10)
+                             + lbl_803E7D08));
     }
 }
 
@@ -145,7 +146,7 @@ float fcos16Approx(int angle) {
             return -(y * (lbl_803E7C90 * y2 + lbl_803E7C8C));
         case 0x6000:
         case 0x8000:
-            return lbl_803E7C80 - y2 * (lbl_803E7C88 * y2 + lbl_803E7C84);
+            return -(y2 * (lbl_803E7C88 * y2 + lbl_803E7C84) + lbl_803E7C80);
         default:
             return y * (lbl_803E7C90 * y2 + lbl_803E7C8C);
     }
@@ -165,7 +166,7 @@ float fsin16(int angle) {
             return -(y * ((lbl_803E7C9C * y2 + lbl_803E7C98) * y2 + lbl_803E7C94));
         case 0x6000:
         case 0x8000:
-            return lbl_803E7CA0 - y2 * ((lbl_803E7CAC * y2 + lbl_803E7CA8) * y2 + lbl_803E7CA4);
+            return -(y2 * ((lbl_803E7CAC * y2 + lbl_803E7CA8) * y2 + lbl_803E7CA4) + lbl_803E7CA0);
         default:
             return y * ((lbl_803E7C9C * y2 + lbl_803E7C98) * y2 + lbl_803E7C94);
     }
@@ -186,8 +187,8 @@ float fcos16Precise(int angle) {
             return -(y * (((lbl_803E7CBC * y2 + lbl_803E7CB8) * y2 + lbl_803E7CB4) * y2 + lbl_803E7CB0));
         case 0x6000:
         case 0x8000:
-            return lbl_803E7CA0
-                   - y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0);
+            return -(y2 * (((lbl_803E7CCC * y2 + lbl_803E7CC8) * y2 + lbl_803E7CC4) * y2 + lbl_803E7CC0)
+                     + lbl_803E7CA0);
         default:
             return y * (((lbl_803E7CBC * y2 + lbl_803E7CB8) * y2 + lbl_803E7CB4) * y2 + lbl_803E7CB0);
     }
@@ -195,7 +196,8 @@ float fcos16Precise(int angle) {
 
 float fn_80293AC4(int angle) {
     s16 reduced = angle << 2;
-    double y = lbl_803E7CD0 * fastCastS16ToFloat(&reduced);
+    float cast = fastCastS16ToFloat(&reduced);
+    double y = lbl_803E7CD0 * cast;
     double y2 = y * y;
 
     switch (angle & 0xE000) {
@@ -218,14 +220,14 @@ float fn_80293AC4(int angle) {
                                   + lbl_803E7CD8)));
         case 0x6000:
         case 0x8000:
-            return (float)(lbl_803E7D08
-                           - y2
+            return (float)(-(y2
                                  * (((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2
                                       + lbl_803E7D20)
                                          * y2
                                      + lbl_803E7D18)
                                         * y2
-                                    + lbl_803E7D10));
+                                    + lbl_803E7D10)
+                             + lbl_803E7D08));
         default:
             return (float)(y * (((((lbl_803E7D00 * y2 + lbl_803E7CF8) * y2 + lbl_803E7CF0) * y2
                                   + lbl_803E7CE8)
@@ -288,7 +290,7 @@ float fn_80293DA4(float x) {
         case 4:
             return -(y * (lbl_803E7D64 * y2 + lbl_803E7D60));
         default:
-            return lbl_803E7D68 - y2 * (lbl_803E7D70 * y2 + lbl_803E7D6C);
+            return -(y2 * (lbl_803E7D70 * y2 + lbl_803E7D6C) + lbl_803E7D68);
     }
 }
 
@@ -309,7 +311,7 @@ float mathSinf(float x) {
         case 4:
             return -(y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74));
         default:
-            return lbl_803E7D80 - y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84);
+            return -(y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84) + lbl_803E7D80);
     }
 }
 
@@ -331,7 +333,7 @@ float fn_80293F7C(float x) {
         case 4:
             return -(y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90));
         default:
-            return lbl_803E7D80
-                   - y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0);
+            return -(y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0)
+                     + lbl_803E7D80);
     }
 }

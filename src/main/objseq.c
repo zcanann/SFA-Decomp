@@ -200,15 +200,14 @@ int objSeqFindLabel(u8* seq, int label)
         }
         else if ((s8)command[0] == 0xb)
         {
-            repeatCount = *(s16*)(command + 2);
-            if (repeatCount > 0)
+            if (*(s16*)(command + 2) > 0)
             {
                 packed = *(u32*)(command + 4);
                 if ((int)(packed & 0x3f) == 9 && (int)(packed >> 16) == label)
                 {
                     return currentLabel;
                 }
-                commandIndex += repeatCount;
+                commandIndex += *(s16*)(command + 2);
             }
         }
         currentLabel += command[1];
@@ -224,7 +223,6 @@ int objSeqFindConditional(u8* seq, u8* seqState)
     int currentLabel;
     int commandIndex;
     u8* command;
-    int repeatCount;
     u32 packed;
 
     currentLabel = -1;
@@ -238,8 +236,7 @@ int objSeqFindConditional(u8* seq, u8* seqState)
         }
         else if ((s8)command[0] == 0xb)
         {
-            repeatCount = *(s16*)(command + 2);
-            if (repeatCount > 0)
+            if (*(s16*)(command + 2) > 0)
             {
                 packed = *(u32*)(command + 4);
                 if ((int)(packed & 0x3f) == 4 &&
@@ -252,7 +249,7 @@ int objSeqFindConditional(u8* seq, u8* seqState)
                     }
                     return currentLabel;
                 }
-                commandIndex += repeatCount;
+                commandIndex += *(s16*)(command + 2);
             }
         }
         currentLabel += command[1];
@@ -4230,8 +4227,8 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
 
 void* ObjSeq_FindTargetObject(u8* obj)
 {
-    void* unused;
     int objectCount;
+    void* unused;
     void** objects;
     int targetId;
     int objectType;
@@ -4309,7 +4306,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
             if (((ObjSeqState*)seq)->curFrame >= *(s16*)(command + 2))
             {
                 ((ObjSeqState*)seq)->unk68 = *(s16*)(command + 2);
-                ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                ((ObjSeqState*)seq)->cmdCursor++;
             }
             else
             {
@@ -4813,9 +4810,9 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     RomCurveNode* node;
     f32 outPos[3];
     f32 offset[3];
-    f32 dx;
-    f32 dy;
     f32 dz;
+    f32 dy;
+    f32 dx;
     f32 angleSin;
     f32 angleCos;
     f32 x;

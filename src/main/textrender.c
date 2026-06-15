@@ -1208,6 +1208,7 @@ int gameTextFn_8001b44c(int x)
     return 0;
 }
 
+#pragma peephole on
 void gameTextLoadTaskText(int taskId)
 {
     int textId;
@@ -1221,8 +1222,7 @@ void gameTextLoadTaskText(int taskId)
         if (lbl_803DCA00 == 0)
         {
             taskList = lbl_802C9EE8;
-            count = 0xb;
-            do
+            for (count = 0xb; count != 0; count--)
             {
                 if (taskId == *taskList)
                 {
@@ -1231,7 +1231,6 @@ void gameTextLoadTaskText(int taskId)
                 }
                 taskList++;
             }
-            while (--count != 0);
             allowed = 0;
         checkAllowed:
             if (allowed == 0)
@@ -1260,6 +1259,7 @@ void gameTextLoadTaskText(int taskId)
         lbl_803DC9F4 = 0xff;
     }
 }
+#pragma peephole reset
 
 int subtitleIsActive(void)
 {
