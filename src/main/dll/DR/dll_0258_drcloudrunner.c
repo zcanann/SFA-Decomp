@@ -1039,13 +1039,13 @@ void DR_CloudRunner_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         fn_802C11BC(obj, -1, timeDelta);
-        ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000;
+        ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000LL;
     }
     else
     {
         inner->baddie.physicsActive = 0;
         fn_802C11BC(obj, -1, timeDelta);
-        ((ObjAnimComponent*)obj)->modelInstance->flags &= ~0x200000;
+        ((ObjAnimComponent*)obj)->modelInstance->flags &= ~0x200000LL;
     }
     if (inner->cooldownTimer != 0)
     {

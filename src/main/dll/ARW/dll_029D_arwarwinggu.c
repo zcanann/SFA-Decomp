@@ -117,12 +117,13 @@ void arwarwinggu_update(int obj)
     case 0x615:
         {
             ArwingGuState* state = ((GameObject*)obj)->extra;
-            if (state->visibleTimer > lbl_803E7060)
+            f32 limit;
+            if (state->visibleTimer > (limit = lbl_803E7060))
             {
                 state->visibleTimer -= timeDelta;
-                if (state->visibleTimer <= lbl_803E7060)
+                if (state->visibleTimer <= limit)
                 {
-                    state->visibleTimer = lbl_803E7060;
+                    state->visibleTimer = limit;
                     objAnim->alpha = 0;
                 }
             }
@@ -150,7 +151,7 @@ void arwarwinggu_update(int obj)
             {
                 v = lbl_803E705C;
             }
-            objAnim->alpha = (int)v;
+            objAnim->alpha = v;
             break;
         }
     }

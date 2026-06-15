@@ -280,8 +280,8 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     dval = lbl_803E6CA4;
     for (i = 0; i < 4; i++)
     {
-        ObjPath_GetPointWorldPosition(obj, i + 1, &vec[0], &vec[1], &vec[2], 0);
-        PSVECSubtract(&vec[0], (void*)(obj + 0xc), &vec[0]);
+        ObjPath_GetPointWorldPosition(obj, i + 1, vec, &vec[1], &vec[2], 0);
+        PSVECSubtract(vec, (void*)(obj + 0xc), vec);
         params.d = dval;
         objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
     }

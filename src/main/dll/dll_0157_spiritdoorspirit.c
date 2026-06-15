@@ -628,27 +628,25 @@ void spiritdoorspirit_update(int* obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (sub->active == 0)
     {
-        sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0);
-        if (sub->active != 0)
+        if ((sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0)) != 0)
         {
             ObjGroup_AddObject(obj, 0x4e);
         }
         if (((GameObject*)obj)->anim.alpha != 0)
         {
-            ((GameObject*)obj)->anim.alpha = (u8)(((GameObject*)obj)->anim.alpha - 1);
+            ((GameObject*)obj)->anim.alpha--;
         }
     }
     else
     {
         fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0);
-        if (sub->active == 0)
+        if ((sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0)) == 0)
         {
             ObjGroup_RemoveObject(obj, 0x4e);
         }
         if (((GameObject*)obj)->anim.alpha < 0xff)
         {
-            ((GameObject*)obj)->anim.alpha = (u8)(((GameObject*)obj)->anim.alpha + 1);
+            ((GameObject*)obj)->anim.alpha++;
         }
     }
 }

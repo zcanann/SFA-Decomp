@@ -61,7 +61,8 @@ typedef struct WallanimatorPlacement
 typedef struct WallanimatorState
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
+    u8 activeFlag : 1;
+    u8 unk4Rest : 7;
     u8 pad5[0x8 - 0x5];
 } WallanimatorState;
 
@@ -264,7 +265,7 @@ void wallanimator_init(s16* obj, s16* p2)
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
     if (GameBit_Get((int)p2[0x18 / 2]) != 0)
     {
-        ((WallanimatorState*)state)->unk4 |= WALLANIMATOR_RUNTIME_ACTIVE_FLAG;
+        ((WallanimatorState*)state)->activeFlag = 1;
         *state = WALLANIMATOR_DONE_TIMER;
     }
 }

@@ -4271,7 +4271,6 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
     int actionIndex;
     u8* command;
     u8 opcode;
-    s16 repeatCount;
     int stop;
 
     if (((ObjSeqState*)seq)->cmds == NULL)
@@ -4300,12 +4299,12 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
                 stop = 1;
             }
         }
-        else if ((s8)opcode == 0xb && (repeatCount = *(s16*)(command + 2)) > 0)
+        else if ((s8)opcode == 0xb && *(s16*)(command + 2) > 0)
         {
             if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
             {
-                ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + command[1];
-                ((ObjSeqState*)seq)->cmdCursor = (s16)(repeatCount + ((ObjSeqState*)seq)->cmdCursor + 1);
+                ((ObjSeqState*)seq)->unk68 += command[1];
+                ((ObjSeqState*)seq)->cmdCursor = (s16)(*(s16*)(command + 2) + ((ObjSeqState*)seq)->cmdCursor + 1);
             }
             else
             {
@@ -4316,9 +4315,9 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         {
             if ((s8)command[0] != 0xf)
             {
-                ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + command[1];
+                ((ObjSeqState*)seq)->unk68 += command[1];
             }
-            ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+            ((ObjSeqState*)seq)->cmdCursor++;
         }
         else
         {

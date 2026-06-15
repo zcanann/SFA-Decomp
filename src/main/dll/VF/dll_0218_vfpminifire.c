@@ -54,12 +54,13 @@ void vfpminifire_initialise(void)
 
 void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    if (vis != 0 && ((GameObject*)p1)->anim.alpha != 0)
+    if (vis == 0 || ((GameObject*)p1)->anim.alpha == 0)
     {
-        fn_80053ED0(8);
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6088);
-        fn_80053EBC(8);
+        return;
     }
+    fn_80053ED0(8);
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6088);
+    fn_80053EBC(8);
 }
 
 void vfpminifire_free(int obj)
@@ -103,9 +104,14 @@ void vfpminifire_update(int obj)
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
     }
 
-    args.x = (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX) / lbl_803E6098;
-    args.y = (((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY) / lbl_803E6098;
-    args.z = (((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) / lbl_803E6098;
+    {
+        f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+        f32 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
+        f32 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+        args.x = dx / lbl_803E6098;
+        args.y = dy / lbl_803E6098;
+        args.z = dz / lbl_803E6098;
+    }
     if ((int)randomGetRange(0, 4) == 0)
     {
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
@@ -124,14 +130,14 @@ void vfpminifire_update(int obj)
     }
 
     linkedGfx = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    if (linkedGfx != 0)
+    if ((void*)linkedGfx != NULL)
     {
         *(u8*)&((ObjHitsPriorityState*)linkedGfx)->hitVolumePriority = 0xb;
         *(u8*)&((ObjHitsPriorityState*)linkedGfx)->hitVolumeId = 1;
         *(int*)&((ObjHitsPriorityState*)linkedGfx)->objectHitMask = 0x10;
         *(int*)&((ObjHitsPriorityState*)linkedGfx)->skeletonHitMask = 0x10;
     }
-    if ((linkedGfx != 0 && *(int*)&((ObjHitsPriorityState*)linkedGfx)->lastHitObject != 0) ||
+    if (((void*)linkedGfx != NULL && *(void**)&((ObjHitsPriorityState*)linkedGfx)->lastHitObject != NULL) ||
         (((GameObject*)obj)->anim.localPosY < state->baseY && state->burstStarted == 0))
     {
         state->burstStarted = 1;

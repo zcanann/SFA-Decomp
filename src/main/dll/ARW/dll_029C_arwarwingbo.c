@@ -121,9 +121,7 @@ void arwarwingbo_update(int obj)
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
-            objAnim->velocityX = lbl_803E7044;
-            objAnim->velocityY = lbl_803E7044;
-            objAnim->velocityZ = lbl_803E7044;
+            objAnim->velocityX = objAnim->velocityY = objAnim->velocityZ = lbl_803E7044;
         }
         (*gPartfxInterface)->spawnObject((void*)obj, 0x79e, NULL, 1, -1,
                                          &objAnim->velocityX);
@@ -144,9 +142,7 @@ void arwarwingbo_update(int obj)
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
-            objAnim->velocityX = lbl_803E7044;
-            objAnim->velocityY = lbl_803E7044;
-            objAnim->velocityZ = lbl_803E7044;
+            objAnim->velocityX = objAnim->velocityY = objAnim->velocityZ = lbl_803E7044;
         }
         objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
                 objAnim->velocityZ * timeDelta);
