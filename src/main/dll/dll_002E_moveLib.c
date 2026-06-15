@@ -916,10 +916,10 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
                        PostControl* control, float* turnSpeed, s16* moves)
 {
     extern int fn_8003A8B4(PostObjAnimComponent* objAnim, PostMotionTarget* leadAnims, u8 contactAnim, void* secondary); /* #57 */
-    extern s16 objMathFn_8003a380(double distance, PostObjAnimComponent* objAnim, PostObject* obj, void* primary, void* secondary, s16* events, int eventCount, int eventState); /* #57 */
+    extern s16 objMathFn_8003a380(PostObjAnimComponent* objAnim, PostObject* obj, void* primary, void* secondary, s16* events, double distance, int eventCount, int eventState); /* #57 */
     extern void fn_80038F1C(int a, int b); /* #57 */
     extern PostMotionTarget* seqFn_800394a0(void); /* #57 */
-    s16 yawDelta;
+    int yawDelta;
     PostMotionTarget* motion;
     s16 hitResult;
     int turnAmount;
@@ -955,17 +955,9 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         yawDelta += -0x8000;
     }
 
-    if ((control->flags & 8) != 0)
-    {
-        secondary = 0;
-    }
-    else
-    {
-        secondary = control->secondary;
-    }
-
-    hitResult = objMathFn_8003a380(distance, objAnim, obj, control->primary, secondary, control->events, 8,
-                                   control->eventState);
+    hitResult = objMathFn_8003a380(objAnim, obj, control->primary,
+                                   ((control->flags & 8) != 0) ? (void*)0 : control->secondary,
+                                   control->events, distance, 8, control->eventState);
     if ((control->flags & 8) == 0)
     {
         control->blocked = (uint)__cntlzw(fn_8003A8B4(objAnim, motion, control->contactAnim,
@@ -981,8 +973,8 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
 
     if (control->blocked == 0)
     {
-        if ((-(int)control->yawLimit < (int)yawDelta) &&
-            ((int)yawDelta < (int)control->yawLimit))
+        if (((s16)yawDelta > -(int)control->yawLimit) &&
+            ((s16)yawDelta < (int)control->yawLimit))
         {
             *turnSpeed = lbl_803E1CC4;
             *turning = 0;
@@ -997,57 +989,54 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         return 1;
     }
 
-    if (*turning == 0)
+    if (*turning != 0)
     {
-        return 1;
-    }
-
-    if ((0 < yawDelta) && (objAnim->currentMove != moves[1]))
-    {
-        ObjAnim_SetCurrentMove((int)objAnim, moves[1], lbl_803E1C90, 0);
-        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)objAnim, 0x1e);
-    }
-    if ((yawDelta < 0) && (objAnim->currentMove != moves[0]))
-    {
-        ObjAnim_SetCurrentMove((int)objAnim, moves[0], lbl_803E1C90, 0);
-        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)objAnim, 0x1e);
-    }
-
-    if (hitResult == 0)
-    {
-        turnAmount = (int)yawDelta;
-        if (turnAmount > 0)
+        if ((0 < (s16)yawDelta) && (objAnim->currentMove != moves[1]))
         {
-            turnAmount = turnAmount / 0x14;
+            ObjAnim_SetCurrentMove((int)objAnim, moves[1], lbl_803E1C90, 0);
+            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)objAnim, 0x1e);
+        }
+        if (((s16)yawDelta < 0) && (objAnim->currentMove != moves[0]))
+        {
+            ObjAnim_SetCurrentMove((int)objAnim, moves[0], lbl_803E1C90, 0);
+            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)objAnim, 0x1e);
+        }
+
+        if (hitResult == 0)
+        {
+            turnAmount = (s16)yawDelta;
+            if (turnAmount > 0)
+            {
+                turnAmount = turnAmount / 0x14;
+            }
+            else
+            {
+                turnAmount = turnAmount / 0x14;
+            }
+            yawDelta = (s16)turnAmount;
         }
         else
         {
-            turnAmount = turnAmount / 0x14;
+            turnAmount = (s16)yawDelta;
+            if (turnAmount > 0)
+            {
+                turnAmount = (turnAmount - 0x500) / 0x14;
+            }
+            else
+            {
+                turnAmount = (turnAmount + 0x500) / 0x14;
+            }
+            yawDelta = (s16)turnAmount;
         }
-        yawDelta = (s16)turnAmount;
-    }
-    else
-    {
-        turnAmount = (int)yawDelta;
-        if (turnAmount > 0)
-        {
-            turnAmount = (turnAmount - 0x500) / 0x14;
-        }
-        else
-        {
-            turnAmount = (turnAmount + 0x500) / 0x14;
-        }
-        yawDelta = (s16)turnAmount;
-    }
 
-    objAnim->yaw += yawDelta;
-    ret = (uint)(s16)
-    yawDelta;
-    if ((int)ret < 0)
-    {
-        ret = -ret;
+        objAnim->yaw += yawDelta;
+        ret = (uint)(s16)yawDelta;
+        if ((int)ret < 0)
+        {
+            ret = -ret;
+        }
+        *turnSpeed = (float)(s32)ret / lbl_803E1CE0;
     }
-    *turnSpeed = (float)(s32)ret / lbl_803E1CE0;
     return 1;
 }
 
