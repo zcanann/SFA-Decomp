@@ -2865,9 +2865,9 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
 #define V0 (((ModgfxVertexGroupCmd*)p)->indices[j])
-                *(s16*)(buf + V0 * 16 + 0) = (int)((f32) * (s16*)(buf + V0 * 16 + 0) * tx);
-                *(s16*)(buf + V0 * 16 + 2) = (int)((f32) * (s16*)(buf + V0 * 16 + 2) * ty);
-                *(s16*)(buf + V0 * 16 + 4) = (int)((f32) * (s16*)(buf + V0 * 16 + 4) * tz);
+                *(s16*)(buf + V0 * 16 + 0) = (s16)((f32) * (s16*)(buf + V0 * 16 + 0) * tx);
+                *(s16*)(buf + V0 * 16 + 2) = (s16)((f32) * (s16*)(buf + V0 * 16 + 2) * ty);
+                *(s16*)(buf + V0 * 16 + 4) = (s16)((f32) * (s16*)(buf + V0 * 16 + 4) * tz);
                 *(s16*)(buf2 + V0 * 16 + 0) = *(s16*)(buf + V0 * 16 + 0);
                 *(s16*)(buf2 + V0 * 16 + 2) = *(s16*)(buf + V0 * 16 + 2);
                 *(s16*)(buf2 + V0 * 16 + 4) = *(s16*)(buf + V0 * 16 + 4);
@@ -2887,15 +2887,15 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 #define V0 (((ModgfxVertexGroupCmd*)p)->indices[j])
             if (lbl_803DF434 != *(f32*)(base + 0x30))
             {
-                *(s16*)(buf2 + V0 * 16 + 0) = (int)(*(f32*)(base + 0x30) * (f32) * (s16*)(buf + V0 * 16 + 0));
+                *(s16*)(buf2 + V0 * 16 + 0) = (s16)(*(f32*)(base + 0x30) * (f32) * (s16*)(buf + V0 * 16 + 0));
             }
             if (lbl_803DF434 != *(f32*)(base + 0x34))
             {
-                *(s16*)(buf2 + V0 * 16 + 2) = (int)(*(f32*)(base + 0x34) * (f32) * (s16*)(buf + V0 * 16 + 2));
+                *(s16*)(buf2 + V0 * 16 + 2) = (s16)(*(f32*)(base + 0x34) * (f32) * (s16*)(buf + V0 * 16 + 2));
             }
             if (lbl_803DF434 != *(f32*)(base + 0x38))
             {
-                *(s16*)(buf2 + V0 * 16 + 4) = (int)(*(f32*)(base + 0x38) * (f32) * (s16*)(buf + V0 * 16 + 4));
+                *(s16*)(buf2 + V0 * 16 + 4) = (s16)(*(f32*)(base + 0x38) * (f32) * (s16*)(buf + V0 * 16 + 4));
             }
 #undef V0
         }
