@@ -659,8 +659,8 @@ void fn_802A4B4C(int obj)
     if (p != NULL)
     {
         *(int*)((char*)p + 0xf8) = 1;
-        *(u32*)((char*)inner + 0x360) |= 0x800000LL;
     }
+    *(u32*)((char*)inner + 0x360) |= 0x800000LL;
 }
 
 void fn_802985AC(int obj)
