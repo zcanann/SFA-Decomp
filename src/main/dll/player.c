@@ -10681,9 +10681,8 @@ void fn_802A96D8(void)
     int obj;
 
     if (!Obj_IsLoadingLocked()) return;
-    p = lbl_80332ED4;
     idx3 = 0;
-    for (i = 0; i < 7; i++)
+    for (i = 0, p = lbl_80332ED4; i < 7; i++)
     {
         if (*p == NULL)
         {
