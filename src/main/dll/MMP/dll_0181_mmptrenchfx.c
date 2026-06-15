@@ -68,11 +68,9 @@ extern f32 lbl_803E5180;
 extern f32 lbl_803E45C0;
 extern int* gCarryableInterface;
 extern void vecRotateZXY(void* in, void* out);
-extern void fn_801A7D74(int obj, u8 a, u8 b);
 extern char lbl_803AC930[];
 extern f32 lbl_803E45B0;
 extern f32 lbl_803E45B4;
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 
 undefined4
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
