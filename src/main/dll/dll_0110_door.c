@@ -1,7 +1,6 @@
 /* DLL 0x0110 — door objects [8017AC2C-8017ADB4) */
 #include "main/game_object.h"
 
-extern undefined8 ObjGroup_RemoveObject();
 
 #include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
@@ -53,7 +52,6 @@ extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
-extern f32 lbl_803E3790;
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
