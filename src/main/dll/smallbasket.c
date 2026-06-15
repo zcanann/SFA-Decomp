@@ -515,7 +515,7 @@ void smallbasket_initScaledVariantState(int* obj, int* st)
     f32 base_v;
     u32 v;
     u32 amt;
-    amt = *((u8*)((int*)obj[0x4c / 4]) + 0x2f);
+    amt = *((u8*)((int*)*(int*)&((GameObject*)obj)->anim.placementData) + 0x2f);
     ratio = (f32)amt;
     if (lbl_803E2B18 == (f32)amt)
     {
@@ -695,7 +695,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state)
     *(u32*)&((BaddieState*)state)->unk2E4 = 0xb;
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x400b0LL;
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x40001040LL;
-    switch ((s16)obj[0x46 / 2])
+    switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x6a3:
         ((BaddieState*)state)->speedScale = lbl_803E2BE4;
