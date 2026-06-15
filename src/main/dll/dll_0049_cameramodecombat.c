@@ -115,6 +115,17 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     lbl_803DD568->pathBlendTargetIndex = target->unkE4;
 }
 
+typedef struct {
+    u8 b0 : 1;
+    u8 b1 : 1;
+    u8 b2 : 1;
+    u8 b3 : 1;
+    u8 b4 : 1;
+    u8 b5 : 1;
+    u8 b6 : 1;
+    u8 b7 : 1;
+} CameraModeCombatFlags;
+
 void CameraModeCombat_free(CameraObject* camera)
 {
     if (camera->targetObj != NULL)
@@ -124,7 +135,7 @@ void CameraModeCombat_free(CameraObject* camera)
     mm_free(lbl_803DD568);
     lbl_803DD568 = 0;
     Rcp_DisableBlurFilter();
-    camera->smoothingFlags &= ~0x80;
+    ((CameraModeCombatFlags*)&camera->smoothingFlags)->b0 = 0;
 }
 
 void CameraModeCombat_update(short* cam)
