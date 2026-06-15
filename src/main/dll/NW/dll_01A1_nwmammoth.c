@@ -162,31 +162,24 @@ void fn_801CEE0C(int p1, int p2)
         break;
     case 1:
         *(int*)&state->triggerList = (int)&lbl_803DBF74;
+        switch (GameBit_Get(1400))
         {
-            int v = GameBit_Get(1400);
-            if (v == 1)
+        case 0:
+            if (ObjTrigger_IsSetById(p1, 1398) != 0)
             {
+                GameBit_Set(1400, 1);
+                gameBitDecrement(1398);
+                (*gObjectTriggerInterface)->runSequence(2, (void*)p1, -1);
+                state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
                 state->stateIndex = 2;
             }
-            else if (v > 1)
-            {
-                state->stateIndex = 3;
-            }
-            else if (v == 0)
-            {
-                if (ObjTrigger_IsSetById(p1, 1398) != 0)
-                {
-                    GameBit_Set(1400, 1);
-                    gameBitDecrement(1398);
-                    (*gObjectTriggerInterface)->runSequence(2, (void*)p1, -1);
-                    state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
-                    state->stateIndex = 2;
-                }
-            }
-            else
-            {
-                state->stateIndex = 3;
-            }
+            break;
+        case 1:
+            state->stateIndex = 2;
+            break;
+        default:
+            state->stateIndex = 3;
+            break;
         }
         break;
     case 2:
