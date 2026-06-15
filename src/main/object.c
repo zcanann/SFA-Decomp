@@ -1055,13 +1055,13 @@ void ObjList_PartitionForRender(int* out)
         stop = 0;
         while (j >= 0 && stop == 0)
         {
-            if (((ObjAnimComponent*)arr[j])->modelInstance->flags & 1)
+            if (!(((ObjAnimComponent*)arr[j])->modelInstance->flags & 1))
             {
-                stop = -1;
+                j--;
             }
             else
             {
-                j--;
+                stop = -1;
             }
         }
         if (i < j)
