@@ -658,18 +658,18 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
 
     if (out != NULL) {
         if ((f32)(near + far) <= lbl_803DEE7C) {
-            *out = (s16)0xFFFF;
+            *(u16*)out = 0xFFFF;
         } else {
-            *out = (s16)(s32)(Gq / (near + far));
-            if (*out == 0) {
+            *out = (short)(Gq / (near + far));
+            if (*(u16*)out == 0) {
                 *out = 1;
             }
         }
     }
-    lbl_803DD038 = fabs(near);
-    lbl_803DD034 = fabs(far);
+    lbl_803DD038 = __fabs(near);
+    lbl_803DD034 = __fabs(far);
     C_MTXPerspective((void *)lbl_803968C0, fov, aspect, lbl_803DD038, lbl_803DD034);
-    lbl_803DD03C = 0;
+    *(u32*)&lbl_803DD03C = 0;
 }
 
 void normalize(f32* x, f32* y, f32* z)
