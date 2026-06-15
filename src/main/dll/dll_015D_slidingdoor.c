@@ -45,7 +45,6 @@ extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern void* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern void loadMapAndParent(int mapId);
 
 void FUN_801a4520(int param_1)
 {
