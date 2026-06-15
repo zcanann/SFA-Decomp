@@ -455,8 +455,8 @@ void DIMboss_free(DIMbossObject* obj)
     timeOfDayFn_80055000();
 }
 
-void DIMboss_render(DIMbossObject* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                    undefined4 param_5, char shouldRender)
+void DIMboss_render(DIMbossObject* obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                    undefined4 p5, char shouldRender)
 {
     DIMbossRuntime* runtime;
     DIMbossEffect* effect;
@@ -467,7 +467,7 @@ void DIMboss_render(DIMbossObject* obj, undefined4 param_2, undefined4 param_3, 
         return;
     }
 
-    objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E4C44);
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E4C44);
     DIM2icicle_updateBossSequenceEffects(obj, runtime);
     dll_2E_func06(obj, gDIMbossAnimController, 0);
 
@@ -593,7 +593,7 @@ void DIMboss_update(DIMbossObject* obj)
     }
 }
 
-void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
+void DIMboss_init(DIMbossObject* obj, undefined4 p2, int isAltVariant)
 {
     DIMbossRuntime* runtime;
     DIMbossTopState* topState;
@@ -609,12 +609,12 @@ void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
     setDrawCloudsAndLights(0);
     obj->updateMode = 2;
     animFlags = 6;
-    if (param_3 != 0)
+    if (isAltVariant != 0)
     {
         animFlags |= 1;
     }
     DIMboss_GetBaddieControlInterface()->setupAnim(
-        obj, param_2, runtime, 0xc, 6, 0x102, animFlags, lbl_803E4C28);
+        obj, p2, runtime, 0xc, 6, 0x102, animFlags, lbl_803E4C28);
     obj->updateState = DIMboss_updateState;
     runtime->phase = DIMBOSS_PHASE_START;
     DIMboss_GetPlayerInterface()->init(obj, runtime, 0);
