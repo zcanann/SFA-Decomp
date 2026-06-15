@@ -8089,7 +8089,6 @@ extern f32 lbl_803E8160;
 void playerDoHitDetection(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = Player_GetObjHitsState(obj);
     f32 dt = timeDelta;
     f32 spd;
     int sub;
@@ -8122,31 +8121,27 @@ void playerDoHitDetection(int obj)
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
                 *(u8*)((char*)inner + 0x8ce) = *(u8*)((char*)inner + 0x8cd);
+                if ((((HitDesc*)(((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))->flags & 1) != 0)
                 {
-                    HitDesc* t = (HitDesc*)((PlayerState*)inner)->moveSlots +
-                        ((PlayerState*)inner)->moveSlotIndex;
-                    if ((t->flags & 1) != 0)
-                    {
-                        ((PlayerState*)inner)->unk820 = lbl_803E80A8;
-                    }
+                    ((PlayerState*)inner)->unk820 = lbl_803E80A8;
                 }
-                {
-                    HitDesc* d = &((HitDesc*)((PlayerState*)inner)->moveSlots)[((PlayerState*)inner)->moveSlotIndex];
-                    if ((d->flags & 2) != 0)
+                if ((((HitDesc*)(((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))->flags & 2) != 0)
                     {
-                        ((PlayerState*)inner)->unk8AD = d->valsA[((PlayerState*)inner)->unk8CD];
-                        {
-                            HitDesc* e = (HitDesc*)((PlayerState*)inner)->moveSlots +
-                                ((PlayerState*)inner)->moveSlotIndex;
-                            ((PlayerState*)inner)->unk8AC =
-                                e->valsB[((PlayerState*)inner)->unk8CD];
-                        }
+                        ((PlayerState*)inner)->unk8AD =
+                            ((HitDesc*)(((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
+                                ((PlayerState*)inner)->unk8CD))->valsA[0];
+                        ((PlayerState*)inner)->unk8AC =
+                            ((HitDesc*)(((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
+                                ((PlayerState*)inner)->unk8CD))->valsB[0];
                         ((PlayerState*)inner)->unk828 =
                             (f32)(u32)((PlayerState*)inner)->unk8AD;
                         ((PlayerState*)inner)->unk8AB += 1;
                         ((PlayerState*)inner)->lastHitObject = *(int*)(sub + 0x50);
                     }
-                }
                 {
                     char* h2 = *(char**)(sub + 0x50);
                     if (h2 != NULL)
@@ -8191,44 +8186,40 @@ void playerDoHitDetection(int obj)
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
                 *(u8*)((char*)inner + 0x8ce) = *(u8*)((char*)inner + 0x8cd);
+                if ((((u8*)(((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))[0x88] & 1) != 0)
                 {
-                    HitDesc* t = (HitDesc*)((PlayerState*)inner)->moveSlots +
-                        ((PlayerState*)inner)->moveSlotIndex;
-                    if ((t->flags & 1) != 0)
-                    {
-                        ((PlayerState*)inner)->unk820 = lbl_803E80A8;
-                    }
+                    ((PlayerState*)inner)->unk820 = lbl_803E80A8;
                 }
-                {
-                    HitDesc* d = &((HitDesc*)((PlayerState*)inner)->moveSlots)[((PlayerState*)inner)->moveSlotIndex];
-                    if ((d->flags & 2) != 0)
+                if ((((u8*)(((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))[0x88] & 2) != 0)
                     {
-                        ((PlayerState*)inner)->unk8AD = d->valsA[((PlayerState*)inner)->unk8CD];
-                        {
-                            HitDesc* e = (HitDesc*)((PlayerState*)inner)->moveSlots +
-                                ((PlayerState*)inner)->moveSlotIndex;
-                            ((PlayerState*)inner)->unk8AC =
-                                e->valsB[((PlayerState*)inner)->unk8CD];
-                        }
+                        ((PlayerState*)inner)->unk8AD =
+                            ((u8*)(((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
+                                ((PlayerState*)inner)->unk8CD))[0xa8];
+                        ((PlayerState*)inner)->unk8AC =
+                            ((u8*)(((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
+                                ((PlayerState*)inner)->unk8CD))[0xab];
                         ((PlayerState*)inner)->unk828 =
                             (f32)(u32)((PlayerState*)inner)->unk8AD;
                         ((PlayerState*)inner)->unk8AB += 1;
                         ((PlayerState*)inner)->lastHitObject =
                             Player_GetObjHitsState(obj)->lastHitObject;
                     }
-                }
             }
         }
         if ((*(u32*)((char*)inner + 0x360) & 2) != 0)
         {
-            int h = *(int*)((char*)inner + 0xdc);
-            if (h != 0 && ((fl = ((ObjAnimComponent*)h)->modelInstance->flags) & OBJMODEL_FLAG_SKIP_RESET_UPDATE) != 0
+            void* h = *(void**)((char*)inner + 0xdc);
+            if (h != NULL && ((fl = ((ObjAnimComponent*)h)->modelInstance->flags) & OBJMODEL_FLAG_SKIP_RESET_UPDATE) != 0
                 &&
                 (fl & 0x8000) == 0)
             {
-                objHitDetectFn_80062e84(obj, h, 1);
+                objHitDetectFn_80062e84(obj, (int)h, 1);
             }
-            else if (((GameObject*)obj)->anim.parent != NULL && h == 0)
+            else if (((GameObject*)obj)->anim.parent != NULL && h == NULL)
             {
                 objHitDetectFn_80062e84(obj, 0, 1);
             }
@@ -8254,7 +8245,7 @@ void playerDoHitDetection(int obj)
                     (((GameObject*)obj)->anim.worldPosY - ((GameObject*)obj)->anim.previousWorldPosY) / dt;
                 if (((GameObject*)obj)->anim.velocityY < lbl_803E811C)
                 {
-                    ((GameObject*)obj)->anim.velocityY = *(f32 *)&lbl_803E811C;
+                    ((GameObject*)obj)->anim.velocityY = lbl_803E811C;
                 }
                 if (((GameObject*)obj)->anim.velocityY > lbl_803E7EA4)
                 {
@@ -8284,7 +8275,7 @@ void playerDoHitDetection(int obj)
                 if (((*(s8*)((char*)inner + 0x264) & 2) != 0 &&
                         (*(s8*)((char*)inner + 0x264) & 0x20) == 0) ||
                     *(u8*)((char*)inner + 0x262) != 0 ||
-                    (hitState->flags & 8) != 0)
+                    (Player_GetObjHitsState(obj)->flags & 8) != 0)
                 {
                     if (((PlayerState*)inner)->unk410 <= lbl_803E7EA4 &&
                         ((PlayerState*)inner)->baddie.animSpeedA > lbl_803E8160)
@@ -8332,8 +8323,8 @@ void playerDoHitDetection(int obj)
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
         }
         {
-            int g = getSbGalleon();
-            if (g != 0 && DBprotection_getCameraState() == 2)
+            void* g = (void*)getSbGalleon();
+            if (g != NULL && DBprotection_getCameraState() == 2)
             {
                 ((GameObject*)obj)->anim.modelState->overrideWorldPosX =
                     ((GameObject*)obj)->anim.localPosX - *(f32*)((char*)g + 0xc);
