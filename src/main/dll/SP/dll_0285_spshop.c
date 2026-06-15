@@ -272,7 +272,9 @@ void shop_init(int obj, int objDef)
 
     *(s8*)(*(int*)&((GameObject*)obj)->extra + 1) = -1;
     ObjGroup_AddObject(obj, 9);
-    for (i = 0, item = lbl_80327FD0; i < 0x3c; i++, item += 0xc)
+    i = 0;
+    item = lbl_80327FD0;
+    for (; i < 0x3c; item += 0xc, i++)
     {
         item[5] = item[randomGetRange(0, 2) + 1];
     }
