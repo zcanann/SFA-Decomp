@@ -31,6 +31,7 @@ extern f32 lbl_803E1770;
 extern f32 lbl_803E1774;
 extern f32 lbl_803E1778;
 
+#pragma dont_inline on
 void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 {
     short sVar1;
@@ -87,6 +88,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 done:
     return;
 }
+#pragma dont_inline reset
 
 void camcontrol_releasePathState(void)
 {
@@ -103,6 +105,7 @@ void CameraModeStaffAnim_copyToCurrent_nop(void)
 void camclimb_update(CameraObject* cam)
 {
     extern uint getAngle();
+    extern int camcontrol_samplePathState();
     byte needsReset;
     uint angle;
     int defaultHandler;
@@ -123,7 +126,7 @@ void camclimb_update(CameraObject* cam)
     }
     else
     {
-        if (gCamcontrolPathState->localFrameObj != *(int*)&cam->anim.parent)
+        if ((u32)gCamcontrolPathState->localFrameObj != *(u32*)&cam->anim.parent)
         {
             for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex = pointIndex + 1)
             {
