@@ -3163,7 +3163,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
                 + 0xc));
     }
 
-    *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
+    *(s16*)obj += ((ObjSeqState*)seq)->heading;
     if (*seqObj != obj && (s8)lbl_803DD0D8 == 0)
     {
         objCallSeqFn(*seqObj, obj, seq, ((u8*)(historyBase + 0x3c4c))[(s8)((ObjSeqState*)seq)->slot]);
