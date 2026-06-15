@@ -1,13 +1,8 @@
 /* DLL 0x0042 — attention / camera-control objects [801046F4-801049B0) */
-#include "main/dll/CAM/attention.h"
-#include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"
-#include "main/dll/CAM/camslide.h"
 #include "main/camera_interface.h"
-#include "main/camera_object.h"
 #include "main/dll/CAM/firstperson.h"
-#include "main/game_object.h"
 #include "main/mm.h"
 #include "string.h"
 
