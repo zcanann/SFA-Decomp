@@ -1181,11 +1181,11 @@ void DR_EarthWarrior_hitDetect(int obj)
                     s16 d = *(s16*)obj - (u16) * (s16*)hitObj;
                     if (d > 0x8000)
                     {
-                        d -= 0xffff;
+                        d = (s16)(d - 0xffff);
                     }
                     if (d < -0x8000)
                     {
-                        d += 0xffff;
+                        d = (s16)(d + 0xffff);
                     }
                     if (d > 0x4000 || d < -0x4000)
                     {
