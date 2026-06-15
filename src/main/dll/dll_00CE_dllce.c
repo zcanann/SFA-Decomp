@@ -475,7 +475,6 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
     int i;
     GroundBaddieState* sub;
     int* objs;
-    ObjHitsPriorityState* hitState;
 
     sub = ((GameObject*)obj)->extra;
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
@@ -483,9 +482,8 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->objectPairPriority = 10;
-    hitState->objectPairHitVolume = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
