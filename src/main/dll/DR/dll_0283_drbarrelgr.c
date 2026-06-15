@@ -212,7 +212,7 @@ void drbarrelgr_update(int obj)
         if (((DrbarrelgrState*)state)->unk128 == ((DrbarrelgrPlacement*)setup)->unk19)
         {
             ((DrbarrelgrState*)state)->unk128 =
-                (int)((f32)((DrbarrelgrState*)state)->unk128 * lbl_803E6CA8);
+                (s16)((f32)((DrbarrelgrState*)state)->unk128 * lbl_803E6CA8);
         }
         else
         {
