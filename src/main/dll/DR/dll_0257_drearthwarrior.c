@@ -1380,6 +1380,7 @@ void DR_EarthWarrior_update(int obj)
     }
 }
 
+#pragma opt_propagation off
 void DR_EarthWarrior_init(int obj, int p2)
 {
     register u8* base = (u8*)(int)gDREarthWarriorInitData;
@@ -1458,3 +1459,4 @@ void DR_EarthWarrior_init(int obj, int p2)
     *(int*)((char*)obj + 0x108) = (int)fn_802BC788;
     ObjModelChain_SetEnabled((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, 1);
 }
+#pragma opt_propagation reset
