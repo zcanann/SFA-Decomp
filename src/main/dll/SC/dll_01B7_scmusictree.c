@@ -161,7 +161,8 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma dont_inline on
 void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
-    extern int randomGetRange(int lo, int hi);    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    extern int randomGetRange(int lo, int hi); /* int here vs u32 in _init: per-fn prototype, do not hoist */
+    int def = *(int*)&((GameObject*)obj)->anim.placementData;
     SCMusicTreeState* state = (SCMusicTreeState*)p2;
     int setup;
 
@@ -193,7 +194,8 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 #pragma dont_inline on
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {
-    extern int GameBit_Get(int bit);    int id = ((ObjPlacement*)((GameObject*)p1)->anim.placementData)->mapId;
+    extern int GameBit_Get(int bit);
+    int id = ((ObjPlacement*)((GameObject*)p1)->anim.placementData)->mapId;
     SCMusicTreeState* state = (SCMusicTreeState*)p2;
     (void)effectType;
 
@@ -399,7 +401,8 @@ end:
 
 void sc_musictree_init(int obj, SCMusicTreeSetup* setup)
 {
-    extern u32 randomGetRange(int min, int max);    SCMusicTreeState* state = ((GameObject*)obj)->extra;
+    extern u32 randomGetRange(int min, int max); /* u32 here vs int in render: per-fn prototype, do not hoist */
+    SCMusicTreeState* state = ((GameObject*)obj)->extra;
     f32 stk[7];
     f32 ratio;
     f32 zero;

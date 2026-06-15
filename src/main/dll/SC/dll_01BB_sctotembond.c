@@ -46,6 +46,10 @@ extern f32 lbl_803E565C;
 extern f32 lbl_803E5660;
 extern void hudFn_8011f38c(int visible);
 extern void fn_80296124(int player, void* pos, void* obj, int arg);
+extern f32 lbl_803E5650;
+extern void objRenderFn_8003b8f4(f32);
+extern void Music_Trigger(int track, int param);
+extern void fn_8011F6D4(int p);
 
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
 #define SC_TOTEMBOND_VT_HANDLE_EVENT 0x20 /* peer anim.dll vtable slot */
@@ -58,11 +62,6 @@ extern void fn_80296124(int player, void* pos, void* obj, int arg);
 #define SC_TOTEMBOND_EVENT_START_ORBS 0x01
 #define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
 #define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
-
-extern f32 lbl_803E5650;
-extern void objRenderFn_8003b8f4(f32);
-extern void Music_Trigger(int track, int param);
-extern void fn_8011F6D4(int p);
 
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {

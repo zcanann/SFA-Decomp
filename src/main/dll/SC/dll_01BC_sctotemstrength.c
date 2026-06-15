@@ -22,24 +22,15 @@ extern undefined4 Sfx_KeepAliveLoopedObjectSound();
 extern uint randomGetRange();
 extern undefined4 setAButtonIcon();
 extern u8* Obj_GetPlayerObject(void);
-
-#define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
-#define PLATFORM1_PEER_SEQ_ID 0x282
-#define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
-#define PLATFORM1_IDLE_PULL_MOVE_ID 0
-
-#define PLATFORM1_VT_HANDLE_EVENT 0x20 /* peer anim.dll vtable slot */
-
-#define PLATFORM1_LOOP_SFX_ID 0x3af
-#define PLATFORM1_PLAYER_SFX_ID 0x13a
-#define PLATFORM1_PLATFORM_SFX_ID 0x4a3
-
 extern u32 getButtonsJustPressedIfNotBusy(int pad);
 extern int isGameTimerDisabled(void);
 extern f32 fn_8001461C(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(int n);
+extern void objRenderFn_8003b8f4(f32);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
 extern int lbl_803DDC10;
 extern int lbl_803DC070;
 extern u8 framesThisStep;
@@ -61,14 +52,22 @@ extern const f32 lbl_803E569C;
 extern f32 lbl_803E56A0;
 extern f32 lbl_803E56A4;
 
+#define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
+#define PLATFORM1_PEER_SEQ_ID 0x282
+#define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
+#define PLATFORM1_IDLE_PULL_MOVE_ID 0
+
+#define PLATFORM1_VT_HANDLE_EVENT 0x20 /* peer anim.dll vtable slot */
+
+#define PLATFORM1_LOOP_SFX_ID 0x3af
+#define PLATFORM1_PLAYER_SFX_ID 0x13a
+#define PLATFORM1_PLATFORM_SFX_ID 0x4a3
+
 /* EN v1.0 0x801DE430  size: 2596b  platform1_control: tug-of-war rope
  * minigame. Resolves the anchor object, applies sequence events, then per
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
-extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
-
 int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* self;
@@ -393,7 +392,6 @@ void sc_totemstrength_init(int* obj)
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
 void sc_totemstrength_update(u8* obj)
 {
-    extern void GameBit_Set(int eventId, int value);
     Platform1State* st = ((GameObject*)obj)->extra;
     u8 t;
     s16 step;

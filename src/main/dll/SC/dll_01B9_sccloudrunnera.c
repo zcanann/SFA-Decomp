@@ -9,6 +9,14 @@
 extern void objRenderFn_8003b8f4(f32);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern void cmbsrc_setExternalActive(int obj, int active);
+extern void Obj_FreeObject(int obj);
+extern void objSetSlot(int obj, int slot);
+extern int* gTitleMenuControlInterface;
+extern u8 lbl_803DB411;    /* trigger-interface update parameter */
+extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
 
 typedef struct ScCloudrunneraPlacement
 {
@@ -42,16 +50,6 @@ typedef struct ScCloudrunneraSetup
     u8 unk29;         /* 0x29 */
     u8 unk2A;         /* 0x2A */
 } ScCloudrunneraSetup;
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void cmbsrc_setExternalActive(int obj, int active);
-extern void Obj_FreeObject(int obj);
-extern void objSetSlot(int obj, int slot);
-extern int* gTitleMenuControlInterface;
-
-extern u8 lbl_803DB411;    /* trigger-interface update parameter */
-extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
 
 int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
 int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }

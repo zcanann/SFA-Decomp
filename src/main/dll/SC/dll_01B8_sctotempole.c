@@ -10,6 +10,7 @@
 
 extern void objRenderFn_8003b8f4(f32);
 extern void GameBit_Set(int id, int value);
+extern u32 GameBit_Get(int id);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 fn_8001461C(void);
 
@@ -55,7 +56,6 @@ typedef struct SCTotemPoleState
    zero = empty slot); returns whether the order changed. */
 int sc_totempole_sortCompletionGameBits(u16* recordBits, u16 newTime)
 {
-    extern u32 GameBit_Get(int id);
     u16 times[4];
     u8 i, j;
     s32 changed = 0;
@@ -108,7 +108,6 @@ void sc_totempole_hitDetect(void)
 
 void sc_totempole_update(int obj)
 {
-    extern u32 GameBit_Get(int id);
     SCTotemPoleState* state = ((GameObject*)obj)->extra;
     f32 animEvents[8];
     int playedFanfare;

@@ -131,6 +131,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
 
     if (solvedThisObject != 0)
     {
+        /* local prototype overrides the file-scope (int obj) form; do not hoist */
         extern void objfx_spawnArcedBurst(SCTotemPuzzleObject* obj, int enabled, f32 radius, int particleKind,
                                           int particleCount, int lifetime, f32 speedA, f32 speedB, f32 scale,
                                           SCTotemPuzzleParticleBox* box, int flags);
@@ -218,6 +219,11 @@ extern f32 lbl_803E5628;
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
+extern s16 lbl_80327A18[];
+extern f32 lbl_803E562C;
+extern f32 lbl_803E5630;
+extern void fn_801DD170(int obj);
+extern int randomGetRange(int lo, int hi);
 
 void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 {
@@ -352,12 +358,6 @@ void sc_totempuzzle_release(void)
 void sc_totempuzzle_initialise(void)
 {
 }
-
-extern s16 lbl_80327A18[];
-extern f32 lbl_803E562C;
-extern f32 lbl_803E5630;
-extern void fn_801DD170(int obj);
-extern int randomGetRange(int lo, int hi);
 
 void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
 {
