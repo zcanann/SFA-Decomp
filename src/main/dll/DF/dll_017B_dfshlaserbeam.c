@@ -200,7 +200,7 @@ void DFSH_LaserBeam_update(uint objAddr)
     config = obj->config;
     runtime = obj->runtime;
 
-    DFSH_LASER_CYCLE_TIMER(runtime) = (s16)(DFSH_LASER_CYCLE_TIMER(runtime) - framesThisStep);
+    DFSH_LASER_CYCLE_TIMER(runtime) -= (s16)framesThisStep;
     if (GameBit_Get(config->disableGameBit) == 0)
     {
         if (DFSH_LASER_CYCLE_TIMER(runtime) < 0)
@@ -235,7 +235,7 @@ void DFSH_LaserBeam_update(uint objAddr)
             if (DFSH_LASER_CYCLE_TIMER(runtime) < 0x28)
             {
                 Sfx_StopObjectChannel(obj, 0x40);
-                if ((lbl_803E4EC0 <= runtime->beamVolumeScale) &&
+                if ((runtime->beamVolumeScale >= lbl_803E4EC0) &&
                     (DFSH_LASER_BLOCKED(runtime) == 0))
                 {
                     runtime->beamVolumeScale -= lbl_803E4EC4 * timeDelta;
