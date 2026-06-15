@@ -1,5 +1,3 @@
-#include "main/audio/sfx_ids.h"
-#include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
