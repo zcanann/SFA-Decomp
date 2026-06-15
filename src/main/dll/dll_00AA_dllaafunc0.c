@@ -29,17 +29,17 @@ void dll_AA_func03(int sourceObj, int variant, u8* posSource, u8* seqFlags)
     (*gModgfxInterface)->addSequenceFlags((u32)seqFlags);
     (*gModgfxInterface)->resetSequenceSpawns();
     (*gModgfxInterface)->addSequenceSpawn
-        (4, lbl_803E1608, lbl_803E160C, lbl_803E160C, 0x15, &tab[0x1b0]);
+        (4, lbl_803E1608, lbl_803E160C, *(f32*)&lbl_803E160C, 0x15, &tab[0x1b0]);
     (*gModgfxInterface)->addSequenceSpawn
-        (2, lbl_803E1610, lbl_803E1614, lbl_803E1610, 0x15, &tab[0x1b0]);
+        (2, lbl_803E1610, lbl_803E1614, *(f32*)&lbl_803E1610, 0x15, &tab[0x1b0]);
     (*gModgfxInterface)->addSequenceSpawn
-        (0x400000, lbl_803E160C, lbl_803E1618, lbl_803E160C, 0, (void*)0);
+        (0x400000, lbl_803E160C, lbl_803E1618, *(f32*)&lbl_803E160C, 0, (void*)0);
     (*gModgfxInterface)->nextSequenceParam();
     (*gModgfxInterface)->addSequenceSpawn
-        (4, lbl_803E161C, lbl_803E160C, lbl_803E160C, 7, &tab[0x174]);
+        (4, lbl_803E161C, lbl_803E160C, *(f32*)&lbl_803E160C, 7, &tab[0x174]);
     (*gModgfxInterface)->nextSequenceParam();
     (*gModgfxInterface)->addSequenceSpawn
-        (4, lbl_803E1620, lbl_803E160C, lbl_803E160C, 7, &tab[0x174]);
+        (4, lbl_803E1620, lbl_803E160C, *(f32*)&lbl_803E160C, 7, &tab[0x174]);
     (*gModgfxInterface)->addSequenceSpawn
         (2, scale, lbl_803E1624, scale, 0x15, &tab[0x1b0]);
     (*gModgfxInterface)->nextSequenceParam();
