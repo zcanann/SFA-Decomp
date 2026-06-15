@@ -12,9 +12,7 @@
  * carryable is hidden + the pickup icon raised while the player stands
  * close holding nothing.
  */
-#include "main/audio/sfx_ids.h"
 #include "main/carryable_interface.h"
-#include "main/dll/groundAnimator.h"
 #include "main/game_object.h"
 
 typedef struct WmColumnPlacement
