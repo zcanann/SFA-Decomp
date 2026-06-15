@@ -1,12 +1,9 @@
 #include "main/newclouds_state.h"
-#include "main/newclouds.h"
 #include "main/audio/sfx.h"
 #include "main/cloud_action_runtime.h"
 #include "main/cloud_layer_state.h"
-#include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/objtexture.h"
-#include "main/resource.h"
 #include "main/sky_interface.h"
 
 typedef struct LightningEffect
