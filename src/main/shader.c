@@ -2785,7 +2785,7 @@ void doPendingMapLoads(void)
     char* base;
     u8 waited;
     int gx, gz;
-    u32 doLoad;
+    int doLoad;
     int layer;
     int row;
     s16 col;
@@ -2829,7 +2829,7 @@ void doPendingMapLoads(void)
                 renderFlags = t & ~0x800LL;
             }
             {
-                u32 ff = getLoadedFileFlags(0);
+                int ff = getLoadedFileFlags(0);
                 if ((ff & 0xFFEFFFFF) != 0)
                 {
                     if (lbl_803DCEC8 != 38 && lbl_803DCEC8 != 58 && lbl_803DCEC8 != 59 &&
