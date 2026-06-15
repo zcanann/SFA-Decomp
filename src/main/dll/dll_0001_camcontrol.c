@@ -45,7 +45,7 @@ void camcontrol_updateTargetFeedback(void)
 {
     uint targetKind;
     s16 objType;
-    float fVar4;
+    float alphaScale;
     CamcontrolTargetObject* target;
     ObjAnimComponent* reticle;
     u8 buttonPressed;
@@ -255,16 +255,16 @@ void camcontrol_updateTargetFeedback(void)
     }
     CAMCONTROL_CAMERA->targetDistance = targetDistance;
 LAB_80102ab4:
-    fVar4 = gCamcontrolReticleAlphaScale * reticle->currentMoveProgress;
-    if (fVar4 < gCamcontrolNormalizedMin)
+    alphaScale = gCamcontrolReticleAlphaScale * reticle->currentMoveProgress;
+    if (alphaScale < gCamcontrolNormalizedMin)
     {
-        fVar4 = gCamcontrolNormalizedMin;
+        alphaScale = gCamcontrolNormalizedMin;
     }
-    else if (gCamcontrolReticleAlphaScale < fVar4)
+    else if (gCamcontrolReticleAlphaScale < alphaScale)
     {
-        fVar4 = gCamcontrolReticleAlphaScale;
+        alphaScale = gCamcontrolReticleAlphaScale;
     }
-    reticle->alpha = (int)fVar4;
+    reticle->alpha = (int)alphaScale;
     gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
     reticle->rotX = (short)(int)(gCamcontrolReticleSpinStepPerFrame * timeDelta + (float)reticle->rotX);
     return;

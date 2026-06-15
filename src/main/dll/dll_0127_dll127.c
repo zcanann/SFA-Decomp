@@ -58,29 +58,29 @@ void dll_127_update(int obj)
 void dll_127_init(short* param_1, int param_2)
 {
     ObjAnimComponent* objAnim;
-    float fVar1;
-    uint uVar2;
+    float scale;
+    uint yawBits;
     u8 b;
 
     objAnim = (ObjAnimComponent*)param_1;
     param_1[3] = param_1[3] | 2;
     b = *(u8*)(param_2 + 0x19);
-    fVar1 = (f32)(int)
+    scale = (f32)(int)
     b;
     if ((f32)(int)b < lbl_803E3D64
     )
     {
-        fVar1 = *(f32*)&lbl_803E3D64;
+        scale = *(f32*)&lbl_803E3D64;
     }
-    fVar1 = fVar1 * lbl_803E3D68;
-    *(float*)(param_1 + 4) = *(float*)(*(int*)(param_1 + 0x28) + 4) * fVar1;
+    scale = scale * lbl_803E3D68;
+    *(float*)(param_1 + 4) = *(float*)(*(int*)(param_1 + 0x28) + 4) * scale;
     if (*(float**)(param_1 + 0x32) != (float*)0x0)
     {
-        **(float**)(param_1 + 0x32) = **(float**)(param_1 + 0x28) * fVar1;
+        **(float**)(param_1 + 0x32) = **(float**)(param_1 + 0x28) * scale;
     }
     objAnim->bankIndex = (s8) * (u8*)(param_2 + 0x18);
-    uVar2 = *(byte*)(param_2 + 0x1a) & 0x3f;
-    *param_1 = (short)(uVar2 << 10);
+    yawBits = *(byte*)(param_2 + 0x1a) & 0x3f;
+    *param_1 = (short)(yawBits << 10);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
