@@ -2600,6 +2600,7 @@ void expgfx_free(u32 sourceId)
 void expgfx_resetAllPools(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
+    ExpgfxStaticDataLayout* staticData;
     ExpgfxSlot* slot;
     ExpgfxResourceEntry* resourceEntry;
     ExpgfxTableEntry* tableEntry;
@@ -2616,14 +2617,15 @@ void expgfx_resetAllPools(void)
     int slotIndex;
     int resourceIndex;
 
+    staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
     slotPoolBases = runtime->slotPoolBases;
     poolActiveMasks = runtime->poolActiveMasks;
     poolActiveCounts = runtime->poolActiveCounts;
-    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+    poolSlotTypeIds = staticData->poolSlotTypeIds;
     poolSourceIds = runtime->poolSourceIds;
-    poolFrameFlags = gExpgfxStaticPoolFrameFlags;
+    poolFrameFlags = staticData->poolFrameFlags;
 
     while (poolIndex < EXPGFX_POOL_COUNT)
     {
@@ -2633,17 +2635,16 @@ void expgfx_resetAllPools(void)
             activeBit = 1 << slotIndex;
             if ((*poolActiveMasks & activeBit) != 0)
             {
-                tableIndex = Expgfx_GetSlotTableIndex(slot);
-                tableEntry = Expgfx_GetTableEntry(tableIndex);
-                if (tableEntry->resource != 0)
+                if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)tableEntry->resource);
+                    textureFree((void*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
-                if (tableEntry->refCount != 0)
+                if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].refCount != 0)
                 {
+                    tableEntry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
                     tableEntry->refCount--;
                     if (tableEntry->refCount == 0)
                     {
@@ -2653,7 +2654,7 @@ void expgfx_resetAllPools(void)
                 }
                 else
                 {
-                    debugPrintf(sExpgfxMismatchInAddRemove);
+                    debugPrintf(staticData->mismatchInAddRemoveString);
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
