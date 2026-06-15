@@ -783,11 +783,11 @@ int fn_802A3F24(int obj, int state)
         ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
         k = lbl_803E7F10;
         ((GameObject*)obj)->anim.worldPosX =
-            k * ((PlayerState*)inner)->unk5C4 + *(f32*)((char*)inner + 0x5d4);
+            k * ((PlayerState*)inner)->unk5C4 + ((PlayerState*)inner)->unk5D4;
         ((GameObject*)obj)->anim.worldPosY =
             ((PlayerState*)inner)->unk5AC - ((PlayerState*)inner)->unk874;
         ((GameObject*)obj)->anim.worldPosZ =
-            k * ((PlayerState*)inner)->unk5CC + *(f32*)((char*)inner + 0x5dc);
+            k * ((PlayerState*)inner)->unk5CC + ((PlayerState*)inner)->unk5DC;
         Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                        ((GameObject*)obj)->anim.worldPosZ, &((GameObject*)obj)->anim.localPosX,
                                        &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
@@ -795,16 +795,16 @@ int fn_802A3F24(int obj, int state)
         objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->unk4C4, 1);
         if (*(void**)((char*)inner + 0x4c4) != NULL)
         {
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5d4), *(f32*)((char*)inner + 0x5d8),
-                                           *(f32*)((char*)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5D4, ((PlayerState*)inner)->unk5D8,
+                                           ((PlayerState*)inner)->unk5DC, (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5ec), *(f32*)((char*)inner + 0x5f0),
-                                           *(f32*)((char*)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5EC, ((PlayerState*)inner)->unk5F0,
+                                           ((PlayerState*)inner)->unk5F4, (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5f8), *(f32*)((char*)inner + 0x5fc),
-                                           *(f32*)((char*)inner + 0x600), (f32*)((char*)inner + 0x5f8),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5F8, ((PlayerState*)inner)->unk5FC,
+                                           ((PlayerState*)inner)->unk600, (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                            ((PlayerState*)inner)->unk4C4);
             ((PlayerState*)inner)->unk5AC =
@@ -913,16 +913,16 @@ int fn_802A36EC(int obj, int state)
             inner->unk5BC = *(f32*)((char*)obj + 0x14);
             if (*(void**)((char*)inner + 0x4c4) != NULL)
             {
-                Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5d4), *(f32*)((char*)inner + 0x5d8),
-                                               *(f32*)((char*)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
+                Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5D4, ((PlayerState*)inner)->unk5D8,
+                                               ((PlayerState*)inner)->unk5DC, (f32*)((char*)inner + 0x5d4),
                                                (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
                                                inner->unk4C4);
-                Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5ec), *(f32*)((char*)inner + 0x5f0),
-                                               *(f32*)((char*)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
+                Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5EC, ((PlayerState*)inner)->unk5F0,
+                                               ((PlayerState*)inner)->unk5F4, (f32*)((char*)inner + 0x5ec),
                                                (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
                                                inner->unk4C4);
-                Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5f8), *(f32*)((char*)inner + 0x5fc),
-                                               *(f32*)((char*)inner + 0x600), (f32*)((char*)inner + 0x5f8),
+                Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5F8, ((PlayerState*)inner)->unk5FC,
+                                               ((PlayerState*)inner)->unk600, (f32*)((char*)inner + 0x5f8),
                                                (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                                inner->unk4C4);
                 inner->unk5AC =
@@ -1064,16 +1064,16 @@ int fn_802A3B04(int obj, int state)
         }
         if (*(void**)((char*)inner + 0x4c4) != NULL)
         {
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5d4), *(f32*)((char*)inner + 0x5d8),
-                                           *(f32*)((char*)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5D4, ((PlayerState*)inner)->unk5D8,
+                                           ((PlayerState*)inner)->unk5DC, (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5ec), *(f32*)((char*)inner + 0x5f0),
-                                           *(f32*)((char*)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5EC, ((PlayerState*)inner)->unk5F0,
+                                           ((PlayerState*)inner)->unk5F4, (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5f8), *(f32*)((char*)inner + 0x5fc),
-                                           *(f32*)((char*)inner + 0x600), (f32*)((char*)inner + 0x5f8),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5F8, ((PlayerState*)inner)->unk5FC,
+                                           ((PlayerState*)inner)->unk600, (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                            ((PlayerState*)inner)->unk4C4);
             ((PlayerState*)inner)->unk5AC =
@@ -10259,22 +10259,9 @@ int objAnimFn_80296328(int obj)
     {
         return 0;
     }
-    if ((v = inner->baddie.controlMode) == 1 || v == 2 || v == 0x26)
-    {
-        return 1;
-    }
-    if (v == 0x18)
-    {
-        if (GameBit_Get(0x3e3))
-        {
-            return 1;
-        }
-        if (*(s16*)((char*)inner->unk7F0 + 0x46) == 0x416)
-        {
-            return 1;
-        }
-    }
-    if (inner->baddie.targetObj != NULL)
+    if ((v = inner->baddie.controlMode) == 1 || v == 2 || v == 0x26 ||
+        (v == 0x18 && (GameBit_Get(0x3e3) || *(s16*)((char*)inner->unk7F0 + 0x46) == 0x416)) ||
+        inner->baddie.targetObj != NULL)
     {
         return 1;
     }
@@ -13091,17 +13078,10 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
         idx = inner->unk8CE;
         if (idx != -1)
         {
-            *flags |= ((EmitElem*)(inner->moveSlots +
-                inner->moveSlotIndex * 0xb0))->a8[idx];
-            *p6 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a70[inner->unk8CE];
-            *p7 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a7c[inner->unk8CE];
-            *p5 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a94[inner->unk8CE];
+            *flags |= *(int*)((char*)(inner->moveSlots + inner->moveSlotIndex * 0xb0) + (8 + idx * 4));
+            *p6 = *(f32*)((char*)(inner->moveSlots + inner->moveSlotIndex * 0xb0) + (0x70 + inner->unk8CE * 4));
+            *p7 = *(f32*)((char*)(inner->moveSlots + inner->moveSlotIndex * 0xb0) + (0x7c + inner->unk8CE * 4));
+            *p5 = *(f32*)((char*)(inner->moveSlots + inner->moveSlotIndex * 0xb0) + (0x94 + inner->unk8CE * 4));
         }
         if (*(u8*)(inner->moveSlots +
             inner->moveSlotIndex * 0xb0 + 0x88) & 2)
@@ -13134,7 +13114,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
     }
     if (inner->baddie.controlMode == 0x2e || inner->baddie.controlMode == 0x2f)
     {
-        *flags &= 0x7d;
+        *(u32*)flags &= 0x7dLL;
         *flags |= 2;
     }
     *p8 = 0x78;
@@ -13856,11 +13836,11 @@ int fn_802A418C(int obj, int state, f32 fv)
     }
     if (*(void**)((char*)inner + 0x7f8) != NULL)
     {
-        c = ((s8 (*)(int, int, int, void*, int))fn_802A74A4)(obj, (int)inner, state, buf, 0x22);
+        c = (s8)((int (*)(int, int, int, void*, int))fn_802A74A4)(obj, (int)inner, state, buf, 0x22);
     }
     else
     {
-        c = ((s8 (*)(int, int, int, void*, int))fn_802A74A4)(obj, (int)inner, state, buf, -0x141);
+        c = (s8)((int (*)(int, int, int, void*, int))fn_802A74A4)(obj, (int)inner, state, buf, -0x141);
     }
     if (c == -1)
     {
@@ -13869,7 +13849,7 @@ int fn_802A418C(int obj, int state, f32 fv)
     }
     else if (c == inner->unk8C2)
     {
-        int n = *(s8*)((char*)inner + 0x8c3) + 1;
+        int n = inner->unk8C3 + 1;
         inner->unk8C3 = n;
         if ((u8)n > 200)
         {
@@ -14150,12 +14130,12 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
     f32 sx;
     f32 sy;
     f32 sz;
-    f32 px;
-    f32 py;
-    f32 pz;
-    f32 qx;
-    f32 qy;
     f32 qz;
+    f32 qy;
+    f32 qx;
+    f32 pz;
+    f32 py;
+    f32 px;
     int tbl[2];
     struct
     {
@@ -14228,17 +14208,17 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         }
         else if (lbl_803DE428 == 0)
         {
+            int i;
             int* mdl = (int*)Obj_GetActiveModel(obj);
             int m = *mdl;
-            int i;
             for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
             {
                 int op = ObjModel_GetRenderOp(m, i);
-                if (*(s8*)((char*)op + 0x41) == 2)
+                if (*(u8*)((char*)op + 0x41) == 2)
                 {
                     Shader_getLayer(op, 1);
                     lbl_803DE428 = op;
-                    *(int*)((char*)op + 0x3c) |= 0x100000;
+                    *(u32*)((char*)op + 0x3c) |= 0x100000LL;
                     break;
                 }
             }
@@ -14988,19 +14968,21 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     planes[0].nx = -*(f32*)((char*)d + 0x24);
     planes[0].ny = lbl_803E7EA4;
     planes[0].nz = *(f32*)((char*)d + 0x1c);
-    planes[0].d = -(-*(f32*)((char*)d + 0x24) * *(f32*)((char*)c + 0x4)) +
-        *(f32*)((char*)d + 0x1c) * *(f32*)((char*)c + 0x14);
-    planes[1].nx = *(f32*)((char*)d + 0x24);
+    planes[0].d = planes[0].nz * *(f32*)((char*)c + 0x14) -
+        planes[0].nx * *(f32*)((char*)c + 0x4);
+    planes[1].nx = -planes[0].nx;
     planes[1].ny = lbl_803E7EA4;
-    planes[1].nz = -*(f32*)((char*)d + 0x1c);
-    planes[1].d = -(*(f32*)((char*)d + 0x24) * *(f32*)((char*)c + 0x8)) +
-        -*(f32*)((char*)d + 0x1c) * *(f32*)((char*)c + 0x18);
+    planes[1].nz = -planes[0].nz;
+    planes[1].d = planes[1].nz * *(f32*)((char*)c + 0x18) -
+        planes[1].nx * *(f32*)((char*)c + 0x8);
+    {
+    f32 zero = lbl_803E7E98;
     for (i = 0; i < 2; i++)
     {
         f32 dot = ((f32 (*)(void*, void*))PSVECDotProduct)(&planes[i], (void*)e) + planes[i].d;
         int face;
         int v0, v1;
-        if (dot < lbl_803E7E98 + lbl_803DC6B8[1])
+        if (dot < zero + lbl_803DC6B8[1])
         {
             s16 fi = *(s16*)((char*)c + i * 2 + 0x4c);
             if (fi > -1)
@@ -15011,7 +14993,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 face = 0;
             }
-            if (face == 0)
+            if ((void*)face == NULL)
             {
                 return 0;
             }
@@ -15023,11 +15005,11 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             v0 = *(s16*)((char*)face + 0x4) * 0xc;
             ax = *(f32*)((char*)tbl2 + v0);
             ay = lbl_803E7EA4;
-            az = *(f32*)((char*)tbl2 + v0 + 8);
+            az = *(f32*)((char*)tbl2 + (v0 + 8));
             v1 = *(s16*)((char*)face + 0x6) * 0xc;
             bx = *(f32*)((char*)tbl2 + v1);
             by = lbl_803E7EA4;
-            bz = *(f32*)((char*)tbl2 + v1 + 8);
+            bz = *(f32*)((char*)tbl2 + (v1 + 8));
             if (hit != NULL)
             {
                 ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, (int)hit);
@@ -15046,6 +15028,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                 }
             }
         }
+    }
     }
     *(f32*)((char*)d + 0x2c) = *(f32*)((char*)e + 0x0);
     *(f32*)((char*)d + 0x30) = *(f32*)((char*)e + 0x4);
@@ -15164,17 +15147,17 @@ int fn_802A2918(int obj, int state, f32 fv)
     }
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x80) != 0)
     {
-        Sfx_PlayFromObject(obj, inner->characterId == 0 ? 0x398 : 0x1d);
+        Sfx_PlayFromObject(obj, (u16)(inner->characterId == 0 ? 0x398 : 0x1d));
     }
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
     {
-        if (inner->unk546 == 4)
+        if (inner->unk546 != 4)
         {
-            Sfx_PlayFromObject(obj, SFXdrak_roar1);
+            Sfx_PlayFromObject(obj, SFXdn_rexroarlng11);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXdn_rexroarlng11);
+            Sfx_PlayFromObject(obj, SFXdrak_roar1);
         }
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
@@ -15185,10 +15168,10 @@ int fn_802A2918(int obj, int state, f32 fv)
         f32 vx, vy, vz;
         f32 sp1c;
         ObjHits_MarkObjectPositionDirty(obj);
-        if (lbl_803DE44C != NULL && (inner->unk3F4 >> 6 & 1) != 0)
+        if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
             inner->unk8B4 = 1;
-            inner->unk3F4 |= 8;
+            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
@@ -15232,7 +15215,7 @@ int fn_802A2918(int obj, int state, f32 fv)
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         fn_802A71E0(obj, t[0], t[1], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
-                    ((PlayerState*)state)->baddie.moveSpeed, 0, flag ? 0x34 | 0x40 : 0x34);
+                    ((PlayerState*)state)->baddie.moveSpeed, 0, 0x34 | (flag ? 0x40 : 0));
         fn_802A71E0(obj, t[2], t[3], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
@@ -15327,10 +15310,10 @@ int fn_8029FA24(int obj, int state, f32 fv)
         f32 j1[3];
         f32 j0[3];
 
-        if (lbl_803DE44C != NULL && (inner->unk3F4 >> 6 & 1) != 0)
+        if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
             inner->unk8B4 = 1;
-            inner->unk3F4 |= 8;
+            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         switch (*(s16*)((char*)sub + 0x46))
         {
@@ -18884,16 +18867,20 @@ void fn_802AEF34(int obj, int state)
             {
                 int ok;
                 ByteFlags* bf = (ByteFlags*)((char*)state + 0x3f0);
+                s16 t = ((PlayerState*)state)->baddie.controlMode;
                 if (bf->b10 || bf->b04 || bf->b08 || bf->b20 ||
                     ((PlayerState*)state)->baddie.controlMode == 0x36)
                 {
                     ok = 0;
                 }
+                else if ((u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
+                    ((PlayerState*)state)->baddie.targetObj != NULL)
+                {
+                    ok = 1;
+                }
                 else
                 {
-                    s16 t = ((PlayerState*)state)->baddie.controlMode;
-                    ok = (u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
-                        ((PlayerState*)state)->baddie.targetObj != NULL;
+                    ok = 0;
                 }
                 if (ok)
                 {

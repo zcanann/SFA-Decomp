@@ -321,7 +321,7 @@ void fn_801511E8(int obj, u8* state)
     u8* entry;
     u32 idx;
 
-    entry = *(u8**)(state[0x33b] * 40 + lbl_8031F16C + 12);
+    entry = *(u8**)(lbl_8031F16C + state[0x33b] * 40 + 12);
     if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState*)state)->baddie.speedScale)
     {
         if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState*)state)->baddie.speedScale)
@@ -342,9 +342,9 @@ void fn_801511E8(int obj, u8* state)
             state[0x33a] = 1;
         }
     }
-    *(u8*)(state + 0x2f2) = ((SeqEntry*)(entry + state[0x33a] * 16))->r;
-    *(u8*)(state + 0x2f3) = ((SeqEntry*)(entry + state[0x33a] * 16))->g;
-    *(u8*)(state + 0x2f4) = ((SeqEntry*)(entry + state[0x33a] * 16))->b;
+    *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
+    *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
+    *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
     fn_8014D08C(obj, state, ((SeqEntry*)(entry + state[0x33a] * 16))->anim, 0, 3, *(f32*)(entry + state[0x33a] * 16));
     ObjAnim_SetMoveProgress(
         *(f32*)(lbl_8031DD30 + ((SeqEntry*)(entry + state[0x33a] * 16))->anim * 4),
@@ -363,7 +363,7 @@ void fn_801513AC(int obj, u8* state)
     u32 idx;
     s16 d;
 
-    entry = *(u8**)(state[0x33b] * 40 + lbl_8031F16C + 12);
+    entry = *(u8**)(lbl_8031F16C + state[0x33b] * 40 + 12);
     if (fn_8014C11C(obj, 1, 16, lbl_803AC428, lbl_803E27AC) >= 1)
     {
         if (*(u16*)(lbl_803AC428 + 4) <= 40
@@ -408,9 +408,9 @@ void fn_801513AC(int obj, u8* state)
             state[0x33a] = 1;
         }
     }
-    *(u8*)(state + 0x2f2) = ((SeqEntry*)(entry + state[0x33a] * 16))->r;
-    *(u8*)(state + 0x2f3) = ((SeqEntry*)(entry + state[0x33a] * 16))->g;
-    *(u8*)(state + 0x2f4) = ((SeqEntry*)(entry + state[0x33a] * 16))->b;
+    *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
+    *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
+    *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
     fn_8014D08C(obj, state, ((SeqEntry*)(entry + state[0x33a] * 16))->anim, 0, 3, *(f32*)(entry + state[0x33a] * 16));
     ObjAnim_SetMoveProgress(
         *(f32*)(lbl_8031DD30 + ((SeqEntry*)(entry + state[0x33a] * 16))->anim * 4),
@@ -426,8 +426,8 @@ void fn_8015165C(int obj, u8* state)
 {
     u8* player;
     ObjHitsPriorityState* hitState;
-    u8* p28;
     u8* p20;
+    u8* p28;
     u8 t;
     f32 tv;
     f32 fz;
@@ -453,8 +453,8 @@ void fn_8015165C(int obj, u8* state)
         if (*(f32*)(state + 0x328) <= fz)
         {
             *(f32*)(state + 0x328) = fz;
-            ((GroundBaddieState*)state)->baddie.controlFlags |= 0x40000000;
-            *(u16*)(state + 0x338) = *(u8*)(p28 + *(u16*)(state + 0x338) * 16 + 10);
+            ((GroundBaddieState*)state)->baddie.controlFlags |= 0x40000000LL;
+            *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[10];
         }
     }
     if ((u8)fn_8014FFB4(obj, state, 1) == 0)
@@ -465,14 +465,14 @@ void fn_8015165C(int obj, u8* state)
             fn_8014C11C(obj, 3, 16, lbl_803AC428, lbl_803E27AC);
             if (*(u16*)(state + 0x338) != 0)
             {
-                *(u8*)(state + 0x2f2) = (u8) * (u32*)(p28 + *(u16*)(state + 0x338) * 16 + 12);
-                fn_8014D08C(obj, state, *(u8*)(p28 + *(u16*)(state + 0x338) * 16 + 8), 0,
-                            (u8) * (u32*)(p28 + *(u16*)(state + 0x338) * 16 + 4),
+                *(u8*)(state + 0x2f2) = (u8) * (u32*)((p28 + *(u16*)(state + 0x338) * 16) + 12);
+                fn_8014D08C(obj, state, (p28 + *(u16*)(state + 0x338) * 16)[8], 0,
+                            (u8) * (u32*)&(p28 + *(u16*)(state + 0x338) * 16)[4],
                             *(f32*)(p28 + *(u16*)(state + 0x338) * 16));
                 ObjAnim_SetMoveProgress(
-                    *(f32*)(lbl_8031DD30 + *(u8*)(p28 + *(u16*)(state + 0x338) * 16 + 8) * 4),
+                    *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4),
                     (ObjAnimComponent*)obj);
-                *(u16*)(state + 0x338) = *(u8*)(p28 + *(u16*)(state + 0x338) * 16 + 9);
+                *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[9];
             }
             else
             {

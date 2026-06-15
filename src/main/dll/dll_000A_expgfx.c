@@ -2012,7 +2012,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
                                                 poolBounds->minY, poolBounds->maxY,
                                                 poolBounds->minZ - playerMapOffsetZ,
                                                 poolBounds->maxZ - playerMapOffsetZ,
-                                                &Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds)->minX) != 0)
+                                                &EXPGFX_STATIC_DATA->boundsTemplates[*poolBoundsTemplateIds].minX) != 0)
             {
                 drawGlow(*slotPoolBases, poolIndex);
             }

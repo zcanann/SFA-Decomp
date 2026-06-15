@@ -32,7 +32,7 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, i
         }
         cur++;
     }
-    byte = *end & ((u32)0xff >> (8 - (d & 7)));
+    byte = *end & (u8)((u32)0xff >> (8 - (d & 7)));
     while (byte != 0)
     {
         byte &= byte - 1;

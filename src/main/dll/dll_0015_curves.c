@@ -18,7 +18,7 @@ extern f32 lbl_803E0668;
 extern f32 lbl_803E066C;
 extern f32 lbl_803E068C;
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,
-                              int p7, int p8, int p9, int p10);
+                              s8 p7, int p8, int p9, int p10);
 extern void fn_80063368(short* obj);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
 extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount,
@@ -199,7 +199,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
                         point = *list;
                         pointY = point->x;
                         if ((pointY < lbl_803E066C + object->anim.worldPosY) &&
-                            (point->type != ROMCURVE_POINT_TYPE_WATER))
+                            ((s8)point->type != ROMCURVE_POINT_TYPE_WATER))
                         {
                             *pf = point->x;
                             sum1 = sum1 + point->y;
@@ -619,8 +619,8 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     u8 pointCount;
     u32 flags;
     f32* localPoint;
-    int pointIndex;
     int radiusOffset;
+    int pointIndex;
     int mode;
     int localOffset;
     f32 zero;
@@ -1708,29 +1708,27 @@ typedef struct CurvesSaveGameObjectPosition
 int pushable_savePos(int obj)
 {
     int i;
+    CurvesSaveGameObjectPosition* position;
+    CurvesSaveGameObjectPosition* slot;
     u32 objectId;
 
     for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
     {
+        position = &((CurvesSaveGameObjectPosition*)gSaveGameData)[i];
         objectId = ((RomCurveDef*)((GameObject*)obj)->anim.placementData)->id;
-        if (objectId ==
-            *(u32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET))
+        if (objectId == *(u32*)((u8*)&position->objectId + SAVEGAME_OBJECT_POSITION_OFFSET))
         {
             if ((((GameObject*)obj)->anim.localPosX ==
-                    *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 4)) &&
-                (((GameObject*)obj)->anim.localPosY ==
-                    *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 8)) &&
-                (((GameObject*)obj)->anim.localPosZ ==
-                    *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 12)))
+                    *(f32*)((u8*)&(slot = (CurvesSaveGameObjectPosition*)(gSaveGameData +
+                        i * sizeof(CurvesSaveGameObjectPosition)))->x + SAVEGAME_OBJECT_POSITION_OFFSET)) &&
+                (((GameObject*)obj)->anim.localPosY == *(f32*)((u8*)&slot->y + SAVEGAME_OBJECT_POSITION_OFFSET)) &&
+                (((GameObject*)obj)->anim.localPosZ == *(f32*)((u8*)&slot->z + SAVEGAME_OBJECT_POSITION_OFFSET)))
             {
                 return 0;
             }
-            ((GameObject*)obj)->anim.localPosX =
-                *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 4);
-            ((GameObject*)obj)->anim.localPosY =
-                *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 8);
-            ((GameObject*)obj)->anim.localPosZ =
-                *(f32*)(gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition) + SAVEGAME_OBJECT_POSITION_OFFSET + 12);
+            ((GameObject*)obj)->anim.localPosX = *(f32*)((u8*)&slot->x + SAVEGAME_OBJECT_POSITION_OFFSET);
+            ((GameObject*)obj)->anim.localPosY = *(f32*)((u8*)&slot->y + SAVEGAME_OBJECT_POSITION_OFFSET);
+            ((GameObject*)obj)->anim.localPosZ = *(f32*)((u8*)&slot->z + SAVEGAME_OBJECT_POSITION_OFFSET);
             return 1;
         }
     }
