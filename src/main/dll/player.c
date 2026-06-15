@@ -13831,7 +13831,7 @@ int fn_802A418C(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     int i;
-    s8 c;
+    int c;
     int* list;
     u8 buf[64];
     f32 dist;
@@ -13852,12 +13852,12 @@ int fn_802A418C(int obj, int state, f32 fv)
     {
         c = ((s8 (*)(int, int, int, void*, int))fn_802A74A4)(obj, (int)inner, state, buf, -0x141);
     }
-    if (c == -1)
+    if ((s8)c == -1)
     {
         inner->unk8C2 = -1;
         inner->unk8C3 = 0;
     }
-    else if (c == inner->unk8C2)
+    else if ((s8)c == inner->unk8C2)
     {
         int n = *(u8*)((char*)inner + 0x8c3) + 1;
         inner->unk8C3 = n;
