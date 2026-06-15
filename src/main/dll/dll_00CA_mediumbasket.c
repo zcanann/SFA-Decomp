@@ -1220,7 +1220,7 @@ int mediumbasket_updateLandingState(int obj, int state)
     if ((((GroundBaddieState*)state)->baddie.moveEventFlags & 1) == 0)
     {
         player = Obj_GetPlayerObject();
-        if (*(s16*)(player + 0x46) == 0) goto playGroundLandSound;
+        if (((GameObject*)player)->anim.seqId == 0) goto playGroundLandSound;
         Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
         goto playLandingExtras;
     playGroundLandSound:
@@ -1328,7 +1328,7 @@ int mediumbasket_updateDropState(int obj, int state)
     {
         Obj_GetPlayerObject();
         player = Obj_GetPlayerObject();
-        if (*(s16*)(player + 0x46) == 0) goto playGroundDropSound;
+        if (((GameObject*)player)->anim.seqId == 0) goto playGroundDropSound;
         Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
         goto playDropExtras;
     playGroundDropSound:
