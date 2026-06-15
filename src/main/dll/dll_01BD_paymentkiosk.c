@@ -1,11 +1,8 @@
 #include "main/dll/paymentkiosk.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
-#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/VF/platform1.h"
-#include "main/mapEventTypes.h"
 #include "main/objseq.h"
-#include "main/screen_transition.h"
 
 extern u8* Obj_GetPlayerObject(void);
 
@@ -163,10 +160,7 @@ void paymentkiosk_update(int obj)
 #include "main/dll/paymentkiosk.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/VF/platform1.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
