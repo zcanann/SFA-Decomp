@@ -536,6 +536,7 @@ void fn_8008B88C(int* outTimer)
     *outTimer = ((SkyState*)sky)->unk218;
 }
 
+#pragma opt_loop_invariants off
 void skyFn_80089710(int flags, u32 enabled, int startComplete)
 {
     u8* sky;
@@ -555,8 +556,7 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         {
             sky = lbl_803DD12C;
             stateActive = ((SkyBlendStateFlags*)(sky + flagBit * 0xa4 + 0xc1))->active;
-            requestedActive = (u8)enabled;
-            if (stateActive != requestedActive)
+            if (stateActive != (u8)enabled)
             {
                 if (startComplete != 0)
                 {
@@ -572,6 +572,7 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 void fn_800897D4(int slot, f32* x, f32* y, f32* z)
 {
