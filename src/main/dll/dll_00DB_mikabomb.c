@@ -20,7 +20,6 @@ extern undefined4 FUN_8003b818();
 
 
 extern ModgfxInterface** gModgfxInterface;
-extern f32 lbl_803E3138;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E31C0;
 extern void kaldachompspit_free(void);
@@ -171,8 +170,6 @@ extern f32 lbl_803E31D0;
 extern f32 lbl_803E31D4;
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern int loadObjectAtObject(int* obj, void* params);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern void selectTexture(void* tex, int x);
 
 void mikabomb_hitDetect(void)
 {
