@@ -453,7 +453,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
     state->altEffectId = 0;
 }
 
-extern u8 lbl_803AC7B0[];
 
 void fxemit_release(void)
 {
