@@ -1455,7 +1455,6 @@ void doColorFilter(u8* mod)
     GXWGFifo.s16 = 0x80;
 
     Camera_RebuildProjectionMatrix();
-    GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
 
 static inline float distortSqrtf(float x) {
