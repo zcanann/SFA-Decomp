@@ -1,9 +1,4 @@
-#include "main/dll/df_partfx.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/resource.h"
 #include "main/screen_transition.h"
 
 extern undefined4 DAT_803de0af;
@@ -367,11 +362,6 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 #pragma peephole reset
 #pragma peephole reset
 
-#include "main/dll/baddie_state.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
