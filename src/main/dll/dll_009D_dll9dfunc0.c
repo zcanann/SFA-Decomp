@@ -44,9 +44,8 @@ extern f32 lbl_803E1414;
 void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     GfxBuf buf;
-    u8* tab = lbl_80318038;
+    u8* tab = (u8*)(int)lbl_80318038;
     GfxCmd* e = buf.entries;
-    GfxCmd* end;
     u32 fl;
 
     e[0].layer = 0;
@@ -156,8 +155,7 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    end = e + 13;
-    buf.count = end - e;
+    buf.count = (GfxCmd*)((u8*)e + 0x138) - e;
     buf.hw[0] = *(s16*)&tab[504];
     buf.hw[1] = *(s16*)&tab[506];
     buf.hw[2] = *(s16*)&tab[508];
@@ -166,10 +164,9 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.hw[5] = *(s16*)&tab[514];
     buf.hw[6] = *(s16*)&tab[516];
     buf.cmds = e;
-    fl = 0xc0100c0;
-    buf.flags = fl;
-    fl |= flags;
-    buf.flags = fl;
+    buf.flags = 0xc0100c0;
+    buf.flags |= flags;
+    fl = buf.flags;
     if (fl & 1)
     {
         if (sourceObj != 0)
