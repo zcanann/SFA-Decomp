@@ -1104,66 +1104,66 @@ void trackDolphin_initIntersectionBuffers(void)
 
 void FUN_80064384(int param_1)
 {
-    int iVar1;
-    int iVar2;
-    uint uVar3;
-    uint uVar4;
-    uint uVar5;
-    uint uVar6;
-    uint uVar7;
-    uint uVar8;
-    int iVar9;
+    int rowBase;
+    int colBase;
+    uint scaled;
+    uint texAddr;
+    uint scale;
+    uint col;
+    uint colN;
+    uint row;
+    int blockCount;
 
-    uVar4 = FUN_8001779c();
-    uVar8 = 0;
+    texAddr = FUN_8001779c();
+    row = 0;
     do
     {
-        uVar6 = 0;
-        iVar1 = (uVar8 >> 2) * 0x100;
-        iVar2 = (uVar8 & 3) * 8;
-        uVar5 = (uVar8 + param_1) * 0xff;
-        iVar9 = 0x10;
+        col = 0;
+        rowBase = (row >> 2) * 0x100;
+        colBase = (row & 3) * 8;
+        scale = (row + param_1) * 0xff;
+        blockCount = 0x10;
         do
         {
-            uVar3 = uVar5;
-            if (0x3fc0 < uVar5)
+            scaled = scale;
+            if (0x3fc0 < scale)
             {
-                uVar3 = 0x3fc0;
+                scaled = 0x3fc0;
             }
-            *(char*)(uVar4 + (uVar6 & 7) + (uVar6 >> 3) * 0x20 + iVar2 + iVar1) =
-                (char)(uVar3 * uVar6 >> 0xc);
-            uVar7 = uVar6 + 1;
-            uVar3 = uVar5;
-            if (0x3fc0 < uVar5)
+            *(char*)(texAddr + (col & 7) + (col >> 3) * 0x20 + colBase + rowBase) =
+                (char)(scaled * col >> 0xc);
+            colN = col + 1;
+            scaled = scale;
+            if (0x3fc0 < scale)
             {
-                uVar3 = 0x3fc0;
+                scaled = 0x3fc0;
             }
-            *(char*)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
-                (char)(uVar3 * uVar7 >> 0xc);
-            uVar7 = uVar6 + 2;
-            uVar3 = uVar5;
-            if (0x3fc0 < uVar5)
+            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) =
+                (char)(scaled * colN >> 0xc);
+            colN = col + 2;
+            scaled = scale;
+            if (0x3fc0 < scale)
             {
-                uVar3 = 0x3fc0;
+                scaled = 0x3fc0;
             }
-            *(char*)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
-                (char)(uVar3 * uVar7 >> 0xc);
-            uVar7 = uVar6 + 3;
-            uVar3 = uVar5;
-            if (0x3fc0 < uVar5)
+            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) =
+                (char)(scaled * colN >> 0xc);
+            colN = col + 3;
+            scaled = scale;
+            if (0x3fc0 < scale)
             {
-                uVar3 = 0x3fc0;
+                scaled = 0x3fc0;
             }
-            *(char*)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
-                (char)(uVar3 * uVar7 >> 0xc);
-            uVar6 = uVar6 + 4;
-            iVar9 = iVar9 + -1;
+            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) =
+                (char)(scaled * colN >> 0xc);
+            col = col + 4;
+            blockCount = blockCount + -1;
         }
-        while (iVar9 != 0);
-        uVar8 = uVar8 + 1;
+        while (blockCount != 0);
+        row = row + 1;
     }
-    while (uVar8 < 0x40);
-    FUN_80017790(DAT_803ddc38 + 0x60, uVar4, 0);
+    while (row < 0x40);
+    FUN_80017790(DAT_803ddc38 + 0x60, texAddr, 0);
     DAT_803ddc00 = (char)param_1;
     return;
 }
