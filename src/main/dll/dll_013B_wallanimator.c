@@ -2,7 +2,6 @@
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-#include "main/dll/MMP/mmp_barrel.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/dll_013B_wallanimator.h"
