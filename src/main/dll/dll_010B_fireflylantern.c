@@ -4,7 +4,6 @@
  * into init; the target keeps it as an extern call.
  */
 #include "main/dll/CF/CFcrystal.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
