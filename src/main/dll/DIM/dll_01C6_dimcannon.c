@@ -82,10 +82,10 @@ void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (((GameObject*)obj)->anim.seqId != 0x1d6)
     {
         sub = ((GameObject*)obj)->extra;
-        saved = *(s16*)obj;
-        *(s16*)obj = (s16)((s8)def[0x28] << 8);
+        saved = ((GameObject*)obj)->anim.rotX;
+        ((GameObject*)obj)->anim.rotX = (s16)((s8)def[0x28] << 8);
         ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48E8);
-        *(s16*)obj = saved;
+        ((GameObject*)obj)->anim.rotX = saved;
         ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)(sub + 0x8c), (f32*)(sub + 0x90), (f32*)(sub + 0x94), 0);
     }
     else
