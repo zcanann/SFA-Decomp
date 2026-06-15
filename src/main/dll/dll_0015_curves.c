@@ -1565,6 +1565,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     }
 }
 
+#pragma opt_unroll_count 8
 void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii,
                    s8* types)
 {
@@ -1581,6 +1582,7 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     }
     state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
+#pragma opt_unroll_count 0
 
 void dll_15_func07(void* arg1, CurvesCollisionState* state)
 {
