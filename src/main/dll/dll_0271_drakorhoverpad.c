@@ -201,14 +201,7 @@ int drakorhoverpad_init(int obj)
         {
             if (lbl_803E6A3C == *(f32*)p)
             {
-                if (f->b01 != 0)
-                {
-                    *(f32*)p = lbl_803E6A74;
-                }
-                else
-                {
-                    *(f32*)p = lbl_803E6A38;
-                }
+                *(f32*)p = (f->b01 != 0) ? lbl_803E6A74 : lbl_803E6A38;
             }
         }
         Sfx_PlayFromObject(obj, SFXfend_fox_keytap3);
