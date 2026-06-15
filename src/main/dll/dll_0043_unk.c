@@ -1,17 +1,13 @@
 /* DLL 0x43 — camera path/climb control [80106F78-801070FC) */
-#include "main/dll/CAM/camshipbattle.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/dll/CAM/pathcam.h"
 #include "main/pad.h"
-#include "main/camera_object.h"
-#include "main/game_object.h"
 #include "main/object_transform.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
-#include "main/dll/CAM/cambike_state.h"
 #include "main/mm.h"
 
 extern undefined4 FUN_80017814();
