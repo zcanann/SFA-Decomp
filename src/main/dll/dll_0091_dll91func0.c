@@ -64,7 +64,7 @@ typedef struct
 void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     GfxBuf buf;
-    u8* base = lbl_80316FF8;
+    u8* base = (u8*)(int)lbl_80316FF8;
     GfxCmd* e = buf.entries;
 
     e[0].layer = 0;
@@ -241,7 +241,7 @@ void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
             buf.pos[2] = lbl_803E11D8 + *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, base, 0x10, base + 0xb4, 0x45, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80316FF8, 0x10, base + 0xb4, 0x45, 0);
 }
 
 void dll_92_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
