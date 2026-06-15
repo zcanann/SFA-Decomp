@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dolphin/os.h"
 #include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/attract_movie.h"
@@ -26,6 +27,49 @@ extern void (*lbl_803DD664)(void);
 extern u8 gAttractMovieLoopCompleted;
 extern OSMessageQueue lbl_803A5CEC;
 extern OSMessage lbl_803DD67C;
+
+typedef struct AttractMovieControl {
+    u8 pad000[0x560];
+    u32 readBufBegin;     /* 0x560 */
+    u32 readBufEnd;       /* 0x564 */
+    u8 pad568[0x5f0 - 0x568];
+    u32 movieCount;       /* 0x5f0 */
+    u32 firstMovieSize;   /* 0x5f4 */
+    s32 initReadSize;     /* 0x5f8 */
+    u8 pad5fc[0x600 - 0x5fc];
+    u32 offsetTable;      /* 0x600 */
+    u32 dataOffset;       /* 0x604 */
+    u8 pad608[0x638 - 0x608];
+    s32 enabled;          /* 0x638 */
+    u8 isPrepared;        /* 0x63c */
+    u8 field63d;          /* 0x63d */
+    u8 playFlags;         /* 0x63e */
+    u8 audioExists;       /* 0x63f */
+    u8 pad640[0x648 - 0x640];
+    s32 preloaded;        /* 0x648 */
+    void* loopFrame;      /* 0x64c */
+    u32 frameOffset;      /* 0x650 */
+    u32 frameSize;        /* 0x654 */
+    u32 movieIndex;       /* 0x658 */
+    u8 pad65c[0x670 - 0x65c];
+    u32 field670;         /* 0x670 */
+    u8 pad674[0x684 - 0x674];
+    u32 field684;         /* 0x684 */
+    u32 field688;         /* 0x688 */
+    u32 field68c;         /* 0x68c */
+    u32 field690;         /* 0x690 */
+} AttractMovieControl;
+
+STATIC_ASSERT(offsetof(AttractMovieControl, readBufBegin) == 0x560);
+STATIC_ASSERT(offsetof(AttractMovieControl, movieCount) == 0x5f0);
+STATIC_ASSERT(offsetof(AttractMovieControl, offsetTable) == 0x600);
+STATIC_ASSERT(offsetof(AttractMovieControl, enabled) == 0x638);
+STATIC_ASSERT(offsetof(AttractMovieControl, isPrepared) == 0x63c);
+STATIC_ASSERT(offsetof(AttractMovieControl, preloaded) == 0x648);
+STATIC_ASSERT(offsetof(AttractMovieControl, frameOffset) == 0x650);
+STATIC_ASSERT(offsetof(AttractMovieControl, field670) == 0x670);
+STATIC_ASSERT(offsetof(AttractMovieControl, field684) == 0x684);
+STATIC_ASSERT(offsetof(AttractMovieControl, field690) == 0x690);
 
 void PlayControl(void)
 {
@@ -221,29 +265,31 @@ BOOL THPPlayerPlay(void)
 BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
 {
     char* base;
+    AttractMovieControl* ctrl;
     void* readyMsg;
 
     base = lbl_803A57C0;
+    ctrl = (AttractMovieControl*)base;
     gAttractMovieLoopCompleted = 0;
 
-    if (*(s32*)(base + 0x638) == 0)
+    if (ctrl->enabled == 0)
     {
         return FALSE;
     }
-    if (*(u8*)(base + 0x63c) != 0)
+    if (ctrl->isPrepared != 0)
     {
         return FALSE;
     }
 
     if ((s32)movieIndex > 0)
     {
-        u32 offsetTable = *(u32*)(base + 0x600);
+        u32 offsetTable = ctrl->offsetTable;
 
         if (offsetTable == 0)
         {
             return FALSE;
         }
-        if (*(u32*)(base + 0x5f0) <= movieIndex)
+        if (ctrl->movieCount <= movieIndex)
         {
             return FALSE;
         }
@@ -253,31 +299,31 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
             return FALSE;
         }
 
-        *(u32*)(base + 0x650) = *(u32*)(base + 0x604) + *(u32*)(base + 0x560);
-        *(u32*)(base + 0x658) = movieIndex;
-        *(u32*)(base + 0x654) = *(u32*)(base + 0x564) - *(u32*)(base + 0x560);
+        ctrl->frameOffset = ctrl->dataOffset + ctrl->readBufBegin;
+        ctrl->movieIndex = movieIndex;
+        ctrl->frameSize = ctrl->readBufEnd - ctrl->readBufBegin;
     }
     else
     {
-        *(u32*)(base + 0x650) = *(u32*)(base + 0x604);
-        *(u32*)(base + 0x654) = *(u32*)(base + 0x5f4);
-        *(u32*)(base + 0x658) = movieIndex;
+        ctrl->frameOffset = ctrl->dataOffset;
+        ctrl->frameSize = ctrl->firstMovieSize;
+        ctrl->movieIndex = movieIndex;
     }
 
-    *(u8*)(base + 0x63e) = (u8)playFlags;
-    *(u32*)(base + 0x670) = 0;
+    ctrl->playFlags = (u8)playFlags;
+    ctrl->field670 = 0;
 
-    if (*(s32*)(base + 0x648) != 0)
+    if (ctrl->preloaded != 0)
     {
-        if (DVDRead((DVDFileInfo*)(base + 0x5a0), *(void**)(base + 0x64c),
-                    *(s32*)(base + 0x5f8), *(s32*)(base + 0x604)) < 0)
+        if (DVDRead((DVDFileInfo*)(base + 0x5a0), ctrl->loopFrame,
+                    ctrl->initReadSize, ctrl->dataOffset) < 0)
         {
             return FALSE;
         }
-        playFlags = ((s32) * (void**)(base + 0x64c) + *(s32*)(base + 0x650)) -
-            *(s32*)(base + 0x604);
+        playFlags = ((s32)ctrl->loopFrame + ctrl->frameOffset) -
+            ctrl->dataOffset;
         CreateVideoDecodeThread(0xf, (void*)playFlags);
-        if (*(u8*)(base + 0x63f) != 0)
+        if (ctrl->audioExists != 0)
         {
             CreateAudioDecodeThread(0xc, (void*)playFlags);
         }
@@ -285,7 +331,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
     else
     {
         CreateVideoDecodeThread(0xf, NULL);
-        if (*(u8*)(base + 0x63f) != 0)
+        if (ctrl->audioExists != 0)
         {
             CreateAudioDecodeThread(0xc, NULL);
         }
@@ -294,11 +340,11 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
 
     InitAllMessageQueue();
     VideoDecodeThreadStart();
-    if (*(u8*)(base + 0x63f) != 0)
+    if (ctrl->audioExists != 0)
     {
         AudioDecodeThreadStart();
     }
-    if (*(s32*)(base + 0x648) == 0)
+    if (ctrl->preloaded == 0)
     {
         ReadThreadStart();
     }
@@ -309,12 +355,12 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
         return FALSE;
     }
 
-    *(u8*)(base + 0x63c) = 1;
-    *(u8*)(base + 0x63d) = 0;
-    *(u32*)(base + 0x68c) = 0;
-    *(u32*)(base + 0x690) = 0;
-    *(u32*)(base + 0x684) = 0;
-    *(u32*)(base + 0x688) = 0;
+    ctrl->isPrepared = 1;
+    ctrl->field63d = 0;
+    ctrl->field68c = 0;
+    ctrl->field690 = 0;
+    ctrl->field684 = 0;
+    ctrl->field688 = 0;
     lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
     return TRUE;
 }
