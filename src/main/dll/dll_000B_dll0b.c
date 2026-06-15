@@ -2019,37 +2019,32 @@ extern int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int 
 
 void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 {
-    ModgfxSpawnContext* context = &gModgfxSpawnContext;
-
-    context->pendingSpawns = gModgfxPendingSpawnQueue;
-    context->pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
+    gModgfxSpawnContext.pendingSpawns = gModgfxPendingSpawnQueue;
+    gModgfxSpawnContext.pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
     if (g == NULL && f == 0)
     {
-        context->flags |= 0x2000000;
+        gModgfxSpawnContext.flags |= 0x2000000LL;
     }
     else
     {
-        context->flags |= 0x4000000;
+        gModgfxSpawnContext.flags |= 0x4000000LL;
     }
-    if (context->flags & 1)
+    if (gModgfxSpawnContext.flags & 1)
     {
-        if (context->attachedSource != NULL)
+        if (gModgfxSpawnContext.attachedSource != NULL)
         {
-            context->posX += ((ExpgfxSourceObject*)context->attachedSource)->worldPosX;
-            context->posY += ((ExpgfxSourceObject*)context->attachedSource)->worldPosY;
-            context->posZ += ((ExpgfxSourceObject*)context->attachedSource)->worldPosZ;
+            gModgfxSpawnContext.posX += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosX;
+            gModgfxSpawnContext.posY += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosY;
+            gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)gModgfxSpawnContext.attachedSource)->worldPosZ;
         }
         else
         {
-            context->posX += ((ExpgfxSourceObject*)a)->localPosX;
-            context->posY += ((ExpgfxSourceObject*)a)->localPosY;
-            context->posZ += ((ExpgfxSourceObject*)a)->localPosZ;
+            gModgfxSpawnContext.posX += ((ExpgfxSourceObject*)a)->localPosX;
+            gModgfxSpawnContext.posY += ((ExpgfxSourceObject*)a)->localPosY;
+            gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)a)->localPosZ;
         }
     }
-    {
-        extern s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
-        gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
-    }
+    gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
 }
 
 extern f32 lbl_803DF460;
