@@ -1785,7 +1785,7 @@ void fn_8003B500(int obj, int p4)
             found[0] = (s16)(found[0] * 3 / 4);
         }
         fn_80039DF8(obj, (s16*)p4, found, lbl_803DE9A4);
-        *(s16*)(p4 + 0x1a) = (s16)(u16) * (s16*)(p4 + 0x1a);
+        *(s16*)(p4 + 0x1a) = (s16)(u16)(u8) * (s16*)(p4 + 0x1a);
     }
 }
 
