@@ -1,11 +1,7 @@
 /* DLL 0x01C5 — dimbarrier (Dinosaur Island Mission barrier object). TU: 0x801B1B40–0x801B1D84. */
-#include "ghidra_import.h"
 
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIMExplosion.h"
 
 typedef struct DimbarrierPlacement
 {
@@ -23,12 +19,10 @@ typedef struct DimbarrierState
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-extern f32 lbl_803E4860;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4898;
 extern int Sfx_PlayFromObject(int obj, int sfx);
 extern u8 framesThisStep;
-extern u8 Obj_IsLoadingLocked(void);
 
 void dimbarrier_free(void)
 {
