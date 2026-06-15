@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/dll/FRONT/title_menu.h"
 #include "main/screen_transition.h"
@@ -157,20 +158,28 @@ void saveSelectOpenFile(int sel, int slot)
 
 void SaveSelectScreen_release(void)
 {
+    void** p;
     int i;
     void* zero;
 
+    i = 0;
+    p = lbl_803A8658;
     zero = NULL;
-    for (i = 0; i < 10; i++)
+    do
     {
-        mm_free(lbl_803A8658[i]);
-        lbl_803A8658[i] = zero;
+        mm_free(*p);
+        *p = zero;
+        p++;
+        i++;
     }
+    while (i < 10);
 }
 
 #pragma dont_inline on
 void saveFileSelect_init(int param_1, int param_2)
 {
+    int i;
+
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
     if (param_1 == 0)
     {
@@ -184,7 +193,8 @@ void saveFileSelect_init(int param_1, int param_2)
         if (param_1 == 1)
         {
             saveFileSelect_currentSlotIndex = (s8)param_2;
-            if (saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].isOccupied == 0)
+            i = (s8)(u8)(s8)param_2;
+            if (saveFileSelect_saveSlots[i].isOccupied == 0)
             {
                 loadUiDll(6);
             }
@@ -392,6 +402,7 @@ void saveSelectGoToChooseSlot(int arg)
 #pragma dont_inline on
 void saveSelectScreenFree(int param_1)
 {
+    void** p;
     int i;
     void* zero;
 
@@ -417,15 +428,20 @@ void saveSelectScreenFree(int param_1)
         lbl_803DD6AC = NULL;
     }
 
+    i = 0;
+    p = lbl_803A8680;
     zero = NULL;
-    for (i = 0; i < 4; i++)
+    do
     {
-        if (lbl_803A8680[i] != NULL)
+        if (*p != NULL)
         {
-            textureFree(lbl_803A8680[i]);
-            lbl_803A8680[i] = zero;
+            textureFree(*p);
+            *p = zero;
         }
+        p++;
+        i++;
     }
+    while (i < 4);
 
     textureFree(lbl_803DD6C8);
     if (param_1 != 0)
@@ -434,7 +450,7 @@ void saveSelectScreenFree(int param_1)
     }
     if (lbl_803DD6B8 != NULL)
     {
-        ((void (**)(void*))gTitleMenuItemInterface->vtable)[4](lbl_803DD6B8);
+        ((void (**)(void))gTitleMenuItemInterface->vtable)[4]();
         lbl_803DD6B8 = NULL;
     }
 }
@@ -564,7 +580,7 @@ int SaveSelectScreen_run(void)
     int prev;
     char* data;
     SaveSelectPanel* panel;
-    int btn;
+    uint btn;
 
     timer = lbl_803DD6CF;
     n = framesThisStep;
@@ -583,14 +599,14 @@ int SaveSelectScreen_run(void)
     }
     if (lbl_803DD6CD != 0 || lbl_803DD6CC != 0)
     {
-        if ((timer <= 12 || lbl_803DD6CF > 12) && lbl_803DD6CF <= 0)
+        if ((timer < 13 || lbl_803DD6CF > 12) && lbl_803DD6CF < 1)
         {
             if (lbl_803DD6CD != 0)
             {
                 n_attractmode_releaseMovieBuffers();
                 if (lbl_803DB424 != 0)
                 {
-                    trySaveGame((u8)saveFileSelect_currentSlotIndex);
+                    trySaveGame(saveFileSelect_currentSlotIndex);
                 }
                 else
                 {
@@ -605,10 +621,9 @@ int SaveSelectScreen_run(void)
                 Music_Trigger(0xc1, 0);
                 if (lbl_803DD6C4 != 0)
                 {
-                    gplayNewGame(&sFrontendFoxName, (u8)saveFileSelect_currentSlotIndex);
+                    gplayNewGame(&sFrontendFoxName, saveFileSelect_currentSlotIndex);
                     ((void (**)(int))gMapEventInterface->vtable)[30](1);
-                    data = (char*)((int (**)(void))gMapEventInterface->vtable)[36]();
-                    *(s8*)(data + 0xe) = -1;
+                    *((u8*)((int (**)(void))gMapEventInterface->vtable)[36]() + 0xe) = 0xff;
                 }
                 if (lbl_803DD6C4 > 1)
                 {
