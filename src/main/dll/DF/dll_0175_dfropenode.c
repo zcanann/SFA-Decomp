@@ -342,8 +342,7 @@ int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
         }
     }
 
-    margin = lbl_803E4E24;
-    extra->minX -= margin;
+    extra->minX = extra->minX - (margin = lbl_803E4E24);
     extra->minZ -= margin;
     extra->maxX += margin;
     extra->maxZ += margin;
