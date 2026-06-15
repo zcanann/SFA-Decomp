@@ -116,7 +116,7 @@ void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefi
     {
         GameBit_Set(0x1c8, 1);
     }
-    if ((*(int*)(state + 0x29c) != 0) && (*(short*)(*(int*)(state + 0x29c) + 0x44) == 1))
+    if ((*(int*)(state + 0x29c) != 0) && (((GameObject*)*(int*)(state + 0x29c))->anim.classId == 1))
     {
         FUN_8001766c();
     }
@@ -190,7 +190,7 @@ void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefi
                 tbl28[(uint) * (ushort*)(state + 0x338) * 0x10 + 9];
             }
         }
-        if (obj[0x50] == (ushort)(byte)tbl20[0x2c]
+        if (((GameObject*)obj)->anim.currentMove == (ushort)(byte)tbl20[0x2c]
         )
         {
             *(float*)(state + 0x308) =
@@ -372,7 +372,7 @@ void fn_801513AC(int obj, u8* state)
         {
             d = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)lbl_803AC428 + 0xc),
                          ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)lbl_803AC428 + 0x14))
-                - (u16) * (s16*)obj;
+                - (u16)((GameObject*)obj)->anim.rotX;
             if (d > 0x8000)
             {
                 d -= 0xFFFF;
@@ -439,8 +439,8 @@ void fn_8015165C(int obj, u8* state)
     {
         GameBit_Set(456, 1);
     }
-    if (((GroundBaddieState*)state)->baddie.trackedObj != NULL && *(s16*)(*(int*)&((GroundBaddieState*)state)->baddie.
-        trackedObj + 0x44) == 1)
+    if (((GroundBaddieState*)state)->baddie.trackedObj != NULL && ((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.
+        trackedObj)->anim.classId == 1)
     {
         fn_8001FEA8();
     }
@@ -674,14 +674,14 @@ void fn_80151DB8(int obj, u8* state)
     {
         return;
     }
-    px0 = setup->posX - lbl_803E27DC * mathSinf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
-    pz0 = setup->posZ - lbl_803E27DC * mathCosf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
+    px0 = setup->posX - lbl_803E27DC * mathSinf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
+    pz0 = setup->posZ - lbl_803E27DC * mathCosf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
     dx = player->anim.worldPosX - px0;
     dz = player->anim.worldPosZ - pz0;
     if (sqrtf(dx * dx + dz * dz) < *(f32*)(state + 0x2ac))
     {
-        cosA = mathSinf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
-        sinA = mathCosf(lbl_803E27E0 * (f32) * (s16*)obj / lbl_803E27E4);
+        cosA = mathSinf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
+        sinA = mathCosf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
         base = -(cosA * (px0 - cosA) + sinA * (pz0 - sinA));
         f5 = base + (cosA * player->anim.previousWorldPosX + sinA * player->anim.previousWorldPosZ);
         f2v = base + (cosA * player->anim.worldPosX + sinA * player->anim.worldPosZ);
