@@ -2149,7 +2149,7 @@ void enemy_update(int obj)
         }
         (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->unk2E, (void*)obj, -1);
         ((EnemyState*)state)->controlFlags |= 2;
-        *(int*)&((EnemyState*)state)->controlFlags = *(int*)&((EnemyState*)state)->controlFlags & -2;
+        *(u32*)&((EnemyState*)state)->controlFlags = *(u32*)&((EnemyState*)state)->controlFlags & ~1LL;
         return;
     }
     if (((GameObject*)obj)->unkF4 != 0)
@@ -2182,7 +2182,7 @@ void enemy_update(int obj)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
-                    ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
+                    *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                 }
                 else
                 {
@@ -2211,7 +2211,7 @@ void enemy_update(int obj)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
-                    *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
+                    *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                 }
                 else
                 {
@@ -2244,7 +2244,7 @@ void enemy_update(int obj)
                         {
                             enemy_init(obj, setup, 0);
                             ((EnemyState*)state)->controlFlags |= 0x1000;
-                            *(u32*)&((EnemyState*)state)->initialFlags &= 0xFFFFEFFF;
+                            *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                         }
                         else
                         {
@@ -2271,7 +2271,7 @@ void enemy_update(int obj)
     {
         hudFn_8011f38c(0);
         (*gPathControlInterface)->attachObject((void*)obj, state + 4);
-        ((EnemyState*)state)->controlFlags &= ~0x8003;
+        ((EnemyState*)state)->controlFlags &= ~0x8003LL;
         if ((((EnemyState*)state)->flags2E4 & 0x20000) != 0)
         {
             s2 = *(u8**)&((GameObject*)obj)->anim.placementData;
