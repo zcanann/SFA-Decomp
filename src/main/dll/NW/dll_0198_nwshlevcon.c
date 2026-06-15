@@ -20,11 +20,11 @@ extern ModgfxInterface** gModgfxInterface;
 extern void* Obj_GetPlayerObject(void);
 extern void fn_80296518(void* player, int a, int b);
 
-void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void FUN_801cacd4(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
     return;
 }
