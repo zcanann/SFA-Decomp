@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
-#include "main/dll/projball1D8.h"
 #include "main/objseq.h"
 
 extern undefined4 Music_Trigger();
