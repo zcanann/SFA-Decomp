@@ -116,7 +116,6 @@ extern s16 lbl_80329848[];
 extern int dbstealerworm_stateHandlerB06();
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
-extern f32 lbl_803E62F4;
 
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
