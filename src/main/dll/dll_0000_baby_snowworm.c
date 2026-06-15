@@ -1306,7 +1306,7 @@ void fn_80128120(int unused, int p2)
     {
         s16 t = 0x11;
         if (i >= level) t = -1;
-        lbl_8031BB90[lbl_803DBA9C[i]].f0 = t;
+        lbl_8031BB90[lbl_803DBA9C[i]].f0 = (s16)t;
     }
 }
 
