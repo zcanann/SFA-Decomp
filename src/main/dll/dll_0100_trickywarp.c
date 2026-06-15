@@ -1,13 +1,8 @@
-#include "main/obj_placement.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/mapEventTypes.h"
-#include "main/objfx.h"
 
 extern u32 GameBit_Get(int eventId);
 extern void* getTrickyObject(void);
