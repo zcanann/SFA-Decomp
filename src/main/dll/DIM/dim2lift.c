@@ -3,8 +3,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
-#include "main/objanim.h"
-#include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
 
