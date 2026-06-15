@@ -809,7 +809,7 @@ int objHitboxFn_801843c0(int obj)
             idx = 3;
         }
 
-        ((ObjHitsPriorityState*)state)->contactHitVolume = results.axisTable[idx];
+        *(u8*)&((ObjHitsPriorityState*)state)->contactHitVolume = results.axisTable[idx];
         ((ObjHitsPriorityState*)state)->contactPosX = endPoints[idx * 3];
         ((ObjHitsPriorityState*)state)->contactPosY = endPoints[idx * 3 + 1];
         ((ObjHitsPriorityState*)state)->contactPosZ = endPoints[idx * 3 + 2];
