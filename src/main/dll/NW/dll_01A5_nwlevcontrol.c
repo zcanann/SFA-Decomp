@@ -47,7 +47,7 @@ void nw_levcontrol_update(int objArg)
     float* state;
 
     obj = objArg;
-    state = *(float**)(obj + 0xb8);
+    state = (float*)((GameObject*)obj)->extra;
     player = (short*)Obj_GetPlayerObject();
     if (*state > lbl_803E5F10)
     {
