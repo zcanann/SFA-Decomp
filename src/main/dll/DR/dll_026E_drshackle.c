@@ -57,7 +57,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
     int* model;
     int* modelData;
-    int joint1;
+    s8 joint1;
     f32 jointPos[3];
     f32 parentPos[3];
     int i;
@@ -69,15 +69,11 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     {
         return 1;
     }
-    ((DrshackleState*)p)->unk8 = ((GameObject*)obj)->anim.localPosX;
-    ((DrshackleState*)p)->unkC = ((GameObject*)obj)->anim.localPosY;
-    ((DrshackleState*)p)->unk10 = ((GameObject*)obj)->anim.localPosZ;
+    ((DrshackleState*)p)->unk8 = *(f32*)((char*)obj + 0xc);
+    ((DrshackleState*)p)->unkC = *(f32*)((char*)obj + 0x10);
+    ((DrshackleState*)p)->unk10 = *(f32*)((char*)obj + 0x14);
 
-    {
-        char* jointBase = (char*)(*(int*)(*(int*)((char*)a + 0x50) + 0x2c) + b * 24);
-        jointBase += objAnim->bankIndex;
-        joint1 = *(s8*)(jointBase + 0x12);
-    }
+    joint1 = *(s8*)(*(int*)(*(int*)((char*)a + 0x50) + 0x2c) + b * 24 + objAnim->bankIndex + 0x12);
     model = DrShackle_GetActiveModel((void*)a);
     modelData = *(int**)model;
 
@@ -112,7 +108,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     for (i = 0; i < ((DrshackleState*)p)->unk14; i++)
     {
         int entry = *ptr;
-        if ((void*)entry != NULL)
+        if (entry != 0)
         {
             ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32*)(entry + 0xc),
                                           (f32*)(entry + 0x10), (f32*)(entry + 0x14), 0);
@@ -180,13 +176,12 @@ int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animU
 void drshackle_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     u8* p = ((GameObject*)obj)->extra;
-    int i;
     int* ptr;
+    int i;
     if (((BitFlags8*)(p + 0x1a))->b0 == 0 && visible != 0)
     {
         objRenderFn_8003b8f4((void*)obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
-        ptr = (int*)p;
-        for (i = 0; i < ((DrshackleState*)p)->unk14; i++)
+        for (i = 0, ptr = (int*)p; i < ((DrshackleState*)p)->unk14; i++)
         {
             int* entry = *(int**)ptr;
             if (entry != 0)
