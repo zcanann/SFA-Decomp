@@ -119,14 +119,12 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-extern int maybeTryLoadSave(int a);
 extern u8 lbl_80314AF0[];
 extern u8 lbl_803DB8D8;
 extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;
 extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8, lbl_803E0CDC;
 extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
 extern f32 lbl_803E0CF8, lbl_803E0CFC;
-extern u8 lbl_80314CB0[];
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
