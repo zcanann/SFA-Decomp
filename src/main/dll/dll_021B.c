@@ -1,25 +1,9 @@
-/*
- * DLL 0x21B (Volcano Force Point family) - a single-axis sliding mover.
- *
- * The object slides along its local Z toward an open/closed extreme while
- * its drive game bit is set; releasing the bit slides it back. setup[0x19]
- * selects the slide direction (negative-Z open vs positive-Z open) and the
- * resting/extended positions are anchored to the placement's posZ.
- *
- * Two enable bits (DLL_21B_ENABLE_BIT_A/B) gate completion: while moving
- * and both enabled the MOVING bit is raised; once the object reaches its
- * extended limit with both still enabled the REACHED bit is raised, and
- * returning home with both clear clears the RESET/REACHED bits.
- *
- * Init reads rotX and the drive game bit from the placement; free releases
- * the object's expgfx source.
- */
 #include "main/dll/VF/vf_shared.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-extern f32 lbl_803E60D0; /* slide limit offset from posZ */
-extern f32 lbl_803E60D4; /* per-frame slide step */
+extern f32 lbl_803E60D0;
+extern f32 lbl_803E60D4;
 
 int dll_21B_getExtraSize_ret_4(void) { return 0x4; }
 
@@ -43,11 +27,8 @@ void dll_21B_hitDetect_nop(void)
 
 typedef struct Dll21BState
 {
-    s16 driveGameBit;
+    s16 gameBit;
 } Dll21BState;
-
-/* getExtraSize reserves 0x4; the live state is only this 2-byte field. */
-STATIC_ASSERT(sizeof(Dll21BState) == 0x2);
 
 void dll_21B_release_nop(void)
 {
@@ -64,9 +45,9 @@ void dll_21B_free(int obj)
 
 void dll_21B_init(int* obj, u8* init)
 {
-    Dll21BState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)init + 0x18) << 8);
-    state->driveGameBit = *(s16*)((char*)init + 0x1e);
+    Dll21BState* inner = ((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    inner->gameBit = *(s16*)((char*)init + 0x1e);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
 
@@ -78,7 +59,7 @@ void dll_21B_update(int obj)
 
     if ((s8)setup[0x19] == 1)
     {
-        if (DLL_21B_BIT_SET(state->driveGameBit) &&
+        if (DLL_21B_BIT_SET(state->gameBit) &&
             ((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)setup)->posZ - lbl_803E60D0)
         {
             ((GameObject*)obj)->anim.localPosZ -= lbl_803E60D4;
@@ -103,7 +84,7 @@ void dll_21B_update(int obj)
             }
             return;
         }
-        if (DLL_21B_BIT_CLEAR(state->driveGameBit) &&
+        if (DLL_21B_BIT_CLEAR(state->gameBit) &&
             ((GameObject*)obj)->anim.localPosZ < ((ObjPlacement*)setup)->posZ)
         {
             ((GameObject*)obj)->anim.localPosZ -= lbl_803E60D4;
@@ -115,7 +96,6 @@ void dll_21B_update(int obj)
             if (((ObjPlacement*)setup)->posZ < ((GameObject*)obj)->anim.localPosZ)
             {
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-                /* both off (vs both-set moving check): clear the status bits */
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A) &&
                     DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_B))
                 {
@@ -127,7 +107,7 @@ void dll_21B_update(int obj)
     }
     else
     {
-        if (DLL_21B_BIT_SET(state->driveGameBit) &&
+        if (DLL_21B_BIT_SET(state->gameBit) &&
             ((GameObject*)obj)->anim.localPosZ < lbl_803E60D0 + ((ObjPlacement*)setup)->posZ)
         {
             ((GameObject*)obj)->anim.localPosZ += lbl_803E60D4;
@@ -152,7 +132,7 @@ void dll_21B_update(int obj)
             }
             return;
         }
-        if (DLL_21B_BIT_CLEAR(state->driveGameBit) &&
+        if (DLL_21B_BIT_CLEAR(state->gameBit) &&
             ((ObjPlacement*)setup)->posZ < ((GameObject*)obj)->anim.localPosZ)
         {
             ((GameObject*)obj)->anim.localPosZ -= lbl_803E60D4;
@@ -164,7 +144,6 @@ void dll_21B_update(int obj)
             if (((GameObject*)obj)->anim.localPosZ < ((ObjPlacement*)setup)->posZ)
             {
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-                /* both off (vs both-set moving check): clear the status bits */
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A) &&
                     DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_B))
                 {
