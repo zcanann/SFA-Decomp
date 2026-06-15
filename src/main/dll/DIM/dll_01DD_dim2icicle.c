@@ -1,11 +1,9 @@
 /* DLL 0x1DD — DIM2 icicle / conveyor / crusher platform objects [801B8798-801B8860) */
-#include "main/audio/sfx_ids.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
@@ -31,15 +29,12 @@ extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
-extern u8 lbl_803DBF20;
-extern void* mmAlloc(int size, int a, int b);
 extern u8 framesThisStep;
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
-#include "main/objanim_internal.h"
 
 typedef struct Dim2iciclePlacement
 {
@@ -65,7 +60,6 @@ extern f32 lbl_803E4B70;
 extern f32 lbl_803E4B74;
 extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E4B68;
 
 void FUN_801b9cc4(int param_1)
