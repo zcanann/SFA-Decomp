@@ -459,7 +459,7 @@ extern f32 lbl_803E7124;
 
 
 extern f32 lbl_803E7138;
-extern f32 lbl_803E713C;
+extern const f32 lbl_803E713C;
 
 
 
@@ -720,7 +720,7 @@ extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 
 
 extern int lbl_8032BEF8[];
-extern u8 lbl_803DC42C[];
+extern u8 lbl_803DC42C;
 extern int lbl_803DC428;
 extern void ObjHits_ClearSourceMask(int obj, int sourceMask);
 extern int arrayIndexOf(int array, int count, int value);

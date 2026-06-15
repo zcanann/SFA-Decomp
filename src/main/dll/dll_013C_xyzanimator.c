@@ -30,26 +30,26 @@ extern f32 lbl_803E4018;
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
-    u8* state;
+    XyzAnimatorState* state;
 
-    if (obj == NULL || (state = ((GameObject*)obj)->extra, state == NULL))
+    if (obj == NULL || (state = (XyzAnimatorState*)((GameObject*)obj)->extra, state == NULL))
     {
         return lbl_803E4000;
     }
     switch (coord)
     {
     case 1:
-        return ((GameObject*)obj)->anim.localPosX + *(f32*)(state + 0x40);
+        return ((GameObject*)obj)->anim.localPosX + state->unk40;
     case 2:
-        return *(f32*)(state + 0x40);
+        return state->unk40;
     case 3:
-        return ((GameObject*)obj)->anim.localPosY + *(f32*)(state + 0x44);
+        return ((GameObject*)obj)->anim.localPosY + state->unk44;
     case 4:
-        return *(f32*)(state + 0x44);
+        return state->unk44;
     case 5:
-        return ((GameObject*)obj)->anim.localPosZ + *(f32*)(state + 0x48);
+        return ((GameObject*)obj)->anim.localPosZ + state->unk48;
     case 6:
-        return *(f32*)(state + 0x48);
+        return state->unk48;
     }
     return lbl_803E4000;
 }
@@ -249,21 +249,21 @@ void xyzanimator_free(int obj, int param_2)
     zero = lbl_803E4000;
     state = *(int*)&((GameObject*)obj)->extra;
     def = *(undefined4*)&((GameObject*)obj)->anim.placementData;
-    *(float*)(state + 0x40) = lbl_803E4000;
-    *(float*)(state + 0x44) = zero;
-    *(float*)(state + 0x48) = zero;
+    ((XyzAnimatorState*)state)->unk40 = lbl_803E4000;
+    ((XyzAnimatorState*)state)->unk44 = zero;
+    ((XyzAnimatorState*)state)->unk48 = zero;
     if (param_2 == 0)
     {
         block = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                     (double)((GameObject*)obj)->anim.localPosY,
                                     (double)((GameObject*)obj)->anim.localPosZ);
         block = mapGetBlock(block);
-        if ((block != 0) && (*(int*)(state + 4) != 0))
+        if ((block != 0) && (((XyzAnimatorState*)state)->unk4 != 0))
         {
             fn_80194C40(def, state, block);
         }
     }
-    if (*(int*)(state + 0xc) != 0)
+    if (((XyzAnimatorState*)state)->dataBuffer != 0)
     {
         mm_free(*(void**)(state + 0xc));
     }
@@ -749,12 +749,12 @@ void xyzanimator_init(int obj)
     {
     case 0x46406:
     case 0x4BAB1:
-        *(s16*)(inner + 0x4e) = 0x7d;
+        ((XyzAnimatorState*)inner)->loopSfxId = 0x7d;
         break;
     case 0x49275:
     case 0x49CB7:
     case 0x4C797:
-        *(s16*)(inner + 0x4e) = 0x4b7;
+        ((XyzAnimatorState*)inner)->loopSfxId = 0x4b7;
         break;
     }
 }

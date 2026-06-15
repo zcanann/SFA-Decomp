@@ -120,7 +120,7 @@ void bombplantspore_startDriftBurst(void* obj, void* state)
     randomGetRange(0x78, 0xb4);
 
     ((BombPlantSporeState*)state)->unk2aa =
-        ((BombPlantSporeState*)state)->unk2a8 + (s16)randomGetRange(-2000, 2000);
+        (s16)(((BombPlantSporeState*)state)->unk2a8 + randomGetRange(-2000, 2000));
     angleDelta = (s32)((BombPlantSporeState*)state)->unk2aa - (u16)baseAngle;
     if (0x8000 < angleDelta)
     {
@@ -130,7 +130,7 @@ void bombplantspore_startDriftBurst(void* obj, void* state)
     {
         angleDelta += 0xffff;
     }
-    if (((BombplantsporeStartDriftBurstPlacement*)params)->unk1A < angleDelta)
+    if (angleDelta > ((BombplantsporeStartDriftBurstPlacement*)params)->unk1A)
     {
         ((BombPlantSporeState*)state)->unk2aa = (s16)(
             baseAngle + ((BombplantsporeStartDriftBurstPlacement*)params)->unk1A);

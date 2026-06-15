@@ -225,7 +225,8 @@ void CameraModeTitle_init(CameraObject* camera)
 
 void CameraModeTitle_moveCam(u8 newCam)
 {
-    if (newCam == lbl_803DD5D2) return;
+    u32 cam = newCam;
+    if (cam == lbl_803DD5D2) return;
     if (lbl_803DD5D1 == 4)
     {
         if (lbl_803E1BE0 != titleScreenCamProgress)
@@ -241,7 +242,7 @@ void CameraModeTitle_moveCam(u8 newCam)
         }
     }
     lbl_803DD5D1 = lbl_803DD5D2;
-    lbl_803DD5D2 = newCam;
+    lbl_803DD5D2 = cam;
     titleScreenCamProgress = lbl_803E1BE4;
     lbl_803DD5D0 = 1;
 }

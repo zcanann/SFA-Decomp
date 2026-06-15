@@ -187,6 +187,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
   int i;
   f32 zero;
   f32 c34v;
+  f32 prod;
   f32 m[12];
   u8 colA;
   u8 colB;
@@ -264,10 +265,11 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
       ((IcicleFxPos *)&lbl_803AC97C)->y = (f32)(int)randomGetRange(-0x19, 0x19);
       c34v = lbl_803E4C34;
       ((IcicleFxPos *)&lbl_803AC97C)->z = lbl_803E4C34;
+      prod = c34v * lbl_803E4C38;
       gDIMbossAnimScratchBase.effectVelocity[0] =
-          ((IcicleFxPos *)&lbl_803AC97C)->x / (c34v * lbl_803E4C38);
+          ((IcicleFxPos *)&lbl_803AC97C)->x / prod;
       gDIMbossAnimScratchBase.effectVelocity[1] =
-          ((IcicleFxPos *)&lbl_803AC97C)->y / (c34v * lbl_803E4C38);
+          ((IcicleFxPos *)&lbl_803AC97C)->y / prod;
       gDIMbossAnimScratchBase.effectVelocity[2] = lbl_803E4BCC;
       PSMTXMultVec(m, gDIMbossAnimScratchBase.effectVelocity,
                    gDIMbossAnimScratchBase.effectVelocity);

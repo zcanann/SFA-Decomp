@@ -978,7 +978,6 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
                 }
             }
         }
-        return 4;
     }
     else
     {
@@ -1029,8 +1028,8 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
                 }
             }
         }
-        return 4;
     }
+    return 4;
 }
 
 #undef WCPUSHBLOCK_IFACE

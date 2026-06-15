@@ -322,13 +322,14 @@ u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
     case MCMD_CTRL_EX_A1:
         return state->exCtrlA1Value * 2 + 0x2000;
     default:
-        if (state->midiSlot == 0xff)
+        if (state->midiSlot != 0xff)
         {
-            value = 0;
+            extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
+            value = inpGetMidiCtrl(ctrl, state->midiSlot, state->midiEvent) & 0xffff;
         }
         else
         {
-            value = inpGetMidiCtrl(ctrl, state->midiSlot, state->midiEvent);
+            value = 0;
         }
         return value & 0xffff;
     }
@@ -340,20 +341,27 @@ u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
 void inpSetExCtrl(McmdVoiceState* state, u32 ctrl, s16 value)
 {
     int translated;
+    int clamped;
+    s16 v;
 
     if (value < 0)
     {
-        value = 0;
+        clamped = 0;
     }
     else if (value > 0x3fff)
     {
-        value = 0x3fff;
+        clamped = 0x3fff;
     }
+    else
+    {
+        clamped = value;
+    }
+    v = (s16)clamped;
     translated = inpTranslateExCtrl(ctrl) & 0xff;
     if ((translated >= MCMD_CTRL_MIDI_LAYER || translated < MCMD_CTRL_EX_A0) &&
         state->midiSlot != 0xff)
     {
-        inpSetMidiCtrl14(ctrl, state->midiSlot, state->midiEvent, value);
+        inpSetMidiCtrl14(ctrl, state->midiSlot, state->midiEvent, v);
     }
 }
 

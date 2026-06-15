@@ -58,9 +58,13 @@ typedef struct Dim2lavacontrolPlacement
 typedef struct Dim2lavacontrolState
 {
     s8 unk0;
-    u8 pad1[0x2 - 0x1];
+    u8 unk1;
     s8 unk2;
-    u8 pad3[0x24 - 0x3];
+    u8 unk3;
+    u8 unk4;
+    u8 pad5[0xC - 0x5];
+    int unkC;
+    u8 padC[0x24 - 0x10];
     f32 unk24;
 } Dim2lavacontrolState;
 
@@ -182,7 +186,7 @@ void dim2lavacontrol_init(int obj, int param2)
     }
     state = *(int*)&((GameObject*)obj)->extra;
     ((Dim2lavacontrolState*)state)->unk0 = (s8) * (s16*)(param2 + 0x1a);
-    *(u8*)(state + 1) = *(u8*)&((Dim2lavacontrolState*)state)->unk0;
+    ((Dim2lavacontrolState*)state)->unk1 = *(u8*)&((Dim2lavacontrolState*)state)->unk0;
     if (GameBit_Get(*(s16*)(param2 + 0x1e)) != 0)
     {
         g = 1;
@@ -192,18 +196,18 @@ void dim2lavacontrol_init(int obj, int param2)
         g = 0;
     }
     ((Dim2lavacontrolState*)state)->unk2 = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->unk2 | g);
-    *(int*)(state + 0xc) = 0xd7;
-    *(u8*)(state + 4) = 0;
+    ((Dim2lavacontrolState*)state)->unkC = 0xd7;
+    ((Dim2lavacontrolState*)state)->unk4 = 0;
     if ((((Dim2lavacontrolState*)state)->unk2 & 1) != 0)
     {
         *(u8*)&((Dim2lavacontrolState*)state)->unk0 = 0;
-        *(u8*)(state + 3) = lbl_803DBF28[0];
+        ((Dim2lavacontrolState*)state)->unk3 = lbl_803DBF28[0];
         fn_8004C1E4(lbl_803DBF28[0], lbl_803E4B90);
     }
     else
     {
         *(u8*)&((Dim2lavacontrolState*)state)->unk0 = 3;
-        *(u8*)(state + 3) = lbl_803DBF28[3];
+        ((Dim2lavacontrolState*)state)->unk3 = lbl_803DBF28[3];
         fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
     }
     Music_Trigger(0xdd, 1);
@@ -235,30 +239,30 @@ void dim2lavacontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 0;
     }
     obj = *(int*)&((GameObject*)obj)->extra;
-    switch (*(u8*)(obj + 4))
+    switch (((Dim2lavacontrolState*)obj)->unk4)
     {
     case 0:
         if (GameBit_Get(0xacd) != 0)
         {
             GameBit_Set(0xcc3, 1);
-            *(u8*)(obj + 4) = 1;
+            ((Dim2lavacontrolState*)obj)->unk4 = 1;
         }
         break;
     case 1:
         break;
     }
-    diff = *(u8*)(obj + 3) - lbl_803DBF28[((Dim2lavacontrolState*)obj)->unk0];
+    diff = ((Dim2lavacontrolState*)obj)->unk3 - lbl_803DBF28[((Dim2lavacontrolState*)obj)->unk0];
     if (diff != 0)
     {
         if (diff > 0)
         {
-            *(u8*)(obj + 3) -= 1;
+            ((Dim2lavacontrolState*)obj)->unk3 -= 1;
         }
         else
         {
-            *(u8*)(obj + 3) += 1;
+            ((Dim2lavacontrolState*)obj)->unk3 += 1;
         }
-        fn_8004C1E4(*(u8*)(obj + 3), lbl_803E4B90);
+        fn_8004C1E4(((Dim2lavacontrolState*)obj)->unk3, lbl_803E4B90);
     }
     if (Player_GetHeldObject((int)Obj_GetPlayerObject(), &heldObj) != 0)
     {
