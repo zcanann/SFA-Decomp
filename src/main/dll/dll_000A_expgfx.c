@@ -1863,7 +1863,7 @@ int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey,
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
             (entry->sourceId == sourceId) && (entry->attachedTableKey == attachedTableKey))
         {
-            refCount = &entry->refCount;
+            refCount = &gExpgfxTableEntries[tableIndex].refCount;
             if (*refCount >= EXPGFX_REFCOUNT_OVERFLOW)
             {
                 debugPrintf(sExpgfxAddToTableUsageOverflow);
