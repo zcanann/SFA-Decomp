@@ -861,9 +861,9 @@ extern void fn_8003A230(int obj, void* p, f32 f);
   *(s8 *)((state) + 0xd) = -1
 
 #define TRICKY_VOICE(obj, st, sfx, vol) \
-  st = *(int *)((obj) + 0xb8); \
+  st = *(int *)&((GameObject *)(obj))->extra; \
   if ((((TrickyByteFlags *)(st + 0x58))->bit6 == 0) && \
-     (((*(short *)((obj) + 0xa0) >= 0x30 || (*(short *)((obj) + 0xa0) < 0x29)) && \
+     (((((GameObject *)(obj))->anim.currentMove >= 0x30 || (((GameObject *)(obj))->anim.currentMove < 0x29)) && \
       (playing = Sfx_IsPlayingFromObjectChannel((obj), 0x10), !playing)))) { \
     objAudioFn_800393f8((obj), (void *)(st + 0x3a8), (sfx), (vol), 0xffffffff, 0); \
   }
