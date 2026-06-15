@@ -84,8 +84,11 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     sum = (uint)state->bobPhase + (uint)framesThisStep * 0x100;
     if (sum > 0xffff)
     {
+        float rngf;
         rng = randomGetRange(0xf, 0x23);
-        state->bobAmplitude = (float)rng * lbl_803E59F0;
+        rngf = (float)rng;
+        rngf = lbl_803E59F0 * rngf;
+        state->bobAmplitude = rngf;
     }
     state->bobPhase = (u16)sum;
     if ((obj->hitFlags & DR_LASERTURRET_HITFLAG_CAN_PROMPT) != 0)
