@@ -48,18 +48,16 @@ void arwarwinggu_hitDetect(void)
 {
 }
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void arwarwinggu_init(int obj)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-
     if (((GameObject*)obj)->anim.seqId == 0x606)
     {
         return;
     }
-    objAnim->flags |= OBJANIM_FLAG_HIDDEN;
-    objAnim->alpha = 0;
+    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    ((GameObject*)obj)->anim.alpha = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -117,13 +115,12 @@ void arwarwinggu_update(int obj)
     case 0x615:
         {
             ArwingGuState* state = ((GameObject*)obj)->extra;
-            f32 limit;
-            if (state->visibleTimer > (limit = lbl_803E7060))
+            if (state->visibleTimer > lbl_803E7060)
             {
                 state->visibleTimer -= timeDelta;
-                if (state->visibleTimer <= limit)
+                if (state->visibleTimer <= lbl_803E7060)
                 {
-                    state->visibleTimer = limit;
+                    state->visibleTimer = lbl_803E7060;
                     objAnim->alpha = 0;
                 }
             }
@@ -151,7 +148,7 @@ void arwarwinggu_update(int obj)
             {
                 v = lbl_803E705C;
             }
-            objAnim->alpha = v;
+            objAnim->alpha = (int)v;
             break;
         }
     }
