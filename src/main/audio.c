@@ -409,11 +409,13 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
         {
             listener = (f32*)((u8*)slot + 0x44);
         }
+        goto common;
+    retDefault:
+        return lbl_803DE570;
     }
+common:
     PSVECSubtract(listener, soundPos, outDelta);
     return PSVECMag(outDelta);
-retDefault:
-    return lbl_803DE570;
 }
 #pragma opt_common_subs reset
 #pragma dont_inline reset
