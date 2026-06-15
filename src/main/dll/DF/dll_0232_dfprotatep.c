@@ -473,7 +473,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 
 #define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep) \
     do { \
-        if ((handle) != 0) { \
+        if ((void *)(handle) != NULL) { \
             *(f32 *)((handle) + 0xc) = lbl_803E6460; \
             *(f32 *)((handle) + 0x10) = lbl_803E6464; \
             *(f32 *)((handle) + 0x14) = lbl_803E6468; \
@@ -490,29 +490,27 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
-    SfxplayerStateFlags* flags = &state->flags;
     s16 rotation[3];
     f32 baseVec[4];
     int* handles;
     s16 angleStep;
     s16 i;
-    int handle;
 
-    if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32)
+    if (state->flags.bit10 != 0 && state->flags.bit20 == 0 && state->variantSfxTimer > 0x32)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXPLAYER_RING_START_SFX);
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta));
+            *(s16*)obj = (s16)(*(s16*)obj + (int)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta)));
         }
         else
         {
-            *(s16*)obj += (s16)(lbl_803E645C * timeDelta);
+            *(s16*)obj = (s16)(*(s16*)obj + (int)(lbl_803E645C * timeDelta));
         }
     }
 
-    if (state->variantSfxTimer != 0 && flags->bit10 != 0)
+    if (state->variantSfxTimer != 0 && state->flags.bit10 != 0)
     {
         state->variantSfxTimer -= (s16)(int)
         timeDelta;
@@ -533,10 +531,8 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
-        handle = handles[0];
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
-        handle = handles[1];
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, rotation, angleStep);
         handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
