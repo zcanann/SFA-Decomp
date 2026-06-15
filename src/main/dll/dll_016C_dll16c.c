@@ -68,7 +68,6 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
-extern void* lbl_803DDB40;
 extern void objRenderFn_8003b8f4(f32);
 extern void Obj_FreeObject(int*);
 extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
@@ -82,7 +81,6 @@ extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern f32 lbl_803E4748;
 extern u8 lbl_802C2308[];
-extern void fn_801AC01C(int* obj);
 extern void Music_Trigger(int track, int flag);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern u8 framesThisStep;
@@ -90,7 +88,6 @@ extern f32 lbl_803E474C;
 extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
-extern u8 lbl_803236B8[];
 
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
