@@ -13253,6 +13253,7 @@ void playerDie(int obj)
     AudioStream_Play(0x51e0, AudioStream_StartPrepared);
 }
 
+#pragma opt_propagation off
 void fn_802AABE4(int obj)
 {
     s16* movp;
@@ -13287,6 +13288,7 @@ void fn_802AABE4(int obj)
     ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
                            OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
+#pragma opt_propagation reset
 
 void fn_802B4A9C(int obj, int inner, int inner2)
 {
