@@ -1,4 +1,3 @@
-#include "main/audio/sfx_ids.h"
 #include "main/dll/mtxbuildarg_struct.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
@@ -6,7 +5,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
-#include "main/resource.h"
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
