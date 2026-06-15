@@ -879,6 +879,9 @@ void arwarwing_initAttachments(int obj, int state)
         f32 c7C;
         f32 c78;
         f32 c74;
+        f32 cB0;
+        f32 c5C;
+        f32 cEF0;
         (*gCameraInterface)->setFocus((void*)obj, 0);
         ((ArwingState*)state)->flags477 |= 1;
         ((ArwingState*)state)->maxSpeedX = lbl_803E6F70;
@@ -903,8 +906,8 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->barrelRollSpeed = lbl_803E6FA8;
         ((ArwingState*)state)->unk3FA = 0x19;
         ((ArwingState*)state)->barrelRollDecelRange = lbl_803E6FAC;
-        ((ArwingState*)state)->rootMotionScale = lbl_803E6FB0;
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6FB0;
+        ((ArwingState*)state)->rootMotionScale = cB0 = lbl_803E6FB0;
+        ((GameObject*)obj)->anim.rootMotionScale = cB0;
         ((ArwingState*)state)->barrelRollMaxSpeedScale = lbl_803E6FB4;
         ((ArwingState*)state)->barrelRollAccelScale = lbl_803E6FB8;
         ((ArwingState*)state)->speedScaleRollL = lbl_803E6FBC;
@@ -917,8 +920,8 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->unkA8 = lbl_803E6F2C;
         ((ArwingState*)state)->rollEnergy = ((ArwingState*)state)->rollEnergyMax;
         ((ArwingState*)state)->unkA4 = ((ArwingState*)state)->unkA8;
-        ((ArwingState*)state)->wingFlexCur = lbl_803E6F5C;
-        ((ArwingState*)state)->wingFlexTarget = lbl_803E6F5C;
+        ((ArwingState*)state)->wingFlexCur = c5C = lbl_803E6F5C;
+        ((ArwingState*)state)->wingFlexTarget = c5C;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
         {
             ((ArwingState*)state)->velZ = lbl_803E6ECC;
@@ -943,7 +946,7 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->maxShield = *(u8*)(mev + 0x1);
         ((ArwingState*)state)->shield = ((ArwingState*)state)->maxShield;
         ((ArwingState*)state)->bobSpeedThreshold = lbl_803E6EF8;
-        ((ArwingState*)state)->bobRotZRate = lbl_803E6EF0;
+        ((ArwingState*)state)->bobRotZRate = cEF0 = lbl_803E6EF0;
         ((ArwingState*)state)->bobRotZAmp = lbl_803E6FE4;
         ((ArwingState*)state)->bobXRate = lbl_803E6EF4;
         ((ArwingState*)state)->bobXAmp = lbl_803E6FD4;
@@ -955,7 +958,7 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState*)state)->homeZ = ((GameObject*)obj)->anim.localPosZ;
         ((ArwingState*)state)->flightHalfWidth = lbl_803E6FEC;
         ((ArwingState*)state)->flightUpperHeight = lbl_803E6FF0;
-        ((ArwingState*)state)->flightLowerHeight = lbl_803E6EF0;
+        ((ArwingState*)state)->flightLowerHeight = cEF0;
     }
 }
 #pragma scheduling reset
