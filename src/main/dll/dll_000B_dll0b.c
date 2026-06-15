@@ -1564,7 +1564,7 @@ void fn_800A1040(s16 p1, int p2)
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
         if (arr[i] == NULL) continue;
-        if ((s16)p1 != arr[i]->sequenceId && p2 == 0) continue;
+        if (p1 != arr[i]->sequenceId && p2 == 0) continue;
         if (arr[i]->auxAllocation != NULL)
         {
             mm_free(arr[i]->auxAllocation);
