@@ -3204,7 +3204,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
     int baseYaw;
     int baseRoll;
-    int basePitch;
+    s16 basePitch;
     f32 baseX;
     f32 baseY;
     f32 baseZ;

@@ -595,17 +595,12 @@ int saveSelect_getInfo(void* outPtr)
             return 0;
         }
 
-        info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
-        if (info->valid == 0)
-        {
-            memset(info, 0, sizeof(SaveSelectInfo));
-        }
-        else
+        if ((info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET]) != 0)
         {
             memcpy(info, save + SAVEGAME_PLAYER_NAME_OFFSET, sizeof(info->name));
 
+            info->percentComplete = (u8)((save[0x55d] * 100) / 0xbb);
             completion = save[0x55d];
-            info->percentComplete = (u8)((completion * 100) / 0xbb);
             if (completion > 0xb3)
             {
                 info->rankA = 6;
@@ -675,6 +670,10 @@ int saveSelect_getInfo(void* outPtr)
             }
             info->active = 0;
             info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+        }
+        else
+        {
+            memset(info, 0, sizeof(SaveSelectInfo));
         }
 
         info++;
