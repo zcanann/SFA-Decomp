@@ -681,7 +681,6 @@ void DFP_Torch_update(int obj)
     } TorchPrm;
     DfpTorchState* blob = ((GameObject*)obj)->extra;
     void* res;
-    int h;
     int i;
     f32 buf[5];
     TorchPrm prm;
@@ -706,8 +705,7 @@ void DFP_Torch_update(int obj)
         }
         if (blob->lit != 0)
         {
-            h = blob->litTimer;
-            if (h != 0)
+            if (blob->litTimer != 0)
             {
                 blob->litTimer -= (s16)timeDelta;
                 if (blob->litTimer <= 0)
