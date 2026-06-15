@@ -1069,12 +1069,12 @@ void arwarwing_handlePathDamage(int obj, int state)
 #pragma scheduling off
 void arwarwing_handleObjectDamage(int obj, int state)
 {
-    uint hitVol;
+    int hitVol;
     int hitObj;
 
     if (objGetFlagsE5_2(obj) != 0)
         return;
-    if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 && hitVol != 0)
+    if (ObjHits_GetPriorityHit(obj, &hitObj, 0, (uint*)&hitVol) != 0 && hitVol != 0)
     {
         if (((ArwingState*)state)->mode == 4)
         {
@@ -1091,16 +1091,19 @@ void arwarwing_handleObjectDamage(int obj, int state)
                 return;
             }
             doRumble(lbl_803E6F2C);
-            ((ArwingState*)state)->shield = ((ArwingState*)state)->shield - hitVol;
+            *(s8*)&((ArwingState*)state)->shield = *(s8*)&((ArwingState*)state)->shield - hitVol;
             Sfx_PlayFromObject(obj, SFXbaddie_vambat_death);
-            ((ArwingState*)state)->flags339 |= 0x80;
+            ((Arw339Flags*)(state + 0x339))->scoreFlag = 1;
             Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
             ((ArwingState*)state)->damageFlashTimer = lbl_803E6F34;
             ((ArwingState*)state)->hitShake = 1;
             ((ArwingState*)state)->shakeYaw = 0;
             ((ArwingState*)state)->shakePitch = 0;
-            ((ArwingState*)state)->knockVelX = lbl_803E6ECC;
-            ((ArwingState*)state)->knockVelZ = lbl_803E6ECC;
+            {
+                f32 knock = lbl_803E6ECC;
+                ((ArwingState*)state)->knockVelX = knock;
+                ((ArwingState*)state)->knockVelZ = knock;
+            }
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E6F2C);
         }
