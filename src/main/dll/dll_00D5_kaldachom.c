@@ -318,10 +318,11 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
 
     if (control->spawnedDustObj != NULL)
     {
-        if (control->hitFlashTimer <= lbl_803E3060)
+        if (control->hitFlashTimer <= *(const f32*)&lbl_803E3060)
         {
+            f32 zeroConst = *(const f32*)&lbl_803E3060;
             ((GameObject*)control->spawnedDustObj)->anim.alpha = 0;
-            control->hitFlashTimer = lbl_803E3060;
+            control->hitFlashTimer = zeroConst;
         }
         else
         {
