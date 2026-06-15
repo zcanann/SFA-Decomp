@@ -899,11 +899,14 @@ void ktrex_init(int obj, char* arg)
     int* pB;
     int* pC;
     int* pD;
+    char* curveBase;
     KTRexRuntime* rt;
-    rt = (KTRexRuntime*)(gKTRexRuntime = ((GameObject*)obj)->extra);
+    curveBase = (char*)lbl_8032A510;
+    gKTRexRuntime = ((GameObject*)obj)->extra;
     (*(void (**)(int, char*, void*, int, int, int, int, f32))((char*)*gBaddieControlInterface + 0x58))(
         obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0 ? 1 : 0), lbl_803E684C);
     ((GameObject*)obj)->animEventCallback = (void*)ktrex_animEventCallback;
+    rt = (KTRexRuntime*)gKTRexRuntime;
     (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))(obj, rt, 0);
     rt->unk270 = 2;
     *(int*)&rt->unk2D0 = 0;
@@ -920,10 +923,10 @@ void ktrex_init(int obj, char* arg)
     yaw0 = (s16)((s8)arg[0x2a] << 8);
     *(s16*)obj = yaw0;
     ((KTRexArenaState*)gKTRexState)->homeYaw = yaw0;
-    pA = (int*)((char*)lbl_8032A510 + 0x4c);
-    pB = (int*)((char*)lbl_8032A510 + 0x3c);
-    pC = (int*)((char*)lbl_8032A510 + 0x6c);
-    pD = (int*)((char*)lbl_8032A510 + 0x5c);
+    pA = (int*)(curveBase + 0x4c);
+    pB = (int*)(curveBase + 0x3c);
+    pC = (int*)(curveBase + 0x6c);
+    pD = (int*)(curveBase + 0x5c);
     for (i = 0; i < 4; i++, pA++, pB++, pC++, pD++)
     {
         cp = (int)(*gRomCurveInterface)->getById(*pA);
