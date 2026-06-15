@@ -1,12 +1,8 @@
 /* DLL 0x0120 (trickyguardspot) — Tricky guard spot object [0x8018B7B0-0x8018B9F0). */
-#include "main/objseq.h"
 
 #include "main/dll/CF/CFtoggleswitch.h"
-#include "main/camera_interface.h"
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 typedef struct TrickyguardspotPlacement
 {
