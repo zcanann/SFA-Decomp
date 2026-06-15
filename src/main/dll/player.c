@@ -13154,15 +13154,8 @@ void fn_802B066C(int obj, int state)
             ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
         ((PlayerState*)state)->unk7A4 = v;
         v = ((PlayerState*)state)->unk7A4;
-        if (v < lbl_803E7EE0)
-        {
-            v = lbl_803E7EE0;
-        }
-        else if (v > lbl_803E8138)
-        {
-            v = lbl_803E8138;
-        }
-        ((PlayerState*)state)->unk7A4 = v;
+        ((PlayerState*)state)->unk7A4 =
+            (v < lbl_803E7EE0) ? lbl_803E7EE0 : ((v > lbl_803E8138) ? lbl_803E8138 : v);
     }
     ((PlayerState*)state)->unk79C =
         ((PlayerState*)state)->unk79C - timeDelta * ((PlayerState*)state)->unk7A4;
