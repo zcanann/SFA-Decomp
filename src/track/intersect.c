@@ -5617,6 +5617,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
 
     GXSetBlendMode(1, 4, 5, 5);
+    GXSetCullMode(0);
     if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
