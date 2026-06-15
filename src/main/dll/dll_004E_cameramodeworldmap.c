@@ -57,7 +57,6 @@ extern CameraModeWorldMapState* lbl_803DD588;
 extern f32 lbl_803E1A40;
 extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
-extern f32 lbl_803A43C0[];
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int ObjList_FindObjectById(int id);
 extern int getButtonsHeld(int pad);
@@ -83,7 +82,6 @@ extern f32 lbl_803E1A60;
 extern f32 lbl_803E1A64;
 extern f32 lbl_803E1A68;
 extern f32 lbl_803E1A6C;
-extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 extern s16 getAngle(f32 x, f32 z);
 extern f32 mathCosf(f32 x);
 
