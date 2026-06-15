@@ -402,8 +402,8 @@ void pollenfragment_update(int obj)
     u8* nearObj;
     void* hit;
     int i;
-    f32 w;
     f32 m;
+    f32 w;
     XyzVec dir;
     XyzVec sc;
     XyzVec pos;
@@ -492,7 +492,7 @@ void pollenfragment_update(int obj)
         PSVECScale(&sc, &sc, lbl_803E315C);
         PSVECAdd(&dir, &sc, &dir);
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX +
-            ((*(f32*)(extra + 8) + (w = lbl_803E315C)) * (dir.x * *(f32*)(extra + 4))) / (m = lbl_803E3164);
+            (((w = lbl_803E315C) + *(f32*)(extra + 8)) * (dir.x * *(f32*)(extra + 4))) / (m = lbl_803E3164);
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ +
             ((w + *(f32*)(extra + 8)) * (dir.z * *(f32*)(extra + 4))) / m;
         if (!(((PollenFragmentExtra*)extra)->def)->noVertical)
@@ -516,10 +516,10 @@ void pollenfragment_update(int obj)
     }
     else if (((GameObject*)obj)->anim.seqId == 0x482)
     {
-        ((GameObject*)obj)->anim.rotX = (s16)(int)(
-            lbl_803E3180 * lbl_803DBD48 * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX);
-        ((GameObject*)obj)->anim.rotY = (s16)(int)(
-            lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotY);
+        ((GameObject*)obj)->anim.rotX =
+            lbl_803E3180 * lbl_803DBD48 * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX;
+        ((GameObject*)obj)->anim.rotY =
+            lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotY;
     }
     Sfx_KeepAliveLoopedObjectSound(obj, (u16)(((PollenFragmentExtra*)extra)->def)->loopSfx);
     objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
