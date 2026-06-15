@@ -1830,16 +1830,16 @@ void animatedobj_update(int* obj)
             for (i = 0; i < seq->eventCount; i++)
             {
                 int b = seq->eventIds[i];
-                if (b == 0xb)
+                switch (b)
                 {
+                case 0xb:
                     if (((GameObject*)obj)->childCount != 0)
                     {
                         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
                         ObjLink_DetachChild(obj, *(int*)&((GameObject*)obj)->childObjs[0]);
                     }
-                }
-                else if (b < 0xb && b > 9)
-                {
+                    break;
+                case 0xa:
                     if ((u8)Obj_IsLoadingLocked() != 0)
                     {
                         void* alloc;
@@ -1851,6 +1851,7 @@ void animatedobj_update(int* obj)
                         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
                             (int)child, lbl_803E3228, timeDelta, NULL);
                     }
+                    break;
                 }
             }
         }
