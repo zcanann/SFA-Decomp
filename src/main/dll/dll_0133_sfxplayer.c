@@ -67,7 +67,9 @@ void sfxplayerObj_init(u8* obj, u8* data)
     case SFXPLAYER_MODE_RANDOM_DELAY:
         {
             int v = randomGetRange(data[0x1e], data[0x1f]);
-            *(f32*)sub = (f32)v * lbl_803E40BC;
+            f32 fv = (f32)v;
+            fv = lbl_803E40BC * fv;
+            *(f32*)sub = fv;
             break;
         }
     }
