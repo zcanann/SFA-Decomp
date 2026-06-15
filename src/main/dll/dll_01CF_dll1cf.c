@@ -111,7 +111,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern undefined4 FUN_800067c0();
 extern f32 lbl_803E4A30;
-extern f32 lbl_803E4A28;
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
