@@ -293,7 +293,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     return;
 }
 
-void FUN_8003df64(undefined4 param_1, undefined4 param_2, int* cmdStream, float* outMtx)
+void FUN_8003df64(undefined4 obj, undefined4 owner, int* cmdStream, float* outMtx)
 {
     byte boneCount0;
     byte boneCount1;
@@ -1491,15 +1491,15 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
     undefined2* cam;
     ushort* parent;
     int jointIdx;
-    int iVar7;
-    int iVar8;
+    int bonePtr;
+    int boneOff;
     double in_f30;
     double dz;
     double in_f31;
     double dx;
     double in_ps30_1;
     double in_ps31_1;
-    undefined8 uVar11;
+    undefined8 pairWord;
     float local_e8;
     undefined4 local_e4;
     float local_e0;
@@ -1524,9 +1524,9 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
     fStack_4 = (float)in_ps31_1;
     local_18 = (float)in_f30;
     fStack_14 = (float)in_ps30_1;
-    uVar11 = FUN_80286840();
-    child = (undefined2*)(ulonglong)(uVar11 >> 0x20);
-    parent = (ushort*)(u32)uVar11;
+    pairWord = FUN_80286840();
+    child = (undefined2*)(ulonglong)(pairWord >> 0x20);
+    parent = (ushort*)(u32)pairWord;
     if (lbl_803DF684 == *(float*)(child + 4))
     {
         DAT_803dd8a4 = 0;
@@ -1535,12 +1535,12 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
     {
         FUN_80017a54((int)child);
         parentNode = (int*)FUN_80017a54((int)parent);
-        iVar8 = ((ushort)child[0x58] & 7) * 0x18;
-        iVar7 = *(int*)(*(int*)(parent + 0x28) + 0x2c) + iVar8;
-        jointIdx = (int)*(char*)(iVar7 + *(char*)((int)parent + 0xad) + 0x12);
-        local_d0 = *(undefined4*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + iVar8);
-        local_cc = *(undefined4*)(iVar7 + 4);
-        local_c8 = *(undefined4*)(iVar7 + 8);
+        boneOff = ((ushort)child[0x58] & 7) * 0x18;
+        bonePtr = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
+        jointIdx = (int)*(char*)(bonePtr + *(char*)((int)parent + 0xad) + 0x12);
+        local_d0 = *(undefined4*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff);
+        local_cc = *(undefined4*)(bonePtr + 4);
+        local_c8 = *(undefined4*)(bonePtr + 8);
         if (jointIdx == -1)
         {
             FUN_80017a50(parent, afStack_84, '\0');
@@ -1553,10 +1553,10 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
         if ((OBJPRINT_MODEL_DEF(child)->renderFlags & 8) == 0)
         {
             local_d4 = lbl_803DF69C;
-            iVar8 = *(int*)(*(int*)(parent + 0x28) + 0x2c) + iVar8;
-            local_dc = *(ushort*)(iVar8 + 0xc);
-            local_da = *(undefined2*)(iVar8 + 0xe);
-            local_d8 = *(undefined2*)(iVar8 + 0x10);
+            boneOff = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
+            local_dc = *(ushort*)(boneOff + 0xc);
+            local_da = *(undefined2*)(boneOff + 0xe);
+            local_d8 = *(undefined2*)(boneOff + 0x10);
             FUN_80017700(&local_dc, afStack_c4);
             FUN_80247618(jointMtx, afStack_c4, afStack_c4);
         }
@@ -1566,11 +1566,11 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
             local_d4 = *(float*)(child + 4);
             dx = (double)(*(float*)(child + 6) - *(float*)(cam + 6));
             dz = (double)(*(float*)(child + 10) - *(float*)(cam + 10));
-            iVar8 = FUN_80017730();
-            local_dc = (short)iVar8 + 0x8000;
+            boneOff = FUN_80017730();
+            local_dc = (short)boneOff + 0x8000;
             FUN_80293900((double)(float)(dx * dx + (double)(float)(dz * dz)));
-            iVar8 = FUN_80017730();
-            local_da = (undefined2)iVar8;
+            boneOff = FUN_80017730();
+            local_da = (undefined2)boneOff;
             local_d8 = cam[2];
             FUN_80017700(&local_dc, afStack_c4);
             local_e8 = local_b8;
