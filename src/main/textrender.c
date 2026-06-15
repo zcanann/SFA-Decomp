@@ -1222,7 +1222,8 @@ void gameTextLoadTaskText(int taskId)
         if (lbl_803DCA00 == 0)
         {
             taskList = lbl_802C9EE8;
-            for (count = 0xb; count != 0; count--)
+            count = 0xb;
+            do
             {
                 if (taskId == *taskList)
                 {
@@ -1230,7 +1231,7 @@ void gameTextLoadTaskText(int taskId)
                     goto checkAllowed;
                 }
                 taskList++;
-            }
+            } while (--count != 0);
             allowed = 0;
         checkAllowed:
             if (allowed == 0)
