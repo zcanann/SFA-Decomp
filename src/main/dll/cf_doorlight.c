@@ -5,7 +5,6 @@
 #include "main/dll/cf_doorlight_state.h"
 #include "main/dll/cf_doorlight.h"
 #include "main/dll/wallanimator.h"
-#include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
 
