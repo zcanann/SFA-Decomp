@@ -68,24 +68,24 @@ void drbarrelgr_init(int obj, int setup)
 
     one = 1;
     state = *(int*)&((GameObject*)obj)->extra;
-    if (*(u8*)(setup + 0x19) == 0)
+    if (((DrbarrelgrPlacement*)setup)->unk19 == 0)
     {
-        *(u8*)(setup + 0x19) = 0xa;
+        ((DrbarrelgrPlacement*)setup)->unk19 = 0xa;
     }
-    if (*(s16*)(setup + 0x1a) <= 0)
+    if (((DrbarrelgrPlacement*)setup)->unk1A <= 0)
     {
-        *(s16*)(setup + 0x1a) = 0x64;
+        ((DrbarrelgrPlacement*)setup)->unk1A = 0x64;
     }
     ((DrbarrelgrState*)state)->unk0 = 5;
     ((DrbarrelgrState*)state)->unk8 = 0;
     ((DrBarrelGrFlags*)(state + 0x12a))->bit80 = 0;
-    ((DrbarrelgrState*)state)->unk128 = *(u8*)(setup + 0x19);
+    ((DrbarrelgrState*)state)->unk128 = ((DrbarrelgrPlacement*)setup)->unk19;
     ((DrbarrelgrState*)state)->unk10 = lbl_803E6CA4;
     ((DrbarrelgrState*)state)->unk4 = -3;
     ((DrBarrelGrFlags*)(state + 0x12a))->bit40 = 0;
     storeZeroToFloatParam((void*)(state + 0xc));
-    s16toFloat((void*)(state + 0xc), *(s16*)(setup + 0x1a));
-    *(s16*)obj = (s16)((s8) * (s8*)(setup + 0x18) << 8);
+    s16toFloat((void*)(state + 0xc), ((DrbarrelgrPlacement*)setup)->unk1A);
+    *(s16*)obj = (s16)((s8)((DrbarrelgrPlacement*)setup)->unk18 << 8);
     (*gRomCurveInterface)->initCurve((void*)(state + 0x20), (void*)obj, lbl_803E6CD0, &one, 0);
     ((GameObject*)obj)->anim.localPosX = ((DrbarrelgrState*)state)->startPosX;
     ((GameObject*)obj)->anim.localPosZ = ((DrbarrelgrState*)state)->startPosZ;
