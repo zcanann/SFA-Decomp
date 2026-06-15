@@ -106,11 +106,10 @@ void SB_FireBall_update(GameObject* obj)
     extern void Obj_FreeObject(int obj);
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     SBFireBallState* state;
-    ObjHitsPriorityState* hits;
     f32 particleArgs[7];
+#define hits (*(ObjHitsPriorityState**)((char*)obj + 0x54))
 
     state = obj->extra;
-    hits = ObjAnim_GetPriorityHitState(&obj->anim);
     if (state->owner == NULL)
     {
         state->owner = *(void**)&obj->unkF8;
@@ -159,4 +158,5 @@ void SB_FireBall_update(GameObject* obj)
 
         state->age += framesThisStep;
     }
+#undef hits
 }
