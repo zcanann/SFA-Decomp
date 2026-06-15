@@ -31,10 +31,7 @@ extern f32 timeDelta;
 
 extern u32 GameBit_Get(int eventId);
 
-extern f32 lbl_803E3778;
 extern void fn_80137948(char* fmt, ...);
-extern f32 lbl_803E3798;
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
 
 void mmp_bridge_free(void)
