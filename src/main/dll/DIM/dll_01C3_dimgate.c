@@ -5,10 +5,19 @@
  */
 #include "main/game_object.h"
 
+#define DIMGATE_TRIGGER_OBJ_TYPE 399
+
+enum DimgateState
+{
+    DIMGATE_STATE_CLOSED = 0,
+    DIMGATE_STATE_OPENING = 1,
+    DIMGATE_STATE_OPEN = 2,
+};
+
 typedef struct DimgatePlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E;
+    s16 gateGameBit;
 } DimgatePlacement;
 
 extern uint GameBit_Get(int eventId);
@@ -55,14 +64,14 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
     char* param;
     param = *(char**)&((GameObject*)obj)->anim.placementData;
     inner = ((GameObject*)obj)->extra;
-    if (GameBit_Get(((DimgatePlacement*)param)->unk1E) != 0)
+    if (GameBit_Get(((DimgatePlacement*)param)->gateGameBit) != 0)
     {
-        inner[0] = 2;
+        inner[0] = DIMGATE_STATE_OPEN;
         ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E4878;
     }
     else
     {
-        inner[0] = 0;
+        inner[0] = DIMGATE_STATE_CLOSED;
     }
     ((GameObject*)obj)->animEventCallback = (void*)dimgate_SeqFn;
     *(s16*)obj = (s16)((s8) * (u8*)(param + 0x18) << 8);
@@ -77,18 +86,18 @@ void dimgate_update(int obj)
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
     switch (*(s8*)extra)
     {
-    case 0:
+    case DIMGATE_STATE_CLOSED:
         {
             int found;
             int i;
-            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != 1)
+            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPENING)
             {
-                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, 1);
+                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPENING);
             }
             found = 0;
             for (i = 0; i < (int)*(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
             {
-                if (*(s16*)(*(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100) + 0x46) == 399)
+                if (*(s16*)(*(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100) + 0x46) == DIMGATE_TRIGGER_OBJ_TYPE)
                 {
                     found = 1;
                     break;
@@ -96,22 +105,22 @@ void dimgate_update(int obj)
             }
             if (found)
             {
-                GameBit_Set(((DimgatePlacement*)def)->unk1E, 1);
-                if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != 2)
+                GameBit_Set(((DimgatePlacement*)def)->gateGameBit, 1);
+                if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPEN)
                 {
-                    ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, 2);
+                    ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPEN);
                 }
-                *(s8*)extra = 2;
+                *(s8*)extra = DIMGATE_STATE_OPEN;
             }
             break;
         }
-    case 1:
+    case DIMGATE_STATE_OPENING:
         break;
-    case 2:
+    case DIMGATE_STATE_OPEN:
         {
-            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != 2)
+            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPEN)
             {
-                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, 2);
+                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPEN);
             }
             break;
         }
