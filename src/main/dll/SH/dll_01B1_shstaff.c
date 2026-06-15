@@ -443,7 +443,7 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
 {
     int player;
     void* child;
-    int* childSlots;
+    ShStaffState* slotBase;
     int i;
     int zero;
 
@@ -457,40 +457,40 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
         fn_80295CF4(player, 1);
         fn_8029672C(player, 1);
         zero = 0;
-        childSlots = state->slots;
+        slotBase = state;
         for (i = 0; i < 8; i += 4)
         {
-            child = (void*)childSlots[0];
+            child = (void*)slotBase->slots[0];
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                childSlots[0] = zero;
+                slotBase->slots[0] = zero;
             }
-            child = (void*)childSlots[1];
+            child = (void*)slotBase->slots[1];
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                childSlots[1] = zero;
+                slotBase->slots[1] = zero;
             }
-            child = (void*)childSlots[2];
+            child = (void*)slotBase->slots[2];
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                childSlots[2] = zero;
+                slotBase->slots[2] = zero;
             }
-            child = (void*)childSlots[3];
+            child = (void*)slotBase->slots[3];
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                childSlots[3] = zero;
+                slotBase->slots[3] = zero;
             }
-            child = (void*)childSlots[4];
+            child = (void*)slotBase->slots[4];
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                childSlots[4] = zero;
+                slotBase->slots[4] = zero;
             }
-            childSlots += 5;
+            slotBase = (ShStaffState*)((int*)slotBase + 5);
         }
     }
 
