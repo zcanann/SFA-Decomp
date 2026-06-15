@@ -48,6 +48,8 @@ void arwarwinggu_hitDetect(void)
 {
 }
 
+#pragma peephole off
+#pragma scheduling off
 void arwarwinggu_init(int obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
@@ -56,9 +58,11 @@ void arwarwinggu_init(int obj)
     {
         return;
     }
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    objAnim->flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off
