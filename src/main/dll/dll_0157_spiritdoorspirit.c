@@ -133,12 +133,12 @@ undefined4
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
 {
-    int iVar1;
-    short sVar2;
-    undefined4 uVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
+    int newAng;
+    short angDelta;
+    undefined4 result;
+    double dist;
+    double velZ;
+    double dx;
     undefined8 in_f5;
     undefined8 in_f6;
     undefined8 in_f7;
@@ -154,62 +154,62 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
 
     if (param_3 == (short*)0x0)
     {
-        uVar3 = 0;
+        result = 0;
     }
     else
     {
         local_50[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
-        dVar6 = (double)local_50[0];
+        dx = (double)local_50[0];
         local_54 = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
         local_58 = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
-        dVar4 = FUN_80293900((double)(local_58 * local_58 + (float)(dVar6 * dVar6) + local_54 * local_54
+        dist = FUN_80293900((double)(local_58 * local_58 + (float)(dx * dx) + local_54 * local_54
         ));
-        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dVar4)
+        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dist)
         {
             FUN_8006f7a0(local_50, &local_54, &local_58);
             *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)local_50[0] * param_1);
             *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)local_54 * param_1);
             *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)local_58 * param_1);
-            sVar2 = (*param_3 + -0x8000) - *param_2;
-            if (0x8000 < sVar2)
+            angDelta = (*param_3 + -0x8000) - *param_2;
+            if (0x8000 < angDelta)
             {
-                sVar2 = sVar2 + 1;
+                angDelta = angDelta + 1;
             }
-            if (sVar2 < -0x8000)
+            if (angDelta < -0x8000)
             {
-                sVar2 = sVar2 + -1;
+                angDelta = angDelta + -1;
             }
             uStack_44 = (int)*param_2 ^ 0x80000000;
             local_48 = 0x43300000;
-            uStack_3c = (int)sVar2 ^ 0x80000000;
+            uStack_3c = (int)angDelta ^ 0x80000000;
             local_40 = 0x43300000;
-            iVar1 = (int)
+            newAng = (int)
             ((f32)(s32)
             uStack_44 +
                 (float)((double)((lbl_803E4DC0 +
                     (float)((double)CONCAT44(0x43300000, uStack_3c) - DOUBLE_803e4db0
-                    )) * (float)(param_1 * (double)lbl_803DC074)) / dVar4)
+                    )) * (float)(param_1 * (double)lbl_803DC074)) / dist)
             )
             ;
-            local_38 = (longlong)iVar1;
-            *param_2 = (short)iVar1;
-            dVar4 = (double)*(float*)(param_2 + 0x14);
-            dVar5 = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, dVar5, (int)param_2);
+            local_38 = (longlong)newAng;
+            *param_2 = (short)newAng;
+            dist = (double)*(float*)(param_2 + 0x14);
+            velZ = (double)*(float*)(param_2 + 0x16);
+            FUN_80017a88((double)*(float*)(param_2 + 0x12), dist, velZ, (int)param_2);
             if (param_2[0x50] != 0x1a)
             {
-                FUN_800305f8((double)lbl_803E4DA8, dVar4, dVar5, dVar6, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
+                FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
             FUN_8002f6ac(param_1, (int)param_2, param_4);
-            uVar3 = 0;
+            result = 0;
         }
         else
         {
-            uVar3 = 1;
+            result = 1;
         }
     }
-    return uVar3;
+    return result;
 }
 
 undefined4
@@ -438,23 +438,23 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 void FUN_8019f1dc(void)
 {
-    uint uVar1;
-    int iVar2;
-    int* piVar3;
-    int iVar4;
-    int iVar5;
-    int* piVar6;
-    int iVar7;
+    uint obj;
+    int other;
+    int* objList;
+    int objId;
+    int self;
+    int* objWalk;
+    int i;
     double in_f29;
-    double dVar8;
+    double savedZ;
     double in_f30;
-    double dVar9;
+    double savedY;
     double in_f31;
-    double dVar10;
+    double savedX;
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    ulonglong uVar11;
+    ulonglong retPair;
     int local_68;
     ushort local_64[4];
     float local_5c;
@@ -474,21 +474,21 @@ void FUN_8019f1dc(void)
     fStack_14 = (float)in_ps30_1;
     local_28 = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
-    uVar11 = FUN_8028683c();
-    uVar1 = (uint)(uVar11 >> 0x20);
-    iVar5 = *(int*)(uVar1 + 0xb8);
-    iVar2 = FUN_80017a98();
-    iVar2 = *(int*)(iVar2 + 0xb8);
-    *(float*)(iVar5 + 0x20) = lbl_803E4F58;
-    if ((uVar11 & 0xff) == 0)
+    retPair = FUN_8028683c();
+    obj = (uint)(retPair >> 0x20);
+    self = *(int*)(obj + 0xb8);
+    other = FUN_80017a98();
+    other = *(int*)(other + 0xb8);
+    *(float*)(self + 0x20) = lbl_803E4F58;
+    if ((retPair & 0xff) == 0)
     {
-        *(float*)(iVar5 + 0x24) = lbl_803E4F6C;
-        *(float*)(iVar5 + 0x28) = lbl_803E4F70;
+        *(float*)(self + 0x24) = lbl_803E4F6C;
+        *(float*)(self + 0x28) = lbl_803E4F70;
     }
     else
     {
-        *(float*)(iVar5 + 0x24) = lbl_803E4F60 * *(float*)(iVar2 + 0x298) + lbl_803E4F5C;
-        *(float*)(iVar5 + 0x28) = lbl_803E4F68 * *(float*)(iVar2 + 0x298) + lbl_803E4F64;
+        *(float*)(self + 0x24) = lbl_803E4F60 * *(float*)(other + 0x298) + lbl_803E4F5C;
+        *(float*)(self + 0x28) = lbl_803E4F68 * *(float*)(other + 0x298) + lbl_803E4F64;
     }
     local_58 = lbl_803E4F58;
     local_54 = lbl_803E4F58;
@@ -496,46 +496,46 @@ void FUN_8019f1dc(void)
     local_5c = lbl_803E4F74;
     local_64[2] = 0;
     local_64[1] = 0;
-    local_64[0] = *(ushort*)(iVar5 + 0x50);
-    FUN_80017748(local_64, (float*)(iVar5 + 0x20));
-    *(byte*)(iVar5 + 0x49) = *(byte*)(iVar5 + 0x49) | 1;
-    FUN_80006824(uVar1, SFXsk_baptr6_c);
-    *(byte*)(iVar5 + 0x49) = *(byte*)(iVar5 + 0x49) | 2;
-    if ((*(byte*)(iVar5 + 0x48) >> 6 & 1) != 0)
+    local_64[0] = *(ushort*)(self + 0x50);
+    FUN_80017748(local_64, (float*)(self + 0x20));
+    *(byte*)(self + 0x49) = *(byte*)(self + 0x49) | 1;
+    FUN_80006824(obj, SFXsk_baptr6_c);
+    *(byte*)(self + 0x49) = *(byte*)(self + 0x49) | 2;
+    if ((*(byte*)(self + 0x48) >> 6 & 1) != 0)
     {
-        iVar5 = *(int*)(uVar1 + 0x4c);
-        iVar2 = 0;
-        if (*(short*)(iVar5 + 0x1a) == 0)
+        self = *(int*)(obj + 0x4c);
+        other = 0;
+        if (*(short*)(self + 0x1a) == 0)
         {
-            iVar2 = ObjGroup_FindNearestObject(0x3a, uVar1, (float*)0x0);
+            other = ObjGroup_FindNearestObject(0x3a, obj, (float*)0x0);
         }
         else
         {
-            piVar3 = ObjGroup_GetObjects(0x3a, &local_68);
-            piVar6 = piVar3;
-            for (iVar7 = 0; iVar7 < local_68; iVar7 = iVar7 + 1)
+            objList = ObjGroup_GetObjects(0x3a, &local_68);
+            objWalk = objList;
+            for (i = 0; i < local_68; i = i + 1)
             {
-                iVar4 = FUN_8020a468(*piVar6);
-                if (*(short*)(iVar5 + 0x1a) == iVar4)
+                objId = FUN_8020a468(*objWalk);
+                if (*(short*)(self + 0x1a) == objId)
                 {
-                    iVar2 = piVar3[iVar7];
+                    other = objList[i];
                     break;
                 }
-                piVar6 = piVar6 + 1;
+                objWalk = objWalk + 1;
             }
         }
-        if (iVar2 != 0)
+        if (other != 0)
         {
-            dVar10 = (double)*(float*)(uVar1 + 0xc);
-            dVar9 = (double)*(float*)(uVar1 + 0x10);
-            dVar8 = (double)*(float*)(uVar1 + 0x14);
-            *(undefined4*)(uVar1 + 0xc) = *(undefined4*)(iVar2 + 0xc);
-            *(undefined4*)(uVar1 + 0x10) = *(undefined4*)(iVar2 + 0x10);
-            *(undefined4*)(uVar1 + 0x14) = *(undefined4*)(iVar2 + 0x14);
-            FUN_800e8630(uVar1);
-            *(float*)(uVar1 + 0xc) = (float)dVar10;
-            *(float*)(uVar1 + 0x10) = (float)dVar9;
-            *(float*)(uVar1 + 0x14) = (float)dVar8;
+            savedX = (double)*(float*)(obj + 0xc);
+            savedY = (double)*(float*)(obj + 0x10);
+            savedZ = (double)*(float*)(obj + 0x14);
+            *(undefined4*)(obj + 0xc) = *(undefined4*)(other + 0xc);
+            *(undefined4*)(obj + 0x10) = *(undefined4*)(other + 0x10);
+            *(undefined4*)(obj + 0x14) = *(undefined4*)(other + 0x14);
+            FUN_800e8630(obj);
+            *(float*)(obj + 0xc) = (float)savedX;
+            *(float*)(obj + 0x10) = (float)savedY;
+            *(float*)(obj + 0x14) = (float)savedZ;
         }
     }
     FUN_80286888();
