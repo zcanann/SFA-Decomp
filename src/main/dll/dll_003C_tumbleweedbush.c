@@ -1,6 +1,5 @@
 #pragma scheduling on
 #pragma peephole on
-#include "main/dll/baddie/dll_003B_menu.h"
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
