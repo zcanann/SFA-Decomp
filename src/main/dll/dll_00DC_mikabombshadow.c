@@ -979,7 +979,7 @@ void mikabombshadow_update(int* obj)
     f32 f;
 
     r4 = ((GameObject*)obj)->ownerObj;
-    t = fz - (*(f32*)((char*)r4 + 0x10) - ((GameObject*)obj)->anim.localPosY) / *(f32*)((GameObject*)obj)->extra;
+    t = fz - (((GameObject*)r4)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / *(f32*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31DC * t + fz;
     f = t * lbl_803E31E0;
     if (f > fz) f = fz;
