@@ -106,7 +106,7 @@ void drbarrelgr_update(int obj)
 
     {
         int held = ((DrbarrelgrState*)state)->unk8;
-    if (held != 0)
+    if ((void*)held != NULL)
     {
         nearest = ObjGroup_FindNearestObject(25, obj, 0);
         match = 0;
@@ -115,7 +115,7 @@ void drbarrelgr_update(int obj)
             match = 1;
         }
         if (match == 0 ||
-            (flags->bit80 != 0 && gunpowderbarrel_isHeld(held) == 0))
+            (flags->bit80 != 0 && gunpowderbarrel_isHeld(((DrbarrelgrState*)state)->unk8) == 0))
         {
             ((DrbarrelgrState*)state)->unk8 = 0;
             flags->bit80 = 0;
