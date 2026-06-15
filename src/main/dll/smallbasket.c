@@ -694,8 +694,8 @@ void smallbasket_initModelVariantState(s16* obj, u8* state)
 {
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0xb;
-    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x400b0;
-    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x40001040;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x400b0LL;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x40001040LL;
     switch ((s16)obj[0x46 / 2])
     {
     case 0x6a3:
