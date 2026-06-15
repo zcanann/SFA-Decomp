@@ -2826,7 +2826,7 @@ void pauseMenuFn_80129ee0(void)
         menuMin = 4;
     }
     if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
-        (player != 0 && coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14)) == 0 &&
+        (player != 0 && coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
             fn_802972A8(player) != 0))
     {
         menuMax = 4;
@@ -2841,7 +2841,7 @@ void pauseMenuFn_80129ee0(void)
         }
         else
         {
-            cell = coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14));
+            cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
         }
         lbl_803DD8E0 = cell;
         if (cell == 0x36)
@@ -3498,7 +3498,7 @@ void pauseMenuFn_80129ee0(void)
                 lbl_803DD758 = 0;
                 if (player != 0)
                 {
-                    lbl_803DD8E0 = coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14));
+                    lbl_803DD8E0 = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
                     if (lbl_803DD8E0 == 7)
                     {
                         for (lbl_803DD756 = 0; lbl_803DD756 < 4;)
@@ -3814,7 +3814,7 @@ void fn_8012C000(void)
     if (player != NULL)
     {
         int t = 0;
-        if (coordsToMapCell(*(f32*)(player + 0xc), *(f32*)(player + 0x14)) != 0 ||
+        if (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) != 0 ||
             fn_802972A8(player) == 0)
         {
             t = 1;
