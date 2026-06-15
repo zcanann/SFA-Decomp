@@ -180,7 +180,7 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
     double dVar4;
     short sVar6;
     uint uVar5;
-    short* psVar7;
+    short* objSeq;
     uint uVar8;
     uint uVar9;
     int iVar10;
@@ -190,15 +190,15 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
     int iVar13;
     undefined4 uVar14;
     undefined4 uVar15;
-    int iVar17;
-    byte bVar18;
-    byte* pbVar19;
-    char cVar20;
-    byte* pbVar21;
+    int objBase;
+    byte opIndex;
+    byte* seqFlags;
+    char mode;
+    byte* opPtr;
     double tmpF1a;
     double tmpF1b;
     double tmpF1c;
-    double dVar22;
+    double resultVal;
     double tmpF1d;
     double tmpF1e;
     undefined8 uVar23;
@@ -206,39 +206,39 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
     int local_34[13];
 
     uVar23 = FUN_8028682c();
-    psVar7 = (short*)((ulonglong)uVar23 >> 0x20);
-    iVar17 = (int)uVar23;
-    pbVar19 = *(byte**)(psVar7 + 0x5c);
-    pbVar21 = (byte*)(*(int*)(psVar7 + 0x26) + 0x18);
-    bVar18 = 0;
-    dVar22 = tmpF1a;
+    objSeq = (short*)((ulonglong)uVar23 >> 0x20);
+    objBase = (int)uVar23;
+    seqFlags = *(byte**)(objSeq + 0x5c);
+    opPtr = (byte*)(*(int*)(objSeq + 0x26) + 0x18);
+    opIndex = 0;
+    resultVal = tmpF1a;
     do
     {
         dVar4 = DOUBLE_803e4d68;
-        cVar20 = (char)param_11;
-        if (7 < bVar18)
+        mode = (char)param_11;
+        if (7 < opIndex)
         {
-            if (cVar20 < '\x01')
+            if (mode < '\x01')
             {
-                if (cVar20 < '\0')
+                if (mode < '\0')
                 {
-                    *pbVar19 = *pbVar19 | 2;
+                    *seqFlags = *seqFlags | 2;
                 }
             }
             else
             {
-                *pbVar19 = *pbVar19 | 1;
-                FUN_80017698((int)*(short*)(pbVar19 + 0x80), 1);
+                *seqFlags = *seqFlags | 1;
+                FUN_80017698((int)*(short*)(seqFlags + 0x80), 1);
             }
             FUN_80286878();
             return;
         }
-        if ((pbVar21[1] != 0) && ((bVar16 = *pbVar19, (bVar16 & 4) == 0 || ((*pbVar21 & 0x20) != 0))))
+        if ((opPtr[1] != 0) && ((bVar16 = *seqFlags, (bVar16 & 4) == 0 || ((*opPtr & 0x20) != 0))))
         {
-            bVar1 = *pbVar21;
+            bVar1 = *opPtr;
             if ((bVar1 & 0x10) == 0)
             {
-                if (cVar20 == '\x01')
+                if (mode == '\x01')
                 {
                     if ((bVar1 & 1) != 0)
                     {
@@ -251,7 +251,7 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                         goto code_r0x80199a48;
                     }
                 }
-                else if ((cVar20 == -1) && ((bVar1 & 2) != 0))
+                else if ((mode == -1) && ((bVar1 & 2) != 0))
                 {
                     if ((bVar16 & 2) != 0)
                     {
@@ -263,28 +263,28 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
             }
             else if ((bVar1 & 1) == 0)
             {
-                if (((bVar1 & 2) == 0) || (cVar20 < '\x01')) goto code_r0x80199a48;
+                if (((bVar1 & 2) == 0) || (mode < '\x01')) goto code_r0x80199a48;
             }
-            else if (-1 < cVar20)
+            else if (-1 < mode)
             {
             code_r0x80199a48:
-                switch (pbVar21[1])
+                switch (opPtr[1])
                 {
                 case 1:
-                    bVar16 = pbVar21[2];
+                    bVar16 = opPtr[2];
                     if (bVar16 == 9)
                     {
                         iVar10 = FUN_80017a98();
                         if (iVar10 != 0)
                         {
-                            dVar22 = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 10);
+                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 10);
                         }
                     }
                     else if (bVar16 < 9)
                     {
                         if ((7 < bVar16) && (iVar10 = FUN_80017a98(), iVar10 != 0))
                         {
-                            dVar22 = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 1);
+                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 1);
                         }
                     }
                     else if (bVar16 == 0xb)
@@ -292,150 +292,150 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                         iVar10 = FUN_80017a98();
                         if (iVar10 != 0)
                         {
-                            dVar22 = (double)FUN_80294bd4((double)lbl_803E4D94, iVar10, 1);
+                            resultVal = (double)FUN_80294bd4((double)lbl_803E4D94, iVar10, 1);
                         }
                     }
                     else if ((bVar16 < 0xb) && (iVar10 = FUN_80017a98(), iVar10 != 0))
                     {
-                        dVar22 = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 0xb);
+                        resultVal = (double)FUN_80294bd4((double)lbl_803E4D70, iVar10, 0xb);
                     }
                     break;
                 case 4:
-                    if (cVar20 < '\0')
+                    if (mode < '\0')
                     {
-                        dVar22 = (double)FUN_80006810((int)psVar7, *(short*)(pbVar21 + 2));
+                        resultVal = (double)FUN_80006810((int)objSeq, *(short*)(opPtr + 2));
                     }
                     else
                     {
-                        dVar22 = (double)FUN_80006824((uint)psVar7, *(ushort*)(pbVar21 + 2));
+                        resultVal = (double)FUN_80006824((uint)objSeq, *(ushort*)(opPtr + 2));
                     }
                     break;
                 case 5:
-                    dVar22 = (double)*(float*)(pbVar19 + 4);
+                    resultVal = (double)*(float*)(seqFlags + 4);
                     break;
                 case 6:
-                    dVar22 = (double)(**(code**)(*DAT_803dd6d0 + 0x24))(pbVar21[2], pbVar21[3], 0);
+                    resultVal = (double)(**(code**)(*DAT_803dd6d0 + 0x24))(opPtr[2], opPtr[3], 0);
                     break;
                 case 8:
-                    switch (pbVar21[2])
+                    switch (opPtr[2])
                     {
                     case 0:
-                        if (1 < pbVar21[3])
+                        if (1 < opPtr[3])
                         {
-                            pbVar21[3] = 1;
+                            opPtr[3] = 1;
                         }
-                        dVar22 = (double)FUN_8005d17c((uint)pbVar21[3]);
+                        resultVal = (double)FUN_8005d17c((uint)opPtr[3]);
                         break;
                     case 1:
-                        if (1 < pbVar21[3])
+                        if (1 < opPtr[3])
                         {
-                            pbVar21[3] = 1;
+                            opPtr[3] = 1;
                         }
-                        dVar22 = (double)FUN_8005d114((uint)pbVar21[3]);
+                        resultVal = (double)FUN_8005d114((uint)opPtr[3]);
                         break;
                     case 2:
-                        if (1 < pbVar21[3])
+                        if (1 < opPtr[3])
                         {
-                            pbVar21[3] = 1;
+                            opPtr[3] = 1;
                         }
-                        dVar22 = (double)FUN_8005d0ac((uint)pbVar21[3]);
+                        resultVal = (double)FUN_8005d0ac((uint)opPtr[3]);
                         break;
                     case 3:
-                        if (1 < pbVar21[3])
+                        if (1 < opPtr[3])
                         {
-                            pbVar21[3] = 1;
+                            opPtr[3] = 1;
                         }
-                        dVar22 = (double)(**(code**)(*DAT_803dd6e4 + 0x1c))(pbVar21[3]);
+                        resultVal = (double)(**(code**)(*DAT_803dd6e4 + 0x1c))(opPtr[3]);
                         break;
                     case 4:
-                        dVar22 = (double)(**(code**)(*DAT_803dd704 + 0xc))(pbVar21[3]);
+                        resultVal = (double)(**(code**)(*DAT_803dd704 + 0xc))(opPtr[3]);
                         break;
                     case 5:
-                        dVar22 = (double)FUN_8006f498((uint)pbVar21[3]);
+                        resultVal = (double)FUN_8006f498((uint)opPtr[3]);
                         break;
                     case 6:
-                        if (pbVar21[3] == 0)
+                        if (opPtr[3] == 0)
                         {
-                            dVar22 = (double)FUN_80080f28(7, '\0');
+                            resultVal = (double)FUN_80080f28(7, '\0');
                         }
                         else
                         {
-                            dVar22 = (double)FUN_80080f28(7, '\x01');
+                            resultVal = (double)FUN_80080f28(7, '\x01');
                         }
                         break;
                     case 7:
-                        if (pbVar21[3] == 0)
+                        if (opPtr[3] == 0)
                         {
-                            dVar22 = (double)FUN_8005cff0(0);
+                            resultVal = (double)FUN_8005cff0(0);
                         }
                         else
                         {
-                            dVar22 = (double)FUN_8005cff0(1);
+                            resultVal = (double)FUN_8005cff0(1);
                         }
                         break;
                     case 8:
-                        if (pbVar21[3] == 0)
+                        if (opPtr[3] == 0)
                         {
-                            dVar22 = (double)FUN_80053b3c();
+                            resultVal = (double)FUN_80053b3c();
                         }
                         else
                         {
-                            dVar22 = (double)FUN_80053b70();
+                            resultVal = (double)FUN_80053b70();
                         }
                         break;
                     case 9:
                         uVar5 = FUN_80080f40();
-                        local_34[2] = (int)pbVar21[3];
+                        local_34[2] = (int)opPtr[3];
                         local_34[1] = 0x43300000;
-                        dVar22 = (double)FUN_80080f3c((double)(float)((double)CONCAT44(0x43300000, local_34[2]) -
+                        resultVal = (double)FUN_80080f3c((double)(float)((double)CONCAT44(0x43300000, local_34[2]) -
                                                           DOUBLE_803e4d88), uVar5 ^ 1);
                         break;
                     case 10:
-                        local_34[2] = (int)pbVar21[3];
+                        local_34[2] = (int)opPtr[3];
                         local_34[1] = 0x43300000;
-                        dVar22 = (double)FUN_80080f3c((double)(float)((double)CONCAT44(0x43300000, local_34[2]) -
+                        resultVal = (double)FUN_80080f3c((double)(float)((double)CONCAT44(0x43300000, local_34[2]) -
                                                           DOUBLE_803e4d88), 0);
                         break;
                     case 0xb:
-                        local_34[2] = (int)pbVar21[3];
+                        local_34[2] = (int)opPtr[3];
                         local_34[1] = 0x43300000;
-                        dVar22 = (double)FUN_80080f3c((double)(float)((double)CONCAT44(0x43300000, local_34[2]) -
+                        resultVal = (double)FUN_80080f3c((double)(float)((double)CONCAT44(0x43300000, local_34[2]) -
                                                           DOUBLE_803e4d88), 1);
                     }
                     break;
                 case 10:
-                    FUN_80006728(dVar22, param_2, param_3, param_4, param_5, param_6, param_7, param_8, psVar7, iVar17,
-                                 (uint) * (ushort*)(pbVar21 + 2), param_12, param_13, param_14, param_15, param_16);
-                    dVar22 = (double)FUN_800723a0();
+                    FUN_80006728(resultVal, param_2, param_3, param_4, param_5, param_6, param_7, param_8, objSeq, objBase,
+                                 (uint) * (ushort*)(opPtr + 2), param_12, param_13, param_14, param_15, param_16);
+                    resultVal = (double)FUN_800723a0();
                     break;
                 case 0xb:
-                    bVar16 = pbVar21[2];
+                    bVar16 = opPtr[2];
                     if (bVar16 == 2)
                     {
-                        (*gObjectTriggerInterface)->setFlag(pbVar21[3], 0);
+                        (*gObjectTriggerInterface)->setFlag(opPtr[3], 0);
                     }
                     else if (bVar16 < 2)
                     {
                         if (bVar16 == 0)
                         {
                         LAB_80199dec:
-                            iVar10 = ObjGroup_FindNearestObject(0xf, psVar7, (float*)0x0);
-                            dVar22 = tmpF1b;
+                            iVar10 = ObjGroup_FindNearestObject(0xf, objSeq, (float*)0x0);
+                            resultVal = tmpF1b;
                             if (iVar10 != 0)
                             {
-                                (*gObjectTriggerInterface)->runSequence(pbVar21[3], (void*)iVar10, -1);
-                                dVar22 = tmpF1b;
+                                (*gObjectTriggerInterface)->runSequence(opPtr[3], (void*)iVar10, -1);
+                                resultVal = tmpF1b;
                             }
                         }
                         else
                         {
-                            (*gObjectTriggerInterface)->setFlag(pbVar21[3], 1);
+                            (*gObjectTriggerInterface)->setFlag(opPtr[3], 1);
                         }
                     }
                     else if (bVar16 < 4) goto LAB_80199dec;
                     break;
                 case 0xc:
-                    uVar3 = *(ushort*)(pbVar21 + 2);
+                    uVar3 = *(ushort*)(opPtr + 2);
                     iVar10 = FUN_80017b00(&local_38, local_34);
                     for (; local_38 < local_34[0]; local_38 = local_38 + 1)
                     {
@@ -448,9 +448,9 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                         LAB_80199ed4:
                             if ((int)psVar12[0x1c] == (uint)uVar3)
                             {
-                                dVar22 = (double)objInterpretSeq_v11_unused(
-                                    dVar22, param_2, param_3, param_4, param_5, param_6, param_7
-                                    , param_8, iVar13, iVar17, param_11, param_12, param_13,
+                                resultVal = (double)objInterpretSeq_v11_unused(
+                                    resultVal, param_2, param_3, param_4, param_5, param_6, param_7
+                                    , param_8, iVar13, objBase, param_11, param_12, param_13,
                                     param_14, param_15, param_16);
                             }
                         }
@@ -466,19 +466,19 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                 case 0xd:
                     param_14 = 0;
                     param_13 = param_12;
-                    getLActions(dVar22, param_2, param_3, param_4, param_5, param_6, param_7, param_8, psVar7, iVar17,
-                                (uint) * (ushort*)(pbVar21 + 2), param_11, param_12, 0, param_15, param_16);
+                    getLActions(resultVal, param_2, param_3, param_4, param_5, param_6, param_7, param_8, objSeq, objBase,
+                                (uint) * (ushort*)(opPtr + 2), param_11, param_12, 0, param_15, param_16);
                     break;
                 case 0x10:
                     iVar10 = FUN_80017a98();
-                    dVar22 = (double)FUN_80017a78(iVar10, (uint)pbVar21[2]);
+                    resultVal = (double)FUN_80017a78(iVar10, (uint)opPtr[2]);
                     break;
                 case 0x11:
-                    dVar22 = (double)FUN_80017698(0x4e3, (uint) * (ushort*)(pbVar21 + 2));
+                    resultVal = (double)FUN_80017698(0x4e3, (uint) * (ushort*)(opPtr + 2));
                     break;
                 case 0x12:
-                    bVar16 = pbVar21[2];
-                    uVar9 = (uint)bVar16 << 8 & 0x3f00 | (uint)pbVar21[3];
+                    bVar16 = opPtr[2];
+                    uVar9 = (uint)bVar16 << 8 & 0x3f00 | (uint)opPtr[3];
                     uVar8 = FUN_80017690(uVar9);
                     uVar5 = ((uint)bVar16 << 8) >> 0xe;
                     if (uVar5 == 0)
@@ -493,18 +493,18 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     {
                         uVar8 = ~uVar8;
                     }
-                    dVar22 = (double)FUN_80017698(uVar9, uVar8);
+                    resultVal = (double)FUN_80017698(uVar9, uVar8);
                     break;
                 case 0x13:
-                    dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x50))
-                        ((int)*(char*)(psVar7 + 0x56), *(undefined2*)(pbVar21 + 2), 1);
+                    resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))
+                        ((int)*(char*)(objSeq + 0x56), *(undefined2*)(opPtr + 2), 1);
                     break;
                 case 0x14:
-                    dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x50))
-                        ((int)*(char*)(psVar7 + 0x56), *(undefined2*)(pbVar21 + 2), 0);
+                    resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))
+                        ((int)*(char*)(objSeq + 0x56), *(undefined2*)(opPtr + 2), 0);
                     break;
                 case 0x15:
-                    piVar11 = (int*)FUN_80017af0(*(ushort*)(pbVar21 + 2) + 2);
+                    piVar11 = (int*)FUN_80017af0(*(ushort*)(opPtr + 2) + 2);
                     if (piVar11 != (int*)0x0)
                     {
                         for (; *piVar11 != -1; piVar11 = piVar11 + 1)
@@ -516,13 +516,13 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                                 param_14 = 0;
                                 param_15 = 0;
                                 param_16 = 0;
-                                dVar22 = (double)FUN_80017648();
+                                resultVal = (double)FUN_80017648();
                             }
                         }
                     }
                     break;
                 case 0x16:
-                    piVar11 = (int*)FUN_80017af0(*(ushort*)(pbVar21 + 2) + 2);
+                    piVar11 = (int*)FUN_80017af0(*(ushort*)(opPtr + 2) + 2);
                     if (piVar11 != (int*)0x0)
                     {
                         for (; *piVar11 != -1; piVar11 = piVar11 + 1)
@@ -530,44 +530,44 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                             iVar10 = FUN_8005337c(*piVar11);
                             if (iVar10 != 0)
                             {
-                                dVar22 = (double)FUN_80053754();
+                                resultVal = (double)FUN_80053754();
                             }
                         }
                     }
                     break;
                 case 0x18:
-                    dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x44))
-                        ((int)*(char*)(psVar7 + 0x56), *(undefined2*)(pbVar21 + 2));
+                    resultVal = (double)(**(code**)(*DAT_803dd72c + 0x44))
+                        ((int)*(char*)(objSeq + 0x56), *(undefined2*)(opPtr + 2));
                     break;
                 case 0x1a:
-                    dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x50))(pbVar21[3], pbVar21[2], 1);
+                    resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))(opPtr[3], opPtr[2], 1);
                     break;
                 case 0x1b:
-                    dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x50))(pbVar21[3], pbVar21[2], 0);
+                    resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))(opPtr[3], opPtr[2], 0);
                     break;
                 case 0x1c:
-                    bVar16 = pbVar21[2];
+                    bVar16 = opPtr[2];
                     if (bVar16 == 2)
                     {
-                        uVar5 = countLeadingZeros((uint)pbVar21[3]);
-                        dVar22 = (double)FUN_80017698(0x3af, uVar5 >> 5);
+                        uVar5 = countLeadingZeros((uint)opPtr[3]);
+                        resultVal = (double)FUN_80017698(0x3af, uVar5 >> 5);
                     }
                     else if (bVar16 < 2)
                     {
                         if (bVar16 == 0)
                         {
-                            uVar5 = countLeadingZeros((uint)pbVar21[3]);
-                            dVar22 = (double)FUN_80017698(0x3ab, uVar5 >> 5);
+                            uVar5 = countLeadingZeros((uint)opPtr[3]);
+                            resultVal = (double)FUN_80017698(0x3ab, uVar5 >> 5);
                         }
                         else
                         {
-                            uVar5 = countLeadingZeros((uint)pbVar21[3]);
-                            dVar22 = (double)FUN_80017698(0x3ac, uVar5 >> 5);
+                            uVar5 = countLeadingZeros((uint)opPtr[3]);
+                            resultVal = (double)FUN_80017698(0x3ac, uVar5 >> 5);
                         }
                     }
                     else if (bVar16 < 4)
                     {
-                        bVar16 = pbVar21[3];
+                        bVar16 = opPtr[3];
                         if (bVar16 == 1)
                         {
                             uVar23 = FUN_80017698(0x3b0, 0);
@@ -583,7 +583,7 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                             uVar15 = FUN_80017a98();
                             uVar23 = FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                                   uVar15, uVar14, 0x142, 0, param_13, param_14, param_15, param_16);
-                            dVar22 = (double)FUN_80080f10(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
+                            resultVal = (double)FUN_80080f10(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
                                                           param_8);
                         }
                         else if (bVar16 == 0)
@@ -599,7 +599,7 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                                                   uVar15, uVar14, 0x135, 0, param_13, param_14, param_15, param_16);
                             uVar14 = FUN_80017a98();
                             uVar15 = FUN_80017a98();
-                            dVar22 = (double)FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
+                            resultVal = (double)FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
                                                           param_8, uVar15, uVar14, 0x142, 0, param_13, param_14,
                                                           param_15
                                                           , param_16);
@@ -617,7 +617,7 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                                                   uVar15, uVar14, 0x137, 0, param_13, param_14, param_15, param_16);
                             uVar14 = FUN_80017a98();
                             uVar15 = FUN_80017a98();
-                            dVar22 = (double)FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
+                            resultVal = (double)FUN_80006728(uVar23, param_2, param_3, param_4, param_5, param_6, param_7,
                                                           param_8, uVar15, uVar14, 0x143, 0, param_13, param_14,
                                                           param_15
                                                           , param_16);
@@ -625,25 +625,25 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     }
                     break;
                 case 0x1d:
-                    if (pbVar21[2] == 0)
+                    if (opPtr[2] == 0)
                     {
                         FUN_80017698(0x966, 1);
                         FUN_80017698(0x967, 1);
-                        dVar22 = (double)FUN_80017698(0x968, 1);
+                        resultVal = (double)FUN_80017698(0x968, 1);
                     }
                     else
                     {
                         FUN_80017698(0x966, 0);
                         FUN_80017698(0x967, 0);
-                        dVar22 = (double)FUN_80017698(0x968, 0);
+                        resultVal = (double)FUN_80017698(0x968, 0);
                     }
                     break;
                 case 0x1e:
-                    dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x44))(pbVar21[3], pbVar21[2]);
+                    resultVal = (double)(**(code**)(*DAT_803dd72c + 0x44))(opPtr[3], opPtr[2]);
                     break;
                 case 0x1f:
                     psVar12 = (short*)FUN_80017a98();
-                    sVar6 = *psVar7 - *psVar12;
+                    sVar6 = *objSeq - *psVar12;
                     if (0x8000 < sVar6)
                     {
                         sVar6 = sVar6 + 1;
@@ -661,45 +661,45 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                     {
                         iVar10 = FUN_80056600();
                         param_13 = *DAT_803dd72c;
-                        dVar22 = (double)(**(code**)(param_13 + 0x1c))
-                            (psVar7 + 6, (int)*psVar7, pbVar21[3], iVar10);
+                        resultVal = (double)(**(code**)(param_13 + 0x1c))
+                            (objSeq + 6, (int)*objSeq, opPtr[3], iVar10);
                     }
                     else
                     {
                         iVar10 = FUN_80056600();
                         param_13 = *DAT_803dd72c;
-                        dVar22 = (double)(**(code**)(param_13 + 0x1c))
-                        (psVar7 + 6, (int)(short)(*psVar7 + -0x8000), pbVar21[3], iVar10
+                        resultVal = (double)(**(code**)(param_13 + 0x1c))
+                        (objSeq + 6, (int)(short)(*objSeq + -0x8000), opPtr[3], iVar10
                         );
                     }
                     break;
                 case 0x20:
-                    if (pbVar21[2] == 0)
+                    if (opPtr[2] == 0)
                     {
-                        dVar22 = (double)FUN_80056a20();
+                        resultVal = (double)FUN_80056a20();
                     }
                     else
                     {
-                        dVar22 = (double)FUN_800569f4();
+                        resultVal = (double)FUN_800569f4();
                     }
                     break;
                 case 0x21:
-                    bVar16 = pbVar21[2];
-                    uVar5 = (uint)bVar16 << 8 & 0x1f00 | (uint)pbVar21[3];
+                    bVar16 = opPtr[2];
+                    uVar5 = (uint)bVar16 << 8 & 0x1f00 | (uint)opPtr[3];
                     uVar9 = FUN_80017690(uVar5);
-                    dVar22 = (double)FUN_80017698(uVar5, uVar9 ^ 1 << (((uint)bVar16 << 8) >> 0xd));
+                    resultVal = (double)FUN_80017698(uVar5, uVar9 ^ 1 << (((uint)bVar16 << 8) >> 0xd));
                     break;
                 case 0x22:
-                    uVar2 = *(undefined2*)(pbVar21 + 2);
-                    bVar16 = (**(code**)(*DAT_803dd72c + 0x4c))((int)*(char*)(psVar7 + 0x56), uVar2);
-                    dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x50))
-                        ((int)*(char*)(psVar7 + 0x56), uVar2, bVar16 ^ 1);
+                    uVar2 = *(undefined2*)(opPtr + 2);
+                    bVar16 = (**(code**)(*DAT_803dd72c + 0x4c))((int)*(char*)(objSeq + 0x56), uVar2);
+                    resultVal = (double)(**(code**)(*DAT_803dd72c + 0x50))
+                        ((int)*(char*)(objSeq + 0x56), uVar2, bVar16 ^ 1);
                     break;
                 case 0x23:
-                    bVar16 = pbVar21[2];
+                    bVar16 = opPtr[2];
                     if (bVar16 == 2)
                     {
-                        dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x28))();
+                        resultVal = (double)(**(code**)(*DAT_803dd72c + 0x28))();
                     }
                     else if (bVar16 < 2)
                     {
@@ -707,89 +707,89 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                         {
                             iVar10 = FUN_80056600();
                             param_13 = *DAT_803dd72c;
-                            dVar22 = (double)(**(code**)(param_13 + 0x24))(psVar7 + 6, (int)*psVar7, iVar10, 0);
+                            resultVal = (double)(**(code**)(param_13 + 0x24))(objSeq + 6, (int)*objSeq, iVar10, 0);
                         }
                         else
                         {
-                            dVar22 = (double)(**(code**)(*DAT_803dd72c + 0x2c))();
+                            resultVal = (double)(**(code**)(*DAT_803dd72c + 0x2c))();
                         }
                     }
                     else if (bVar16 < 4)
                     {
                         iVar10 = FUN_80056600();
                         param_13 = *DAT_803dd72c;
-                        dVar22 = (double)(**(code**)(param_13 + 0x24))(psVar7 + 6, (int)*psVar7, iVar10, 1);
+                        resultVal = (double)(**(code**)(param_13 + 0x24))(objSeq + 6, (int)*objSeq, iVar10, 1);
                     }
                     break;
                 case 0x26:
                     iVar10 = FUN_80017a90();
                     if (iVar10 != 0)
                     {
-                        bVar16 = pbVar21[2];
+                        bVar16 = opPtr[2];
                         if (bVar16 == 2)
                         {
                             iVar13 = ObjGroup_FindNearestObject(0x32, iVar10, (float*)0x0);
-                            dVar22 = tmpF1d;
+                            resultVal = tmpF1d;
                             if (iVar13 == 0)
                             {
                                 iVar13 = ObjGroup_FindNearestObject(0x31, iVar10, (float*)0x0);
-                                dVar22 = tmpF1e;
+                                resultVal = tmpF1e;
                             }
                             if (iVar13 != 0)
                             {
-                                dVar22 = (double)(**(code**)(**(int**)(iVar10 + 0x68) + 0x38))(iVar10);
+                                resultVal = (double)(**(code**)(**(int**)(iVar10 + 0x68) + 0x38))(iVar10);
                             }
                         }
                         else if (bVar16 < 2)
                         {
                             if (bVar16 == 0)
                             {
-                                dVar22 = (double)(**(code**)(**(int**)(iVar10 + 0x68) + 0x3c))();
+                                resultVal = (double)(**(code**)(**(int**)(iVar10 + 0x68) + 0x3c))();
                             }
                             else
                             {
                                 iVar10 = FUN_80017a90();
-                                dVar22 = (double)FUN_80017ac8(dVar22, param_2, param_3, param_4, param_5, param_6,
+                                resultVal = (double)FUN_80017ac8(resultVal, param_2, param_3, param_4, param_5, param_6,
                                                               param_7
                                                               , param_8, iVar10);
                             }
                         }
                         else if (bVar16 == 4)
                         {
-                            dVar22 = (double)FUN_80017698(0xd00, 1);
+                            resultVal = (double)FUN_80017698(0xd00, 1);
                         }
                         else if (bVar16 < 4)
                         {
-                            dVar22 = (double)FUN_80017698(0xd00, 0);
+                            resultVal = (double)FUN_80017698(0xd00, 0);
                         }
                     }
                     break;
                 case 0x27:
-                    FUN_80041c10(dVar22, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                 (uint) * (ushort*)(pbVar21 + 2));
+                    FUN_80041c10(resultVal, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                                 (uint) * (ushort*)(opPtr + 2));
                     FUN_800178bc();
-                    dVar22 = (double)FUN_800723a0();
+                    resultVal = (double)FUN_800723a0();
                     break;
                 case 0x28:
-                    FUN_80043030(dVar22, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-                    dVar22 = (double)FUN_800723a0();
+                    FUN_80043030(resultVal, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+                    resultVal = (double)FUN_800723a0();
                     break;
                 case 0x2a:
-                    FUN_80042bec((uint)pbVar21[2], (uint)pbVar21[3]);
-                    dVar22 = (double)FUN_800723a0();
+                    FUN_80042bec((uint)opPtr[2], (uint)opPtr[3]);
+                    resultVal = (double)FUN_800723a0();
                     break;
                 case 0x2b:
-                    FUN_80042b9c((uint)pbVar21[2], (uint)pbVar21[3], 0);
-                    dVar22 = (double)FUN_800723a0();
+                    FUN_80042b9c((uint)opPtr[2], (uint)opPtr[3], 0);
+                    resultVal = (double)FUN_800723a0();
                     break;
                 case 0x2c:
                     param_2 = (double)lbl_803E4D98;
-                    local_34[2] = *(ushort*)(pbVar21 + 2) ^ 0x80000000;
+                    local_34[2] = *(ushort*)(opPtr + 2) ^ 0x80000000;
                     local_34[1] = 0x43300000;
-                    **(float**)(iVar17 + 0xb8) =
+                    **(float**)(objBase + 0xb8) =
                         (float)(param_2 *
                             (double)(float)((double)CONCAT44(0x43300000, local_34[2]) - DOUBLE_803e4d68));
-                    dVar22 = dVar4;
+                    resultVal = dVar4;
                     break;
                 case 0x2d:
                     iVar10 = FUN_80017a98();
@@ -798,33 +798,33 @@ undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double
                         iVar10 = FUN_8020a6fc();
                         if (iVar10 != 0)
                         {
-                            dVar22 = (double)FUN_80125b7c(dVar22, param_2, param_3, param_4, param_5, param_6, param_7,
-                                                          param_8, (uint) * (ushort*)(pbVar21 + 2));
+                            resultVal = (double)FUN_80125b7c(resultVal, param_2, param_3, param_4, param_5, param_6, param_7,
+                                                          param_8, (uint) * (ushort*)(opPtr + 2));
                         }
                     }
                     else
                     {
                         param_13 = *DAT_803dd6e8;
-                        dVar22 = (double)(**(code**)(param_13 + 0x38))
-                            (*(undefined2*)(pbVar21 + 2), 0x14, 0x8c, 1);
+                        resultVal = (double)(**(code**)(param_13 + 0x38))
+                            (*(undefined2*)(opPtr + 2), 0x14, 0x8c, 1);
                     }
                     break;
                 case 0x2e:
-                    dVar22 = (double)FUN_80040da0();
+                    resultVal = (double)FUN_80040da0();
                     break;
                 case 0x2f:
-                    iVar10 = ObjGroup_FindNearestObject(0x4c, psVar7, (float*)0x0);
-                    dVar22 = tmpF1c;
+                    iVar10 = ObjGroup_FindNearestObject(0x4c, objSeq, (float*)0x0);
+                    resultVal = tmpF1c;
                     if (iVar10 != 0)
                     {
-                        dVar22 = (double)FUN_8020a908(iVar10, (uint)pbVar21[3] * 0x3c);
+                        resultVal = (double)FUN_8020a908(iVar10, (uint)opPtr[3] * 0x3c);
                     }
                 }
             }
         }
     switchD_80199a5c_caseD_0:
-        bVar18 = bVar18 + 1;
-        pbVar21 = pbVar21 + 4;
+        opIndex = opIndex + 1;
+        opPtr = opPtr + 4;
     }
     while (true);
 }
