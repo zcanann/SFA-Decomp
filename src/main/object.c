@@ -1797,7 +1797,7 @@ void Obj_UpdateObject(u8* obj)
     if (((GameObject*)obj)->colorFadeFlags != 0 && *(int*)&((GameObject*)obj)->ownerObj == 0 && (((GameObject*)obj)->
         colorFadeFlags & 1))
     {
-        ((GameObject*)obj)->colorFadeFrames = (s16)(int)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
+        ((GameObject*)obj)->colorFadeFrames = (f32)((GameObject*)obj)->colorFadeFrames - timeDelta;
         if (((GameObject*)obj)->colorFadeFrames <= 0)
         {
             ((GameObject*)obj)->colorFadeFrames = 0;
