@@ -11,11 +11,9 @@
  * sandwormBoss 10-DLL container.
  */
 
-#include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
