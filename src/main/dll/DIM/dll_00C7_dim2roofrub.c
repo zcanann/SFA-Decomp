@@ -17,7 +17,6 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003b818();
 
-
 void mikabomb_hitDetect(void);
 
 void mikabomb_free(int obj, int mode);
@@ -26,7 +25,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -1059,10 +1057,7 @@ void FUN_80170048(void)
     return;
 }
 
-
-
 void mikabombshadow_update(int* obj);
-
 
 void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -1191,9 +1186,7 @@ LAB_801725bc:
     return;
 }
 
-
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -1225,7 +1218,6 @@ void shield_initialise(void);
 
 void shield_free(int obj);
 
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void) { return 0x140; }
 int depthoffieldpoint_getExtraSize(void);
@@ -1247,7 +1239,6 @@ void dim2roofrub_free(int* obj)
     ((void(*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1651,13 +1642,9 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 void flamethrowerspe_render(void);
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
-
 void flamethrowerspe_func0B(int* obj);
 
-
-
 void staff_modelMtxFn(int* obj, int p4, int p5);
-
 
 void gcbaddieshield_update(int* obj);
 
@@ -1736,7 +1723,6 @@ void animatedobj_init(int* obj, int* params);
 
 void flamethrowerspe_update(int* obj);
 
-
 void mikabomb_init(int* obj);
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -1760,6 +1746,14 @@ typedef struct Dim2FxVec
     f32 y;
     f32 z;
 } Dim2FxVec;
+
+#define DIM2ROOFRUB_SEQID_SLIDE       0xa8
+#define DIM2ROOFRUB_SEQID_TREAD       0x451
+
+#define DIM2ROOFRUB_EVENT_TOGGLE_LIGHT  1
+#define DIM2ROOFRUB_EVENT_TOGGLE_HEAVY  2
+#define DIM2ROOFRUB_EVENT_TOGGLE_FX     3
+#define DIM2ROOFRUB_EVENT_SPAWN_DUST    4
 
 void dim2roofrub_spawnEffects(int* obj)
 {
@@ -1807,11 +1801,11 @@ void dim2roofrub_spawnEffects(int* obj)
         v.z = lbl_803E3240 * (lbl_803E3250 * ((GameObject*)obj)->anim.rootMotionScale);
         objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, n, lbl_803E3258, &v);
     }
-    if (((GameObject*)obj)->anim.seqId == 0xa8)
+    if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_SLIDE)
     {
         objfx_spawnDirectionalBurst(obj, 7, lbl_803E3270, 5, 1, 10, lbl_803E3274, 0, 0x20000000);
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x451)
+    else if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_TREAD)
     {
         int* model = Obj_GetActiveModel((int)obj);
         *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = 2;
@@ -1897,16 +1891,16 @@ void dim2roofrub_update(int* obj)
             int b = seq->eventIds[res];
             switch (b)
             {
-            case 1:
+            case DIM2ROOFRUB_EVENT_TOGGLE_LIGHT:
                 ((GameObject*)obj)->unkF8 ^= 1;
                 break;
-            case 2:
+            case DIM2ROOFRUB_EVENT_TOGGLE_HEAVY:
                 ((GameObject*)obj)->unkF8 ^= 2;
                 break;
-            case 3:
+            case DIM2ROOFRUB_EVENT_TOGGLE_FX:
                 ((GameObject*)obj)->unkF8 ^= 4;
                 break;
-            case 4:
+            case DIM2ROOFRUB_EVENT_SPAWN_DUST:
                 {
                     int k;
                     v.x = ((GameObject*)obj)->anim.localPosX;
