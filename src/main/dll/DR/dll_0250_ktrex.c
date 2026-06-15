@@ -667,7 +667,7 @@ int ktrex_stateHandlerB07(int obj, int runtime)
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 0x80) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~0x80;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x40000;
+        *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x40000LL;
     }
     return 0;
 }
@@ -852,7 +852,7 @@ int ktrex_stateHandlerB02(int obj, int runtime)
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 0x80) != 0)
     {
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~0x80;
-        *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x10000;
+        *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x10000LL;
     }
     ((KTRexRuntime*)runtime)->unk34C |= 1;
     (*(void (**)(int, int, f32, int))((char*)*gPlayerInterface + 0x20))(obj, runtime, timeDelta, 3);
