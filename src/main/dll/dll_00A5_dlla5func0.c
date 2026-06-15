@@ -165,9 +165,9 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     buf.hw[5] = *(s16*)&tab[0x82];
     buf.hw[6] = *(s16*)&tab[0x84];
     buf.cmds = e;
-    fl = 0x4040000;
-    fl |= (flags | 0x80);
-    buf.flags = fl;
+    buf.flags = 0x4040000;
+    buf.flags |= (flags | 0x80);
+    fl = buf.flags;
     if (fl & 1)
     {
         if (sourceObj != 0)
