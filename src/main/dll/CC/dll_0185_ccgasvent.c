@@ -36,55 +36,55 @@ extern f32 lbl_803E4614;
 
 void FUN_801a8f88(void)
 {
-    int control;
+    int ctrl;
     uint rnd;
-    short* state;
+    short* vent;
 
-    control = FUN_80286840();
-    state = *(short**)(control + 0xb8);
-    if (((int)*state == 0xffffffff) || (rnd = GameBit_Get((int)*state), rnd != 0))
+    ctrl = FUN_80286840();
+    vent = *(short**)(ctrl + 0xb8);
+    if (((int)*vent == 0xffffffff) || (rnd = GameBit_Get((int)*vent), rnd != 0))
     {
-        *(float*)(state + 0x14) = *(float*)(state + 0x14) - lbl_803DC074;
-        if (*(float*)(state + 0x14) < lbl_803E5248)
+        *(float*)(vent + 0x14) = *(float*)(vent + 0x14) - lbl_803DC074;
+        if (*(float*)(vent + 0x14) < lbl_803E5248)
         {
-            *(float*)(state + 0xc) = lbl_803E524C;
-            rnd = randomGetRange(-(uint)(ushort)state[1], (uint)(ushort)state[1]);
-            *(float*)(state + 0xe) =
+            *(float*)(vent + 0xc) = lbl_803E524C;
+            rnd = randomGetRange(-(uint)(ushort)vent[1], (uint)(ushort)vent[1]);
+            *(float*)(vent + 0xe) =
                 (f32)(s32)(rnd);
-            rnd = randomGetRange(-(uint)(ushort)state[3], (uint)(ushort)state[3]);
-            *(float*)(state + 0x10) =
+            rnd = randomGetRange(-(uint)(ushort)vent[3], (uint)(ushort)vent[3]);
+            *(float*)(vent + 0x10) =
                 (f32)(s32)(rnd);
-            rnd = randomGetRange(-(uint)(ushort)state[2], (uint)(ushort)state[2]);
-            *(float*)(state + 0x12) =
+            rnd = randomGetRange(-(uint)(ushort)vent[2], (uint)(ushort)vent[2]);
+            *(float*)(vent + 0x12) =
                 (f32)(s32)(rnd);
-            FUN_80017748((ushort*)(state + 4), (float*)(state + 0xe));
-            *(float*)(state + 0xe) = *(float*)(state + 0xe) + *(float*)(control + 0xc);
-            *(float*)(state + 0x10) = *(float*)(state + 0x10) + *(float*)(control + 0x10);
-            *(float*)(state + 0x12) = *(float*)(state + 0x12) + *(float*)(control + 0x14);
+            FUN_80017748((ushort*)(vent + 4), (float*)(vent + 0xe));
+            *(float*)(vent + 0xe) = *(float*)(vent + 0xe) + *(float*)(ctrl + 0xc);
+            *(float*)(vent + 0x10) = *(float*)(vent + 0x10) + *(float*)(ctrl + 0x10);
+            *(float*)(vent + 0x12) = *(float*)(vent + 0x12) + *(float*)(ctrl + 0x14);
             rnd = randomGetRange(100, 200);
-            *(float*)(state + 0x14) =
+            *(float*)(vent + 0x14) =
                 (f32)(s32)(rnd);
             rnd = randomGetRange(0x32, 100);
-            *(float*)(state + 0x16) =
+            *(float*)(vent + 0x16) =
                 (f32)(s32)(rnd);
         }
-        *(float*)(state + 0x16) = *(float*)(state + 0x16) - lbl_803DC074;
-        if (lbl_803E5248 < *(float*)(state + 0x16))
+        *(float*)(vent + 0x16) = *(float*)(vent + 0x16) - lbl_803DC074;
+        if (lbl_803E5248 < *(float*)(vent + 0x16))
         {
-            (*gPartfxInterface)->spawnObject((void*)control, 0x71f, state + 8, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)ctrl, 0x71f, vent + 8, 0x200001, -1, NULL);
         }
         DAT_803ad598 = lbl_803E524C;
-        rnd = randomGetRange(-(uint)(ushort)state[1], (uint)(ushort)state[1]);
+        rnd = randomGetRange(-(uint)(ushort)vent[1], (uint)(ushort)vent[1]);
         DAT_803ad59c = (f32)(s32)(rnd);
-        rnd = randomGetRange(-(uint)(ushort)state[3], (uint)(ushort)state[3]);
+        rnd = randomGetRange(-(uint)(ushort)vent[3], (uint)(ushort)vent[3]);
         DAT_803ad5a0 = (f32)(s32)(rnd);
-        rnd = randomGetRange(-(uint)(ushort)state[2], (uint)(ushort)state[2]);
+        rnd = randomGetRange(-(uint)(ushort)vent[2], (uint)(ushort)vent[2]);
         DAT_803ad5a4 = (f32)(s32)(rnd);
-        FUN_80017748((ushort*)(state + 4), &DAT_803ad59c);
-        DAT_803ad59c = DAT_803ad59c + *(float*)(control + 0xc);
-        DAT_803ad5a0 = DAT_803ad5a0 + *(float*)(control + 0x10);
-        DAT_803ad5a4 = DAT_803ad5a4 + *(float*)(control + 0x14);
-        (*gPartfxInterface)->spawnObject((void*)control, 0x720, &DAT_803ad590, 0x200001, -1, NULL);
+        FUN_80017748((ushort*)(vent + 4), &DAT_803ad59c);
+        DAT_803ad59c = DAT_803ad59c + *(float*)(ctrl + 0xc);
+        DAT_803ad5a0 = DAT_803ad5a0 + *(float*)(ctrl + 0x10);
+        DAT_803ad5a4 = DAT_803ad5a4 + *(float*)(ctrl + 0x14);
+        (*gPartfxInterface)->spawnObject((void*)ctrl, 0x720, &DAT_803ad590, 0x200001, -1, NULL);
     }
     FUN_8028688c();
     return;
@@ -92,11 +92,11 @@ void FUN_801a8f88(void)
 
 undefined4
 FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj,
              ObjAnimUpdateState* animUpdate)
 {
-    byte eventType;
-    undefined2* spawnDef;
+    byte eventId;
+    undefined2* spawned;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
@@ -106,32 +106,32 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
 
     for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
     {
-        eventType = animUpdate->eventIds[i];
-        if (eventType == 2)
+        eventId = animUpdate->eventIds[i];
+        if (eventId == 2)
         {
-            child = *(int*)&((GameObject*)param_9)->childObjs[0];
+            child = *(int*)&((GameObject*)obj)->childObjs[0];
             if (child != 0)
             {
-                detached = ObjLink_DetachChild(param_9, child);
+                detached = ObjLink_DetachChild(obj, child);
                 param_1 = FUN_80017ac8(detached, param_2, param_3, param_4, param_5, param_6, param_7, param_8, child);
             }
-            *(undefined4*)(param_9 + 0xf8) = 0xffffffff;
+            *(undefined4*)(obj + 0xf8) = 0xffffffff;
         }
-        else if ((eventType < 2) && (eventType != 0))
+        else if ((eventId < 2) && (eventId != 0))
         {
-            *(undefined4*)(param_9 + 0xf8) = 0x30b;
-            child = *(int*)&((GameObject*)param_9)->childObjs[0];
+            *(undefined4*)(obj + 0xf8) = 0x30b;
+            child = *(int*)&((GameObject*)obj)->childObjs[0];
             if (child != 0)
             {
-                detached = ObjLink_DetachChild(param_9, child);
+                detached = ObjLink_DetachChild(obj, child);
                 param_1 = FUN_80017ac8(detached, param_2, param_3, param_4, param_5, param_6, param_7, param_8, child);
             }
-            spawnDef = FUN_80017aa4(0x20, (short)*(undefined4*)(param_9 + 0xf8));
-            child = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawnDef, 4,
-                                 ((GameObject*)param_9)->anim.mapEventSlot, 0xffffffff,
-                                 *(uint**)&((GameObject*)param_9)->anim.parent,
+            spawned = FUN_80017aa4(0x20, (short)*(undefined4*)(obj + 0xf8));
+            child = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawned, 4,
+                                 ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,
+                                 *(uint**)&((GameObject*)obj)->anim.parent,
                                  in_r8, in_r9, in_r10);
-            param_1 = ObjLink_AttachChild(param_9, child, 0);
+            param_1 = ObjLink_AttachChild(obj, child, 0);
         }
     }
     return 0;
