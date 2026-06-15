@@ -50,8 +50,8 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     uint sender;
     uint param;
     int controlObj;
-    f32 zero;
     f32 one;
+    f32 zero;
 
     zero = lbl_803E56B0;
     one = lbl_803E56B4;
