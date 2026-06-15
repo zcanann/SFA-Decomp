@@ -6,6 +6,7 @@
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
 
@@ -48,6 +49,7 @@ extern f32 Vec_distance(void* a, void* b);
 
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
+extern undefined4 FUN_800068c4();
 extern void gameBitDecrement(int eventId);
 extern f32 lbl_803E3A98;
 extern f32 lbl_803E3A9C;
@@ -303,10 +305,10 @@ void LanternFireFly_update(int obj)
             f32 worldY;
             LanternFireFlyState* st;
 
-            worldZ = *(f32*)(player + 0x20);
-            worldY = lbl_803E3AA8 + *(f32*)(player + 0x1c);
-            st = (LanternFireFlyState*)*(int *)&((GameObject *)obj)->extra;
-            st->anchorX = *(f32*)(player + 0x18);
+            worldZ = ((GameObject*)player)->anim.worldPosZ;
+            worldY = lbl_803E3AA8 + ((GameObject*)player)->anim.worldPosY;
+            st = (LanternFireFlyState*)((GameObject*)obj)->extra;
+            st->anchorX = ((GameObject*)player)->anim.worldPosX;
             st->anchorY = worldY;
             st->anchorZ = worldZ;
         }
