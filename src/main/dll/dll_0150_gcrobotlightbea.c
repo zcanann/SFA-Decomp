@@ -616,8 +616,8 @@ extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* 
 extern f32 lbl_803E429C;
 void gcrobotlightbea_hitDetect(int* obj)
 {
-    int out;
     f32 vec[3];
+    u8 out[0x58];
     void* hit;
     GcRobotLightBeaState* sub = ((GameObject*)obj)->extra;
     ((Bit80*)&sub->hitFlags)->top = 0;
@@ -634,7 +634,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0) return;
     if (((GameObject*)obj)->unkF4 != 0 ||
-        objBboxFn_800640cc(lbl_803E429C, (void*)((int)obj + 0xc), vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0)
+        objBboxFn_800640cc(lbl_803E429C, (void*)((int)obj + 0xc), vec, 0, out, (int)obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
