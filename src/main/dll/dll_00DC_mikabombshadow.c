@@ -998,7 +998,7 @@ void mikabombshadow_update(int* obj)
     ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31DC * t + fz;
     f = t * lbl_803E31E0;
     if (f > fz) f = fz;
-    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = (s32)(lbl_803E31E4 * f);
+    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * f;
 }
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
