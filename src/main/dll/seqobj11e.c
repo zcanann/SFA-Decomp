@@ -651,7 +651,7 @@ void fn_80152A94(int obj, int p)
     ((BaddieState*)p)->speedScale = lbl_803E2850;
     *(u32*)&((BaddieState*)p)->unk2E4 = 41;
     *(u32*)&((BaddieState*)p)->unk2E4 |= 0x7000;
-    *(u32*)&((BaddieState*)p)->unk2E4 |= 0x20000;
+    *(u32*)&((BaddieState*)p)->unk2E4 |= 0x20000LL;
     ((BaddieState*)p)->unk308 = lbl_803E2854;
     ((BaddieState*)p)->unk300 = lbl_803E2858;
     ((BaddieState*)p)->unk304 = lbl_803E285C;
