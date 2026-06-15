@@ -62,13 +62,13 @@ extern u8 lbl_803AC7B0[];
 
 void FUN_8018f650(void)
 {
-    byte bVar1;
-    int iVar2;
-    int* piVar3;
-    short sVar4;
-    int iVar5;
+    byte mode;
+    int obj;
+    int* emitter;
+    short i;
+    int data;
     double in_f31;
-    double dVar6;
+    double bias;
     double in_ps31_1;
     ushort local_68;
     undefined2 local_66;
@@ -89,195 +89,195 @@ void FUN_8018f650(void)
 
     local_8 = (float)in_f31;
     fStack_4 = (float)in_ps31_1;
-    iVar2 = FUN_8028683c();
-    iVar5 = *(int*)(iVar2 + 0xb8);
+    obj = FUN_8028683c();
+    data = *(int*)(obj + 0xb8);
     local_58 = FLOAT_803e4b00;
-    bVar1 = *(byte*)(iVar5 + 8);
-    if (bVar1 == 0)
+    mode = *(byte*)(data + 8);
+    if (mode == 0)
     {
-        if (*(short*)(iVar5 + 0xc) < 1)
+        if (*(short*)(data + 0xc) < 1)
         {
-            uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+            uStack_34 = randomGetRange(-(uint) * (ushort*)(data + 0x14), (uint) * (ushort*)(data + 0x14));
             local_54 = (f32)(s32)
             uStack_34;
-            uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+            uStack_3c = randomGetRange(-(uint) * (ushort*)(data + 0x18), (uint) * (ushort*)(data + 0x18));
             local_50 = (f32)(s32)
             uStack_3c;
-            uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+            uStack_44 = randomGetRange(-(uint) * (ushort*)(data + 0x16), (uint) * (ushort*)(data + 0x16));
             local_4c = (f32)(s32)
             uStack_44;
-            local_68 = *(ushort*)(iVar5 + 0x1a);
-            local_66 = *(undefined2*)(iVar5 + 0x1c);
-            local_64 = *(short*)(iVar5 + 0x1e);
-            if (*(int*)(iVar2 + 0x30) != 0)
+            local_68 = *(ushort*)(data + 0x1a);
+            local_66 = *(undefined2*)(data + 0x1c);
+            local_64 = *(short*)(data + 0x1e);
+            if (*(int*)(obj + 0x30) != 0)
             {
-                local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+                local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
             }
             FUN_80017748(&local_68, &local_54);
-            local_54 = local_54 + *(float*)(iVar2 + 0xc);
-            local_50 = local_50 + *(float*)(iVar2 + 0x10);
-            local_4c = local_4c + *(float*)(iVar2 + 0x14);
-            (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+            local_54 = local_54 + *(float*)(obj + 0xc);
+            local_50 = local_50 + *(float*)(obj + 0x10);
+            local_4c = local_4c + *(float*)(obj + 0x14);
+            (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                              auStack_60, 0x200001, -1, NULL);
         }
         else
         {
-            dVar6 = DOUBLE_803e4af8;
-            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            bias = DOUBLE_803e4af8;
+            for (i = 0; i < *(short*)(data + 0xc); i = i + 1)
             {
-                uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
-                local_54 = (float)((double)CONCAT44(0x43300000, uStack_44) - dVar6);
-                uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
-                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - dVar6);
-                uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
-                local_4c = (float)((double)CONCAT44(0x43300000, uStack_34) - dVar6);
-                local_68 = *(ushort*)(iVar5 + 0x1a);
-                local_66 = *(undefined2*)(iVar5 + 0x1c);
-                local_64 = *(short*)(iVar5 + 0x1e);
-                if (*(int*)(iVar2 + 0x30) != 0)
+                uStack_44 = randomGetRange(-(uint) * (ushort*)(data + 0x14), (uint) * (ushort*)(data + 0x14));
+                local_54 = (float)((double)CONCAT44(0x43300000, uStack_44) - bias);
+                uStack_3c = randomGetRange(-(uint) * (ushort*)(data + 0x18), (uint) * (ushort*)(data + 0x18));
+                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - bias);
+                uStack_34 = randomGetRange(-(uint) * (ushort*)(data + 0x16), (uint) * (ushort*)(data + 0x16));
+                local_4c = (float)((double)CONCAT44(0x43300000, uStack_34) - bias);
+                local_68 = *(ushort*)(data + 0x1a);
+                local_66 = *(undefined2*)(data + 0x1c);
+                local_64 = *(short*)(data + 0x1e);
+                if (*(int*)(obj + 0x30) != 0)
                 {
-                    local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+                    local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
                 }
                 FUN_80017748(&local_68, &local_54);
-                local_54 = local_54 + *(float*)(iVar2 + 0xc);
-                local_50 = local_50 + *(float*)(iVar2 + 0x10);
-                local_4c = local_4c + *(float*)(iVar2 + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                local_54 = local_54 + *(float*)(obj + 0xc);
+                local_50 = local_50 + *(float*)(obj + 0x10);
+                local_4c = local_4c + *(float*)(obj + 0x14);
+                (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                  auStack_60, 0x200001, -1, NULL);
             }
         }
     }
-    else if (bVar1 == 1)
+    else if (mode == 1)
     {
-        piVar3 = (int*)FUN_80006b14(*(ushort*)(iVar5 + 10) + 0x58 & 0xffff);
-        if (*(short*)(iVar5 + 0xc) < 1)
+        emitter = (int*)FUN_80006b14(*(ushort*)(data + 10) + 0x58 & 0xffff);
+        if (*(short*)(data + 0xc) < 1)
         {
-            (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, 0);
+            (**(code**)(*emitter + 4))(obj, 0, 0, 1, 0xffffffff, 0);
         }
         else
         {
-            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            for (i = 0; i < *(short*)(data + 0xc); i = i + 1)
             {
-                (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, 0);
+                (**(code**)(*emitter + 4))(obj, 0, 0, 1, 0xffffffff, 0);
             }
         }
-        FUN_80006b0c((undefined*)piVar3);
+        FUN_80006b0c((undefined*)emitter);
     }
-    else if (bVar1 == 2)
+    else if (mode == 2)
     {
-        piVar3 = (int*)FUN_80006b14(*(ushort*)(iVar5 + 10) + 0xab & 0xffff);
-        if (*(short*)(iVar5 + 0xc) < 1)
+        emitter = (int*)FUN_80006b14(*(ushort*)(data + 10) + 0xab & 0xffff);
+        if (*(short*)(data + 0xc) < 1)
         {
-            (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, *(ushort*)(iVar5 + 10) & 0xff, 0);
+            (**(code**)(*emitter + 4))(obj, 0, 0, 1, 0xffffffff, *(ushort*)(data + 10) & 0xff, 0);
         }
         else
         {
-            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            for (i = 0; i < *(short*)(data + 0xc); i = i + 1)
             {
-                (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, *(ushort*)(iVar5 + 10) & 0xff, 0);
+                (**(code**)(*emitter + 4))(obj, 0, 0, 1, 0xffffffff, *(ushort*)(data + 10) & 0xff, 0);
             }
         }
-        FUN_80006b0c((undefined*)piVar3);
+        FUN_80006b0c((undefined*)emitter);
     }
-    else if (bVar1 == 3)
+    else if (mode == 3)
     {
-        if (*(short*)(iVar5 + 0xc) < 1)
+        if (*(short*)(data + 0xc) < 1)
         {
-            uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+            uStack_34 = randomGetRange(-(uint) * (ushort*)(data + 0x14), (uint) * (ushort*)(data + 0x14));
             local_54 = (f32)(s32)
             uStack_34;
-            uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+            uStack_3c = randomGetRange(-(uint) * (ushort*)(data + 0x18), (uint) * (ushort*)(data + 0x18));
             local_50 = (f32)(s32)
             uStack_3c;
-            uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+            uStack_44 = randomGetRange(-(uint) * (ushort*)(data + 0x16), (uint) * (ushort*)(data + 0x16));
             local_4c = (f32)(s32)
             uStack_44;
-            local_68 = *(ushort*)(iVar5 + 0x1a);
-            local_66 = *(undefined2*)(iVar5 + 0x1c);
-            local_64 = *(short*)(iVar5 + 0x1e);
-            if (*(int*)(iVar2 + 0x30) != 0)
+            local_68 = *(ushort*)(data + 0x1a);
+            local_66 = *(undefined2*)(data + 0x1c);
+            local_64 = *(short*)(data + 0x1e);
+            if (*(int*)(obj + 0x30) != 0)
             {
-                local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+                local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
             }
             FUN_80017748(&local_68, &local_54);
-            (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+            (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                              auStack_60, 2, -1, NULL);
         }
         else
         {
-            dVar6 = DOUBLE_803e4af8;
-            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            bias = DOUBLE_803e4af8;
+            for (i = 0; i < *(short*)(data + 0xc); i = i + 1)
             {
-                uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
-                local_54 = (float)((double)CONCAT44(0x43300000, uStack_34) - dVar6);
-                uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
-                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - dVar6);
-                uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
-                local_4c = (float)((double)CONCAT44(0x43300000, uStack_44) - dVar6);
-                local_68 = *(ushort*)(iVar5 + 0x1a);
-                local_66 = *(undefined2*)(iVar5 + 0x1c);
-                local_64 = *(short*)(iVar5 + 0x1e);
-                if (*(int*)(iVar2 + 0x30) != 0)
+                uStack_34 = randomGetRange(-(uint) * (ushort*)(data + 0x14), (uint) * (ushort*)(data + 0x14));
+                local_54 = (float)((double)CONCAT44(0x43300000, uStack_34) - bias);
+                uStack_3c = randomGetRange(-(uint) * (ushort*)(data + 0x18), (uint) * (ushort*)(data + 0x18));
+                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - bias);
+                uStack_44 = randomGetRange(-(uint) * (ushort*)(data + 0x16), (uint) * (ushort*)(data + 0x16));
+                local_4c = (float)((double)CONCAT44(0x43300000, uStack_44) - bias);
+                local_68 = *(ushort*)(data + 0x1a);
+                local_66 = *(undefined2*)(data + 0x1c);
+                local_64 = *(short*)(data + 0x1e);
+                if (*(int*)(obj + 0x30) != 0)
                 {
-                    local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+                    local_64 = local_64 + *(short*)(*(int*)(obj + 0x30) + 4);
                 }
                 FUN_80017748(&local_68, &local_54);
-                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                  auStack_60, 2, -1, NULL);
             }
         }
     }
-    else if (5 < bVar1)
+    else if (5 < mode)
     {
-        if (*(short*)(iVar5 + 0xc) < 1)
+        if (*(short*)(data + 0xc) < 1)
         {
-            uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+            uStack_34 = randomGetRange(-(uint) * (ushort*)(data + 0x14), (uint) * (ushort*)(data + 0x14));
             local_54 = (f32)(s32)
             uStack_34;
-            uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+            uStack_3c = randomGetRange(-(uint) * (ushort*)(data + 0x18), (uint) * (ushort*)(data + 0x18));
             local_50 = (f32)(s32)
             uStack_3c;
-            uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+            uStack_44 = randomGetRange(-(uint) * (ushort*)(data + 0x16), (uint) * (ushort*)(data + 0x16));
             local_4c = (f32)(s32)
             uStack_44;
-            FUN_80017748((ushort*)(iVar5 + 0x1a), &local_54);
-            if (*(char*)(iVar5 + 8) == '\x06')
+            FUN_80017748((ushort*)(data + 0x1a), &local_54);
+            if (*(char*)(data + 8) == '\x06')
             {
-                local_54 = local_54 + *(float*)(iVar2 + 0xc);
-                local_50 = local_50 + *(float*)(iVar2 + 0x10);
-                local_4c = local_4c + *(float*)(iVar2 + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                local_54 = local_54 + *(float*)(obj + 0xc);
+                local_50 = local_50 + *(float*)(obj + 0x10);
+                local_4c = local_4c + *(float*)(obj + 0x14);
+                (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                  auStack_60, 0x200001, -1, NULL);
             }
             else
             {
-                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                  auStack_60, 2, -1, NULL);
             }
         }
         else
         {
-            dVar6 = DOUBLE_803e4af8;
-            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            bias = DOUBLE_803e4af8;
+            for (i = 0; i < *(short*)(data + 0xc); i = i + 1)
             {
-                uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
-                local_54 = (float)((double)CONCAT44(0x43300000, uStack_34) - dVar6);
-                uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
-                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - dVar6);
-                uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
-                local_4c = (float)((double)CONCAT44(0x43300000, uStack_44) - dVar6);
-                FUN_80017748((ushort*)(iVar5 + 0x1a), &local_54);
-                if (*(char*)(iVar5 + 8) == '\x06')
+                uStack_34 = randomGetRange(-(uint) * (ushort*)(data + 0x14), (uint) * (ushort*)(data + 0x14));
+                local_54 = (float)((double)CONCAT44(0x43300000, uStack_34) - bias);
+                uStack_3c = randomGetRange(-(uint) * (ushort*)(data + 0x18), (uint) * (ushort*)(data + 0x18));
+                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - bias);
+                uStack_44 = randomGetRange(-(uint) * (ushort*)(data + 0x16), (uint) * (ushort*)(data + 0x16));
+                local_4c = (float)((double)CONCAT44(0x43300000, uStack_44) - bias);
+                FUN_80017748((ushort*)(data + 0x1a), &local_54);
+                if (*(char*)(data + 8) == '\x06')
                 {
-                    local_54 = local_54 + *(float*)(iVar2 + 0xc);
-                    local_50 = local_50 + *(float*)(iVar2 + 0x10);
-                    local_4c = local_4c + *(float*)(iVar2 + 0x14);
-                    (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                    local_54 = local_54 + *(float*)(obj + 0xc);
+                    local_50 = local_50 + *(float*)(obj + 0x10);
+                    local_4c = local_4c + *(float*)(obj + 0x14);
+                    (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                      auStack_60, 0x200001, -1, NULL);
                 }
                 else
                 {
-                    (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                    (*gPartfxInterface)->spawnObject((void*)obj, *(undefined2*)(data + 10),
                                                      auStack_60, 2, -1, NULL);
                 }
             }
