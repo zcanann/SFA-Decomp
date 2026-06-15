@@ -19,6 +19,10 @@ extern void objUpdateOpacity(int obj);
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
+typedef struct ResourceParamBlob
+{
+    int w[4];
+} ResourceParamBlob;
 extern int lbl_802C23C8[];
 extern s8 lbl_803DDBD0;
 extern f32 lbl_803E5138;
@@ -80,11 +84,7 @@ void dll_197_update(int obj)
     int stageEffectBase;
     int* resourceDefaults;
 
-    resourceDefaults = lbl_802C23C8;
-    resourceParams[0] = resourceDefaults[0];
-    resourceParams[1] = resourceDefaults[1];
-    resourceParams[2] = resourceDefaults[2];
-    resourceParams[3] = resourceDefaults[3];
+    *(ResourceParamBlob*)resourceParams = *(ResourceParamBlob*)lbl_802C23C8;
 
     player = Obj_GetPlayerObject();
     distance = Vec_distance((void*)(player + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX);
@@ -111,6 +111,7 @@ void dll_197_update(int obj)
     {
     case 1:
         break;
+    case 0:
     default:
         return;
     }
