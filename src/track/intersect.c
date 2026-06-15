@@ -225,15 +225,18 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     }
 }
 
-/* EN v1.0 Size: 256b - 96% match. Per-iteration byte decrement
- * for 256 rows in two parallel arrays. Target recomputes the full
- * int->float magic in the else-branch store (no CSE with the
- * compare); reproduced with #pragma opt_common_subs off. Plain
- * float->u8 store (no (u8)/(s32) cast) drops the clrlwi. Remaining
- * residual is GPR coloring (#108): byte temp wants r5, pointers
- * r3/r4 -- mine routes the base addresses through r0 with extra
- * mr's. Not cracked by decl-order/launder probes. */
-#pragma opt_common_subs off
+/* EN v1.0 Size: 256b - 77% match. Per-iteration byte decrement:
+ *   if (b != 0) {
+ *     v = (f32)(u32)b - step;
+ *     if (v <= 0) b = 0; else b = (u8)v;
+ *   }
+ * for 256 rows in two parallel arrays. MWCC CSEs the conversion
+ * expression (v) between the compare and the store, emitting a
+ * single fctiwz on cached f2. Target recomputes the full
+ * stw/lfd/fsubs sequence before the second use, which suggests
+ * retail source had a variable reassignment between the two uses
+ * (see Ghidra: local_18 reassigned before the else-branch store).
+ * Can't reproduce the re-store without __asm. */
 void timeFn_8006f400(f32 step)
 {
     int i;
@@ -249,21 +252,20 @@ void timeFn_8006f400(f32 step)
             if ((f32)(u32)a[0x33] - step <= 0.0f) {
                 a[0x33] = 0;
             } else {
-                a[0x33] = (f32)(u32)a[0x33] - step;
+                a[0x33] = (u8)(s32)((f32)(u32)a[0x33] - step);
             }
         }
         if (b[0x0E] != 0) {
             if ((f32)(u32)b[0x0E] - step <= 0.0f) {
                 b[0x0E] = 0;
             } else {
-                b[0x0E] = (f32)(u32)b[0x0E] - step;
+                b[0x0E] = (u8)(s32)((f32)(u32)b[0x0E] - step);
             }
         }
         a += 0x38;
         b += 0x10;
     }
 }
-#pragma opt_common_subs reset
 
 void drawFn_8006f500(void)
 {
@@ -5622,6 +5624,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
 
     GXSetBlendMode(1, 4, 5, 5);
+    GXSetCullMode(0);
     if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
