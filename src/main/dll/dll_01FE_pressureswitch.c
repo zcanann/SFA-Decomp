@@ -371,7 +371,6 @@ void pressureswitch_update(int obj)
     int ac;
     int v;
     s8 played;
-    char* hitList;
     f32 cur;
     f32 lim;
     f32 thr;
@@ -393,15 +392,16 @@ void pressureswitch_update(int obj)
         b->chimeLatch = 0;
     }
     ((PswFlags*)&b->flags)->active = 0;
-    hitList = *(char**)(obj + PSWITCH_HITLIST_OFFSET);
-    if (hitList != NULL && *(s8*)(hitList + PSWITCH_HITLIST_COUNT_OFFSET) > 0)
+    if (*(char**)(obj + PSWITCH_HITLIST_OFFSET) != NULL &&
+        *(s8*)(*(char**)(obj + PSWITCH_HITLIST_OFFSET) + PSWITCH_HITLIST_COUNT_OFFSET) > 0)
     {
         b->retriggerTimer = (s16)(t->unk1E * 60);
         i = 0;
         thr = lbl_803E5D60;
-        for (; i < *(s8*)(hitList + PSWITCH_HITLIST_COUNT_OFFSET); i++)
+        for (; i < *(s8*)(*(char**)(obj + PSWITCH_HITLIST_OFFSET) + PSWITCH_HITLIST_COUNT_OFFSET); i++)
         {
-            GameObject* ent = *(GameObject**)(hitList + i * 4 + PSWITCH_HITLIST_OBJECTS_OFFSET);
+            GameObject* ent =
+                *(GameObject**)(*(char**)(obj + PSWITCH_HITLIST_OFFSET) + i * 4 + PSWITCH_HITLIST_OBJECTS_OFFSET);
             if (ent->anim.seqId == PSWITCH_TRIGGER_SEQ_ID)
             {
                 ((PswFlags*)&b->flags)->active = 1;
