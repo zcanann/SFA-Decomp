@@ -8,7 +8,6 @@
 extern void objRenderFn_8003b8f4(f32 alpha);
 extern f32 lbl_803E4348;
 
-extern int* gCarryableInterface; /* carryable-object interface singleton */
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern u8* mapGetBlock(int idx);
 extern u8* mapBlockFn_800606ec(void* block, int idx);
@@ -18,7 +17,6 @@ extern int GameBit_Get(int bit);
 extern void GameBit_Set(int bit, int val);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int lbl_803DDB18;
-extern int timerCountDown(void* p);
 extern void objSetSlot(int* obj, int slot);
 
 int blasted_getExtraSize(void)
