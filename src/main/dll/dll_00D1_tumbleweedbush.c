@@ -158,7 +158,7 @@ void tumbleweedbush_update(int* obj)
 {
     TumbleweedBushState* state;
     int* player;
-    int hitExtra;
+    f32 hitExtra[3];
     f32 sunTime;
     int hit0;
     f32 dx, dy, d;
@@ -169,11 +169,11 @@ void tumbleweedbush_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     player = (int*)Obj_GetPlayerObject();
-    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hit0, &hitExtra) != 0)
+    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hit0, (int*)hitExtra) != 0)
     {
         if (*(s16*)((char*)hit0 + 0x46) != 0x4ba)
         {
-            objfx_spawnHitEmitterAtPos(&hitExtra, 8, 0xff, 0xff, 0x78);
+            objfx_spawnHitEmitterAtPos((int*)hitExtra, 8, 0xff, 0xff, 0x78);
             Sfx_PlayFromObject(obj, SFXsc_gethit04);
             for (i = 0; (u8)i < state->pieceCount; i++)
             {
