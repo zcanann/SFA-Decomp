@@ -1525,7 +1525,7 @@ int ktrex_stateHandlerA08(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->unk4 =
             (f32)(u32) * (u16*)((char*)p + (((KTRexArenaState*)gKTRexState)->unk101 & ~1) + 0x4a);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-        return 0;
+        goto ret0;
     }
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) == 0)
     {
@@ -1533,7 +1533,7 @@ int ktrex_stateHandlerA08(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->unk4 = t;
         if (!(t <= lbl_803E67B8))
         {
-            return 0;
+            goto ret0;
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
@@ -1548,6 +1548,8 @@ int ktrex_stateHandlerA08(int obj, int runtime)
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     return 10;
+ret0:
+    return 0;
 }
 
 int ktrex_stateHandlerA11(int obj, int runtime)
