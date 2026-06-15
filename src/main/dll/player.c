@@ -12885,8 +12885,8 @@ void fn_802AF7F8(int obj, int state)
     int inner;
     u8 result;
     int r35c;
-    void** p;
     int i;
+    void** p;
     int v;
     if (fn_802A9C0C(obj, state, 0x2d) != 0)
     {
