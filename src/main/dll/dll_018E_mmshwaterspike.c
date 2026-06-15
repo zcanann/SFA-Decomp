@@ -24,8 +24,6 @@ typedef struct MmshWaterspikeObjectDef
 
 extern u32 randomGetRange(int min, int max);
 
-extern f32 lbl_803E4F68;
-extern void objRenderFn_8003b8f4(f32);
 extern void* ObjList_FindObjectById(int id);
 extern f32 objFn_801948c0(void* obj, int param_2);
 extern void fn_80137948(char* fmt, ...);
@@ -35,7 +33,6 @@ extern u8 framesThisStep;
 extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;
-extern f32 lbl_803E4F78;
 
 void mmsh_waterspike_free(void)
 {
