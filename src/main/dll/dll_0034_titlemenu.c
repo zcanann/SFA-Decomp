@@ -5,7 +5,6 @@
 #include "main/camera_interface.h"
 #include "main/screen_transition.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/FRONT/dll_0034_n_filemenu.h"
 
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
