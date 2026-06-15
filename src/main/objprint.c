@@ -1744,7 +1744,7 @@ void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
     {
         return;
     }
-    Sfx_PlayFromObjectChannel((u32)p1, 0x10, (u16)p3);
+    ((void (*)(u32, u32, int))Sfx_PlayFromObjectChannel)((u32)p1, 0x10, p3);
     *(f32*)((char*)p2 + 0xc) = (f32)p5;
     *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
     *(u8*)((char*)p2 + 0) = 1;
