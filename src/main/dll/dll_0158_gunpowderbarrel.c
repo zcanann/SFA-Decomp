@@ -665,7 +665,7 @@ void gunpowderbarrel_hitDetect(int param_1)
         }
     }
 
-    if (state->fuseFrames != 0)
+    if (state->fuseFrames != 0u)
     {
         return;
     }
@@ -685,7 +685,7 @@ void gunpowderbarrel_hitDetect(int param_1)
         state->queuedHitObject = 0;
     }
 
-    if (((state->heldFlags >> 7) & 1) != 0)
+    if (((state->heldFlags >> 7) & 1) != 0u)
     {
         sp1c[0] = barrel->anim.localPosX - barrel->anim.previousLocalPosX;
         sp1c[1] = barrel->anim.localPosY - barrel->anim.previousLocalPosY;
@@ -726,7 +726,7 @@ void gunpowderbarrel_hitDetect(int param_1)
         state->unk16 = 4;
     }
 
-    if (((state->heldFlags >> 7) & 1) != 0 &&
+    if (((state->heldFlags >> 7) & 1) != 0u &&
         (s8) * ((u8*)&collision_buf[0] + 0x51) == 3)
     {
         gunpowderbarrel_setPlayerHeldState((int*)param_1, 0);
