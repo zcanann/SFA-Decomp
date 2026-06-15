@@ -233,17 +233,18 @@ extern SaveGameDefaultPosition lbl_802C2170;
 
 int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
 {
+    u8* position;
     int i;
-    SaveGameObjectPosition* position;
 
-    position = (SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET);
-    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++, position++)
+    for (i = 0, position = &gSaveGameData[0]; i < SAVEGAME_OBJECT_POSITION_COUNT;
+         i++, position += sizeof(SaveGameObjectPosition))
     {
-        if (object->objectId == position->objectId)
+        if (object->objectId == *(u32*)(position + SAVEGAME_OBJECT_POSITION_OFFSET))
         {
-            object->x = position->x;
-            object->y = position->y;
-            object->z = position->z;
+            u8* slot = gSaveGameData + i * sizeof(SaveGameObjectPosition);
+            object->x = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 4);
+            object->y = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 8);
+            object->z = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 12);
             return 1;
         }
     }
