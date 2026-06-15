@@ -48,9 +48,9 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     int playerObj;
     int hit;
     u32 head[2];
-    int popOut;
     int pushKindA;
     int pushKindB;
+    int popOut;
 
     head[0] = lbl_803E59D0;
     head[1] = lbl_803E59D4;
