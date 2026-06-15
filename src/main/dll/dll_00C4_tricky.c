@@ -1419,21 +1419,21 @@ void Tricky_update(int obj)
             {
                 if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff))
                 {
-                    *(s16*)obj = *(s16*)obj + diff;
+                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + diff;
                 }
                 else
                 {
-                    *(s16*)obj = *(s16*)obj + step;
+                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + step;
                 }
             }
             else
             {
-                *(s16*)obj = *(s16*)obj + step;
+                ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + step;
             }
         }
         else
         {
-            *(s16*)obj = *(s16*)obj + diff;
+            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + diff;
         }
     }
     if ((((TrickyState*)state)->stateFlags & 0x40) != 0)
@@ -2491,11 +2491,11 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     voxmaps_worldToGrid(&probe, baseGrid);
     if (*(u32*)&((GameObject*)obj)->anim.parent != 0)
     {
-        baseAngle = *(s16*)obj + **(s16**)&((GameObject*)obj)->anim.parent;
+        baseAngle = ((GameObject*)obj)->anim.rotX + **(s16**)&((GameObject*)obj)->anim.parent;
     }
     else
     {
-        baseAngle = *(s16*)obj;
+        baseAngle = ((GameObject*)obj)->anim.rotX;
     }
     angleScale = lbl_803E25B4;
     angleDivisor = lbl_803E25B8;
