@@ -1482,7 +1482,7 @@ void dll_D3_init(int obj, int def, int flag)
     LandedArwingState* extra;
     u8 setupFlags;
     f32 fz;
-    s16 ftag;
+    int ftag;
 
     state = *(int*)&((GameObject*)obj)->extra;
     setupFlags = 6;
@@ -1490,14 +1490,14 @@ void dll_D3_init(int obj, int def, int flag)
     {
         setupFlags |= 1;
     }
-    ((void (*)(int, int, int, int, int, int, int, f32))((void**)*(int*)gBaddieControlInterface)[22])
+    ((void (*)(int, int, int, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])
         (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
     ((GameObject*)obj)->animEventCallback = NULL;
 
     extra = *(LandedArwingState**)(state + 0x40c);
     memset((void*)extra, 0, 0x94);
     extra->surfaceMode = 5;
-    extra->flags92 = (extra->flags92 & 0xf) | 0x30;
+    ((StaffBits*)&extra->flags92)->hi = 3;
     fz = lbl_803E2FDC;
     extra->surfaceNormalX = fz;
     extra->surfaceNormalY = lbl_803E2FF4;
@@ -1507,14 +1507,14 @@ void dll_D3_init(int obj, int def, int flag)
     extra->scriptTargetY = ((GameObject*)obj)->anim.localPosY;
     extra->scriptTargetZ = ((GameObject*)obj)->anim.localPosZ;
 
-    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
-    if (*(u8*)(def + 0x2b) != 0)
+    ObjAnim_SetCurrentMove(obj, 0, fz, 0);
+    if (*(u8*)(def + 0x2b) == 0)
     {
-        ftag = 1;
+        ftag = 0;
     }
     else
     {
-        ftag = 0;
+        ftag = 1;
     }
     ((TreasureChestState*)state)->controlMode = ftag;
     ((TreasureChestState*)state)->unk270 = 0;
