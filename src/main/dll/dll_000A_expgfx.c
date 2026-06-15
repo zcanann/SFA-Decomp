@@ -18,7 +18,6 @@ extern int renderModeSetOrGet(int mode);
 extern void debugPrintf(char* message, ...);
 extern undefined8 FUN_80286830();
 
-extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
 extern volatile f32 timeDelta;
