@@ -456,7 +456,7 @@ void largecrate_update(int obj)
                 ((ExplodableState*)state)->animTimer = -(timeDelta * animSpeed - ((ExplodableState*)state)->animTimer);
                 if (((ExplodableState*)state)->animTimer <= thresh)
                 {
-                    if (!(Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(Obj_GetPlayerObject() + 0x18)) >
+                    if (!(Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
                         lbl_803E39D0))
                     {
                         ((ExplodableState*)state)->animTimer = lbl_803E39AC;
@@ -555,7 +555,7 @@ void largecrate_update(int obj)
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
                 }
             }
-            vec3f_distanceSquared((f32*)(Obj_GetPlayerObject() + 0x18), &((GameObject*)obj)->anim.worldPosX);
+            vec3f_distanceSquared(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
             if ((((ExplodableState*)state)->randomTimer -= framesThisStep) <= 0)
             {
                 ((ExplodableState*)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
