@@ -29,7 +29,6 @@ extern f32 lbl_803DFFE8;
 extern f32 lbl_803DFFEC;
 extern f32 lbl_803DFFF0;
 
-extern f32 lbl_803E0000;
 
 int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6)
 {
