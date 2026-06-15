@@ -52,7 +52,6 @@ extern f32 lbl_803E265C;
 extern f32 mathCosf(f32);
 extern f32 mathSinf(f32);
 extern CameraModeCannonState* lbl_803DD5A0;
-extern f32 lbl_803E1A40;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 lbl_803E1AE0;
@@ -60,7 +59,6 @@ extern f32 lbl_803E1AE4;
 extern f32 lbl_803E1AE8;
 extern f32 lbl_803E1AEC;
 extern f32 lbl_803E1AF0;
-extern f32 fn_8029610C(int obj);
 extern f32 mathCosf(f32 x);
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
