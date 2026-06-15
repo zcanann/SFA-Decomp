@@ -1,5 +1,4 @@
 /* DLL 0x166 - Exploded [801A39B4-801A39D0) */
-#include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
@@ -14,11 +13,7 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/camera_interface.h"
-#include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
