@@ -719,51 +719,50 @@ void dll_6E_func03(int sourceObj, int variant, int posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* e = buf.entries;
     u8* base = (u8*)(int)lbl_80313C30;
     int ctx;
-    e[0].layer = 0;
-    e[0].flags = 5;
-    e[0].tex = &base[84];
-    e[0].mode = 4;
-    e[0].x = lbl_803E0A98;
-    e[0].y = lbl_803E0A9C;
-    e[0].z = lbl_803E0A9C;
-    e[1].layer = 0;
-    e[1].flags = 5;
-    e[1].tex = &base[84];
-    e[1].mode = 2;
-    e[1].x = lbl_803E0AA0;
-    e[1].y = lbl_803E0AA0;
-    e[1].z = lbl_803E0AA0;
-    e[2].layer = 0;
-    e[2].flags = 5;
-    e[2].tex = &base[84];
-    e[2].mode = 8;
-    e[2].x = lbl_803E0A9C;
-    e[2].y = lbl_803E0AA4;
-    e[2].z = lbl_803E0A9C;
-    e[3].layer = 0;
-    e[3].flags = 0x7a;
-    e[3].tex = (void*)0;
-    e[3].mode = 0x10000;
-    e[3].x = lbl_803E0A9C;
-    e[3].y = lbl_803E0A9C;
-    e[3].z = lbl_803E0A9C;
-    e[4].layer = 1;
-    e[4].flags = 5;
-    e[4].tex = &base[84];
-    e[4].mode = 4;
-    e[4].x = lbl_803E0A9C;
-    e[4].y = lbl_803E0A9C;
-    e[4].z = lbl_803E0A9C;
-    e[5].layer = 1;
-    e[5].flags = 5;
-    e[5].tex = &base[84];
-    e[5].mode = 2;
-    e[5].x = lbl_803E0AA8;
-    e[5].y = lbl_803E0AAC;
-    e[5].z = lbl_803E0AA8;
+    buf.entries[0].layer = 0;
+    buf.entries[0].flags = 5;
+    buf.entries[0].tex = &base[84];
+    buf.entries[0].mode = 4;
+    buf.entries[0].x = lbl_803E0A98;
+    buf.entries[0].y = lbl_803E0A9C;
+    buf.entries[0].z = lbl_803E0A9C;
+    buf.entries[1].layer = 0;
+    buf.entries[1].flags = 5;
+    buf.entries[1].tex = &base[84];
+    buf.entries[1].mode = 2;
+    buf.entries[1].x = lbl_803E0AA0;
+    buf.entries[1].y = lbl_803E0AA0;
+    buf.entries[1].z = lbl_803E0AA0;
+    buf.entries[2].layer = 0;
+    buf.entries[2].flags = 5;
+    buf.entries[2].tex = &base[84];
+    buf.entries[2].mode = 8;
+    buf.entries[2].x = lbl_803E0A9C;
+    buf.entries[2].y = lbl_803E0AA4;
+    buf.entries[2].z = lbl_803E0A9C;
+    buf.entries[3].layer = 0;
+    buf.entries[3].flags = 0x7a;
+    buf.entries[3].tex = (void*)0;
+    buf.entries[3].mode = 0x10000;
+    buf.entries[3].x = lbl_803E0A9C;
+    buf.entries[3].y = lbl_803E0A9C;
+    buf.entries[3].z = lbl_803E0A9C;
+    buf.entries[4].layer = 1;
+    buf.entries[4].flags = 5;
+    buf.entries[4].tex = &base[84];
+    buf.entries[4].mode = 4;
+    buf.entries[4].x = lbl_803E0A9C;
+    buf.entries[4].y = lbl_803E0A9C;
+    buf.entries[4].z = lbl_803E0A9C;
+    buf.entries[5].layer = 1;
+    buf.entries[5].flags = 5;
+    buf.entries[5].tex = &base[84];
+    buf.entries[5].mode = 2;
+    buf.entries[5].x = lbl_803E0AA8;
+    buf.entries[5].y = lbl_803E0AAC;
+    buf.entries[5].z = lbl_803E0AA8;
     buf.v58 = 0;
     ctx = sourceObj;
     buf.ctx = ctx;
@@ -788,22 +787,22 @@ void dll_6E_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.hw[4] = *(s16*)&base[104];
     buf.hw[5] = *(s16*)&base[106];
     buf.hw[6] = *(s16*)&base[108];
-    buf.cmds = buf.entries;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x4000010;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((void*)ctx == NULL)
-        {
-            buf.pos[0] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->posZ;
-        }
-        else
+        if ((void*)ctx != NULL)
         {
             buf.pos[0] = lbl_803E0AAC + *(f32*)(ctx + 0x18);
             buf.pos[1] = lbl_803E0AAC + *(f32*)(ctx + 0x1c);
             buf.pos[2] = lbl_803E0AAC + *(f32*)(ctx + 0x20);
+        }
+        else
+        {
+            buf.pos[0] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 5, (u8*)(int)lbl_80313C30, 4, &base[52], 0x5e, 0);
