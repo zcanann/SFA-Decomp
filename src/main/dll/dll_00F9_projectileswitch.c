@@ -178,8 +178,8 @@ void ProjectileSwitch_hitDetect(int obj)
         if ((((ProjectileSwitchPlacement*)state2)->unk1E & 3) == 2)
         {
             ((ProjectileSwitchState*)state)->unk4 =
-                lbl_803E3704 * lbl_803E3708 *
-                (f32)((ProjectileSwitchPlacement*)state2)->unk1A;
+                lbl_803E3704 * (lbl_803E3708 *
+                (f32)((ProjectileSwitchPlacement*)state2)->unk1A);
         }
     }
 }
