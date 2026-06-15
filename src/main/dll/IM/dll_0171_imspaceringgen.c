@@ -146,7 +146,6 @@ STATIC_ASSERT(offsetof(ImSpaceRingSetup, unk1A) == 0x1A);
 STATIC_ASSERT(offsetof(ImSpaceRingSetup, unk1C) == 0x1C);
 STATIC_ASSERT(sizeof(ImSpaceRingSetup) == 0x24);
 
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
@@ -158,7 +157,6 @@ extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern f32 lbl_803E47C4;
-extern void ModelLightStruct_free(void* light);
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
