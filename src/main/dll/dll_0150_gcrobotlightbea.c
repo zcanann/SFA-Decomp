@@ -159,12 +159,12 @@ undefined4
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
 {
-    int iVar1;
-    short sVar2;
-    undefined4 uVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
+    int newAng;
+    short angDelta;
+    undefined4 result;
+    double dist;
+    double velZ;
+    double dx;
     undefined8 in_f5;
     undefined8 in_f6;
     undefined8 in_f7;
@@ -180,62 +180,62 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
 
     if (param_3 == (short*)0x0)
     {
-        uVar3 = 0;
+        result = 0;
     }
     else
     {
         local_50[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
-        dVar6 = (double)local_50[0];
+        dx = (double)local_50[0];
         local_54 = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
         local_58 = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
-        dVar4 = FUN_80293900((double)(local_58 * local_58 + (float)(dVar6 * dVar6) + local_54 * local_54
+        dist = FUN_80293900((double)(local_58 * local_58 + (float)(dx * dx) + local_54 * local_54
         ));
-        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dVar4)
+        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dist)
         {
             FUN_8006f7a0(local_50, &local_54, &local_58);
             *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)local_50[0] * param_1);
             *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)local_54 * param_1);
             *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)local_58 * param_1);
-            sVar2 = (*param_3 + -0x8000) - *param_2;
-            if (0x8000 < sVar2)
+            angDelta = (*param_3 + -0x8000) - *param_2;
+            if (0x8000 < angDelta)
             {
-                sVar2 = sVar2 + 1;
+                angDelta = angDelta + 1;
             }
-            if (sVar2 < -0x8000)
+            if (angDelta < -0x8000)
             {
-                sVar2 = sVar2 + -1;
+                angDelta = angDelta + -1;
             }
             uStack_44 = (int)*param_2 ^ 0x80000000;
             local_48 = 0x43300000;
-            uStack_3c = (int)sVar2 ^ 0x80000000;
+            uStack_3c = (int)angDelta ^ 0x80000000;
             local_40 = 0x43300000;
-            iVar1 = (int)
+            newAng = (int)
             ((f32)(s32)
             uStack_44 +
                 (float)((double)((lbl_803E4DC0 +
                     (float)((double)CONCAT44(0x43300000, uStack_3c) - DOUBLE_803e4db0
-                    )) * (float)(param_1 * (double)lbl_803DC074)) / dVar4)
+                    )) * (float)(param_1 * (double)lbl_803DC074)) / dist)
             )
             ;
-            local_38 = (longlong)iVar1;
-            *param_2 = (short)iVar1;
-            dVar4 = (double)*(float*)(param_2 + 0x14);
-            dVar5 = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, dVar5, (int)param_2);
+            local_38 = (longlong)newAng;
+            *param_2 = (short)newAng;
+            dist = (double)*(float*)(param_2 + 0x14);
+            velZ = (double)*(float*)(param_2 + 0x16);
+            FUN_80017a88((double)*(float*)(param_2 + 0x12), dist, velZ, (int)param_2);
             if (param_2[0x50] != 0x1a)
             {
-                FUN_800305f8((double)lbl_803E4DA8, dVar4, dVar5, dVar6, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
+                FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
             FUN_8002f6ac(param_1, (int)param_2, param_4);
-            uVar3 = 0;
+            result = 0;
         }
         else
         {
-            uVar3 = 1;
+            result = 1;
         }
     }
-    return uVar3;
+    return result;
 }
 
 undefined4
@@ -502,7 +502,7 @@ void FUN_8019f1dc(void)
     fStack_24 = (float)in_ps29_1;
     objPair = FUN_8028683c();
     obj = (uint)(objPair >> 0x20);
-    subObj = *(int*)(obj + 0xb8);
+    subObj = *(int *)&((GameObject *)obj)->extra;
     childOrTarget = FUN_80017a98();
     childOrTarget = *(int*)(childOrTarget + 0xb8);
     *(float*)(subObj + 0x20) = lbl_803E4F58;
@@ -529,7 +529,7 @@ void FUN_8019f1dc(void)
     *(byte*)(subObj + 0x49) = *(byte*)(subObj + 0x49) | 2;
     if ((*(byte*)(subObj + 0x48) >> 6 & 1) != 0)
     {
-        subObj = *(int*)(obj + 0x4c);
+        subObj = *(int *)&((GameObject *)obj)->anim.placementData;
         childOrTarget = 0;
         if (*(short*)(subObj + 0x1a) == 0)
         {
@@ -552,16 +552,16 @@ void FUN_8019f1dc(void)
         }
         if (childOrTarget != 0)
         {
-            savedX = (double)*(float*)(obj + 0xc);
-            savedY = (double)*(float*)(obj + 0x10);
-            savedZ = (double)*(float*)(obj + 0x14);
+            savedX = (double)((GameObject *)obj)->anim.localPosX;
+            savedY = (double)((GameObject *)obj)->anim.localPosY;
+            savedZ = (double)((GameObject *)obj)->anim.localPosZ;
             *(undefined4*)(obj + 0xc) = *(undefined4*)(childOrTarget + 0xc);
             *(undefined4*)(obj + 0x10) = *(undefined4*)(childOrTarget + 0x10);
             *(undefined4*)(obj + 0x14) = *(undefined4*)(childOrTarget + 0x14);
             FUN_800e8630(obj);
-            *(float*)(obj + 0xc) = (float)savedX;
-            *(float*)(obj + 0x10) = (float)savedY;
-            *(float*)(obj + 0x14) = (float)savedZ;
+            ((GameObject *)obj)->anim.localPosX = (float)savedX;
+            ((GameObject *)obj)->anim.localPosY = (float)savedY;
+            ((GameObject *)obj)->anim.localPosZ = (float)savedZ;
         }
     }
     FUN_80286888();
