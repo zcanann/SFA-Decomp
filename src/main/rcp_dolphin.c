@@ -1561,23 +1561,28 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
             {
                 flag = 0;
             }
-            else if (v == 0)
+            else if (v != 0)
             {
-                flag = 1;
-            }
-            else if (v < 9)
-            {
-                if ((*(u8*)(obj + 3) >> (v - 1)) & 1)
+                if (v < 9)
+                {
+                    if ((*(u8*)(obj + 3) >> (v - 1)) & 1)
+                        flag = 0;
+                    else
+                        goto flag1;
+                }
+                else if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
+                {
                     flag = 0;
+                }
                 else
+                {
+                flag1:
                     flag = 1;
+                }
             }
             else
             {
-                if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
-                    flag = 0;
-                else
-                    flag = 1;
+                goto flag1;
             }
             if (flag != 0)
             {
