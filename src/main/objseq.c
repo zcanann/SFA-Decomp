@@ -4242,10 +4242,10 @@ void* ObjSeq_FindTargetObject(u8* obj)
         return getTrickyObject();
     }
 
-    bestDistSq = lbl_803DEFF0;
-    bestObj = NULL;
     {
     f32 zeroRef = lbl_803DEFB0;
+    bestDistSq = lbl_803DEFF0;
+    bestObj = NULL;
     for (i = 0; i < objectCount; i++)
     {
         candidate = objects[i];
