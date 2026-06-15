@@ -125,8 +125,6 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-extern int maybeTryLoadSave(int a);
-extern void mm_free(u32);
 extern void* Obj_GetPlayerObject(void);
 extern void playerSetHeldObject(void* player, int held);
 extern f32 lbl_803E06D8;
