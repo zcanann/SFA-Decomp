@@ -12,7 +12,6 @@
 
 extern void envFxActFn_800887f8(int);
 extern int mapUnload(int id, int flags);
-extern undefined4 FUN_800067c0();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_80286884();
 extern uint countLeadingZeros();
@@ -40,7 +39,6 @@ extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E54C0;
-extern s16 lbl_80327618_ids[];
 
 int sh_levelcontrol_getExtraSize(void)
 {
