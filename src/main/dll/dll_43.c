@@ -12,9 +12,9 @@ extern u8 lbl_803DD6CC;
 extern u8 lbl_803DD6CD;
 extern u8 lbl_803DD6CF;
 
-void saveSelectSetSlot(int param_1, int param_2)
+void saveSelectSetSlot(int slot, int value)
 {
-    if (param_1 == 0)
+    if (slot == 0)
     {
         if (lbl_803DB424 != 0)
         {
@@ -39,6 +39,6 @@ void saveSelectSetSlot(int param_1, int param_2)
         ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
         ((void (**)(int))gTitleMenuControlInterface->vtable)[7](3);
         lbl_803DD6CF = 0x23;
-        lbl_803DD6C4 = param_2;
+        lbl_803DD6C4 = value;
     }
 }
