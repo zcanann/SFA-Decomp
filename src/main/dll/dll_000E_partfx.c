@@ -1,4 +1,3 @@
-#include "main/audio/sfx_ids.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll/modgfx_types.h"
