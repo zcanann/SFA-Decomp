@@ -566,8 +566,8 @@ void ktrex_update(int obj)
     {
         return;
     }
-    runtime = ((GameObject*)obj)->extra;
-    gKTRexRuntime = runtime;
+    gKTRexRuntime = ((GameObject*)obj)->extra;
+    runtime = gKTRexRuntime;
     if (((GameObject*)obj)->unkF8 == 1)
     {
         Music_Trigger(40, 1);
@@ -583,15 +583,20 @@ void ktrex_update(int obj)
         d[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
         d[1] = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         d[2] = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
+        ((KTRexRuntime*)runtime)->unk2C0 =
+            sqrtf(((f32*)d)[2] * ((f32*)d)[2] + (((f32*)d)[0] * ((f32*)d)[0] + ((f32*)d)[1] * ((f32*)d)[1]));
     }
     characterDoEyeAnims(obj, (char*)gKTRexRuntime + 0x3ac);
     maskA = 0;
-    for (i = 0; i < 4; i++)
     {
-        if (GameBit_Get(lbl_803DC290[i]) != 0)
+        s16* pA = lbl_803DC290;
+        for (i = 0; i < 4; i++)
         {
-            maskA |= 1 << i;
+            if (GameBit_Get(*pA) != 0)
+            {
+                maskA |= 1 << i;
+            }
+            pA++;
         }
     }
     ((KTRexArenaState*)gKTRexState)->unkFF = maskA;
@@ -601,7 +606,7 @@ void ktrex_update(int obj)
         ->rowAX)[phase];
     dx = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBZ)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)
         ->rowAZ)[phase];
-    if ((f32)__fabs(dz) > (f32)__fabs(dx))
+    if (__fabs(dz) > __fabs(dx))
     {
         ((KTRexArenaState*)gKTRexState)->unkF4 =
             (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
@@ -617,11 +622,15 @@ void ktrex_update(int obj)
     ((KTRexArenaState*)gKTRexState)->unkFE = ((u8*)&tmp)[(((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3];
     flags = ((KTRexArenaState*)gKTRexState)->unkFE;
     maskB = 0;
-    for (i = 0; i < 4; i++)
     {
-        if ((flags & (1 << i)) != 0 && GameBit_Get(lbl_803DC298[i]) != 0)
+        s16* pB = lbl_803DC298;
+        for (i = 0; i < 4; i++)
         {
-            maskB |= 1 << i;
+            if ((flags & (1 << i)) != 0 && GameBit_Get(*pB) != 0)
+            {
+                maskB |= 1 << i;
+            }
+            pB++;
         }
     }
     ((KTRexArenaState*)gKTRexState)->laneMode = maskB;
