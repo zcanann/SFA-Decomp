@@ -24,21 +24,10 @@ extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 objAudioFn_8006ef38();
-extern uint countLeadingZeros();
 
 extern undefined4 DAT_803274f4;
-extern f64 DOUBLE_803e5eb8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5E98;
 extern f32 lbl_803E5EA4;
-extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EAC;
-extern f32 lbl_803E5EB0;
-extern f32 lbl_803E5EC0;
-extern f32 lbl_803E5EC4;
-extern f32 lbl_803E5EC8;
-extern f32 lbl_803E5ECC;
-extern f32 lbl_803E5ED0;
 
 #pragma scheduling on
 #pragma peephole on
