@@ -721,8 +721,8 @@ void dll_59_func03(int sourceObj, int variant, int posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* e = buf.entries;
     u8* base = (u8*)(int)lbl_80311C58;
+    GfxCmd* e = buf.entries;
     int ctx;
     e[0].layer = 1;
     e[0].flags = 0x11;
