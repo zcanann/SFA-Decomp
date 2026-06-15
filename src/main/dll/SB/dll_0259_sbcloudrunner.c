@@ -319,9 +319,9 @@ void fn_801EE668(s16 *obj, u8 *state)
 
     {
         f32 t = (f32)(((SBCloudRunnerState *)state)->stickX << 3) / lbl_803E5C98;
-        *(s16 *)(state + 0x2c) = -(t * timeDelta - (f32) * (s16 *)(state + 0x2c));
+        ((SBCloudRunnerState *)state)->unk2C = -(t * timeDelta - (f32)((SBCloudRunnerState *)state)->unk2C);
     }
-    *(s16 *)(state + 0x2c) -= (*(s16 *)(state + 0x2c) * framesThisStep) >> 5;
+    ((SBCloudRunnerState *)state)->unk2C -= (((SBCloudRunnerState *)state)->unk2C * framesThisStep) >> 5;
 
     /* shortest-arc wrap to (-0x8000, 0x8000); the two-op form is load-bearing */
     d = yawTarget - (u16)((GameObject *)obj)->anim.rotY;
@@ -354,7 +354,7 @@ void fn_801EE668(s16 *obj, u8 *state)
     v = (v < -13000) ? -13000 : ((v > 13000) ? 13000 : v);
     ((SBCloudRunnerState *)state)->rotZ = v;
 
-    ((GameObject *)obj)->anim.rotX = *(s16 *)(state + 0x2c) + 0x4000;
+    ((GameObject *)obj)->anim.rotX = ((SBCloudRunnerState *)state)->unk2C + 0x4000;
     ((GameObject *)obj)->anim.rotZ = ((SBCloudRunnerState *)state)->rotZ;
 
     events.sfxFlag = 0;
