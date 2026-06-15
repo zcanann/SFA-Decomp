@@ -58,7 +58,7 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     u8 mode = state->route;
     if (mode == 1 || mode == 3)
     {
-        f32 cur, lim, edge;
+        f32 edge, cur, lim;
         ((GameObject*)obj)->anim.localPosX = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosX;
         cur = ((GameObject*)obj)->anim.localPosX;
         lim = state->origX;
@@ -82,7 +82,7 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     }
     else if (mode == 4 || mode == 5)
     {
-        f32 cur, lim, edge;
+        f32 edge, cur, lim;
         ((GameObject*)obj)->anim.localPosY = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosY;
         cur = ((GameObject*)obj)->anim.localPosY;
         lim = state->origY;
