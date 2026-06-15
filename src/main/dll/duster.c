@@ -503,7 +503,7 @@ void fn_80155F20(int obj, int state)
             if (((GameObject*)obj)->anim.currentMove == 1)
             {
                 ((BaddieState*)state)->seqEntryIndex = 2;
-                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
             }
             else if (((GameObject*)obj)->anim.currentMove == 3)
             {
@@ -750,7 +750,7 @@ void fn_8015652C(uint obj, int state)
     }
     else
     {
-        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
     }
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
@@ -760,7 +760,7 @@ void fn_8015652C(uint obj, int state)
             (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E2AE4,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
         }
         if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
         {
