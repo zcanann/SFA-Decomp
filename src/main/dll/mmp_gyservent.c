@@ -41,7 +41,7 @@ void objFn_80198fa4(s16* obj, void* arg2)
     f32 out_x;
     f32 out_y;
     f32 out_z;
-    f32 tmp[20];
+    f32 tmp[24];
 
     state = ((GameObject*)obj)->extra;
     obj[0] = (s16)((*(u8*)((char*)arg2 + 0x3d) & 0x3f) << 10);
