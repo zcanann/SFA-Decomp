@@ -3,7 +3,6 @@
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/dll/mmshrine/shrine1C2.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/audio/sfx_ids.h"
