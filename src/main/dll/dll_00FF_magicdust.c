@@ -87,7 +87,7 @@ void magicdust_update(int obj)
     double dVar9;
     char fxArg;
     char burstArg[3];
-    int msg[9];
+    int msg[1];
     register int msgId;
     f32 dist;
 
@@ -106,7 +106,7 @@ void magicdust_update(int obj)
             Sfx_PlayFromObject(obj, (u16)((MagicDustState*)state)->sfxId);
             Sfx_StopFromObject(obj, 0x56);
             playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
-            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & 0xfa;
+            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & ~5;
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x40;
             ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
@@ -297,7 +297,7 @@ void magicdust_update(int obj)
                     Sfx_PlayFromObject(obj, (u16)((MagicDustState*)state)->sfxId);
                     Sfx_StopFromObject(obj, 0x56);
                     playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
-                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & 0xfa;
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & ~5;
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x40;
                     ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
