@@ -237,7 +237,7 @@ typedef struct CameraModeNpcSpeakInitParams
 void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
 {
     CameraObject* camera = (CameraObject*)obj;
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+#define target ((GameObject*)camera->anim.targetObj)
     int mode = 0;
     int yawA, yawB;
     int spd;
@@ -419,6 +419,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     camcontrol_traceMove(&camera->anim.worldPosX, va, (void*)&lbl_803DD584->cameraX, traceWork, 3, 1,
                          1, lbl_803E1A20);
 }
+#undef target
 #pragma opt_common_subs reset
 
 void CameraModeNpcSpeak_update(u8* obj)
