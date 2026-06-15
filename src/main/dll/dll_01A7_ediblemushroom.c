@@ -62,7 +62,6 @@ extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void Obj_StartModelFadeIn(u8* obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
 extern f32 sqrtf(f32 x);
-extern undefined4 FUN_80006824();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
@@ -74,7 +73,6 @@ extern f32 lbl_803E52E8;
 extern f32 lbl_803E52EC;
 extern f32 lbl_803E52F0;
 extern f32 lbl_803E52F4;
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
