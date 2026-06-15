@@ -379,7 +379,7 @@ void FUN_800da850(uint value, undefined* out)
 }
 
 undefined2
-FUN_800db110(float* point, int param_2, undefined4 param_3, undefined4 param_4, byte param_5)
+FUN_800db110(float* point, int patchIdx, undefined4 param_3, undefined4 param_4, byte param_5)
 {
     byte i;
     uint sectorIdx;
@@ -392,8 +392,8 @@ FUN_800db110(float* point, int param_2, undefined4 param_3, undefined4 param_4, 
         {
             return 0;
         }
-        if (((&DAT_803a2390)[param_2] != '\0') &&
-            (sectorIdx = (uint)(byte)(&DAT_803a076c)[param_2 * 0x28 + (uint)i], sectorIdx != 0))
+        if (((&DAT_803a2390)[patchIdx] != '\0') &&
+            (sectorIdx = (uint)(byte)(&DAT_803a076c)[patchIdx * 0x28 + (uint)i], sectorIdx != 0))
         {
             if ((point[1] <
                     (float)((double)CONCAT44(0x43300000,

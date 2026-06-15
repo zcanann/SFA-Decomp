@@ -391,7 +391,7 @@ bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return 0;
 }
 
-void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
+void FUN_800da700(undefined4 param_1, undefined4 param_2, int actFilter)
 {
     float dx;
     float dy;
@@ -421,7 +421,7 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3)
         obj = *objList;
         if ((((((obj != 0) && (*(char*)(obj + 0x19) == '$')) &&
                         (((uint)uVar11 == 0xffffffff || ((uint) * (byte*)(obj + 3) == (uint)uVar11)))) &&
-                    ((param_3 == -1 || (*(char*)(obj + 0x1a) == param_3)))) &&
+                    ((actFilter == -1 || (*(char*)(obj + 0x1a) == actFilter)))) &&
                 (((int)*(short*)(obj + 0x30) == 0xffffffff ||
                     (bit = GameBit_Get((int)*(short*)(obj + 0x30)), bit != 0)))) &&
             ((((int)*(short*)(obj + 0x32) == 0xffffffff ||
@@ -446,7 +446,7 @@ void FUN_800da850(uint value, undefined* out)
 }
 
 undefined2
-FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4, byte param_5)
+FUN_800db110(float* point, int patchIdx, undefined4 param_3, undefined4 param_4, byte param_5)
 {
     byte i;
     uint sectorIdx;
@@ -459,25 +459,25 @@ FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4
         {
             return 0;
         }
-        if (((&DAT_803a2390)[param_2] != '\0') &&
-            (sectorIdx = (uint)(byte)(&DAT_803a076c)[param_2 * 0x28 + (uint)i], sectorIdx != 0))
+        if (((&DAT_803a2390)[patchIdx] != '\0') &&
+            (sectorIdx = (uint)(byte)(&DAT_803a076c)[patchIdx * 0x28 + (uint)i], sectorIdx != 0))
         {
-            if ((param_1[1] <
+            if ((point[1] <
                     (float)((double)CONCAT44(0x43300000,
                                              (int)(short)(&DAT_8039d768)[sectorIdx * 0x18] ^ 0x80000000) -
                         DOUBLE_803e1260)) &&
                 ((float)((double)CONCAT44(0x43300000, (int)(short)(&DAT_8039d76a)[sectorIdx * 0x18] ^ 0x80000000
-                ) - DOUBLE_803e1260) < param_1[1]))
+                ) - DOUBLE_803e1260) < point[1]))
             {
                 param_5 = 0;
                 off = 0;
                 while ((param_5 < 4 &&
                     (*(float*)(&DAT_8039d748 + sectorIdx * 0x18 + (uint)param_5 * 2 + 8) +
-                        *param_1 *
+                        *point *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_8039d748)[sectorIdx * 0x18 + (off & 0xff)]
                                                  ^ 0x80000000) - DOUBLE_803e1260) +
-                        param_1[2] *
+                        point[2] *
                         (float)((double)CONCAT44(0x43300000,
                                                  (int)(short)(&DAT_8039d748)
                                                  [sectorIdx * 0x18 + (off & 0xff) + 1] ^
