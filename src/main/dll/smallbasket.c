@@ -1548,7 +1548,7 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
         firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
     }
     *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x40;
-    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40;
+    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
     if (cmd == 0x10 && ((BaddieState*)state)->inWhirlpoolGroup != 0)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
@@ -1735,7 +1735,7 @@ void fn_80158494(s16* obj, u8* state)
     int i;
     f32 dv[3];
 
-    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40;
+    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
         firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
@@ -1747,7 +1747,7 @@ void fn_80158494(s16* obj, u8* state)
         if ((*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BA8,
                                              (int*)&lbl_803DBCF0, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
         }
         if (*(u8*)(state + 0x33b) == 0)
         {
@@ -1825,7 +1825,7 @@ void fn_80158494(s16* obj, u8* state)
                 && (*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BC0,
                                                     (int*)&lbl_803DBCF0, -1) != 0)
             {
-                ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+                ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
             }
             if ((*(u8*)(state + 0x33d) & 0xa) == 0)
             {
@@ -2139,7 +2139,7 @@ void fn_80158C2C(s16* obj, u8* state)
                 }
                 else
                 {
-                    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40;
+                    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
                 }
                 break;
             }
@@ -2227,7 +2227,7 @@ void fn_80159958(s16* obj, u8* state)
         *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
         if (*(f32*)(state + 0x32c) < lbl_803E2C10 && *(f32*)(state + 0x330) == lbl_803E2C30)
         {
-            *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000;
+            *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
         }
         t = lbl_803E2C3C - *(f32*)(state + 0x32c) / lbl_803E2C40;
         if (t < lbl_803E2C30)
@@ -2243,7 +2243,7 @@ void fn_80159958(s16* obj, u8* state)
             && (*gRomCurveInterface)->initCurve(base, obj, lbl_803E2C44,
                                                 (int*)&lbl_803DBCF8, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
+            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
         }
         sidekickToy_accelerateTowardTarget3D(obj, base->posX, base->posY,
                                              base->posZ, lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50,
