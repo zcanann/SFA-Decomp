@@ -271,8 +271,9 @@ void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 int DR_CloudRunner_stateHandler00(int obj)
 {
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
-    if (inner->unkBB4 == 0)
+    switch (inner->unkBB4)
     {
+    case 0:
         return 2;
     }
     ObjHits_EnableObject(obj);
