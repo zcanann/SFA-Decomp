@@ -1984,8 +1984,8 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     sub->flags14 |= 2;
     if (*(void**)&sub->linkedObj == NULL && sub->unk1C != -1)
     {
-        tmpA = sub->unk30;
         tmpB = sub->unk2C;
+        tmpA = sub->unk30;
         q = sub->msgStack;
         msgA[0] = sub->unk28;
         msgA[1] = tmpB;
@@ -2139,8 +2139,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
         if ((u32)obj == (u32)ObjGroup_FindNearestObject(3, *(int*)&((BaddieState*)p2)->targetObj, 0))
         {
             sub->unk3C = *(int*)&((BaddieState*)p2)->targetObj;
-            tmpA = sub->unk30;
             tmpB = sub->unk2C;
+            tmpA = sub->unk30;
             q = sub->msgStack;
             msgA[0] = sub->unk28;
             msgA[1] = tmpB;
