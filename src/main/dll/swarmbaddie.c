@@ -1,5 +1,4 @@
 #include "main/game_ui_interface.h"
-#include "main/dll/baddie/swarmBaddie.h"
 #include "main/game_object.h"
 
 extern u32 randomGetRange(int min, int max);
