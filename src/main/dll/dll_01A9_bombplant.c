@@ -403,7 +403,7 @@ void bombplant_update(void* obj)
             {
                 Obj_StartModelFadeIn(obj, 0x12c);
             }
-            else if (hitType - 0xe <= 1 || hitType == 0x11)
+            else if ((u32)(hitType - 0xe) <= 1 || hitType == 0x11)
             {
                 Sfx_PlayFromObject(obj, SFXmv_curtainloop16);
                 hitX = hitX + playerMapOffsetX;
