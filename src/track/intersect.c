@@ -1740,7 +1740,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
     GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x55);
 
-    if (model == 0 || ((ModelFileHeader *)model)->normalCount == 0) {
+    if (model == 0 || ((ModelFileHeader *)model)->normalCount != 0) {
         PSMTXScale(mtx_54, lbl_803DB6B8, lbl_803DB6B8, lbl_803DEEDC);
         mtx_54[2][3] = lbl_803DEEE4;
         PSMTXTrans(mtx_24, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
@@ -1787,16 +1787,9 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 
     alpha_byte = (((ModelRenderOp *)renderOp)->alpha * ((u8*)obj_a)[0x37]) >> 8;
     ((u8*)&temp)[3] = (u8)alpha_byte;
-    ((u8*)&temp)[0] = ((u8*)&temp)[0]; /* keep rgb */
-    {
-        u32 tmp_word;
-        tmp_word = *(u32*)&temp;  /* sourced from 0x20 in stack */
-        *(u32*)&temp = tmp_word;
-    }
     GXSetTevKColor(0, temp);
     GXSetTevKAlphaSel(0, 0x1c);
-    *(u32*)&temp = lbl_803DB6BC;
-    GXSetTevKColor(1, temp);
+    GXSetTevKColor(1, *(GXColor*)&lbl_803DB6BC);
     GXSetTevKColorSel(1, 0xd);
 
     pcb = (void(*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
