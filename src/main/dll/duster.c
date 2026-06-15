@@ -758,7 +758,7 @@ void fn_8015652C(uint obj, int state)
         if (((Curve_AdvanceAlongPath(route, ((BaddieState*)state)->pathStep) != 0 ||
                     route->atSegmentEnd != 0) &&
                 (*gRomCurveInterface)->goNextPoint(route) != 0) &&
-            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E2AE4,
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2AE4,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
