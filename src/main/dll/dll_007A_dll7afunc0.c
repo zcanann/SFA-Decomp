@@ -723,8 +723,8 @@ int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         GfxCmd entries[32];
     } buf;
     u8* base = (u8*)(int)lbl_80314BD0;
-    int ret = 0;
     GfxCmd* entries = buf.entries;
+    int ret = 0;
     GfxCmd* e;
     entries[0].layer = 0;
     entries[0].flags = 8;
@@ -817,7 +817,7 @@ int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.hw[4] = *(s16*)&base[0xb8];
     buf.hw[5] = *(s16*)&base[0xba];
     buf.hw[6] = *(s16*)&base[0xbc];
-    buf.cmds = buf.entries;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x4000000;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
