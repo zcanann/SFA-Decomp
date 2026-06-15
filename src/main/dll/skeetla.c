@@ -1238,7 +1238,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
         useBlendedDistance = 1;
     }
 
-    if (centerToEnd >= limitDistanceSq)
+    if (!(centerToEnd < limitDistanceSq))
     {
         return;
     }
@@ -1249,7 +1249,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     projection[0] = ((center[2] - (perpSlope * center[0])) - intercept) / (slope - perpSlope);
     projection[2] = (slope * projection[0]) + intercept;
 
-    if (getXZDistance(center, projection) >= minDistanceSq)
+    if (!(getXZDistance(center, projection) < minDistanceSq))
     {
         return;
     }
