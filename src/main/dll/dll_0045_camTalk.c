@@ -17,7 +17,6 @@ extern CameraModeBikeState* lbl_803DD540;
 
 static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
-extern undefined4 FUN_80006a1c();
 extern void vecRotateZXY(void* param_1, void* outVec);
 extern undefined4 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(void* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
