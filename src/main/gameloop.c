@@ -341,6 +341,7 @@ void cutsceneFadeInOut(int a)
     cutsceneEnterExit(a, 1);
 }
 
+#pragma optimization_level 2
 int gameBitDecrement(int bit)
 {
     int val = GameBit_Get(bit);
@@ -352,6 +353,7 @@ int gameBitDecrement(int bit)
     }
     return 0;
 }
+#pragma optimization_level reset
 
 extern void waitNextFrame(void);
 extern void GXFlush_(int a, int b);

@@ -131,10 +131,9 @@ void dfpfloorbar_update(int obj)
         idx = idx_init;
         for (; idx < count; idx++)
         {
-            int o = items[idx];
-            if (((GameObject*)o)->anim.seqId == 0x431)
+            if (((GameObject*)items[idx])->anim.seqId == 0x431)
             {
-                state->linkedObject = (int*)o;
+                state->linkedObject = (int*)items[idx];
                 idx = count;
             }
         }
