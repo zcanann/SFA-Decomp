@@ -587,7 +587,7 @@ void fn_802BE6E8(int obj, int t, int p3)
 
 int fn_802BC830(int obj, int p2, int p3)
 {
-    ((EarthWarriorSub*)p2)->unk360 |= 0x1000000;
+    *(u32*)&((EarthWarriorSub*)p2)->unk360 |= 0x1000000LL;
     ((BaddieState*)p3)->moveSpeed = lbl_803E82EC;
     if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject*)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
@@ -1015,9 +1015,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
 
 int DR_EarthWarrior_stateHandler01(int obj, int p2)
 {
+    extern int ObjAnim_GetCurrentEventCountdown(ObjAnimComponent* objAnim);
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     EarthWarriorSub* q = &inner->sub;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int s;
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
@@ -1039,7 +1039,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     {
         buttonDisable(0, 0x100);
         ((ByteFlags*)&inner->sub.flags994)->b01 = 1;
-        hitState->suppressOutgoingHits = 0;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
         ((BaddieState*)p2)->moveDone = 0;
         return 3;
