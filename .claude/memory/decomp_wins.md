@@ -1,5 +1,64 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (later): 3 wins, ~13 attempts =====
+WINS:
+- dll_000B fn_800A0524 (98.95->99.99%): else-clamp (s16==0 branch) wrote 3 separate
+  stores `*c8=lbl;*cc=lbl;*d0=lbl` -> MWCC reloaded the const per store (3 lfs).
+  Target CSEs (1 lfs + 3 stfs). FIX: chained-assign `*c8=*cc=*d0=lbl_803DF430;` (#51).
+- dll_0072 dll_72_func03 (98.88->100%): #93 cmd-builder. Decl `base` BEFORE
+  `e=buf.entries` so MWCC materializes the lbl base addr before the &buf.entries
+  stack addr (matches target lis;addi-base then addi-r1 emission). Pure decl swap (#5).
+- dll_01B5 lightfoot_update (98.98->99.01%): CORRECTNESS — flags400 clear in the
+  challenge-target-hit branch was `&= ~0x4` but target clears 0x2 (the SAME bit tested
+  by the enclosing `flags400 & 0x2` guard). rlwinm 31,29 not 30,28. Fixed mask. Residual
+  = #81 fcmpo CSE/operand (lbl_803E8180 kept in saved reg across `-=timeDelta` store;
+  current reloads) + int li r30/r27 perm — banked. LESSON: rlwinm MB/ME-width diffs in
+  ndiff `--classify` are a RELIABLE correctness-bug vein (clear-mask off by one bit).
+
+BANKED this session (no clean source lever):
+- dll_0013 waterfx_onMapSetup (98.95%): `li r6,0` (the `e->active=0` loop-store value)
+  scheduled AFTER 2 lfs const-loads; target emits it BEFORE. Hoisting an `int z=0`
+  local before the cxyz/cf10 assigns was INERT (CSE'd, didn't move). Pure li-const
+  scheduling, 2 regions. Bank.
+- dll_0242 dbstealerworm_stateHandlerB06 (98.65%): loop `for(;n!=0;n--)Stack_Push(...
+  off-=12)`. Target decrements n (r26) BEFORE the call (between the arg loads and
+  off-=12); current after. Tried: while-at-top (moved n-- BEFORE loads, wrong),
+  for-empty-update + n-- as first body stmt (moved n-- before loads again),
+  `#pragma scheduling off` (INERT). The decrement needs to land BETWEEN the two arg
+  loads (lwz msgStack, lwz *entry) and off-=12 — un-controllable scheduling within
+  call-arg setup. Bank.
+- objfx WM_newcrystalFn_800969b0 (98.78%): `lbl[i]*((1+phase)*0.5)` fmuls operand
+  order — target `f1,f0,f31` (var,const), current `f1,f31,f0` (const first). 0.5f is
+  HOISTED to saved f31 in BOTH. MWCC FULLY canonicalizes commutative FP mul regardless
+  of source order (temp split + both operand spellings INERT). #66 canonicalization-
+  inert case. Bank.
+- dll_0265 drcreator_spawnProjectileCallback (98.96%): `lbl*conv` fmuls — same reg-perm
+  (target lbl->f1 conv->f0, current lbl->f0 conv->f1). conv-to-temp split INERT. #82/
+  canonicalization. Bank.
+- grenade trickyFn_80143388 (97.3%) / trickyFn_801430e0 (97.4%): two-pointer-param
+  coloring perm (#108/#126; both u8*/int params, target colors r28/r29 or r29/r30,
+  current r31/r28). trickyFn_80143388 ALSO #112: `trickyState[val+0x81f]` target
+  `addi val,2079; lbzx trickyState` vs current `add base+idx; lbz 2079` — inlining the
+  ref var INERT (byte disp folds; coupled to param coloring). Bank.
+- dll_801c0bf8 fn_801C0BF8 (98.63%): loop body bumps vertex(r23)+=16 then i(r22)+=1 in
+  target; current i then vertex. while-loop + `scheduling off` both INERT. Plus a
+  @96-vs-lbl reloc (score-neutral #70). Bank — bump order uncontrollable.
+- dll_0035 saveSelectSetupMenuItems (98.89%): `off2=off1` (both 0) — target `li r4,0;
+  mr r5,r4`, current two `li`. #110 const-equal-copy-fold, unreproducible at O4. Bank.
+- dll_0229 dfplevelcontrol_setScale (93.3%): named ptr-local `p=lbl` gets `addi r0;
+  mr r7` (extra copy) vs target direct `addi r5`; + `(s16)(i+1)` extsh-CSE'd into r5
+  vs target re-extends from r6. peephole-off INERT. #80/#108. Bank.
+- dll_00FF magicdust_init (98.72%): multi-issue — divisor lbl_803E34F4 load order
+  (target loads before numerator in `(a-b)/lbl`) + switch beq structure (cmpwi 708
+  binary-search differs). Multi-issue, bank.
+- dll_02BB gflevelcon fn_8023A3E4 (98.0%): 23 regions, all r29/r30 param perm. #108.
+- dll_002E moveLib dll_2E_func03 (98.6%): 34 regions, 29 reg-perm. #108. Bank.
+LESSON: chained-assign `a=b=c=K` (#51) reliably CSEs a const across same-value stores
+where separate statements reload — check ndiff for repeated `lfs lbl; stfs` bursts.
+LESSON: #93 cmd-builder base-vs-&buf.entries decl order is a real lever (dll_72 100%);
+for VOLATILE regs decl-base-first works; for SAVED regs (dll_93) it's #108 perm (the
+randomGetRange mid-loop perturbs the web — decl swap regressed 5->17 regions).
+
 ## Session: objInterpretSeq (dll_0126_trigger) 87.7->97.4% — BIG win (~10 commits)
 Large switch dispatcher. Was the banked TOP LEAD; cracked with stacked structural fixes:
 - fn_80295918 / skyFn_80088e54: declare INT param first (caller emits int args before
