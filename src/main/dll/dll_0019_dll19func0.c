@@ -1267,21 +1267,21 @@ u16 dll_19_func0A(int obj)
  * current target and turns the yaw by the buffered turn rate. */
 void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
 {
-    if (*(f32*)(st + 0x298) < lbl_803E1C78)
+    if (((BaddieState*)st)->inputMagnitude < lbl_803E1C78)
     {
         f32 rest;
         *(s16*)(st + 0x334) = 0;
         ((BaddieState*)st)->turnRate = 0;
         rest = lbl_803E1C2C;
-        *(f32*)(st + 0x298) = rest;
+        ((BaddieState*)st)->inputMagnitude = rest;
         ((BaddieState*)st)->animSpeedA = rest;
     }
     ((BaddieState*)st)->animSpeedB = lbl_803E1C2C;
     *yaw = lbl_803E1C7C * ((f32)((BaddieState*)st)->turnRate * timeDelta / speed) + (f32) * yaw;
     ((BaddieState*)st)->animSpeedC +=
-        timeDelta * ((*(f32*)(st + 0x298) - ((BaddieState*)st)->animSpeedC) / *(f32*)(st + 0x2b8));
+        timeDelta * ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedC) / ((BaddieState*)st)->velSmoothTime);
     ((BaddieState*)st)->animSpeedA +=
-        timeDelta * ((*(f32*)(st + 0x298) - ((BaddieState*)st)->animSpeedA) / *(f32*)(st + 0x2b8));
+        timeDelta * ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedA) / ((BaddieState*)st)->velSmoothTime);
     if (((BaddieState*)st)->animSpeedC > cap)
     {
         ((BaddieState*)st)->animSpeedC = cap;
