@@ -13156,9 +13156,9 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
 void fn_802B066C(int obj, int state)
 {
     f32 v;
-    f32 px;
-    f32 py;
     f32 pz;
+    f32 py;
+    f32 px;
 
     if (((PlayerState*)state)->surfaceType == 0x1a)
     {
@@ -13167,19 +13167,12 @@ void fn_802B066C(int obj, int state)
     if (((ByteFlags*)((char*)state + 0x3f0))->b10 == 0)
     {
         v = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
-            ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY);
+            (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
         ((PlayerState*)state)->unk7A4 = v;
         v = ((PlayerState*)state)->unk7A4;
-        if (v < lbl_803E7EE0)
-        {
-            v = lbl_803E7EE0;
-        }
-        else if (v > lbl_803E8138)
-        {
-            v = lbl_803E8138;
-        }
-        ((PlayerState*)state)->unk7A4 = v;
+        ((PlayerState*)state)->unk7A4 =
+            (v < lbl_803E7EE0) ? lbl_803E7EE0 : ((v > lbl_803E8138) ? lbl_803E8138 : v);
     }
     ((PlayerState*)state)->unk79C =
         ((PlayerState*)state)->unk79C - timeDelta * ((PlayerState*)state)->unk7A4;
