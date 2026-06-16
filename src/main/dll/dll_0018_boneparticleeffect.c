@@ -1385,6 +1385,7 @@ extern f32 lbl_803DF4AC;
 extern f32 lbl_803DF4B0;
 extern f32 lbl_803DF4B4;
 extern f32 lbl_803DF4B8;
+extern f32 lbl_803DF4BC;
 extern f32 lbl_803DF4C0;
 extern f32 lbl_803DF4C4;
 extern f32 playerMapOffsetX;
@@ -1509,7 +1510,7 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                 dx = dx * 20.02f;
                 if (id == 0x1d || id == 0x1d) /* duplicate term is load-bearing: emits target's beq;bne pair */
                 {
-                    dy = 20.02f * (lbl_803DF4C0 + dy);
+                    dy = lbl_803DF4BC * (lbl_803DF4C0 + dy);
                 }
                 else
                 {
