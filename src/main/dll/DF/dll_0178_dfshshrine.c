@@ -113,8 +113,8 @@ void fn_801C2914(int obj)
     if (player != NULL)
     {
         angleDelta =
-        ((u16)getAngle(((GameObject*)obj)->anim.worldPosX - *(f32*)(player + 0x18),
-                       ((GameObject*)obj)->anim.worldPosZ - *(f32*)(player + 0x20)) -
+        ((u16)getAngle(((GameObject*)obj)->anim.worldPosX - ((GameObject*)player)->anim.worldPosX,
+                       ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)player)->anim.worldPosZ) -
             ((u16) * (s16*)obj));
         if (angleDelta > 0x8000)
         {
