@@ -1790,7 +1790,7 @@ void initFn_8006d020(void)
     placed = 0;
     attempts = 0;
     e = lbl_80391978;
-    while (placed < 0x32 && attempts < 10000)
+    while (placed < 0x32 && attempts < 10000u)
     {
         e[0] = (f32)(int)
         randomGetRange(8, 0x10);
@@ -1832,7 +1832,7 @@ void initFn_8006d020(void)
             }
             attempts++;
         }
-        while (collide && attempts < 10000);
+        while (collide && attempts < 10000u);
         e += 5;
         placed++;
     }
