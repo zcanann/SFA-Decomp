@@ -1156,7 +1156,7 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk4 = t * t;
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
+        *(s16*)obj = (s16)(params[0x3d] << 8);
         ((GameObject*)obj)->anim.rootMotionScale = t / lbl_803E40F8;
         break;
     case 0x4c:
@@ -1168,7 +1168,7 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk4 = ((TriggerState*)sub)->unk4 * ((TriggerState*)sub)->unk4;
         break;
     case 0x4d:
-        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
+        *(s16*)obj = (s16)(params[0x3d] << 8);
         ((GameObject*)obj)->anim.rotY = (s16)(params[0x3e] << 8);
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
@@ -1179,9 +1179,10 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk88 = *(s16*)(params + 0x4e);
         ((TriggerFlags8A*)(sub + 0x8a))->bit7 = 0;
         break;
+    case 0x51:
+        break;
     case 0xf4:
         break;
-    case 0x51:
     default:
         break;
     }
@@ -1193,9 +1194,11 @@ void Trigger_init(u8* obj, u8* params)
     sub[0] = (u8)(sub[0] | 0x40);
 }
 
+void cloudprisoncontrol_free(void);
 
 int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
+int cloudprisoncontrol_getExtraSize(void);
 
 /* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
  * struct-field form flips MWCC's variable-index/walker addressing, banked).
@@ -1212,9 +1215,9 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     u8* state = ((GameObject*)obj)->extra;
     u8* p = (u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18);
     u8 i = 0;
-    u8 opFlags;
-    u8 seqFlags;
-    u8 subOp;
+    u8 b;
+    u8 sflags;
+    u8 c;
     int t;
     int t2;
     int* tbl;
@@ -1230,18 +1233,18 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
 
     while (i < 8)
     {
-        if (p[1] != 0 && ((seqFlags = *state, (seqFlags & 4) == 0) || (*p & 0x20) != 0))
+        if (p[1] != 0 && ((sflags = *state, (sflags & 4) == 0) || (*p & 0x20) != 0))
         {
-            opFlags = *p;
-            if ((opFlags & 0x10) == 0)
+            b = *p;
+            if ((b & 0x10) == 0)
             {
                 if ((s8)p3 == 1)
                 {
-                    if ((opFlags & 1) != 0)
+                    if ((b & 1) != 0)
                     {
-                        if ((seqFlags & 1) != 0)
+                        if ((sflags & 1) != 0)
                         {
-                            if ((opFlags & 4) == 0)
+                            if ((b & 4) == 0)
                             {
                                 goto next;
                             }
@@ -1249,11 +1252,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         goto run;
                     }
                 }
-                else if ((s8)p3 == -1 && (opFlags & 2) != 0)
+                else if ((s8)p3 == -1 && (b & 2) != 0)
                 {
-                    if ((seqFlags & 2) != 0)
+                    if ((sflags & 2) != 0)
                     {
-                        if ((opFlags & 8) == 0)
+                        if ((b & 8) == 0)
                         {
                             goto next;
                         }
@@ -1261,7 +1264,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     goto run;
                 }
             }
-            else if ((opFlags & 1) != 0)
+            else if ((b & 1) != 0)
             {
                 if ((s8)p3 < 0)
                 {
@@ -1269,7 +1272,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 }
                 goto run;
             }
-            else if ((opFlags & 2) == 0 || (s8)p3 <= 0)
+            else if ((b & 2) == 0 || (s8)p3 <= 0)
             {
             run:
                 switch (p[1])
@@ -1520,7 +1523,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x2f:
                     t = ObjGroup_FindNearestObject(0x4c, obj, 0);
-                    if (t != 0)
+                    if ((void*)t != NULL)
                     {
                         timer_addDuration(t, (u32)p[3] * 0x3c);
                     }
@@ -1531,16 +1534,15 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x22:
                     id = (u16)((p[2] << 8) | p[3]);
-                    subOp = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
-                    (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, subOp ^ 1);
+                    c = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
+                    (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:
-                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
-                    if (tbl != NULL)
+                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
-                            if (getLoadedTexture(*tbl) == 0)
+                            if ((void*)getLoadedTexture(*tbl) == NULL)
                             {
                                 crash(0x32, 3, 0, *tbl, 0, 0, 0, 0);
                             }
@@ -1548,12 +1550,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x16:
-                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
-                    if (tbl != NULL)
+                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
-                            if (getLoadedTexture(*tbl) != 0)
+                            if ((void*)getLoadedTexture(*tbl) != NULL)
                             {
                                 textureFree(*tbl);
                             }
@@ -1578,7 +1579,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x1f:
                     t = Obj_GetPlayerObject();
-                    d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)t)->anim.rotX;
+                    d = *(s16*)obj - (u16) * (s16*)t;
                     if (d > 0x8000)
                     {
                         d -= 0xffff;
@@ -1595,12 +1596,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     if (ang > 0x4000)
                     {
                         (*gMapEventInterface)->savePoint(obj + 0xc,
-                                                            (int)(s16)(((GameObject*)obj)->anim.rotX + 0x8000),
+                                                            (int)(s16)(*(s16*)obj + 0x8000),
                                                             p[3], getCurMapLayer());
                     }
                     else
                     {
-                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)((GameObject*)obj)->anim.rotX,
+                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)*(s16*)obj,
                                                             p[3], getCurMapLayer());
                     }
                     break;
@@ -1618,7 +1619,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     switch (((ObjInterpretSeqPlacement*)p)->unk2)
                     {
                     case 0:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
                                                                     getCurMapLayer(), 0);
                         break;
                     case 1:
@@ -1628,7 +1629,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (*gMapEventInterface)->gotoRestartPoint();
                         break;
                     case 3:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
                                                                     getCurMapLayer(), 1);
                         break;
                     }
@@ -1666,14 +1667,14 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x1c:
-                    subOp = p[2];
-                    if (subOp == 2)
+                    c = p[2];
+                    if (c == 2)
                     {
                         GameBit_Set(0x3af, p[3] == 0);
                     }
-                    else if (subOp < 2)
+                    else if (c < 2)
                     {
-                        if (subOp == 0)
+                        if (c == 0)
                         {
                             GameBit_Set(0x3ab, p[3] == 0);
                         }
@@ -1682,10 +1683,10 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             GameBit_Set(0x3ac, p[3] == 0);
                         }
                     }
-                    else if (subOp < 4)
+                    else if (c < 4)
                     {
-                        subOp = p[3];
-                        if (subOp == 1)
+                        c = p[3];
+                        if (c == 1)
                         {
                             GameBit_Set(0x3b0, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
@@ -1693,14 +1694,14 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
                             envFxFn_800887cc();
                         }
-                        else if (subOp == 0)
+                        else if (c == 0)
                         {
                             GameBit_Set(0x3b0, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
                         }
-                        else if (subOp < 3)
+                        else if (c < 3)
                         {
                             GameBit_Set(0x3b0, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
@@ -1765,51 +1766,51 @@ void Trigger_hitDetect(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    int player;
-    int tricky;
+    int t;
+    int tk;
     int target;
     int ok;
-    int flagOk;
+    int ok2;
     int r1;
     int r2;
     int i;
-    u8* flagWalker;
-    u8 anchorMode;
+    u8* p8;
+    u8 c;
     s16 ty;
     f32 dist[1];
 
     dist[0] = lbl_803E4104;
     if (((TriggerPlacement*)def)->unk38 <= 0 || *(s16*)def == 0xf4)
     {
-        player = Obj_GetPlayerObject();
-        if ((void*)player != NULL)
+        t = Obj_GetPlayerObject();
+        if ((void*)t != NULL)
         {
             r1 = fn_802972A8();
             if ((void*)r1 != NULL)
             {
-                player = r1;
+                t = r1;
             }
         }
         else
         {
-            player = getArwing();
+            t = getArwing();
         }
-        tricky = getTrickyObject();
-        if ((void*)player != NULL || (void*)tricky != NULL)
+        tk = getTrickyObject();
+        if ((void*)t != NULL || (void*)tk != NULL)
         {
             if ((*state & 4) != 0)
             {
-                objInterpretSeq(obj, player, 1, 0);
+                objInterpretSeq(obj, t, 1, 0);
                 *state &= ~4;
                 *state |= 1;
             }
             else
             {
                 ok = 1;
-                anchorMode = def[0x43];
-                if (anchorMode > 2)
+                c = def[0x43];
+                if (c > 2)
                 {
-                    target = ObjGroup_FindNearestObject(anchorMode - 1, obj, (int)dist);
+                    target = ObjGroup_FindNearestObject(c - 1, obj, (int)dist);
                     if ((void*)target == NULL)
                     {
                         ok = 0;
@@ -1817,18 +1818,18 @@ void Trigger_hitDetect(int obj)
                 }
                 else
                 {
-                    switch (anchorMode)
+                    switch (c)
                     {
                     case 0:
-                        target = player;
-                        if ((void*)player == NULL)
+                        target = t;
+                        if ((void*)t == NULL)
                         {
                             ok = 0;
                         }
                         break;
                     case 1:
-                        target = tricky;
-                        if ((void*)tricky == NULL)
+                        target = tk;
+                        if ((void*)tk == NULL)
                         {
                             ok = 0;
                         }
@@ -1896,12 +1897,12 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x4c:
-                    flagOk = 1;
+                    ok2 = 1;
                     if (((TriggerState*)state)->unk82 != -1 && GameBit_Get(((TriggerState*)state)->unk82) == 0)
                     {
-                        flagOk = 0;
+                        ok2 = 0;
                     }
-                    if (flagOk && ok)
+                    if (ok2 && ok)
                     {
                         fn_80198DE8(obj, target);
                     }
@@ -1940,7 +1941,7 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x50:
-                    objInterpretSeq(obj, player, 1, 0);
+                    objInterpretSeq(obj, t, 1, 0);
                     if (return1_800202BC() != 0)
                     {
                         Obj_FreeObject(obj);
@@ -1949,20 +1950,20 @@ void Trigger_hitDetect(int obj)
                 case 0x54:
                     ok = 1;
                     i = 0;
-                    flagWalker = state;
+                    p8 = state;
                     while (i < 4 && ok)
                     {
-                        if (*(s16*)(flagWalker + 0x82) != -1 && GameBit_Get(*(s16*)(flagWalker + 0x82)) == 0)
+                        if (*(s16*)(p8 + 0x82) != -1 && GameBit_Get(*(s16*)(p8 + 0x82)) == 0)
                         {
                             ok = 0;
                         }
-                        flagWalker += 2;
+                        p8 += 2;
                         i++;
                     }
                     if (ok && (s8)state[0x8a] >= 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
-                        objInterpretSeq(obj, player, 1, 0);
+                        objInterpretSeq(obj, t, 1, 0);
                     }
                     if (!ok)
                     {
