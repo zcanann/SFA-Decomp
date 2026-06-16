@@ -275,23 +275,25 @@ void vortex_update(int obj)
 
     if (state->flags.active != 0)
     {
-        if (state->alpha < lbl_803E73E0)
+        f32 lim = lbl_803E73E0;
+        if (state->alpha < lim)
         {
             state->alpha = lbl_803E7400 * timeDelta + state->alpha;
-            if (state->alpha > lbl_803E73E0)
+            if (state->alpha > lim)
             {
-                state->alpha = lbl_803E73E0;
+                state->alpha = lim;
             }
         }
     }
     else
     {
-        if (state->alpha > lbl_803E73D0)
+        f32 lim = lbl_803E73D0;
+        if (state->alpha > lim)
         {
             state->alpha = state->alpha - lbl_803E7400 * timeDelta;
-            if (state->alpha < lbl_803E73D0)
+            if (state->alpha < lim)
             {
-                state->alpha = lbl_803E73D0;
+                state->alpha = lim;
             }
         }
     }
