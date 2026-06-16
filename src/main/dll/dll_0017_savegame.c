@@ -570,7 +570,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                 transient = s->transient;
                 for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
                 {
-                    if (transient->mapId == idx && transient->shift == shift)
+                    if (idx == transient->mapId && shift == transient->shift)
                     {
                         return;
                     }
