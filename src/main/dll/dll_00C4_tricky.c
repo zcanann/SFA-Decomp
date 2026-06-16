@@ -198,6 +198,8 @@ extern f32 lbl_803E30D0;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3188;
+extern f32 lbl_803E24F8;
+extern undefined4 lbl_803E23C8;
 extern f32 lbl_803E31C4;
 extern f32 lbl_803E3234;
 extern f32 lbl_803E3244;
@@ -522,7 +524,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     promptA = false;
     promptB = false;
     promptC = false;
-    promptTable[0] = DAT_803e3058;
+    promptTable[0] = lbl_803E23C8;
     bitVal = GameBit_Get(0x4e4);
     if (bitVal != 0)
     {
@@ -593,7 +595,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         *(u8*)(state + 0xb) = 0;
         if ((cond) && ((*(uint*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(state + 0x7b4) = lbl_803E3188;
+            *(float*)(state + 0x7b4) = lbl_803E24F8;
             if ((*(int*)(state + 0x7b0) == 0) && (Obj_IsLoadingLocked() != 0))
             {
                 bitVal = randomGetRange(0, 1);
@@ -601,7 +603,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ref = *(int*)(objVal + 0xb8);
                 if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
                     (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                        (cond = FUN_800067f0(objVal, 0x10), !cond))))
+                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
                 {
                     objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
                 }
@@ -650,15 +652,15 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         else if (*(int*)(state + 0x7b0) != 0)
         {
-            *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - lbl_803DC074;
-            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E306C)
+            *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - timeDelta;
+            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E23DC)
             {
                 objAnimFreeChildren(objVal, state, (int*)(state + 0x7b0));
             }
         }
         if ((promptA) && ((*(uint*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(state + 0x7ac) = lbl_803E3188;
+            *(float*)(state + 0x7ac) = lbl_803E24F8;
             if ((*(int*)(state + 0x7a8) == 0) && (Obj_IsLoadingLocked() != 0))
             {
                 bitVal = randomGetRange(0, 3);
@@ -669,7 +671,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                         ref = *(int*)(objVal + 0xb8);
                         if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
                             (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                                (cond = FUN_800067f0(objVal, 0x10), !cond))))
+                                (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
                         {
                             objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
@@ -677,7 +679,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     else if ((((promptC) &&
                                 (ref = *(int*)(objVal + 0xb8), (*(byte*)(ref + 0x58) >> 6 & 1) == 0)) &&
                             ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
-                        (cond = FUN_800067f0(objVal, 0x10), !cond))
+                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))
                     {
                         objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
@@ -726,8 +728,8 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         else if (*(int*)(state + 0x7a8) != 0)
         {
-            *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - lbl_803DC074;
-            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E306C)
+            *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - timeDelta;
+            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E23DC)
             {
                 objAnimFreeChildren(objVal, state, (int*)(state + 0x7a8));
             }
