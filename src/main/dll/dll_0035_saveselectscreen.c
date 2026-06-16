@@ -600,7 +600,7 @@ int SaveSelectScreen_run(void)
     }
     if (lbl_803DD6CD != 0 || lbl_803DD6CC != 0)
     {
-        if ((timer < 13 || lbl_803DD6CF > 12) && lbl_803DD6CF < 1)
+        if ((timer <= 12 || lbl_803DD6CF > 12) && lbl_803DD6CF <= 0)
         {
             if (lbl_803DD6CD != 0)
             {
