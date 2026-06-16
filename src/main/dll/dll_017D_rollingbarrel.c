@@ -258,21 +258,27 @@ void RollingBarrel_update(int obj)
         break;
     case ROLLINGBARREL_STATE_EXPLODED_WAIT:
         state->timer += timeDelta;
-        if (state->timer >= lbl_803E44B0)
         {
-            state->state = ROLLINGBARREL_STATE_RESPAWN_WAIT;
-            state->timer -= lbl_803E44B0;
+            f32 respawnDelay = lbl_803E44B0;
+            if (state->timer >= respawnDelay)
+            {
+                state->state = ROLLINGBARREL_STATE_RESPAWN_WAIT;
+                state->timer -= respawnDelay;
+            }
         }
         break;
     case ROLLINGBARREL_STATE_RESPAWN_WAIT:
         state->timer += timeDelta;
-        if (state->timer >= lbl_803E44B0)
         {
+            f32 respawnDelay = lbl_803E44B0;
+            if (state->timer >= respawnDelay)
+            {
             state->hitVolumeSlot = 0;
             state->state = ROLLINGBARREL_STATE_CLEANUP;
-            state->timer -= lbl_803E44B0;
+            state->timer -= respawnDelay;
             ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
             lbl_803DDB20 -= 1;
+            }
         }
         break;
     case ROLLINGBARREL_STATE_CLEANUP:
