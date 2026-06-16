@@ -223,7 +223,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
         if ((sliderDelta == 0) ||
             ((lbl_803DD91C < (f32)item->minValue) && (sliderDelta < 0)) ||
-            (((f32)item->maxValue < lbl_803DD91C) && (sliderDelta > 0)))
+            ((lbl_803DD91C > (f32)item->maxValue) && (sliderDelta > 0)))
         {
             lbl_803DD918 = 0;
         }
