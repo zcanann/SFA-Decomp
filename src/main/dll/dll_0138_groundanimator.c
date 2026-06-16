@@ -412,6 +412,7 @@ void groundanimator_update(int* obj)
     u8 oldbit;
     u8 allow;
     void* tricky;
+    f32 zero;
     f32 nd;
     f32 vbuf[2];
     Obj_GetPlayerObject();
@@ -550,6 +551,7 @@ void groundanimator_update(int* obj)
             }
             foff = 0;
             hoff = 0;
+            zero = lbl_803E3FB0;
             for (blkIdx = 0; blkIdx < g->entryCount; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, g->blockEntries[blkIdx]);
@@ -558,7 +560,7 @@ void groundanimator_update(int* obj)
                     vtx = fn_800606DC(block, mid);
                     for (inner = 0; inner < 3; inner++)
                     {
-                        if (*(f32*)((char*)g->falloffBuf + foff) > lbl_803E3FB0)
+                        if (*(f32*)((char*)g->falloffBuf + foff) > zero)
                         {
                             void* cell = (char*)((MapBlockData*)block)->unk58 + *(u16*)vtx * 6;
                             fn_800605F0(cell, &vbuf[1]);
