@@ -16622,7 +16622,7 @@ void fn_802B0920(int obj, int state)
             t4->textureId = 0x200;
         }
     }
-    if ((((PlayerState*)state)->flags360 & 0x2000000) == 0)
+    if ((((PlayerState*)state)->flags360 & 0x2000000) == 0u)
     {
         ((PlayerState*)state)->headPitch =
             (f32)((PlayerState*)state)->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
@@ -16637,14 +16637,8 @@ void fn_802B0920(int obj, int state)
     {
         f31v = inner->baddie.animSpeedC /
             *(f32*)((char*)(((PlayerState*)state)->unk400) + 0x18);
-        if (f31v < lbl_803E7EA4)
-        {
-            f31v = lbl_803E7EA4;
-        }
-        else if (f31v > lbl_803E7EE0)
-        {
-            f31v = lbl_803E7EE0;
-        }
+        f31v = (f31v < lbl_803E7EA4) ? lbl_803E7EA4
+               : ((f31v > lbl_803E7EE0) ? lbl_803E7EE0 : f31v);
         f30v = lbl_803E7EE0 - f31v;
     }
     if (vec9 != NULL)
