@@ -1,3 +1,19 @@
+/*
+ * vfplift (DLL 0x21D, VFPLift / VFPLift1 / VFPLift2 / VFPLift3) - the
+ * rising/lowering platform lifts in the Volcano Force Point Temple.
+ *
+ * Three lift variants share this code, dispatched by seq id in
+ * vfplift_update:
+ *  - lift 1 (0x3B7): gated behind four "gate" game bits (or map-event
+ *    act 2); once all are set it plays its ready trigger, then toggles
+ *    raised/lowered on interaction;
+ *  - lifts 2/3 (0x3BF / 0x53F): a plain interact-to-toggle platform,
+ *    each variant using its own raised height offset.
+ * Interacting with a lift disables the A-button prompt, runs the
+ * raise/lower trigger sequence, plays the move sfx, and writes the
+ * toggle game bit. hitDetect enables/disables the object's hit volume
+ * from the hit-disable game bit.
+ */
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -302,51 +318,50 @@ void vfplift_hitDetect(int obj)
 
     if (state->hitDisableGameBit != -1 && (u32)GameBit_Get(state->hitDisableGameBit) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= VFPLIFT_OBJ_FLAG_NO_HIT;
     }
-    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 8) != 0)
+    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & VFPLIFT_OBJ_FLAG_NO_HIT) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= VFPLIFT_OBJ_FLAG_NO_HIT;
     }
 }
 
 void vfplift_init(int* obj, VFPLiftPlacement* init)
 {
-    VFPLiftState* st = ((GameObject*)obj)->extra;
+    VFPLiftState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)vfplift_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(init->yawByte << 8);
-    st->mode = 0;
-    st->hitDisableGameBit = init->hitDisableGameBit;
-    st->toggleGameBit = init->toggleGameBit;
-    st->travelDistance = (f32)(s32)
-    init->travelDistance;
-    st->mapEventNo = init->mapEventNo;
-    *(s16*)((char*)st + 0x12) = 0;
-    *(s16*)((char*)st + 0x14) = 0;
-    *(s16*)((char*)st + 0x16) = 0;
-    *(s16*)((char*)st + 0x18) = 0;
-    if (((GameObject*)obj)->anim.seqId == 0x3bf)
+    state->mode = VFPLIFT_STATE_IDLE;
+    state->hitDisableGameBit = init->hitDisableGameBit;
+    state->toggleGameBit = init->toggleGameBit;
+    state->travelDistance = (f32)(s32)init->travelDistance;
+    state->mapEventNo = init->mapEventNo;
+    *(s16*)((char*)state + 0x12) = 0;
+    *(s16*)((char*)state + 0x14) = 0;
+    *(s16*)((char*)state + 0x16) = 0;
+    *(s16*)((char*)state + 0x18) = 0;
+    if (((GameObject*)obj)->anim.seqId == VFPLIFT2_OBJTYPE)
     {
-        if ((u32)GameBit_Get(st->toggleGameBit) != 0)
+        if ((u32)GameBit_Get(state->toggleGameBit) != 0)
         {
-            st->mode = 4;
-            st->applyHeight = 1;
+            state->mode = VFPLIFT_STATE_RAISED;
+            state->applyHeight = 1;
         }
         else
         {
-            st->mode = 3;
+            state->mode = VFPLIFT_STATE_LOWERED;
         }
     }
-    if (((GameObject*)obj)->anim.seqId == 0x3b7 && (u32)GameBit_Get(0x4ee) != 0)
+    if (((GameObject*)obj)->anim.seqId == VFPLIFT1_OBJTYPE && (u32)GameBit_Get(VFPLIFT1_READY_GAMEBIT) != 0)
     {
-        if ((u32)GameBit_Get(st->toggleGameBit) != 0)
+        if ((u32)GameBit_Get(state->toggleGameBit) != 0)
         {
-            st->mode = 3;
+            state->mode = VFPLIFT_STATE_LOWERED;
         }
         else
         {
-            st->mode = 4;
-            st->applyHeight = 1;
+            state->mode = VFPLIFT_STATE_RAISED;
+            state->applyHeight = 1;
         }
     }
 }
