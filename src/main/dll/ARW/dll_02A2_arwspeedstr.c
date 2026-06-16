@@ -1,3 +1,12 @@
+/*
+ * arwspeedstr (DLL 0x2A2) - the streaking "speed line" particles that fly
+ * past the camera during the on-rails Arwing sections, conveying forward
+ * speed. On first update each streak picks a random spread offset in
+ * camera space, transforms it through the inverse view matrix into world
+ * space and biases it by the player's map offset. It then drifts along its
+ * own velocity, fading its alpha up to a cap over its life timer before
+ * freeing itself when the timer runs out.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
