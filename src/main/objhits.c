@@ -383,7 +383,7 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeleto
     ObjHitsVec3 move;
     ObjHitsVec3 projPos;
 
-    aPtr = (float*)&pj.accum;
+    aPtr = &pj.out[9];
     saved = hits;
     move.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)obj)->anim.previousWorldPosX;
     move.y = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousWorldPosY;
