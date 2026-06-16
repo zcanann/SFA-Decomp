@@ -1584,6 +1584,14 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
     }
 }
 
+typedef struct TrickyByte82E
+{
+    u8 b0 : 1;
+    u8 b1 : 1;
+    u8 b5 : 1;
+    u8 rest : 5;
+} TrickyByte82E;
+
 int trickyFoodFn_8014460c(int objArg, int* trickyState)
 {
     u8* obj = (u8*)objArg;
@@ -1656,7 +1664,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(3, obj, -1);
-                    ((TrickyState*)b)->unk82E = (((TrickyState*)b)->unk82E & 0xdf) | 0x20;
+                    ((TrickyByte82E*)&((TrickyState*)b)->unk82E)->b5 = 1;
                 }
                 else
                 {
@@ -1711,7 +1719,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(2, obj, -1);
-                    ((TrickyState*)b)->unk82E = (((TrickyState*)b)->unk82E & 0xdf) | 0x20;
+                    ((TrickyByte82E*)&((TrickyState*)b)->unk82E)->b5 = 1;
                     ((TrickyState*)state)->stateFlags |= 0x40000000;
                 }
                 buttonDisable(0, 0x100);
@@ -1767,7 +1775,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                     trickyDebugPrint(lbl_8031D478);
                 }
                 (*gObjectTriggerInterface)->runSequence(g, obj, -1);
-                ((TrickyState*)b)->unk82E = (((TrickyState*)b)->unk82E & 0xdf) | 0x20;
+                ((TrickyByte82E*)&((TrickyState*)b)->unk82E)->b5 = 1;
                 buttonDisable(0, 0x100);
                 return 1;
             }
