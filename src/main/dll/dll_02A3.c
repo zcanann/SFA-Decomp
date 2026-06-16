@@ -1,3 +1,16 @@
+/*
+ * dll_02A3 - a short-lived spinning debris/particle object.
+ *
+ * On init it fades in from alpha 0, picks a random starting orientation
+ * and random per-axis spin speeds. Each frame it fades the alpha up to a
+ * cap, advances its rotation by the spin speeds, and drifts along its
+ * velocity (gravity/launch supplied by fn_8023137C). It self-frees once
+ * its lifetime decays past a threshold.
+ *
+ * lbl_803DDD90 is a live-instance refcount (bumped on init, dropped on
+ * free); lbl_803DDD94 is a once-per-frame "an instance updated" flag,
+ * cleared by hitDetect and set by the first update.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -15,7 +28,7 @@ STATIC_ASSERT(offsetof(Dll2A3State, rotXSpeed) == 0x04);
 STATIC_ASSERT(offsetof(Dll2A3State, rotYSpeed) == 0x06);
 STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
 
-int dll_2A3_getExtraSize_ret_12(void) { return 0xc; }
+int dll_2A3_getExtraSize_ret_12(void) { return sizeof(Dll2A3State); }
 
 int dll_2A3_getObjectTypeId(void) { return 0x0; }
 
@@ -38,29 +51,29 @@ void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
 
 void dll_2A3_update(int obj)
 {
-    f32 thr;
-    f32 a;
-    f32 v;
+    f32 lifetimeFloor;
+    f32 lifetime;
+    f32 alpha;
     Dll2A3State* state = ((GameObject*)obj)->extra;
 
-    if ((a = state->lifetime) > (thr = lbl_803E711C))
+    if ((lifetime = state->lifetime) > (lifetimeFloor = lbl_803E711C))
     {
-        state->lifetime = a - timeDelta;
-        if (state->lifetime <= thr)
+        state->lifetime = lifetime - timeDelta;
+        if (state->lifetime <= lifetimeFloor)
         {
-            state->lifetime = thr;
+            state->lifetime = lifetimeFloor;
             Obj_FreeObject(obj);
             return;
         }
     }
 
-    v = (f32)(u32)((GameObject*)obj)->anim.alpha;
-    v = lbl_803E7120 * timeDelta + v;
-    if (v > lbl_803E7124)
+    alpha = (f32)(u32)((GameObject*)obj)->anim.alpha;
+    alpha = lbl_803E7120 * timeDelta + alpha;
+    if (alpha > lbl_803E7124)
     {
-        v = lbl_803E7124;
+        alpha = lbl_803E7124;
     }
-    ((GameObject*)obj)->anim.alpha = (u8)v;
+    ((GameObject*)obj)->anim.alpha = (u8)alpha;
 
     ((GameObject*)obj)->anim.rotX = (s16)((f32)state->rotXSpeed * timeDelta + (f32) * (s16*)(obj + 0));
     ((GameObject*)obj)->anim.rotY = (s16)((f32)state->rotYSpeed * timeDelta + (f32) * (s16*)(obj + 2));
@@ -89,15 +102,15 @@ void dll_2A3_init(int obj)
     lbl_803DDD90 = lbl_803DDD90 + 1;
 }
 
-void fn_8023137C(int obj, int src)
+void fn_8023137C(int obj, int velocity)
 {
-    ((GameObject*)obj)->anim.velocityX = *(f32*)(src + 0x0);
-    ((GameObject*)obj)->anim.velocityY = *(f32*)(src + 0x4);
-    ((GameObject*)obj)->anim.velocityZ = *(f32*)(src + 0x8);
+    ((GameObject*)obj)->anim.velocityX = *(f32*)(velocity + 0x0);
+    ((GameObject*)obj)->anim.velocityY = *(f32*)(velocity + 0x4);
+    ((GameObject*)obj)->anim.velocityZ = *(f32*)(velocity + 0x8);
 }
 
-void fn_8023134C(int obj, int v)
+void fn_8023134C(int obj, int lifetime)
 {
     Dll2A3State* state = ((GameObject*)obj)->extra;
-    state->lifetime = (f32)v;
+    state->lifetime = (f32)lifetime;
 }
