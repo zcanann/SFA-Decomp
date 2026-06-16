@@ -11213,11 +11213,14 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
 void fn_8029A4A8(int obj, int p2)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    s16 sel = ((PlayerState*)p2)->baddie.controlMode;
+    int sel = ((PlayerState*)p2)->baddie.controlMode;
     void** p;
     int i;
 
-    if (sel == 0x2a || sel == 0x2e || sel == 0x2f || sel == 0x2c) return;
+    if (sel == 0x2a) return;
+    if (sel == 0x2e) return;
+    if (sel == 0x2f) return;
+    if (sel == 0x2c) return;
 
     *(u32*)((char*)inner + 0x360) |= 0x800000LL;
     inner->animState = -1;
