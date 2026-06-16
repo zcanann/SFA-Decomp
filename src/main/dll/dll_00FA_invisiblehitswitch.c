@@ -109,9 +109,11 @@ void InvisibleHitSwitch_update(int obj)
         {
             ((InvisibleHitSwitchState*)state)->unk4 = zero;
             GameBit_Set((int)*(short*)(state2 + 0x18), 0);
+        }
+        else
+        {
             return;
         }
-        return;
     }
 
     if (((InvisibleHitSwitchState*)state)->unk8 != *(volatile f32*)&lbl_803E3730)
