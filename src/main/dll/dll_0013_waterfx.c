@@ -1,12 +1,42 @@
+/*
+ * waterfx (DLL 0x13) - water surface impact effects.
+ *
+ * Maintains four particle pools allocated as one block in
+ * waterfx_initialise: ripple quads (WaterEntry7, lbl_803DD238, up to 30),
+ * a second ripple/wake pool (WaterEntry, lbl_803DD228, up to 30), splash
+ * bursts (WaterParticle, lbl_803DD230, up to 10) and the individual splash
+ * drops thrown by each burst (WaterDrop, lbl_803DD220, up to 30). Counts of
+ * live entries are tracked in the lbl_803DD2xx pointer-sized counters.
+ *
+ * waterfx_func04 is the per-frame entry from a water surface: for each set
+ * bit in the limb mask it spawns a ripple (and, when the surface is shallow
+ * and the speed is high enough, a splash burst) and records a pending impact
+ * position that waterfx_consumePendingImpactNearPoint can query. waterfx_run
+ * advances all pools each tick; waterfx_func05 renders them. Drops that fall
+ * below their parent particle's surface spawn a fresh ripple.
+ *
+ * Tunables live in the lbl_803DF2xx/lbl_803DF3xx config block; the splash
+ * point-sprite render state is built in waterfx_setupSplashDropPointRender.
+ */
 #include "main/dll/fx_800944A0_shared.h"
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
+#define WATERFX_POOL_SIZE 30
+#define WATERFX_MAX_SPLASHES 10
+
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(void* a, void* b, void* ab);
+
 extern void DCStoreRange(void* p, int n);
+extern void DCInvalidateRange(void* p, int n);
 extern void GXCallDisplayList(void* list, int n);
+extern void GXSetMisc(int token, int val);
+extern void GXBeginDisplayList(void* p, int n);
+extern int GXEndDisplayList(void);
+extern void GXResetWriteGatherPipe(void);
+
 extern u16 lbl_803DD204;
 extern f32 lbl_803DF2E0;
 extern f32 lbl_803DF2E4;
@@ -14,15 +44,10 @@ extern f32 lbl_803DF2F0;
 extern f32 lbl_803DF2F4;
 extern f32 lbl_803DF2F8;
 extern f32 lbl_803DF304;
-extern void GXSetMisc(int token, int val);
-extern void DCInvalidateRange(void* p, int n);
-extern void GXBeginDisplayList(void* p, int n);
-extern int GXEndDisplayList(void);
-extern void GXResetWriteGatherPipe(void);
-extern f32 fn_802942EC(f32);
-extern f32 fn_80293F7C(f32);
 extern f32 lbl_803DF310;
 extern f32 lbl_803DF314;
+extern f32 fn_802942EC(f32);
+extern f32 fn_80293F7C(f32);
 
 void waterfx_setupSplashDropPointRender(void)
 {
@@ -81,12 +106,12 @@ void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d)
     WaterVtx* q;
     WaterEntry7* e;
     int j;
-    while (i < 0x1e && p->active != 0)
+    while (i < WATERFX_POOL_SIZE && p->active != 0)
     {
         p++;
         i++;
     }
-    if (i >= 0x1e)
+    if (i >= WATERFX_POOL_SIZE)
     {
         return;
     }
@@ -154,12 +179,12 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d)
     WaterVtx* q;
     WaterEntry* entry;
     int j;
-    while (i < 0x1e && p->active != 0)
+    while (i < WATERFX_POOL_SIZE && p->active != 0)
     {
         p++;
         i++;
     }
-    if (i >= 0x1e)
+    if (i >= WATERFX_POOL_SIZE)
     {
         return;
     }
@@ -216,12 +241,12 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
     i = 0;
     base = lbl_803DD230;
     p = base;
-    while (i < 0xa && (p->active != 0 || p->f10 < *(f32 *)&lbl_803DF2EC))
+    while (i < WATERFX_MAX_SPLASHES && (p->active != 0 || p->f10 < *(f32 *)&lbl_803DF2EC))
     {
         p++;
         i++;
     }
-    if (i >= 0xa)
+    if (i >= WATERFX_MAX_SPLASHES)
     {
         return;
     }
@@ -242,15 +267,15 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
 {
     int cur;
     f32 scale;
-    ExpParticle* p;
-    ExpParticle* base;
-    ExpParticle* slot;
+    WaterDrop* p;
+    WaterDrop* base;
+    WaterDrop* slot;
     int j;
     int i;
     cur = (int)lbl_803DD224;
-    if (count + cur > 30)
+    if (count + cur > WATERFX_POOL_SIZE)
     {
-        count = 30 - cur;
+        count = WATERFX_POOL_SIZE - cur;
     }
     if (count != 0)
     {
@@ -259,14 +284,14 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
         for (; i < count; i++)
         {
             j = 0;
-            base = (ExpParticle*)lbl_803DD220;
+            base = (WaterDrop*)lbl_803DD220;
             p = base;
-            while (j < 30 && p->active != -1)
+            while (j < WATERFX_POOL_SIZE && p->idx != -1)
             {
                 p++;
                 j++;
             }
-            if (j < 30)
+            if (j < WATERFX_POOL_SIZE)
             {
                 slot = &base[j];
                 slot->f0c = (f32)randomGetRange(-250, 250);
@@ -275,7 +300,7 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
                 slot->f14 = slot->f14 * scale;
                 slot->f10 = (f32)randomGetRange(200, 300);
                 slot->f10 = slot->f10 * scale;
-                slot->active = (s8)idx;
+                slot->idx = (s8)idx;
                 slot->x = src->x;
                 slot->y = src->y;
                 slot->z = src->z;
@@ -299,7 +324,7 @@ void waterfx_func05(int p1, int p2)
         {
             fn_8007CAF4((int)lbl_803DD21C);
         }
-        for (i = 0; i < 30; i++)
+        for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry7* e = &((WaterEntry7*)lbl_803DD238)[i];
             if (e->active != 0)
@@ -330,7 +355,7 @@ void waterfx_func05(int p1, int p2)
             GXSetVtxDesc(0xd, 3);
         }
         thr = lbl_803DF2EC;
-        for (i = 0; i < 10; i++)
+        for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
         {
             WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
             if (s->f10 < thr)
@@ -342,7 +367,7 @@ void waterfx_func05(int p1, int p2)
         {
             waterfx_setupSplashDropPointRender();
         }
-        for (i = 0; i < 30; i++)
+        for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterDrop* d = &((WaterDrop*)lbl_803DD220)[i];
             if (d->idx != -1)
@@ -357,7 +382,7 @@ void waterfx_func05(int p1, int p2)
         {
             fn_8007C664((int)lbl_803DD210);
         }
-        for (i = 0; i < 30; i++)
+        for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry* g = &((WaterEntry*)lbl_803DD228)[i];
             if (g->active != 0 && g->f18 == 0)
@@ -382,7 +407,7 @@ void waterfx_func05(int p1, int p2)
 void waterfx_run(void)
 {
     int i;
-    for (i = 0; i < 30; i++)
+    for (i = 0; i < WATERFX_POOL_SIZE; i++)
     {
         WaterEntry7* e = &((WaterEntry7*)lbl_803DD238)[i];
         if (e->active != 0)
@@ -396,7 +421,7 @@ void waterfx_run(void)
             }
         }
     }
-    for (i = 0; i < 30; i++)
+    for (i = 0; i < WATERFX_POOL_SIZE; i++)
     {
         WaterEntry* g = &((WaterEntry*)lbl_803DD228)[i];
         if (g->active != 0)
@@ -412,7 +437,7 @@ void waterfx_run(void)
     }
     {
         f32 thr = lbl_803DF2EC;
-        for (i = 0; i < 10; i++)
+        for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
         {
             WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
             if (s->f10 < thr)
@@ -425,7 +450,7 @@ void waterfx_run(void)
             }
         }
     }
-    for (i = 0; i < 30; i++)
+    for (i = 0; i < WATERFX_POOL_SIZE; i++)
     {
         WaterDrop* d = &((WaterDrop*)lbl_803DD220)[i];
         if (d->idx != -1)
@@ -484,12 +509,12 @@ void waterfx_onMapSetup(void)
     int i;
     VtxDesc* vd;
     {
-        f32 cf10;
-        f32 cxyz;
+        f32 initScale;
+        f32 initPos;
         vd = (VtxDesc*)lbl_803DD248;
-        cxyz = lbl_803DF300;
-        cf10 = lbl_803DF318;
-        for (i = 0; i < 30; i++)
+        initPos = lbl_803DF300;
+        initScale = lbl_803DF318;
+        for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry7* e;
             vd[0].b1 = 3;
@@ -500,36 +525,36 @@ void waterfx_onMapSetup(void)
             vd[1].b3 = 1;
             vd += 2;
             e = &((WaterEntry7*)lbl_803DD238)[i];
-            e->x = cxyz;
-            e->y = cxyz;
-            e->z = cxyz;
-            e->w = cxyz;
-            e->f10 = cf10;
+            e->x = initPos;
+            e->y = initPos;
+            e->z = initPos;
+            e->w = initPos;
+            e->f10 = initScale;
             e->active = 0;
         }
     }
     {
-        f32 cf10;
-        f32 cxyz;
-        cxyz = lbl_803DF300;
-        cf10 = lbl_803DF2EC;
-        for (i = 0; i < 10; i++)
+        f32 initThreshold;
+        f32 initPos;
+        initPos = lbl_803DF300;
+        initThreshold = lbl_803DF2EC;
+        for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
         {
             WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
-            s->x = cxyz;
-            s->y = cxyz;
-            s->z = cxyz;
-            s->f10 = cf10;
+            s->x = initPos;
+            s->y = initPos;
+            s->z = initPos;
+            s->f10 = initThreshold;
             s->active = 0;
         }
     }
     {
-        f32 cf10;
-        f32 cxyz;
+        f32 initScale;
+        f32 initPos;
         vd = (VtxDesc*)lbl_803DD240;
-        cxyz = lbl_803DF300;
-        cf10 = lbl_803DF318;
-        for (i = 0; i < 30; i++)
+        initPos = lbl_803DF300;
+        initScale = lbl_803DF318;
+        for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry* g;
             vd[0].b1 = 3;
@@ -540,27 +565,27 @@ void waterfx_onMapSetup(void)
             vd[1].b3 = 1;
             vd += 2;
             g = &((WaterEntry*)lbl_803DD228)[i];
-            g->x = cxyz;
-            g->y = cxyz;
-            g->z = cxyz;
-            g->w = cxyz;
-            g->f10 = cf10;
+            g->x = initPos;
+            g->y = initPos;
+            g->z = initPos;
+            g->w = initPos;
+            g->f10 = initScale;
             g->active = 0;
             g->f16 = 0;
         }
     }
     {
-        f32 cf10 = lbl_803DF300;
-        for (i = 0; i < 30; i++)
+        f32 initPos = lbl_803DF300;
+        for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterDrop* d = &((WaterDrop*)lbl_803DD220)[i];
             d->idx = -1;
-            d->f0c = cf10;
-            d->f10 = cf10;
-            d->f14 = cf10;
-            d->x = cf10;
-            d->y = cf10;
-            d->z = cf10;
+            d->f0c = initPos;
+            d->f10 = initPos;
+            d->f14 = initPos;
+            d->x = initPos;
+            d->y = initPos;
+            d->z = initPos;
         }
     }
 }
