@@ -804,11 +804,13 @@ void pushable_init(s16* obj, char* def)
                 int found = 0;
                 int j = 0;
                 u8 cnt = *(u8*)&state->pointCount;
+                f32 vx = vtx[0];
+                f32 vz = vtx[2];
 
                 for (; j < (s8)cnt; j++)
                 {
                     char* p = (char*)state + j * 0xc;
-                    if (vtx[0] == *(f32*)(p + 0x48) && vtx[2] == *(f32*)(p + 0x50))
+                    if (vx == *(f32*)(p + 0x48) && vz == *(f32*)(p + 0x50))
                     {
                         found = 1;
                         j = (s8)cnt;
