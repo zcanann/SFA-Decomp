@@ -1,3 +1,21 @@
+/*
+ * cloudaction - the sky-cloud layer renderer/updater for the env-fx DLL
+ * (shares its TU/runtime with the water and explosion fx via
+ * fx_800944A0_shared.h). It owns up to three cloud-layer objects in
+ * CloudActionRuntime (lbl_8039AB28): a main layer, an upper layer and a
+ * lower layer, each spawned from an asset id picked out of the per-env
+ * CloudEnvTbl (lbl_8030F7B0) by the current environment's layer-state
+ * bytes.
+ *
+ * renderClouds() positions each live layer to the current camera view
+ * slot (or to the gCloudOverride* position when one is set), draws it via
+ * objRender, and additionally draws a procedural sun/glare quad through
+ * the GX FIFO when the sky's cloud factor (fn_8008ED88) is above
+ * threshold. cloudaction_update() re-reads the env layer state each step,
+ * (re)spawns/frees the three layers as their asset ids change, and feeds
+ * the texture-scroll step; cloudaction_func05() scrolls the main layer's
+ * texture each frame.
+ */
 #include "main/dll/fx_800944A0_shared.h"
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
@@ -88,14 +106,14 @@ void renderClouds(int a, int b, int c, int d)
     u8 lightRed;
     u8 lightGreen;
     u8 lightBlue;
-    int s0;
-    int s1;
-    int s2;
-    int s3;
-    int t0;
-    int t1;
-    int t2;
-    int t3;
+    int clipX;
+    int clipY;
+    int clipW;
+    int clipH;
+    int savedClipX;
+    int savedClipY;
+    int savedClipW;
+    int savedClipH;
     f32 pos[3];
     f32 mtx[12];
     u8* view;
@@ -177,11 +195,11 @@ void renderClouds(int a, int b, int c, int d)
         fn_800412B8(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
 
-        fn_80060490(&s0, &s1, &s2, &s3);
-        if (s2 > 0 && s3 > 0)
+        fn_80060490(&clipX, &clipY, &clipW, &clipH);
+        if (clipW > 0 && clipH > 0)
         {
-            GXGetScissor(&t0, &t1, &t2, &t3);
-            GXSetScissor(s0, s1, s2, s3);
+            GXGetScissor(&savedClipX, &savedClipY, &savedClipW, &savedClipH);
+            GXSetScissor(clipX, clipY, clipW, clipH);
             *(u16*)(*(int*)model + 2) = *(u16*)(*(int*)model + 2) | 0x2000;
             fn_8003BB7C(0x80);
             GXSetColorUpdate(0);
@@ -189,7 +207,7 @@ void renderClouds(int a, int b, int c, int d)
             *(u16*)(*(int*)model + 2) = *(u16*)(*(int*)model + 2) & ~0x2000;
             fn_8003BB7C(0);
             GXSetColorUpdate(1);
-            GXSetScissor(t0, t1, t2, t3);
+            GXSetScissor(savedClipX, savedClipY, savedClipW, savedClipH);
         }
     }
 
@@ -286,9 +304,9 @@ void cloudaction_onMapSetup(void)
 void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
 {
     CloudEnvTbl* tbl = (CloudEnvTbl*)lbl_8030F7B0;
-    int env;
+    int envState;
 
-    env = saveGameGetEnvState();
+    envState = saveGameGetEnvState();
     if (state == NULL)
     {
         return;
@@ -297,7 +315,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         return;
     }
-    *(s16*)(env + 0xa) = (s16)((s16) * (u16*)(state + 0x24) - 1);
+    *(s16*)(envState + 0xa) = (s16)((s16) * (u16*)(state + 0x24) - 1);
     if ((state[0x59] & 1) == 0)
     {
         return;
