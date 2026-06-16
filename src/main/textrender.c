@@ -763,6 +763,7 @@ void* gameTextGetStr(int textId)
     return *(void**)*(u8**)((u8*)t + 8);
 }
 
+#pragma peephole off
 void* gameTextGet(int textId)
 {
     u8* gameTextBase;
@@ -871,6 +872,7 @@ void* gameTextGet(int textId)
     *(f32*)lbl_803DC970 = lbl_803DE704;
     return lbl_803DC974;
 }
+#pragma peephole reset
 
 undefined4
 #pragma scheduling on
