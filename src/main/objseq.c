@@ -395,7 +395,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 entry += 8;
             }
             *(u8**)(slotBase + j * 8) = activeObj;
-            *(u8**)((u8*)((int)lbl_80396918 + slotOff) + j * 8 + 4) = obj;
+            *(u8**)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
         }
     }
     else
@@ -1014,7 +1014,8 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x48:
                     mode48.mode = lbl_803DD108;
-                    if ((code = lbl_803DD100) == 0)
+                    code = lbl_803DD100;
+                    if (code == 0)
                     {
                         mode48.flag = 1;
                     }
@@ -1162,7 +1163,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             break;
         }
         slotFlags = base + (s8)((ObjSeqState*)seq)->slot;
-        slotFlags = (u8*)((int)slotFlags + 0x3538);
+        slotFlags = slotFlags + 0x3538;
         v = *slotFlags;
         if ((v & 0x10) != 0)
         {
@@ -4562,14 +4563,14 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
                               Curve_BuildHermiteCoeffs);
 
-    times = (f32*)out;
-    times[2] = lbl_803DEFB0;
+    times = &out->fromTime;
+    times[0] = lbl_803DEFB0;
     for (i = 0; i < 8; i++)
     {
         dx = xSamples[i + 1] - xSamples[i];
         dy = ySamples[i + 1] - ySamples[i];
         dz = zSamples[i + 1] - zSamples[i];
-        times[i + 3] = times[i + 2] + sqrtf(dx * dx + dy * dy + dz * dz);
+        times[i + 1] = times[i] + sqrtf(dx * dx + dy * dy + dz * dz);
     }
     if ((s8)flag == 1)
     {
@@ -4577,7 +4578,7 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     }
     for (i = 0; i <= 8; i++)
     {
-        times[i + 2] += t;
+        times[i] += t;
     }
 }
 
@@ -4720,15 +4721,15 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     if (from != NULL && state->toNodeId > -1)
     {
         to = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
-        times = (f32*)state;
         i = 0;
-        while (i <= 8 && t >= times[i + 2])
+        while (i <= 8 && t >= (&state->fromTime)[i])
         {
             i++;
         }
         segment = i - 1;
         segmentT = ((f32)segment +
-                (t - times[segment + 2]) / (times[segment + 3] - times[segment + 2])) *
+                (t - (&state->fromTime)[segment]) /
+                    ((&state->fromTime)[segment + 1] - (&state->fromTime)[segment])) *
             lbl_803DF01C;
 
         fromScale = ROM_CURVE_NODE_SCALE(from);
