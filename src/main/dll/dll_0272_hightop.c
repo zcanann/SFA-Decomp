@@ -810,7 +810,7 @@ int hightop_stateHandler04(int obj, int p)
         }
         fn_80039264((char*)state + 0xb48);
     }
-    count = GameBit_Get(0x9c9) + GameBit_Get(0x9c7) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
+    count = GameBit_Get(0x9c7) + GameBit_Get(0x9c9) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
     if (GameBit_Get(0x62b) != 0)
     {
         HighTopRuntime* state2;
@@ -818,7 +818,7 @@ int hightop_stateHandler04(int obj, int p)
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask &= ~1;
-        state->unkC4B = -1;
+        *(s8*)&state->unkC4B = -1;
         state->unkC40 |= 0x40;
         state->unkC40 |= 0x20;
         state->flagsC49.b1 = 0;
@@ -883,24 +883,10 @@ int hightop_stateHandler04(int obj, int p)
     {
         f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
         f32 a = dy >= lbl_803E6AA8 ? dy : -dy;
-        int doBlock;
-        if (a < lbl_803E6AEC)
-        {
-            doBlock = 1;
-        }
-        else
-        {
-            f32 b = dy >= lbl_803E6AA8 ? dy : -dy;
-            doBlock = b > lbl_803E6AF0;
-        }
-        if (doBlock == 0)
-        {
-            state->unk9FD &= ~1;
-        }
-        else
+        if (a < lbl_803E6AEC || (dy >= *(f32*)&lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
         {
             state->unk9FD |= 1;
-            if (randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
+            if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
             {
                 f32 c = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
                 f32 ac = c >= lbl_803E6AA8 ? c : -c;
@@ -909,6 +895,10 @@ int hightop_stateHandler04(int obj, int p)
                     (*gObjectTriggerInterface)->runSequence(9, (void*)obj, -1);
                 }
             }
+        }
+        else
+        {
+            state->unk9FD &= ~1;
         }
     }
     return 0;
