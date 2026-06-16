@@ -269,39 +269,43 @@ void saveGame_unsaveObjectPos(u8* obj)
     int i;
     SaveGameObjectPosition* slot;
     u32 objectId;
+    int status;
 
     if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         return;
     }
-    if (saveGameLoadStatus == 0)
+    status = saveGameLoadStatus;
+    if (status != 0)
     {
-        i = 0;
-        saveBase = gSaveGameData;
-        for (; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
-        {
-            objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
-            if (objectId == ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
-            {
-                break;
-            }
-            saveBase += sizeof(SaveGameObjectPosition);
-        }
-        if (i == SAVEGAME_OBJECT_POSITION_COUNT)
-        {
-            return;
-        }
-
-        slot = (SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET);
-        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++)
-        {
-            slot[0].objectId = slot[1].objectId;
-            slot[0].x = slot[1].x;
-            slot[0].y = slot[1].y;
-            slot[0].z = slot[1].z;
-        }
-        *(u32*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
+        return;
     }
+
+    i = 0;
+    saveBase = gSaveGameData;
+    for (; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
+    {
+        objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
+        if (objectId == ((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
+        {
+            break;
+        }
+        saveBase += sizeof(SaveGameObjectPosition);
+    }
+    if (i == SAVEGAME_OBJECT_POSITION_COUNT)
+    {
+        return;
+    }
+
+    slot = (SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET) + i;
+    for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++)
+    {
+        slot[0].objectId = slot[1].objectId;
+        slot[0].x = slot[1].x;
+        slot[0].y = slot[1].y;
+        slot[0].z = slot[1].z;
+    }
+    *(u32*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
 }
 
 extern void* memset(void* dst, int val, u32 n);
