@@ -1,20 +1,46 @@
+/*
+ * androssbrain (DLL 0x2BE) - the destructible brain core of the final
+ * Andross boss. It tracks the parent andross object (0x47B77) and the
+ * lightning object (0x4C611), mirroring andross's position and rotation
+ * each frame. While shielded it stays hidden; once made vulnerable it
+ * shows the air-meter health bar (0x50 hits), takes a hit per priority
+ * collision with a flash + cooldown, and on reaching zero health flips to
+ * the defeated state, signalling andross and the lightning object.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-/*
- * Per-object extra state for the Andross brain core
- * (androssbrain_getExtraSize == 0x28).
- */
+enum
+{
+    ANDROSS_OBJ_ID = 0x47b77,
+    ANDROSSLIGH_OBJ_ID = 0x4c611
+};
+
+enum
+{
+    BRAIN_SHIELDED = 0,
+    BRAIN_VULNERABLE = 1,
+    BRAIN_DEFEATED = 2
+};
+
+#define BRAIN_MAX_HEALTH 0x50
+
+enum
+{
+    ANDROSS_SIGNAL_BRAIN_HIT = 1,
+    ANDROSS_SIGNAL_BRAIN_DEFEATED = 8
+};
+
 typedef struct AndrossBrainState
 {
-    GameObject* andross; /* objId 0x47B77 main andross object */
-    GameObject* lightning; /* objId 0x4C611, androssligh target */
+    GameObject* andross; /* objId ANDROSS_OBJ_ID, main andross object */
+    GameObject* lightning; /* objId ANDROSSLIGH_OBJ_ID, androssligh target */
     u8 pad08[0x1C - 0x08];
-    s8 brainState; /* 0 shielded, 1 vulnerable, 2 defeated */
+    s8 brainState; /* BRAIN_* */
     s8 prevState;
-    u8 health; /* 0x50; decrements per hit */
+    u8 health; /* decrements per hit */
     u8 flashTimer; /* frames of red flash / hit cooldown */
-    u8 pad20[8];
+    u8 pad20[0x28 - 0x20];
 } AndrossBrainState;
 
 STATIC_ASSERT(sizeof(AndrossBrainState) == 0x28);
@@ -52,17 +78,17 @@ void androssbrain_setState(int obj, int newState, u8 force)
         return;
     }
     state = ((GameObject*)obj)->extra;
-    if (state->brainState != 2 || force != 0)
+    if (state->brainState != BRAIN_DEFEATED || force != 0)
     {
         state->brainState = (s8)newState;
         if (force != 0)
         {
-            state->health = 0x50;
+            state->health = BRAIN_MAX_HEALTH;
         }
     }
     else
     {
-        andross_setPartSignal((int)state->andross, 1);
+        andross_setPartSignal((int)state->andross, ANDROSS_SIGNAL_BRAIN_HIT);
     }
 }
 
@@ -70,28 +96,28 @@ void androssbrain_init(int obj)
 {
     AndrossBrainState* state = ((GameObject*)obj)->extra;
 
-    state->health = 0x50;
+    state->health = BRAIN_MAX_HEALTH;
     ObjHits_SetTargetMask(obj, 4);
 }
 
 void androssbrain_update(int obj)
 {
     AndrossBrainState* state = ((GameObject*)obj)->extra;
-    u8 flag = 0;
+    u8 stateChanged = 0;
     int hitObj;
     int sphereIdx;
     uint hitVol;
     int hit;
-    int t;
+    int flashTimer;
     u8 currentState;
 
     if (state->andross == NULL)
     {
-        state->andross = (GameObject*)ObjList_FindObjectById(0x47b77);
+        state->andross = (GameObject*)ObjList_FindObjectById(ANDROSS_OBJ_ID);
     }
     if (state->lightning == NULL)
     {
-        state->lightning = (GameObject*)ObjList_FindObjectById(0x4c611);
+        state->lightning = (GameObject*)ObjList_FindObjectById(ANDROSSLIGH_OBJ_ID);
     }
     ObjHits_SetHitVolumeSlot(obj, 5, 2, -1);
     ObjHits_EnableObject(obj);
@@ -101,36 +127,36 @@ void androssbrain_update(int obj)
         ((GameObject*)obj)->anim.localPosY = state->andross->anim.localPosY;
         ((GameObject*)obj)->anim.localPosZ = state->andross->anim.localPosZ;
     }
-    currentState = *(u8*)&state->brainState;
+    currentState = state->brainState;
     if ((s8)currentState != state->prevState)
     {
-        flag = 1;
+        stateChanged = 1;
     }
-    *(u8*)&state->prevState = currentState;
+    *(u8*)&state->prevState = currentState; /* #15 u8 store, no extsb */
     switch (state->brainState)
     {
-    case 0:
-        if (flag != 0)
+    case BRAIN_SHIELDED:
+        if (stateChanged != 0)
         {
             (*gGameUIInterface)->airMeterShutdown();
         }
         ((GameObject*)obj)->anim.rotX = state->andross->anim.rotX;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
-    case 1:
-        if (flag != 0)
+    case BRAIN_VULNERABLE:
+        if (stateChanged != 0)
         {
             state->flashTimer = 0x3c;
-            (*gGameUIInterface)->initAirMeter(0x50, 0x643);
+            (*gGameUIInterface)->initAirMeter(BRAIN_MAX_HEALTH, 0x643);
         }
         (*gGameUIInterface)->runAirMeter(state->health);
         hit = ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol);
-        t = state->flashTimer - framesThisStep;
-        if (t < 0)
+        flashTimer = state->flashTimer - framesThisStep;
+        if (flashTimer < 0)
         {
-            t = 0;
+            flashTimer = 0;
         }
-        state->flashTimer = (u8)t;
+        state->flashTimer = (u8)flashTimer;
         if (hit != 0)
         {
             if (state->flashTimer == 0)
@@ -140,8 +166,8 @@ void androssbrain_update(int obj)
                 state->health -= 1;
                 if (state->health == 0)
                 {
-                    *(u8*)&state->brainState = 2;
-                    andross_setPartSignal((int)state->andross, 1);
+                    state->brainState = BRAIN_DEFEATED;
+                    andross_setPartSignal((int)state->andross, ANDROSS_SIGNAL_BRAIN_HIT);
                     Sfx_PlayFromObject(obj, 0x485);
                 }
                 else
@@ -152,14 +178,14 @@ void androssbrain_update(int obj)
         }
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         break;
-    case 2:
-        if (flag != 0)
+    case BRAIN_DEFEATED:
+        if (stateChanged != 0)
         {
-            androssligh_setState((int)state->lightning, 2, 0);
+            androssligh_setState((int)state->lightning, BRAIN_DEFEATED, 0);
             (*gGameUIInterface)->airMeterShutdown();
         }
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        andross_setPartSignal((int)state->andross, 8);
+        andross_setPartSignal((int)state->andross, ANDROSS_SIGNAL_BRAIN_DEFEATED);
         break;
     }
 }
