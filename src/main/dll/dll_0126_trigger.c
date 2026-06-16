@@ -1411,7 +1411,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 10:
                     getEnvfxAct(obj, p2, (u16)((p[2] << 8) | p[3]), p4);
-                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (u16)((p[2] << 8) | p[3]), p4);
+                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], p4);
                     break;
                 case 0xd:
                     getLActions(obj, p2, (u16)((p[2] << 8) | p[3]), p3, p4, 0);
@@ -1539,7 +1539,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:
-                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
+                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
+                    if (tbl != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
@@ -1551,7 +1552,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x16:
-                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
+                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
+                    if (tbl != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
