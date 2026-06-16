@@ -945,13 +945,6 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
 }
 
 undefined4
-FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-undefined4
 projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSourceState* sourceState,
                           uint spawnFlags, undefined modelId, undefined2* extraArgs)
 {
@@ -1274,23 +1267,6 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     }
     return spawnResult;
 }
-
-undefined4
-FUN_800a3828(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-undefined4
-FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-
-
 
 
 
