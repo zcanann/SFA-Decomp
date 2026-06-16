@@ -1816,14 +1816,14 @@ void fn_8015CE68(int obj, int state)
     {
         scale = ((GroundBaddieState*)state)->baddie.animSpeedA;
     }
-    if (((GroundBaddieState*)state)->baddie.controlMode == 4)
+    if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
-        ObjPath_GetPointWorldPosition(obj, 0, (f32*)(control + 0x2c),
+        ObjPath_GetPointWorldPosition(obj, 2, (f32*)(control + 0x2c),
                                       (f32*)(control + 0x30), (f32*)(control + 0x34), 0);
     }
     else
     {
-        ObjPath_GetPointWorldPosition(obj, 2, (f32*)(control + 0x2c),
+        ObjPath_GetPointWorldPosition(obj, 0, (f32*)(control + 0x2c),
                                       (f32*)(control + 0x30), (f32*)(control + 0x34), 0);
     }
     *(f32*)(control + 0x30) = lbl_803E2D90 + ((GameObject*)obj)->anim.localPosY;
