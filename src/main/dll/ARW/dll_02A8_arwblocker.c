@@ -1,3 +1,12 @@
+/*
+ * arwblocker (DLL 0x2A8) - an invisible trigger volume in the on-rails
+ * Arwing flight sections. It starts hidden with hit-detection disabled;
+ * once the Arwing (or, as a fallback, the player object) closes to within
+ * a fixed distance it fades in, enables its hitbox and fires one of two
+ * object sequences (selected by the placement's sequenceMode). The
+ * animEventCallback (arwblocker_getBlockState) reports whether the blocker
+ * is currently "armed" (mode 1 and not yet locked) to the sequence system.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
