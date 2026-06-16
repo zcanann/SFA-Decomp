@@ -1,3 +1,17 @@
+/*
+ * dll5efunc0 (DLL 0x5E) - save-file / gameplay-state services.
+ *
+ * Home TU for a block of save and map-event helpers that live in the
+ * 0x800e8xxx-0x800eaxxx text range and are called from many object DLLs
+ * (the FUN_800exxxx symbols are mirrored as drift duplicates in sibling
+ * dll_00xx files; this file holds the canonical bodies the linker resolves).
+ *
+ * Named entry points cover the gameplay preview/cheat settings struct
+ * (cheat-unlock bitset in gGameplayRegisteredDebugOptions, preview RGB
+ * volumes, getSaveFileStruct), save load/commit, the map-act flag history
+ * tables, and a modgfx particle-sequence spawn (dll_5E_func03). Several
+ * tiny dll_5E/5F entry stubs are no-ops.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
@@ -113,12 +127,6 @@ extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0,
 extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
 extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 void saveFileStruct_unlockCheat(uint cheatId)
 {
     gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
@@ -199,8 +207,8 @@ void FUN_800e8630(int param_1)
         slotIdx = slotBase + 6;
         if ((*(int*)(entry + 0x1c8) == 0) || (objId == *(int*)(entry + 0x1c8))) break;
         entry = entry + 0x70;
-        slotBase = slotBase + 7;
-        groupsLeft = groupsLeft + -1;
+        slotBase += 7;
+        groupsLeft--;
         slotIdx = slotBase;
         if (groupsLeft == 0) break;
     }
@@ -225,7 +233,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
 
 undefined FUN_800e8b98(void)
 {
@@ -294,7 +301,7 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
             (*gMapEventInterface)->setMapAct(act, 1);
         }
         actFlags = actFlags + 1;
-        act = act + 1;
+        act++;
     }
     while (act < 0x78);
     FUN_800e95e8(7, 0, 1);
@@ -311,13 +318,13 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     (&DAT_803a4590)[(uint)DAT_803a3f28 * 4] = savedY;
     (&DAT_803a4594)[(uint)DAT_803a3f28 * 4] = savedZ;
     DAT_803a4465 = 1;
-    if (src == (char*)0x0)
+    if (src == NULL)
     {
         DAT_803a3f24 = 0x46;
         DAT_803a3f25 = 0x4f;
         DAT_803a3f26 = 0x58;
         DAT_803a3f27 = 0;
-        src = (char*)0x0;
+        src = NULL;
     }
     else
     {
@@ -325,15 +332,15 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
         do
         {
             c = *src;
-            src = src + 1;
+            src++;
             *dst = c;
-            dst = dst + 1;
+            dst++;
         }
         while (c != '\0');
     }
     saveHandle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
     c = (char)result;
-    if ((c != -1) && (DAT_803dc4f0 = c, src != (char*)0x0))
+    if ((c != -1) && (DAT_803dc4f0 = c, src != NULL))
     {
         FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)result & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
@@ -426,7 +433,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                     }
                     actPtr = actPtr + 6;
                     wordPtr = wordPtr + 6;
-                    i = i + -1;
+                    i--;
                 }
                 while (i != 0);
                 if (!isClearMode)
@@ -446,7 +453,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                             goto LAB_800e9628;
                         histScan = histScan + 0xf;
                         slotBase = slotBase + '\x05';
-                        i = i + -1;
+                        i--;
                     }
                     while (i != 0);
                     slotIdx = -1;
@@ -466,8 +473,8 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                                 break;
                             }
                             histPtr = histPtr + 3;
-                            i = i + 1;
-                            j = j + -1;
+                            i++;
+                            j--;
                         }
                         while (j != 0);
                     }
@@ -509,7 +516,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                         }
                         actPtr = actPtr + 6;
                         wordPtr = wordPtr + 6;
-                        i = i + -1;
+                        i--;
                     }
                     while (i != 0);
                 }
@@ -524,18 +531,7 @@ void FUN_800e9e9c(void)
 {
     uint slotIdx;
     int saveResult;
-    undefined4 extraout_r4;
     undefined4 sizeArg;
-    undefined4 in_r6;
-    undefined4 in_r7;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined8 in_f4;
-    undefined8 in_f5;
-    undefined8 in_f6;
-    undefined8 in_f7;
-    undefined8 in_f8;
 
     DAT_803de10c = 0xff;
     DAT_803de104 = 0xffffffff;
@@ -548,9 +544,8 @@ void FUN_800e9e9c(void)
     FUN_8011e80c();
     slotIdx = (uint)DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[slotIdx * 4], (double)(float)(&DAT_803a4590)[slotIdx * 4],
-                 (double)(float)(&DAT_803a4594)[slotIdx * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
-                 (int)(char)(&DAT_803a4599)[slotIdx * 0x10], extraout_r4, sizeArg, in_r6, in_r7, in_r8, in_r9,
-                 in_r10);
+                 (double)(float)(&DAT_803a4594)[slotIdx * 4],
+                 (int)(char)(&DAT_803a4599)[slotIdx * 0x10], sizeArg);
     saveResult = FUN_80006b7c();
     if (saveResult != 4)
     {
@@ -594,7 +589,7 @@ void FUN_800ea9b8(void)
     uint flagWord;
     uint bit;
     uint flagId;
-    uint unaff_r27;
+    uint flagWordCache;
     uint cachedFlagId;
     uint scanId;
     short* mapFlags;
@@ -605,7 +600,7 @@ void FUN_800ea9b8(void)
     if (history[6] == '\0')
     {
         mapFlags = &DAT_80312632;
-        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
+        for (scanId = 1; (short)scanId < 0xce; scanId++)
         {
             if ((*mapFlags == 0xffff) || (*mapFlags == -1))
             {
@@ -644,18 +639,16 @@ void FUN_800ea9b8(void)
                 mapId = (uint)(short)(((byte)history[5] >> 5) + 0x12f);
                 if (mapId != (int)(short)cachedFlagId)
                 {
-                    unaff_r27 = FUN_80017690(mapId);
+                    flagWordCache = FUN_80017690(mapId);
                     cachedFlagId = mapId;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)history[5] & 0x1f)) != 0);
+            while ((flagWordCache & 1 << ((byte)history[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
     return;
 }
-
-void SaveGame_func08_nop(void);
 
 void dll_5E_func01_nop(void)
 {
@@ -664,29 +657,6 @@ void dll_5E_func01_nop(void)
 void dll_5E_func00_nop(void)
 {
 }
-
-void dll_5F_func01_nop(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* lbl = N (byte) */
-
-/* 12b 3-insn patterns. */
-
-/* misc 8b leaves */
-
-/* if (lbl) fn(lbl); */
-
-enum
-{
-    SAVEGAME_EMPTY_TASK_HINT = -1,
-    SAVEGAME_DEFAULT_VOLUME = 0x7f,
-};
-
 
 void dll_5E_func03(int sourceObj, int variant, u8* posSource, uint flags)
 {
@@ -702,21 +672,21 @@ void dll_5E_func03(int sourceObj, int variant, u8* posSource, uint flags)
     (*gModgfxInterface)->addSequenceSpawn(4, lbl_803E07D0, lbl_803E07D0, lbl_803E07D0, 0x24, &base[0x260]);
     (*gModgfxInterface)->addSequenceSpawn(8, lbl_803E07D4, lbl_803E07D8, lbl_803E07DC, 0x24, &base[0x260]);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07E0, lbl_803E07E4, lbl_803E07E0, 0, (u8*)0);
-    (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0, (u8*)0);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, (u8*)0);
+    (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07E0, lbl_803E07E4, lbl_803E07E0, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, NULL);
     (*gModgfxInterface)->nextSequenceParam();
     (*gModgfxInterface)->addSequenceSpawn(4, lbl_803E07F4, lbl_803E07D0, lbl_803E07D0, 0x12, &base[0x2a8]);
     (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, (u8*)0);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, (u8*)0);
+    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, NULL);
     (*gModgfxInterface)->nextSequenceParam();
     (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, (u8*)0);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, (u8*)0);
+    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, NULL);
     (*gModgfxInterface)->nextSequenceParam();
     (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, (u8*)0);
+    (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, NULL);
     (*gModgfxInterface)->addSequenceSpawn(4, lbl_803E07D0, lbl_803E07D0, lbl_803E07D0, 0x24, &base[0x260]);
     (*gModgfxInterface)->spawnSequence(posSource, (u8*)(int)lbl_80312340, 0x24, &base[0x168], 0x10, 0x120, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
