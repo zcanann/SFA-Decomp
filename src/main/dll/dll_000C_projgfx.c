@@ -1,4 +1,20 @@
-#include "main/dll/fxnode9_struct.h"
+/*
+ * projgfx (DLL 0x0C) - model-graphics / preset-particle effect support.
+ *
+ * Holds the modgfx_* per-effect runtime: expgfx slot-pool alloc/release,
+ * the ExpgfxSpawnConfig setup, and the per-frame vertex animators that drive
+ * a ModgfxState (texcoord scroll, RGB/alpha/scale blends, position and
+ * rotation steps, base-vertex save/restore) plus the active-effect registry
+ * teardown (by type, by owner, all).
+ *
+ * projgfx_spawnPresetEffect builds an ExpgfxSpawnConfig for a preset effect
+ * id (0x422-0x42d: dust, sparks, splashes, etc.) - randomised position,
+ * velocity, scale, colour and lifetime per id - then hands it to
+ * gExpgfxInterface->spawnEffect.
+ *
+ * projgfx_funcs is the object's ObjectDescriptor11; most slots are no-ops or
+ * "No Longer supported" OSReport stubs (release/rayhit/setzscale).
+ */
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -13,14 +29,9 @@ STATIC_ASSERT(offsetof(ModgfxState, activeChannel) == 0xFC);
 STATIC_ASSERT(offsetof(ModgfxState, rotStepZ) == 0x100);
 STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
 
-static inline int* Modgfx_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
 #define PARTFX_STAGE_COUNT 7
+#define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, vecX) == 0x20);
@@ -84,13 +95,13 @@ typedef struct PartfxEffectState
     s16 nextStage;
     s16 stageTimer;
     u8 pad112[0x114 - 0x112];
-    int word114;
-    int word118;
-    int word11C;
-    s16 vec120;
-    s16 vec122;
-    s16 vec124;
-    s8 byte126;
+    int unk_114;
+    int unk_118;
+    int unk_11C;
+    s16 unk_120;
+    s16 unk_122;
+    s16 unk_124;
+    s8 unk_126;
     u8 pad127[0x12C - 0x127];
     void* inlineData;
     u8 activeVertexBufferIndex;
@@ -104,9 +115,9 @@ typedef struct PartfxEffectState
     u8 initialStateByte;
     s8 emitterCount;
     u8 releaseRequested;
-    char byte13B;
+    s8 unk_13B;
     u8 requestedStage;
-    u8 byte13D;
+    u8 unk_13D;
     u8 frameUpdated;
     u8 textureIsBorrowed;
 } PartfxEffectState;
@@ -148,7 +159,7 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-
+extern void OSReport(const char* fmt, ...);
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -193,7 +204,6 @@ void modgfx_releaseExpgfxPools(void)
         poolIndex = poolIndex + 1;
     }
     while (poolIndex < EXPGFX_POOL_COUNT);
-    return;
 }
 
 void modgfx_allocExpgfxPools(void)
@@ -257,14 +267,13 @@ void modgfx_allocExpgfxPools(void)
     }
     while (poolIndex < EXPGFX_POOL_COUNT);
     FUN_800033a8(-0x7fc63ec8, 0, 0x500);
-    return;
 }
 
 void modgfx_initExpgfxSpawnConfig(undefined4 unused1, undefined4 unused2, undefined colorLowByte,
                                   undefined4 textureWord, undefined4 scaleBits)
 {
     undefined4 setupWord;
-    ushort setupValue;
+    ushort setupValue; /* uninitialised - matches target */
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
@@ -284,7 +293,6 @@ void modgfx_initExpgfxSpawnConfig(undefined4 unused1, undefined4 unused2, undefi
     gExpgfxSpawnConfig.texture.word = textureWord;
     gExpgfxSpawnConfig.colorByte0.lowByte = colorLowByte;
     FUN_8028688c();
-    return;
 }
 
 void modgfx_scrollVertexTexcoords(int stateArg, int command)
@@ -360,7 +368,6 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
         }
         activeVertexData = activeVertexData + 1;
     }
-    return;
 }
 
 void modgfx_resetBaseVertexState(int stateArg)
@@ -400,7 +407,6 @@ void modgfx_resetBaseVertexState(int stateArg)
     state->scaleChannels[1].step[0] = zero;
     state->scaleChannels[1].step[1] = zero;
     state->scaleChannels[1].step[2] = zero;
-    return;
 }
 
 void modgfx_updateVertexRgb(int state, int command, int mode)
@@ -519,7 +525,6 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
             (char)(int)((ModgfxState*)state)->blendColorB;
         idxOff = idxOff + 2;
     }
-    return;
 }
 
 void modgfx_updateEffectPosition(int stateArg, int command, int mode)
@@ -529,10 +534,10 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
     ushort rotAngle0;
     ushort rotAngle1;
     ushort rotAngle2;
-    float unusedW;
-    float unusedX;
-    float unusedY;
-    float unusedZ;
+    float unk_W;
+    float unk_X;
+    float unk_Y;
+    float unk_Z;
 
     state = (ModgfxState*)stateArg;
     biasS = DOUBLE_803e00c8;
@@ -542,10 +547,10 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         {
             if (((state->flags & 4) != 0) || ((state->flags & 0x80000) != 0))
             {
-                unusedX = lbl_803E00B0;
-                unusedY = lbl_803E00B0;
-                unusedZ = lbl_803E00B0;
-                unusedW = lbl_803E00B4;
+                unk_X = lbl_803E00B0;
+                unk_Y = lbl_803E00B0;
+                unk_Z = lbl_803E00B0;
+                unk_W = lbl_803E00B4;
                 rotAngle0 = *(ushort*)state->unk04;
                 rotAngle1 = rotAngle0;
                 rotAngle2 = rotAngle0;
@@ -583,7 +588,6 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         state->posCurZ =
             state->posStepZ * lbl_803DDF04 + state->posCurZ;
     }
-    return;
 }
 
 void modgfx_updateEffectRotation(int stateArg, int command, int mode)
@@ -624,7 +628,6 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
     state->rotOffsetZ = state->rotOffsetZ + state->rotStepZ;
     state->rotOffsetY = state->rotOffsetY + state->rotStepY;
     state->rotOffsetX = state->rotOffsetX + state->rotStepX;
-    return;
 }
 
 void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
@@ -694,7 +697,6 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
         *(undefined*)(baseVtxData + vtxOff) = *(undefined*)(curVtxData + vtxOff);
         work0 = work0 + 2;
     }
-    return;
 }
 
 void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
@@ -793,7 +795,6 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
         }
         off = off + 2;
     }
-    return;
 }
 
 void modgfx_restoreActiveVertexState(int stateArg)
@@ -818,7 +819,6 @@ void modgfx_restoreActiveVertexState(int stateArg)
         activeVertexData = activeVertexData + 1;
         baseVertexData = baseVertexData + 1;
     }
-    return;
 }
 
 void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, undefined8 param_3,
@@ -835,7 +835,7 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, u
     do
     {
         activeEffect = activeEffects[i];
-        if ((activeEffect != (ModgfxActiveEffect*)0x0) &&
+        if ((activeEffect != NULL) &&
             ((effectType == activeEffect->effectType || (releaseAll != 0))))
         {
             if (activeEffect->releaseTransformSource != 0)
@@ -857,12 +857,11 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, u
                 activeEffect->sharedResourceHandle = 0;
             }
             param_1 = FUN_80017814(activeEffect);
-            activeEffects[i] = (ModgfxActiveEffect*)0x0;
+            activeEffects[i] = NULL;
         }
         i = i + 1;
     }
     while (i < MODGFX_ACTIVE_EFFECT_COUNT);
-    return;
 }
 
 void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, undefined8 param_3,
@@ -878,7 +877,7 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, 
     do
     {
         activeEffect = activeEffects[i];
-        if ((activeEffect != (ModgfxActiveEffect*)0x0) && (activeEffect->ownerToken == ownerToken))
+        if ((activeEffect != NULL) && (activeEffect->ownerToken == ownerToken))
         {
             if (activeEffect->instanceHandle != 0)
             {
@@ -895,12 +894,11 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, 
                 activeEffect->sharedResourceHandle = 0;
             }
             param_1 = FUN_80017814(activeEffect);
-            activeEffects[i] = (ModgfxActiveEffect*)0x0;
+            activeEffects[i] = NULL;
         }
         i = i + 1;
     }
     while (i < MODGFX_ACTIVE_EFFECT_COUNT);
-    return;
 }
 
 void modgfx_releaseAllActiveEffects(undefined8 param_1, undefined8 param_2, undefined8 param_3,
@@ -909,7 +907,6 @@ void modgfx_releaseAllActiveEffects(undefined8 param_1, undefined8 param_2, unde
 {
     modgfx_releaseActiveEffectsByType(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                       0, 1);
-    return;
 }
 
 void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, undefined8 param_3,
@@ -924,7 +921,7 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
     activeEffects = modgfx_getActiveEffectRegistry();
     for (i = 0; i < MODGFX_ACTIVE_EFFECT_COUNT; i = i + 1)
     {
-        activeEffects[i] = (ModgfxActiveEffect*)0x0;
+        activeEffects[i] = NULL;
     }
     i = 2;
     {
@@ -933,20 +930,12 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
         tailEffects = &activeEffects[MODGFX_ACTIVE_EFFECT_COUNT - 2];
         do
         {
-            *tailEffects = (ModgfxActiveEffect*)0x0;
+            *tailEffects = NULL;
             tailEffects = tailEffects + 1;
             i = i + -1;
         }
         while (i != 0);
     }
-    return;
-}
-
-undefined4
-FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
 }
 
 undefined4
@@ -984,19 +973,12 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     undefined cfgInitialAlpha;
     undefined cfgLinkGroup;
     undefined cfgModelIdByte;
-    undefined4 convHi0;
     uint randVal0;
-    undefined4 convHi1;
     uint randVal1;
-    undefined4 convHi2;
     uint randVal2;
-    undefined4 convHi3;
     uint randVal3;
-    undefined4 convHi4;
     uint randVal4;
-    undefined4 convHi5;
     uint randVal5;
-    undefined4 convHi6;
     uint randVal6;
 
     lbl_803DC450 = lbl_803DC450 + lbl_803E0900;
@@ -1017,7 +999,7 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     {
         if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
         {
-            if (sourceState == (ExpgfxAttachedSourceState*)0x0)
+            if (sourceState == NULL)
             {
                 return 0xffffffff;
             }
@@ -1056,7 +1038,7 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
         switch (effectId)
         {
         case 0x422:
-            if (extraArgs == (undefined2*)0x0)
+            if (extraArgs == NULL)
             {
                 return 0;
             }
@@ -1192,7 +1174,7 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
         default:
             return 0xffffffff;
         case 0x42b:
-            if (extraArgs == (undefined2*)0x0)
+            if (extraArgs == NULL)
             {
                 return 0;
             }
@@ -1273,20 +1255,6 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     return spawnResult;
 }
 
-undefined4
-FUN_800a3828(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-undefined4
-FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
 void projgfx_func07_nop(void)
 {
 }
@@ -1307,19 +1275,13 @@ void projgfx_initialise(void)
 {
 }
 
-void playerShadow_func03_nop(void);
-
 int projgfx_getObjectTypeId(void) { return 0x0; }
 
-
-extern void OSReport(const char* fmt, ...);
 #pragma scheduling off
 void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSupported); }
 #pragma scheduling reset
 
 /* OSReport-stub returns. */
-
-#define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 
 #pragma scheduling off
 int projgfx_rayhit_doUnsupported(void)
@@ -1361,123 +1323,3 @@ char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer 
 static u8 sProjgfxStringPad1[] = {0, 0, 0};
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
-
-#pragma peephole reset
-
-extern f32 lbl_803DF878;
-extern f32 lbl_803DFCE0;
-
-#pragma scheduling off
-#pragma peephole off
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
-extern FxNode9 lbl_8039C398;
-
-#define FILL9() do {                            \
-    lbl_8039C398.posX = 0.0f;             \
-    lbl_8039C398.posY = 0.0f;            \
-    lbl_8039C398.posZ = 0.0f;            \
-    lbl_8039C398.scale = 1.0f;             \
-    lbl_8039C398.unk0 = 0;                         \
-    lbl_8039C398.unk2 = 0;                         \
-    lbl_8039C398.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C398;             \
-  } while (0)
-
-#undef FILL9
-
-extern FxNode9 lbl_8039C380;
-
-#define FILL8() do {                            \
-    lbl_8039C380.posX = 0.0f;             \
-    lbl_8039C380.posY = 0.0f;            \
-    lbl_8039C380.posZ = 0.0f;            \
-    lbl_8039C380.scale = 1.0f;             \
-    lbl_8039C380.unk0 = 0;                         \
-    lbl_8039C380.unk2 = 0;                         \
-    lbl_8039C380.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C380;             \
-  } while (0)
-
-#undef FILL8
-
-extern FxNode9 lbl_8039C338;
-extern f32 lbl_803DF884;
-
-#define FILL338() do {                          \
-    lbl_8039C338.posX = lbl_803DF884;             \
-    lbl_8039C338.posY = lbl_803DF884;            \
-    lbl_8039C338.posZ = lbl_803DF884;            \
-    lbl_8039C338.scale = lbl_803DF878;             \
-    lbl_8039C338.unk0 = 0;                         \
-    lbl_8039C338.unk2 = 0;                         \
-    lbl_8039C338.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C338;             \
-  } while (0)
-
-#undef FILL338
-
-extern FxNode9 lbl_8039C368;
-extern f32 lbl_803DFCEC;
-
-#define FILL368() do {                          \
-    lbl_8039C368.posX = lbl_803DFCEC;             \
-    lbl_8039C368.posY = lbl_803DFCEC;            \
-    lbl_8039C368.posZ = lbl_803DFCEC;            \
-    lbl_8039C368.scale = lbl_803DFCE0;             \
-    lbl_8039C368.unk0 = 0;                         \
-    lbl_8039C368.unk2 = 0;                         \
-    lbl_8039C368.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C368;             \
-  } while (0)
-
-#undef FILL368
-
-extern FxNode9 lbl_8039C350;
-extern f32 lbl_803DF9D0;
-extern f32 lbl_803DF9D4;
-
-#define FILL350() do {                          \
-    lbl_8039C350.posX = lbl_803DF9D0;             \
-    lbl_8039C350.posY = lbl_803DF9D0;            \
-    lbl_8039C350.posZ = lbl_803DF9D0;            \
-    lbl_8039C350.scale = lbl_803DF9D4;             \
-    lbl_8039C350.unk0 = 0;                         \
-    lbl_8039C350.unk2 = 0;                         \
-    lbl_8039C350.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C350;             \
-  } while (0)
-
-#undef FILL350
-
-// VERIFY lbl_803DF720 may already exist in modgfx.c
-// VERIFY lbl_803DF724 may already exist in modgfx.c
-// VERIFY lbl_803DF728 may already exist in modgfx.c
-// VERIFY lbl_803DF730 may already exist in modgfx.c
-extern FxNode9 lbl_8039C320;
-/* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
-   already declared in modgfx.c. */
-
-/* ===== (2) FILL macro ===== */
-#define FILL320() do {                          \
-    lbl_8039C320.posX = 0.0f;             \
-    lbl_8039C320.posY = 0.0f;            \
-    lbl_8039C320.posZ = 0.0f;            \
-    lbl_8039C320.scale = 1.0f;             \
-    lbl_8039C320.unk0 = 0;                         \
-    lbl_8039C320.unk2 = 0;                         \
-    lbl_8039C320.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C320;             \
-  } while (0)
-
-#undef FILL320
-
-#pragma peephole reset
-#pragma scheduling reset
