@@ -17,7 +17,6 @@
 
 #include "main/audio/sfx_ids.h"
 
-
 #define WCPRESSURES_EXTRA_SIZE 0x7c
 #define WCPRESSURES_TRACKED_COUNT 10
 #define WCPRESSURES_OBJECT_GROUP 0x31
@@ -319,7 +318,7 @@ void wcpressures_init(u8* obj, u8* setup)
         state->mode = WCPRESSURES_MODE_PRESSED;
     }
 
-    ObjGroup_AddObject((int)obj, 0x31);
+    ObjGroup_AddObject((int)obj, WCPRESSURES_OBJECT_GROUP);
     for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++)
     {
         state->objects[i] = 0;

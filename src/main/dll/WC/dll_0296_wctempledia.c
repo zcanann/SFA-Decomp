@@ -144,9 +144,9 @@ void wctempledia_update(int obj)
 {
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
     WCTempleDiaSetup* setup = (WCTempleDiaSetup*)((GameObject*)obj)->anim.placementData;
-    int i;
-    int j;
-    int k;
+    int stage;
+    int priorStage;
+    int resetStage;
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
     {
@@ -162,16 +162,16 @@ void wctempledia_update(int obj)
         Sfx_SetObjectSfxVolume(obj, SFXmn_sml_trex_roar, vol,
                                lbl_803E6E68 * ratio + lbl_803E6E64);
     }
-    for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
+    for (stage = 0; stage < WCTEMPLE_DIA_STAGE_COUNT; stage++)
     {
-        int bit = 1 << i;
+        int bit = 1 << stage;
         if ((state->stageMask & bit) == 0 &&
-            GameBit_Get(state->gamebits[i]) != 0)
+            GameBit_Get(state->gamebits[stage]) != 0)
         {
             int found = 0;
-            for (j = 0; j < i; j++)
+            for (priorStage = 0; priorStage < stage; priorStage++)
             {
-                if ((state->stageMask & (1 << j)) == 0)
+                if ((state->stageMask & (1 << priorStage)) == 0)
                 {
                     found = 1;
                     break;
@@ -179,9 +179,9 @@ void wctempledia_update(int obj)
             }
             if (found)
             {
-                for (k = 0; k < WCTEMPLE_DIA_STAGE_COUNT; k++)
+                for (resetStage = 0; resetStage < WCTEMPLE_DIA_STAGE_COUNT; resetStage++)
                 {
-                    GameBit_Set(state->gamebits[k], 0);
+                    GameBit_Set(state->gamebits[resetStage], 0);
                 }
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_RESET_SFX);
                 state->stageMask = 0;
@@ -189,12 +189,12 @@ void wctempledia_update(int obj)
                 break;
             }
             state->stageMask |= bit;
-            if (i == 0)
+            if (stage == 0)
             {
                 state->targetSpeed = state->targetTable[1];
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_STAGE_SFX);
             }
-            else if (i == 1)
+            else if (stage == 1)
             {
                 state->targetSpeed = state->targetTable[2];
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_STAGE_SFX);

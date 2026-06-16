@@ -1056,9 +1056,3 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 }
 
 #undef WCPUSHBLOCK_IFACE
-#undef SFXmn_sml_trex_fstep
-#undef SFXsc_lockon3_on
-#undef SFXsc_lockon3_off
-#undef SFXsc_lifeforcedoor
-#undef SFXsc_golfbar_swipe
-#undef SFXsp_lf_mutter4
