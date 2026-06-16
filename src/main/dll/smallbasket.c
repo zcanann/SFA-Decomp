@@ -852,12 +852,10 @@ void fn_80157B58(int* obj, u8* state)
 void fn_8015A924(int* obj, u8* state)
 {
     u8* tbl = *(u8**)((char*)lbl_8031FD48 + *(u16*)(state + 0x338) * 8);
-    ObjHitsPriorityState* hitState;
     int i;
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 10;
-    hitState->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
