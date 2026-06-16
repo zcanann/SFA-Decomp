@@ -493,26 +493,16 @@ void drakorhoverpad_updateMain(int obj)
         ((DrakorhoverpadUpdateMainState*)p)->verticalVel = ((DrakorhoverpadUpdateMainState*)p)->unk114 + (((
             DrakorhoverpadUpdateMainState*)p)->verticalVel + wobbleY);
         absV = ((DrakorhoverpadUpdateMainState*)p)->verticalVel;
-        if (absV < lbl_803E6A3C)
-        {
-            absV = -absV;
-        }
+        absV = (absV >= lbl_803E6A3C) ? absV : -absV;
         if (absV < limit)
         {
             ((DrakorhoverpadUpdateMainState*)p)->verticalVel = *(f32*)p;
         }
         else
         {
-            if (((DrakorhoverpadUpdateMainState*)p)->verticalVel > *(f32*)p)
-            {
-                ((DrakorhoverpadUpdateMainState*)p)->verticalVel = ((DrakorhoverpadUpdateMainState*)p)->verticalVel + -
-                    limit;
-            }
-            else
-            {
-                ((DrakorhoverpadUpdateMainState*)p)->verticalVel = ((DrakorhoverpadUpdateMainState*)p)->verticalVel +
-                    limit;
-            }
+            ((DrakorhoverpadUpdateMainState*)p)->verticalVel =
+                ((DrakorhoverpadUpdateMainState*)p)->verticalVel +
+                ((((DrakorhoverpadUpdateMainState*)p)->verticalVel > *(f32*)p) ? -limit : limit);
         }
         ObjHits_SetHitVolumeSlot(obj, 8, 1, 0);
     }
@@ -534,7 +524,8 @@ void drakorhoverpad_updateMain(int obj)
     if (lbl_803E6A3C != ((DrakorhoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorhoverpadUpdateMainState*)p)->verticalVel);
-        if (curve->reverse != 0 ? curve->atSegmentEnd == 0 : curve->atSegmentEnd != 0)
+        if ((curve->reverse != 0 && curve->atSegmentEnd == 0) ||
+            (curve->reverse == 0 && curve->atSegmentEnd != 0))
         {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)((u8*)curve->nodeA0 + 0x18),
                                                     *(u8*)((u8*)curve->nodeA4 + 0x18),
