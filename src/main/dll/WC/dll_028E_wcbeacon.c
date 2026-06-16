@@ -181,7 +181,7 @@ void wcbeacon_init(u8* obj, u8* setup)
 
     (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     objType = (s16)(setupData->type << 8);
-    *(s16*)obj = objType;
+    ((GameObject*)obj)->anim.rotX = objType;
     objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
