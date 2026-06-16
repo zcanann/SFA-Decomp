@@ -1508,10 +1508,11 @@ void timeListDraw(void)
     drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
 
     {
-        s16 ang = (s16)(lbl_803DD7E6 + lbl_803DBAB4);
+        s16 ang;
         int pulse;
         int a, b;
-        lbl_803DD7E6 = ang;
+        lbl_803DD7E6 += lbl_803DBAB4;
+        ang = lbl_803DD7E6;
         pulse = (int)(lbl_803DBAB8 * fsin16Precise((u16)ang) + lbl_803DBABC);
         if (lbl_803DD75B == 1)
         {
