@@ -1,4 +1,8 @@
-/* DLL 0x235 — DFP target block object [80208508-802086C4) */
+/*
+ * DragonRock Palace target block (DLL 0x235; "DFP_TargetBlock") - a block
+ * the player knocks along a path: it raycasts for hits, snaps to stored
+ * path points, plays impact/loop sfx and reports completion.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/fruit.h"
