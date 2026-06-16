@@ -1449,9 +1449,9 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     extern f32 lbl_803E62D0;
     extern f32 lbl_803E62A8;
     extern f32 lbl_803E62C8;
-    DbStealerwormControl* sub;
     GroundBaddieState* state;
     char* path;
+    DbStealerwormControl* sub;
 
     state = ((GameObject*)obj)->extra;
     sub = (DbStealerwormControl*)state->control;
