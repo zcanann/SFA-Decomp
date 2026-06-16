@@ -480,7 +480,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
     {
         switch (action)
         {
-        case 4:
+        case 3:
             break;
         case 1:
             player = (int)Obj_GetPlayerObject();
