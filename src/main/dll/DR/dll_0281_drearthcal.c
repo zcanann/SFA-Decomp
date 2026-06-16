@@ -56,14 +56,14 @@ void drearthcal_update(int obj)
         if (*(s8*)(*(int*)(obj + 0x58) + 0x10f) > 0)
         {
             i = 0;
-            do
+            while (i < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
             {
                 if (((void**)*(int*)(obj + 0x58))[i + 0x40] == (void*)player)
                 {
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
                 }
                 i++;
-            } while (i < *(s8*)(*(int*)(obj + 0x58) + 0x10f));
+            }
         }
         if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0)
         {
