@@ -384,7 +384,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
     byte byteVal;
-    char hitResult;
+    u8 hitResult;
     undefined mode;
     ObjHitReactEntry* hitReactEntries;
     int val;
@@ -432,7 +432,8 @@ void SHthorntail_update(SHthorntailObject* obj)
     val = 0x19;
     uval = (uint)runtime->hitReactState;
     scratch = (float*)runtime->hitReactScratch;
-    hitResult = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, uval, scratch);
+    hitResult = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
+        (int)obj, hitReactEntries, 0x19, uval, scratch);
     runtime->hitReactState = hitResult;
     if (hitResult == '\0')
     {
@@ -522,7 +523,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             obj->modelPos.z = -facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
             obj->modelPos.x = -facingSin * animEvents.rootDeltaX + obj->modelPos.x;
             obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
-            obj->facingAngle = obj->facingAngle + animEvents.rootPitch;
+            obj->facingAngle += animEvents.rootPitch;
         }
         eventId = animEvents.triggeredIds;
         for (val = 0; val < animEvents.triggerCount; val = val + 1)
