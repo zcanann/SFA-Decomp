@@ -847,7 +847,7 @@ int fn_802A36EC(int obj, int state)
         if (*(int*)&((PlayerState*)state)->baddie.eventFlags & 1)
         {
             Sfx_PlayFromObject(
-                obj, (u16)(inner->characterId != 0 ? 0x1d : 0x398));
+                obj, (u16)(inner->characterId == 0 ? 0x398 : 0x1d));
         }
         if ((((u32)inner->unk3F0 >> 5) & 1) || lbl_803DC6A0 == 0x1a)
         {
