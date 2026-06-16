@@ -1474,7 +1474,7 @@ void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
     memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
     gModgfxSpawnContext.modeByte = p2;
     gModgfxSpawnContext.attachedSource = (void*)p1;
-    gModgfxSpawnContext.sourceModeCopy = (u8)p2;
+    gModgfxSpawnContext.sourceModeCopy = gModgfxSpawnContext.modeByte;
     fz = lbl_803DF430;
     gModgfxSpawnContext.posX = fz;
     gModgfxSpawnContext.posY = fz;

@@ -2883,16 +2883,17 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
                     int i12 = (int)*(u16*)(a + 0xa) * im * 2;
-                    texA = *(u16*)(a + i6 + i4 + i5 + i12 + 0x60);
+                    int off = i6 + i4 + i5 + i12;
+                    texA = *(u16*)(a + off + 0x60);
                     redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
-                    texB = *(u16*)(b + i6 + i4 + i5 + i12 + 0x60);
+                    texB = *(u16*)(b + off + 0x60);
                     redB = ((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13);
                     bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8)
                         + ((int)(wB * (u8)(((texB & 0x1f) << 3) | ((int)(texB & 0x1c) >> 2))) >> 8)) & 0xf8) >> 3;
                     rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
                     gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8)
                         + ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
-                    *(u16*)(c + i6 + i4 + i5 + i12 + 0x60) = bf | (rf | gf);
+                    *(u16*)(c + off + 0x60) = bf | (rf | gf);
                 }
             }
         }
