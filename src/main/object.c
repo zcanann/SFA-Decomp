@@ -457,27 +457,33 @@ void objSetSlot(u8* obj, s8 slot)
     ((GameObject*)obj)->anim.activeHitboxMode = slot;
 }
 
+#pragma opt_strength_reduction off
 void fn_8002B758(void* v)
 {
     int i;
+    int* p;
+    int count;
 
-    for (i = 0; i < lbl_803DCB74; i++)
+    p = lbl_803408A8;
+    count = lbl_803DCB74;
+    for (i = 0; i < count; i++, p++)
     {
-        if ((void*)lbl_803408A8[i] == v)
+        if ((void*)*p == v)
         {
             break;
         }
     }
-    if (i == lbl_803DCB74)
+    if (i == count)
     {
         return;
     }
-    for (; i < lbl_803DCB74 - 1; i++)
+    for (p = &lbl_803408A8[i]; i < count - 1; i++, p++)
     {
-        lbl_803408A8[i] = lbl_803408A8[i + 1];
+        *p = p[1];
     }
     lbl_803DCB74--;
 }
+#pragma opt_strength_reduction reset
 
 #pragma peephole on
 void fn_8002B860(void* v)
