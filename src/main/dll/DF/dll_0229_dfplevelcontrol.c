@@ -727,6 +727,8 @@ void dfplevelcontrol_update(int obj)
     case 2:
         fn_80204098(obj);
         break;
+    case 3:
+        break;
     case 4:
         break;
     }
