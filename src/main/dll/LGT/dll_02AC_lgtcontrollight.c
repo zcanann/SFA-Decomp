@@ -112,7 +112,7 @@ void controllight_update(int obj)
                 int invBit;
                 GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
                 GameObject** p;
-                invBit = !bit;
+                invBit = bit == 0;
                 for (i = 0, p = objs; i < count; i++)
                 {
                     GameObject* lightObj = *p;
