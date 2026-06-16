@@ -1325,7 +1325,7 @@ void dll_D3_update(int* obj)
     int rc;
     int hits;
     struct { f32 searchRadius; f32 x, y, z; } sd;
-    int aiStack_80[24];
+    int aiStack_80[22];
     char hitType;
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
