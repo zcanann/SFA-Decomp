@@ -1,3 +1,30 @@
+/*
+ * arwarwing (DLL 0x29A) - the player's Arwing in the on-rails flight
+ * sections. This is the core object of the section; the singleton instance
+ * is published through the gArwing global (getArwing) so the pickups,
+ * squadron and level-controller TUs can find it.
+ *
+ * Per-object extra state is ArwingState (arwing_state.h, 0x498 bytes). The
+ * update loop reads the controller, integrates flight physics toward stick-
+ * driven velocity / rotation targets, runs the laser and bomb weapons, the
+ * barrel-roll / wing-flex model rigging, the engine sound and the camera
+ * push, then applies path and object damage. A small "mode" state machine
+ * covers normal flight, barrel roll, death (4), explode (5) and warp-out
+ * (6). arwarwing_init wires up the path-control block and per-course flight
+ * tuning (keyed by mapEventSlot); arwarwing_initAttachments locates and
+ * links the gun / bomb / engine child models and the wing light before the
+ * Arwing becomes active (flags477 bit 1).
+ *
+ * arwarwing_SeqFn handles object-sequence events: course warps, spawning
+ * lasers / bombs / boss objects, aim-snapshot capture for the hit-detect
+ * pass, score registration and the per-course map-event setup.
+ *
+ * Most functions take the extra pointer as a raw int ("state") and cast at
+ * each use - that spelling reproduces the retail register colouring; see the
+ * CLAUDE.md matching notes. Several attachment / weapon / physics helpers
+ * (updateThrusters, readControls, updateFlightPhysics, updateBombFire,
+ * clampToFlightBounds, spawnBomb) are defined in a sibling TU.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
