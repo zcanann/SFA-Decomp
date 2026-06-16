@@ -168,10 +168,10 @@ void fn_80194C40(undefined4 def, int state, int block)
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
         if ((int)*(char*)(def + 0x28) == blockLayer)
         {
-            ((MapBlockHdr*)mapBlock)->posA = (int)(*(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x10) + coordOffset));
-            ((MapBlockHdr*)mapBlock)->posB = (int)(*(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x14) + coordOffset));
+            ((MapBlockHdr*)mapBlock)->posA = *(float*)(state + 0x44) +
+                (f32) * (s16*)(*(int*)(state + 0x10) + coordOffset);
+            ((MapBlockHdr*)mapBlock)->posB = *(float*)(state + 0x44) +
+                (f32) * (s16*)(*(int*)(state + 0x14) + coordOffset);
             coordOffset += 2;
             blockEnd = mapBlock[10];
             scale = lbl_803E4008;
@@ -184,12 +184,12 @@ void fn_80194C40(undefined4 def, int state, int block)
                 for (edgeIndex = 3; edgeIndex != 0; edgeIndex--)
                 {
                     vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint) * mapBlock * 6);
-                    vtx->x = (int)(scale * *(float*)(state + 0x40) +
-                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset));
-                    vtx->y = (int)(scale * *(float*)(state + 0x44) +
-                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset + 2));
-                    vtx->z = (int)(scale * *(float*)(state + 0x48) +
-                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset + 4));
+                    vtx->x = scale * *(float*)(state + 0x40) +
+                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset);
+                    vtx->y = scale * *(float*)(state + 0x44) +
+                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset + 2);
+                    vtx->z = scale * *(float*)(state + 0x48) +
+                        (f32) * (s16*)(*(int*)(state + 0xc) + edgeOffset + 4);
                     edgeOffset += 6;
                     vertexIndex += 6;
                     vertexOffset += 6;
@@ -207,20 +207,20 @@ void fn_80194C40(undefined4 def, int state, int block)
         shader = fn_8006070C((int*)block, *(byte*)(vertexOffset + 0x13));
         shader = Shader_getLayer(shader, 0);
         scale = lbl_803E4008;
-        if ((uint) * (byte*)((int)shader + 5) == (int)*(char*)(def + 0x28))
+        if ((int) * (byte*)((int)shader + 5) == (int)*(char*)(def + 0x28))
         {
-            ((EdgeVerts*)vertexOffset)->a = (int)(scale * *(float*)(state + 0x40) +
-                (f32) * (s16*)(*(int*)(state + 0x28) + edgeData));
-            ((EdgeVerts*)vertexOffset)->d = (int)(scale * *(float*)(state + 0x40) +
-                (f32) * (s16*)(*(int*)(state + 0x2c) + edgeData));
-            ((EdgeVerts*)vertexOffset)->b = (int)(scale * *(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x30) + edgeData));
-            ((EdgeVerts*)vertexOffset)->e = (int)(scale * *(float*)(state + 0x44) +
-                (f32) * (s16*)(*(int*)(state + 0x34) + edgeData));
-            ((EdgeVerts*)vertexOffset)->c = (int)(scale * *(float*)(state + 0x48) +
-                (f32) * (s16*)(*(int*)(state + 0x38) + edgeData));
-            ((EdgeVerts*)vertexOffset)->f = (int)(scale * *(float*)(state + 0x48) +
-                (f32) * (s16*)(*(int*)(state + 0x3c) + edgeData));
+            ((EdgeVerts*)vertexOffset)->a = scale * *(float*)(state + 0x40) +
+                (f32) * (s16*)(*(int*)(state + 0x28) + edgeData);
+            ((EdgeVerts*)vertexOffset)->d = scale * *(float*)(state + 0x40) +
+                (f32) * (s16*)(*(int*)(state + 0x2c) + edgeData);
+            ((EdgeVerts*)vertexOffset)->b = scale * *(float*)(state + 0x44) +
+                (f32) * (s16*)(*(int*)(state + 0x30) + edgeData);
+            ((EdgeVerts*)vertexOffset)->e = scale * *(float*)(state + 0x44) +
+                (f32) * (s16*)(*(int*)(state + 0x34) + edgeData);
+            ((EdgeVerts*)vertexOffset)->c = scale * *(float*)(state + 0x48) +
+                (f32) * (s16*)(*(int*)(state + 0x38) + edgeData);
+            ((EdgeVerts*)vertexOffset)->f = scale * *(float*)(state + 0x48) +
+                (f32) * (s16*)(*(int*)(state + 0x3c) + edgeData);
         }
         edgeData += 2;
     }
