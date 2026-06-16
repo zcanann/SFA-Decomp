@@ -112,6 +112,7 @@ typedef struct
 
 /* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
+#pragma opt_common_subs off
 void fn_801D29E4(int* obj, int* p2)
 {
     int* spore;
@@ -148,6 +149,7 @@ void fn_801D29E4(int* obj, int* p2)
         Obj_SetupObject(spore, 5, -1, -1, 0);
     }
 }
+#pragma opt_common_subs reset
 
 /* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
