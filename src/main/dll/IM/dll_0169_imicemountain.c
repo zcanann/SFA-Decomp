@@ -1,10 +1,22 @@
-#include "main/dll/dll16cstate_struct.h"
-#include "main/dll/magiclightstate_struct.h"
-#include "main/dll/crrockfall_types.h"
+/*
+ * imicemountain (DLL 0x169) - the master event controller for the Ice
+ * Mountain map. A single instance drives the level's scripted progress:
+ * it arms the map-event group triggers at init, then runs one of three
+ * top-level branches selected by the map-event "act" queried at startup
+ * (1 = full event sequence, 2 = boulder-chase replay, 5 = already
+ * complete).
+ *
+ * The act-1 branch steps an internal event-state machine
+ * (imicemountain_updateEventState, states 1..7) that gates avalanche
+ * effects, the boulder spawn, level locks and the final warp out. Every
+ * frame the controller also shows the "turn back" warning text while a
+ * timer is positive, latches the day/night music, and refreshes a block
+ * of SCGameBitLatch records that mirror world state into game bits.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
-#include "main/dll/DIM/DIMboulder.h"
+#include "main/objanim_update.h"
 #include "main/sky_interface.h"
 
 /*
@@ -26,45 +38,9 @@ typedef struct IMIceMountainState
 
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
-/*
- * Per-object extra state for the magiclight proximity light
- * (magiclight_getExtraSize == 0x14 for non-0x172 types).
- */
-
-STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-
-/*
- * Per-object extra state for the dll_16C map-event boulder proxy
- * (dll_16C_getExtraSize == 0x24).
- */
-
-STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
-
-/*
- * Per-object extra state for the crrockfall falling rock
- * (crrockfall_getExtraSize == 0x14).
- */
-
-STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
-
 extern undefined4 getLActions();
 extern uint GameBit_Get(int eventId);
 extern undefined8 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_8001771c();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_800305f8();
-
-extern undefined4 DAT_802c2a88;
-extern undefined4 DAT_802c2a8c;
-extern undefined4 DAT_802c2a90;
-extern f32 lbl_803E53D0;
-extern f32 lbl_803E53E0;
-extern f32 lbl_803E53F0;
-
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E46E0;
@@ -81,176 +57,7 @@ extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, in
 extern f32 timeDelta;
 extern f32 lbl_803E46DC;
 
-void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9)
-{
-}
-
-undefined4
-FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj)
-{
-    int ctx;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    float* extra;
-    double dist;
-    double threshold;
-
-    if (((GameObject*)obj)->anim.seqId != 0x172)
-    {
-        extra = ((GameObject*)obj)->extra;
-        ctx = FUN_80017a98();
-        dist = (double)FUN_8001771c((float*)(ctx + 0x18), (float*)&((GameObject*)obj)->anim.worldPosX);
-        threshold = (double)*extra;
-        if ((threshold <= dist) || (*(char*)((int)extra + 0xb) != '\0'))
-        {
-            if (((double)(float)((double)lbl_803E53D0 + threshold) < dist) &&
-                (*(char*)((int)extra + 0xb) != '\0'))
-            {
-                *(u8*)((int)extra + 0xb) = 0;
-                getLActions(dist, threshold, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
-                            (uint) * (ushort*)(extra + 2), 0, 0, 0, in_r9, in_r10);
-            }
-        }
-        else
-        {
-            *(u8*)((int)extra + 0xb) = 1;
-            getLActions(dist, threshold, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
-                        (uint) * (ushort*)((int)extra + 6), 0, 0, 0, in_r9, in_r10);
-        }
-    }
-    return 0;
-}
-
-void FUN_801adca0(undefined2* dst, undefined2* src, undefined4 param_3, undefined4 param_4,
-                  undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
-{
-    u8 savedByte;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined4 local_20[5];
-
-    if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
-    {
-        savedByte = *(u8*)((int)src + 0x37);
-        *(char*)((int)src + 0x37) = (char)param_8;
-        (**(code**)(**(int**)(src + 0x34) + 0x10))
-            (src, param_3, param_4, param_5, param_6, 0xffffffff);
-        *(u8*)((int)src + 0x37) = savedByte;
-    }
-    *(undefined4*)(dst + 0x46) = *(undefined4*)(dst + 0xc);
-    *(undefined4*)(dst + 0x48) = *(undefined4*)(dst + 0xe);
-    *(undefined4*)(dst + 0x4a) = *(undefined4*)(dst + 0x10);
-    *(undefined4*)(dst + 0x40) = *(undefined4*)(dst + 6);
-    *(undefined4*)(dst + 0x42) = *(undefined4*)(dst + 8);
-    *(undefined4*)(dst + 0x44) = *(undefined4*)(dst + 10);
-    (**(code**)(**(int**)(src + 0x34) + 0x28))(src, local_20, &local_24, &local_28);
-    *(undefined4*)(dst + 6) = local_20[0];
-    *(undefined4*)(dst + 8) = local_24;
-    *(undefined4*)(dst + 10) = local_28;
-    *dst = *src;
-    dst[1] = src[1];
-    dst[2] = src[2];
-    *(undefined4*)(dst + 0xc) = *(undefined4*)(dst + 6);
-    *(undefined4*)(dst + 0xe) = *(undefined4*)(dst + 8);
-    *(undefined4*)(dst + 0x10) = *(undefined4*)(dst + 10);
-    *(undefined4*)(dst + 0x12) = *(undefined4*)(src + 0x12);
-    *(undefined4*)(dst + 0x14) = *(undefined4*)(src + 0x14);
-    *(undefined4*)(dst + 0x16) = *(undefined4*)(src + 0x16);
-    return;
-}
-
-undefined4
-FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15
-             , undefined4 param_16)
-{
-    uint active;
-    undefined2* spawnDef;
-    undefined4 newObj;
-    int modelState;
-    int* extra;
-    int child;
-    undefined2 uStack_2a;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined2 local_20;
-
-    extra = ((GameObject*)obj)->extra;
-    *(u8*)(extra + 8) = 0xff;
-    child = *extra;
-    if (animUpdate->triggerCommand == 3)
-    {
-        *(u8*)((int)extra + 0x21) = 0xff;
-        animUpdate->triggerCommand = 0;
-    }
-    local_28 = DAT_802c2a88;
-    local_24 = DAT_802c2a8c;
-    local_20 = DAT_802c2a90;
-    if (*(char*)((int)extra + 0x21) != *(char*)((int)extra + 0x22))
-    {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
-        {
-            param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)obj)->childObjs[0]);
-            ((GameObject*)obj)->childObjs[0] = 0;
-            ((GameObject*)obj)->childCount = 0;
-        }
-        active = FUN_80017ae8();
-        if ((active & 0xff) == 0)
-        {
-            *(u8*)((int)extra + 0x22) = 0;
-        }
-        else
-        {
-            if (0 < *(char*)((int)extra + 0x21))
-            {
-                spawnDef = FUN_80017aa4(0x18, (&uStack_2a)[*(char*)((int)extra + 0x21)]);
-                param_12 = 0xffffffff;
-                param_13 = *(uint**)&((GameObject*)obj)->anim.parent;
-                newObj = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawnDef,
-                                     4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
-                ((GameObject*)obj)->childObjs[0] = (void*)newObj;
-                ((GameObject*)obj)->childCount = 1;
-            }
-            *(u8*)((int)extra + 0x22) = *(u8*)((int)extra + 0x21);
-        }
-    }
-    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
-    if ((child == 0) || (animUpdate->triggerCommand != 2))
-    {
-        if ((child != 0) && (animUpdate->triggerCommand == 1))
-        {
-            (**(code**)(**(int**)(child + 0x68) + 0x3c))(child, 0);
-            animUpdate->triggerCommand = 0;
-        }
-    }
-    else
-    {
-        extra[1] = (int)lbl_803E53F0;
-        extra[2] = extra[5];
-        extra[3] = extra[6];
-        extra[4] = extra[7];
-        (**(code**)(**(int**)(child + 0x68) + 0x3c))(child, 2);
-        FUN_800305f8((double)lbl_803E53E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
-        modelState = (int)((GameObject*)obj)->anim.modelState;
-        if (modelState != 0)
-        {
-            ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-        }
-        animUpdate->hitVolumePair &= ~4;
-        animUpdate->triggerCommand = 0;
-    }
-    if ((child != 0) && (child = (**(code**)(**(int**)(child + 0x68) + 0x38))(child), child == 2))
-    {
-        animUpdate->hitVolumePair &= 0xfffc;
-    }
-    return 0;
-}
+int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void imicemountain_free(void)
 {
@@ -264,9 +71,9 @@ void imicemountain_hitDetect(void)
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
 
-/* EN v1.0 0x801AC9C0  size: 828b  imicemountain_init: clear the ice-mountain
- * gamebit block, arm the map-event triggers, then branch on the queried level
- * state to set the boulder's start state and fire the appropriate triggers. */
+/* imicemountain_init: clear the ice-mountain gamebit block, arm the
+ * map-event triggers, then branch on the queried level state to set the
+ * boulder's start state and fire the appropriate triggers. */
 #pragma scheduling off
 #pragma peephole off
 void imicemountain_init(int* obj)
@@ -376,8 +183,9 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
 
-/* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
- * through jumptable_80323698 (states 1..7; state 0 idles). */
+/* imicemountain_updateEventState: the act-1 event machine (states 1..7;
+ * state 0 idles), advancing avalanche fx, the boulder spawn, level
+ * locks and the final warp as the relevant game bits are set. */
 #pragma peephole off
 void imicemountain_updateEventState(int* obj)
 {
