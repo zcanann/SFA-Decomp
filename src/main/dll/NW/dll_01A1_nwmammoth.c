@@ -93,6 +93,28 @@ extern u32 lbl_803E5208;
 extern f32 lbl_803E5254;
 extern f32 lbl_803E5258;
 
+/* bits in the per-state-index flag table (NwMammothTables.stateFlags) */
+enum NwMammothStateFlag
+{
+    NW_MAMMOTH_STATE_FLAG_PATH_CONTROL = 0x01,
+    NW_MAMMOTH_STATE_FLAG_HEAVY_HIT_REACT = 0x02,
+    NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH = 0x04,
+    NW_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT = 0x08,
+    NW_MAMMOTH_STATE_FLAG_MENU_ACTION = 0x10,
+    NW_MAMMOTH_STATE_FLAG_SOLID = 0x20,
+};
+
+/* bits in NwMammothState.runtimeFlags */
+enum NwMammothRuntimeFlag
+{
+    NW_MAMMOTH_RUNTIME_PATH_CONTROL = 0x01,
+    NW_MAMMOTH_RUNTIME_ANIM_ENDED = 0x02,
+    NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH = 0x04,
+    NW_MAMMOTH_RUNTIME_MENU_LOCK = 0x10,
+    NW_MAMMOTH_RUNTIME_RESET_PATH = 0x20,
+    NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
+};
+
 int nw_mammoth_getExtraSize(void)
 {
     return 0x48c;
@@ -118,22 +140,22 @@ void fn_801CEE0C(int p1, int p2)
     {
     case 0:
         state->triggerList = (u8*)&lbl_803DBF70;
-        if (GameBit_Get(211) != 0)
+        if (GameBit_Get(0xd3) != 0)
         {
             state->stateIndex = 1;
         }
         break;
     case 1:
         state->triggerList = (u8*)&lbl_803DBF74;
-        switch (GameBit_Get(1400))
+        switch (GameBit_Get(0x578))
         {
         case 0:
-            if (ObjTrigger_IsSetById(p1, 1398) != 0)
+            if (ObjTrigger_IsSetById(p1, 0x576) != 0)
             {
-                GameBit_Set(1400, 1);
-                gameBitDecrement(1398);
+                GameBit_Set(0x578, 1);
+                gameBitDecrement(0x576);
                 (*gObjectTriggerInterface)->runSequence(2, (void*)p1, -1);
-                state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
+                state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
                 state->stateIndex = 2;
             }
             break;
@@ -147,13 +169,13 @@ void fn_801CEE0C(int p1, int p2)
         break;
     case 2:
         state->triggerList = (u8*)&lbl_803DBF78;
-        if (ObjTrigger_IsSetById(p1, 1398) != 0)
+        if (ObjTrigger_IsSetById(p1, 0x576) != 0)
         {
-            GameBit_Set(1400, 2);
-            gameBitDecrement(1398);
+            GameBit_Set(0x578, 2);
+            gameBitDecrement(0x576);
             (*gObjectTriggerInterface)->runSequence(4, (void*)p1, -1);
             state->stateIndex = 3;
-            state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
         }
         break;
     case 3:
@@ -175,19 +197,19 @@ void fn_801CED2C(int p1, int p2)
     {
     case 4:
         state->triggerList = (u8*)&lbl_803DBFB4;
-        if (ObjTrigger_IsSetById(p1, 418) != 0)
+        if (ObjTrigger_IsSetById(p1, 0x1a2) != 0)
         {
-            state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
-            GameBit_Set(413, 1);
-            GameBit_Set(419, 1);
-            GameBit_Set(3813, 1);
-            GameBit_Set(3814, 1);
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
+            GameBit_Set(0x19d, 1);
+            GameBit_Set(0x1a3, 1);
+            GameBit_Set(0xee5, 1);
+            GameBit_Set(0xee6, 1);
             state->stateIndex = 5;
         }
         break;
     case 5:
         state->triggerList = (u8*)&lbl_803DBFB8;
-        if (GameBit_Get(415) != 0)
+        if (GameBit_Get(0x19f) != 0)
         {
             state->stateIndex = 6;
         }
@@ -245,7 +267,7 @@ int fn_801CE078(int* obj, u8* st)
         {
             Sfx_PlayFromObject((u32)obj, 0x14b);
         }
-        if (state->runtimeFlags & 2)
+        if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_ANIM_ENDED)
         {
             state->stateIndex = 0x15;
             state->stateTimer = (f32)(s32)
@@ -283,7 +305,7 @@ int fn_801CE078(int* obj, u8* st)
         {
             Sfx_PlayFromObject((u32)obj, 0x14d);
         }
-        if (state->runtimeFlags & 2)
+        if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_ANIM_ENDED)
         {
             state->stateIndex = st[0x409];
         }
@@ -426,7 +448,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0xa:
-        if (state->runtimeFlags & 2)
+        if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_ANIM_ENDED)
         {
             state->stateIndex = 0xb;
         }
@@ -441,7 +463,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         if (ObjTrigger_IsSet(obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(3, (void*)near_, -1);
-            state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
             state->stateIndex = 0xd;
             GameBit_Set(0xce1, 1);
             GameBit_Set(0xd32, 1);
@@ -535,10 +557,10 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     }
                 }
             }
-            if (!(state->runtimeFlags & 0x40))
+            if (!(state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE))
             {
                 (*gGameUIInterface)->initAirMeter(0xc8, 0x5d0);
-                state->runtimeFlags = (u8)(state->runtimeFlags | 0x40);
+                state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
             }
             break;
         }
@@ -551,7 +573,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0xf:
-        if (state->runtimeFlags & 2)
+        if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_ANIM_ENDED)
         {
             Obj_FreeObject(*(int*)&state->trackedObject);
             *(int*)&state->trackedObject = 0;
@@ -587,7 +609,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             (*gScreenTransitionInterface)->start(0x14, 1);
             state->stateIndex = 0x12;
             GameBit_Set(0xd32, 0);
-            state->runtimeFlags = (u8)(state->runtimeFlags & ~0x40);
+            state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_UI_MESSAGE);
             (*gGameUIInterface)->airMeterShutdown();
         }
         break;
@@ -620,7 +642,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         fn_801CE078(obj, st);
         break;
     }
-    if (state->runtimeFlags & 0x40)
+    if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE)
     {
         if (state->airMeterValue < lbl_803E5238 * (f32)state->uiMessageCount)
         {
@@ -644,7 +666,7 @@ void nw_mammoth_free(void* obj)
 
     node = ((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x4d);
-    if ((((NwMammothState*)node)->runtimeFlags & 0x40) != 0)
+    if ((((NwMammothState*)node)->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE) != 0)
     {
         (*gGameUIInterface)->airMeterShutdown();
     }
@@ -673,26 +695,6 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
                                   (char*)node + 0x14,
                                   0);
 }
-
-enum NwMammothStateFlag
-{
-    NW_MAMMOTH_STATE_FLAG_PATH_CONTROL = 0x01,
-    NW_MAMMOTH_STATE_FLAG_HEAVY_HIT_REACT = 0x02,
-    NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH = 0x04,
-    NW_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT = 0x08,
-    NW_MAMMOTH_STATE_FLAG_MENU_ACTION = 0x10,
-    NW_MAMMOTH_STATE_FLAG_SOLID = 0x20,
-};
-
-enum NwMammothRuntimeFlag
-{
-    NW_MAMMOTH_RUNTIME_PATH_CONTROL = 0x01,
-    NW_MAMMOTH_RUNTIME_ANIM_ENDED = 0x02,
-    NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH = 0x04,
-    NW_MAMMOTH_RUNTIME_MENU_LOCK = 0x10,
-    NW_MAMMOTH_RUNTIME_RESET_PATH = 0x20,
-    NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
-};
 
 void nw_mammoth_update(NwMammothObject* obj, int param_2)
 {
@@ -819,7 +821,7 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     }
     objAudioFn_8006ef38((int)obj, &state->animEvents, 8, state->pathPoints, state->pathState,
                         lbl_803E5210, *(f32*)&lbl_803E5210);
-    fn_801CDF94((int)obj, state, table->stateFlags[state->stateIndex] & 4);
+    fn_801CDF94((int)obj, state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
     if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0))
     {
