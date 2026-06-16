@@ -1381,7 +1381,6 @@ void DR_EarthWarrior_init(int obj, int p2)
 {
     register u8* base = gDREarthWarriorInitData;
     int inner = *(int*)&((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState;
     int stk;
     EWPathRange r2;
     EWPathRange r1;
@@ -1405,8 +1404,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     pathState[0x264] = 0x28;
     (*gPathControlInterface)->attachObject((void*)obj, pathState);
     ObjHits_EnableObject(obj);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->trackContactMask = 9;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
     dll_2E_func05(obj, inner + 0x3ec, -0x2000, 0x31c7, 2);
     dll_2E_func09(inner + 0x3ec, &r1, &r2, 2);
     fn_80113F94(inner + 0x3ec, lbl_803E8388);
