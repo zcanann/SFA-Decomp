@@ -189,6 +189,12 @@ typedef struct SaveScoreEntry
     u8 initials[4];
 } SaveScoreEntry;
 
+typedef struct SaveScoreFile
+{
+    u8 pad0[SAVE_SCORE_TABLE_OFFSET];
+    SaveScoreEntry entries[SAVE_SCORE_ENTRY_COUNT];
+} SaveScoreFile;
+
 typedef struct SaveGameDefaultPosition
 {
     f32 x;
@@ -350,29 +356,29 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
 {
     int rank;
     int i;
-    SaveScoreEntry* scores;
+    SaveScoreFile* file;
 
-    scores = (SaveScoreEntry*)(saveData + slot * SAVE_SCORE_FILE_STRIDE + SAVE_SCORE_TABLE_OFFSET);
+    file = (SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE);
     for (rank = 0; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
     {
-        if (score > scores[rank].score)
+        if (score > file->entries[rank].score)
         {
             for (i = SAVE_SCORE_ENTRY_COUNT - 1; i > rank; i--)
             {
-                scores[i].score = scores[i - 1].score;
-                scores[i].flag = scores[i - 1].flag;
-                scores[i].initials[0] = scores[i - 1].initials[0];
-                scores[i].initials[1] = scores[i - 1].initials[1];
-                scores[i].initials[2] = scores[i - 1].initials[2];
-                scores[i].initials[3] = scores[i - 1].initials[3];
+                file->entries[i].score = file->entries[i - 1].score;
+                file->entries[i].flag = file->entries[i - 1].flag;
+                file->entries[i].initials[0] = file->entries[i - 1].initials[0];
+                file->entries[i].initials[1] = file->entries[i - 1].initials[1];
+                file->entries[i].initials[2] = file->entries[i - 1].initials[2];
+                file->entries[i].initials[3] = file->entries[i - 1].initials[3];
             }
 
-            scores[rank].score = score;
-            scores[rank].flag = flag;
-            scores[rank].initials[0] = initials[0];
-            scores[rank].initials[1] = initials[1];
-            scores[rank].initials[2] = initials[2];
-            scores[rank].initials[3] = initials[3];
+            file->entries[rank].score = score;
+            file->entries[rank].flag = flag;
+            file->entries[rank].initials[0] = initials[0];
+            file->entries[rank].initials[1] = initials[1];
+            file->entries[rank].initials[2] = initials[2];
+            file->entries[rank].initials[3] = initials[3];
             return rank;
         }
     }
