@@ -1602,8 +1602,8 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
     u8 c;
     u8 d;
     u32 n;
-    u32 cnt;
-    s8 g;
+    u8 cnt;
+    u8 g;
     int inWater;
     s16 item[4];
 
@@ -1669,19 +1669,19 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                 else
                 {
                     d = c - a;
-                    cnt = d >> 2;
-                    if (d & 3)
+                    cnt = (u32)d >> 2;
+                    if (d % 4)
                     {
                         cnt += 1;
                     }
                     if (n < cnt)
                     {
-                        ((TrickyState*)state)->unk82D = a + (u8)(n << 2);
+                        ((TrickyState*)state)->unk82D = a + (n << 2);
                         GameBit_Set(0xc1, 0);
                     }
                     else
                     {
-                        ((TrickyState*)state)->unk82D = a + (u8)(cnt << 2);
+                        ((TrickyState*)state)->unk82D = a + (cnt << 2);
                         GameBit_Set(0xc1, n - cnt);
                     }
                     if (*(*(u8**)state + 1) < ((TrickyState*)state)->unk82D)
@@ -1735,7 +1735,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
     else
     {
         g = GameBit_Get(0x4e3);
-        if (g != -1 && cMenuGetSelectedItem() == -1)
+        if (g != 0xff && cMenuGetSelectedItem() == -1)
         {
             if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
             {
