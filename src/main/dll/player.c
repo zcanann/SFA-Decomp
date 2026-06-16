@@ -745,13 +745,15 @@ int fn_802A3F24(int obj, int state)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     f32 fz;
+    int flagsBase;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 9;
         ((PlayerState*)inner)->unk898 = 0;
     }
-    *(u32*)((char*)inner + 0x360) &= ~2LL;
-    *(u32*)((char*)inner + 0x360) |= 0x2000LL;
+    flagsBase = *(int*)&((GameObject*)obj)->extra;
+    *(u32*)((char*)flagsBase + 0x360) &= ~2LL;
+    *(u32*)((char*)flagsBase + 0x360) |= 0x2000LL;
     *(int*)((char*)state + 4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedA = fz;
