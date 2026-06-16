@@ -214,7 +214,7 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
             if ((*gRomCurveInterface)->goNextPoint(((RomCurveWalker*)routePtr)) != 0)
                 result = -1;
             else
-                result = (s8) * (u8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
+                result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
         }
         scale = lbl_803E6C78 * a;
     }
@@ -260,7 +260,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
             if ((*gRomCurveInterface)->goNextPointIndexed(((RomCurveWalker*)routePtr), *pickIdx) != 0)
                 result = -1;
             else
-                result = (s8) * (u8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
+                result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
             *pickIdx = 0;
         }
         scale = lbl_803E6C78 * a;
