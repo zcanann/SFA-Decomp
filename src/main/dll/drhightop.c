@@ -536,7 +536,11 @@ void fn_801EB940(short* obj, int stateRaw)
                 fb = (lbl_803E5B40 < lbl_803E5BC4 * st->unk424)
                          ? lbl_803E5B40
                          : lbl_803E5BC4 * st->unk424;
-                Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, (u8)(int)fb, lbl_803E5B20);
+                {
+                    extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume,
+                                                       f32 volumeScale); /* #11 */
+                    Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, (int)fb, lbl_803E5B20);
+                }
             }
         }
         ((HightopFlagsB*)&st->flags428)->resetLatch = 0;
