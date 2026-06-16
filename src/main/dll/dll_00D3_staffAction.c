@@ -1216,9 +1216,9 @@ void fn_80166444(int obj, int state)
     start[0] = ((GameObject*)obj)->anim.localPosX;
     start[1] = ((GameObject*)obj)->anim.localPosY;
     start[2] = ((GameObject*)obj)->anim.localPosZ;
-    end[0] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalX - start[0]);
-    end[1] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalY - start[1]);
-    end[2] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalZ - start[2]);
+    end[0] = -(*(f32*)&lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalX - start[0]);
+    end[1] = -(*(f32*)&lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalY - start[1]);
+    end[2] = -(*(f32*)&lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalZ - start[2]);
     hitScratch.hitRadius = lbl_803E2FDC;
     hitScratch.hitType = 3;
     hitFound = hitDetectFn_80067958(obj, start, end, 1, hitScratch.hit, 0x20);

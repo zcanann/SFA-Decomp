@@ -64,9 +64,8 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     GfxBuf buf;
     u8* base = (u8*)(int)lbl_803178B0;
     GfxCmd* e;
-
     *(s16*)(base + 0x216) = randomGetRange(0, 0x1e) + 0x1e;
-    *(s16*)(base + 0x218) = *(s16*)(base + 0x216);
+    *(volatile s16*)(base + 0x218) = *(volatile s16*)(base + 0x216);
     e = buf.entries;
     e[0].layer = 0;
     e[0].flags = 0x12;
