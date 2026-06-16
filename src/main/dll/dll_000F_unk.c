@@ -867,7 +867,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         ((BaddieState*)state)->targetDistance = lbl_803E0570;
     }
 
-    if ((*(u32*)state & 0x8000) != 0 && *(int*)(pos + 0xc0) == 0)
+    if ((*(u32*)state & 0x8000) != 0 && *(void**)(pos + 0xc0) == NULL)
     {
         fn_800D915C((int)pos, (int*)state, (void*)auxStateFns, dt);
         ((BaddieState*)state)->unk32E = (s16)((f32) * (s16*)(state + 0x32e) + dt);
