@@ -583,7 +583,7 @@ void groundanimator_update(int* obj)
     }
     else
     {
-        allow = GameBit_Get(((GroundanimatorPlacement*)r20)->unk1A) != 0;
+        allow = GameBit_Get(((GroundanimatorPlacement*)r20)->unk1A) != 0 ? 1 : 0;
     }
     if ((g->flags & 2) == 0 && allow != 0)
     {
