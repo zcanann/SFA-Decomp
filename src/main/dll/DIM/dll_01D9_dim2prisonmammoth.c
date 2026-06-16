@@ -124,7 +124,7 @@ void dim2prisonmammoth_release(void)
 #pragma scheduling off
 void fn_802BC788(int a, int b)
 {
-    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)((char*)a + 0xb8) + 0x14f8), 0);
+    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&((GameObject*)a)->extra + 0x14f8), 0);
 }
 
 void dim2prisonmammoth_initialise(void)
