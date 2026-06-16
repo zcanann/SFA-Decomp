@@ -106,7 +106,7 @@ void wcfloortile_update(int obj)
             if (0 < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
             {
                 f32 z = lbl_803E6E9C;
-                for (i = 0, off = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++, off += 4)
+                for (i = 0, off = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); off += 4, i++)
                 {
                     int e = *(int*)(*(int*)(obj + 0x58) + off + 0x100);
                     if (*(s16*)(e + 0x44) == 1)
@@ -150,7 +150,8 @@ void wcfloortile_update(int obj)
             }
             else
             {
-                t = lbl_803E6E98 - (d - lbl_803E6EAC) / lbl_803E6EB8;
+                t = (d - lbl_803E6EAC) / lbl_803E6EB8;
+                t = lbl_803E6E98 - t;
                 if (t > lbl_803E6E98)
                 {
                     t = lbl_803E6E98;
@@ -175,8 +176,8 @@ void wcfloortile_update(int obj)
         break;
     case 3:
         {
-            f32 a = lbl_803E6EBC * timeDelta + (f32)(u32)
-            objAnim->alpha;
+            f32 a = (f32)(u32)objAnim->alpha;
+            a = lbl_803E6EBC * timeDelta + a;
             if (a > lbl_803E6EB0)
             {
                 a = lbl_803E6EB0;
