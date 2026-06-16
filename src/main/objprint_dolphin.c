@@ -3737,8 +3737,8 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
                 {
                     if (lbl_803DCC5C != 0)
                     {
-                        int a;
                         int b;
+                        int a;
                         modelLightStruct_getProjectionTevModes(lbl_803DCC64, &a, &b);
                         if (a == 0)
                         {
