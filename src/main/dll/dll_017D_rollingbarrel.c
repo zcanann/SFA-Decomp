@@ -236,7 +236,7 @@ void RollingBarrel_update(int obj)
             }
 
             ((GameObject*)obj)->anim.rotY =
-                (s32)(lbl_803E44AC * timeDelta * state->curveSpeed +
+                (s16)(lbl_803E44AC * timeDelta * state->curveSpeed +
                     (f32)(int)((GameObject*)obj)->anim.rotY);
             hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
 
