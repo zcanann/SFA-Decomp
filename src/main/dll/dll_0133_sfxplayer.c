@@ -1,38 +1,49 @@
-/*
- * sfxplayer (DLL 0x133) - a placement-driven ambient/triggered SFX emitter.
- *
- * Each instance reads its behaviour from placement bytes: data[0x1d] selects
- * the mode (SFXPLAYER_MODE_GAMEBIT / _LOOPED / _RANDOM_DELAY), data[0x1c]
- * holds the trigger/positioning flag bits, data[0x18] a gate game bit, the
- * sfx-id pair at data[0x1a]/data[0x22], and the random-delay range at
- * data[0x1e]/data[0x1f].
- *
- * Per frame sfxplayerObj_update optionally feeds a rom-curve channel (flag
- * 0x8) tracking either the active camera or the player object, evaluates the
- * gate bit, and starts/stops the sfx pair via the Sfx_* API. Positioning is
- * chosen by flags 0x10 (at object position) and 0x1 (force point form).
- * sfxplayerObj_free tears down any still-active looped sounds.
- *
- * Home TU of these symbols and the SFXPLAYER_* constants is MMP_moonrock.
- */
+#include "main/dll/MMP/MMP_asteroid.h"
+
+extern uint GameBit_Get(int eventId);
+extern u32 randomGetRange(int min, int max);
+
+extern f32 timeDelta;
+
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+typedef struct SfxplayerObjPlacement
+{
+    u8 pad0[0x14 - 0x0];
+    u32 unk14;
+    u32 unk18;
+    u8 pad1C[0x22 - 0x1C];
+    u16 unk22;
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} SfxplayerObjPlacement;
+
+extern f32 lbl_803E40B8;
+
 extern u8* Obj_GetPlayerObject(void);
 extern int getCurSeqNo(void);
+
+/* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
+ * lightningRender(handle). */
+
+/* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
+ * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
+ * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
+
+/* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
+ * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
+ * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
+ * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
+extern f32 lbl_803E40BC;
+
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_StopFromObject(u8* obj, u16 sfx);
 extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_PlayFromObject(u8* obj, u16 sfx);
 extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
-
-extern f32 timeDelta;
-extern f32 lbl_803E40B8;
-extern f32 lbl_803E40BC;
 
 void sfxplayerObj_init(u8* obj, u8* data)
 {
@@ -64,6 +75,10 @@ void sfxplayerObj_init(u8* obj, u8* data)
     }
 }
 
+/* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
+ * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
+ * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
+
 void sfxplayerObj_free(u8* obj)
 {
     u8* data = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -76,7 +91,7 @@ void sfxplayerObj_free(u8* obj)
         u16 sfx1 = *(u16*)(data + 0x1a);
         if (sfx1 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx1);
         {
-            u16 sfx2 = *(u16*)(data + 0x22);
+            u16 sfx2 = ((SfxplayerObjPlacement*)data)->unk22;
             if (sfx2 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx2);
         }
     }
@@ -85,7 +100,7 @@ void sfxplayerObj_free(u8* obj)
         u16 sfx1 = *(u16*)(data + 0x1a);
         if (sfx1 != 0) Sfx_StopFromObject(obj, sfx1);
         {
-            u16 sfx2 = *(u16*)(data + 0x22);
+            u16 sfx2 = ((SfxplayerObjPlacement*)data)->unk22;
             if (sfx2 != 0) Sfx_StopFromObject(obj, sfx2);
         }
     }
@@ -189,7 +204,7 @@ void sfxplayerObj_update(u8* obj)
                     if ((data[0x1c] & 4) != 0)
                     {
                         SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                        SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
                     }
                 }
             }
@@ -199,7 +214,7 @@ void sfxplayerObj_update(u8* obj)
                 if ((data[0x1c] & 2) != 0)
                 {
                     SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                    SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
                 }
             }
         }
@@ -212,7 +227,7 @@ void sfxplayerObj_update(u8* obj)
             if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0)
             {
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
             }
         }
         else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
@@ -221,7 +236,7 @@ void sfxplayerObj_update(u8* obj)
             SFXPLAYER_STOP_PAIR();
         }
         break;
-    case SFXPLAYER_MODE_RANDOM_DELAY:
+    case 2:
         if ((*(s16*)(data + 0x18) == -1) ||
             (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
             (((data[0x1c] & 4) != 0) && (bitState == 0)))
@@ -232,7 +247,7 @@ void sfxplayerObj_update(u8* obj)
                 *(f32*)state = (f32)(s32)
                 randomGetRange(data[0x1e], data[0x1f]) * lbl_803E40BC;
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
             }
         }
         else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
@@ -244,5 +259,8 @@ void sfxplayerObj_update(u8* obj)
     }
 }
 
+void fn_80198A00(u8* obj, int seqArg);
 
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
+
+int WaterFallSpray_SeqFn(int* obj);
