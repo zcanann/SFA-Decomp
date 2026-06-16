@@ -959,7 +959,7 @@ int fn_802A3B04(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         void* sub;
-        Sfx_PlayFromObject(obj, (u16)(((PlayerState*)inner)->characterId != 0 ? 0x29 : 0x2cb));
+        Sfx_PlayFromObject(obj, (u16)(((PlayerState*)inner)->characterId == 0 ? 0x2cb : 0x29));
         *(s16*)((char*)state + 0x278) = 0xa;
         ((PlayerState*)inner)->unk898 = 0;
         ((PlayerState*)inner)->unk800 = 0;
