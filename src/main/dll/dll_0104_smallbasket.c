@@ -241,7 +241,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
-        diff = *(s16*)spawned - ang;
+        diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
             diff -= 0xffff;
@@ -250,7 +250,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             diff += 0xffff;
         }
-        *(s16*)spawned = diff;
+        ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
@@ -305,7 +305,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
-        diff = *(s16*)spawned - ang;
+        diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
             diff -= 0xffff;
@@ -314,7 +314,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             diff += 0xffff;
         }
-        *(s16*)spawned = diff;
+        ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
@@ -369,7 +369,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
-        diff = *(s16*)spawned - ang;
+        diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
             diff -= 0xffff;
@@ -378,7 +378,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             diff += 0xffff;
         }
-        *(s16*)spawned = diff;
+        ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 5:
     case 6:
@@ -453,7 +453,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
-        diff = *(s16*)spawned - ang;
+        diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
             diff -= 0xffff;
@@ -462,7 +462,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             diff += 0xffff;
         }
-        *(s16*)spawned = diff;
+        ((GameObject*)spawned)->anim.rotX = diff;
         break;
     }
     return 1;
@@ -709,7 +709,7 @@ void smallbasket_init(int obj, int def)
     lbl_803DDAC0 = Resource_Acquire(0x5b, 1);
     ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
     ((CfperchState*)state)->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
-    *(s16*)obj = (s16)(((SmallbasketObjectDef*)def)->unk18 << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->unk18 << 8);
     ((CfperchState*)state)->enableGameBit = *(s16*)(def + 0x1e);
     ((CfperchState*)state)->unkC = ((SmallbasketObjectDef*)def)->unk20;
     if (((CfperchState*)state)->unkC == 0)
@@ -941,7 +941,7 @@ void smallbasket_update(int obj)
                         blk.fx = lbl_803E3950;
                         blk.h2 = 0;
                         blk.h1 = 0;
-                        blk.h0 = *(s16*)player;
+                        blk.h0 = ((GameObject*)player)->anim.rotX;
                         if (*(void**)(player + 0x30) != NULL)
                         {
                             blk.h0 = blk.h0 + **(s16**)(player + 0x30);
@@ -973,7 +973,7 @@ void smallbasket_update(int obj)
                         blk.fx = lbl_803E3950;
                         blk.h2 = 0;
                         blk.h1 = 0;
-                        blk.h0 = *(s16*)player;
+                        blk.h0 = ((GameObject*)player)->anim.rotX;
                         vecRotateZXY(&blk, (void*)&((GameObject*)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
                         ((CfperchState*)state)->unk6 = 0;
