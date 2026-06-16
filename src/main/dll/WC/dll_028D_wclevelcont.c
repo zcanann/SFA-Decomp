@@ -1,6 +1,27 @@
+/*
+ * wclevelcont (DLL 0x28D) - the master level controller for the Walled
+ * City (WC) push-block puzzle. One instance owns the level's global
+ * progress: it drives the day/night sky and music state, latches a set of
+ * game bits through a SCGameBitLatch, and dispatches the tile puzzle by the
+ * object's map-event act (act 1 -> wcpushblock_updateLevelControlState,
+ * act 2 -> fn_802251B4). state->mode is seeded at init from completion
+ * game bits.
+ *
+ * The puzzle runs on two 8x8 u8 grids (lbl_803AD2D8 / lbl_803AD298), copied
+ * at init from the ROM templates lbl_8032B008 / lbl_8032B088. The
+ * func0E/func0F/func15/func16 helpers scan an 8x8 ROM table for a value and
+ * return its (row,col); render2/func14 read a working-grid cell with bounds
+ * checks and modelMtxFn/func13 write one; func0B/func12 map a world XZ to a
+ * cell and setScale/func11 map a cell back to world XZ (via
+ * mapGetBlockOriginForPos); func10 ray-walks a row or column from a start
+ * cell in a +/-1 step direction, returning a hit classification (1/2/4) and
+ * the world position of the blocking cell. The func* names are the retail
+ * symbol names, not semantic.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+/* find `value` in ROM grid lbl_8032B0C8 -> (row, col) */
 void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -19,6 +40,7 @@ void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
     }
 }
 
+/* find `value` in ROM grid lbl_8032B088 -> (row, col) */
 void wclevelcont_func15(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -37,6 +59,7 @@ void wclevelcont_func15(s16 value, s16* outRow, s16* outCol)
     }
 }
 
+/* read working grid lbl_803AD298 cell, 0 when (i,j) out of range */
 int wclevelcont_func14(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -46,6 +69,7 @@ int wclevelcont_func14(s16 i, s16 j)
     return lbl_803AD298[i][j];
 }
 
+/* write working grid lbl_803AD298 cell, bounds-checked */
 void wclevelcont_func13(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -55,6 +79,7 @@ void wclevelcont_func13(int value, s16 i, s16 j)
     lbl_803AD298[i][j] = (u8)value;
 }
 
+/* world XZ -> grid (row, col) for the lbl_803AD298 grid */
 void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
@@ -66,6 +91,7 @@ void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
 
+/* grid (col, row) -> world XZ for the lbl_803AD298 grid */
 void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
@@ -79,6 +105,7 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
     *outZp = base + (lbl_803E6DC0 + outZ + (f32)(row * 48));
 }
 
+/* find `value` in ROM grid lbl_8032B048 -> (row, col) */
 void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -97,6 +124,7 @@ void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
     }
 }
 
+/* find `value` in ROM grid lbl_8032B008 -> (row, col) */
 void wclevelcont_func0E(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -115,6 +143,7 @@ void wclevelcont_func0E(s16 value, s16* outRow, s16* outCol)
     }
 }
 
+/* read working grid lbl_803AD2D8 cell, 0 when (i,j) out of range */
 int wclevelcont_render2(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -124,6 +153,7 @@ int wclevelcont_render2(s16 i, s16 j)
     return lbl_803AD2D8[i][j];
 }
 
+/* write working grid lbl_803AD2D8 cell, bounds-checked */
 void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -133,6 +163,7 @@ void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
     lbl_803AD2D8[i][j] = (u8)value;
 }
 
+/* world XZ -> grid (row, col) for the lbl_803AD2D8 grid */
 void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
@@ -144,6 +175,7 @@ void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
 
+/* grid (col, row) -> world XZ for the lbl_803AD2D8 grid */
 void wclevelcont_setScale(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
