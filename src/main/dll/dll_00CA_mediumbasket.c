@@ -1961,6 +1961,7 @@ void fn_8015D3C0(int obj, int sub, int state)
     u8* target;
     int hitInfo[7];
     f32 targetDelta[3];
+    f32* pd = targetDelta;
     f32 distSq;
 
     Obj_GetPlayerObject();
@@ -1971,7 +1972,7 @@ void fn_8015D3C0(int obj, int sub, int state)
         targetDelta[1] = ((GameObject*)target)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         targetDelta[2] = ((GameObject*)target)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         ((GroundBaddieState*)state)->baddie.targetDistance =
-            sqrtf(targetDelta[2] * targetDelta[2] + targetDelta[0] * targetDelta[0] + targetDelta[1] * targetDelta[1]);
+            sqrtf(pd[2] * pd[2] + pd[0] * pd[0] + pd[1] * pd[1]);
     }
     if ((((GroundBaddieState*)sub)->configFlags & 0x20) == 0)
     {
