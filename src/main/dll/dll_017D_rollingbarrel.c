@@ -304,12 +304,13 @@ void RollingBarrel_update(int obj)
 #pragma peephole off
 void fn_801A5D88(int obj, int explosionVariant)
 {
-    RollingBarrelState* state = ((GameObject*)obj)->extra;
+    RollingBarrelState* state;
     u32 r;
     u32 r2;
     int player;
     f32 dist;
     f32 falloff;
+    state = ((GameObject*)obj)->extra;
     lbl_803DDB20 += 1;
     Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (lbl_803DDB20 > 1)
