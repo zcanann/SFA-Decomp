@@ -12765,14 +12765,14 @@ void objLoadPlayerFromSave(int obj)
 int fn_802AB1D0(int obj)
 {
     int objs;
-    int i;
     int count;
-    int best;
     int cur;
+    int best;
+    int i;
     f32 dist;
     f32 bestDist;
     f32 scale;
-    s16 yaw;
+    int yaw;
     void* held;
 
     if (((GameObject*)obj)->objectFlags & 0x1000)
@@ -12787,9 +12787,9 @@ int fn_802AB1D0(int obj)
     best = 0;
     objs = (int)ObjGroup_GetObjects(8, &count);
     bestDist = lbl_803E7EA4;
-    for (i = 0; i < count; i++)
+    for (i = 0; i < count;)
     {
-        cur = ((int*)objs)[i];
+        cur = ((int*)objs)[i++];
         if ((*(s16*)((char*)cur + 0x44) == 0x1c || *(s16*)((char*)cur + 0x44) == 0x2a) &&
             ((GameObject*)cur)->anim.alpha == 0xff)
         {
@@ -12808,7 +12808,7 @@ int fn_802AB1D0(int obj)
                     }
                     dist = sqrtf(dist) / scale;
                 }
-                yaw = Obj_GetYawDeltaToObject(obj, cur, 0);
+                yaw = (s16)Obj_GetYawDeltaToObject(obj, cur, 0);
                 if (yaw < 0x5555 && yaw > -0x5555)
                 {
                     if (dist < bestDist || lbl_803E7EA4 == bestDist)
