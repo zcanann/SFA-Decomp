@@ -142,7 +142,7 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
                                      4, 0xff, 0xffffffff, *(uint**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
                                      in_r10);
                 *(undefined4*)&((GameObject*)param_9)->childObjs[0] = uVar3;
-                *(ushort*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
+                ((GameObject*)((GameObject*)param_9)->childObjs[0])->objectFlags = ((GameObject*)param_9)->objectFlags &
                     7;
             }
             *(u8*)(param_10 + 0x409) = *(u8*)(param_10 + 0x407);
@@ -297,7 +297,7 @@ void CameraModeWorldMap_update(u8* obj)
                 fn_8012DDB8(0);
                 (*gScreenTransitionInterface)->step(0xc, 1);
                 lbl_803DD588->flags.transitionActive = 0;
-                *(u8*)(*(int*)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 0;
+                *(u8*)(*(int*)&((GameObject*)ObjList_FindObjectById(0x43077))->extra + 0x27d) = 0;
             }
             if (lbl_803DD588->flags.transitionActive == 0)
             {
@@ -446,7 +446,7 @@ void CameraModeWorldMap_update(u8* obj)
                     fn_8012DDB8(1);
                     (*gScreenTransitionInterface)->step(0xc, 1);
                     lbl_803DD588->flags.transitionActive = 0;
-                    *(u8*)(*(int*)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 1;
+                    *(u8*)(*(int*)&((GameObject*)ObjList_FindObjectById(0x43077))->extra + 0x27d) = 1;
                 }
                 if (lbl_803DD588->flags.transitionActive == 0)
                 {
