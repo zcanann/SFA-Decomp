@@ -253,7 +253,7 @@ void bombplantspore_update(void* obj)
     void* playerObj;
     u32 poppedMessage;
     u32 poppedSender;
-    u32 detonateMessage;
+    int detonateMessage;
     int i;
 
     state = ((GameObject*)obj)->extra;
@@ -262,7 +262,7 @@ void bombplantspore_update(void* obj)
         detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0)
         {
-            if (poppedMessage == detonateMessage)
+            if ((int)poppedMessage == detonateMessage)
             {
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
                 Sfx_PlayFromObject(obj, SFXmv_totem_slide);
