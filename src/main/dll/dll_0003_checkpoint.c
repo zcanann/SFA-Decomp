@@ -1,447 +1,30 @@
-#include "main/dll_000A_expgfx.h"
-#include "main/dll/dim_partfx.h"
+/*
+ * Checkpoint route DLL (DLL 0x0003).
+ *
+ * Central TU globals:
+ *   lbl_8039C458 - route table (sorted CheckpointSlot array)
+ *   lbl_803DD410 - route count (entries in the table)
+ *   lbl_803DD418 - front particle-list pointer (read side this frame)
+ *   lbl_803DD41C - back particle-list pointer (write side this frame)
+ *   lbl_803DD414 - front particle count (this frame's entries)
+ *   lbl_803DD416 - back particle count (next frame's entries, capped at 10)
+ *
+ * Maintains the global sorted table of CheckpointRouteEntry nodes
+ * (lbl_8039C458, count lbl_803DD410) used for path/route following, plus a
+ * double-buffered particle-ranking list (lbl_803DD418/lbl_803DD41C, swapped
+ * each game loop) holding up to 10 entries (lbl_803DD414/lbl_803DD416).
+ *
+ * Checkpoint_Add / Checkpoint_remove keep the table key-sorted;
+ * Checkpoint_find does a binary search by key. fn_800D55BC builds the per-
+ * segment Hermite control points (curve mode 0 = endpoints, 1 = full 4-point
+ * spline sampled along the heading-rotated cross section, >=2 = single point);
+ * Checkpoint_func08 walks the route advancing by arc length and clamps the
+ * Hermite parameter t to [0,1]; Checkpoint_func07 / Checkpoint_func06 project
+ * an object onto the route and select the active checkpoint segment.
+ */
+#include "main/checkpoint_route.h"
 
 extern u32 randomGetRange(int min, int max);
-
-extern undefined4 DAT_8039d0b8;
-extern undefined4 DAT_8039d0bc;
-extern undefined4 DAT_803de090;
-extern f32 lbl_803DC4B0;
-extern f32 lbl_803DC4B4;
-extern f32 lbl_803E0E38;
-extern f32 lbl_803E0E3C;
-extern f32 lbl_803E0E40;
-extern f32 lbl_803E0E44;
-extern f32 lbl_803E0E48;
-extern f32 lbl_803E0E4C;
-extern f32 lbl_803E0E50;
-extern f32 lbl_803E0E54;
-extern f32 lbl_803E0E58;
-extern f32 lbl_803E0E5C;
-extern f32 lbl_803E0E60;
-extern f32 lbl_803E0E64;
-extern f32 lbl_803E0E68;
-extern f32 lbl_803E0E6C;
-extern f32 lbl_803E0E70;
-extern f32 lbl_803E0E74;
-extern f32 lbl_803E0E78;
-extern f32 lbl_803E0E7C;
-extern f32 lbl_803E0E80;
-extern f32 lbl_803E0E84;
-extern f32 lbl_803E0E88;
-extern f32 lbl_803E0E8C;
-
-undefined4
-FUN_800c8110(int sourceObj, undefined4 effectType, undefined2* spawnParams, uint spawnFlags, u8 argByte,
-             int variant)
-{
-    undefined4 result;
-    uint roll;
-    int desc[3];
-    undefined2 tmplRotX;
-    undefined2 tmplRotY;
-    undefined2 tmplRotZ;
-    undefined4 tmplScale;
-    float tmplPosX;
-    float tmplPosY;
-    float tmplPosZ;
-    float velX;
-    float velY;
-    float velZ;
-    float posX;
-    float posY;
-    float posZ;
-    float scale;
-    undefined2 word58;
-    undefined2 effectId;
-    uint flagsA;
-    undefined4 flagsB;
-    undefined4 word4c;
-    uint word48;
-    uint word44;
-    undefined2 word40;
-    undefined2 word3e;
-    undefined2 word3c;
-    u8 byte3a;
-    u8 alpha;
-    u8 byte37;
-    u8 tmplByte;
-    undefined4 pad30;
-    uint rnd0;
-    undefined4 biasC0;
-    uint rnd1;
-    undefined4 pad20;
-    uint rnd2;
-    undefined4 pad18;
-    uint rnd3;
-
-    lbl_803DC4B0 = lbl_803DC4B0 + lbl_803E0E38;
-    if (lbl_803E0E40 < lbl_803DC4B0)
-    {
-        lbl_803DC4B0 = lbl_803E0E3C;
-    }
-    lbl_803DC4B4 = lbl_803DC4B4 + lbl_803E0E44;
-    if (lbl_803E0E40 < lbl_803DC4B4)
-    {
-        lbl_803DC4B4 = lbl_803E0E48;
-    }
-    if (sourceObj == 0)
-    {
-        result = 0xffffffff;
-    }
-    else
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
-            if (spawnParams == (undefined2*)0x0)
-            {
-                return 0xffffffff;
-            }
-            tmplPosX = ((PartFxSpawnParams*)spawnParams)->posX;
-            tmplPosY = ((PartFxSpawnParams*)spawnParams)->posY;
-            tmplPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
-            tmplScale = *(undefined4*)&((PartFxSpawnParams*)spawnParams)->scale;
-            tmplRotZ = ((PartFxSpawnParams*)spawnParams)->unk4;
-            tmplRotY = ((PartFxSpawnParams*)spawnParams)->unk2;
-            tmplRotX = *spawnParams;
-            tmplByte = argByte;
-        }
-        flagsA = 0;
-        flagsB = 0;
-        byte3a = (undefined)effectType;
-        posX = lbl_803E0E4C;
-        posY = lbl_803E0E4C;
-        posZ = lbl_803E0E4C;
-        velX = lbl_803E0E4C;
-        velY = lbl_803E0E4C;
-        velZ = lbl_803E0E4C;
-        scale = lbl_803E0E4C;
-        desc[2] = 0;
-        desc[1] = 0xffffffff;
-        alpha = 0xff;
-        byte37 = 0;
-        effectId = 0;
-        word40 = 0xffff;
-        word3e = 0xffff;
-        word3c = 0xffff;
-        word4c = 0xffff;
-        word48 = 0xffff;
-        word44 = 0xffff;
-        word58 = 0;
-        desc[0] = sourceObj;
-        switch (effectType)
-        {
-        case 0x73a:
-            rnd0 = randomGetRange(8, 10);
-            velY = lbl_803E0E50 * (f32)(s32)
-            rnd0;
-            roll = randomGetRange(0, 0x28);
-            if (roll == 0)
-            {
-                rnd0 = randomGetRange(0x15, 0x29);
-                scale = lbl_803E0E38 *
-                    (f32)(s32)
-                rnd0;
-                desc[2] = 0x1cc;
-            }
-            else
-            {
-                rnd0 = randomGetRange(8, 0x14);
-                scale = lbl_803E0E38 *
-                    (f32)(s32)
-                rnd0;
-                desc[2] = randomGetRange(0x5a, 0x78);
-            }
-            flagsA = 0x80180200;
-            flagsB = 0x1000020;
-            effectId = 0xc0b;
-            alpha = 0x7f;
-            word3c = 0x3fff;
-            word3e = 0x3fff;
-            word40 = 0x3fff;
-            word44 = 0xffff;
-            word48 = 0xffff;
-            word4c = 0xffff;
-            posY = lbl_803E0E54;
-            break;
-        case 0x73b:
-            rnd0 = randomGetRange(0xffffffec, 0x14);
-            velX = lbl_803E0E50 * (f32)(s32)
-            rnd0;
-            rnd1 = randomGetRange(8, 0x14);
-            velY = lbl_803E0E50 * (f32)(s32)
-            rnd1;
-            rnd2 = randomGetRange(0xffffffec, 0x14);
-            velZ = lbl_803E0E50 * (f32)(s32)
-            rnd2;
-            scale = lbl_803E0E58;
-            desc[2] = 0x32;
-            flagsA = 0x3000200;
-            flagsB = 0x200020;
-            effectId = 0x33;
-            alpha = 0xff;
-            word40 = 0xffff;
-            word3e = 0xffff;
-            word3c = 0xffff;
-            word4c = 0xffff;
-            word48 = randomGetRange(0, 0x8000);
-            posY = lbl_803E0E5C;
-            word44 = word48;
-            break;
-        default:
-            return 0xffffffff;
-        case 0x73d:
-            rnd2 = randomGetRange(0xfffffff6, 10);
-            posX = lbl_803E0E3C * (f32)(s32)
-            rnd2;
-            rnd1 = randomGetRange(0xfffffff6, 100);
-            posY = lbl_803E0E50 * (f32)(s32)
-            rnd1;
-            rnd0 = randomGetRange(0xfffffff6, 10);
-            posZ = lbl_803E0E3C * (f32)(s32)
-            rnd0;
-            rnd3 = randomGetRange(7, 9);
-            scale = lbl_803E0E60 *
-                lbl_803E0E64 * (f32)(s32)
-            rnd3;
-            desc[2] = 0x3c;
-            flagsA = 0x80100;
-            byte37 = 0x10;
-            effectId = 0xde;
-            break;
-        case 0x73e:
-            rnd3 = randomGetRange(0xfffffff6, 10);
-            posX = lbl_803E0E3C * (f32)(s32)
-            rnd3;
-            rnd2 = randomGetRange(0xfffffff6, 100);
-            posY = lbl_803E0E50 * (f32)(s32)
-            rnd2;
-            rnd1 = randomGetRange(0xfffffff6, 10);
-            posZ = lbl_803E0E3C * (f32)(s32)
-            rnd1;
-            rnd0 = randomGetRange(7, 9);
-            scale = lbl_803E0E60 *
-                lbl_803E0E64 * (f32)(s32)
-            rnd0;
-            desc[2] = 0x3c;
-            flagsA = 0x80100;
-            byte37 = 0x10;
-            effectId = 0xdf;
-            break;
-        case 0x73f:
-            if (variant == 0)
-            {
-                rnd3 = randomGetRange(0xfffffff6, 10);
-                posX = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd3;
-                rnd2 = randomGetRange(0xfffffff6, 100);
-                posY = lbl_803E0E50 *
-                    (f32)(s32)
-                rnd2;
-                rnd1 = randomGetRange(0xfffffff6, 10);
-                rnd1 = rnd1 ^ 0x80000000;
-                posZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd1;
-            }
-            else
-            {
-                rnd3 = randomGetRange(0xfffffff6, 10);
-                posX = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd3 +
-                    lbl_803E0E68;
-                rnd2 = randomGetRange(0xfffffff6, 100);
-                posY = lbl_803E0E50 *
-                    (f32)(s32)
-                rnd2 +
-                    lbl_803E0E6C;
-                rnd1 = randomGetRange(0xfffffff6, 10);
-                rnd1 = rnd1 ^ 0x80000000;
-                posZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd1 +
-                    lbl_803E0E70;
-            }
-            biasC0 = 0x43300000;
-            rnd3 = randomGetRange(7, 9);
-            scale = lbl_803E0E74 *
-                lbl_803E0E64 * (f32)(s32)
-            rnd3;
-            desc[2] = 0x3c;
-            flagsA = 0x80100;
-            byte37 = 0x10;
-            effectId = 0xde;
-            break;
-        case 0x740:
-            if (variant == 0)
-            {
-                rnd3 = randomGetRange(0xfffffff6, 10);
-                posX = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd3;
-                rnd2 = randomGetRange(0xfffffff6, 100);
-                posY = lbl_803E0E50 *
-                    (f32)(s32)
-                rnd2;
-                rnd1 = randomGetRange(0xfffffff6, 10);
-                rnd1 = rnd1 ^ 0x80000000;
-                posZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd1;
-            }
-            else
-            {
-                rnd3 = randomGetRange(0xfffffff6, 10);
-                posX = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd3 +
-                    lbl_803E0E68;
-                rnd2 = randomGetRange(0xfffffff6, 100);
-                posY = lbl_803E0E50 *
-                    (f32)(s32)
-                rnd2 +
-                    lbl_803E0E6C;
-                rnd1 = randomGetRange(0xfffffff6, 10);
-                rnd1 = rnd1 ^ 0x80000000;
-                posZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rnd1 +
-                    lbl_803E0E70;
-            }
-            biasC0 = 0x43300000;
-            rnd3 = randomGetRange(7, 9);
-            scale = lbl_803E0E74 *
-                lbl_803E0E64 * (f32)(s32)
-            rnd3;
-            desc[2] = 0x3c;
-            flagsA = 0x80100;
-            byte37 = 0x10;
-            effectId = 0xdf;
-            break;
-        case 0x741:
-            if (spawnParams != (undefined2*)0x0)
-            {
-                posY = ((PartFxSpawnParams*)spawnParams)->posY;
-            }
-            scale = lbl_803E0E78;
-            desc[2] = randomGetRange(0, 0x1e);
-            desc[2] = desc[2] + 0x50;
-            alpha = 0x60;
-            flagsA = 0x80110;
-            effectId = 0x7b;
-            byte37 = 0x20;
-            break;
-        case 0x742:
-            velZ = lbl_803E0E7C;
-            rnd3 = randomGetRange(0xffffffec, 0x14);
-            velX = lbl_803E0E80 * (f32)(s32)
-            rnd3;
-            rnd2 = randomGetRange(0xffffffec, 0x14);
-            velY = lbl_803E0E80 * (f32)(s32)
-            rnd2;
-            scale = lbl_803E0E84;
-            desc[2] = randomGetRange(0x46, 0x50);
-            alpha = 0xff;
-            flagsA = 0x82000104;
-            flagsB = 0x400;
-            effectId = 0x3f4;
-            break;
-        case 0x743:
-            velZ = lbl_803E0E7C;
-            rnd3 = randomGetRange(0xffffffec, 0x14);
-            velX = lbl_803E0E80 * (f32)(s32)
-            rnd3;
-            rnd2 = randomGetRange(0xffffffec, 0x14);
-            velY = lbl_803E0E80 * (f32)(s32)
-            rnd2;
-            scale = lbl_803E0E84;
-            desc[2] = randomGetRange(0x46, 0x50);
-            alpha = 0xff;
-            flagsA = 0x82000104;
-            flagsB = 0x400;
-            effectId = 0x500;
-            break;
-        case 0x744:
-            roll = randomGetRange(0, 4);
-            if (roll == 4)
-            {
-                scale = lbl_803E0E88;
-                alpha = 0x9b;
-                flagsA = 0x480000;
-                desc[2] = randomGetRange(0x1e, 0x28);
-            }
-            else
-            {
-                scale = lbl_803E0E8C;
-                alpha = 0x7d;
-                flagsA = 0x180000;
-                desc[2] = 0x50;
-            }
-            flagsB = 0x2000000;
-            effectId = 0x88;
-        }
-        flagsA = flagsA | spawnFlags;
-        if (((flagsA & 1) != 0) && ((flagsA & 2) != 0))
-        {
-            flagsA = flagsA ^ 2;
-        }
-        if ((flagsA & 1) != 0)
-        {
-            if ((spawnFlags & 0x200000) == 0)
-            {
-                if (desc[0] != 0)
-                {
-                    posX = posX + *(float*)(desc[0] + 0x18);
-                    posY = posY + *(float*)(desc[0] + 0x1c);
-                    posZ = posZ + *(float*)(desc[0] + 0x20);
-                }
-            }
-            else
-            {
-                posX = posX + tmplPosX;
-                posY = posY + tmplPosY;
-                posZ = posZ + tmplPosZ;
-            }
-        }
-        result = (*gExpgfxInterface)->spawnEffect(desc, 0xffffffff, effectType, 0);
-    }
-    return result;
-}
-
-undefined4 FUN_800c9030(uint key, int* outIndex)
-{
-    int hi;
-    int lo;
-    int mid;
-
-    *outIndex = -1;
-    if ((int)key < 0)
-    {
-        return 0;
-    }
-    hi = DAT_803de090 + -1;
-    lo = 0;
-    while (true)
-    {
-        while (true)
-        {
-            if (hi < lo)
-            {
-                *outIndex = -1;
-                return 0;
-            }
-            mid = hi + lo >> 1;
-            if (key <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
-            lo = mid + 1;
-        }
-        if ((uint)(&DAT_8039d0b8)[mid * 2] <= key) break;
-        hi = mid + -1;
-    }
-    *outIndex = mid;
-    return (&DAT_8039d0bc)[mid * 2];
-}
 
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
@@ -450,8 +33,14 @@ extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
 
 extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
 
 extern f32 sqrtf(f32);
+
+extern f32 lbl_803E04D8;
+extern f32 lbl_803E04DC;
+extern f32 lbl_803E04E0;
+extern f32 lbl_803E04E4;
 
 #pragma dont_inline on
 CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
@@ -485,12 +74,6 @@ CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
     *idx_out = -1;
     return NULL;
 }
-
-extern f32 lbl_803E04D8;
-extern f32 lbl_803E04DC;
-extern f32 lbl_803E04E0;
-extern f32 lbl_803E04E4;
-extern f32 mathCosf(f32 x);
 
 #pragma dont_inline off
 s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
@@ -625,24 +208,13 @@ u32 Checkpoint_func0E(s32* p)
     return lbl_803DD418;
 }
 
-void fn_800D6584(void)
-{
-    extern u32 lbl_803DD418; /* #57 */
-    extern u32 lbl_803DD41C; /* #57 */
-    u32 tmp = lbl_803DD418;
-    lbl_803DD418 = lbl_803DD41C;
-    lbl_803DD41C = tmp;
-    lbl_803DD414 = lbl_803DD416;
-    lbl_803DD416 = 0;
-}
-
-/* Rank object r3 against array at lbl_803DD418 by (int@0x1c, float@0xc) descending. */
+/* Rank object r3 against array at lbl_803DD418 by (priority, distSq) descending. */
 typedef struct PartFxItem
 {
-    u8 _pad0[0xc];
-    f32 _0xc;
-    u8 _pad10[0xc];
-    s32 _0x1c;
+    u8 pad00[0xc];
+    f32 distSq;
+    u8 pad10[0xc];
+    s32 priority;
 } PartFxItem;
 
 s32 Checkpoint_func0F(PartFxItem* p)
@@ -657,13 +229,13 @@ s32 Checkpoint_func0F(PartFxItem* p)
         q = arr[i];
         if (q != p)
         {
-            if (q->_0x1c > p->_0x1c)
+            if (q->priority > p->priority)
             {
                 rank++;
             }
-            else if (q->_0x1c == p->_0x1c)
+            else if (q->priority == p->priority)
             {
-                if (q->_0xc > p->_0xc)
+                if (q->distSq > p->distSq)
                 {
                     rank++;
                 }
@@ -691,13 +263,13 @@ PartFxItem* Checkpoint_func10(s32 target_rank)
             PartFxItem* other = *inner;
             if (other != cur)
             {
-                if (other->_0x1c > cur->_0x1c)
+                if (other->priority > cur->priority)
                 {
                     rank++;
                 }
-                else if (other->_0x1c == cur->_0x1c)
+                else if (other->priority == cur->priority)
                 {
-                    if (other->_0xc > cur->_0xc)
+                    if (other->distSq > cur->distSq)
                     {
                         rank++;
                     }
@@ -711,9 +283,11 @@ PartFxItem* Checkpoint_func10(s32 target_rank)
         }
         outer++;
     }
-    return 0;
+    return NULL;
 }
 
+/* Look up a checkpoint by key and emit a random local offset, then pick the
+ * forward or back link to advance along depending on the flag byte. */
 void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
 {
     s32 local_idx;
@@ -793,8 +367,7 @@ void Checkpoint_func0C(CheckpointRouteState* o)
     }
 }
 
-/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
- * NOTE: stuck at ~78% ? instruction scheduling differs. */
+/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries. */
 void Checkpoint_func0D(u32 v)
 {
     extern u32 lbl_803DD41C; /* #57 */
@@ -802,22 +375,14 @@ void Checkpoint_func0D(u32 v)
     ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
 }
 
-void Effect16_func05(void);
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
 int Checkpoint_func09_ret_1(void) { return 0x1; }
 
-extern f32 lbl_803E0504;
-extern f32 lbl_803E0508;
+extern f32 lbl_803E0504; /* used by Checkpoint_func08/07/06 */
+extern f32 lbl_803E0508; /* used by Checkpoint_func08 */
 extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
 
+/* Advance along the route by arc-length `dist`, sampling the Hermite curve and
+ * clamping t to [0,1]; crossing a segment end hands off to the next checkpoint. */
 s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
 {
     extern u16 getAngle(f32 a, f32 b); /* #57 */
@@ -834,7 +399,7 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
     s32 i;
     s8 clamp;
     s32 ang1;
-    s32 ang2;
+    s32 ang2; /* only written and read under `flag != 0`; never read uninitialized */
     f32 kMax;
     f32 kMin;
     f32 t;
@@ -964,17 +529,17 @@ void Checkpoint_onGameLoop(void)
 }
 
 #pragma dont_inline reset
-#pragma dont_inline reset
 
 #include "main/game_object.h"
 
-extern f32 sqrtf(f32 x);
-extern f32 lbl_803E050C;
-extern f32 lbl_803E0510;
-extern f32 lbl_803E0514;
-extern f32 lbl_803E0518;
+extern f32 lbl_803E050C; /* used by Checkpoint_func07 */
+extern f32 lbl_803E0510; /* used by Checkpoint_func07 */
+extern f32 lbl_803E0514; /* used by Checkpoint_func07 */
+extern f32 lbl_803E0518; /* used by Checkpoint_func07/06 */
 
 #pragma opt_common_subs off
+/* Project the object onto the current checkpoint segment, stepping the route
+ * cursor forward or back and returning the segment heading. */
 int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
 {
     extern int getAngle(f32 dx, f32 dz); /* #57 */
@@ -1088,18 +653,6 @@ void Checkpoint_reset(void) { extern u32 lbl_803DD410; /* #57 */ lbl_803DD410 = 
 
 extern u32 lbl_8039CA98[];
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
 #pragma scheduling off
 void Checkpoint_initialise(void)
 {
@@ -1167,16 +720,6 @@ void Checkpoint_remove(CheckpointRouteEntry* obj)
     }
 }
 #pragma opt_common_subs reset
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 
 extern f64 lbl_803E0520;
 extern f32 lbl_803E051C;
@@ -1186,6 +729,8 @@ extern f32 lbl_803E0530;
 extern f32 lbl_803E0534;
 extern f32 lbl_803E0538;
 
+/* Flood-search the route graph (filtered by group) for the segment the object
+ * lies within, recording the matched checkpoint and local coordinates. */
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
     extern CheckpointSlot lbl_8039C458[]; /* #57 */
