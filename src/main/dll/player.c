@@ -13205,7 +13205,7 @@ void fn_802B066C(int obj, int state)
     if (((PlayerState*)state)->unk7A0 <= lbl_803E7EA4)
     {
         ObjPath_GetPointWorldPosition(obj, 0xb, &px, &py, &pz, 0);
-        ObjHits_RecordPositionHit(px, py, pz, obj, 0, 0x1f, 1, -1);
+        ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, px, py, pz);
         ((PlayerState*)state)->unk7A0 = lbl_803E8050;
     }
 }
