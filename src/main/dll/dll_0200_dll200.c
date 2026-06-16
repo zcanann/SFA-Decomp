@@ -377,7 +377,7 @@ void dll_200_init(int* obj, int* arg)
 {
     Dll200State* b;
     ((GameObject*)obj)->unkF4 = 0;
-    *(s16*)obj = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = (void*)dll_200_SeqFn;
     b = ((GameObject*)obj)->extra;
     b->defNoLow = (u8)*(s16*)arg;
@@ -432,13 +432,13 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
         }
         break;
     case 0:
-        break;
+        return 0;
     case 2:
-        break;
+        return 0;
     case 3:
-        break;
+        return 0;
     case 5:
-        break;
+        return 0;
     }
     return 0;
 }
@@ -640,17 +640,17 @@ void fn_801F2290(int obj)
             {
                 ang = getAngle(lbl_80328974[b->prevMode].x,
                                lbl_80328974[b->prevMode].y);
-                diff = (s16)(ang - *(s16*)obj);
+                diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
                 fn_80137948(sArwingAttachmentDiffFormat, diff);
                 if (diff < -1000 || diff > 1000)
                 {
                     if (diff > 0)
                     {
-                        *(s16*)obj = (s16)(*(s16*)obj + framesThisStep * 100);
+                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + framesThisStep * 100);
                     }
                     else
                     {
-                        *(s16*)obj = (s16)(*(s16*)obj - framesThisStep * 100);
+                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - framesThisStep * 100);
                     }
                 }
                 else
@@ -687,7 +687,7 @@ void fn_801F2290(int obj)
                 dy = lbl_80328974[m].y - (((GameObject*)obj)->anim.localPosZ - b->homeZ);
                 dist = sqrtf(dx * dx + dy * dy);
                 ang = getAngle(dx, dy);
-                diff = (s16)(ang - *(s16*)obj);
+                diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
                 if (diff >= -1000 && diff <= 1000)
                 {
                     if (((GameObject*)obj)->anim.currentMove != 59)
@@ -710,11 +710,11 @@ void fn_801F2290(int obj)
                     }
                     if (diff > 0)
                     {
-                        *(s16*)obj = (s16)(*(s16*)obj + framesThisStep * 300);
+                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + framesThisStep * 300);
                     }
                     else
                     {
-                        *(s16*)obj = (s16)(*(s16*)obj - framesThisStep * 300);
+                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - framesThisStep * 300);
                     }
                 }
                 if (dist < lbl_803E5DB4)
