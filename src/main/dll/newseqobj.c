@@ -94,8 +94,8 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
     {
         if (msgId != 0x11)
         {
-            if (msgId != 0x1a && *(s16*)((char*)p3 + 0x46) != 0x6d &&
-                *(s16*)((char*)p3 + 0x46) != 0x754)
+            if (msgId != 0x1a && ((GameObject*)p3)->anim.seqId != 0x6d &&
+                ((GameObject*)p3)->anim.seqId != 0x754)
             {
                 Sfx_PlayFromObject(obj, 0x255);
                 Sfx_PlayFromObject(obj, 0x16);
@@ -174,13 +174,13 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
             *(f32*)(state + 0x328) = (f32)(u32) * (u16*)(state + 0x2ec);
         }
         ((BaddieState*)state)->reactionFlags |= 8;
-        if (*(s16*)((char*)p3 + 0x44) == 0x1c)
+        if (((GameObject*)p3)->anim.classId == 0x1c)
         {
             return 0;
         }
         {
-            int* other = *(int**)((char*)p3 + 0xc4);
-            if (other != 0 && *(s16*)((char*)other + 0x44) == 0x1c)
+            int* other = (int*)((GameObject*)p3)->ownerObj;
+            if (other != 0 && ((GameObject*)other)->anim.classId == 0x1c)
             {
                 return 0;
             }
@@ -209,8 +209,8 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
         {
             Sfx_PlayFromObject(obj, 0x14);
         }
-        if (msgId != 0x1a && msgId != 0x1f && *(s16*)((char*)p3 + 0x46) != 0x6d &&
-            *(s16*)((char*)p3 + 0x46) != 0x754)
+        if (msgId != 0x1a && msgId != 0x1f && ((GameObject*)p3)->anim.seqId != 0x6d &&
+            ((GameObject*)p3)->anim.seqId != 0x754)
         {
             Sfx_PlayFromObject(obj, 0x22);
         }
@@ -233,7 +233,7 @@ void fn_80150EDC(void* p1, void* p2)
     }
 
     if (((BaddieState*)p2)->trackedObj != NULL &&
-        *(s16*)((u8*)((BaddieState*)p2)->trackedObj + 0x44) == 1)
+        ((GameObject*)((BaddieState*)p2)->trackedObj)->anim.classId == 1)
     {
         fn_8001FEA8();
     }
@@ -319,7 +319,8 @@ void fn_80150EDC(void* p1, void* p2)
     if ((*(u8*)((u8*)p2 + 0x323) & 8) == 0)
     {
         void* p_29c = ((BaddieState*)p2)->trackedObj;
-        fn_8014CF7C(p1, p2, *(f32*)((u8*)p_29c + 0xc), *(f32*)((u8*)p_29c + 0x14), 0xf, 0);
+        fn_8014CF7C(p1, p2, ((GameObject*)p_29c)->anim.localPosX,
+                    ((GameObject*)p_29c)->anim.localPosZ, 0xf, 0);
     }
 }
 

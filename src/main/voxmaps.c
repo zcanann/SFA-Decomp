@@ -275,6 +275,7 @@ void voxmaps_initialise(void)
     lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
 }
 
+#pragma opt_strength_reduction off
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
     VoxMaps* vm = &lbl_803387A0;
@@ -293,8 +294,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
 
     vm->blockOriginWorldX = lbl_803DCDC8 + gridX * 640;
     vm->blockOriginWorldZ = lbl_803DCDCC + gridY * 640;
-    vm->blockOriginGridX = vm->blockOriginWorldX / 10;
-    vm->blockOriginGridZ = vm->blockOriginWorldZ / 10;
+    vm->blockOriginGridX = *(volatile int*)&vm->blockOriginWorldX / 10;
+    vm->blockOriginGridZ = *(volatile int*)&vm->blockOriginWorldZ / 10;
 
     blockId = -1;
     if (mapGetBlockAtPos(gridX, gridY, 0) != NULL)
@@ -302,11 +303,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
         block = fn_80059334(gridX, gridY);
         blockId = block->f6;
     }
-    if (blockId == -1)
-    {
-        vm->f58 = 0;
-    }
-    else
+    if (blockId != -1)
     {
         found = -1;
         for (i = 0; i < 6; i++)
@@ -321,11 +318,12 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
         {
             vm->timer[found] = 0;
             vm->f58 = 0;
+            return &vm->blockOriginWorldX;
         }
         else
         {
-            s8 b8;
-            s8 b9;
+            int b8;
+            int b9;
             void** slot;
             bestSlot = -1;
             bestVal = -1;
@@ -349,13 +347,16 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
             vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
-            vm->slotOrigin[bestSlot].gridX = (s16)vm->blockOriginGridX;
-            vm->slotOrigin[bestSlot].gridZ = (s16)vm->blockOriginGridZ;
+            *(s16*)&vm->slotOrigin[bestSlot].gridX = vm->blockOriginGridX;
+            *(s16*)&vm->slotOrigin[bestSlot].gridZ = vm->blockOriginGridZ;
             vm->f58 = 0;
+            return &vm->blockOriginWorldX;
         }
     }
+    vm->f58 = 0;
     return &vm->blockOriginWorldX;
 }
+#pragma opt_strength_reduction reset
 
 int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, u8 skipFirst)
 {

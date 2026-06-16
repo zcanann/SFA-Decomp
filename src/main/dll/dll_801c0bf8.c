@@ -21,25 +21,26 @@ extern f32 lbl_803E4DE0;
 extern f32 lbl_803E4DE4;
 extern f32 lbl_803E4DE8;
 
+#pragma peephole on
 void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out)
 {
-    short startX;
-    short startY;
-    short startZ;
-    short endX;
-    short endY;
-    short endZ;
+    int startX;
+    int startY;
+    int startZ;
+    int endX;
+    int endY;
+    int endZ;
     short* vertex;
     int i;
     float angleRadians;
     f32 vertexX;
 
-    startX = (short)(lbl_803E4DE0 * startNode[0]);
-    startY = (short)(lbl_803E4DE0 * startNode[1]);
-    startZ = (short)(lbl_803E4DE0 * startNode[2]);
-    endX = (short)(lbl_803E4DE0 * endNode[0]);
-    endY = (short)(lbl_803E4DE0 * endNode[1]);
-    endZ = (short)(lbl_803E4DE0 * endNode[2]);
+    startX = (int)(lbl_803E4DE0 * startNode[0]);
+    startY = (int)(lbl_803E4DE0 * startNode[1]);
+    startZ = (int)(lbl_803E4DE0 * startNode[2]);
+    endX = (int)(lbl_803E4DE0 * endNode[0]);
+    endY = (int)(lbl_803E4DE0 * endNode[1]);
+    endZ = (int)(lbl_803E4DE0 * endNode[2]);
     memcpy(out, templateData, 0x60);
 
     i = 0;
@@ -48,8 +49,8 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     for (; i < 6; i++)
     {
         vertexX = (float)(int)*vertex;
-        *vertex = (short)(vertexX * mathCosf(angleRadians));
-        vertex[2] = (short)(-vertexX * mathSinf(angleRadians));
+        *vertex = (int)(vertexX * mathCosf(angleRadians));
+        vertex[2] = (int)(-vertexX * mathSinf(angleRadians));
         vertex += 8;
     }
 
@@ -73,3 +74,4 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     out[0x2a] += endZ;
     return;
 }
+#pragma peephole reset

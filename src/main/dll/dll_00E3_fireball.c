@@ -842,7 +842,7 @@ void FUN_80170048(void)
     packed = FUN_80286838();
     obj = (uint)((ulonglong)packed >> 0x20);
     scaleTbl = (float*)&DAT_80321678;
-    spellData = *(int**)(obj + 0xb8);
+    spellData = *(int**)&((GameObject*)obj)->extra;
     idx = FUN_80017a98();
     spellObj = 0;
     if (idx != 0)
@@ -887,9 +887,9 @@ void FUN_80170048(void)
             if (*spellData != 0)
             {
                 FUN_800175b0(*spellData, 2);
-                FUN_800175ec((double)*(float*)(obj + 0xc),
-                             (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                             (double)*(float*)(obj + 0x14), (int*)*spellData);
+                FUN_800175ec((double)((GameObject*)obj)->anim.localPosX,
+                             (double)(((GameObject*)obj)->anim.localPosY - lbl_803E4050),
+                             (double)((GameObject*)obj)->anim.localPosZ, (int*)*spellData);
                 FUN_8001759c(*spellData, 0, 0xff, 0xff, 0xff);
                 FUN_80017588(*spellData, 0, 0xff, 0xff, 0xff);
                 FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *spellData);
@@ -964,9 +964,9 @@ void FUN_80170048(void)
         if (*spellData != 0)
         {
             FUN_800175b0(*spellData, 2);
-            FUN_800175ec((double)*(float*)(obj + 0xc),
-                         (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                         (double)*(float*)(obj + 0x14), (int*)*spellData);
+            FUN_800175ec((double)((GameObject*)obj)->anim.localPosX,
+                         (double)(((GameObject*)obj)->anim.localPosY - lbl_803E4050),
+                         (double)((GameObject*)obj)->anim.localPosZ, (int*)*spellData);
             FUN_8001759c(*spellData, 0, 0xff, 0xff, 0xff);
             FUN_80017588(*spellData, 0, 0xff, 0xff, 0xff);
             FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *spellData);
@@ -1808,7 +1808,7 @@ void fireball_hitDetect(int* obj)
     }
     target = (int*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (target == NULL) return;
-    if (*(s16*)((char*)target + 0x46) == 0x6e8)
+    if (((GameObject*)target)->anim.seqId == 0x6e8)
     {
         int idx = cmbsrc_getColorIndex(target);
         if ((s8)idx != -1)
@@ -1865,6 +1865,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
 void dim2roofrub_update(int* obj);
 
+#pragma opt_common_subs off
 void fireball_init(int* obj)
 {
     extern int objCreateLight(int* obj, int arg); /* #57 */
@@ -1928,6 +1929,7 @@ void fireball_init(int* obj)
         }
     }
 }
+#pragma opt_common_subs reset
 
 void fireball_update(int* obj)
 {

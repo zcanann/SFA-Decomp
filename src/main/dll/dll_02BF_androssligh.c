@@ -90,10 +90,10 @@ void androssligh_update(int obj)
     }
 }
 
-#pragma opt_common_subs off
 void androssligh_updateBeam(int obj, int beam)
 {
-    extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, int angle, int c, int d);
+    extern void PSVECAdd(f32* a, f32* b, f32* ab);
+    extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, int angle, int c, int d);
     f32 start[3];
     f32 end[3];
     f32 tmp[3];
@@ -101,7 +101,7 @@ void androssligh_updateBeam(int obj, int beam)
     start[0] = ((GameObject*)obj)->anim.localPosX - lbl_803DC528;
     start[1] = ((GameObject*)obj)->anim.localPosY;
     start[2] = ((GameObject*)obj)->anim.localPosZ;
-    end[0] = lbl_803DC528 + ((GameObject*)obj)->anim.localPosX;
+    end[0] = ((GameObject*)obj)->anim.localPosX + lbl_803DC528;
     end[1] = start[1];
     end[2] = start[2];
     tmp[0] = start[0] - playerMapOffsetX;
@@ -113,7 +113,7 @@ void androssligh_updateBeam(int obj, int beam)
     tmp[2] = -tmp[2];
     PSVECScale(tmp, tmp, lbl_803DC52C);
     PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), tmp, tmp);
-    PSVECAdd((int)start, (int)tmp, (int)start);
+    PSVECAdd(start, tmp, start);
     tmp[0] = end[0] - playerMapOffsetX;
     tmp[1] = end[1];
     tmp[2] = end[0] - playerMapOffsetZ;
@@ -123,7 +123,7 @@ void androssligh_updateBeam(int obj, int beam)
     tmp[2] = -tmp[2];
     PSVECScale(tmp, tmp, lbl_803DC52C);
     PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), tmp, tmp);
-    PSVECAdd((int)end, (int)tmp, (int)end);
+    PSVECAdd(end, tmp, end);
     if (*(void**)(beam + 4) == NULL)
     {
         *(int*)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C,
@@ -141,4 +141,3 @@ void androssligh_updateBeam(int obj, int beam)
         }
     }
 }
-#pragma opt_common_subs reset

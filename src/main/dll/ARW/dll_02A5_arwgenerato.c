@@ -1,3 +1,11 @@
+/*
+ * arwgenerato (DLL 0x2A5) - spawner used in the on-rails Arwing flight
+ * sections. It holds a single countdown timer (state->spawnTimer, seeded
+ * from the placement's spawnInterval) and, when the timer elapses, calls
+ * one of two spawn helpers selected by the placement's spawnMode before
+ * re-arming the timer. The two spawn helpers (fn_802317A8 / fn_802315EC)
+ * live in a sibling flight-section TU.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 

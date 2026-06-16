@@ -76,7 +76,7 @@ FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 para
     double targetY;
     double speed;
 
-    state = *(int*)(*(int*)(obj + 0x5c) + 0x40c);
+    state = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     target = FUN_80017a98();
     *(undefined*)((int)params + 0x34d) = 1;
     if (*(char*)((int)params + 0x27a) != '\0')
@@ -84,10 +84,10 @@ FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(float*)(state + 0x60) = lbl_803E3C9C;
         ObjHits_EnableObject((u32)obj);
         trig = (double)FUN_80293bc4();
-        *(float*)(obj + 0x12) = (float)(-(double)*(float*)(state + 0x60) * trig);
-        *(float*)(obj + 0x14) = lbl_803E3C74;
+        ((GameObject*)obj)->anim.velocityX = (float)(-(double)*(float*)(state + 0x60) * trig);
+        ((GameObject*)obj)->anim.velocityY = lbl_803E3C74;
         trig = (double)FUN_80293f80();
-        *(float*)(obj + 0x16) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        ((GameObject*)obj)->anim.velocityZ = (float)(-(double)*(float*)(state + 0x60) * trig);
         *params = *params | 0x2004000;
         FUN_800305f8((double)lbl_803E3C74, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
@@ -202,17 +202,17 @@ FUN_80165e74(undefined8 param_1, double param_2, double param_3, undefined8 para
     int state;
     double trig;
 
-    state = *(int*)(*(int*)(obj + 0x5c) + 0x40c);
+    state = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(undefined*)((int)params + 0x34d) = 1;
     if (*(char*)((int)params + 0x27a) != '\0')
     {
         *(float*)(state + 0x60) = lbl_803E3C9C;
         ObjHits_EnableObject((u32)obj);
         trig = (double)FUN_80293bc4();
-        *(float*)(obj + 0x12) = (float)(-(double)*(float*)(state + 0x60) * trig);
-        *(float*)(obj + 0x14) = lbl_803E3C74;
+        ((GameObject*)obj)->anim.velocityX = (float)(-(double)*(float*)(state + 0x60) * trig);
+        ((GameObject*)obj)->anim.velocityY = lbl_803E3C74;
         trig = (double)FUN_80293f80();
-        *(float*)(obj + 0x16) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        ((GameObject*)obj)->anim.velocityZ = (float)(-(double)*(float*)(state + 0x60) * trig);
         *params = *params | 0x2004000;
         FUN_800305f8((double)lbl_803E3C74, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
@@ -901,15 +901,15 @@ undefined4 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
 
-    state = *(LandedArwingState**)(*(int*)(obj + 0x5c) + 0x40c);
+    state = *(LandedArwingState**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(undefined*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
         ObjHits_EnableObject((u32)obj);
-        *(f32*)(obj + 0x12) = -(state->speed) * fsin16Precise((u16) * obj);
-        *(f32*)(obj + 0x14) = lbl_803E2FDC;
-        *(f32*)(obj + 0x16) = -(state->speed) * fcos16Precise((u16) * obj);
+        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise((u16) * obj);
+        ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
+        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise((u16) * obj);
         *params |= 0x2004000;
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;

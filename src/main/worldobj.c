@@ -186,7 +186,7 @@ void worldobj_init(int obj, int arg)
         }
         base = (f32)(int)
         randomGetRange(0xc8, 0x190);
-        d = Vec_distance((char*)objB + 0x18, (char*)objA + 0x18);
+        d = Vec_distance(&((GameObject*)objB)->anim.worldPosX, &((GameObject*)objA)->anim.worldPosX);
         state->orbitRadiusZ = lbl_803E66C8 * d + base;
         state->orbitRadiusX = state->orbitRadiusZ * (lbl_803E66CC * ((f32)(int)
         randomGetRange(0, 0x64) / lbl_803E66B4

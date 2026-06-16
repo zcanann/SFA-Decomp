@@ -200,7 +200,7 @@ void scarab_update(int obj)
             {
                 ((GameObject*)obj)->anim.rotZ = 0;
                 ((ScarabState*)state)->phase = 1;
-                ((ScarabState*)state)->spawnYaw = *(s16*)obj;
+                ((ScarabState*)state)->spawnYaw = ((GameObject*)obj)->anim.rotX;
                 if (((GameObject*)obj)->anim.seqId == 0x3d3)
                 {
                     {
@@ -278,7 +278,7 @@ void scarab_update(int obj)
                     localPosX;
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.
                     localPosZ;
-                *(s16*)obj = 0;
+                ((GameObject*)obj)->anim.rotX = 0;
                 sumsq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->
                     anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
                 if (sumsq != lbl_803E39F8)
@@ -298,7 +298,7 @@ void scarab_update(int obj)
                 rot.ang = (s16)randomGetRange(-10000, 10000);
                 vecRotateZXY(&rot, (f32*)(obj + 0x24));
                 ang = (u16)getAngle(((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);
-                diff = *(s16*)obj - ang;
+                diff = ((GameObject*)obj)->anim.rotX - ang;
                 if (diff > 0x8000)
                 {
                     diff += -0xffff;
@@ -307,7 +307,7 @@ void scarab_update(int obj)
                 {
                     diff += 0xffff;
                 }
-                *(s16*)obj = (s16)diff;
+                ((GameObject*)obj)->anim.rotX = (s16)diff;
                 ((ScarabState*)state)->phase = 0;
                 ((ScarabState*)state)->riseAmount = lbl_803E39F8;
                 {
@@ -366,7 +366,7 @@ void scarab_update(int obj)
                 }
                 if (((GameObject*)obj)->anim.seqId != 0x3d6)
                 {
-                    *(s16*)obj = (s16)(*(s16*)obj + (int)randomGetRange(-1460, 1460));
+                    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)randomGetRange(-1460, 1460));
                 }
                 ((GameObject*)obj)->anim.velocityX = ((ScarabState*)state)->velX;
                 {
@@ -380,7 +380,7 @@ void scarab_update(int obj)
                 rot.scale = lbl_803E3A00;
                 rot.c = 0;
                 rot.b = 0;
-                rot.ang = *(s16*)obj - ((ScarabState*)state)->spawnYaw;
+                rot.ang = ((GameObject*)obj)->anim.rotX - ((ScarabState*)state)->spawnYaw;
                 vecRotateZXY(&rot, (f32*)(obj + 0x24));
                 ((ScarabState*)state)->mode -= framesThisStep;
                 if (((ScarabState*)state)->mode <= 0)
@@ -402,7 +402,7 @@ void scarab_update(int obj)
                     ang = (u16)getAngle(list[best][1], list[best][3]);
                     fang = (f32)ang;
                     fang = lbl_803DBDCC * fang + lbl_803E3A2C;
-                    *(s16*)obj = fang;
+                    ((GameObject*)obj)->anim.rotX = fang;
                     ((GameObject*)obj)->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best][1]) + ((GameObject*)obj)
                         ->anim.localPosX;
                     ((GameObject*)obj)->anim.localPosZ = timeDelta * (k * list[best][3]) + ((GameObject*)obj)
@@ -441,7 +441,7 @@ void scarab_update(int obj)
                     ang = (u16)getAngle(vsub[0], vsub[2]);
                     fang = (f32)ang;
                     fang = lbl_803DBDD0 * fang + lbl_803E3A2C;
-                    *(s16*)obj = fang;
+                    ((GameObject*)obj)->anim.rotX = fang;
                 }
             }
             else

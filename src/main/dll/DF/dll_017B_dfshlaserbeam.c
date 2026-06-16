@@ -449,8 +449,8 @@ void DFSH_LaserBeam_initialise(void)
 void fn_801C4664(void* objArg)
 {
     DFSHLaserBeamObject* obj;
-    DFSHLaserBeamConfig* config;
     DFSHLaserBeamRuntime* runtime;
+    DFSHLaserBeamConfig* config;
     void* playerObj;
     f32 trigA;
     f32 trigB;
@@ -459,8 +459,8 @@ void fn_801C4664(void* objArg)
     int animEvents;
 
     obj = (DFSHLaserBeamObject*)objArg;
-    config = obj->config;
     runtime = obj->runtime;
+    config = obj->config;
     playerObj = Obj_GetPlayerObject();
 
     if ((obj->flags06 & 0x4000) != 0)

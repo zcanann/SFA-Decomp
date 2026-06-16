@@ -1894,7 +1894,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         model = Obj_GetActiveModel((int)obj);
         savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
         savedB36 = ((GameObject*)obj)->anim.alpha;
-        saved0 = *(s16*)obj;
+        saved0 = ((GameObject*)obj)->anim.rotX;
         saved2 = ((GameObject*)obj)->anim.rotY;
         saved4 = ((GameObject*)obj)->anim.rotZ;
         hud = getHudHiddenFrameCount();
@@ -1913,7 +1913,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 if ((*(u8*)(state + i + 0x5c) & 1) == 0)
                 {
                     u8* q = state + i * 2;
-                    *(s16*)obj = *(s16*)(q + 0x44);
+                    ((GameObject*)obj)->anim.rotX = *(s16*)(q + 0x44);
                     ((GameObject*)obj)->anim.rotY = *(s16*)(q + 0x4c);
                     ((GameObject*)obj)->anim.rotZ = *(s16*)(q + 0x54);
                     *(s16*)(q + 0x44) = dt * (f32)lbl_803DBD78[i] + (f32) * (s16*)(q + 0x44);
@@ -1938,7 +1938,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 if ((*(u8*)(state + i + 0x5c) & 1) == 0)
                 {
                     u32 off = i * 2 + 0x44;
-                    *(s16*)obj = *(s16*)(state + off);
+                    ((GameObject*)obj)->anim.rotX = *(s16*)(state + off);
                     *(s16*)(state + off) = dt * (f32)lbl_803DBD70[i] + (f32) * (s16*)(state + off);
                     {
                         u8* r = state + i * 4;
@@ -1960,7 +1960,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                             pv[0] = cA * f8v;
                             pv[1] = cB * f8v;
                             pv[2] = cC;
-                            *(s16*)obj += 32767;
+                            ((GameObject*)obj)->anim.rotX += 32767;
                             vecRotateZXY(obj, pv);
                             pv[0] += ((GameObject*)obj)->anim.localPosX;
                             pv[1] += ((GameObject*)obj)->anim.localPosY;
@@ -1975,7 +1975,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         ((GameObject*)obj)->anim.rootMotionScale = savedF8;
         ((GameObject*)obj)->anim.alpha = savedB36;
-        *(s16*)obj = saved0;
+        ((GameObject*)obj)->anim.rotX = saved0;
         ((GameObject*)obj)->anim.rotY = saved2;
         ((GameObject*)obj)->anim.rotZ = saved4;
     }

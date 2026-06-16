@@ -225,15 +225,18 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     }
 }
 
-/* EN v1.0 Size: 256b - 96% match. Per-iteration byte decrement
- * for 256 rows in two parallel arrays. Target recomputes the full
- * int->float magic in the else-branch store (no CSE with the
- * compare); reproduced with #pragma opt_common_subs off. Plain
- * float->u8 store (no (u8)/(s32) cast) drops the clrlwi. Remaining
- * residual is GPR coloring (#108): byte temp wants r5, pointers
- * r3/r4 -- mine routes the base addresses through r0 with extra
- * mr's. Not cracked by decl-order/launder probes. */
-#pragma opt_common_subs off
+/* EN v1.0 Size: 256b - 77% match. Per-iteration byte decrement:
+ *   if (b != 0) {
+ *     v = (f32)(u32)b - step;
+ *     if (v <= 0) b = 0; else b = (u8)v;
+ *   }
+ * for 256 rows in two parallel arrays. MWCC CSEs the conversion
+ * expression (v) between the compare and the store, emitting a
+ * single fctiwz on cached f2. Target recomputes the full
+ * stw/lfd/fsubs sequence before the second use, which suggests
+ * retail source had a variable reassignment between the two uses
+ * (see Ghidra: local_18 reassigned before the else-branch store).
+ * Can't reproduce the re-store without __asm. */
 void timeFn_8006f400(f32 step)
 {
     int i;
@@ -249,21 +252,20 @@ void timeFn_8006f400(f32 step)
             if ((f32)(u32)a[0x33] - step <= 0.0f) {
                 a[0x33] = 0;
             } else {
-                a[0x33] = (f32)(u32)a[0x33] - step;
+                a[0x33] = (u8)(s32)((f32)(u32)a[0x33] - step);
             }
         }
         if (b[0x0E] != 0) {
             if ((f32)(u32)b[0x0E] - step <= 0.0f) {
                 b[0x0E] = 0;
             } else {
-                b[0x0E] = (f32)(u32)b[0x0E] - step;
+                b[0x0E] = (u8)(s32)((f32)(u32)b[0x0E] - step);
             }
         }
         a += 0x38;
         b += 0x10;
     }
 }
-#pragma opt_common_subs reset
 
 void drawFn_8006f500(void)
 {
@@ -579,10 +581,9 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = (u32)gDepthReadPendingCount;
         if (n < 0x14) {
-            DepthReadRequest* queue = (DepthReadRequest*)&gDepthReadPendingQueue;
-            queue[n].x = (u16)x;
-            queue[n].y = (u16)y;
-            queue[n].key = requestKey;
+            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].x = (u16)x;
+            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].y = (u16)y;
+            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].key = requestKey;
             gDepthReadPendingCount++;
         }
         i = 0;
@@ -628,11 +629,10 @@ extern f32 lbl_803DEE74;
 extern f32 lbl_803DEE78;
 extern f32 lbl_803DEE7C;
 extern f32 Gq;
-extern f32 lbl_803DD03C;
+extern int lbl_803DD03C;
 extern int lbl_803968C0[];
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern f32 fabs(f32 x);
 
 void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
                        float *mat, short *out)
@@ -658,16 +658,16 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
 
     if (out != NULL) {
         if ((f32)(near + far) <= lbl_803DEE7C) {
-            *out = (s16)0xFFFF;
+            *(u16*)out = 0xFFFF;
         } else {
-            *out = (s16)(s32)(Gq / (near + far));
-            if (*out == 0) {
+            *(s16*)out = (s16)(Gq / (near + far));
+            if (*(u16*)out == 0) {
                 *out = 1;
             }
         }
     }
-    lbl_803DD038 = fabs(near);
-    lbl_803DD034 = fabs(far);
+    lbl_803DD038 = __fabs(near);
+    lbl_803DD034 = __fabs(far);
     C_MTXPerspective((void *)lbl_803968C0, fov, aspect, lbl_803DD038, lbl_803DD034);
     lbl_803DD03C = 0;
 }
@@ -1404,7 +1404,7 @@ void doColorFilter(u8* mod)
     GXSetTevColorIn(2, 0xf, 8, 0xe, 0);
     GXSetTevAlphaIn(2, 7, 7, 7, 0);
     GXSetTevSwapMode(2, 0, 3);
-    GXSetTevColorOp(2, 0, 0, 3, 1, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
 
     GXClearVtxDesc();
@@ -1455,7 +1455,6 @@ void doColorFilter(u8* mod)
     GXWGFifo.s16 = 0x80;
 
     Camera_RebuildProjectionMatrix();
-    GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
 
 static inline float distortSqrtf(float x) {
@@ -1988,11 +1987,11 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     mtx[0][0] = lbl_803DEF30;
     mtx[0][1] = lbl_803DEEDC;
     mtx[0][2] = lbl_803DEEDC;
-    mtx[0][3] = gSynthDelayedActionWord0;
+    mtx[0][3] = *(f32*)&gSynthDelayedActionWord0;
     mtx[1][0] = lbl_803DEEDC;
     mtx[1][1] = lbl_803DEF30;
     mtx[1][2] = lbl_803DEEDC;
-    mtx[1][3] = gSynthDelayedActionWord0;
+    mtx[1][3] = *(f32*)&gSynthDelayedActionWord0;
     mtx[2][0] = lbl_803DEEDC;
     mtx[2][1] = lbl_803DEEDC;
     mtx[2][2] = lbl_803DEEDC;
@@ -2112,11 +2111,11 @@ int modelCb_80073d04(u8 *obj, int *objB)
     texMtx[0][0] = lbl_803DEF34;
     texMtx[0][1] = lbl_803DEEDC;
     texMtx[0][2] = lbl_803DEEDC;
-    texMtx[0][3] = gSynthDelayedActionWord0;
+    texMtx[0][3] = *(f32*)&gSynthDelayedActionWord0;
     texMtx[1][0] = lbl_803DEEDC;
     texMtx[1][1] = lbl_803DEF34;
     texMtx[1][2] = lbl_803DEEDC;
-    texMtx[1][3] = gSynthDelayedActionWord0;
+    texMtx[1][3] = *(f32*)&gSynthDelayedActionWord0;
     texMtx[2][0] = lbl_803DEEDC;
     texMtx[2][1] = lbl_803DEEDC;
     texMtx[2][2] = lbl_803DEEDC;
@@ -2255,7 +2254,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     return 1;
 }
 
-int modelCb_80074518(void* obj_a, void** obj_b, int slot)
+void modelCb_80074518(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DB6B0, lbl_803DB6B4;
@@ -2272,8 +2271,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    extern int fn_8003BB74(void);
-    extern void GXSetAlphaCompare(int, int, int, int, int);
     Mtx mtx_90;
     Mtx mtx_60;
     Mtx mtx_30;
@@ -2312,7 +2309,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
 
     GXSetIndTexOrder(1, 0, 2);
     GXSetIndTexCoordScale(1, 0, 0);
-    GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 1, 0, 0);
+    GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 0, 0, 1);
     PSMTXScale(mtx_30, lbl_803DB6B0, lbl_803DB6B0, lbl_803DEEE4);
     PSMTXConcat(mtx_30, lbl_80396820, mtx_90);
     PSMTXTrans(mtx_30,
@@ -2339,11 +2336,13 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
         pcb(obj_a, obj_b, slot);
     } else {
         u8 zCompLoc = 1;
-        if (((u8*)obj_a)[0x37] < 0xff
-            || (((ModelRenderOp *)renderOp)->flags & 0x40000000) != 0
-            || ((ModelRenderOp *)renderOp)->alpha < 0xff) {
-            GXSetBlendMode(1, 4, 5, 5);
+        u32 modelFlags;
+        if (((u8*)obj_a)[0x37] >= 0xff
+            && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
+            && ((ModelRenderOp *)renderOp)->alpha >= 0xff) {
+            modelFlags = ((ModelRenderOp *)renderOp)->flags;
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
+                GXSetBlendMode(0, 1, 0, 5);
                 if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
                     GXSetZMode(0, 3, 0);
@@ -2352,22 +2351,8 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     lbl_803DD012 = 0;
                     lbl_803DD01A = 1;
                 }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
-            } else if ((((ModelFileHeader *)model)->flags & 0x2000) != 0) {
-                int alphaRef0, alphaRef1;
-                zCompLoc = 0;
-                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                    (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
-                    GXSetZMode(1, 3, 1);
-                    lbl_803DD018 = 1;
-                    lbl_803DD014 = 3;
-                    lbl_803DD012 = 1;
-                    lbl_803DD01A = 1;
-                }
-                alphaRef0 = fn_8003BB74();
-                alphaRef1 = fn_8003BB74();
-                GXSetAlphaCompare(4, alphaRef1, 0, 4, alphaRef0);
             } else {
+                GXSetBlendMode(0, 1, 0, 5);
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
                     (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
                     GXSetZMode(1, 3, 0);
@@ -2376,54 +2361,31 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     lbl_803DD012 = 0;
                     lbl_803DD01A = 1;
                 }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
+            GXSetAlphaCompare(7, 0, 0, 7, 0);
         } else {
-            if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
-                GXSetBlendMode(0, 1, 0, 5);
-                if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
-                        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                        GXSetZMode(0, 3, 0);
-                        lbl_803DD018 = 0;
-                        lbl_803DD014 = 3;
-                        lbl_803DD012 = 0;
-                        lbl_803DD01A = 1;
-                    }
-                } else {
-                    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                        (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
-                        GXSetZMode(1, 3, 1);
-                        lbl_803DD018 = 1;
-                        lbl_803DD014 = 3;
-                        lbl_803DD012 = 1;
-                        lbl_803DD01A = 1;
-                    }
+            if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
+                GXSetBlendMode(1, 4, 5, 5);
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 0);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
                 }
-                GXSetAlphaCompare(4, 192, 0, 4, 192);
             } else {
-                GXSetBlendMode(0, 1, 0, 5);
-                if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
-                        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-                        GXSetZMode(0, 3, 0);
-                        lbl_803DD018 = 0;
-                        lbl_803DD014 = 3;
-                        lbl_803DD012 = 0;
-                        lbl_803DD01A = 1;
-                    }
-                } else {
-                    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
-                        (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
-                        GXSetZMode(1, 3, 1);
-                        lbl_803DD018 = 1;
-                        lbl_803DD014 = 3;
-                        lbl_803DD012 = 1;
-                        lbl_803DD01A = 1;
-                    }
+                GXSetBlendMode(1, 4, 5, 5);
+                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(0, 3, 0);
+                    lbl_803DD018 = 0;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
                 }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
+            GXSetAlphaCompare(7, 0, 0, 7, 0);
         }
         if ((((ModelRenderOp *)renderOp)->flags & 0x400) != 0) {
             zCompLoc = 0;
@@ -2433,13 +2395,12 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
             lbl_803DD011 = zCompLoc;
             lbl_803DD019 = 1;
         }
-        if ((((ModelRenderOp *)renderOp)->flags & 0x8) != 0) {
+        if ((((ModelRenderOp *)renderOp)->flags & 0x10) != 0) {
             GXSetCullMode(2);
         } else {
             GXSetCullMode(0);
         }
     }
-    return 1;
 }
 
 u32 objCallback_80074d04(int handle, void* model)
@@ -2462,9 +2423,9 @@ u32 objCallback_80074d04(int handle, void* model)
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    Mtx mtx_8c;
-    Mtx mtx_bc;
     Mtx mtx_ec;
+    Mtx mtx_bc;
+    Mtx mtx_8c;
     Mtx mtx_5c;
     f32 indMtx_44[6];
     f32 indMtx_2c[6];
@@ -2484,8 +2445,14 @@ u32 objCallback_80074d04(int handle, void* model)
         pz = mtx_8c[2][3];
         dist = px*px + py*py + pz*pz;
         if (dist > lbl_803DEEDC) {
-            f32 e = (f32)(1.0 / __frsqrte((double)dist));
-            dist = dist * e;
+            extern double lbl_803DEF10, lbl_803DEF18;
+            volatile float vdist;
+            double g = __frsqrte((double)dist);
+            g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
+            g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
+            g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
+            vdist = (float)(dist * g);
+            dist = vdist;
         }
         f31_val = lbl_803DEF3C / dist;
         if (f31_val > lbl_803DEEE4) f31_val = lbl_803DEEE4;
@@ -2602,15 +2569,14 @@ u32 objCallback_80074d04(int handle, void* model)
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
-    GXSetBlendMode(1, 4, 5, 5);
     if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
         GXSetZCompLoc(1);
         lbl_803DD011 = 1;
         lbl_803DD019 = 1;
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetCullMode(2);
-    return 1;
+    GXSetBlendMode(1, 4, 5, 5);
+    return 0;
 }
 
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
@@ -4325,7 +4291,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     fn_8006C540(&handle);
     selectTexture(handle, 0);
     {
-        f32 dec = gSynthDelayedActionWord0;
+        f32 dec = *(f32*)&gSynthDelayedActionWord0;
         f32 zero = lbl_803DEEDC;
         f32 inv_sx = dec / sx;
         f32 inv_sy = dec / sy;
@@ -4636,7 +4602,7 @@ void doHeatEffect(u8 alpha)
     *(IndMtxInit *)indMtx = *(IndMtxInit *)lbl_802C1EA8;
     v = fn_8000FA70();
     if (v < 0) {
-        k = (((u16)v >> 8) - 0xc0) << 2;
+        k = (((u16)(int)v >> 8) - 0xc0) << 2;
     } else {
         k = 0xff;
     }
@@ -5162,12 +5128,13 @@ void fn_8007BD8C(int handle1, int handle2)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void selectReflectionTexture(int);
-    extern int isHeavyFogEnabled(void);
+    extern u8 isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_30;
     GXColor temp;
+    u8* indBase = (u8*)lbl_8030EA10;
 
     selectReflectionTexture(0);
     selectTexture(handle1, 1);
@@ -5226,9 +5193,9 @@ void fn_8007BD8C(int handle1, int handle2)
 
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
-    GXSetIndTexMtx(1, lbl_8030EA10, -1);
-    GXSetIndTexMtx(2, (f32(*)[3])((u8*)lbl_8030EA10 + 0x18), -1);
-    GXSetIndTexMtx(3, (f32(*)[3])((u8*)lbl_8030EA10 + 0x30), -1);
+    GXSetIndTexMtx(1, (f32(*)[3])indBase, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])(indBase + 0x18), -1);
+    GXSetIndTexMtx(3, (f32(*)[3])(indBase + 0x30), -1);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 1);
     GXSetTevIndirect(2, 0, 0, 7, 3, 0, 0, 0, 0, 0);
@@ -5294,11 +5261,11 @@ void setupReflectionIndirectTev(u8 flag)
     GXSetTexCoordGen2(1, 0, 0, 0x24, 0, 0x7D);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     mtx[0] = lbl_803DEEDC;
-    mtx[1] = gSynthDelayedActionWord0;
+    mtx[1] = *(f32*)&gSynthDelayedActionWord0;
     mtx[2] = lbl_803DEEDC;
     mtx[3] = lbl_803DEEDC;
     mtx[4] = lbl_803DEEDC;
-    mtx[5] = gSynthDelayedActionWord0;
+    mtx[5] = *(f32*)&gSynthDelayedActionWord0;
     GXSetIndTexOrder(0, 0, 0);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (void*)mtx, -2);
@@ -5343,8 +5310,8 @@ void fn_8007C664(int texHandle)
     extern u8 isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
     u8 ignoredLightColor;
-    f32 tOff;
     f32 sOff;
+    f32 tOff;
     f32 indMtx[6];
     Mtx scaleMtx;
 
@@ -5357,11 +5324,11 @@ void fn_8007C664(int texHandle)
     GXLoadTexMtxImm(scaleMtx, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
     indMtx[0] = lbl_803DEEDC;
-    indMtx[1] = gSynthDelayedActionWord0;
+    indMtx[1] = *(f32*)&gSynthDelayedActionWord0;
     indMtx[2] = lbl_803DEEDC;
     indMtx[3] = lbl_803DEEDC;
     indMtx[4] = lbl_803DEEDC;
-    indMtx[5] = gSynthDelayedActionWord0;
+    indMtx[5] = *(f32*)&gSynthDelayedActionWord0;
     if (isHeavyFogEnabled()) {
         lbl_803DB688.r = lbl_803DD01C.r;
         lbl_803DB688.g = lbl_803DD01C.g;
@@ -5436,8 +5403,8 @@ void fn_8007CAF4(void)
     extern u8 isHeavyFogEnabled(void);
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
-    f32 tOff;
     f32 sOff;
+    f32 tOff;
     f32 indMtx[6];
     Mtx scaleMtx;
 
@@ -5519,7 +5486,7 @@ void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
     extern f32 lbl_803DEF40, lbl_803DEF88;
-    extern u8 lbl_803DEF81[8];
+    extern u8 lbl_803DEF81;
     extern u32 lbl_803DB67C;
     extern GXColor lbl_803DD01C;
     extern u8 lbl_803DB678;
@@ -5530,7 +5497,7 @@ void gxTextureSetupFn_8007cf7c(void)
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void selectReflectionTexture(int);
-    extern int isHeavyFogEnabled(void);
+    extern u8 isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
     Mtx mtx_cc;
     Mtx mtx_9c;
@@ -5572,11 +5539,11 @@ void gxTextureSetupFn_8007cf7c(void)
     GXLoadTexMtxImm(mtx_9c, 0x2a, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x2a, 0, 0x7d);
 
-    indMtx_3c[0] = *(f32*)((u8*)lbl_803DEF81 + 3);
-    indMtx_3c[1] = *(f32*)((u8*)lbl_803DEF81 + 3);
+    indMtx_3c[0] = *(f32*)((u8*)&lbl_803DEF81 + 3);
+    indMtx_3c[1] = *(f32*)((u8*)&lbl_803DEF81 + 3);
     indMtx_3c[2] = lbl_803DEEDC;
     indMtx_3c[3] = lbl_803DEF88;
-    indMtx_3c[4] = *(f32*)((u8*)lbl_803DEF81 + 3);
+    indMtx_3c[4] = *(f32*)((u8*)&lbl_803DEF81 + 3);
     indMtx_3c[5] = lbl_803DEEDC;
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
@@ -5717,14 +5684,21 @@ int cardLoadFn_8007d72c(void)
     int need_format;
     int res;
     u64 serial;
+    int ok;
 
     need_format = 0;
     if (cardProbe(0) == 0) {
-        return 0;
+        ok = 0;
+    } else {
+        lbl_803DD040 = mmAlloc(0xA000, -1, 0);
+        if (lbl_803DD040 == 0) {
+            lbl_803DB700 = 8;
+            ok = 0;
+        } else {
+            ok = 1;
+        }
     }
-    lbl_803DD040 = mmAlloc(0xA000, -1, 0);
-    if (lbl_803DD040 == 0) {
-        lbl_803DB700 = 8;
+    if (ok == 0) {
         return 0;
     }
     lbl_803DB700 = 0;
@@ -5740,9 +5714,8 @@ int cardLoadFn_8007d72c(void)
     } else if (res == -13 || res == 0) {
         res = CARDGetSerialNo(0, &serial);
         if (res == 0) {
-            u32* serial_words = (u32*)&serial;
-            if ((lbl_803DD048 | lbl_803DD04C) == 0 ||
-                ((lbl_803DD048 ^ serial_words[0]) | (lbl_803DD04C ^ serial_words[1])) != 0) {
+            u64 cache = (u64)lbl_803DD048 << 32 | lbl_803DD04C;
+            if (cache == 0 || cache != serial) {
                 res = -0x55;
                 lbl_803DB700 = 0xB;
             } else if (need_format) {
@@ -5822,16 +5795,23 @@ int cardDeleteFn_8007d99c(void)
     extern const char* sMemoryCardFileName;
     extern volatile s32 lbl_803DB700;
     int res;
+    int ok;
 
     lbl_803DD058 = 0;
 
     do {
         if (cardProbe(0) == 0) {
-            return 0;
+            ok = 0;
+        } else {
+            lbl_803DD040 = mmAlloc(0xA000, -1, 0);
+            if (lbl_803DD040 == 0) {
+                lbl_803DB700 = 8;
+                ok = 0;
+            } else {
+                ok = 1;
+            }
         }
-        lbl_803DD040 = mmAlloc(0xA000, -1, 0);
-        if (lbl_803DD040 == 0) {
-            lbl_803DB700 = 8;
+        if (ok == 0) {
             return 0;
         }
         lbl_803DB700 = 0;

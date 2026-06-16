@@ -1112,7 +1112,6 @@ void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags)
     }
 }
 
-void mtxRotateByVec3s(f32* mtx, void* transform);
 
 typedef struct LoadedObj
 {
@@ -1595,17 +1594,17 @@ void objFreeObjDef(void* objp, int flag)
     {
         for (i = 0; i < lbl_803DCB84; i++)
         {
-            if (*(u8**)(((u8**)lbl_803DCB88)[i] + 0xc0) == obj)
+            if (((GameObject**)lbl_803DCB88)[i]->pendingParentObj == obj)
             {
-                *(int*)(((u8**)lbl_803DCB88)[i] + 0xc0) = 0;
+                ((GameObject**)lbl_803DCB88)[i]->pendingParentObj = 0;
             }
         }
     }
     for (i = 0; i < lbl_803DCB84; i++)
     {
-        if (*(s16*)(((u8**)lbl_803DCB88)[i] + 0x44) == 0x10)
+        if (((GameObject**)lbl_803DCB88)[i]->anim.classId == 0x10)
         {
-            bp = *(int**)(((u8**)lbl_803DCB88)[i] + 0xb8);
+            bp = (int*)((GameObject**)lbl_803DCB88)[i]->extra;
             if (*(u8**)bp == obj)
             {
                 *bp = 0;
@@ -1763,7 +1762,7 @@ void Obj_UpdateObject(u8* obj)
     {
         if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
-            t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
+            t = (u8*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState;
             if (t != 0)
             {
                 childHitState = (ObjHitsPriorityState*)t;
@@ -1837,7 +1836,7 @@ skip:
     {
         if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
-            t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
+            t = (u8*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState;
             if (t != 0)
             {
                 childHitState = (ObjHitsPriorityState*)t;
@@ -1988,7 +1987,9 @@ void Obj_UpdateAllObjects(u8 flags)
                     cb(child);
                     break;
                 }
-                Obj_GetWorldPosition((u32)child, (f32 *)(child + 0x18), (f32 *)(child + 0x1c), (f32 *)(child + 0x20));
+                Obj_GetWorldPosition((u32)child, &((GameObject*)child)->anim.worldPosX,
+                                     &((GameObject*)child)->anim.worldPosY,
+                                     &((GameObject*)child)->anim.worldPosZ);
             }
         }
     done:
@@ -2229,7 +2230,7 @@ void Obj_UpdateModelBlendStates(void)
                                 c0 = ((GameObject*)child)->pendingParentObj;
                                 if (c0 != 0)
                                 {
-                                    bp = *(u8**)(c0 + 0xb8);
+                                    bp = ((GameObject*)c0)->extra;
                                 }
                                 else
                                 {
@@ -2585,7 +2586,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
 
     modelDef = (ObjModelInstance*)def;
     size = modelDef->modelCount * 4 + 0x10c;
-    switch (*(s16*)((u8*)tmpl + 0x46))
+    switch (((GameObject*)tmpl)->anim.seqId)
     {
     case 0:
     case 0x1f:

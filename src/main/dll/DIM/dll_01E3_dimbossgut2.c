@@ -119,7 +119,7 @@ void dimbossgut2_updateTracking(int obj, int state)
             }
         }
         angle = (s16)(getAngle(*(f32*)(r30v + 0x74), *(f32*)(r30v + 0x7c)) + 0x8000);
-        delta = (s16)(angle - (u16) * (s16*)obj);
+        delta = (s16)(angle - (u16)((GameObject*)obj)->anim.rotX);
         if (delta > 0x8000)
         {
             delta = (s16)(delta - 0xffff);
@@ -128,7 +128,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             delta = (s16)(delta + 0xffff);
         }
-        *(s16*)obj = angle;
+        ((GameObject*)obj)->anim.rotX = angle;
         ((Dimbossgut2Curve*)curve)->f4 = ((Dimbossgut2Curve*)curve)->f4 + (f32)(delta >> 4);
         if (((Dimbossgut2Curve*)curve)->f10 < lbl_803E4D14)
         {
@@ -156,9 +156,9 @@ void dimbossgut2_updateTracking(int obj, int state)
     else
     {
         player = Obj_GetPlayerObject();
-        rel = (int)(u16)getAngle(-(*(f32*)(player + 0x18) - ((GameObject*)obj)->anim.worldPosX),
-                                 -(*(f32*)(player + 0x20) - ((GameObject*)obj)->anim.worldPosZ)) -
-            (int)(u16) * (s16*)obj;
+        rel = (int)(u16)getAngle(-(((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX),
+                                 -(((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ)) -
+            (int)(u16)((GameObject*)obj)->anim.rotX;
         if (rel > 0x8000)
         {
             rel = rel - 0xffff;

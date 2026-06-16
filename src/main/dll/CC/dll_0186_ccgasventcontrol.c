@@ -194,7 +194,7 @@ void ccgasventcontrol_init(int obj, u8* p)
 {
     char* inner = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)CCGasVentControl_SeqFn;
-    *(s16*)obj = (s16)((u32)p[0x1a] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1a] << 8);
     if (GameBit_Get(0xa3) != 0)
     {
         *(u8*)inner = 7;
@@ -298,7 +298,7 @@ void ccgasventcontrol_update(int obj)
     case 5:
         {
             int player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint(player + 0xc, *(s16*)player, 1, 0);
+            (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
             *(u8*)ex = 6;
             break;
         }

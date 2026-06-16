@@ -214,7 +214,7 @@ void dim2snowball_update(int* obj)
                 list = ObjList_GetObjects(&start, &count);
                 for (; start < count; start++)
                 {
-                    if (*(s16*)((char*)list[start] + 0x46) == OBJ_TYPE_SHARPCLAW)
+                    if (((GameObject*)list[start])->anim.seqId == OBJ_TYPE_SHARPCLAW)
                     {
                         hit = list[start];
                         goto checkHit;

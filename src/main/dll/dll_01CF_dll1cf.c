@@ -208,6 +208,6 @@ void dll_1CF_init(int* obj, int* def)
     {
         ((GameObject*)obj)->anim.rotY = (s16)(((s32)((Dll1CFObjectDef*)def)->unk1A << 13) / 45);
     }
-    *(s16*)obj = (s16)((s32)((Dll1CFObjectDef*)def)->unk18 << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)((Dll1CFObjectDef*)def)->unk18 << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0xe000);
 }

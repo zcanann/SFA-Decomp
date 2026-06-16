@@ -212,7 +212,7 @@ void bombplant_init(void* obj, void* param, int flag)
     s16 bitId;
 
     state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)(s8) * ((u8*)param + 0x1f) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * ((u8*)param + 0x1f) << 8);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->animEventCallback = (void*)bombplant_SeqFn;
     ((BombPlantState*)state)->growTargetScale = ((GameObject*)obj)->anim.rootMotionScale;

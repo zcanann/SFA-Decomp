@@ -94,8 +94,8 @@ void dimbarrier_update(int obj)
             for (i = 0; i < (int)*(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
             {
                 entry = *(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100);
-                ex = *(int*)(entry + 0xb8);
-                if (*(s16*)(entry + 0x46) == DIMBARRIER_TRIGGER_OBJ_TYPE && *(u8*)(ex + 4) != 0)
+                ex = *(int*)&((GameObject*)entry)->extra;
+                if (((GameObject*)entry)->anim.seqId == DIMBARRIER_TRIGGER_OBJ_TYPE && *(u8*)(ex + 4) != 0)
                 {
                     found = 1;
                     break;

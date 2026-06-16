@@ -7062,12 +7062,15 @@ int fileLoadToBuffer(int id, void* buffer)
 int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
 {
     u8 fileInfo[0x3c];
-    void* tmp;
     int asize;
+    void* tmp;
     if (size == 0) return 0;
     if (lbl_8035F3E8[id] != 0)
     {
-        memcpy(buffer, (void*)(lbl_8035F3E8[id] + offset), size);
+        {
+            int base = lbl_8035F3E8[id];
+            memcpy(buffer, (void*)(base + offset), size);
+        }
         DCStoreRange(buffer, size);
         return size;
     }

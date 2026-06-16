@@ -240,7 +240,7 @@ void WarpPoint_update(int* obj)
     if (*(u8*)(def + 0x1f) != 0 && ((WarpPointState*)state)->unkD == 0 && lbl_803DCEB8 > -1 &&
         lbl_803DCEB8 == *(s8*)(def + 0x19))
     {
-        (*gMapEventInterface)->savePoint((int)(player + 0xc), *(s16*)player,
+        (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX,
                                             0, getCurMapLayer());
         ((WarpPointState*)state)->unkD = 1;
     }
@@ -261,7 +261,7 @@ void WarpPoint_update(int* obj)
                 {
                     GameBit_Set(0xd53, 1);
                     (*gMapEventInterface)->savePoint(
-                        (int)(player + 0xc), *(s16*)player, 0, getCurMapLayer());
+                        (int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0, getCurMapLayer());
                 }
                 (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
                 GameBit_Set(0xd53, 0);
@@ -271,7 +271,7 @@ void WarpPoint_update(int* obj)
         }
         if (*(s8*)(def + 0x1a) > -1)
         {
-            f32 d2 = Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18));
+            f32 d2 = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
             if (d2 < ((WarpPointState*)state)->unk8)
             {
                 warpToMap(*(s8*)(def + 0x1a), 1);

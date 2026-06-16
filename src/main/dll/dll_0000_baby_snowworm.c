@@ -991,7 +991,7 @@ void pauseMenuDrawText(void)
     target = (s16)(target - 0x14);
     if (target < 0) target = 0;
     target = (s16)(target << 4);
-    if (target > 0x10e) target = 0x10e;
+    target = (target > 0x10e) ? 0x10e : target;
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
     gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
@@ -1002,7 +1002,7 @@ void pauseMenuDrawText(void)
         s16 blit_x = width + 0x28;
         if (blit_x >= target) blit_x = target;
         if (blit_x < 0) blit_x = 0;
-        *(s16*)((u8*)sprite + 0x8) = (s16)(blit_x & ~1);
+        *(s16*)((u8*)sprite + 0x8) = blit_x & 0xFFFE;
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
     }
 
@@ -1132,16 +1132,17 @@ void pauseMenuFn_8012b77c(void)
     extern void buttonDisable(s32, u32); /* #57 */
     extern u32 getButtonsJustPressed(s32); /* #57 */
     u32 btn = (u16)getButtonsJustPressed(0);
-    double v = lbl_803DD764 * timeDelta + lbl_803DD760;
+    f32 speed = lbl_803DD764;
+    f32 v = speed * timeDelta + lbl_803DD760;
 
-    lbl_803DD760 = v;
-    if (v <= lbl_803E2160) v = lbl_803E2160;
-    lbl_803DD760 = v;
-    if (v >= lbl_803E1F60) v = lbl_803E1F60;
-    lbl_803DD760 = v;
+    *(volatile f32*)&lbl_803DD760 = v;
+    v = (v > lbl_803E2160) ? v : lbl_803E2160;
+    *(volatile f32*)&lbl_803DD760 = v;
+    v = (v < lbl_803E1F60) ? v : lbl_803E1F60;
+    *(volatile f32*)&lbl_803DD760 = v;
 
-    if ((pauseMenuState >= 0xc || pauseMenuState < 8) &&
-        (btn & 0x200) && lbl_803DD764 > lbl_803E2160)
+    if (((int)pauseMenuState >= 0xc || (int)pauseMenuState < 8) &&
+        ((int)btn & 0x200) && speed > lbl_803E2160)
     {
         u8 i;
         buttonDisable(0, 0x200);
@@ -4524,10 +4525,10 @@ void GameUI_update(void)
     extern uint GameBit_Get(int eventId); /* #57 */
     u8* player = Obj_GetPlayerObject();
     u8* tricky = getTrickyObject();
+    s16 angDelta;
+    s16 cx;
     u8 f25 = 1;
     u8 f26 = 0;
-    int angDelta;
-    s16 cx;
     int r29v;
     int flags;
 

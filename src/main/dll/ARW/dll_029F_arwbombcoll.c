@@ -1,3 +1,15 @@
+/*
+ * arwbombcoll (DLL 0x29F) - the in-flight pickups and rings collected by
+ * the Arwing in the on-rails sections. A pickup fades in once the Arwing is
+ * close ahead, can oscillate along the X or Y axis (route modes 1/3 and
+ * 4/5), spins, and watches for the Arwing passing through it. The reward on
+ * collection depends on the object's seqId (shield, max-shield, score,
+ * ring, laser upgrade, bomb, and the 0x6D8-0x6DB collectibles) and on the
+ * pickup's "mode" (handled in arwbombcoll_handleArwingHit). Rings also feed
+ * the ring-count gate driven by arwlevelcon. Collision is checked two ways:
+ * an axis-aligned proximity test (flag bit10) or a plane-crossing test that
+ * compares the Arwing's current and previous Z against the pickup's Z.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -204,18 +216,18 @@ void arwbombcoll_update(int obj)
     ArwBombFlags* flags;
     int arw;
     ARWBombCollState* state;
-    int a2;
-    f32 thr;
+    int arwingCheck;
+    f32 minLifetime;
 
     arw = getArwing();
     objAnim = &((GameObject*)obj)->anim;
     state = ((GameObject*)obj)->extra;
     flags = &state->flags;
 
-    if (state->lifetime > (thr = lbl_803E707C))
+    if (state->lifetime > (minLifetime = lbl_803E707C))
     {
         state->lifetime -= timeDelta;
-        if (state->lifetime <= thr)
+        if (state->lifetime <= minLifetime)
         {
             Obj_FreeObject(obj);
             return;
@@ -232,8 +244,8 @@ void arwbombcoll_update(int obj)
 
     if (flags->b80 == 0)
     {
-        a2 = getArwing();
-        if ((((u32)a2 != 0) ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)a2)->anim.localPosZ < lbl_803E7080) : 0) != 0)
+        arwingCheck = getArwing();
+        if ((((u32)arwingCheck != 0) ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)arwingCheck)->anim.localPosZ < lbl_803E7080) : 0) != 0)
         {
             goto active;
         }
@@ -243,18 +255,18 @@ void arwbombcoll_update(int obj)
     return;
 active :
     {
-        int v;
+        int alpha;
 
-        v = (int)
+        alpha = (int)
         (lbl_803E7084 * timeDelta + (f32)(u32)
         objAnim->alpha
         )
         ;
-        if (v > 0xff)
+        if (alpha > 0xff)
         {
-            v = 0xff;
+            alpha = 0xff;
         }
-        objAnim->alpha = v;
+        objAnim->alpha = alpha;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);

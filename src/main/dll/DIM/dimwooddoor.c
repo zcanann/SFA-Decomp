@@ -108,7 +108,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     ((ObjPlacement*)setup)->posZ = state->targetZ;
 
     shard = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
-    shardState = *(DIMWoodDoorShardState**)(shard + 0xb8);
+    shardState = *(DIMWoodDoorShardState**)&((GameObject*)shard)->extra;
     shardState->parent = obj;
     shardState->variant = variant;
     if (variant != 0)

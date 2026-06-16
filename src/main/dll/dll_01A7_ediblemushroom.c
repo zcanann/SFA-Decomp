@@ -658,7 +658,7 @@ void ediblemushroom_update(u8* self)
         if (((EdiblemushroomState*)state)->unk108 < (f32)(u32)other[0x1F]
         )
         {
-            (*(void (**)(u8*, u8*, int, int))(*(int*)*(int*)(enemy + 0x68) + 0x28))
+            (*(void (**)(u8*, u8*, int, int))(*(int*)*(int*)&((GameObject*)enemy)->anim.dll + 0x28))
                 (enemy, self, 0, 1);
         }
     }
@@ -673,7 +673,7 @@ void ediblemushroom_update(u8* self)
         else
         {
             Obj_SetModelColorFadeRecursive(self, 0xF, 0xC8, 0, 0, 1);
-            if (*(s16*)((u8*)hitObj + 0x46) != 0x416)
+            if (((GameObject*)hitObj)->anim.seqId != 0x416)
             {
                 if ((state[0x137] & 0x10) == 0)
                 {

@@ -121,7 +121,7 @@ void ccqueen_init(int* obj, u8* init)
     sub = ((GameObject*)obj)->extra;
     buf2 = lbl_803E4650;
     buf1 = lbl_803E4658;
-    *(s16*)obj = (s16)(init[0x1a] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(init[0x1a] << 8);
     dll_2E_func05(obj, sub, 0x71c7, 0x3555, 3);
     dll_2E_func08(sub, 0x258, 0xf0);
     dll_2E_func09(sub, &buf1, &buf2, 3);

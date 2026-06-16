@@ -739,7 +739,7 @@ void SnowBike_init(int obj, u8* params, int flag)
     rot = params[0x18] << 8;
     ((SnowBikeState*)state)->unk40C = rot;
     ((SnowBikeState*)state)->yaw = rot;
-    *(s16*)obj = rot;
+    ((GameObject*)obj)->anim.rotX = rot;
     fn_801EC928(obj, state);
     if (flag == 0)
     {
@@ -1099,7 +1099,7 @@ void SnowBike_update(int obj)
             fn_801EA240(obj, state, ((SnowBikeState*)state)->distanceScale,
                         (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430), state + 0x461, 7);
             fn_801EB634(obj, state);
-            *(s16*)obj = ((SnowBikeState*)state)->yaw;
+            ((GameObject*)obj)->anim.rotX = ((SnowBikeState*)state)->yaw;
         }
         break;
     }

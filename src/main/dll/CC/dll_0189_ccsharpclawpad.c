@@ -89,7 +89,7 @@ int ccpedstal_getExtraSize(void);
 #pragma peephole off
 void ccsharpclawpad_init(int* obj, int* def)
 {
-    *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 24) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 24) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 }
 

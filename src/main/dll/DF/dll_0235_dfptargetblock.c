@@ -167,21 +167,21 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         Sfx_PlayFromObject(obj, DFPTARGETBLOCK_IMPACT_SFX);
         velX = hitObj->velX;
         velZ = hitObj->velZ;
-        if (velX < lbl_803E648C)
+        if (velX < 0.0f)
         {
             velX *= lbl_803E6494;
         }
-        if (velZ < lbl_803E648C)
+        if (velZ < 0.0f)
         {
             velZ *= lbl_803E6494;
         }
-        if (velX <= velZ)
+        if (velX > velZ)
         {
-            hitObj->velX = *(f32 *)&lbl_803E648C;
+            hitObj->velZ = 0.0f;
         }
         else
         {
-            hitObj->velZ = *(f32 *)&lbl_803E648C;
+            hitObj->velX = 0.0f;
         }
         obj->velX = hitObj->velX * lbl_803E6498;
         obj->velZ = hitObj->velZ * lbl_803E6498;

@@ -323,8 +323,8 @@ void LaserBeam_update(int obj2)
     }
     dz = (f32)(int)((LaserBeamPlacement*)t)->unk1A;
     dz2 = dz * dz;
-    sinv = mathCosf((lbl_803E5D20 * (f32)(int)*(s16*)obj2) / lbl_803E5D24);
-    cosv = mathSinf((lbl_803E5D20 * (f32)(int)*(s16*)obj2) / lbl_803E5D24);
+    sinv = mathCosf((lbl_803E5D20 * (f32)(int)((GameObject*)obj2)->anim.rotX) / lbl_803E5D24);
+    cosv = mathSinf((lbl_803E5D20 * (f32)(int)((GameObject*)obj2)->anim.rotX) / lbl_803E5D24);
     dot = -(((GameObject*)obj2)->anim.localPosX * sinv + ((GameObject*)obj2)->anim.localPosZ * cosv);
     player = Obj_GetPlayerObject();
     b->unk27 = (s8)(b->unk27 - framesThisStep);

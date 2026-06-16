@@ -145,11 +145,11 @@ void Lamp_init(int* obj, int* def)
     int* state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId == 996)
     {
-        *(s16*)obj = (s16)((u32)((LampObjectDef*)def)->unk1A << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((u32)((LampObjectDef*)def)->unk1A << 8);
     }
     else
     {
-        *(s16*)obj = (s16)((s32)((LampObjectDef*)def)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s32)((LampObjectDef*)def)->unk18 << 8);
     }
     ((GameObject*)obj)->anim.rotY = 0;
     ((GameObject*)obj)->anim.rotZ = 0;

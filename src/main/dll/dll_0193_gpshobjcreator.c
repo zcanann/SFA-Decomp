@@ -119,7 +119,7 @@ void gpsh_objcreator_init(int* obj, int* def)
     register u32 zero;
     register int* state;
     state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)((GpshObjcreatorObjectDef*)def)->unk1E << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)((GpshObjcreatorObjectDef*)def)->unk1E << 8);
     zero = 0;
     ((GameObject*)obj)->unkF8 = zero;
     ((GpshObjcreatorState*)state)->unk4 = (u8)((GpshObjcreatorObjectDef*)def)->unk1A;

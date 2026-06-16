@@ -1451,13 +1451,13 @@ void intersectModLineBuild(int* obj)
         line[0] = sp[0xc];
         line[1] = sp[0xd];
         line[3] = sp[0xf];
-        if (((s8)line[3] & 0x3f) == 0x11)
+        if ((*(s8*)(line + 3) & 0x3f) == 0x11)
         {
-            line[3] = (s8)line[3] & ~0x3f;
-            line[3] = (s8)line[3] | 2;
+            *(s8*)(line + 3) = *(s8*)(line + 3) & ~0x3f;
+            *(s8*)(line + 3) = *(s8*)(line + 3) | 2;
         }
         line[2] = sp[0xe];
-        line[2] = (s8)line[2] ^ 0x10;
+        *(s8*)(line + 2) = *(s8*)(line + 2) ^ 0x10;
         *(s16*)(line + 0xc) = *(s16*)(sp + 0x10);
         for (i = 0; i < 3; i++)
         {
@@ -3227,12 +3227,16 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
         d0[1] = b[1] - a[1];
         d0[2] = b[2] - a[2];
         Vec3_Normalize(d0);
-        fb = (b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3]) - y;
-        fa = (a[1] * p[1] + a[0] * p[0] + a[2] * p[2] + p[3]) - y;
-        if (fa == fb)
-            scale = __AR_Callback;
-        else
+        {
+            f32 fbd = b[1] * p[1];
+            f32 fad = a[1] * p[1];
+            fb = (fbd + b[0] * p[0] + b[2] * p[2] + p[3]) - y;
+            fa = (fad + a[0] * p[0] + a[2] * p[2] + p[3]) - y;
+        }
+        if (fa != fb)
             scale = fa / (fa - fb);
+        else
+            scale = __AR_Callback;
         d0[0] = b[0] - a[0];
         d0[1] = b[1] - a[1];
         d0[2] = b[2] - a[2];
@@ -3252,11 +3256,14 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
         case 8:
         case 0xa:
             {
-                f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                f32 dotL = b[1] * p[1];
+                f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 y = y - dot;
                 if (y > __AR_Callback)
                 {
-                    f32 d = fn_802943F4(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
+                    f32 px = p[0] * p[0];
+                    f32 pz = p[2] * p[2];
+                    f32 d = fn_802943F4(fn_802925C4(p[1], sqrtf(px + pz)));
                     if (__AR_Callback != d)
                         y = y / d;
                     d1[0] = p[0];
@@ -3270,11 +3277,12 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
             }
         default:
             {
-                f32 dot, t;
+                f32 dot, t, dotL;
                 b[0] = b[0] - f1p * p[0];
                 b[1] = b[1] - f1p * p[1];
                 b[2] = b[2] - f1p * p[2];
-                dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                dotL = b[1] * p[1];
+                dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 t = y - dot;
                 b[0] = t * p[0] + b[0];
                 b[1] = t * p[1] + b[1];
@@ -3290,24 +3298,29 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
         case 5:
         case 8:
             {
-                f32 dot, t;
+                f32 dot, t, dotL;
                 b[0] = b[0] - f1p * p[0];
                 b[1] = b[1] - f1p * p[1];
                 b[2] = b[2] - f1p * p[2];
-                dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                dotL = b[1] * p[1];
+                dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 t = y - dot;
                 b[0] = t * p[0] + b[0];
                 b[1] = t * p[1] + b[1];
                 b[2] = t * p[2] + b[2];
                 break;
             }
+        case 0xb:
         default:
             {
-                f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                f32 dotL = b[1] * p[1];
+                f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 y = y - dot;
                 if (y > __AR_Callback)
                 {
-                    f32 d = floor(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
+                    f32 px = p[0] * p[0];
+                    f32 pz = p[2] * p[2];
+                    f32 d = floor(fn_802925C4(p[1], sqrtf(px + pz)));
                     b[1] = b[1] + y / d;
                 }
                 break;
@@ -3412,13 +3425,11 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
     pp = (void**)results;
     for (i = 0; i < count; i++)
     {
-        fp[0] = initA;
-        fp[1] = initB;
-        fp[2] = initA;
-        fp[3] = initA;
-        pp[0x17] = NULL;
-        fp += 4;
-        pp += 1;
+        fp[i * 4 + 0] = initA;
+        fp[i * 4 + 1] = initB;
+        fp[i * 4 + 2] = initA;
+        fp[i * 4 + 3] = initA;
+        pp[i + 0x17] = NULL;
     }
 
     {
@@ -3433,16 +3444,14 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
     pp = (void**)results;
     for (i = 0; i < count; i++)
     {
-        if (pp[0x17] != NULL)
+        if (pp[i + 0x17] != NULL)
         {
-            Obj_TransformLocalVectorByWorldMatrix((int)pp[0x17], fp, fp);
+            Obj_TransformLocalVectorByWorldMatrix((int)pp[i + 0x17], &fp[i * 4], &fp[i * 4]);
             if (contactSrc != NULL)
             {
-                ObjHits_AddContactObject((int)pp[0x17], (int)contactSrc);
+                ObjHits_AddContactObject((int)pp[i + 0x17], (int)contactSrc);
             }
         }
-        pp += 1;
-        fp += 4;
     }
 
     *(u8*)((u8*)results + 0x6e) = hitCount;
@@ -5003,9 +5012,13 @@ void trackIntersect(void)
         lbl_803DCF4D = 2;
     }
 
-    for (i = 0; i < 0x47; i++)
     {
-        counts[i] = 0;
+        s16* cp = counts;
+        for (i = 0; i < 0x47; i++)
+        {
+            *cp = 0;
+            cp++;
+        }
     }
     lbl_803DCF5E = 0;
     lbl_803DCF5C = 0;
@@ -5232,7 +5245,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
         {
             u8* tbl = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x38);
             start = tbl[(s8)seg * 2];
-            end = *(u8*)(tbl + (s8)seg * 2 + 1);
+            end = tbl[(s8)seg * 2 + 1];
         }
         else
         {
@@ -5251,8 +5264,9 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     {
         if ((s8)seg != -1)
         {
-            start = ((u16*)lbl_8038D840)[(s8)seg * 2];
-            end = ((u16*)lbl_8038D840)[(s8)seg * 2 + 1];
+            u16* segtbl = (u16*)lbl_8038D840;
+            start = segtbl[(s8)seg * 2];
+            end = segtbl[(s8)seg * 2 + 1];
         }
         else
         {

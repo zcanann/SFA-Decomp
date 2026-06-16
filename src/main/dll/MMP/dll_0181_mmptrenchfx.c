@@ -192,7 +192,7 @@ void mmp_trenchfx_init(int obj, int data)
     ((GameObject*)obj)->anim.rotY = v;
     v = (s16)(((s32) * (s8*)(data + 0x1B)) << 8);
     state->emitAngles[0] = v;
-    *(s16*)obj = v;
+    ((GameObject*)obj)->anim.rotX = v;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E45C0;
 }
 

@@ -487,7 +487,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                 }
                 else
                 {
-                    boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
+                    boneEntry = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
                     boneIndex = 0;
                     for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
                          boneCount = boneCount - 1)
@@ -500,7 +500,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                         boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
                         boneIndex = boneIndex + 1;
                     }
-                    boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
+                    boneEntry = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
                     boneIndex = 0;
                     for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
                          boneCount = boneCount - 1)
@@ -694,7 +694,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         if (DAT_803dd8cc == '\0')
         {
             renderFlags = OBJPRINT_MODEL_DEF(modelData)->renderFlags;
-            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)(modelData + 0x32) + 0xc) == (float*)0x0))
+            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)&((GameObject*)modelData)->anim.modelState + 0xc) == (float*)0x0))
             {
                 if ((renderFlags & 0x10) == 0)
                 {
@@ -728,7 +728,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
             }
             else
             {
-                FUN_8004afc0(*(float**)(*(int*)(modelData + 0x32) + 0xc));
+                FUN_8004afc0(*(float**)(*(int*)&((GameObject*)modelData)->anim.modelState + 0xc));
                 lightCount = 0;
             }
         }
@@ -760,9 +760,9 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         if ((*(uint*)(subNode + 0x3c) & 0x100000) != 0)
         {
             decalEntry = (uint*)FUN_800480a0(subNode, 1);
-            light = *(int*)(*(int*)(modelData + 0x28) + 0xc);
+            light = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
             lightSlot = 0;
-            for (texMaterial = (uint) * (byte*)(*(int*)(modelData + 0x28) + 0x59); texMaterial != 0;
+            for (texMaterial = (uint) * (byte*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0x59); texMaterial != 0;
                  texMaterial = texMaterial - 1)
             {
                 if (*(char*)((int)decalEntry + 5) == *(char*)(light + 1))
@@ -3037,6 +3037,7 @@ typedef struct
     int pos;
 } MtxBitStream;
 
+#pragma optimization_level 2
 void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
 {
     char* cache = getCache();
@@ -3105,6 +3106,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
     }
 }
 
+#pragma optimization_level reset
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(int id);
@@ -3289,6 +3291,7 @@ extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
 extern void OSReport(char* fmt, ...);
 
+#pragma optimization_level 2
 void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
     u8* tbl = lbl_802CAED0;
@@ -3393,6 +3396,7 @@ void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mt
         }
     }
 }
+#pragma optimization_level reset
 
 typedef union
 {
@@ -5244,6 +5248,7 @@ extern void* memcpy(void*, void*, int);
 extern int mmSetFreeDelay(int);
 extern int getHeapItemSize(void*);
 
+#pragma optimization_level 2
 void defragMemory(int mode)
 {
     u8* base = lbl_80345E10;
@@ -5450,6 +5455,7 @@ void defragMemory(int mode)
     }
     texFlagFn_80023cbc(0);
 }
+#pragma optimization_level reset
 
 void* getCurrentDataFile(int id)
 {

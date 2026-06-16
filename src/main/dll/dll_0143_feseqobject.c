@@ -45,20 +45,18 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FEseqobjectEffectParams effect;
     register int self = obj;
-    register ObjAnimUpdateState* anim = animUpdate;
-    register int controlObj;
     int i;
     int msg;
     uint sender;
     uint param;
+    int controlObj;
     f32 one;
     f32 zero;
 
-    controlObj = 0;
-    i = 0;
-    one = lbl_803E56B4;
     zero = lbl_803E56B0;
-    for (; i < anim->eventCount; i++)
+    one = lbl_803E56B4;
+    controlObj = 0;
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         effect.x = zero;
         effect.y = zero;
@@ -68,7 +66,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         effect.xRot = 0;
         effect.variant = 0;
 
-        switch (anim->eventIds[i])
+        switch (animUpdate->eventIds[i])
         {
         case 1:
             GameBit_Set(0x75, 1);
@@ -98,7 +96,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     while (ObjMsg_Pop((void*)self, (uint*)&msg, &sender, &param) != 0)
     {
-        if ((((u8*)anim)[0x90] & 0x80) == 0)
+        if ((((u8*)animUpdate)[0x90] & 0x80) == 0)
         {
             switch (msg)
             {
@@ -126,7 +124,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
         }
     }
-    anim->sequenceEventActive = 0;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 

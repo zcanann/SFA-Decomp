@@ -414,8 +414,8 @@ f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
 
 f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 {
-    f32 p0 = values[0];
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (-p0 + lbl_803DE664 * values[1]));
+    f32 p0;
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-(p0 = values[0]) + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +
         (lbl_803DE664 * p0 + lbl_803DE66C * values[1]);
     f32 c = lbl_803DE668 * p0 + lbl_803DE664 * values[1];
@@ -429,9 +429,9 @@ f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 
 void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
 {
-    f32 k698 = lbl_803DE698;
+    f32 k698;
 
-    coefficients[0] = values[3] + (values[2] + (lbl_803DE660 * values[0] + k698 * values[1]));
+    coefficients[0] = values[3] + (values[2] + (lbl_803DE660 * values[0] + (k698 = lbl_803DE698) * values[1]));
     coefficients[1] = (lbl_803DE668 * values[0] + lbl_803DE664 * values[1] +
             k698 * values[2]) -
         values[3];
@@ -446,9 +446,8 @@ f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
     f32 k660 = lbl_803DE660;
     f32 p0 = values[0];
     f32 k698 = lbl_803DE698;
-    f32 tangent0 = values[1];
-    f32 a = p3 + (tangent1 + (k660 * p0 + k698 * tangent0));
-    f32 b = (k698 * tangent1 + (lbl_803DE668 * p0 + lbl_803DE664 * tangent0)) - p3;
+    f32 a = p3 + (tangent1 + (k660 * p0 + k698 * values[1]));
+    f32 b = (k698 * tangent1 + (lbl_803DE668 * p0 + lbl_803DE664 * values[1])) - p3;
 
     if (outTangent != NULL)
     {

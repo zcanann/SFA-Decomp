@@ -102,7 +102,7 @@ void dll_219_update(Dll219Object* obj)
 void dll_219_init(int* obj, u8* init)
 {
     int* inner = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
     *(s16*)inner = *(s16*)((char*)init + 0x1e);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }

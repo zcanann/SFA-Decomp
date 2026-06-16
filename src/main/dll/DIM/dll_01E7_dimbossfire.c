@@ -84,7 +84,7 @@ void dimbossfire_free(int obj)
     int state;
     void* light;
 
-    state = *(int*)(o + 0xb8);
+    state = *(int*)&((GameObject*)o)->extra;
     light = ((DimbossfireState*)state)->light;
     if (light != 0)
     {
@@ -173,7 +173,7 @@ void dimbossfire_update(int obj)
                 while (ref < 0x32);
             }
             ref = Obj_GetPlayerObject();
-            if (((void*)ref != NULL) && ((*(ushort*)(ref + 0xb0) & 0x1000) == 0))
+            if (((void*)ref != NULL) && ((((GameObject*)ref)->objectFlags & 0x1000) == 0))
             {
                 playerDist = Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)(ref + 0x18));
                 if (playerDist <= lbl_803E4DA4)

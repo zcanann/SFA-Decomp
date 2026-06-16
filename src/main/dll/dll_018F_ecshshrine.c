@@ -908,7 +908,7 @@ void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8
                              in_r9, in_r10);
         if (anim != 0)
         {
-            *(u8*)(*(int*)(anim + 0xb8) + 0x404) = 0x20;
+            *(u8*)(*(int*)&((GameObject*)anim)->extra + 0x404) = 0x20;
         }
         *state = 100;
         state[1] = 0;

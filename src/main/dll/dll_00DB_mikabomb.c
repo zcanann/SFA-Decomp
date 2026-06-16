@@ -776,7 +776,7 @@ void FUN_80170048(void)
     ret = FUN_80286838();
     world = (uint)((ulonglong)ret >> 0x20);
     scaleTbl = (float*)&DAT_80321678;
-    state = *(int**)(world + 0xb8);
+    state = *(int**)&((GameObject*)world)->extra;
     scratch = FUN_80017a98();
     effectObj = 0;
     if (scratch != 0)
@@ -898,9 +898,9 @@ void FUN_80170048(void)
         if (*state != 0)
         {
             FUN_800175b0(*state, 2);
-            FUN_800175ec((double)*(float*)(world + 0xc),
-                         (double)(*(float*)(world + 0x10) - lbl_803E4050),
-                         (double)*(float*)(world + 0x14), (int*)*state);
+            FUN_800175ec((double)((GameObject*)world)->anim.localPosX,
+                         (double)(((GameObject*)world)->anim.localPosY - lbl_803E4050),
+                         (double)((GameObject*)world)->anim.localPosZ, (int*)*state);
             FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
             FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
             FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);

@@ -116,7 +116,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
             {
                 hitDetectFn_80097070(obj, state->hitEffectScale, 1, 7, 0x1e, 0);
             }
-            foundState = (McLightningState*)*(int*)(objs[i] + 0xb8);
+            foundState = (McLightningState*)*(int*)&((GameObject*)objs[i])->extra;
             if (foundState->flags.spawnFlags & 1)
             {
                 hitDetectFn_80097070(objs[i], foundState->hitEffectScale, 1, 7, 0x1e, 0);

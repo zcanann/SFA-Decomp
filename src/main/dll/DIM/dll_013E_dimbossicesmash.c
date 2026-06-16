@@ -89,7 +89,7 @@ void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((int**)obj)[0x4c / 4] + 0x18) << 11) | 0x400; }
+u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((GameObject*)obj)->anim.placementData + 0x18) << 11) | 0x400; }
 
 void dimbossicesmash_free(int* obj)
 {

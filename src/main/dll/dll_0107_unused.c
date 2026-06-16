@@ -328,7 +328,7 @@ void fn_80185B74(int obj)
                 rot.scale = lbl_803E3A5C;
                 rot.c = 0;
                 rot.b = 0;
-                rot.ang = *(s16*)player;
+                rot.ang = ((GameObject*)player)->anim.rotX;
                 vecRotateZXY(&rot, &((GameObject*)obj)->anim.velocityX);
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
             }

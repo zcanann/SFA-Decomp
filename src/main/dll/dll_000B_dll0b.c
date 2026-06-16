@@ -1466,7 +1466,7 @@ void dll_0B_initialise(void)
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
     f32 fz;
@@ -1474,7 +1474,7 @@ void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
     memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
     gModgfxSpawnContext.modeByte = p2;
     gModgfxSpawnContext.attachedSource = (void*)p1;
-    gModgfxSpawnContext.sourceModeCopy = (u8)p2;
+    gModgfxSpawnContext.sourceModeCopy = gModgfxSpawnContext.modeByte;
     fz = lbl_803DF430;
     gModgfxSpawnContext.posX = fz;
     gModgfxSpawnContext.posY = fz;
@@ -1750,17 +1750,18 @@ void fn_800A081C(int p1, int p2, int mode)
             int flags = ((ModgfxState*)p1)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
             {
-                s16 buf[6];
-                f32* fbuf = (f32*)&buf[2];
-                s16 v = *((ModgfxState*)p1)->unk04;
+                s16 buf[12];
+                f32* fbuf = (f32*)&buf[4];
+                s16 v;
                 f32 fill = lbl_803DF430;
-                fbuf[3] = fill;
-                fbuf[2] = fill;
                 fbuf[1] = fill;
+                fbuf[2] = fill;
+                fbuf[3] = fill;
                 fbuf[0] = lbl_803DF434;
-                buf[2] = v;
-                buf[1] = v;
+                v = *((ModgfxState*)p1)->unk04;
                 buf[0] = v;
+                buf[1] = v;
+                buf[2] = v;
                 vecRotateZXY(buf, (f32*)(p2 + 0x4));
             }
             ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX;
@@ -2797,9 +2798,8 @@ void fn_800A0524(void* state, void* p, int mode)
             *(f32*)((char*)state + 0xbc) = tr;
             *(f32*)((char*)state + 0xc0) = tg;
             *(f32*)((char*)state + 0xc4) = tb;
-            *(f32*)((char*)state + 0xc8) = lbl_803DF430;
-            *(f32*)((char*)state + 0xcc) = lbl_803DF430;
-            *(f32*)((char*)state + 0xd0) = lbl_803DF430;
+            *(f32*)((char*)state + 0xd0) = *(f32*)((char*)state + 0xcc) =
+                *(f32*)((char*)state + 0xc8) = lbl_803DF430;
         }
     }
     *(f32*)((char*)state + 0xbc) += *(f32*)((char*)state + 0xc8);

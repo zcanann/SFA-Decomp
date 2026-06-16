@@ -624,9 +624,9 @@ FUN_80152a30(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(u8*)(setup + 3) = *(u8*)(def + 6);
         *(u8*)((int)setup + 5) = 1;
         *(u8*)((int)setup + 7) = *(u8*)(def + 7);
-        *(undefined4*)(setup + 4) = *(undefined4*)(obj + 0xc);
-        *(undefined4*)(setup + 6) = *(undefined4*)(obj + 0x10);
-        *(undefined4*)(setup + 8) = *(undefined4*)(obj + 0x14);
+        *(undefined4*)(setup + 4) = *(undefined4*)&((GameObject*)obj)->anim.localPosX;
+        *(undefined4*)(setup + 6) = *(undefined4*)&((GameObject*)obj)->anim.localPosY;
+        *(undefined4*)(setup + 8) = *(undefined4*)&((GameObject*)obj)->anim.localPosZ;
         *(u8*)((int)setup + 0x19) = 0;
         setup[0x10] = 0x95;
         result = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup, 5,

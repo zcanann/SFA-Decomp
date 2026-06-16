@@ -739,7 +739,7 @@ void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
 void fn_80053EBC(u32 bits)
 {
     u32 v = lbl_803DCDA8;
-    u32 nb = bits ^ 0xffffffff;
+    u32 nb = -bits - 1;
     lbl_803DCDA8 = v & nb;
 }
 

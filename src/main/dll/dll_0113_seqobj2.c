@@ -324,7 +324,7 @@ void seqobj2_init(int* obj, SeqObjectPlacement* def)
 {
     SeqObj2State* state = ((GameObject*)obj)->extra;
     OSReport(sSeqObjNeedBitUsedBitFormat, def->base.mapId, def->triggerGameBit, def->openGameBit);
-    *(s16*)obj = (s16)((u32)def->initialYaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)def->initialYaw << 8);
     ((GameObject*)obj)->animEventCallback = (void*)seqobj2_SeqFn;
     if (def->preemptSequenceId > -1)
     {

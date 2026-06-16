@@ -1,3 +1,16 @@
+/*
+ * arwlevelcon (DLL 0x2A1) - the level controller for one of the on-rails
+ * Arwing flight courses. There is one instance per course, distinguished by
+ * its mapEventSlot (0x3a-0x3e), which selects the course's audio stream id
+ * and the ring-choice trigger id. On the first update it configures the sky
+ * (colour/overcast), kicks off the intro sequence (or the alternate-route
+ * sequence when the placement's routeSignature flags it) and starts the
+ * course music/audio stream. Once the Arwing flies past a Z threshold it
+ * fires the ring-count gate: comparing collected vs required rings it sets
+ * the "enough rings" (0x9d8) or "not enough" (0x9d7) game bit, which steers
+ * the branching exit. ringEventCallback drives the sequence's camera and
+ * course-specific text; commitRingChoice picks the follow-up music.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -61,12 +74,12 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
     seq->freeCallback = (ObjAnimSequenceFreeCallback)arwlevelcon_commitRingChoice;
     for (i = 0; i < seq->eventCount; i++)
     {
-        u8 v = seq->eventIds[i];
-        if (v == 1)
+        u8 eventId = seq->eventIds[i];
+        if (eventId == 1)
         {
             (*gObjectTriggerInterface)->setCamVars(0x56, 0, 0, 0);
         }
-        else if (v == 4)
+        else if (eventId == 4)
         {
             switch (((GameObject*)obj)->anim.mapEventSlot)
             {
@@ -159,16 +172,16 @@ void arwlevelcon_update(int obj)
     }
     if (state->ringChoiceTriggered == 0)
     {
-        int mb = mapBlockFn_800592e4();
-        if (((GameObject*)arwing)->anim.localPosZ - *(f32*)(mb + 0x28) > lbl_803E70E8 &&
+        int mapBlock = mapBlockFn_800592e4();
+        if (((GameObject*)arwing)->anim.localPosZ - *(f32*)(mapBlock + 0x28) > lbl_803E70E8 &&
             arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0)
         {
-            int a, b;
+            int requiredRings, collectedRings;
             arwingHudSetVisible(2);
             (*gObjectTriggerInterface)->setObjects(state->ringChoiceTriggerId, 0, 0);
-            a = arwarwing_getRequiredRingCount(arwing);
-            b = arwarwing_getCollectedRingCount(arwing);
-            if (b >= a)
+            requiredRings = arwarwing_getRequiredRingCount(arwing);
+            collectedRings = arwarwing_getCollectedRingCount(arwing);
+            if (collectedRings >= requiredRings)
             {
                 GameBit_Set(0x9d8, 1);
             }
@@ -192,9 +205,9 @@ void arwlevelcon_init(int obj, u8* setup)
     state->sequenceSlot = 1;
     state->sequenceCameraId = 0x50;
     {
-        f32 fz = lbl_803E70EC;
-        state->sequenceParam0 = fz;
-        state->sequenceParam1 = fz;
+        f32 seqParam = lbl_803E70EC;
+        state->sequenceParam0 = seqParam;
+        state->sequenceParam1 = seqParam;
     }
     state->sequenceParam2 = lbl_803E70F0;
     state->sequenceParam3 = lbl_803E70F4;

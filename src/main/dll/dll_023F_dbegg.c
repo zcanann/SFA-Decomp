@@ -186,7 +186,7 @@ void dbegg_setupFromDef(int obj, u8* state)
 
     config = (AnimBehaviorConfig*)((GameObject*)obj)->anim.placementData;
     state[0x119] = 0;
-    *(s16*)obj = (s16)(config->facingAngleByte << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(config->facingAngleByte << 8);
     ((GameObject*)obj)->anim.rotY = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
@@ -1156,7 +1156,7 @@ void dbegg_update(int obj)
                     ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
                         ((GameObject*)obj)->anim.localPosX,
                         ((GameObject*)obj)->anim.localPosY - ((DbEggState*)blob)->waterOffset,
-                        ((GameObject*)obj)->anim.localPosZ, *(s16*)obj, (f32)randomGetRange(1, 10), 1);
+                        ((GameObject*)obj)->anim.localPosZ, ((GameObject*)obj)->anim.rotX, (f32)randomGetRange(1, 10), 1);
                 }
             }
             if (GameBit_Get(0x426) != 0)
@@ -1382,7 +1382,7 @@ void dbegg_update(int obj)
                     }
                     else
                     {
-                        v = ((GameObject*)obj)->anim.localPosY - *(f32*)(player + 0x10);
+                        v = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
                         v = v >= lbl_803E61C8 ? v : -v;
                         if (v < lbl_803E6268)
                         {

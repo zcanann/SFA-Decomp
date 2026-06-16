@@ -96,7 +96,7 @@ int cclevcontrol_getExtraSize(void);
 void ccpedstal_init(int* obj, u8* params)
 {
     CcpedstalState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((u32)params[0x1a] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)params[0x1a] << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
     switch (*(int*)(params + 0x14))
     {

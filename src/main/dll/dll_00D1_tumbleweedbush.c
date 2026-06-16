@@ -95,7 +95,7 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
     sub[0x4c] = params[0x23];
     ((GameObject*)obj)->anim.rotZ = (s16)((params[0x18] - 0x7f) << 7);
     ((GameObject*)obj)->anim.rotY = (s16)((params[0x19] - 0x7f) << 7);
-    *(s16*)obj = (s16)(params[0x1a] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(params[0x1a] << 8);
     ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(params + 0x1c);
     t = ((GameObject*)obj)->anim.rootMotionScale;
     ObjHitbox_SetCapsuleBounds(obj,
@@ -172,7 +172,7 @@ void tumbleweedbush_update(int* obj)
     player = (int*)Obj_GetPlayerObject();
     if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hit0, hitExtra) != 0)
     {
-        if (*(s16*)((char*)hit0 + 0x46) != 0x4ba)
+        if (((GameObject*)hit0)->anim.seqId != 0x4ba)
         {
             objfx_spawnHitEmitterAtPos(hitExtra, 8, 0xff, 0xff, 0x78);
             Sfx_PlayFromObject(obj, SFXsc_gethit04);
@@ -185,7 +185,7 @@ void tumbleweedbush_update(int* obj)
                     {
                         if ((*gSkyInterface)->getSunPosition(&sunTime) == 0) continue;
                     }
-                    ((void(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x28))(*slot);
+                    ((void(*)(int*))*(int*)(*(int*)(*(int*)&((GameObject*)*slot)->anim.dll) + 0x28))(*slot);
                 }
             }
         }
@@ -205,7 +205,7 @@ void tumbleweedbush_update(int* obj)
         slot = (int**)&state->pieceObjects[(u8)j];
         if (*slot != NULL)
         {
-            if (((int(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x20))(*slot) > 1)
+            if (((int(*)(int*))*(int*)(*(int*)(*(int*)&((GameObject*)*slot)->anim.dll) + 0x20))(*slot) > 1)
             {
                 *slot = (int*)nullVal;
             }
@@ -248,11 +248,11 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     }
     while (i < count)
     {
-        if (*(s16*)((char*)*list + 0x46) == 0x3fb)
+        if (((GameObject*)*list)->anim.seqId == 0x3fb)
         {
-            if (((u8*)(*(u8**)((char*)*list + 0xb8)))[0x278] > 1)
+            if (((u8*)((GameObject*)*list)->extra)[0x278] > 1)
             {
-                f32 d = vec3f_distanceSquared((f32*)((char*)*list + 0x18), p_pos);
+                f32 d = vec3f_distanceSquared(&((GameObject*)*list)->anim.worldPosX, p_pos);
                 if (d < bestDist)
                 {
                     bestDist = d;
@@ -333,7 +333,9 @@ s8 fn_801631C8(int* obj)
     count = 0;
     while (idx < outCount)
     {
-        if (siblingType == *(s16*)((char*)list[idx++] + 0x46)) count++;
+        int j = idx;
+        idx = j + 1;
+        if (siblingType == ((GameObject*)list[j])->anim.seqId) count++;
     }
     if (count >= 7) return -1;
     if (Obj_IsLoadingLocked() == 0) return -1;

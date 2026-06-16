@@ -178,7 +178,7 @@ void iceblast_update(int* obj)
     {
         ((GameObject*)obj)->anim.rotZ = *(s16*)((char*)path + 4);
         ((GameObject*)obj)->anim.rotY = *(s16*)((char*)path + 2);
-        *(s16*)obj = *(s16*)path;
+        ((GameObject*)obj)->anim.rotX = *(s16*)path;
     }
     else
     {

@@ -560,6 +560,7 @@ void smallbasket_rotateVectorYaw(int p1, int p2, f32* vec, f32 f1, int p5, u32 i
     PSMTXMultVecSR(mtx, vec, vec);
 }
 
+#pragma optimization_level 1
 void smallbasket_handleHitStateEvent(int obj, int* st, int p3, int cmd)
 {
     if (cmd == 0x11)
@@ -577,6 +578,7 @@ void smallbasket_handleHitStateEvent(int obj, int* st, int p3, int cmd)
         *(s16*)&((BaddieState*)st)->hitCounter = 0;
     }
 }
+#pragma optimization_level reset
 
 void smallbasket_initVariantState(int* obj, int* st)
 {
@@ -1289,9 +1291,13 @@ void fn_80159FCC(s16* obj, u8* state)
     }
     if (*(f32*)(state + 0x324) > lbl_803E2C30)
     {
+        extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfx, int vol, f32 v);
         Sfx_PlayFromObject((int)obj, 0x3e8);
-        i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
-        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (u8)i, *(f32*)(state + 0x324) / lbl_803E2C70);
+        {
+            f32 t = *(f32*)(state + 0x324);
+            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((lbl_803E2C6C * t) / lbl_803E2C70),
+                                   t / lbl_803E2C70);
+        }
     }
     else
     {
@@ -2164,7 +2170,8 @@ void fn_80159958(s16* obj, u8* state)
     f32 dv[3];
     int i;
 
-    if (*(f32*)(state + 0x330) != (cap = lbl_803E2C30))
+    cap = lbl_803E2C30;
+    if (*(f32*)(state + 0x330) != cap)
     {
         *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
         if (*(f32*)(state + 0x330) <= cap)
@@ -2312,9 +2319,13 @@ void fn_80159958(s16* obj, u8* state)
 
     if (*(f32*)(state + 0x324) > lbl_803E2C30)
     {
+        extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfx, int vol, f32 v);
         Sfx_PlayFromObject((int)obj, 0x3e8);
-        i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
-        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (u8)i, *(f32*)(state + 0x324) / lbl_803E2C70);
+        {
+            f32 t = *(f32*)(state + 0x324);
+            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((lbl_803E2C6C * t) / lbl_803E2C70),
+                                   t / lbl_803E2C70);
+        }
     }
     else
     {

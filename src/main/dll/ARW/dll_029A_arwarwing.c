@@ -1,3 +1,30 @@
+/*
+ * arwarwing (DLL 0x29A) - the player's Arwing in the on-rails flight
+ * sections. This is the core object of the section; the singleton instance
+ * is published through the gArwing global (getArwing) so the pickups,
+ * squadron and level-controller TUs can find it.
+ *
+ * Per-object extra state is ArwingState (arwing_state.h, 0x498 bytes). The
+ * update loop reads the controller, integrates flight physics toward stick-
+ * driven velocity / rotation targets, runs the laser and bomb weapons, the
+ * barrel-roll / wing-flex model rigging, the engine sound and the camera
+ * push, then applies path and object damage. A small "mode" state machine
+ * covers normal flight, barrel roll, death (4), explode (5) and warp-out
+ * (6). arwarwing_init wires up the path-control block and per-course flight
+ * tuning (keyed by mapEventSlot); arwarwing_initAttachments locates and
+ * links the gun / bomb / engine child models and the wing light before the
+ * Arwing becomes active (flags477 bit 1).
+ *
+ * arwarwing_SeqFn handles object-sequence events: course warps, spawning
+ * lasers / bombs / boss objects, aim-snapshot capture for the hit-detect
+ * pass, score registration and the per-course map-event setup.
+ *
+ * Most functions take the extra pointer as a raw int ("state") and cast at
+ * each use - that spelling reproduces the retail register colouring; see the
+ * CLAUDE.md matching notes. Several attachment / weapon / physics helpers
+ * (updateThrusters, readControls, updateFlightPhysics, updateBombFire,
+ * clampToFlightBounds, spawnBomb) are defined in a sibling TU.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -53,6 +80,15 @@ STATIC_ASSERT(offsetof(ArwArwingVec3, x) == 0x0);
 STATIC_ASSERT(offsetof(ArwArwingVec3, y) == 0x4);
 STATIC_ASSERT(offsetof(ArwArwingVec3, z) == 0x8);
 
+/* ArwingState.mode - the flight state machine. Mode 0 is normal flight
+   (never compared against a literal); the others are explicit. */
+enum
+{
+    ARWING_MODE_BARRELROLL = 1,
+    ARWING_MODE_DEAD = 4,
+    ARWING_MODE_EXPLODE = 5,
+    ARWING_MODE_WARPOUT = 6
+};
 
 int getArwing(void) { return gArwing; }
 
@@ -122,7 +158,7 @@ void arwarwing_hitDetect(int obj)
         PSMTXMultVec(mtx, &state->aimOffsetX, pos);
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
-        fn_8008020C((s16)(0x8000 - *(s16*)obj + state->aimYaw),
+        fn_8008020C((s16)(0x8000 - ((GameObject*)obj)->anim.rotX + state->aimYaw),
                     (s16)(((GameObject*)obj)->anim.rotY + state->aimPitch),
                     (s16)(((GameObject*)obj)->anim.rotZ + state->aimRoll),
                     pos[0], pos[1], pos[2], lbl_803E6FF8);
@@ -428,19 +464,19 @@ void arwarwing_update(int obj)
         return;
     }
     mode = ((ArwingState*)state)->mode;
-    if (mode == 5)
+    if (mode == ARWING_MODE_EXPLODE)
     {
         t = ((ArwingState*)state)->modeTimer - timeDelta;
         ((ArwingState*)state)->modeTimer = t;
         if (t <= lbl_803E6ECC)
         {
-            ((ArwingState*)state)->mode = 6;
+            ((ArwingState*)state)->mode = ARWING_MODE_WARPOUT;
             (*gScreenTransitionInterface)->start(0x14, 1);
             ((ArwingState*)state)->modeTimer = lbl_803E6F34;
         }
         return;
     }
-    if (mode == 6)
+    if (mode == ARWING_MODE_WARPOUT)
     {
         t = ((ArwingState*)state)->modeTimer - timeDelta;
         ((ArwingState*)state)->modeTimer = t;
@@ -460,13 +496,13 @@ void arwarwing_update(int obj)
         }
         return;
     }
-    if (mode == 4)
+    if (mode == ARWING_MODE_DEAD)
     {
         t = ((ArwingState*)state)->modeTimer - timeDelta;
         ((ArwingState*)state)->modeTimer = t;
         if (t <= lbl_803E6ECC)
         {
-            ((ArwingState*)state)->mode = 5;
+            ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
             ((ArwingState*)state)->modeTimer = lbl_803E6F24;
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
@@ -649,7 +685,7 @@ int arwarwing_isExplodingOrWarping(int arwing)
 {
     int result = 0;
     u32 v = (*(ArwingState**)&((GameObject*)arwing)->extra)->mode;
-    if (v == 5 || v == 6)
+    if (v == ARWING_MODE_EXPLODE || v == ARWING_MODE_WARPOUT)
     {
         result = 1;
     }
@@ -657,9 +693,9 @@ int arwarwing_isExplodingOrWarping(int arwing)
 }
 #pragma scheduling reset
 
-int arwarwing_isBarrelRolling(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == 1; }
+int arwarwing_isBarrelRolling(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_BARRELROLL; }
 
-int arwarwing_isDead(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == 4; }
+int arwarwing_isDead(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_DEAD; }
 
 #pragma peephole off
 #pragma scheduling off
@@ -670,7 +706,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
     vec = objModelGetVecFn_800395d8(((ArwingState*)state)->escortObj, 0x14);
 
-    if (((ArwingState*)state)->mode < 4 && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0)
+    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0)
     {
         vol = (f32)((lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ)) *
             lbl_803E6F50);
@@ -1038,14 +1074,14 @@ void arwarwing_handlePathDamage(int obj, int state)
     (*gPathControlInterface)->apply((void*)obj, pathBlock);
     (*gPathControlInterface)->advance((void*)obj, pathBlock, timeDelta);
 
-    if (((ArwingState*)state)->hitShake == 0 || ((ArwingState*)state)->mode == 4)
+    if (((ArwingState*)state)->hitShake == 0 || ((ArwingState*)state)->mode == ARWING_MODE_DEAD)
     {
         dmg = (s8)pathBlock[0x260];
         if (dmg == 0)
             return;
-        if (((ArwingState*)state)->mode == 4)
+        if (((ArwingState*)state)->mode == ARWING_MODE_DEAD)
         {
-            ((ArwingState*)state)->mode = 5;
+            ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
             ((ArwingState*)state)->modeTimer = lbl_803E6F24;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
@@ -1062,7 +1098,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
                 GameBit_Set(0xe74, 1);
             else
-                ((ArwingState*)state)->mode = 4;
+                ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
             ((ArwingState*)state)->modeTimer = lbl_803E6F30;
             Sfx_PlayFromObject(obj, 0x380);
             Music_Trigger(0xd6, 1);
@@ -1103,16 +1139,16 @@ void arwarwing_handleObjectDamage(int obj, int state)
         return;
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, (uint*)&hitVol) != 0 && hitVol != 0)
     {
-        if (((ArwingState*)state)->mode == 4)
+        if (((ArwingState*)state)->mode == ARWING_MODE_DEAD)
         {
-            ((ArwingState*)state)->mode = 5;
+            ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
             ((ArwingState*)state)->modeTimer = lbl_803E6F24;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
         else
         {
-            if (((GameObject*)hitObj)->anim.seqId == 0x6ae && ((ArwingState*)state)->mode == 1)
+            if (((GameObject*)hitObj)->anim.seqId == 0x6ae && ((ArwingState*)state)->mode == ARWING_MODE_BARRELROLL)
             {
                 Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_movelp);
                 return;
@@ -1135,13 +1171,13 @@ void arwarwing_handleObjectDamage(int obj, int state)
             CameraShake_SetAllMagnitudes(lbl_803E6F2C);
         }
     }
-    if (((ArwingState*)state)->mode != 4 && ((ArwingState*)state)->mode != 5 &&
-        ((ArwingState*)state)->mode != 6 && (s8)((ArwingState*)state)->shield <= 0)
+    if (((ArwingState*)state)->mode != ARWING_MODE_DEAD && ((ArwingState*)state)->mode != ARWING_MODE_EXPLODE &&
+        ((ArwingState*)state)->mode != ARWING_MODE_WARPOUT && (s8)((ArwingState*)state)->shield <= 0)
     {
         arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
         if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
             GameBit_Set(0xe74, 1);
-        ((ArwingState*)state)->mode = 4;
+        ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
         ((ArwingState*)state)->modeTimer = lbl_803E6F30;
         Sfx_PlayFromObject(obj, 0x380);
         Music_Trigger(0xd6, 1);

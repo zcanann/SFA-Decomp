@@ -205,7 +205,7 @@ void staffactivated_spawnMapEventDebris(int obj)
             rotate.y = (s16)randomGetRange(-10000, 10000);
             vecRotateZXY(&rotate, (void*)(spawnedObj + 0x24));
 
-            yawDelta = *(s16*)spawnedObj -
+            yawDelta = ((GameObject*)spawnedObj)->anim.rotX -
                 (u16)getAngle(((GameObject*)spawnedObj)->anim.velocityX, -((GameObject*)spawnedObj)->anim.velocityZ);
             if (yawDelta > 0x8000)
             {
@@ -215,7 +215,7 @@ void staffactivated_spawnMapEventDebris(int obj)
             {
                 yawDelta += 0xffff;
             }
-            *(s16*)spawnedObj = (s16)yawDelta;
+            ((GameObject*)spawnedObj)->anim.rotX = (s16)yawDelta;
             i++;
         }
     }

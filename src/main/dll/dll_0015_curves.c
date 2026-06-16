@@ -326,6 +326,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     f32 localZ[4];
     f32 matrix[16];
     f32 averageScale;
+    f32 scale;
     f32 zero;
     u8 pointCount;
     s32 pointLimit;
@@ -339,7 +340,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     f32* outZ;
     f32* outY;
     f32* outX;
-    s16 angle;
+    int angle;
 
     collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
     collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
@@ -365,17 +366,18 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             pointYZ += 3;
         }
 
-        averageScale = lbl_803E068C / (f32)pointCount;
+        scale = lbl_803E068C;
+        averageScale = scale / (f32)pointCount;
         ((GameObject*)obj)->anim.worldPosX *= averageScale;
         ((GameObject*)obj)->anim.worldPosY *= averageScale;
         ((GameObject*)obj)->anim.worldPosZ *= averageScale;
 
-        if ((collision->flags & 0x8600) != 0)
+        if ((s32)(collision->flags & 0x8600) != 0)
         {
         transform.angles[0] = -((GameObject*)obj)->anim.rotX;
             transform.angles[1] = -((GameObject*)obj)->anim.rotY;
             transform.angles[2] = -((GameObject*)obj)->anim.rotZ;
-            transform.scale = lbl_803E068C;
+            transform.scale = scale;
             transform.x = -((GameObject*)obj)->anim.worldPosX;
             transform.y = -((GameObject*)obj)->anim.worldPosY;
             transform.z = -((GameObject*)obj)->anim.worldPosZ;
@@ -403,13 +405,13 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
                 idx2 = 1;
                 idx3 = 1;
             }
-            if ((collision->flags & 0x8000) != 0)
+            if ((s32)(collision->flags & 0x8000) != 0)
             {
                 angle = getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
                                  (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
             ((GameObject*)obj)->anim.rotX += (s16)(angle - 0x8000) >> 2;
             }
-            if ((collision->flags & 0x200) != 0)
+            if ((s32)(collision->flags & 0x200) != 0)
             {
                 angle = getAngle(((localY[idx2] - localY[idx1]) + (localY[idx3] - localY[0])) *
                                  lbl_803E0690,
@@ -417,7 +419,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
                                  lbl_803E0690);
                 collision->tiltPitch = -angle;
             }
-            if ((pointCount == 4) && ((collision->flags & 0x400) != 0))
+            if ((pointCount == 4) && ((s32)(collision->flags & 0x400) != 0))
             {
                 angle = getAngle(((localY[idx1] - localY[0]) + (localY[idx2] - localY[idx3])) *
                                  lbl_803E0690,
@@ -805,18 +807,19 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             {
                 collision->traceStart[pointIndex][0] = collision->points[pointIndex][0];
                 collision->traceStart[pointIndex][1] =
-                    raisedPointOffset + collision->points[pointIndex][1] + collision->segmentRadii[pointIndex];
+                    raisedPointOffset +
+                    (collision->points[pointIndex][1] + collision->segmentRadii[pointIndex]);
                 collision->traceStart[pointIndex][2] = collision->points[pointIndex][2];
             }
         }
         if (((GameObject*)obj)->anim.classId == 1)
         {
-            *(u32*)&collision->points[2][0] = *(u32*)&((GameObject*)obj)->anim.worldPosX;
-            *(u32*)&collision->traceStart[2][0] = *(u32*)&((GameObject*)obj)->anim.worldPosX;
+            collision->points[2][0] = ((GameObject*)obj)->anim.worldPosX;
+            collision->traceStart[2][0] = ((GameObject*)obj)->anim.worldPosX;
             collision->points[2][1] = lbl_803E06BC + ((GameObject*)obj)->anim.worldPosY;
             collision->traceStart[2][1] = collision->points[2][1];
-            *(u32*)&collision->points[2][2] = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
-            *(u32*)&collision->traceStart[2][2] = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
+            collision->points[2][2] = ((GameObject*)obj)->anim.worldPosZ;
+            collision->traceStart[2][2] = ((GameObject*)obj)->anim.worldPosZ;
         }
         collision->surfaceFlags = 0;
         collision->surfaceHitMask = 0;
@@ -1594,10 +1597,12 @@ void dll_15_func07(void* arg1, CurvesCollisionState* state)
     if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)
     {
         type = state->subtype;
-        if (type != CURVES_COLLISION_SUBTYPE_OBJECT && type != CURVES_COLLISION_SUBTYPE_POINT) return;
-        if ((s32)(flags & 0x00000004) != 0) mask |= 0x1;
-        if ((s32)(flags & 0x01000000) != 0) mask |= 0x20;
-        hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
+        if (type == CURVES_COLLISION_SUBTYPE_OBJECT || type == CURVES_COLLISION_SUBTYPE_POINT)
+        {
+            if ((s32)(flags & 0x00000004) != 0) mask |= 0x1;
+            if ((s32)(flags & 0x01000000) != 0) mask |= 0x20;
+            hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
+        }
     }
 }
 

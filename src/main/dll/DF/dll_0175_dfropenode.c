@@ -234,7 +234,7 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
 #pragma peephole on
 void dfropenode_setScale(int* obj, f32* out)
 {
-    int* p = (int*)obj[0xb8 / 4];
+    int* p = (int*)((GameObject*)obj)->extra;
     out[0] = *(f32*)((char*)p + 0x1c);
     out[1] = *(f32*)((char*)p + 0x20);
     out[2] = *(f32*)((char*)p + 0x24);

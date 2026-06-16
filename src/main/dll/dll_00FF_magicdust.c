@@ -165,14 +165,13 @@ void magicdust_update(int obj)
         ref = (int)((GameObject*)obj)->anim.modelState;
         if ((uint)ref != 0)
         {
-            ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+            ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
         }
         *(undefined*)&((MagicDustState*)state)->unk25B = 1;
-        fval = lbl_803E34BC;
         if ((((MagicDustState*)state)->flags27A & 3) == 0)
         {
-            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * fval;
-            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * fval;
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34BC;
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * lbl_803E34BC;
             ((GameObject*)obj)->anim.velocityY = -(lbl_803E34C0 * timeDelta - ((GameObject*)obj)->anim.velocityY);
         }
         ((MagicDustState*)state)->burstTimer = ((MagicDustState*)state)->burstTimer - timeDelta;
@@ -282,7 +281,7 @@ void magicdust_update(int obj)
                 val = GameBit_Get(0x90d);
                 if (val == 0)
                 {
-                    *(undefined2*)&((MagicDustState*)state)->unk280 = 0xffff;
+                    *(s16*)&((MagicDustState*)state)->unk280 = 0xffff;
                     ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x280);
                     ObjHits_DisableObject(obj);
                     GameBit_Set(0x90d, 1);

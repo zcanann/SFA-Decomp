@@ -667,20 +667,20 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)gCurTextBuffer, strings + 0xec4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)gCurTextBuffer, strings + 0xed4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)gCurTextBuffer, strings + 0xee0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)gCurTextBuffer, strings + 0xef0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -698,8 +698,8 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char*)gCurTextBuffer, strings + 0xefc, textId,
+        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
+        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xefc, textId,
                 sMapDirectoryNameTable[(int)curGameTextDir]);
         return lbl_803DC974;
     }
@@ -715,8 +715,8 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char*)gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
+        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
+        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
         return lbl_803DC974;
     }
 
@@ -788,25 +788,25 @@ void* gameTextGet(int textId)
         {
             lbl_803DC97C = 0;
         }
-        entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
+        entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
+        lbl_803DC970 = (int)(gameTextBase + 0x20 + *(volatile int*)&lbl_803DC97C * 4);
 
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xec4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xed4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xee0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xef0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -843,8 +843,9 @@ void* gameTextGet(int textId)
             fadeLimit = lbl_803DE71C;
             if (zero < fadeLimit)
             {
-                *cachedAlpha = zero + timeDelta;
-                if (*cachedAlpha >= fadeLimit)
+                f32 alpha = zero + timeDelta;
+                *cachedAlpha = alpha;
+                if (alpha >= fadeLimit)
                 {
                     sprintf((char*)*(int*)*(int**)((u8*)cachedEntry + 8), strings + 0xefc, textId,
                             sMapDirectoryNameTable[(int)curGameTextDir]);
@@ -859,12 +860,12 @@ void* gameTextGet(int textId)
     {
         lbl_803DC97C = 0;
     }
-    entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
+    entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&lbl_803DC97C * 0xc);
     lbl_803DC974 = (u8*)entry;
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
-    lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
-    sprintf((char*)gCurTextBuffer, lbl_803DB3D4, textId,
+    lbl_803DC970 = (int)(gameTextBase + 0x20 + *(volatile int*)&lbl_803DC97C * 4);
+    sprintf((char*)*(volatile int*)&gCurTextBuffer, lbl_803DB3D4, textId,
             sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)lbl_803DC974 = (u16)textId;
     *(f32*)lbl_803DC970 = lbl_803DE704;
@@ -1221,8 +1222,7 @@ void gameTextLoadTaskText(int taskId)
         if (lbl_803DCA00 == 0)
         {
             taskList = lbl_802C9EE8;
-            count = 0xb;
-            do
+            for (count = 0xb; count != 0; count--)
             {
                 if (taskId == *taskList)
                 {
@@ -1230,7 +1230,7 @@ void gameTextLoadTaskText(int taskId)
                     goto checkAllowed;
                 }
                 taskList++;
-            } while (--count != 0);
+            }
             allowed = 0;
         checkAllowed:
             if (allowed == 0)
@@ -1307,14 +1307,16 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 
 #pragma dont_inline off
+#pragma optimization_level 2
 void gameTextSetWindowStrPos(int idx, int x, int y)
 {
     if (gameTextDrawFunc != NULL)
     {
         s16 sx = x;
         u8* box = gTextBoxes;
-        *(s16*)(box + idx * 0x20 + 0x18) = sx;
-        *(s16*)(box + idx * 0x20 + 0x1a) = y;
+        int off = idx * 0x20;
+        *(s16*)(box + off + 0x18) = sx;
+        *(s16*)(box + off + 0x1a) = y;
     }
     else
     {
@@ -1329,10 +1331,12 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
     }
 }
 
+#pragma optimization_level reset
 extern void* lbl_8033BE54[];
 extern void* lbl_8033B240[];
 extern int lbl_803DCA14;
 
+#pragma optimization_level 1
 void gameTextInitFn_8001bd14(void)
 {
     int i;
@@ -1346,7 +1350,7 @@ void gameTextInitFn_8001bd14(void)
 
     scratch = (int*)lbl_8033B240;
     i = 8;
-    do
+    while (i != 0)
     {
         scratch[0] = zero;
         scratch[1] = zero;
@@ -1386,9 +1390,9 @@ void gameTextInitFn_8001bd14(void)
         scratch += 8;
         i--;
     }
-    while (i != 0);
 }
 
+#pragma optimization_level reset
 #pragma dont_inline on
 void subtitleFn_8001b700(void)
 {

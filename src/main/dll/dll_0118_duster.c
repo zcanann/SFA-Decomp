@@ -272,7 +272,7 @@ void duster_update(int obj)
                 launch.scale = lbl_803E38B0;
                 launch.roll = 0;
                 launch.pitch = 0;
-                launch.yaw = *(s16*)obj;
+                launch.yaw = ((GameObject*)obj)->anim.rotX;
                 vecRotateZXY(&launch, (void*)(obj + 0x24));
             }
             else
@@ -321,10 +321,10 @@ void duster_update(int obj)
     {
         if (state->priorityHit != 0)
         {
-            *(s16*)obj = (s16)(*(s16*)obj - 0x7fff);
+            ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - 0x7fff);
             state->driftDir = 0;
         }
-        *(s16*)obj = (s16)((f32) * (s16*)obj + lbl_803E38CC * timeDelta);
+        ((GameObject*)obj)->anim.rotX = (s16)((f32)((GameObject*)obj)->anim.rotX + lbl_803E38CC * timeDelta);
     }
 
     floorDelta = playerObj->anim.localPosY - ((GameObject*)obj)->anim.localPosY;

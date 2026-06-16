@@ -226,7 +226,7 @@ void dim2pathgenerator_update(int* obj)
     objs = ObjGroup_GetObjects(OBJ_GROUP_SNOWBALL_POOL, &count);
     for (i = 0; i < count; i++)
     {
-        if (((Dim2PathGeneratorState*)extra)->spawnTypes[toggle] == *(s16*)((char*)objs[i] + 0x46))
+        if (((Dim2PathGeneratorState*)extra)->spawnTypes[toggle] == ((GameObject*)objs[i])->anim.seqId)
         {
             int* p = *(int**)((char*)objs[i] + 0x4c);
             int j;

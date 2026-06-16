@@ -453,7 +453,7 @@ void pressureswitchfb_init(u8* obj, u8* params)
     objAnim = (ObjAnimComponent*)obj;
     sub = ((GameObject*)obj)->extra;
     flags = (PressureSwitchFbFlags*)(sub + 0x84);
-    *(s16*)obj = (s16)(params[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(params[0x18] << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
     objAnim->bankIndex = (s8)params[0x19];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)

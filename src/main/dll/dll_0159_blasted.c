@@ -240,7 +240,7 @@ void blasted_init(int obj, int placement)
         }
     }
     GameBit_Set(0x2de, 1);
-    *(s16*)obj = (s16)((s32) * (s8*)(placement + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(placement + 0x18) << 8);
     if ((u32)GameBit_Get(*(s16*)(placement + 0x1e)) != 0)
     {
         state[0xc / 4] = fn_801A27B8(obj, (int)*(s16*)(placement + 0x1c));

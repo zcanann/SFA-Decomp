@@ -291,9 +291,9 @@ void FUN_801534d8(ushort* obj, undefined4* state)
             state[0xb7] = state[0xb7] & 0xffffdfff;
         }
         FUN_8014d3d0((short*)obj, state, 0xf, 0);
-        dx = target[0x1a] - *(float*)(obj + 6);
+        dx = target[0x1a] - ((GameObject*)obj)->anim.localPosX;
         dy = target[0x1b] - ((GameObject *)obj)->anim.rootMotionScale;
-        dz = target[0x1c] - *(float*)(obj + 10);
+        dz = target[0x1c] - ((GameObject*)obj)->anim.localPosZ;
         FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)obj,
                      (int)state, &dx, '\x01');
         state[0xc9] = (float)state[0xc9] + lbl_803DC074;
@@ -355,9 +355,9 @@ void FUN_80153738(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     }
     ObjHits_SetHitVolumeSlot((int)obj, 0xe, 1, 0);
     iVar3 = state[0xa7];
-    dx = *(float*)(iVar3 + 0xc) - *(float*)(obj + 6);
-    dy = (lbl_803E3570 + *(float*)(iVar3 + 0x10)) - *(float*)(obj + 8);
-    dz = *(float*)(iVar3 + 0x14) - *(float*)(obj + 10);
+    dx = *(float*)(iVar3 + 0xc) - ((GameObject*)obj)->anim.localPosX;
+    dy = (lbl_803E3570 + *(float*)(iVar3 + 0x10)) - ((GameObject*)obj)->anim.localPosY;
+    dz = *(float*)(iVar3 + 0x14) - ((GameObject*)obj)->anim.localPosZ;
     SeekTwiceBeforeRead(&dx);
     state[0xcb] = (float)state[0xcb] + lbl_803DC074;
     if ((state[0xd0] != 0) || (lbl_803E3560 < (float)state[0xcb]))

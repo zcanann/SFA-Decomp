@@ -284,14 +284,14 @@ void sc_musictree_update(int obj)
             }
             else
             {
-                int r = (*(int (**)(int))(*(int*)(*(int*)(*p + 0x68)) + 0x28))(*p);
+                int r = (*(int (**)(int))(*(int*)(*(int*)&((GameObject*)*p)->anim.dll) + 0x28))(*p);
                 if (r > 3)
                 {
                     *p = 0;
                 }
                 else
                 {
-                    (*(void (**)(int, int))(*(int*)(*(int*)(*p + 0x68)) + 0x24))(*p, (int)q + 0xc);
+                    (*(void (**)(int, int))(*(int*)(*(int*)&((GameObject*)*p)->anim.dll) + 0x24))(*p, (int)q + 0xc);
                 }
             }
             p = (int*)((char*)p + 4);
@@ -351,7 +351,7 @@ void sc_musictree_update(int obj)
             int rc = *pp;
             if ((u32)rc != 0)
             {
-                int rr = (*(int (**)(int))(*(int*)(*(int*)(rc + 0x68)) + 0x28))(rc);
+                int rr = (*(int (**)(int))(*(int*)(*(int*)&((GameObject*)rc)->anim.dll) + 0x28))(rc);
                 if (rr > 1)
                 {
                     ObjHits_RecordObjectHit(*pp, obj, 0xe, 1, 0);

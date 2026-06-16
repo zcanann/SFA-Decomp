@@ -102,7 +102,7 @@ void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8
 
 undefined4
 FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj)
 {
     int lookupBase;
     undefined4 in_r9;
@@ -111,11 +111,11 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     double dist;
     double value;
 
-    if (((GameObject*)param_9)->anim.seqId != 0x172)
+    if (((GameObject*)obj)->anim.seqId != 0x172)
     {
-        state = ((GameObject*)param_9)->extra;
+        state = ((GameObject*)obj)->extra;
         lookupBase = FUN_80017a98();
-        dist = (double)FUN_8001771c((float*)(lookupBase + 0x18), (float*)&((GameObject*)param_9)->anim.worldPosX);
+        dist = (double)FUN_8001771c((float*)(lookupBase + 0x18), (float*)&((GameObject*)obj)->anim.worldPosX);
         value = (double)*state;
         if ((value <= dist) || (*(char*)((int)state + 0xb) != '\0'))
         {
@@ -123,21 +123,21 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
                 (*(char*)((int)state + 0xb) != '\0'))
             {
                 *(u8*)((int)state + 0xb) = 0;
-                getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
+                getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
                             (uint) * (ushort*)(state + 2), 0, 0, 0, in_r9, in_r10);
             }
         }
         else
         {
             *(u8*)((int)state + 0xb) = 1;
-            getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
+            getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
                         (uint) * (ushort*)((int)state + 6), 0, 0, 0, in_r9, in_r10);
         }
     }
     return 0;
 }
 
-void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
+void FUN_801adca0(undefined2* dst, undefined2* src, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
 {
     u8 savedAlpha;
@@ -147,38 +147,38 @@ void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, 
 
     if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
     {
-        savedAlpha = *(u8*)((int)param_2 + 0x37);
-        *(char*)((int)param_2 + 0x37) = (char)param_8;
-        (**(code**)(**(int**)(param_2 + 0x34) + 0x10))
-            (param_2, param_3, param_4, param_5, param_6, 0xffffffff);
-        *(u8*)((int)param_2 + 0x37) = savedAlpha;
+        savedAlpha = *(u8*)((int)src + 0x37);
+        *(char*)((int)src + 0x37) = (char)param_8;
+        (**(code**)(**(int**)(src + 0x34) + 0x10))
+            (src, param_3, param_4, param_5, param_6, 0xffffffff);
+        *(u8*)((int)src + 0x37) = savedAlpha;
     }
-    *(undefined4*)(param_1 + 0x46) = *(undefined4*)(param_1 + 0xc);
-    *(undefined4*)(param_1 + 0x48) = *(undefined4*)(param_1 + 0xe);
-    *(undefined4*)(param_1 + 0x4a) = *(undefined4*)(param_1 + 0x10);
-    *(undefined4*)(param_1 + 0x40) = *(undefined4*)(param_1 + 6);
-    *(undefined4*)(param_1 + 0x42) = *(undefined4*)(param_1 + 8);
-    *(undefined4*)(param_1 + 0x44) = *(undefined4*)(param_1 + 10);
-    (**(code**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, local_20, &local_24, &local_28);
-    *(undefined4*)(param_1 + 6) = local_20[0];
-    *(undefined4*)(param_1 + 8) = local_24;
-    *(undefined4*)(param_1 + 10) = local_28;
-    *param_1 = *param_2;
-    param_1[1] = param_2[1];
-    param_1[2] = param_2[2];
-    *(undefined4*)(param_1 + 0xc) = *(undefined4*)(param_1 + 6);
-    *(undefined4*)(param_1 + 0xe) = *(undefined4*)(param_1 + 8);
-    *(undefined4*)(param_1 + 0x10) = *(undefined4*)(param_1 + 10);
-    *(undefined4*)(param_1 + 0x12) = *(undefined4*)(param_2 + 0x12);
-    *(undefined4*)(param_1 + 0x14) = *(undefined4*)(param_2 + 0x14);
-    *(undefined4*)(param_1 + 0x16) = *(undefined4*)(param_2 + 0x16);
+    *(undefined4*)(dst + 0x46) = *(undefined4*)(dst + 0xc);
+    *(undefined4*)(dst + 0x48) = *(undefined4*)(dst + 0xe);
+    *(undefined4*)(dst + 0x4a) = *(undefined4*)(dst + 0x10);
+    *(undefined4*)(dst + 0x40) = *(undefined4*)(dst + 6);
+    *(undefined4*)(dst + 0x42) = *(undefined4*)(dst + 8);
+    *(undefined4*)(dst + 0x44) = *(undefined4*)(dst + 10);
+    (**(code**)(**(int**)(src + 0x34) + 0x28))(src, local_20, &local_24, &local_28);
+    *(undefined4*)(dst + 6) = local_20[0];
+    *(undefined4*)(dst + 8) = local_24;
+    *(undefined4*)(dst + 10) = local_28;
+    *dst = *src;
+    dst[1] = src[1];
+    dst[2] = src[2];
+    *(undefined4*)(dst + 0xc) = *(undefined4*)(dst + 6);
+    *(undefined4*)(dst + 0xe) = *(undefined4*)(dst + 8);
+    *(undefined4*)(dst + 0x10) = *(undefined4*)(dst + 10);
+    *(undefined4*)(dst + 0x12) = *(undefined4*)(src + 0x12);
+    *(undefined4*)(dst + 0x14) = *(undefined4*)(src + 0x14);
+    *(undefined4*)(dst + 0x16) = *(undefined4*)(src + 0x16);
     return;
 }
 
 undefined4
 FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* param_11, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, undefined4 param_10
+             , ObjAnimUpdateState* animUpdate, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15
              , undefined4 param_16)
 {
     uint active;
@@ -192,25 +192,25 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 local_24;
     undefined2 local_20;
 
-    extra = ((GameObject*)param_9)->extra;
+    extra = ((GameObject*)obj)->extra;
     *(u8*)(extra + 8) = 0xff;
     linkedObj = *extra;
-    if (param_11->triggerCommand == 3)
+    if (animUpdate->triggerCommand == 3)
     {
         *(u8*)((int)extra + 0x21) = 0xff;
-        param_11->triggerCommand = 0;
+        animUpdate->triggerCommand = 0;
     }
     local_28 = DAT_802c2a88;
     local_24 = DAT_802c2a8c;
     local_20 = DAT_802c2a90;
     if (*(char*)((int)extra + 0x21) != *(char*)((int)extra + 0x22))
     {
-        if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
+        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(undefined4*)(param_9 + 200) = 0;
-            *(u8*)(param_9 + 0xeb) = 0;
+                                   *(int*)&((GameObject*)obj)->childObjs[0]);
+            *(undefined4*)(obj + 200) = 0;
+            *(u8*)(obj + 0xeb) = 0;
         }
         active = FUN_80017ae8();
         if ((active & 0xff) == 0)
@@ -223,22 +223,22 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 setup = FUN_80017aa4(0x18, (&uStack_2a)[*(char*)((int)extra + 0x21)]);
                 param_12 = 0xffffffff;
-                param_13 = *(uint**)&((GameObject*)param_9)->anim.parent;
+                param_13 = *(uint**)&((GameObject*)obj)->anim.parent;
                 spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
                                      4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
-                *(undefined4*)(param_9 + 200) = spawned;
-                *(u8*)(param_9 + 0xeb) = 1;
+                *(undefined4*)(obj + 200) = spawned;
+                *(u8*)(obj + 0xeb) = 1;
             }
             *(u8*)((int)extra + 0x22) = *(u8*)((int)extra + 0x21);
         }
     }
-    param_11->hitVolumePair = param_11->activeHitVolumePair;
-    if ((linkedObj == 0) || (param_11->triggerCommand != 2))
+    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
+    if ((linkedObj == 0) || (animUpdate->triggerCommand != 2))
     {
-        if ((linkedObj != 0) && (param_11->triggerCommand == 1))
+        if ((linkedObj != 0) && (animUpdate->triggerCommand == 1))
         {
             (**(code**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 0);
-            param_11->triggerCommand = 0;
+            animUpdate->triggerCommand = 0;
         }
     }
     else
@@ -249,18 +249,18 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
         extra[4] = extra[7];
         (**(code**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 2);
         FUN_800305f8((double)lbl_803E53E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
-        modelState = (int)((GameObject*)param_9)->anim.modelState;
+                     obj, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
+        modelState = (int)((GameObject*)obj)->anim.modelState;
         if (modelState != 0)
         {
-            ((GameObject*)param_9)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+            ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
-        param_11->hitVolumePair &= ~4;
-        param_11->triggerCommand = 0;
+        animUpdate->hitVolumePair &= ~4;
+        animUpdate->triggerCommand = 0;
     }
     if ((linkedObj != 0) && (linkedObj = (**(code**)(**(int**)(linkedObj + 0x68) + 0x38))(linkedObj), linkedObj == 2))
     {
-        param_11->hitVolumePair &= 0xfffc;
+        animUpdate->hitVolumePair &= 0xfffc;
     }
     return 0;
 }
@@ -405,9 +405,9 @@ void crrockfall_init(int* obj, u8* params)
 void crrockfall_update(int* obj)
 {
     CrRockfallState* ex = ((GameObject*)obj)->extra;
-    int* s54 = *(int**)&((GameObject*)obj)->anim.hitReactState;
+    int* hitState = *(int**)&((GameObject*)obj)->anim.hitReactState;
     ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
-    int* p4c = *(int**)&((GameObject*)obj)->anim.placementData;
+    int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
 
     if (lbl_803DDB40 == NULL)
     {
@@ -468,8 +468,8 @@ void crrockfall_update(int* obj)
                     ((f32)n * dist));
         }
 
-        if (((CrrockfallPlacement*)p4c)->unk1C == -1 ||
-            GameBit_Get(((CrrockfallPlacement*)p4c)->unk1C) != 0)
+        if (((CrrockfallPlacement*)placement)->unk1C == -1 ||
+            GameBit_Get(((CrrockfallPlacement*)placement)->unk1C) != 0)
         {
             switch (ex->mode)
             {
@@ -522,12 +522,12 @@ void crrockfall_update(int* obj)
                         Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
                     }
                     Sfx_PlayFromObject(obj, SFXmv_blockscrape_lp);
-                    ((ObjHitsPriorityState*)s54)->flags |= 1;
+                    ((ObjHitsPriorityState*)hitState)->flags |= 1;
                 }
-                *(int*)&((ObjHitsPriorityState*)s54)->objectHitMask = 16;
-                *(int*)&((ObjHitsPriorityState*)s54)->skeletonHitMask = 16;
-                *(u8*)&((ObjHitsPriorityState*)s54)->hitVolumeId = 1;
-                *(u8*)&((ObjHitsPriorityState*)s54)->hitVolumePriority = 13;
+                *(int*)&((ObjHitsPriorityState*)hitState)->objectHitMask = 16;
+                *(int*)&((ObjHitsPriorityState*)hitState)->skeletonHitMask = 16;
+                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumeId = 1;
+                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumePriority = 13;
                 ((GameObject*)obj)->anim.velocityY =
                     lbl_803E4720 * timeDelta + ((GameObject*)obj)->anim.velocityY;
                 ((GameObject*)obj)->anim.localPosY =
@@ -546,18 +546,18 @@ void crrockfall_update(int* obj)
                 }
                 break;
             case 2:
-                *(int*)&((ObjHitsPriorityState*)s54)->objectHitMask = 16;
-                *(int*)&((ObjHitsPriorityState*)s54)->skeletonHitMask = 16;
-                *(u8*)&((ObjHitsPriorityState*)s54)->hitVolumeId = 1;
-                *(u8*)&((ObjHitsPriorityState*)s54)->hitVolumePriority = 13;
+                *(int*)&((ObjHitsPriorityState*)hitState)->objectHitMask = 16;
+                *(int*)&((ObjHitsPriorityState*)hitState)->skeletonHitMask = 16;
+                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumeId = 1;
+                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumePriority = 13;
                 break;
             case 4:
                 break;
             }
 
-            if (*(void**)&((ObjHitsPriorityState*)s54)->lastHitObject != NULL)
+            if (*(void**)&((ObjHitsPriorityState*)hitState)->lastHitObject != NULL)
             {
-                ((ObjHitsPriorityState*)s54)->flags &= ~1;
+                ((ObjHitsPriorityState*)hitState)->flags &= ~1;
                 ex->mode = 3;
                 Sfx_StopObjectChannel(obj, 8);
                 if (((GameObject*)obj)->anim.seqId == 103)
@@ -567,7 +567,7 @@ void crrockfall_update(int* obj)
                 else
                 {
                     Sfx_PlayFromObject(obj, 955);
-                    spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)p4c)->unk1B,
+                    spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)placement)->unk1B,
                                    1, 1, 0, 1, 1, 1, 1);
                 }
             }

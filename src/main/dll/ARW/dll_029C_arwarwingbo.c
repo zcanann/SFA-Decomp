@@ -1,3 +1,13 @@
+/*
+ * arwarwingbo (DLL 0x29C) - the Arwing's deployed bomb in the on-rails
+ * flight sections. While its fuse timer counts down it flies forward along
+ * its velocity, trailing particle fx. It detonates when the fuse expires,
+ * when it strikes something, or when the player re-presses the bomb button
+ * (button bit 0x200): it plays the explosion, arms a blast hitbox for a few
+ * frames, then frees itself. It is registered into object group 0x52 and
+ * detaches its expgfx source on free; arwarwing keeps a back-pointer that is
+ * cleared via arwarwing_clearActiveBomb when the bomb goes away.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -92,7 +102,7 @@ void arwarwingbo_update(int obj)
     ArwingBombState* state = ((GameObject*)obj)->extra;
     int arwing = getArwing();
     f32 zero;
-    extern u32 getButtonsJustPressed(int); /* #57 unsigned -> cmplwi */
+    extern u32 getButtonsJustPressed(int);
 
     if (((GameObject*)arwing)->objectFlags & 0x1000)
     {

@@ -145,9 +145,9 @@ FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
         *(undefined*)(setup + 3) = 0xff;
         *(undefined*)((int)setup + 5) = 1;
         *(undefined*)((int)setup + 7) = 0xff;
-        *(undefined4*)(setup + 4) = *(undefined4*)(param_9 + 0xc);
-        *(undefined4*)(setup + 6) = *(undefined4*)(param_9 + 0x10);
-        *(undefined4*)(setup + 8) = *(undefined4*)(param_9 + 0x14);
+        *(undefined4*)(setup + 4) = *(undefined4*)&((GameObject*)param_9)->anim.localPosX;
+        *(undefined4*)(setup + 6) = *(undefined4*)&((GameObject*)param_9)->anim.localPosY;
+        *(undefined4*)(setup + 8) = *(undefined4*)&((GameObject*)param_9)->anim.localPosZ;
         scale = lbl_803E4FE8;
         setup[0x10] = (short)(int)(lbl_803E4FE8 * *(float*)(param_11 + 0x40));
         setup[0x11] = (short)(int)(scale * *(float*)(param_11 + 0x44));
@@ -175,10 +175,10 @@ FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
         setup[0x15] = (short)(int)(scale * *(float*)(param_11 + 0x3c));
         *(undefined*)(setup + 0xc) = param_12;
         bias = (double)lbl_803E4FF4;
-        scale = *(float*)(param_9 + 8);
+        scale = ((GameObject*)param_9)->anim.rootMotionScale;
         *(char*)((int)setup + 0x3d) =
             (char)(int)(bias * (double)(float)((double)scale /
-                (double)*(float*)(*(int*)(param_9 + 0x50) + 4)));
+                (double)*(float*)(*(int*)&((GameObject*)param_9)->anim.modelInstance + 4)));
         setup[0x1c] = (short)*(undefined4*)(param_11 + 0x5c);
         setup[0x1d] = (short)(int)*(float*)(param_11 + 0x58);
         result = FUN_80017ae4((double)scale, bias, param_3, param_4, param_5, param_6, param_7, param_8, setup,

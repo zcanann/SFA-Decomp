@@ -670,7 +670,7 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     undefined4 sound;
 
-    sound = *(undefined4*)(param_9 + 0xb8);
+    sound = *(undefined4*)&((GameObject*)param_9)->extra;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E3B00, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -910,7 +910,7 @@ void chukchuk_setScale(int obj, int v);
 void iceball_init(void* obj)
 {
     char* p = (char*)obj;
-    *(int*)(p + 0xf4) = 0xb4;
+    ((GameObject*)p)->unkF4 = 0xb4;
     ObjHits_DisableObject((int)p);
     ((GameObject*)p)->anim.alpha = 0xff;
 }

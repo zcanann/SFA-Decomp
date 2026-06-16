@@ -782,9 +782,9 @@ void FUN_80170048(void)
             if (*state != 0)
             {
                 FUN_800175b0(*state, 2);
-                FUN_800175ec((double)*(float*)(objPtr + 0xc),
-                             (double)(*(float*)(objPtr + 0x10) - lbl_803E4050),
-                             (double)*(float*)(objPtr + 0x14), (int*)*state);
+                FUN_800175ec((double)((GameObject*)objPtr)->anim.localPosX,
+                             (double)(((GameObject*)objPtr)->anim.localPosY - lbl_803E4050),
+                             (double)((GameObject*)objPtr)->anim.localPosZ, (int*)*state);
                 FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
                 FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
                 FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
@@ -859,9 +859,9 @@ void FUN_80170048(void)
         if (*state != 0)
         {
             FUN_800175b0(*state, 2);
-            FUN_800175ec((double)*(float*)(objPtr + 0xc),
-                         (double)(*(float*)(objPtr + 0x10) - lbl_803E4050),
-                         (double)*(float*)(objPtr + 0x14), (int*)*state);
+            FUN_800175ec((double)((GameObject*)objPtr)->anim.localPosX,
+                         (double)(((GameObject*)objPtr)->anim.localPosY - lbl_803E4050),
+                         (double)((GameObject*)objPtr)->anim.localPosZ, (int*)*state);
             FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
             FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
             FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
@@ -1658,7 +1658,7 @@ void gcbaddieshield_update(int* obj)
         Obj_FreeObject(obj);
         return;
     }
-    *(s16*)obj = (s16)(*(s16*)obj + (s32)(lbl_803E3200 * timeDelta));
+    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s32)(lbl_803E3200 * timeDelta));
     ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + (s32)(lbl_803E3204 * timeDelta));
     if (state[0] <= lbl_803E3208)
     {

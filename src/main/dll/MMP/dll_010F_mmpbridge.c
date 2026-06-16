@@ -59,7 +59,7 @@ void mmp_bridge_init(int* obj)
     {
         tex->offsetS = 0x800;
     }
-    *(s16*)obj = (s16)(((MmpBridgePlacement*)state)->unk18 << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((MmpBridgePlacement*)state)->unk18 << 8);
     ((GameObject*)obj)->objectFlags |= 0x6000;
     ObjHits_DisableObject((int)obj);
     if (GameBit_Get(((MmpBridgePlacement*)state)->unk1E) != 0)

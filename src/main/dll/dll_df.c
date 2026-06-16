@@ -714,7 +714,7 @@ state_selected:
             delta[0] = tpos[0] - ((GameObject*)obj)->anim.worldPosX;
             delta[1] = tpos[1] - ((GameObject*)obj)->anim.worldPosY;
             delta[2] = tpos[2] - ((GameObject*)obj)->anim.worldPosZ;
-            rot.yaw = -*(s16*)obj;
+            rot.yaw = -((GameObject*)obj)->anim.rotX;
             rot.b = 0;
             rot.c = 0;
             vecRotateZXY(&rot, delta);

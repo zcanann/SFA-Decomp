@@ -155,8 +155,8 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
                                      4, 0xff, 0xffffffff, *(uint**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
                                      in_r10);
                 *(undefined4*)&((GameObject*)param_9)->childObjs[0] = uVar3;
-                *(ushort*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
-                    7;
+                ((GameObject*)*(int*)&((GameObject*)param_9)->childObjs[0])->objectFlags =
+                    ((GameObject*)param_9)->objectFlags & 7;
             }
             *(u8*)(param_10 + 0x409) = *(u8*)(param_10 + 0x407);
         }

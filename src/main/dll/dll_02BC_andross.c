@@ -179,7 +179,7 @@ void andross_init(int obj, u8* setup)
     ((AndrossState*)state)->fightPhase = 1;
     ((AndrossState*)state)->prevFightPhase = -1;
     ((AndrossState*)state)->unkA0 = -0x8000;
-    *(s16*)obj = -0x8000;
+    ((GameObject*)obj)->anim.rotX = -0x8000;
     ((AndrossState*)state)->spawnCooldown = lbl_803E7594;
     ((AndrossState*)state)->unkA8 = lbl_803E74D4;
     ((AndrossState*)state)->springStiffness = lbl_803E7598;
@@ -241,9 +241,9 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
     f32 vel[3];
 
     result = 0;
-    dx = *(f32*)(p1 + 0xc0) - *(f32*)(*(int*)p1 + 0xc);
-    dy = *(f32*)(p1 + 0xc4) - *(f32*)(*(int*)p1 + 0x10);
-    dz = *(f32*)(p1 + 0xc8) - *(f32*)(*(int*)p1 + 0x14);
+    dx = *(f32*)(p1 + 0xc0) - ((GameObject*)*(int*)p1)->anim.localPosX;
+    dy = *(f32*)(p1 + 0xc4) - ((GameObject*)*(int*)p1)->anim.localPosY;
+    dz = *(f32*)(p1 + 0xc8) - ((GameObject*)*(int*)p1)->anim.localPosZ;
     dist = sqrtf(dx * dx + dy * dy);
     yaw = (s16)getAngle(dx, dy);
     if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > lbl_803DC4C0)
@@ -344,7 +344,7 @@ void andross_update(int obj)
         found = getArwing();
         *state = found;
         if (*(void**)state == NULL) goto LAB_8023ef14;
-        ((AndrossState*)state)->unk70 = *(f32*)(*state + 0x14);
+        ((AndrossState*)state)->unk70 = ((GameObject*)*state)->anim.localPosZ;
         arwarwing_setFlightHalfWidth(*state, (f32)lbl_803DC438);
     }
     for (work = 0; (u8)work < 4; work = work + 1)
@@ -383,7 +383,7 @@ void andross_update(int obj)
     ((AndrossState*)state)->unkD8 = lbl_803E74D4;
     ((AndrossState*)state)->unkDC = fval;
     ((AndrossState*)state)->unkE0 = fval;
-    if ((-0x4000 < ((AndrossState*)state)->unkA0) && (*(s16*)obj < 0x4000))
+    if ((-0x4000 < ((AndrossState*)state)->unkA0) && (((GameObject*)obj)->anim.rotX < 0x4000))
     {
         pathFlag = 1;
     }
@@ -618,8 +618,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -654,8 +654,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -692,8 +692,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -736,8 +736,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > lbl_803E74CC) ? lbl_803E74CC : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -765,8 +765,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > lbl_803E74CC) ? lbl_803E74CC : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -820,8 +820,8 @@ void andross_update(int obj)
     LAB_8023bb18:
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > lbl_803E74CC) ? lbl_803E74CC : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -850,8 +850,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7508) ? lbl_803E7508 : ((fb > lbl_803E750C) ? lbl_803E750C : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -883,8 +883,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7508) ? lbl_803E7508 : ((fb > lbl_803E750C) ? lbl_803E750C : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -916,8 +916,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > lbl_803E74CC) ? lbl_803E74CC : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -949,8 +949,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > lbl_803E74CC) ? lbl_803E74CC : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -999,8 +999,8 @@ void andross_update(int obj)
         {
             lbl_803DDDCA += lbl_803DC4BC;
             lbl_803DDDC8 += lbl_803DC4BE;
-            fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-            fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+            fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+            fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
             fc = (fb < lbl_803E7508) ? lbl_803E7508 : ((fb > lbl_803E750C) ? lbl_803E750C : fb);
             fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
             fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA))
@@ -1071,8 +1071,8 @@ void andross_update(int obj)
     LAB_8023c584:
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7510) ? lbl_803E7510 : ((fb > lbl_803E74FC) ? lbl_803E74FC : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -1150,8 +1150,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7508) ? lbl_803E7508 : ((fa > lbl_803E750C) ? lbl_803E750C : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -1247,8 +1247,8 @@ void andross_update(int obj)
     LAB_8023cbdc:
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74F4) ? lbl_803E74F4 : ((fb > lbl_803E74F8) ? lbl_803E74F8 : fb);
         fb = (fa < lbl_803E7510) ? lbl_803E7510 : ((fa > lbl_803E74FC) ? lbl_803E74FC : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -1301,11 +1301,11 @@ void andross_update(int obj)
         }
         else
         {
-            if (*(float*)(*state + 0x14) > ((AndrossState*)state)->cachedPosZ)
+            if (((GameObject*)*state)->anim.localPosZ > ((AndrossState*)state)->cachedPosZ)
             {
                 ((AndrossState*)state)->actionState = 0x10;
                 *(undefined*)(state + 0x2e) = 1;
-                *(f32*)(*state + 0x14) = ((AndrossState*)state)->cachedPosZ;
+                ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->cachedPosZ;
                 ((AndrossState*)state)->unkE0 = lbl_803E74D4;
                 lbl_803DDDB8 = lbl_803DC4D4;
                 lbl_803DDDB8 += lbl_803DC4D0;
@@ -1341,8 +1341,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7500) ? lbl_803E7500 : ((fb > lbl_803E74CC) ? lbl_803E74CC : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -1368,8 +1368,8 @@ void andross_update(int obj)
         }
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
         zero = lbl_803E74D4;
@@ -1419,8 +1419,8 @@ void andross_update(int obj)
         ((AndrossState*)state)->unkA8 = fval;
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
         zero = lbl_803E74D4;
@@ -1485,8 +1485,8 @@ void andross_update(int obj)
     LAB_8023d59c:
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -1541,8 +1541,8 @@ void andross_update(int obj)
     LAB_8023d7cc:
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7520) ? lbl_803E7520 : ((fb > lbl_803E74A8) ? lbl_803E74A8 : fb);
         fb = (fa < lbl_803E7524) ? lbl_803E7524 : ((fa > lbl_803E7528) ? lbl_803E7528 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -1628,8 +1628,8 @@ void andross_update(int obj)
     LAB_8023db24:
         lbl_803DDDCA += lbl_803DC4BC;
         lbl_803DDDC8 += lbl_803DC4BE;
-        fb = (*(float*)(*state + 0xc) - ((AndrossState*)state)->homePosX);
-        fa = (*(float*)(*state + 0x10) - ((AndrossState*)state)->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E752C) ? lbl_803E752C : ((fa > lbl_803E74E8) ? lbl_803E74E8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
@@ -1666,7 +1666,7 @@ void andross_update(int obj)
             GameBit_Set(0x10, 0);
             ((AndrossState*)state)->actionTimer = 0x1e;
             arwarwing_resetFlightState(*state);
-            *(f32*)(*state + 0x14) = ((AndrossState*)state)->unk70;
+            ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->unk70;
             ((AndrossState*)state)->unkA8 = lbl_803E74D4;
         }
         ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX;
@@ -1778,9 +1778,9 @@ void andross_update(int obj)
             androssbrain_setState(((AndrossState*)state)->lightAnchorObj, 1, 0);
             ObjHits_DisableObject(obj);
             ((AndrossState*)state)->actionTimer = (short)lbl_803DC484;
-            ((AndrossState*)state)->targetPosX = *(f32*)(*state + 0xc);
-            ((AndrossState*)state)->targetPosY = *(float*)(*state + 0x10) + lbl_803DC47C;
-            ((AndrossState*)state)->targetPosZ = *(float*)(*state + 0x14) + lbl_803DC480;
+            ((AndrossState*)state)->targetPosX = ((GameObject*)*state)->anim.localPosX;
+            ((AndrossState*)state)->targetPosY = ((GameObject*)*state)->anim.localPosY + lbl_803DC47C;
+            ((AndrossState*)state)->targetPosZ = ((GameObject*)*state)->anim.localPosZ + lbl_803DC480;
             fval = lbl_803E74D4;
             ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
             ((GameObject*)obj)->anim.velocityY = fval;
@@ -1836,7 +1836,7 @@ void andross_update(int obj)
             }
             ((AndrossState*)state)->unkA8 = fval;
         }
-        sval = ((AndrossState*)state)->unkA0 - *(s16*)obj;
+        sval = ((AndrossState*)state)->unkA0 - ((GameObject*)obj)->anim.rotX;
         if (0x8000 < sval)
         {
             sval = sval + 1;
@@ -1963,7 +1963,7 @@ void andross_update(int obj)
         }
         else
         {
-            fc = (((AndrossState*)state)->unk70 - *(float*)(*state + 0x14));
+            fc = (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
             fval = lbl_803E753C * timeDelta + ((AndrossState*)state)->unkA8;
             if (lbl_803E74D4 < fval)
             {
@@ -2007,7 +2007,7 @@ void andross_update(int obj)
         }
         else
         {
-            fc = (((AndrossState*)state)->unk70 - *(float*)(*state + 0x14));
+            fc = (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
             fval = lbl_803E7514 * timeDelta + ((AndrossState*)state)->unkA8;
             if (lbl_803E74D4 < fval)
             {
@@ -2079,7 +2079,7 @@ void andross_update(int obj)
         }
         else
         {
-            ((AndrossState*)state)->unkE0 = lbl_803DC4B0 * (((AndrossState*)state)->unk70 - *(float*)(*state + 0x14));
+            ((AndrossState*)state)->unkE0 = lbl_803DC4B0 * (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
         }
     }
     if (*(void**)(*state + 0xc0) == NULL)
@@ -2087,7 +2087,7 @@ void andross_update(int obj)
         velAdd = *(SunVec3*)(state + 0x36);
         arwarwing_addVelocity(*state, (int)&velAdd);
     }
-    sval = ((AndrossState*)state)->unkA0 - *(s16*)obj;
+    sval = ((AndrossState*)state)->unkA0 - ((GameObject*)obj)->anim.rotX;
     if (0x8000 < sval)
     {
         sval = sval + 1;
@@ -2103,7 +2103,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->unkA4 +
         (short)((-(int)((GameObject*)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState*)state)->unkA4) /
             lbl_803DC434);
-    *(s16*)obj = *(s16*)obj + *(short*)((int)state + 0xa2);
+    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + *(short*)((int)state + 0xa2);
     ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + ((AndrossState*)state)->unkA4;
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, ((AndrossState*)state)->animSpeed, timeDelta, 0);
     fn_8023A3E4(obj, (int)state);

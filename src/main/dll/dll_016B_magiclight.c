@@ -273,7 +273,7 @@ void magiclight_init(int* obj, u8* params)
 {
     MagicLightState* sub;
     ((GameObject*)obj)->unkF4 = 0;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = (void*)magiclight_SeqFn;
     if (((GameObject*)obj)->anim.seqId == 0x172)
     {
@@ -348,7 +348,7 @@ void magiclight_update(int obj)
 {
     if (((GameObject*)obj)->anim.seqId != 0x172 && ((GameObject*)obj)->unkF4 == 0)
     {
-        *(s16*)obj = 0;
+        ((GameObject*)obj)->anim.rotX = 0;
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotZ = 0;
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);

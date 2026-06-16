@@ -1156,7 +1156,7 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk4 = t * t;
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
-        *(s16*)obj = (s16)(params[0x3d] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
         ((GameObject*)obj)->anim.rootMotionScale = t / lbl_803E40F8;
         break;
     case 0x4c:
@@ -1168,7 +1168,7 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk4 = ((TriggerState*)sub)->unk4 * ((TriggerState*)sub)->unk4;
         break;
     case 0x4d:
-        *(s16*)obj = (s16)(params[0x3d] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
         ((GameObject*)obj)->anim.rotY = (s16)(params[0x3e] << 8);
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
@@ -1578,7 +1578,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x1f:
                     t = Obj_GetPlayerObject();
-                    d = *(s16*)obj - (u16) * (s16*)t;
+                    d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)t)->anim.rotX;
                     if (d > 0x8000)
                     {
                         d -= 0xffff;
@@ -1595,12 +1595,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     if (ang > 0x4000)
                     {
                         (*gMapEventInterface)->savePoint(obj + 0xc,
-                                                            (int)(s16)(*(s16*)obj + 0x8000),
+                                                            (int)(s16)(((GameObject*)obj)->anim.rotX + 0x8000),
                                                             p[3], getCurMapLayer());
                     }
                     else
                     {
-                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)*(s16*)obj,
+                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)((GameObject*)obj)->anim.rotX,
                                                             p[3], getCurMapLayer());
                     }
                     break;
@@ -1618,7 +1618,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     switch (((ObjInterpretSeqPlacement*)p)->unk2)
                     {
                     case 0:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
                                                                     getCurMapLayer(), 0);
                         break;
                     case 1:
@@ -1628,7 +1628,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (*gMapEventInterface)->gotoRestartPoint();
                         break;
                     case 3:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
                                                                     getCurMapLayer(), 1);
                         break;
                     }

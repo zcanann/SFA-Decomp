@@ -60,7 +60,7 @@ void Door_init(int* obj, u8* def)
 {
     u8* state = ((GameObject*)obj)->extra;
     state[5] = 1;
-    *(s16*)obj = (s16)(def[0x1f] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
     ((GameObject*)obj)->animEventCallback = (void*)Door_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->unk21 * lbl_803E3784;
@@ -185,7 +185,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if ((opened != 0) && ((*(u8*)(state + 6) & 1) == 0))
         {
-            if (*(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x59) != 0)
+            if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
             {
                 Sfx_PlayFromObject(obj, 0x4b);
             }
@@ -193,7 +193,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if ((closeReady != 0) && ((*(u8*)(state + 6) & 2) == 0))
         {
-            if (*(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x59) != 0)
+            if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
             {
                 Sfx_PlayFromObject(obj, 0x4b);
             }

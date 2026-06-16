@@ -221,7 +221,7 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
     state->yawWavePhase += (s16)(lbl_803E2690 * timeDelta);
     state->rollWavePhase += (s16)(lbl_803E2694 * timeDelta);
 
-    *(s16*)obj += (s16)(lbl_803E2698 *
+    ((GameObject*)obj)->anim.rotX += (s16)(lbl_803E2698 *
         (lbl_803E269C *
             mathSinf((lbl_803E26A0 * (f32)state->yawWavePhase) / lbl_803E26A4)));
 

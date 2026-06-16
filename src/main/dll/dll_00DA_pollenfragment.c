@@ -527,7 +527,7 @@ void pollenfragment_update(int obj)
     ObjHits_SetHitVolumeSlot((u32)obj, 0x16, 1, 0);
     ObjHits_EnableObject((u32)obj);
     hit = (void*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
-    if (hit != NULL && *(s16*)((u8*)hit + 0x46) != ((GameObject*)obj)->anim.seqId && hit != *(void**)extra)
+    if (hit != NULL && ((GameObject*)hit)->anim.seqId != ((GameObject*)obj)->anim.seqId && hit != *(void**)extra)
     {
         *(f32*)(extra + 8) = lbl_803E3160;
         ObjHits_DisableObject((u32)obj);

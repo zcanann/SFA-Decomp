@@ -1371,8 +1371,8 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(undefined*)(state + 0x346) = 0;
     }
     *(undefined*)(state + 0x25f) = 1;
-    *(undefined2*)(obj + 4) = *(undefined2*)(state + 0x19e);
-    *(undefined2*)(obj + 2) = *(undefined2*)(state + 0x19c);
+    *(undefined2*)&((GameObject*)obj)->anim.rotZ = *(undefined2*)(state + 0x19e);
+    *(undefined2*)&((GameObject*)obj)->anim.rotY = *(undefined2*)(state + 0x19c);
     (**(code**)(*DAT_803dd738 + 0x10))
         ((double)lbl_803E3B24, (double)lbl_803E3B28, obj, state, child);
     *(float*)(state + 0x2a0) = lbl_803E3B2C * *(float*)(state + 0x280);

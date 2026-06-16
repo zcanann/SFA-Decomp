@@ -1689,8 +1689,8 @@ void flamethrowerspe_init(int* obj, int* params)
     int* state = ((GameObject*)obj)->extra;
     storeZeroToFloatParam((f32*)((char*)state + 4));
     {
-        f32 t = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E33A0;
-        ((FlamethrowerspeState*)state)->unk8 = t * lbl_803DBD60;
+        f32 r = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E33A0;
+        ((FlamethrowerspeState*)state)->unk8 = r * lbl_803DBD60;
     }
     ((GameObject*)obj)->anim.velocityY = lbl_803E338C;
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;

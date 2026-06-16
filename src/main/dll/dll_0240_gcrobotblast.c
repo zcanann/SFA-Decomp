@@ -123,33 +123,33 @@ int dbstealerworm_stateHandlerB04(int obj, int p);
 
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
     int control;
 
-    control = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
     *(byte*)(control + 0x15) = *(byte*)(control + 0x15) | 4;
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F80;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    *(float*)(state + 0x2a0) = lbl_803E6F80;
+    if (*(char*)(state + 0x27a) != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
-                               param_8, param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+                               param_8, obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        *(undefined*)(state + 0x346) = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 0x1f;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    *(undefined*)(state + 0x34d) = 0x1f;
+    if (*(char*)(state + 0x27a) != '\0')
     {
-        *(undefined4*)(control + 0x18) = *(undefined4*)(param_10 + 0x2d0);
+        *(undefined4*)(control + 0x18) = *(undefined4*)(state + 0x2d0);
         *(undefined2*)(control + 0x1c) = 0x24;
         *(undefined4*)(control + 0x2c) = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                            *(int*)(control + 0x18), 0x11, param_9, 0x12, param_13, param_14, param_15, param_16);
-        FUN_80006824(param_9, SFXfoot_ice_run_3);
+                            *(int*)(control + 0x18), 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
+        FUN_80006824(obj, SFXfoot_ice_run_3);
     }
-    if (lbl_803E6F84 < ((GameObject*)param_9)->anim.currentMoveProgress)
+    if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
     {
         *(undefined*)(control + 0x34) = 1;
     }
@@ -308,7 +308,7 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 undefined4
 FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
@@ -317,29 +317,29 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 noMove;
     int control;
 
-    control = *(int*)&((GameObject*)param_9)->extra;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    control = *(int*)&((GameObject*)obj)->extra;
+    if (*(char*)(state + 0x27a) != '\0')
     {
-        ObjHits_EnableObject(param_9);
+        ObjHits_EnableObject(obj);
     }
     noMove = 0xffffffff;
-    ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    *(float*)(state + 0x2a0) = lbl_803E6F8C;
+    if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 10, 0, noMove, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+                     obj, 10, 0, noMove, param_13, param_14, param_15, param_16);
+        *(undefined*)(state + 0x346) = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 1;
+    *(undefined*)(state + 0x34d) = 1;
     control = *(int*)(control + 0x40c);
     *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    if ((*(uint*)(param_10 + 0x314) & 1) != 0)
+    if ((*(uint*)(state + 0x314) & 1) != 0)
     {
-        *(uint*)(param_10 + 0x314) = *(uint*)(param_10 + 0x314) & ~1;
+        *(uint*)(state + 0x314) = *(uint*)(state + 0x314) & ~1;
         *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 1;
     }
-    if (*(char*)(param_10 + 0x346) != '\0')
+    if (*(char*)(state + 0x346) != '\0')
     {
         *(undefined*)(control + 0x34) = 1;
     }
@@ -350,7 +350,7 @@ int dbstealerworm_stateHandlerA09(int obj, int p);
 
 undefined4
 FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
@@ -358,26 +358,26 @@ FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 para
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
     undefined4 noMove;
 
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    if (*(char*)(state + 0x27a) != '\0')
     {
-        ObjHits_EnableObject(param_9);
+        ObjHits_EnableObject(obj);
     }
     noMove = 0xffffffff;
-    ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    *(float*)(state + 0x2a0) = lbl_803E6F8C;
+    if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 5, 0, noMove, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+                     obj, 5, 0, noMove, param_13, param_14, param_15, param_16);
+        *(undefined*)(state + 0x346) = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 1;
+    *(undefined*)(state + 0x34d) = 1;
     return 0;
 }
 
 undefined4
 FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
@@ -388,40 +388,40 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     int extra;
     int control;
 
-    extra = *(int*)&((GameObject*)param_9)->extra;
+    extra = *(int*)&((GameObject*)obj)->extra;
     control = *(int*)(extra + 0x40c);
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    if (*(char*)(state + 0x27a) != '\0')
     {
-        ObjHits_EnableObject(param_9);
+        ObjHits_EnableObject(obj);
     }
     noMove = 0xffffffff;
-    ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    if (*(char*)(state + 0x27a) != '\0')
     {
         pick = randomGetRange(0, 1);
         if (pick == 0)
         {
-            if (*(char*)(param_10 + 0x27a) != '\0')
+            if (*(char*)(state + 0x27a) != '\0')
             {
                 FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 7, 0, noMove, param_13, param_14, param_15, param_16);
-                *(undefined*)(param_10 + 0x346) = 0;
+                             obj, 7, 0, noMove, param_13, param_14, param_15, param_16);
+                *(undefined*)(state + 0x346) = 0;
             }
         }
-        else if (*(char*)(param_10 + 0x27a) != '\0')
+        else if (*(char*)(state + 0x27a) != '\0')
         {
             FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         param_9, 6, 0, noMove, param_13, param_14, param_15, param_16);
-            *(undefined*)(param_10 + 0x346) = 0;
+                         obj, 6, 0, noMove, param_13, param_14, param_15, param_16);
+            *(undefined*)(state + 0x346) = 0;
         }
-        *(undefined*)(param_10 + 0x34d) = 1;
-        *(float*)(param_10 + 0x2a0) =
+        *(undefined*)(state + 0x34d) = 1;
+        *(float*)(state + 0x2a0) =
             lbl_803E6FDC +
             (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(extra + 0x406)) - DOUBLE_803e6f78) /
             lbl_803E6FE0;
     }
-    *(float*)(param_10 + 0x280) = lbl_803E6F40;
-    if (*(char*)(param_10 + 0x346) != '\0')
+    *(float*)(state + 0x280) = lbl_803E6F40;
+    if (*(char*)(state + 0x346) != '\0')
     {
         *(undefined*)(control + 0x34) = 1;
     }
@@ -430,8 +430,8 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
 }
 
 undefined4
-FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
-             int param_6)
+FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4, ushort* obj,
+             int target)
 {
     int yawDelta;
     undefined4 result;
@@ -440,8 +440,8 @@ FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4,
     double turnRate;
     float yawOut[5];
 
-    anim = *(int*)(param_5 + 0x5c);
-    yawDelta = Obj_GetYawDeltaToObject(param_5, param_6, yawOut);
+    anim = *(int*)(obj + 0x5c);
+    yawDelta = Obj_GetYawDeltaToObject(obj, target, yawOut);
     if ((double)lbl_803E6F40 == param_4)
     {
         result = 0;
@@ -481,23 +481,23 @@ FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4,
 int dbstealerworm_stateHandlerA06(int obj, int p2);
 
 undefined4
-FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
-             int param_6)
+FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4, ushort* obj,
+             int target)
 {
     int yawDelta;
     int anim;
     double heightDiff;
     float yawOut[7];
 
-    anim = *(int*)(param_5 + 0x5c);
-    if ((param_5 != (ushort*)0x0) && (param_6 != 0))
+    anim = *(int*)(obj + 0x5c);
+    if ((obj != (ushort*)0x0) && (target != 0))
     {
-        yawDelta = Obj_GetYawDeltaToObject(param_5, param_6, yawOut);
+        yawDelta = Obj_GetYawDeltaToObject(obj, target, yawOut);
         if ((double)lbl_803E6F40 != param_4)
         {
             if ((double)yawOut[0] < param_1)
             {
-                heightDiff = (double)(*(float*)(param_5 + 8) - *(float*)(param_6 + 0x10));
+                heightDiff = (double)(*(float*)(obj + 8) - *(float*)(target + 0x10));
                 if (heightDiff < (double)lbl_803E6F40)
                 {
                     heightDiff = -heightDiff;

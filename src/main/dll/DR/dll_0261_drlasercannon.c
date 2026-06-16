@@ -346,7 +346,7 @@ void drlasercannon_init(int obj, char* arg)
     ObjGroup_AddObject(obj, DR_LASERCANNON_GROUP_ID);
     state->beamObject = 0;
     state->flags.b3 = 0;
-    *(s16*)obj = (s16)(setup->initialYaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(setup->initialYaw << 8);
     state->trickyCooldown = DR_LASERCANNON_TRICKY_COOLDOWN;
     state->animStepScale = lbl_803E6920;
     if (GameBit_Get(setup->destroyedGameBit) != 0)
@@ -411,7 +411,7 @@ void drlasercannon_hitDetect(int obj)
                                              &hitPosY, &hitPosZ);
     if (state->flags.b6 != 0)
     {
-        if (hit != 0 && *(s16 *)(hitObject + 0x46) != state->hitExcludeType &&
+        if (hit != 0 && ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType &&
             (void *)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
@@ -419,7 +419,7 @@ void drlasercannon_hitDetect(int obj)
     }
     else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
              (void *)state->lastHitObject != (void *)hitObject &&
-             *(s16 *)(hitObject + 0x46) != state->hitExcludeType)
+             ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType)
     {
         state->lastHitObject = hitObject;
         state->health -= hitVolume;
@@ -490,7 +490,7 @@ void drlasercannon_update(int obj)
     {
         return;
     }
-    if (state->warningObject != 0)
+    if ((void*)state->warningObject != NULL)
     {
         ((GameObject*)state->warningObject)->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)state->warningObject)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E68FC;
@@ -501,7 +501,7 @@ void drlasercannon_update(int obj)
         if (GameBit_Get(setup->warningOffGameBit) != 0)
         {
             state->flags.b6 = 0;
-            if (state->warningObject != 0)
+            if ((void*)state->warningObject != NULL)
             {
                 staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
             }
@@ -510,7 +510,7 @@ void drlasercannon_update(int obj)
     else
     {
         objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, 5 - (u8)state->health, lbl_803E6904);
-        if (state->warningObject != 0)
+        if ((void*)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
         }
@@ -538,7 +538,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v;
-            *(s16*)obj += lbl_803DC2AC;
+            ((GameObject*)obj)->anim.rotX += lbl_803DC2AC;
             v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
             v[0] = (s16)(v[0] >> 1);
         }
@@ -621,7 +621,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
-            *(s16*)spawned = (s16)((f32) * (s16*)obj + lbl_803DDD68);
+            ((GameObject*)spawned)->anim.rotX = (s16)((f32)((GameObject*)obj)->anim.rotX + lbl_803DDD68);
             ((GameObject*)spawned)->anim.rotY = v[0];
         }
     }

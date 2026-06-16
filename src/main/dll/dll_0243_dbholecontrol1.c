@@ -183,15 +183,15 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     short* hits;
     int control;
     double dist;
-    undefined4 local_48;
-    undefined4 local_44;
-    undefined4 local_40;
-    undefined4 local_3c;
-    undefined4 local_38;
-    undefined4 local_34;
-    undefined4 local_30;
-    undefined4 local_2c;
-    undefined4 local_28;
+    undefined4 msgWord48;
+    undefined4 msgWord44;
+    undefined4 msgWord40;
+    undefined4 msgWord3c;
+    undefined4 msgWord38;
+    undefined4 msgWord34;
+    undefined4 msgWord30;
+    undefined4 msgWord2c;
+    undefined4 msgWord28;
     float dx;
     float dy;
     float dz;
@@ -220,14 +220,14 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         dist = FUN_80293900((double)(dz * dz + dx * dx + dy * dy));
         if (dist < (double)lbl_803E6F50)
         {
-            local_40 = *(undefined4*)(param_10 + 0x2d0);
+            msgWord40 = *(undefined4*)(param_10 + 0x2d0);
             hits = *(short**)(control + 0x24);
-            local_48 = 0xe;
-            local_44 = 1;
+            msgWord48 = 0xe;
+            msgWord44 = 1;
             busy = FUN_80006ab8(hits);
             if (busy == 0)
             {
-                FUN_80006ac4(hits, (uint) & local_48);
+                FUN_80006ac4(hits, (uint) & msgWord48);
             }
             *(undefined*)(control + 0x34) = 1;
         }
@@ -235,23 +235,23 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     else
     {
         hits = *(short**)(control + 0x24);
-        local_30 = 9;
-        local_2c = 0;
-        local_28 = 0x24;
+        msgWord30 = 9;
+        msgWord2c = 0;
+        msgWord28 = 0x24;
         busy = FUN_80006ab8(hits);
         if (busy == 0)
         {
-            FUN_80006ac4(hits, (uint) & local_30);
+            FUN_80006ac4(hits, (uint) & msgWord30);
         }
         *(undefined*)(control + 0x34) = 1;
-        local_34 = *(undefined4*)(param_10 + 0x2d0);
+        msgWord34 = *(undefined4*)(param_10 + 0x2d0);
         hits = *(short**)(control + 0x24);
-        local_3c = 7;
-        local_38 = 1;
+        msgWord3c = 7;
+        msgWord38 = 1;
         busy = FUN_80006ab8(hits);
         if (busy == 0)
         {
-            FUN_80006ac4(hits, (uint) & local_3c);
+            FUN_80006ac4(hits, (uint) & msgWord3c);
         }
         *(undefined*)(control + 0x34) = 1;
     }

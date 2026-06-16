@@ -89,7 +89,7 @@ void magiccavetop_init(int* obj, s8* def)
     {
         ((MagiccavetopState*)state)->unk4 = lbl_803E3C4C;
     }
-    *(s16*)obj = (s16)((s32)(u8)def[0x23] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x23] << 8);
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
     if (((MagiccavetopObjectDef*)def)->unk24 > 0)
     {

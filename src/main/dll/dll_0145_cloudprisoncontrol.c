@@ -1124,7 +1124,7 @@ void cloudprisoncontrol_update(int obj)
             cnt = n - i;
             if (n > i)
             {
-                for (i = 0; i < (int)cnt; i++)
+                for (; cnt != 0; cnt--)
                 {
                     p[-2] = p[0];
                     *(s16*)((char*)p - 4) = *(s16*)((char*)p + 4);

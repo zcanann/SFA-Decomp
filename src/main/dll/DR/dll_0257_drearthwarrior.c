@@ -781,7 +781,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     if (((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40)
     {
         s16 sv;
-        ((EarthWarriorSub*)q)->unk360 |= 0x1000000;
+        *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
         ((EarthWarriorState*)p2)->baddie.moveSpeed = lbl_803E8300;
         sv = (s16)(int)(
             lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub*)q)->unk858);
@@ -849,7 +849,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         (((EarthWarriorSub*)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub*)q)->frameCounter >= 0x96))
     {
         ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 = 1;
-        ((EarthWarriorSub*)q)->unk360 |= 0x1000000;
+        *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
         ((EarthWarriorSub*)q)->unk844 = ((EarthWarriorState*)p2)->baddie.animSpeedA;
         ObjAnim_SetCurrentMove(obj, *(s16*)(((EarthWarriorSub*)q)->moveTable + 0x3c), lbl_803E8304, 0);
         ((EarthWarriorState*)p2)->baddie.moveSpeed = lbl_803E82EC;
@@ -1153,7 +1153,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         {
             doRumble(lbl_803E8330);
         }
-        *(s16*)obj = inner->sub.unk478;
+        ((GameObject*)obj)->anim.rotX = inner->sub.unk478;
         if (inner->baddie.controlMode != 3)
         {
             int hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &hx, &hy, &hz);
@@ -1178,7 +1178,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                 }
                 objAudioFn_800393f8(obj, (void*)((int)((char*)inner + 0x3bc)), 0x28e, 0x1000, -1, 1);
                 {
-                    s16 d = *(s16*)obj - (u16) * (s16*)hitObj;
+                    s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
                     if (d > 0x8000)
                     {
                         d = (s16)(d - 0xffff);
@@ -1389,7 +1389,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     stk = lbl_803E82D8;
     r2 = lbl_802C2CA8;
     r1 = lbl_802C2CB4;
-    *(s16*)obj = (s16)(*(s8*)((char*)p2 + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)p2 + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = (void*)fn_802BDBE8;
     ObjGroup_AddObject(obj, 0xa);
     ((DREarthWarriorState*)inner)->unk14E8 = *(u8*)((char*)p2 + 0x19);
@@ -1433,7 +1433,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     ((DREarthWarriorState*)inner)->unk142C = 0x2e;
     ((DREarthWarriorState*)inner)->unk1338 = GXIndTexMtxScale1024;
     {
-        s16 h = *(s16*)obj;
+        s16 h = ((GameObject*)obj)->anim.rotX;
         ((DREarthWarriorState*)inner)->unkFEC = h;
         ((DREarthWarriorState*)inner)->unkFCC = h;
         ((DREarthWarriorState*)inner)->unkFDC = h;

@@ -239,7 +239,7 @@ void lavaball1bf_update(int* obj)
     spawned = state->spawnedObj;
     t = state->fireTimer - timeDelta;
     state->fireTimer = t;
-    if (t <= lbl_803E4814 && ((int (*)(int*))((void**)*(void**)*(int*)((char*)spawned + 0x68))[9])(spawned) != 0)
+    if (t <= lbl_803E4814 && ((int (*)(int*))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[9])(spawned) != 0)
     {
         if (state->gbState != 0)
         {
@@ -253,7 +253,7 @@ void lavaball1bf_update(int* obj)
             {
                 a = setup[0x1a];
             }
-            ((void (*)(int*, int, int))((void**)*(void**)*(int*)((char*)spawned + 0x68))[8])(spawned, a, setup[0x1b]);
+            ((void (*)(int*, int, int))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[8])(spawned, a, setup[0x1b]);
         }
         state->fireTimer = state->firePeriod + (f32)(int)
         randomGetRange(0, 0x3c);

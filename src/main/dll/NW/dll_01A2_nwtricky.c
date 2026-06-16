@@ -91,7 +91,7 @@ void nw_tricky_update(int* obj)
             objects = ObjGroup_GetObjects(3, &count);
             for (i = 0, scan = objects; i < count; scan++, i++)
             {
-                if (*(s16*)((char*)*scan + 0x46) == 0x13a)
+                if (((GameObject*)*scan)->anim.seqId == 0x13a)
                 {
                     fn_8014C66C(*scan, player);
                 }
@@ -132,7 +132,7 @@ void nw_tricky_update(int* obj)
             objects = ObjGroup_GetObjects(3, &count);
             for (i = 0, scan = objects; i < count; scan++, i++)
             {
-                if (*(s16*)((char*)*scan + 0x46) == 0x13a)
+                if (((GameObject*)*scan)->anim.seqId == 0x13a)
                 {
                     dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan)->pos, ((NwObjPos*)player)->pos);
                     if (vec3f_distanceSquared(((NwObjPos*)*scan)->pos, ((NwObjPos*)tricky)->pos) < dPlayer)

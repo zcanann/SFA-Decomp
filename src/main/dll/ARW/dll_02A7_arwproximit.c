@@ -1,3 +1,14 @@
+/*
+ * arwproximit (DLL 0x2A7) - a proximity mine in the on-rails Arwing
+ * sections. It spins in place and walks through a small phase machine
+ * (state->phase): dormant until the Arwing approaches (phase 0), then it
+ * spawns a glowing green light and fades in (phase 1); when the Arwing gets
+ * closer the light turns red and a warning countdown starts (phase 2); on
+ * timeout or a direct hit it detonates and arms its blast hitbox (phase 3),
+ * then disables and frees the light (phase 4). It can also be destroyed
+ * early by a player shot. The placement's textVariant selects which warning
+ * / taunt text lines are shown.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -29,6 +40,15 @@ STATIC_ASSERT(offsetof(ARWProximitState, despawnTimer) == 0x10);
 STATIC_ASSERT(offsetof(ARWProximitState, phase) == 0x14);
 STATIC_ASSERT(offsetof(ARWProximitState, textVariant) == 0x15);
 STATIC_ASSERT(offsetof(ARWProximitSetup, textVariant) == 0x31);
+
+enum ArwProximitPhase
+{
+    ARWPROXIMIT_PHASE_DORMANT = 0,  /* hidden, waiting for the Arwing */
+    ARWPROXIMIT_PHASE_FADEIN = 1,   /* light spawned, alpha fading in */
+    ARWPROXIMIT_PHASE_WARNING = 2,  /* light turned red, countdown running */
+    ARWPROXIMIT_PHASE_DETONATE = 3, /* exploded, blast hitbox active */
+    ARWPROXIMIT_PHASE_DONE = 4      /* disabled, light freed */
+};
 
 int arwproximit_getExtraSize(void) { return 0x18; }
 
@@ -77,7 +97,7 @@ void arwproximit_update(int obj)
 
     switch (state->phase)
     {
-    case 0:
+    case ARWPROXIMIT_PHASE_DORMANT:
         {
             GameObject* arwing = (GameObject*)getArwing();
             if (arwing == NULL)
@@ -99,22 +119,22 @@ void arwproximit_update(int obj)
                 ObjHits_EnableObject(obj);
                 ObjHits_MarkObjectPositionDirty(obj);
                 ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-                state->phase = 1;
+                state->phase = ARWPROXIMIT_PHASE_FADEIN;
             }
             return;
         }
-    case 1:
+    case ARWPROXIMIT_PHASE_FADEIN:
     default:
         {
             GameObject* arwing;
-            int a = (int)
+            int alpha = (int)
             (lbl_803E71FC * timeDelta + (f32)(u32)
             objAnim->alpha
             )
             ;
-            if (a > 0xff)
-                a = 0xff;
-            objAnim->alpha = a;
+            if (alpha > 0xff)
+                alpha = 0xff;
+            objAnim->alpha = alpha;
             arwing = (GameObject*)getArwing();
             if (arwing == NULL)
                 arwing = (GameObject*)Obj_GetPlayerObject();
@@ -127,7 +147,7 @@ void arwproximit_update(int obj)
                     modelLightStruct_startColorFade(state->light, 2, 0xa);
                 }
                 s16toFloat((void*)&state->warningTimer, 0x3c);
-                state->phase = 2;
+                state->phase = ARWPROXIMIT_PHASE_WARNING;
                 if (state->textVariant == 2)
                 {
                     if (randomGetRange(0, 1) != 0)
@@ -138,14 +158,14 @@ void arwproximit_update(int obj)
             }
             break;
         }
-    case 2:
+    case ARWPROXIMIT_PHASE_WARNING:
         {
-            u8 b0, b1, b2, b3;
+            u8 r, g, b, a;
             objAnim->alpha = 0xff;
             if (state->light != NULL)
             {
-                modelLightStruct_getDiffuseColor(state->light, &b0, &b1, &b2, &b3);
-                modelLightStruct_setGlowColor(state->light, b0, b1, b2, 0x64);
+                modelLightStruct_getDiffuseColor(state->light, &r, &g, &b, &a);
+                modelLightStruct_setGlowColor(state->light, r, g, b, 0x64);
             }
             if (timerCountDown((void*)&state->warningTimer) != 0 ||
                 ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
@@ -160,18 +180,18 @@ void arwproximit_update(int obj)
                 ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_MarkObjectPositionDirty(obj);
-                state->phase = 3;
+                state->phase = ARWPROXIMIT_PHASE_DETONATE;
             }
             break;
         }
-    case 3:
+    case ARWPROXIMIT_PHASE_DETONATE:
         if (timerCountDown((void*)&state->despawnTimer) != 0)
         {
             ObjHits_DisableObject(obj);
-            state->phase = 4;
+            state->phase = ARWPROXIMIT_PHASE_DONE;
         }
         break;
-    case 4:
+    case ARWPROXIMIT_PHASE_DONE:
         if (state->light != NULL)
         {
             ModelLightStruct_free(state->light);
@@ -180,7 +200,7 @@ void arwproximit_update(int obj)
         return;
     }
 
-    if (state->phase == 1 || state->phase == 2)
+    if (state->phase == ARWPROXIMIT_PHASE_FADEIN || state->phase == ARWPROXIMIT_PHASE_WARNING)
     {
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
@@ -193,7 +213,7 @@ void arwproximit_update(int obj)
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty(obj);
-            state->phase = 4;
+            state->phase = ARWPROXIMIT_PHASE_DONE;
         }
         ((GameObject*)obj)->anim.rotZ =
             timeDelta * (f32)state->spinSpeed + (f32)((GameObject*)obj)->anim.rotZ;

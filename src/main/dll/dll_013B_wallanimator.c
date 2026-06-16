@@ -110,7 +110,7 @@ f32 wallanimator_setScale(int obj, int target)
         out[2] -= kD8;
         vecRotateZXY((void*)obj, out);
         effect.rot[2] = ((WallanimatorPlacement*)desc)->unk1C;
-        effect.rot[0] = *(s16*)obj;
+        effect.rot[0] = ((GameObject*)obj)->anim.rotX;
         effect.pos[0] = ((GameObject*)obj)->anim.worldPosX + out[0];
         effect.pos[1] = kDC + (((GameObject*)obj)->anim.worldPosY + out[1]);
         effect.pos[2] = ((GameObject*)obj)->anim.worldPosZ + out[2];

@@ -397,7 +397,7 @@ void staticCamera_init(short* param_1, int param_2, int param_3)
     *param_1 = -*(short*)(param_2 + 0x1c);
     param_1[1] = -*(short*)(param_2 + 0x1e);
     param_1[2] = -*(short*)(param_2 + 0x20);
-    dest = *(undefined**)(param_1 + 0x5c);
+    dest = ((GameObject*)param_1)->extra;
     *dest = *(undefined*)(param_2 + 0x19);
     *(float*)(dest + 4) =
         (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
@@ -801,7 +801,7 @@ void FUN_80170048(void)
     packed = FUN_80286838();
     obj = (uint)((ulonglong)packed >> 0x20);
     scaleTbl = (float*)&DAT_80321678;
-    state = *(int**)(obj + 0xb8);
+    state = ((GameObject*)obj)->extra;
     iTmp = FUN_80017a98();
     handle = 0;
     if (iTmp != 0)
@@ -846,9 +846,9 @@ void FUN_80170048(void)
             if (*state != 0)
             {
                 FUN_800175b0(*state, 2);
-                FUN_800175ec((double)*(float*)(obj + 0xc),
-                             (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                             (double)*(float*)(obj + 0x14), (int*)*state);
+                FUN_800175ec((double)((GameObject*)obj)->anim.localPosX,
+                             (double)(((GameObject*)obj)->anim.localPosY - lbl_803E4050),
+                             (double)((GameObject*)obj)->anim.localPosZ, (int*)*state);
                 FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
                 FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
                 FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
@@ -923,9 +923,9 @@ void FUN_80170048(void)
         if (*state != 0)
         {
             FUN_800175b0(*state, 2);
-            FUN_800175ec((double)*(float*)(obj + 0xc),
-                         (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                         (double)*(float*)(obj + 0x14), (int*)*state);
+            FUN_800175ec((double)((GameObject*)obj)->anim.localPosX,
+                         (double)(((GameObject*)obj)->anim.localPosY - lbl_803E4050),
+                         (double)((GameObject*)obj)->anim.localPosZ, (int*)*state);
             FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
             FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
             FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);

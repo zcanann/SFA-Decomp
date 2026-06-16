@@ -2352,7 +2352,7 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
             if (count > 0)
             {
                 arr = *(u8**)(state + 8);
-                idx = (int)(*(f32*)(e + 0x98) * (f32)count);
+                idx = (int)(((GameObject*)e)->anim.currentMoveProgress * (f32)count);
                 if (idx >= count)
                 {
                     idx = count - 1;
@@ -2413,16 +2413,16 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
             vec[1] = zero;
             vec[2] = zero;
             PSMTXMultVec((f32*)mtx, vec, vec);
-            *(f32*)(c + 0xc) = vec[0] + playerMapOffsetX;
-            *(f32*)(c + 0x10) = vec[1];
-            *(f32*)(c + 0x14) = vec[2] + playerMapOffsetZ;
+            ((GameObject*)c)->anim.localPosX = vec[0] + playerMapOffsetX;
+            ((GameObject*)c)->anim.localPosY = vec[1];
+            ((GameObject*)c)->anim.localPosZ = vec[2] + playerMapOffsetZ;
             Obj_GetWorldPosition((u32)c, (f32 *)(c + 0x18), (f32 *)(c + 0x1c), (f32 *)(c + 0x20));
         }
         src = *(u8**)(b + 0x58);
         vec[0] = *(f32*)(src + (srcOff + 8));
         vec[1] = *(f32*)(src + (srcOff + 0xc));
         vec[2] = *(f32*)(src + (srcOff + 0x10));
-        *(f32*)(st->cur + dstOff) = *(f32*)(src + (srcOff + 4)) * *(f32*)(e + 8);
+        *(f32*)(st->cur + dstOff) = *(f32*)(src + (srcOff + 4)) * ((GameObject*)e)->anim.rootMotionScale;
         PSMTXMultVec((f32*)mtx, vec, (f32*)(st->cur + (dstOff + 4)));
         *(f32*)(prev + 4) = (lbl_803DCED0 + *(f32*)(prev + 4)) - playerMapOffsetX;
         *(f32*)(prev + 0xc) = (lbl_803DCECC + *(f32*)(prev + 0xc)) - playerMapOffsetZ;
@@ -2589,8 +2589,8 @@ extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 #pragma peephole on
 void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 {
-    int i;
     int off;
+    int i;
 
     if (*(u8*)(p + 0x1a) != 0)
     {

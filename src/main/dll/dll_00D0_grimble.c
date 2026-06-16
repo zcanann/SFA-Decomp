@@ -469,11 +469,10 @@ void grimble_update(int obj)
                 ((GroundBaddieState*)state)->baddie.targetObj = Obj_GetPlayerObject();
             }
             {
-                ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
                 if (((GroundBaddieState*)state)->baddie.targetObj != NULL || *(s8*)&((GroundBaddieState*)state)->baddie.
                     hitPoints == 0)
                 {
-                    hitState->flags |= 1;
+                    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
                     if ((*(int (**)(int, char*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
                         obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 1) != 0)
                     {
@@ -482,7 +481,7 @@ void grimble_update(int obj)
                 }
                 else
                 {
-                    hitState->flags &= ~1;
+                    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
                     target = (*(void *(**)(int, char*, f32, int))(*(int*)gBaddieControlInterface + 0x48))(
                         obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 0x8000);
                     if (target != NULL)

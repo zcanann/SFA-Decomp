@@ -23,7 +23,7 @@ void bombplantingspot_update(void* obj)
     BombPlantingSpotMapData* mapData = *(BombPlantingSpotMapData**)&((GameObject*)obj)->anim.placementData;
     s32 trigBit;
 
-    *(s16*)obj = (s16)(mapData->yawByte << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
 
     trigBit = mapData->requiredGameBit;
     if (trigBit != -1 && GameBit_Get(trigBit) == 0)
@@ -68,6 +68,6 @@ void bombplantingspot_update(void* obj)
 void bombplantingspot_init(void* obj, BombPlantingSpotMapData* mapData)
 {
     ((GameObject*)obj)->objectFlags |= 0x4000;
-    *(s16*)obj = (s16)(mapData->yawByte << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
 }
 

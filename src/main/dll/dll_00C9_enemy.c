@@ -1711,6 +1711,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
     }
 }
 
+#pragma fp_contract off
 void fn_8014BC98(int* node, int* sub)
 {
     extern void fn_8014BC98(int* node, int* sub);
@@ -1718,11 +1719,10 @@ void fn_8014BC98(int* node, int* sub)
     if (target != NULL)
     {
         volatile f32 d[3];
-        int angle;
         int raw;
         s32 delta;
         f32 dist;
-        u16 d16;
+        u16 ua;
 
         if ((((TrickyState*)sub)->controlFlags & 0x8000) != 0)
         {
@@ -1736,7 +1736,7 @@ void fn_8014BC98(int* node, int* sub)
             d[1] = ((GameObject*)node)->anim.worldPosY - *(f32*)((char*)target + 0x1c);
             d[2] = ((GameObject*)node)->anim.worldPosZ - *(f32*)((char*)target + 0x20);
         }
-        angle = getAngle(-d[0], -d[2]);
+        ua = (u16)getAngle(-d[0], -d[2]);
         if (*(int**)&((GameObject*)node)->anim.parent != NULL)
         {
             raw = (s16)(*(s16*)node + **(s16**)&((GameObject*)node)->anim.parent);
@@ -1745,25 +1745,25 @@ void fn_8014BC98(int* node, int* sub)
         {
             raw = *(s16*)node;
         }
-        delta = (u16)angle - (u16)(s16)
+        delta = ua - (u16)(s16)
         raw;
         if (delta > 0x8000) delta -= 0xFFFF;
         if (delta < -0x8000) delta += 0xFFFF;
-        d16 = (u16)delta;
-        ((TrickyState*)sub)->unk2A2 = d16;
-        ((TrickyState*)sub)->unk2A0 = d16 >> 13;
+        ((TrickyState*)sub)->unk2A2 = (u16)delta;
+        ((TrickyState*)sub)->unk2A0 = (u32)(u16)delta >> 13;
 
         dist = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
-        *(s16*)&((TrickyState*)sub)->unk2A4 = (s16)(s32)
+        *(s16*)&((TrickyState*)sub)->unk2A4 = (s32)
         dist;
 
         {
             int* t = *(int**)&((TrickyState*)sub)->actionTargetObj;
-            *(s16*)&((TrickyState*)sub)->unk2A6 = (s16)(s32)(
+            *(s16*)&((TrickyState*)sub)->unk2A6 = (s32)(
                 *(f32*)((char*)t + 0x1c) - ((GameObject*)node)->anim.worldPosY);
         }
     }
 }
+#pragma fp_contract on
 
 void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
 {

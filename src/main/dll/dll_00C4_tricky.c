@@ -13,6 +13,9 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
+#define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
+#define TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE 0x08000000
+#define TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE 0x10000000
 #define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT 0x00000008
 #define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
 #define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y 0x20000000
@@ -597,7 +600,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 promptId = *(ushort*)((int)promptTable + bitVal * 2);
                 ref = *(int*)(objVal + 0xb8);
                 if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
-                    (((0x2f < *(short*)(objVal + 0xa0) || (*(short*)(objVal + 0xa0) < 0x29)) &&
+                    (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
                         (cond = FUN_800067f0(objVal, 0x10), !cond))))
                 {
                     objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
@@ -665,7 +668,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     {
                         ref = *(int*)(objVal + 0xb8);
                         if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
-                            (((0x2f < *(short*)(objVal + 0xa0) || (*(short*)(objVal + 0xa0) < 0x29)) &&
+                            (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
                                 (cond = FUN_800067f0(objVal, 0x10), !cond))))
                         {
                             objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
@@ -673,7 +676,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     }
                     else if ((((promptC) &&
                                 (ref = *(int*)(objVal + 0xb8), (*(byte*)(ref + 0x58) >> 6 & 1) == 0)) &&
-                            ((0x2f < *(short*)(objVal + 0xa0) || (*(short*)(objVal + 0xa0) < 0x29)))) &&
+                            ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
                         (cond = FUN_800067f0(objVal, 0x10), !cond))
                     {
                         objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
@@ -2651,7 +2654,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;
     *nearestSpecialY = defaultY;
-    hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+    hitCount = (u16)hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                     ((GameObject*)obj)->anim.localPosZ, obj, hitList, 0, 0);
     *nearestFloorY = ((GameObject*)obj)->anim.localPosY;
     *nearestSpecialY = ((GameObject*)obj)->anim.localPosY;

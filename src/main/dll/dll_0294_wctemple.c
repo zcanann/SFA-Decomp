@@ -85,7 +85,7 @@ void wctemple_init(int obj, int setup)
     WCTempleSetup* setupData = (WCTempleSetup*)setup;
     int angle = setupData->type;
 
-    *(s16*)obj = (s16)(angle << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(angle << 8);
 }
 
 void wctemple_release(void)

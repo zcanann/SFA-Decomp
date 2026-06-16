@@ -319,7 +319,7 @@ void dll_197_init(int obj, int data)
     } stk;
 
     st = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(((s8) * (u8*)(data + 0x18) & 0x3fu) << 10);
+    ((GameObject*)obj)->anim.rotX = (s16)(((s8) * (u8*)(data + 0x18) & 0x3fu) << 10);
     if (*(s16*)(data + 0x1a) > 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = (f32) * (s16*)(data + 0x1a) / lbl_803E5140;
