@@ -1,78 +1,39 @@
-/* DLL 0x0180 (mmpasteroidre) — MMP asteroid re-entry object [0x801A6F4C-0x801A78C8). */
-#include "main/dll/mmptrenchfxstate_struct.h"
-#include "main/dll/moonseedbushstate_struct.h"
-
-extern u32 randomGetRange(int min, int max);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern u32 GameBit_Get(int eventId);
-
-extern void doRumble(f32 v);
-
-extern void objRenderFn_8003b8f4(f32 v);
-
-extern f32 timeDelta;
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* segment pragma-stack balance (re-split): */
+/*
+ * mmpasteroidre (DLL 0x180) - Moon Mountain Pass asteroid re-entry object.
+ *
+ * A scripted falling asteroid. The sequence callback (fn_801A6F4C)
+ * consumes anim events to toggle lighting and drive phase transitions
+ * (eventFlags / gamebit 0x87B). init seeds intensity (gamebit 0x88C) and
+ * phase, restoring the right visual state on load. update integrates the
+ * descent - gravity-like vertical motion toward a target height with a
+ * sine wobble on position and rotation, looped re-entry sfx scaled by
+ * intensity, and per-flag particle bursts (trails, sparks, the impact
+ * explosion with camera shake + rumble). The state timer clears gamebit
+ * 0x88B when it expires.
+ */
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
-#include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/DIM/DIMlavaball.h"
-
-/*
- * Per-object extra state for the MoonSeedBush plant spot
- * (MoonSeedBush_getExtraSize == 0x2).
- */
-
-STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
-
-/*
- * Per-object extra state for the mmp asteroid set piece
- * (mmp_asteroid_re_getExtraSize == 0x1C).
- */
+#include "main/objanim_update.h"
 
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
-/*
- * Per-object extra state for the mmp trench fx emitter
- * (mmp_trenchfx_getExtraSize == 0x30).
- */
-
-STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
-
-/*
- * Per-object extra state for the mmp moonrock carryable
- * (mmp_moonrock_getExtraSize == 0x30). The leading bytes belong to the
- * gCarryableInterface record (the state pointer itself is handed to it).
- */
-
-STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
-
-extern undefined8 FUN_80006728();
-extern uint GameBit_Get(int eventId);
-extern int FUN_80017a98();
-extern undefined4 FUN_8005d0ac();
-
-extern f32 lbl_803E5180;
-
-extern f32 lbl_803E44F8;
-extern void setDrawLights(int v);
-extern f32 lbl_803E44E8;
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern u32 randomGetRange(int min, int max);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
+extern u32 GameBit_Get(int eventId);
+extern void setDrawLights(int v);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern void objRenderFn_8003b8f4(f32 v);
+extern void doRumble(f32 v);
 extern f32 mathSinf(f32);
+extern f32 timeDelta;
 extern char lbl_803231D0[];
 extern char lbl_803AC900[];
 extern int lbl_803DDB30;
+extern f32 lbl_803E44E8;
+extern f32 lbl_803E44F8;
 extern f32 lbl_803E44FC;
 extern f32 lbl_803E4500;
 extern f32 lbl_803E4504;
@@ -91,93 +52,7 @@ extern f32 lbl_803E4534;
 extern f32 lbl_803E4538;
 extern f32 lbl_803E453C;
 
-undefined4
-FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    byte eventType;
-    undefined4 fxHandle;
-    int i;
-
-    fxHandle = FUN_80017a98();
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
-    {
-        eventType = animUpdate->eventIds[i];
-        if (eventType == 2)
-        {
-            param_1 = FUN_80006728(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                   , fxHandle, 0x138, 0, param_13, param_14, param_15, param_16);
-        }
-        else if ((eventType < 2) && (eventType != 0))
-        {
-            param_1 = FUN_80006728(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                   , fxHandle, 0x13b, 0, param_13, param_14, param_15, param_16);
-        }
-    }
-    FUN_801a6b10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-    return 0;
-}
-
-undefined4
-FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
-             undefined4 param_10, ObjAnimUpdateState* animUpdate)
-{
-    extern undefined4 GameBit_Set(int eventId, int value);
-    byte eventType;
-    uint rnd;
-    int i;
-    byte* state;
-
-    state = ((GameObject*)param_9)->extra;
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
-    {
-        eventType = animUpdate->eventIds[i];
-        if (eventType == 2)
-        {
-            *state = *state & 0xf6;
-            *state = *state | 0x30;
-            ((ObjAnimComponent*)param_9)->bankIndex = 1;
-        }
-        else if (eventType < 2)
-        {
-            if (eventType == 0)
-            {
-                param_1 = FUN_8005d0ac(0);
-            }
-            else
-            {
-                *state = 0xd;
-                state[1] = 1;
-                param_1 = GameBit_Set(0x87b, (uint)state[1]);
-                ((GameObject*)param_9)->anim.alpha = 0xff;
-            }
-        }
-        else if (eventType == 4)
-        {
-            *(float*)(state + 4) = lbl_803E5180;
-            param_1 = FUN_8005d0ac(1);
-        }
-        else if (eventType < 4)
-        {
-            *state = *state & 0xdf;
-            *state = *state | 0x50;
-            rnd = randomGetRange(10, 0x3c);
-            *(float*)(state + 8) =
-                (f32)(s32)(rnd);
-            state[1] = 1;
-            param_1 = GameBit_Set(0x87b, (uint)state[1]);
-        }
-    }
-    *state = *state | 0x80;
-    FUN_801a7a94(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-    return 0;
-}
-
+void mmp_asteroid_re_update(int obj);
 
 void mmp_asteroid_re_free(void)
 {
@@ -195,11 +70,8 @@ void mmp_asteroid_re_initialise(void)
 {
 }
 
-
 int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
 int mmp_asteroid_re_getObjectTypeId(void) { return 0x0; }
-
-extern void objRenderFn_8003b8f4(f32);
 
 #pragma peephole off
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -293,8 +165,6 @@ void mmp_asteroid_re_init(int obj)
         state->baseY2 = v;
     }
 }
-
-extern void doRumble(f32 duration);
 
 void mmp_asteroid_re_update(int obj)
 {
