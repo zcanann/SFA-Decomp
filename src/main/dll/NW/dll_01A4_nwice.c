@@ -36,7 +36,6 @@ void nw_ice_update(int* obj)
     NwIceState* state;
     int* setup;
     int i;
-    int** scan;
     int** objects;
     int* candidate;
     int count;
@@ -74,11 +73,10 @@ void nw_ice_update(int* obj)
     else
     {
         objects = (int**)ObjGroup_GetObjects(0x3d, &count);
-        scan = objects;
         setup = *(int**)&((GameObject*)obj)->anim.placementData;
-        for (i = 0; i < count; scan++, i++)
+        for (i = 0; i < count; i++)
         {
-            candidate = *scan;
+            candidate = objects[i];
             if ((obj != candidate) &&
                 (((NwIcePlacement*)setup)->unk1B ==
                     *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
