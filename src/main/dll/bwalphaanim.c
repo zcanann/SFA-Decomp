@@ -9,7 +9,7 @@ void SB_CloudRunner_onSeqFree(int* obj)
     p->riderPosY = ((GameObject*)obj)->anim.localPosY;
     p->riderPosZ = ((GameObject*)obj)->anim.localPosZ;
     {
-        s32 v = *(s16*)obj - 0x4000;
+        s32 v = ((GameObject*)obj)->anim.rotX - 0x4000;
         p->riderYawOnFree = (s16)v;
     }
     p->riderPitchOnFree = ((GameObject*)obj)->anim.rotZ;
