@@ -1946,11 +1946,11 @@ extern void* textureLoad(int id, int flag);
 
 void staff_initialise(void)
 {
-    s16* p = (s16*)lbl_803208A0;
-    int n = 0;
+    s16* p;
+    int n;
     int i;
     int j;
-    for (i = 0; i < 5; i++)
+    for (n = 0, p = (s16*)lbl_803208A0; n < 30; n += 6)
     {
         for (j = 0; j < 7; j++)
         {
@@ -1960,7 +1960,6 @@ void staff_initialise(void)
             }
             p++;
         }
-        n += 6;
     }
     lbl_803DDAA4 = lbl_803DBD50;
     if (lbl_803DDAA8[0] == NULL)
