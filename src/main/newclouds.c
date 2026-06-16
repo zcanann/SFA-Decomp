@@ -383,8 +383,8 @@ void snowFreeSnowCloud(int cloudId)
     env = saveGameGetEnvState();
     if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0)
     {
-        *(s16*)(env + cloudId * 2 + 0xe) = -1;
-        ((s8*)env)[cloudId + 0x41] = -1;
+        ((s16*)(env + 0xe))[cloudId] = -1;
+        ((s8*)(env + 0x41))[cloudId] = -1;
     }
     for (i = 0; i < 8; i++)
     {
@@ -1559,8 +1559,8 @@ extern f32 lbl_803DF244;
 void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 {
     char* strs;
-    int ok;
     int id;
+    int ok;
     int i;
     u8 fl;
     WindSource* w;

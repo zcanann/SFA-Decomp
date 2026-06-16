@@ -395,7 +395,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 entry += 8;
             }
             *(u8**)(slotBase + j * 8) = activeObj;
-            *(u8**)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
+            *(u8**)((u8*)((int)lbl_80396918 + slotOff) + j * 8 + 4) = obj;
         }
     }
     else
@@ -1014,8 +1014,7 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x48:
                     mode48.mode = lbl_803DD108;
-                    code = lbl_803DD100;
-                    if (code == 0)
+                    if ((code = lbl_803DD100) == 0)
                     {
                         mode48.flag = 1;
                     }
@@ -1163,7 +1162,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             break;
         }
         slotFlags = base + (s8)((ObjSeqState*)seq)->slot;
-        slotFlags = slotFlags + 0x3538;
+        slotFlags = (u8*)((int)slotFlags + 0x3538);
         v = *slotFlags;
         if ((v & 0x10) != 0)
         {
@@ -3182,9 +3181,9 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
     ((f32*)(historyBase + 0x3740))[(s8)((ObjSeqState*)seq)->slot] = (f32)((ObjSeqState*)seq)->curFrame;
     ((s16*)(historyBase + 0x2be0))[(s8)((ObjSeqState*)seq)->slot] = ((ObjSeqState*)seq)->curFrame;
     time = OSGetTime();
-    *(long long*)(historyBase + (s8)((ObjSeqState*)seq)->slot * 8 + 0x2f38) = time;
+    ((long long*)(historyBase + 0x2f38))[(s8)((ObjSeqState*)seq)->slot] = time;
     time = OSGetTime();
-    *(long long*)(historyBase + (s8)((ObjSeqState*)seq)->slot * 8 + 0x2c90) = time;
+    ((long long*)(historyBase + 0x2c90))[(s8)((ObjSeqState*)seq)->slot] = time;
 
     if (*seqObj != NULL)
     {

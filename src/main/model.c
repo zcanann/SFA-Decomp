@@ -2589,8 +2589,8 @@ extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 #pragma peephole on
 void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 {
-    int i;
     int off;
+    int i;
 
     if (*(u8*)(p + 0x1a) != 0)
     {

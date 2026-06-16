@@ -1299,7 +1299,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
         typeIndex = 0;
         do
         {
-            if ((curve->type == curveTypes[typeIndex]) || (typeCount < 1))
+            if ((curve->type == curveTypes[typeIndex]) || (typeCount <= 0))
             {
                 dx = curve->x - ((GameObject*)obj)->anim.localPosX;
                 dy = curve->y - ((GameObject*)obj)->anim.localPosY;
@@ -4438,7 +4438,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     int j;
     int linkId;
     RomCurveDef* linkedCurve;
-    int candidates[7];
+    int candidates[4];
 
     if (curve == NULL)
     {
@@ -4459,7 +4459,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
             {
                 high = top;
                 low = 0;
-                while (low <= high)
+                while (high >= low)
                 {
                     mid = (high + low) >> 1;
                     linkedCurve = romCurves[mid];
@@ -4632,7 +4632,7 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                     {
                         high = nRomCurves - 1;
                         low = 0;
-                        while (low <= high)
+                        while (high >= low)
                         {
                             mid = (high + low) >> 1;
                             linkedCurve = romCurves[mid];
@@ -4938,7 +4938,6 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
     outXCursor = outX;
     foundCount = 0;
     windowCursor = windowCurves;
-    remaining = 4;
     outZCursor = outZ;
     outYCursor = outY;
     for (remaining = 4; remaining != 0; remaining--)
@@ -4952,7 +4951,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
         {
             high = nRomCurves + -1;
             low = 0;
-            while (low <= high)
+            while (high >= low)
             {
                 mid = high + low >> 1;
                 resolvedCurve = romCurves[mid];
@@ -5071,7 +5070,7 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
     {
         high = nRomCurves - 1;
         low = 0;
-        while (low <= high)
+        while (high >= low)
         {
             mid = (high + low) >> 1;
             adjacent = romCurves[mid];
@@ -5427,9 +5426,8 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
     int curveIndex;
     int typeIndex;
 
-    bestDistance = lbl_803E0664;
+    bestActionDistance = bestDistance = lbl_803E0664;
     bestCurve = NULL;
-    bestActionDistance = bestDistance;
     bestActionCurve = NULL;
     point[0] = x;
     point[1] = y;

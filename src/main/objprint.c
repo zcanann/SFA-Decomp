@@ -2078,7 +2078,7 @@ void fn_8003A230(int obj, int p2, f32 val)
         {
             fn_80039B54(obj, (s16*)p2, found, val);
         }
-        *(s16*)((char*)p2 + 0x1a) = (s16)(u16) * (s16*)((char*)p2 + 0x1a);
+        *(s16*)((char*)p2 + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)p2 + 0x1a);
         if (val > lbl_803DE9E4)
         {
             flag = 1;
@@ -2199,7 +2199,7 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 #pragma dont_inline on
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
 {
-    extern f32 Curve_EvalHermite(int, int, f32);
+    extern f32 Curve_EvalHermite(int, f32, int);
     extern f32 timeDelta;
     extern f32 lbl_803DE99C;
     extern f32 lbl_803DE9A4;
@@ -2242,7 +2242,7 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
     }
 
     {
-        f32 rate = Curve_EvalHermite((int)buf, 0, ratio);
+        f32 rate = Curve_EvalHermite((int)buf, ratio, 0);
         if (curve[10] < curve[11])
         {
             rate = -rate;
