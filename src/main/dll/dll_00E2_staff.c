@@ -1747,9 +1747,9 @@ void staff_func15(int* obj, s16 idx, f32 f1, f32 f2)
     u8* slot;
     u8* state = (u8*)((int**)obj)[0xb8 / 4];
     slot = state;
-    if ((state[0x14] & 0x2) != 0)
+    if ((slot[0x14] & 0x2) != 0)
     {
-        slot = state + 0x18;
+        slot += 0x18;
         if ((slot[0x14] & 0x2) != 0)
         {
             slot += 0x18;
