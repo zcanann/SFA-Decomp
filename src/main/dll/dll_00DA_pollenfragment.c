@@ -93,12 +93,12 @@ void pollenfragment_init(int obj, int config)
     state = *(undefined4**)&((GameObject*)obj)->extra;
     if (*(char*)(config + 0x19) == '\x01')
     {
-        *(float*)(state + 2) = lbl_803E3198;
+        *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E3198;
     }
     else
     {
         randomValue = randomGetRange(0xb4, 300);
-        *(float*)(state + 2) = (float)(int)randomValue;
+        *(float*)&((XyzAnimatorState*)state)->unk8 = (float)(int)randomValue;
     }
     pollenType = *(s8*)(config + 0x19);
     pollenType = (pollenType < 0) ? 0 : ((pollenType > 5u) ? 5 : pollenType);
@@ -117,12 +117,12 @@ void pollenfragment_init(int obj, int config)
     while (spawnCount-- != 0);
     if (!((PollenFragmentDef*)state[7])->timed)
     {
-        *(float*)(state + 2) = lbl_803E319C;
+        *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E319C;
     }
     ObjHits_SetTargetMask(obj, 4);
-    state[6] = 0;
-    *(f32*)(state + 1) = *(f32*)(state[7] + 0xc);
-    *state = 0;
+    ((XyzAnimatorState*)state)->unk18 = 0;
+    *(f32*)&((XyzAnimatorState*)state)->unk4 = *(f32*)(state[7] + 0xc);
+    ((XyzAnimatorState*)state)->rowCount = 0;
     s16toFloat(state + 9, 0xe10);
     storeZeroToFloatParam(state + 8);
     return;
