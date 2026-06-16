@@ -1,4 +1,20 @@
-/* DLL 0x43 - camera path/climb control [80106F78-801070FC) */
+/*
+ * DLL 0x43 - climb/path camera control.
+ *
+ * Drives the camera while the player climbs along a B-spline path:
+ *   camclimb_update      - per-frame: transforms the path points into the
+ *                          camera parent's local frame, samples the path
+ *                          state, tracks yaw toward the target and triggers
+ *                          a fallback to camera mode 0x42 on reset.
+ *   CameraModeStaffAnim_init - builds the B-spline path (allocating the
+ *                          shared gCamcontrolPathState), choosing an active
+ *                          fast path or constructing curve points; plays a
+ *                          snort sfx on a large turn.
+ *   camcontrol_updatePathTargetAction - reads the pad and switches to
+ *                          camera mode 0x49 (follow) or 0x44 (action).
+ *
+ * All path geometry lives in the singleton gCamcontrolPathState.
+ */
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/camlockon.h"
@@ -15,14 +31,14 @@ extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 
 extern f32 timeDelta;
-extern f32 lbl_803E1740;
-extern f32 lbl_803E1758;
-extern f32 lbl_803E175C;
 extern void memset(void* ptr, int value, int size);
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
+extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
+extern f32 lbl_803E1758;
+extern f32 lbl_803E175C;
 extern f32 lbl_803E1760;
 extern f32 lbl_803E1764;
 extern f32 lbl_803E1768;
@@ -34,7 +50,7 @@ extern f32 lbl_803E1778;
 #pragma dont_inline on
 void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 {
-    short sVar1;
+    short targetClassId;
     u16 buttons;
     GameObject* targetObj;
     struct
@@ -42,7 +58,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         f32 x;
         f32 z;
         s16 y;
-    } local_28;
+    } actionPayload;
 
     if (*(u32*)&target->pendingParentObj == 0)
     {
@@ -50,12 +66,12 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         targetObj = (GameObject*)camera->currentTarget;
         if (targetObj != NULL)
         {
-            sVar1 = targetObj->anim.classId;
-            if (sVar1 == 0x1c)
+            targetClassId = targetObj->anim.classId;
+            if (targetClassId == 0x1c)
             {
                 goto checkActiveTarget;
             }
-            if (sVar1 != 0x2a)
+            if (targetClassId != 0x2a)
             {
                 goto checkOverrideFlag;
             }
@@ -79,10 +95,10 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
             (objFn_802962b4((int)target) != 0))
         {
-            local_28.x = gCamcontrolPathState->actionParamX;
-            local_28.z = gCamcontrolPathState->actionParamZ;
-            local_28.y = (s16)gCamcontrolPathState->actionParamY;
-            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &local_28, 0, 0xff);
+            actionPayload.x = gCamcontrolPathState->actionParamX;
+            actionPayload.z = gCamcontrolPathState->actionParamZ;
+            actionPayload.y = (s16)gCamcontrolPathState->actionParamY;
+            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &actionPayload, 0, 0xff);
         }
     }
 done:
@@ -93,8 +109,7 @@ done:
 void camcontrol_releasePathState(void)
 {
     FUN_80017814(gCamcontrolPathState);
-    gCamcontrolPathState = 0;
-    return;
+    gCamcontrolPathState = NULL;
 }
 
 void CameraModeStaffAnim_copyToCurrent_nop(void)
@@ -104,21 +119,21 @@ void CameraModeStaffAnim_copyToCurrent_nop(void)
 #pragma dont_inline on
 void camclimb_update(CameraObject* cam)
 {
-    extern uint getAngle();
+    extern u32 getAngle();
     extern int camcontrol_samplePathState();
-    byte needsReset;
-    uint angle;
+    u8 needsReset;
+    u32 angle;
     int defaultHandler;
     int yawDelta;
     GameObject* target;
     int pointIndex;
-    float localPosZ[4];
-    float localPosY;
-    float localPosX;
-    float relX;
-    undefined relY[4];
-    float relZ;
-    float relDistXZ;
+    f32 localPosZ[4];
+    f32 localPosY;
+    f32 localPosX;
+    f32 relX;
+    f32 relY;
+    f32 relZ;
+    f32 relDistXZ;
 
     if (gCamcontrolPathState->active != 0)
     {
@@ -128,14 +143,14 @@ void camclimb_update(CameraObject* cam)
     {
         if ((u32)gCamcontrolPathState->localFrameObj != *(u32*)&cam->anim.parent)
         {
-            for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex = pointIndex + 1)
+            for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex++)
             {
                 Obj_TransformLocalPointToWorld(gCamcontrolPathState->pointsX[pointIndex],
                                                gCamcontrolPathState->pointsY[pointIndex], gCamcontrolPathState->pointsZ[pointIndex],
                                                &gCamcontrolPathState->pointsX[pointIndex], &gCamcontrolPathState->pointsY[pointIndex],
                                                &gCamcontrolPathState->pointsZ[pointIndex], gCamcontrolPathState->localFrameObj);
             }
-            for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex = pointIndex + 1)
+            for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex++)
             {
                 Obj_TransformWorldPointToLocal(gCamcontrolPathState->pointsX[pointIndex],
                                                gCamcontrolPathState->pointsY[pointIndex], gCamcontrolPathState->pointsZ[pointIndex],
@@ -175,11 +190,10 @@ void camclimb_update(CameraObject* cam)
             needsReset = 1;
         }
         (*gCameraInterface)->getRelativePosition(lbl_803E1740, (int)cam, &relX,
-                                                 (f32*)relY, &relZ, &relDistXZ, 0);
+                                                 &relY, &relZ, &relDistXZ, 0);
         angle = getAngle((double)relX, (double)relZ);
         yawDelta = 0x8000 - (angle & 0xffff);
-        yawDelta = yawDelta - (uint)(u16)
-        cam->anim.rotX;
+        yawDelta = yawDelta - (u32)(u16)cam->anim.rotX;
         if (0x8000 < yawDelta)
         {
             yawDelta = yawDelta + -0xffff;
@@ -213,13 +227,13 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
 
 #pragma scheduling off
 #pragma peephole off
-void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* settings)
+void CameraModeStaffAnim_init(CameraObject* camera, int param_2, u8* settings)
 {
     extern int getAngle(f32 dx, f32 dz);
     GameObject* target;
     int view;
-    f32 cosFacing;
     f32 sinFacing;
+    f32 cosFacing;
     f32 relAngleRad;
     f32 relCos;
     f32 relSin;
@@ -256,8 +270,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* sett
     gCamcontrolPathState->active = 0;
     gCamcontrolPathState->localFrameObj = *(int*)&camera->anim.parent;
 
-    cosFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
-    sinFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
+    sinFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
+    cosFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
 
     if ((void*)gCamcontrolPathState->localFrameObj != NULL)
     {
@@ -302,10 +316,10 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* sett
         }
         pathRadius = sqrtf(pathRadius);
 
-        localPos[0] = (cosFacing * pathRadius) + target->anim.worldPosX;
+        localPos[0] = (sinFacing * pathRadius) + target->anim.worldPosX;
         localPos[1] = gCamcontrolPathState->actionParamZ +
             (target->anim.worldPosY + gCamcontrolPathState->actionParamY);
-        localPos[2] = (sinFacing * pathRadius) + target->anim.worldPosZ;
+        localPos[2] = (cosFacing * pathRadius) + target->anim.worldPosZ;
 
         if (settings[3] != 0)
         {
