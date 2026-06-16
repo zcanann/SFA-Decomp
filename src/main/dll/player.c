@@ -9758,13 +9758,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     ((GameObject*)p1)->anim.localPosY = b;
     ((GameObject*)p1)->anim.localPosZ = c;
     inner = *(int*)&((GameObject*)p1)->extra;
-    if (((PlayerState*)inner)->baddie.controlMode == 0x18 || (((GameObject*)p1)->objectFlags & 0x1000) != 0)
-    {
-        ((GameObject*)p1)->anim.rotY = *(s16*)((char*)p3 + 0x2);
-        ((GameObject*)p1)->anim.rotZ = *(s16*)((char*)p3 + 0x4);
-        *(s16*)((char*)p2 + 0x478) = *(s16*)((char*)p3 + 0x0);
-    }
-    else
+    if (((PlayerState*)inner)->baddie.controlMode != 0x18 && (((GameObject*)p1)->objectFlags & 0x1000) == 0)
     {
         flag = 1;
         (*(void (*)(int, int, int*))(*(int*)((char*)*(int*)*(int*)((char*)p3 + 0x68) + 0x54)))(
@@ -9800,6 +9794,12 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
             ((GameObject*)p1)->anim.rotY = *(s16*)((char*)p3 + 0x2);
             ((GameObject*)p1)->anim.rotZ = *(s16*)((char*)p3 + 0x4);
         }
+    }
+    else
+    {
+        ((GameObject*)p1)->anim.rotY = *(s16*)((char*)p3 + 0x2);
+        ((GameObject*)p1)->anim.rotZ = *(s16*)((char*)p3 + 0x4);
+        *(s16*)((char*)p2 + 0x478) = *(s16*)((char*)p3 + 0x0);
     }
     *(s16*)((char*)p2 + 0x484) = *(s16*)((char*)p2 + 0x478);
     ((GameObject*)p1)->anim.rotX = *(s16*)((char*)p2 + 0x478);
