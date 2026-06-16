@@ -146,7 +146,7 @@ void SpiritDoorLock_update(int obj)
                     (f32)(int)
                 descriptor->scale *
                     lbl_803E4448;
-                if (state->light == 0)
+                if (state->light == 0u)
                 {
                     state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
                 }
