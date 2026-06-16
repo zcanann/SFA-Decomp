@@ -1461,7 +1461,7 @@ void saveGame_saveObjectPos(int* obj)
     register int v;
     register int i;
     if (((GameObject*)obj)->anim.flags & 0x2000) return;
-    if (saveGameLoadStatus == 0)
+    if ((int)saveGameLoadStatus == 0)
     {
         slot = gSaveGameData;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
@@ -1474,7 +1474,8 @@ void saveGame_saveObjectPos(int* obj)
         if (i == SAVEGAME_OBJECT_POSITION_COUNT) return;
         {
             register int objectId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-            register char* entry = (char*)gSaveGameData + i * sizeof(SaveGameObjectPosition);
+            register char* entry = (char*)gSaveGameData;
+            entry += i * sizeof(SaveGameObjectPosition);
             *(int*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET) = objectId;
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = ((GameObject*)obj)->anim.localPosY;
