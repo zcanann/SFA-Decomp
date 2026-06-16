@@ -10267,7 +10267,7 @@ int objAnimFn_80296328(int obj)
         return 0;
     }
     v = inner->baddie.controlMode;
-    if (v == 1 || v == 2 || v == 0x26)
+    if (v == 1 || (v = inner->baddie.controlMode) == 2 || v == 0x26)
     {
         return 1;
     }
