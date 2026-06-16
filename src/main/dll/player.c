@@ -1355,9 +1355,11 @@ int fn_8029A76C(int obj, int state, f32 fv)
     setBButtonIcon(0xa);
     if (lbl_803DE42C != 0)
     {
+        f32 t;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        inner->unk854 = inner->unk854 - timeDelta;
-        if (inner->unk854 <= lbl_803E7EA4)
+        t = inner->unk854 - timeDelta;
+        inner->unk854 = t;
+        if (t <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 1;
@@ -4936,9 +4938,11 @@ int fn_8029ABD8(int obj, int state, f32 fv)
 
     if (lbl_803DE42C != 0)
     {
+        f32 t;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        inner->unk854 = inner->unk854 - timeDelta;
-        if (inner->unk854 <= lbl_803E7EA4)
+        t = inner->unk854 - timeDelta;
+        inner->unk854 = t;
+        if (t <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 1;
