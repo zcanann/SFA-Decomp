@@ -65,7 +65,7 @@ typedef struct KTRexArenaState
 {
     int stack; /* allocModelStruct stack handle */
     f32 unk4;
-    f32 unk8;
+    f32 pathProgress; /* 0x08: per-phase fraction (0..1) along the current path segment */
     int unk0C;
     f32 laneAX[4]; /* 0x10: per-lane rom-curve points, one f32[4] per plane */
     f32 laneAY[4]; /* 0x20 */
@@ -85,16 +85,16 @@ typedef struct KTRexArenaState
     void* rowBX;
     void* rowBY;
     void* rowBZ;
-    f32 unkE8;
-    f32 unkEC;
-    f32 unkF0;
-    f32 unkF4;
+    f32 interpX; /* 0xe8: interpolated path position X */
+    f32 interpY; /* 0xec: interpolated path position Y */
+    f32 interpZ; /* 0xf0: interpolated path position Z */
+    f32 playerPathProgress; /* 0xf4: player's projected fraction along the current path segment */
     s16 homeYaw; /* 0xf8: spawn heading */
     u16 timerFA;
     u8 unkFC;
     u8 unkFD;
-    u8 unkFE;
-    u8 unkFF;
+    u8 laneMaskA; /* 0xfe: current phase's lane bitmask (laneA in shouldAdvanceArenaPhase) */
+    u8 laneMaskB; /* 0xff: gated active-lane bitmask (laneB in shouldAdvanceArenaPhase) */
     u8 laneMode; /* 0x100: 1/2 z-lanes, 4/8 x-lanes */
     u8 unk101;
     u8 unk102;
@@ -314,6 +314,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj)
 }
 #pragma dont_inline reset
 
+/* looks like a getter, not a scale */
 int ktrex_setScale(int obj)
 {
     void* p = ((GameObject*)obj)->extra;
@@ -465,10 +466,10 @@ int ktrex_updateArenaPathProgress(int obj)
     {
         speed = *(f32*)((char*)obj + 0x294);
     }
-    ((KTRexArenaState*)gKTRexState)->unk8 = speed * timeDelta + ((KTRexArenaState*)gKTRexState)->unk8;
-    if ((((KTRexArenaState*)gKTRexState)->unk8 > lbl_8032A540[((KTRexArenaState*)gKTRexState)->unkFC] && speed >
+    ((KTRexArenaState*)gKTRexState)->pathProgress = speed * timeDelta + ((KTRexArenaState*)gKTRexState)->pathProgress;
+    if ((((KTRexArenaState*)gKTRexState)->pathProgress > lbl_8032A540[((KTRexArenaState*)gKTRexState)->unkFC] && speed >
             lbl_803E67B8) ||
-        (((KTRexArenaState*)gKTRexState)->unk8<lbl_8032A534[((KTRexArenaState*)gKTRexState)->unkFC] && speed <
+        (((KTRexArenaState*)gKTRexState)->pathProgress<lbl_8032A534[((KTRexArenaState*)gKTRexState)->unkFC] && speed <
             lbl_803E67B8))
     {
         if (dir != 0)
@@ -489,23 +490,23 @@ int ktrex_updateArenaPathProgress(int obj)
         }
         ((KTRexArenaState*)gKTRexState)->timerFA = ((KTRexArenaState*)gKTRexState)->timerFA & ~6;
         ((KTRexArenaState*)gKTRexState)->timerFA = ((KTRexArenaState*)gKTRexState)->timerFA | (phase << 1);
-        if (((KTRexArenaState*)gKTRexState)->unk8 > lbl_8032A540[((KTRexArenaState*)gKTRexState)->unkFC])
+        if (((KTRexArenaState*)gKTRexState)->pathProgress > lbl_8032A540[((KTRexArenaState*)gKTRexState)->unkFC])
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 = lbl_8032A540[((KTRexArenaState*)gKTRexState)->unkFC];
+            ((KTRexArenaState*)gKTRexState)->pathProgress = lbl_8032A540[((KTRexArenaState*)gKTRexState)->unkFC];
         }
-        else if (((KTRexArenaState*)gKTRexState)->unk8<lbl_8032A534[((KTRexArenaState*)gKTRexState)->unkFC])
+        else if (((KTRexArenaState*)gKTRexState)->pathProgress<lbl_8032A534[((KTRexArenaState*)gKTRexState)->unkFC])
         {
-            ((KTRexArenaState*)gKTRexState)->unk8 = lbl_8032A534[((KTRexArenaState*)gKTRexState)->unkFC];
+            ((KTRexArenaState*)gKTRexState)->pathProgress = lbl_8032A534[((KTRexArenaState*)gKTRexState)->unkFC];
         }
         changed = 1;
     }
-    ((KTRexArenaState*)gKTRexState)->unkE8 = ((KTRexArenaState*)gKTRexState)->unk8 * (((f32*)*(int*)&((KTRexArenaState*)
+    ((KTRexArenaState*)gKTRexState)->interpX = ((KTRexArenaState*)gKTRexState)->pathProgress * (((f32*)*(int*)&((KTRexArenaState*)
         gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) + ((f32*)*(int*)&((
         KTRexArenaState*)gKTRexState)->rowAX)[phase];
-    ((KTRexArenaState*)gKTRexState)->unkEC = ((KTRexArenaState*)gKTRexState)->unk8 * (((f32*)*(int*)&((KTRexArenaState*)
+    ((KTRexArenaState*)gKTRexState)->interpY = ((KTRexArenaState*)gKTRexState)->pathProgress * (((f32*)*(int*)&((KTRexArenaState*)
         gKTRexState)->rowBY)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAY)[phase]) + ((f32*)*(int*)&((
         KTRexArenaState*)gKTRexState)->rowAY)[phase];
-    ((KTRexArenaState*)gKTRexState)->unkF0 = ((KTRexArenaState*)gKTRexState)->unk8 * (((f32*)*(int*)&((KTRexArenaState*)
+    ((KTRexArenaState*)gKTRexState)->interpZ = ((KTRexArenaState*)gKTRexState)->pathProgress * (((f32*)*(int*)&((KTRexArenaState*)
         gKTRexState)->rowBZ)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) + ((f32*)*(int*)&((
         KTRexArenaState*)gKTRexState)->rowAZ)[phase];
     return changed;
@@ -623,7 +624,7 @@ void ktrex_update(int obj)
         }
         bitA++;
     }
-    ((KTRexArenaState*)gKTRexState)->unkFF = maskA;
+    ((KTRexArenaState*)gKTRexState)->laneMaskB = maskA;
     player = ((KTRexRuntime*)runtime)->unk2D0;
     phase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
     dz = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)
@@ -632,19 +633,19 @@ void ktrex_update(int obj)
         ->rowAZ)[phase];
     if (__fabs(dz) > __fabs(dx))
     {
-        ((KTRexArenaState*)gKTRexState)->unkF4 =
+        ((KTRexArenaState*)gKTRexState)->playerPathProgress =
             (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
             dz;
     }
     else
     {
-        ((KTRexArenaState*)gKTRexState)->unkF4 =
+        ((KTRexArenaState*)gKTRexState)->playerPathProgress =
             (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
             dx;
     }
     tmp = lbl_803E67B0;
-    ((KTRexArenaState*)gKTRexState)->unkFE = ((u8*)&tmp)[(((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3];
-    flags = ((KTRexArenaState*)gKTRexState)->unkFE;
+    ((KTRexArenaState*)gKTRexState)->laneMaskA = ((u8*)&tmp)[(((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3];
+    flags = ((KTRexArenaState*)gKTRexState)->laneMaskA;
     maskB = 0;
     bitB = lbl_803DC298;
     for (i = 0; i < 4; i++)
@@ -665,7 +666,7 @@ void ktrex_update(int obj)
     ObjHits_SetHitVolumeMasks(obj, 24, 2, 0x1fffff);
     (*(void (**)(int, void*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
-    ((GameObject*)obj)->anim.localPosY = ((KTRexArenaState*)gKTRexState)->unkEC;
+    ((GameObject*)obj)->anim.localPosY = ((KTRexArenaState*)gKTRexState)->interpY;
 }
 #pragma fp_contract reset
 
@@ -848,11 +849,11 @@ int ktrex_stateHandlerB01(int obj, int runtime)
         ((KTRexRuntime*)gKTRexRuntime)->handlerState &= ~1;
         *(int*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= maskI;
     }
-    dx = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->unkE8 - ((GameObject*)obj)->anim.localPosX);
-    dz = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->unkF0 - ((GameObject*)obj)->anim.localPosZ);
+    dx = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->interpX - ((GameObject*)obj)->anim.localPosX);
+    dz = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->interpZ - ((GameObject*)obj)->anim.localPosZ);
     ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj, &((KTRexRuntime*)runtime)->unk2A0);
-    ((GameObject*)obj)->anim.localPosX = ((KTRexArenaState*)gKTRexState)->unkE8;
-    ((GameObject*)obj)->anim.localPosZ = ((KTRexArenaState*)gKTRexState)->unkF0;
+    ((GameObject*)obj)->anim.localPosX = ((KTRexArenaState*)gKTRexState)->interpX;
+    ((GameObject*)obj)->anim.localPosZ = ((KTRexArenaState*)gKTRexState)->interpZ;
     return 0;
 }
 
@@ -1338,8 +1339,8 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     bit = flags & 1;
     phase = ((KTRexArenaState*)gKTRexState)->unk101;
     if (((KTRexArenaState*)gKTRexState)->unkFC == 0 && phase >= 2 && (flags & 0x20) == 0 &&
-        ((bit == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67E8) ||
-            (bit != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
+        ((bit == 0 && ((KTRexArenaState*)gKTRexState)->pathProgress >= lbl_803E67E8) ||
+            (bit != 0 && ((KTRexArenaState*)gKTRexState)->pathProgress <= lbl_803E67C0)))
     {
         idx = phase >> 1;
         if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x56])
@@ -1357,22 +1358,22 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x52])
         {
             u8 cond;
-            u8 fe = ((KTRexArenaState*)gKTRexState)->unkFE;
+            u8 fe = ((KTRexArenaState*)gKTRexState)->laneMaskA;
             if (fe == 1)
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 2;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 2;
             }
             else if (fe == 2)
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 1;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 1;
             }
             else if (fe == 4)
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 8;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 8;
             }
             else
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 4;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 4;
             }
             if (cond && (((KTRexArenaState*)gKTRexState)->timerFA & 0x40) == 0)
             {
@@ -1388,15 +1389,15 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         }
         ((KTRexArenaState*)gKTRexState)->timerFA |= 0x20;
     }
-    if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
+    if ((((KTRexArenaState*)gKTRexState)->laneMaskA & ((KTRexArenaState*)gKTRexState)->laneMaskB) != 0)
     {
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x40;
-        if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
+        if ((((KTRexArenaState*)gKTRexState)->laneMaskA & ((KTRexArenaState*)gKTRexState)->laneMaskB) != 0)
         {
             u8 result;
             if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
             {
-                if (((KTRexArenaState*)gKTRexState)->unk8 - ((KTRexArenaState*)gKTRexState)->unkF4 > lbl_803E67B4)
+                if (((KTRexArenaState*)gKTRexState)->pathProgress - ((KTRexArenaState*)gKTRexState)->playerPathProgress > lbl_803E67B4)
                 {
                     result = 1;
                     goto haveResult;
@@ -1404,7 +1405,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             }
             else
             {
-                if (((KTRexArenaState*)gKTRexState)->unkF4 - ((KTRexArenaState*)gKTRexState)->unk8 > lbl_803E67B4)
+                if (((KTRexArenaState*)gKTRexState)->playerPathProgress - ((KTRexArenaState*)gKTRexState)->pathProgress > lbl_803E67B4)
                 {
                     result = 1;
                     goto haveResult;
@@ -1459,7 +1460,7 @@ int ktrex_stateHandlerA03(int obj, int runtime)
                   ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
                 f4;
         }
-        ((KTRexArenaState*)gKTRexState)->unk8 = f4;
+        ((KTRexArenaState*)gKTRexState)->pathProgress = f4;
         popped = 0;
         if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
         {
@@ -1651,12 +1652,12 @@ int ktrex_stateHandlerA11(int obj, int runtime)
         ->rowAZ)[phase];
     if (__fabs(f5) > __fabs(f4))
     {
-        ((KTRexArenaState*)gKTRexState)->unk8 =
+        ((KTRexArenaState*)gKTRexState)->pathProgress =
             (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) / f5;
     }
     else
     {
-        ((KTRexArenaState*)gKTRexState)->unk8 =
+        ((KTRexArenaState*)gKTRexState)->pathProgress =
             (((GameObject*)obj)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) / f4;
     }
     ((KTRexArenaState*)gKTRexState)->timerFA |= 0x40;
@@ -1728,8 +1729,8 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     }
     if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8 &&
         ((KTRexArenaState*)gKTRexState)->unk0C == phase &&
-        ((laneBit == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67D0) ||
-            (laneBit != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67D4)))
+        ((laneBit == 0 && ((KTRexArenaState*)gKTRexState)->pathProgress >= lbl_803E67D0) ||
+            (laneBit != 0 && ((KTRexArenaState*)gKTRexState)->pathProgress <= lbl_803E67D4)))
     {
         if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
         {
@@ -1739,22 +1740,22 @@ int ktrex_stateHandlerA10(int obj, int runtime)
             GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->unk101);
             ((KTRexArenaState*)gKTRexState)->unkFD = 0;
             ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x8;
-            fe = ((KTRexArenaState*)gKTRexState)->unkFE;
+            fe = ((KTRexArenaState*)gKTRexState)->laneMaskA;
             if (fe == 1)
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 2;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 2;
             }
             else if (fe == 2)
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 1;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 1;
             }
             else if (fe == 4)
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 8;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 8;
             }
             else
             {
-                cond = ((KTRexArenaState*)gKTRexState)->unkFF == 4;
+                cond = ((KTRexArenaState*)gKTRexState)->laneMaskB == 4;
             }
             if (cond && (((KTRexArenaState*)gKTRexState)->timerFA & 0x40) == 0)
             {
