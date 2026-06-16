@@ -1497,7 +1497,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setObjGroupStatus(
-                        (int)((GameObject*)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]), 1);
+                        (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 1);
                     break;
                 case 0x27:
                     id = (u16)((p[2] << 8) | p[3]);
@@ -1530,7 +1530,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x14:
                     (*gMapEventInterface)->setObjGroupStatus(
-                        (int)((GameObject*)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]), 0);
+                        (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 0);
                     break;
                 case 0x22:
                     id = (u16)((p[2] << 8) | p[3]);
@@ -1563,7 +1563,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x18:
                     (*gMapEventInterface)->setMapAct(
-                        (int)((GameObject*)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]));
+                        (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3]);
                     break;
                 case 0x1a:
                     (*gMapEventInterface)->setObjGroupStatus(p[3], p[2], 1);
