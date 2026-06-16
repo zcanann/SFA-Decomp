@@ -1,3 +1,25 @@
+/*
+ * earthwalker (DLL 0x28A) - the large EarthWalker dinosaur NPC as it
+ * appears in the Walled City (WC). Its per-instance record lives at
+ * ewObj->state (obj+0xB8; getExtraSize 0x660) and is viewed through both
+ * EarthWalkerState (the baddie record in dll_80220608_shared.h) and
+ * EarthwalkerState (the route/AI record in earthwalker_state.h);
+ * render/update/hitDetect forward into the shared dll_2E_* character
+ * helpers.
+ *
+ * Behavior is keyed on ewState->encounterType (read from the placement
+ * setup byte at +0x19). update() runs a hit-reaction pass, picks an idle
+ * vs. interaction animation move (0x203 / 2), runs eye anims, then a
+ * two-step interactionState handshake: on player contact it disables the
+ * A-button, sets game bit 0x7fb and, from interactionState 2, selects a
+ * trigger-sequence number from a large encounterType-by-game-bit table
+ * (gMapEventInterface map-act 2 plus quest bits 0xc90/0xc36/0xc55/0x7fc/
+ * 0x235/0x9ad/0xc92) and runs it via gObjectTriggerInterface, remembering
+ * it in lastTriggeredState. The fn_8022xxxx AI-move callbacks (gated on
+ * "move just started") steer the dino along a RomCurve route toward/away
+ * from the player. Exact game-bit meanings and several encounter
+ * sub-states are inferred from use, not confirmed.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
