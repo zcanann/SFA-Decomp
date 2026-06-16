@@ -15822,10 +15822,12 @@ void fn_802AE650(int obj, int state, int p3)
 {
     f32 v;
     u32 b;
+    f32 hi;
 
     (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, 1, timeDelta);
+    hi = lbl_803E7EE0;
     if (((GameObject*)obj)->anim.currentMoveProgress >=
-        lbl_803E7EE0 - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
+        hi - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
     {
         ((PlayerState*)p3)->baddie.animSpeedA =
             *(f32*)((char*)state + 0x844) *
@@ -15836,15 +15838,8 @@ void fn_802AE650(int obj, int state, int p3)
         *(f32*)((char*)state + 0x844) =
             lbl_803E7EFC * timeDelta + *(f32*)((char*)state + 0x844);
         v = *(f32*)((char*)state + 0x844);
-        if (v < lbl_803E7EA4)
-        {
-            v = lbl_803E7EA4;
-        }
-        else if (v > lbl_803E7EE0)
-        {
-            v = lbl_803E7EE0;
-        }
-        *(f32*)((char*)state + 0x844) = v;
+        *(f32*)((char*)state + 0x844) =
+            (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > hi) ? hi : v);
     }
     if ((*(int*)&((PlayerState*)p3)->baddie.eventFlags & 0x200) != 0)
     {
