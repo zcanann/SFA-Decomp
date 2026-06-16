@@ -4725,11 +4725,11 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
             i++;
         }
         segment = i - 1;
-        segmentT = ((f32)segment +
-                (t - *(f32*)((u8*)state + (segment << 2) + 8)) /
-                    (*(f32*)((u8*)state + (segment << 2) + 12) -
-                        *(f32*)((u8*)state + (segment << 2) + 8))) *
-            lbl_803DF01C;
+        segmentT = (f32)segment +
+            (t - *(f32*)((u8*)state + (segment << 2) + 8)) /
+                (*(f32*)((u8*)state + (segment << 2) + 12) -
+                    *(f32*)((u8*)state + (segment << 2) + 8));
+        segmentT = segmentT * lbl_803DF01C;
 
         fromScale = ROM_CURVE_NODE_SCALE(from);
         toScale = ROM_CURVE_NODE_SCALE(to);
