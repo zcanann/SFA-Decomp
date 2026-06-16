@@ -1,19 +1,6 @@
-/*
- * DLL 0xE1 - wisp baddie (object type id 0x9).
- *
- * A floating wisp that follows a ROM curve path with a sine-wave bob,
- * switching to a direct player-chase when its trigger distance is met
- * (flags bit 2) and falling back to the curve when it drifts too far
- * (flags bit 4). Velocity is clamped per-axis and integrated by objMove.
- * Hits grow a hit-volume envelope before the object is enabled; particle
- * effects 0x337/0x338 and several object sfx are driven each update.
- *
- * This TU also owns the hagabon and swarmbaddie ObjectDescriptors; those
- * objects' update/init/etc. callbacks live in sibling TUs and are only
- * referenced here. The fn_8014FFB4 / fn_8015039C / fn_801504BC helpers
- * are the shared baddie animation-event sequencer and sfx dispatch.
- */
+/* DLL 0xE1 - wisp baddie / swarmbaddie / hagabon objects [8014F620-8014F9E8) */
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/swarmbaddiestate_struct.h"
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
@@ -21,16 +8,22 @@
 #include "main/game_object.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
 
-extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_DisableObject(u32 obj);
-extern void ObjHits_EnableObject(u32 obj);
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern undefined8 ObjGroup_RemoveObject();
+
+extern f32 lbl_803DC074;
 
 void hagabon_release(void);
+
 void hagabon_initialise(void);
+
 void swarmbaddie_hitDetect(void);
+
 void swarmbaddie_release(void);
+
 void swarmbaddie_initialise(void);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -41,7 +34,7 @@ extern f32 lbl_803E26D8;
 extern f32 lbl_803E26DC;
 extern f32 lbl_803E26E0;
 extern f32 lbl_803E26E4;
-extern const f32 lbl_803E26E8;
+extern f32 lbl_803E26E8;
 extern f32 lbl_803E26EC;
 extern f32 lbl_803E26F0;
 extern f32 lbl_803E26F4;
@@ -60,11 +53,28 @@ extern f32 mathSinf(f32 x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
+extern void* mmAlloc(int size, int tag, int flags);
+extern void* memset(void* dst, int value, uint size);
 extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_800305c4();
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void doRumble(f32 duration);
 extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
+extern undefined4 FUN_8014d3d0();
+extern undefined4 FUN_8014d4c8();
+extern undefined4 FUN_80151844();
 extern void fn_801513AC(int obj, int state);
+extern undefined8 FUN_80286840();
+extern undefined4 FUN_8028688c();
+extern undefined4 DAT_8031e980;
+extern undefined4 DAT_8031feac;
+extern undefined4 DAT_8031fead;
+extern f32 lbl_803E33D8;
+extern f32 lbl_803E33DC;
+extern f32 lbl_803E33E0;
+extern f32 lbl_803E33E4;
+extern f32 lbl_803E33E8;
+extern f32 lbl_803E33EC;
 extern f32 lbl_803E2708;
 extern f32 lbl_803E270C;
 extern f32 lbl_803E2710;
@@ -80,6 +90,7 @@ extern f32 lbl_803E2750;
 extern f32 lbl_803E2754;
 extern f32 lbl_803E2760;
 extern f32 lbl_803E2764;
+extern void* PTR_DAT_8031fdc4;
 extern void wispbaddie_init(int obj, int setup, int initialised);
 extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
 extern f32 lbl_803E2728;
@@ -88,17 +99,8 @@ extern f32 lbl_803E2730;
 extern f32 lbl_803E2734;
 extern f32 lbl_803E2738;
 extern f32 lbl_803E273C;
-typedef struct WispEntry { char pad[4]; u8* ptr; char pad2[0x28 - 8]; } WispEntry;
-extern WispEntry lbl_8031F16C[];
+extern char lbl_8031F16C[];
 extern u8 lbl_8031DD30[];
-
-/* WispBaddieState.flags */
-#define WISP_FLAG_CURVE_RESTART 1 /* re-init the curve walker on next path tick */
-#define WISP_FLAG_CHASE 2         /* chase the player directly */
-#define WISP_FLAG_RETURN 4        /* drifting back toward the curve */
-
-#define WISP_PARTICLE_CHASE 0x338
-#define WISP_PARTICLE_IDLE 0x337
 
 void wispbaddie_hitDetect(void)
 {
@@ -137,6 +139,8 @@ int wispbaddie_getObjectTypeId(void) { return 0x9; }
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
+void fn_8014EE8C(int obj, SwarmBaddieState* state);
+
 void fn_8014F620(int obj, WispBaddieState* state)
 {
     RomCurveWalker* curve;
@@ -155,11 +159,11 @@ void fn_8014F620(int obj, WispBaddieState* state)
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E26E4,
                                           &lbl_803DBC80, -1) != 0))
     {
-        state->flags = state->flags & ~WISP_FLAG_CURVE_RESTART;
+        state->flags = state->flags & ~1;
     }
     lbl_803DDA68 = curve->atSegmentEnd;
 
-    if ((state->flags & WISP_FLAG_CHASE) != 0)
+    if ((state->flags & 2) != 0)
     {
         ((GameObject*)obj)->anim.velocityX =
             lbl_803E26E8 * (state->playerObj->anim.localPosX - ((GameObject*)obj)->anim.localPosX) +
@@ -176,17 +180,17 @@ void fn_8014F620(int obj, WispBaddieState* state)
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX =
-            lbl_803E26E8 * (curve->posX - ((GameObject*)obj)->anim.localPosX) +
+        ((GameObject*)obj)->anim.velocityX = lbl_803E26E8 * (*(f32*)((char*)curve + 0x68) - ((GameObject*)obj)->anim.localPosX)
+            +
             ((GameObject*)obj)->anim.velocityX;
 
         wave = mathSinf((lbl_803E26DC * (f32)state->hoverWavePhase) / lbl_803E26E0);
         ((GameObject*)obj)->anim.velocityY =
-            ((lbl_803E26F0 * wave + curve->posY) - ((GameObject*)obj)->anim.localPosY) *
+            ((lbl_803E26F0 * wave + *(f32*)((char*)curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY) *
             lbl_803E26E8 +
             ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ =
-            lbl_803E26E8 * (curve->posZ - ((GameObject*)obj)->anim.localPosZ) +
+        ((GameObject*)obj)->anim.velocityZ = lbl_803E26E8 * (*(f32*)((char*)curve + 0x70) - ((GameObject*)obj)->anim.localPosZ)
+            +
             ((GameObject*)obj)->anim.velocityZ;
     }
 
@@ -261,6 +265,11 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     swarmbaddie_getExtraSize,
 };
 
+/* segment pragma-stack balance (re-split): */
+
+#define SEQOBJ_ANIM_BLEND_ACTIVE_FLAG 0x40
+#define SEQOBJ_ANIM_EVENT_HOLD_FLAG 0x40000000
+
 void wispbaddie_update(int obj)
 {
     WispBaddieState* state;
@@ -272,10 +281,10 @@ void wispbaddie_update(int obj)
     f32 dz;
     f32 hitX;
     f32 hitY;
-    f32 delta[3];
+    f32 d[3];
     int particleParam;
     u8 f;
-    void* deltaAlias = (void*)delta; /* keeps delta[] stack-resident (load-bearing) */
+    void* dAlias = (void*)d;
 
     state = ((GameObject*)obj)->extra;
     curve = state->curve;
@@ -284,10 +293,10 @@ void wispbaddie_update(int obj)
     {
         state->hitRadius = lbl_803E2708;
         f = state->flags;
-        if ((f & WISP_FLAG_CHASE) != 0)
+        if ((f & 2) != 0)
         {
-            state->flags = (u8)(f & ~WISP_FLAG_CHASE);
-            state->flags = (u8)(state->flags | WISP_FLAG_RETURN);
+            state->flags = (u8)(f & ~2);
+            state->flags = (u8)(state->flags | 4);
         }
         Sfx_PlayAtPositionFromObject(obj, hitZ, dy, dz, 0x23c);
     }
@@ -323,26 +332,26 @@ void wispbaddie_update(int obj)
     state->playerObj = Obj_GetPlayerObject();
     if (state->playerObj != NULL)
     {
-        delta[0] = state->playerObj->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        delta[1] = state->playerObj->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        delta[2] = state->playerObj->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        state->playerDistance = sqrtf(delta[2] * delta[2] + (delta[0] * delta[0] + delta[1] * delta[1]));
+        d[0] = state->playerObj->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = state->playerObj->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = state->playerObj->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        state->playerDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
     if (curve != 0)
     {
-        delta[0] = curve->posX - ((GameObject*)obj)->anim.worldPosX;
-        delta[1] = curve->posY - ((GameObject*)obj)->anim.worldPosY;
-        delta[2] = curve->posZ - ((GameObject*)obj)->anim.worldPosZ;
-        state->curveDistance = sqrtf(delta[2] * delta[2] + (delta[0] * delta[0] + delta[1] * delta[1]));
+        d[0] = *(f32*)((u8*)curve + 0x68) - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = *(f32*)((u8*)curve + 0x6c) - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = *(f32*)((u8*)curve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        state->curveDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
 
     f = state->flags;
-    if ((f & WISP_FLAG_CHASE) != 0)
+    if ((f & 2) != 0)
     {
         if (state->curveDistance > lbl_803E2710)
         {
-            state->flags = (u8)(f & ~WISP_FLAG_CHASE);
-            state->flags = (u8)(state->flags | WISP_FLAG_RETURN);
+            state->flags = (u8)(f & ~2);
+            state->flags = (u8)(state->flags | 4);
         }
         state->cryTimer -= timeDelta;
         if (state->cryTimer < lbl_803E2714)
@@ -350,25 +359,25 @@ void wispbaddie_update(int obj)
             Sfx_PlayFromObject(obj, 0x23d);
             state->cryTimer = (f32)(int)randomGetRange(0x3c, 0x78);
         }
-        state->particleId = WISP_PARTICLE_CHASE;
+        state->particleId = 0x338;
     }
     f = state->flags;
-    if ((f & WISP_FLAG_RETURN) != 0)
+    if ((f & 4) != 0)
     {
         if (state->curveDistance < lbl_803E2718)
         {
-            state->flags = (u8)(f & ~WISP_FLAG_RETURN);
+            state->flags = (u8)(f & ~4);
         }
-        state->particleId = WISP_PARTICLE_IDLE;
+        state->particleId = 0x337;
     }
-    if ((state->flags & (WISP_FLAG_CHASE | WISP_FLAG_RETURN)) == 0)
+    if ((state->flags & 6) == 0)
     {
         if ((state->hitRadius >= state->maxHitRadius) && (state->playerObj != 0) &&
             (state->playerDistance < state->triggerDistance))
         {
-            state->flags = (u8)(state->flags | WISP_FLAG_CHASE);
+            state->flags = (u8)(state->flags | 2);
         }
-        state->particleId = WISP_PARTICLE_IDLE;
+        state->particleId = 0x337;
     }
     fn_8014F620(obj, state);
 }
@@ -383,7 +392,7 @@ void wispbaddie_init(int obj, int setup, int initialised)
     state->maxHitRadius = value;
     state->hitRadius = value;
     state->triggerDistance = lbl_803E2720 * (f32) * (s8*)(setup + 0x19);
-    state->particleId = WISP_PARTICLE_IDLE;
+    state->particleId = 0x337;
 
     if (initialised == 0)
     {
@@ -395,13 +404,168 @@ void wispbaddie_init(int obj, int setup, int initialised)
         if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->triggerDistance,
                                              &lbl_803DBC80, -1) == 0)
         {
-            state->flags = (u8)(state->flags | WISP_FLAG_CURVE_RESTART);
+            state->flags = (u8)(state->flags | 1);
         }
         Sfx_PlayFromObject(obj, 0x23b);
     }
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
+void FUN_8014fef8(undefined4 param_1, int param_2, undefined4 param_3, int param_4)
+{
+    if (param_4 == 0x10)
+    {
+        *(uint*)(param_2 + 0x2e8) = *(uint*)(param_2 + 0x2e8) | 0x20;
+        return;
+    }
+    *(uint*)(param_2 + 0x2e8) = *(uint*)(param_2 + 0x2e8) | 8;
+    return;
+}
+
+void FUN_8014ff20(void)
+{
+    return;
+}
+
+#pragma scheduling on
+#pragma peephole on
+void FUN_8014ff24(short* param_1, undefined4 param_2)
+{
+    FUN_8014d3d0(param_1, param_2, 0xf, 0);
+    return;
+}
+
+void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  undefined4 param_9, undefined4 param_10, uint param_11, undefined4 param_12,
+                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
+{
+    byte bVar1;
+    float fVar2;
+    float fVar3;
+    int iVar4;
+    short* psVar5;
+    uint uVar6;
+    int iVar7;
+    undefined* puVar8;
+    float* pfVar9;
+    double dVar10;
+    double dVar11;
+    undefined8 uVar12;
+
+    uVar12 = FUN_80286840();
+    fVar3 = lbl_803E33D8;
+    psVar5 = (short*)((ulonglong)uVar12 >> 0x20);
+    iVar7 = (int)uVar12;
+    puVar8 = (&PTR_DAT_8031fdc4)[(uint) * (byte*)(iVar7 + 0x33b) * 10];
+    if (((*(uint*)(iVar7 + 0x2dc) & 0x4000) != 0) ||
+        ((dVar10 = (double)*(float*)(iVar7 + 0x328), dVar10 != (double)lbl_803E33D8 &&
+            (*(short*)(iVar7 + 0x338) != 0))))
+        goto LAB_80150818;
+    bVar1 = *(byte*)(iVar7 + 0x2f1);
+    uVar6 = bVar1 & 0x1f;
+    if ((bVar1 & 0x10) != 0)
+    {
+        uVar6 = bVar1 & 0x17;
+    }
+    if (0x18 < uVar6)
+    {
+        uVar6 = 0;
+    }
+    fVar2 = lbl_803E33E0;
+    if ((bVar1 & 0x20) != 0)
+    {
+        uVar6 = 0;
+        fVar2 = lbl_803E33DC;
+    }
+    dVar11 = (double)fVar2;
+    if (((param_11 & 0xff) != 0) &&
+        ((((bVar1 != 0 ||
+                (dVar10 = (double)*(float*)(iVar7 + 0x324), dVar10 != (double)lbl_803E33D8)) &&
+            ((*(uint*)(iVar7 + 0x2dc) & 0x40) == 0)) && ((bVar1 & 0x20) == 0))))
+    {
+        param_2 = (double)*(float*)(iVar7 + 0x324);
+        dVar10 = (double)lbl_803E33D8;
+        if (param_2 == dVar10)
+        {
+            iVar4 = (uint) * (byte*)(iVar7 + 0x33b) * 2;
+            uVar6 = randomGetRange((uint)(byte)(&DAT_8031feac)[iVar4], (uint)(byte)(&DAT_8031fead)[iVar4]);
+            *(float*)(iVar7 + 0x324) =
+                *(float*)(iVar7 + 0x334) +
+                (f32)(s32)(uVar6);
+            *(float*)(iVar7 + 0x334) = lbl_803E33D8;
+            goto LAB_80150818;
+        }
+        *(float*)(iVar7 + 0x324) = (float)(param_2 - (double)lbl_803DC074);
+        if (dVar10 < (double)*(float*)(iVar7 + 0x324)) goto LAB_80150818;
+        *(float*)(iVar7 + 0x324) = fVar3;
+    }
+    if ((((((param_11 & 0xff) == 0) || (*(char*)(iVar7 + 0x2f1) == '\0')) ||
+            (puVar8[uVar6 * 0xc + 8] == '\0')) && ((*(byte*)(iVar7 + 0x2f1) & 0x20) == 0)) ||
+        ((*(byte*)(iVar7 + 0x33c) == uVar6 &&
+            (dVar10 = (double)lbl_803E33D8, dVar10 != (double)*(float*)(iVar7 + 0x32c)))))
+    {
+        if (*(float*)(iVar7 + 0x32c) != lbl_803E33D8)
+        {
+            dVar10 = (double)*(float*)(*(int*)(iVar7 + 0x29c) + 0x14);
+            FUN_8014d3d0(psVar5, iVar7, 0xf, 0);
+            if (lbl_803E33E8 < *(float*)(iVar7 + 0x308))
+            {
+                *(float*)(iVar7 + 0x308) = *(float*)(iVar7 + 0x308) - lbl_803E33EC;
+            }
+            if ((*(uint*)(iVar7 + 0x2dc) & 0x40000000) != 0)
+            {
+                iVar4 = (uint) * (byte*)(iVar7 + 0x33c) * 0xc;
+                FUN_8014d4c8((double)*(float*)(puVar8 + iVar4), dVar10, dVar11, param_4, param_5, param_6,
+                             param_7, param_8, (int)psVar5, iVar7, (uint)(byte)puVar8[iVar4 + 8], 0,
+                             *(uint*)(puVar8 + iVar4 + 4) & 0xff, param_14, param_15, param_16);
+                FUN_800305c4((double)*(float*)(&DAT_8031e980 +
+                                 (uint)(byte)puVar8[(uint) * (byte*)(iVar7 + 0x33c) * 0xc + 8]
+                             * 4), (int)psVar5
+                )
+                ;
+            }
+            *(float*)(iVar7 + 0x32c) = *(float*)(iVar7 + 0x32c) - lbl_803DC074;
+            if (*(float*)(iVar7 + 0x32c) <= lbl_803E33D8)
+            {
+                *(float*)(iVar7 + 0x32c) = lbl_803E33D8;
+                *(uint*)(iVar7 + 0x2dc) = *(uint*)(iVar7 + 0x2dc) & 0xffffffbf;
+                *(uint*)(iVar7 + 0x2dc) = *(uint*)(iVar7 + 0x2dc) | 0x40000000;
+                *(byte*)(iVar7 + 0x2f2) = *(byte*)(iVar7 + 0x2f2) & 0x7f;
+                *(undefined*)(iVar7 + 0x33c) = 0;
+            }
+        }
+    }
+    else if (((*(uint*)(iVar7 + 0x2dc) & 0x800080) == 0) && ((*(byte*)(iVar7 + 0x2f1) & 0x20) == 0))
+    {
+        if ((*(uint*)(iVar7 + 0x2dc) & 0x40000000) != 0)
+        {
+            FUN_80151844(dVar10, param_2, dVar11, param_4, param_5, param_6, param_7, param_8, psVar5, iVar7);
+        }
+    }
+    else
+    {
+        pfVar9 = (float*)(puVar8 + uVar6 * 0xc);
+        fVar3 = lbl_803E33E4 * (float)(dVar11 * (double)*pfVar9);
+        *(float*)(iVar7 + 0x330) = fVar3;
+        *(float*)(iVar7 + 0x32c) = fVar3;
+        *(uint*)(iVar7 + 0x2dc) = *(uint*)(iVar7 + 0x2dc) | 0x40;
+        *(byte*)(iVar7 + 0x2f2) = *(byte*)(iVar7 + 0x2f2) | 0x80;
+        *(undefined*)(iVar7 + 0x2f3) = 0;
+        *(undefined*)(iVar7 + 0x2f4) = 0;
+        FUN_8014d4c8((double)(float)(dVar11 * (double)*pfVar9), param_2, dVar11, param_4, param_5, param_6,
+                     param_7, param_8, (int)psVar5, iVar7, (uint) * (byte*)(pfVar9 + 2), 0,
+                     (uint)pfVar9[1] & 0xff, param_14, param_15, param_16);
+        FUN_800305c4((double)*(float*)(&DAT_8031e980 + (uint) * (byte*)(pfVar9 + 2) * 4), (int)psVar5);
+        *(char*)(iVar7 + 0x33c) = (char)uVar6;
+    }
+LAB_80150818:
+    FUN_8028688c();
+    return;
+}
+
+#pragma scheduling off
+#pragma peephole off
 void wispbaddie_release(void)
 {
 }
@@ -594,10 +758,9 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
             ((BaddieState*)state)->controlFlags =
-                ((BaddieState*)state)->controlFlags & ~0x40LL;
-            ((BaddieState*)state)->controlFlags =
-                ((BaddieState*)state)->controlFlags | 0x40000000LL;
-            *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & ~0x80;
+                (((BaddieState*)state)->controlFlags & ~SEQOBJ_ANIM_BLEND_ACTIVE_FLAG) |
+                SEQOBJ_ANIM_EVENT_HOLD_FLAG;
+            *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & 0x7f;
             *(u8*)(state + 0x33c) = 0;
             return 0;
         }
@@ -611,7 +774,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
 
 void fn_8015039C(int obj, int animState)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b); /* #57: f32* signature needed for codegen; global headers disagree */
+    extern f32 Vec_distance(f32 * a, f32 * b); /* #57 */
     GameObject* player;
     f32 distance;
     f32 rumbleFalloff;
@@ -656,7 +819,7 @@ void fn_8015039C(int obj, int animState)
 void fn_801504BC(int obj, int delta)
 {
     u8* inner = ((GameObject*)obj)->extra;
-    u8* ptr = lbl_8031F16C[inner[0x33b]].ptr;
+    u8* ptr = *(u8**)(lbl_8031F16C + inner[0x33b] * 0x28 + 4);
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
