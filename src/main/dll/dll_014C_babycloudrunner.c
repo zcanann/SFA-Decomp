@@ -714,6 +714,7 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
  * gets within the trigger radius and the runner is in state 3, fire its
  * burst (notify, bump the counter, set the gamebit); otherwise just play
  * the idle audio cue. */
+#pragma peephole off
 int babycloudrunner_func0B(void* p)
 {
     int* obj;
@@ -755,6 +756,7 @@ int babycloudrunner_func0B(void* p)
     Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
     return 0;
 }
+#pragma peephole reset
 void windlift_hitDetect(void);
 
 /* Per-object extra state for the CloudRunner main crystal
