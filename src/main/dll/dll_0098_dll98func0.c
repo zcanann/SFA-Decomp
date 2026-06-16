@@ -169,10 +169,10 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     {
         buf.pos[1] = lbl_803E133C;
     }
-    buf.pos[2] = lbl_803E1318;
-    buf.col[0] = lbl_803E1318;
-    buf.col[1] = lbl_803E1318;
-    buf.col[2] = lbl_803E1318;
+    buf.pos[2] = *(f32*)&lbl_803E1318;
+    buf.col[0] = *(f32*)&lbl_803E1318;
+    buf.col[1] = *(f32*)&lbl_803E1318;
+    buf.col[2] = *(f32*)&lbl_803E1318;
     buf.scale = lbl_803E1330;
     buf.v40 = 1;
     buf.v3c = 0;
