@@ -1,3 +1,22 @@
+/*
+ * wcpushblock (cloud-ride variant, Walled City) - a path-spawned rideable
+ * cloud/push block. WCPushBlock_SpawnFromPath only spawns while object
+ * loading is locked: it rotates a base vector by the path's yaw/pitch/roll
+ * (vecRotateZXY) to seed the block's velocity, allocates a 0x18-byte object
+ * setup (id WCPUSHBLOCK_SPAWN_OBJECT_ID, group 1) at path point 4, and arms
+ * a spawn idle timer and spawn sfx. WCPushBlock_UpdateCloudAction drives a
+ * rotor/cloud platform through gCloudActionInterface (setRotorAngle +
+ * moveRelative), easing a lift amount toward a push-roll-derived target and
+ * converting the rotor angle into a sin/cos planar move.
+ * WCPushBlock_UpdateRideTilt reads the rider's analog stick, integrates
+ * pitch/roll toward scaled targets with wrap-around and per-axis clamps
+ * (MAX_PITCH/MAX_ROLL), applies a damped yaw drift and advances the ride
+ * animation move.
+ *
+ * This is a distinct DLL from the tile-grid wcpushblock (DLL 0x290); it
+ * does not use the WCLevelContInterface controller protocol and keeps its
+ * own externs (their signatures differ from dll_80220608_shared.h).
+ */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 
@@ -192,8 +211,8 @@ void WCPushBlock_SpawnFromPath(s16* path)
 void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
 {
     f32 angle;
-    f32 angleSin;
-    f32 angleCos;
+    f32 rotorCos;
+    f32 rotorSin;
     f32 targetLift;
     f32 baseLift;
     f32 moveX;
@@ -205,9 +224,9 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
     (*gCloudActionInterface)->setRotorAngle(state->rotorAngle);
 
     angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
-    angleSin = mathCosf(angle);
+    rotorCos = mathCosf(angle);
     angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
-    angleCos = mathSinf(angle);
+    rotorSin = mathSinf(angle);
 
     if (state->linkedPushBlock != NULL)
     {
@@ -221,10 +240,10 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
     state->liftAmount += liftStep * lbl_803E5C90;
 
     baseLift = lbl_803E5C94;
-    moveX = baseLift * angleCos;
-    moveZ = baseLift * -angleSin;
-    moveX += angleSin * -state->liftAmount;
-    moveZ += angleCos * -state->liftAmount;
+    moveX = baseLift * rotorSin;
+    moveZ = baseLift * -rotorCos;
+    moveX += rotorCos * -state->liftAmount;
+    moveZ += rotorSin * -state->liftAmount;
 
     state->bankAmount = state->liftAmount;
     state->liftBase = baseLift;
