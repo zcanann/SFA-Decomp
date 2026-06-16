@@ -16,7 +16,6 @@
 
 extern int renderModeSetOrGet(int mode);
 extern void debugPrintf(char* message, ...);
-extern undefined8 FUN_80286830();
 
 extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern ExpgfxBounds gExpgfxPoolBounds[];
@@ -145,17 +144,6 @@ static inline f64 Expgfx_U16AsDouble(u16 value)
 
     bits = CONCAT44(0x43300000, (u32)value);
     return *(f64*)&bits - lbl_803DF378;
-}
-
-static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
-{
-    undefined8 rawSource;
-    ExpgfxCurrentSource currentSource;
-
-    rawSource = FUN_80286830();
-    currentSource.sourceId = (int)((ulonglong)rawSource >> 0x20);
-    currentSource.sourceMode = (int)rawSource;
-    return currentSource;
 }
 
 #pragma scheduling off
@@ -395,9 +383,7 @@ void expgfx_initSlotQuad(void* slotPtr)
     ExpgfxSlot* slot;
     ExpgfxTableEntry* entry;
     ExpgfxQuadVertex* quad;
-    ExpgfxQuadTemplateVertex *
-    template
-    ;
+    ExpgfxQuadTemplateVertex* tmpl;
     u32 resource;
     u32 behaviorFlags;
     s16 texS0;
@@ -417,15 +403,11 @@ void expgfx_initSlotQuad(void* slotPtr)
     behaviorFlags = slot->behaviorFlags;
     if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0)
     {
-        template
-        =
-        staticData->quadTemplateA;
+        tmpl = staticData->quadTemplateA;
     }
     else
     {
-        template
-        =
-        staticData->quadTemplateB;
+        tmpl = staticData->quadTemplateB;
     }
 
     if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
@@ -500,48 +482,24 @@ void expgfx_initSlotQuad(void* slotPtr)
     }
 
     quad = (ExpgfxQuadVertex*)slot;
-    quad[0].x =
-    template
-    [0].x;
-    quad[0].y =
-    template
-    [0].y;
-    quad[0].z =
-    template
-    [0].z;
+    quad[0].x = tmpl[0].x;
+    quad[0].y = tmpl[0].y;
+    quad[0].z = tmpl[0].z;
     quad[0].texS = texS0;
     quad[0].texT = texT0;
-    quad[1].x =
-    template
-    [1].x;
-    quad[1].y =
-    template
-    [1].y;
-    quad[1].z =
-    template
-    [1].z;
+    quad[1].x = tmpl[1].x;
+    quad[1].y = tmpl[1].y;
+    quad[1].z = tmpl[1].z;
     quad[1].texS = texS1;
     quad[1].texT = texT0;
-    quad[2].x =
-    template
-    [2].x;
-    quad[2].y =
-    template
-    [2].y;
-    quad[2].z =
-    template
-    [2].z;
+    quad[2].x = tmpl[2].x;
+    quad[2].y = tmpl[2].y;
+    quad[2].z = tmpl[2].z;
     quad[2].texS = texS1;
     quad[2].texT = texT1;
-    quad[3].x =
-    template
-    [3].x;
-    quad[3].y =
-    template
-    [3].y;
-    quad[3].z =
-    template
-    [3].z;
+    quad[3].x = tmpl[3].x;
+    quad[3].y = tmpl[3].y;
+    quad[3].z = tmpl[3].z;
     quad[3].texS = texS0;
     quad[3].texT = texT1;
 }
@@ -581,9 +539,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32* maxZPtr;
     s16 slotIdx;
     ExpgfxSlot* slot;
-    ExpgfxQuadTemplateVertex *
-    template
-    ;
+    ExpgfxQuadTemplateVertex* tmpl;
     s16 texT1;
     s16 texT0;
     s16 texS1;
@@ -829,15 +785,11 @@ foundFirst:
                 }
                 if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0)
                 {
-                    template
-                    =
-                    staticData->quadTemplateA;
+                    tmpl = staticData->quadTemplateA;
                 }
                 else
                 {
-                    template
-                    =
-                    staticData->quadTemplateB;
+                    tmpl = staticData->quadTemplateB;
                 }
                 if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
                     (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0)
@@ -1398,15 +1350,9 @@ foundFirst:
                         slot->sourceVecY = slot->sourceVecY + framesThisStep * (int)slot->sourcePosZ.value;
                         slot->sourceVecZ = slot->sourceVecZ + framesThisStep * (int)slot->sourcePosW.value;
                         rot.scale = lbl_803DF354;
-                        vecBuf[0] = (f32)
-                        template
-                        [0].x;
-                        vecBuf[1] = (f32)
-                        template
-                        [0].y;
-                        vecBuf[2] = (f32)
-                        template
-                        [0].z;
+                        vecBuf[0] = (f32) tmpl[0].x;
+                        vecBuf[1] = (f32) tmpl[0].y;
+                        vecBuf[2] = (f32) tmpl[0].z;
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
@@ -1420,15 +1366,9 @@ foundFirst:
                         quad[0].z = (int)vecBuf[2];
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        vecBuf[0] = (f32)
-                        template
-                        [1].x;
-                        vecBuf[1] = (f32)
-                        template
-                        [1].y;
-                        vecBuf[2] = (f32)
-                        template
-                        [1].z;
+                        vecBuf[0] = (f32) tmpl[1].x;
+                        vecBuf[1] = (f32) tmpl[1].y;
+                        vecBuf[2] = (f32) tmpl[1].z;
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
@@ -1442,15 +1382,9 @@ foundFirst:
                         quad[1].z = (int)vecBuf[2];
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        vecBuf[0] = (f32)
-                        template
-                        [2].x;
-                        vecBuf[1] = (f32)
-                        template
-                        [2].y;
-                        vecBuf[2] = (f32)
-                        template
-                        [2].z;
+                        vecBuf[0] = (f32) tmpl[2].x;
+                        vecBuf[1] = (f32) tmpl[2].y;
+                        vecBuf[2] = (f32) tmpl[2].z;
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
@@ -1464,15 +1398,9 @@ foundFirst:
                         quad[2].z = (int)vecBuf[2];
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        vecBuf[0] = (f32)
-                        template
-                        [3].x;
-                        vecBuf[1] = (f32)
-                        template
-                        [3].y;
-                        vecBuf[2] = (f32)
-                        template
-                        [3].z;
+                        vecBuf[0] = (f32) tmpl[3].x;
+                        vecBuf[1] = (f32) tmpl[3].y;
+                        vecBuf[2] = (f32) tmpl[3].z;
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
@@ -1489,248 +1417,128 @@ foundFirst:
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0)
                     {
-                        quad[0].x =
-                        template
-                        [0].x;
-                        quad[0].y =
-                        template
-                        [0].y;
-                        quad[0].z =
-                        template
-                        [0].z;
+                        quad[0].x = tmpl[0].x;
+                        quad[0].y = tmpl[0].y;
+                        quad[0].z = tmpl[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x =
-                        template
-                        [1].x;
-                        quad[1].y =
-                        template
-                        [1].y;
-                        quad[1].z =
-                        template
-                        [1].z;
+                        quad[1].x = tmpl[1].x;
+                        quad[1].y = tmpl[1].y;
+                        quad[1].z = tmpl[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x =
-                        template
-                        [2].x;
-                        quad[2].y =
-                        template
-                        [2].y;
-                        quad[2].z =
-                        template
-                        [2].z;
+                        quad[2].x = tmpl[2].x;
+                        quad[2].y = tmpl[2].y;
+                        quad[2].z = tmpl[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x =
-                        template
-                        [3].x;
-                        quad[3].y =
-                        template
-                        [3].y;
-                        quad[3].z =
-                        template
-                        [3].z;
+                        quad[3].x = tmpl[3].x;
+                        quad[3].y = tmpl[3].y;
+                        quad[3].z = tmpl[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_Y8) != 0)
                     {
-                        quad[0].x =
-                        template
-                        [0].x;
-                        quad[0].y =
-                        template
-                        [0].y;
+                        quad[0].x = tmpl[0].x;
+                        quad[0].y = tmpl[0].y;
                         quad[0].y <<= 3;
-                        quad[0].z =
-                        template
-                        [0].z;
+                        quad[0].z = tmpl[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x =
-                        template
-                        [1].x;
-                        quad[1].y =
-                        template
-                        [1].y;
+                        quad[1].x = tmpl[1].x;
+                        quad[1].y = tmpl[1].y;
                         quad[1].y <<= 3;
-                        quad[1].z =
-                        template
-                        [1].z;
+                        quad[1].z = tmpl[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x =
-                        template
-                        [2].x;
-                        quad[2].y =
-                        template
-                        [2].y;
+                        quad[2].x = tmpl[2].x;
+                        quad[2].y = tmpl[2].y;
                         quad[2].y <<= 3;
-                        quad[2].z =
-                        template
-                        [2].z;
+                        quad[2].z = tmpl[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x =
-                        template
-                        [3].x;
-                        quad[3].y =
-                        template
-                        [3].y;
+                        quad[3].x = tmpl[3].x;
+                        quad[3].y = tmpl[3].y;
                         quad[3].y <<= 3;
-                        quad[3].z =
-                        template
-                        [3].z;
+                        quad[3].z = tmpl[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SWAP_XZ_SCALE_Z32) != 0)
                     {
-                        quad[0].z =
-                        template
-                        [0].x;
+                        quad[0].z = tmpl[0].x;
                         quad[0].z <<= 5;
-                        quad[0].y =
-                        template
-                        [0].y;
-                        quad[0].x =
-                        template
-                        [0].z;
+                        quad[0].y = tmpl[0].y;
+                        quad[0].x = tmpl[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].z =
-                        template
-                        [1].x;
+                        quad[1].z = tmpl[1].x;
                         quad[1].z <<= 5;
-                        quad[1].y =
-                        template
-                        [1].y;
-                        quad[1].x =
-                        template
-                        [1].z;
+                        quad[1].y = tmpl[1].y;
+                        quad[1].x = tmpl[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].z =
-                        template
-                        [2].x;
+                        quad[2].z = tmpl[2].x;
                         quad[2].z <<= 5;
-                        quad[2].y =
-                        template
-                        [2].y;
-                        quad[2].x =
-                        template
-                        [2].z;
+                        quad[2].y = tmpl[2].y;
+                        quad[2].x = tmpl[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].z =
-                        template
-                        [3].x;
+                        quad[3].z = tmpl[3].x;
                         quad[3].z <<= 5;
-                        quad[3].y =
-                        template
-                        [3].y;
-                        quad[3].x =
-                        template
-                        [3].z;
+                        quad[3].y = tmpl[3].y;
+                        quad[3].x = tmpl[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_X32) != 0)
                     {
-                        quad[0].x =
-                        template
-                        [0].x;
+                        quad[0].x = tmpl[0].x;
                         quad[0].x <<= 5;
-                        quad[0].y =
-                        template
-                        [0].y;
-                        quad[0].z =
-                        template
-                        [0].z;
+                        quad[0].y = tmpl[0].y;
+                        quad[0].z = tmpl[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x =
-                        template
-                        [1].x;
+                        quad[1].x = tmpl[1].x;
                         quad[1].x <<= 5;
-                        quad[1].y =
-                        template
-                        [1].y;
-                        quad[1].z =
-                        template
-                        [1].z;
+                        quad[1].y = tmpl[1].y;
+                        quad[1].z = tmpl[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x =
-                        template
-                        [2].x;
+                        quad[2].x = tmpl[2].x;
                         quad[2].x <<= 5;
-                        quad[2].y =
-                        template
-                        [2].y;
-                        quad[2].z =
-                        template
-                        [2].z;
+                        quad[2].y = tmpl[2].y;
+                        quad[2].z = tmpl[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x =
-                        template
-                        [3].x;
+                        quad[3].x = tmpl[3].x;
                         quad[3].x <<= 5;
-                        quad[3].y =
-                        template
-                        [3].y;
-                        quad[3].z =
-                        template
-                        [3].z;
+                        quad[3].y = tmpl[3].y;
+                        quad[3].z = tmpl[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else
                     {
-                        quad[0].x =
-                        template
-                        [0].x;
-                        quad[0].y =
-                        template
-                        [0].y;
-                        quad[0].z =
-                        template
-                        [0].z;
+                        quad[0].x = tmpl[0].x;
+                        quad[0].y = tmpl[0].y;
+                        quad[0].z = tmpl[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x =
-                        template
-                        [1].x;
-                        quad[1].y =
-                        template
-                        [1].y;
-                        quad[1].z =
-                        template
-                        [1].z;
+                        quad[1].x = tmpl[1].x;
+                        quad[1].y = tmpl[1].y;
+                        quad[1].z = tmpl[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x =
-                        template
-                        [2].x;
-                        quad[2].y =
-                        template
-                        [2].y;
-                        quad[2].z =
-                        template
-                        [2].z;
+                        quad[2].x = tmpl[2].x;
+                        quad[2].y = tmpl[2].y;
+                        quad[2].z = tmpl[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x =
-                        template
-                        [3].x;
-                        quad[3].y =
-                        template
-                        [3].y;
-                        quad[3].z =
-                        template
-                        [3].z;
+                        quad[3].x = tmpl[3].x;
+                        quad[3].y = tmpl[3].y;
+                        quad[3].z = tmpl[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
@@ -2789,9 +2597,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
     {
         return EXPGFX_INVALID_POOL_INDEX;
     }
-    {
-
-
+    { /* load-bearing: this scope and the tex-coord re-init set the stack-slot layout MWCC matches */
         if ((int)poolIndex < EXPGFX_POOL_COUNT)
         {
             runtime->poolSourceIds[(int)poolIndex] = (int)config->attachedSource;
