@@ -18526,18 +18526,17 @@ void fn_802AAD44(int obj)
         }
         else
         {
-            *(s16*)(vp + 2) = (s16)(s32)
-            v;
+            *(s16*)(vp + 2) = v;
         }
         if (i < 4)
         {
-            *(s16*)(vp + 0) = (s16)(s32)(lbl_803E7FA4 * src[0]);
-            *(s16*)(vp + 4) = (s16)(s32)(lbl_803E7FA4 * src[2]);
+            *(s16*)(vp + 0) = (lbl_803E7FA4 * src[0]);
+            *(s16*)(vp + 4) = (lbl_803E7FA4 * src[2]);
         }
         else
         {
-            *(s16*)(vp + 0) = (s16)(s32)(lbl_803E7FA4 * src[0]);
-            *(s16*)(vp + 4) = (s16)(s32)(lbl_803E7FA4 * src[2]);
+            *(s16*)(vp + 0) = (lbl_803E7FA4 * src[0]);
+            *(s16*)(vp + 4) = (lbl_803E7FA4 * src[2]);
         }
         vp[0xc] = 0xff;
         vp[0xd] = 0;
