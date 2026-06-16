@@ -10372,18 +10372,17 @@ int fn_802A5048(int obj, int state, f32 fv)
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
-        int i;
         void** p;
+        int i;
         lbl_803DE42C = 0;
         p = lbl_80332ED4;
         for (i = 0; i < 7; i++)
         {
-            if (*p != NULL)
+            if (p[i] != NULL)
             {
-                Obj_FreeObject((int)*p);
-                *p = NULL;
+                Obj_FreeObject((int)p[i]);
+                p[i] = NULL;
             }
-            p++;
         }
         if (lbl_803DE454 != NULL)
         {
