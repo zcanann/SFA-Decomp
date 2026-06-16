@@ -813,12 +813,12 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
         }
         if (((GameObject*)obj)->anim.classId == 1)
         {
-            *(u32*)&collision->points[2][0] = *(u32*)&((GameObject*)obj)->anim.worldPosX;
-            *(u32*)&collision->traceStart[2][0] = *(u32*)&((GameObject*)obj)->anim.worldPosX;
+            collision->points[2][0] = ((GameObject*)obj)->anim.worldPosX;
+            collision->traceStart[2][0] = ((GameObject*)obj)->anim.worldPosX;
             collision->points[2][1] = lbl_803E06BC + ((GameObject*)obj)->anim.worldPosY;
             collision->traceStart[2][1] = collision->points[2][1];
-            *(u32*)&collision->points[2][2] = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
-            *(u32*)&collision->traceStart[2][2] = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
+            collision->points[2][2] = ((GameObject*)obj)->anim.worldPosZ;
+            collision->traceStart[2][2] = ((GameObject*)obj)->anim.worldPosZ;
         }
         collision->surfaceFlags = 0;
         collision->surfaceHitMask = 0;
