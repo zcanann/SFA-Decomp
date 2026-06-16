@@ -105,8 +105,8 @@ int fn_80198B68(u8* obj, f32* point)
     pointY = point[1];
     pointZ = point[2];
 
-    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
-    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
+    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotX));
+    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotX));
     pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
     pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
 
