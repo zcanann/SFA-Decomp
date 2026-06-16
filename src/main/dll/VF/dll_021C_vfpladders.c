@@ -116,7 +116,7 @@ void vfpladders_init(int* obj, u8* init)
 {
     VfpLaddersState* state = ((GameObject*)obj)->extra;
     VfpLaddersSetup* setup = (VfpLaddersSetup*)init;
-    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
     state->triggerGameBit = setup->triggerGameBit;
     state->baseGameBit = setup->baseGameBit;
     ((GameObject*)obj)->objectFlags |= 0x6000;
