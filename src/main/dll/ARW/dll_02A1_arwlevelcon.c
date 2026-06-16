@@ -1,3 +1,16 @@
+/*
+ * arwlevelcon (DLL 0x2A1) - the level controller for one of the on-rails
+ * Arwing flight courses. There is one instance per course, distinguished by
+ * its mapEventSlot (0x3a-0x3e), which selects the course's audio stream id
+ * and the ring-choice trigger id. On the first update it configures the sky
+ * (colour/overcast), kicks off the intro sequence (or the alternate-route
+ * sequence when the placement's routeSignature flags it) and starts the
+ * course music/audio stream. Once the Arwing flies past a Z threshold it
+ * fires the ring-count gate: comparing collected vs required rings it sets
+ * the "enough rings" (0x9d8) or "not enough" (0x9d7) game bit, which steers
+ * the branching exit. ringEventCallback drives the sequence's camera and
+ * course-specific text; commitRingChoice picks the follow-up music.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
