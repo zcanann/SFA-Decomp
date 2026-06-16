@@ -171,16 +171,18 @@ void sfxplayerObj_update(u8* obj)
         if (getCurSeqNo() != 0)
         {
             focusObj = (*gCameraInterface)->getCamera();
-            ((void (*)(f32, f32, f32, int, int, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
+            ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
+                7, *(s8*)(data + 0x20),
                 *(f32*)(focusObj + 0x18), *(f32*)(focusObj + 0x1c), *(f32*)(focusObj + 0x20),
-                7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
+                obj + 0x0c, obj + 0x10, obj + 0x14);
         }
         else
         {
             focusObj = Obj_GetPlayerObject();
-            ((void (*)(f32, f32, f32, int, int, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
+            ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
+                7, *(s8*)(data + 0x20),
                 *(f32*)(focusObj + 0x18), *(f32*)(focusObj + 0x1c), *(f32*)(focusObj + 0x20),
-                7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
+                obj + 0x0c, obj + 0x10, obj + 0x14);
         }
     }
 
