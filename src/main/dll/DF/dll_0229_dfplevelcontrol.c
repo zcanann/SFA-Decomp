@@ -231,8 +231,6 @@ void dfplevelcontrol_update(int obj)
         break;
     case 3:
         break;
-    case 4:
-        break;
     }
     SCGameBitLatch_Update((void*)state->unk08, 2, -1, -1, 0xdce, 0x95);
     SCGameBitLatch_UpdateInverted((void*)state->unk08, 4, -1, -1, 0xdce, 0x37);
