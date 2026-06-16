@@ -326,6 +326,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     f32 localZ[4];
     f32 matrix[16];
     f32 averageScale;
+    f32 scale;
     f32 zero;
     u8 pointCount;
     s32 pointLimit;
@@ -339,7 +340,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     f32* outZ;
     f32* outY;
     f32* outX;
-    s16 angle;
+    int angle;
 
     collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
     collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
@@ -365,7 +366,8 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             pointYZ += 3;
         }
 
-        averageScale = lbl_803E068C / (f32)pointCount;
+        scale = lbl_803E068C;
+        averageScale = scale / (f32)pointCount;
         ((GameObject*)obj)->anim.worldPosX *= averageScale;
         ((GameObject*)obj)->anim.worldPosY *= averageScale;
         ((GameObject*)obj)->anim.worldPosZ *= averageScale;
@@ -375,7 +377,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
         transform.angles[0] = -((GameObject*)obj)->anim.rotX;
             transform.angles[1] = -((GameObject*)obj)->anim.rotY;
             transform.angles[2] = -((GameObject*)obj)->anim.rotZ;
-            transform.scale = lbl_803E068C;
+            transform.scale = scale;
             transform.x = -((GameObject*)obj)->anim.worldPosX;
             transform.y = -((GameObject*)obj)->anim.worldPosY;
             transform.z = -((GameObject*)obj)->anim.worldPosZ;
