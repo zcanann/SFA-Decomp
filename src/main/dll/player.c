@@ -9973,8 +9973,8 @@ int fn_80299E44(int obj, int state, f32 fv)
 int fn_80299BB0(int obj, int p2)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int state30 = 0x1a;
-    int state29 = 0x1a;
+    u8 state30 = 0x1a;
+    u8 state29 = 0x1a;
     void* near;
     f32 dist;
     f32 dir[3];
