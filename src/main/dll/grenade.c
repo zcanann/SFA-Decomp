@@ -801,7 +801,7 @@ skip:
         *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10;
         ((TrickyState*)state)->substate = 0;
     }
-    if ((u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1)
+    if ((u8)trickyFn_8013b368((int)obj, lbl_803E2408, (int)state) == 1)
     {
         return 1;
     }
