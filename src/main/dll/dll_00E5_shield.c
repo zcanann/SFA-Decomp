@@ -2038,38 +2038,38 @@ void staffFn_80170380(int* obj, int cmd)
         }
         {
             f32 v = lbl_803E33AC;
-            *(f32*)(state + 8) = v;
-            *(f32*)(state + 0xc) = v;
-            *(f32*)(state + 0x10) = v;
-            *(f32*)(state + 4) = v;
+            ((ShieldState*)state)->unk8 = v;
+            ((ShieldState*)state)->unkC = v;
+            *(f32*)&((ShieldState*)state)->unk10 = v;
+            ((ShieldState*)state)->unk4 = v;
         }
-        state[0x5c] |= 1;
-        state[0x5d] |= 1;
-        state[0x5e] |= 1;
-        state[0x5f] |= 1;
+        ((ShieldState*)state)->unk5C |= 1;
+        ((ShieldState*)state)->unk5D |= 1;
+        ((ShieldState*)state)->unk5E |= 1;
+        ((ShieldState*)state)->unk5F |= 1;
         break;
     case 0:
         if (*(int**)state != NULL)
         {
             modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
         }
-        if (lbl_803E33AC != *(f32*)(state + 8))
+        if (lbl_803E33AC != ((ShieldState*)state)->unk8)
         {
             f32 v = lbl_803E33B0;
-            *(f32*)(state + 0x10) = v;
-            *(f32*)(state + 4) = v;
+            *(f32*)&((ShieldState*)state)->unk10 = v;
+            ((ShieldState*)state)->unk4 = v;
             if (glow != NULL)
             {
                 staffSetGlow(glow, 7, 0);
             }
         }
-        *(f32*)(state + 8) = lbl_803E33AC;
-        *(f32*)(state + 0xc) = lbl_803E33B4;
+        ((ShieldState*)state)->unk8 = lbl_803E33AC;
+        ((ShieldState*)state)->unkC = lbl_803E33B4;
         Sfx_StopFromObject((int)obj, 0x42c);
         Sfx_StopFromObject((int)obj, 0x42d);
         break;
     case 1:
-        if (lbl_803E33AC == *(f32*)(state + 8))
+        if (lbl_803E33AC == ((ShieldState*)state)->unk8)
         {
             if (glow != NULL)
             {
@@ -2095,13 +2095,13 @@ void staffFn_80170380(int* obj, int cmd)
             }
             {
                 f32 v1 = lbl_803E33AC;
-                if (v1 == *(f32*)(state + 8))
+                if (v1 == ((ShieldState*)state)->unk8)
                 {
-                    *(f32*)(state + 0x10) = lbl_803E33B0;
-                    *(f32*)(state + 4) = v1;
+                    *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33B0;
+                    ((ShieldState*)state)->unk4 = v1;
                 }
             }
-            *(f32*)(state + 8) = lbl_803E33B0;
+            ((ShieldState*)state)->unk8 = lbl_803E33B0;
             {
                 f32 amp = lbl_803E33C4;
                 int i;
@@ -2111,7 +2111,7 @@ void staffFn_80170380(int* obj, int cmd)
                 f32* t1;
                 f32 k;
                 f32 kc;
-                *(f32*)(state + 0xc) = amp;
+                ((ShieldState*)state)->unkC = amp;
                 i = 0;
                 hw = state;
                 w = state;
@@ -2145,12 +2145,12 @@ void staffFn_80170380(int* obj, int cmd)
         {
             staffSetGlow(glow, 7, 0);
         }
-        if (lbl_803E33AC != *(f32*)(state + 8))
+        if (lbl_803E33AC != ((ShieldState*)state)->unk8)
         {
-            *(f32*)(state + 0x10) = lbl_803E33CC;
+            *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33CC;
         }
-        *(f32*)(state + 8) = lbl_803E33AC;
-        *(f32*)(state + 0xc) = lbl_803E33B4;
+        ((ShieldState*)state)->unk8 = lbl_803E33AC;
+        ((ShieldState*)state)->unkC = lbl_803E33B4;
         if (*(int**)state != NULL)
         {
             modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
@@ -2181,11 +2181,11 @@ void staffFn_80170380(int* obj, int cmd)
             modelLightStruct_startColorFade(*(int*)state, 0, 0);
             modelLightStruct_setAffectsAabbLightSelection(*(int*)state, 1);
         }
-        if (lbl_803E33AC == *(f32*)(state + 8))
+        if (lbl_803E33AC == ((ShieldState*)state)->unk8)
         {
-            *(f32*)(state + 0x10) = lbl_803E33CC;
+            *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33CC;
         }
-        *(f32*)(state + 8) = lbl_803E33CC;
+        ((ShieldState*)state)->unk8 = lbl_803E33CC;
         {
             f32 amp = lbl_803E33C4;
             int i;
@@ -2194,7 +2194,7 @@ void staffFn_80170380(int* obj, int cmd)
             f32* t0;
             f32* t1;
             f32 k;
-            *(f32*)(state + 0xc) = amp;
+            ((ShieldState*)state)->unkC = amp;
             i = 0;
             hw = state;
             w = state;
@@ -2221,9 +2221,9 @@ void staffFn_80170380(int* obj, int cmd)
         Sfx_PlayFromObject(obj, 0x42c);
         break;
     case 5:
-        *(f32*)(state + 8) = lbl_803E33AC;
-        *(f32*)(state + 0xc) = lbl_803E33B4;
-        *(f32*)(state + 0x10) = lbl_803E33CC;
+        ((ShieldState*)state)->unk8 = lbl_803E33AC;
+        ((ShieldState*)state)->unkC = lbl_803E33B4;
+        *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33CC;
         Sfx_StopFromObject((int)obj, 0x42c);
         Sfx_StopFromObject((int)obj, 0x42d);
         break;
@@ -2231,10 +2231,10 @@ void staffFn_80170380(int* obj, int cmd)
         {
             f32 v = lbl_803E33CC;
             f32 amp;
-            *(f32*)(state + 8) = v;
+            ((ShieldState*)state)->unk8 = v;
             amp = lbl_803E33C4;
-            *(f32*)(state + 0xc) = amp;
-            *(f32*)(state + 0x10) = v;
+            ((ShieldState*)state)->unkC = amp;
+            *(f32*)&((ShieldState*)state)->unk10 = v;
             {
                 int i;
                 u8* hw;
