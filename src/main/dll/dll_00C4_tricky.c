@@ -3018,6 +3018,7 @@ int Tricky_func12(int* obj)
     return r;
 }
 
+#pragma optimization_level 1
 int Tricky_func10(int* obj, int targetObj)
 {
     int* state = (int*)obj[0xb8 / 4];
@@ -3047,6 +3048,7 @@ int Tricky_func10(int* obj, int targetObj)
     }
     return 1;
 }
+#pragma optimization_level reset
 
 #pragma optimization_level 1
 void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
