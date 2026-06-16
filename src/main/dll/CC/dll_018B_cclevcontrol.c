@@ -1,90 +1,44 @@
-/* DLL 0x018B — CC level-control objects [801AA558-801AA560) */
-#include "main/dll/DIM/dimlogfire.h"
+/*
+ * cclevcontrol - Crystal Caves level-control object (DLL 0x018B). The
+ * per-level director object: it drives the day/night music transition off
+ * the sky sun position, fans a set of SCGameBitLatch updates that gate
+ * puzzle/door object groups on gameBits, toggles a triggered camera action
+ * from the SharpClaw-encounter gameBits, runs the intro env-fx in init and
+ * an end-of-level sfx once all the collectables are in.
+ *
+ * The extra block (0x10 bytes): a help-text hold timer at +0, a latch/flags
+ * word at +4 (an SCGameBitLatchState), the current music state at +8 and the
+ * cached map-act at +0xC.
+ */
 #include "main/sky_interface.h"
-
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-
-extern void objRenderFn_8003b8f4(f32);
-
-extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int id);
-
 #include "main/camera_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-extern undefined4 FUN_8008112c();
-
-extern f32 lbl_803E530C;
-extern f32 lbl_803E5310;
-extern f32 lbl_803E5314;
-extern f32 lbl_803E5360;
-
-#pragma scheduling on
-#pragma peephole on
-extern f32 lbl_803E46CC;
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern void objRenderFn_8003b8f4(f32);
+extern f32 timeDelta;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void envFxActFn_800887f8(int a);
 extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern f32 lbl_803E46C8;
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern int getSaveGameLoadStatus(void);
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern void getEnvfxAct(int obj, int target, int id, int p);
 extern int lbl_80323548[];
-extern f32 lbl_803E46D4;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
 
-void FUN_801aaa6c(double value, int state, int obj)
-{
-    if ((double)lbl_803E530C == value)
-    {
-        *(u8*)(state + 0x10) = 0xc;
-        return;
-    }
-    if ((*(byte*)(state + 0x11) & 2) != 0)
-    {
-        *(u8*)(state + 0x10) = 1;
-        return;
-    }
-    if ((double)lbl_803E5310 <= value)
-    {
-        *(u8*)(state + 0x10) = 2;
-        return;
-    }
-    if ((*(short*)(obj + 0xa0) == 0x18) && (lbl_803E5314 < *(float*)(obj + 0x98)))
-    {
-        *(u8*)(state + 0x10) = 8;
-        return;
-    }
-    if (*(short*)(obj + 0xa0) == 0x19)
-    {
-        *(u8*)(state + 0x10) = 5;
-        return;
-    }
-    *(u8*)(state + 0x10) = 0xb;
-    return;
-}
+extern f32 lbl_803E46C8; /* SeqFn explosion scale */
+extern f32 lbl_803E46CC; /* render scale */
+extern f32 lbl_803E46D0; /* help-text hold floor */
+extern f32 lbl_803E46D4; /* help-text hold reset value */
 
-undefined4
-FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 obj,
-             undefined4 param_10, ObjAnimUpdateState* animUpdate)
-{
-    if (animUpdate->eventCount != 0)
-    {
-        FUN_8008112c((double)lbl_803E5360, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 1, 1, 0, 1, 1, 1, 0);
-    }
-    return 0;
-}
-
-int cclightfoot_getExtraSize(void);
+#pragma scheduling on
+#pragma peephole on
 int cclevcontrol_getExtraSize(void) { return 0x10; }
 
 void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
@@ -97,8 +51,6 @@ void cclevcontrol_free(void)
     Music_Trigger(200, 0);
 }
 
-void cclightfoot_init(int* obj, int* def);
-
 int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (animUpdate->eventCount != 0)
@@ -107,8 +59,6 @@ int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-void cclightfoot_free(int* obj, int p2);
 
 void cclevcontrol_init(int* obj)
 {
@@ -132,24 +82,6 @@ void cclevcontrol_init(int* obj)
     state[2] = -1;
     state[3] = (u32)(u8)(*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
 }
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-/* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
- * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
- * Otherwise selects model 0, then consults gbit 0xa9: if set, clears the
- * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
- * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
- * clear, sets the obj[0xaf] 0x10 flag instead. */
-
-/* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
- * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
- * sets bit 8 again and selects model 0; if clear, selects model 1 and
- * (when the obj's pending trigger is asserted) fires vtable[0x12] with
- * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
- * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
- * match target's layout. */
 
 void cclevcontrol_update(int obj)
 {
