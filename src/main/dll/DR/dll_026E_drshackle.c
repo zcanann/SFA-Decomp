@@ -181,15 +181,14 @@ void drshackle_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
     if (((BitFlags8*)(p + 0x1a))->b0 == 0 && visible != 0)
     {
         objRenderFn_8003b8f4((void*)obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
-        for (i = 0, ptr = (int*)p; i < ((DrshackleState*)p)->unk14; i++)
+        for (i = 0; i < ((DrshackleState*)p)->unk14; i++)
         {
-            int* entry = *(int**)ptr;
+            int* entry = ((int**)p)[i];
             if (entry != 0)
             {
                 ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32*)((char*)entry + 0xc),
                                               (f32*)((char*)entry + 0x10), (f32*)((char*)entry + 0x14), 0);
             }
-            ptr++;
         }
     }
 }
