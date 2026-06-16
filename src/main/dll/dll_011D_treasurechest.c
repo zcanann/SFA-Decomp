@@ -215,7 +215,7 @@ void treasurechest_init(int* obj)
     register TreasureChestSetup* cfg = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
 
     ((GameObject*)obj)->animEventCallback = (void*)treasurechest_SeqFn;
-    *(s16*)obj = (s16)((s32)cfg->type << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)cfg->type << 8);
 
     if (cfg->openGameBit != -1)
     {
