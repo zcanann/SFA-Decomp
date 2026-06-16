@@ -169,7 +169,7 @@ void waveanimator_update(void);
 int groundanimator_getExtraSize(void) { return 0x30; }
 int hitanimator_getExtraSize(void);
 
-u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
+u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((GameObject*)obj)->extra + 0x2b); }
 
 #pragma peephole off
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -182,9 +182,9 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole on
 u8 groundanimator_func0B(int* obj)
 {
-    GroundAnimatorState * state = (GroundAnimatorState*)((int**)obj)[0xB8 / 4];
+    GroundAnimatorState * state = (GroundAnimatorState*)((GameObject*)obj)->extra;
     f32 depth = state->sinkDepth;
-    int* placement = ((int**)obj)[0x4C / 4];
+    int* placement = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
     u8 maxDepth = *(u8*)((char*)placement + 0x20);
     return depth > lbl_803E3F98 * (f32)maxDepth;
 }
@@ -192,7 +192,7 @@ u8 groundanimator_func0B(int* obj)
 #pragma peephole off
 void groundanimator_init(int* obj, int* desc)
 {
-    GroundAnimatorState * vstate = (GroundAnimatorState*)((int**)obj)[0xB8 / 4];
+    GroundAnimatorState * vstate = (GroundAnimatorState*)((GameObject*)obj)->extra;
     vstate->modelVariant = (u8)((WaveanimatorObjectDef*)desc)->modelVariant;
     vstate->yOffset = (f32)((WaveanimatorObjectDef*)desc)->yOffset;
     vstate->lastDepth = lbl_803E3FB8;
@@ -305,13 +305,13 @@ f32 groundanimator_setScale(int* obj, int* target)
             int* e;
             g->sinkDepth = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->unk20;
             e = (int*)g->linkedObj;
-            switch (*(s16*)((char*)e + 0x46))
+            switch (((GameObject*)e)->anim.seqId)
             {
             case 0x519:
                 fn_801A80F0(e, 0);
                 break;
             default:
-                (*(code*)(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
+                (*(code*)(*(int*)(*(int*)&((GameObject*)e)->anim.dll) + 0x24))(e, 0);
                 break;
             }
         }
@@ -466,7 +466,7 @@ void groundanimator_update(int* obj)
             near = (void*)g->linkedObj;
             if (near != NULL)
             {
-                if (*(s16*)((char*)near + 0x46) == 0x519)
+                if (((GameObject*)near)->anim.seqId == 0x519)
                 {
                     if ((g->flags & 2) == 0)
                     {
@@ -480,16 +480,16 @@ void groundanimator_update(int* obj)
                 {
                     if ((g->flags & 2) == 0)
                     {
-                        (*(code*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x24))(near, 1);
+                        (*(code*)(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x24))(near, 1);
                     }
-                    (*(code*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x38))(
+                    (*(code*)(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x38))(
                         near, ((GameObject*)obj)->anim.localPosX,
                         ((GameObject*)obj)->anim.localPosY - g->yOffset,
                         ((GameObject*)obj)->anim.localPosZ);
                 }
             }
         }
-        else if ((*(u16*)((char*)g->linkedObj + 0xb0) & 0x40) != 0)
+        else if ((((GameObject*)g->linkedObj)->objectFlags & 0x40) != 0)
         {
             g->linkedObj = 0;
         }
@@ -531,15 +531,15 @@ void groundanimator_update(int* obj)
             {
                 g->lastDepth = lim;
                 g->sinkDepth = lim;
-                if (*(void**)&g->linkedObj != NULL && *(void**)((char*)g->linkedObj + 0xb8) != NULL)
+                if (*(void**)&g->linkedObj != NULL && ((GameObject*)g->linkedObj)->extra != NULL)
                 {
-                    if (*(s16*)((char*)g->linkedObj + 0x46) == 0x519)
+                    if (((GameObject*)g->linkedObj)->anim.seqId == 0x519)
                     {
                         fn_801A80F0((void*)g->linkedObj, 0);
                     }
                     else
                     {
-                        (*(code*)(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))((void*)g->linkedObj, 0);
+                        (*(code*)(*(int*)(*(int*)&((GameObject*)g->linkedObj)->anim.dll) + 0x24))((void*)g->linkedObj, 0);
                     }
                 }
                 GameBit_Set(((GroundanimatorPlacement*)r20)->unk18, 1);
@@ -597,7 +597,7 @@ void groundanimator_update(int* obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8;
         if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
         {
-            (*(code*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 1);
+            (*(code*)(*(int*)(*(int*)&((GameObject*)tricky)->anim.dll) + 0x28))(tricky, obj, 1, 1);
         }
     }
     else
