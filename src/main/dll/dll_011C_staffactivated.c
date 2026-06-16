@@ -93,26 +93,26 @@ lbl_gt2:
     goto lbl_case3;
 
 lbl_case2:
-    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) - state->targetX);
-    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) - state->targetZ);
+    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) - state->targetX);
+    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) - state->targetZ);
     goto lbl_done;
 
 lbl_case3:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + state->targetX;
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + state->targetZ;
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + state->targetX;
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + state->targetZ;
     goto lbl_done;
 
 lbl_case0:
-    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
         localPosX;
-    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
         localPosZ;
     goto lbl_done;
 
 lbl_default:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
         localPosX;
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
         localPosZ;
 
 lbl_done:;
@@ -269,7 +269,7 @@ void staffactivated_init(int obj, int setup)
     setupData = (StaffActivatedSetup*)setup;
     state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, 0x41);
-    *(s16*)obj = (s16)((s32)setupData->type << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)setupData->type << 8);
 
     sizeIndex = setupData->size;
     if (sizeIndex > 2)
@@ -321,24 +321,24 @@ void staffactivated_init(int obj, int setup)
         state->targetX = -(lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathSinf((lbl_803E3BF4 * (f32) * (s16*)obj) / lbl_803E3BF8))) -
+                    mathSinf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) -
             ((GameObject*)obj)->anim.localPosX);
         state->targetZ = -(lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathCosf((lbl_803E3BF4 * (f32) * (s16*)obj) / lbl_803E3BF8))) -
+                    mathCosf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) -
             ((GameObject*)obj)->anim.localPosZ);
         break;
     case 3:
         state->targetX = lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathSinf((lbl_803E3BF4 * (f32) * (s16*)obj) / lbl_803E3BF8))) +
+                    mathSinf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) +
             ((GameObject*)obj)->anim.localPosX;
         state->targetZ = lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathCosf((lbl_803E3BF4 * (f32) * (s16*)obj) / lbl_803E3BF8))) +
+                    mathCosf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) +
             ((GameObject*)obj)->anim.localPosZ;
         break;
     default:
