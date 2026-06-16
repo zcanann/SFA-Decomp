@@ -1442,7 +1442,7 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
     }
     else
     {
-        if (trickyState[0x1ec] != 0)
+        if (*(void**)&trickyState[0x1ec] != NULL)
         {
             done = *(int*)&((GameObject*)obj)->extra;
             if ((((*(byte*)(done + 0x58) >> 6 & 1) == 0U) &&
