@@ -1,85 +1,125 @@
+/*
+ * mmp_gyservent - the MMP (Moon Mountain Pass) geyser-vent object.
+ *
+ * Setup (objFn_80198fa4) reads the placement's class-specific bytes to
+ * orient the vent (rotX from byte 0x3d, rotY from byte 0x3e), scales the
+ * eruption reach from byte 0x3a, then builds a clip plane in the vent's
+ * local frame: a forward direction is transformed out of the vent matrix
+ * and stored with its plane normal and offset, and the inverse rotation
+ * is transposed into the state's 4x4 at +0x38.
+ * nearRadiusSq is the squared "near" radius and reach the eruption reach
+ * used by the sequence functions.
+ *
+ * The two sequence callbacks classify the player's position against two
+ * target points (the vent's two reach endpoints) and pass a discrete
+ * "leg" code to objInterpretSeq, selecting which scripted reaction runs.
+ * objSeqMoveFn_80199188 gates on height (dy) plus squared distance using a
+ * speed byte from placement 0x3b; objSeqFn_801992ec gates on pure squared
+ * distance against nearRadiusSq.
+ */
 #include "main/game_object.h"
+
+/* placement instance id (+0x14) of the one vent that emits a debug OSReport */
+#define MMP_GYSERVENT_DEBUG_INSTANCE_ID 0x46a31
+
+/* placement (WmSpiritPlaceMapData) byte offsets read at setup / per-frame */
+#define MMP_GYSERVENT_PLACE_REACH    0x3a /* eruption reach scale byte */
+#define MMP_GYSERVENT_PLACE_SPEED    0x3b /* per-frame speed byte */
+#define MMP_GYSERVENT_PLACE_ROTX     0x3d /* rotX (low 6 bits) */
+#define MMP_GYSERVENT_PLACE_ROTY     0x3e /* rotY */
+#define MMP_GYSERVENT_PLACE_INSTANCE 0x14 /* instance id */
 
 typedef struct MmpGyserventState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
+    f32 nearRadiusSq;  /* 0x04: squared near-distance threshold */
     u8 pad8[0xC - 0x8];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    f32 unk34;
+    f32 planeNormalX;  /* 0x0C: clip-plane normal (vent local forward) */
+    f32 planeNormalY;  /* 0x10 */
+    f32 planeNormalZ;  /* 0x14 */
+    f32 planeOffset;   /* 0x18: plane d term */
+    f32 reachAX;       /* 0x1C: reach endpoint A */
+    f32 reachAY;       /* 0x20 */
+    f32 reachAZ;       /* 0x24 */
+    f32 reachBX;       /* 0x28: reach endpoint B */
+    f32 reachBY;       /* 0x2C */
+    f32 reachBZ;       /* 0x30 */
+    f32 reach;         /* 0x34: eruption reach distance */
+    /* 0x38: 4x4 inverse-rotation matrix written by mtx44Transpose */
 } MmpGyserventState;
+
+STATIC_ASSERT(offsetof(MmpGyserventState, nearRadiusSq) == 0x04);
+STATIC_ASSERT(offsetof(MmpGyserventState, planeNormalX) == 0x0C);
+STATIC_ASSERT(offsetof(MmpGyserventState, planeOffset) == 0x18);
+STATIC_ASSERT(offsetof(MmpGyserventState, reachAX) == 0x1C);
+STATIC_ASSERT(offsetof(MmpGyserventState, reachBX) == 0x28);
+STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 
 extern void mtxRotateByVec3s(void* out, void* vec);
 extern void mtx44Transpose(void* m, void* out);
-extern void Matrix_TransformPoint(void* mtx, float x, float y, float z, float* ox, float* oy, float* oz);
+extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void setMatrixFromObjectPos(void* out, void* vec);
 extern void OSReport(const char* fmt, ...);
-extern void objInterpretSeq(void* obj, int param_2, int triggerState, int distanceSquared);
+extern void objInterpretSeq(void* obj, int arg2, int legCode, int distanceSquared);
 
-extern char lbl_8032253C[];
-extern f32 lbl_803E40D8;
-extern f32 lbl_803E40DC;
-extern f32 lbl_803E40E0;
-extern f32 lbl_803E40E4;
-extern f32 lbl_803E40E8;
+extern char lbl_8032253C[]; /* OSReport format string (.data) */
+extern f32 lbl_803E40D8;     /* 0.0f - used both as a plain 0.0f and, via *(f32*)&lbl_803E40D8, as the y arg of Matrix_TransformPoint (same value, address-of spelling matches asm) */
+extern f32 lbl_803E40DC;     /* 0.0625f (1/16) - reach scale per height byte */
+extern f32 lbl_803E40E0;     /* 1.0f */
+extern f32 lbl_803E40E4;     /* 100.0f - reach multiplier */
+extern f32 lbl_803E40E8;     /* 145.0f - near-radius multiplier */
 
-void objFn_80198fa4(s16* obj, void* arg2)
+/* obj is the GameObject, but typed s16* so the rotX/rotY/rotZ word writes
+ * (obj[0..2]) and the f32 scale at obj+4 land at the exact offsets the
+ * target expects (CLAUDE.md #126); it is cast to GameObject* where needed. */
+void objFn_80198fa4(s16* obj, void* placement)
 {
     void* state;
-    s16 vec[3];
-    f32 mtx[15];
-    f32 transposed[16];
-    f32 out_x;
-    f32 out_y;
-    f32 out_z;
-    f32 tmp[24];
+    s16 rot[3];
+    f32 rotMtx[15];
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    f32 mtx[24];
 
     state = ((GameObject*)obj)->extra;
-    obj[0] = (s16)((*(u8*)((char*)arg2 + 0x3d) & 0x3f) << 10);
-    obj[1] = (s16)(*(u8*)((char*)arg2 + 0x3e) << 8);
+    obj[0] = (s16)((*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTX) & 0x3f) << 10);
+    obj[1] = (s16)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTY) << 8);
     *(f32*)(obj + 4) =
         ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-        ((float)(u32) * (u8*)((char*)arg2 + 0x3a)) * lbl_803E40DC;
+        ((float)(u32)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_REACH))) * lbl_803E40DC;
 
-    vec[0] = obj[0];
-    vec[1] = obj[1];
-    vec[2] = obj[2];
-    tmp[0] = lbl_803E40E0;
-    tmp[1] = lbl_803E40D8;
-    tmp[2] = lbl_803E40D8;
-    tmp[3] = lbl_803E40D8;
-    setMatrixFromObjectPos(&tmp[4], vec);
-    Matrix_TransformPoint(&tmp[4], lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &out_z, &out_y, &out_x);
-    ((MmpGyserventState*)state)->unkC = out_y;
-    ((MmpGyserventState*)state)->unk10 = out_z;
-    ((MmpGyserventState*)state)->unk14 = out_x;
-    ((MmpGyserventState*)state)->unk18 =
-        -(((GameObject*)obj)->anim.worldPosZ * out_x +
-            ((GameObject*)obj)->anim.worldPosX * out_y +
-            ((GameObject*)obj)->anim.worldPosY * out_z);
+    rot[0] = obj[0];
+    rot[1] = obj[1];
+    rot[2] = obj[2];
+    mtx[0] = lbl_803E40E0;
+    mtx[1] = lbl_803E40D8;
+    mtx[2] = lbl_803E40D8;
+    mtx[3] = lbl_803E40D8;
+    setMatrixFromObjectPos(&mtx[4], rot);
+    Matrix_TransformPoint(&mtx[4], lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &outZ, &outY, &outX);
+    ((MmpGyserventState*)state)->planeNormalX = outY;
+    ((MmpGyserventState*)state)->planeNormalY = outZ;
+    ((MmpGyserventState*)state)->planeNormalZ = outX;
+    ((MmpGyserventState*)state)->planeOffset =
+        -(((GameObject*)obj)->anim.worldPosZ * outX +
+            ((GameObject*)obj)->anim.worldPosX * outY +
+            ((GameObject*)obj)->anim.worldPosY * outZ);
 
-    vec[0] = (s16)(-obj[0]);
-    vec[1] = (s16)(-obj[1]);
-    vec[2] = 0;
-    tmp[0] = lbl_803E40E0;
-    tmp[1] = -((GameObject*)obj)->anim.worldPosX;
-    tmp[2] = -((GameObject*)obj)->anim.worldPosY;
-    tmp[3] = -((GameObject*)obj)->anim.worldPosZ;
-    mtxRotateByVec3s(mtx, vec);
-    mtx44Transpose(mtx, (char*)state + 0x38);
+    rot[0] = (s16)(-obj[0]);
+    rot[1] = (s16)(-obj[1]);
+    rot[2] = 0;
+    mtx[0] = lbl_803E40E0;
+    mtx[1] = -((GameObject*)obj)->anim.worldPosX;
+    mtx[2] = -((GameObject*)obj)->anim.worldPosY;
+    mtx[3] = -((GameObject*)obj)->anim.worldPosZ;
+    mtxRotateByVec3s(rotMtx, rot);
+    mtx44Transpose(rotMtx, (char*)state + 0x38);
 
-    ((MmpGyserventState*)state)->unk34 = lbl_803E40E4 * *(f32*)(obj + 4);
-    ((MmpGyserventState*)state)->unk4 = lbl_803E40E8 * *(f32*)(obj + 4) * lbl_803E40E8 * *(f32*)(obj + 4);
-    if (*(int*)((char*)arg2 + 0x14) == 0x46a31)
+    ((MmpGyserventState*)state)->reach = lbl_803E40E4 * *(f32*)(obj + 4);
+    ((MmpGyserventState*)state)->nearRadiusSq =
+        lbl_803E40E8 * *(f32*)(obj + 4) * lbl_803E40E8 * *(f32*)(obj + 4);
+    if (*(int*)((char*)placement + MMP_GYSERVENT_PLACE_INSTANCE) == MMP_GYSERVENT_DEBUG_INSTANCE_ID)
     {
         OSReport(lbl_8032253C);
     }
@@ -88,56 +128,57 @@ void objFn_80198fa4(s16* obj, void* arg2)
 void objSeqMoveFn_80199188(void* obj, int arg2)
 {
     f32 speed;
-    f32 dx;
-    f32 dz;
-    f32 dy;
-    f32 dy2;
-    f32 dz2;
+    f32 t;
+    f32 distSqA;
+    f32 dyA;
+    f32 dyB;
+    f32 distSqB;
     bool nearEnd;
     char leg;
-    int state;
+    MmpGyserventState* state;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    speed = (float)(s32)(*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x3b) * 2);
-    dx = *(f32*)(state + 0x1c) - ((GameObject*)obj)->anim.worldPosX;
-    dy = *(f32*)(state + 0x20) - ((GameObject*)obj)->anim.worldPosY;
-    dz = *(f32*)(state + 0x24) - ((GameObject*)obj)->anim.worldPosZ;
-    dz = dx * dx + dz * dz;
-    dx = *(f32*)(state + 0x28) - ((GameObject*)obj)->anim.worldPosX;
-    dy2 = *(f32*)(state + 0x2c) - ((GameObject*)obj)->anim.worldPosY;
-    dz2 = *(f32*)(state + 0x30) - ((GameObject*)obj)->anim.worldPosZ;
-    dz2 = dx * dx + dz2 * dz2;
-    dx = *(f32*)(state + 4);
-    if (dz2 < dx)
+    state = ((GameObject*)obj)->extra;
+    speed = (float)(s32)(*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + MMP_GYSERVENT_PLACE_SPEED) * 2);
+    t = state->reachAX - ((GameObject*)obj)->anim.worldPosX;
+    dyA = state->reachAY - ((GameObject*)obj)->anim.worldPosY;
+    distSqA = state->reachAZ - ((GameObject*)obj)->anim.worldPosZ;
+    distSqA = t * t + distSqA * distSqA;
+    t = state->reachBX - ((GameObject*)obj)->anim.worldPosX;
+    dyB = state->reachBY - ((GameObject*)obj)->anim.worldPosY;
+    distSqB = state->reachBZ - ((GameObject*)obj)->anim.worldPosZ;
+    distSqB = t * t + distSqB * distSqB;
+    t = state->nearRadiusSq;
+    /* goto preserves the target's flattened two-exit branch shape */
+    if (distSqB < t)
     {
-        dy2 = (dy2 < lbl_803E40D8) ? -dy2 : dy2;
-        if (dy2 < speed)
+        dyB = (dyB < lbl_803E40D8) ? -dyB : dyB;
+        if (dyB < speed)
         {
             nearEnd = false;
-            if (dz < dx)
+            if (distSqA < t)
             {
-                dy = (dy < lbl_803E40D8) ? -dy : dy;
-                if (dy < speed)
+                dyA = (dyA < lbl_803E40D8) ? -dyA : dyA;
+                if (dyA < speed)
                 {
                     nearEnd = true;
                 }
             }
             if (nearEnd)
             {
-                leg = '\x02';
+                leg = 2;
             }
             else
             {
-                leg = '\x01';
+                leg = 1;
             }
             goto end;
         }
     }
     nearEnd = false;
-    if (dz < dx)
+    if (distSqA < t)
     {
-        dy = (dy < lbl_803E40D8) ? -dy : dy;
-        if (dy < speed)
+        dyA = (dyA < lbl_803E40D8) ? -dyA : dyA;
+        if (dyA < speed)
         {
             nearEnd = true;
         }
@@ -151,7 +192,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
         leg = -2;
     }
 end:
-    objInterpretSeq(obj, arg2, (int)leg, (int)dz2);
+    objInterpretSeq(obj, arg2, (int)leg, (int)distSqB);
 }
 
 void objSeqFn_801992ec(void* obj, int arg2)
@@ -159,28 +200,27 @@ void objSeqFn_801992ec(void* obj, int arg2)
     void* state;
     f32 dx0, dy0, dz0, d0;
     f32 dx1, dy1, dz1, d1;
-    f32 r;
     s8 cat;
 
     state = ((GameObject*)obj)->extra;
 
-    dx0 = ((MmpGyserventState*)state)->unk1C - ((GameObject*)obj)->anim.worldPosX;
-    dy0 = ((MmpGyserventState*)state)->unk20 - ((GameObject*)obj)->anim.worldPosY;
-    dz0 = ((MmpGyserventState*)state)->unk24 - ((GameObject*)obj)->anim.worldPosZ;
+    dx0 = ((MmpGyserventState*)state)->reachAX - ((GameObject*)obj)->anim.worldPosX;
+    dy0 = ((MmpGyserventState*)state)->reachAY - ((GameObject*)obj)->anim.worldPosY;
+    dz0 = ((MmpGyserventState*)state)->reachAZ - ((GameObject*)obj)->anim.worldPosZ;
     d0 = dx0 * dx0 + dy0 * dy0 + dz0 * dz0;
 
-    dx1 = ((MmpGyserventState*)state)->unk28 - ((GameObject*)obj)->anim.worldPosX;
-    dy1 = ((MmpGyserventState*)state)->unk2C - ((GameObject*)obj)->anim.worldPosY;
-    dz1 = ((MmpGyserventState*)state)->unk30 - ((GameObject*)obj)->anim.worldPosZ;
+    dx1 = ((MmpGyserventState*)state)->reachBX - ((GameObject*)obj)->anim.worldPosX;
+    dy1 = ((MmpGyserventState*)state)->reachBY - ((GameObject*)obj)->anim.worldPosY;
+    dz1 = ((MmpGyserventState*)state)->reachBZ - ((GameObject*)obj)->anim.worldPosZ;
     d1 = dx1 * dx1 + dy1 * dy1 + dz1 * dz1;
 
-    if (d1 < ((MmpGyserventState*)state)->unk4)
+    if (d1 < ((MmpGyserventState*)state)->nearRadiusSq)
     {
-        cat = (d0 < ((MmpGyserventState*)state)->unk4) ? 2 : 1;
+        cat = (d0 < ((MmpGyserventState*)state)->nearRadiusSq) ? 2 : 1;
     }
     else
     {
-        cat = (d0 < ((MmpGyserventState*)state)->unk4) ? -1 : -2;
+        cat = (d0 < ((MmpGyserventState*)state)->nearRadiusSq) ? -1 : -2;
     }
     objInterpretSeq(obj, arg2, (int)cat, (int)d1);
 }
