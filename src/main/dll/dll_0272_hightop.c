@@ -219,7 +219,7 @@ void hightop_func0F(int obj, f32* ox, f32* oy, f32* oz)
     pos.x = ((GameObject*)player)->anim.localPosX;
     pos.y = ((GameObject*)player)->anim.localPosY;
     pos.z = ((GameObject*)player)->anim.localPosZ;
-    pos.rx = ((GameObject*)player)->anim.rotX;
+    pos.rx = *(s16*)player;
     pos.ry = ((GameObject*)player)->anim.rotY;
     pos.rz = ((GameObject*)player)->anim.rotZ;
     pos.scale = lbl_803E6AB8;
@@ -343,7 +343,7 @@ void hightop_getLookTargetYaw(int obj, int mode, int* out)
         }
         else
         {
-            *out = ((GameObject*)obj)->anim.rotX + 0x4000;
+            *out = *(s16*)obj + 0x4000;
         }
         break;
     case 3:
@@ -421,7 +421,7 @@ void hightop_init(void* obj, u8* arg)
     local8 = lbl_803E6AA0;
     local1 = lbl_802C2590;
     local2 = lbl_802C25A4;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
+    *(s16*)obj = (s16)((s8)arg[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = (void*)hightop_interactionCallback;
     runtime->unkC45 = arg[0x19];
     runtime->unkC16 = 5;
@@ -810,10 +810,11 @@ int hightop_stateHandler04(int obj, int p)
         }
         fn_80039264((char*)state + 0xb48);
     }
-    count = GameBit_Get(0x9c7) + GameBit_Get(0x9c9) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
+    count = GameBit_Get(0x9c9) + GameBit_Get(0x9c7) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
     if (GameBit_Get(0x62b) != 0)
     {
         HighTopRuntime* state2;
+        RomCurveInterface* curve = *gRomCurveInterface;
         GameBit_Set(0x62f, 1);
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
@@ -822,8 +823,8 @@ int hightop_stateHandler04(int obj, int p)
         state->unkC40 |= 0x40;
         state->unkC40 |= 0x20;
         state->flagsC49.b1 = 0;
-        ((void (*)(void*, int, int, void*))(*gRomCurveInterface)->slotA8)(
-            (char*)state + 0xa10, obj, 0x3463a, *gRomCurveInterface);
+        ((void (*)(void*, int, int, void*))curve->slotA8)(
+            (char*)state + 0xa10, obj, 0x3463a, curve);
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(lbl_803DC320, 0x5ce);
@@ -882,11 +883,11 @@ int hightop_stateHandler04(int obj, int p)
     else
     {
         f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-        f32 a = dy >= lbl_803E6AA8 ? dy : -dy;
-        if (a < lbl_803E6AEC || (dy >= *(f32*)&lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
+        if ((dy >= lbl_803E6AA8 ? dy : -dy) < lbl_803E6AEC ||
+            (dy >= lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
         {
             state->unk9FD |= 1;
-            if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
+            if (randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
             {
                 f32 c = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
                 f32 ac = c >= lbl_803E6AA8 ? c : -c;
