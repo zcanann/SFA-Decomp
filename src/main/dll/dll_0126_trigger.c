@@ -1889,7 +1889,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (((TriggerState*)state)->unk82 != -1 && GameBit_Get(((TriggerState*)state)->unk82) == 0)
+                    if (((TriggerState*)state)->unk82 != -1 && (u32)GameBit_Get(((TriggerState*)state)->unk82) == 0)
                     {
                         ok2 = 0;
                     }
@@ -1900,7 +1900,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4e:
                     ((TriggerState*)state)->unk8 = *(int*)&((TriggerState*)state)->unk8 + framesThisStep;
-                    if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->unk8)
+                    if (((TriggerState*)state)->unk8 >= (u32)((TriggerPlacement*)def)->unk46)
                     {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
@@ -1908,26 +1908,29 @@ void Trigger_hitDetect(int obj)
                 case 0x4d:
                     if (ok)
                     {
-                        r1 = fn_80198B68(obj, *(int*)&((GameObject*)obj)->extra + 0x28);
-                        r2 = fn_80198B68(obj, *(int*)&((GameObject*)obj)->extra + 0x1c);
-                        if (r1 == 0)
+                        {
+                            int extra = *(int*)&((GameObject*)obj)->extra;
+                            r1 = fn_80198B68(obj, extra + 0x28);
+                            r2 = fn_80198B68(obj, extra + 0x1c);
+                        }
+                        if (r1 != 0)
                         {
                             if (r2 == 0)
                             {
-                                objInterpretSeq(obj, target, -2, 0);
+                                objInterpretSeq(obj, target, 1, 0);
                             }
                             else
                             {
-                                objInterpretSeq(obj, target, -1, 0);
+                                objInterpretSeq(obj, target, 2, 0);
                             }
                         }
-                        else if (r2 == 0)
+                        else if (r2 != 0)
                         {
-                            objInterpretSeq(obj, target, 1, 0);
+                            objInterpretSeq(obj, target, -1, 0);
                         }
                         else
                         {
-                            objInterpretSeq(obj, target, 2, 0);
+                            objInterpretSeq(obj, target, -2, 0);
                         }
                     }
                     break;
@@ -1944,14 +1947,14 @@ void Trigger_hitDetect(int obj)
                     p8 = state;
                     while (i < 4 && ok)
                     {
-                        if (*(s16*)(p8 + 0x82) != -1 && GameBit_Get(*(s16*)(p8 + 0x82)) == 0)
+                        if (*(s16*)(p8 + 0x82) != -1 && (u32)GameBit_Get(*(s16*)(p8 + 0x82)) == 0)
                         {
                             ok = 0;
                         }
                         p8 += 2;
                         i++;
                     }
-                    if (ok && (s8)state[0x8a] >= 0)
+                    if (ok && ((TriggerFlags8A*)(state + 0x8a))->bit7 == 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
                         objInterpretSeq(obj, t, 1, 0);
