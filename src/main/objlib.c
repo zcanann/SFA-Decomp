@@ -1064,9 +1064,9 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
                 bestDistanceSq = distanceSq;
                 nearest = *entry;
             }
+            entry++;
+            index++;
         }
-        entry++;
-        index++;
     }
     if (nearest != 0)
     {
