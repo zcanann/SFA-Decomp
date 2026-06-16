@@ -469,7 +469,7 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
     undefined8 convFrames2;
 
     biasU = DOUBLE_803e00c0;
-    vtxData = (int)((ModgfxState*)state)->vertexBuffers[((ModgfxState*)state)->activeVertexBufferIndex];
+    vtxData = *(int*)(state + (uint) * (byte*)(state + 0x130) * 4 + 0x78);
     if (mode == 1)
     {
         targetR = ((ModgfxVertexGroupCmd*)command)->valueX;
@@ -773,7 +773,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
         if ((int)((ModgfxState*)state)->blendFrameCount == 0)
         {
             work2 = (int)((ModgfxState*)state)->baseVertexData;
-            vtxBufA = (int)((ModgfxState*)state)->vertexBuffers[((ModgfxState*)state)->activeVertexBufferIndex];
+            vtxBufA = *(int*)(state + (uint) * (byte*)(state + 0x130) * 4 + 0x78);
             work1 = 0;
             for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0 = work0 + 1)
             {
@@ -1466,7 +1466,7 @@ void dll_0B_initialise(void)
     }
 }
 
-#pragma peephole off
+#pragma peephole on
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
     f32 fz;
@@ -1474,7 +1474,7 @@ void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
     memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
     gModgfxSpawnContext.modeByte = p2;
     gModgfxSpawnContext.attachedSource = (void*)p1;
-    gModgfxSpawnContext.sourceModeCopy = gModgfxSpawnContext.modeByte;
+    gModgfxSpawnContext.sourceModeCopy = (u8)p2;
     fz = lbl_803DF430;
     gModgfxSpawnContext.posX = fz;
     gModgfxSpawnContext.posY = fz;
@@ -1750,18 +1750,17 @@ void fn_800A081C(int p1, int p2, int mode)
             int flags = ((ModgfxState*)p1)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
             {
-                s16 buf[12];
-                f32* fbuf = (f32*)&buf[4];
-                s16 v;
+                s16 buf[6];
+                f32* fbuf = (f32*)&buf[2];
+                s16 v = *((ModgfxState*)p1)->unk04;
                 f32 fill = lbl_803DF430;
-                fbuf[1] = fill;
-                fbuf[2] = fill;
                 fbuf[3] = fill;
+                fbuf[2] = fill;
+                fbuf[1] = fill;
                 fbuf[0] = lbl_803DF434;
-                v = *((ModgfxState*)p1)->unk04;
-                buf[0] = v;
-                buf[1] = v;
                 buf[2] = v;
+                buf[1] = v;
+                buf[0] = v;
                 vecRotateZXY(buf, (f32*)(p2 + 0x4));
             }
             ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX;
@@ -2018,7 +2017,7 @@ void dll_0B_func08(void* param)
     }
 }
 
-extern s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
+extern int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
 
 void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 {
@@ -2053,7 +2052,7 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 extern f32 lbl_803DF460;
 extern s16 lbl_803DD280;
 
-s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
+int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
     u8* st = (u8*)base;
     int slot;
@@ -2798,8 +2797,9 @@ void fn_800A0524(void* state, void* p, int mode)
             *(f32*)((char*)state + 0xbc) = tr;
             *(f32*)((char*)state + 0xc0) = tg;
             *(f32*)((char*)state + 0xc4) = tb;
-            *(f32*)((char*)state + 0xd0) = *(f32*)((char*)state + 0xcc) =
-                *(f32*)((char*)state + 0xc8) = lbl_803DF430;
+            *(f32*)((char*)state + 0xc8) =
+            *(f32*)((char*)state + 0xcc) =
+            *(f32*)((char*)state + 0xd0) = lbl_803DF430;
         }
     }
     *(f32*)((char*)state + 0xbc) += *(f32*)((char*)state + 0xc8);
@@ -3069,7 +3069,7 @@ void dll_0B_func05(void)
                             o = Obj_AllocObjectSetup(0x20, 0x66);
                             ((GameObject*)o)->anim.rootMotionScale = tmpl.x;
                             ((GameObject*)o)->anim.localPosX = tmpl.y;
-                            ((GameObject*)o)->anim.localPosY = tmpl.z;
+                            *(f32*)&((ObjDef*)o)->jointData = tmpl.z;
                             *(int*)eff = (int)Obj_SetupObject(o, 5, -1, -1, 0);
                             *(int*)(*(int*)eff + 0xf8) = 1;
                         }
@@ -3088,9 +3088,9 @@ void dll_0B_func05(void)
                             tmpl.y += ((ModgfxEffectSlot*)eff)->posOffsetY;
                             tmpl.z += ((ModgfxEffectSlot*)eff)->posOffsetZ;
                         }
-                        (*(GameObject**)eff)->anim.worldPosX = tmpl.x;
-                        (*(GameObject**)eff)->anim.worldPosY = tmpl.y;
-                        (*(GameObject**)eff)->anim.worldPosZ = tmpl.z;
+                        *(f32*)(*(int*)eff + 0x18) = tmpl.x;
+                        *(f32*)(*(int*)eff + 0x1c) = tmpl.y;
+                        *(f32*)(*(int*)eff + 0x20) = tmpl.z;
                     }
                     if (*(int*)eff != 0)
                     {
