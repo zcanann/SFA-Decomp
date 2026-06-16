@@ -89,6 +89,8 @@ extern f32 lbl_803E422C;
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 lbl_803E4298;
+extern f32 lbl_803E429C;
+extern int objBboxFn_800640cc();
 extern void modelLightStruct_freeSlot(int* p);
 extern f32 lbl_803E42A0;
 extern f32 lbl_803E42A4;
@@ -636,7 +638,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0) return;
     if (((GameObject*)obj)->unkF4 != 0 ||
-        objBboxFn_800640cc((int)obj + 0xc, vec, 0, out, (int)obj, 4, -1, 0, 0) == 0)
+        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)((int)obj + 0xc, vec, lbl_803E429C, 0, out, (int)obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
