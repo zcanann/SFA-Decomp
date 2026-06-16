@@ -1221,9 +1221,9 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     int t;
     int t2;
     int* tbl;
-    u32 bit;
-    u32 v;
     u32 op;
+    u32 v;
+    u32 bit;
     u32 sel;
     s16 d;
     int ang;
@@ -1492,8 +1492,9 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     GameBit_Set(bit, v);
                     break;
                 case 0x21:
-                    bit = ((u32)p[2] << 8 & 0x1f00) | p[3];
-                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (((u32)p[2] << 8) >> 13)));
+                    op = (u16)((p[2] << 8) | p[3]);
+                    bit = op & 0x1fff;
+                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13)));
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setObjGroupStatus(
