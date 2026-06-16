@@ -314,15 +314,15 @@ void curvefish_update(int obj)
         }
         if (yawDelta > 0x180)
         {
-            *(s16*)obj += 0x180;
+            ((GameObject*)obj)->anim.rotX += 0x180;
         }
         else if (yawDelta < -0x180)
         {
-            *(s16*)obj -= 0x180;
+            ((GameObject*)obj)->anim.rotX -= 0x180;
         }
         else
         {
-            *(s16*)obj = targetYaw;
+            ((GameObject*)obj)->anim.rotX = targetYaw;
         }
     }
 
