@@ -10266,26 +10266,18 @@ int objAnimFn_80296328(int obj)
     {
         return 0;
     }
-    if ((v = inner->baddie.controlMode) == 1 || v == 2 || v == 0x26)
+    if ((v = inner->baddie.controlMode) != 1 && v != 2 && v != 0x26)
     {
-        return 1;
-    }
-    if (v == 0x18)
-    {
-        if (GameBit_Get(0x3e3))
+        if (v != 0x18 ||
+            (!GameBit_Get(0x3e3) && *(s16*)((char*)inner->unk7F0 + 0x46) != 0x416))
         {
-            return 1;
-        }
-        if (*(s16*)((char*)inner->unk7F0 + 0x46) == 0x416)
-        {
-            return 1;
+            if (inner->baddie.targetObj == NULL)
+            {
+                return 0;
+            }
         }
     }
-    if (inner->baddie.targetObj != NULL)
-    {
-        return 1;
-    }
-    return 0;
+    return 1;
 }
 
 void fn_802AD204(int p1, int obj)
@@ -11336,7 +11328,7 @@ int fn_802957B4(int obj)
     PlayerState* inner = ((GameObject*)obj)->extra;
     int sub;
 
-    if (obj == 0)
+    if ((void*)obj == NULL)
     {
         return 0;
     }
@@ -11344,26 +11336,26 @@ int fn_802957B4(int obj)
     (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
 
     sub = inner->unk7F0;
-    if ((void*)sub == NULL)
+    if ((void*)sub != NULL)
     {
-        return 0;
+        /* target uses 3-deref (lwz r5,104; lwz r5,0(r5); lwz r12,60(r5)) -- correct form is
+           *(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c); blocked by #108 remat cascade
+           (3-deref alone nets -0.4pp here); apply 3-deref + #108 fix together when #108 lands. */
+        (*(void (*)(int, int))(*(int*)(*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 0);
+        (*gCameraInterface)->setFocus((void*)obj, 0);
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
+        ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
+        inner->unk7F0 = 0;
+        ((GameObject*)obj)->anim.activeMove = -1;
+        (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
+        *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
+        Music_Trigger(0x1f, 0);
+        Music_Trigger(0x97, 0);
+        Music_Trigger(0xe6, 0);
+        Music_Trigger(0xd5, 0);
+        return 1;
     }
-    /* target uses 3-deref (lwz r5,104; lwz r5,0(r5); lwz r12,60(r5)) -- correct form is
-       *(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c); blocked by #108 remat cascade
-       (3-deref alone nets -0.4pp here); apply 3-deref + #108 fix together when #108 lands. */
-    (*(void (*)(int, int))(*(int*)(*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 0);
-    (*gCameraInterface)->setFocus((void*)obj, 0);
-    ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
-    ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-    inner->unk7F0 = 0;
-    ((GameObject*)obj)->anim.activeMove = -1;
-    (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
-    *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
-    Music_Trigger(0x1f, 0);
-    Music_Trigger(0x97, 0);
-    Music_Trigger(0xe6, 0);
-    Music_Trigger(0xd5, 0);
-    return 1;
+    return 0;
 }
 
 int fn_8029BC4C(int obj, int state, f32 fv)
@@ -13164,9 +13156,9 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
 void fn_802B066C(int obj, int state)
 {
     f32 v;
-    f32 px;
-    f32 py;
     f32 pz;
+    f32 py;
+    f32 px;
 
     if (((PlayerState*)state)->surfaceType == 0x1a)
     {
@@ -13175,19 +13167,12 @@ void fn_802B066C(int obj, int state)
     if (((ByteFlags*)((char*)state + 0x3f0))->b10 == 0)
     {
         v = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
-            ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY);
+            (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
         ((PlayerState*)state)->unk7A4 = v;
         v = ((PlayerState*)state)->unk7A4;
-        if (v < lbl_803E7EE0)
-        {
-            v = lbl_803E7EE0;
-        }
-        else if (v > lbl_803E8138)
-        {
-            v = lbl_803E8138;
-        }
-        ((PlayerState*)state)->unk7A4 = v;
+        ((PlayerState*)state)->unk7A4 =
+            (v < lbl_803E7EE0) ? lbl_803E7EE0 : ((v > lbl_803E8138) ? lbl_803E8138 : v);
     }
     ((PlayerState*)state)->unk79C =
         ((PlayerState*)state)->unk79C - timeDelta * ((PlayerState*)state)->unk7A4;

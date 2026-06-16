@@ -5479,8 +5479,8 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
 
 void curves_remove(RomCurveDef* curve)
 {
-    int sortedCurveCount;
     RomCurveDef** tableSlot;
+    int sortedCurveCount;
     int removeIndex;
 
     removeIndex = 0;

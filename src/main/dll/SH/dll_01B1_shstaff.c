@@ -447,7 +447,6 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
 {
     int player;
     void* child;
-    ShStaffState* slotBase;
     int i;
     int zero;
 
@@ -461,40 +460,39 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
         fn_80295CF4(player, 1);
         fn_8029672C(player, 1);
         zero = 0;
-        slotBase = state;
         for (i = 0; i < 8; i += 4)
         {
-            child = (void*)slotBase->slots[0];
+            char* p = (char*)state + (i << 2) + i;
+            child = *(void**)(p + 56);
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                slotBase->slots[0] = zero;
+                *(int*)(p + 56) = zero;
             }
-            child = (void*)slotBase->slots[1];
+            child = *(void**)(p + 60);
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                slotBase->slots[1] = zero;
+                *(int*)(p + 60) = zero;
             }
-            child = (void*)slotBase->slots[2];
+            child = *(void**)(p + 64);
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                slotBase->slots[2] = zero;
+                *(int*)(p + 64) = zero;
             }
-            child = (void*)slotBase->slots[3];
+            child = *(void**)(p + 68);
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                slotBase->slots[3] = zero;
+                *(int*)(p + 68) = zero;
             }
-            child = (void*)slotBase->slots[4];
+            child = *(void**)(p + 72);
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
-                slotBase->slots[4] = zero;
+                *(int*)(p + 72) = zero;
             }
-            slotBase = (ShStaffState*)((int*)slotBase + 5);
         }
     }
 

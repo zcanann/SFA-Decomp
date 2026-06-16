@@ -1508,10 +1508,11 @@ void timeListDraw(void)
     drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
 
     {
-        s16 ang = (s16)(lbl_803DD7E6 + lbl_803DBAB4);
+        s16 ang;
         int pulse;
         int a, b;
-        lbl_803DD7E6 = ang;
+        lbl_803DD7E6 += lbl_803DBAB4;
+        ang = lbl_803DD7E6;
         pulse = (int)(lbl_803DBAB8 * fsin16Precise((u16)ang) + lbl_803DBABC);
         if (lbl_803DD75B == 1)
         {
@@ -4250,6 +4251,7 @@ void fn_8012FA70(int idx, s8 flag)
 {
     extern undefined4 cMenuSetItems(); /* #57 */
     void* entry;
+    s16* posPtr;
     u8 prev = 1;
     int count;
     s16 pos;
@@ -4257,17 +4259,17 @@ void fn_8012FA70(int idx, s8 flag)
 
     entry = &lbl_8031B5D8[idx * 16];
     count = cMenuSetItems(*(int*)entry, flag);
-    pos = *(s16*)((char*)entry + 4);
+    posPtr = (s16*)((char*)entry + 4);
+    pos = *posPtr;
 
     for (i = 0; i < count * 2; i++)
     {
-        u8 b = lbl_803A8C78[(s16)pos];
-        if (b != 0 && (prev != 0 || i >= count))
+        if (lbl_803A8C78[(s16)pos] != 0 && (prev != 0 || i >= count))
         {
-            *(s16*)((char*)entry + 4) = pos;
+            *posPtr = pos;
             return;
         }
-        prev = b;
+        prev = lbl_803A8C78[(s16)pos];
         pos++;
         if (pos >= count)
         {
