@@ -1,3 +1,21 @@
+/*
+ * nwmammoth (DLL 0x1A1) - the SnowHorn (mammoth) creature of SnowHorn
+ * Wastes (map 'nwastes', 0x0A). One DLL serves every SnowHorn variant
+ * (white/heavy/baby/guard); the placement's behaviorMode selects which
+ * per-frame state machine runs:
+ *   0  fn_801CEE0C  - the guarded herd member gated by trigger 1398
+ *   2  fn_801CED2C  - the rescue/release scene gated by trigger 418
+ *   1/3 fn_801CEA14 - free-roaming path follower (curve-driven, fn_801CE078
+ *                     handles the sun/sound/eruption sub-state + particles)
+ *   4  fn_801CE2BC  - the bagged-SnowHorn capture minigame (air meter UI,
+ *                     herding tumbleweed bushes, screen transition on win)
+ * nw_mammoth_update runs the shared per-frame pipeline (hit reactions,
+ * state-table lookups, animation advance, audio, path control) and
+ * dispatches to the mode handler; nw_mammoth_init seeds the mode from
+ * GameBits. The heavy per-object state lives in NwMammothState
+ * (dim2conveyor.h); the looped audio / path helpers are shared with the
+ * geyser TU (dll_01A0_nwgeyser.h).
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -18,26 +36,7 @@
 
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
-extern undefined4 FUN_8003a1c4();
-extern undefined4 fn_8003A328();
-extern undefined4 FUN_8003b1a4();
-extern undefined4 FUN_8003b280();
 extern undefined4 objAudioFn_8006ef38();
-extern uint countLeadingZeros();
-
-extern undefined4 DAT_803274f4;
-extern f64 DOUBLE_803e5eb8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5E98;
-extern f32 lbl_803E5EA4;
-extern f32 lbl_803E5EA8;
-extern f32 lbl_803E5EAC;
-extern f32 lbl_803E5EB0;
-extern f32 lbl_803E5EC0;
-extern f32 lbl_803E5EC4;
-extern f32 lbl_803E5EC8;
-extern f32 lbl_803E5ECC;
-extern f32 lbl_803E5ED0;
 
 #pragma scheduling on
 #pragma peephole on
@@ -89,45 +88,10 @@ extern void fn_801CDF94(int obj, void* state, int flag);
 extern u8 lbl_803267C0[];
 extern u8 lbl_803267E8[];
 extern u8 lbl_80326818[];
-extern ObjHitReactEntry DAT_80327400;
-extern ObjHitReactEntry DAT_80327414;
-extern undefined4 DAT_80327468;
-extern undefined4 DAT_80327498;
 extern NwMammothPathControlInterface** gPathControlInterface;
 extern u32 lbl_803E5208;
 extern f32 lbl_803E5254;
 extern f32 lbl_803E5258;
-
-void FUN_801ce078(undefined2* param_1, int param_2)
-{
-}
-
-void FUN_801ce340(short* param_1, int param_2, int param_3)
-{
-    if (((param_3 == 0) || (*(int*)(param_2 + 0x28) == 0)) ||
-        (lbl_803E5EAC <= *(float*)(param_2 + 0x18)))
-    {
-        *(undefined*)(param_2 + 0x40c) = 0;
-    }
-    else
-    {
-        *(undefined*)(param_2 + 0x40c) = 1;
-        *(undefined4*)(param_2 + 0x410) = *(undefined4*)(*(int*)(param_2 + 0x28) + 0xc);
-        *(undefined4*)(param_2 + 0x414) = *(undefined4*)(*(int*)(param_2 + 0x28) + 0x10);
-        *(undefined4*)(param_2 + 0x418) = *(undefined4*)(*(int*)(param_2 + 0x28) + 0x14);
-    }
-    if (((&DAT_803274f4)[*(byte*)(param_2 + 0x408)] & 2) == 0)
-    {
-        fn_8003A328((double)lbl_803E5EA4, param_1, (char*)(param_2 + 0x40c));
-        FUN_8003b280((int)param_1, param_2 + 0x40c);
-    }
-    else
-    {
-        FUN_8003a1c4((int)param_1, param_2 + 0x40c);
-        FUN_8003b1a4((int)param_1, param_2 + 0x40c);
-    }
-    return;
-}
 
 int nw_mammoth_getExtraSize(void)
 {
@@ -138,7 +102,7 @@ int nw_mammoth_getExtraSize(void)
 #pragma peephole off
 void fn_801CEE0C(int p1, int p2)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern undefined4 GameBit_Set(int eventId, int value);
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
     extern int gameBitDecrement(int);
@@ -153,14 +117,14 @@ void fn_801CEE0C(int p1, int p2)
     switch (state->stateIndex)
     {
     case 0:
-        *(int*)&state->triggerList = (int)&lbl_803DBF70;
+        state->triggerList = (u8*)&lbl_803DBF70;
         if (GameBit_Get(211) != 0)
         {
             state->stateIndex = 1;
         }
         break;
     case 1:
-        *(int*)&state->triggerList = (int)&lbl_803DBF74;
+        state->triggerList = (u8*)&lbl_803DBF74;
         switch (GameBit_Get(1400))
         {
         case 0:
@@ -182,7 +146,7 @@ void fn_801CEE0C(int p1, int p2)
         }
         break;
     case 2:
-        *(int*)&state->triggerList = (int)&lbl_803DBF78;
+        state->triggerList = (u8*)&lbl_803DBF78;
         if (ObjTrigger_IsSetById(p1, 1398) != 0)
         {
             GameBit_Set(1400, 2);
@@ -193,14 +157,14 @@ void fn_801CEE0C(int p1, int p2)
         }
         break;
     case 3:
-        *(int*)&state->triggerList = (int)&lbl_803DBF7C;
+        state->triggerList = (u8*)&lbl_803DBF7C;
         break;
     }
 }
 
 void fn_801CED2C(int p1, int p2)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern undefined4 GameBit_Set(int eventId, int value);
     extern int ObjTrigger_IsSetById(int, int);
     extern int lbl_803DBFB4;
     extern int lbl_803DBFB8;
@@ -210,7 +174,7 @@ void fn_801CED2C(int p1, int p2)
     switch (state->stateIndex)
     {
     case 4:
-        *(int*)&state->triggerList = (int)&lbl_803DBFB4;
+        state->triggerList = (u8*)&lbl_803DBFB4;
         if (ObjTrigger_IsSetById(p1, 418) != 0)
         {
             state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
@@ -222,14 +186,14 @@ void fn_801CED2C(int p1, int p2)
         }
         break;
     case 5:
-        *(int*)&state->triggerList = (int)&lbl_803DBFB8;
+        state->triggerList = (u8*)&lbl_803DBFB8;
         if (GameBit_Get(415) != 0)
         {
             state->stateIndex = 6;
         }
         break;
     case 6:
-        *(int*)&state->triggerList = (int)&lbl_803DBFBC;
+        state->triggerList = (u8*)&lbl_803DBFBC;
         break;
     }
 }
@@ -242,7 +206,7 @@ typedef struct
 
 int fn_801CE078(int* obj, u8* st)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern u32 randomGetRange(int min, int max);
     u8 cv;
     int snd;
     f32 sunTime;
@@ -396,55 +360,55 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF90;
+            state->triggerList = (u8*)&lbl_803DBF90;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF8C;
+            state->triggerList = (u8*)&lbl_803DBF8C;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF88;
+            state->triggerList = (u8*)&lbl_803DBF88;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF84;
+            state->triggerList = (u8*)&lbl_803DBF84;
         }
         else
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF80;
+            state->triggerList = (u8*)&lbl_803DBF80;
         }
     }
     else
     {
         if (GameBit_Get(0x19d) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFA4;
+            state->triggerList = (u8*)&lbl_803DBFA4;
         }
         else if (GameBit_Get(0x1a2) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFA0;
+            state->triggerList = (u8*)&lbl_803DBFA0;
         }
         else if (GameBit_Get(0x102) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF9C;
+            state->triggerList = (u8*)&lbl_803DBF9C;
         }
         else if (GameBit_Get(0x9e) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF98;
+            state->triggerList = (u8*)&lbl_803DBF98;
         }
         else
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBF94;
+            state->triggerList = (u8*)&lbl_803DBF94;
         }
     }
 }
 
 void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
-    extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
-    extern int* getTrickyObject(void); /* #57 */
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern f32 vec3f_distanceSquared(void* a, void* b);
+    extern int* getTrickyObject(void);
+    extern undefined4 GameBit_Set(int eventId, int value);
     NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408])
@@ -548,7 +512,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                     (**(void (**)(int*, int*, int, int))((char*)(*(int**)*(int*)((char*)tk + 0x68)) + 0x28))(
                         tk, obj, 1, 1);
                 }
-                *(int*)&state->triggerList = (int)&lbl_803DBFA8;
+                state->triggerList = (u8*)&lbl_803DBFA8;
                 if (*(void**)&state->trackedObject == NULL)
                 {
                     short* cfg = *(short**)&((GameObject*)obj)->anim.placementData;
@@ -642,7 +606,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     default:
         if (GameBit_Get(0x224) != 0)
         {
-            *(int*)&state->triggerList = (int)&lbl_803DBFB0;
+            state->triggerList = (u8*)&lbl_803DBFB0;
         }
         else
         {
@@ -651,7 +615,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                 GameBit_Set(0xea7, 1);
                 GameBit_Set(0x9d5, 1);
             }
-            *(int*)&state->triggerList = (int)&lbl_803DBFAC;
+            state->triggerList = (u8*)&lbl_803DBFAC;
         }
         fn_801CE078(obj, st);
         break;
@@ -675,7 +639,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 
 void nw_mammoth_free(void* obj)
 {
-    extern void ObjGroup_RemoveObject(void* obj, int group); /* #57 */
+    extern void ObjGroup_RemoveObject(void* obj, int group);
     void* node;
 
     node = ((GameObject*)obj)->extra;
@@ -688,8 +652,8 @@ void nw_mammoth_free(void* obj)
 
 void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
-    extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag); /* #57 */
-    extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
+    extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+    extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
     int i;
     void* node;
 
@@ -709,21 +673,6 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
                                   (char*)node + 0x14,
                                   0);
 }
-
-#define gNwMammothNormalHitReactEntry DAT_80327400
-#define gNwMammothHeavyHitReactEntry DAT_80327414
-#define gNwMammothStateMoveIds DAT_80327468
-#define gNwMammothStateMoveStepScales DAT_80327498
-#define gNwMammothStateFlags DAT_803274f4
-
-#define NW_MAMMOTH_STATE_FLAGS(table) ((u8 *)((table) + 0xf4))
-#define NW_MAMMOTH_MOVE_IDS(table) ((s16 *)((table) + 0x68))
-#define NW_MAMMOTH_MOVE_STEP_SCALES(table) ((f32 *)((table) + 0x98))
-#define NW_MAMMOTH_HIT_REACT_ENTRIES(table) ((ObjHitReactEntry *)(table))
-#define NW_MAMMOTH_HEAVY_HIT_REACT_ENTRIES(table) \
-  ((ObjHitReactEntry *)((table) + sizeof(ObjHitReactEntry)))
-#define NW_MAMMOTH_HIT_REACT_STEP_SCALE(state) ((f32 *)((state) + 0x50))
-#define NW_MAMMOTH_HIT_REACT_STATE(state) ((state)[0x3d4])
 
 enum NwMammothStateFlag
 {
@@ -747,12 +696,12 @@ enum NwMammothRuntimeFlag
 
 void nw_mammoth_update(NwMammothObject* obj, int param_2)
 {
-    extern void fn_801CE2BC(int obj, void* state, void* objDef); /* #57 */
-    extern void fn_801CEA14(int obj, void* state, void* objDef); /* #57 */
-    extern void fn_801CED2C(int obj, void* state, void* objDef); /* #57 */
-    extern void fn_801CEE0C(int obj, void* state, void* objDef); /* #57 */
-    extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2); /* #57 */
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern void fn_801CE2BC(int obj, void* state, void* objDef);
+    extern void fn_801CEA14(int obj, void* state, void* objDef);
+    extern void fn_801CED2C(int obj, void* state, void* objDef);
+    extern void fn_801CEE0C(int obj, void* state, void* objDef);
+    extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+    extern u32 randomGetRange(int min, int max);
     NwMammothTables* table = (NwMammothTables*)lbl_803267C0;
     NwMammothState* state;
     NwMammothMapData* mapData;
