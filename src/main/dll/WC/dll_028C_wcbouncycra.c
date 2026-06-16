@@ -159,7 +159,8 @@ void wcbouncycra_initialise(void)
 {
 }
 
-#pragma scheduling on
+#pragma scheduling off
+#pragma opt_common_subs off
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     ObjAnimComponent* objAnim;
@@ -215,5 +216,6 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 
     return 0;
 }
+#pragma opt_common_subs reset
 
 #undef WCBLOCK_GRID_IFACE
