@@ -1,6 +1,22 @@
+/*
+ * lgtpointlight (DLL 0x2A9) - a placeable point light.
+ *
+ * On init it creates a ModelLight of kind POINT and configures it from the
+ * placement record: diffuse colour (or the live ambient colour when
+ * POINTLIGHT_FLAG_USE_AMBIENT_COLOR is set), distance attenuation, spot
+ * attenuation (brightness clamped to POINTLIGHT_MAX_SPOT_BRIGHTNESS), an
+ * initial colour fade, direction, an optional billboard glow, AABB
+ * light-selection participation and a selection priority. update() spins the
+ * light by its per-axis rotation speeds, toggles the light on/off from its
+ * enableBit game bit, refreshes the ambient colour each frame when requested
+ * and advances the glow alpha.
+ *
+ * Each instance joins LGT_POINTLIGHT_GROUP so lgtcontrollight can toggle the
+ * point lights within a radius; pointlight_setEffectState is the entry point
+ * it calls.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-
 
 typedef struct PointLightState
 {
@@ -100,6 +116,7 @@ void pointlight_render(int obj)
 {
     PointLightState* state = ((GameObject*)obj)->extra;
     ModelLight* light = state->light;
+    /* glowType (0x2f8) set and the light enabled (0x4c) */
     if (light != NULL && *(u8*)((char*)light + 0x2f8) != 0 &&
         *(u8*)((char*)light + 0x4c) != 0)
     {
