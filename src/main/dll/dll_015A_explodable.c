@@ -515,7 +515,7 @@ void fn_801A2E80(int obj, int def, int p3, int state)
             i14 += 4;
             i8 += 4;
         }
-        *(u8*)(state + 0x6e4) = ((u32)GameBit_Get(*(s16*)(def + 0x3e)) != 0) ? 1 : 0;
+        ((DrExplodableState*)state)->phase6E4 = ((u32)GameBit_Get(*(s16*)(def + 0x3e)) != 0) ? 1 : 0;
     }
 }
 
