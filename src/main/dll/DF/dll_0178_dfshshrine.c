@@ -1,4 +1,9 @@
-/* DLL 0x0178 — dfshshrine (DarkFlier Sauria shrine lantern object). TU: 0x801C2914–0x801C3618. */
+/*
+ * DragonRock Shrine lantern (DLL 0x178; "DFSH_Shrine") - the shrine's
+ * floating lantern object: it orbits and sways (sin-driven), animates its
+ * model light, and once activated triggers the level unlock, music change
+ * and screen transition.
+ */
 #include "main/mapEvent.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -113,8 +118,8 @@ void fn_801C2914(int obj)
     if (player != NULL)
     {
         angleDelta =
-        ((u16)getAngle(((GameObject*)obj)->anim.worldPosX - ((GameObject*)player)->anim.worldPosX,
-                       ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)player)->anim.worldPosZ) -
+        ((u16)getAngle(((GameObject*)obj)->anim.worldPosX - *(f32*)(player + 0x18),
+                       ((GameObject*)obj)->anim.worldPosZ - *(f32*)(player + 0x20)) -
             ((u16) * (s16*)obj));
         if (angleDelta > 0x8000)
         {
@@ -224,9 +229,6 @@ void dfsh_shrine_free(int obj)
     GameBit_Set(0xcbb, 1);
 }
 
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern void objRenderFn_8003b8f4(f32 scale);
-extern void Music_Trigger(int musicId, int mode);
 
 typedef struct DfshShrineState
 {
@@ -497,8 +499,6 @@ void dfsh_shrine_initialise(void)
 {
 }
 
-extern int mapGetDirIdx(int id);
-extern void unlockLevel(int idx, int a, int b);
 
 typedef struct DfshShrineFlags
 {
