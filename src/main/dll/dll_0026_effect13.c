@@ -5,34 +5,7 @@
 
 extern u32 randomGetRange(int min, int max);
 
-extern undefined4 DAT_8039d0b8;
-extern undefined4 DAT_8039d0bc;
-extern undefined4 DAT_803de090;
-extern f32 lbl_803DC4B0;
-extern f32 lbl_803DC4B4;
-extern f32 lbl_803E0E38;
-extern f32 lbl_803E0E3C;
-extern f32 lbl_803E0E40;
-extern f32 lbl_803E0E44;
-extern f32 lbl_803E0E48;
-extern f32 lbl_803E0E4C;
-extern f32 lbl_803E0E50;
-extern f32 lbl_803E0E54;
-extern f32 lbl_803E0E58;
-extern f32 lbl_803E0E5C;
-extern f32 lbl_803E0E60;
-extern f32 lbl_803E0E64;
-extern f32 lbl_803E0E68;
-extern f32 lbl_803E0E6C;
-extern f32 lbl_803E0E70;
-extern f32 lbl_803E0E74;
-extern f32 lbl_803E0E78;
-extern f32 lbl_803E0E7C;
-extern f32 lbl_803E0E80;
-extern f32 lbl_803E0E84;
-extern f32 lbl_803E0E88;
-extern f32 lbl_803E0E8C;
-
+#if 0
 undefined4
 FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint spawnFlags, u8 modelId,
              int useWorldOffset)
@@ -444,6 +417,7 @@ undefined4 FUN_800c9030(uint key, int* outIndex)
     *outIndex = mid;
     return (&DAT_8039d0bc)[mid * 2];
 }
+#endif
 
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
