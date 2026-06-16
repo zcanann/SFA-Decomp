@@ -247,7 +247,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
     player = state->player;
     angle = (u16)getAngle(((GameObject*)obj)->anim.worldPosX - player->anim.worldPosX,
                           ((GameObject*)obj)->anim.worldPosZ - player->anim.worldPosZ);
-    angleDelta = angle - ((int)*(s16*)obj & 0xffff);
+    angleDelta = angle - ((int)((GameObject*)obj)->anim.rotX & 0xffff);
     if (angleDelta > 0x8000)
     {
         angleDelta -= 0xffff;
@@ -257,7 +257,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         angleDelta += 0xffff;
     }
 
-    *(s16*)obj += (s16)(s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
+    ((GameObject*)obj)->anim.rotX += (s16)(s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
 }
 
 void hagabon_hitDetect(int obj)
