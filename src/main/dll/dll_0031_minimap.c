@@ -868,10 +868,10 @@ void Minimap_release(void)
     null = NULL;
     while ((u32)i < 2)
     {
-        if (slots[i] != NULL)
+        if (slots[(u8)i] != NULL)
         {
-            Obj_FreeObject(slots[i]);
-            slots[i] = null;
+            Obj_FreeObject(slots[(u8)i]);
+            slots[(u8)i] = null;
         }
         i++;
     }
