@@ -1668,47 +1668,41 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x1c:
-                    c = p[2];
-                    if (c == 2)
+                    switch (p[2])
                     {
+                    case 0:
+                        GameBit_Set(0x3ab, p[3] == 0);
+                        break;
+                    case 1:
+                        GameBit_Set(0x3ac, p[3] == 0);
+                        break;
+                    case 2:
                         GameBit_Set(0x3af, p[3] == 0);
-                    }
-                    else if (c < 2)
-                    {
-                        if (c == 0)
+                        break;
+                    case 3:
+                        switch (p[3])
                         {
-                            GameBit_Set(0x3ab, p[3] == 0);
-                        }
-                        else
-                        {
-                            GameBit_Set(0x3ac, p[3] == 0);
-                        }
-                    }
-                    else if (c < 4)
-                    {
-                        c = p[3];
-                        if (c == 1)
-                        {
+                        case 0:
+                            GameBit_Set(0x3b0, 1);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+                            break;
+                        case 1:
                             GameBit_Set(0x3b0, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
                             envFxFn_800887cc();
-                        }
-                        else if (c == 0)
-                        {
-                            GameBit_Set(0x3b0, 1);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
-                        }
-                        else if (c < 3)
-                        {
+                            break;
+                        case 2:
                             GameBit_Set(0x3b0, 1);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x137, 0);
                             getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x143, 0);
+                            break;
                         }
+                        break;
                     }
                     break;
                 case 0x1d:
