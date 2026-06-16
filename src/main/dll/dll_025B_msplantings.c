@@ -275,7 +275,7 @@ void ccgasvent_free(int x);
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int*)&((GameObject*)obj)->extra;
-    *(u8*)(obj + 1) = (u8)((uint) * (u8*)(obj + 1) | 1);
+    ((MoonSeedPlantingSpotState*)obj)->flags = (u8)((uint)((MoonSeedPlantingSpotState*)obj)->flags | 1);
     return 0;
 }
 
@@ -443,7 +443,7 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
     ret = 0;
     if (arg == 0)
     {
-        if ((inner[1] & 2) != 0)
+        if ((((MoonSeedPlantingSpotState*)inner)->flags & 2) != 0)
         {
             inner[0] = 3;
             *(s16*)(inner + 0xc) = 0;
@@ -481,7 +481,7 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
     {
         if (inner[0] == 2)
         {
-            if ((inner[1] & 2) != 0)
+            if ((((MoonSeedPlantingSpotState*)inner)->flags & 2) != 0)
             {
                 f32 s;
                 int iv;
