@@ -1,34 +1,29 @@
-/* DLL 0x54 - CameraModeNpcSpeak [8010DB7C-8010DD58) */
-#include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/game_object.h"
+/*
+ * DLL 0x54 - CameraModeNpcSpeak
+ *
+ * Camera mode used while the player talks to an NPC. dll_54_init allocates the
+ * mode-54 state (mmAlloc), snaps the camera onto the optional source camera and
+ * records the starting pose for the transition. dll_54_update locates the
+ * look-at object (seqId 0x2AB) and origin object (seqId 0x4DC), frames the
+ * player between them, derives FOV/height/yaw/pitch from the configured curve
+ * constants, eases the camera from its start pose over transitionTimer, then
+ * transforms the result into the camera's local space. The exit flag switches
+ * back to camera mode 0x42.
+ *
+ * Also hosts the shared force-behind / cloud-runner camera no-op and free
+ * callbacks referenced from the sibling camera-mode DLLs, plus two drifted
+ * helpers (FUN_8010de18_v11_drift, FUN_801115e0) that the camera DLLs call.
+ */
 #include "main/mm.h"
+#include "main/camera_object.h"
+#include "main/camera_interface.h"
+#include "main/dll/CAM/camera_mode_54_state.h"
+#include "main/dll/CAM/camcloudrunner_state.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 
-#include "ghidra_import.h"
-#include "main/dll/baddieControl.h"
-#include "main/camera_object.h"
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camera_mode_54_state.h"
-#include "main/dll/CAM/camera_mode_4f_state.h"
-#include "main/dll/CAM/camcloudrunner_state.h"
-#include "main/dll/CAM/camcrawl_state.h"
-#include "main/dll/CAM/camera_mode_cannon_state.h"
-#include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/dll/CAM/camperv_state.h"
-#include "main/dll/CAM/camworldmap_state.h"
-#include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/mapEvent.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/screen_transition.h"
-
-#include "main/dll/dll19_state.h"
-#include "main/objanim.h"
-#include "main/dll/baddie_state.h"
-
+/* home TUs unresolved (drifted FUN_/lbl_/DAT_ symbols) */
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -47,10 +42,9 @@ extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 
-#pragma scheduling on
-#pragma peephole on
 extern void* memset(void* dst, int val, u32 n);
 extern f32 timeDelta;
+/* lbl_803DD5C0/lbl_803DD5B8: .sbss globals, owning TU unconfirmed in splits — kept extern */
 extern CameraMode54State* lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
@@ -66,8 +60,10 @@ extern f32 lbl_803E1B58;
 extern f32 lbl_803E1B60;
 extern f32 lbl_803E1B64;
 extern const f32 lbl_803E1B68;
-extern s16 getAngle(f32 x, f32 z);
 
+#pragma scheduling on
+#pragma peephole on
+/* NonMatching drift helper (v1.1 home TU unresolved) — not yet attempted, raw Ghidra body */
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -104,6 +100,7 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
     return;
 }
 
+/* NonMatching drift helper (v1.1 home TU unresolved) — not yet attempted, raw Ghidra body */
 void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9, int param_10)
@@ -154,8 +151,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-void CameraModeNpcSpeak_release(void);
-
 #pragma scheduling off
 #pragma peephole off
 void CameraModeForceBehind_func06_nop(void)
@@ -166,13 +161,10 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-void CameraModeForceBehind_release(void);
-
+/* 0x801101E4 CameraModeCloudRunner_copyToCurrent — genuine 4-byte no-op (sibling DLL) */
 void fn_801101E4(void)
 {
 }
-
-void CameraModeCloudRunner_release(void);
 
 void dll_54_func06_nop(void)
 {
@@ -190,16 +182,9 @@ void fn_80110C80(void)
 {
 }
 
-void CameraModePerv_release(void);
-
 void fn_80110EC0(void)
 {
 }
-
-void CameraModeArwing_release(void);
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 
 void dll_54_init(int* p1, int unused, int* p3)
 {
@@ -231,16 +216,13 @@ void dll_54_init(int* p1, int unused, int* p3)
     lbl_803DD5C0->startRoll = camera->anim.rotZ;
 }
 
-int dll_19_func1B(int p);
-
+/* 0x801101E8 CameraModeCloudRunner_free (size 0x2C, not a no-op; sibling DLL) */
 void fn_801101E8(void)
 {
-    extern void mm_free(u32); /* #57 */
+    extern void mm_free(u32); /* #57: block-scope extern reconciles per-file type disagreement */
     mm_free((u32)lbl_803DD5B8);
     lbl_803DD5B8 = NULL;
 }
-
-void CameraModeCloudRunner_free(void);
 
 void dll_54_func05(void)
 {
@@ -248,8 +230,6 @@ void dll_54_func05(void)
     mm_free((u32)lbl_803DD5C0);
     lbl_803DD5C0 = NULL;
 }
-
-void CameraModePerv_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -364,37 +344,3 @@ void dll_54_update(u8* obj)
                                        *(int*)&camera->anim.parent);
     }
 }
-
-/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
- * angle into the caller's record. */
-
-/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
- * caller's record and aims its angle at the nearest group-8 object (falling
- * back to the point's packed angle). */
-
-/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
- * current target and turns the yaw by the buffered turn rate. */
-
-/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
- * primes the animation channel tables. */
-
-/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
- * first use and refreshes the current path point position. */
-
-/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
- * distance from an object to its target, updating the wide-turn flag. */
-
-/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
- * the object for walkable space, returning a bitmask of clear directions. */
-
-/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
- * curve, snapping to ground and easing the yaw toward the path direction. */
-
-/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
- * arms the move, phase 5 walks the setup/playback sub-phases. */
-
-/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
- * object's facing plane and returns the lateral offset of the result. */
-
-/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
- * given speed, snapping when close, easing yaw and pacing the walk anim. */
