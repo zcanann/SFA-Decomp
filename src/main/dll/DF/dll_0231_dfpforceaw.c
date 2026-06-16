@@ -1,3 +1,8 @@
+/*
+ * DragonRock Palace force-field object (DLL 0x231; "DFP_ForceAw"),
+ * implemented on the shared TrickyCurve state machine and sfxplayer: a
+ * curve-driven hazard/barrier with per-state update handlers.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
