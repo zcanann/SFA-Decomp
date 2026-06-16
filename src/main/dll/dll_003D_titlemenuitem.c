@@ -264,24 +264,24 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
     if (item->value > item->maxValue)
     {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) != 0)
         {
-            item->value = item->maxValue;
+            item->value = 0;
         }
         else
         {
-            item->value = 0;
+            item->value = item->maxValue;
         }
     }
     else if (item->value < item->minValue)
     {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) != 0)
         {
-            item->value = item->minValue;
+            item->value = item->maxValue;
         }
         else
         {
-            item->value = item->maxValue;
+            item->value = item->minValue;
         }
     }
 
