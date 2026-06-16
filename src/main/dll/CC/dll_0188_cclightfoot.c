@@ -55,12 +55,12 @@ void FUN_801aaa6c(double param_1, int param_2, int param_3)
         *(u8*)(param_2 + 0x10) = 2;
         return;
     }
-    if ((*(short*)(param_3 + 0xa0) == 0x18) && (lbl_803E5314 < *(float*)(param_3 + 0x98)))
+    if ((((GameObject*)param_3)->anim.currentMove == 0x18) && (lbl_803E5314 < ((GameObject*)param_3)->anim.currentMoveProgress))
     {
         *(u8*)(param_2 + 0x10) = 8;
         return;
     }
-    if (*(short*)(param_3 + 0xa0) == 0x19)
+    if (((GameObject*)param_3)->anim.currentMove == 0x19)
     {
         *(u8*)(param_2 + 0x10) = 5;
         return;
@@ -88,7 +88,7 @@ int cclightfoot_getExtraSize(void) { return 0x18; }
 #pragma peephole off
 void cclightfoot_init(int* obj, int* def)
 {
-    *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 26) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 26) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
     ((GameObject*)obj)->animEventCallback = (void*)ccqueen_SeqFn;
 }
@@ -278,7 +278,7 @@ void cclightfoot_update(int obj)
         }
         else
         {
-            valid = GameBit_Get(*(s16*)(*(int*)(o1 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+            valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o1)->anim.placementData + 0x18)) != 0 ? 0 : 1;
         }
         if (valid == 0)
         {
@@ -291,7 +291,7 @@ void cclightfoot_update(int obj)
         }
         else
         {
-            valid = GameBit_Get(*(s16*)(*(int*)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+            valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
         }
         if (valid == 0)
         {
@@ -356,7 +356,7 @@ void cclightfoot_update(int obj)
             }
             else
             {
-                valid = GameBit_Get(*(s16*)(*(int*)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+                valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
             }
             if (valid != 0)
             {
@@ -369,7 +369,7 @@ void cclightfoot_update(int obj)
             }
             else
             {
-                valid = GameBit_Get(*(s16*)(*(int*)(o2 + 0x4c) + 0x18)) != 0 ? 0 : 1;
+                valid = GameBit_Get(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
             }
             if (valid != 0)
             {
@@ -400,7 +400,7 @@ void cclightfoot_update(int obj)
     cc_endif:;
         angle = (s16)getAngle(-(((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX),
                               -(((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ));
-        diff = (s16)(*(s16*)obj - (u16)angle);
+        diff = (s16)(((GameObject*)obj)->anim.rotX - (u16)angle);
         if (diff > 0x8000)
         {
             diff = (s16)(diff - 0xffff);
@@ -461,15 +461,15 @@ void cclightfoot_update(int obj)
         {
             if (diff > 0x400)
             {
-                *(s16*)obj = (s16)(*(s16*)obj - (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(lbl_803E468C * timeDelta));
             }
             else if (diff < -0x400)
             {
-                *(s16*)obj = (s16)(*(s16*)obj + (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E468C * timeDelta));
             }
             else
             {
-                *(s16*)obj = angle;
+                ((GameObject*)obj)->anim.rotX = angle;
             }
         }
         if (*((u8*)state + 0x11) & 1)
@@ -597,15 +597,15 @@ void cclightfoot_update(int obj)
         {
             if (diff > 0x400)
             {
-                *(s16*)obj = (s16)(*(s16*)obj - (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(lbl_803E468C * timeDelta));
             }
             else if (diff < -0x400)
             {
-                *(s16*)obj = (s16)(*(s16*)obj + (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E468C * timeDelta));
             }
             else
             {
-                *(s16*)obj = angle;
+                ((GameObject*)obj)->anim.rotX = angle;
             }
         }
         if (*((u8*)state + 0x11) & 1)
