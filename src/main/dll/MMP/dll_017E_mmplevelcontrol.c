@@ -1,49 +1,41 @@
-/* DLL 0x17E - MMPLevelControl [801A6638-801A6778) */
-#include "main/dll/mmptrenchfxstate_struct.h"
-#include "main/dll/moonseedbushstate_struct.h"
-#include "main/dll/MMP/mmp_asteroid_re_state.h"
-#include "main/dll/MMP/mmp_moonrock_state.h"
-#include "main/game_object.h"
-#include "main/dll/DIM/DIMlavaball.h"
+/*
+ * mmplevelcontrol (DLL 0x17E) - Moon Mountain Pass level controller.
+ *
+ * A singleton manager object that drives the area's environment. init
+ * unlocks the map, primes the fog/heat-haze countdown (lbl_803DDB28) and
+ * fires the area music cues. update selects the sky/weather environment
+ * fx set from gamebits (0xD47 / 0xF33) and the player's current map cell,
+ * runs the heat-haze text + countdown, and latches two scripted gamebit
+ * events via SCGameBitLatch_Update. The sequence callback
+ * (MMP_LevelControl_SeqFn) layers extra env fx on top in response to anim
+ * events.
+ */
 
-extern u32 randomGetRange(int min, int max);
-extern u32 GameBit_Get(int eventId);
+#include "main/game_object.h"
+#include "main/objanim_update.h"
 
 extern void objRenderFn_8003b8f4(f32 v);
-extern void Music_Trigger(int id, int p2);
+extern void Music_Trigger(int id, int mode);
 extern int getSaveGameLoadStatus(void);
-extern int getEnvfxAct(int obj, int player, int id, int p);
-
-extern f32 timeDelta;
-
-extern f32 lbl_803E44C0;
-extern f32 lbl_803E44C4;
-
-extern f32 lbl_803DDB28;
-extern int lbl_803DDB2C;
-
-STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
-STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
-STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
-STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
-extern undefined8 FUN_80006728();
-extern uint GameBit_Get(int eventId);
-extern int FUN_80017a98();
-extern undefined4 FUN_8005d0ac();
-extern f32 lbl_803E5180;
+extern int getEnvfxAct(int obj, int target, int actId, int flags);
+extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
 extern void gameTextShow(int textId);
 extern void envFxActFn_800887f8(int value);
 extern void skyFn_80088c94(int flags, int mode);
-extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
-extern int getEnvfxAct(int obj, int target, int actId, int flags);
 extern int coordsToMapCell(f32 x, f32 z);
-extern void Music_Trigger(int id, int mode);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
                                   int setBit, int textId);
-extern void objRenderFn_8003b8f4(f32);
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
+extern u32 GameBit_Get(int eventId);
+extern f32 timeDelta;
+extern f32 lbl_803E44C0;
+extern f32 lbl_803E44C4;
 extern f32 lbl_803E44C8;
+extern f32 lbl_803DDB28;
+extern int lbl_803DDB2C;
+
+void MMP_levelcontrol_update(int obj);
 
 void MMP_levelcontrol_hitDetect(void)
 {
@@ -79,37 +71,16 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (v)
         {
         case 1:
-            getEnvfxAct(obj, player, 315, 0);
+            getEnvfxAct(obj, player, 0x13b, 0);
             break;
         case 2:
-            getEnvfxAct(obj, player, 312, 0);
+            getEnvfxAct(obj, player, 0x138, 0);
             break;
         }
     }
     MMP_levelcontrol_update(obj);
     return 0;
 }
-
-/*
- * Per-object extra state for the MoonSeedBush plant spot
- * (MoonSeedBush_getExtraSize == 0x2).
- */
-
-/*
- * Per-object extra state for the mmp asteroid set piece
- * (mmp_asteroid_re_getExtraSize == 0x1C).
- */
-
-/*
- * Per-object extra state for the mmp trench fx emitter
- * (mmp_trenchfx_getExtraSize == 0x30).
- */
-
-/*
- * Per-object extra state for the mmp moonrock carryable
- * (mmp_moonrock_getExtraSize == 0x30). The leading bytes belong to the
- * gCarryableInterface record (the state pointer itself is handed to it).
- */
 
 #pragma peephole on
 void MMP_levelcontrol_update(int obj)
@@ -211,94 +182,6 @@ void MMP_levelcontrol_update(int obj)
 
     SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
     SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
-}
-
-undefined4
-#pragma scheduling on
-FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    byte eventType;
-    undefined4 fxHandle;
-    int i;
-
-    fxHandle = FUN_80017a98();
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
-    {
-        eventType = animUpdate->eventIds[i];
-        if (eventType == 2)
-        {
-            param_1 = FUN_80006728(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                   , fxHandle, 0x138, 0, param_13, param_14, param_15, param_16);
-        }
-        else if ((eventType < 2) && (eventType != 0))
-        {
-            param_1 = FUN_80006728(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                   , fxHandle, 0x13b, 0, param_13, param_14, param_15, param_16);
-        }
-    }
-    FUN_801a6b10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-    return 0;
-}
-
-undefined4
-FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
-             undefined4 param_10, ObjAnimUpdateState* animUpdate)
-{
-    extern undefined4 GameBit_Set(int eventId, int value);
-    byte eventType;
-    uint rnd;
-    int i;
-    byte* state;
-
-    state = ((GameObject*)param_9)->extra;
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
-    {
-        eventType = animUpdate->eventIds[i];
-        if (eventType == 2)
-        {
-            *state = *state & 0xf6;
-            *state = *state | 0x30;
-            ((ObjAnimComponent*)param_9)->bankIndex = 1;
-        }
-        else if (eventType < 2)
-        {
-            if (eventType == 0)
-            {
-                param_1 = FUN_8005d0ac(0);
-            }
-            else
-            {
-                *state = 0xd;
-                state[1] = 1;
-                param_1 = GameBit_Set(0x87b, (uint)state[1]);
-                ((GameObject*)param_9)->anim.alpha = 0xff;
-            }
-        }
-        else if (eventType == 4)
-        {
-            *(float*)(state + 4) = lbl_803E5180;
-            param_1 = FUN_8005d0ac(1);
-        }
-        else if (eventType < 4)
-        {
-            *state = *state & 0xdf;
-            *state = *state | 0x50;
-            rnd = randomGetRange(10, 0x3c);
-            *(float*)(state + 8) =
-                (f32)(s32)(rnd);
-            state[1] = 1;
-            param_1 = GameBit_Set(0x87b, (uint)state[1]);
-        }
-    }
-    *state = *state | 0x80;
-    FUN_801a7a94(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-    return 0;
 }
 
 void MMP_levelcontrol_release(void)
