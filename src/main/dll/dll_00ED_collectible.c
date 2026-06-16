@@ -594,12 +594,12 @@ void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 {
     char* inner = (char*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.localPosX = f1;
-    *(f32*)(inner + 0x24) = f1;
+    ((CollectibleState*)inner)->basePosX = f1;
     ((GameObject*)obj)->anim.localPosY = f2;
-    *(f32*)(inner + 0x28) = f2;
+    ((CollectibleState*)inner)->basePosY = f2;
     ((GameObject*)obj)->anim.localPosZ = f3;
-    *(f32*)(inner + 0x2c) = f3;
-    if (GameBit_Get(*(s16*)(inner + 0x10)) == 0)
+    ((CollectibleState*)inner)->basePosZ = f3;
+    if (GameBit_Get(((CollectibleState*)inner)->hideGameBit) == 0)
     {
         saveGame_saveObjectPos((int)obj);
     }
@@ -608,14 +608,14 @@ void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 void collectible_func0B(int* obj, int flag)
 {
     char* inner = (char*)((GameObject*)obj)->extra;
-    *(u8*)(inner + 0xf) = (u8)flag;
+    ((CollectibleState*)inner)->unkF = (u8)flag;
     if (flag != 0)
     {
         ObjHits_DisableObject((u32)obj);
     }
     else
     {
-        if (GameBit_Get(*(s16*)(inner + 0x10)) == 0)
+        if (GameBit_Get(((CollectibleState*)inner)->hideGameBit) == 0)
         {
             ObjHits_EnableObject((u32)obj);
         }
@@ -728,9 +728,9 @@ void fn_80171E5C(int* obj)
             ((GameObject*)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    if (*(s16*)(state + 0x10) != -1)
+    if (((CollectibleState*)state)->hideGameBit != -1)
     {
-        GameBit_Set(*(s16*)(state + 0x10), 1);
+        GameBit_Set(((CollectibleState*)state)->hideGameBit, 1);
         saveGame_unsaveObjectPos(obj);
     }
     if (*(s16*)(params + 0x1e) != -1)
@@ -852,11 +852,11 @@ void fn_80172144(int* obj)
         ((GameObject*)obj)->anim.velocityY *= lbl_803E3464;
         ((GameObject*)obj)->anim.velocityX *= len;
         ((GameObject*)obj)->anim.velocityZ *= len;
-        state[0x1d] -= 1;
-        if (state[0x1d] == 0)
+        ((GfxEmitState*)state)->unk1D -= 1;
+        if (((GfxEmitState*)state)->unk1D == 0)
         {
             f32 z;
-            state[0x1d] = 0;
+            ((GfxEmitState*)state)->unk1D = 0;
             z = lbl_803E345C;
             ((GameObject*)obj)->anim.velocityX = z;
             ((GameObject*)obj)->anim.velocityY = z;
@@ -1180,9 +1180,9 @@ void collectible_update(int obj)
     }
     if (((GfxEmitState*)state)->enableGameBit != -1)
     {
-        state[0x1e] = (u8)(GameBit_Get((s32)((GfxEmitState*)state)->enableGameBit) == 0);
+        ((GfxEmitState*)state)->enableGameBitClear = (u8)(GameBit_Get((s32)((GfxEmitState*)state)->enableGameBit) == 0);
     }
-    if (state[0x1e] != 0 || state[0xf] != 0)
+    if (((GfxEmitState*)state)->enableGameBitClear != 0 || state[0xf] != 0)
     {
         return;
     }
@@ -1255,7 +1255,7 @@ void collectible_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
         fn_801723DC(obj);
-        if (state[0x1d] != 0)
+        if (((GfxEmitState*)state)->unk1D != 0)
         {
             fn_80172144(obj);
         }
