@@ -12488,6 +12488,14 @@ void fn_802AC32C(int p1, int p2, int p3)
         }
         angle1 += v480 * 0xb6;
     }
+    if (angle1 < -0x3FFC)
+    {
+        angle1 = -0x3FFC;
+    }
+    else if (angle1 > 0x3FFC)
+    {
+        angle1 = 0x3FFC;
+    }
     angle1 -= (u16) * (s16*)((char*)p3 + 0x4d4);
     if (angle1 > 0x8000)
     {
