@@ -13,7 +13,7 @@
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
 #include "main/game_object.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern void vecRotateZXY(void* params, void* outVec);
 
 extern f32 lbl_803E5EAC;
@@ -33,6 +33,8 @@ extern void FireFlyFn_801f4f88(int* obj);
 /* angle advance applied each update */
 #define FIREFLY_ANGLE_ADVANCE_MIN 0xbb8
 #define FIREFLY_ANGLE_ADVANCE_MAX 0x1388
+/* upper bound for the random initial angle (~one full 1/65536-turn circle) */
+#define FIREFLY_ANGLE_INIT_MAX 0xfde8
 /* vertical bob amplitude ceiling */
 #define FIREFLY_AMP_MAX 0x3c
 /* minimum inward margin when re-rolling the orbit radius */
@@ -65,7 +67,7 @@ void fn_801F4C28(u8* obj, u8* rec)
     ((LgtFireFlyRec*)rec)->unk67 = 0;
     ((LgtFireFlyRec*)rec)->angleStep =
         (s16)randomGetRange(FIREFLY_ANGLE_STEP_MIN, FIREFLY_ANGLE_STEP_MAX);
-    ((LgtFireFlyRec*)rec)->angle = (s16)randomGetRange(0, 0xfde8);
+    ((LgtFireFlyRec*)rec)->angle = (s16)randomGetRange(0, FIREFLY_ANGLE_INIT_MAX);
     ((LgtFireFlyRec*)rec)->ampMax = FIREFLY_AMP_MAX;
     ((LgtFireFlyRec*)rec)->unk66 = 4;
     ((LgtFireFlyRec*)rec)->radiusMin = lbl_803E5EB8;

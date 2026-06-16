@@ -46,7 +46,7 @@ STATIC_ASSERT(offsetof(ControlLightSetup, radius) == 0x1A);
 STATIC_ASSERT(offsetof(ControlLightSetup, gameBit) == 0x1E);
 STATIC_ASSERT(sizeof(ControlLightSetup) == 0x20);
 
-int controllight_getExtraSize(void) { return 0xc; }
+int controllight_getExtraSize(void) { return sizeof(ControlLightState); }
 
 int controllight_getObjectTypeId(void) { return 0; }
 

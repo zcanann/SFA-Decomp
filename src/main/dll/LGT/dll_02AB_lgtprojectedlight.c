@@ -7,7 +7,7 @@
  * either an orthographic frustum (PROJECTEDLIGHT_PROJECTION_ORTHO, with the
  * half-extents derived from projectionWidth/Height and the near/far depth from
  * the two nibbles of orthoDepthNibbles) or a perspective frustum (fovY plus the
- * width/height aspect), configures the projection TEV modes, near/far Z, colour
+ * height/width ratio), configures the projection TEV modes, near/far Z, colour
  * fade and target colour. update just spins the light by its per-axis rotation
  * speeds.
  */
@@ -81,7 +81,7 @@ STATIC_ASSERT(offsetof(ProjectedLightSetup, tevModeB) == 0x3E);
 STATIC_ASSERT(offsetof(ProjectedLightSetup, orthoDepthNibbles) == 0x3F);
 STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
-int projectedlight_getExtraSize(void) { return 8; }
+int projectedlight_getExtraSize(void) { return sizeof(ProjectedLightState); }
 
 int projectedlight_getObjectTypeId(void) { return 0; }
 

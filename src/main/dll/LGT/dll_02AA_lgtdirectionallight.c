@@ -82,7 +82,7 @@ STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
 STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
 STATIC_ASSERT(sizeof(DirectionalLightSetup) == 0x38);
 
-int directionallight_getExtraSize(void) { return 0x10; }
+int directionallight_getExtraSize(void) { return sizeof(DirectionalLightState); }
 
 int directionallight_getObjectTypeId(void) { return 0; }
 

@@ -87,7 +87,7 @@ STATIC_ASSERT(offsetof(PointLightSetup, glowEnabled) == 0x3E);
 STATIC_ASSERT(offsetof(PointLightSetup, affectsAabbLightSelection) == 0x3F);
 STATIC_ASSERT(sizeof(PointLightSetup) == 0x40);
 
-int pointlight_getExtraSize(void) { return 8; }
+int pointlight_getExtraSize(void) { return sizeof(PointLightState); }
 
 int pointlight_getObjectTypeId(void) { return 0; }
 
