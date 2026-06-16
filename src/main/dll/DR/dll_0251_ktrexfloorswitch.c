@@ -18,6 +18,14 @@
 
 #include "main/audio/sfx_ids.h"
 
+typedef struct Vec3Blob
+{
+    int x;
+    int y;
+    int z;
+} Vec3Blob;
+
+
 typedef struct KtrexfloorswitchPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -32,6 +40,16 @@ typedef struct KtrexfloorswitchPlacement
     u8 sinkDepth;        /* 0x1F: depth subtracted while pressed */
 } KtrexfloorswitchPlacement;
 
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, curveX) == 0x08);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, baseHeight) == 0x0C);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, curveZ) == 0x10);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, chargeReload) == 0x19);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, levelBit) == 0x1A);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, activeBit) == 0x1C);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, retractDepth) == 0x1E);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, sinkDepth) == 0x1F);
+STATIC_ASSERT(sizeof(KtrexfloorswitchPlacement) == 0x20);
+
 
 typedef struct KtrexfloorswitchSpawnEnergyArcState
 {
@@ -39,6 +57,9 @@ typedef struct KtrexfloorswitchSpawnEnergyArcState
     f32 unk8;
     f32 unkC;
 } KtrexfloorswitchSpawnEnergyArcState;
+
+STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, unk8) == 0x8);
+STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, unkC) == 0xC);
 
 
 typedef struct KtrexfloorswitchState
@@ -52,6 +73,13 @@ typedef struct KtrexfloorswitchState
     u8 flags;            /* 0x10: motion/state bits (1,2,4,8) */
     u8 pad11[0x14 - 0x11];
 } KtrexfloorswitchState;
+
+STATIC_ASSERT(offsetof(KtrexfloorswitchState, graceTimer) == 0x04);
+STATIC_ASSERT(offsetof(KtrexfloorswitchState, prevGraceTimer) == 0x05);
+STATIC_ASSERT(offsetof(KtrexfloorswitchState, chargeTimer) == 0x08);
+STATIC_ASSERT(offsetof(KtrexfloorswitchState, scrollSpeed) == 0x0C);
+STATIC_ASSERT(offsetof(KtrexfloorswitchState, flags) == 0x10);
+STATIC_ASSERT(sizeof(KtrexfloorswitchState) == 0x14);
 
 void ktrexfloorswitch_free(void)
 {
@@ -133,20 +161,13 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     *(void**)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
 }
 
-typedef struct Vec3Blob
-{
-    int x;
-    int y;
-    int z;
-} Vec3Blob;
-
 void ktrexfloorswitch_update(int obj)
 {
     int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
     int* state = ((GameObject*)obj)->extra;
     ObjTextureRuntimeSlot* tex;
     int* player;
-    int anim;
+    int moved;
     int level;
     int scroll;
     f32 vecA[3];
@@ -159,7 +180,7 @@ void ktrexfloorswitch_update(int obj)
     ((GameObject*)obj)->unkF8 = ((GameObject*)obj)->unkF4;
     ((GameObject*)obj)->unkF4 = GameBit_Get(((KtrexfloorswitchPlacement*)placement)->activeBit);
     tex = objFindTexture((void*)obj, 0, 0);
-    anim = 0;
+    moved = 0;
     if (((GameObject*)obj)->unkF4 <= 1)
     {
         tex->textureId = 0;
@@ -279,7 +300,7 @@ void ktrexfloorswitch_update(int obj)
             }
             else
             {
-                anim = 1;
+                moved = 1;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x488, NULL, 2, -1, NULL);
             }
         }
@@ -296,7 +317,7 @@ void ktrexfloorswitch_update(int obj)
             }
             else
             {
-                anim = 1;
+                moved = 1;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x488, NULL, 2, -1, NULL);
             }
         }
@@ -313,7 +334,7 @@ void ktrexfloorswitch_update(int obj)
             }
             else
             {
-                anim = 1;
+                moved = 1;
             }
         }
         if (((KtrexfloorswitchState*)state)->chargeTimer < lbl_803E687C)
@@ -358,7 +379,7 @@ void ktrexfloorswitch_update(int obj)
         }
         else
         {
-            anim = 1;
+            moved = 1;
         }
         if ((((KtrexfloorswitchState*)state)->flags & 0x8) != 0)
         {
@@ -388,11 +409,11 @@ void ktrexfloorswitch_update(int obj)
         GameBit_Get(((KtrexfloorswitchPlacement*)placement)->levelBit);
         GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
     }
-    if ((s8)anim != 0 && lbl_803DDD60 == 0)
+    if ((s8)moved != 0 && lbl_803DDD60 == 0)
     {
         Sfx_PlayFromObject(obj, SFXmv_bodyf2_c);
     }
-    lbl_803DDD60 = (s8)anim;
+    lbl_803DDD60 = (s8)moved;
     if (((GameObject*)obj)->unkF4 == 2)
     {
         if ((s8)((KtrexfloorswitchState*)state)->graceTimer != 0)
