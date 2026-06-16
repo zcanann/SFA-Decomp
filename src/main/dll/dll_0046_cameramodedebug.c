@@ -80,8 +80,8 @@ void CameraModeDebug_update(short* camObj)
     {
         f32 cosYaw = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
         f32 sinYaw = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
-        f32 sinPitch = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
-        f32 cosPitch = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
+        f32 sinPitch = mathCosf(lbl_803E185C * (f32)(s32) * (s16*)(cam + 2) / lbl_803E1860);
+        f32 cosPitch = mathSinf(lbl_803E185C * (f32)(s32) * (s16*)(cam + 2) / lbl_803E1860);
         f32 rc;
         f32 rs;
         f32 xt;
