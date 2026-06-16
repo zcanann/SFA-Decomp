@@ -1375,7 +1375,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject(
             (void*)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
-        if (((u16) * (s16*)((char*)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
+        if ((*(u16*)((char*)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
@@ -1405,8 +1405,8 @@ int fn_8029A76C(int obj, int state, f32 fv)
             int res;
             int half;
             int low;
-            f32 a;
             f32 b;
+            f32 a;
             *(u32*)((char*)inner + 0x360) &= ~0x400LL;
             a = inner->unk7BC;
             b = inner->unk7B8;
