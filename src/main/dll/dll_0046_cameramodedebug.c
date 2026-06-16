@@ -23,7 +23,7 @@ extern f32 lbl_803E185C;
 extern f32 lbl_803E1860;
 extern f32 lbl_803E1870;
 
-#pragma fp_contract off
+#pragma fp_contract on
 void CameraModeDebug_update(short* camObj)
 {
     extern u16 getButtonsJustPressed(int port); /* #57 */
