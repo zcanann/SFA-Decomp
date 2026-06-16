@@ -324,12 +324,13 @@ void titlescreen_init(u8* obj, u8* p)
     }
     else
     {
-        ((TitlescreenState*)a)->unk34 = lbl_803E22F8;
+        f32 m = lbl_803E22F8;
+        ((TitlescreenState*)a)->unk34 = m;
         ((TitlescreenState*)a)->unk31 = -2;
         v = ((GameObject*)obj)->anim.seqId;
         if (v == 0x78a)
         {
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, m, 0);
         }
         else if (v == 0x781)
         {
