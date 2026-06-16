@@ -1324,8 +1324,7 @@ void dll_D3_update(int* obj)
     int hitCount;
     int rc;
     int hits;
-    f32 searchRadius;
-    struct { f32 x, y, z; } delta;
+    struct { f32 searchRadius; f32 x, y, z; } sd;
     int aiStack_80[24];
     char hitType;
 
@@ -1333,14 +1332,14 @@ void dll_D3_update(int* obj)
     state = ((GameObject*)obj)->extra;
     extra = *(LandedArwingState**)((char*)state + 0x40c);
     player = (int*)Obj_GetPlayerObject();
-    searchRadius = lbl_803E3034;
+    sd.searchRadius = lbl_803E3034;
 
     if (extra->boundsObj == NULL)
     {
         extra->surfaceMode = 6;
         if (((u32)extra->flags92 >> 4 & 0xF) != 0u)
         {
-            hits = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &searchRadius);
+            hits = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &sd.searchRadius);
             *(int*)&extra->boundsObj = hits;
             if ((void*)hits != NULL)
             {
@@ -1415,14 +1414,14 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
-        delta.x = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
+        sd.x = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
             ((GameObject*)obj)->anim.worldPosX;
-        delta.y = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
+        sd.y = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
             ((GameObject*)obj)->anim.worldPosY;
-        delta.z = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
+        sd.z = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
-            sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
+            sqrtf(sd.x * sd.x + sd.y * sd.y + sd.z * sd.z);
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
