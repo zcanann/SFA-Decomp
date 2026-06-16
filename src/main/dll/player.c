@@ -16876,16 +16876,21 @@ void fn_802ADE80(int obj, int inner, int state)
     }
     ObjPath_GetPointWorldPosition(obj, 0x13, &v.mat[1], &v.mat[2], &v.mat[3], 0);
     loopCount = (*(f32*)((char*)inner + 0x83c) - v.mat[2] > lbl_803E7F10);
-    for (i = 0; i < loopCount; i++)
     {
-        pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7FA4;
-        pfx.y = v.mat[2] + (f32)randomGetRange(-0x64, 0x64) / lbl_803E808C;
-        pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7FA4;
-        pfx.scale = *(f32*)((char*)inner + 0x83c) - pfx.y;
-        if (pfx.scale > lbl_803E7EA4)
+        f32 div0 = lbl_803E7FA4;
+        f32 div1 = lbl_803E808C;
+        f32 zero = lbl_803E7EA4;
+        for (i = 0; i < loopCount; i++)
         {
-            (*gPartfxInterface)->spawnObject(
-                (void*)obj, 0x202, &pfx, 0x200001, -1, NULL);
+            pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / div0;
+            pfx.y = v.mat[2] + (f32)randomGetRange(-0x64, 0x64) / div1;
+            pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / div0;
+            pfx.scale = *(f32*)((char*)inner + 0x83c) - pfx.y;
+            if (pfx.scale > zero)
+        {
+                (*gPartfxInterface)->spawnObject(
+                    (void*)obj, 0x202, &pfx, 0x200001, -1, NULL);
+            }
         }
     }
 }
