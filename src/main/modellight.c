@@ -1628,8 +1628,8 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 b
                     obj->projectionLeft, obj->projectionRight, scaledT, scaledS, scaledT,
                     scaledS);
     C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
-                    obj->projectionLeft, obj->projectionRight, lbl_803DE790, lbl_803DE790,
-                    lbl_803DE790, lbl_803DE790);
+                    obj->projectionLeft, obj->projectionRight, 0.5f, 0.5f,
+                    0.5f, 0.5f);
 }
 
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness)
