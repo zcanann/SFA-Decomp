@@ -1665,6 +1665,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     u16 flags;
     int phase;
     int laneBit;
+    f32 t;
     p = ((GameObject*)obj)->anim.placementData;
     flags = ((KTRexArenaState*)gKTRexState)->timerFA;
     phase = (flags >> 1) & 3;
@@ -1693,8 +1694,9 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
     }
-    ((KTRexArenaState*)gKTRexState)->unk4 -= timeDelta;
-    if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
+    t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
+    ((KTRexArenaState*)gKTRexState)->unk4 = t;
+    if (t <= lbl_803E67B8)
     {
         ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
     }
@@ -1705,7 +1707,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
         {
-            int cond;
+            u8 cond;
             u8 fe;
             ((KTRexArenaState*)gKTRexState)->unk101 += 1;
             GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->unk101);
