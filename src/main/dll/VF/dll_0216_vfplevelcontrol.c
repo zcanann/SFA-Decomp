@@ -42,7 +42,7 @@ enum
 
 #define VFP_TIMER_INIT 0x82
 
-typedef union VFPLevelControlLatch
+typedef union VfpLevelControlLatch
 {
     u8 raw[8];
 
@@ -52,29 +52,29 @@ typedef union VFPLevelControlLatch
         u8 sequenceStep; /* 0x04: index of the next sequence bit to light */
         u8 pad05[3];
     } fields;
-} VFPLevelControlLatch;
+} VfpLevelControlLatch;
 
-typedef struct VFPLevelControlState
+typedef struct VfpLevelControlState
 {
     u8 pad00[2];
-    s16 cueTimers[6];          /* 0x02 */
-    s16 areaMode;              /* 0x0E: 1..2, from setup (defaults to 1) */
+    s16 unk02[6];               /* 0x02: cleared at init, never read back */
+    s16 areaMode;               /* 0x0E: 1..2, from setup (defaults to 1) */
     u8 pad10[4];
-    VFPLevelControlLatch latch; /* 0x14 */
-} VFPLevelControlState;
+    VfpLevelControlLatch latch; /* 0x14 */
+} VfpLevelControlState;
 
-typedef struct VFPLevelControlSetup
+typedef struct VfpLevelControlSetup
 {
     u8 pad00[0x1a];
     s16 areaMode; /* 0x1A */
-} VFPLevelControlSetup;
+} VfpLevelControlSetup;
 
-STATIC_ASSERT(offsetof(VFPLevelControlState, cueTimers) == 0x02);
-STATIC_ASSERT(offsetof(VFPLevelControlState, areaMode) == 0x0E);
-STATIC_ASSERT(offsetof(VFPLevelControlState, latch) == 0x14);
-STATIC_ASSERT(sizeof(VFPLevelControlState) == 0x1c);
-STATIC_ASSERT(offsetof(VFPLevelControlLatch, fields.sequenceStep) == 0x04);
-STATIC_ASSERT(offsetof(VFPLevelControlSetup, areaMode) == 0x1A);
+STATIC_ASSERT(offsetof(VfpLevelControlState, unk02) == 0x02);
+STATIC_ASSERT(offsetof(VfpLevelControlState, areaMode) == 0x0E);
+STATIC_ASSERT(offsetof(VfpLevelControlState, latch) == 0x14);
+STATIC_ASSERT(sizeof(VfpLevelControlState) == 0x1c);
+STATIC_ASSERT(offsetof(VfpLevelControlLatch, fields.sequenceStep) == 0x04);
+STATIC_ASSERT(offsetof(VfpLevelControlSetup, areaMode) == 0x1A);
 
 extern int coordsToMapCell(f32 x, f32 z);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
@@ -100,7 +100,7 @@ void vfplevelcontrol_hitDetect(void)
 
 void vfplevelcontrol_update(int obj)
 {
-    VFPLevelControlState* state = ((GameObject*)obj)->extra;
+    VfpLevelControlState* state = ((GameObject*)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
@@ -190,15 +190,15 @@ void vfplevelcontrol_free(int obj)
 
 void vfplevelcontrol_init(int* obj, u8* init)
 {
-    VFPLevelControlState* state = ((GameObject*)obj)->extra;
-    VFPLevelControlSetup* setup = (VFPLevelControlSetup*)init;
+    VfpLevelControlState* state = ((GameObject*)obj)->extra;
+    VfpLevelControlSetup* setup = (VfpLevelControlSetup*)init;
     ObjGroup_AddObject(obj, 9);
-    state->cueTimers[0] = 0;
-    state->cueTimers[1] = 0;
-    state->cueTimers[2] = 0;
-    state->cueTimers[3] = 0;
-    state->cueTimers[4] = 0;
-    state->cueTimers[5] = 0;
+    state->unk02[0] = 0;
+    state->unk02[1] = 0;
+    state->unk02[2] = 0;
+    state->unk02[3] = 0;
+    state->unk02[4] = 0;
+    state->unk02[5] = 0;
     state->areaMode = 1;
     if (setup->areaMode != 0 && setup->areaMode <= 2)
     {
@@ -206,8 +206,8 @@ void vfplevelcontrol_init(int* obj, u8* init)
     }
     lbl_803DC148 = VFP_TIMER_INIT;
     (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    state->cueTimers[4] = 0;
-    state->cueTimers[5] = 0;
+    state->unk02[4] = 0;
+    state->unk02[5] = 0;
     ((GameObject*)obj)->objectFlags |= 0x6000;
     timeOfDayFn_80055038();
     GameBit_Set(GAMEBIT_VFP_LATCH, 1);
@@ -231,7 +231,7 @@ void vfplevelcontrol_init(int* obj, u8* init)
 void fn_801F9804(int obj)
 {
     s16* p;
-    VFPLevelControlState* state = ((GameObject*)obj)->extra;
+    VfpLevelControlState* state = ((GameObject*)obj)->extra;
     s16 bits[4];
     s16 i;
 

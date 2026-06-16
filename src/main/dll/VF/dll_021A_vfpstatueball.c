@@ -29,7 +29,7 @@ typedef struct VfpStatueBallPlacement
 typedef struct VfpStatueBallState
 {
     s16 gameBit;         /* 0x00 */
-    s16 timer;           /* 0x02 */
+    s16 timer;           /* 0x02: decremented each tick, never tested */
     u8 unk4;             /* 0x04 */
     u8 active;           /* 0x05 */
     u8 playActivateSfx;  /* 0x06 */

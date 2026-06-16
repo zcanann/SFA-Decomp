@@ -29,7 +29,8 @@ extern void hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int fla
 
 typedef struct VfpMinifireState
 {
-    f32 baseY;        /* 0x00: floor height below spawn, then fall distance */
+    f32 baseY;        /* 0x00: downward hit-scan result, then rebased to
+                         (localPosY - that) as the fall threshold */
     u8 pad4[6];
     u8 burstStarted;  /* 0x0A: flame burst has fired; fading out */
 } VfpMinifireState;
