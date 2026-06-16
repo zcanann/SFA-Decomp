@@ -183,7 +183,7 @@ void FUN_80157004(undefined8 param_1, double param_2, double param_3, undefined8
     undefined4 in_r9;
     undefined4 in_r10;
 
-    if ((*(uint*)(param_10 + 0x2dc) & 0x40000000) != 0)
+    if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
     {
         if (*(byte*)(param_10 + 0x33a) == 0)
         {
@@ -1073,7 +1073,7 @@ void fn_80159284(int* obj, u8* state)
     int j;
     int n;
 
-    if (*(void**)(state + 0x29c) != NULL && *(s16*)(*(int*)(state + 0x29c) + 0x44) == 1)
+    if (((BaddieState*)state)->trackedObj != NULL && *(s16*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1)
     {
         fn_8001FE90();
     }
@@ -1178,8 +1178,8 @@ void fn_80159284(int* obj, u8* state)
 
     if ((*(u8*)(state + 0x323) & 8) == 0 && (*(u8*)(state + 0x33d) & 0x10) == 0)
     {
-        fn_8014CF7C(obj, state, *(f32*)(*(int*)(state + 0x29c) + 0xc),
-                    *(f32*)(*(int*)(state + 0x29c) + 0x14), 0x1e, 0);
+        fn_8014CF7C(obj, state, *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
+                    *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14), 0x1e, 0);
     }
     fn_80157CDC((int)obj, (int)state);
 }
