@@ -1411,8 +1411,8 @@ int fn_8029A76C(int obj, int state, f32 fv)
             int res;
             int half;
             int low;
-            f32 a;
             f32 b;
+            f32 a;
             *(u32*)((char*)inner + 0x360) &= ~0x400LL;
             a = inner->unk7BC;
             b = inner->unk7B8;
