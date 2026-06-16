@@ -1587,11 +1587,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     d = *(s16*)obj - (u16) * (s16*)t;
                     if (d > 0x8000)
                     {
-                        d -= 0xffff;
+                        d = (d - 0x10000) + 1;
                     }
                     if (d < -0x8000)
                     {
-                        d += 0xffff;
+                        d = (d + 0x10000) - 1;
                     }
                     ang = d;
                     if (ang < 0)
@@ -1653,11 +1653,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             break;
                         case 2:
                             t2 = ObjGroup_FindNearestObject(0x32, t, 0);
-                            if (t2 == 0)
+                            if ((void*)t2 == NULL)
                             {
                                 t2 = ObjGroup_FindNearestObject(0x31, t, 0);
                             }
-                            if (t2 != 0)
+                            if ((void*)t2 != NULL)
                             {
                                 (*(code*)(**(int**)(t + 0x68) + 0x38))(t);
                             }
