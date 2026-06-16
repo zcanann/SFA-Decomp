@@ -229,8 +229,8 @@ void SpiritPrize_update(int obj)
             {
                 matchingObj = childObj;
             }
-            if (*(s16*)(childObj + 0xb4) == -2 && *(s16*)(childObj + 0x44) == 0x10 &&
-                prizeId == (s8)((SpiritPrizeState*)*(int*)(childObj + 0xb8))->prizeId)
+            if (*(s16*)(childObj + 0xb4) == -2 && ((GameObject*)childObj)->anim.classId == 0x10 &&
+                prizeId == (s8)((SpiritPrizeState*)*(int*)&((GameObject*)childObj)->extra)->prizeId)
             {
                 duplicateCount++;
             }
