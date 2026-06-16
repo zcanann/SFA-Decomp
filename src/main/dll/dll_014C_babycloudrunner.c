@@ -694,7 +694,7 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
         }
         else
         {
-            s16 t;
+            int t;
             s16 sv = (s16)shifted;
             if ((int)sv > 0)
             {
@@ -704,7 +704,7 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
             {
                 t = -sv >> 2;
             }
-            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(a, (f32)t / lbl_803E4240, timeDelta, 0);
+            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(a, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
         }
     }
 }
