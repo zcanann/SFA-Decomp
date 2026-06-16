@@ -242,8 +242,8 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     int yawA, yawB;
     int spd;
     int d1, d2;
-    int npc;
-    f32 vd[3], vc[3], vb[3], va[3];
+    void* npc;
+    f32 vd, vc, vb, va;
     u8 traceWork[CAMCONTROL_TRACE_WORK_SIZE];
 
     if (lbl_803DD584 == NULL)
@@ -384,7 +384,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
         lbl_803DD584->orbitAngleVelocity = -0x80;
     }
 
-    if (mode != 6 && mode != 7 && (npc = getFocusedNpc()) != 0)
+    if (mode != 6 && mode != 7 && (npc = (void*)getFocusedNpc()) != NULL)
     {
         s16 sd;
         int dd;
@@ -398,7 +398,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
             sd += 0xffff;
         }
         dd = sd - (u16)(s16)
-        Obj_GetYawDeltaToObject((int)target, npc, 0);
+        Obj_GetYawDeltaToObject((int)target, (int)npc, 0);
         if (dd > 0x8000)
         {
             dd -= 0xffff;
@@ -414,8 +414,8 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
         }
     }
 
-    fn_8010DB7C(target, va, vb, vc);
-    camcontrol_traceMove(&camera->anim.worldPosX, va, (void*)&lbl_803DD584->cameraX, traceWork, 3, 1,
+    fn_8010DB7C(target, &va, &vb, &vc);
+    camcontrol_traceMove(&camera->anim.worldPosX, &va, (void*)&lbl_803DD584->cameraX, traceWork, 3, 1,
                          1, lbl_803E1A20);
 }
 #undef target
