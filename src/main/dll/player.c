@@ -9800,12 +9800,14 @@ int fn_80299E44(int obj, int state, f32 fv)
         f32 y;
         f32 z;
     } pfx;
+    f32 timer;
 
     if (lbl_803DE42C != 0)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        inner->unk854 = inner->unk854 - timeDelta;
-        if (inner->unk854 <= lbl_803E7EA4)
+        timer = inner->unk854 - timeDelta;
+        inner->unk854 = timer;
+        if (timer <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 1;
@@ -9868,7 +9870,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 8;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9876,7 +9878,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 9;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9884,7 +9886,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 7;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9892,7 +9894,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 6;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9900,7 +9902,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 5;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9913,7 +9915,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 1;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9923,7 +9925,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 4;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9933,7 +9935,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 3;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9943,7 +9945,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             inner->moveSlotIndex = 2;
             ObjAnim_SetCurrentMove(
                 obj,
-                lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
@@ -9951,7 +9953,7 @@ int fn_80299E44(int obj, int state, f32 fv)
         inner->moveSlotIndex = 0;
         ObjAnim_SetCurrentMove(
             obj,
-            lbl_803336BC[((MoveSlot*)(inner->moveSlots))[inner->moveSlotIndex].moveIdx],
+            lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
             lbl_803E7EA4, 0);
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
         return 0x27;
