@@ -1,3 +1,14 @@
+/*
+ * nwlevcontrol (DLL 0x1A5) - the SnowHorn Wastes level controller (map
+ * 'nwastes', 0x0A).
+ *
+ * Runs the area's overall progression: a countdown that gates a hint
+ * message, the day/night music swap driven by the sun position, a set of
+ * latched game-bit -> music/sfx reactions (SCGameBitLatch_Update), the
+ * timed-challenge timer (init / count-up / stop with the SnowHorn rescue
+ * bits 0x19d/0x19f), and a state machine that walks a table of target
+ * objects (fn_801CFD68) firing their trigger sequences in turn.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -10,19 +21,17 @@ extern byte gameTimerIsRunning();
 extern f32 fn_80014668(void);
 extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
-extern uint GameBit_Get();
+extern uint GameBit_Get(int id);
 extern undefined4 GameBit_Set();
 extern undefined4 SCGameBitLatch_Update();
 extern u8* Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
+extern f32 lbl_803E5280;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
-
-extern uint GameBit_Get(int id);
-extern f32 lbl_803E5280;
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
@@ -301,9 +310,8 @@ int nw_levcontrol_getExtraSize(void)
     return 0x14;
 }
 
-/* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches the object's
- * map event slot through gMapEventInterface; when the call returns 0 also fires
- * envFxActFn_800887f8(0); always tails into gameTimerStop. */
+/* On free, restore the default environment fx (only if this slot's object
+ * group is no longer active) and always stop the challenge timer. */
 void nw_levcontrol_free(GameObject* obj)
 {
     extern void envFxActFn_800887f8(s32);
