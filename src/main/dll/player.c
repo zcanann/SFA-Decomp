@@ -13667,14 +13667,17 @@ void fn_802AA8D0(int obj)
     }
     lbl_803DE478 = base;
     buf.y = dy + ((GameObject*)obj)->anim.localPosY;
+    {
+    f32 divisor = lbl_803E7ED8;
     for (i = 0; i < 10; i++)
     {
-        buf.x = ((GameObject*)obj)->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
-        buf.z = ((GameObject*)obj)->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
+        buf.x = ((GameObject*)obj)->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / divisor;
+        buf.z = ((GameObject*)obj)->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / divisor;
         (*gPartfxInterface)->spawnObject(
             (void*)obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject(
             (void*)obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, NULL);
+    }
     }
 }
 #pragma dont_inline reset
