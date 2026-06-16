@@ -915,16 +915,16 @@ int fn_802A36EC(int obj, int state)
             inner->unk5BC = ((GameObject*)obj)->anim.localPosZ;
             if (*(void**)((char*)inner + 0x4c4) != NULL)
             {
-                Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5d4), *(f32*)((char*)inner + 0x5d8),
-                                               *(f32*)((char*)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
+                Obj_TransformWorldPointToLocal(inner->unk5D4, inner->unk5D8,
+                                               inner->unk5DC, (f32*)((char*)inner + 0x5d4),
                                                (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
                                                inner->unk4C4);
-                Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5ec), *(f32*)((char*)inner + 0x5f0),
-                                               *(f32*)((char*)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
+                Obj_TransformWorldPointToLocal(inner->unk5EC, inner->unk5F0,
+                                               inner->unk5F4, (f32*)((char*)inner + 0x5ec),
                                                (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
                                                inner->unk4C4);
-                Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5f8), *(f32*)((char*)inner + 0x5fc),
-                                               *(f32*)((char*)inner + 0x600), (f32*)((char*)inner + 0x5f8),
+                Obj_TransformWorldPointToLocal(inner->unk5F8, inner->unk5FC,
+                                               inner->unk600, (f32*)((char*)inner + 0x5f8),
                                                (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                                inner->unk4C4);
                 inner->unk5AC =
