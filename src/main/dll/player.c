@@ -9395,7 +9395,7 @@ int fn_802A1114(int obj, int state)
         }
         inner->unk5A4 =
             fn_802A71E0(obj, tbl[0], tbl[1], (int*)((char*)inner + 0x598),
-                        (int*)((int)inner + 0x56c), lbl_803E7EA4, lbl_803E7EA4, 2, (u8)flags);
+                        (int*)((int)inner + 0x56c), lbl_803E7EA4, *(f32*)&lbl_803E7EA4, 2, (u8)flags);
         model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
