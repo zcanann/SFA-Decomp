@@ -261,22 +261,19 @@ void drawFn_80125424(void)
 
 void fn_80125D04(void)
 {
-    int* ptr;
-    int i = 0;
-    ptr = lbl_803A93F8;
-    for (; i < 6; i++)
+    int i;
+    for (i = 0; i < 6; i++)
     {
-        int* obj = (int*)ptr[0];
+        int* obj = (int*)lbl_803A93F8[i];
         if (obj != NULL)
         {
             if ((u32) * (int*)&((GameObject*)obj)->anim.placementData > 0x90000000u)
             {
                 *(int*)&((GameObject*)obj)->anim.placementData = 0;
             }
-            Obj_FreeObject((int*)ptr[0]);
-            ptr[0] = 0;
+            Obj_FreeObject((int*)lbl_803A93F8[i]);
+            lbl_803A93F8[i] = 0;
         }
-        ptr++;
     }
 }
 
