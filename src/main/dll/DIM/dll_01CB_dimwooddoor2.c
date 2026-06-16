@@ -125,7 +125,7 @@ void dimwooddoor2_update(int* obj)
         for (i = 0; i < (int)*(s8*)(*(int*)(objAddr + 0x58) + 0x10f); i++)
         {
             int o = *(int*)(*(int*)(objAddr + 0x58) + i * 4 + 0x100);
-            if (*(s16*)(o + 0x46) == DIMWOODDOOR2_KEY_MOVE_A || *(s16*)(o + 0x46) == DIMWOODDOOR2_KEY_MOVE_B)
+            if (((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_A || ((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_B)
             {
                 found = 1;
                 break;
