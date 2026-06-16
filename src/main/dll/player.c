@@ -9544,7 +9544,7 @@ int fn_8029F6E4(int obj, int state)
     }
     if ((inner->unk6EC & 0x4) != 0)
     {
-        ObjAnim_SetMoveProgress(*(f32*)((char*)sub + 0x98), (ObjAnimComponent*)obj);
+        ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, *(f32*)((char*)sub + 0x98));
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EA4;
     }
     else
