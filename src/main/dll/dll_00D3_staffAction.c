@@ -1314,6 +1314,7 @@ extern void LandedArwing_ReturnZero(void);
 extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
 extern void fn_80167550(int* obj);
 
+#pragma fp_contract off
 void dll_D3_update(int* obj)
 {
     int trans;
@@ -1324,9 +1325,7 @@ void dll_D3_update(int* obj)
     int rc;
     int hits;
     f32 searchRadius;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    struct { f32 x, y, z; } delta;
     int aiStack_80[24];
     char hitType;
 
@@ -1416,14 +1415,14 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
-        dx = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
+        delta.x = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
             ((GameObject*)obj)->anim.worldPosX;
-        dy = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
+        delta.y = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
             ((GameObject*)obj)->anim.worldPosY;
-        dz = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
+        delta.z = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
-            sqrtf(dx * dx + dy * dy + dz * dz);
+            sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
@@ -1477,6 +1476,7 @@ void dll_D3_update(int* obj)
         }
     }
 }
+#pragma fp_contract reset
 
 void dll_D3_init(int obj, int def, int flag)
 {
