@@ -824,11 +824,12 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     else
     {
-        f32 s = ((PartFxSpawnParams*)posSource)->scale;
+        f32 s;
         e[1].layer = 0;
         e[1].flags = 7;
         e[1].tex = &base[0x100];
         e[1].mode = 2;
+        s = ((PartFxSpawnParams*)posSource)->scale;
         e[1].x = lbl_803E08D8 * s;
         e[1].y = lbl_803E08DC * s;
         e[1].z = lbl_803E08D8 * s;
