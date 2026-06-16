@@ -1420,9 +1420,12 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     f32 radii[4];
 
     collision = state;
-    if ((collision->subtype != CURVES_COLLISION_SUBTYPE_NONE) &&
-        ((s32)(state->flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
-        ((s32)(state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0))
+    if ((collision->subtype == CURVES_COLLISION_SUBTYPE_NONE) ||
+        ((s32)(state->flags & CURVES_COLLISION_STATE_ACTIVE) == 0) ||
+        ((s32)(state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) == 0))
+    {
+        return;
+    }
     {
         if (*(void**)&obj->anim.parent != NULL)
         {
