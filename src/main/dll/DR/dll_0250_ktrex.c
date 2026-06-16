@@ -1,3 +1,26 @@
+/*
+ * dll_0250_ktrex - the King T-Rex / Galdon boss (DLL 0x250, object type
+ * 0x49). A large arena boss that patrols a closed rom-curve loop track
+ * (laneA..laneD point sets sampled at init, interpolated per phase in
+ * ktrex_updateArenaPathProgress) while the player fights it.
+ *
+ * Two parallel state-handler tables drive it, both indexed by the boss's
+ * current state id and installed by ktrex_initialiseStateHandlerTables:
+ *   - gKTRexStateHandlersA[0..11]: decision handlers, run each tick; they
+ *     read game state and RETURN the next state id (0 = stay).
+ *   - gKTRexStateHandlersB[0..8]: behavior handlers for the active state;
+ *     they kick off animation moves and translate per-state animation
+ *     events (handlerState bits) into arena phaseFlags.
+ * A small Stack queues pending state transitions (Stack_Push/Pop of state
+ * ids) so the boss can defer one move behind another.
+ *
+ * Per-object data lives in the extra block (ktrex_getExtraSize == 0x5a4,
+ * KTRexRuntime); the shared arena/track state hangs off runtime+0x40c
+ * (gKTRexState -> KTRexArenaState). animEventCallback runs the animation
+ * timeline, accumulating attack/impact effects in phaseFlags which
+ * ktrex_updateAttackEffects then drains into sfx, rumble, camera shake
+ * and particle bursts.
+ */
 #include "main/dll/objfsa_romcurve.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
@@ -355,16 +378,16 @@ void ktrex_free(int obj)
 
 int ktrex_shouldAdvanceArenaPhase(void)
 {
-    u8 a;
-    u8 b;
+    u8 laneA;
+    u8 laneB;
     int* s = gKTRexState;
-    int r6;
-    r6 = *(u16*)((char*)s + 0xfa) & 1;
-    a = *(u8*)((char*)s + 0xfe);
-    b = *(u8*)((char*)s + 0xff);
-    if ((a & b) != 0)
+    int dir;
+    dir = *(u16*)((char*)s + 0xfa) & 1;
+    laneA = *(u8*)((char*)s + 0xfe);
+    laneB = *(u8*)((char*)s + 0xff);
+    if ((laneA & laneB) != 0)
     {
-        if (r6 != 0)
+        if (dir != 0)
         {
             if (*(f32*)((char*)s + 0x8) < *(f32*)((char*)s + 0xf4))
             {
@@ -380,15 +403,17 @@ int ktrex_shouldAdvanceArenaPhase(void)
         }
         return 0;
     }
-    if (r6 != 0)
+    if (dir != 0)
     {
-        if ((a == 8 && (b & 1)) || (a == 2 && (b & 8)) || (a == 4 && (b & 2)) || (a == 1 && (b & 4)))
+        if ((laneA == 8 && (laneB & 1)) || (laneA == 2 && (laneB & 8)) || (laneA == 4 && (laneB & 2)) ||
+            (laneA == 1 && (laneB & 4)))
         {
             return 1;
         }
         return 0;
     }
-    if ((a == 1 && (b & 8)) || (a == 4 && (b & 1)) || (a == 2 && (b & 4)) || (a == 8 && (b & 2)))
+    if ((laneA == 1 && (laneB & 8)) || (laneA == 4 && (laneB & 1)) || (laneA == 2 && (laneB & 4)) ||
+        (laneA == 8 && (laneB & 2)))
     {
         return 1;
     }
