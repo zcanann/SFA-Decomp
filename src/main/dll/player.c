@@ -6120,7 +6120,7 @@ void fn_8029F67C(int obj)
 {
     ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
     s16* v;
-    modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+    modelState->flags &= 0xFFFFEFFFLL;
     ((GameObject*)obj)->anim.flags &= ~0x8;
     ((GameObject*)obj)->anim.activeMove = -1;
     v = objModelGetVecFn_800395d8(obj, 9);
