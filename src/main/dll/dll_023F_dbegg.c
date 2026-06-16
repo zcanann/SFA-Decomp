@@ -447,9 +447,8 @@ void fn_801FE774(int cam, f32* vel)
 
     sumZ = sumX = lbl_803E61C8;
     objs = (int*)ObjGroup_GetObjects(0x14, &count);
-    i = 0;
     limit = lbl_803E61E8;
-    for (; i < count; i++)
+    for (i = 0; i < count; i++)
     {
         f32 dy;
         o = (u8*)*objs;
