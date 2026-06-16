@@ -10373,8 +10373,9 @@ int fn_802A5048(int obj, int state, f32 fv)
         int i;
         void** p;
         lbl_803DE42C = 0;
+        i = 0;
         p = lbl_80332ED4;
-        for (i = 0; i < 7; i++)
+        for (; i < 7; i++)
         {
             if (*p != NULL)
             {
