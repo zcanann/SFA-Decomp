@@ -4251,6 +4251,7 @@ void fn_8012FA70(int idx, s8 flag)
 {
     extern undefined4 cMenuSetItems(); /* #57 */
     void* entry;
+    s16* posPtr;
     u8 prev = 1;
     int count;
     s16 pos;
@@ -4258,13 +4259,14 @@ void fn_8012FA70(int idx, s8 flag)
 
     entry = &lbl_8031B5D8[idx * 16];
     count = cMenuSetItems(*(int*)entry, flag);
-    pos = *(s16*)((char*)entry + 4);
+    posPtr = (s16*)((char*)entry + 4);
+    pos = *posPtr;
 
     for (i = 0; i < count * 2; i++)
     {
         if (lbl_803A8C78[(s16)pos] != 0 && (prev != 0 || i >= count))
         {
-            *(s16*)((char*)entry + 4) = pos;
+            *posPtr = pos;
             return;
         }
         prev = lbl_803A8C78[(s16)pos];
