@@ -132,7 +132,7 @@ extern void gameFlagFn_8005cd24(int v);
 extern void timeOfDayFn_80055000(void);
 extern void timeOfDayFn_80055038(void);
 extern int getSkyStructField24C(void);
-extern void skyFn_80088e54(f32 a, int b);
+extern void skyFn_80088e54(int b, f32 a);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 extern int ObjList_GetObjects(int* first, int* count);
 extern int getTablesBinEntry(int idx);
@@ -1393,13 +1393,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         }
                         break;
                     case 9:
-                        skyFn_80088e54((f32)(u32)p[3], getSkyStructField24C() ^ 1);
+                        skyFn_80088e54(getSkyStructField24C() ^ 1, (f32)(u32)p[3]);
                         break;
                     case 10:
-                        skyFn_80088e54((f32)(u32)p[3], 0);
+                        skyFn_80088e54(0, (f32)(u32)p[3]);
                         break;
                     case 0xb:
-                        skyFn_80088e54((f32)(u32)p[3], 1);
+                        skyFn_80088e54(1, (f32)(u32)p[3]);
                         break;
                     }
                     break;
