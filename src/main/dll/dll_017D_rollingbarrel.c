@@ -33,7 +33,8 @@ extern void objRenderFn_8003b8f4(f32 v);
 extern f32 timeDelta;
 extern s16 lbl_803DDB20;
 
-extern int lbl_803E4460;
+typedef struct { int a; int b; } RollingBarrelCurveSeed;
+extern RollingBarrelCurveSeed lbl_803E4460;
 extern int lbl_803E4464;
 extern f32 lbl_803E4468;
 extern f32 lbl_803E446C;
@@ -104,10 +105,9 @@ void RollingBarrel_free(int obj)
 void RollingBarrel_init(int obj, RollingBarrelMapData* params)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
-    int tmp[2];
+    RollingBarrelCurveSeed tmp;
 
-    tmp[0] = lbl_803E4460;
-    tmp[1] = lbl_803E4464;
+    tmp = lbl_803E4460;
     params->respawnParam = -1;
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
     ((GameObject*)obj)->anim.rotZ = 0x4000;
@@ -125,7 +125,7 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     state->pitchRising = 1;
     state->timer = lbl_803E4468;
 
-    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, lbl_803E44B8, tmp, -1);
+    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, lbl_803E44B8, (int*)&tmp, -1);
 }
 
 
